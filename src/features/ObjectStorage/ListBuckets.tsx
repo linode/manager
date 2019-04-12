@@ -97,7 +97,7 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
             count={count}
             page={page}
             pageSize={pageSize}
-            handlePageChange={handlePageChange}
+            handlePageChange={handlePageChange()}
             handleSizeChange={handlePageSizeChange}
             eventCategory="object storage landing"
           />

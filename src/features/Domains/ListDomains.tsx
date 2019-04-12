@@ -89,7 +89,7 @@ const ListDomains: React.StatelessComponent<CombinedProps> = props => {
             count={count}
             page={page}
             pageSize={pageSize}
-            handlePageChange={handlePageChange}
+            handlePageChange={handlePageChange()}
             handleSizeChange={handlePageSizeChange}
             eventCategory="domains landing"
           />

@@ -8,7 +8,6 @@ import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
 import Divider from 'src/components/core/Divider';
 import Typography from 'src/components/core/Typography';
-import ErrorState from 'src/components/ErrorState';
 
 type ClassNames =
   | 'root'
@@ -45,34 +44,15 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 interface Props {
-  loading: boolean;
-  disks?: Linode.Disk[];
-  error?: Error;
-  totalDiskSpace?: number;
+  disks: Linode.Disk[];
+  totalDiskSpace: number;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
   render() {
-    const { loading, error, disks, totalDiskSpace, classes } = this.props;
-
-    if (loading) {
-      return <DiskSpaceLoading />;
-    }
-
-    if (error) {
-      return (
-        <ErrorState
-          cozy
-          errorText="There was an error loading your storage statistics"
-        />
-      );
-    }
-
-    if (!disks || !totalDiskSpace) {
-      return null;
-    }
+    const { disks, totalDiskSpace, classes } = this.props;
 
     const usedDiskSpace = addUsedDiskSpace(disks);
 
@@ -136,16 +116,3 @@ export const addUsedDiskSpace = (disks: Linode.Disk[]) => {
 const styled = withStyles(styles);
 
 export default styled(LinodeDiskSpace);
-
-class DiskSpaceLoading extends React.PureComponent<{}> {
-  render() {
-    return (
-      <BarPercent
-        isFetchingValue={true}
-        loadingText="Loading your storage statistics..."
-        max={0}
-        value={0}
-      />
-    );
-  }
-}

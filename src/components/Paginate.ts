@@ -20,7 +20,7 @@ const createDiplayPage = <T extends any>(page: number, pageSize: number) => (
 };
 
 export interface PaginationProps extends State {
-  handlePageChange: (page: number) => void;
+  handlePageChange: (shouldScrollToTop?: boolean) => (page: number) => void;
   handlePageSizeChange: (pageSize: number) => void;
   data: any[];
   count: number;
@@ -45,9 +45,11 @@ export default class Paginate extends React.Component<Props, State> {
     pageSize: storage.pageSize.get()
   };
 
-  handlePageChange = (page: number) => {
+  handlePageChange = (shouldScrollToTop: boolean = true) => (page: number) => {
     const { scrollToRef } = this.props;
-    scrollTo(scrollToRef);
+    if (shouldScrollToTop) {
+      scrollTo(scrollToRef);
+    }
     this.setState({ page });
   };
 

@@ -1,8 +1,3 @@
-/**
- * @todo Since configs are requested and stored in Redux, this needs to be updated to use
- * the OrderBy and Paginated components, rather than Pagey.
- */
-
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -22,21 +17,19 @@ import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import Table from 'src/components/Table';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
 import { resetEventsPolling } from 'src/events';
 import {
   DeleteLinodeConfig,
   withLinodeDetailContext
 } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
-import { getLinodeConfigs, linodeReboot } from 'src/services/linodes';
+import { linodeReboot } from 'src/services/linodes';
 import LinodeConfigActionMenu from '../LinodeSettings/LinodeConfigActionMenu';
 import LinodeConfigDrawer from '../LinodeSettings/LinodeConfigDrawer';
+
+import Paginate from 'src/components/Paginate';
 
 type ClassNames = 'root' | 'headline' | 'addNewWrapper';
 
@@ -58,13 +51,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-interface Props {
-  active: boolean;
-}
-
-type CombinedProps = Props &
-  LinodeContext &
-  PaginationProps<Linode.Config> &
+type CombinedProps = LinodeContext &
   WithStyles<ClassNames> &
   InjectedNotistackProps;
 
@@ -101,12 +88,6 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
     configDrawer: this.defaultConfigDrawerState
   };
 
-  componentDidUpdate(prevProps: CombinedProps) {
-    if (prevProps.active === false && this.props.active === true) {
-      this.props.handleOrderChange('label');
-    }
-  }
-
   render() {
     const { classes, readOnly } = this.props;
 
@@ -133,7 +114,6 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           linodeRegion={this.props.linodeRegion}
           maxMemory={this.props.linodeMemory}
           onClose={this.resetConfigDrawer}
-          onSuccess={this.props.request}
           open={this.state.configDrawer.open}
         />
         <ConfirmationDialog
@@ -249,7 +229,6 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
     }
 
     deleteLinodeConfig(configId)
-      .then(() => this.props.onDelete())
       .then(() => {
         this.setConfirmDelete(
           {
@@ -279,53 +258,48 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
 
   linodeConfigsTable = () => {
     return (
-      <React.Fragment>
-        <Table isResponsive={false} aria-label="List of Configurations" border>
-          <TableHead>
-            <TableRow>
-              <TableCell>Label</TableCell>
-              <TableCell />
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {this.renderConfigTableContent(
-              this.props.loading,
-              this.props.error,
-              this.props.data
-            )}
-          </TableBody>
-        </Table>
-        <PaginationFooter
-          count={this.props.count}
-          page={this.props.page}
-          pageSize={this.props.pageSize}
-          handlePageChange={this.props.handlePageChange}
-          handleSizeChange={this.props.handlePageSizeChange}
-          eventCategory="linode configs"
-        />
-      </React.Fragment>
+      <Paginate data={this.props.configs}>
+        {({
+          data: paginatedData,
+          handlePageChange,
+          handlePageSizeChange,
+          page,
+          pageSize,
+          count
+        }) => {
+          return (
+            <React.Fragment>
+              <Table
+                isResponsive={false}
+                aria-label="List of Configurations"
+                border
+              >
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Label</TableCell>
+                    <TableCell />
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {this.renderConfigTableContent(paginatedData)}
+                </TableBody>
+              </Table>
+              <PaginationFooter
+                count={count}
+                page={page}
+                pageSize={pageSize}
+                handlePageChange={handlePageChange(false)}
+                handleSizeChange={handlePageSizeChange}
+                eventCategory="linode configs"
+              />
+            </React.Fragment>
+          );
+        }}
+      </Paginate>
     );
   };
 
-  renderConfigTableContent = (
-    loading: boolean,
-    error?: Error,
-    data?: Linode.Config[]
-  ) => {
-    if (error) {
-      return (
-        <TableRowError colSpan={2} message={`Unable to load configurations.`} />
-      );
-    }
-
-    if (loading) {
-      return <TableRowLoading colSpan={2} />;
-    }
-
-    if (!data || data.length === 0) {
-      return <TableRowEmptyState colSpan={2} />;
-    }
-
+  renderConfigTableContent = (data: Linode.Config[]) => {
     return data.map(config => (
       <TableRow key={config.id} data-qa-config={config.label}>
         <TableCell>{config.label}</TableCell>
@@ -360,10 +334,12 @@ interface LinodeContext {
   linodeTotalDisk: number;
   deleteLinodeConfig: DeleteLinodeConfig;
   readOnly: boolean;
+  configs: Linode.Config[];
+  getLinodeConfigs: () => void;
 }
 
 const linodeContext = withLinodeDetailContext<LinodeContext>(
-  ({ linode, deleteLinodeConfig }) => ({
+  ({ linode, deleteLinodeConfig, getLinodeConfigs }) => ({
     linodeHypervisor: linode.hypervisor,
     linodeId: linode.id,
     linodeLabel: linode.label,
@@ -372,17 +348,14 @@ const linodeContext = withLinodeDetailContext<LinodeContext>(
     linodeStatus: linode.status,
     linodeTotalDisk: linode.specs.disk,
     readOnly: linode._permissions === 'read_only',
-    deleteLinodeConfig
+    deleteLinodeConfig,
+    configs: linode._configs,
+    getLinodeConfigs
   })
 );
 
-const paginated = Pagey((ownProps: LinodeContext, params, filters) => {
-  return getLinodeConfigs(ownProps.linodeId, params, filters);
-});
-
-const enhanced = compose<CombinedProps, Props>(
+const enhanced = compose<CombinedProps, {}>(
   linodeContext,
-  paginated,
   styled,
   errorBoundary,
   withSnackbar

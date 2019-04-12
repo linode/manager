@@ -91,7 +91,6 @@ interface Props {
   open: boolean;
   linodeConfigId?: number;
   onClose: () => void;
-  onSuccess: () => void;
 }
 
 interface State {
@@ -630,7 +629,6 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       return updateLinodeConfig(linodeConfigId, configData)
         .then(_ => {
           this.props.onClose();
-          this.props.onSuccess();
         })
         .catch(error => {
           this.setState({
@@ -647,7 +645,6 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     return createLinodeConfig(configData)
       .then(_ => {
         this.props.onClose();
-        this.props.onSuccess();
       })
       .catch(error =>
         this.setState({

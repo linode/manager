@@ -372,7 +372,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
                   </Paper>
                   <PaginationFooter
                     count={count}
-                    handlePageChange={handlePageChange}
+                    handlePageChange={handlePageChange()}
                     handleSizeChange={handlePageSizeChange}
                     page={page}
                     pageSize={pageSize}

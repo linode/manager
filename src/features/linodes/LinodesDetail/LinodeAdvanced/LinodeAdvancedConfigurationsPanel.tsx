@@ -36,25 +36,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 type CombinedProps = LinodeContextProps & WithStyles<ClassNames>;
 
-interface State {
-  loaded: boolean;
-}
-
-class LinodeAdvancedConfigurationsPanel extends React.Component<
-  CombinedProps,
-  State
+class LinodeAdvancedConfigurationsPanel extends React.PureComponent<
+  CombinedProps
 > {
-  state: State = {
-    loaded: false
-  };
-
-  componentDidMount = () => {
-    this.setState({ loaded: true });
-  };
-
   render() {
     const { classes, disks, linodeTotalDisk } = this.props;
-    const { loaded } = this.state;
 
     return (
       <Grid container>
@@ -63,19 +49,15 @@ class LinodeAdvancedConfigurationsPanel extends React.Component<
             Advanced Configurations
           </Typography>
           <Paper className={classes.paper}>
-            <LinodeConfigs active={loaded} />
+            <LinodeConfigs />
           </Paper>
           <Paper className={classes.paper}>
-            <LinodeDisks active={loaded} />
+            <LinodeDisks />
           </Paper>
         </Grid>
         <Grid item xs={12} md={5} lg={3} className={classes.sidebar}>
           <Paper className={classes.paper}>
-            <LinodeDiskSpace
-              disks={disks}
-              loading={!loaded}
-              totalDiskSpace={linodeTotalDisk}
-            />
+            <LinodeDiskSpace disks={disks} totalDiskSpace={linodeTotalDisk} />
           </Paper>
         </Grid>
       </Grid>
@@ -84,8 +66,8 @@ class LinodeAdvancedConfigurationsPanel extends React.Component<
 }
 
 interface LinodeContextProps {
-  linodeTotalDisk?: number;
-  disks: Linode.Disk[] | undefined;
+  linodeTotalDisk: number;
+  disks: Linode.Disk[];
 }
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
