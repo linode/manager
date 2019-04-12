@@ -43,6 +43,7 @@ export const ActivityRow: React.StatelessComponent<CombinedProps> = props => {
       direction={'row'}
       justify={'space-between'}
       alignItems={'center'}
+      data-qa-activity-row
     >
       <Grid item>
         <Typography variant={'inherit'}>{message}</Typography>

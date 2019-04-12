@@ -35,12 +35,17 @@ export const ActivitySummaryContent: React.StatelessComponent<
 > = props => {
   const { classes, error, loading, events } = props;
   if (error) {
-    return <ErrorState errorText={error} />;
+    return <ErrorState data-qa-activity-error errorText={error} />;
   }
 
   if (loading) {
     return (
-      <Grid container alignContent="center" justify="center">
+      <Grid
+        container
+        alignContent="center"
+        justify="center"
+        data-qa-activity-loading
+      >
         <CircleProgress mini />
       </Grid>
     );
@@ -48,7 +53,12 @@ export const ActivitySummaryContent: React.StatelessComponent<
 
   if (events.length === 0) {
     return (
-      <Grid container alignContent="center" justify="center">
+      <Grid
+        container
+        alignContent="center"
+        justify="center"
+        data-qa-activity-empty
+      >
         <Typography className={classes.emptyState} variant="body2">
           No recent activity for this Linode.
         </Typography>
@@ -59,7 +69,11 @@ export const ActivitySummaryContent: React.StatelessComponent<
   return (
     <>
       {events.map((event, idx) => (
-        <ActivityRow event={event} key={`activity-summary-row-${idx}`} />
+        <ActivityRow
+          event={event}
+          key={`activity-summary-row-${idx}`}
+          data-qa-activity-row
+        />
       ))}
     </>
   );
