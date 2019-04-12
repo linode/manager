@@ -155,7 +155,10 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
         <Table aria-label="List of Events">
           <TableHead>
             <TableRow>
-              <TableCell style={{ padding: 0, width: '1%' }} />
+              {/* Cell for icon (global EventsLanding only) */}
+              {!isEventsLandingForEntity && (
+                <TableCell style={{ padding: 0, width: '1%' }} />
+              )}
               <TableCell
                 data-qa-events-subject-header
                 style={{ minWidth: 200, paddingLeft: 10 }}

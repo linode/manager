@@ -103,10 +103,10 @@ export const Row: React.StatelessComponent<RowProps> = props => {
     <TableRow
       rowLink={isEventsLandingForEntity ? undefined : (linkTarget as any)}
     >
-      <TableCell data-qa-event-icon-cell compact>
-        {' '}
-        {/** We don't use the event argument, so typing isn't critical here. */}
-        {!isEventsLandingForEntity && (
+      {/** We don't use the event argument, so typing isn't critical here. */}
+      {/* Only display entity icon on the Global EventsLanding page */}
+      {!isEventsLandingForEntity && (
+        <TableCell data-qa-event-icon-cell compact>
           <Hidden smDown data-qa-entity-icon>
             <EntityIcon
               variant={type}
@@ -115,8 +115,8 @@ export const Row: React.StatelessComponent<RowProps> = props => {
               marginTop={1}
             />
           </Hidden>
-        )}
-      </TableCell>
+        </TableCell>
+      )}
       <TableCell parentColumn={'Event'} data-qa-event-message-cell compact>
         <Typography
           className={classes.message}
