@@ -9,8 +9,8 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { getEvents } from 'src/services/account';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { getEventsForEntity } from 'src/utilities/getEventsForEntity';
 
 import ActivitySummaryContent from './ActivitySummaryContent';
 
@@ -45,7 +45,7 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
   };
 
   componentDidMount() {
-    getEvents({}, { 'entity.type': 'linode', 'entity.id': this.props.linodeId })
+    getEventsForEntity({}, 'linode', this.props.linodeId)
       .then(response => {
         this.setState({
           events: response.data.slice(0, 5),
