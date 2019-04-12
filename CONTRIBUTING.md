@@ -49,12 +49,12 @@ We use [Husky](https://github.com/typicode/husky) to perform the following tasks
 4. [Circular dependency check](https://github.com/pahen/madge)
 5. Type Checking (as we're using TypeScript in the src code)
 
- If any fail the commit will be aborted. Address the reported issues, stage the changes, and attempt the commit again. This behaviour can be skipped using the
-`--no-verify` flag, but we highly suggest you do _**not**_ use this flag
+ If any fail the commit will be aborted. Address the reported issues, stage the changes, and attempt the commit again. This behavior can be skipped using the
+`--no-verify` flag, but we highly suggest you do _**not**_ use this flag.
 
 ### Merge Conflicts
 
-Merge conflicts happen, and when they do, we reccommend rebasing.
+Merge conflicts happen, and when they do, we recommend rebasing.
 
 `git rebase -i develop` will allow you to interactively pick which commits you want to keep and then you can address the conflicts as they appear.
 
@@ -86,7 +86,7 @@ Once your code from the `develop` branch has been merged into `testing` and you 
 7. Finally, follow the merge flow. Merge from `testing` to `staging` and finally to `master`
 
 ### Generating the changelog
-Get a Python 3 installation with pip. On a Mac
+Get a Python 3 installation with `pip`. On a Mac:
 
 `brew install python` (Python 3 is now the default)
 
@@ -106,7 +106,7 @@ So altogether, the command should look like:
 python generate_changelog.py v0.52.0 2019-09-17 origin
 ```
 
-This script does a git log diff of manager/master...HEAD, printing only the commit subject. Strips any reference to a JIRA ticket, and disregards any testing or automation ticket, and updates the CHANGELOG.md Added, Breaking, Fixed, Change based on keywords in the commit subject.
+This script does a git log diff of manager/master...HEAD, printing only the commit subject. Strip any reference to a JIRA ticket, and disregards any testing or automation ticket, and updates the CHANGELOG.md Added, Breaking, Fixed, Change based on keywords in the commit subject.
 
 ## Other Things
 

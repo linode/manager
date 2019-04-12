@@ -2,7 +2,7 @@
 
 ## Unit Tests
 
-The unit tests for Linode manager are written in Typescript using the [Jest](https://facebook.github.io/jest/) testing framework. Unit tests end with `.test.tsx` file extension and can be found throughout the codebase.
+The unit tests for Linode manager are written in Typescript using the [Jest](https://facebook.github.io/jest/) testing framework. Unit tests end with the `.test.tsx` file extension and can be found throughout the codebase.
 
 To run tests:
 
@@ -22,6 +22,22 @@ To Run a specific file or files in a directory:
 yarn test myFile.test.tsx
 yarn test src/some-folder
 ```
+
+Jest includes pattern matching out of the box, so you can also do things like run all tests whose filename
+contains "Linode" with
+
+```
+yarn test linode
+```
+
+To run a test in debug mode, add a `debugger` breakpoint inside one of the test cases, then run
+
+```
+yarn test:debug
+```
+
+Test execution will stop at the debugger statement, and you will be able to use Chrome's normal debugger to step through
+the tests (open `chrome://inspect/#devices` in Chrome).
 
 ## End-to-End Tests
 
@@ -62,7 +78,7 @@ brew cask install java8
 
 ### Command Line Arguments
 
-The `yarn e2e` command accepts a number of helpful command line arguments that faciliate
+The `yarn e2e` command accepts a number of helpful command line arguments that facilitate
 writing and running tests locally.
 
 Running an individual spec file:

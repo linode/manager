@@ -38,7 +38,7 @@ Function components have their place, but please keep in mind [function componen
 
 That being, said with the [introduction of hooks](https://reactjs.org/docs/hooks-intro.html), function components have become a lot more valuable, so you may find yourself writing them more often than you would a PureComponent. With that in mind, nearly all function components should be memoized with the invocation of `React.memo()` in order to gain the same benefit that PureComponents do.
 
-Like PureComponents, function componenets wrapped in `React.memo()` have a shallow prop and state comparison implemented by default. You can also create your own update conditions as the second argument passed to `React.memo()`
+Like PureComponents, function components wrapped in `React.memo()` have a shallow prop and state comparison implemented by default. You can also create your own update conditions as the second argument passed to `React.memo()`
 
 Okay
 ```js
