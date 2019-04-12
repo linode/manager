@@ -38,7 +38,7 @@ export const ActivitySummaryContent: React.StatelessComponent<
   }
 
   if (loading) {
-    return <CircleProgress />;
+    return <CircleProgress mini />;
   }
 
   if (events.length === 0) {

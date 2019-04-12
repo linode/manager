@@ -14,7 +14,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import ActivitySummaryContent from './ActivitySummaryContent';
 
-type ClassNames = 'root' | 'header' | 'emptyState';
+type ClassNames = 'root' | 'header';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -22,9 +22,6 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   header: {
     marginBottom: theme.spacing.unit * 2
-  },
-  emptyState: {
-    padding: theme.spacing.unit * 2
   }
 });
 
@@ -45,7 +42,6 @@ export const ActivitySummary: React.StatelessComponent<
     getEvents({}, { 'entity.type': 'linode', 'entity.id': props.linodeId })
       .then(response => {
         setEvents(response.data.slice(0, 5));
-        setLoading(false);
       })
       .catch(err => {
         setError(
