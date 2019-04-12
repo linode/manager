@@ -45,7 +45,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    [theme.breakpoints.down('sm')]: {
+      padding: theme.spacing.unit * 4
+    }
   },
   errorIcon: {
     width: 60,
