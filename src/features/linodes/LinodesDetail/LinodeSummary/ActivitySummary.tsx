@@ -29,56 +29,68 @@ interface Props {
   linodeId: number;
 }
 
+interface State {
+  loading: boolean;
+  error?: string;
+  events: Linode.Event[];
+}
+
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const ActivitySummary: React.StatelessComponent<
-  CombinedProps
-> = props => {
-  const [events, setEvents] = React.useState<Linode.Event[]>([]);
-  const [error, setError] = React.useState<string | undefined>(undefined);
-  const [loading, setLoading] = React.useState<boolean>(true);
+export class ActivitySummary extends React.Component<CombinedProps, State> {
+  state: State = {
+    loading: true,
+    error: undefined,
+    events: []
+  };
 
-  React.useEffect(() => {
-    getEvents({}, { 'entity.type': 'linode', 'entity.id': props.linodeId })
+  componentDidMount() {
+    getEvents({}, { 'entity.type': 'linode', 'entity.id': this.props.linodeId })
       .then(response => {
-        setEvents(response.data.slice(0, 5));
+        this.setState({
+          events: response.data.slice(0, 5),
+          loading: false
+        });
       })
       .catch(err => {
-        setError(
-          getErrorStringOrDefault(
+        this.setState({
+          error: getErrorStringOrDefault(
             err,
             "Couldn't retrieve events for this Linode."
-          )
-        );
+          ),
+          loading: false
+        });
       });
-    setLoading(false);
-  }, []);
-  const { classes, linodeId } = props;
-  return (
-    <>
-      <Grid
-        container
-        alignItems={'center'}
-        justify={'space-between'}
-        className={classes.header}
-      >
-        <Grid item>
-          <Typography variant="h2">Activity Feed</Typography>
+  }
+  render() {
+    const { classes, linodeId } = this.props;
+    const { events, error, loading } = this.state;
+    return (
+      <>
+        <Grid
+          container
+          alignItems={'center'}
+          justify={'space-between'}
+          className={classes.header}
+        >
+          <Grid item>
+            <Typography variant="h2">Activity Feed</Typography>
+          </Grid>
+          <Grid item>
+            <Link to={`/linodes/${linodeId}/activity`}>View More Activity</Link>
+          </Grid>
         </Grid>
-        <Grid item>
-          <Link to={`/linodes/${linodeId}/activity`}>View More Activity</Link>
-        </Grid>
-      </Grid>
-      <Paper className={classes.root}>
-        <ActivitySummaryContent
-          events={events}
-          error={error}
-          loading={loading}
-        />
-      </Paper>
-    </>
-  );
-};
+        <Paper className={classes.root}>
+          <ActivitySummaryContent
+            events={events}
+            error={error}
+            loading={loading}
+          />
+        </Paper>
+      </>
+    );
+  }
+}
 
 const styled = withStyles(styles);
 
