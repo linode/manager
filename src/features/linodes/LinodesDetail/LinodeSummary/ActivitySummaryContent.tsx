@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import CircleProgress from 'src/components/CircleProgress';
+import Grid from 'src/components/core/Grid';
 import {
   StyleRulesCallback,
   Theme,
@@ -38,14 +39,20 @@ export const ActivitySummaryContent: React.StatelessComponent<
   }
 
   if (loading) {
-    return <CircleProgress mini />;
+    return (
+      <Grid container alignContent="center" justify="center">
+        <CircleProgress mini />
+      </Grid>
+    );
   }
 
   if (events.length === 0) {
     return (
-      <Typography className={classes.emptyState} variant="body2">
-        No recent activity for this Linode.
-      </Typography>
+      <Grid container alignContent="center" justify="center">
+        <Typography className={classes.emptyState} variant="body2">
+          No recent activity for this Linode.
+        </Typography>
+      </Grid>
     );
   }
 
