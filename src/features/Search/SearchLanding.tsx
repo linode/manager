@@ -11,7 +11,6 @@ import {
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import Placeholder from 'src/components/Placeholder';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { ErrorObject } from 'src/store/selectors/entitiesErrors';
 import { getQueryParam } from 'src/utilities/queryParams';
@@ -19,12 +18,40 @@ import ResultGroup from './ResultGroup';
 import { emptyResults } from './utils';
 import withStoreSearch, { SearchProps } from './withStoreSearch';
 
-type ClassNames = 'root' | 'headline';
+import Error from 'src/assets/icons/error.svg';
+import './searchLanding.css';
+
+type ClassNames =
+  | 'root'
+  | 'headline'
+  | 'emptyResultWrapper'
+  | 'emptyResult'
+  | 'errorIcon';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   headline: {
     marginBottom: 10
+  },
+  emptyResultWrapper: {
+    padding: `${theme.spacing.unit * 10}px ${theme.spacing.unit * 4}px`,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  emptyResult: {
+    padding: `${theme.spacing.unit * 10}px ${theme.spacing.unit * 4}px`,
+    display: 'flex',
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center'
+  },
+  errorIcon: {
+    width: 60,
+    height: 60,
+    color: theme.palette.text.primary,
+    marginBottom: theme.spacing.unit * 4
   }
 });
 
@@ -65,6 +92,14 @@ const getErrorMessage = (errors: ErrorObject): string => {
   return `Could not retrieve search results for: ${joined}`;
 };
 
+const splitWord = (word: any) => {
+  word = word.split('');
+  for (let i = 0; i < word.length; i += 2) {
+    word[i] = <span key={i}>{word[i]}</span>;
+  }
+  return word;
+};
+
 export class SearchLanding extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
 
@@ -103,9 +138,11 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
     return (
       <Grid container direction="column">
         <Grid item>
-          <Typography variant="h1" className={classes.headline}>
-            Search Results {query && `for "${query}"`}
-          </Typography>
+          {!resultsEmpty && !entitiesLoading && (
+            <Typography variant="h1" className={classes.headline}>
+              Search Results {query && `for "${query}"`}
+            </Typography>
+          )}
         </Grid>
         {errors.hasErrors && (
           <Grid item>
@@ -118,11 +155,19 @@ export class SearchLanding extends React.Component<CombinedProps, State> {
           </Grid>
         )}
         {resultsEmpty && !entitiesLoading && (
-          <Grid item data-qa-empty-state>
-            <Placeholder
-              title="No results"
-              copy="Your search didn't return any results."
-            />
+          <Grid item data-qa-empty-state className={classes.emptyResultWrapper}>
+            <div className={classes.emptyResult}>
+              <Error className={classes.errorIcon} />
+              <Typography style={{ marginBottom: 16 }}>
+                You searched for ...
+              </Typography>
+              <Typography className="resultq">
+                {query && splitWord(query)}
+              </Typography>
+              <Typography style={{ marginTop: 56 }} className="nothing">
+                sorry, no results for this one
+              </Typography>
+            </div>
           </Grid>
         )}
         {!entitiesLoading && (
