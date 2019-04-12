@@ -41,12 +41,9 @@ export const ActivitySummary: React.StatelessComponent<
   const [loading, setLoading] = React.useState<boolean>(true);
 
   React.useEffect(() => {
-    getEvents(
-      { pageSize: 5 },
-      { 'entity.type': 'linode', 'entity.id': props.linodeId }
-    )
+    getEvents({}, { 'entity.type': 'linode', 'entity.id': props.linodeId })
       .then(response => {
-        setEvents(response.data);
+        setEvents(response.data.slice(0, 5));
         setLoading(false);
       })
       .catch(err => {

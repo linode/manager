@@ -45,7 +45,7 @@ export const ActivityRow: React.StatelessComponent<CombinedProps> = props => {
       alignItems={'center'}
     >
       <Grid item>
-        <Typography variant={'inherit'}>{event.action}</Typography>
+        <Typography variant={'inherit'}>{message}</Typography>
       </Grid>
       <Grid item>
         <DateTimeDisplay value={event.created} humanizeCutoff={'month'} />

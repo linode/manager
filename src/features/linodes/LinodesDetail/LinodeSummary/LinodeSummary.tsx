@@ -16,7 +16,10 @@ import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import Select from 'src/components/Select';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
-import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
+import {
+  displayType,
+  typeLabelDetails
+} from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
 import { ApplicationState } from 'src/store';
 import { setUpCharts } from 'src/utilities/charts';
@@ -651,8 +654,9 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       return null;
     }
 
-    const longLabel = typeLabelLong(
-      displayType(linode.type, typesData || []),
+    const label = displayType(linode.type, typesData || []);
+
+    const details = typeLabelDetails(
       linode.specs.memory,
       linode.specs.disk,
       linode.specs.vcpus
@@ -670,13 +674,17 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             <Grid
               container
               justify="space-between"
-              alignItems="center"
+              alignItems="flex-start"
               className={classes.headerWrapper}
+              direction="column"
             >
               <Grid item className="py0">
                 <Typography variant="h2" className={classes.graphTitle}>
-                  {longLabel}
+                  {label}
                 </Typography>
+              </Grid>
+              <Grid item>
+                <Typography variant="h3">{details}</Typography>
               </Grid>
             </Grid>
 
