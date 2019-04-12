@@ -701,7 +701,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               </Grid>
             </Grid>
 
-            <ActivitySummary />
+            <ActivitySummary linodeId={linode.id} />
 
             <StatsPanel
               title="CPU Usage"
