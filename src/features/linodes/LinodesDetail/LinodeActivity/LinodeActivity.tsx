@@ -7,7 +7,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EventsLanding from 'src/features/Events/EventsLanding';
-import { getEvents } from 'src/services/account';
+import { getEventsForEntity } from 'src/utilities/getEventsForEntity';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 
 type ClassNames = 'root' | 'title';
@@ -37,12 +37,10 @@ export const LinodeActivity: React.StatelessComponent<
       </Typography>
       <EventsLanding
         getEventsRequest={(params: any = {}) =>
-          getEvents(params, {
-            'entity.type': 'linode',
-            'entity.id': props.linodeID
-          })
+          getEventsForEntity(params, 'linode', props.linodeID)
         }
         isEventsLandingForEntity={true}
+        errorMessage="There was an error retrieving activity for this Linode."
         data-qa-events-landing-for-linode
       />
     </React.Fragment>

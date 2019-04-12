@@ -43,6 +43,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface Props {
   getEventsRequest?: typeof getEvents;
   isEventsLandingForEntity?: boolean;
+  errorMessage?: string; // Custom error message (for an entity's Activity page, for example)
 }
 
 type CombinedProps = Props &
@@ -134,7 +135,12 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
       });
   }, []);
 
-  const { classes, entitiesLoading, isEventsLandingForEntity } = props;
+  const {
+    classes,
+    entitiesLoading,
+    isEventsLandingForEntity,
+    errorMessage
+  } = props;
   const isLoading = loading || entitiesLoading;
 
   return (
@@ -164,8 +170,9 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
               isLoading,
               isRequesting,
               isEventsLandingForEntity,
-              events,
-              error
+              errorMessage,
+              error,
+              events
             )}
           </TableBody>
         </Table>
@@ -190,8 +197,9 @@ export const renderTableBody = (
   loading: boolean,
   isRequesting: boolean,
   isEventsLandingForEntity: boolean = false,
-  events?: Linode.Event[],
-  error?: string
+  errorMessage = 'There was an error retrieving the events on your account.',
+  error?: string,
+  events?: Linode.Event[]
 ) => {
   if (loading) {
     return <TableRowLoading colSpan={12} data-qa-events-table-loading />;
@@ -199,7 +207,7 @@ export const renderTableBody = (
     return (
       <TableRowError
         colSpan={12}
-        message="There was an error retrieving the events on your account."
+        message={errorMessage}
         data-qa-events-table-error
       />
     );
