@@ -1,0 +1,79 @@
+.animation {
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+
+.charcontainer {
+  display: block;
+  left: 0px;
+  position: absolute;
+  top: 0px;
+  border-radius: 14px;
+}
+
+.info {
+  left: 0;
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  transition: opacity 1s ease-in-out;
+}
+
+.keybutton {
+  background-color: #666666;
+  border-radius: 10px;
+  height: 92px;
+  position: absolute;
+  width: 92px;
+}
+
+.pip {
+  background: #000;
+  display: block;
+  left: 0px;
+  transition: opacity 0.3s ease-in-out;
+  position: absolute;
+  top: 0px;
+}
+
+#container {
+  cursor: pointer;
+  position: absolute;
+  margin: 0 auto;
+  left: 0;
+  right: 0;
+  border-radius: 16px;
+  z-index: 2;
+}
+
+#score {
+  cursor: pointer;
+  font-size: 20px;
+  overflow: hidden;
+  padding: 0px;
+  position: relative;
+  margin: 20px auto;
+  margin-top: 5px;
+  text-align: center;
+  font-family: $sans;
+}
+
+#info {
+  font-weight: 700;
+  text-align: center;
+  user-select: none;
+  vertical-align: middle;
+  font-family: $sans;
+  font-size: 60px;
+  color: $white;
+}
+
+#infobg {
+  background-color: $zeus;
+  border-radius: 14px;
+}
+
+canvas {
+  border-radius: 16px;
+}

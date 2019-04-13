@@ -1,23 +1,13 @@
 import * as React from 'react';
 
-import ErrorOutline from '@material-ui/icons/ErrorOutline';
-
-import Placeholder from 'src/components/Placeholder';
+import LinodePac from 'src/components/LinodePac';
 
 interface Props {
   className?: string;
 }
 
 const NotFound = (props: Props) => {
-  return (
-    <Placeholder
-      icon={ErrorOutline}
-      title="Not Found"
-      copy=""
-      animate={false}
-      className={props.className}
-    />
-  );
+  return <LinodePac />;
 };
 
 export default NotFound;
