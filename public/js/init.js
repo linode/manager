@@ -273,7 +273,7 @@ function onGameOver(complete) {
       "<h2>YOU WIN!</h1><p>Now what?</p><p><a class='btn'>Let's play again I guess</a></p>";
   } else {
     str =
-      "<h2>GAME OVER</h2><p>Let's configure these nodeBalancers?</p><p><a class='btn'>Play again???</a></p>";
+      "<h2>GAME OVER</h2><p>Let's configure those NodeBalancers?</p><p><a class='btn'>Play again???</a></p>";
   }
 
   showInfo(str);
