@@ -13,10 +13,10 @@ import TableBody from 'src/components/core/TableBody';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import ViewAllLink from 'src/components/ViewAllLink';
 import { events$ } from 'src/events';
 import { getVolumes } from 'src/services/volumes';
 import DashboardCard from '../DashboardCard';
-import ViewAllLink from '../ViewAllLink';
 import VolumeDashboardRow from './VolumeDashboardRow';
 
 type ClassNames = 'root';

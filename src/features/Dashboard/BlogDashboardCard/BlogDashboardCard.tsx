@@ -9,9 +9,9 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import ViewAllLink from 'src/components/ViewAllLink';
 import { parseString } from 'xml2js';
 import DashboardCard from '../DashboardCard';
-import ViewAllLink from '../ViewAllLink';
 
 const parseXMLStringPromise = (str: string) =>
   new Promise((resolve, reject) =>
