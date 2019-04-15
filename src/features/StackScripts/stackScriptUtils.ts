@@ -3,6 +3,8 @@ import { getStackScript, getStackScripts } from 'src/services/stackscripts';
 
 type StackScript = Linode.StackScript.Response;
 
+export type StackScriptCategory = 'account' | 'community';
+
 export const emptyResult: Linode.ResourcePage<StackScript> = {
   data: [],
   page: 1,
@@ -21,7 +23,7 @@ const oneClickFilter = [
       }
     ]
   },
-  { '+order_by': 'sequence' }
+  { '+order_by': 'ordinal' }
 ];
 
 export const getOneClickApps = (params?: any) =>
@@ -104,9 +106,9 @@ export const getMineAndAccountStackScripts = (
  */
 export const getCommunityStackscripts = (
   currentUser: string,
-  stackScriptGrants: Linode.Grant[],
   params?: any,
-  filter?: any
+  filter?: any,
+  stackScriptGrants?: Linode.Grant[]
 ) => {
   if (stackScriptGrants) {
     // User is restricted, so can't ask for a list of account users
@@ -189,7 +191,7 @@ export const getStackScriptUrl = (
       // My StackScripts
       // @todo: handle account stackscripts
       type = 'My%20Images';
-      subtype = 'My%20StackScripts';
+      subtype = 'Account%20StackScripts';
       break;
     default:
       // Community StackScripts
@@ -197,4 +199,28 @@ export const getStackScriptUrl = (
       subtype = 'Community%20StackScripts';
   }
   return `/linodes/create?type=${type}&subtype=${subtype}&stackScriptID=${id}`;
+};
+
+export const canUserModifyAccountStackScript = (
+  isRestrictedUser: boolean,
+  stackScriptGrants: Linode.Grant[],
+  stackScriptID: number
+) => {
+  // If the user isn't restricted, they can modify any StackScript on the account
+  if (!isRestrictedUser) {
+    return true;
+  }
+
+  // Look for permissions for this specific StackScript
+  const grantsForThisStackScript = stackScriptGrants.find(
+    (eachGrant: Linode.Grant) => eachGrant.id === Number(stackScriptID)
+  );
+
+  // If there are no permissions for this StackScript (permissions:"none")
+  if (!grantsForThisStackScript) {
+    return false;
+  }
+
+  // User must have "read_write" permissions to modify StackScript
+  return grantsForThisStackScript.permissions === 'read_write';
 };

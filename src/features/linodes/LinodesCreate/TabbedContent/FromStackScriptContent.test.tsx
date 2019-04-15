@@ -8,6 +8,7 @@ import {
 } from './FromStackScriptContent';
 
 const mockProps: CombinedProps = {
+  category: 'community',
   typeDisplayInfo: undefined,
   classes: {
     main: '',

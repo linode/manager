@@ -73,7 +73,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   used: {
     fontSize: '1.5rem',
-    fontFamily: 'LatoWebBold',
+    fontFamily: theme.font.bold,
     color: theme.color.green
   },
   quota: {
@@ -184,14 +184,14 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
               <Typography
                 className={classes.itemText + ' ' + classes.itemTextFirst}
               >
-                Free: <strong>{quota - used}</strong> GB
+                Total: <strong>{quota}</strong> GB
               </Typography>
               <Typography className={classes.itemText}>
                 Used: <strong>{used}</strong> GB
               </Typography>
               <Divider className={classes.divider} />
               <Typography className={classes.itemText}>
-                Total: <strong>{quota}</strong> GB
+                Free: <strong>{quota - used}</strong> GB
               </Typography>
             </Grid>
           </Grid>

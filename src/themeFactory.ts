@@ -44,6 +44,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     '@keyframes dash': any;
     bg: any;
     color: any;
+    font?: any;
     animateCircleIcon?: any;
     notificationList: any;
     status: any;
@@ -55,6 +56,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     '@keyframes dash'?: any;
     bg?: any;
     color?: any;
+    font?: any;
     animateCircleIcon?: any;
     notificationList?: any;
     status?: any;
@@ -78,6 +80,11 @@ const primaryColors = {
   divider: '#f4f4f4',
   offBlack: '#444',
   white: '#fff'
+};
+
+const primaryFonts = {
+  normal: '"LatoWeb", sans-serif',
+  bold: '"LatoWebBold", sans-serif'
 };
 
 const iconCircleAnimation = {
@@ -184,6 +191,10 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       label: '#555',
       disabledText: '#c9cacb'
     },
+    font: {
+      normal: primaryFonts.normal,
+      bold: spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold
+    },
     animateCircleIcon: {
       ...iconCircleAnimation
     },
@@ -212,13 +223,13 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
     },
     typography: {
       useNextVariants: true,
-      fontFamily: '"LatoWeb", sans-serif',
+      fontFamily: primaryFonts.normal,
       fontSize: 16,
       h1: {
         color: primaryColors.headline,
         fontSize: '1.25rem',
         lineHeight: '1.75rem',
-        fontFamily: 'LatoWebBold',
+        fontFamily: primaryFonts.bold,
         [breakpoints.up('lg')]: {
           fontSize: '1.5rem',
           lineHeight: '1.875rem'
@@ -227,13 +238,13 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       h2: {
         color: primaryColors.headline,
         fontSize: '1.125rem',
-        fontFamily: 'LatoWebBold',
+        fontFamily: spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold,
         lineHeight: '1.5rem'
       },
       h3: {
         color: primaryColors.headline,
         fontSize: '1rem',
-        fontFamily: 'LatoWebBold',
+        fontFamily: spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold,
         lineHeight: '1rem'
       },
       body1: {
@@ -283,7 +294,8 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
           borderRadius: 0,
           fontSize: '1rem',
           lineHeight: 1,
-          fontFamily: 'LatoWebBold',
+          fontFamily:
+            spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold,
           color: primaryColors.main,
           padding: `${spacingUnit * 2}px ${spacingUnit * 3 +
             spacingUnit / 2}px ${spacingUnit * 2}px`,
@@ -620,7 +632,8 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       MuiFormLabel: {
         root: {
           color: '#555',
-          fontFamily: 'LatoWebBold',
+          fontFamily:
+            spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold,
           fontSize: '.9rem',
           marginBottom: 2,
           '&$focused': {
@@ -778,10 +791,9 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
             backgroundColor: 'transparent',
             color: primaryColors.main
           },
-
           '&.selectHeader': {
             opacity: 1,
-            fontFamily: 'LatoWebBold',
+            fontFamily: primaryFonts.bold,
             fontSize: '1rem',
             color: primaryColors.text
           }
@@ -826,7 +838,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       MuiMenuItem: {
         root: {
           height: 'auto',
-          fontFamily: 'LatoWeb',
+          fontFamily: primaryFonts.normal,
           fontSize: '.9rem',
           whiteSpace: 'initial',
           textOverflow: 'initial',
@@ -1021,7 +1033,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
             minWidth: 75
           },
           '&$selected, &$selected:hover': {
-            fontFamily: 'LatoWebBold',
+            fontFamily: primaryFonts.bold,
             color: primaryColors.headline
           },
           '&:hover': {
@@ -1112,7 +1124,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
           '&:before': {
             borderLeftColor: 'white'
           },
-          '&:hover': {
+          '&:hover, &:focus': {
             '&$hover': {
               backgroundColor: '#fbfbfb',
               '&:before': {

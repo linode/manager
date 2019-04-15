@@ -3,9 +3,19 @@ import {
   withStyles,
   WithStyles
 } from '@material-ui/core/styles';
-import { compose, isEmpty, lensIndex, map, over, splitAt, unless } from 'ramda';
+import {
+  compose as ramdaCompose,
+  isEmpty,
+  lensIndex,
+  map,
+  over,
+  pathOr,
+  splitAt,
+  unless
+} from 'ramda';
 import * as React from 'react';
-
+import { connect } from 'react-redux';
+import { compose } from 'recompose';
 import ShowMore from 'src/components/ShowMore';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -13,8 +23,13 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import Tag from 'src/components/Tag';
-
+import {
+  hasGrant,
+  isRestrictedUser as _isRestrictedUser
+} from 'src/features/Profile/permissionsHelpers';
 import StackScriptActionMenu from 'src/features/StackScripts/StackScriptPanel/StackScriptActionMenu';
+import { canUserModifyAccountStackScript } from 'src/features/StackScripts/stackScriptUtils';
+import { MapState } from 'src/store/types';
 import LabelCell from '../LabelCell';
 
 type ClassNames = 'root';
@@ -34,9 +49,10 @@ interface Props {
   currentUser: string;
   triggerDelete: (stackScriptID: number, stackScriptLabel: string) => void;
   triggerMakePublic: (stackScriptID: number, stackScriptLabel: string) => void;
+  category: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames> & StateProps;
 
 export const StackScriptTableRows: React.StatelessComponent<
   CombinedProps
@@ -44,7 +60,11 @@ export const StackScriptTableRows: React.StatelessComponent<
   const {
     stackScript: { loading, error, stackScripts },
     triggerMakePublic,
-    triggerDelete
+    triggerDelete,
+    isRestrictedUser,
+    stackScriptGrants,
+    category,
+    userCannotAddLinodes
   } = props;
 
   if (loading) {
@@ -99,15 +119,13 @@ export const StackScriptTableRows: React.StatelessComponent<
                   triggerDelete={triggerDelete}
                   triggerMakePublic={triggerMakePublic}
                   isPublic={eachStackScript.is_public}
-                  canDelete={determineCanDelete(
-                    eachStackScript.username,
-                    props.currentUser,
-                    eachStackScript.is_public
+                  canModify={canUserModifyAccountStackScript(
+                    isRestrictedUser,
+                    stackScriptGrants,
+                    eachStackScript.id
                   )}
-                  canEdit={determineCanEdit(
-                    eachStackScript.username,
-                    props.currentUser
-                  )}
+                  canAddLinodes={!userCannotAddLinodes}
+                  category={category}
                 />
               </TableCell>
             </TableRow>
@@ -115,35 +133,6 @@ export const StackScriptTableRows: React.StatelessComponent<
         })}
     </React.Fragment>
   );
-};
-
-/*
- * We can only delete a stackscript if it's ours
- * and it's not publicly available
- */
-export const determineCanDelete = (
-  stackScriptUser: string,
-  currentUser: string,
-  stackScriptIsPublic: boolean
-) => {
-  if (stackScriptUser === currentUser && !stackScriptIsPublic) {
-    return true;
-  }
-  return false;
-};
-
-/*
- * We can only edit a stackscript if it's ours
- * it doesn't matter if it's public or not
- */
-export const determineCanEdit = (
-  stackScriptUser: string,
-  currentUser: string
-) => {
-  if (stackScriptUser === currentUser) {
-    return true;
-  }
-  return false;
 };
 
 const createTag: (images: string | null) => JSX.Element = v => {
@@ -166,7 +155,7 @@ const createShowMore: (images: string[]) => JSX.Element = images => (
   <ShowMore key={0} items={images} render={createTags} />
 );
 
-const displayTagsAndShowMore: (s: string[]) => JSX.Element[][] = compose<
+const displayTagsAndShowMore: (s: string[]) => JSX.Element[][] = ramdaCompose<
   string[],
   string[][],
   any,
@@ -187,4 +176,28 @@ export const stripImageName = (image: string) => {
 
 const styled = withStyles(styles);
 
-export default styled(StackScriptTableRows);
+interface StateProps {
+  isRestrictedUser: boolean;
+  stackScriptGrants: Linode.Grant[];
+  userCannotAddLinodes: boolean;
+}
+
+const mapStateToProps: MapState<StateProps, {}> = state => ({
+  isRestrictedUser: _isRestrictedUser(state),
+  stackScriptGrants: pathOr(
+    [],
+    ['__resources', 'profile', 'data', 'grants', 'stackscript'],
+    state
+  ),
+  userCannotAddLinodes:
+    _isRestrictedUser(state) && !hasGrant(state, 'add_linodes')
+});
+
+const connected = connect(mapStateToProps);
+
+const enhanced = compose<CombinedProps, Props>(
+  connected,
+  styled
+);
+
+export default enhanced(StackScriptTableRows);

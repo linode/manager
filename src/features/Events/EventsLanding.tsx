@@ -40,7 +40,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = StateProps &
+interface Props {
+  getEventsRequest?: typeof getEvents;
+  isEventsLandingForEntity?: boolean;
+  errorMessage?: string; // Custom error message (for an entity's Activity page, for example)
+}
+
+type CombinedProps = Props &
+  StateProps &
   InjectedNotistackProps &
   WithStyles<ClassNames>;
 
@@ -84,7 +91,10 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
       return;
     }
     setRequesting(true);
-    getEvents({ page: currentPage, pageSize: 50 })
+
+    const getEventsRequest = props.getEventsRequest || getEvents;
+
+    getEventsRequest({ page: currentPage, pageSize: 50 })
       .then(handleEventsRequestSuccess)
       .catch(() => {
         props.enqueueSnackbar('There was an error loading more events', {
@@ -113,7 +123,10 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
     setLoading(true);
     setRequesting(true);
     setError(undefined);
-    getEvents()
+
+    const getEventsRequest = props.getEventsRequest || getEvents;
+
+    getEventsRequest()
       .then(handleEventsRequestSuccess)
       .then(() => setInitialLoaded(true))
       .catch(() => {
@@ -122,22 +135,33 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
       });
   }, []);
 
-  const { classes, entitiesLoading } = props;
+  const {
+    classes,
+    entitiesLoading,
+    isEventsLandingForEntity,
+    errorMessage
+  } = props;
   const isLoading = loading || entitiesLoading;
 
   return (
     <>
-      <Typography variant="h1" className={classes.header}>
-        Events
-      </Typography>
+      {/* Only display this title on the main Events landing page */}
+      {!isEventsLandingForEntity && (
+        <Typography variant="h1" className={classes.header}>
+          Events
+        </Typography>
+      )}
       <Paper>
         <Table aria-label="List of Events">
           <TableHead>
             <TableRow>
-              <TableCell style={{ padding: 0, width: '1%' }} />
+              {/* Cell for icon (global EventsLanding only) */}
+              {!isEventsLandingForEntity && (
+                <TableCell style={{ padding: 0, width: '1%' }} />
+              )}
               <TableCell
                 data-qa-events-subject-header
-                style={{ minWidth: 200 }}
+                style={{ minWidth: 200, paddingLeft: 10 }}
               >
                 Event
               </TableCell>
@@ -145,7 +169,14 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {renderTableBody(isLoading, isRequesting, events, error)}
+            {renderTableBody(
+              isLoading,
+              isRequesting,
+              isEventsLandingForEntity,
+              errorMessage,
+              error,
+              events
+            )}
           </TableBody>
         </Table>
       </Paper>
@@ -168,8 +199,10 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
 export const renderTableBody = (
   loading: boolean,
   isRequesting: boolean,
-  events?: Linode.Event[],
-  error?: string
+  isEventsLandingForEntity: boolean = false,
+  errorMessage = 'There was an error retrieving the events on your account.',
+  error?: string,
+  events?: Linode.Event[]
 ) => {
   if (loading) {
     return <TableRowLoading colSpan={12} data-qa-events-table-loading />;
@@ -177,7 +210,7 @@ export const renderTableBody = (
     return (
       <TableRowError
         colSpan={12}
-        message="There was an error retrieving the events on your account."
+        message={errorMessage}
         data-qa-events-table-error
       />
     );
@@ -193,7 +226,11 @@ export const renderTableBody = (
     return (
       <>
         {events.map((thisEvent, idx) => (
-          <EventRow key={`event-list-item-${idx}`} event={thisEvent} />
+          <EventRow
+            key={`event-list-item-${idx}`}
+            event={thisEvent}
+            isEventsLandingForEntity={isEventsLandingForEntity}
+          />
         ))}
         {isRequesting && <TableRowLoading colSpan={12} transparent />}
       </>
@@ -213,7 +250,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, Props>(
   styled,
   connected,
   withSnackbar

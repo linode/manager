@@ -3,12 +3,7 @@ import * as React from 'react';
 
 import { stackScripts as mockStackScripts } from 'src/__data__/stackScripts';
 
-import {
-  determineCanDelete,
-  determineCanEdit,
-  StackScriptTableRows,
-  stripImageName
-} from './TableRows';
+import { StackScriptTableRows, stripImageName } from './TableRows';
 
 let component: ShallowWrapper<any, any>;
 
@@ -21,10 +16,14 @@ beforeAll(() => {
       currentUser="mmckenna"
       triggerDelete={jest.fn()}
       triggerMakePublic={jest.fn()}
+      isRestrictedUser={false}
+      stackScriptGrants={[]}
       stackScript={{
         loading: false,
         stackScripts: mockStackScripts
       }}
+      category="community"
+      userCannotAddLinodes={false}
     />
   );
 });
@@ -53,36 +52,6 @@ describe('StackScript Table Rows', () => {
     it('stripImageName() should return centos7 ', () => {
       const cleanedName = stripImageName('linode/centos7');
       expect(cleanedName).toBe('centos7');
-    });
-
-    it('determineCanEdit should return true if we own the stackscript', () => {
-      const canEdit = determineCanEdit('mmckenna', 'mmckenna');
-      expect(canEdit).toBeTruthy();
-    });
-
-    it('determineCanEdit should return false if we do not own the stackscript', () => {
-      const canEdit = determineCanEdit('mmckenna', 'anotherperson');
-      expect(canEdit).toBeFalsy();
-    });
-
-    it('determineCanDelete should return true if we own the stackscript and it is not public', () => {
-      const canDelete = determineCanDelete('mmckenna', 'mmckenna', false);
-      expect(canDelete).toBeTruthy();
-    });
-
-    it('determineCanDelete should return false if we do not own the stackscript and it is not public', () => {
-      const canDelete = determineCanDelete('mmckenna', 'whoever', false);
-      expect(canDelete).toBeFalsy();
-    });
-
-    it('determineCanDelete should return false if we own the stackscript and it is public', () => {
-      const canDelete = determineCanDelete('mmckenna', 'mmckenna', true);
-      expect(canDelete).toBeFalsy();
-    });
-
-    it('determineCanDelete should return false if we do not own the stackscript and it is public', () => {
-      const canDelete = determineCanDelete('mmckenna', 'whoever', true);
-      expect(canDelete).toBeFalsy();
     });
   });
 });

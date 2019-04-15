@@ -44,6 +44,7 @@ type ClassNames =
   | 'leftLegend'
   | 'bottomLegend'
   | 'graphTitle'
+  | 'graphSelectTitle'
   | 'graphControls'
   | 'totalTraffic';
 
@@ -76,8 +77,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
     },
     leftLegend: {
       position: 'absolute',
-      left: -8,
-      bottom: '50%',
+      left: -18,
+      bottom: 48,
       transform: 'rotate(-90deg)',
       color: '#777',
       fontSize: 14
@@ -99,6 +100,12 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
     },
     graphTitle: {
       marginRight: theme.spacing.unit * 2
+    },
+    graphSelectTitle: {
+      marginRight: theme.spacing.unit,
+      position: 'relative',
+      color: theme.color.headline,
+      top: -1
     },
     graphControls: {
       display: 'flex',
@@ -567,7 +574,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div className={classes.chart}>
-          <div className={classes.leftLegend} style={{ left: -18, bottom: 48 }}>
+          <div className={classes.leftLegend} style={{ left: -24 }}>
             blocks/sec
           </div>
           <LineGraph
@@ -670,7 +677,10 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               </Grid>
               <Grid item className="py0">
                 <div className={classes.graphControls}>
-                  <Typography variant="h3" className={classes.graphTitle}>
+                  <Typography
+                    variant="body1"
+                    className={classes.graphSelectTitle}
+                  >
                     Graphs
                   </Typography>
                   <FormControl style={{ marginTop: 0 }}>

@@ -46,11 +46,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     '&.animate': {
       animation: 'scaleIn .5s ease-in-out'
     },
-    width: '150px',
-    height: '150px',
+    width: '120px',
+    height: '120px',
     [theme.breakpoints.up('md')]: {
-      width: '225px',
-      height: '225px'
+      width: '150px',
+      height: '150px'
     },
     '& .outerCircle': {
       fill: theme.color.absWhite,
@@ -66,14 +66,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   title: {
-    textAlign: 'center',
-    fontFamily: 'LatoWebBold',
-    fontSize: '2.188rem',
-    lineHeight: '3.75rem',
-    [theme.breakpoints.up('md')]: {
-      fontSize: '2.5rem',
-      lineHeight: '4rem'
-    }
+    textAlign: 'center'
   },
   button: {
     marginBottom: theme.spacing.unit * 4
@@ -106,7 +99,11 @@ const Placeholder: React.StatelessComponent<CombinedProps> = props => {
         {Icon && <Icon className={`${classes.icon} ${animate && 'animate'}`} />}
       </Grid>
       <Grid item xs={12}>
-        <Typography className={classes.title} data-qa-placeholder-title>
+        <Typography
+          className={classes.title}
+          data-qa-placeholder-title
+          variant="h1"
+        >
           {title}
         </Typography>
       </Grid>

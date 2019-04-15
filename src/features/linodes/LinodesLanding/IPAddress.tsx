@@ -15,6 +15,7 @@ type CSSClasses =
   | 'right'
   | 'icon'
   | 'row'
+  | 'multipleAddresses'
   | 'ip'
   | 'ipLink'
   | 'hide';
@@ -50,6 +51,11 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     alignItems: 'flex-start',
     width: '100%'
   },
+  multipleAddresses: {
+    '&:not(:last-child)': {
+      marginBottom: theme.spacing.unit
+    }
+  },
   left: {
     marginLeft: theme.spacing.unit
   },
@@ -61,7 +67,6 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   },
   icon: {
     '& svg': {
-      top: 1,
       width: 12,
       height: 12
     }
@@ -72,13 +77,17 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   },
   ipLink: {
     color: theme.palette.primary.main,
+    top: -1,
     position: 'relative',
     display: 'inline-block',
-    width: 28,
     transition: theme.transitions.create(['color'])
   },
   hide: {
-    opacity: 0, // Hide until the component is hovered, when props.showCopyOnHover is true
+    [theme.breakpoints.up('md')]: {
+      // Hide until the component is hovered,
+      // when props.showCopyOnHover is true (only on desktop)
+      opacity: 0
+    },
     transition: theme.transitions.create(['opacity']),
     '&:focus': {
       opacity: 1
@@ -91,6 +100,7 @@ interface Props {
   copyRight?: boolean;
   showCopyOnHover?: boolean;
   showMore?: boolean;
+  showAll?: boolean;
 }
 
 const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
@@ -134,9 +144,12 @@ export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
   };
 
   renderIP = (ip: string, copyRight?: Boolean, key?: number) => {
-    const { classes } = this.props;
+    const { classes, showAll } = this.props;
     return (
-      <div key={key} className={classes.row}>
+      <div
+        key={key}
+        className={`${classes.row} ${showAll && classes.multipleAddresses}`}
+      >
         <div className={`${classes.ip} ${'ip xScroll'}`} data-qa-ip-main>
           {ip}
         </div>
@@ -146,16 +159,21 @@ export class IPAddress extends React.Component<Props & WithStyles<CSSClasses>> {
   };
 
   render() {
-    const { classes, ips, copyRight, showMore } = this.props;
+    const { classes, ips, copyRight, showMore, showAll } = this.props;
 
     const formattedIPS = ips
       .map(ip => ip.replace('/64', ''))
       .sort(sortIPAddress);
 
     return (
-      <div className={`dif ${classes.root}`}>
-        {this.renderIP(formattedIPS[0], copyRight)}
-        {formattedIPS.length > 1 && showMore && (
+      <div className={`${!showAll && 'dif'} ${classes.root}`}>
+        {!showAll
+          ? this.renderIP(formattedIPS[0], copyRight)
+          : formattedIPS.map((a, i) => {
+              return this.renderIP(a, copyRight, i);
+            })}
+
+        {formattedIPS.length > 1 && showMore && !showAll && (
           <ShowMore
             items={tail(formattedIPS)}
             render={(ipsAsArray: string[]) => {

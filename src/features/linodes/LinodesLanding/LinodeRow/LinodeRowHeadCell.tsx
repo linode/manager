@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import {
   StyleRulesCallback,
@@ -28,7 +27,6 @@ type ClassNames =
   | 'labelRow'
   | 'labelStatusWrapper'
   | 'dashboard'
-  | 'labelGridWrapper'
   | 'wrapHeader';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
@@ -40,6 +38,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     paddingTop: theme.spacing.unit / 4
   },
   root: {
+    width: '40%',
     '& h3': {
       transition: theme.transitions.create(['color'])
     },
@@ -71,9 +70,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center'
-  },
-  labelGridWrapper: {
-    padding: `${theme.spacing.unit}px ${theme.spacing.unit / 2}px !important`
   },
   wrapHeader: {
     wordBreak: 'break-all'
@@ -113,7 +109,6 @@ type CombinedProps = Props &
 const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
   const {
     // linode props
-    id,
     label,
     status,
     memory,
@@ -142,41 +137,40 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
 
   return (
     <TableCell className={classes.root} style={style} rowSpan={loading ? 2 : 1}>
-      <Link to={`/linodes/${id}`} className={classes.link}>
-        <Grid container wrap="nowrap" alignItems="center">
-          <Grid item className="py0">
-            <EntityIcon
-              variant="linode"
-              status={status}
-              loading={linodeInTransition(status, recentEvent)}
-              marginTop={1}
-            />
-          </Grid>
-          <Grid item className={classes.labelGridWrapper}>
-            <div className={loading ? classes.labelWrapper : ''}>
-              {recentEvent && linodeInTransition(status, recentEvent) && (
-                <ProgressDisplay
-                  className={classes.loadingStatus}
-                  text={transitionText(status, recentEvent)}
-                  progress={recentEvent.percent_complete}
-                />
-              )}
-              <div className={classes.labelStatusWrapper}>
-                <Typography
-                  variant="h3"
-                  className={classes.wrapHeader}
-                  data-qa-label
-                >
-                  {label}
-                </Typography>
-              </div>
-              <Typography className={classes.linodeDescription}>
-                {description}
+      <Grid container wrap="nowrap" alignItems="center">
+        <Grid item className="py0">
+          <EntityIcon
+            variant="linode"
+            status={status}
+            loading={linodeInTransition(status, recentEvent)}
+            marginTop={1}
+          />
+        </Grid>
+        <Grid item>
+          <div className={loading ? classes.labelWrapper : ''}>
+            {recentEvent && linodeInTransition(status, recentEvent) && (
+              <ProgressDisplay
+                className={classes.loadingStatus}
+                text={transitionText(status, recentEvent)}
+                progress={recentEvent.percent_complete}
+              />
+            )}
+            <div className={classes.labelStatusWrapper}>
+              <Typography
+                variant="h3"
+                className={classes.wrapHeader}
+                data-qa-label
+              >
+                {label}
               </Typography>
             </div>
-          </Grid>
+            <Typography className={classes.linodeDescription}>
+              {description}
+            </Typography>
+          </div>
         </Grid>
-      </Link>
+      </Grid>
+      {/* </Link> */}
     </TableCell>
   );
 };

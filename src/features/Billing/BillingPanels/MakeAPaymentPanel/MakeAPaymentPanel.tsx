@@ -20,6 +20,7 @@
  *
  */
 
+import { captureException, configureScope } from '@sentry/browser';
 import * as classNames from 'classnames';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -384,6 +385,21 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
         return response.checkout_token;
       })
       .catch(errorResponse => {
+        /** For sentry purposes only */
+        const cleanedError = getAPIErrorOrDefault(
+          errorResponse,
+          'Something went wrong with the call to Linode /v4/account/paypal. See tags for USD info'
+        )[0].reason;
+
+        /**
+         * Send the error off to sentry with the USD amount in the tags
+         */
+        configureScope(scope => {
+          scope.setExtra('Raw USD', usd);
+          scope.setExtra('USD converted to number', (+usd).toFixed(2));
+        });
+        captureException(cleanedError);
+
         this.setState({
           isStagingPaypalPayment: false,
           paypalPaymentFailed: true

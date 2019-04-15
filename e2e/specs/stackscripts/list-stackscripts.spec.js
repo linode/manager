@@ -11,7 +11,7 @@ describe('StackScripts - List Suite', () => {
         ListStackScripts.baseElementsDisplay();
     });
 
-    it('should display my stackscripts preselected', () => {
+    it('should display account stackscripts preselected', () => {
         expect(ListStackScripts.accountStackScriptTab.getAttribute('aria-selected')).toBe('true');
     });
 

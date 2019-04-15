@@ -11,7 +11,7 @@ class MongoCredStore extends CredStore {
 
     constructor(dbHost, shouldCleanupUsingAPI, browser) {
         super(shouldCleanupUsingAPI, browser);
-        console.log("connecting to mongodb host: " + dbHost);
+        //console.log("connecting to mongodb host: " + dbHost);
 
         // Connection URL
         this.dbUrl = 'mongodb://' + dbHost + ':27017';
@@ -19,7 +19,7 @@ class MongoCredStore extends CredStore {
         // Database Name
         this.dbName = 'test-credentials';
         this.collectionName = 'users';
-        console.log(this);
+        //console.log(this);
     }
 
     // return MongoClient for use in chained promises

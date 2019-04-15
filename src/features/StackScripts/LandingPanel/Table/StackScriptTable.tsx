@@ -42,7 +42,8 @@ const StackScriptTable = (props: CombinedProps) => {
     orderBy,
     currentUser,
     triggerDelete,
-    triggerMakePublic
+    triggerMakePublic,
+    type
   } = props;
 
   return (
@@ -63,6 +64,7 @@ const StackScriptTable = (props: CombinedProps) => {
               error,
               stackScripts
             }}
+            category={type}
           />
         </TableBody>
       </Table>

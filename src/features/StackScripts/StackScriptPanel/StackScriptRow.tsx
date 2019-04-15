@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
-
 import { withStyles, WithStyles } from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TableRow from 'src/components/TableRow';
 import StackScriptsActionMenu from 'src/features/StackScripts/StackScriptPanel/StackScriptActionMenu';
+import { StackScriptCategory } from 'src/features/StackScripts/stackScriptUtils';
 import {
   ClassNames,
   displayTagsAndShowMore,
@@ -24,9 +24,14 @@ export interface Props {
   stackScriptUsername: string;
   triggerDelete: (id: number, label: string) => void;
   triggerMakePublic: (id: number, label: string) => void;
-  canDelete: boolean;
-  canEdit: boolean;
+  canModify: boolean;
+  canAddLinodes: boolean;
   isPublic: boolean;
+  // @todo: when we implement StackScripts pagination, we should remove "| string" in the type below.
+  // Leaving this in as an escape hatch now, since there's a bunch of code in
+  // /LandingPanel that uses different values for categories that we shouldn't
+  // change until we're actually using it.
+  category: StackScriptCategory | string;
 }
 
 export type CombinedProps = Props & WithStyles<ClassNames> & RenderGuardProps;
@@ -44,9 +49,10 @@ export class StackScriptRow extends React.Component<CombinedProps, {}> {
       stackScriptUsername,
       triggerDelete,
       triggerMakePublic,
-      canDelete,
-      canEdit,
-      isPublic
+      canModify,
+      isPublic,
+      category,
+      canAddLinodes
     } = this.props;
 
     const renderLabel = () => {
@@ -103,9 +109,10 @@ export class StackScriptRow extends React.Component<CombinedProps, {}> {
               stackScriptLabel={label}
               triggerDelete={triggerDelete}
               triggerMakePublic={triggerMakePublic}
-              canDelete={canDelete}
-              canEdit={canEdit}
+              canModify={canModify}
+              canAddLinodes={canAddLinodes}
               isPublic={isPublic}
+              category={category}
             />
           </TableCell>
         </TableRow>

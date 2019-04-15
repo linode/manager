@@ -73,7 +73,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   userName: {
     whiteSpace: 'nowrap',
-    fontFamily: 'LatoWebBold',
+    fontFamily: 'LatoWebBold', // we keep this bold at all times
     color: theme.color.headline
   },
   paper: {
