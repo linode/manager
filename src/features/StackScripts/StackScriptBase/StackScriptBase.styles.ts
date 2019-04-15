@@ -9,7 +9,8 @@ type ClassNames =
   | 'emptyState'
   | 'table'
   | 'searchWrapper'
-  | 'searchBar';
+  | 'searchBar'
+  | 'stackscriptPlaceholder';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
@@ -18,11 +19,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   emptyState: {
     textAlign: 'center',
-    padding: '5em 2em',
-    color: theme.palette.text.primary,
-    [theme.breakpoints.up('sm')]: {
-      padding: '10em'
-    }
+    color: theme.palette.text.primary
   },
   searchWrapper: {
     position: 'sticky',
@@ -35,6 +32,12 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   searchBar: {
     marginTop: 0,
     backgroundColor: theme.color.white
+  },
+  // Styles to override base placeholder styles for StackScript null state
+  stackscriptPlaceholder: {
+    padding: `${theme.spacing.unit}px 0`,
+    margin: 0,
+    width: '100%'
   }
 });
 
