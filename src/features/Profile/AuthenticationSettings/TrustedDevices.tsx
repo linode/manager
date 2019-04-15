@@ -27,7 +27,13 @@ import ToggleState from 'src/components/ToggleState';
 import Dialog from './TrustedDevicesDialog';
 import TrustedDevicesTable from './TrustedDevicesTable';
 
-type ClassNames = 'root' | 'title';
+type ClassNames =
+  | 'root'
+  | 'title'
+  | 'deviceCell'
+  | 'ipCell'
+  | 'usedCell'
+  | 'expireCell';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
@@ -37,6 +43,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   title: {
     marginBottom: theme.spacing.unit * 2
+  },
+  deviceCell: {},
+  ipCell: {},
+  usedCell: {
+    minWidth: 120
+  },
+  expireCell: {
+    minWidth: 100
   }
 });
 
@@ -74,10 +88,10 @@ class TrustedDevices extends React.PureComponent<CombinedProps, {}> {
             <Table>
               <TableHead>
                 <TableRow>
-                  <TableCell>Device</TableCell>
-                  <TableCell>Last IP</TableCell>
-                  <TableCell>Last Used</TableCell>
-                  <TableCell>Expires</TableCell>
+                  <TableCell className={classes.deviceCell}>Device</TableCell>
+                  <TableCell className={classes.ipCell}>Last IP</TableCell>
+                  <TableCell className={classes.usedCell}>Last Used</TableCell>
+                  <TableCell className={classes.expireCell}>Expires</TableCell>
                   <TableCell />
                 </TableRow>
               </TableHead>
