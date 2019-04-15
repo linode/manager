@@ -17,15 +17,14 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import ViewAllLink from 'src/components/ViewAllLink';
 import { ApplicationState } from 'src/store';
 import { openForEditing } from 'src/store/domainDrawer';
-
 import {
   isEntityEvent,
   isInProgressEvent
 } from 'src/store/events/event.helpers';
 import DashboardCard from '../DashboardCard';
-import ViewAllLink from '../ViewAllLink';
 
 type ClassNames =
   | 'root'

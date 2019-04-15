@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
@@ -9,12 +8,12 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import ViewAllLink from 'src/components/ViewAllLink';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { getEventsForEntity } from 'src/utilities/getEventsForEntity';
-
 import ActivitySummaryContent from './ActivitySummaryContent';
 
-type ClassNames = 'root' | 'header';
+type ClassNames = 'root' | 'header' | 'viewMore';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
@@ -22,6 +21,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   header: {
     marginBottom: theme.spacing.unit * 2
+  },
+  viewMore: {
+    position: 'relative',
+    top: 2
   }
 });
 
@@ -67,17 +70,18 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
     const { events, error, loading } = this.state;
     return (
       <>
-        <Grid
-          container
-          alignItems={'center'}
-          justify={'space-between'}
-          className={classes.header}
-        >
+        <Grid container alignItems={'center'} className={classes.header}>
           <Grid item>
             <Typography variant="h2">Activity Feed</Typography>
           </Grid>
           <Grid item>
-            <Link to={`/linodes/${linodeId}/activity`}>View More Activity</Link>
+            <Typography>
+              <ViewAllLink
+                text="View More Activity"
+                link={`/linodes/${linodeId}/activity`}
+                className={classes.viewMore}
+              />
+            </Typography>
           </Grid>
         </Grid>
         <Paper className={classes.root}>

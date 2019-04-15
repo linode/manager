@@ -15,7 +15,8 @@ const props = {
   linodeId: 123456,
   classes: {
     root: '',
-    header: ''
+    header: '',
+    viewMore: ''
   }
 };
 const component = shallow(<ActivitySummary {...props} />);

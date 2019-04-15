@@ -18,11 +18,11 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import ViewAllLink from 'src/components/ViewAllLink';
 import { events$ } from 'src/events';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
 import { getNodeBalancers } from 'src/services/nodebalancers';
 import DashboardCard from '../DashboardCard';
-import ViewAllLink from '../ViewAllLink';
 
 type ClassNames =
   | 'root'

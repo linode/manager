@@ -14,6 +14,7 @@ interface Props {
   link: string;
   count?: number;
   external?: boolean;
+  className?: any;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -36,7 +37,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 const ViewAllLink: React.StatelessComponent<CombinedProps> = props => {
-  const { classes, count, text, link, external } = props;
+  const { classes, count, text, link, external, className } = props;
   return (
     <>
       {count && (
@@ -51,10 +52,13 @@ const ViewAllLink: React.StatelessComponent<CombinedProps> = props => {
       {!external ? (
         <Link
           to={link}
-          className={classNames({
-            [classes.link]: true,
-            [classes.noCount]: !count
-          })}
+          className={classNames(
+            {
+              [classes.link]: true,
+              [classes.noCount]: !count
+            },
+            className
+          )}
           data-qa-view-all-link
         >
           {text}
