@@ -312,9 +312,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         sendEvent({
           category: 'NodeBalancer',
           action: 'Create NodeBalancer',
-          data: {
-            region: nodeBalancerRequestData.region
-          }
+          label: `${nodeBalancer.label}: ${nodeBalancer.region}`
         });
       })
       .catch(errorResponse => {

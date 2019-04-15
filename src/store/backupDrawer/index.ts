@@ -224,7 +224,8 @@ export const gatherResponsesAndErrors = (
       // GA Event
       sendEvent({
         category: 'Backups',
-        action: 'Enable Backups'
+        action: 'Enable Backups',
+        label: 'Enabling backups for all Linodes'
       });
       return response;
     })

@@ -108,10 +108,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
             sendEvent({
               category: 'Create Volume',
               action: 'Create Volume',
-              data: {
-                label,
-                size
-              }
+              label: `${label}: ${size}GiB`
             });
           })
           .catch(errorResponse => {

@@ -5,7 +5,6 @@ interface AnalyticsEvent {
   action: string;
   label?: string;
   value?: number;
-  data?: any;
 }
 
 /*

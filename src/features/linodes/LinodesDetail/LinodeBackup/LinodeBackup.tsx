@@ -281,7 +281,8 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         // GA Event
         sendEvent({
           category: 'Backups',
-          action: 'Enable Backups'
+          action: 'Enable Backups',
+          label: 'From Backups tab'
         });
       })
       .catch(errorResponse => {
@@ -309,7 +310,8 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         // GA Event
         sendEvent({
           category: 'Backups',
-          action: 'Disable Backups'
+          action: 'Disable Backups',
+          label: 'From Backups tab'
         });
       })
       .catch(errorResponse => {
