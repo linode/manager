@@ -1,7 +1,8 @@
 import * as moment from 'moment';
-import { compose, map, pathOr } from 'ramda';
+import { map, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'recompose';
 import FormControl from 'src/components/core/FormControl';
 import InputLabel from 'src/components/core/InputLabel';
 import MenuItem from 'src/components/core/MenuItem';
@@ -16,10 +17,7 @@ import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import Select from 'src/components/Select';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
-import {
-  displayType,
-  typeLabelDetails
-} from 'src/features/linodes/presentation';
+import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
 import { ApplicationState } from 'src/store';
 import { setUpCharts } from 'src/utilities/charts';
@@ -654,9 +652,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       return null;
     }
 
-    const label = displayType(linode.type, typesData || []);
-
-    const details = typeLabelDetails(
+    const longLabel = typeLabelLong(
+      displayType(linode.type, typesData || []),
       linode.specs.memory,
       linode.specs.disk,
       linode.specs.vcpus
@@ -680,11 +677,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             >
               <Grid item className="py0">
                 <Typography variant="h2" className={classes.graphTitle}>
-                  {label}
+                  {longLabel}
                 </Typography>
-              </Grid>
-              <Grid item>
-                <Typography variant="h3">{details}</Typography>
               </Grid>
             </Grid>
 
@@ -756,7 +750,7 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
   typesData: state.__resources.types.entities
 }));
 
-const enhanced = compose(
+const enhanced = compose<CombinedProps, {}>(
   styled,
   withTypes,
   linodeContext
