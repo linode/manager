@@ -27,7 +27,7 @@ describe('Create - Volume Suite', () => {
         }
     });
 
-    it('should setup the screnario', () => {
+    it('should setup the scenario', () => {
         browser.url(constants.routes.linodes);
         apiCreateLinode();
         ListLinodes.linodesDisplay();
