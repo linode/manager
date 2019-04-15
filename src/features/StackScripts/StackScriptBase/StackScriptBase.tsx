@@ -433,16 +433,16 @@ const withStackScriptBase = (isSelecting: boolean) => (
                 <Placeholder
                   icon={StackScriptsIcon}
                   title="StackScripts"
-                  copy="You do not have any StackScripts to select from."
+                  copy="You don't have any StackScripts to select from."
                   className={classes.stackscriptPlaceholder}
                 />
               ) : (
                 <Placeholder
                   icon={StackScriptsIcon}
                   title="StackScripts"
-                  copy="You do not have any StackScripts to select from."
+                  copy="You don't have any StackScripts to select from."
                   buttonProps={{
-                    onClick: () => window.open('/stackscripts/create'),
+                    href: '/stackscripts/create',
                     children: 'Create a StackScript'
                   }}
                   className={classes.stackscriptPlaceholder}
