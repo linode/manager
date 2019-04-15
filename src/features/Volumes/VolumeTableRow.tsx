@@ -223,7 +223,13 @@ export const VolumeTableRow: React.StatelessComponent<
           onEdit={openForEdit}
           onResize={openForResize}
           onClone={openForClone}
-          attached={Boolean(volume.linode_id)}
+          /**
+           * This is a safer check than volume.linode_id (see logic in addAttachedLinodeInfoToVolume() from VolumesLanding)
+           * as it actually checks to see if the Linode exists before adding linodeLabel and linodeStatus.
+           * This avoids a bug (M3-2534) where a Volume attached to a just-deleted Linode
+           * could sometimes get tagged as "attached" here.
+           */
+          attached={Boolean(volume.linodeLabel)}
           onAttach={handleAttach}
           onDetach={handleDetach}
           poweredOff={volume.linodeStatus === 'offline'}
