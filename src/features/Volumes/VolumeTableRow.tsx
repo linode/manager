@@ -15,6 +15,7 @@ import TableCell from 'src/components/TableCell';
 import TagsCell from 'src/components/TagsCell';
 import { formatRegion } from 'src/utilities';
 import VolumesActionMenu from './VolumesActionMenu';
+import { ExtendedVolume } from './VolumesLanding';
 
 type ClassNames =
   | 'root'
@@ -74,7 +75,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 interface Props {
-  volume: any;
+  volume: ExtendedVolume;
   isUpdating: boolean;
   isVolumesLanding: boolean;
   openForEdit: (
@@ -214,7 +215,7 @@ export const VolumeTableRow: React.StatelessComponent<
         <VolumesActionMenu
           onShowConfig={openForConfig}
           filesystemPath={filesystemPath}
-          linodeLabel={volume.linodeLabel}
+          linodeLabel={volume.linodeLabel || ''}
           regionID={regionID}
           volumeId={volume.id}
           volumeTags={volume.tags}
