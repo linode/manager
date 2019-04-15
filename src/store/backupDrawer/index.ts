@@ -5,6 +5,7 @@ import { updateAccountSettings } from 'src/services/account';
 import { enableBackups } from 'src/services/linodes';
 import { handleUpdate } from 'src/store/accountSettings/accountSettings.actions';
 import { updateMultipleLinodes } from 'src/store/linodes/linodes.actions';
+import { sendEvent } from 'src/utilities/analytics';
 import { ThunkActionCreator } from '../types';
 
 export interface BackupError {
@@ -219,6 +220,14 @@ export const gatherResponsesAndErrors = (
   linode: Linode.Linode
 ) => {
   return enableBackups(linode.id)
+    .then(response => {
+      // GA Event
+      sendEvent({
+        category: 'Backups',
+        action: 'Enable Backups'
+      });
+      return response;
+    })
     .then(() => ({
       ...accumulator,
       // This is accurate, since a 200 from the API means that backups were enabled.

@@ -50,6 +50,7 @@ import {
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
 import { MapState } from 'src/store/types';
+import { sendEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -277,6 +278,11 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           variant: 'info'
         });
         resetEventsPolling();
+        // GA Event
+        sendEvent({
+          category: 'Backups',
+          action: 'Enable Backups'
+        });
       })
       .catch(errorResponse => {
         getAPIErrorOrDefault(errorResponse).forEach(
@@ -300,6 +306,11 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         // and enabling is still true:
         this.setState({ enabling: false });
         resetEventsPolling();
+        // GA Event
+        sendEvent({
+          category: 'Backups',
+          action: 'Disable Backups'
+        });
       })
       .catch(errorResponse => {
         getAPIErrorOrDefault(

@@ -695,6 +695,11 @@ const handleAnalytics = (
   sendEvent({
     category: 'Create Linode',
     action: eventAction,
-    label: eventLabel
+    label: eventLabel,
+    data: {
+      plan: payload.type,
+      region: payload.region,
+      backups_enabled: payload.backups_enabled
+    }
   });
 };
