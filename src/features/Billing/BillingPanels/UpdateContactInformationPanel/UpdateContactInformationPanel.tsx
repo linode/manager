@@ -19,7 +19,7 @@ import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import * as countryRegionItems from './countryRegionData.json';
+import countryRegionItems from './countryRegionData';
 
 type ClassNames = 'root' | 'mainFormContainer' | 'stateZip';
 
@@ -38,7 +38,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface State {
   submitting: boolean;
   submissionErrors?: Linode.ApiFieldError[];
-  countryRegionItems?: any;
   success?: string;
   fields: {
     address_1?: string;
@@ -83,8 +82,7 @@ class UpdateContactInformationPanel extends React.Component<
 > {
   state: State = {
     submitting: false,
-    fields: {},
-    countryRegionItems
+    fields: {}
   };
 
   composeState = composeState;
@@ -120,12 +118,7 @@ class UpdateContactInformationPanel extends React.Component<
 
   renderForm = (account: Linode.Account) => {
     const { classes } = this.props;
-    const {
-      fields,
-      submissionErrors,
-      success,
-      countryRegionItems
-    } = this.state;
+    const { fields, submissionErrors, success } = this.state;
 
     const hasErrorFor = getAPIErrorFor(
       {
@@ -147,18 +140,17 @@ class UpdateContactInformationPanel extends React.Component<
 
     const generalError = hasErrorFor('none');
 
-    const countryResults = countryRegionItems.default.map((country: any) => {
+    const countryResults = countryRegionItems.map((country: any) => {
       return {
         value: country.countryShortCode,
         label: country.countryName
       };
     });
 
-    const currentCountryResult = countryRegionItems.default.filter(
-      (country: any) =>
-        fields.country
-          ? country.countryShortCode === fields.country
-          : country.countryShortCode === account.country
+    const currentCountryResult = countryRegionItems.filter((country: any) =>
+      fields.country
+        ? country.countryShortCode === fields.country
+        : country.countryShortCode === account.country
     );
 
     const regionResults = currentCountryResult[0].regions.map((region: any) => {
@@ -333,7 +325,6 @@ class UpdateContactInformationPanel extends React.Component<
                 data-qa-contact-province
                 placeholder="Select a State"
                 options={regionResults}
-                defaultInputValue={account.state}
                 isClearable={false}
               />
             </Grid>
@@ -362,7 +353,6 @@ class UpdateContactInformationPanel extends React.Component<
             data-qa-contact-country
             placeholder="Select a Country"
             options={countryResults}
-            defaultInputValue={account.country}
             isClearable={false}
           />
         </Grid>
