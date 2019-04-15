@@ -18,6 +18,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
+import TextField from 'src/components/TextField';
 import bucketRequestsContainer, {
   BucketsRequests
 } from 'src/containers/bucketRequests.container';
@@ -55,6 +56,7 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
   ] = React.useState<BucketToRemove | null>(null);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>('');
+  const [confirmBucketName, setConfirmBucketName] = React.useState<string>('');
 
   const handleClickRemove = (cluster: string, label: string) => {
     setBucketToRemove({ cluster, label });
@@ -102,6 +104,9 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
         onClick={removeBucket}
         data-qa-submit-rebuild
         loading={isLoading}
+        disabled={
+          bucketToRemove ? confirmBucketName !== bucketToRemove.label : true
+        }
       >
         Delete
       </Button>
@@ -192,9 +197,15 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
             error={error}
           >
             <Typography>
-              Are you sure you want to remove this bucket? This will result in
-              permanent data loss.
+              Are you sure you want to remove this bucket? This action{' '}
+              <strong>cannot</strong> be undone, and will result in permanent
+              data loss.
             </Typography>
+            <TextField
+              label="Type the name of the bucket to confirm."
+              onChange={e => setConfirmBucketName(e.target.value)}
+              expand
+            />
           </ConfirmationDialog>
         </React.Fragment>
       )}
