@@ -63,7 +63,7 @@ export const ZONES = {
   'ap-northeast-1b': 'shinagawa1',
   'ap-south': 'singapore',
   'ap-south-1a': 'singapore',
-  'ca-east': 'toronto' // @todo check this after approval
+  'ca-east': 'toronto1' // @todo check this after approval
 };
 
 export const dcDisplayNames = {
