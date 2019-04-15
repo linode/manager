@@ -46,12 +46,12 @@ assetImages['level'].src = '/img/LinodePac.png';
 
 function init() {
   // CANVAS SET UP
-  zivcontainer = document.getElementById('linodepac');
+  linodeContainer = document.getElementById('linodepac');
   container = document.createElement('div');
   container.id = 'container';
   container.style.width = SCREEN_WIDTH + 'px';
   container.style.height = SCREEN_HEIGHT + 'px';
-  zivcontainer.appendChild(container);
+  linodeContainer.appendChild(container);
   container.appendChild(canvas);
   canvas.width = SCREEN_WIDTH;
   canvas.height = SCREEN_HEIGHT;
@@ -93,7 +93,7 @@ function init() {
   scoreContainer = document.createElement('div');
   scoreContainer.id = 'score';
   scoreContainer.style.width = SCREEN_WIDTH + 'px';
-  zivcontainer.appendChild(scoreContainer);
+  linodeContainer.appendChild(scoreContainer);
 
   player.init();
   ghost.init();
@@ -270,14 +270,10 @@ function onGameOver(complete) {
   var str;
   if (complete) {
     str =
-      "<h1>YOU WIN!</h1><p>You get a free website!</p><p>ok, you don't really, but karma for winning</p><p><a class='btn'>" +
-      (isTouch ? 'TOUCH' : 'CLICK') +
-      ' TO PLAY AGAIN</a></p>';
+      "<h2>YOU WIN!</h1><p>Now what?</p><p><a class='btn'>Let's play again I guess</a></p>";
   } else {
     str =
-      "<h1>GAME OVER</h1><p><a class='btn'>" +
-      (isTouch ? 'TOUCH' : 'CLICK') +
-      ' TO RESTART<span></p>';
+      "<h2>GAME OVER</h2><p>Let's configure these nodeBalancers?</p><p><a class='btn'>Play again???</a></p>";
   }
 
   showInfo(str);
@@ -300,7 +296,7 @@ function showInfo(str) {
   }
 
   info.style.opacity = 1;
-  infobg.style.opacity = 0.75;
+  infobg.style.opacity = 0.9;
 }
 
 function makeControls() {
@@ -327,7 +323,7 @@ function makeControls() {
   buttons.id = 'container';
   buttons.style.width = SCREEN_WIDTH + 'px';
   buttons.style.height = SCREEN_HEIGHT + 'px';
-  zivcontainer.appendChild(buttons);
+  linodeContainer.appendChild(buttons);
 
   var button;
 

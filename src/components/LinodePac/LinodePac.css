@@ -64,8 +64,12 @@
   text-align: center;
   user-select: none;
   vertical-align: middle;
-
-  font-size: 60px;
+  font-size: 1.2rem;
+  position: absolute;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
 #info a {
@@ -74,11 +78,11 @@
   background: #3683dc;
   padding: 1rem;
   font-size: 1.2rem;
+  margin: 0 auto;
 }
 
 #infobg {
   background-color: white;
-
   border-radius: 14px;
 }
 
