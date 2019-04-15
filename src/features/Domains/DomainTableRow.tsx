@@ -28,7 +28,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     backgroundColor: theme.bg.white
   },
   domainCellContainer: {
-    padding: `${theme.spacing.unit}px !important`,
     [theme.breakpoints.down('sm')]: {
       textAlign: 'left'
     }
