@@ -46,7 +46,7 @@ assetImages['level'].src = '/img/LinodePac.png';
 
 function init() {
   // CANVAS SET UP
-  zivcontainer = document.getElementById('main-content');
+  zivcontainer = document.getElementById('linodepac');
   container = document.createElement('div');
   container.id = 'container';
   container.style.width = SCREEN_WIDTH + 'px';
@@ -103,7 +103,7 @@ function init() {
   //   makeControls();
   // }
 
-  showInfo("<a class='btn'>" + (isTouch ? 'TOUCH' : 'CLICK') + ' TO START</a>');
+  showInfo("<a class='btn'>Let's kill some time</a>");
 }
 
 function run() {
