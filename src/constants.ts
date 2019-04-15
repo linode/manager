@@ -44,6 +44,10 @@ export const ISO_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 export const MAX_VOLUME_SIZE = 10240;
 
+/**
+ * Used by e.g. LISH to determine the websocket connection address.
+ * Whenever updating this, also update the corresponding name in resolvers.ts
+ */
 export const ZONES = {
   'us-east': 'newark',
   'us-east-1a': 'newark',
