@@ -15,6 +15,11 @@ export interface BucketRequestPayload {
   cluster: string;
 }
 
+export interface DeleteBucketRequestPayload {
+  cluster: string;
+  label: string;
+}
+
 /**
  * getBuckets
  *
@@ -42,3 +47,17 @@ export const createBucket = (data: BucketRequestPayload) =>
     setMethod('POST'),
     setData(data, CreateBucketSchema)
   ).then(response => response.data);
+
+/**
+ * deleteBucket
+ *
+ * Removes a Bucket from your account.
+ *
+ * @param bucketId { number } The ID of the bucket to delete.
+ *
+ */
+export const deleteBucket = ({ cluster, label }: DeleteBucketRequestPayload) =>
+  Request<Linode.Bucket>(
+    setURL(`${API_ROOT}beta/object-storage/buckets/${cluster}/${label}`),
+    setMethod('DELETE')
+  );

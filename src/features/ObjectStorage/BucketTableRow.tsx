@@ -14,6 +14,7 @@ import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { formatRegion } from 'src/utilities/formatRegion';
+import BucketActionMenu from './BucketActionMenu';
 
 type ClassNames = 'root' | 'labelStatusWrapper' | 'bucketRow' | 'hostname';
 
@@ -32,14 +33,25 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 // BucketTableRow has the same props as Linode.Bucket.
 // Aliased for convention's sake.
-type BucketTableRowProps = Linode.Bucket;
+interface BucketTableRowProps extends Linode.Bucket {
+  onRemove: (cluster: string, bucketLabel: string) => void;
+}
 
 type CombinedProps = BucketTableRowProps & WithStyles<ClassNames>;
 
 export const BucketTableRow: React.StatelessComponent<
   CombinedProps
 > = props => {
-  const { classes, label, region, size, objects, hostname, created } = props;
+  const {
+    classes,
+    label,
+    region,
+    size,
+    objects,
+    hostname,
+    created,
+    onRemove
+  } = props;
 
   return (
     <TableRow
@@ -95,6 +107,13 @@ export const BucketTableRow: React.StatelessComponent<
           value={created}
           humanizeCutoff="month"
           data-qa-created
+        />
+      </TableCell>
+      <TableCell>
+        <BucketActionMenu
+          onRemove={onRemove}
+          bucketLabel={label}
+          cluster={region}
         />
       </TableCell>
     </TableRow>

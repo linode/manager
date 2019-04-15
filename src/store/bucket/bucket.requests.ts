@@ -1,11 +1,17 @@
 import {
   BucketRequestPayload,
   createBucket as _createBucket,
+  deleteBucket as _deleteBucket,
+  DeleteBucketRequestPayload,
   getBuckets as _getBuckets
 } from 'src/services/objectStorage/buckets';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
-import { createBucketActions, getAllBucketsActions } from './bucket.actions';
+import {
+  createBucketActions,
+  deleteBucketActions,
+  getAllBucketsActions
+} from './bucket.actions';
 
 /*
  * Create Bucket
@@ -29,3 +35,13 @@ export const getAllBuckets = createRequestThunk(
   getAllBucketsActions,
   getAllBucketsRequest
 );
+
+/*
+ * Delete Bucket
+ */
+export type DeleteBucketRequest = DeleteBucketRequestPayload;
+export const deleteBucket = createRequestThunk<
+  DeleteBucketRequestPayload,
+  {},
+  Linode.ApiFieldError[]
+>(deleteBucketActions, data => _deleteBucket(data));

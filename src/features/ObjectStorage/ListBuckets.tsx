@@ -1,4 +1,8 @@
 import * as React from 'react';
+import { compose } from 'recompose';
+import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
@@ -7,11 +11,18 @@ import {
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
+import Typography from 'src/components/core/Typography';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
+import bucketRequestsContainer, {
+  BucketsRequests
+} from 'src/containers/bucketRequests.container';
+import useOpenClose from 'src/hooks/useOpenClose';
+import { DeleteBucketRequest } from 'src/store/bucket/bucket.requests';
 import BucketTableRow from './BucketTableRow';
 
 type ClassNames = 'root' | 'label';
@@ -30,10 +41,73 @@ interface Props {
   handleOrderChange: (orderBy: string, order?: 'asc' | 'desc') => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames> & BucketsRequests;
+
+type BucketToRemove = DeleteBucketRequest;
 
 export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
   const { data, orderBy, order, handleOrderChange, classes } = props;
+
+  const removeBucketConfirmationDialog = useOpenClose();
+  const [
+    bucketToRemove,
+    setBucketToRemove
+  ] = React.useState<BucketToRemove | null>(null);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string>('');
+
+  const handleClickRemove = (cluster: string, label: string) => {
+    setBucketToRemove({ cluster, label });
+    setError('');
+    removeBucketConfirmationDialog.open();
+  };
+
+  const removeBucket = () => {
+    const { deleteBucket } = props;
+
+    // This shouldn't happen, but just in case (and to get TS to quit complaining...)
+    if (!bucketToRemove) {
+      return;
+    }
+
+    setError('');
+    setIsLoading(true);
+
+    const { cluster, label } = bucketToRemove;
+    deleteBucket({ cluster, label })
+      .then(() => {
+        removeBucketConfirmationDialog.close();
+        setIsLoading(false);
+      })
+      .catch(() => {
+        setIsLoading(false);
+        setError('Error when removing bucket');
+      });
+  };
+
+  const actions = () => (
+    <ActionsPanel>
+      <Button
+        type="cancel"
+        onClick={() => {
+          removeBucketConfirmationDialog.close();
+        }}
+        data-qa-cancel
+      >
+        Cancel
+      </Button>
+      <Button
+        type="secondary"
+        destructive
+        onClick={removeBucket}
+        data-qa-submit-rebuild
+        loading={isLoading}
+      >
+        Delete
+      </Button>
+    </ActionsPanel>
+  );
+
   return (
     <Paginate data={data} pageSize={25}>
       {({
@@ -86,10 +160,12 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
                   >
                     Created
                   </TableSortCell>
+                  {/* Empty TableCell for ActionMenu*/}
+                  <TableCell />
                 </TableRow>
               </TableHead>
               <TableBody>
-                <RenderData data={paginatedData} />
+                <RenderData data={paginatedData} onRemove={handleClickRemove} />
               </TableBody>
             </Table>
           </Paper>
@@ -101,6 +177,25 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
             handleSizeChange={handlePageSizeChange}
             eventCategory="object storage landing"
           />
+          <ConfirmationDialog
+            open={removeBucketConfirmationDialog.isOpen}
+            onClose={() => {
+              setBucketToRemove(null);
+              removeBucketConfirmationDialog.close();
+            }}
+            title={
+              bucketToRemove
+                ? `Remove ${bucketToRemove.label}`
+                : 'Remove bucket'
+            }
+            actions={actions}
+            error={error}
+          >
+            <Typography>
+              Are you sure you want to remove this bucket? This will result in
+              permanent data loss.
+            </Typography>
+          </ConfirmationDialog>
         </React.Fragment>
       )}
     </Paginate>
@@ -109,10 +204,11 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
 
 interface RenderDataProps {
   data: Linode.Bucket[];
+  onRemove: (cluster: string, bucketLabel: string) => void;
 }
 
 const RenderData: React.StatelessComponent<RenderDataProps> = props => {
-  const { data } = props;
+  const { data, onRemove } = props;
 
   return (
     <>
@@ -125,6 +221,7 @@ const RenderData: React.StatelessComponent<RenderDataProps> = props => {
           size={bucket.size}
           hostname={bucket.hostname}
           created={bucket.created}
+          onRemove={onRemove}
         />
       ))}
     </>
@@ -133,4 +230,9 @@ const RenderData: React.StatelessComponent<RenderDataProps> = props => {
 
 const styled = withStyles(styles);
 
-export default styled(ListBuckets);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  bucketRequestsContainer
+);
+
+export default enhanced(ListBuckets);
