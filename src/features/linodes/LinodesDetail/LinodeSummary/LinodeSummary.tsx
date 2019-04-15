@@ -1,7 +1,8 @@
 import * as moment from 'moment';
-import { compose, map, pathOr } from 'ramda';
+import { map, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'recompose';
 import FormControl from 'src/components/core/FormControl';
 import InputLabel from 'src/components/core/InputLabel';
 import MenuItem from 'src/components/core/MenuItem';
@@ -29,6 +30,7 @@ import {
   getMetrics,
   getTotalTraffic
 } from 'src/utilities/statMetrics';
+import ActivitySummary from './ActivitySummary';
 import MetricsDisplay from './MetricsDisplay';
 import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
@@ -109,7 +111,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
     },
     graphControls: {
       display: 'flex',
-      alignItems: 'center'
+      alignItems: 'center',
+      marginTop: theme.spacing.unit * 2,
+      marginBottom: theme.spacing.unit * 2
     },
     totalTraffic: {
       margin: '12px'
@@ -667,37 +671,37 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             <Grid
               container
               justify="space-between"
-              alignItems="center"
+              alignItems="flex-start"
               className={classes.headerWrapper}
+              direction="column"
             >
               <Grid item className="py0">
                 <Typography variant="h2" className={classes.graphTitle}>
                   {longLabel}
                 </Typography>
               </Grid>
-              <Grid item className="py0">
-                <div className={classes.graphControls}>
-                  <Typography
-                    variant="body1"
-                    className={classes.graphSelectTitle}
+            </Grid>
+
+            <Grid item>
+              <ActivitySummary linodeId={linode.id} />
+            </Grid>
+
+            <Grid item className="py0">
+              <div className={classes.graphControls}>
+                <FormControl>
+                  <InputLabel htmlFor="chartRange" disableAnimation hidden>
+                    Select Time Range
+                  </InputLabel>
+                  <Select
+                    value={rangeSelection}
+                    onChange={this.handleChartRangeChange}
+                    inputProps={{ name: 'chartRange', id: 'chartRange' }}
+                    small
                   >
-                    Graphs
-                  </Typography>
-                  <FormControl style={{ marginTop: 0 }}>
-                    <InputLabel htmlFor="chartRange" disableAnimation hidden>
-                      Select Time Range
-                    </InputLabel>
-                    <Select
-                      value={rangeSelection}
-                      onChange={this.handleChartRangeChange}
-                      inputProps={{ name: 'chartRange', id: 'chartRange' }}
-                      small
-                    >
-                      {this.rangeSelectOptions}
-                    </Select>
-                  </FormControl>
-                </div>
-              </Grid>
+                    {this.rangeSelectOptions}
+                  </Select>
+                </FormControl>
+              </div>
             </Grid>
 
             <StatsPanel
@@ -746,7 +750,7 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
   typesData: state.__resources.types.entities
 }));
 
-const enhanced = compose(
+const enhanced = compose<CombinedProps, {}>(
   styled,
   withTypes,
   linodeContext
