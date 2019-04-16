@@ -17,7 +17,9 @@ type ClassNames = 'root';
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit,
-    borderBottom: `1px solid ${theme.palette.divider}`
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    width: '100%',
+    margin: 0
   }
 });
 
@@ -46,7 +48,7 @@ export const ActivityRow: React.StatelessComponent<CombinedProps> = props => {
       data-qa-activity-row
     >
       <Grid item>
-        <Typography variant={'inherit'}>{message}</Typography>
+        <Typography variant="body1">{message}</Typography>
       </Grid>
       <Grid item>
         <DateTimeDisplay value={event.created} humanizeCutoff={'month'} />
