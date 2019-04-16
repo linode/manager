@@ -203,9 +203,9 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     }
   };
 
-  changeSelectedDisk = (e: React.ChangeEvent<HTMLInputElement>) => {
+  changeSelectedDisk = (disk: string) => {
     this.setState({
-      imageDrawer: { ...this.state.imageDrawer, selectedDisk: e.target.value }
+      imageDrawer: { ...this.state.imageDrawer, selectedDisk: disk }
     });
   };
 
@@ -333,9 +333,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
                           <TableCell data-qa-image-created-header>
                             Created
                           </TableCell>
-                          <TableCell data-qa-expiry-header>
-                            Expires
-                          </TableCell>
+                          <TableCell data-qa-expiry-header>Expires</TableCell>
                           <TableSortCell
                             active={orderBy === 'size'}
                             label={'size'}

@@ -49,7 +49,7 @@ export interface Props {
   onClose: () => void;
   onSuccess: () => void;
   changeLinode: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  changeDisk: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  changeDisk: (disk: string) => void;
   changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }

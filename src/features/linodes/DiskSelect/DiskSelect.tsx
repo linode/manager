@@ -1,15 +1,12 @@
 import { compose } from 'ramda';
 import * as React from 'react';
-import FormControl from 'src/components/core/FormControl';
-import FormHelperText from 'src/components/core/FormHelperText';
 import {
   StyleRulesCallback,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
-import MenuItem from 'src/components/MenuItem';
+import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import RenderGuard from 'src/components/RenderGuard';
-import TextField from 'src/components/TextField';
 
 type ClassNames = 'root';
 
@@ -23,47 +20,35 @@ interface Props {
   disks: Linode.Disk[];
   selectedDisk?: string;
   disabled?: boolean;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChange: (disk: string) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
+const disksToOptions = (disks: Linode.Disk[]): Item<string>[] => {
+  return disks.map(disk => ({ label: disk.label, value: String(disk.id) }));
+};
+
 const DiskSelect: React.StatelessComponent<CombinedProps> = props => {
+  const {
+    disabled,
+    disks,
+    diskError,
+    generalError,
+    handleChange,
+    selectedDisk
+  } = props;
+  const options = disksToOptions(disks);
   return (
-    <FormControl fullWidth>
-      <TextField
-        value={props.selectedDisk || 'none'}
-        onChange={props.handleChange}
-        inputProps={{ name: 'linode', id: 'linode' }}
-        error={Boolean(props.diskError)}
-        disabled={props.disabled}
-        select
-        data-qa-disk-select
-        label="Disk"
-      >
-        <MenuItem value="none" disabled>
-          Select a Disk
-        </MenuItem>
-        {props.disks &&
-          props.disks.map(disk => {
-            return (
-              <MenuItem
-                key={disk.id}
-                value={'' + disk.id}
-                data-qa-disk-menu-item={disk.label}
-              >
-                {disk.label}
-              </MenuItem>
-            );
-          })}
-      </TextField>
-      {Boolean(props.diskError) && (
-        <FormHelperText error>{props.diskError}</FormHelperText>
-      )}
-      {Boolean(props.generalError) && (
-        <FormHelperText error>{props.generalError}</FormHelperText>
-      )}
-    </FormControl>
+    <EnhancedSelect
+      label={'Disk'}
+      placeholder={'Select a Disk'}
+      disabled={disabled}
+      options={options}
+      value={selectedDisk}
+      onChange={(newDisk: Item<string>) => handleChange(newDisk.value)}
+      errorText={generalError || diskError}
+    />
   );
 };
 
