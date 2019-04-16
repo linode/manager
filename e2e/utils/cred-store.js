@@ -10,7 +10,7 @@ class CredStore {
         this.browser = browser;
         this.shouldCleanupUsingAPI = shouldCleanupUsingAPI;
     }
-    
+
     setBrowser(browser) {
         //console.log("setting browser to:");
         //console.log(browser);
@@ -24,7 +24,13 @@ class CredStore {
         throw "CredStore.getAllCreds() needs to be implemented in child class";
     }
 
-    cleanupAccounts(timeOut) {
+    /*
+        Account cleanup gets a default timeout of 21 seconds
+        Timeout is used to wait on removing volumes after removing linodes
+        If a linode with a volume attached is removed, the volume will still appear
+        as attached to the linode for a few seconds and will throw errors on attempts to remove
+    */
+    cleanupAccounts(timeOut=21000) {
         if (this.shouldCleanupUsingAPI) {
             console.log("cleaning up user resources via API");
             return this.getAllCreds().then((credCollection) => {
@@ -39,7 +45,7 @@ class CredStore {
 
     login(username, password, shouldStoreToken = false) {
         console.log("logging in for user: " + username);
-        
+
         let browser = this.browser;
 
         browser.url(constants.routes.linodes);
@@ -48,19 +54,19 @@ class CredStore {
         } catch (err) {
             console.log(browser.getSource());
         }
-    
+
         browser.waitForVisible('#password', constants.wait.long);
         browser.jsClick('#username');
         browser.trySetValue('#username', username);
         browser.jsClick('#password');
         browser.trySetValue('#password', password);
 
-        
+
         let url = browser.getUrl();
 
         const loginButton = url.includes('dev') ? '.btn#submit' : '[data-qa-sign-in] input';
         const letsGoButton = url.includes('dev') ? '.btn#submit' : '[data-qa-welcome-button]';
-    
+
         // Helper to check if on the Authorize 3rd Party App
         const isOauthAuthPage = () => {
             /**
@@ -74,24 +80,24 @@ class CredStore {
                 return false;
             }
         }
-    
+
         // Helper to check if CSRF error is displayed on the page
         const csrfErrorExists = () => {
             const sourceIncludesCSRF = browser.getSource().includes('CSRF');
             return sourceIncludesCSRF;
         };
-    
+
         // Click the Login button
         browser.click(loginButton);
-    
+
         const onOauthPage = isOauthAuthPage();
         const csrfError = csrfErrorExists();
-    
+
         // If on the authorize page, click the authorize button
         if (onOauthPage) {
             $('.form-actions>.btn').click();
         }
-    
+
         // If still on the login page, check for a form error
         if (csrfError) {
             // Attempt to Login after encountering the CSRF Error
@@ -99,7 +105,7 @@ class CredStore {
             browser.trySetValue('#username', username);
             $(loginButton).click();
         }
-    
+
         // Wait for the add entity menu to exist
         try {
             browser.waitForExist('[data-qa-add-new-menu-button]', constants.wait.normal);
@@ -108,15 +114,15 @@ class CredStore {
             console.error(`Current URL is:\n${browser.getUrl()}`);
             console.error(`Page source: \n ${browser.getSource()}`);
         }
-    
+
         // Wait for the welcome modal to display, click it once it appears
         if (browser.waitForVisible('[role="dialog"]')) {
             browser.click(letsGoButton);
             browser.waitForVisible('[role="dialog"]', constants.wait.long, true)
         }
-    
+
         browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.long);
-    
+
         // TODO fix storeToken implementation
         //if (shouldStoreToken) {
         //    this.storeToken(username);
@@ -131,7 +137,7 @@ class CredStore {
 
         this would replace personal access tokens provided via env vars in favor of the access token
         created when logging in.
-        
+
         we can rework token handling in a followup feature branch.
      */
     getTokenFromLocalStorage() {
