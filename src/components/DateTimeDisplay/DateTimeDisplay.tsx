@@ -1,4 +1,5 @@
 import * as React from 'react';
+import Typography from 'src/components/core/Typography';
 import formatDate, { TimeInterval } from 'src/utilities/formatDate';
 
 export interface Props {
@@ -15,7 +16,7 @@ export const DateTimeDisplay: React.StatelessComponent<
   const { format, humanizeCutoff, value } = props;
   return (
     <React.Fragment>
-      {formatDate(value, { format, humanizeCutoff })}
+      <Typography>{formatDate(value, { format, humanizeCutoff })}</Typography>
     </React.Fragment>
   );
 };

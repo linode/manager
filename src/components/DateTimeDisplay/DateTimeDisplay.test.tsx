@@ -12,7 +12,12 @@ describe('DateTimeDisplay component', () => {
   describe('Non-humanized dates', () => {
     it('should be displayed in 24-hour ISO format', () => {
       component.setProps({ value: APIDate, humanizeCutoff: undefined });
-      expect(component.text()).toContain('2018-07-20 04:23:17');
+      expect(
+        component
+          .find('WithStyles(Typography)')
+          .children()
+          .text()
+      ).toContain('2018-07-20 04:23:17');
     });
   });
 
@@ -22,7 +27,12 @@ describe('DateTimeDisplay component', () => {
         value: moment().subtract(5, 'minutes'),
         humanizeCutoff: 'day'
       });
-      expect(component.text()).toContain('5 minutes ago');
+      expect(
+        component
+          .find('WithStyles(Typography)')
+          .children()
+          .text()
+      ).toContain('5 minutes ago');
     });
     it('should output ISO strings if the date is older than the cutoff', () => {
       const almostOneWeek = moment().subtract(6, 'days');
@@ -30,9 +40,19 @@ describe('DateTimeDisplay component', () => {
         value: almostOneWeek,
         humanizeCutoff: 'month'
       });
-      expect(component.text()).toContain('6 days ago');
+      expect(
+        component
+          .find('WithStyles(Typography)')
+          .children()
+          .text()
+      ).toContain('6 days ago');
       component.setProps({ humanizeCutoff: 'day' });
-      expect(component.text()).toContain(almostOneWeek.year());
+      expect(
+        component
+          .find('WithStyles(Typography)')
+          .children()
+          .text()
+      ).toContain(almostOneWeek.year());
     });
     it('should always output formatted text if humanizedCutoff is set to never', () => {
       const aLongTimeAgo = moment().subtract(10, 'years');
@@ -40,7 +60,12 @@ describe('DateTimeDisplay component', () => {
         value: aLongTimeAgo,
         humanizeCutoff: 'never'
       });
-      expect(component.text()).toContain('10 years ago');
+      expect(
+        component
+          .find('WithStyles(Typography)')
+          .children()
+          .text()
+      ).toContain('10 years ago');
     });
   });
 });

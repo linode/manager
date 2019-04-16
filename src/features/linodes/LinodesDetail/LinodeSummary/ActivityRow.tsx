@@ -46,7 +46,7 @@ export const ActivityRow: React.StatelessComponent<CombinedProps> = props => {
       data-qa-activity-row
     >
       <Grid item>
-        <Typography variant={'inherit'}>{message}</Typography>
+        <Typography>{message}</Typography>
       </Grid>
       <Grid item>
         <DateTimeDisplay value={event.created} humanizeCutoff={'month'} />
