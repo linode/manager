@@ -16,7 +16,9 @@ export const DateTimeDisplay: React.StatelessComponent<
   const { format, humanizeCutoff, value } = props;
   return (
     <React.Fragment>
-      <Typography>{formatDate(value, { format, humanizeCutoff })}</Typography>
+      <Typography component="span">
+        {formatDate(value, { format, humanizeCutoff })}
+      </Typography>
     </React.Fragment>
   );
 };
