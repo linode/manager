@@ -11,6 +11,7 @@ class Volumes extends Page {
     get volumeAttachment() { return $('[data-qa-volume-cell-attachment]'); }
     get copyToolTip() { return $('[data-qa-copy-tooltip]'); }
     get configHelpMessages() { $$('[data-qa-config-help-msg]'); }
+    get actionMenu() { return $('[data-qa-action-menu]'); }
 
     baseElemsDisplay(initial) {
         if (initial) {

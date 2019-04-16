@@ -3,8 +3,6 @@ require('dotenv').config();
 const https = require('https');
 const axios = require('axios');
 const API_ROOT = process.env.REACT_APP_API_ROOT;
-const { isEmpty } = require('lodash');
-const { readFileSync, unlink } = require('fs');
 
 
 function removeEntity(token, entity, endpoint) {
