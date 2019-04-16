@@ -92,10 +92,10 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
 
   return (
     <TableWrapper {...tableWrapperProps}>
-      {groupedVolumes.map(([tag, domains]: [string, Linode.Domain[]]) => {
+      {groupedVolumes.map(([tag, volumes]: [string, Linode.Volume[]]) => {
         return (
           <React.Fragment key={tag}>
-            <Paginate data={domains} pageSize={DEFAULT_PAGE_SIZE}>
+            <Paginate data={volumes} pageSize={DEFAULT_PAGE_SIZE}>
               {({
                 data: paginatedData,
                 handlePageChange,
