@@ -90,7 +90,7 @@ interface State {
   removeDialog: {
     open: boolean;
     domain?: string;
-    domainID?: number;
+    domainId?: number;
   };
 }
 
@@ -162,13 +162,12 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
 
   removeDomain = () => {
     const {
-      removeDialog: { domainID }
+      removeDialog: { domainId }
     } = this.state;
     const { enqueueSnackbar, domainActions } = this.props;
-    if (domainID) {
-      // @todo: Replace all "domainID" with "domainId"
+    if (domainId) {
       domainActions
-        .deleteDomain({ domainId: domainID })
+        .deleteDomain({ domainId })
         .then(() => {
           this.closeRemoveDialog();
         })
@@ -187,9 +186,9 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     }
   };
 
-  openRemoveDialog = (domain: string, domainID: number) => {
+  openRemoveDialog = (domain: string, domainId: number) => {
     this.setState({
-      removeDialog: { open: true, domain, domainID }
+      removeDialog: { open: true, domain, domainId }
     });
   };
 
