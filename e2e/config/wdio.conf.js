@@ -251,6 +251,7 @@ exports.config = {
                 console.error("***** MAKE SURE MONGO IS RUNNING, do: docker run -d -p 27017:27017 mongo *****");
             }
         });
+        credStore.cleanupAccounts();
     },
     /**
      * Gets executed just before initialising the webdriver session and test framework. It allows you
