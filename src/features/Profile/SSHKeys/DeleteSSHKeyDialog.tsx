@@ -7,6 +7,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { deleteSSHKey } from 'src/services/profile';
 
@@ -57,7 +58,9 @@ class DeleteSSHKeyDialog extends React.PureComponent<CombinedProps, State> {
         {error && (
           <Notice error text={`Unable to delete SSH key. Please try again.`} />
         )}
-        Are you sure you want to delete SSH key {label}?
+        <Typography>
+          Are you sure you want to delete SSH key {label}?
+        </Typography>
       </ConfirmationDialog>
     );
   }
