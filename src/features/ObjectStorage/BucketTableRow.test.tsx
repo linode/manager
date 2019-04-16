@@ -17,6 +17,7 @@ describe('BucketTableRow', () => {
       objects={24}
       hostname="test-bucket-001.alpha.linodeobjects.com"
       region="us-east"
+      cluster="a-cluster"
       onRemove={jest.fn()}
     />
   );

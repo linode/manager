@@ -48,6 +48,7 @@ export const BucketTableRow: React.StatelessComponent<
     region,
     size,
     objects,
+    cluster,
     hostname,
     created,
     onRemove
@@ -113,7 +114,7 @@ export const BucketTableRow: React.StatelessComponent<
         <BucketActionMenu
           onRemove={onRemove}
           bucketLabel={label}
-          cluster={region}
+          cluster={cluster}
         />
       </TableCell>
     </TableRow>

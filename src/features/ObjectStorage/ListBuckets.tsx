@@ -1,3 +1,4 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -81,9 +82,18 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
         removeBucketConfirmationDialog.close();
         setIsLoading(false);
       })
-      .catch(() => {
+      .catch(e => {
         setIsLoading(false);
-        setError('Error when removing bucket');
+
+        // We're not worried about field errors here, so just grab the text
+        // of the first error in the response.
+        const errorText = pathOr(
+          'Error removing bucket.',
+          ['response', 'data', 'errors', 0, 'reason'],
+          e
+        );
+
+        setError(errorText);
       });
   };
 
@@ -224,16 +234,7 @@ const RenderData: React.StatelessComponent<RenderDataProps> = props => {
   return (
     <>
       {data.map(bucket => (
-        <BucketTableRow
-          key={bucket.label}
-          label={bucket.label}
-          objects={bucket.objects}
-          region={bucket.region}
-          size={bucket.size}
-          hostname={bucket.hostname}
-          created={bucket.created}
-          onRemove={onRemove}
-        />
+        <BucketTableRow {...bucket} key={bucket.label} onRemove={onRemove} />
       ))}
     </>
   );
