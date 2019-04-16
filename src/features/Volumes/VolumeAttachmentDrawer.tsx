@@ -133,7 +133,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
       linode_id: Number(selectedLinode),
       config_id: Number(selectedConfig) || undefined
     })
-      .then(response => {
+      .then(_ => {
         resetEventsPolling();
         this.handleClose();
       })
@@ -153,7 +153,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { open, volumeLabel, disabled, readOnly } = this.props;
+    const { open, volumeLabel, disabled, linodeRegion, readOnly } = this.props;
     const { configs, selectedLinode, selectedConfig, errors } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(this.errorResources, errors);
@@ -176,6 +176,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
         )}
         <LinodeSelect
           selectedLinode={selectedLinode}
+          region={linodeRegion}
           handleChange={this.changeSelectedLinode}
           linodeError={linodeError}
           generalError={generalError}
