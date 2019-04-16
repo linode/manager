@@ -138,7 +138,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             this.setState({
               errors: [
                 {
-                  field: 'disk',
+                  field: 'disk_id',
                   reason: 'Could not retrieve disks for this Linode.'
                 }
               ]
