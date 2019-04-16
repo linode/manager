@@ -11,7 +11,13 @@ export const linodeDescription = (
 ) => {
   const imageDesc = safeGetImageLabel(images, imageId);
   const typeDesc = typeLabelLong(typeLabel, memory, disk, vcpus);
-  return `${imageDesc}, ${typeDesc}`;
+
+  // Check if we return an empty string for imageDesc if the slug is nonexsistent
+  if (imageDesc === '') {
+    return `${typeDesc}`;
+  } else {
+    return `${imageDesc}, ${typeDesc}`;
+  }
 };
 
 export default linodeDescription;
