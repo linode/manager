@@ -1,9 +1,10 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
-import { SupportTicketsLanding } from './SupportTicketsLanding';
-
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
+import {
+  getSelectedTabFromQueryString,
+  SupportTicketsLanding
+} from './SupportTicketsLanding';
 
 describe('Support Tickets Landing', () => {
   const component = shallow(
@@ -25,5 +26,25 @@ describe('Support Tickets Landing', () => {
   it('icon text link text should read "Open New Ticket"', () => {
     const iconText = component.find('[data-qa-open-ticket-link]').prop('label');
     expect(iconText).toBe('Open New Ticket');
+  });
+});
+
+describe('getSelectedTabFromQueryString utility function', () => {
+  it('should return 0 if ?type=open', () => {
+    const url = 'cloud.linode.com/support/tickets?type=open';
+    expect(getSelectedTabFromQueryString(url)).toBe(0);
+  });
+
+  it('should return 1 if ?type=closed', () => {
+    const url = 'cloud.linode.com/support/tickets?type=closed';
+    expect(getSelectedTabFromQueryString(url)).toBe(1);
+  });
+
+  it('should return 0 if type is unrecognized or not defined', () => {
+    let url = 'cloud.linode.com/support/tickets?type=unknown';
+    expect(getSelectedTabFromQueryString(url)).toBe(0);
+
+    url = 'cloud.linode.com/support/tickets';
+    expect(getSelectedTabFromQueryString(url)).toBe(0);
   });
 });
