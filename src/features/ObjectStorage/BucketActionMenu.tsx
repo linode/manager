@@ -1,7 +1,7 @@
 import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
-interface Props {
+export interface Props {
   onRemove: (cluster: string, bucketLabel: string) => void;
   bucketLabel: string;
   cluster: string;

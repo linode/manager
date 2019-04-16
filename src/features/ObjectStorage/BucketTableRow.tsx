@@ -115,6 +115,7 @@ export const BucketTableRow: React.StatelessComponent<
           onRemove={onRemove}
           bucketLabel={label}
           cluster={cluster}
+          data-qa-action-menu
         />
       </TableCell>
     </TableRow>
