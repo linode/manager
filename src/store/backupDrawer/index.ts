@@ -273,7 +273,7 @@ export const enableAllBackups: EnableAllBackupsThunk = () => (
       sendEvent({
         category: 'Backups',
         action: 'Enable All Backups',
-        value: response.success.length
+        label: `Enabled backups for ${response.success.length} Linodes`
       });
     })
     .catch(() =>
