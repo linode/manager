@@ -6,7 +6,7 @@ import { branch, compose, renderComponent } from 'recompose';
 import ErrorState from 'src/components/ErrorState';
 import { MapState } from 'src/store/types';
 
-interface OutterProps {
+interface OuterProps {
   configsError?: Linode.ApiFieldError[];
   typesError?: Linode.ApiFieldError[];
 }
@@ -15,7 +15,7 @@ interface InnerProps {
   error?: Linode.ApiFieldError[] | Error;
 }
 
-const collectErrors: MapState<InnerProps, OutterProps> = (
+const collectErrors: MapState<InnerProps, OuterProps> = (
   state,
   { configsError, typesError }
 ) => {
