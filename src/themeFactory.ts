@@ -1093,6 +1093,16 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
             position: 'absolute',
             bottom: 6,
             zIndex: 2,
+            left: -9,
+            '& svg': {
+              backgroundColor: 'rgba(232, 232, 232, .9)',
+              height: 39,
+              width: 38,
+              padding: '7px 4px',
+              borderRadius: '50%'
+            }
+          },
+          '& $scrollButtons:last-child': {
             '& svg': {
               backgroundColor: 'rgba(232, 232, 232, .9)',
               height: 39,
