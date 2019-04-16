@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const { readFileSync, unlinkSync } = require('fs');
+const { readFileSync } = require('fs');
 const { argv } = require('yargs');
 
 const FSCredStore = require('../utils/fs-cred-store');
@@ -259,10 +259,8 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {Array.<String>} specs List of spec file paths that are to be run
      */
-    beforeSession: function (config, capabilities, specs) {
-        console.log("beforeSession");
-        return credStore.cleanupAccounts(false, 10);
-    },
+    // beforeSession: function (config, capabilities, specs) {
+    // },
     /**
      * Gets executed before test execution begins. At this point you can access to all global
      * variables like `browser`. It is the perfect place to define custom commands.
@@ -313,6 +311,11 @@ exports.config = {
         });
         console.log("creds are");
         console.log(creds);
+
+        browser.call(() => {
+            return credStore.cleanupAccounts(10, false);
+        });
+
         credStore.login(creds.username, creds.password, false);
     },
     /**
