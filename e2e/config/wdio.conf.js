@@ -251,7 +251,6 @@ exports.config = {
                 console.error("***** MAKE SURE MONGO IS RUNNING, do: docker run -d -p 27017:27017 mongo *****");
             }
         });
-        credStore.cleanupAccounts();
     },
     /**
      * Gets executed just before initialising the webdriver session and test framework. It allows you
@@ -260,8 +259,10 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {Array.<String>} specs List of spec file paths that are to be run
      */
-    // beforeSession: function (config, capabilities, specs) {
-    // },
+    beforeSession: function (config, capabilities, specs) {
+        console.log("beforeSession");
+        return credStore.cleanupAccounts(false, 10);
+    },
     /**
      * Gets executed before test execution begins. At this point you can access to all global
      * variables like `browser`. It is the perfect place to define custom commands.

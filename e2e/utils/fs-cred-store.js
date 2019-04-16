@@ -127,18 +127,20 @@ class FSCredStore extends CredStore {
         return this._readCredsFile();
     }
 
-    cleanupAccounts() {
-        return super.cleanupAccounts()
+    cleanupAccounts(noCredDel, timeOut) {
+        return super.cleanupAccounts(timeOut)
         .catch((err) => console.log(err))
         .then(() => {
             return new Promise((resolve, reject) => {
-                unlink(this.credsFile, (err) => {
-                    if (err) {
-                        reject(err);
-                    } else {
-                        resolve(this.credsFile);
-                    }
-                })
+                noCredDel !== false ?
+                    unlink(this.credsFile, (err) => {
+                        if (err) {
+                            reject(err);
+                        } else {
+                            resolve(this.credsFile);
+                        }
+                    })
+                : resolve(this.credsFile);
             });            
         })
     }
