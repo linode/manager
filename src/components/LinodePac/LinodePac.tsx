@@ -33,7 +33,7 @@ class LinodePac extends React.Component<WithStyles> {
       <div className={classes.root}>
         <Typography variant="h1">Oops... 404</Typography>
         <Typography className={classes.subtitle}>
-          Wanna play some Pacman to recover from this terrible experience?
+          Wanna play some Tuxman to recover from this terrible experience?
         </Typography>
         <div id="linodepac" />
       </div>
