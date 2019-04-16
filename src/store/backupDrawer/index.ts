@@ -220,15 +220,6 @@ export const gatherResponsesAndErrors = (
   linode: Linode.Linode
 ) => {
   return enableBackups(linode.id)
-    .then(response => {
-      // GA Event
-      sendEvent({
-        category: 'Backups',
-        action: 'Enable Backups',
-        label: 'Enabling backups for all Linodes'
-      });
-      return response;
-    })
     .then(() => ({
       ...accumulator,
       // This is accurate, since a 200 from the API means that backups were enabled.
@@ -278,6 +269,12 @@ export const enableAllBackups: EnableAllBackupsThunk = () => (
         dispatch(handleEnableSuccess(response.success));
       }
       dispatch(updateMultipleLinodes(response.success));
+      // GA Event
+      sendEvent({
+        category: 'Backups',
+        action: 'Enable All Backups',
+        value: response.success.length
+      });
     })
     .catch(() =>
       dispatch(
