@@ -11,7 +11,8 @@ const volumeWithLinodeLabel = {
 
 const unattachedVolume = {
   ...volumes[0],
-  linodeLabel: ''
+  linodeLabel: '',
+  linodeStatus: 'active'
 };
 
 const classes = {

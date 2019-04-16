@@ -35,7 +35,6 @@ import withLinodes from 'src/containers/withLinodes.container';
 import { BlockStorage } from 'src/documentation';
 import { resetEventsPolling } from 'src/events';
 import LinodePermissionsError from 'src/features/linodes/LinodesDetail/LinodePermissionsError';
-
 import {
   openForClone,
   openForConfig,
@@ -128,8 +127,8 @@ interface WithLinodesProps {
   linodesError?: Linode.ApiFieldError[];
 }
 export interface ExtendedVolume extends Linode.Volume {
-  linodeLabel: string;
-  linodeStatus: string;
+  linodeLabel?: string;
+  linodeStatus?: string;
 }
 
 interface Props {
