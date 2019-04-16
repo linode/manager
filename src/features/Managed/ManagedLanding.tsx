@@ -1,10 +1,12 @@
 import { compose } from 'ramda';
 import * as React from 'react';
+import ManagedIcon from 'src/assets/icons/managed.svg';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Placeholder from 'src/components/Placeholder';
@@ -31,8 +33,9 @@ export class ManagedLanding extends React.Component<CombinedProps, {}> {
       <React.Fragment>
         <DocumentTitleSegment segment="Managed" />
         <Placeholder
+          icon={ManagedIcon}
           title="Linode Managed"
-          copy={`Linode Managed is only available in the Classic Manager`}
+          copy={`Linode Managed is only available in the Classic Manager.`}
           buttonProps={{
             onClick: () =>
               window.open(

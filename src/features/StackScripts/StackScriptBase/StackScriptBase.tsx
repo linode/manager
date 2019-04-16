@@ -1,14 +1,15 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 import Waypoint from 'react-waypoint';
 import { compose } from 'recompose';
+import StackScriptsIcon from 'src/assets/addnewmenu/stackscripts.svg';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import DebouncedSearch from 'src/components/DebouncedSearchTextField';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
+import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import {
   hasGrant,
@@ -428,12 +429,24 @@ const withStackScriptBase = (isSelecting: boolean) => (
           listOfStackScripts &&
           listOfStackScripts.length === 0 ? (
             <div className={classes.emptyState} data-qa-stackscript-empty-msg>
-              You do not have any StackScripts to select from.
-              {!userCannotCreateStackScripts && (
-                <>
-                  You must first
-                  <Link to="/stackscripts/create"> create one.</Link>
-                </>
+              {userCannotCreateStackScripts ? (
+                <Placeholder
+                  icon={StackScriptsIcon}
+                  title="StackScripts"
+                  copy="You don't have any StackScripts to select from."
+                  className={classes.stackscriptPlaceholder}
+                />
+              ) : (
+                <Placeholder
+                  icon={StackScriptsIcon}
+                  title="StackScripts"
+                  copy="You don't have any StackScripts to select from."
+                  buttonProps={{
+                    href: '/stackscripts/create',
+                    children: 'Create a StackScript'
+                  }}
+                  className={classes.stackscriptPlaceholder}
+                />
               )}
             </div>
           ) : (
