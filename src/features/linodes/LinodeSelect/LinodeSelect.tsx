@@ -1,15 +1,13 @@
-import { compose } from 'ramda';
 import * as React from 'react';
-import FormControl from 'src/components/core/FormControl';
-import FormHelperText from 'src/components/core/FormHelperText';
+import { compose } from 'recompose';
 import {
   StyleRulesCallback,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
-import MenuItem from 'src/components/MenuItem';
-import RenderGuard from 'src/components/RenderGuard';
-import TextField from 'src/components/TextField';
+import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
+import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+import withLinodes from 'src/containers/withLinodes.container';
 
 type ClassNames = 'root';
 
@@ -17,55 +15,79 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {}
 });
 
-interface Props {
-  generalError?: string;
-  linodes: string[][];
-  linodeError?: string;
-  selectedLinode?: string;
-  disabled?: boolean;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+interface WithLinodesProps {
+  linodesData: Linode.Linode[];
+  linodesLoading: boolean;
+  linodesError?: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+interface Props {
+  generalError?: string;
+  linodeError?: string;
+  selectedLinode: number | null;
+  disabled?: boolean;
+  region?: string;
+  handleChange: (linodeId: number | null) => void;
+}
+
+type CombinedProps = Props & WithLinodesProps & WithStyles<ClassNames>;
+
+const linodesToItems = (linodes: Linode.Linode[]): Item<number>[] =>
+  linodes.map(thisLinode => ({
+    value: thisLinode.id,
+    label: thisLinode.label
+  }));
+
+const linodeFromItems = (linodes: Item<number>[], linodeId: number | null) => {
+  if (!linodeId) {
+    return;
+  }
+  return linodes.find(thisLinode => thisLinode.value === linodeId);
+};
 
 const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
+  const {
+    disabled,
+    generalError,
+    handleChange,
+    linodeError,
+    linodesError,
+    linodesLoading,
+    linodesData,
+    region,
+    selectedLinode
+  } = props;
+
+  const linodes = region
+    ? linodesData.filter(thisLinode => thisLinode.region === region)
+    : linodesData;
+  const options = linodesToItems(linodes);
+
   return (
-    <FormControl fullWidth>
-      <TextField
-        value={props.selectedLinode || 'none'}
-        onChange={props.handleChange}
-        inputProps={{ name: 'linode', id: 'linode' }}
-        error={Boolean(props.linodeError)}
-        select
-        data-qa-linode-select
-        disabled={props.disabled}
-        label="Linode"
-      >
-        <MenuItem value="none" disabled>
-          Select a Linode
-        </MenuItem>
-        {props.linodes &&
-          props.linodes.map(l => {
-            return (
-              <MenuItem key={l[0]} value={l[0]} data-qa-linode-menu-item={l[1]}>
-                {l[1]}
-              </MenuItem>
-            );
-          })}
-      </TextField>
-      {Boolean(props.linodeError) && (
-        <FormHelperText error>{props.linodeError}</FormHelperText>
-      )}
-      {Boolean(props.generalError) && (
-        <FormHelperText error>{props.generalError}</FormHelperText>
-      )}
-    </FormControl>
+    <EnhancedSelect
+      label="Linode"
+      placeholder="Select a Linode"
+      value={linodeFromItems(options, selectedLinode)}
+      options={options}
+      disabled={disabled}
+      isLoading={linodesLoading}
+      onChange={(selected: Item<number> | null) =>
+        handleChange(selected ? selected.value : null)
+      }
+      errorText={generalError || linodeError || linodesError}
+    />
   );
 };
 
 const styled = withStyles(styles);
 
-export default compose<any, any, any>(
+export default compose<CombinedProps, Props & RenderGuardProps>(
   styled,
-  RenderGuard
+  RenderGuard,
+  withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
+    ...ownProps,
+    linodesData,
+    linodesLoading,
+    linodesError
+  }))
 )(LinodeSelect);

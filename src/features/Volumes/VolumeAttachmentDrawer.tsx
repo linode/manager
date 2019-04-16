@@ -22,7 +22,7 @@ import withVolumesRequests, {
 import { resetEventsPolling } from 'src/events';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
-import { getLinodeConfigs, getLinodes } from 'src/services/linodes';
+import { getLinodeConfigs } from 'src/services/linodes';
 import { MapState } from 'src/store/types';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -43,9 +43,8 @@ interface Props {
 }
 
 interface State {
-  linodes: string[][];
   configs: string[][];
-  selectedLinode?: string;
+  selectedLinode: number | null;
   selectedConfig?: string;
   errors?: Linode.ApiFieldError[];
 }
@@ -57,9 +56,8 @@ type CombinedProps = Props &
 
 class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
   defaultState = {
-    linodes: [],
     configs: [],
-    selectedLinode: 'none',
+    selectedLinode: null,
     selectedConfig: 'none',
     errors: []
   };
@@ -68,19 +66,6 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
 
   reset = () => {
     this.setState({ ...this.defaultState });
-  };
-
-  updateLinodes = (linodeRegion: string) => {
-    /*
-     * @todo: We're only getting page 1 here, what if the account has over 100
-     * Linodes?
-     */
-    getLinodes({ page: 1 }, { region: linodeRegion }).then(response => {
-      const linodeChoices = response.data.map(linode => {
-        return [`${linode.id}`, linode.label];
-      });
-      this.setState({ linodes: linodeChoices });
-    });
   };
 
   updateConfigs(linodeID: number) {
@@ -105,10 +90,10 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
       });
   }
 
-  changeSelectedLinode = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ selectedLinode: e.target.value });
-    if (e.target.value) {
-      this.updateConfigs(+e.target.value);
+  changeSelectedLinode = (linodeId: number | null) => {
+    this.setState({ selectedLinode: linodeId });
+    if (linodeId) {
+      this.updateConfigs(linodeId);
     }
   };
 
@@ -122,19 +107,13 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
   };
 
   componentWillReceiveProps(nextProps: CombinedProps) {
-    if (
-      nextProps.linodeRegion &&
-      this.props.linodeRegion !== nextProps.linodeRegion
-    ) {
-      this.updateLinodes(nextProps.linodeRegion);
-    }
     this.setState({ configs: [] });
   }
 
   attachToLinode = () => {
     const { volumeId, attachVolume } = this.props;
     const { selectedLinode, selectedConfig } = this.state;
-    if (!selectedLinode || selectedLinode === 'none') {
+    if (!selectedLinode) {
       this.setState(
         {
           errors: [
@@ -175,13 +154,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const { open, volumeLabel, disabled, readOnly } = this.props;
-    const {
-      linodes,
-      configs,
-      selectedLinode,
-      selectedConfig,
-      errors
-    } = this.state;
+    const { configs, selectedLinode, selectedConfig, errors } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(this.errorResources, errors);
     const linodeError = hasErrorFor('linode_id');
@@ -202,7 +175,6 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
           />
         )}
         <LinodeSelect
-          linodes={linodes}
           selectedLinode={selectedLinode}
           handleChange={this.changeSelectedLinode}
           linodeError={linodeError}
