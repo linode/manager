@@ -290,7 +290,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
   renderCPUChart = () => {
     const { rangeSelection, stats } = this.state;
-    const { classes } = this.props;
+    const { classes, timezone } = this.props;
     const data = pathOr([], ['data', 'cpu'], stats);
 
     const metrics = getMetrics(data);
@@ -301,6 +301,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         <div className={classes.chart}>
           <div className={classes.leftLegend}>CPU %</div>
           <LineGraph
+            timezone={timezone}
             chartHeight={chartHeight}
             showToday={rangeSelection === '24'}
             data={[
@@ -333,7 +334,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   };
 
   renderIPv4TrafficChart = () => {
-    const { classes } = this.props;
+    const { classes, timezone } = this.props;
     const { rangeSelection, stats } = this.state;
 
     const v4Data = {
@@ -376,6 +377,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         <div className={classes.chart}>
           <div className={classes.leftLegend}>bits/sec</div>
           <LineGraph
+            timezone={timezone}
             chartHeight={chartHeight}
             showToday={rangeSelection === '24'}
             data={[
@@ -456,7 +458,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   };
 
   renderIPv6TrafficChart = () => {
-    const { classes } = this.props;
+    const { classes, timezone } = this.props;
     const { rangeSelection, stats } = this.state;
 
     const data = {
@@ -485,6 +487,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         <div className={classes.chart}>
           <div className={classes.leftLegend}>bits/sec</div>
           <LineGraph
+            timezone={timezone}
             chartHeight={chartHeight}
             showToday={rangeSelection === '24'}
             data={[
@@ -565,7 +568,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   };
 
   renderDiskIOChart = () => {
-    const { classes } = this.props;
+    const { classes, timezone } = this.props;
     const { rangeSelection, stats } = this.state;
 
     const data = {
@@ -582,6 +585,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             blocks/sec
           </div>
           <LineGraph
+            timezone={timezone}
             chartHeight={chartHeight}
             showToday={rangeSelection === '24'}
             data={[
@@ -744,10 +748,12 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 
 interface WithTypesProps {
   typesData: Linode.LinodeType[];
+  timezone: string;
 }
 
 const withTypes = connect((state: ApplicationState, ownProps) => ({
-  typesData: state.__resources.types.entities
+  typesData: state.__resources.types.entities,
+  timezone: pathOr('UTC', ['__resources', 'profile', 'data', 'timezone'], state)
 }));
 
 const enhanced = compose<CombinedProps, {}>(
