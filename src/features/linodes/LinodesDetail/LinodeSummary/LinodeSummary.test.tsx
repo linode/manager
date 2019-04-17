@@ -10,6 +10,7 @@ describe('LinodeSummary', () => {
       linodeCreated="2018-11-01T00:00:00"
       linodeId={1234}
       linodeData={linodes[0]}
+      timezone={'America/Los_Angeles'}
       classes={{
         main: '',
         sidebar: '',
