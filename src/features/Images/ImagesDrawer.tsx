@@ -44,12 +44,12 @@ export interface Props {
   imageID?: string;
   label?: string;
   disks?: Linode.Disk[];
-  selectedDisk?: string;
+  selectedDisk: string | null;
   selectedLinode?: string;
   onClose: () => void;
   onSuccess: () => void;
   changeLinode: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  changeDisk: (disk: string) => void;
+  changeDisk: (disk: string | null) => void;
   changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -261,7 +261,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     // When restoring to an existing Linode, the Linode select is the only field.
     const { mode, selectedDisk, selectedLinode } = this.props;
 
-    const isDiskSelected = selectedDisk && selectedDisk !== 'none';
+    const isDiskSelected = Boolean(selectedDisk);
 
     switch (mode) {
       case modes.CREATING:
@@ -332,7 +332,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         {[modes.CREATING, modes.IMAGIZING].includes(mode) && (
           <>
             <DiskSelect
-              selectedDisk={selectedDisk || 'none'}
+              selectedDisk={selectedDisk}
               disks={disks}
               diskError={diskError}
               handleChange={changeDisk}
