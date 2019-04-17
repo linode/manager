@@ -326,6 +326,11 @@ class UpdateContactInformationPanel extends React.Component<
                 placeholder="Select a State"
                 options={regionResults}
                 isClearable={false}
+                value={regionResults.filter(({ value }) =>
+                  fields.state
+                    ? value === fields.state
+                    : value === account.state
+                )}
               />
             </Grid>
             <Grid item xs={12} sm={5}>
@@ -354,6 +359,11 @@ class UpdateContactInformationPanel extends React.Component<
             placeholder="Select a Country"
             options={countryResults}
             isClearable={false}
+            value={countryResults.filter(({ value }) =>
+              fields.country
+                ? value === fields.country
+                : value === account.country
+            )}
           />
         </Grid>
 
