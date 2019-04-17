@@ -135,10 +135,10 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
 
   componentDidMount() {
     this.mounted = true;
-    const { history } = this.props;
+    const { history, location } = this.props;
     this.loadTicketAndReplies();
     // Clear any state that was passed from React Router so errors don't persist after reload.
-    history.push({ state: {} });
+    history.replace(location.pathname, {});
   }
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
@@ -343,12 +343,9 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
           <Grid item className={classes.titleWrapper}>
             <Breadcrumb
               linkTo={{
-                pathname: '/support/tickets',
-                // If the ticket is "open" or "new", the "Open Tickets" tab
-                // should be active on when we go back to SupportTicketsLanding
-                state: {
-                  openFromRedirect: ['open', 'new'].includes(ticket.status)
-                }
+                pathname: `/support/tickets`,
+                // If we're viewing a `Closed` ticket, the Breadcrumb link should take us to `Closed` tickets.
+                search: `type=${ticket.status === 'closed' ? 'closed' : 'open'}`
               }}
               linkText="Support Tickets"
               labelTitle={`#${ticket.id}: ${ticket.summary}`}

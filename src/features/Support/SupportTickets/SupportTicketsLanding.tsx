@@ -14,10 +14,10 @@ import Tabs from 'src/components/core/Tabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import { getParamsFromUrl } from 'src/utilities/queryParams';
+import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import SupportTicketDrawer from './SupportTicketDrawer';
 import TicketList from './TicketList';
-
-import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 
 type ClassNames = 'root' | 'title' | 'titleWrapper';
 
@@ -45,22 +45,40 @@ interface State {
   newTicket?: Linode.SupportTicket;
 }
 
-export class SupportTicketsLanding extends React.Component<
+const tabs = ['open', 'closed'];
+
+// Returns 0 if `type=open`, 1 if `type=closed`. Defaults to 0.
+export const getSelectedTabFromQueryString = (queryString: string) => {
+  const parsedParams = getParamsFromUrl(queryString);
+  const preSelectedTab = pathOr('open', ['type'], parsedParams).toLowerCase();
+
+  const idx = tabs.indexOf(preSelectedTab);
+
+  return idx !== -1 ? idx : 0;
+};
+
+export class SupportTicketsLanding extends React.PureComponent<
   CombinedProps,
   State
 > {
   mounted: boolean = false;
   constructor(props: CombinedProps) {
     super(props);
-    const open = pathOr(
-      true,
-      ['history', 'location', 'state', 'openFromRedirect'],
-      this.props
-    );
+
     this.state = {
-      value: open ? 0 : 1,
+      value: getSelectedTabFromQueryString(props.location.search),
       drawerOpen: false
     };
+  }
+
+  componentDidUpdate() {
+    const selectedTabValue = getSelectedTabFromQueryString(
+      this.props.location.search
+    );
+
+    if (selectedTabValue !== this.state.value) {
+      this.setState({ value: selectedTabValue });
+    }
   }
 
   componentDidMount() {
@@ -72,7 +90,14 @@ export class SupportTicketsLanding extends React.Component<
   }
 
   handleChange = (event: React.ChangeEvent<HTMLDivElement>, value: number) => {
+    const selectedTab = tabs[value];
     this.setState({ value, notice: undefined });
+
+    if (selectedTab) {
+      this.props.history.push({
+        search: `?type=${selectedTab}`
+      });
+    }
   };
 
   closeDrawer = () => {
