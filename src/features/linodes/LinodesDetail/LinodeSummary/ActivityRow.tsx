@@ -17,7 +17,9 @@ type ClassNames = 'root';
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     padding: theme.spacing.unit,
-    borderBottom: `1px solid ${theme.palette.divider}`
+    borderBottom: `1px solid ${theme.palette.divider}`,
+    width: '100%',
+    margin: 0
   }
 });
 

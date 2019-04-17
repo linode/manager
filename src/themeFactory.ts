@@ -1138,7 +1138,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
             '&$hover': {
               backgroundColor: '#fbfbfb',
               '&:before': {
-                backgroundColor: primaryColors.main
+                borderLeftColor: primaryColors.main
               }
             }
           }

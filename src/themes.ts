@@ -483,7 +483,7 @@ export const dark = () =>
           '&:before': {
             borderLeftColor: '#32363c'
           },
-          '&:hover': {
+          '&:hover, &:focus': {
             '&$hover': {
               backgroundColor: 'rgba(0, 0, 0, 0.1)',
               '&:before': {
