@@ -59,7 +59,7 @@ describe('Support Ticket Detail', () => {
     it('contains linkTo prop when open', () => {
       expect(breadcrumbProps.linkTo).toEqual({
         pathname: '/support/tickets',
-        state: { openFromRedirect: true }
+        search: 'type=open'
       });
     });
 
@@ -71,7 +71,7 @@ describe('Support Ticket Detail', () => {
       breadcrumbProps = wrapper.find('[data-qa-breadcrumb]').props();
       expect(breadcrumbProps.linkTo).toEqual({
         pathname: '/support/tickets',
-        state: { openFromRedirect: false }
+        search: 'type=closed'
       });
     });
 
