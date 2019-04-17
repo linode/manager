@@ -305,7 +305,7 @@ export interface EnhancedSelectProps {
   placeholder?: string;
   errorText?: string;
   styleOverrides?: StylesConfig;
-  onChange: (selected: Item | Item[], actionMeta: ActionMeta) => void;
+  onChange: (selected: Item | Item[] | null, actionMeta: ActionMeta) => void;
   createNew?: (inputValue: string) => void;
   onInputChange?: (inputValue: string, actionMeta: ActionMeta) => void;
   loadOptions?: (inputValue: string) => Promise<Item | Item[]> | undefined;

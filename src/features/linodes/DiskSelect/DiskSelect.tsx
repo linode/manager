@@ -20,7 +20,7 @@ interface Props {
   disks: Linode.Disk[];
   selectedDisk?: string;
   disabled?: boolean;
-  handleChange: (disk: string) => void;
+  handleChange: (disk: string | null) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -56,7 +56,9 @@ const DiskSelect: React.StatelessComponent<CombinedProps> = props => {
       disabled={disabled}
       options={options}
       value={diskFromValue(options, selectedDisk)}
-      onChange={(newDisk: Item<string>) => handleChange(newDisk.value)}
+      onChange={(newDisk: Item<string> | null) =>
+        handleChange(newDisk ? newDisk.value : null)
+      }
       errorText={generalError || diskError}
     />
   );
