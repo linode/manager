@@ -72,19 +72,19 @@ export const updateDomain = (domainId: number, data: Partial<Linode.Domain>) =>
  *
  * @param domainId { number } The ID of the Domain to delete.
  */
-export const deleteDomain = (domainID: number) =>
-  Request<{}>(setURL(`${API_ROOT}/domains/${domainID}`), setMethod('DELETE'));
+export const deleteDomain = (domainId: number) =>
+  Request<{}>(setURL(`${API_ROOT}/domains/${domainId}`), setMethod('DELETE'));
 
 /**
  * Clones a Domain.
  *
- * @param domainID { number } The ID of the Domain to clone.
+ * @param domainId { number } The ID of the Domain to clone.
  * @param cloneName { string } The name of the new domain.
  */
-export const cloneDomain = (domainID: number, cloneName: string) =>
+export const cloneDomain = (domainId: number, cloneName: string) =>
   Request<Domain>(
     setData({ domain: cloneName }),
-    setURL(`${API_ROOT}/domains/${domainID}/clone`),
+    setURL(`${API_ROOT}/domains/${domainId}/clone`),
     setMethod('POST')
   ).then(response => response.data);
 

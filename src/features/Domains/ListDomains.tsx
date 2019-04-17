@@ -29,7 +29,7 @@ interface Props {
   orderBy: string;
   order: 'asc' | 'desc';
   handleOrderChange: (orderBy: string, order?: 'asc' | 'desc') => void;
-  onRemove: (domain: string, domainID: number) => void;
+  onRemove: (domain: string, domainId: number) => void;
   onClone: (domain: string, id: number) => void;
   onEdit: (domain: string, id: number) => void;
 }
@@ -101,7 +101,7 @@ const ListDomains: React.StatelessComponent<CombinedProps> = props => {
 
 interface RenderDataProps {
   data: Linode.Domain[];
-  onRemove: (domain: string, domainID: number) => void;
+  onRemove: (domain: string, domainId: number) => void;
   onClone: (domain: string, id: number) => void;
   onEdit: (domain: string, id: number) => void;
 }
