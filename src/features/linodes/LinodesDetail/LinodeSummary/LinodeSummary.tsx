@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { map, pathOr } from 'ramda';
+import { init as ramdaInit, map, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -128,7 +128,7 @@ interface LinodeContextProps {
 }
 
 interface State {
-  stats: Linode.TodoAny;
+  stats?: Linode.Stats;
   rangeSelection: string;
   statsLoadError?: string;
   dataIsLoading: boolean;
@@ -143,6 +143,38 @@ type CombinedProps = LinodeContextProps &
 const chartHeight = 300;
 
 const statsFetchInterval = 30000;
+
+// Sometimes the last data pair on a given stat is incorrectly returned by the API as 0.
+// The way we're avoiding the problems this causes is by dropping the last element of each
+// stats array.
+const applyInitToAllStats = (stats: Linode.Stats) => {
+  // Wrap Ramda's `init` function with the typing we want.
+  const init = (list: [number, number][]) => ramdaInit<[number, number]>(list);
+
+  const { cpu, netv4, netv6, io } = stats.data;
+  return {
+    title: stats.title,
+    data: {
+      cpu: init(cpu),
+      netv4: {
+        in: init(netv4.in),
+        out: init(netv4.out),
+        private_in: init(netv4.private_in),
+        private_out: init(netv4.private_out)
+      },
+      netv6: {
+        in: init(netv6.in),
+        out: init(netv6.out),
+        private_in: init(netv6.private_in),
+        private_out: init(netv6.private_out)
+      },
+      io: {
+        io: init(io.io),
+        swap: init(io.swap)
+      }
+    }
+  };
+};
 
 export class LinodeSummary extends React.Component<CombinedProps, State> {
   statsInterval?: number = undefined;
@@ -253,7 +285,10 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         }
 
         this.setState({ statsLoadError: undefined });
-        this.setState({ stats: response.data, dataIsLoading: false });
+        this.setState({
+          stats: applyInitToAllStats(response),
+          dataIsLoading: false
+        });
       })
       .catch(errorResponse => {
         if (!this.mounted) {
