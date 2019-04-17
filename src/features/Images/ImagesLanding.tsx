@@ -56,7 +56,7 @@ interface State {
     label?: string;
     description?: string;
     selectedLinode?: string;
-    selectedDisk?: string;
+    selectedDisk: string | null;
   };
   removeDialog: {
     open: boolean;
@@ -80,7 +80,8 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
       open: false,
       mode: 'edit',
       label: '',
-      description: ''
+      description: '',
+      selectedDisk: null
     },
     removeDialog: {
       open: false,
@@ -100,7 +101,13 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
 
   openForCreate = () => {
     this.setState({
-      imageDrawer: { open: true, mode: 'create', label: '', description: '' }
+      imageDrawer: {
+        open: true,
+        mode: 'create',
+        label: '',
+        description: '',
+        selectedDisk: null
+      }
     });
   };
 
@@ -130,7 +137,8 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
         mode: 'edit',
         description,
         imageID,
-        label
+        label,
+        selectedDisk: null
       }
     });
   };
@@ -140,7 +148,8 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
       imageDrawer: {
         open: true,
         mode: 'restore',
-        imageID
+        imageID,
+        selectedDisk: null
       }
     });
   };
@@ -196,14 +205,14 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
       this.setState({
         imageDrawer: {
           ...this.state.imageDrawer,
-          selectedDisk: 'none',
+          selectedDisk: null,
           selectedLinode: e.target.value
         }
       });
     }
   };
 
-  changeSelectedDisk = (disk: string) => {
+  changeSelectedDisk = (disk: string | null) => {
     this.setState({
       imageDrawer: { ...this.state.imageDrawer, selectedDisk: disk }
     });
