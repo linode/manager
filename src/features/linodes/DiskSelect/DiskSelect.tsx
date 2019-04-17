@@ -18,7 +18,7 @@ interface Props {
   generalError?: string;
   diskError?: string;
   disks: Linode.Disk[];
-  selectedDisk?: string;
+  selectedDisk: string | null;
   disabled?: boolean;
   handleChange: (disk: string | null) => void;
 }
@@ -31,7 +31,7 @@ const disksToOptions = (disks: Linode.Disk[]): Item<string>[] => {
 
 const diskFromValue = (
   disks: Item<string>[],
-  diskId?: string
+  diskId: string | null
 ): Item<string> | undefined => {
   if (!diskId) {
     return;
