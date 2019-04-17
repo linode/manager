@@ -1428,7 +1428,7 @@
             "X-XSS-Protection": "1; mode=block",
             "Strict-Transport-Security": "max-age=31536000"
           },
-          "body": "{\"pages\": 1, \"results\": 9, \"page\": 1, \"data\": [{\"country\": \"us\", \"id\": \"us-central\"}, {\"country\": \"us\", \"id\": \"us-west\"}, {\"country\": \"us\", \"id\": \"us-southeast\"}, {\"country\": \"us\", \"id\": \"us-east\"}, {\"country\": \"uk\", \"id\": \"eu-west\"}, {\"country\": \"sg\", \"id\": \"ap-south\"}, {\"country\": \"de\", \"id\": \"eu-central\"}, {\"country\": \"jp\", \"id\": \"ap-northeast\"}, {\"country\": \"jp\", \"id\": \"ap-northeast-1a\"}, {\"country\": \"ca\", \"id\": \"ca-east\"}]}",
+          "body": "{\"pages\": 1, \"results\": 9, \"page\": 1, \"data\": [{\"country\": \"us\", \"id\": \"us-central\"}, {\"country\": \"us\", \"id\": \"us-west\"}, {\"country\": \"us\", \"id\": \"us-southeast\"}, {\"country\": \"us\", \"id\": \"us-east\"}, {\"country\": \"uk\", \"id\": \"eu-west\"}, {\"country\": \"sg\", \"id\": \"ap-south\"}, {\"country\": \"de\", \"id\": \"eu-central\"}, {\"country\": \"jp\", \"id\": \"ap-northeast\"}, {\"country\": \"jp\", \"id\": \"ap-northeast-1a\"}, {\"country\": \"ca\", \"id\": \"ca-central\"}]}",
           "_mode": "text"
         }
       }]
