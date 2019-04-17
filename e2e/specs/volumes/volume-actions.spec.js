@@ -1,4 +1,5 @@
 const { constants } = require('../../constants');
+
 import {
   timestamp,
   apiCreateLinode,
@@ -9,6 +10,7 @@ import {
 } from '../../utils/common';
 
 import Volumes from '../../pageobjects/volumes.page';
+import VolumeDetail from '../../pageobjects/linode-detail/linode-detail-volume.page';
 
 describe("Volumes Landing - Volume Actions", () => {
   const testVolume = {
@@ -41,10 +43,18 @@ describe("Volumes Landing - Volume Actions", () => {
   it("should list the Volumes on the Volumes landing page", () => {
     browser.url(constants.routes.volumes);
     Volumes.baseElemsDisplay();
-    expect(Volumes.volumeCell.length).toBe(2);
+    expect(Volumes.volumeCell.length).toBeGreaterThan(0);
   });
 
   it("should have basic actions", () => {
-    VolumeDetail.selectActionMenuItemV2(VolumeDetail.volumeCellElem.selector, 'Detach');
+    const attachedVolume = VolumeDetail.volumeRow(volumeEast.label).$('..');
+    browser.debug();
+    attachedVolume.$(VolumeDetail.actionMenu.selector).click();
+    const basicActions = ['Show Configuration', 'Edit Volume', 'Resize', 'Clone'];
+    const actionsDisplayed = Volumes.actionMenuItems.map(action => action.getText());
+    // expect(basicActions.sort()).toEqual(actionsDisplayed.sort());
+    basicActions.forEach(action => {
+      expect(actionsDisplayed).toContain(action);
+    });
   });
 });
