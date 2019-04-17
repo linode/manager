@@ -32,11 +32,12 @@ const disksToOptions = (disks: Linode.Disk[]): Item<string>[] => {
 const diskFromValue = (
   disks: Item<string>[],
   diskId: string | null
-): Item<string> | undefined => {
+): Item<string> | null => {
   if (!diskId) {
-    return;
+    return null;
   }
-  return disks.find(thisDisk => thisDisk.value === diskId);
+  const thisDisk = disks.find(disk => disk.value === diskId);
+  return thisDisk ? thisDisk : null;
 };
 
 const DiskSelect: React.StatelessComponent<CombinedProps> = props => {
