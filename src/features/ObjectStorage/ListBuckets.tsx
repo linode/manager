@@ -46,7 +46,7 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
       }) => (
         <React.Fragment>
           <Paper>
-            <Table aria-label="List of your Buckets">
+            <Table removeLabelonMobile aria-label="List of your Buckets">
               <TableHead>
                 <TableRow>
                   <TableSortCell
