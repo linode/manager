@@ -2,7 +2,6 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
-import InputLabel from 'src/components/core/InputLabel';
 import {
   StyleRulesCallback,
   WithStyles,
@@ -32,15 +31,6 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
   return (
     <FormControl fullWidth>
-      <InputLabel
-        htmlFor="linode"
-        disableAnimation
-        shrink={true}
-        error={Boolean(props.linodeError)}
-        disabled={props.disabled}
-      >
-        Linode
-      </InputLabel>
       <TextField
         value={props.selectedLinode || 'none'}
         onChange={props.handleChange}
@@ -49,6 +39,7 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
         select
         data-qa-linode-select
         disabled={props.disabled}
+        label="Linode"
       >
         <MenuItem value="none" disabled>
           Select a Linode

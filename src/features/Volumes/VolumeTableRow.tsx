@@ -15,6 +15,7 @@ import TableCell from 'src/components/TableCell';
 import TagsCell from 'src/components/TagsCell';
 import { formatRegion } from 'src/utilities';
 import VolumesActionMenu from './VolumesActionMenu';
+import { ExtendedVolume } from './VolumesLanding';
 
 type ClassNames =
   | 'root'
@@ -74,7 +75,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 interface Props {
-  volume: any;
+  volume: ExtendedVolume;
   isUpdating: boolean;
   isVolumesLanding: boolean;
   openForEdit: (
@@ -214,7 +215,7 @@ export const VolumeTableRow: React.StatelessComponent<
         <VolumesActionMenu
           onShowConfig={openForConfig}
           filesystemPath={filesystemPath}
-          linodeLabel={volume.linodeLabel}
+          linodeLabel={volume.linodeLabel || ''}
           regionID={regionID}
           volumeId={volume.id}
           volumeTags={volume.tags}
@@ -223,7 +224,13 @@ export const VolumeTableRow: React.StatelessComponent<
           onEdit={openForEdit}
           onResize={openForResize}
           onClone={openForClone}
-          attached={Boolean(volume.linode_id)}
+          /**
+           * This is a safer check than volume.linode_id (see logic in addAttachedLinodeInfoToVolume() from VolumesLanding)
+           * as it actually checks to see if the Linode exists before adding linodeLabel and linodeStatus.
+           * This avoids a bug (M3-2534) where a Volume attached to a just-deleted Linode
+           * could sometimes get tagged as "attached" here.
+           */
+          attached={Boolean(volume.linodeLabel)}
           onAttach={handleAttach}
           onDetach={handleDetach}
           poweredOff={volume.linodeStatus === 'offline'}

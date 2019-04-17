@@ -1,6 +1,4 @@
 export const ipv4DNSResolvers = {
-  // @todo this is a lot of items to display in a single list, and each DC has ~8.
-  // Probably will need a different UX here.
   newark: [
     '66.228.42.5',
     '96.126.106.5',
@@ -58,7 +56,7 @@ export const ipv4DNSResolvers = {
     '106.186.123.5',
     '106.186.124.5'
   ],
-  'singapore': [
+  singapore: [
     '139.162.11.5',
     '139.162.13.5',
     '139.162.14.5',

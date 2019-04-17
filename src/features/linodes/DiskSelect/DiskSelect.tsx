@@ -2,7 +2,6 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
-import InputLabel from 'src/components/core/InputLabel';
 import {
   StyleRulesCallback,
   WithStyles,
@@ -32,14 +31,6 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const DiskSelect: React.StatelessComponent<CombinedProps> = props => {
   return (
     <FormControl fullWidth>
-      <InputLabel
-        htmlFor="disk"
-        disableAnimation
-        shrink={true}
-        error={Boolean(props.diskError)}
-      >
-        Disk
-      </InputLabel>
       <TextField
         value={props.selectedDisk || 'none'}
         onChange={props.handleChange}
@@ -48,6 +39,7 @@ const DiskSelect: React.StatelessComponent<CombinedProps> = props => {
         disabled={props.disabled}
         select
         data-qa-disk-select
+        label="Disk"
       >
         <MenuItem value="none" disabled>
           Select a Disk

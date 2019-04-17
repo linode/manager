@@ -52,7 +52,7 @@ interface Props {
   tags: string[];
   status: string;
   type: 'master' | 'slave';
-  onRemove: (domain: string, domainID: number) => void;
+  onRemove: (domain: string, domainId: number) => void;
   onClone: (domain: string, id: number) => void;
   onEdit: (domain: string, id: number) => void;
 }

@@ -29,7 +29,7 @@ interface Props {
 
 type CombinedProps = Props & RouteComponentProps<{}>;
 
-class VolumesActionMenu extends React.Component<CombinedProps> {
+export class VolumesActionMenu extends React.Component<CombinedProps> {
   handleShowConfig = () => {
     const { onShowConfig, label, filesystemPath } = this.props;
     onShowConfig(label, filesystemPath);
