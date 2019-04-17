@@ -37,7 +37,7 @@ export const ModeSelect: React.StatelessComponent<CombinedProps> = ({
       aria-label="mode"
       name="mode"
       value={selected}
-      onChange={onChange} // @todo remove Lambda after we have React.memo
+      onChange={onChange}
       data-qa-mode-radio-group
     >
       {modes.map((mode, idx: number) => (
@@ -55,4 +55,4 @@ export const ModeSelect: React.StatelessComponent<CombinedProps> = ({
 
 const styled = withStyles(styles);
 
-export default styled(ModeSelect);
+export default React.memo(styled(ModeSelect));

@@ -72,8 +72,8 @@ export const updateDomainRecord = (
  * @param domainId { number } The ID of the Domain whose Record you are deleting.
  * @param recordId { number } The ID of the Record you are deleting.
  */
-export const deleteDomainRecord = (domainID: number, recordId: number) =>
+export const deleteDomainRecord = (domainId: number, recordId: number) =>
   Request<{}>(
-    setURL(`${API_ROOT}/domains/${domainID}/records/${recordId}`),
+    setURL(`${API_ROOT}/domains/${domainId}/records/${recordId}`),
     setMethod('DELETE')
   ).then(response => response.data);
