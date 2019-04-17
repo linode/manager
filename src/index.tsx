@@ -22,7 +22,7 @@ import { sendEvent } from 'src/utilities/analytics';
 import 'src/utilities/createImageBitmap';
 import 'src/utilities/request';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
-import { theme } from 'src/utilities/storage';
+import { spacing as spacingChoice, theme } from 'src/utilities/storage';
 import App from './App';
 import './events';
 import './index.css';
@@ -38,19 +38,15 @@ const Lish = DefaultLoader({
 initAnalytics(GA_ID, isProduction);
 initTagManager(GTM_ID);
 
-if (theme.get() === 'dark') {
-  sendEvent({
-    category: 'Theme Choice',
-    action: 'Dark Theme',
-    label: location.pathname
-  });
-} else {
-  sendEvent({
-    category: 'Theme Choice',
-    action: 'Light Theme',
-    label: location.pathname
-  });
-}
+const themeChoice = theme.get() === 'dark' ? 'Dark Theme' : 'Light Theme';
+const spacingMode =
+  spacingChoice.get() === 'compact' ? 'Compact Mode' : 'Normal Mode';
+
+sendEvent({
+  category: 'Theme Choice',
+  action: `${themeChoice} | ${spacingMode}`,
+  label: location.pathname
+});
 
 /**
  * Send pageviews unless blacklisted.
