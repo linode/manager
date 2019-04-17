@@ -110,8 +110,7 @@ const parseInTimeZone = curry((timezone: string, utcMoment: any) => {
   if (!timezone) {
     return moment(utcMoment);
   }
-  const offset = moment.tz(timezone).utcOffset();
-  return moment(utcMoment).utcOffset(offset);
+  return moment(utcMoment).tz(timezone);
 });
 
 class LineGraph extends React.Component<CombinedProps, {}> {
