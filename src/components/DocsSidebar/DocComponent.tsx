@@ -5,6 +5,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import ExternalLink from 'src/components/ExternalLink';
 import truncateText from 'src/utilities/truncateText';
 
 export interface Doc {
@@ -47,9 +48,7 @@ class DocComponent extends React.PureComponent<PropsWithStyles> {
       <React.Fragment>
         <div className={classes.root} data-qa-doc={title}>
           <Typography variant="h3" className={classes.title}>
-            <a href={src} target="_blank" className={classes.titleLink}>
-              {title}
-            </a>
+            <ExternalLink text={title} link={src} absoluteIcon black />
           </Typography>
           <Typography variant="body2" className={classes.body}>
             {this.body()}
