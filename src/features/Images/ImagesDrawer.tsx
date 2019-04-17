@@ -43,6 +43,7 @@ export interface Props {
   description?: string;
   imageID?: string;
   label?: string;
+  // Only used from LinodeDisks to pre-populate the selected Disk
   disks?: Linode.Disk[];
   selectedDisk: string | null;
   selectedLinode?: string;
@@ -105,6 +106,8 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     /** Is opening... */
     if (prevProps.open === false && this.props.open === true) {
       this.updateLinodes();
+      // Reset the disks on drawer open
+      this.setState({ disks: [] });
     }
 
     if (this.props.disks && !equals(this.props.disks, prevProps.disks)) {
