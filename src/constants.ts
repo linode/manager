@@ -44,6 +44,10 @@ export const ISO_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 
 export const MAX_VOLUME_SIZE = 10240;
 
+/**
+ * Used by e.g. LISH to determine the websocket connection address.
+ * Whenever updating this, also update the corresponding name in resolvers.ts
+ */
 export const ZONES = {
   'us-east': 'newark',
   'us-east-1a': 'newark',
@@ -63,7 +67,8 @@ export const ZONES = {
   'ap-northeast-1b': 'shinagawa1',
   'ap-south': 'singapore',
   'ap-south-1a': 'singapore',
-  'ca-east': 'toronto' // @todo check this after approval
+  'ca-central': 'toronto1',
+  'ca-east': 'toronto1' // @todo Fallback for old Toronto ID; remove once DB has been updated.
 };
 
 export const dcDisplayNames = {
@@ -73,7 +78,7 @@ export const dcDisplayNames = {
   'us-southeast-1a': 'Atlanta, GA',
   'eu-central-1a': 'Frankfurt, DE',
   'eu-west-1a': 'London, UK',
-  'ap-northeast-1a': 'Tokyo, JP', // @todo should we remove this and change the display name of Tokyo 2 to Tokyo?
+  'ap-northeast-1a': 'Tokyo, JP',
   'ap-northeast-1b': 'Tokyo 2, JP',
   'us-central': 'Dallas, TX',
   'us-west': 'Fremont, CA',
@@ -83,7 +88,8 @@ export const dcDisplayNames = {
   'ap-south': 'Singapore, SG',
   'eu-central': 'Frankfurt, DE',
   'ap-northeast': 'Tokyo 2, JP',
-  'ca-east': 'Toronto, ON'
+  'ca-central': 'Toronto, ON',
+  'ca-east': 'Toronto, ON' // @todo Fallback for old Toronto ID; remove once DB has been updated.
 };
 
 export const dcDisplayCountry = {
@@ -103,6 +109,7 @@ export const dcDisplayCountry = {
   'ap-south': 'SG',
   'eu-central': 'DE',
   'ap-northeast': 'JP',
+  'ca-central': 'CA',
   'ca-east': 'CA'
 };
 

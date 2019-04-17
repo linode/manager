@@ -5,7 +5,7 @@ describe('does region support block storage', () => {
     expect(doesRegionSupportBlockStorage('us-central')).toBe(true);
     expect(doesRegionSupportBlockStorage('us-east')).toBe(true);
     expect(doesRegionSupportBlockStorage('us-central')).toBe(true);
-    expect(doesRegionSupportBlockStorage('ca-east')).toBe(true);
+    expect(doesRegionSupportBlockStorage('ca-central')).toBe(true);
   });
 
   it('returns false if the region does not support block storage', () => {
