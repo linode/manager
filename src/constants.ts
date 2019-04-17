@@ -67,7 +67,7 @@ export const ZONES = {
   'ap-northeast-1b': 'shinagawa1',
   'ap-south': 'singapore',
   'ap-south-1a': 'singapore',
-  'ca-east': 'toronto1' // @todo check this after approval
+  'ca-central': 'toronto1' // @todo check this after approval
 };
 
 export const dcDisplayNames = {
@@ -87,7 +87,7 @@ export const dcDisplayNames = {
   'ap-south': 'Singapore, SG',
   'eu-central': 'Frankfurt, DE',
   'ap-northeast': 'Tokyo 2, JP',
-  'ca-east': 'Toronto, ON'
+  'ca-central': 'Toronto, ON'
 };
 
 export const dcDisplayCountry = {
@@ -107,7 +107,7 @@ export const dcDisplayCountry = {
   'ap-south': 'SG',
   'eu-central': 'DE',
   'ap-northeast': 'JP',
-  'ca-east': 'CA'
+  'ca-central': 'CA'
 };
 
 // At this time, the following regions do not support block storage.
