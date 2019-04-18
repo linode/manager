@@ -43,11 +43,14 @@ describe("Volumes Landing - Volume Actions", () => {
     Volumes.baseElemsDisplay();
     VolumeDetail.assertVolumeInTable(volumeEast);
     VolumeDetail.assertVolumeInTable(volumeEastAttached);
+    const attached = Volumes.getVolumeElement(volumeEastAttached.label);
+    const unattached = Volumes.getVolumeElement(volumeEast.label);
+    expect(Volumes.isAttached(attached)).toBeTruthy();
+    expect(Volumes.isAttached(unattached)).toBeFalsy();
   });
 
   it("an unattached Volume should have the correct actions", () => {
-    const unattachedVolumeId = Volumes.getVolumeId(volumeEast.label);
-    const unattachedVolume = $(`[data-qa-volume-cell="${unattachedVolumeId}"]`);
+    const unattachedVolume = Volumes.getVolumeElement(volumeEast.label)
     unattachedVolume.$(VolumeDetail.actionMenu.selector).click();
     const basicActions = ['Show Configuration', 'Edit Volume', 'Resize', 'Clone', 'Attach', 'Delete'];
     const actionsDisplayed = Volumes.actionMenuItems.map(action => action.getText());
@@ -60,8 +63,7 @@ describe("Volumes Landing - Volume Actions", () => {
   });
 
   it("an attached Volume should have the correct actions", () => {
-    const attachedVolumeId = Volumes.getVolumeId(volumeEastAttached.label);
-    const attachedVolume = $(`[data-qa-volume-cell="${attachedVolumeId}"]`);
+    const attachedVolume = Volumes.getVolumeElement(volumeEastAttached.label);
     browser.waitForExist('[data-qa-backdrop]', constants.wait.normal, true);
 
     attachedVolume.$(VolumeDetail.actionMenu.selector).click();

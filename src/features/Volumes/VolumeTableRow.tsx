@@ -202,7 +202,7 @@ export const VolumeTableRow: React.StatelessComponent<
       {isVolumesLanding && (
         <TableCell
           parentColumn="Attached To"
-          data-qa-volume-cell-attachment={volume.linodeLabel}
+          data-qa-volume-cell-attachment={volume.linodeLabel || 'Unattached'}
         >
           {volume.linodeLabel ? (
             <Link

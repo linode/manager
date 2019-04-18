@@ -67,13 +67,18 @@ class Volumes extends Page {
 
         // Wait for progress bars to not display on volume detail pages
         if (!browser.getUrl().includes('/linodes')) {
-            browser.waitForVisible(`[data-qa-volume-cell-attachment="${linodeLabel}"]`,constants.wait.minute, true);
+            browser.waitForVisible(`[data-qa-volume-cell-attachment="${linodeLabel}"]`, constants.wait.minute, true);
         }
     }
 
     isAttached(volumeElement) {
-        const attached = volumeElement.$(this.volumeAttachment.selector).getText() !== '' ? true : false;
+        const attached = volumeElement.$(this.volumeAttachment.selector).getText() !== 'Unattached';
         return attached;
+    }
+
+    getVolumeElement(volumeLabel) {
+        const volumeId = this.getVolumeId(volumeLabel);
+        return $(`[data-qa-volume-cell="${volumeId}"]`);
     }
 }
 
