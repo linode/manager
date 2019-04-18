@@ -74,19 +74,33 @@ When a new version of Cloud Manager is released, it must be accompanied by an up
 
 #### What to Do When Releasing
 
+NOTE: These instructions assume your upstream is called `origin`
+
+These instructions assume you have your local branches configured so that the upstream is set to their
+remote counterpart. If you haven't done so already, run the following commands.
+
+* `git checkout origin/testing && git checkout -b testing && git branch --set-upstream-to origin/testing`
+* `git checkout origin/staging && git checkout -b staging && git branch --set-upstream-to origin/staging`
+* `git checkout origin/master && git checkout -b master && git branch --set-upstream-to origin/master`
+
 When you plan on releasing a new version of Cloud Manager:
 
 1. Pull down the latest `testing` and `develop` branches locally
+    * `git checkout develop && git pull && git checkout testing && git pull`
 2. Merge develop into testing with `git checkout testing && git merge develop`
     * This should result in 0 merge conflicts
-3. [Generate the Changelog](#generating-the-changelog) first
+3. While `testing` branch is checked out, [generate the Changelog](#generating-the-changelog) first
 4. Review the Changelog and update manually if necessary
-5. Once your Changelog has been approved by the team, stage the changes locally and run `yarn version --new-version X.X.X` (replace the X's with the appropriate version number)
-    * this will apply the Git tags and update the version number in the `package.json`
+    * This includes getting rid of any references to PR numbers, JIRA ticket numbers or grammar and spelling mistakes
+    * You should also ensure that everything in the Chaneglog is user-facing. Removing anything that users won't directly be interacting with
+5. Once your Changelog has been approved by the team, run `git add . && yarn version --new-version X.X.X` (replace the X's with the appropriate version number)
+    * This will apply the Git tags and update the version number in the `package.json`
     * This will also automatically commit the changes with the commit message `vX.X.X`
-6. Push the changes from your local `testing` branch to the upstream
+6. Push the changes from your local `testing` branch to the upstream with `git push origin testing`
     * You may need to add the `--no-verify` flag, as the `testing` branch isn't prefixed with `M3`
-7. At last, follow the merge flow. Merge from `testing` to `staging` and finally to `master`
+7. At last, follow the merge flow as normal
+    * Merge `testing` into `staging` with `git checkout staging && git pull && git merge testing && git push origin staging`
+    * Merge `staging` into `master` with `git checkout master && git pull && git merge staging && git push origin master` 
 8. After the new version has been released, create a new branch from `develop` branch and cherry-pick the release commit from `master` branch into your new branch
 9. Then, open a PR to merge that branch into `develop` branch to update the release
 10. Finally, on GitHub, create a new release from the Git tag you've just pushed to `master` branch
