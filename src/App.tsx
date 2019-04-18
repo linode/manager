@@ -352,7 +352,11 @@ export class App extends React.Component<CombinedProps, State> {
                   toggleSpacing={toggleSpacing}
                 />
                 <main className={classes.content}>
-                  <TopMenu openSideMenu={this.openMenu} />
+                  <TopMenu
+                    openSideMenu={this.openMenu}
+                    isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
+                    username={this.props.username}
+                  />
                   <div className={classes.wrapper} id="main-content">
                     <Grid container spacing={0} className={classes.grid}>
                       <Grid item className={classes.switchWrapper}>
@@ -485,7 +489,9 @@ interface StateProps {
   volumesError?: Linode.ApiFieldError[] | Error;
   bucketsError?: Error | Linode.ApiFieldError[];
   userId?: number;
+  username: string;
   documentation: Linode.Doc[];
+  isLoggedInAsCustomer: boolean;
 }
 
 const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
@@ -502,8 +508,13 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
   volumesError: state.__resources.volumes.error,
   bucketsError: state.__resources.buckets.error,
   userId: path(['data', 'uid'], state.__resources.profile),
-
-  documentation: state.documentation
+  username: pathOr('', ['data', 'username'], state.__resources.profile),
+  documentation: state.documentation,
+  isLoggedInAsCustomer: pathOr(
+    false,
+    ['authentication', 'loggedInAsCustomer'],
+    state
+  )
 });
 
 export const connected = connect(

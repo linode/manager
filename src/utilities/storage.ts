@@ -23,7 +23,7 @@ export const setStorage = (key: string, value: string) => {
 
 const THEME = 'themeChoice';
 const SPACING = 'spacingChoice';
-const PAGE_SIZE = 'PAGE_SIZE'
+const PAGE_SIZE = 'PAGE_SIZE';
 const BETA_NOTIFICATION = 'BetaNotification';
 const LINODE_VIEW = 'linodesViewStyle';
 const GROUP_LINODES = 'GROUP_LINODES';
@@ -143,7 +143,7 @@ export const storage: Storage = {
   },
   pageSize: {
     get: () => {
-      return parseInt(getStorage(PAGE_SIZE, '25'), 10)
+      return parseInt(getStorage(PAGE_SIZE, '25'), 10);
     },
     set: v => setStorage(PAGE_SIZE, `${v}`)
   },
@@ -197,8 +197,7 @@ export const storage: Storage = {
   BackupsCtaDismissed: {
     get: () => getStorage(BACKUPSCTA_DISMISSED),
     set: () => setStorage(BACKUPSCTA_DISMISSED, 'true')
-  },
-  
+  }
 };
 
 export const { theme, notifications, views, authentication, spacing } = storage;

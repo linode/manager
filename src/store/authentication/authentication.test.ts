@@ -1,6 +1,10 @@
 import store from 'src/store';
 import { authentication } from 'src/utilities/storage';
-import { handleLogout, handleStartSession } from './authentication.actions';
+import {
+  handleInitTokens,
+  handleLogout,
+  handleStartSession
+} from './authentication.actions';
 
 describe('Authentication', () => {
   authentication.expire.set('hello world');
@@ -19,7 +23,8 @@ describe('Authentication', () => {
     expect(store.getState().authentication).toEqual({
       token: 'helloworld',
       scopes: '*',
-      expiration: 'never'
+      expiration: 'never',
+      loggedInAsCustomer: false
     });
   });
 
@@ -39,7 +44,44 @@ describe('Authentication', () => {
     expect(store.getState().authentication).toEqual({
       token: null,
       scopes: null,
-      expiration: null
+      expiration: null,
+      loggedInAsCustomer: false
+    });
+  });
+
+  it('should set loggedInAsCustomer to true if token contains "admin"', () => {
+    authentication.expire.set(
+      'Thu Apr 11 3000 11:48:04 GMT-0400 (Eastern Daylight Time)'
+    );
+    authentication.nonce.set('hello world');
+    authentication.scopes.set('hello world');
+    authentication.token.set('Admin');
+
+    store.dispatch(handleInitTokens());
+
+    expect(store.getState().authentication).toEqual({
+      token: 'Admin',
+      scopes: 'hello world',
+      expiration: 'Thu Apr 11 3000 11:48:04 GMT-0400 (Eastern Daylight Time)',
+      loggedInAsCustomer: true
+    });
+  });
+
+  it('should set loggedInAsCustomer to false if token does not contain "admin"', () => {
+    authentication.expire.set(
+      'Thu Apr 11 3000 11:48:04 GMT-0400 (Eastern Daylight Time)'
+    );
+    authentication.nonce.set('hello world');
+    authentication.scopes.set('hello world');
+    authentication.token.set('bearer');
+
+    store.dispatch(handleInitTokens());
+
+    expect(store.getState().authentication).toEqual({
+      token: 'bearer',
+      scopes: 'hello world',
+      expiration: 'Thu Apr 11 3000 11:48:04 GMT-0400 (Eastern Daylight Time)',
+      loggedInAsCustomer: false
     });
   });
 });

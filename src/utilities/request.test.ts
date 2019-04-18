@@ -54,7 +54,8 @@ describe('Expiring Tokens', () => {
     expect(store.getState().authentication).toEqual({
       token: null,
       scopes: null,
-      expiration: null
+      expiration: null,
+      loggedInAsCustomer: false
     });
     expireToken.catch((e: AxiosError) => expect(e.response!.status).toBe(401));
   });
@@ -76,7 +77,8 @@ describe('Expiring Tokens', () => {
     expect(store.getState().authentication).toEqual({
       token: 'helloworld',
       scopes: '*',
-      expiration: 'never'
+      expiration: 'never',
+      loggedInAsCustomer: false
     });
     expireToken.catch((e: AxiosError) => expect(e.response!.status).toBe(400));
   });

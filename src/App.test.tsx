@@ -16,6 +16,8 @@ it('renders without crashing', () => {
         <StaticRouter location="/" context={{}}>
           <App
             {...mockNodeBalancerActions}
+            username=""
+            isLoggedInAsCustomer={false}
             onPresentSnackbar={jest.fn()}
             enqueueSnackbar={jest.fn()}
             location={{

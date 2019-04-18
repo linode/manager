@@ -1,12 +1,9 @@
 const PRODUCTION = 'production';
 
-export const GA_ID = process.env.REACT_APP_GA_ID;
-
-export const GTM_ID = process.env.REACT_APP_GTM_ID;
-
+/** native to webpack build */
 export const isProduction = process.env.NODE_ENV === PRODUCTION;
-export const isTest = process.env.REACT_APP_TEST_ENVIRONMENT === 'true';
 
+/** required for the app to function */
 export const APP_ROOT =
   process.env.REACT_APP_APP_ROOT || 'http://localhost:3000';
 export const LOGIN_ROOT =
@@ -15,23 +12,28 @@ export const API_ROOT =
   process.env.REACT_APP_API_ROOT || 'https://api.lindev.local';
 export const LISH_ROOT =
   process.env.REACT_APP_LISH_ROOT || 'webconsole.linode.com';
+/** generate a client_id by navigating to https://cloud.linode.com/profile/clients */
 export const CLIENT_ID = process.env.REACT_APP_CLIENT_ID;
-
-export const SENTRY_URL = process.env.REACT_APP_SENTRY_URL;
-
-export const LOGIN_SESSION_LIFETIME_MS = 45 * 60 * 1000;
-export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
-
+/** All of the following used specifically for Algolia search */
 export const DOCS_BASE_URL = 'https://linode.com';
 export const COMMUNITY_BASE_URL = 'https://linode.com/community/';
 export const DOCS_SEARCH_URL = 'https://linode.com/docs/search/?q=';
 export const COMMUNITY_SEARCH_URL =
   'https://linode.com/community/questions/search?query=';
-
 export const ALGOLIA_APPLICATION_ID =
   process.env.REACT_APP_ALGOLIA_APPLICATION_ID || '';
 export const ALGOLIA_SEARCH_KEY =
   process.env.REACT_APP_ALGOLIA_SEARCH_KEY || '';
+
+/** optional variables */
+export const SENTRY_URL = process.env.REACT_APP_SENTRY_URL;
+export const LOGIN_SESSION_LIFETIME_MS = 45 * 60 * 1000;
+export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
+/** Google Analytics and Tag Manager */
+export const GA_ID = process.env.REACT_APP_GA_ID;
+export const GTM_ID = process.env.REACT_APP_GTM_ID;
+/** for hardcoding token used for API Requests. Example: "Bearer 1234" */
+export const ACCESS_TOKEN = process.env.REACT_APP_ACCESS_TOKEN;
 
 // Features
 export const isObjectStorageEnabled =

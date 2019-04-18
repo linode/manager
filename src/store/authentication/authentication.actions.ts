@@ -3,9 +3,9 @@ import actionCreatorFactory from 'typescript-fsa';
 const actionCreator = actionCreatorFactory('@@CLOUDMANAGER/Authentication');
 
 interface TokensWithExpiry {
-  token?: string;
-  scopes?: string;
-  expires?: string;
+  token: string;
+  scopes: string;
+  expires: string;
 }
 
 /** user is coming to the app for the first time */
