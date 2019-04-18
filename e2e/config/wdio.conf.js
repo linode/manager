@@ -1,6 +1,6 @@
 require('dotenv').config();
 
-const { readFileSync, unlinkSync } = require('fs');
+const { readFileSync } = require('fs');
 const { argv } = require('yargs');
 
 const FSCredStore = require('../utils/fs-cred-store');
@@ -311,6 +311,11 @@ exports.config = {
         });
         console.log("creds are");
         console.log(creds);
+
+        browser.call(() => {
+            return credStore.cleanupAccounts(10, false);
+        });
+
         credStore.login(creds.username, creds.password, false);
     },
     /**
