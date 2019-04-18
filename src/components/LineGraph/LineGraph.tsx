@@ -32,7 +32,7 @@ interface Props {
   showToday: boolean;
   suggestedMax?: number;
   data: DataSet[];
-  timezone?: string;
+  timezone: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -107,9 +107,6 @@ const lineOptions: ChartData<any> = {
 };
 
 const parseInTimeZone = curry((timezone: string, utcMoment: any) => {
-  if (!timezone) {
-    return moment(utcMoment);
-  }
   return moment(utcMoment).tz(timezone);
 });
 
