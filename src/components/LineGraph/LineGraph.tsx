@@ -1,4 +1,5 @@
-import { clone } from 'ramda';
+import * as moment from 'moment-timezone';
+import { clone, curry } from 'ramda';
 import * as React from 'react';
 import { ChartData, Line } from 'react-chartjs-2';
 import {
@@ -31,6 +32,7 @@ interface Props {
   showToday: boolean;
   suggestedMax?: number;
   data: DataSet[];
+  timezone: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -104,10 +106,19 @@ const lineOptions: ChartData<any> = {
   pointHitRadius: 10
 };
 
+const parseInTimeZone = curry((timezone: string, utcMoment: any) => {
+  return moment(utcMoment).tz(timezone);
+});
+
 class LineGraph extends React.Component<CombinedProps, {}> {
   getChartOptions = (suggestedMax?: number) => {
     const finalChartOptions = clone(chartOptions);
-    const { showToday } = this.props;
+    const { showToday, timezone } = this.props;
+    const parser = parseInTimeZone(timezone || '');
+    finalChartOptions.scales.xAxes[0].time.parser = parser;
+    finalChartOptions.scales.xAxes[0].time.offset = moment
+      .tz(timezone || '')
+      .utcOffset();
 
     if (showToday) {
       finalChartOptions.scales.xAxes[0].time.displayFormats = {
