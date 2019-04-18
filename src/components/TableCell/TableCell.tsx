@@ -34,7 +34,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   data: {
     [theme.breakpoints.down('sm')]: {
       textAlign: 'right',
-      wordBreak: 'break-all',
+      width: '100%',
       marginLeft: theme.spacing.unit * 3
     }
   },
@@ -86,9 +86,7 @@ class WrappedTableCell extends React.Component<CombinedProps> {
             <Hidden mdUp>
               <span>{parentColumn}</span>
             </Hidden>
-            <span className={`${classes.data} data`}>
-              {this.props.children}
-            </span>
+            <div className={`${classes.data} data`}>{this.props.children}</div>
           </React.Fragment>
         ) : (
           this.props.children
