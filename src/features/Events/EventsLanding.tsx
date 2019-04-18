@@ -1,5 +1,5 @@
 import { InjectedNotistackProps, withSnackbar } from 'notistack';
-import { compose as rCompose, concat, sort, uniq } from 'ramda';
+import { compose as rCompose, concat, uniq } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import Waypoint from 'react-waypoint';
@@ -27,7 +27,7 @@ import areEntitiesLoading from 'src/store/selectors/entitiesLoading';
 
 import EventRow from './EventRow';
 
-type ClassNames = 'root' | 'header' | 'noMoreEvents';
+type ClassNames = 'root' | 'header' | 'labelCell' | 'timeCell' | 'noMoreEvents';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
@@ -37,6 +37,15 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   noMoreEvents: {
     padding: theme.spacing.unit * 4,
     textAlign: 'center'
+  },
+  labelCell: {
+    width: '69%',
+    minWidth: 200,
+    paddingLeft: 10
+  },
+  timeCell: {
+    width: '30%',
+    paddingLeft: theme.spacing.unit / 2
   }
 });
 
@@ -51,28 +60,9 @@ type CombinedProps = Props &
   InjectedNotistackProps &
   WithStyles<ClassNames>;
 
-const sortByCreated = (prevEvent: Linode.Event, nextEvent: Linode.Event) => {
-  const a = prevEvent.created;
-  const b = nextEvent.created;
-  if (a > b) {
-    return 1;
-  }
-  if (b < a) {
-    return -1;
-  }
-  return 0;
-};
-
 const appendToEvents = (oldEvents: Linode.Event[], newEvents: Linode.Event[]) =>
-  rCompose<
-    Linode.Event[],
-    Linode.Event[],
-    Linode.Event[],
-    Linode.Event[],
-    Linode.Event[]
-  >(
+  rCompose<Linode.Event[], Linode.Event[], Linode.Event[], Linode.Event[]>(
     uniq, // Ensure no duplicates
-    sort(sortByCreated), // Ensure entries are sorted by date
     concat(oldEvents), // Attach the new events
     setDeletedEvents // Add a _deleted entry for each new event
   )(newEvents);
@@ -161,11 +151,16 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
               )}
               <TableCell
                 data-qa-events-subject-header
-                style={{ minWidth: 200, paddingLeft: 10 }}
+                className={classes.labelCell}
               >
                 Event
               </TableCell>
-              <TableCell data-qa-events-time-header>Time</TableCell>
+              <TableCell
+                data-qa-events-time-header
+                className={classes.timeCell}
+              >
+                Time
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
