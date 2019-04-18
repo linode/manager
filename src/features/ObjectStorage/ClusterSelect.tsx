@@ -40,6 +40,7 @@ export const ClusterSelect: React.StatelessComponent<CombinedProps> = props => {
       isSearchable={false}
       isClearable={false}
       errorText={errorText}
+      defaultValue={options[0]}
     />
   );
 };

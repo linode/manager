@@ -11,7 +11,6 @@ describe('BucketTableRow', () => {
       classes={{
         root: '',
         labelStatusWrapper: '',
-        hostname: '',
         bucketRow: ''
       }}
       label="test-bucket-001"
