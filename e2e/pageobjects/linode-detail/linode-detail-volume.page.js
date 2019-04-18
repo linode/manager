@@ -329,13 +329,10 @@ export class VolumeDetail extends Page {
         const volumes = this.volumeCell;
         const vLabel = this.volumeCellLabel;
         const vSize = this.volumeCellSize;
-        const vFsPath = this.volumeFsPath;
-
         const volumesDisplayed = volumes.map((v) => {
-            return [v.$(vLabel.selector).getText(),
-            v.$(vSize.selector).getText()]
+            return v.$(vLabel.selector).getText()
         });
-        expect(volumesDisplayed).toContain([volume.label, volume.size]);
+        expect(volumesDisplayed).toContain(volume.label);
     }
 
     assertActionMenuItems(attached=true) {
