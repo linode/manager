@@ -46,13 +46,23 @@ describe("Volumes Landing - Volume Actions", () => {
     expect(Volumes.volumeCell.length).toBeGreaterThan(0);
   });
 
-  it("should have basic actions", () => {
-    const attachedVolume = VolumeDetail.volumeRow(volumeEast.label).$('..');
-    browser.debug();
-    attachedVolume.$(VolumeDetail.actionMenu.selector).click();
-    const basicActions = ['Show Configuration', 'Edit Volume', 'Resize', 'Clone'];
+  it("an unattached Volume should have the correct actions", () => {
+    const unattachedVolumeId = Volumes.getVolumeId(volumeEast.label);
+    const unattachedVolume = $(`[data-qa-volume-cell="${unattachedVolumeId}"]`);
+    unattachedVolume.$(VolumeDetail.actionMenu.selector).click();
+    const basicActions = ['Show Configuration', 'Edit Volume', 'Resize', 'Clone', 'Attach', 'Delete'];
     const actionsDisplayed = Volumes.actionMenuItems.map(action => action.getText());
-    // expect(basicActions.sort()).toEqual(actionsDisplayed.sort());
+    basicActions.forEach(action => {
+      expect(actionsDisplayed).toContain(action);
+    });
+  });
+
+  it("an attached Volume should have the correct actions", () => {
+    const unattachedVolumeId = Volumes.getVolumeId(volumeEast.label);
+    const unattachedVolume = $(`[data-qa-volume-cell="${unattachedVolumeId}"]`);
+    unattachedVolume.$(VolumeDetail.actionMenu.selector).click();
+    const basicActions = ['Show Configuration', 'Edit Volume', 'Resize', 'Clone', 'Detach'];
+    const actionsDisplayed = Volumes.actionMenuItems.map(action => action.getText());
     basicActions.forEach(action => {
       expect(actionsDisplayed).toContain(action);
     });
