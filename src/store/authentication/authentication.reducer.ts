@@ -14,7 +14,8 @@ import { State } from './index';
 export const defaultState: State = {
   token: null,
   scopes: null,
-  expiration: null
+  expiration: null,
+  loggedInAsCustomer: false
 };
 
 const {
@@ -45,8 +46,9 @@ const reducer = reducerWithInitialState(defaultState)
      * if our token is expired, clear local storage
      * and redux state
      */
-    const expiryTime = expiryInLocalStorage.get();
-    if (expiryTime && new Date(expiryTime) < new Date()) {
+    const expiryDateFromLocalStorage = expiryInLocalStorage.get();
+    const expiryDate = new Date(expiryDateFromLocalStorage);
+    if (expiryDateFromLocalStorage && expiryDate < new Date()) {
       /**
        * the case where the user refreshes the page and has a expiry time in localstorage
        * but it's  expired
@@ -72,11 +74,15 @@ const reducer = reducerWithInitialState(defaultState)
       redirectToLogin(location.pathname, location.search);
     }
 
+    /** token will either be "Admin: 1234" or "Bearer: 1234" */
+    const isLoggedInAsCustomer = (token || '').toLowerCase().includes('admin');
+
     return {
       ...state,
       token,
       scopes,
-      expiration: expiryTime
+      expiration: expiryDateFromLocalStorage,
+      loggedInAsCustomer: isLoggedInAsCustomer
     };
   })
   .cases([handleExpireTokens, handleLogout], state => {
@@ -86,7 +92,8 @@ const reducer = reducerWithInitialState(defaultState)
       ...state,
       scopes: null,
       token: null,
-      expiration: null
+      expiration: null,
+      loggedInAsCustomer: false
     };
   })
   .case(handleRefreshTokens, state => {
