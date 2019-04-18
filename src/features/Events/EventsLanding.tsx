@@ -27,7 +27,7 @@ import areEntitiesLoading from 'src/store/selectors/entitiesLoading';
 
 import EventRow from './EventRow';
 
-type ClassNames = 'root' | 'header' | 'noMoreEvents';
+type ClassNames = 'root' | 'header' | 'labelCell' | 'timeCell' | 'noMoreEvents';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
@@ -37,6 +37,15 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   noMoreEvents: {
     padding: theme.spacing.unit * 4,
     textAlign: 'center'
+  },
+  labelCell: {
+    width: '69%',
+    minWidth: 200,
+    paddingLeft: 10
+  },
+  timeCell: {
+    width: '30%',
+    paddingLeft: theme.spacing.unit / 2
   }
 });
 
@@ -142,11 +151,16 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
               )}
               <TableCell
                 data-qa-events-subject-header
-                style={{ minWidth: 200, paddingLeft: 10 }}
+                className={classes.labelCell}
               >
                 Event
               </TableCell>
-              <TableCell data-qa-events-time-header>Time</TableCell>
+              <TableCell
+                data-qa-events-time-header
+                className={classes.timeCell}
+              >
+                Time
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
