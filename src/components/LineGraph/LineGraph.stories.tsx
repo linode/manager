@@ -23,8 +23,25 @@ const mockData = [
 ];
 
 storiesOf('Line Graph', module)
-  .add('Current Day', () => <LineGraph showToday={true} data={mockData} />)
-  .add('Multiple Days', () => <LineGraph showToday={false} data={mockData} />)
+  .add('Current Day', () => (
+    <LineGraph
+      showToday={true}
+      data={mockData}
+      timezone={'America/Los_Angeles'}
+    />
+  ))
+  .add('Multiple Days', () => (
+    <LineGraph
+      showToday={false}
+      data={mockData}
+      timezone={'America/Los_Angeles'}
+    />
+  ))
   .add('Fixed Max Y Axis', () => (
-    <LineGraph showToday={false} data={mockData} suggestedMax={7000} />
+    <LineGraph
+      showToday={false}
+      data={mockData}
+      suggestedMax={7000}
+      timezone={'America/Los_Angeles'}
+    />
   ));
