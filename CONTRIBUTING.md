@@ -1,4 +1,4 @@
-# Contributing to the Linode manager
+# Contributing to the Linode Cloud Manager
 
 Contributing to the Cloud Manager just involves sending a Pull Request.
 
