@@ -98,12 +98,13 @@ When you plan on releasing a new version of Cloud Manager:
     * This will also automatically commit the changes with the commit message `vX.X.X`
 6. Push the changes from your local `testing` branch to the upstream with `git push origin testing`
     * You may need to add the `--no-verify` flag, as the `testing` branch isn't prefixed with `M3`
-7. At last, follow the merge flow as normal
-    * Merge `testing` into `staging` with `git checkout staging && git pull && git merge testing && git push origin staging`
-    * Merge `staging` into `master` with `git checkout master && git pull && git merge staging && git push origin master` 
-8. After the new version has been released, create a new branch from `develop` branch and cherry-pick the release commit from `master` branch into your new branch
-9. Then, open a PR to merge that branch into `develop` branch to update the release
-10. Finally, on GitHub, create a new release from the Git tag you've just pushed to `master` branch
+7. At this point, you can begin deploying to the rest of the environments
+8. Deploy to the staging environment by merging `testing` into `staging` with `git checkout staging && git pull && git merge testing && git push origin staging`
+9. At this point, run the end-to-end test suite. Please see a team member on instructions how to do so.
+10. Deploy to the production environment by merging `staging` into `master` with `git checkout master && git pull && git merge staging && git push origin master` 
+11. Once your new version has being deployed to production, open a PR to merge `master` branch into `develop` branch - **DO NOT SQUASH MERGE**
+    * Seriously...**DO NOT SQUASH MERGE**
+12. Finally, on GitHub, create a new release from the Git tag you've just pushed to `master` branch
 
 ### Generating the changelog
 Get a Python 3 installation with `pip`. On a Mac:
