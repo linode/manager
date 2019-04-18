@@ -7,8 +7,8 @@ The following buzzwords are involved in this project:
 * [React.js](https://facebook.github.io/react/)
 * [Redux](http://redux.js.org/)
 * [Webpack](https://webpack.github.io/)
+* [Material-UI](https://material-ui.com/)
 * ES6/ES7 (via [Babel](https://babeljs.io/))
-* [SCSS](http://sass-lang.com)
 * [Yarn](https://yarnpkg.com/)
 * [WebdriverIO](https://webdriver.io/)
 
@@ -74,16 +74,22 @@ When a new version of Cloud Manager is released, it must be accompanied by an up
 
 #### What to Do When Releasing
 
-Once your code from the `develop` branch has been merged into `testing` and you intend on pushing this code live:
+When you plan on releasing a new version of Cloud Manager:
 
-1. Pull down the latest `testing` branch locally
-2. Run `yarn version --new-version vX.X.X` (replace the X's with the appropriate version number)
-    * this will apply the Git tags and update the version number in the `package.json`
-3. [Generate the Changelog](#generating-the-changelog)
+1. Pull down the latest `testing` and `develop` branches locally
+2. Merge develop into testing with `git checkout testing && git merge develop`
+    * This should result in 0 merge conflicts
+3. [Generate the Changelog](#generating-the-changelog) first
 4. Review the Changelog and update manually if necessary
-5. Stage and commit the version bump and changelog addition with the commit message, which should be as simple as: `vX.X.X`
-6. Push up the changes to the `testing` branch with `git push origin testing`
-7. Finally, follow the merge flow. Merge from `testing` to `staging` and finally to `master`
+5. Once your Changelog has been approved by the team, stage the changes locally and run `yarn version --new-version X.X.X` (replace the X's with the appropriate version number)
+    * this will apply the Git tags and update the version number in the `package.json`
+    * This will also automatically commit the changes with the commit message `vX.X.X`
+6. Push the changes from your local `testing` branch to the upstream
+    * You may need to add the `--no-verify` flag, as the `testing` branch isn't prefixed with `M3`
+7. At last, follow the merge flow. Merge from `testing` to `staging` and finally to `master`
+8. After the new version has been released, create a new branch from `develop` branch and cherry-pick the release commit from `master` branch into your new branch
+9. Then, open a PR to merge that branch into `develop` branch to update the release
+10. Finally, on GitHub, create a new release from the Git tag you've just pushed to `master` branch
 
 ### Generating the changelog
 Get a Python 3 installation with `pip`. On a Mac:
