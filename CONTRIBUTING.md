@@ -106,6 +106,17 @@ When you plan on releasing a new version of Cloud Manager:
     * Seriously...**DO NOT SQUASH MERGE**
 12. Finally, on GitHub, create a new release from the Git tag you've just pushed to `master` branch
 
+#### Pushing a Hotfix
+
+In the case where the release process has been initated and you need to push a hotfix - in other words, if `develop` has already been merged into `testing`, is slated for release, and there is some bug fix, styling change, or E2E test that needs to be resovled:
+
+1. Make a branch from `testing` branch
+2. Make your changes
+3. Create a PR against `testing` branch
+4. Merge on approval
+
+At the end of the release process, `master` branch will be merged back into `develop`, so don't fear that you also need to apply your changes to `develop`.
+
 ### Generating the changelog
 Get a Python 3 installation with `pip`. On a Mac:
 
