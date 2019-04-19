@@ -185,6 +185,8 @@ class TablesPanel extends React.Component<CombinedProps, State> {
           return;
         }
         this.setState({
+          // Occasionally the last reading of each stats reading is incorrect, so we drop
+          // the last element of each array in the stats response.
           stats: initAll(response),
           loadingStats: false,
           statsError: undefined

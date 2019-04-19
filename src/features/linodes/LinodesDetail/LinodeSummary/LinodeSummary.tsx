@@ -255,6 +255,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
         this.setState({ statsLoadError: undefined });
         this.setState({
+          // Occasionally the last reading of each stats reading is incorrect, so we drop
+          // the last element of each array in the stats response.
           stats: initAll(response),
           dataIsLoading: false
         });
