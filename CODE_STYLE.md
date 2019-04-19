@@ -528,7 +528,16 @@ const MyComponent: React.FC<PaginationProps & OtherProps> = (props) => {
 }
 ```
 
-Now, each time you change a page, the appropriate page will be requested.
+Now, each time you change a page, the appropriate page will be requested. `<Pagey />` also gives you access to a bunch of other props that might help for other tasks you're attempting to accomplish, namely:
+
+| Prop Name | Type | Description
+| --------- | ---- | ---------- |
+| onDelete  | () => void | Helper function that should be invoked when you're deleting items from the list. This will ensure no redundant requests are made |
+| Order | 'asc' or 'desc' | What order in which the data is being sorted. |
+| handleSearch | (filter?: any) => void | Helper function to re-invoke the base request with new filters |
+| searching | boolean | is the handleSeach Promise in-progress |
+| handleOrderChange | (sortBy: string, order: 'asc' or 'desc' = 'asc', page: number = 1) | Helper function to change the sort and sort order of the base request |
+| isSorting | boolean | is the handleOrderChange in-progress |
 
 ### Toasts
 
