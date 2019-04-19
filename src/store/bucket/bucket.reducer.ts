@@ -2,7 +2,11 @@ import { Reducer } from 'redux';
 import { RequestableRequiredData } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import { onStart } from '../store.helpers';
-import { createBucketActions, getAllBucketsActions } from './bucket.actions';
+import {
+  createBucketActions,
+  deleteBucketActions,
+  getAllBucketsActions
+} from './bucket.actions';
 
 /**
  * State
@@ -63,6 +67,23 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       ...state,
       loading: false,
       error
+    };
+  }
+
+  /*
+   * Delete Bucket
+   **/
+
+  // DONE
+  if (isType(action, deleteBucketActions.done)) {
+    const { params } = action.payload;
+    return {
+      ...state,
+      data: state.data.filter(
+        bucket =>
+          // Buckets don't have IDs, so we look at the region and label to remove the deleted bucket from state
+          bucket.label !== params.label && bucket.region !== params.cluster
+      )
     };
   }
 

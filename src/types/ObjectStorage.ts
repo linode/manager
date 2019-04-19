@@ -12,6 +12,7 @@ namespace Linode {
     created: string;
     size: number;
     region: string;
+    cluster: string;
     hostname: string;
   }
 

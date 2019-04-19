@@ -14,8 +14,9 @@ import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { formatRegion } from 'src/utilities/formatRegion';
+import BucketActionMenu from './BucketActionMenu';
 
-type ClassNames = 'root' | 'labelStatusWrapper' | 'bucketRow' | 'hostname';
+type ClassNames = 'root' | 'labelStatusWrapper' | 'bucketRow';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
@@ -26,20 +27,29 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center'
-  },
-  hostname: { paddingTop: theme.spacing.unit }
+  }
 });
 
-// BucketTableRow has the same props as Linode.Bucket.
-// Aliased for convention's sake.
-type BucketTableRowProps = Linode.Bucket;
+interface BucketTableRowProps extends Linode.Bucket {
+  onRemove: (cluster: string, bucketLabel: string) => void;
+}
 
 type CombinedProps = BucketTableRowProps & WithStyles<ClassNames>;
 
 export const BucketTableRow: React.StatelessComponent<
   CombinedProps
 > = props => {
-  const { classes, label, region, size, objects, hostname, created } = props;
+  const {
+    classes,
+    label,
+    region,
+    size,
+    objects,
+    cluster,
+    hostname,
+    created,
+    onRemove
+  } = props;
 
   return (
     <TableRow
@@ -61,11 +71,7 @@ export const BucketTableRow: React.StatelessComponent<
                 {label}
               </Typography>
             </div>
-            <Typography
-              variant="body2"
-              className={classes.hostname}
-              data-qa-hostname
-            >
+            <Typography variant="body2" data-qa-hostname>
               {hostname}
             </Typography>
           </Grid>
@@ -76,7 +82,7 @@ export const BucketTableRow: React.StatelessComponent<
       <TableCell parentColumn="Size">
         <Grid>
           <Typography variant="body1" data-qa-size>
-            <strong>{prettyBytes(size)}</strong>
+            {prettyBytes(size)}
           </Typography>
         </Grid>
         <Grid>
@@ -95,6 +101,14 @@ export const BucketTableRow: React.StatelessComponent<
           value={created}
           humanizeCutoff="month"
           data-qa-created
+        />
+      </TableCell>
+      <TableCell>
+        <BucketActionMenu
+          onRemove={onRemove}
+          bucketLabel={label}
+          cluster={cluster}
+          data-qa-action-menu
         />
       </TableCell>
     </TableRow>
