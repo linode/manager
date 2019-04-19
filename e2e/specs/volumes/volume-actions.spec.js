@@ -3,6 +3,7 @@ const { constants } = require('../../constants');
 import {
   timestamp,
   apiCreateLinode,
+  apiDeleteLinode,
   createVolumes,
 } from '../../utils/common';
 
@@ -27,8 +28,10 @@ describe("Volumes Landing - Volume Actions", () => {
 
   const testLinode = `AutoLinodeEast${timestamp()}`;
 
+  let linode;
+
   beforeAll(() => {
-    const linode = apiCreateLinode(testLinode);
+    linode = apiCreateLinode(testLinode);
     const environment = process.env.REACT_APP_API_ROOT;
     volumeEastAttached.linode_id = linode.id;
     if (environment.includes('dev') || environment.includes('testing')){
@@ -77,5 +80,25 @@ describe("Volumes Landing - Volume Actions", () => {
     expect(actionsDisplayed).not.toContain('Delete');
     // Close the menu
     $('[data-qa-backdrop]').click()
+  });
+
+  it("should list a volume as unattached after deleting a Linode", () => {
+    /**
+     * An API bug causes Volumes to report themselves as still attached
+     * after the Linode they were attached to is deleted. This lasts for a few seconds,
+     * and if it overlaps the update-volume request the VolumesLanding table can be
+     * out of date until page reload. We catch and fix this case client-side.
+     */
+    apiDeleteLinode(linode.id);
+    browser.pause(1000);
+    const wasAttached = Volumes.getVolumeElement(volumeEastAttached.label);
+    expect(Volumes.isAttached(wasAttached)).toBeFalsy();
+
+    wasAttached.$(VolumeDetail.actionMenu.selector).click();
+    const actionsDisplayed = Volumes.actionMenuItems.map(action => action.getText());
+
+    expect(actionsDisplayed).not.toContain('Detach');
+    expect(actionsDisplayed).toContain('Delete');
+    expect(actionsDisplayed).toContain('Attach');
   });
 });

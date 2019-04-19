@@ -226,6 +226,18 @@ exports.removeNodebalancer = (token, nodeBalancerId) => {
     });
 }
 
+exports.removeLinode = (token, linodeId) => {
+    return new Promise((resolve, reject) => {
+        const endpoint = `/linode/instances/${linodeId}`;
+        return getAxiosInstance(token).delete(endpoint)
+            .then(response => resolve(response.data))
+            .catch(error => {
+                console.error('Error', error);
+                reject(error);
+            });
+    });
+}
+
 exports.createNodeBalancer = (token, label, region, tags) => {
     return new Promise((resolve,reject) => {
         const endpoint = '/nodebalancers';

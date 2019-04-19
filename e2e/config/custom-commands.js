@@ -18,6 +18,7 @@ const {
     getLinodeImage,
     createDomain,
     createNodeBalancer,
+    removeLinode,
 } = require('../setup/setup');
 
 const {
@@ -82,6 +83,12 @@ exports.browserCommands = () => {
             .then(res => res)
             .catch(err => err);
     });
+    
+    browser.addCommand('removeLinode', function async(token, linodeId) {
+        return removeLinode(token, linodeId)
+            .then(res => res)
+            .catch(err => console.error(err));
+    })
 
     browser.addCommand('removeAllLinodes', function async(token) {
         return removeAllLinodes(token)

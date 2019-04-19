@@ -7,8 +7,6 @@ const {
     removeImage,
     getPublicKeys,
     removePublicKey,
-    updateUserProfile,
-    getUserProfile
 } = require('../setup/setup');
 
 import ConfigureLinode from '../pageobjects/configure-linode';
@@ -71,6 +69,12 @@ export const apiCreateLinode = (linodeLabel=false, privateIp=false, tags=[], typ
 
     return linode;
 }
+
+export const apiDeleteLinode = (linodeId) => {
+    const token = readToken(browser.options.testUser);
+    browser.removeLinode(token, linodeId);
+}
+
  export const apiCreateMultipleLinodes = (arrayOfLinodeCreateObj) => {
     let linodes = [];
     const token = readToken(browser.options.testUser);
@@ -150,7 +154,6 @@ export const createNodeBalancer = () => {
 export const removeNodeBalancers = (doNotDeleteLinodes) => {
     const token = readToken(browser.options.testUser);
     if(!doNotDeleteLinodes){
-        console.log('here');
         apiDeleteAllLinodes();
     }
     const availableNodeBalancers = browser.getNodeBalancers(token);
