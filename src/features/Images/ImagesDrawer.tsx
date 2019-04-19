@@ -43,13 +43,14 @@ export interface Props {
   description?: string;
   imageID?: string;
   label?: string;
+  // Only used from LinodeDisks to pre-populate the selected Disk
   disks?: Linode.Disk[];
-  selectedDisk?: string;
+  selectedDisk: string | null;
   selectedLinode?: string;
   onClose: () => void;
   onSuccess: () => void;
   changeLinode: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  changeDisk: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  changeDisk: (disk: string | null) => void;
   changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -105,6 +106,8 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     /** Is opening... */
     if (prevProps.open === false && this.props.open === true) {
       this.updateLinodes();
+      // Reset the disks on drawer open
+      this.setState({ disks: [] });
     }
 
     if (this.props.disks && !equals(this.props.disks, prevProps.disks)) {
@@ -138,7 +141,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             this.setState({
               errors: [
                 {
-                  field: 'disk',
+                  field: 'disk_id',
                   reason: 'Could not retrieve disks for this Linode.'
                 }
               ]
@@ -261,7 +264,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     // When restoring to an existing Linode, the Linode select is the only field.
     const { mode, selectedDisk, selectedLinode } = this.props;
 
-    const isDiskSelected = selectedDisk && selectedDisk !== 'none';
+    const isDiskSelected = Boolean(selectedDisk);
 
     switch (mode) {
       case modes.CREATING:
@@ -332,7 +335,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
         {[modes.CREATING, modes.IMAGIZING].includes(mode) && (
           <>
             <DiskSelect
-              selectedDisk={selectedDisk || 'none'}
+              selectedDisk={selectedDisk}
               disks={disks}
               diskError={diskError}
               handleChange={changeDisk}
