@@ -29,6 +29,6 @@ describe('BucketActionMenu', () => {
     );
 
     fireEvent.click(getByText('Remove'));
-    expect(mockOnRemove).toHaveBeenCalled();
+    expect(mockOnRemove).toHaveBeenCalledWith('a-cluster', 'my-test-bucket');
   });
 });

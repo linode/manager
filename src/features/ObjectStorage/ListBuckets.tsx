@@ -87,6 +87,8 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
 
         // We're not worried about field errors here, so just grab the text
         // of the first error in the response.
+
+        // @todo: change this code when getErrorStringOrDefault is ironed out.
         const errorText = pathOr(
           'Error removing bucket.',
           ['response', 'data', 'errors', 0, 'reason'],

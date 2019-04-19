@@ -30,8 +30,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-// BucketTableRow has the same props as Linode.Bucket.
-// Aliased for convention's sake.
 interface BucketTableRowProps extends Linode.Bucket {
   onRemove: (cluster: string, bucketLabel: string) => void;
 }
