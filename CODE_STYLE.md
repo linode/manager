@@ -341,6 +341,195 @@ import { Observable } from 'rxjs/Observable';
 
 ## Other Things
 
+### Paginating Things
+
+The first step to creating a paginated list is asking yourself one question:
+
+Is my data sourced from Redux state or is it being requested on `componentDidMount`?
+
+If your data is being sourced from Redux state, it's safe to assume that the data is being pre-loaded on app mount. But not just some of the data - ALL of the data. A pattern we have adopted is to request every single page of entities for data that we are storing is Redux. Because of this, there is a possibility that there may be more than 100 items in the slice of Redux state. Which leads us to the first solution
+
+#### Paginating Data Sourced From Redux
+
+The first step in paginating things from Redux is to source the data
+
+```js
+import { connect } from 'react-redux'
+
+interface ReduxStateProps {
+  loading: boolean;
+  error?: Linode.ApiFieldError[];
+  data: Linode.Volume[];
+}
+
+const MyComponent: React.FC<ReduxStateProps> = (props) => {
+  return (
+    <div />
+  )
+}
+
+const mapStateToProps: MapStateToProps<
+  /* props that this HOC returns */
+  ReduxStateProps,
+  /* other props this HOC is inheriting */
+  {},
+  /* global redux state */
+  ApplicationState
+> = state => ({
+  loading: state.__resources.volumes.loading,
+  error: state.__resources.volumes.error,
+  volumes: state.__resources.volumes.items
+});
+
+export default connected(mapStateToProps)(MyComponent)
+```
+
+Next, we need to leverage the `<Paginate />` render props Component, which has built-in pagination logic, so you don't have to worry about the heavy lifting
+
+
+```js
+const MyComponent: React.FC<ReduxStateProps> = (props) => {
+  return (
+    <Paginate data={data} pageSize={25}>
+      {({
+        data: paginatedData,
+        count,
+        handlePageChange,
+        handlePageSizeChange,
+        page,
+        pageSize
+      }) => (
+        <div />
+      )}
+    </Paginate>
+  )
+}
+```
+
+Now we see that we have access to all the data, the current page, the page size, and helper functions to change page and page size.
+
+Finally, lets put it all together now with our `<PaginationFooter />` component
+
+```js
+const MyComponent: React.FC<ReduxStateProps> = (props) => {
+  return (
+    <Paginate data={data} pageSize={25}>
+      {({
+        data: paginatedData,
+        count,
+        handlePageChange,
+        handlePageSizeChange,
+        page,
+        pageSize
+      }) => (
+        <React.Fragment>
+          <Table aria-label="List of your Volumes">
+            <TableHeader>My Volumes</TableHeader>
+            <TableBody>
+              {
+                (paginatedData.map(eachVolumes => {
+                  return (
+                    <TableRow>
+                      <TableCell>{eachVolume.label}</TableCell>
+                      <TableCell>{eachVolume.size}</TableCell>
+                    </TableRow>
+                  )
+                }))
+              }
+            </TableBody>
+          </Table>
+          <PaginationFooter
+            count={count}
+            page={page}
+            pageSize={pageSize}
+            /* 
+              handlePageChange takes an optional boolean argument of 
+              whether you want to auto scroll-to-top
+            */
+            handlePageChange={handlePageChange()}
+            handleSizeChange={handlePageSizeChange}
+          />
+        </React.Fragment>
+      )}
+    </Paginate>
+  )
+}
+```
+
+And that is how you paginate data sourced from Redux.
+
+#### Paginating Data requested in `componentDidMount()`
+
+Paginating data this way is similar to the last approach with some differences. In this case, we'll be leveraging the `<Pagey />` higher-order component.
+
+So the first step is to wrap your base component in the HOC and tell Pagey what request you want to fire when the page changes:
+
+```js
+import { Pagey, PaginationProps } from 'src/components/Pagey';
+import { getInvoices } from 'src/services/account'
+
+interface OtherProps {
+  someText: string;
+}
+
+const MyComponent: React.FC<PaginationProps & OtherProps> = (props) => {
+  return <div />
+}
+
+const paginated = Pagey((ownProps: OtherProps, params: any, filter: any) => {
+  return getInvoices(params, filter)
+})
+
+export default paginated(MyComponent)
+```
+
+Now we have access to the same props as before. Lets add in the rest of our markup
+
+```js
+const MyComponent: React.FC<PaginationProps & OtherProps> = (props) => {
+
+  const {
+    data: myInvoices,
+    page,
+    pageSize,
+    loading,
+    error,
+    count,
+    handlePageChange,
+    handlePageSizeChange
+  } = props;
+
+  return (
+    <React.Fragment>
+      <Table aria-label="List of your Invoices">
+        <TableHeader>My Invoices</TableHeader>
+        <TableBody>
+          {
+            (myInvoices.map(eachInvoice => {
+              return (
+                <TableRow>
+                  <TableCell>{eachInvoice.label}</TableCell>
+                  <TableCell>{eachInvoice.amount}</TableCell>
+                </TableRow>
+              )
+            }))
+          }
+        </TableBody>
+      </Table>
+      <PaginationFooter
+        count={count}
+        page={page}
+        pageSize={pageSize}
+        handlePageChange={handlePageChange}
+        handleSizeChange={handlePageSizeChange}
+      />
+    </React.Fragment>
+  )
+}
+```
+
+Now, each time you change a page, the appropriate page will be requested.
+
 ### Toasts
 
 Showing messaging to users is a complex task that varies depending on whether an action is immidiate or scheduled to happen some n time in the future. For all actions that we cannot predict their completion time,
