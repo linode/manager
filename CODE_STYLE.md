@@ -533,11 +533,11 @@ Now, each time you change a page, the appropriate page will be requested. `<Page
 | Prop Name | Type | Description
 | --------- | ---- | ---------- |
 | onDelete  | () => void | Helper function that should be invoked when you're deleting items from the list. This will ensure no redundant requests are made |
-| Order | 'asc' or 'desc' | What order in which the data is being sorted. |
+| order | 'asc' or 'desc' | What order in which the data is being sorted. |
 | handleSearch | (filter?: any) => void | Helper function to re-invoke the base request with new filters |
 | searching | boolean | is the handleSeach Promise in-progress |
-| handleOrderChange | (sortBy: string, order: 'asc' or 'desc' = 'asc', page: number = 1) | Helper function to change the sort and sort order of the base request |
-| isSorting | boolean | is the handleOrderChange in-progress |
+| handleOrderChange | (sortBy: string, order: 'asc' or 'desc' = 'asc', page: number = 1) => void | Helper function to change the sort and sort order of the base request |
+| isSorting | boolean | is the handleOrderChange Promise in-progress |
 
 ### Toasts
 
