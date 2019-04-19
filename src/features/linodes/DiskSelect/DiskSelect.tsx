@@ -1,15 +1,12 @@
-import { compose } from 'ramda';
 import * as React from 'react';
-import FormControl from 'src/components/core/FormControl';
-import FormHelperText from 'src/components/core/FormHelperText';
+import { compose } from 'recompose';
 import {
   StyleRulesCallback,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
-import MenuItem from 'src/components/MenuItem';
-import RenderGuard from 'src/components/RenderGuard';
-import TextField from 'src/components/TextField';
+import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
+import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 
 type ClassNames = 'root';
 
@@ -21,55 +18,56 @@ interface Props {
   generalError?: string;
   diskError?: string;
   disks: Linode.Disk[];
-  selectedDisk?: string;
+  selectedDisk: string | null;
   disabled?: boolean;
-  handleChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  handleChange: (disk: string | null) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
+const disksToOptions = (disks: Linode.Disk[]): Item<string>[] => {
+  return disks.map(disk => ({ label: disk.label, value: String(disk.id) }));
+};
+
+const diskFromValue = (
+  disks: Item<string>[],
+  diskId: string | null
+): Item<string> | null => {
+  if (!diskId) {
+    return null;
+  }
+  const thisDisk = disks.find(disk => disk.value === diskId);
+  return thisDisk ? thisDisk : null;
+};
+
 const DiskSelect: React.StatelessComponent<CombinedProps> = props => {
+  const {
+    disabled,
+    disks,
+    diskError,
+    generalError,
+    handleChange,
+    selectedDisk
+  } = props;
+  const options = disksToOptions(disks);
   return (
-    <FormControl fullWidth>
-      <TextField
-        value={props.selectedDisk || 'none'}
-        onChange={props.handleChange}
-        inputProps={{ name: 'linode', id: 'linode' }}
-        error={Boolean(props.diskError)}
-        disabled={props.disabled}
-        select
-        data-qa-disk-select
-        label="Disk"
-      >
-        <MenuItem value="none" disabled>
-          Select a Disk
-        </MenuItem>
-        {props.disks &&
-          props.disks.map(disk => {
-            return (
-              <MenuItem
-                key={disk.id}
-                value={'' + disk.id}
-                data-qa-disk-menu-item={disk.label}
-              >
-                {disk.label}
-              </MenuItem>
-            );
-          })}
-      </TextField>
-      {Boolean(props.diskError) && (
-        <FormHelperText error>{props.diskError}</FormHelperText>
-      )}
-      {Boolean(props.generalError) && (
-        <FormHelperText error>{props.generalError}</FormHelperText>
-      )}
-    </FormControl>
+    <EnhancedSelect
+      label={'Disk'}
+      placeholder={'Select a Disk'}
+      disabled={disabled}
+      options={options}
+      value={diskFromValue(options, selectedDisk)}
+      onChange={(newDisk: Item<string> | null) =>
+        handleChange(newDisk ? newDisk.value : null)
+      }
+      errorText={generalError || diskError}
+    />
   );
 };
 
 const styled = withStyles(styles);
 
-export default compose<any, any, any>(
+export default compose<CombinedProps, Props & RenderGuardProps>(
   styled,
   RenderGuard
 )(DiskSelect);
