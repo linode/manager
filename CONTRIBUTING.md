@@ -1,4 +1,4 @@
-# Contributing to the Linode manager
+# Contributing to the Linode Cloud Manager
 
 Contributing to the Cloud Manager just involves sending a Pull Request.
 
@@ -7,8 +7,8 @@ The following buzzwords are involved in this project:
 * [React.js](https://facebook.github.io/react/)
 * [Redux](http://redux.js.org/)
 * [Webpack](https://webpack.github.io/)
+* [Material-UI](https://material-ui.com/)
 * ES6/ES7 (via [Babel](https://babeljs.io/))
-* [SCSS](http://sass-lang.com)
 * [Yarn](https://yarnpkg.com/)
 * [WebdriverIO](https://webdriver.io/)
 
@@ -74,16 +74,48 @@ When a new version of Cloud Manager is released, it must be accompanied by an up
 
 #### What to Do When Releasing
 
-Once your code from the `develop` branch has been merged into `testing` and you intend on pushing this code live:
+NOTE: These instructions assume your upstream is called `origin`
 
-1. Pull down the latest `testing` branch locally
-2. Run `yarn version --new-version vX.X.X` (replace the X's with the appropriate version number)
-    * this will apply the Git tags and update the version number in the `package.json`
-3. [Generate the Changelog](#generating-the-changelog)
+These instructions assume you have your local branches configured so that the upstream is set to their
+remote counterpart. If you haven't done so already, run the following commands.
+
+* `git checkout origin/testing && git checkout -b testing && git branch --set-upstream-to origin/testing`
+* `git checkout origin/staging && git checkout -b staging && git branch --set-upstream-to origin/staging`
+* `git checkout origin/master && git checkout -b master && git branch --set-upstream-to origin/master`
+
+When you plan on releasing a new version of Cloud Manager:
+
+1. Pull down the latest `testing` and `develop` branches locally
+    * `git checkout develop && git pull && git checkout testing && git pull`
+2. Merge develop into testing with `git checkout testing && git merge develop`
+    * This should result in 0 merge conflicts
+3. While `testing` branch is checked out, [generate the Changelog](#generating-the-changelog) first
 4. Review the Changelog and update manually if necessary
-5. Stage and commit the version bump and changelog addition with the commit message, which should be as simple as: `vX.X.X`
-6. Push up the changes to the `testing` branch with `git push origin testing`
-7. Finally, follow the merge flow. Merge from `testing` to `staging` and finally to `master`
+    * This includes getting rid of any references to PR numbers, JIRA ticket numbers or grammar and spelling mistakes
+    * You should also ensure that everything in the Chaneglog is user-facing. Removing anything that users won't directly be interacting with
+5. Once your Changelog has been approved by the team, run `git add . && yarn version --new-version X.X.X` (replace the X's with the appropriate version number)
+    * This will apply the Git tags and update the version number in the `package.json`
+    * This will also automatically commit the changes with the commit message `vX.X.X`
+6. Push the changes from your local `testing` branch to the upstream with `git push origin testing`
+    * You may need to add the `--no-verify` flag, as the `testing` branch isn't prefixed with `M3`
+7. At this point, you can begin deploying to the rest of the environments
+8. Deploy to the staging environment by merging `testing` into `staging` with `git checkout staging && git pull && git merge testing && git push origin staging`
+9. At this point, run the end-to-end test suite. Please see a team member on instructions how to do so.
+10. Deploy to the production environment by merging `staging` into `master` with `git checkout master && git pull && git merge staging && git push origin master` 
+11. Once your new version has being deployed to production, open a PR to merge `master` branch into `develop` branch - **DO NOT SQUASH MERGE**
+    * Seriously...**DO NOT SQUASH MERGE**
+12. Finally, on GitHub, create a new release from the Git tag you've just pushed to `master` branch
+
+#### Pushing a Hotfix
+
+In the case where the release process has been initated and you need to push a hotfix - in other words, if `develop` has already been merged into `testing`, is slated for release, and there is some bug fix, styling change, or E2E test that needs to be resovled:
+
+1. Make a branch from `testing` branch
+2. Make your changes
+3. Create a PR against `testing` branch
+4. Merge on approval
+
+At the end of the release process, `master` branch will be merged back into `develop`, so don't fear that you also need to apply your changes to `develop`.
 
 ### Generating the changelog
 Get a Python 3 installation with `pip`. On a Mac:
