@@ -1,6 +1,9 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
+import { Props as ActionMenuProps } from './BucketActionMenu';
 import { BucketTableRow } from './BucketTableRow';
+
+const mockOnRemove = jest.fn();
 
 describe('BucketTableRow', () => {
   const wrapper = shallow(
@@ -8,7 +11,6 @@ describe('BucketTableRow', () => {
       classes={{
         root: '',
         labelStatusWrapper: '',
-        hostname: '',
         bucketRow: ''
       }}
       label="test-bucket-001"
@@ -17,6 +19,8 @@ describe('BucketTableRow', () => {
       objects={24}
       hostname="test-bucket-001.alpha.linodeobjects.com"
       region="us-east"
+      cluster="a-cluster"
+      onRemove={mockOnRemove}
     />
   );
 
@@ -64,5 +68,14 @@ describe('BucketTableRow', () => {
     expect(wrapper.find('[data-qa-created]').prop('value')).toBe(
       '2019-02-24 18:46:15.516813'
     );
+  });
+
+  it('should render an Action Menu with label and cluster', () => {
+    const actionMenuProps = wrapper
+      .find('[data-qa-action-menu]')
+      .props() as ActionMenuProps;
+    expect(actionMenuProps.bucketLabel).toBe('test-bucket-001');
+    expect(actionMenuProps.cluster).toBe('a-cluster');
+    expect(actionMenuProps.onRemove).toBe(mockOnRemove);
   });
 });
