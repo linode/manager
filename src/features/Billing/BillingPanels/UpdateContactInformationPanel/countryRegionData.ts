@@ -16641,7 +16641,8 @@ export default [
     countryShortCode: 'TC',
     regions: [
       {
-        name: 'Turks and Caicos Islands'
+        name: 'Turks and Caicos Islands',
+        shortCode: 'TC'
       }
     ]
   },

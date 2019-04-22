@@ -153,11 +153,37 @@ class UpdateContactInformationPanel extends React.Component<
         : country.countryShortCode === account.country
     );
 
-    const regionResults = currentCountryResult[0].regions.map((region: any) => {
+    const countryRegions: Item[] = pathOr(
+      [],
+      ['0', 'regions'],
+      currentCountryResult
+    );
+
+    const regionResults = countryRegions.map((region: any) => {
       return {
         value: region.shortCode,
         label: region.name
       };
+    });
+
+    // Adding account.state as an option in case user has it set to something that doesn't exist as an option on react-select.
+    const updatedRegionResults = [
+      ...regionResults,
+      { value: account.state, label: account.state }
+    ];
+
+    const regionSelection = updatedRegionResults.filter((region: any) => {
+      if (fields.state) {
+        return region.value === fields.state;
+      } else {
+        // If the country has changed, we need to remove the manually added account.state so it will not persist as the selection.
+        if (fields.country && fields.country !== account.country) {
+          updatedRegionResults.pop();
+          return;
+        } else {
+          return region.value === account.state;
+        }
+      }
     });
 
     return (
@@ -326,11 +352,7 @@ class UpdateContactInformationPanel extends React.Component<
                 placeholder="Select a State"
                 options={regionResults}
                 isClearable={false}
-                value={regionResults.filter(({ value }) =>
-                  fields.state
-                    ? value === fields.state
-                    : value === account.state
-                )}
+                value={regionSelection}
               />
             </Grid>
             <Grid item xs={12} sm={5}>
@@ -359,7 +381,7 @@ class UpdateContactInformationPanel extends React.Component<
             placeholder="Select a Country"
             options={countryResults}
             isClearable={false}
-            value={countryResults.filter(({ value }) =>
+            value={countryResults.find(({ value }) =>
               fields.country
                 ? value === fields.country
                 : value === account.country
