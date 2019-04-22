@@ -79,7 +79,7 @@ const NavItem: React.SFC<CombinedProps> = props => {
               role="menuitem"
               onClick={e => {
                 props.closeMenu();
-                /** disregarding undefined is fine here because */
+                /* disregarding undefined is fine here because of the error handling thrown above */
                 onClick!();
               }}
               disabled={!!isDisabled ? !!isDisabled() : false}

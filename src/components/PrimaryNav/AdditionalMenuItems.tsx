@@ -37,7 +37,7 @@ const AdditionalMenuItems: React.FC<CombinedProps> = props => {
       ada = new (window as any).AdaChaperone('linode');
     } else {
       setAdaError(
-        'There was an issue loading the chat bot. Please try again later.'
+        'There was an issue loading the support bot. Please try again later.'
       );
     }
   });
