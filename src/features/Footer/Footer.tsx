@@ -61,7 +61,7 @@ export class Footer extends React.PureComponent<CombinedProps> {
             API Reference
           </a>
         </Grid>
-        <Grid item style={{ paddingLeft: 0 }}>
+        <Grid item style={{ paddingLeft: 0, marginRight: 60 }}>
           <a
             className={classes.link}
             href={createMailto(window.navigator.userAgent || '')}
