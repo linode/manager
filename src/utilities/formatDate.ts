@@ -31,7 +31,7 @@ export const shouldHumanize = (
    */
   const diff = Math.abs(+moment.duration(moment().diff(time)));
   /**
-   * Humanize the date if th difference between the current date and provided date
+   * Humanize the date if the difference between the current date and provided date
    * is lower than the cutoff
    */
   return diff <= +duration;
@@ -49,8 +49,12 @@ export const formatDate = (
   let time;
 
   /** get the timezone from redux and use it as the moment timezone */
-  const reduxProfile = store.getState().__resources.profile;
-  const userTimezone = pathOr('GMT', ['data', 'timezone'], reduxProfile);
+  const state = store.getState();
+  const userTimezone = pathOr(
+    'GMT',
+    ['__resources', 'profile', 'data', 'timezone'],
+    state
+  );
 
   try {
     // Unknown error was causing this to crash in rare situations.
@@ -58,7 +62,7 @@ export const formatDate = (
   } catch (e) {
     // Better to return a blank date than an error or incorrect information.
     reportException(e);
-    return 'Error getting datetime';
+    return 'Error getting date';
   }
   const formattedTime = shouldHumanize(time, options.humanizeCutoff)
     ? time.fromNow()
