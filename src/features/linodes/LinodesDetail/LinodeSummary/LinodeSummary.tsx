@@ -37,6 +37,8 @@ import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
 import TotalTraffic, { TotalTrafficProps } from './TotalTraffic';
 
+import { ExtendedEvent } from 'src/store/events/event.helpers';
+
 setUpCharts();
 
 type ClassNames =
@@ -693,7 +695,11 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             </Grid>
 
             <Grid item>
-              <ActivitySummary linodeId={linode.id} />
+              <ActivitySummary
+                eventsFromRedux={this.props.events}
+                linodeId={linode.id}
+                inProgressEvents={this.props.inProgressEvents}
+              />
             </Grid>
 
             <Grid item className="py0">
@@ -755,11 +761,19 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 interface WithTypesProps {
   typesData: Linode.LinodeType[];
   timezone: string;
+  inProgressEvents: Record<number, boolean>;
+  events: ExtendedEvent[];
 }
 
 const withTypes = connect((state: ApplicationState, ownProps) => ({
   typesData: state.__resources.types.entities,
-  timezone: pathOr('UTC', ['__resources', 'profile', 'data', 'timezone'], state)
+  timezone: pathOr(
+    'UTC',
+    ['__resources', 'profile', 'data', 'timezone'],
+    state
+  ),
+  inProgressEvents: state.events.inProgressEvents,
+  events: state.events.events
 }));
 
 const enhanced = compose<CombinedProps, {}>(

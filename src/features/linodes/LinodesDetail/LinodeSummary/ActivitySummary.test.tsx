@@ -13,6 +13,8 @@ import { ActivitySummary } from './ActivitySummary';
 
 const props = {
   linodeId: 123456,
+  eventsFromRedux: [],
+  inProgressEvents: [],
   classes: {
     root: '',
     header: '',
