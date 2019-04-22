@@ -21,6 +21,7 @@ import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
 import { ApplicationState } from 'src/store';
 import { setUpCharts } from 'src/utilities/charts';
+import { initAll } from 'src/utilities/initAll';
 import { isRecent } from 'src/utilities/isRecent';
 import {
   formatBitsPerSecond,
@@ -128,7 +129,7 @@ interface LinodeContextProps {
 }
 
 interface State {
-  stats: Linode.TodoAny;
+  stats?: Linode.Stats;
   rangeSelection: string;
   statsLoadError?: string;
   dataIsLoading: boolean;
@@ -253,7 +254,12 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         }
 
         this.setState({ statsLoadError: undefined });
-        this.setState({ stats: response.data, dataIsLoading: false });
+        this.setState({
+          // Occasionally the last reading of each stats reading is incorrect, so we drop
+          // the last element of each array in the stats response.
+          stats: initAll(response),
+          dataIsLoading: false
+        });
       })
       .catch(errorResponse => {
         if (!this.mounted) {

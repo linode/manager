@@ -46,7 +46,7 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
     getLinodeStatsByDate(linodeId, year, month)
       .then(resp => {
         this.setState({
-          used: getMonthlyTraffic(resp.data.data),
+          used: getMonthlyTraffic(resp.data),
           loading: false
         });
       })

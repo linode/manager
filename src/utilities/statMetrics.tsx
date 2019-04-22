@@ -122,7 +122,7 @@ export const getTotalTraffic = (
   };
 };
 
-export const getMonthlyTraffic = (stats: Linode.Stats) => {
+export const getMonthlyTraffic = (stats: Linode.StatsData) => {
   const getTrafficSum = (records: number[][]) =>
     records.reduce((acc, record) => {
       return acc + record[1];

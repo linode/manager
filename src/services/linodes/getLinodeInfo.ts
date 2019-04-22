@@ -4,9 +4,6 @@ import Request, { setMethod, setParams, setURL, setXFilter } from '../index';
 
 type Page<T> = Linode.ResourcePage<T>;
 type Type = Linode.LinodeType;
-interface Stats {
-  data: Linode.Stats;
-}
 
 /**
  * getLinodeStats
@@ -16,10 +13,10 @@ interface Stats {
  * @param linodeId { number } The id of the Linode to retrieve stats data for.
  */
 export const getLinodeStats = (linodeId: number) =>
-  Request<Stats>(
+  Request<Linode.Stats>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/stats`),
     setMethod('GET')
-  );
+  ).then(response => response.data);
 
 /**
  * getLinodeStats
@@ -37,10 +34,10 @@ export const getLinodeStatsByDate = (
   year: string,
   month: string
 ) =>
-  Request<Stats>(
+  Request<Linode.Stats>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/stats/${year}/${month}`),
     setMethod('GET')
-  );
+  ).then(response => response.data);
 
 /**
  * getLinodeKernels
