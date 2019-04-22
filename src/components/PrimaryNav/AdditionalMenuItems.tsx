@@ -53,7 +53,7 @@ const AdditionalMenuItems: React.FC<CombinedProps> = props => {
 
     setAdaError('');
     sendEvent({
-      category: 'Chat Bot',
+      category: 'Support Bot',
       action: 'Open',
       label: location.pathname
     });
@@ -63,7 +63,7 @@ const AdditionalMenuItems: React.FC<CombinedProps> = props => {
   const links: PrimaryLink[] = [
     { display: 'Get Help', href: '/support', key: 'help' },
     {
-      display: 'Chat',
+      display: 'Support Bot',
       key: 'chat',
       onClick: handleAdaInit,
       isDisabled: () => adaError
