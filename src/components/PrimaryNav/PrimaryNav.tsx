@@ -83,6 +83,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     padding: `${theme.spacing.unit + 2}px 0 ${theme.spacing.unit}px`
   },
   listItem: {
+    cursor: 'pointer',
     borderLeft: '6px solid transparent',
     transition: theme.transitions.create([
       'background-color',
@@ -472,7 +473,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
               listItemClasses={classNames({
                 [classes.linkItem]: true
               })}
-              navigate={this.navigate}
               closeMenu={this.props.closeMenu}
               dividerClasses={classes.divider}
             />
