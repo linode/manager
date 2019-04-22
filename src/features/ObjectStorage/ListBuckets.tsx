@@ -84,12 +84,7 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
       })
       .catch(e => {
         setIsLoading(false);
-
-        // We're not worried about field errors here, so just grab the text
-        // of the first error in the response.
-
         const errorText = getErrorStringOrDefault(e, 'Error removing bucket.');
-
         setError(errorText);
       });
   };
