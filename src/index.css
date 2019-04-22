@@ -178,7 +178,8 @@ bold {
 * do not show the ada chat app button site-wide
 */
 .ada-chat-button {
-  display: none !important;
+  /* display: none !important; */
+  margin: 1em !important;
 }
 
 .block {
