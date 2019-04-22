@@ -4,6 +4,48 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.53.0] - 2019-04-18
+
+### Added:
+- Event stream summary
+- Empty search logic
+- List all IP addresses in summary panel
+- Activity tab on Linode Details
+- Account Creation Date to Summary Panel
+- GA event for compact mode switcher
+- GA events for billing-related actions
+- New icons for Managed Services and StackScripts
+
+### Changed:
+- Styling no results page
+- Styles and mobile handling
+- Remove tag column and styling for NodeBalancers Landing
+- Remove tag column and styling for Linode Landing
+- Re-order fields on monthly network transfer panels
+- Place disk spaces in sidebar
+- Moving disk space component
+- Adjustments for tables for devices
+- Making beta tag blue for both themes
+- Adjust spacing for add buttons for domain records
+- Remove bolding from notices
+- Styling of disk storage panel
+- Adjustments to table row for DT and activity feed updates
+- Scroll buttons styles for mobile tabs
+- Resolvers object to match new Toronto name
+- Table cell sizes
+- Focus states for clickable rows
+- Styling for graph legend on Linode detail page
+
+### Fixed:
+- Wrap domains text on Domain landing
+- Routing on Support Ticket pages
+- Detach from deleted Linode
+- Image creation drawer labels spacing
+- Linodes graphs legends placement
+- Minor copy fixes
+- Typos and init code guidelines
+
+
 ## [v0.52.1] - 2019.04.09
 
 ### Added:
