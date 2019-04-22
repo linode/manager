@@ -19,9 +19,7 @@ export const updateStackScriptSchema = object({
   label: string()
     .min(3, 'Label must be between 3 and 128 characters.')
     .max(128, 'Label must be between 3 and 128 characters.'),
-  images: array()
-    .of(string())
-    .required('An image is required.'),
+  images: array().of(string()),
   description: string(),
   is_public: boolean(),
   rev_note: string()

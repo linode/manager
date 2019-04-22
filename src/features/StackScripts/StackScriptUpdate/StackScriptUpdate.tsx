@@ -192,6 +192,12 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
 
     const { history } = this.props;
 
+    if (selectedImages.length < 1) {
+      return this.setState({
+        errors: [{ field: 'images', reason: 'An image is required.' }]
+      });
+    }
+
     const payload = {
       script,
       label: labelText,
