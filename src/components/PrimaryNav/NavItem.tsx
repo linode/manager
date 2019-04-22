@@ -55,7 +55,7 @@ const NavItem: React.SFC<CombinedProps> = props => {
   return (
     /* 
      href takes priority here. So if an href and onClick 
-     so if an href and onClick is provided, the onClick will not be applied
+     are provided, the onClick will not be applied
     */
     <React.Fragment>
       {href ? (
