@@ -177,9 +177,18 @@ bold {
 /* 
 * do not show the ada chat app button site-wide
 */
-.ada-chat-button {
+button.ada-chat-button {
   /* display: none !important; */
-  margin: 1em !important;
+  /* margin: 1em !important; */
+  width: 38px !important;
+  height: 38px !important;
+  bottom: 16px !important;
+  right: 16px !important;
+}
+
+button.ada-chat-button:after {
+  width: 38px !important;
+  height: 38px !important;
 }
 
 .block {
