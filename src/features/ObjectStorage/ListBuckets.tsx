@@ -1,4 +1,3 @@
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -25,6 +24,7 @@ import bucketRequestsContainer, {
 } from 'src/containers/bucketRequests.container';
 import useOpenClose from 'src/hooks/useOpenClose';
 import { DeleteBucketRequest } from 'src/store/bucket/bucket.requests';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import BucketTableRow from './BucketTableRow';
 
 type ClassNames = 'root' | 'label';
@@ -88,12 +88,7 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
         // We're not worried about field errors here, so just grab the text
         // of the first error in the response.
 
-        // @todo: change this code when getErrorStringOrDefault is ironed out.
-        const errorText = pathOr(
-          'Error removing bucket.',
-          ['response', 'data', 'errors', 0, 'reason'],
-          e
-        );
+        const errorText = getErrorStringOrDefault(e, 'Error removing bucket.');
 
         setError(errorText);
       });

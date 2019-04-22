@@ -1,4 +1,7 @@
-import { mockAxiosError } from 'src/__data__/axios';
+import {
+  mockAxiosError,
+  mockAxiosErrorWithAPIErrorContent
+} from 'src/__data__/axios';
 import { getAPIErrorOrDefault, getErrorStringOrDefault } from './errorUtils';
 
 const error = [{ field: 'a field', reason: 'a reason' }];
@@ -49,6 +52,14 @@ describe('Error handling utilities', () => {
 
     it('should just return the string if you pass it a string', () => {
       expect(getErrorStringOrDefault('a', 'b')).toBe('a');
+    });
+
+    it('should access response.data.errors if passed an AxiosError', () => {
+      expect(
+        getErrorStringOrDefault(mockAxiosErrorWithAPIErrorContent)
+      ).toMatch(
+        mockAxiosErrorWithAPIErrorContent.response.data.errors[0].reason
+      );
     });
   });
 });
