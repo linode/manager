@@ -106,6 +106,10 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       this.setState({ disks: this.props.disks });
     }
 
+    if (!this.props.selectedLinode && prevProps.selectedLinode) {
+      this.setState({ disks: [] });
+    }
+
     if (
       this.props.selectedLinode &&
       this.props.selectedLinode !== prevProps.selectedLinode
