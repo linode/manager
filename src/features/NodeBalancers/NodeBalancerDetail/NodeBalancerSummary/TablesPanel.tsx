@@ -16,6 +16,7 @@ import LineGraph from 'src/components/LineGraph';
 import MetricsDisplay from 'src/features/linodes/LinodesDetail/LinodeSummary/MetricsDisplay';
 import { getNodeBalancerStats } from 'src/services/nodebalancers';
 import { ApplicationState } from 'src/store';
+import { initAll } from 'src/utilities/initAll';
 import {
   formatBitsPerSecond,
   formatNumber,
@@ -184,7 +185,9 @@ class TablesPanel extends React.Component<CombinedProps, State> {
           return;
         }
         this.setState({
-          stats: response,
+          // Occasionally the last reading of each stats reading is incorrect, so we drop
+          // the last element of each array in the stats response.
+          stats: initAll(response),
           loadingStats: false,
           statsError: undefined
         });
