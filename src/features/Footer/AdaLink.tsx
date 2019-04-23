@@ -64,7 +64,7 @@ const AdaLink: React.FC<CombinedProps> = props => {
       <AdaIcon />
     </IconButton>
   ) : (
-    <Tooltip title={adaError} placement="left">
+    <Tooltip title={adaError} placement="top-end">
       <AdaIcon className={classes.disabled} />
     </Tooltip>
   );
