@@ -12,7 +12,7 @@ import TableRowLoading from 'src/components/TableRowLoading';
 interface Props {
   loading: boolean;
   errors?: Linode.ApiFieldError[];
-  items?: any[];
+  items?: Linode.InvoiceItem[];
 }
 
 const InvoiceTable: React.StatelessComponent<Props> = props => {
@@ -29,6 +29,8 @@ const InvoiceTable: React.StatelessComponent<Props> = props => {
             Unit Price
           </TableCell>
           <TableCell data-qa-column="Amount">Amount (USD)</TableCell>
+          <TableCell data-qa-column="Taxes">Tax (USD)</TableCell>
+          <TableCell data-qa-column="Total">Total (USD)</TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -57,46 +59,54 @@ const RenderData: React.StatelessComponent<{
   const { items } = props;
   return (
     <>
-      {items.map(({ label, from, to, quantity, unit_price, amount }) => (
-        <TableRow key={`${label}-${from}-${to}`}>
-          <TableCell parentColumn="Description" data-qa-descrition>
-            {label}
-          </TableCell>
-          <TableCell parentColumn="From" data-qa-from>
-            {renderDate(from)}
-          </TableCell>
-          <TableCell parentColumn="To" data-qa-to>
-            {renderDate(to)}
-          </TableCell>
-          <TableCell parentColumn="Quantity" data-qa-quantity>
-            {renderQuantity(quantity)}
-          </TableCell>
-          <TableCell parentColumn="Unit Price" data-qa-unit-price>
-            {renderUnitPrice(unit_price)}
-          </TableCell>
-          <TableCell parentColumn="Amount (USD)" data-qa-amount>
-            ${amount}
-          </TableCell>
-        </TableRow>
-      ))}
+      {items.map(
+        ({ label, from, to, quantity, unit_price, amount, tax, total }) => (
+          <TableRow key={`${label}-${from}-${to}`}>
+            <TableCell parentColumn="Description" data-qa-descrition>
+              {label}
+            </TableCell>
+            <TableCell parentColumn="From" data-qa-from>
+              {renderDate(from)}
+            </TableCell>
+            <TableCell parentColumn="To" data-qa-to>
+              {renderDate(to)}
+            </TableCell>
+            <TableCell parentColumn="Quantity" data-qa-quantity>
+              {renderQuantity(quantity)}
+            </TableCell>
+            <TableCell parentColumn="Unit Price" data-qa-unit-price>
+              {renderUnitPrice(unit_price)}
+            </TableCell>
+            <TableCell parentColumn="Amount (USD)" data-qa-amount>
+              ${amount}
+            </TableCell>
+            <TableCell parentColumn="Tax (USD)" data-qa-tax>
+              ${tax}
+            </TableCell>
+            <TableCell parentColumn="Total (USD)" data-qa-total>
+              ${total}
+            </TableCell>
+          </TableRow>
+        )
+      )}
     </>
   );
 };
 
 const RenderLoading: React.StatelessComponent<{}> = () => {
-  return <TableRowLoading colSpan={6} />;
+  return <TableRowLoading colSpan={8} />;
 };
 
 const RenderErrors: React.StatelessComponent<{
   errors: Linode.ApiFieldError[];
 }> = props => {
   return (
-    <TableRowError colSpan={6} message="Unable to retrieve invoice items." />
+    <TableRowError colSpan={8} message="Unable to retrieve invoice items." />
   );
 };
 
 const RenderEmpty: React.StatelessComponent<{}> = () => {
-  return <TableRowEmptyState colSpan={6} />;
+  return <TableRowEmptyState colSpan={8} />;
 };
 
 const MaybeRenderContent: React.StatelessComponent<{

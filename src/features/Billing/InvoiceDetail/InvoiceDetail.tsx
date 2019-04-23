@@ -23,11 +23,19 @@ import { ThunkDispatch } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import InvoiceTable from './InvoiceTable';
 
-type ClassNames = 'root' | 'backButton' | 'titleWrapper';
+type ClassNames = 'root' | 'backButton' | 'titleWrapper' | 'totals';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`
+  },
+  totals: {
+    display: 'flex',
+    flexDirection: 'column',
+    textAlign: 'right',
+    '& h2': {
+      margin: theme.spacing.unit
+    }
   },
   titleWrapper: {
     display: 'flex',
@@ -155,7 +163,7 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
               <Grid item className={classes.titleWrapper}>
                 {invoice && (
                   <Typography variant="h2" data-qa-total={invoice.total}>
-                    Total ${Number(invoice.total).toFixed(2)}
+                    Total: ${Number(invoice.total).toFixed(2)}
                   </Typography>
                 )}
               </Grid>
@@ -174,15 +182,21 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
             <InvoiceTable loading={loading} items={items} errors={errors} />
           </Grid>
           <Grid item xs={12}>
-            <Grid container justify="flex-end">
-              <Grid item className={classes.titleWrapper}>
-                {invoice && (
+            {invoice && (
+              <Grid container justify="flex-end">
+                <Grid item className={classes.totals}>
                   <Typography variant="h2">
-                    Total ${Number(invoice.total).toFixed(2)}
+                    Subtotal: ${Number(invoice.subtotal).toFixed(2)}
                   </Typography>
-                )}
+                  <Typography variant="h2">
+                    Tax: ${Number(invoice.tax).toFixed(2)}
+                  </Typography>
+                  <Typography variant="h2">
+                    Total: ${Number(invoice.total).toFixed(2)}
+                  </Typography>
+                </Grid>
               </Grid>
-            </Grid>
+            )}
           </Grid>
         </Grid>
       </Paper>

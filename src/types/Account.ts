@@ -43,6 +43,8 @@ namespace Linode {
     date: string;
     label: string;
     total: string | number;
+    tax: number;
+    subtotal: number;
   }
 
   export interface InvoiceItem {
@@ -53,6 +55,8 @@ namespace Linode {
     quantity: null | number;
     type: 'hourly' | 'prepay' | 'misc';
     unit_price: null | number;
+    tax: number;
+    total: number;
   }
 
   export interface Payment {
