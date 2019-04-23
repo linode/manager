@@ -4,6 +4,24 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.54.0] - 2019-04-23
+
+### Added:
+- Ada support bot available app-wide
+- Ability to delete Object Storage buckets
+
+### Changed:
+- Update ListBuckets
+- Don't use last Stats reading on Linode/NodeBalancer graphs
+- Adjust messaging in UserEventsList for deleted entities
+- Add documentation to CONTRIBUTING.md
+- Expire token on logout
+- Catch disk error correctly for blocked requests
+- Use EnhancedSelect for the DiskSelect component
+
+### Fixed:
+- AxiosError handling for getErrorStringOrDefault
+
 ## [v0.53.0] - 2019-04-18
 
 ### Added:
