@@ -19,7 +19,7 @@ import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import countryRegionItems from './countryRegionData';
+import countryData from './countryRegionData';
 
 type ClassNames = 'root' | 'mainFormContainer' | 'stateZip';
 
@@ -140,14 +140,14 @@ class UpdateContactInformationPanel extends React.Component<
 
     const generalError = hasErrorFor('none');
 
-    const countryResults = countryRegionItems.map((country: any) => {
+    const countryResults = countryData.map((country: any) => {
       return {
         value: country.countryShortCode,
         label: country.countryName
       };
     });
 
-    const currentCountryResult = countryRegionItems.filter((country: any) =>
+    const currentCountryResult = countryData.filter((country: any) =>
       fields.country
         ? country.countryShortCode === fields.country
         : country.countryShortCode === account.country
@@ -166,7 +166,7 @@ class UpdateContactInformationPanel extends React.Component<
       };
     });
 
-    // Adding account.state as an option in case user has it set to something that doesn't exist as an option on react-select.
+    // Adding account.state as an option if user's setting is something that doesn't exist within the react-select options list.
     const updatedRegionResults = [
       ...regionResults,
       { value: account.state, label: account.state }

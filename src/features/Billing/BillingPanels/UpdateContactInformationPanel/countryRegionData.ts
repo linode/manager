@@ -1,4 +1,19 @@
-export default [
+interface countryData {
+  countries: Country[];
+}
+
+interface Country {
+  countryName: string;
+  countryShortCode: string;
+  regions: Region[];
+}
+
+interface Region {
+  name: string;
+  shortCode: string;
+}
+
+const countryData = [
   {
     countryName: 'Afghanistan',
     countryShortCode: 'AF',
@@ -18637,3 +18652,5 @@ export default [
     ]
   }
 ];
+
+export default countryData;
