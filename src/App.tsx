@@ -189,9 +189,6 @@ type CombinedProps = Props &
   WithStyles<ClassNames> &
   InjectedNotistackProps;
 
-/** ada chat bot */
-let ada: any;
-
 export class App extends React.Component<CombinedProps, State> {
   composeState = composeState;
 
@@ -205,12 +202,6 @@ export class App extends React.Component<CombinedProps, State> {
 
   componentDidCatch() {
     this.setState({ hasError: true });
-  }
-
-  componentDidUpdate() {
-    if ('AdaChaperone' in window && typeof ada === 'undefined') {
-      ada = new (window as any).AdaChaperone('linode');
-    }
   }
 
   async componentDidMount() {
