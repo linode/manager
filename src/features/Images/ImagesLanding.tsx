@@ -291,7 +291,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     }
 
     /** Error State */
-    if (imagesError instanceof Error) {
+    if (imagesError) {
       return this.renderError(imagesError);
     }
 
@@ -408,7 +408,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     );
   }
 
-  renderError = (e: Error) => {
+  renderError = (_: Linode.ApiFieldError[]) => {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Images" />
