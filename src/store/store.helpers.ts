@@ -92,7 +92,7 @@ export const addMany = <E extends Entity>(
 };
 
 /**
- * Generates a list of entites added to an existing list, and a list of entities removed from an existing list.
+ * Generates a list of entities added to an existing list, and a list of entities removed from an existing list.
  */
 export const getAddRemoved = <E extends Entity>(
   existingList: E[] = [],
