@@ -10,7 +10,9 @@ import { Logout } from './Logout';
 window.location.assign = jest.fn();
 
 describe('layouts/Logout', () => {
-  const component = shallow<Logout>(<Logout dispatchLogout={jest.fn()} />);
+  const component = shallow<Logout>(
+    <Logout token="" dispatchLogout={jest.fn()} />
+  );
 
   it('dispatches logout action on componentDidMount', () => {
     const instance = component.instance();
