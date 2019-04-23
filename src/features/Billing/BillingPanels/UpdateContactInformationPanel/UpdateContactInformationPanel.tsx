@@ -166,25 +166,14 @@ class UpdateContactInformationPanel extends React.Component<
       };
     });
 
-    // Adding account.state as an option if user's setting is something that doesn't exist within the react-select options list.
-    const updatedRegionResults = [
-      ...regionResults,
-      { value: account.state, label: account.state }
-    ];
-
-    const regionSelection = updatedRegionResults.filter((region: any) => {
-      if (fields.state) {
-        return region.value === fields.state;
-      } else {
-        // If the country has changed, we need to remove the manually added account.state so it will not persist as the selection.
-        if (fields.country && fields.country !== account.country) {
-          updatedRegionResults.pop();
-          return;
-        } else {
-          return region.value === account.state;
-        }
-      }
+    const regionSelection = regionResults.find(region => {
+      return fields.state
+        ? region.value === fields.state
+        : region.value === account.state;
     });
+
+    const hasChangedCountry =
+      fields.country && fields.country !== account.country;
 
     return (
       <Grid
@@ -352,7 +341,13 @@ class UpdateContactInformationPanel extends React.Component<
                 placeholder="Select a State"
                 options={regionResults}
                 isClearable={false}
-                value={regionSelection}
+                value={
+                  regionSelection
+                    ? regionSelection
+                    : hasChangedCountry
+                    ? null
+                    : { value: account.state, label: account.state }
+                }
               />
             </Grid>
             <Grid item xs={12} sm={5}>
