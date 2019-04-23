@@ -83,10 +83,6 @@ describe('PrimaryNav', () => {
       expect(findLinkInPrimaryNav('images')).toHaveLength(1);
     });
 
-    it('should have a get help link', () => {
-      expect(findLinkInPrimaryNav('support')).toHaveLength(1);
-    });
-
     it('should not have a account link', () => {
       expect(findLinkInPrimaryNav('account')).toHaveLength(0);
     });
