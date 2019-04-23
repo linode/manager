@@ -1,4 +1,4 @@
-interface countryData {
+interface CountryData {
   countries: Country[];
 }
 
@@ -13,7 +13,7 @@ interface Region {
   shortCode: string;
 }
 
-const countryData = [
+const CountryData = [
   {
     countryName: 'Afghanistan',
     countryShortCode: 'AF',
@@ -18653,4 +18653,4 @@ const countryData = [
   }
 ];
 
-export default countryData;
+export default CountryData;
