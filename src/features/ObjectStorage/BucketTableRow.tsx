@@ -87,7 +87,7 @@ export const BucketTableRow: React.StatelessComponent<
         </Grid>
         <Grid>
           <Typography variant="body2" data-qa-num-objects>
-            {objects} items
+            {`${objects} ${objects === 1 ? 'item' : 'items'}`}
           </Typography>
         </Grid>
       </TableCell>

@@ -78,4 +78,30 @@ describe('BucketTableRow', () => {
     expect(actionMenuProps.cluster).toBe('a-cluster');
     expect(actionMenuProps.onRemove).toBe(mockOnRemove);
   });
+
+  it('should correctly pluralize the number of items in the bucket', () => {
+    wrapper.setProps({ objects: 0 });
+    expect(
+      wrapper
+        .find('[data-qa-num-objects]')
+        .childAt(0)
+        .text()
+    ).toBe('0 items');
+
+    wrapper.setProps({ objects: 1 });
+    expect(
+      wrapper
+        .find('[data-qa-num-objects]')
+        .childAt(0)
+        .text()
+    ).toBe('1 item');
+
+    wrapper.setProps({ objects: 24 });
+    expect(
+      wrapper
+        .find('[data-qa-num-objects]')
+        .childAt(0)
+        .text()
+    ).toBe('24 items');
+  });
 });
