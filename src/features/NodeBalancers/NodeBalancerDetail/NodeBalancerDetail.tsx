@@ -35,6 +35,7 @@ import {
   withNodeBalancerActions,
   WithNodeBalancerActions
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { NodeBalancerProvider } from './context';
@@ -109,7 +110,12 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
           this.props.clearLoadingAndErrors();
         })
         .catch(error => {
-          this.props.setErrorAndClearLoading(error);
+          this.props.setErrorAndClearLoading(
+            getErrorStringOrDefault(
+              error,
+              'There was an error loading your NodeBalancer.'
+            )
+          );
         });
     });
 
