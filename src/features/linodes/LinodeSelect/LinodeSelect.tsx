@@ -8,6 +8,7 @@ import {
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import withLinodes from 'src/containers/withLinodes.container';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 type ClassNames = 'root';
 
@@ -18,7 +19,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface WithLinodesProps {
   linodesData: Linode.Linode[];
   linodesLoading: boolean;
-  linodesError?: string;
+  linodesError?: Linode.ApiFieldError[];
 }
 
 interface Props {
@@ -74,7 +75,9 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
       onChange={(selected: Item<number> | null) =>
         handleChange(selected ? selected.value : null)
       }
-      errorText={generalError || linodeError || linodesError}
+      errorText={getErrorStringOrDefault(
+        generalError || linodeError || linodesError || []
+      )}
     />
   );
 };

@@ -127,7 +127,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             this.setState({ disks: filteredDisks });
           }
         })
-        .catch(error => {
+        .catch(_ => {
           if (!this.mounted) {
             return;
           }
