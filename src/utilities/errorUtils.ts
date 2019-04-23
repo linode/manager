@@ -66,13 +66,14 @@ export const handleUnauthorizedErrors = (
 };
 
 export const getErrorStringOrDefault = (
-  errors: Linode.ApiFieldError[] | string,
+  errors: Linode.ApiFieldError[] | AxiosError | string,
   defaultError: string = 'An unexpected error occurred.'
 ): string => {
   if (typeof errors === 'string') {
     return errors;
   }
-  return pathOr<string>(defaultError, [0, 'reason'], errors);
+  const apiErrors = pathOr(errors, ['response', 'data', 'errors'], errors);
+  return pathOr<string>(defaultError, [0, 'reason'], apiErrors);
 };
 
 /**
