@@ -174,10 +174,7 @@ bold {
   display: list-item;
 }
 
-/* 
-* do not show the ada chat app button site-wide
-*/
-.ada-chat-button {
+button.ada-chat-button {
   display: none !important;
 }
 

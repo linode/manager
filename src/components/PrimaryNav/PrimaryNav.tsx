@@ -19,9 +19,11 @@ import Grid from 'src/components/Grid';
 import { isObjectStorageEnabled } from 'src/constants';
 import { MapState } from 'src/store/types';
 import { sendEvent } from 'src/utilities/analytics';
-import isPathOneOf from 'src/utilities/routing/isPathOneOf';
+import AdditionalMenuItems from './AdditionalMenuItems';
 import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
+
+import { linkIsActive } from './utils';
 
 interface PrimaryLink {
   display: string;
@@ -81,6 +83,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     padding: `${theme.spacing.unit + 2}px 0 ${theme.spacing.unit}px`
   },
   listItem: {
+    cursor: 'pointer',
     borderLeft: '6px solid transparent',
     transition: theme.transitions.create([
       'background-color',
@@ -251,7 +254,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       isManagedAccount
     } = this.props;
 
-    const primaryLinks = [
+    const primaryLinks: PrimaryLink[] = [
       { display: 'Dashboard', href: '/dashboard', key: 'dashboard' }
     ];
 
@@ -319,12 +322,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       });
     }
 
-    primaryLinks.push({
-      display: 'Get Help',
-      href: '/support',
-      key: 'support'
-    });
-
     this.setState({ primaryLinks });
   };
 
@@ -332,10 +329,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     const { history, closeMenu } = this.props;
     history.push(href);
     closeMenu();
-  };
-
-  linkIsActive = (href: string) => {
-    return isPathOneOf([href], this.props.location.pathname);
   };
 
   expandMenutItem = (e: React.MouseEvent<HTMLElement>) => {
@@ -410,7 +403,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           data-qa-nav-item={primaryLink.key}
           className={classNames({
             [classes.listItem]: true,
-            [classes.active]: this.linkIsActive(primaryLink.href)
+            [classes.active]: linkIsActive(primaryLink.href)
           })}
         >
           <ListItemText
@@ -469,6 +462,21 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
               this.renderPrimaryLink(primaryLink, id === arr.length - 1)
             )}
 
+            {/** menu items under the main navigation links */}
+            <AdditionalMenuItems
+              linkClasses={(href?: string) =>
+                classNames({
+                  [classes.listItem]: true,
+                  [classes.active]: href ? linkIsActive(href) : false
+                })
+              }
+              listItemClasses={classNames({
+                [classes.linkItem]: true
+              })}
+              closeMenu={this.props.closeMenu}
+              dividerClasses={classes.divider}
+            />
+
             <Hidden mdUp>
               <Divider className={classes.divider} />
               <Link
@@ -481,7 +489,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
                   [classes.listItem]: true,
                   [classes.active]:
                     expandedMenus.support ||
-                    this.linkIsActive('/profile/display') === true
+                    linkIsActive('/profile/display') === true
                 })}
               >
                 <ListItemText
