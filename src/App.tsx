@@ -209,7 +209,6 @@ export class App extends React.Component<CombinedProps, State> {
 
   componentDidUpdate() {
     if ('AdaChaperone' in window && typeof ada === 'undefined') {
-      console.log('true');
       ada = new (window as any).AdaChaperone('linode');
     }
   }
