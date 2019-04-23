@@ -41,7 +41,6 @@ interface State {
   loading: boolean;
   error?: string;
   events: Linode.Event[];
-  initialEventsLength: number;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -50,8 +49,7 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
   state: State = {
     loading: true,
     error: undefined,
-    events: [],
-    initialEventsLength: this.props.eventsFromRedux.length
+    events: []
   };
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
@@ -63,13 +61,21 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
             of the activity stream. Make sure they're events after the ones
             we got from page load and ones that match the Linode ID
           */
-          ...this.props.eventsFromRedux.filter((eachEvent, index) => {
+          ...this.props.eventsFromRedux.filter(eachEvent => {
             return (
-              index < this.state.initialEventsLength &&
-              (eachEvent.entity && eachEvent.entity.id === this.props.linodeId)
+              !eachEvent._initial &&
+              (eachEvent.entity &&
+                eachEvent.entity.id === this.props.linodeId &&
+                eachEvent.entity.type === 'linode')
             );
           }),
-          ...this.state.events
+          /* 
+            at this point, the state is populated with events from Redux and events from the cDM request
+            and we only want the ones where the "_initial" flag doesn't exist
+          */
+          ...this.state.events.filter(
+            eachEvent => typeof eachEvent._initial === 'undefined'
+          )
         ]
       });
     }
