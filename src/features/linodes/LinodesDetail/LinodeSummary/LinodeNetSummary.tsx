@@ -8,23 +8,23 @@ import { WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import { getLinodeStatsByDate } from 'src/services/linodes';
-import { MapState } from 'src/store/types';
-import { isRecent } from 'src/utilities/isRecent.ts';
-
 import {
   ClassNames,
   renderPercentageString,
   styled
 } from 'src/features/Dashboard/TransferDashboardCard/TransferDashboardCard';
-import { getMonthlyTraffic } from 'src/utilities/statMetrics';
+import { getLinodeStatsByDate } from 'src/services/linodes';
+import { MapState } from 'src/store/types';
+import { isRecent } from 'src/utilities/isRecent.ts';
+import { readableBytes } from 'src/utilities/readableBytes';
+import { getMonthlyNetworkTransferInBits } from 'src/utilities/statMetrics';
 
 interface Props {
   linodeId: number;
 }
 
 interface StateProps {
-  used: number;
+  usedInBytes: number;
   loading: boolean;
   error: boolean;
 }
@@ -33,7 +33,7 @@ type CombinedProps = Props & StoreProps & StateProps & WithStyles<ClassNames>;
 
 class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
   state = {
-    used: 0,
+    usedInBytes: 0,
     loading: true,
     error: false
   };
@@ -46,7 +46,7 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
     getLinodeStatsByDate(linodeId, year, month)
       .then(resp => {
         this.setState({
-          used: getMonthlyTraffic(resp.data),
+          usedInBytes: getMonthlyNetworkTransferInBits(resp.data) / 8,
           loading: false
         });
       })
@@ -59,11 +59,15 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
   }
 
   render() {
-    const { total, classes, isTooEarlyForStats } = this.props;
-    const { used, loading, error } = this.state;
+    const { totalTransferInGB, classes, isTooEarlyForStats } = this.props;
+    const { usedInBytes, loading, error } = this.state;
 
-    const usedInGb = Math.ceil(used / 8e9);
-    const usagePercent = 100 - ((total - usedInGb) * 100) / total;
+    const usedInGB = usedInBytes / 1024 / 1024 / 1024;
+
+    const usagePercent =
+      100 - ((totalTransferInGB - usedInGB) * 100) / totalTransferInGB;
+
+    const usedInReadableBytes = readableBytes(usedInBytes);
 
     if (loading) {
       return (
@@ -132,22 +136,23 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
           <Typography>
             You have used{' '}
             <strong>{renderPercentageString(usagePercent)}</strong> of your
-            available Network Transfer quota for this Linode's plan ({total}{' '}
-            GB).
+            available Network Transfer quota for this Linode's plan (
+            {totalTransferInGB} GB).
           </Typography>
           <Divider className={classes.divider} />
           <Typography
             className={classes.itemText + ' ' + classes.itemTextFirst}
           >
-            Total: <strong>{total}</strong> GB
+            Total: <strong>{totalTransferInGB}</strong> GB
           </Typography>
 
           <Typography className={classes.itemText}>
-            Used: <strong>{usedInGb}</strong> GB
+            Used: <strong>{usedInReadableBytes.value}</strong>{' '}
+            {usedInReadableBytes.unit}
           </Typography>
           <Divider className={classes.divider} />
           <Typography className={classes.itemText}>
-            Free: <strong>{Math.floor(total - usedInGb)}</strong> GB
+            Free: <strong>{Math.floor(totalTransferInGB - usedInGB)}</strong> GB
           </Typography>
         </Grid>
       </Grid>
@@ -156,7 +161,7 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
 }
 
 interface StoreProps {
-  total: number;
+  totalTransferInGB: number;
   isTooEarlyForStats?: boolean;
 }
 
@@ -165,7 +170,7 @@ const mapStateToProps: MapState<StoreProps, CombinedProps> = (state, props) => {
     (l: Linode.Linode) => l.id === props.linodeId
   );
   return {
-    total: linode ? linode.specs.transfer : 0,
+    totalTransferInGB: linode ? linode.specs.transfer : 0,
     isTooEarlyForStats:
       linode && isRecent(linode.created, moment.utc().format())
   };

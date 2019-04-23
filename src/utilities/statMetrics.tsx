@@ -1,3 +1,6 @@
+import * as moment from 'moment';
+import { curry } from 'ramda';
+
 export interface Metrics {
   max: number;
   average: number;
@@ -122,16 +125,36 @@ export const getTotalTraffic = (
   };
 };
 
-export const getMonthlyTraffic = (stats: Linode.StatsData) => {
-  const getTrafficSum = (records: number[][]) =>
-    records.reduce((acc, record) => {
-      return acc + record[1];
-    }, 0);
+const _sumStatsAfterCutoff = (
+  cutoff: moment.Moment,
+  records: [number, number][]
+): number => {
+  return records.reduce((acc, record) => {
+    const dateOfReading = moment(record[0]);
 
-  return (
-    getTrafficSum(stats.netv4.in) +
-    getTrafficSum(stats.netv4.out) +
-    getTrafficSum(stats.netv6.in) +
-    getTrafficSum(stats.netv4.out)
-  );
+    if (dateOfReading.isSameOrAfter(cutoff)) {
+      return acc + record[1];
+    }
+    return acc;
+  }, 0);
+};
+
+export const sumStatsAfterCutoff = curry(_sumStatsAfterCutoff);
+
+export const getMonthlyNetworkTransferInBits = (stats: Linode.StatsData) => {
+  const startOfMonth = moment()
+    .utc()
+    .startOf('month');
+
+  const sumCurrentMonthStats = sumStatsAfterCutoff(startOfMonth);
+
+  const networkRateAverages =
+    sumCurrentMonthStats(stats.netv4.in) +
+    sumCurrentMonthStats(stats.netv4.out) +
+    sumCurrentMonthStats(stats.netv6.in) +
+    sumCurrentMonthStats(stats.netv6.out);
+
+  // The stat readings are average rates per second over two hours,
+  // so we need to multiply by the number of seconds in 2 hours
+  return networkRateAverages * 60 * 60 * 2; // 7200 seconds in 2 hours;
 };

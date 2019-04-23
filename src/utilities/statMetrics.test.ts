@@ -1,3 +1,4 @@
+import * as moment from 'moment';
 import {
   formatBitsPerSecond,
   formatBytes,
@@ -5,7 +6,8 @@ import {
   formatNumber,
   formatPercentage,
   getMetrics,
-  getTotalTraffic
+  getTotalTraffic,
+  sumStatsAfterCutoff
 } from './statMetrics';
 
 const data = [
@@ -152,5 +154,27 @@ describe('formatting', () => {
     expect(formatBytes(12)).toBe('12.00 B');
     expect(formatBytes(0)).toBe('0.00 B');
     expect(formatBytes(123456789)).toBe('123.46 MB');
+  });
+});
+
+describe('Monthly Network Transfer', () => {
+  describe('sumStatsAfterCutoff', () => {
+    const stats: [number, number][] = [
+      [moment('2019-04-01 01:00:00').valueOf(), 1],
+      [moment('2019-04-03 01:00:00').valueOf(), 2],
+      [moment('2019-04-05 01:00:00').valueOf(), 4]
+    ];
+
+    it('sums stats happening after the cutoff date', () => {
+      expect(sumStatsAfterCutoff(moment('2019-03-01'), stats)).toBe(7);
+    });
+
+    it('does not sum stats happening before the cutoff date', () => {
+      expect(sumStatsAfterCutoff(moment('2019-04-04'), stats)).toBe(4);
+    });
+
+    it('sums stats where the date of the stats reading is equal to the cutoff date', () => {
+      expect(sumStatsAfterCutoff(moment('2019-04-03 01:00:00'), stats)).toBe(6);
+    });
   });
 });
