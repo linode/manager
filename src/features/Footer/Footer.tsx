@@ -7,7 +7,9 @@ import {
 import Grid from 'src/components/Grid';
 import createMailto from './createMailto';
 
-type CSSClasses = 'container' | 'link' | 'version';
+import AdaLink from './AdaLink';
+
+type CSSClasses = 'container' | 'link' | 'version' | 'adaLink';
 
 const styles: StyleRulesCallback<CSSClasses> = theme => ({
   container: {
@@ -36,6 +38,10 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
       marginLeft: theme.spacing.unit,
       marginRight: theme.spacing.unit
     }
+  },
+  adaLink: {
+    padding: '0 !important',
+    marginRight: theme.spacing.unit * 3
   }
 });
 
@@ -48,7 +54,12 @@ export class Footer extends React.PureComponent<CombinedProps> {
     const { classes } = this.props;
 
     return (
-      <Grid container spacing={32} className={classes.container}>
+      <Grid
+        container
+        spacing={32}
+        alignItems="center"
+        className={classes.container}
+      >
         <Grid item className={classes.version}>
           {this.renderVersion(classes.link)}
         </Grid>
@@ -61,13 +72,16 @@ export class Footer extends React.PureComponent<CombinedProps> {
             API Reference
           </a>
         </Grid>
-        <Grid item style={{ paddingLeft: 0, marginRight: 60 }}>
+        <Grid item style={{ paddingLeft: 0 }}>
           <a
             className={classes.link}
             href={createMailto(window.navigator.userAgent || '')}
           >
             Provide Feedback
           </a>
+        </Grid>
+        <Grid item className={classes.adaLink}>
+          <AdaLink />
         </Grid>
       </Grid>
     );

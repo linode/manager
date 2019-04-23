@@ -174,21 +174,8 @@ bold {
   display: list-item;
 }
 
-/* 
-* do not show the ada chat app button site-wide
-*/
 button.ada-chat-button {
-  /* display: none !important; */
-  /* margin: 1em !important; */
-  width: 38px !important;
-  height: 38px !important;
-  bottom: 16px !important;
-  right: 16px !important;
-}
-
-button.ada-chat-button:after {
-  width: 38px !important;
-  height: 38px !important;
+  display: none !important;
 }
 
 .block {
