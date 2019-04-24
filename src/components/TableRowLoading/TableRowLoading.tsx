@@ -15,8 +15,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   tableCell: {
     padding: 17,
-    textAlign: 'center',
-    border: 0
+    textAlign: 'center'
+    // border: 0
   },
   transparent: {
     backgroundColor: theme.bg.main
