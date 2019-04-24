@@ -4,6 +4,8 @@ import {
   timestamp,
   apiCreateLinode,
   apiDeleteLinode,
+  apiDeleteAllLinodes,
+  apiDeleteAllVolumes,
   createVolumes,
 } from '../../utils/common';
 
@@ -41,6 +43,11 @@ describe("Volumes Landing - Volume Actions", () => {
     }
   });
 
+  afterAll(() => {
+    apiDeleteAllLinodes();
+    apiDeleteAllVolumes();
+  });
+
   it("should list the Volumes on the Volumes landing page", () => {
     browser.url(constants.routes.volumes);
     Volumes.baseElemsDisplay();
@@ -48,8 +55,8 @@ describe("Volumes Landing - Volume Actions", () => {
     VolumeDetail.assertVolumeInTable(volumeEastAttached);
     const attached = Volumes.getVolumeElement(volumeEastAttached.label);
     const unattached = Volumes.getVolumeElement(volumeEast.label);
-    expect(Volumes.isAttached(attached)).toBeTruthy();
-    expect(Volumes.isAttached(unattached)).toBeFalsy();
+    expect(Volumes.isAttached(attached)).toBe(true);
+    expect(Volumes.isAttached(unattached)).toBe(false);
   });
 
   it("an unattached Volume should have the correct actions", () => {
@@ -92,7 +99,7 @@ describe("Volumes Landing - Volume Actions", () => {
     apiDeleteLinode(linode.id);
     browser.pause(1000);
     const wasAttached = Volumes.getVolumeElement(volumeEastAttached.label);
-    expect(Volumes.isAttached(wasAttached)).toBeFalsy();
+    expect(Volumes.isAttached(wasAttached)).toBe(false);
 
     wasAttached.$(VolumeDetail.actionMenu.selector).click();
     const actionsDisplayed = Volumes.actionMenuItems.map(action => action.getText());
