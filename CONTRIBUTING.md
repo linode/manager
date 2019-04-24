@@ -96,7 +96,7 @@ When you plan on releasing a new version of Cloud Manager:
 5. Once your Changelog has been approved by the team, run `git add . && yarn version --new-version X.X.X` (replace the X's with the appropriate version number)
     * This will apply the Git tags and update the version number in the `package.json`
     * This will also automatically commit the changes with the commit message `vX.X.X`
-6. Push the changes from your local `testing` branch to the upstream with `git push origin testing`
+6. Push the changes from your local `testing` branch to the upstream with `git push origin testing && git push origin testing --tags`
     * You may need to add the `--no-verify` flag, as the `testing` branch isn't prefixed with `M3`
 7. At this point, you can begin deploying to the rest of the environments
 8. Deploy to the staging environment by merging `testing` into `staging` with `git checkout staging && git pull && git merge testing && git push origin staging`
