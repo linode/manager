@@ -29,7 +29,7 @@ export const convertMegabytesTo = (data: number) => {
 // Value and unit are returned separately for flexibility of use.
 export const readableBytes = (num: number) => {
   if (num === 0) {
-    return { value: 0, unit: 'B', formatted: '0 bytes' };
+    return { value: 0, unit: 'bytes', formatted: '0 bytes' };
   }
 
   const kilobyte = 1024;
