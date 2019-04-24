@@ -41,7 +41,13 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   },
   adaLink: {
     padding: '0 !important',
-    marginRight: theme.spacing.unit * 3
+    marginRight: theme.spacing.unit * 2,
+    position: 'fixed',
+    right: 0,
+    bottom: 8,
+    [theme.breakpoints.up('sm')]: {
+      marginRight: theme.spacing.unit * 3
+    }
   }
 });
 
@@ -72,7 +78,7 @@ export class Footer extends React.PureComponent<CombinedProps> {
             API Reference
           </a>
         </Grid>
-        <Grid item style={{ paddingLeft: 0 }}>
+        <Grid item style={{ paddingLeft: 0, marginRight: 60 }}>
           <a
             className={classes.link}
             href={createMailto(window.navigator.userAgent || '')}
