@@ -5,11 +5,17 @@ import LinodeLogo from './LinodeLogo';
 
 import { reportException } from 'src/exceptionReporting';
 
-const leftPadding = 15;
-const baseFont = 'Times';
-const tableBodyStart = 155;
-const cellHeight = 25;
-const maxInstanceNameLength = 25;
+const leftMargin = 15; // space that needs to be applied to every parent element
+const baseFont = 'helvetica';
+const tableTopStart = 150; // AKA "top" CSS rule. Where the table header should start on the Y-axis
+const tableBodyStart = tableTopStart + 26; // where the table body should start on the Y-axis
+const calculateTableTotalsStart = (
+  items: Linode.InvoiceItem[],
+  itemsPerPage: number
+) => {
+  const howManyItemsOnLastPage = items.length % itemsPerPage;
+  return tableBodyStart + howManyItemsOnLastPage * 45;
+};
 
 const renderDate = (v: null | string) =>
   v ? formatDate(v, { format: `YYYY-MM-DD HH:mm:ss` }) : null;
@@ -18,30 +24,55 @@ const renderUnitPrice = (v: null | number) => (v ? `$${v}` : null);
 
 const renderQuantity = (v: null | number) => (v ? v : null);
 
+const truncateLabel = (label: string) => {
+  return label.length > 15 ? `${label.substr(0, 15)}...` : label;
+};
+
 const formatDescription = (desc?: string) => {
   if (!desc) {
     return 'No Description';
   }
 
-  const isBackup = /^Backup/.test(desc);
-  const descChunks = desc.split(' - ');
-  const nameIndex = isBackup ? 2 : 1;
-  if (!descChunks[nameIndex]) {
-    // some irregular description. Just truncate and let it through
-    return desc.substring(0, maxInstanceNameLength);
-  }
-  descChunks[nameIndex] = descChunks[nameIndex]
-    .split(' (')
-    .map(s => s.substring(0, maxInstanceNameLength))
-    .join(' (');
+  /**
+   * The description will look one of three ways
+   *
+   * 1. If this is a backup, it will look like:
+   *    Backup Service - Linode 2GB - MyLinode (1234)
+   *
+   * 2. If this is not a backup, it will look like:
+   *    Linode 32GB - MyLinode (1234)
+   *
+   * 3. If it's a volume
+   *    Storage Volume - volume (1234) - 20 GiB
+   */
 
-  return descChunks.reduce((acc, chunk, i) => {
-    const delimiter = i === nameIndex ? ' - \n' : ' - '; // insert line break before long entity name
-    if (i === 0) {
-      return chunk; // avoid inserting delimiter for the first element
-    }
-    return acc + delimiter + chunk;
-  }, '');
+  const isBackup = /^Backup/.test(desc);
+  const isVolume = /^Storage/.test(desc);
+
+  /** create an array like ["Backup service", "Linode 2GB", "MyLinode (1234)"] */
+  const descChunks = desc.split(' - ');
+
+  if (descChunks.length < 2) {
+    /** in this case, it's probably a manual payment from admin */
+    return desc;
+  }
+
+  if (isVolume) {
+    const [volLabel, volID] = descChunks[1].split(' ');
+    return `${descChunks[0]}\r\n${truncateLabel(volLabel)} ${
+      descChunks[2]
+    }\r\n${volID}`;
+  }
+
+  if (isBackup) {
+    const [backupLabel, backupID] = descChunks[2].split(' ');
+    return `${descChunks[0]}\r\n${descChunks[1]}\r\n${truncateLabel(
+      backupLabel
+    )}\r\n${backupID}`;
+  }
+
+  const [entitiyLabel, entitiyID] = descChunks[1].split(' ');
+  return `${descChunks[0]}\r\n${truncateLabel(entitiyLabel)}\r\n${entitiyID}`;
 };
 
 const addLeftHeader = (
@@ -52,7 +83,7 @@ const addLeftHeader = (
   type: string
 ) => {
   const addLine = (text: string, fontSize = 9) => {
-    doc.text(text, leftPadding, currentLine, { charSpace: 0.75 });
+    doc.text(text, leftMargin, currentLine, { charSpace: 0.75 });
     currentLine += fontSize;
   };
 
@@ -116,33 +147,28 @@ const addRightHeader = (doc: jsPDF, account: Linode.Account) => {
 };
 
 const addFooter = (doc: jsPDF) => {
-  const fontSize = 5;
-  let currentLine = 600;
-
-  const addLine = (text: string, customPadding: number) => {
-    doc.text(text, customPadding, currentLine, {
-      charSpace: 0.75,
-      align: 'center'
-    });
-    currentLine += fontSize * 2;
-  };
+  const fontSize = 10;
+  const left = 215;
+  const top = 600;
 
   doc.setFontSize(fontSize);
   doc.setFont(baseFont);
 
-  // Second number argument - manual centering cos automatic doesn't work well
-  addLine('249 Arch St. - Philadelphia, PA 19106', 210);
-  addLine('USA', 220);
-  addLine(
-    'P:855-4-LINODE (855-454-6633) F:609-380-7200 W:https://www.linode.com',
-    190
-  );
+  const footerText =
+    `249 Arch St. - Philadelphia, PA 19106\r\n` +
+    `USA\r\n` +
+    'P:855-4-LINODE (855-454-6633) F:609-380-7200 W:https://www.linode.com\r\n';
+
+  doc.text(footerText, left, top, {
+    charSpace: 0.75,
+    align: 'center'
+  });
 };
 
-const addTitle = (doc: jsPDF, title: string) => {
+const addTitle = (doc: jsPDF, ...textStrings: string[]) => {
   doc.setFontSize(12);
   doc.setFontStyle('bold');
-  doc.text(title, leftPadding, 130, { charSpace: 0.75 });
+  doc.text(`${textStrings.join(`\r\n`)}`, leftMargin, 130, { charSpace: 0.75 });
   // reset text format
   doc.setFontStyle('normal');
 };
@@ -158,12 +184,15 @@ export const printInvoice = (
   items: Linode.InvoiceItem[]
 ): PdfResult => {
   try {
-    const itemsPerPage = 18;
+    const itemsPerPage = 9;
     const date = formatDate(invoice.date, { format: 'YYYY-MM-DD' });
     const invoiceId = invoice.id;
+
+    /**
+     * splits invoice items into nested arrays based on the itemsPerPage
+     */
     const itemsChunks = items ? splitEvery(itemsPerPage, items) : [[]];
-    const tableEnd =
-      tableBodyStart + cellHeight * itemsChunks[itemsChunks.length - 1].length;
+
     const doc = new jsPDF({
       unit: 'px'
     });
@@ -172,71 +201,116 @@ export const printInvoice = (
       doc.setFontSize(10);
 
       const header = [
-        { name: 'Description', prompt: 'Description', width: 205 },
-        { name: 'From', prompt: 'From', width: 72 },
-        { name: 'To', prompt: 'To', width: 72 },
-        { name: 'Quantity', prompt: 'Quantity', width: 52 },
-        { name: 'Unit Price', prompt: 'Unit Price', width: 67 },
-        { name: 'Amount', prompt: 'Amount (USD)', width: 82 }
+        { name: 'Description', prompt: 'Description', width: 150 },
+        { name: 'From', prompt: 'From', width: 83 },
+        { name: 'To', prompt: 'To', width: 83 },
+        { name: 'Quantity', prompt: 'QTY', width: 42 },
+        { name: 'Unit Price', prompt: 'Unit\r\nPrice', width: 52 },
+        { name: 'Amount', prompt: 'Amount', width: 62 },
+        { name: 'Tax', prompt: 'Tax', width: 42 },
+        { name: 'Total', prompt: 'Total', width: 43 }
       ] as any[]; // assert type 'any' because per source code this is an extended and more advanced way of usage
 
       const itemRows = itemsChunk.map(item => {
-        const { label, from, to, quantity, unit_price, amount } = item;
+        const {
+          label,
+          from,
+          to,
+          quantity,
+          unit_price,
+          amount,
+          tax,
+          total
+        } = item;
         return {
           Description: formatDescription(label),
           From: renderDate(from),
           To: renderDate(to),
           Quantity: renderQuantity(quantity),
           'Unit Price': renderUnitPrice(unit_price),
-          Amount: '$' + amount
+          Amount: '$' + amount,
+          Tax: '$' + tax,
+          Total: '$' + total
         };
       });
 
-      // Place table header
-      doc.table(leftPadding, 140, [], header, {
+      /** place table header */
+      doc.table(leftMargin, tableTopStart, [], header, {
         fontSize: 10,
         printHeaders: true,
-        autoSize: false,
-        margins: {
-          left: 15,
-          top: 10,
-          width: 800,
-          bottom: 0
-        }
+        autoSize: false
       });
 
-      // Place table body
-      doc.table(leftPadding, tableBodyStart, itemRows, header, {
+      /* 
+        Place table body 26px under the table header 
+
+        NOTE: doc.table() has functionality to automatically generate both
+        the headers and table rows at once, but we're creating two seperate tables
+        because of an issue where the table header is running over the table body
+
+        You can see this issue here: http://raw.githack.com/MrRio/jsPDF/master/
+        when selecting the "Cell" example. The dark grey header is overtaking the
+        table body
+      */
+      doc.table(leftMargin, tableBodyStart, itemRows, header, {
         fontSize: 9,
         printHeaders: false,
-        autoSize: false,
-        margins: {
-          left: leftPadding,
-          top: 10,
-          width: 800,
-          bottom: 0
-        }
+        autoSize: false
       });
     };
 
     const addTotalAmount = () => {
-      doc.setFontSize(13);
+      /* 
+        these will be hidden - purely to define the widths of the table rows
+        NOTE: I patch-package'd the minified NPM script, so I could use the "align" property 
+       */
+      const tableTotalHeaders = [
+        {
+          name: 'Total Label',
+          prompt: 'Total Label',
+          width: 450,
+          align: 'right'
+        },
+        {
+          name: 'Total Value',
+          prompt: 'Total Value',
+          width: 107,
+          align: 'right'
+        }
+      ] as any[];
+
+      /** set the font style */
       doc.setFontStyle('bold');
-      // Empty line
-      doc.cell(leftPadding, tableEnd, 412.5, 10, ' ', 1, 'left');
-      // "Total" cell
-      doc.cell(leftPadding, tableEnd + 10, 374, 20, 'Total:  ', 2, 'right');
-      // Total value cell
-      doc.cell(
-        leftPadding + 300,
-        tableEnd + 10,
-        38.5,
-        20,
-        `$${Number(invoice.total).toFixed(2)}`,
-        2,
-        'left'
+
+      /* blank spaces are important because we can't change right padding on per cell */
+      const tableTotalRows = [
+        {
+          'Total Label': 'Subtotal (USD)    ',
+          'Total Value': `$${invoice.subtotal.toFixed(2)}   `
+        },
+        {
+          'Total Label': 'Tax (USD)   ',
+          'Total Value': `$${invoice.tax.toFixed(2)}   `
+        },
+        {
+          'Total Label': 'Total (USD)    ',
+          'Total Value': `$${invoice.total.toFixed(2)}   `
+        }
+      ];
+
+      doc.table(
+        leftMargin,
+        calculateTableTotalsStart(items, itemsPerPage),
+        tableTotalRows,
+        tableTotalHeaders,
+        {
+          fontSize: 13,
+          fontStyle: 'bold',
+          printHeaders: false
+        }
       );
-      // reset text format
+
+      /** reset the font style back */
       doc.setFontStyle('normal');
     };
 
@@ -245,7 +319,7 @@ export const printInvoice = (
       doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
       addLeftHeader(doc, index + 1, itemsChunks.length, date, 'Invoice');
       addRightHeader(doc, account);
-      addTitle(doc, `Invoice: #${invoiceId}`);
+      addTitle(doc, `Invoice: #${invoiceId}`, `Tax ID: ${account.tax_id}`);
       addTable(itemsChunk);
       addFooter(doc);
       if (index < itemsChunks.length - 1) {
@@ -274,9 +348,6 @@ export const printPayment = (
 ): PdfResult => {
   try {
     const date = formatDate(payment.date, { format: 'YYYY-MM-DD' });
-    const paymentId = payment.id;
-    const amount = payment.usd;
-    const tableEnd = tableBodyStart + cellHeight;
     const doc = new jsPDF({
       unit: 'px'
     });
@@ -285,65 +356,74 @@ export const printPayment = (
       doc.setFontSize(10);
 
       const header = [
-        { name: 'Description', prompt: 'Description', width: 292 },
-        { name: 'Date', prompt: 'Date', width: 128 },
-        { name: 'Amount', prompt: 'Amount', width: 128 }
+        { name: 'Description', prompt: 'Description', width: 294 },
+        { name: 'Date', prompt: 'Date', width: 158 },
+        { name: 'Amount', prompt: 'Amount', width: 98 }
       ] as any[]; // assert type 'any' because per source code this is an extended and more advanced way of usage
 
       const itemRows = [
         {
-          Description: 'Payment. Thank you.', // Automatic line breaks don't work well. Doing it manually
+          Description: 'Payment. Thank you.',
           Date: renderDate(date),
-          Amount: '$' + amount
+          Amount: '$' + payment.usd
         }
       ];
 
-      doc.table(leftPadding, 140, itemRows, header, {
+      doc.table(leftMargin, tableTopStart, itemRows, header, {
         fontSize: 12,
         printHeaders: true,
-        autoSize: false,
-        margins: {
-          left: 15,
-          top: 10,
-          width: 800,
-          bottom: 0
-        }
+        autoSize: false
       });
     };
 
     const addTotalAmount = () => {
-      doc.setFontSize(13);
+      /* 
+        these will be hidden - purely to define the widths of the table rows
+        NOTE: I patch-package'd the minified NPM script, so I could use the "align" property 
+       */
+      const tableTotalHeaders = [
+        {
+          name: 'Total Label',
+          prompt: 'Total Label',
+          width: 450,
+          align: 'right'
+        },
+        {
+          name: 'Total Value',
+          prompt: 'Total Value',
+          width: 100,
+          align: 'right'
+        }
+      ] as any[];
+
+      /** set the font style */
       doc.setFontStyle('bold');
-      // Empty line
-      doc.cell(leftPadding, tableEnd, 411, 10, ' ', 1, 'left');
-      // "Total" cell
-      doc.cell(
-        leftPadding,
-        tableEnd + 10,
-        374,
-        20,
-        'Payment Total:    ',
-        2,
-        'right'
+
+      /* blank spaces are important because we can't change right padding on per cell */
+      const tableTotalRows = [
+        {
+          'Total Label': 'Payment Total (USD)       ',
+          'Total Value': `$${payment.usd.toFixed(2)}   `
+        }
+      ];
+
+      doc.table(
+        leftMargin,
+        tableBodyStart + 26,
+        tableTotalRows,
+        tableTotalHeaders,
+        {
+          fontSize: 13,
+          fontStyle: 'bold',
+          printHeaders: false
+        }
       );
-      // Total value cell
-      doc.cell(
-        leftPadding + 300,
-        tableEnd + 10,
-        37,
-        20,
-        `$${Number(amount).toFixed(2)}`,
-        2,
-        'left'
-      );
-      // reset text format
-      doc.setFontStyle('normal');
     };
 
     doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
     addLeftHeader(doc, 1, 1, date, 'Payment');
     addRightHeader(doc, account);
-    addTitle(doc, `Receipt for Payment #${paymentId}`);
+    addTitle(doc, `Receipt for Payment #${payment.id}`);
     addTable();
     addFooter(doc);
     addTotalAmount();

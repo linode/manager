@@ -28,4 +28,4 @@ class Invoice extends Page {
     }
 }
 
-export default new Invoice():
+export default new Invoice();
