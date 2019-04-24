@@ -12,7 +12,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
-import { convertMegabytesTo } from 'src/utilities/convertMegabytesTo';
+import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import NodeBalancerActionMenu from './NodeBalancerActionMenu';
 
 type ClassNames = 'tagWrapper' | 'ipsWrapper' | 'icon';

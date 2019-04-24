@@ -16,8 +16,8 @@ import {
 import { getLinodeStatsByDate } from 'src/services/linodes';
 import { MapState } from 'src/store/types';
 import { isRecent } from 'src/utilities/isRecent.ts';
-import { readableBytes } from 'src/utilities/readableBytes';
 import { getMonthlyNetworkTransferInBits } from 'src/utilities/statMetrics';
+import { readableBytes } from 'src/utilities/unitConversions';
 
 interface Props {
   linodeId: number;

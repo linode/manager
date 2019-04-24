@@ -1,8 +1,8 @@
-import { readableBytes } from './readableBytes';
+import { readableBytes } from './unitConversions';
 
 describe('readableBytes', () => {
   it('should return "0 B" if bytes === 0', () => {
-    expect(readableBytes(0).formatted).toBe('0 B');
+    expect(readableBytes(0).formatted).toBe('0 bytes');
   });
 
   it('should return B if < 1024', () => {
