@@ -255,7 +255,7 @@ export const printInvoice = (
         {
           name: 'Total Value',
           prompt: 'Total Value',
-          width: 100,
+          width: 107,
           align: 'right'
         }
       ] as any[];
