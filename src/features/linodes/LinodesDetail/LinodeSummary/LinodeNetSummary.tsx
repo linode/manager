@@ -23,15 +23,15 @@ interface Props {
   linodeId: number;
 }
 
-interface StateProps {
+interface State {
   usedInBytes: number;
   loading: boolean;
   error: boolean;
 }
 
-type CombinedProps = Props & StoreProps & StateProps & WithStyles<ClassNames>;
+type CombinedProps = Props & StoreProps & WithStyles<ClassNames>;
 
-class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
+class LinodeNetSummary extends React.Component<CombinedProps, State> {
   state = {
     usedInBytes: 0,
     loading: true,
