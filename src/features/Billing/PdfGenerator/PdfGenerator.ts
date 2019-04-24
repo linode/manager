@@ -7,7 +7,7 @@ import { reportException } from 'src/exceptionReporting';
 
 const leftMargin = 15; // space that needs to be applied to every parent element
 const baseFont = 'Times';
-const tableTopStart = 140; // AKA "top" CSS rule. Where the table header should start on the Y-axis
+const tableTopStart = 150; // AKA "top" CSS rule. Where the table header should start on the Y-axis
 const tableBodyStart = tableTopStart + 26; // where the table body should start on the Y-axis
 const calculateTableTotalsStart = (
   items: Linode.InvoiceItem[],
@@ -146,10 +146,10 @@ const addFooter = (doc: jsPDF) => {
   );
 };
 
-const addTitle = (doc: jsPDF, title: string) => {
+const addTitle = (doc: jsPDF, ...textStrings: string[]) => {
   doc.setFontSize(12);
   doc.setFontStyle('bold');
-  doc.text(title, leftMargin, 130, { charSpace: 0.75 });
+  doc.text(`${textStrings.join(`\r\n`)}`, leftMargin, 130, { charSpace: 0.75 });
   // reset text format
   doc.setFontStyle('normal');
 };
@@ -165,7 +165,7 @@ export const printInvoice = (
   items: Linode.InvoiceItem[]
 ): PdfResult => {
   try {
-    const itemsPerPage = 17;
+    const itemsPerPage = 16;
     const date = formatDate(invoice.date, { format: 'YYYY-MM-DD' });
     const invoiceId = invoice.id;
 
@@ -186,8 +186,8 @@ export const printInvoice = (
         { name: 'From', prompt: 'From', width: 63 },
         { name: 'To', prompt: 'To', width: 63 },
         { name: 'Quantity', prompt: 'QTY', width: 42 },
-        { name: 'Unit Price', prompt: 'Unit Price', width: 67 },
-        { name: 'Amount', prompt: 'AMT', width: 42 },
+        { name: 'Unit Price', prompt: 'Unit\r\nPrice', width: 37 },
+        { name: 'Amount', prompt: 'Amount', width: 72 },
         { name: 'Tax', prompt: 'Tax', width: 32 },
         { name: 'Total', prompt: 'Total', width: 43 }
       ] as any[]; // assert type 'any' because per source code this is an extended and more advanced way of usage
@@ -300,7 +300,7 @@ export const printInvoice = (
       doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
       addLeftHeader(doc, index + 1, itemsChunks.length, date, 'Invoice');
       addRightHeader(doc, account);
-      addTitle(doc, `Invoice: #${invoiceId}`);
+      addTitle(doc, `Invoice: #${invoiceId}`, `Tax ID: ${account.tax_id}`);
       addTable(itemsChunk);
       addFooter(doc);
       if (index < itemsChunks.length - 1) {
