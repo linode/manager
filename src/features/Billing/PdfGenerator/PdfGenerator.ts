@@ -182,9 +182,9 @@ export const printInvoice = (
       doc.setFontSize(10);
 
       const header = [
-        { name: 'Description', prompt: 'Description', width: 180 },
-        { name: 'From', prompt: 'From', width: 72 },
-        { name: 'To', prompt: 'To', width: 72 },
+        { name: 'Description', prompt: 'Description', width: 205 },
+        { name: 'From', prompt: 'From', width: 63 },
+        { name: 'To', prompt: 'To', width: 63 },
         { name: 'Quantity', prompt: 'QTY', width: 42 },
         { name: 'Unit Price', prompt: 'Unit Price', width: 67 },
         { name: 'Amount', prompt: 'AMT', width: 42 },
