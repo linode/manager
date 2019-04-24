@@ -17,7 +17,7 @@ import { resetEventsPolling } from 'src/events';
 import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { createImage, updateImage } from 'src/services/images';
-import { getLinodeDisks, getLinodes } from 'src/services/linodes';
+import { getLinodeDisks } from 'src/services/linodes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
@@ -46,18 +46,17 @@ export interface Props {
   // Only used from LinodeDisks to pre-populate the selected Disk
   disks?: Linode.Disk[];
   selectedDisk: string | null;
-  selectedLinode?: string;
   onClose: () => void;
-  onSuccess: () => void;
-  changeLinode: (e: React.ChangeEvent<HTMLInputElement>) => void;
   changeDisk: (disk: string | null) => void;
+  selectedLinode: number | null;
+  onSuccess: () => void;
+  changeLinode: (linodeId: number) => void;
   changeLabel: (e: React.ChangeEvent<HTMLInputElement>) => void;
   changeDescription: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 interface State {
   disks: Linode.Disk[];
-  linodes: string[][];
   notice?: string;
   errors?: Linode.ApiFieldError[];
 }
@@ -84,7 +83,6 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   state = {
     disks: [],
-    linodes: [],
     errors: undefined,
     notice: undefined
   };
@@ -103,23 +101,20 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
   }
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
-    /** Is opening... */
-    if (prevProps.open === false && this.props.open === true) {
-      this.updateLinodes();
-      // Reset the disks on drawer open
-      this.setState({ disks: [] });
-    }
-
     if (this.props.disks && !equals(this.props.disks, prevProps.disks)) {
       // for the 'imagizing' mode
       this.setState({ disks: this.props.disks });
+    }
+
+    if (!this.props.selectedLinode && prevProps.selectedLinode) {
+      this.setState({ disks: [] });
     }
 
     if (
       this.props.selectedLinode &&
       this.props.selectedLinode !== prevProps.selectedLinode
     ) {
-      getLinodeDisks(Number(this.props.selectedLinode))
+      getLinodeDisks(this.props.selectedLinode)
         .then(response => {
           if (!this.mounted) {
             return;
@@ -132,7 +127,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
             this.setState({ disks: filteredDisks });
           }
         })
-        .catch(error => {
+        .catch(_ => {
           if (!this.mounted) {
             return;
           }
@@ -203,7 +198,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       case modes.CREATING:
       case modes.IMAGIZING:
         createImage(Number(selectedDisk), label, safeDescription)
-          .then(response => {
+          .then(_ => {
             if (!this.mounted) {
               return;
             }
@@ -245,19 +240,6 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
     }
   };
 
-  updateLinodes() {
-    getLinodes({ page: 1 }).then(response => {
-      if (!this.mounted) {
-        return;
-      }
-
-      const linodeChoices = response.data.map(linode => {
-        return [`${linode.id}`, linode.label];
-      });
-      this.setState({ linodes: linodeChoices });
-    });
-  }
-
   checkRequirements = () => {
     // When creating an image, disable the submit button until a Linode,
     // disk, and label are selected. When editing, only a label is required.
@@ -291,7 +273,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
       changeDescription,
       classes
     } = this.props;
-    const { disks, linodes, notice } = this.state;
+    const { disks, notice } = this.state;
     const { errors } = this.state;
 
     const requirementsMet = this.checkRequirements();
@@ -324,11 +306,10 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
 
         {[modes.CREATING, modes.RESTORING].includes(mode) && (
           <LinodeSelect
-            linodes={linodes}
-            selectedLinode={selectedLinode || 'none'}
+            selectedLinode={selectedLinode}
             linodeError={linodeError}
             handleChange={changeLinode}
-            updateFor={[linodes, selectedLinode, linodeError, classes]}
+            updateFor={[selectedLinode, linodeError, classes]}
           />
         )}
 

@@ -196,7 +196,7 @@ export const retrieveGlobalSettings = () => {
 export const checkEnvironment = () => {
     const environment = process.env.REACT_APP_API_ROOT;
     if (environment.includes('dev') || environment.includes('testing')) {
-        pending('Feature not available in Testing or Dev environmnet');
+        pending('Feature not available in Testing or Dev environment');
     }
 }
 
