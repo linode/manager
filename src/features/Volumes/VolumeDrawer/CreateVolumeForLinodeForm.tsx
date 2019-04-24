@@ -148,12 +148,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
 
         return (
           <Form>
-            {generalError && (
-              <NoticePanel
-                success={status ? status.success : undefined}
-                error={generalError}
-              />
-            )}
+            {generalError && <NoticePanel error={generalError} />}
             {status && <NoticePanel success={status.success} />}
             {disabled && (
               <NoticePanel
