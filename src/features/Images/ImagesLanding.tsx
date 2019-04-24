@@ -55,8 +55,8 @@ interface State {
     imageID?: string;
     label?: string;
     description?: string;
-    selectedLinode?: string;
     selectedDisk: string | null;
+    selectedLinode?: number;
   };
   removeDialog: {
     open: boolean;
@@ -200,13 +200,22 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
       });
   };
 
-  changeSelectedLinode = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (this.state.imageDrawer.selectedLinode !== e.target.value) {
+  changeSelectedLinode = (linodeId: number | null) => {
+    if (!linodeId) {
       this.setState({
         imageDrawer: {
           ...this.state.imageDrawer,
           selectedDisk: null,
-          selectedLinode: e.target.value
+          selectedLinode: undefined
+        }
+      });
+    }
+    if (this.state.imageDrawer.selectedLinode !== linodeId) {
+      this.setState({
+        imageDrawer: {
+          ...this.state.imageDrawer,
+          selectedDisk: null,
+          selectedLinode: linodeId!
         }
       });
     }
@@ -282,7 +291,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     }
 
     /** Error State */
-    if (imagesError instanceof Error) {
+    if (imagesError) {
       return this.renderError(imagesError);
     }
 
@@ -399,7 +408,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     );
   }
 
-  renderError = (e: Error) => {
+  renderError = (_: Linode.ApiFieldError[]) => {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Images" />
