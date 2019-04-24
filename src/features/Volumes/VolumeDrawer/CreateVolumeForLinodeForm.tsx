@@ -139,14 +139,22 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
           values
         } = formikProps;
 
+        /**
+         * This form doesn't have a region select (the region is auto-populated)
+         * so if the API returns an error with field === 'region' the field mapping
+         * logic will pass over it. Explicitly use general error Notice in this case.
+         */
+        const generalError = status ? status.generalError : errors.region;
+
         return (
           <Form>
-            {status && (
+            {generalError && (
               <NoticePanel
-                success={status.success}
-                error={status.generalError}
+                success={status ? status.success : undefined}
+                error={generalError}
               />
             )}
+            {status && <NoticePanel success={status.success} />}
             {disabled && (
               <NoticePanel
                 error={
