@@ -119,6 +119,24 @@ export class NodeBalancersLanding extends React.Component<
     deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState
   };
 
+  pollInterval: number;
+
+  componentDidMount() {
+    /**
+     * To keep NB node status up to date, poll NodeBalancers and configs every 30 seconds while the
+     * user is on this page.
+     */
+    const { getAllNodeBalancersWithConfigs } = this.props.nodeBalancerActions;
+    this.pollInterval = window.setInterval(
+      () => getAllNodeBalancersWithConfigs(),
+      30 * 1000
+    );
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.pollInterval);
+  }
+
   static docs = [NodeBalancerGettingStarted, NodeBalancerReference];
 
   toggleDialog = (nodeBalancerId: number) => {
@@ -150,7 +168,7 @@ export class NodeBalancersLanding extends React.Component<
     });
 
     deleteNodeBalancer({ nodeBalancerId: selectedNodeBalancerId })
-      .then(response => {
+      .then(_ => {
         this.setState({
           deleteConfirmDialog: {
             open: false,
@@ -374,13 +392,19 @@ export const enhanced = compose<CombinedProps, {}>(
   connect((state: ApplicationState) => {
     const { __resources } = state;
     const { nodeBalancers } = __resources;
-    const { error, items, loading: nodeBalancersLoading } = nodeBalancers;
+    const {
+      error,
+      items,
+      loading: nodeBalancersLoading,
+      lastUpdated
+    } = nodeBalancers;
 
     return {
       nodeBalancersCount: items.length,
       nodeBalancersData: nodeBalancersWithConfigs(__resources),
       nodeBalancersError: error,
-      nodeBalancersLoading
+      // In this component we only want to show loading state on initial load
+      nodeBalancersLoading: nodeBalancersLoading && lastUpdated === 0
     };
   }),
   withLocalStorage,

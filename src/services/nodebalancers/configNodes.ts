@@ -36,12 +36,6 @@ export interface NodeBalancerConfigNode {
   weight: number;
 }
 
-// interface IDontKnowWhatThisIs {
-//   /* for the sake of local operations */
-//   modifyStatus?: 'new' | 'delete' | 'update';
-//   errors?: Linode.ApiFieldError[];
-// }
-
 /**
  * getNodeBalancerConfigNodes
  *
@@ -65,8 +59,7 @@ export const getNodeBalancerConfigNodes = (
 /**
  * getNodeBalancerConfigNode
  *
- * Returns a paginated list of nodes for the specified NodeBalancer configuration profile.
- * These are the backends that will be sent traffic for this port.
+ * Returns details about a specific node for the given NodeBalancer configuration profile.
  *
  * @param nodeBalancerId { number } The ID of the NodeBalancer the config belongs to.
  * @param configId { number } The configuration profile to retrieve nodes for.

@@ -10,6 +10,7 @@ import {
 } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
+import CircleProgress from 'src/components/CircleProgress';
 import AppBar from 'src/components/core/AppBar';
 import {
   StyleRulesCallback,
@@ -21,9 +22,10 @@ import Tabs from 'src/components/core/Tabs';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import PromiseLoader, {
-  PromiseLoaderResponse
-} from 'src/components/PromiseLoader/PromiseLoader';
+import withLoadingAndError, {
+  LoadingAndErrorHandlers,
+  LoadingAndErrorState
+} from 'src/components/withLoadingAndError';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import {
   getNodeBalancer,
@@ -33,6 +35,7 @@ import {
   withNodeBalancerActions,
   WithNodeBalancerActions
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { NodeBalancerProvider } from './context';
@@ -59,18 +62,13 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 const defaultError = [
-  { reason: 'An unknown error occured while updating NodeBalancer.' }
+  { reason: 'An unknown error occurred while updating NodeBalancer.' }
 ];
 
 type RouteProps = RouteComponentProps<{ nodeBalancerId?: string }>;
 
-interface PreloadedProps {
-  nodeBalancer: PromiseLoaderResponse<Linode.ExtendedNodeBalancer>;
-}
-
 interface State {
-  nodeBalancer: Linode.ExtendedNodeBalancer;
-  error?: Error;
+  nodeBalancer?: Linode.ExtendedNodeBalancer;
   ApiError: Linode.ApiFieldError[] | undefined;
   labelInput?: string;
 }
@@ -78,20 +76,20 @@ interface State {
 type CombinedProps = WithNodeBalancerActions &
   InjectedNotistackProps &
   RouteProps &
-  PreloadedProps &
+  LoadingAndErrorHandlers &
+  LoadingAndErrorState &
   WithStyles<ClassNames>;
 
-const preloaded = PromiseLoader<CombinedProps>({
-  nodeBalancer: ({
-    match: {
-      params: { nodeBalancerId }
-    }
-  }) => {
-    if (!nodeBalancerId) {
-      return Promise.reject(new Error('nodeBalancerId param not set.'));
-    }
+class NodeBalancerDetail extends React.Component<CombinedProps, State> {
+  state: State = {
+    nodeBalancer: undefined,
+    ApiError: undefined
+  };
 
-    return getNodeBalancer(+nodeBalancerId).then(nodeBalancer => {
+  pollInterval: number;
+
+  requestNodeBalancer = (nodeBalancerId: number) =>
+    getNodeBalancer(+nodeBalancerId).then(nodeBalancer => {
       return getNodeBalancerConfigs(nodeBalancer.id)
         .then(({ data: configs }) => {
           return {
@@ -107,22 +105,43 @@ const preloaded = PromiseLoader<CombinedProps>({
             }, [])
           };
         })
-        .catch(e => []);
+        .then((response: Linode.ExtendedNodeBalancer) => {
+          this.setState({ nodeBalancer: response });
+          this.props.clearLoadingAndErrors();
+        })
+        .catch(error => {
+          this.props.setErrorAndClearLoading(
+            getErrorStringOrDefault(
+              error,
+              'There was an error loading your NodeBalancer.'
+            )
+          );
+        });
     });
+
+  componentDidMount() {
+    const { nodeBalancerId } = this.props.match.params;
+
+    // On initial load only, we want a loading state.
+    this.props.setLoadingAndClearErrors();
+    if (!nodeBalancerId) {
+      this.props.setErrorAndClearLoading('NodeBalancer ID param not set.');
+      return;
+    }
+    this.requestNodeBalancer(+nodeBalancerId);
+
+    // Update NB information every 30 seconds, so that we have an accurate picture of nodes
+    this.pollInterval = window.setInterval(
+      () => this.requestNodeBalancer(+nodeBalancerId),
+      30 * 1000
+    );
   }
-});
 
-class NodeBalancerDetail extends React.Component<CombinedProps, State> {
-  state: State = {
-    nodeBalancer: pathOr(undefined, ['response'], this.props.nodeBalancer),
-    error: pathOr(undefined, ['error'], this.props.nodeBalancer),
-    ApiError: undefined
-  };
+  componentWillUnmount() {
+    clearInterval(this.pollInterval);
+  }
 
-  handleTabChange = (
-    event: React.ChangeEvent<HTMLDivElement>,
-    value: number
-  ) => {
+  handleTabChange = (_: React.ChangeEvent<HTMLDivElement>, value: number) => {
     const { history } = this.props;
     const routeName = this.tabs[value].routeNames[0];
     history.push(`${routeName}`);
@@ -133,6 +152,11 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     const {
       nodeBalancerActions: { updateNodeBalancer }
     } = this.props;
+
+    // This should never actually happen, but TypeScript is expecting a Promise here.
+    if (nodeBalancer === undefined) {
+      return Promise.resolve();
+    }
 
     return updateNodeBalancer({ nodeBalancerId: nodeBalancer.id, label })
       .then(() => {
@@ -165,6 +189,10 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
       nodeBalancerActions: { updateNodeBalancer }
     } = this.props;
 
+    if (nodeBalancer === undefined) {
+      return;
+    }
+
     return updateNodeBalancer({ nodeBalancerId: nodeBalancer.id, tags }).then(
       () => {
         this.setState({
@@ -178,7 +206,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   cancelUpdate = () => {
     this.setState({
       ApiError: undefined,
-      labelInput: this.state.nodeBalancer.label
+      labelInput: pathOr('', ['label'], this.state.nodeBalancer)
     });
   };
 
@@ -226,9 +254,16 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
       Boolean(matchPath(this.props.location.pathname, { path: pathName }));
     const {
       match: { path, url },
-      classes
+      classes,
+      error,
+      loading
     } = this.props;
-    const { error, nodeBalancer } = this.state;
+    const { nodeBalancer } = this.state;
+
+    /** Loading State */
+    if (loading) {
+      return <CircleProgress />;
+    }
 
     /** Empty State */
     if (!nodeBalancer) {
@@ -349,7 +384,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 const reloaded = reloadableWithRouter<
-  PreloadedProps,
+  CombinedProps,
   { nodeBalancerId?: number }
 >((routePropsOld, routePropsNew) => {
   return (
@@ -362,7 +397,7 @@ export default compose(
   setDocs(NodeBalancerDetail.docs),
   reloaded,
   styled,
-  preloaded,
   withSnackbar,
-  withNodeBalancerActions
+  withNodeBalancerActions,
+  withLoadingAndError
 )(NodeBalancerDetail);
