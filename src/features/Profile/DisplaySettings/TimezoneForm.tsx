@@ -33,6 +33,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 interface Props {
   timezone: string;
+  isLoggedInAsCustomer: boolean;
   updateProfile: (v: Linode.Profile) => void;
 }
 
@@ -122,7 +123,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, timezone } = this.props;
+    const { classes, isLoggedInAsCustomer, timezone } = this.props;
     const { errors, submitting, success } = this.state;
     const timezoneDisplay = pathOr(
       timezone,
@@ -144,6 +145,13 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
         <Paper className={classes.root}>
           {success && <Notice success text={success} />}
           {generalError && <Notice error text={generalError} />}
+          {isLoggedInAsCustomer && (
+            <Notice
+              warning
+              data-qa-admin-notice
+              text={`While you are logged in as a customer, all times, dates, and graphs will be displayed in your browser's timezone (${timezone}).`}
+            />
+          )}
           <Typography variant="body1" data-qa-copy>
             This setting converts the dates and times displayed in the Linode
             Manager to a timezone of your choice. Your current timezone is:{' '}
