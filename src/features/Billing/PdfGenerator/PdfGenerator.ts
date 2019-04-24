@@ -6,7 +6,7 @@ import LinodeLogo from './LinodeLogo';
 import { reportException } from 'src/exceptionReporting';
 
 const leftMargin = 15; // space that needs to be applied to every parent element
-const baseFont = 'Times';
+const baseFont = 'helvetica';
 const tableTopStart = 150; // AKA "top" CSS rule. Where the table header should start on the Y-axis
 const tableBodyStart = tableTopStart + 26; // where the table body should start on the Y-axis
 const calculateTableTotalsStart = (
@@ -14,9 +14,8 @@ const calculateTableTotalsStart = (
   itemsPerPage: number
 ) => {
   const howManyItemsOnLastPage = items.length % itemsPerPage;
-  return tableBodyStart + howManyItemsOnLastPage * 26;
+  return tableBodyStart + howManyItemsOnLastPage * 45;
 };
-const maxInstanceNameLength = 25;
 
 const renderDate = (v: null | string) =>
   v ? formatDate(v, { format: `YYYY-MM-DD HH:mm:ss` }) : null;
@@ -25,30 +24,55 @@ const renderUnitPrice = (v: null | number) => (v ? `$${v}` : null);
 
 const renderQuantity = (v: null | number) => (v ? v : null);
 
+const truncateLabel = (label: string) => {
+  return label.length > 15 ? `${label.substr(0, 15)}...` : label;
+};
+
 const formatDescription = (desc?: string) => {
   if (!desc) {
     return 'No Description';
   }
 
-  const isBackup = /^Backup/.test(desc);
-  const descChunks = desc.split(' - ');
-  const nameIndex = isBackup ? 2 : 1;
-  if (!descChunks[nameIndex]) {
-    // some irregular description. Just truncate and let it through
-    return desc.substring(0, maxInstanceNameLength);
-  }
-  descChunks[nameIndex] = descChunks[nameIndex]
-    .split(' (')
-    .map(s => s.substring(0, maxInstanceNameLength))
-    .join(' (');
+  /**
+   * The description will look one of three ways
+   *
+   * 1. If this is a backup, it will look like:
+   *    Backup Service - Linode 2GB - MyLinode (1234)
+   *
+   * 2. If this is not a backup, it will look like:
+   *    Linode 32GB - MyLinode (1234)
+   *
+   * 3. If it's a volume
+   *    Storage Volume - volume (1234) - 20 GiB
+   */
 
-  return descChunks.reduce((acc, chunk, i) => {
-    const delimiter = i === nameIndex ? ' - \n' : ' - '; // insert line break before long entity name
-    if (i === 0) {
-      return chunk; // avoid inserting delimiter for the first element
-    }
-    return acc + delimiter + chunk;
-  }, '');
+  const isBackup = /^Backup/.test(desc);
+  const isVolume = /^Storage/.test(desc);
+
+  /** create an array like ["Backup service", "Linode 2GB", "MyLinode (1234)"] */
+  const descChunks = desc.split(' - ');
+
+  if (descChunks.length < 2) {
+    /** in this case, it's probably a manual payment from admin */
+    return desc;
+  }
+
+  if (isVolume) {
+    const [volLabel, volID] = descChunks[1].split(' ');
+    return `${descChunks[0]}\r\n${truncateLabel(volLabel)} ${
+      descChunks[2]
+    }\r\n${volID}`;
+  }
+
+  if (isBackup) {
+    const [backupLabel, backupID] = descChunks[2].split(' ');
+    return `${descChunks[0]}\r\n${descChunks[1]}\r\n${truncateLabel(
+      backupLabel
+    )}\r\n${backupID}`;
+  }
+
+  const [entitiyLabel, entitiyID] = descChunks[1].split(' ');
+  return `${descChunks[0]}\r\n${truncateLabel(entitiyLabel)}\r\n${entitiyID}`;
 };
 
 const addLeftHeader = (
@@ -123,27 +147,22 @@ const addRightHeader = (doc: jsPDF, account: Linode.Account) => {
 };
 
 const addFooter = (doc: jsPDF) => {
-  const fontSize = 5;
-  let currentLine = 600;
-
-  const addLine = (text: string, customPadding: number) => {
-    doc.text(text, customPadding, currentLine, {
-      charSpace: 0.75,
-      align: 'center'
-    });
-    currentLine += fontSize * 2;
-  };
+  const fontSize = 10;
+  const left = 215;
+  const top = 600;
 
   doc.setFontSize(fontSize);
   doc.setFont(baseFont);
 
-  // Second number argument - manual centering cos automatic doesn't work well
-  addLine('249 Arch St. - Philadelphia, PA 19106', 210);
-  addLine('USA', 220);
-  addLine(
-    'P:855-4-LINODE (855-454-6633) F:609-380-7200 W:https://www.linode.com',
-    190
-  );
+  const footerText =
+    `249 Arch St. - Philadelphia, PA 19106\r\n` +
+    `USA\r\n` +
+    'P:855-4-LINODE (855-454-6633) F:609-380-7200 W:https://www.linode.com\r\n';
+
+  doc.text(footerText, left, top, {
+    charSpace: 0.75,
+    align: 'center'
+  });
 };
 
 const addTitle = (doc: jsPDF, ...textStrings: string[]) => {
@@ -165,7 +184,7 @@ export const printInvoice = (
   items: Linode.InvoiceItem[]
 ): PdfResult => {
   try {
-    const itemsPerPage = 16;
+    const itemsPerPage = 9;
     const date = formatDate(invoice.date, { format: 'YYYY-MM-DD' });
     const invoiceId = invoice.id;
 
@@ -182,13 +201,13 @@ export const printInvoice = (
       doc.setFontSize(10);
 
       const header = [
-        { name: 'Description', prompt: 'Description', width: 205 },
-        { name: 'From', prompt: 'From', width: 63 },
-        { name: 'To', prompt: 'To', width: 63 },
+        { name: 'Description', prompt: 'Description', width: 150 },
+        { name: 'From', prompt: 'From', width: 83 },
+        { name: 'To', prompt: 'To', width: 83 },
         { name: 'Quantity', prompt: 'QTY', width: 42 },
-        { name: 'Unit Price', prompt: 'Unit\r\nPrice', width: 37 },
-        { name: 'Amount', prompt: 'Amount', width: 72 },
-        { name: 'Tax', prompt: 'Tax', width: 32 },
+        { name: 'Unit Price', prompt: 'Unit\r\nPrice', width: 52 },
+        { name: 'Amount', prompt: 'Amount', width: 62 },
+        { name: 'Tax', prompt: 'Tax', width: 42 },
         { name: 'Total', prompt: 'Total', width: 43 }
       ] as any[]; // assert type 'any' because per source code this is an extended and more advanced way of usage
 
