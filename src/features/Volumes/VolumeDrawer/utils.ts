@@ -29,7 +29,7 @@ export const handleFieldErrors = (callback: Function, response: any) => {
 export const handleGeneralErrors = (
   callback: Function,
   errors: any,
-  defaultMessage: string = 'An error has occured.'
+  defaultMessage: string = 'An error has occurred.'
 ) => {
   const apiErrors = path<Linode.ApiFieldError[]>(
     ['response', 'data', 'errors'],
