@@ -142,7 +142,7 @@ const ListGroupedNodeBalancers: React.StatelessComponent<
                             count={count}
                             page={page}
                             pageSize={pageSize}
-                            handlePageChange={handlePageChange}
+                            handlePageChange={handlePageChange()}
                             handleSizeChange={handlePageSizeChange}
                             eventCategory="nodebalancers landing"
                           />

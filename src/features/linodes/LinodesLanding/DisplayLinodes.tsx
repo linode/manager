@@ -71,7 +71,7 @@ const DisplayLinodes: React.StatelessComponent<CombinedProps> = props => {
               {
                 <PaginationFooter
                   count={data.length}
-                  handlePageChange={handlePageChange}
+                  handlePageChange={handlePageChange()}
                   handleSizeChange={handlePageSizeChange}
                   pageSize={pageSize}
                   page={page}

@@ -141,7 +141,7 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
                           >
                             <PaginationFooter
                               count={count}
-                              handlePageChange={handlePageChange}
+                              handlePageChange={handlePageChange()}
                               handleSizeChange={handlePageSizeChange}
                               pageSize={pageSize}
                               page={page}

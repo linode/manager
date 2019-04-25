@@ -69,7 +69,9 @@ export const getAllLinodeDisks: ThunkActionCreator<Promise<Entity[]>> = (
   const { linodeId } = params;
   const { started, done, failed } = getAllLinodeDisksActions;
   dispatch(started(params));
-  const req = getAll<Entity>(() => _getLinodeDisks(linodeId));
+  const req = getAll<Entity>((diskParams: any, filter: any) =>
+    _getLinodeDisks(linodeId, diskParams, filter)
+  );
 
   try {
     const { data } = await req();
