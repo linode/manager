@@ -23,7 +23,7 @@ export const ObjectStorageLanding: React.StatelessComponent<Props> = props => {
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     { title: 'Buckets', routeName: `${match.url}/buckets` },
-    { title: 'Access Keys', routeName: `${match.url}/keys` }
+    { title: 'Access Keys', routeName: `${match.url}/access-keys` }
   ];
 
   const handleTabChange = (
@@ -68,7 +68,7 @@ export const ObjectStorageLanding: React.StatelessComponent<Props> = props => {
       </AppBar>
       <Switch>
         <Route exact path={`${url}/buckets`} component={BucketLanding} />
-        <Route exact path={`${url}/keys`} component={AccessKeyLanding} />
+        <Route exact path={`${url}/access-keys`} component={AccessKeyLanding} />
         <Route exact path={`${url}`} component={BucketLanding} />
       </Switch>
     </React.Fragment>
