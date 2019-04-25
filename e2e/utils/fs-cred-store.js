@@ -8,7 +8,7 @@ const CredStore = require('./cred-store');
  * on the local filesystem.
  */
 class FSCredStore extends CredStore {
-
+    
     constructor(credsFile, shouldCleanupUsingAPI, browser) {
         super(shouldCleanupUsingAPI, browser);
         this.credsFile = credsFile;
@@ -55,7 +55,7 @@ class FSCredStore extends CredStore {
             if (!currentUser.isPresetToken) {
                 currentUser.token = this.getTokenFromLocalStorage();
             }
-
+    
             return this._writeCredsFile(credCollection);
         })
     }
@@ -75,7 +75,7 @@ class FSCredStore extends CredStore {
                 if (!cred.inUse) {
                     credCollection[i].inUse = true;
                     credCollection[i].spec = specFile;
-
+                    
                     this.browser.options.testUser = credCollection[i].username;
                     return true;
                 }
@@ -86,7 +86,7 @@ class FSCredStore extends CredStore {
 
     checkinCreds(specFile) {
         console.log("checkinCreds: " + specFile);
-
+        
         return this._readCredsFile().then((credCollection) => {
             const creds = credCollection.find((cred, i) => {
                 if (cred.spec === specFile) {
@@ -117,7 +117,7 @@ class FSCredStore extends CredStore {
                 setCredCollection('MANAGER_USER', `_${i}`);
             }
         }
-
+        
         console.log("adding users:");
         console.log(credCollection);
         return this._writeCredsFile(credCollection);
@@ -127,15 +127,12 @@ class FSCredStore extends CredStore {
         return this._readCredsFile();
     }
 
-    cleanupAccounts(timeOut, runningOnComplete=true) {
+    cleanupAccounts(noCredDel, timeOut) {
         return super.cleanupAccounts(timeOut)
         .catch((err) => console.log(err))
         .then(() => {
             return new Promise((resolve, reject) => {
-                if (!runningOnComplete) {
-                    // Nothing else to do if not running from onComplete
-                    resolve(true)
-                } else {
+                noCredDel !== false ?
                     unlink(this.credsFile, (err) => {
                         if (err) {
                             reject(err);
@@ -143,8 +140,8 @@ class FSCredStore extends CredStore {
                             resolve(this.credsFile);
                         }
                     })
-                }
-            });
+                : resolve(this.credsFile);
+            });            
         })
     }
 }
@@ -152,9 +149,9 @@ class FSCredStore extends CredStore {
 if (process.argv[2] == "test-fs") {
 
     console.log("running fs credential tests");
-
+    
     let mockTestConfig = {"host":"selenium","port":4444,"sync":true,"specs":["./e2e/specs/search/smoke-search.spec.js"],"suites":{},"exclude":["./e2e/specs/accessibility/*.spec.js"],"logLevel":"silent","coloredLogs":true,"deprecationWarnings":false,"baseUrl":"http://localhost:3000","bail":0,"waitforInterval":500,"waitforTimeout":30000,"framework":"jasmine","reporters":["spec","junit"],"reporterOptions":{"junit":{"outputDir":"./e2e/test-results"}},"maxInstances":1,"maxInstancesPerCapability":100,"connectionRetryTimeout":90000,"connectionRetryCount":3,"debug":false,"execArgv":null,"mochaOpts":{"timeout":10000},"jasmineNodeOpts":{"defaultTimeoutInterval":600000},"before":[null],"beforeSession":[],"beforeSuite":[],"beforeHook":[],"beforeTest":[],"beforeCommand":[],"afterCommand":[],"afterTest":[],"afterHook":[],"afterSuite":[],"afterSession":[],"after":[null],"onError":[],"onReload":[],"beforeFeature":[],"beforeScenario":[],"beforeStep":[],"afterFeature":[],"afterScenario":[],"afterStep":[],"mountebankConfig":{"proxyConfig":{"imposterPort":"8088","imposterProtocol":"https","imposterName":"Linode-API","proxyHost":"https://api.linode.com/v4","mutualAuth":true}},"testUser":"","watch":false};
-
+    
     let credStore = new FSCredStore("/tmp/e2e-users.js", false);
 
     // assumes env var config for 2 test users, see .env or .env.example

@@ -28,7 +28,7 @@ const getAxiosInstance = (token) => {
 }
 
 exports.removeAllLinodes = token => {
-
+    
     const linodesEndpoint = '/linode/instances';
 
     return getAxiosInstance(token).get(linodesEndpoint)
@@ -50,12 +50,12 @@ exports.removeAllLinodes = token => {
 */
 exports.pause = (volumesResponse, timeOut) => {
     return new Promise((resolve, reject) => {
-        setTimeout(() => resolve(volumesResponse), timeOut);
+        setTimeout(() => resolve(volumesResponse, timeOut), timeOut ? timeOut : 21000);
     });
 }
 
 exports.removeAllVolumes = (token, timeOut) => {
-
+    
     const endpoint = '/volumes';
 
     return getAxiosInstance(token).get(endpoint).then((volumesResponse) => {
