@@ -54,9 +54,12 @@ describe('Create Linode - Create from StackScript Suite', () => {
       constants.wait.normal
     );
     ConfigureLinode.selectFirstStackScript().click();
-    ConfigureLinode.stackScriptRows.find(row =>
-      row.$('[data-qa-radio="true"]')
+
+    const checkedRows = ConfigureLinode.stackScriptRows.filter(
+      row => row.$('[data-qa-radio]').getAttribute('data-qa-radio') === 'true'
     );
+
+    expect(checkedRows.length).toEqual(1);
   });
 
   it('should display an error when creating without selecting a region', () => {
