@@ -315,3 +315,7 @@ button::-moz-focus-inner {
 .no-transition *::after {
   transition: none !important;
 }
+
+.terminal {
+  padding: 24px;
+}
