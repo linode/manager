@@ -1180,6 +1180,12 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
         icon: {
           opacity: 1,
           marginTop: 2
+        },
+        iconDirectionDesc: {
+          transform: 'rotate(180deg)'
+        },
+        iconDirectionAsc: {
+          transform: 'rotate(0deg)'
         }
       },
       MuiTooltip: {
