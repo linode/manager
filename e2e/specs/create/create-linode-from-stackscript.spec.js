@@ -46,17 +46,18 @@ describe('Create Linode - Create from StackScript Suite', () => {
     ConfigureLinode.waitForNotice(noticeMsg);
   });
 
-  //   it('should work amazingly ', () => {
-  //     ConfigureLinode.createFrom('One-Click');
-  //     ConfigureLinode.createFrom('Community StackScripts');
-  //     ConfigureLinode.stackScriptMetadataDisplay();
-  //     ConfigureLinode.selectFirstStackScript().click();
-  //     expect(
-  //       ConfigureLinode.stackScriptRows.find(row =>
-  //         row.$('[data-qa-radio="true"]')
-  //       )
-  //     );
-  //   });
+  it('should select a stackscript if the associated table row is clicked', () => {
+    ConfigureLinode.createFrom('One-Click');
+    ConfigureLinode.createFrom('Community StackScripts');
+    ConfigureLinode.stackScriptTableDisplay();
+    ConfigureLinode.selectFirstStackScript().waitForVisible(
+      constants.wait.normal
+    );
+    ConfigureLinode.selectFirstStackScript().click();
+    ConfigureLinode.stackScriptRows.find(row =>
+      row.$('[data-qa-radio="true"]')
+    );
+  });
 
   it('should display an error when creating without selecting a region', () => {
     const regionErr = 'Region is required.';
