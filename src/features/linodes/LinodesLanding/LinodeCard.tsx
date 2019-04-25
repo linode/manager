@@ -172,8 +172,8 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
               <RegionIndicator region={region} />
             </div>
             <div className={classes.cardSection} data-qa-ips>
-              <IPAddress ips={ipv4} copyRight showMore />
-              <IPAddress ips={[ipv6]} copyRight showMore />
+              <IPAddress ips={ipv4} copyRight showAll />
+              <IPAddress ips={[ipv6]} copyRight showAll />
             </div>
             <div className={classes.cardSection} data-qa-image>
               {imageLabel}
