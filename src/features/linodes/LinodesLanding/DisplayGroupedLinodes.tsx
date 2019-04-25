@@ -147,7 +147,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<
                       <Grid item xs={12}>
                         <PaginationFooter
                           count={count}
-                          handlePageChange={handlePageChange}
+                          handlePageChange={handlePageChange()}
                           handleSizeChange={handlePageSizeChange}
                           pageSize={pageSize}
                           page={page}
@@ -217,7 +217,7 @@ const DisplayGroupedLinodes: React.StatelessComponent<
                             >
                               <PaginationFooter
                                 count={count}
-                                handlePageChange={handlePageChange}
+                                handlePageChange={handlePageChange()}
                                 handleSizeChange={handlePageSizeChange}
                                 pageSize={pageSize}
                                 page={page}
