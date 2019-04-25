@@ -192,14 +192,14 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
             }}
             title={
               bucketToRemove
-                ? `Remove ${bucketToRemove.label}`
-                : 'Remove bucket'
+                ? `Delete ${bucketToRemove.label}`
+                : 'Delete bucket'
             }
             actions={actions}
             error={error}
           >
             <Typography>
-              Are you sure you want to remove this bucket? This action{' '}
+              Are you sure you want to delete this bucket? This action{' '}
               <strong>cannot</strong> be undone, and will result in permanent
               data loss.
             </Typography>
