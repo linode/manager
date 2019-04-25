@@ -26,10 +26,10 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const PrivateImages: React.StatelessComponent<CombinedProps> = (props) => {
+const PrivateImages: React.StatelessComponent<CombinedProps> = props => {
   const { classes, disabled, handleSelection, images, selectedImageID } = props;
   return (
-    <Grid container className={classes.flatImagePanelSelections} >
+    <Grid container className={classes.flatImagePanelSelections}>
       {images &&
         images.map((image: Linode.Image, idx: number) => (
           <SelectionCard
@@ -41,10 +41,10 @@ const PrivateImages: React.StatelessComponent<CombinedProps> = (props) => {
             subheadings={[image.description as string]}
             disabled={disabled}
           />
-      ))}
+        ))}
     </Grid>
-  )
-}
+  );
+};
 
 const styled = withStyles(styles);
 
