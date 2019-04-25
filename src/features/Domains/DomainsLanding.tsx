@@ -1,4 +1,4 @@
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -100,7 +100,7 @@ type CombinedProps = WithDomainsProps &
   WithStyles<ClassNames> &
   RouteComponentProps<{}> &
   DispatchProps &
-  InjectedNotistackProps;
+  WithSnackbarProps;
 
 class DomainsLanding extends React.Component<CombinedProps, State> {
   static eventCategory = `domains landing`;

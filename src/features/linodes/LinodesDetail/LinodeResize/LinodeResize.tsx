@@ -1,4 +1,4 @@
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -76,7 +76,7 @@ type CombinedProps = WithTypesProps &
   LinodeContextProps &
   NotificationProps &
   WithStyles<ClassNames> &
-  InjectedNotistackProps;
+  WithSnackbarProps;
 
 export class LinodeResize extends React.Component<CombinedProps, State> {
   state: State = {

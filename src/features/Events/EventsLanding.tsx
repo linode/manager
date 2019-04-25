@@ -1,4 +1,4 @@
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { compose as rCompose, concat, uniq } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -57,7 +57,7 @@ interface Props {
 
 type CombinedProps = Props &
   StateProps &
-  InjectedNotistackProps &
+  WithSnackbarProps &
   WithStyles<ClassNames>;
 
 const appendToEvents = (oldEvents: Linode.Event[], newEvents: Linode.Event[]) =>

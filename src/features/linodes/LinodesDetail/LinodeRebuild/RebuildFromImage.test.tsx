@@ -17,7 +17,7 @@ describe('RebuildFromImage', () => {
       imagesData={images}
       imagesLoading={false}
       userSSHKeys={[]}
-      onPresentSnackbar={jest.fn()}
+      closeSnackbar={jest.fn()}
       enqueueSnackbar={jest.fn()}
       {...reactRouterProps}
     />
