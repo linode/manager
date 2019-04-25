@@ -13,7 +13,6 @@ import TableSortCell from 'src/components/TableSortCell';
 type ClassNames =
   | 'root'
   | 'labelCol'
-  | 'tagsCol'
   | 'regionCol'
   | 'attachmentCol'
   | 'sizeCol'
@@ -29,7 +28,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   linodeVolumesWrapper: {
     '& $labelCol': {
       width: '20%',
-      minWidth: 200
+      minWidth: 150
     },
     '& $sizeCol': {
       width: '15%',
@@ -37,26 +36,21 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     },
     '& $pathCol': {
       width: '55%',
-      minWidth: 350
+      minWidth: 150
     }
-  },
-  tagsCol: {
-    width: '10%',
-    minWidth: 150,
-    paddingLeft: 65
   },
   regionCol: {
     width: '20%',
-    minWidth: 150
+    minWidth: 75
   },
   labelCol: {
     width: '20%',
-    minWidth: 150,
+    minWidth: 75,
     paddingLeft: theme.spacing.unit * 2 + 49
   },
   attachmentCol: {
     width: '15%',
-    minWidth: 150
+    minWidth: 75
   },
   sizeCol: {
     width: '10%',
@@ -64,7 +58,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   pathCol: {
     width: '25%',
-    minWidth: 250
+    minWidth: 100
   }
 });
 
@@ -105,7 +99,6 @@ const SortableTableHeader: React.StatelessComponent<CombinedProps> = props => {
         >
           Label
         </TableSortCell>
-        <TableCell className={classes.tagsCol}>Tags</TableCell>
         {isVolumesLanding && (
           <TableSortCell
             className={classes.regionCol}

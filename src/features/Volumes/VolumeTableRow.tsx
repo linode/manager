@@ -12,7 +12,6 @@ import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import TableCell from 'src/components/TableCell';
-import TagsCell from 'src/components/TagsCell';
 import { formatRegion } from 'src/utilities';
 import VolumesActionMenu from './VolumesActionMenu';
 import { ExtendedVolume } from './VolumesLanding';
@@ -26,7 +25,8 @@ type ClassNames =
   | 'sizeCol'
   | 'pathCol'
   | 'volumesWrapper'
-  | 'linodeVolumesWrapper';
+  | 'linodeVolumesWrapper'
+  | 'systemPath';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
@@ -71,6 +71,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   pathCol: {
     width: '25%',
     minWidth: 250
+  },
+  systemPath: {
+    wordBreak: 'break-all'
   }
 });
 
@@ -157,7 +160,6 @@ export const VolumeTableRow: React.StatelessComponent<
           </Grid>
         </Grid>
       </TableCell>
-      <TagsCell tags={volume.tags} />
       <TableCell colSpan={5}>
         <LinearProgress value={progressFromEvent(volume.recentEvent)} />
       </TableCell>
@@ -182,7 +184,6 @@ export const VolumeTableRow: React.StatelessComponent<
           </Grid>
         </Grid>
       </TableCell>
-      <TagsCell tags={volume.tags} />
       {isVolumesLanding && (
         <TableCell parentColumn="Region" data-qa-volume-region>
           {region}
@@ -191,7 +192,11 @@ export const VolumeTableRow: React.StatelessComponent<
       <TableCell parentColumn="Size" data-qa-volume-size>
         {size} GiB
       </TableCell>
-      <TableCell parentColumn="File System Path" data-qa-fs-path>
+      <TableCell
+        parentColumn="File System Path"
+        data-qa-fs-path
+        className={classes.systemPath}
+      >
         {filesystemPath}
       </TableCell>
       {isVolumesLanding && (
