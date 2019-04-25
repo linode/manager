@@ -15,12 +15,11 @@
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
     "noUnusedLocals": true,
+    "resolveJsonModule": true,
     "rootDir": "src",
     "baseUrl": ".",
     "paths": {
-      "src/*": [
-        "src/*"
-      ]
+      "src/*": ["src/*"]
     }
   },
   "exclude": [
