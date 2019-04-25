@@ -48,18 +48,18 @@ exports.removeAllLinodes = token => {
    where Volumes fail to be removed if they were
    attached to a recently deleted linode
 */
-exports.pause = (volumesResponse, timeOut) => {
+exports.pause = (volumesResponse) => {
     return new Promise((resolve, reject) => {
-        setTimeout(() => resolve(volumesResponse, timeOut), timeOut ? timeOut : 21000);
+        setTimeout(() => resolve(volumesResponse), 21000);
     });
 }
 
-exports.removeAllVolumes = (token, timeOut) => {
+exports.removeAllVolumes = token => {
     
     const endpoint = '/volumes';
 
-    return getAxiosInstance(token).get(endpoint).then((volumesResponse) => {
-        return exports.pause(volumesResponse, timeOut).then(res => {
+    return getAxiosInstance(token).get(endpoint).then(volumesResponse => {
+        return exports.pause(volumesResponse).then(res => {
             volumes = res.data.data;
             if (volumes.length > 0) {
                 return Promise.all(
@@ -126,14 +126,14 @@ exports.deleteAll = (token, user) => {
     return iterateEndpointsAndRemove();
 }
 
-exports.resetAccounts = (credsArray, timeOut) => {
+exports.resetAccounts = (credsArray) => {
     return Promise.all(
         credsArray.map((cred) => {
             return exports.removeAllLinodes(cred.token)
             .then((res) => {
                 console.log("removed all linodes")
                 console.log(res);
-                return exports.removeAllVolumes(cred.token, timeOut)
+                return exports.removeAllVolumes(cred.token)
             })
             .then((res) => {
                 console.log("removed all volumes")

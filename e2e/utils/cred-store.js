@@ -24,12 +24,12 @@ class CredStore {
         throw "CredStore.getAllCreds() needs to be implemented in child class";
     }
 
-    cleanupAccounts(timeOut) {
+    cleanupAccounts() {
         if (this.shouldCleanupUsingAPI) {
             console.log("cleaning up user resources via API");
             return this.getAllCreds().then((credCollection) => {
                 console.log(credCollection);
-                return resetAccounts(credCollection, timeOut);
+                return resetAccounts(credCollection);
             });
         } else {
             console.log("not cleaning up resources via API");
