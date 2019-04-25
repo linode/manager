@@ -1,4 +1,4 @@
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
@@ -76,7 +76,7 @@ type CombinedProps = DispatchProps &
   StateProps &
   WithTypesProps &
   WithStyles<ClassNames> &
-  InjectedNotistackProps;
+  WithSnackbarProps;
 
 const getFailureNotificationText = (
   success: number,

@@ -1,4 +1,4 @@
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { shim } from 'promise.prototype.finally';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
@@ -187,7 +187,7 @@ type CombinedProps = Props &
   DispatchProps &
   StateProps &
   WithStyles<ClassNames> &
-  InjectedNotistackProps;
+  WithSnackbarProps;
 
 export class App extends React.Component<CombinedProps, State> {
   composeState = composeState;

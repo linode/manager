@@ -1,4 +1,4 @@
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { compose, filter, map, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -86,7 +86,7 @@ interface State {
   appInstancesError?: string;
 }
 
-type CombinedProps = InjectedNotistackProps &
+type CombinedProps = WithSnackbarProps &
   CreateType &
   LinodeActionsProps &
   WithImagesProps &
@@ -528,7 +528,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   };
 
   render() {
-    const { enqueueSnackbar, onPresentSnackbar, ...restOfProps } = this.props;
+    const { enqueueSnackbar, closeSnackbar, ...restOfProps } = this.props;
     const { label, udfs: selectedUDFs, ...restOfState } = this.state;
     return (
       <StickyContainer>

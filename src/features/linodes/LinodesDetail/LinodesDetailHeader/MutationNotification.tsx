@@ -1,4 +1,4 @@
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -35,7 +35,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 type CombinedProps = MutationDrawerProps &
   ContextProps &
   WithTypes &
-  InjectedNotistackProps &
+  WithSnackbarProps &
   WithStyles<ClassNames>;
 
 const MutationNotification: React.StatelessComponent<CombinedProps> = props => {

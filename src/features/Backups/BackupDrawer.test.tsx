@@ -69,7 +69,7 @@ const props = {
 const { rerender, getByTestId, queryByTestId } = render(
   wrapWithTheme(
     <BackupDrawer
-      onPresentSnackbar={jest.fn()}
+      closeSnackbar={jest.fn()}
       enqueueSnackbar={jest.fn()}
       {...props}
     />
@@ -127,7 +127,7 @@ describe('BackupDrawer component', () => {
       rerender(
         wrapWithTheme(
           <BackupDrawer
-            onPresentSnackbar={jest.fn()}
+            closeSnackbar={jest.fn()}
             enqueueSnackbar={jest.fn()}
             {...props}
             enableSuccess={true}
@@ -150,7 +150,7 @@ describe('BackupDrawer component', () => {
       rerender(
         wrapWithTheme(
           <BackupDrawer
-            onPresentSnackbar={jest.fn()}
+            closeSnackbar={jest.fn()}
             enqueueSnackbar={jest.fn()}
             {...props}
             enableErrors={[error]}
@@ -163,7 +163,7 @@ describe('BackupDrawer component', () => {
       rerender(
         wrapWithTheme(
           <BackupDrawer
-            onPresentSnackbar={jest.fn()}
+            closeSnackbar={jest.fn()}
             enqueueSnackbar={jest.fn()}
             {...props}
             enableErrors={[error]}

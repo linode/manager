@@ -1,4 +1,4 @@
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -124,7 +124,7 @@ interface State {
 type CombinedProps = UserSSHKeyProps &
   LinodeContextProps &
   WithStyles<ClassNames> &
-  InjectedNotistackProps;
+  WithSnackbarProps;
 
 class LinodeDisks extends React.Component<CombinedProps, State> {
   static defaultDrawerState: DrawerState = {

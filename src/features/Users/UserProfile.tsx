@@ -1,4 +1,4 @@
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -83,7 +83,7 @@ interface State {
 }
 
 type CombinedProps = Props &
-  InjectedNotistackProps &
+  WithSnackbarProps &
   StateProps &
   WithStyles<ClassNames> &
   RouteComponentProps<{}>;

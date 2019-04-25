@@ -10,7 +10,7 @@ describe('LinodeResize', () => {
 
   const component = shallow(
     <LinodeResize
-      onPresentSnackbar={jest.fn()}
+      closeSnackbar={jest.fn()}
       enqueueSnackbar={jest.fn()}
       requestNotifications={jest.fn()}
       {...reactRouterProps}
@@ -32,7 +32,7 @@ describe('LinodeResize', () => {
     const componentWithTheme = mount(
       <LinodeThemeWrapper>
         <LinodeResize
-          onPresentSnackbar={jest.fn()}
+          closeSnackbar={jest.fn()}
           enqueueSnackbar={jest.fn()}
           requestNotifications={jest.fn()}
           {...reactRouterProps}
@@ -65,7 +65,7 @@ describe('LinodeResize', () => {
         const componentWithTheme = mount(
           <LinodeThemeWrapper>
             <LinodeResize
-              onPresentSnackbar={jest.fn()}
+              closeSnackbar={jest.fn()}
               enqueueSnackbar={jest.fn()}
               requestNotifications={jest.fn()}
               {...reactRouterProps}
@@ -100,7 +100,7 @@ describe('LinodeResize', () => {
         const componentWithTheme = mount(
           <LinodeThemeWrapper>
             <LinodeResize
-              onPresentSnackbar={jest.fn()}
+              closeSnackbar={jest.fn()}
               enqueueSnackbar={jest.fn()}
               requestNotifications={jest.fn()}
               {...reactRouterProps}
