@@ -34,7 +34,6 @@ exports.config = merge(wdioMaster.config, {
     seleniumInstallArgs: seleniumSettings,
     seleniumArgs: seleniumSettings,
     onPrepare: () => {},
-    beforeSession: () => {},
     before: function(caps, specs) {
         // Load up our custom commands
         require('babel-register');
