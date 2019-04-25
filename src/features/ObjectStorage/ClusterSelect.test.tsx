@@ -8,6 +8,7 @@ describe('ClusterSelect', () => {
 
   const wrapper = shallow(
     <ClusterSelect
+      selectedCluster="a-cluster"
       onChange={onChangeMock}
       onBlur={onBlurMock}
       clustersData={[]}
