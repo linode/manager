@@ -30,7 +30,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const ObjectStorageKeyDisplayDialog: React.StatelessComponent<
+export const AccessKeyDisplayDialog: React.StatelessComponent<
   CombinedProps
 > = props => {
   const { classes, objectStorageKey, isOpen, close } = props;
@@ -42,7 +42,7 @@ export const ObjectStorageKeyDisplayDialog: React.StatelessComponent<
 
   return (
     <ConfirmationDialog
-      title="Object Storage Keys"
+      title="Access Keys"
       actions={
         <Button type="secondary" onClick={close} data-qa-close-dialog>
           OK
@@ -53,8 +53,8 @@ export const ObjectStorageKeyDisplayDialog: React.StatelessComponent<
       className={classes.confirmationDialog}
     >
       <Typography variant="body1" className={classes.helperText}>
-        Your Object Storage keys have been created. Store these credentials.
-        They won't be shown again.
+        Your Access Keys have been created. Store these credentials. They won't
+        be shown again.
       </Typography>
 
       <Typography>
@@ -86,4 +86,4 @@ const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(styled);
 
-export default enhanced(ObjectStorageKeyDisplayDialog);
+export default enhanced(AccessKeyDisplayDialog);

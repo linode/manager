@@ -7,7 +7,6 @@ import {
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -21,10 +20,10 @@ import {
   updateObjectStorageKey
 } from 'src/services/profile/objectStorageKeys';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
-import ObjectStorageKeyDisplayDialog from './ObjectStorageDisplayDialog';
-import ObjectStorageDrawer from './ObjectStorageDrawer';
-import ObjectStorageKeyTable from './ObjectStorageKeyTable';
-import ObjectStorageRevokeKeysDialog from './ObjectStorageRevokeKeysDialog';
+import AccessKeyDisplayDialog from './AccessKeyDisplayDialog';
+import AccessKeyDrawer from './AccessKeyDrawer';
+import AccessKeyTable from './AccessKeyTable';
+import RevokeAccessKeyDialog from './RevokeAccessKeyDialog';
 
 type ClassNames = 'headline';
 
@@ -43,7 +42,7 @@ export type FormikProps = FormikBag<Props, ObjectStorageKeyRequest>;
 
 export type MODES = 'creating' | 'editing';
 
-export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
+export const AccessKeyLanding: React.StatelessComponent<Props> = props => {
   const { classes, ...paginationProps } = props;
 
   const [mode, setMode] = React.useState<MODES>('creating');
@@ -102,7 +101,7 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
 
         const errors = getAPIErrorOrDefault(
           errorResponse,
-          'There was an issue creating Object Storage Keys.'
+          'There was an issue creating your Access Key.'
         );
         const mappedErrors = getErrorMap(['label'], errors);
 
@@ -149,7 +148,7 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
 
         const errors = getAPIErrorOrDefault(
           errorResponse,
-          'There was an issue updating your Object Storage Key.'
+          'There was an issue updating your Access Key.'
         );
         const mappedErrors = getErrorMap(['label'], errors);
 
@@ -185,7 +184,7 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
 
         const errors = getAPIErrorOrDefault(
           errorResponse,
-          'There was an issue revoking your Object Storage Key.'
+          'There was an issue revoking your Access Key.'
         );
         setRevokeErrors(errors);
       });
@@ -214,25 +213,16 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
 
   return (
     <React.Fragment>
-      <Grid container justify="space-between" alignItems="flex-end">
-        <Grid item>
-          <Typography
-            variant="h2"
-            className={classes.headline}
-            data-qa-table="Object Storage Keys"
-          >
-            Object Storage Keys
-          </Typography>
-        </Grid>
+      <Grid container justify="flex-end">
         <Grid item>
           <AddNewLink
             onClick={openDrawerForCreating}
-            label="Create an Object Storage Key"
+            label="Create an Access Key"
           />
         </Grid>
       </Grid>
 
-      <ObjectStorageKeyTable
+      <AccessKeyTable
         {...paginationProps}
         openDrawerForEditing={openDrawerForEditing}
         openRevokeDialog={openRevokeDialog}
@@ -247,7 +237,7 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
         eventCategory="object storage keys table"
       />
 
-      <ObjectStorageDrawer
+      <AccessKeyDrawer
         open={createOrEditDrawer.isOpen}
         onClose={createOrEditDrawer.close}
         onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
@@ -255,12 +245,12 @@ export const ObjectStorageKeys: React.StatelessComponent<Props> = props => {
         objectStorageKey={keyToEdit ? keyToEdit : undefined}
       />
 
-      <ObjectStorageKeyDisplayDialog
+      <AccessKeyDisplayDialog
         objectStorageKey={keyToDisplay}
         isOpen={displayKeysDialog.isOpen}
         close={displayKeysDialog.close}
       />
-      <ObjectStorageRevokeKeysDialog
+      <RevokeAccessKeyDialog
         isOpen={revokeKeysDialog.isOpen}
         label={(keyToRevoke && keyToRevoke.label) || ''}
         handleClose={closeRevokeDialog}
@@ -284,4 +274,4 @@ const enhanced = compose(
   paginated
 );
 
-export default enhanced(ObjectStorageKeys);
+export default enhanced(AccessKeyLanding);
