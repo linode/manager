@@ -53,7 +53,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   },
   multipleAddresses: {
     '&:not(:last-child)': {
-      marginBottom: theme.spacing.unit
+      marginBottom: theme.spacing.unit / 2
     }
   },
   left: {
