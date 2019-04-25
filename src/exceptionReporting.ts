@@ -1,7 +1,14 @@
-import { BrowserOptions, captureException, init } from '@sentry/browser';
-import { lensPath, over } from 'ramda';
+import {
+  BrowserOptions,
+  captureException,
+  configureScope,
+  init
+} from '@sentry/browser';
+import { lensPath, over, pathOr } from 'ramda';
 import { SENTRY_URL } from 'src/constants';
 import redactAccessTokenFromUrl from 'src/utilities/redactAccessTokenFromUrl';
+
+import store from 'src/store';
 
 const updateRequestUrl = over(
   lensPath(['request', 'url']),
@@ -68,14 +75,54 @@ window.addEventListener('unhandledrejection', (err: PromiseRejectionEvent) => {
   captureException(err.reason);
 });
 
-export const reportException = (error: string | Error, extra?: any) => {
-  if (process.env.NODE_ENV === 'production' && SENTRY_URL) {
-    captureException(error);
-  } else {
+export const reportException = (
+  error: string | Error,
+  extra?: Record<string, any>,
+  tags?: Record<string, string>
+) => {
+  /**
+   * if we're in the development environment, log the error to the console
+   */
+  if (process.env.NODE_ENV !== 'production' && SENTRY_URL) {
     /* tslint:disable */
     console.error('====================================');
     console.error(error);
     console.log(extra);
     console.error('====================================');
+  }
+
+  /** log the error to sentry as long as the URL exists in the .env */
+  if (SENTRY_URL) {
+    const userEmail = pathOr(
+      'Could not get user email',
+      ['__resources', 'profile', 'data', 'email'],
+      store.getState()
+    );
+    const userID = pathOr(
+      'Could not get user ID',
+      ['__resources', 'profile', 'data', 'uid'],
+      store.getState()
+    );
+
+    configureScope(scopes => {
+      if (extra) {
+        Object.keys(extra).forEach(extraKey => {
+          scopes.setExtra(extraKey, extra[extraKey]);
+        });
+      }
+
+      if (tags) {
+        Object.keys(tags).forEach(tagKey => {
+          scopes.setTag(tagKey, tags[tagKey]);
+        });
+      }
+
+      scopes.setUser({
+        id: userID,
+        email: userEmail
+      });
+    });
+
+    captureException(error);
   }
 };
