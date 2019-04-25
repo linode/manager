@@ -1,4 +1,4 @@
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -70,7 +70,7 @@ interface State {
 type CombinedProps = WithPrivateImages &
   WithStyles<ClassNames> &
   RouteComponentProps<{}> &
-  InjectedNotistackProps;
+  WithSnackbarProps;
 
 class ImagesLanding extends React.Component<CombinedProps, State> {
   eventsSub: Subscription;
