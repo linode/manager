@@ -1069,6 +1069,11 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
           borderBottom: `2px solid ${primaryColors.divider}`,
           '&:last-child': {
             paddingRight: spacingUnit + 2
+          },
+          '& .action-menu': {
+            [breakpoints.down('sm')]: {
+              width: '100%'
+            }
           }
         },
         head: {

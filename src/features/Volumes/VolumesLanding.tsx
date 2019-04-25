@@ -678,7 +678,7 @@ const RenderLoading = () => {
 const RenderError = () => {
   return (
     <TableRowError
-      colSpan={7}
+      colSpan={6}
       message="There was an error loading your volumes. Please try again later"
     />
   );

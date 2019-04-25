@@ -24,7 +24,8 @@ const classes = {
   sizeCol: '',
   pathCol: '',
   volumesWrapper: '',
-  linodeVolumesWrapper: ''
+  linodeVolumesWrapper: '',
+  systemPath: ''
 };
 
 const props = {
