@@ -19,7 +19,7 @@ import composeState from 'src/utilities/composeState';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import CountryData from './countryRegionData';
+import CountryData, { Region } from './countryRegionData';
 
 type ClassNames = 'root' | 'mainFormContainer' | 'stateZip';
 
@@ -140,28 +140,28 @@ class UpdateContactInformationPanel extends React.Component<
 
     const generalError = hasErrorFor('none');
 
-    const countryResults = CountryData.map((country: any) => {
+    const countryResults = CountryData.map(country => {
       return {
         value: country.countryShortCode,
         label: country.countryName
       };
     });
 
-    const currentCountryResult = CountryData.filter((country: any) =>
+    const currentCountryResult = CountryData.filter(country =>
       fields.country
         ? country.countryShortCode === fields.country
         : country.countryShortCode === account.country
     );
 
-    const countryRegions: Item[] = pathOr(
+    const countryRegions: Region[] = pathOr(
       [],
       ['0', 'regions'],
       currentCountryResult
     );
 
-    const regionResults = countryRegions.map((region: any) => {
+    const regionResults = countryRegions.map(region => {
       return {
-        value: region.shortCode,
+        value: region.shortCode ? region.shortCode : region.name,
         label: region.name
       };
     });

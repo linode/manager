@@ -2,18 +2,18 @@ interface CountryData {
   countries: Country[];
 }
 
-interface Country {
+export interface Country {
   countryName: string;
   countryShortCode: string;
   regions: Region[];
 }
 
-interface Region {
+export interface Region {
   name: string;
-  shortCode: string;
+  shortCode?: string;
 }
 
-const CountryData = [
+const CountryData: Country[] = [
   {
     countryName: 'Afghanistan',
     countryShortCode: 'AF',
