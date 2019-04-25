@@ -537,11 +537,7 @@ const MyComponent: React.FC<ReduxStateProps> = (props) => {
             count={count}
             page={page}
             pageSize={pageSize}
-            /* 
-              handlePageChange takes an optional boolean argument of 
-              whether you want to auto scroll-to-top
-            */
-            handlePageChange={handlePageChange()}
+            handlePageChange={handlePageChange}
             handleSizeChange={handlePageSizeChange}
           />
         </React.Fragment>

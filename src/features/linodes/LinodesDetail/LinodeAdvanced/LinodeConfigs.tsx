@@ -86,13 +86,15 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
     configDrawer: this.defaultConfigDrawerState
   };
 
+  configsPanel = React.createRef();
+
   render() {
     const { classes, readOnly } = this.props;
 
     return (
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end">
-          <Grid item>
+          <Grid item innerRef={this.configsPanel}>
             <Typography variant="h3" className={classes.headline}>
               Configuration
             </Typography>
@@ -255,7 +257,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
 
   linodeConfigsTable = () => {
     return (
-      <Paginate data={this.props.configs}>
+      <Paginate data={this.props.configs} scrollToRef={this.configsPanel}>
         {({
           data: paginatedData,
           handlePageChange,
@@ -285,7 +287,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                 count={count}
                 page={page}
                 pageSize={pageSize}
-                handlePageChange={handlePageChange(false)}
+                handlePageChange={handlePageChange}
                 handleSizeChange={handlePageSizeChange}
                 eventCategory="linode configs"
               />
