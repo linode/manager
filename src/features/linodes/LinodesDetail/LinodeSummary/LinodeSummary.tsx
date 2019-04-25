@@ -761,7 +761,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 interface WithTypesProps {
   typesData: Linode.LinodeType[];
   timezone: string;
-  inProgressEvents: Record<number, boolean>;
+  inProgressEvents: Record<number, number>;
   events: ExtendedEvent[];
 }
 
