@@ -27,7 +27,17 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     margin: 0
   },
   tabRoot: {
-    minWidth: '50%'
+    margin: 0,
+    flexBasis: '50%',
+    transition: theme.transitions.create('background-color'),
+    '&[aria-selected="true"]': {
+      backgroundColor: theme.palette.primary.main,
+      color: 'white',
+      '&:hover': {
+        backgroundColor: theme.palette.primary.light,
+        color: 'white'
+      }
+    }
   },
   progress: {
     height: 'auto'
@@ -188,8 +198,7 @@ class Lish extends React.Component<CombinedProps, State> {
           className={classes.tabs}
           indicatorColor="primary"
           textColor="primary"
-          variant="scrollable"
-          scrollButtons="on"
+          scrollButtons="off"
         >
           {this.tabs.map(tab => (
             <Tab
