@@ -5,6 +5,8 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import { v4 } from 'uuid';
+import CloseSnackbar from './CloseSnackbar';
 
 type ClassNames = 'root' | 'info' | 'success' | 'error' | 'warning';
 
@@ -44,6 +46,7 @@ class SnackBar extends React.Component<CombinedProps> {
           variantWarning: classes.warning,
           variantInfo: classes.info
         }}
+        action={<CloseSnackbar uuid={v4()} text="Dismiss Notification" />}
       >
         {children}
       </SnackbarProvider>
