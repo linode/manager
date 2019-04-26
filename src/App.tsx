@@ -105,6 +105,10 @@ const Longview = DefaultLoader({
   loader: () => import('src/features/Longview')
 });
 
+const Kubernetes = DefaultLoader({
+  loader: () => import('src/features/Kubernetes')
+});
+
 const Managed = DefaultLoader({
   loader: () => import('src/features/Managed')
 });
@@ -374,6 +378,11 @@ export class App extends React.Component<CombinedProps, State> {
                           <Route path="/domains" component={Domains} />
                           <Route exact path="/managed" component={Managed} />
                           <Route exact path="/longview" component={Longview} />
+                          <Route
+                            exact
+                            path="/kubernetes"
+                            component={Kubernetes}
+                          />
                           <Route exact path="/images" component={Images} />
                           <Route
                             path="/stackscripts"
