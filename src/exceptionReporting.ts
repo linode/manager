@@ -48,22 +48,6 @@ if (SENTRY_URL) {
       // See http://toolbar.conduit.com/Developer/HtmlAndGadget/Methods/JSInjection.aspx
       'conduitPage'
     ],
-    blacklistUrls: [
-      // Facebook flakiness
-      /graph\.facebook\.com/i,
-      // Facebook blocked
-      /connect\.facebook\.net\/en_US\/all\.js/i,
-      // Woopra flakiness
-      /eatdifferent\.com\.woopra-ns\.com/i,
-      /static\.woopra\.com\/js\/woopra\.js/i,
-      // Chrome extensions
-      /extensions\//i,
-      /^chrome:\/\//i,
-      // Other plugins
-      /127\.0\.0\.1:4001\/isrunning/i, // Cacaoweb
-      /webappstoolbarba\.texthelp\.com\//i,
-      /metrics\.itunes\.apple\.com\.edgesuite\.net\//i
-    ],
     whitelistUrls: [
       /** anything from either *.linode.com or linode.com */
       /https?:\/\/((cdn|www)\.)?linode\.com/
