@@ -266,6 +266,14 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     primaryLinks.push({ display: 'Volumes', href: '/volumes', key: 'volumes' });
     // }
 
+    if (isObjectStorageEnabled) {
+      primaryLinks.push({
+        display: 'Object Storage',
+        href: '/object-storage',
+        key: 'objectStorage'
+      });
+    }
+
     // if (canAccessNodeBalancers) {
     primaryLinks.push({
       display: 'NodeBalancers',
@@ -305,14 +313,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     // if(canAccessImages){
     primaryLinks.push({ display: 'Images', href: '/images', key: 'images' });
     // }
-
-    if (isObjectStorageEnabled) {
-      primaryLinks.push({
-        display: 'Object Storage',
-        href: '/object-storage',
-        key: 'objectStorage'
-      });
-    }
 
     if (hasAccountAccess) {
       primaryLinks.push({
