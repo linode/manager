@@ -11,19 +11,17 @@ As a rule, if you're writing a class component and do not intend on writing any 
 so this should encourage you to pass down props and use state that is flat and doesn't need any deep checking.
 
 Good
-
 ```js
 class MyComponent extends React.PureComponent<MyProps> {}
 ```
 
 Also good
-
 ```js
-import { equals } from 'ramda';
+import { equals } from 'ramda'
 
 class MyComponent extends React.Component<MyProps> {
   shouldComponentUpdate(prevProps: MyProps) {
-    if (equals(prevProps, this.props)) {
+    if(equals(prevProps, this.props)) {
       return false;
     }
     return true;
@@ -32,7 +30,6 @@ class MyComponent extends React.Component<MyProps> {
 ```
 
 Worse
-
 ```js
 class MyComponent extends React.Component<MyProps> {}
 ```
@@ -44,13 +41,11 @@ That being, said with the [introduction of hooks](https://reactjs.org/docs/hooks
 Like PureComponents, function components wrapped in `React.memo()` have a shallow prop and state comparison implemented by default. You can also create your own update conditions as the second argument passed to `React.memo()`
 
 Okay
-
 ```js
 const MyComponent: React.FC<MyProps> = (props) => ()
 ```
 
 Much better
-
 ```js
 const MyComponent: React.FC<MyProps> = (props) => ()
 
@@ -59,7 +54,6 @@ const EnhancedComponent = React.memo(MyComponent);
 ```
 
 With custom update conditions
-
 ```js
 import { equals } from 'ramda'
 
@@ -79,21 +73,20 @@ const EnhancedComponent = React.memo(MyComponent, areEqual);
 ```
 
 ## Testing Memoized components
-
 Testing memoized components is little tricky, since they dont return JSX when shallow rendered, but instead return an object. This means when you try
 
 ```js
 const MyChildComponent = React.memo(props => {
-  return <div />;
+  return <div />
 });
 
 const MyComponent = React.memo(props => {
-  return <MyChildComponent />;
+  return <MyChildComponent />
 });
 
 const Component = shallow(<MyComponent />); // fails here
 
-expect(Component.find('MyChildComponent'));
+expect(Component.find('MyChildComponent'))
 ```
 
 You end up with an error like this in your test
@@ -107,11 +100,11 @@ Instead, try something like this
 
 ```js
 const MyChildComponent = React.memo(props => {
-  return <div />;
+  return <div />
 });
 
 const MyComponent = props => {
-  return <MyChildComponent />;
+  return <MyChildComponent />
 };
 
 export default React.memo(MyComponent);
@@ -135,11 +128,11 @@ solution is to implement solution that mimics our end-to-end tests
 
 ```js
 const MyChildComponent = React.memo(props => {
-  return <div />;
+  return <div />
 });
 
 const MyComponent = props => {
-  return <MyChildComponent data-qa-child-component />;
+  return <MyChildComponent data-qa-child-component />
 };
 
 export default React.memo(MyComponent);
@@ -150,7 +143,6 @@ expect(Component.find('[data-qa-child-component]')); // our test is passing!!! w
 ```
 
 ## Avoiding instance methods that could be made into components.
-
 Everytime an instance of a component is created so are all the instance methods, just like
 renderContent in the following code. So this takes more CPU to create, more memory to store, and
 more CPU to tear down. This code smells because theres a function invocation that has no arguments.
@@ -158,7 +150,6 @@ That screams side-effects. To correct this we simply extract the functionality i
 passing the props as necessary.
 
 Before
-
 ```js
 class MyComponent extends Component {
   renderContent = () => {
@@ -169,24 +160,25 @@ class MyComponent extends Component {
     }
 
     if (loading) {
-      return this.renderLoading();
+      return this.renderLoading()
     }
 
     if (!data || data.length === 0) {
-      return this.renderEmptyState();
+      return this.renderEmptyState()
     }
 
     return this.renderData();
-  };
+  }
 
-  render() {
-    <div>{this.renderContent()}</div>;
+  render(){
+    <div>
+      { this.renderContent() }
+    </div>
   }
 }
 ```
 
 After
-
 ```js
 const MyComponent = (props) => {
   const { loading, error, data } = props;
@@ -246,7 +238,6 @@ Abstracting code is a great way to not repeat yourself and keep the code DRY. It
 1. Any functions that are inside a React Class/function that don't rely on state or props should be abstracted out
 
 Bad
-
 ```js
 class MyComponent extends React.PureComponent<MyProps> {
   /** no reason for this to be attached to the Class */
@@ -259,7 +250,6 @@ class MyComponent extends React.PureComponent<MyProps> {
 ```
 
 Good
-
 ```js
 class MyComponent extends React.PureComponent<MyProps> {
   return <div />
@@ -274,7 +264,6 @@ const filterOutNumbers = (arrayOfNumbers: number[]) => {
 2. Any logic that is being duplicated or even used more than twice should live in it's own file (ideally in the `/utilities` dir)
 
 Bad
-
 ```js
 class MyComponent extends React.PureComponent<MyProps> {
   return (
@@ -299,7 +288,6 @@ class MyComponent extends React.PureComponent<MyProps> {
 ```
 
 Good
-
 ```js
 import { capitalizeAllWords } from 'src/utilities/word-formatting-utils'
 
@@ -316,11 +304,10 @@ class MyComponent extends React.PureComponent<MyProps> {
 We're creating abstractions of all external components, even if that's just an immediate exporting
 of the component `export { default } from '@material-ui/core'`. We're doing this for the following
 reasons;
-
 - Provides a common entry point where can make site-wide changes to the components structure or functionality.
 - Allows us control of the API we consume, regardless of where the component comes from.
 - The wrapper component allows us to respond to naming/file structure changes made by the
-  component authors.
+component authors.
 
 ## Importing and Structuring Dependencies
 
@@ -342,13 +329,11 @@ using RxJS I would import only Observable and the type of Observable I want to c
 size down substantially.
 
 Bad
-
 ```js
 import { Observable } from 'rxjs/Rx';
 ```
 
 Good
-
 ```js
 import 'rxjs/add/observable/of';
 import { Observable } from 'rxjs/Observable';
@@ -369,7 +354,7 @@ If your data is being sourced from Redux state, it's safe to assume that the dat
 The first step in paginating things from Redux is to source the data
 
 ```js
-import { connect } from 'react-redux';
+import { connect } from 'react-redux'
 
 interface ReduxStateProps {
   loading: boolean;
@@ -377,9 +362,11 @@ interface ReduxStateProps {
   data: Linode.Volume[];
 }
 
-const MyComponent: React.FC<ReduxStateProps> = props => {
-  return <div />;
-};
+const MyComponent: React.FC<ReduxStateProps> = (props) => {
+  return (
+    <div />
+  )
+}
 
 const mapStateToProps: MapStateToProps<
   /* props that this HOC returns */
@@ -394,13 +381,14 @@ const mapStateToProps: MapStateToProps<
   volumes: state.__resources.volumes.items
 });
 
-export default connected(mapStateToProps)(MyComponent);
+export default connected(mapStateToProps)(MyComponent)
 ```
 
 Next, we need to leverage the `<Paginate />` render props Component, which has built-in pagination logic, so you don't have to worry about the heavy lifting
 
+
 ```js
-const MyComponent: React.FC<ReduxStateProps> = props => {
+const MyComponent: React.FC<ReduxStateProps> = (props) => {
   return (
     <Paginate data={data} pageSize={25}>
       {({
@@ -410,10 +398,12 @@ const MyComponent: React.FC<ReduxStateProps> = props => {
         handlePageSizeChange,
         page,
         pageSize
-      }) => <div />}
+      }) => (
+        <div />
+      )}
     </Paginate>
-  );
-};
+  )
+}
 ```
 
 Now we see that we have access to all the data, the current page, the page size, and helper functions to change page and page size.
@@ -421,7 +411,7 @@ Now we see that we have access to all the data, the current page, the page size,
 Finally, lets put it all together now with our `<PaginationFooter />` component
 
 ```js
-const MyComponent: React.FC<ReduxStateProps> = props => {
+const MyComponent: React.FC<ReduxStateProps> = (props) => {
   return (
     <Paginate data={data} pageSize={25}>
       {({
@@ -436,14 +426,16 @@ const MyComponent: React.FC<ReduxStateProps> = props => {
           <Table aria-label="List of your Volumes">
             <TableHeader>My Volumes</TableHeader>
             <TableBody>
-              {paginatedData.map(eachVolumes => {
-                return (
-                  <TableRow>
-                    <TableCell>{eachVolume.label}</TableCell>
-                    <TableCell>{eachVolume.size}</TableCell>
-                  </TableRow>
-                );
-              })}
+              {
+                (paginatedData.map(eachVolumes => {
+                  return (
+                    <TableRow>
+                      <TableCell>{eachVolume.label}</TableCell>
+                      <TableCell>{eachVolume.size}</TableCell>
+                    </TableRow>
+                  )
+                }))
+              }
             </TableBody>
           </Table>
           <PaginationFooter
@@ -460,8 +452,8 @@ const MyComponent: React.FC<ReduxStateProps> = props => {
         </React.Fragment>
       )}
     </Paginate>
-  );
-};
+  )
+}
 ```
 
 And that is how you paginate data sourced from Redux.
@@ -474,27 +466,28 @@ So the first step is to wrap your base component in the HOC and tell Pagey what 
 
 ```js
 import { Pagey, PaginationProps } from 'src/components/Pagey';
-import { getInvoices } from 'src/services/account';
+import { getInvoices } from 'src/services/account'
 
 interface OtherProps {
   someText: string;
 }
 
-const MyComponent: React.FC<PaginationProps & OtherProps> = props => {
-  return <div />;
-};
+const MyComponent: React.FC<PaginationProps & OtherProps> = (props) => {
+  return <div />
+}
 
 const paginated = Pagey((ownProps: OtherProps, params: any, filter: any) => {
-  return getInvoices(params, filter);
-});
+  return getInvoices(params, filter)
+})
 
-export default paginated(MyComponent);
+export default paginated(MyComponent)
 ```
 
 Now we have access to the same props as before. Lets add in the rest of our markup
 
 ```js
-const MyComponent: React.FC<PaginationProps & OtherProps> = props => {
+const MyComponent: React.FC<PaginationProps & OtherProps> = (props) => {
+
   const {
     data: myInvoices,
     page,
@@ -511,14 +504,16 @@ const MyComponent: React.FC<PaginationProps & OtherProps> = props => {
       <Table aria-label="List of your Invoices">
         <TableHeader>My Invoices</TableHeader>
         <TableBody>
-          {myInvoices.map(eachInvoice => {
-            return (
-              <TableRow>
-                <TableCell>{eachInvoice.label}</TableCell>
-                <TableCell>{eachInvoice.amount}</TableCell>
-              </TableRow>
-            );
-          })}
+          {
+            (myInvoices.map(eachInvoice => {
+              return (
+                <TableRow>
+                  <TableCell>{eachInvoice.label}</TableCell>
+                  <TableCell>{eachInvoice.amount}</TableCell>
+                </TableRow>
+              )
+            }))
+          }
         </TableBody>
       </Table>
       <PaginationFooter
@@ -529,20 +524,20 @@ const MyComponent: React.FC<PaginationProps & OtherProps> = props => {
         handleSizeChange={handlePageSizeChange}
       />
     </React.Fragment>
-  );
-};
+  )
+}
 ```
 
 Now, each time you change a page, the appropriate page will be requested. `<Pagey />` also gives you access to a bunch of other props that might help for other tasks you're attempting to accomplish, namely:
 
-| Prop Name         | Type                                                                       | Description                                                                                                                      |
-| ----------------- | -------------------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------------------------------- |
-| onDelete          | () => void                                                                 | Helper function that should be invoked when you're deleting items from the list. This will ensure no redundant requests are made |
-| order             | 'asc' or 'desc'                                                            | What order in which the data is being sorted.                                                                                    |
-| handleSearch      | (filter?: any) => void                                                     | Helper function to re-invoke the base request with new filters                                                                   |
-| searching         | boolean                                                                    | is the handleSeach Promise in-progress                                                                                           |
-| handleOrderChange | (sortBy: string, order: 'asc' or 'desc' = 'asc', page: number = 1) => void | Helper function to change the sort and sort order of the base request                                                            |
-| isSorting         | boolean                                                                    | is the handleOrderChange Promise in-progress                                                                                     |
+| Prop Name | Type | Description
+| --------- | ---- | ---------- |
+| onDelete  | () => void | Helper function that should be invoked when you're deleting items from the list. This will ensure no redundant requests are made |
+| order | 'asc' or 'desc' | What order in which the data is being sorted. |
+| handleSearch | (filter?: any) => void | Helper function to re-invoke the base request with new filters |
+| searching | boolean | is the handleSeach Promise in-progress |
+| handleOrderChange | (sortBy: string, order: 'asc' or 'desc' = 'asc', page: number = 1) => void | Helper function to change the sort and sort order of the base request |
+| isSorting | boolean | is the handleOrderChange Promise in-progress |
 
 ### Toasts
 
@@ -557,9 +552,9 @@ An example of how to use a Toast is as follows:
 ```js
 import React from 'react';
 
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { InjectedNotistackProps, withSnackbar } from 'notistack';
 
-interface Props extends WithSnackbarProps {
+interface Props extends InjectedNotistackProps {
   /**
    * props here
    */
@@ -569,10 +564,14 @@ export const Example: React.SFC<Props> = props => {
   const handleClick = () => {
     props.enqueueSnackbar('this is a toast notification', {
       onClick: () => alert('you clicked the toast!')
-    });
-  };
+    })
+  }
 
-  return <div onClick={handleClick}>Click Me</div>;
+  return (
+    <div onClick={handleClick}>
+      Click Me
+    </div>
+  );
 };
 
 export default withSnackbar(Example);
@@ -585,59 +584,59 @@ which generally call API methods from the services library and dispatch multiple
 
 1. Mock the services library module that is called by the Thunk in question:
 
-```js
-jest.mock('../../../services/instances', () => ({
-  getInstances: () => Promise.resolve('return value');
-}))
+  ```js
+  jest.mock('../../../services/instances', () => ({
+    getInstances: () => Promise.resolve('return value');
+  }))
 ```
 
 2. To verify that the Thunk called the correct method, you will have to mock that specific method (in the example above, the `getInstances` method can't be accessed
-   later in your tests).
+  later in your tests).
 
-```js
-// Using requireMock makes it semantically clear that this import is not used, and avoids TypeScript issues.
-const requests = require.requireMock('../../../services/instances');
+  ```js
+    // Using requireMock makes it semantically clear that this import is not used, and avoids TypeScript issues.
+    const requests = require.requireMock('../../../services/instances');
 
-// (In your tests somewhere)
+    // (In your tests somewhere)
 
-requests.getInstances = jest.fn(() => Promise.resolve('return something here'));
+    requests.getInstances = jest.fn(() => Promise.resolve('return something here'));
 
-it('calls the right method', () => {
-  expect(requests.getInstances).toHaveBeenCalled();
-});
+    it("calls the right method", () => {
+      expect(requests.getInstances).toHaveBeenCalled();
+    });
 ```
 
 3. To actually test the Thunk, you will need to dispatch it, which requires the creation of a mock store:
 
-```js
-import configureStore from 'redux-mock-store';
-import ReduxThunk from 'redux-thunk';
+  ```js
+  import configureStore from 'redux-mock-store';
+  import ReduxThunk from 'redux-thunk';
 
-const middlewares = [ReduxThunk];
-const createMockStore = configureStore(middlewares);
-const store = createMockStore({});
-```
+  const middlewares = [ReduxThunk];
+  const createMockStore = configureStore(middlewares);
+  const store = createMockStore({});
+  ```
 
-You can then dispatch your async actions normally:
+  You can then dispatch your async actions normally:
 
-```js
-await store.dispatch(instances.getInstances() as any);
-```
+  ```js
+  await store.dispatch(instances.getInstances() as any);
+  ```
 
-The mock store allows you to check the actions dispatched by Thunks:
+  The mock store allows you to check the actions dispatched by Thunks:
 
-```js
-const actions = store.getActions();
-// [{ type: ACTION_1 }, { type: ACTION_2, payload: some_payload }]
-expect(actions).toEqual([instances.load(), instances.handleError(error)]);
-```
+  ```js
+  const actions = store.getActions();
+  // [{ type: ACTION_1 }, { type: ACTION_2, payload: some_payload }]
+  expect(actions).toEqual([instances.load(), instances.handleError(error)]);
+  ```
 
-It is also helpful to reset the mock store before each request, to keep the actions history clean:
+  It is also helpful to reset the mock store before each request, to keep the actions history clean:
 
-```js
-const store = createMockStore({});
-beforeEach(() => {
-  jest.resetAllMocks();
-  store.clearActions();
-});
-```
+  ```js
+  const store = createMockStore({});
+  beforeEach(() => {
+    jest.resetAllMocks();
+    store.clearActions();
+  });
+  ```
