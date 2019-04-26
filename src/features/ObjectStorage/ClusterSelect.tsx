@@ -7,6 +7,7 @@ import clustersContainer, {
 import { formatRegion } from 'src/utilities';
 
 interface Props {
+  selectedCluster: string;
   onChange: (value: string) => void;
   onBlur: (e: any) => void;
   error?: string;
@@ -14,12 +15,25 @@ interface Props {
 
 type CombinedProps = Props & StateProps;
 export const ClusterSelect: React.StatelessComponent<CombinedProps> = props => {
-  const { error, onChange, onBlur, clustersData, clustersError } = props;
+  const {
+    selectedCluster,
+    error,
+    onChange,
+    onBlur,
+    clustersData,
+    clustersError
+  } = props;
 
   const options: Item<string>[] = clustersData.map(eachCluster => ({
     value: eachCluster.id,
     label: formatRegion(eachCluster.region)
   }));
+
+  // If there's only one option, we want it to selected by default.
+  // If it isn't already selected, call `onChange` with it so Formik knows about it.
+  if (options.length === 1 && selectedCluster !== options[0].value) {
+    onChange(options[0].value);
+  }
 
   // Error could be: 1. General Clusters error, 2. Field error, 3. Nothing
   const errorText = clustersError
