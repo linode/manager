@@ -165,10 +165,20 @@ const addFooter = (doc: jsPDF) => {
   });
 };
 
-const addTitle = (doc: jsPDF, ...textStrings: string[]) => {
+interface Title {
+  text: string;
+  leftMargin?: number;
+}
+
+const addTitle = (doc: jsPDF, ...textStrings: Title[]) => {
   doc.setFontSize(12);
   doc.setFontStyle('bold');
-  doc.text(`${textStrings.join(`\r\n`)}`, leftMargin, 130, { charSpace: 0.75 });
+  textStrings.forEach(eachString => {
+    doc.text(eachString.text, eachString.leftMargin || leftMargin, 130, {
+      charSpace: 0.75
+    });
+  });
+  // doc.text(`${textStrings.join(`\r\n`)}`, leftMargin, 130, { charSpace: 0.75 });
   // reset text format
   doc.setFontStyle('normal');
 };
@@ -202,9 +212,9 @@ export const printInvoice = (
 
       const header = [
         { name: 'Description', prompt: 'Description', width: 150 },
-        { name: 'From', prompt: 'From', width: 83 },
-        { name: 'To', prompt: 'To', width: 83 },
-        { name: 'Quantity', prompt: 'QTY', width: 42 },
+        { name: 'From', prompt: 'From', width: 73 },
+        { name: 'To', prompt: 'To', width: 73 },
+        { name: 'Quantity', prompt: 'Quantity', width: 62 },
         { name: 'Unit Price', prompt: 'Unit\r\nPrice', width: 52 },
         { name: 'Amount', prompt: 'Amount', width: 62 },
         { name: 'Tax', prompt: 'Tax', width: 42 },
@@ -319,7 +329,20 @@ export const printInvoice = (
       doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
       addLeftHeader(doc, index + 1, itemsChunks.length, date, 'Invoice');
       addRightHeader(doc, account);
-      addTitle(doc, `Invoice: #${invoiceId}`, `Tax ID: ${account.tax_id}`);
+      addTitle(
+        doc,
+        {
+          text: `Invoice: #${invoiceId}`
+        },
+        {
+          /* 
+            300px left margin is a hacky way of aligning the text to the right 
+            because this library friggin stinks
+           */
+          text: `Tax ID: ${account.tax_id}`,
+          leftMargin: 300
+        }
+      );
       addTable(itemsChunk);
       addFooter(doc);
       if (index < itemsChunks.length - 1) {
@@ -423,7 +446,7 @@ export const printPayment = (
     doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
     addLeftHeader(doc, 1, 1, date, 'Payment');
     addRightHeader(doc, account);
-    addTitle(doc, `Receipt for Payment #${payment.id}`);
+    addTitle(doc, { text: `Receipt for Payment #${payment.id}` });
     addTable();
     addFooter(doc);
     addTotalAmount();
