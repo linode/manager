@@ -114,6 +114,7 @@ export const CreateBucketForm: React.StatelessComponent<
               error={touched.cluster ? errors.cluster : undefined}
               onBlur={handleBlur}
               onChange={value => setFieldValue('cluster', value)}
+              selectedCluster={values.cluster}
             />
 
             <BucketsActionPanel
