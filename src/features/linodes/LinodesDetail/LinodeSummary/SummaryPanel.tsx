@@ -135,12 +135,12 @@ class SummaryPanel extends React.Component<CombinedProps> {
           </Typography>
           <div className={classes.section}>
             <IPAddress ips={linodeIpv4} copyRight showAll />
+            {linodeIpv6 && (
+              <div className={classes.section}>
+                <IPAddress ips={[linodeIpv6]} copyRight showAll />
+              </div>
+            )}
           </div>
-          {linodeIpv6 && (
-            <div className={classes.section}>
-              <IPAddress ips={[linodeIpv6]} copyRight showAll />
-            </div>
-          )}
         </Paper>
         <Paper className={classes.summarySection} style={{ paddingBottom: 24 }}>
           <Typography variant="h3" className={classes.title} data-qa-title>
