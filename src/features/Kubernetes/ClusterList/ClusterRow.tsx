@@ -5,9 +5,8 @@ import {
   withStyles
 } from 'src/components/core/styles';
 import TableRow from 'src/components/core/TableRow';
+import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell';
-import { formatDate } from 'src/utilities/format-date-iso8601';
-
 
 type ClassNames = 'root' | 'label';
 
@@ -27,7 +26,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
+export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
   const { classes, cluster } = props;
   return (
     <TableRow key={cluster.id} data-qa-cluster-cell={cluster.id}>
@@ -42,14 +41,14 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = (props) => {
         {cluster.version}
       </TableCell>
       <TableCell parentColumn="Created" data-qa-cluster-date>
-        {formatDate(cluster.created)}
+        <DateTimeDisplay value={cluster.created} humanizeCutoff="month" />
       </TableCell>
       <TableCell parentColumn="Region" data-qa-cluster-size>
         {cluster.region}
       </TableCell>
-  </TableRow>
-  )
-}
+    </TableRow>
+  );
+};
 
 const styled = withStyles(styles);
 
