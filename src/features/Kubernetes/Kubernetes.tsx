@@ -23,11 +23,6 @@ class Kubernetes extends React.Component<Props> {
     return (
       <Switch>
         <Route component={KubernetesLanding} path={path} exact />
-        {/* <Route component={NodeBalancerCreate} path={`${path}/create`} exact />
-        <Route
-          component={NodeBalancerDetail}
-          path={`${path}/:nodeBalancerId`}
-        /> */}
       </Switch>
     );
   }

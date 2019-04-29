@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
-import LinodeSvg from 'src/assets/addnewmenu/linode.svg';
+import KubernetesSvg from 'src/assets/addnewmenu/kubernetes.svg';
 import Button from 'src/components/Button';
 import {
   StyleRulesCallback,
@@ -79,7 +79,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
         className={classes.root}
       >
         <Grid item xs={12}>
-          <LinodeSvg className={classes.icon} />
+          <KubernetesSvg className={classes.icon} />
         </Grid>
         <Typography
           variant="h4"
@@ -93,6 +93,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
             Need help getting started?
           </Typography>
           <Typography variant="subtitle1">
+            {/* @todo update link once we have one for LKE */}
             <a
               href="https://linode.com/docs/getting-started-new-manager/"
               target="_blank"
@@ -105,7 +106,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
         <Grid item xs={12} lg={10} className={classes.copy}>
           <Button
             type="primary"
-            onClick={() => this.props.history.push('/linodes/create')}
+            onClick={() => this.props.history.push('/kubernetes/create')}
           >
             Create a Cluster
           </Button>
