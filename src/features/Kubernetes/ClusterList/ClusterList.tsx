@@ -18,6 +18,7 @@ import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
@@ -188,9 +189,11 @@ export const ClusterContent: React.FunctionComponent<ContentProps> = props => {
 
   if (data.length === 0) {
     return (
-      <TableRow data-qa-cluster-empty>
-        <TableCell>You don't have any Kubernetes Clusters.</TableCell>
-      </TableRow>
+      <TableRowEmptyState
+        data-qa-cluster-empty
+        message={"You don't have any Kubernetes Clusters."}
+        colSpan={12}
+      />
     );
   }
 
