@@ -13,7 +13,7 @@ import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { ObjectStorageKeyRequest } from 'src/services/profile/objectStorageKeys';
 import { createObjectStorageKeysSchema } from 'src/services/profile/objectStorageKeys.schema';
-import { MODES } from './ObjectStorageKeys';
+import { MODES } from './AccessKeyLanding';
 
 type ClassNames = 'root';
 
@@ -32,15 +32,13 @@ export interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const ObjectStorageDrawer: React.StatelessComponent<
+export const AccessKeyDrawer: React.StatelessComponent<
   CombinedProps
 > = props => {
   const { open, onClose, onSubmit, mode, objectStorageKey } = props;
 
   const title =
-    mode === 'creating'
-      ? 'Create an Object Storage Key'
-      : 'Edit Object Storage Key';
+    mode === 'creating' ? 'Create an Access Key' : 'Edit Access Key';
 
   const initialLabelValue =
     mode === 'editing' && objectStorageKey ? objectStorageKey.label : '';
@@ -71,8 +69,7 @@ export const ObjectStorageDrawer: React.StatelessComponent<
             {/* Explainer copy if we're in 'creating' mode */}
             {mode === 'creating' && (
               <Typography>
-                Generate an Object Storage key pair for use with an
-                S3-compatible client.
+                Generate an Access Key for use with an S3-compatible client.
               </Typography>
             )}
 
@@ -115,4 +112,4 @@ export const ObjectStorageDrawer: React.StatelessComponent<
 
 const styled = withStyles(styles);
 
-export default styled(ObjectStorageDrawer);
+export default styled(AccessKeyDrawer);

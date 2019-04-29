@@ -43,7 +43,7 @@ import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
 import { isObjectStorageEnabled } from './constants';
-import BucketDrawer from './features/ObjectStorage/BucketDrawer';
+import BucketDrawer from './features/ObjectStorage/Buckets/BucketDrawer';
 import { requestClusters } from './store/clusters/clusters.actions';
 import {
   withNodeBalancerActions,
