@@ -142,7 +142,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
         e.preventDefault();
       },
       body: `Create and manage Kubernetes Clusters for highly available container workloads`,
-      ItemIcon: DomainIcon
+      ItemIcon: DomainIcon // @todo update icon
     }
   ];
 

@@ -299,7 +299,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       href: '/kubernetes',
       key: 'kubernetes'
     });
-    // }
 
     if (isManagedAccount) {
       primaryLinks.push({

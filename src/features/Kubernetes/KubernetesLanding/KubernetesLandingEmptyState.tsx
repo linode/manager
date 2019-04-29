@@ -79,6 +79,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
         className={classes.root}
       >
         <Grid item xs={12}>
+          {/* @todo update icon */}
           <LinodeSvg className={classes.icon} />
         </Grid>
         <Typography
@@ -93,6 +94,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
             Need help getting started?
           </Typography>
           <Typography variant="subtitle1">
+            {/* @todo update link once we have one for LKE */}
             <a
               href="https://linode.com/docs/getting-started-new-manager/"
               target="_blank"
@@ -105,7 +107,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
         <Grid item xs={12} lg={10} className={classes.copy}>
           <Button
             type="primary"
-            onClick={() => this.props.history.push('/linodes/create')}
+            onClick={() => this.props.history.push('/kubernetes/create')}
           >
             Create a Cluster
           </Button>
