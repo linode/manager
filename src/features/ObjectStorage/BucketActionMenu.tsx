@@ -16,7 +16,7 @@ export const BucketActionMenu: React.StatelessComponent<Props> = props => {
   const createActions = () => (closeMenu: Function): Action[] => {
     return [
       {
-        title: 'Remove',
+        title: 'Delete',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           handleRemove();
           closeMenu();
