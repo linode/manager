@@ -33,6 +33,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 interface Props {
   timezone: string;
+  loggedInAsCustomer: boolean;
   updateProfile: (v: Linode.Profile) => void;
 }
 
@@ -122,7 +123,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, timezone } = this.props;
+    const { classes, loggedInAsCustomer, timezone } = this.props;
     const { errors, submitting, success } = this.state;
     const timezoneDisplay = pathOr(
       timezone,
@@ -142,6 +143,21 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Paper className={classes.root}>
+          {loggedInAsCustomer && (
+            <div
+              style={{
+                backgroundColor: 'pink',
+                padding: '1em',
+                marginBottom: '0.5em',
+                textAlign: 'center'
+              }}
+              data-qa-admin-notice
+            >
+              <Typography style={{ fontSize: '1.2em', color: 'black' }}>
+                {`While you are logged in as a customer, all times, dates, and graphs will be displayed in your browser's timezone (${timezone}).`}
+              </Typography>
+            </div>
+          )}
           {success && <Notice success text={success} />}
           {generalError && <Notice error text={generalError} />}
           <Typography variant="body1" data-qa-copy>

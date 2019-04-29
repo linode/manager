@@ -44,7 +44,14 @@ export class DisplaySettings extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { email, loading, timezone, username, actions } = this.props;
+    const {
+      actions,
+      email,
+      loggedInAsCustomer,
+      loading,
+      timezone,
+      username
+    } = this.props;
 
     if (!email || !username) {
       return null;
@@ -64,6 +71,7 @@ export class DisplaySettings extends React.Component<CombinedProps, State> {
             <TimezoneForm
               timezone={timezone}
               updateProfile={actions.updateProfile}
+              loggedInAsCustomer={loggedInAsCustomer}
             />
           </React.Fragment>
         )}
@@ -81,6 +89,7 @@ interface StateProps {
   username?: string;
   email?: string;
   timezone: string;
+  loggedInAsCustomer: boolean;
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => {
@@ -89,7 +98,12 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     loading: profile.loading,
     username: path(['data', 'username'], profile),
     email: path(['data', 'email'], profile),
-    timezone: defaultTimezone(profile)
+    timezone: defaultTimezone(profile),
+    loggedInAsCustomer: pathOr(
+      false,
+      ['authentication', 'loggedInAsCustomer'],
+      state
+    )
   };
 };
 
