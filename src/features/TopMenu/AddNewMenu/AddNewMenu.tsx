@@ -133,6 +133,16 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
       },
       body: `Manage your DNS records using Linode’s high-availability name servers`,
       ItemIcon: DomainIcon
+    },
+    {
+      title: 'Kubernetes',
+      onClick: e => {
+        this.props.history.push('/kubernetes/create');
+        this.handleClose();
+        e.preventDefault();
+      },
+      body: `Create and manage Kubernetes Clusters for highly available container workloads`,
+      ItemIcon: DomainIcon
     }
   ];
 
