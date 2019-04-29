@@ -34,10 +34,14 @@ class PageNumbers extends React.PureComponent<Props & StyleProps> {
 
   render() {
     const { numOfPages, currentPage, classes, ...rest } = this.props;
+
+    const pageNumbers = pageNumbersToRender(currentPage, numOfPages);
+
     return (
       <React.Fragment>
-        {/** display "1 ... " if we're on a page higher than 5 */
-        currentPage >= 5 ? (
+        {/* We always want to start with "1", so if it isn't already the first
+        element in pageNumbers, add it here. */}
+        {pageNumbers[0] !== 1 && (
           <React.Fragment>
             <PageNumber
               number={1}
@@ -48,12 +52,16 @@ class PageNumbers extends React.PureComponent<Props & StyleProps> {
             >
               1
             </PageNumber>
-            <div className={classes.ellipses}>
-              <span className={classes.ellipsesInner}>...</span>
-            </div>
+            {/* We want an ellipsis here, unless the first element of pageNumbers is 2, because
+             "1 ... 2" is incorrect. */}
+            {pageNumbers[0] !== 2 && (
+              <div className={classes.ellipses}>
+                <span className={classes.ellipsesInner}>...</span>
+              </div>
+            )}
           </React.Fragment>
-        ) : null}
-        {pageNumbersToRender(currentPage, numOfPages).map(eachPage => (
+        )}
+        {pageNumbers.map(eachPage => (
           <PageNumber
             number={eachPage}
             data-qa-page-to={eachPage}
@@ -65,13 +73,17 @@ class PageNumbers extends React.PureComponent<Props & StyleProps> {
             {eachPage}
           </PageNumber>
         ))}
-        {/* if we have more than 5 pages and we're on a page that is
-        not one of the last 5 pages, show " ... lastPage# " */
-        numOfPages > 5 && currentPage <= numOfPages - 4 ? (
+        {/* We always want to end with the last page, so if it isn't already the last
+        element in pageNumbers, add it here. */}
+        {pageNumbers[pageNumbers.length - 1] !== numOfPages && (
           <React.Fragment>
-            <div className={classes.ellipses}>
-              <span className={classes.ellipsesInner}>...</span>
-            </div>
+            {/* We want an ellipsis here, unless the last element of pageNumbers is equal to
+            numPages-1, because "6 ... 7" is incorrect. */}
+            {pageNumbers[pageNumbers.length - 1] !== numOfPages - 1 && (
+              <div className={classes.ellipses}>
+                <span className={classes.ellipsesInner}>...</span>
+              </div>
+            )}
             <PageNumber
               number={numOfPages}
               data-qa-page-to={numOfPages}
@@ -82,7 +94,7 @@ class PageNumbers extends React.PureComponent<Props & StyleProps> {
               {numOfPages}
             </PageNumber>
           </React.Fragment>
-        ) : null}
+        )}
       </React.Fragment>
     );
   }
