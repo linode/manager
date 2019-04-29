@@ -143,8 +143,6 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Paper className={classes.root}>
-          {success && <Notice success text={success} />}
-          {generalError && <Notice error text={generalError} />}
           {loggedInAsCustomer && (
             <div
               style={{
@@ -160,6 +158,8 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
               </Typography>
             </div>
           )}
+          {success && <Notice success text={success} />}
+          {generalError && <Notice error text={generalError} />}
           <Typography variant="body1" data-qa-copy>
             This setting converts the dates and times displayed in the Linode
             Manager to a timezone of your choice. Your current timezone is:{' '}
