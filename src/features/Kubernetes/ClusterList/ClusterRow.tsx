@@ -5,18 +5,24 @@ import {
   withStyles
 } from 'src/components/core/styles';
 import TableRow from 'src/components/core/TableRow';
+import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import EntityIcon from 'src/components/EntityIcon';
+import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 
-type ClassNames = 'root' | 'label';
+type ClassNames = 'root' | 'label' | 'clusterDescription';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   label: {
-    width: '30%',
+    width: '50%',
     [theme.breakpoints.down('sm')]: {
       width: '100%'
     }
+  },
+  clusterDescription: {
+    paddingTop: theme.spacing.unit / 2
   }
 });
 
@@ -35,7 +41,18 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
         className={classes.label}
         data-qa-cluster-label
       >
-        {cluster.label}
+        <Grid container wrap="nowrap" alignItems="center">
+          <Grid item className="py0">
+            <EntityIcon variant="linode" marginTop={1} />
+          </Grid>
+          <Grid item>
+            <Typography variant="h3">{cluster.label}</Typography>
+            {/* @todo add cluster description when available */}
+            {/* <Typography className={classes.clusterDescription}>
+              64 CPUs
+            </Typography> */}
+          </Grid>
+        </Grid>
       </TableCell>
       <TableCell parentColumn="Version" data-qa-cluster-version>
         {cluster.version}

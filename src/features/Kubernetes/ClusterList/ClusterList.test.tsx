@@ -7,7 +7,8 @@ import { ClusterContent, ClusterList } from './ClusterList';
 const props = {
   classes: {
     root: '',
-    title: ''
+    title: '',
+    labelHeader: ''
   }
 };
 

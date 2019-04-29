@@ -26,12 +26,15 @@ import { getKubernetesClusters } from 'src/services/kubernetes';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ClusterRow from './ClusterRow';
 
-type ClassNames = 'root' | 'title';
+type ClassNames = 'root' | 'title' | 'labelHeader';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   title: {
     marginBottom: theme.spacing.unit + theme.spacing.unit / 2
+  },
+  labelHeader: {
+    paddingLeft: theme.spacing.unit * 2 + 49
   }
 });
 
@@ -111,6 +114,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
                           label={'label'}
                           direction={order}
                           handleClick={handleOrderChange}
+                          className={classes.labelHeader}
                           data-qa-kubernetes-clusters-name-header
                         >
                           Cluster Label
@@ -120,7 +124,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
                           label={'version'}
                           direction={order}
                           handleClick={handleOrderChange}
-                          data-qa-kubernetes-clusters-name-header
+                          data-qa-kubernetes-clusters-version-header
                         >
                           Version
                         </TableSortCell>
@@ -138,7 +142,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
                           label={'region'}
                           direction={order}
                           handleClick={handleOrderChange}
-                          data-qa-kubernetes-clusters-size-header
+                          data-qa-kubernetes-clusters-region-header
                         >
                           Region
                         </TableSortCell>

@@ -8,7 +8,8 @@ const props = {
   cluster: clusters[0],
   classes: {
     root: '',
-    label: ''
+    label: '',
+    clusterDescription: ''
   }
 };
 
