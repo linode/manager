@@ -13,7 +13,7 @@ interface RevokeKeysDialogProps {
   errors?: Linode.ApiFieldError[];
 }
 
-export const RevokeKeysDialog: React.StatelessComponent<
+export const RevokeAccessKeyDialog: React.StatelessComponent<
   RevokeKeysDialogProps
 > = props => {
   const { label, isOpen, isLoading, handleClose, handleSubmit, errors } = props;
@@ -42,10 +42,8 @@ export const RevokeKeysDialog: React.StatelessComponent<
       actions={actions}
       error={(errors || []).map(e => e.reason).join(',')}
     >
-      <Typography>
-        Are you sure you want to revoke this Object Storage key?
-      </Typography>
+      <Typography>Are you sure you want to revoke this Access Key?</Typography>
     </ConfirmationDialog>
   );
 };
-export default RevokeKeysDialog;
+export default RevokeAccessKeyDialog;

@@ -22,7 +22,7 @@ class ObjectStorage extends React.Component<Props> {
 
     return (
       <Switch>
-        <Route component={ObjectStorageLanding} path={path} exact />
+        <Route component={ObjectStorageLanding} path={path} />
       </Switch>
     );
   }

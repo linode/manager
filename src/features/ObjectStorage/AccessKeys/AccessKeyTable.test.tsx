@@ -2,14 +2,14 @@ import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 import objectStorageKeys from 'src/__data__/objectStorageKeys';
 import { pageyProps } from 'src/__data__/pageyProps';
-import { CombinedProps, ObjectStorageKeyTable } from './ObjectStorageKeyTable';
+import { AccessKeyTable, CombinedProps } from './AccessKeyTable';
 
 describe('ObjectStorageKeyTable', () => {
   let wrapper: ShallowWrapper<CombinedProps>;
 
   beforeEach(() => {
     wrapper = shallow<CombinedProps>(
-      <ObjectStorageKeyTable
+      <AccessKeyTable
         classes={{
           root: '',
           headline: '',
@@ -50,7 +50,7 @@ describe('ObjectStorageKeyTable', () => {
     wrapper.setProps({ error: new Error() });
     expect(wrapper.find('WithStyles(TableRowError)')).toHaveLength(1);
     expect(wrapper.find('WithStyles(TableRowError)').prop('message')).toBe(
-      'We were unable to load your Object Storage Keys.'
+      'We were unable to load your Access Keys.'
     );
   });
 

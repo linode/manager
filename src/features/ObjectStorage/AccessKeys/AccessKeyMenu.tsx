@@ -14,14 +14,14 @@ interface Props {
 
 type CombinedProps = Props;
 
-const ObjectStorageKeyMenu: React.StatelessComponent<CombinedProps> = props => {
+const AccessKeyMenu: React.StatelessComponent<CombinedProps> = props => {
   const createActions = () => {
     const { openRevokeDialog, objectStorageKey, openDrawerForEditing } = props;
 
     return (closeMenu: Function): Action[] => {
       return [
         {
-          title: 'Rename Key',
+          title: 'Rename Access Key',
           onClick: () => {
             openDrawerForEditing(objectStorageKey);
             closeMenu();
@@ -40,4 +40,4 @@ const ObjectStorageKeyMenu: React.StatelessComponent<CombinedProps> = props => {
   return <ActionMenu createActions={createActions()} />;
 };
 
-export default ObjectStorageKeyMenu;
+export default AccessKeyMenu;

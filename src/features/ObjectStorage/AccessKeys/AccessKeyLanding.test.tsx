@@ -1,9 +1,9 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { pageyProps } from 'src/__data__/pageyProps';
-import { ObjectStorageKeys } from './ObjectStorageKeys';
+import { AccessKeyLanding } from './AccessKeyLanding';
 
-describe('ObjectStorageKeys', () => {
+describe('AccessKeyLanding', () => {
   const props = {
     classes: {
       headline: '',
@@ -15,7 +15,7 @@ describe('ObjectStorageKeys', () => {
     },
     ...pageyProps
   };
-  const wrapper = shallow(<ObjectStorageKeys {...props} />);
+  const wrapper = shallow(<AccessKeyLanding {...props} />);
   it('renders without crashing', () => {
     expect(wrapper).toHaveLength(1);
   });
