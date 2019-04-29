@@ -7,5 +7,6 @@ namespace Linode {
     label: string;
     version: string;
     id: string;
+    node_pools: any[]; // @todo type this
   }
 }

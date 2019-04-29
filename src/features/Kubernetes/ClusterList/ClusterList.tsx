@@ -36,7 +36,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 type CombinedProps = WithStyles<ClassNames>;
 
-const ClusterList: React.FunctionComponent<CombinedProps> = props => {
+export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
   const { classes } = props;
   const [clusters, setClusters] = React.useState<Linode.KubernetesCluster[]>(
     []
@@ -179,16 +179,16 @@ interface ContentProps {
 export const ClusterContent: React.FunctionComponent<ContentProps> = props => {
   const { data, error, loading } = props;
   if (error) {
-    return <TableRowError message={error} colSpan={12} />;
+    return <TableRowError data-qa-cluster-error message={error} colSpan={12} />;
   }
 
   if (loading) {
-    return <TableRowLoading colSpan={12} />;
+    return <TableRowLoading data-qa-cluster-loading colSpan={12} />;
   }
 
   if (data.length === 0) {
     return (
-      <TableRow>
+      <TableRow data-qa-cluster-empty>
         <TableCell>You don't have any Kubernetes Clusters.</TableCell>
       </TableRow>
     );
@@ -197,7 +197,11 @@ export const ClusterContent: React.FunctionComponent<ContentProps> = props => {
   return (
     <>
       {data.map((cluster, idx) => (
-        <ClusterRow key={`kubernetes-cluster-list-${idx}`} cluster={cluster} />
+        <ClusterRow
+          data-qa-cluster-row
+          key={`kubernetes-cluster-list-${idx}`}
+          cluster={cluster}
+        />
       ))}
     </>
   );

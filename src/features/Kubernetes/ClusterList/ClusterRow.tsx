@@ -37,13 +37,13 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
       >
         {cluster.label}
       </TableCell>
-      <TableCell parentColumn="Version" data-qa-cluster-date>
+      <TableCell parentColumn="Version" data-qa-cluster-version>
         {cluster.version}
       </TableCell>
       <TableCell parentColumn="Created" data-qa-cluster-date>
         <DateTimeDisplay value={cluster.created} humanizeCutoff="month" />
       </TableCell>
-      <TableCell parentColumn="Region" data-qa-cluster-size>
+      <TableCell parentColumn="Region" data-qa-cluster-region>
         {cluster.region}
       </TableCell>
     </TableRow>
