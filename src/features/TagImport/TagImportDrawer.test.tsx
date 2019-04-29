@@ -22,8 +22,8 @@ const props = {
   loading: false,
   success: false,
   entitiesWithGroupsToImport: { domains, linodes },
-  onPresentSnackbar: jest.fn(),
   enqueueSnackbar: jest.fn(),
+  closeSnackbar: jest.fn(),
   classes: { root: '' }
 };
 

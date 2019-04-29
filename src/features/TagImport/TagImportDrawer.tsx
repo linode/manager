@@ -1,4 +1,4 @@
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import {
   compose as _compose,
   isEmpty,
@@ -64,7 +64,7 @@ interface DispatchProps {
 
 type CombinedProps = StateProps &
   DispatchProps &
-  InjectedNotistackProps &
+  WithSnackbarProps &
   WithStyles<ClassNames>;
 
 export const getGroupImportList = (entities: GroupImportProps[]) => {

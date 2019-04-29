@@ -1,4 +1,4 @@
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { Lens, lensPath, over, path, pathOr, set, view } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
@@ -70,7 +70,7 @@ type CombinedProps = WithStyles<ClassNames> &
   DispatchProps &
   RouteComponentProps<{}> &
   StateProps &
-  InjectedNotistackProps;
+  WithSnackbarProps;
 
 const masterIPsLens = lensPath(['master_ips']);
 const masterIPLens = (idx: number) =>

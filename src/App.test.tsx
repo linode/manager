@@ -18,7 +18,7 @@ it('renders without crashing', () => {
             {...mockNodeBalancerActions}
             username=""
             isLoggedInAsCustomer={false}
-            onPresentSnackbar={jest.fn()}
+            closeSnackbar={jest.fn()}
             enqueueSnackbar={jest.fn()}
             location={{
               pathname: '',

@@ -1,5 +1,5 @@
 import { storiesOf } from '@storybook/react';
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Snackbar from 'src/components/SnackBar';
@@ -21,7 +21,7 @@ class MyButton extends React.PureComponent<Props> {
   }
 }
 
-class Example extends React.PureComponent<InjectedNotistackProps, {}> {
+class Example extends React.PureComponent<WithSnackbarProps, {}> {
   render() {
     const { enqueueSnackbar } = this.props;
     const variants = ['default', 'success', 'warning', 'error', 'info'];
