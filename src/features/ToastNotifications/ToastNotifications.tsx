@@ -1,4 +1,4 @@
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import 'rxjs/add/operator/bufferTime';
 import 'rxjs/add/operator/filter';
@@ -7,10 +7,7 @@ import 'rxjs/add/operator/merge';
 import { Subscription } from 'rxjs/Subscription';
 import { events$ } from 'src/events';
 
-class ToastNotifications extends React.PureComponent<
-  InjectedNotistackProps,
-  {}
-> {
+class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
   subscription: Subscription;
 
   componentDidMount() {

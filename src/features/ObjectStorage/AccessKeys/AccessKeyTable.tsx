@@ -17,7 +17,7 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import ObjectStorageKeyMenu from './ObjectStorageKeyMenu';
+import AccessKeyMenu from './AccessKeyMenu';
 
 type ClassNames = 'root' | 'headline' | 'paper' | 'labelCell' | 'copyIcon';
 
@@ -54,7 +54,7 @@ export type CombinedProps = Props &
   WithStyles<ClassNames> &
   PaginationProps<Linode.ObjectStorageKey>;
 
-export const ObjectStorageKeyTable: React.StatelessComponent<
+export const AccessKeyTable: React.StatelessComponent<
   CombinedProps
 > = props => {
   const {
@@ -75,7 +75,7 @@ export const ObjectStorageKeyTable: React.StatelessComponent<
       return (
         <TableRowError
           colSpan={6}
-          message="We were unable to load your Object Storage Keys."
+          message="We were unable to load your Access Keys."
         />
       );
     }
@@ -105,7 +105,7 @@ export const ObjectStorageKeyTable: React.StatelessComponent<
           </Typography>
         </TableCell>
         <TableCell>
-          <ObjectStorageKeyMenu
+          <AccessKeyMenu
             objectStorageKey={eachKey}
             openRevokeDialog={openRevokeDialog}
             openDrawerForEditing={openDrawerForEditing}
@@ -118,7 +118,7 @@ export const ObjectStorageKeyTable: React.StatelessComponent<
   return (
     <React.Fragment>
       <Paper className={classes.paper}>
-        <Table aria-label="List of Object Storage Keys">
+        <Table aria-label="List of Object Storage Access Keys">
           <TableHead>
             <TableRow data-qa-table-head>
               <TableCell className={classes.labelCell} data-qa-header-label>
@@ -145,4 +145,4 @@ const enhanced = compose<
   Props & PaginationProps<Linode.ObjectStorageKey>
 >(styled);
 
-export default enhanced(ObjectStorageKeyTable);
+export default enhanced(AccessKeyTable);

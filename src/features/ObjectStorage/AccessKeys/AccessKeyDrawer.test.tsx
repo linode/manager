@@ -1,9 +1,9 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-import { ObjectStorageDrawer, Props } from './ObjectStorageDrawer';
-import { MODES } from './ObjectStorageKeys';
+import { AccessKeyDrawer, Props } from './AccessKeyDrawer';
+import { MODES } from './AccessKeyLanding';
 
-describe('ObjectStorageDrawer', () => {
+describe('AccessKeyDrawer', () => {
   const props = {
     classes: { root: '' },
     open: true,
@@ -14,7 +14,7 @@ describe('ObjectStorageDrawer', () => {
     isLoading: false,
     mode: 'creating' as MODES
   };
-  const wrapper = shallow<Props>(<ObjectStorageDrawer {...props} />);
+  const wrapper = shallow<Props>(<AccessKeyDrawer {...props} />);
   it('renders without crashing', () => {
     expect(wrapper).toHaveLength(1);
   });

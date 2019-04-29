@@ -1,5 +1,5 @@
 import * as moment from 'moment-timezone';
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path, pathOr, sortBy } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -148,7 +148,7 @@ type CombinedProps = PreloadedProps &
   WithStyles<ClassNames> &
   RouteComponentProps<{}> &
   ContextProps &
-  InjectedNotistackProps;
+  WithSnackbarProps;
 
 const evenize = (n: number): number => {
   if (n === 0) {

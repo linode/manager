@@ -1,6 +1,6 @@
 import { map as mapPromise } from 'bluebird';
 import * as memoize from 'memoizee';
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -90,7 +90,7 @@ interface State {
 }
 
 type CombinedProps = WithStyles<ClassNames> &
-  InjectedNotistackProps &
+  WithSnackbarProps &
   PaginationProps<Linode.User> &
   RouteComponentProps<{}>;
 

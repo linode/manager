@@ -1,4 +1,4 @@
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { any, last, pathOr } from 'ramda';
 import * as React from 'react';
 import {
@@ -74,7 +74,7 @@ interface State {
 }
 
 type CombinedProps = WithNodeBalancerActions &
-  InjectedNotistackProps &
+  WithSnackbarProps &
   RouteProps &
   LoadingAndErrorHandlers &
   LoadingAndErrorState &

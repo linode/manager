@@ -16,19 +16,19 @@ const props = {
 afterAll(cleanup);
 
 describe('BucketActionMenu', () => {
-  it('Includes a "Remove" option', () => {
+  it('Includes a "Delete" option', () => {
     const { queryByText } = render(
       wrapWithTheme(<BucketActionMenu {...props} />)
     );
-    expect(queryByText('Remove')).toBeInTheDocument();
+    expect(queryByText('Delete')).toBeInTheDocument();
   });
 
-  it('executes the onRemove function when the "Remove" option is clicked', () => {
+  it('executes the onRemove function when the "Delete" option is clicked', () => {
     const { getByText } = render(
       wrapWithTheme(<BucketActionMenu {...props} />)
     );
 
-    fireEvent.click(getByText('Remove'));
+    fireEvent.click(getByText('Delete'));
     expect(mockOnRemove).toHaveBeenCalledWith('a-cluster', 'my-test-bucket');
   });
 });

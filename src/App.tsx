@@ -1,4 +1,4 @@
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { shim } from 'promise.prototype.finally';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
@@ -43,7 +43,7 @@ import composeState from 'src/utilities/composeState';
 import { notifications, theme as themeStorage } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
 import { isObjectStorageEnabled } from './constants';
-import BucketDrawer from './features/ObjectStorage/BucketDrawer';
+import BucketDrawer from './features/ObjectStorage/Buckets/BucketDrawer';
 import { requestClusters } from './store/clusters/clusters.actions';
 import {
   withNodeBalancerActions,
@@ -191,7 +191,7 @@ type CombinedProps = Props &
   DispatchProps &
   StateProps &
   WithStyles<ClassNames> &
-  InjectedNotistackProps;
+  WithSnackbarProps;
 
 export class App extends React.Component<CombinedProps, State> {
   composeState = composeState;

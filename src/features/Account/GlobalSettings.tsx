@@ -1,4 +1,4 @@
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -58,7 +58,7 @@ interface DispatchProps {
 type CombinedProps = StateProps &
   DispatchProps &
   WithStyles<ClassNames> &
-  InjectedNotistackProps;
+  WithSnackbarProps;
 
 class GlobalSettings extends React.Component<CombinedProps, {}> {
   toggleAutomaticBackups = () => {
