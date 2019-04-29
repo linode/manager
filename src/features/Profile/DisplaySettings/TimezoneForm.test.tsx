@@ -14,7 +14,7 @@ describe('Timezone change form', () => {
       }}
       timezone={'Pacific/Niue'}
       updateProfile={updateProfile}
-      isLoggedInAsCustomer={true}
+      loggedInAsCustomer={true}
     />
   );
 
@@ -27,7 +27,7 @@ describe('Timezone change form', () => {
   });
 
   it('should not show a message if the user is logged in normally', () => {
-    component.setProps({ isLoggedInAsCustomer: false });
+    component.setProps({ loggedInAsCustomer: false });
     expect(component.find('[data-qa-admin-notice]')).toHaveLength(0);
   });
 
