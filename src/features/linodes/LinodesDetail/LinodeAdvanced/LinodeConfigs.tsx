@@ -1,4 +1,4 @@
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -51,9 +51,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = LinodeContext &
-  WithStyles<ClassNames> &
-  InjectedNotistackProps;
+type CombinedProps = LinodeContext & WithStyles<ClassNames> & WithSnackbarProps;
 
 interface State {
   configDrawer: ConfigDrawerState;

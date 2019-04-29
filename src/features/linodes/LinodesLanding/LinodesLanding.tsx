@@ -1,6 +1,6 @@
 import withWidth, { WithWidth } from '@material-ui/core/withWidth';
 import * as moment from 'moment-timezone';
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { parse, stringify } from 'qs';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -83,7 +83,7 @@ type CombinedProps = WithImagesProps &
   RouteProps &
   StyleProps &
   SetDocsProps &
-  InjectedNotistackProps &
+  WithSnackbarProps &
   BackupCTAProps;
 
 export class ListLinodes extends React.Component<CombinedProps, State> {

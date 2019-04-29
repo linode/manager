@@ -1,4 +1,4 @@
-import { InjectedNotistackProps } from 'notistack';
+import { WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
 import {
@@ -25,7 +25,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 type CombinedProps = ContextProps &
-  InjectedNotistackProps & {
+  WithSnackbarProps & {
     requestNotifications: () => void;
   } & WithStyles<ClassNames>;
 

@@ -1,4 +1,4 @@
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -195,7 +195,7 @@ type CombinedProps = Props &
   PaginationProps<ExtendedVolume> &
   DispatchProps &
   RouteProps &
-  InjectedNotistackProps &
+  WithSnackbarProps &
   WithMappedVolumesProps &
   WithStyles<ClassNames>;
 

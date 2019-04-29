@@ -1,6 +1,6 @@
 import AddCircle from '@material-ui/icons/AddCircle';
 import * as classNames from 'classnames';
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { clone, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -151,7 +151,7 @@ export interface Props {
   disabled?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & InjectedNotistackProps;
+type CombinedProps = Props & WithStyles<ClassNames> & WithSnackbarProps;
 
 class TagsPanel extends React.Component<CombinedProps, State> {
   state: State = {

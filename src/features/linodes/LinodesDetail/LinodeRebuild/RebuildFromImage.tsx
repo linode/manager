@@ -1,4 +1,4 @@
-import { InjectedNotistackProps, withSnackbar } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
@@ -51,7 +51,7 @@ export type CombinedProps = WithImagesProps &
   ContextProps &
   UserSSHKeyProps &
   RouteComponentProps &
-  InjectedNotistackProps;
+  WithSnackbarProps;
 
 export const RebuildFromImage: React.StatelessComponent<
   CombinedProps
