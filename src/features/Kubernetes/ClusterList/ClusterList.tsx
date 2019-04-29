@@ -1,11 +1,6 @@
 import * as React from 'react';
 import 'rxjs/add/operator/filter';
-import { Subscription } from 'rxjs/Subscription';
-import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
-import Button from 'src/components/Button';
-import CircleProgress from 'src/components/CircleProgress';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
@@ -17,20 +12,18 @@ import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import Notice from 'src/components/Notice';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableRowError from 'src/components/TableRowError';
+import TableRowLoading from 'src/components/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
-import { Images } from 'src/documentation';
+import { getKubernetesClusters } from 'src/services/kubernetes';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-
-interface Props {}
+import ClusterRow from './ClusterRow';
 
 type ClassNames = 'root' | 'title';
 
@@ -41,13 +34,31 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = WithStyles<ClassNames>;
+
 
 const ClusterList: React.FunctionComponent<CombinedProps> = props => {
   const { classes } = props;
+  const [clusters, setClusters] = React.useState<Linode.KubernetesCluster[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<string|undefined>(undefined);
+
+  React.useEffect(() => {
+    setLoading(true);
+    getKubernetesClusters()
+      .then((response) => {
+        setClusters(response.data);
+        setLoading(false);
+      })
+      .catch((err) => {
+        setLoading(false);
+        setError(getErrorStringOrDefault(err));
+      })
+  }, []);
+
   return (
     <React.Fragment>
-      <DocumentTitleSegment segment="Images" />
+      <DocumentTitleSegment segment="Kubernetes Clusters" />
       <Grid
         container
         justify="space-between"
@@ -69,8 +80,8 @@ const ClusterList: React.FunctionComponent<CombinedProps> = props => {
         </Grid>
       </Grid>
       <OrderBy data={[]} orderBy={'label'} order={'asc'}>
-        {({ data: orderedData, handleOrderChange, order, orderBy }) => (
-          <Paginate data={orderedData}>
+        {({ handleOrderChange, order, orderBy }) => (
+          <Paginate data={clusters}>
             {({
               data,
               count,
@@ -118,9 +129,7 @@ const ClusterList: React.FunctionComponent<CombinedProps> = props => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {data.map((image, idx) => (
-                        <div>Hi</div>
-                      ))}
+                      <ClusterContent loading={loading} error={error} data={data} />
                     </TableBody>
                   </Table>
                 </Paper>
@@ -140,6 +149,35 @@ const ClusterList: React.FunctionComponent<CombinedProps> = props => {
     </React.Fragment>
   )
 };
+
+interface ContentProps {
+  loading: boolean;
+  error?: string;
+  data: Linode.KubernetesCluster[];
+}
+
+const ClusterContent:React.FunctionComponent<ContentProps> = (props) => {
+  const { data, error, loading } = props;
+  if (error) {
+    return <TableRowError message={error} colSpan={12} />
+  }
+
+  if (loading) {
+    return <TableRowLoading colSpan={12} />
+  }
+
+  if (data.length === 0) {
+    return <TableRow><TableCell>You don't have any Kubernetes Clusters.</TableCell></TableRow>;
+  }
+
+  return (
+    <>
+      {data.map((cluster, idx) => (
+        <ClusterRow key={`kubernetes-cluster-list-${idx}`} cluster={cluster} />
+      ))}
+    </>
+  )
+}
 
 const styled = withStyles(styles);
 
