@@ -274,6 +274,15 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       });
     }
 
+    if (true) {
+      // @todo add feature flagging
+      primaryLinks.push({
+        display: 'Kubernetes',
+        href: '/kubernetes',
+        key: 'kubernetes'
+      });
+    }
+
     // if (canAccessNodeBalancers) {
     primaryLinks.push({
       display: 'NodeBalancers',

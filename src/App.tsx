@@ -73,6 +73,10 @@ const Images = DefaultLoader({
   loader: () => import('src/features/Images')
 });
 
+const Kubernetes = DefaultLoader({
+  loader: () => import('src/features/Kubernetes/ClusterList')
+});
+
 const ObjectStorage = DefaultLoader({
   loader: () => import('src/features/ObjectStorage')
 });
@@ -380,6 +384,9 @@ export class App extends React.Component<CombinedProps, State> {
                               path="/object-storage"
                               component={ObjectStorage}
                             />
+                          )}
+                          {true && ( //@todo add feature flagging
+                            <Route path="/kubernetes" component={Kubernetes} />
                           )}
                           <Route path="/account" component={Account} />
                           <Route
