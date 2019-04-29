@@ -82,7 +82,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
             <Grid item className="pt0">
               <AddNewLink
                 disabled={true}
-                onClick={() => null}
+                onClick={() => null} // @todo enable creation flow
                 label="Add a Cluster"
               />
             </Grid>
