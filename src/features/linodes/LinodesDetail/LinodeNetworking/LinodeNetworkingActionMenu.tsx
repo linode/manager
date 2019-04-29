@@ -15,6 +15,8 @@ interface Props {
 export type IPTypes =
   | 'SLAAC'
   | 'Public'
+  | 'Public Reserved'
+  | 'Private Reserved'
   | 'Private'
   | 'Shared'
   | 'Link Local'
@@ -46,14 +48,15 @@ class LinodeNetworkingActionMenu extends React.Component<CombinedProps> {
       ];
 
       /**
-       * can only edit if we're not dealing with
-       * either a private IP or Link Local IP
+       * can only edit if we're not dealing private IPs, link local, or reserved IPs
        */
       if (
         onEdit &&
         ipAddress &&
         ipType !== 'Private' &&
-        ipType !== 'Link Local'
+        ipType !== 'Link Local' &&
+        ipType !== 'Public Reserved' &&
+        ipType !== 'Private Reserved'
       ) {
         actions.push({
           title: 'Edit RDNS',
