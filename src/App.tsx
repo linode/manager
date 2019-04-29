@@ -42,7 +42,7 @@ import { getAllVolumes } from 'src/store/volume/volume.requests';
 import composeState from 'src/utilities/composeState';
 import { notifications } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
-import { isObjectStorageEnabled } from './constants';
+import { isKubernetesEnabled, isObjectStorageEnabled } from './constants';
 import BucketDrawer from './features/ObjectStorage/Buckets/BucketDrawer';
 import { requestClusters } from './store/clusters/clusters.actions';
 import {
@@ -385,7 +385,7 @@ export class App extends React.Component<CombinedProps, State> {
                               component={ObjectStorage}
                             />
                           )}
-                          {true && ( //@todo add feature flagging
+                          {isKubernetesEnabled && (
                             <Route path="/kubernetes" component={Kubernetes} />
                           )}
                           <Route path="/account" component={Account} />
