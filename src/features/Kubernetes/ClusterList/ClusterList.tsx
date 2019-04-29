@@ -36,24 +36,30 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 type CombinedProps = WithStyles<ClassNames>;
 
-
 const ClusterList: React.FunctionComponent<CombinedProps> = props => {
   const { classes } = props;
-  const [clusters, setClusters] = React.useState<Linode.KubernetesCluster[]>([]);
+  const [clusters, setClusters] = React.useState<Linode.KubernetesCluster[]>(
+    []
+  );
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<string|undefined>(undefined);
+  const [error, setError] = React.useState<string | undefined>(undefined);
 
   React.useEffect(() => {
     setLoading(true);
     getKubernetesClusters()
-      .then((response) => {
+      .then(response => {
         setClusters(response.data);
         setLoading(false);
       })
-      .catch((err) => {
+      .catch(err => {
         setLoading(false);
-        setError(getErrorStringOrDefault(err));
-      })
+        setError(
+          getErrorStringOrDefault(
+            err,
+            'There was an error loading your Kubernetes Clusters.'
+          )
+        );
+      });
   }, []);
 
   return (
@@ -74,14 +80,18 @@ const ClusterList: React.FunctionComponent<CombinedProps> = props => {
         <Grid item>
           <Grid container alignItems="flex-end">
             <Grid item className="pt0">
-              <AddNewLink disabled={true} onClick={() => null} label="Add a Cluster" />
+              <AddNewLink
+                disabled={true}
+                onClick={() => null}
+                label="Add a Cluster"
+              />
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-      <OrderBy data={[]} orderBy={'label'} order={'asc'}>
-        {({ handleOrderChange, order, orderBy }) => (
-          <Paginate data={clusters}>
+      <OrderBy data={clusters} orderBy={'label'} order={'asc'}>
+        {({ data: orderedData, handleOrderChange, order, orderBy }) => (
+          <Paginate data={orderedData}>
             {({
               data,
               count,
@@ -113,9 +123,15 @@ const ClusterList: React.FunctionComponent<CombinedProps> = props => {
                         >
                           Version
                         </TableSortCell>
-                        <TableCell data-qa-kubernetes-clusters-created-header>
+                        <TableSortCell
+                          active={orderBy === 'created'}
+                          label={'created'}
+                          direction={order}
+                          handleClick={handleOrderChange}
+                          data-qa-kubernetes-clusters-created-header
+                        >
                           Created
-                        </TableCell>
+                        </TableSortCell>
                         <TableSortCell
                           active={orderBy === 'region'}
                           label={'region'}
@@ -129,7 +145,11 @@ const ClusterList: React.FunctionComponent<CombinedProps> = props => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      <ClusterContent loading={loading} error={error} data={data} />
+                      <ClusterContent
+                        loading={loading}
+                        error={error}
+                        data={data}
+                      />
                     </TableBody>
                   </Table>
                 </Paper>
@@ -147,7 +167,7 @@ const ClusterList: React.FunctionComponent<CombinedProps> = props => {
         )}
       </OrderBy>
     </React.Fragment>
-  )
+  );
 };
 
 interface ContentProps {
@@ -156,18 +176,22 @@ interface ContentProps {
   data: Linode.KubernetesCluster[];
 }
 
-const ClusterContent:React.FunctionComponent<ContentProps> = (props) => {
+export const ClusterContent: React.FunctionComponent<ContentProps> = props => {
   const { data, error, loading } = props;
   if (error) {
-    return <TableRowError message={error} colSpan={12} />
+    return <TableRowError message={error} colSpan={12} />;
   }
 
   if (loading) {
-    return <TableRowLoading colSpan={12} />
+    return <TableRowLoading colSpan={12} />;
   }
 
   if (data.length === 0) {
-    return <TableRow><TableCell>You don't have any Kubernetes Clusters.</TableCell></TableRow>;
+    return (
+      <TableRow>
+        <TableCell>You don't have any Kubernetes Clusters.</TableCell>
+      </TableRow>
+    );
   }
 
   return (
@@ -176,8 +200,8 @@ const ClusterContent:React.FunctionComponent<ContentProps> = (props) => {
         <ClusterRow key={`kubernetes-cluster-list-${idx}`} cluster={cluster} />
       ))}
     </>
-  )
-}
+  );
+};
 
 const styled = withStyles(styles);
 
