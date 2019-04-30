@@ -9,13 +9,13 @@ const leftMargin = 15; // space that needs to be applied to every parent element
 const baseFont = 'helvetica';
 const tableTopStart = 150; // AKA "top" CSS rule. Where the table header should start on the Y-axis
 const tableBodyStart = tableTopStart + 26; // where the table body should start on the Y-axis
-const calculateTableTotalsStart = (
-  items: Linode.InvoiceItem[],
-  itemsPerPage: number
-) => {
-  const howManyItemsOnLastPage = items.length % itemsPerPage;
-  return tableBodyStart + howManyItemsOnLastPage * 45;
-};
+// const calculateTableTotalsStart = (
+//   items: Linode.InvoiceItem[],
+//   itemsPerPage: number
+// ) => {
+//   const howManyItemsOnLastPage = items.length % itemsPerPage;
+//   return tableBodyStart + howManyItemsOnLastPage * 45;
+// };
 
 const renderDate = (v: null | string) =>
   v ? formatDate(v, { format: `YYYY-MM-DD HH:mm:ss` }) : null;
@@ -175,7 +175,8 @@ const addTitle = (doc: jsPDF, ...textStrings: Title[]) => {
   doc.setFontStyle('bold');
   textStrings.forEach(eachString => {
     doc.text(eachString.text, eachString.leftMargin || leftMargin, 130, {
-      charSpace: 0.75
+      charSpace: 0.75,
+      maxWidth: 100
     });
   });
   // doc.text(`${textStrings.join(`\r\n`)}`, leftMargin, 130, { charSpace: 0.75 });
@@ -308,17 +309,11 @@ export const printInvoice = (
         }
       ];
 
-      doc.table(
-        leftMargin,
-        calculateTableTotalsStart(items, itemsPerPage),
-        tableTotalRows,
-        tableTotalHeaders,
-        {
-          fontSize: 13,
-          fontStyle: 'bold',
-          printHeaders: false
-        }
-      );
+      doc.table(leftMargin, 50, tableTotalRows, tableTotalHeaders, {
+        fontSize: 13,
+        fontStyle: 'bold',
+        printHeaders: false
+      });
 
       /** reset the font style back */
       doc.setFontStyle('normal');
@@ -350,7 +345,9 @@ export const printInvoice = (
       }
     });
 
+    doc.addPage();
     addTotalAmount();
+    addFooter(doc);
 
     doc.save(`invoice-${date}.pdf`);
     return {
