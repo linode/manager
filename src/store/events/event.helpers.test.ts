@@ -291,7 +291,7 @@ describe('event.helpers', () => {
     });
 
     it('should do nothing if there are no in-progress events', () => {
-      const inProgressEvents = { '999': true };
+      const inProgressEvents = { '999': 23 };
       const events = [
         {
           id: 1,
@@ -307,7 +307,7 @@ describe('event.helpers', () => {
         }
       ];
       const result = updateInProgressEvents(inProgressEvents, events);
-      expect(result).toEqual({ '999': true });
+      expect(result).toEqual({ '999': 23 });
     });
 
     it('should add in-progress events to the Map', () => {
@@ -328,7 +328,7 @@ describe('event.helpers', () => {
       ];
       const result = updateInProgressEvents(inProgressEvents, events);
 
-      expect(result).toEqual({ '2': true });
+      expect(result).toEqual({ '2': 60 });
     });
   });
 });

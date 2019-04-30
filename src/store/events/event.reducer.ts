@@ -14,7 +14,7 @@ export interface State {
   events: ExtendedEvent[];
   mostRecentEventTime: number;
   countUnseenEvents: number;
-  inProgressEvents: Record<number, boolean>;
+  inProgressEvents: Record<number, number>;
 }
 
 export const defaultState: State = {

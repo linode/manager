@@ -71,7 +71,7 @@ describe('events.reducer', () => {
         });
 
         it('should update the inProgressEvents', () => {
-          expect(state).toHaveProperty('inProgressEvents', { 18022171: true });
+          expect(state).toHaveProperty('inProgressEvents', { 18022171: 80 });
         });
       });
     });
