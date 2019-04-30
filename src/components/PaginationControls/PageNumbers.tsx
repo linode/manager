@@ -15,6 +15,8 @@ interface Props {
   handlePageClick: (n: number) => void;
 }
 
+export type CombinedProps = Props & StyleProps;
+
 // This component handles page numbering for the pagination footer.
 // The first and last page are always shown, and depending on the number
 // of pages (and the selected page number), ellipses may be shown.
@@ -27,7 +29,7 @@ interface Props {
 //
 // On smaller viewports, only 3 page numbers are shown in the middle,
 // so the last example becomes 1 ... 6 *7* 8 ... 11
-class PageNumbers extends React.PureComponent<Props & StyleProps> {
+export class PageNumbers extends React.PureComponent<CombinedProps> {
   forceRefresh = debounce(400, false, () => {
     /**
      * forcing update because we want the shown page numbers to update
@@ -58,6 +60,7 @@ class PageNumbers extends React.PureComponent<Props & StyleProps> {
             <PageNumber
               number={1}
               data-qa-page-to={1}
+              data-testid={1}
               disabled={currentPage === 1}
               aria-label={`Page 1`}
               {...rest}
@@ -67,7 +70,7 @@ class PageNumbers extends React.PureComponent<Props & StyleProps> {
             {/* We want an ellipsis here, unless the first element of pageNumbers is 2, because
              "1 ... 2" is incorrect. */}
             {pageNumbers[0] !== 2 && (
-              <div className={classes.ellipses}>
+              <div data-testid="leading-ellipsis" className={classes.ellipses}>
                 <span className={classes.ellipsesInner}>...</span>
               </div>
             )}
@@ -77,6 +80,7 @@ class PageNumbers extends React.PureComponent<Props & StyleProps> {
           <PageNumber
             number={eachPage}
             data-qa-page-to={eachPage}
+            data-testid={eachPage}
             key={eachPage}
             disabled={eachPage === currentPage}
             aria-label={`Page ${eachPage}`}
@@ -92,13 +96,14 @@ class PageNumbers extends React.PureComponent<Props & StyleProps> {
             {/* We want an ellipsis here, unless the last element of pageNumbers is equal to
             numPages-1, because "6 ... 7" is incorrect. */}
             {pageNumbers[pageNumbers.length - 1] !== numOfPages - 1 && (
-              <div className={classes.ellipses}>
+              <div data-testid="trailing-ellipsis" className={classes.ellipses}>
                 <span className={classes.ellipsesInner}>...</span>
               </div>
             )}
             <PageNumber
               number={numOfPages}
               data-qa-page-to={numOfPages}
+              data-testid={numOfPages}
               disabled={currentPage === numOfPages}
               aria-label={`Page ${numOfPages}`}
               {...rest}
