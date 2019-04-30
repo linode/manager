@@ -189,7 +189,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               error={touched.region ? errors.region : undefined}
               name="region"
               onBlur={handleBlur}
-              onChange={handleChange}
+              onChange={value => setFieldValue('region', value)}
               value={values.region}
               shouldOnlyDisplayRegionsWithBlockStorage={true}
               disabled={disabled}
