@@ -30,6 +30,7 @@ import {
   withDomainActions
 } from 'src/store/domains/domains.container';
 import defaultNumeric from 'src/utilities/defaultNumeric';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -107,7 +108,7 @@ interface NumberFieldProps extends _TextFieldProps {
 
 class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   /**
-   * the defaultFieldState is used to prepopulate the drawer with either
+   * the defaultFieldState is used to pre-populate the drawer with either
    * editable data or defaults.
    */
   static defaultFieldsState = (props: Partial<CombinedProps>) => ({
@@ -374,7 +375,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     </TextField>
   );
 
-  DomainTrainsferField = () => (
+  DomainTransferField = () => (
     <TextField
       multiline
       label="Domain Transfers"
@@ -392,25 +393,10 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   );
 
   handleSubmissionErrors = (errorResponse: any) => {
-    const errors = path<Linode.ApiFieldError[]>(['response', 'data', 'errors'])(
-      errorResponse
-    );
-    if (errors) {
-      this.setState({ errors, submitting: false }, () => {
-        scrollErrorIntoView();
-      });
-      return;
-    }
-
-    this.setState(
-      {
-        submitting: false,
-        errors: [{ reason: 'An unknown error has occured.', field: '_unknown' }]
-      },
-      () => {
-        scrollErrorIntoView();
-      }
-    );
+    const errors = getAPIErrorOrDefault(errorResponse);
+    this.setState({ errors, submitting: false }, () => {
+      scrollErrorIntoView();
+    });
   };
 
   handleRecordSubmissionSuccess = () => {
@@ -551,7 +537,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         (idx: number) => (
           <this.TextField field="soa_email" label="SOA Email" key={idx} />
         ),
-        (idx: number) => <this.DomainTrainsferField key={idx} />,
+        (idx: number) => <this.DomainTransferField key={idx} />,
         (idx: number) => <this.DefaultTTLField key={idx} />,
         (idx: number) => <this.RefreshRateField key={idx} />,
         (idx: number) => <this.RetryRateField key={idx} />,
