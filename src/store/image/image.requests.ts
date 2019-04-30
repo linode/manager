@@ -1,6 +1,6 @@
-import { pathOr } from 'ramda';
 import { getImages } from 'src/services/images';
 import { ThunkActionCreator } from 'src/store/types';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import { getImagesFailure, getImagesSuccess } from './image.actions';
 
@@ -15,10 +15,9 @@ export const requestImages: ThunkActionCreator<
       return data;
     })
     .catch(err => {
-      const ApiError = pathOr(
-        [{ reason: 'There was an error retrieving your Images.' }],
-        ['response', 'data', 'errors'],
-        err
+      const ApiError = getAPIErrorOrDefault(
+        err,
+        'There was an error retrieving your Images.'
       );
       dispatch(getImagesFailure(ApiError));
       return err;

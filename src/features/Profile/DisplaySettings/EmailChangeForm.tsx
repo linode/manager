@@ -1,4 +1,4 @@
-import { lensPath, pathOr, set } from 'ramda';
+import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -11,6 +11,7 @@ import {
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { updateProfile } from 'src/services/profile';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -75,15 +76,10 @@ export class EmailChangeForm extends React.Component<CombinedProps, State> {
         });
       })
       .catch(error => {
-        const fallbackError = [{ reason: 'An unexpected error has occured.' }];
         this.setState(
           {
             submitting: false,
-            errors: pathOr(
-              fallbackError,
-              ['response', 'data', 'errors'],
-              error
-            ),
+            errors: getAPIErrorOrDefault(error),
             success: undefined
           },
           () => {
