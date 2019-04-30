@@ -40,7 +40,7 @@ import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
 import { getAllVolumes } from 'src/store/volume/volume.requests';
 import composeState from 'src/utilities/composeState';
-import { notifications, theme as themeStorage } from 'src/utilities/storage';
+import { notifications } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
 import { isObjectStorageEnabled } from './constants';
 import BucketDrawer from './features/ObjectStorage/Buckets/BucketDrawer';
@@ -344,7 +344,7 @@ export class App extends React.Component<CombinedProps, State> {
         {profileLoading === false && (
           <React.Fragment>
             <>
-              <div {...themeDataAttr()} className={classes.appFrame}>
+              <div className={classes.appFrame}>
                 <SideMenu
                   open={menuOpen}
                   closeMenu={this.closeMenu}
@@ -427,17 +427,6 @@ export class App extends React.Component<CombinedProps, State> {
     );
   }
 }
-
-const themeDataAttr = () => {
-  if (themeStorage.get() === 'dark') {
-    return {
-      'data-qa-theme-dark': true
-    };
-  }
-  return {
-    'data-qa-theme-light': true
-  };
-};
 
 interface DispatchProps {
   actions: {
