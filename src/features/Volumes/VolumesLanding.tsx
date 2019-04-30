@@ -42,7 +42,7 @@ import {
   openForEdit,
   openForResize
 } from 'src/store/volumeDrawer';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import ListGroupedVolumes from './ListGroupedVolumes';
 import ListVolumes from './ListVolumes';
@@ -581,11 +581,7 @@ const withLocalStorage = localStorageContainer<
     toggleGroupByTag: state => (checked: boolean) => {
       storage.groupVolumesByTag.set(checked ? 'true' : 'false');
 
-      sendEvent({
-        category: VolumesLanding.eventCategory,
-        action: 'group by tag',
-        label: String(checked)
-      });
+      sendGroupByTagEnabledEvent(VolumesLanding.eventCategory, checked);
 
       return {
         ...state,

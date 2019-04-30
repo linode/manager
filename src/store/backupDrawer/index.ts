@@ -5,7 +5,7 @@ import { updateAccountSettings } from 'src/services/account';
 import { enableBackups } from 'src/services/linodes';
 import { handleUpdate } from 'src/store/accountSettings/accountSettings.actions';
 import { updateMultipleLinodes } from 'src/store/linodes/linodes.actions';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendBackupsEnabledEvent } from 'src/utilities/ga';
 import { ThunkActionCreator } from '../types';
 
 export interface BackupError {
@@ -270,11 +270,9 @@ export const enableAllBackups: EnableAllBackupsThunk = () => (
       }
       dispatch(updateMultipleLinodes(response.success));
       // GA Event
-      sendEvent({
-        category: 'Backups',
-        action: 'Enable All Backups',
-        label: `Enabled backups for ${response.success.length} Linodes`
-      });
+      sendBackupsEnabledEvent(
+        `Enabled backups for ${response.success.length} Linodes`
+      );
     })
     .catch(() =>
       dispatch(

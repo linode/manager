@@ -13,7 +13,7 @@ import {
   updateStackScript
 } from 'src/services/stackscripts';
 import { MapState } from 'src/store/types';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendStackscriptsSearchEvent } from 'src/utilities/ga';
 import {
   getCommunityStackscripts,
   getStackScriptsByUser
@@ -104,12 +104,7 @@ class PanelContent extends React.Component<CombinedProps, State> {
        */
       handleSearch(generateCatchAllFilter(searchTermToLower));
     }
-
-    sendEvent({
-      category: 'stackscripts',
-      action: 'search',
-      label: searchTermToLower
-    });
+    sendStackscriptsSearchEvent(searchTermToLower);
   };
 
   closeDialogs = () => {

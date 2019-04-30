@@ -36,7 +36,7 @@ import {
   TagError
 } from 'src/store/tagImportDrawer';
 import { ThunkDispatch } from 'src/store/types';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendImportDisplayGroupSubmitEvent } from 'src/utilities/ga';
 import { sortAlphabetically } from 'src/utilities/sort-by';
 import { storage } from 'src/utilities/storage';
 import DisplayGroupList from './DisplayGroupList';
@@ -90,12 +90,10 @@ export const TagImportDrawer: React.StatelessComponent<
 
   const handleSubmit = () => {
     // Send event to GA
-    sendEvent({
-      category: 'dashboard',
-      action: 'import display groups',
-      label: createLabel(linodes.length, domains.length),
-      value: linodes.length + domains.length
-    });
+    sendImportDisplayGroupSubmitEvent(
+      createLabel(linodes.length, domains.length),
+      linodes.length + domains.length
+    );
     // Add tags to entities (Redux action)
     update();
   };
