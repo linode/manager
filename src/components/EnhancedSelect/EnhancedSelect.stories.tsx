@@ -166,13 +166,6 @@ class Example extends React.Component<{}, State> {
           createNew={this.createNew}
         />
         <Select
-          variant="async"
-          loadOptions={this.loadOptions}
-          label="Async Select"
-          value={valueAsync}
-          onChange={this.handleChangeAsync}
-        />
-        <Select
           loadOptions={this.loadOptions}
           label="Small Select"
           value={valueAsync}

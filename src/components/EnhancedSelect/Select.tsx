@@ -1,7 +1,6 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import ReactSelect from 'react-select';
-import Async, { AsyncProps } from 'react-select/lib/Async';
 import CreatableSelect, {
   Props as CreatableSelectProps
 } from 'react-select/lib/Creatable';
@@ -299,7 +298,7 @@ export interface EnhancedSelectProps {
   isClearable?: boolean;
   isMulti?: boolean;
   isLoading?: boolean;
-  variant?: 'async' | 'creatable';
+  variant?: 'creatable';
   value?: Item | Item[] | null;
   label?: string;
   placeholder?: string;
@@ -387,13 +386,9 @@ class Select extends React.PureComponent<CombinedProps, {}> {
 
     // If async, pass loadOptions instead of options. A Select can't be both Creatable and Async.
     // (AsyncCreatable exists, but we have not adapted it.)
-    type PossibleProps = BaseSelectProps | CreatableProps | AsyncProps<any>;
+    type PossibleProps = BaseSelectProps | CreatableProps;
     const BaseSelect: React.ComponentClass<PossibleProps> =
-      variant === 'creatable'
-        ? CreatableSelect
-        : variant === 'async'
-        ? Async
-        : ReactSelect;
+      variant === 'creatable' ? CreatableSelect : ReactSelect;
 
     return (
       <BaseSelect
@@ -403,10 +398,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
         isSearchable
         blurInputOnSelect={blurInputOnSelect}
         isLoading={isLoading}
-        defaultOptions
-        cacheOptions={false}
         filterOption={filterOption}
-        loadOptions={loadOptions}
         isMulti={isMulti}
         isDisabled={disabled}
         classes={classes}
