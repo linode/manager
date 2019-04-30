@@ -7,7 +7,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Select from 'src/components/EnhancedSelect/Select';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import regionsContainer, {
   DefaultProps as WithRegions
 } from 'src/containers/regions.container';
@@ -24,7 +24,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface Props {
   error?: string;
   name: string;
-  onChange: any;
+  onChange: (value: string) => void;
   onBlur: (e: any) => void;
   value: any;
   shouldOnlyDisplayRegionsWithBlockStorage?: boolean;
@@ -39,7 +39,6 @@ export const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
     onChange,
     onBlur,
     regionsData,
-    value,
     shouldOnlyDisplayRegionsWithBlockStorage: shouldOnlyDisplayRegionsWithBlockStorage,
     disabled
   } = props;
@@ -56,14 +55,14 @@ export const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
   return (
     <FormControl fullWidth>
       <Select
-        value={value}
         options={regionList}
         placeholder="All Regions"
-        onChange={onChange}
+        onChange={(item: Item<string>) => onChange(item.value)}
         onBlur={onBlur}
         data-qa-select-region
         disabled={disabled}
         label="Region"
+        isClearable={false}
       />
       {error && <FormHelperText error>{error}</FormHelperText>}
       {!error && shouldOnlyDisplayRegionsWithBlockStorage && (
