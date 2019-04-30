@@ -246,7 +246,6 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       })
       .catch(errorResponse => {
         const errors = getAPIErrorOrDefault(errorResponse);
-        console.log(errors);
         this.updateConfirmDialog(c => ({
           ...c,
           submitting: false,
