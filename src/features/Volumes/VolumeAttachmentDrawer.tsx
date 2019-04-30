@@ -182,7 +182,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
           generalError={generalError}
           disabled={disabled || readOnly}
         />
-        {!linodeError ||
+        {!linodeError &&
           (!generalError && (
             <FormHelperText>
               Only Linodes in this Volume's region are displayed.
