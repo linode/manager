@@ -6,7 +6,6 @@ import { compose } from 'recompose';
 import { bindActionCreators } from 'redux';
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import AddNewLink from 'src/components/AddNewLink';
-import CircleProgress from 'src/components/CircleProgress';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import {
   StyleRulesCallback,
@@ -20,7 +19,6 @@ import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import { PaginationProps } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
-import TableRowError from 'src/components/TableRowError';
 import Toggle from 'src/components/Toggle';
 import { regionsWithoutBlockStorage } from 'src/constants';
 import _withEvents, { EventsProps } from 'src/containers/events.container';
@@ -47,6 +45,8 @@ import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import ListGroupedVolumes from './ListGroupedVolumes';
 import ListVolumes from './ListVolumes';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
+
+import ErrorState from 'src/components/ErrorState';
 
 type ClassNames =
   | 'root'
@@ -269,18 +269,13 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   render() {
     const {
       classes,
-      volumesLoading,
       volumesError,
       mappedVolumesDataWithLinodes,
       readOnly
     } = this.props;
 
-    if (volumesError) {
+    if (volumesError && volumesError.read) {
       return <RenderError />;
-    }
-
-    if (volumesLoading) {
-      return <RenderLoading />;
     }
 
     // If this is the Volumes tab on a Linode, we want ONLY the Volumes attached to this Linode.
@@ -648,34 +643,33 @@ export default compose<CombinedProps, Props>(
       linodesError
     })
   ),
-  withVolumes((ownProps: CombinedProps, volumesData, volumesLoading) => {
-    const mappedData = volumesData.items.map(id => volumesData.itemsById[id]);
-    const mappedVolumesDataWithLinodes = mappedData.map(volume => {
-      const volumeWithLinodeData = addAttachedLinodeInfoToVolume(
-        volume,
-        ownProps.linodesData
-      );
-      return addRecentEventToVolume(volumeWithLinodeData, ownProps.eventsData);
-    });
-    return {
-      ...ownProps,
-      volumesData,
-      mappedVolumesDataWithLinodes,
-      volumesLoading
-    };
-  }),
+  withVolumes(
+    (ownProps: CombinedProps, volumesData, volumesLoading, volumesError) => {
+      const mappedData = volumesData.items.map(id => volumesData.itemsById[id]);
+      const mappedVolumesDataWithLinodes = mappedData.map(volume => {
+        const volumeWithLinodeData = addAttachedLinodeInfoToVolume(
+          volume,
+          ownProps.linodesData
+        );
+        return addRecentEventToVolume(
+          volumeWithLinodeData,
+          ownProps.eventsData
+        );
+      });
+      return {
+        ...ownProps,
+        volumesData,
+        mappedVolumesDataWithLinodes,
+        volumesLoading,
+        volumesError
+      };
+    }
+  ),
   withSnackbar
 )(VolumesLanding);
 
-const RenderLoading = () => {
-  return <CircleProgress />;
-};
-
 const RenderError = () => {
   return (
-    <TableRowError
-      colSpan={6}
-      message="There was an error loading your volumes. Please try again later"
-    />
+    <ErrorState errorText="There was an error loading your Volumes. Please try again later" />
   );
 };

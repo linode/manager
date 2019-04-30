@@ -3,7 +3,6 @@ import {
   withStyles,
   WithStyles
 } from '@material-ui/core/styles';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -16,6 +15,7 @@ import Typography from 'src/components/core/Typography';
 import withLoadingAndError, {
   Props as LoadingAndErrorProps
 } from 'src/components/withLoadingAndError';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 type ClassNames = 'root';
 
@@ -52,11 +52,9 @@ class DisableTwoFactorDialog extends React.PureComponent<CombinedProps, {}> {
         this.props.onSuccess();
       })
       .catch(e => {
-        const defaultError = 'There was an error disabling TFA.';
-        const errorString = pathOr(
-          defaultError,
-          ['response', 'data', 'errors', 0, 'reason'],
-          e
+        const errorString = getErrorStringOrDefault(
+          e,
+          'There was an error disabling TFA.'
         );
         setErrorAndClearLoading(errorString);
       });

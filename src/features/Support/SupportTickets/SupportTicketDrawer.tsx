@@ -21,7 +21,7 @@ import { getNodeBalancers } from 'src/services/nodebalancers';
 import { createSupportTicket, uploadAttachment } from 'src/services/support';
 import { getVolumes } from 'src/services/volumes';
 import composeState from 'src/utilities/composeState';
-import { getErrorMap } from 'src/utilities/errorUtils';
+import { getErrorMap, getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { getVersionString } from 'src/utilities/getVersionString';
 import AttachFileForm, { FileAttachment } from '../AttachFileForm';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
@@ -307,12 +307,9 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
          * fail! Don't try to aggregate errors!
          */
         this.setState(set(lensPath(['files', idx, 'uploading']), false));
-        const error =
-          'There was an error attaching this file. Please try again.';
-        const newError = pathOr<string>(
-          error,
-          ['response', 'data', 'errors', 0, 'reason'],
-          attachmentErrors
+        const newError = getErrorStringOrDefault(
+          attachmentErrors,
+          'There was an error attaching this file. Please try again.'
         );
         return {
           ...accumulator,

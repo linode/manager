@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import {
   attachVolume as _attachVolume,
   cloneVolume as _cloneVolume,
@@ -36,7 +37,7 @@ export type CreateVolumeRequest = _VolumeRequestPayload;
 export const createVolume = createRequestThunk<
   CreateVolumeRequest,
   Linode.Volume,
-  Linode.ApiFieldError[]
+  Error | AxiosError
 >(createVolumeActions, data => _createVolume(data));
 
 /*
@@ -45,7 +46,7 @@ export const createVolume = createRequestThunk<
 export const updateVolume = createRequestThunk<
   UpdateVolumeParams,
   Linode.Volume,
-  Linode.ApiFieldError[]
+  Error | AxiosError
 >(updateVolumeActions, ({ volumeId, ...data }) =>
   _updateVolume(volumeId, data)
 );
@@ -56,7 +57,7 @@ export const updateVolume = createRequestThunk<
 export const deleteVolume = createRequestThunk<
   VolumeId,
   {},
-  Linode.ApiFieldError[]
+  Error | AxiosError
 >(deleteVolumeActions, ({ volumeId }) => _deleteVolume(volumeId));
 
 /*
@@ -65,7 +66,7 @@ export const deleteVolume = createRequestThunk<
 export const attachVolume = createRequestThunk<
   AttachVolumeParams,
   Linode.Volume,
-  Linode.ApiFieldError[]
+  Error | AxiosError
 >(attachVolumeActions, ({ volumeId, ...data }) =>
   _attachVolume(volumeId, data)
 );
@@ -76,7 +77,7 @@ export const attachVolume = createRequestThunk<
 export const detachVolume = createRequestThunk<
   VolumeId,
   {},
-  Linode.ApiFieldError[]
+  Error | AxiosError
 >(detachVolumeActions, ({ volumeId }) => _detachVolume(volumeId));
 
 /*
@@ -85,7 +86,7 @@ export const detachVolume = createRequestThunk<
 export const resizeVolume = createRequestThunk<
   ResizeVolumeParams,
   Linode.Volume,
-  Linode.ApiFieldError[]
+  Error | AxiosError
 >(resizeVolumeActions, ({ volumeId, ...payload }) =>
   _resizeVolume(volumeId, payload)
 );
@@ -96,7 +97,7 @@ export const resizeVolume = createRequestThunk<
 export const getOneVolume = createRequestThunk<
   VolumeId,
   Linode.Volume,
-  Linode.ApiFieldError[]
+  Error | AxiosError
 >(getOneVolumeActions, ({ volumeId }) => _getVolume(volumeId));
 
 /*
@@ -105,7 +106,7 @@ export const getOneVolume = createRequestThunk<
 export const cloneVolume = createRequestThunk<
   CloneVolumeParams,
   Linode.Volume,
-  Linode.ApiFieldError[]
+  Error | AxiosError
 >(cloneVolumeActions, ({ volumeId, ...payload }) =>
   _cloneVolume(volumeId, payload)
 );
