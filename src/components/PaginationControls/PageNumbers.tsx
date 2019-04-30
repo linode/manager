@@ -15,6 +15,18 @@ interface Props {
   handlePageClick: (n: number) => void;
 }
 
+// This component handles page numbering for the pagination footer.
+// The first and last page are always shown, and depending on the number
+// of pages (and the selected page number), ellipses may be shown.
+//
+// Examples: ("*" denotes selected page)
+// 1 2 *3* 4 5 6
+// 1 2 3 *4* 5 ... 7
+// 1 ... 3 4 *5* 6 7
+// 1 ... 5 6 *7* 8 9 ... 11
+//
+// On smaller viewports, only 3 page numbers are shown in the middle,
+// so the last example becomes 1 ... 6 *7* 8 ... 11
 class PageNumbers extends React.PureComponent<Props & StyleProps> {
   forceRefresh = debounce(400, false, () => {
     /**
