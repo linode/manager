@@ -2,14 +2,12 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
-import InputLabel from 'src/components/core/InputLabel';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import MenuItem from 'src/components/MenuItem';
-import Select from 'src/components/Select';
+import Select from 'src/components/EnhancedSelect/Select';
 import regionsContainer, {
   DefaultProps as WithRegions
 } from 'src/containers/regions.container';
@@ -26,7 +24,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface Props {
   error?: string;
   name: string;
-  onChange: (e: React.ChangeEvent<any>) => void;
+  onChange: any;
   onBlur: (e: any) => void;
   value: any;
   shouldOnlyDisplayRegionsWithBlockStorage?: boolean;
@@ -42,7 +40,6 @@ export const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
     onBlur,
     regionsData,
     value,
-    name,
     shouldOnlyDisplayRegionsWithBlockStorage: shouldOnlyDisplayRegionsWithBlockStorage,
     disabled
   } = props;
@@ -51,41 +48,23 @@ export const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
     ? regionsData.filter(region => doesRegionSupportBlockStorage(region.id))
     : regionsData;
 
+  const regionList = regions.map(eachRegion => {
+    const label = formatRegion('' + eachRegion.id);
+    return { label, value: eachRegion.id };
+  });
+
   return (
     <FormControl fullWidth>
-      <InputLabel
-        htmlFor="region"
-        disableAnimation
-        shrink={true}
-        disabled={disabled}
-      >
-        Region
-      </InputLabel>
       <Select
         value={value}
-        name={name}
+        options={regionList}
         placeholder="All Regions"
         onChange={onChange}
         onBlur={onBlur}
-        inputProps={{ name: 'region', id: 'region' }}
         data-qa-select-region
         disabled={disabled}
-      >
-        <MenuItem key="none" value="none">
-          All Regions
-        </MenuItem>
-        {regions.map(eachRegion => {
-          return (
-            <MenuItem
-              data-qa-attach-to-region={eachRegion.id}
-              key={eachRegion.id}
-              value={eachRegion.id}
-            >
-              {formatRegion('' + eachRegion.id)}
-            </MenuItem>
-          );
-        })}
-      </Select>
+        label="Region"
+      />
       {error && <FormHelperText error>{error}</FormHelperText>}
       {!error && shouldOnlyDisplayRegionsWithBlockStorage && (
         <FormHelperText data-qa-volume-region>
