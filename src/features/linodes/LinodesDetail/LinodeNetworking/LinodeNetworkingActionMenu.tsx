@@ -48,7 +48,7 @@ class LinodeNetworkingActionMenu extends React.Component<CombinedProps> {
       ];
 
       /**
-       * can only edit if we're not dealing private IPs, link local, or reserved IPs
+       * can only edit if we're not dealing with private IPs, link local, or reserved IPs
        */
       if (
         onEdit &&
