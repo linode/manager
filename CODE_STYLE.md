@@ -10,6 +10,11 @@ to your code.
 As a rule, if you're writing a class component and do not intend on writing any `shouldComponentUpdate` logic yourself, write a PureComponent. PureComponents implement a shallow comparison of props and state by default
 so this should encourage you to pass down props and use state that is flat and doesn't need any deep checking.
 
+NOTE: PureComponent only offers benefits when passed props that will respect a strict equality check (`===`).
+In other cases, most commonly passing a Lambda function as a prop,
+PureComponent will actually be slower, since the component will always fail the `shouldComponentUpdate` logic,
+resulting in two comparisons instead of one.
+
 Good
 ```js
 class MyComponent extends React.PureComponent<MyProps> {}
@@ -32,6 +37,17 @@ class MyComponent extends React.Component<MyProps> {
 Worse
 ```js
 class MyComponent extends React.Component<MyProps> {}
+```
+
+Worst
+```js
+class MyComponent extends React.PureComponent<Props> {
+  render (
+    <div>{this.props.doTheThing()}</div>
+  )
+}
+
+<MyComponent doTheThing={() => Math.random()} />
 ```
 
 Function components have their place, but please keep in mind [function components are treated as Classes under the hood in React](https://twitter.com/dan_abramov/status/755343749983657986?lang=en), so really, you're not getting any performance boost from writing a function component versus a class.
@@ -143,7 +159,7 @@ expect(Component.find('[data-qa-child-component]')); // our test is passing!!! w
 ```
 
 ## Avoiding instance methods that could be made into components.
-Everytime an instance of a component is created so are all the instance methods, just like
+Every time an instance of a component is created so are all the instance methods, just like
 renderContent in the following code. So this takes more CPU to create, more memory to store, and
 more CPU to tear down. This code smells because theres a function invocation that has no arguments.
 That screams side-effects. To correct this we simply extract the functionality into a new component
@@ -228,7 +244,7 @@ const DataComponent = (props) => {
 ```
 
 So now we have two separate and testable components. We've also done the type checking so inside the
-DataComponent, we dont have to worry about if there's no data or an empty array, we can just work
+DataComponent, we don't have to worry about if there's no data or an empty array, we can just work
 with what we're provided!
 
 ## Abstraction
@@ -340,6 +356,85 @@ import { Observable } from 'rxjs/Observable';
 ```
 
 ## Other Things
+
+### Error Handling
+
+Our application has to work with different types of errors: JavaScript `Error` objects, `AxiosErrors`, and field errors
+from the Linode API. To simplify working with these and maintain consistency, we have created several helper methods in `src/utilities/errorUtils`.
+
+#### ApiFieldError arrays
+
+In most cases, we want components to work with an array of Linode API field errors. These have the shape:
+
+`{ field: 'field-name', reason: 'why this error occurred' }`
+
+However, when we make an API request, there is no guarantee that the errors returned will have this shape (if the request fails before
+reaching the API, for instance). To make sure that our components have an array of field errors to work with, use `getAPIErrorOrDefault`:
+
+```js
+import { getApiErrorOrDefault } from 'src/utilities/errorUtils';
+
+apiRequest()
+  .catch(error => {
+    const apiError = getApiErrorOrDefault(
+      error, // If this is an array of API field errors, it will be returned unchanged.
+      'An unexpected error occurred.', // If no field errors are present, an array consisting of an error with this reason is returned.
+      'linode-id' // Optional. If you want the default field error to have a `field` property, this argument will be used.
+    )
+  });
+```
+
+#### Error Strings
+
+In some cases, we only want to display a single error message, regardless of how many things went wrong. This is not an ideal pattern,
+because some error data is potentially lost and not shown to the user. When it is necessary, however, use the `getErrorStringOrDefault`
+helper:
+
+```js
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+
+apiRequest()
+  .catch(error => {
+    const errorMessage = getErrorStringOrDefault(
+      error, // Whatever this is, the helper will return the reason, or a default message if no reason is found
+      'Default message' // Optional; a generic message is displayed if this isn't provided.
+    )
+  })
+```
+
+#### Error Maps
+
+The usual pattern is to map field errors to the appropriate field, showing a generalError for any errors that don't have a field. For example,
+a form might have an input for `region`, and that element will display any errors with `{ field: 'region', reason: 'whatever' }` inline. In 
+some cases, however, we either aren't checking for every possible error field, or we aren't entirely sure what all of the possible fields the 
+API is considering are. To make sure that we catch these and show them to the user, use the `getErrorMap` helper:
+
+```js
+import { getErrorMap } from 'src/utilities/errorUtils';
+
+apiRequest()
+  .catch(error => {
+    const errorMap = getErrorMap(
+      ['label', 'region'], // Fields we want to check for
+      error
+      )
+    const labelError = errorMap.label;
+    const regionError = errorMap.region;
+    const generalError = errorMap.none;
+  });
+```
+
+`errorMap` will be an object with one key for each of the fields we specified, and a `none` key that captures any errors (the first
+one it finds) that don't match the provided fields:
+
+```js
+console.log(errorMap);
+{
+  label: 'a label error',
+  region: 'a region error',
+  none: 'a linode_id error or similar'
+}
+```
 
 ### Paginating Things
 
