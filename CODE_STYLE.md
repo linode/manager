@@ -359,7 +359,7 @@ import { Observable } from 'rxjs/Observable';
 
 ### Error Handling
 
-Our application has to work with different types of errors: JavaScript `Error` objects, Axios `ErrorResponses`, and field errors
+Our application has to work with different types of errors: JavaScript `Error` objects, `AxiosErrors`, and field errors
 from the Linode API. To simplify working with these and maintain consistency, we have created several helper methods in `src/utilities/errorUtils`.
 
 #### ApiFieldError arrays
