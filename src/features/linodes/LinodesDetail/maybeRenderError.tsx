@@ -1,4 +1,4 @@
-import { pathOr } from 'ramda';
+import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -32,7 +32,7 @@ const collectErrors: MapState<InnerProps, OuterProps> = (
     error:
       configsError ||
       typesError ||
-      linodes.error ||
+      path(['error', 'read'], linodes) ||
       types.error ||
       notifications.error ||
       linodeConfigs.error ||
@@ -40,16 +40,22 @@ const collectErrors: MapState<InnerProps, OuterProps> = (
   };
 };
 
-/**
- * Collect possible errors from Redux, configs request, and disks requests.
- * If any are defined, render the ErrorComponent. (early return)
+/*
+  Collect possible errors from Redux, configs request, and disks requests.
+  If any are defined, render the ErrorComponent. (early return)
+  
+  IMPORTANT NOTE: The errors we're collecting here should only be the errors that
+  dictate when the Linode detail page should bomb. You'll notice that we're not 
+  collecting volumes errors here, and it's because we don't want to crash the entire
+  page if there was an issue loading the volumes.
  */
 
 export default compose(
   connect(collectErrors),
   branch(
     ({ error }) => Boolean(error),
-    renderComponent((props: any) => {
+    /** error is not the only prop, but it's the only one we care about */
+    renderComponent((props: { error: Linode.ApiFieldError[] }) => {
       /**
        * props.error can either be an Error or Linode.APIFieldError
        * so we need to handle for both and look for the suspended message

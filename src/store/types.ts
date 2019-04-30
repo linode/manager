@@ -51,12 +51,15 @@ export interface MappedEntityState<
   loading: boolean;
 }
 
-export interface EntityState<T extends Entity> {
+export interface EntityState<
+  T extends Entity,
+  E = Linode.ApiFieldError[] | undefined
+> {
   results: TypeOfID<T>[];
   entities: T[];
   loading: boolean;
   lastUpdated: number;
-  error?: Linode.ApiFieldError[];
+  error?: E;
 }
 
 export interface RequestableData<D> {

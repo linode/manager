@@ -487,7 +487,7 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
   /** Profile */
   profileLoading: state.__resources.profile.loading,
   profileError: state.__resources.profile.error,
-  linodesError: state.__resources.linodes.error,
+  linodesError: path(['read'], state.__resources.linodes.error),
   domainsError: state.__resources.domains.error,
   imagesError: state.__resources.images.error,
   notificationsError: state.__resources.notifications.error,

@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { EntityState, HasNumericID } from 'src/store/types';
+import { EntityError, EntityState, HasNumericID } from 'src/store/types';
 import updateById from 'src/utilities/updateById';
 import updateOrAdd from 'src/utilities/updateOrAdd';
 import { isType } from 'typescript-fsa';
@@ -7,7 +7,7 @@ import {
   createLinodeActions,
   deleteLinode,
   deleteLinodeActions,
-  linodesRequest,
+  getLinodesActions,
   updateLinode,
   updateLinodeActions,
   updateMultipleLinodes,
@@ -19,7 +19,7 @@ const getId = <E extends HasNumericID>({ id }: E) => id;
 /**
  * State
  */
-export type State = EntityState<Linode.Linode>;
+export type State = EntityState<Linode.Linode, EntityError>;
 
 export const defaultState: State = {
   results: [],
@@ -34,14 +34,14 @@ export const defaultState: State = {
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
   /** Get ALL */
-  if (isType(action, linodesRequest.started)) {
+  if (isType(action, getLinodesActions.started)) {
     return {
       ...state,
       loading: true
     };
   }
 
-  if (isType(action, linodesRequest.done)) {
+  if (isType(action, getLinodesActions.done)) {
     const {
       payload: { result }
     } = action;
@@ -54,12 +54,14 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     };
   }
 
-  if (isType(action, linodesRequest.failed)) {
+  if (isType(action, getLinodesActions.failed)) {
     const { error } = action.payload;
 
     return {
       ...state,
-      error,
+      error: {
+        read: error
+      },
       loading: false
     };
   }

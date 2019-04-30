@@ -1,3 +1,4 @@
+import { path } from 'ramda';
 import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';
 
@@ -12,8 +13,10 @@ export interface ErrorObject {
   nodebalancers: boolean;
 }
 
-export const linodesErrorSelector = (state: State) =>
-  Boolean(state.linodes.error && state.linodes.error.length > 0);
+export const linodesErrorSelector = (state: State) => {
+  const error = path(['read'], state.linodes.error);
+  return Boolean(error && Array.isArray(error) && error.length > 0);
+};
 export const volumesErrorSelector = (state: State) => false; //  Boolean(state.volumes.error && state.volumes.error.length > 0)
 export const nodeBalsErrorSelector = (state: State) => false; //  Boolean(state.nodebalancers.error && state.nodebalancers.error.length > 0)
 export const domainsErrorSelector = (state: State) =>

@@ -2,7 +2,7 @@ import withWidth, { WithWidth } from '@material-ui/core/withWidth';
 import * as moment from 'moment-timezone';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { parse, stringify } from 'qs';
-import { pathOr } from 'ramda';
+import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { CSVLink } from 'react-csv';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -521,7 +521,7 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
     linodesCount: state.__resources.linodes.results.length,
     linodesData: state.__resources.linodes.entities,
     linodesRequestLoading: state.__resources.linodes.loading,
-    linodesRequestError: state.__resources.linodes.error
+    linodesRequestError: path(['error', 'read'], state.__resources.linodes)
   };
 };
 

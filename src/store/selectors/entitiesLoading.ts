@@ -1,14 +1,15 @@
 import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';
+import { EntityError } from 'src/store/types';
 
 type State = ApplicationState['__resources'];
 
-interface Resource<T> {
+interface Resource<T, E = Linode.ApiFieldError[]> {
   results: string[] | number[];
   entities: T;
   loading: boolean;
   lastUpdated: number;
-  error?: Linode.ApiFieldError[];
+  error?: E;
 }
 
 const emptyResource = {
@@ -25,11 +26,12 @@ export const domainsSelector = (state: State) => state.domains;
 export const imagesSelector = (state: State) => state.images;
 export const typesSelector = (state: State) => state.types;
 
-const isInitialLoad = (e: Resource<any>) => e.loading && e.lastUpdated === 0;
+const isInitialLoad = (e: Resource<any, any>) =>
+  e.loading && e.lastUpdated === 0;
 
 export default createSelector<
   State,
-  Resource<Linode.Linode[]>,
+  Resource<Linode.Linode[], EntityError>,
   Resource<Linode.Volume[]>,
   Resource<Linode.NodeBalancer[][]>,
   Resource<Linode.Domain[]>,
