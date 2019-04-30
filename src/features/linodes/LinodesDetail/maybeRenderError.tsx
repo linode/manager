@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { branch, compose, renderComponent } from 'recompose';
 import ErrorState from 'src/components/ErrorState';
 import { MapState } from 'src/store/types';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 interface OuterProps {
   configsError?: Linode.ApiFieldError[];
@@ -54,10 +55,9 @@ export default compose(
        * so we need to handle for both and look for the suspended message
        * in both paths
        */
-      const errorTextFromAxios = pathOr(
-        'Unable to load Linode',
-        ['response', 'data', 'errors', 0, 'reason'],
-        props.error
+      const errorTextFromAxios = getErrorStringOrDefault(
+        props.error,
+        'Unable to load Linode'
       );
 
       let errorText = pathOr(errorTextFromAxios, ['error', 0, 'reason'], props);

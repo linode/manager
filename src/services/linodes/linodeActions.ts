@@ -179,7 +179,7 @@ export const cloneLinode = (sourceLinodeId: number, data: LinodeCloneData) => {
  * If any actions are currently running or queued, those actions must be completed
  * first before you can initiate a mutate.
  *
- * @param linodeId { number } The id of the Linode to retrieve stats data for.
+ * @param linodeId { number } The id of the Linode to be upgraded.
  */
 export const startMutation = (linodeID: number) => {
   return Request<{}>(

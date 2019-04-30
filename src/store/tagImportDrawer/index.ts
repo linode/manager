@@ -1,5 +1,5 @@
 import * as Bluebird from 'bluebird';
-import { isEmpty, pathOr } from 'ramda';
+import { isEmpty } from 'ramda';
 import { Action } from 'redux';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { ApplicationState } from 'src/store';
@@ -9,6 +9,7 @@ import getEntitiesWithGroupsToImport, {
   GroupImportProps
 } from 'src/store/selectors/getEntitiesWithGroupsToImport';
 import { ThunkActionCreator } from 'src/store/types';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { storage } from 'src/utilities/storage';
 import actionCreatorFactory from 'typescript-fsa';
 
@@ -173,12 +174,8 @@ const createAccumulator = <T extends Linode.Linode | Linode.Domain>(
       ...accumulator,
       success: [...accumulator.success, updatedEntity]
     }))
-    .catch((error: any) => {
-      const reason = pathOr(
-        'Error adding tag.',
-        ['response', 'data', 'errors', 0, 'reason'],
-        error
-      );
+    .catch(error => {
+      const reason = getErrorStringOrDefault(error, 'Error adding tag.');
       return {
         ...accumulator,
         errors: [
