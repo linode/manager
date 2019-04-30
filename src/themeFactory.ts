@@ -71,6 +71,9 @@ interface ThemeArguments {
 
 const breakpoints = createBreakpoints({});
 
+export const COMPACT_SPACING_UNIT = 4;
+export const NORMAL_SPACING_UNIT = 8;
+
 const primaryColors = {
   main: '#3683dc',
   light: '#4d99f1',
@@ -105,7 +108,8 @@ const iconCircleAnimation = {
 };
 
 const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
-  const spacingUnit = options.spacing === 'compact' ? 4 : 8;
+  const spacingUnit =
+    options.spacing === 'compact' ? COMPACT_SPACING_UNIT : NORMAL_SPACING_UNIT;
 
   return {
     breakpoints,

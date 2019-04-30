@@ -1,6 +1,12 @@
 import * as Cookies from 'js-cookie';
 
+const localStorageCache = {};
+
 export const getStorage = (key: string, fallback?: any) => {
+  if (localStorageCache[key]) {
+    return localStorageCache[key];
+  }
+
   const item = window.localStorage.getItem(key);
   /*
    * Basically, if localstorage doesn't exist,
@@ -11,13 +17,16 @@ export const getStorage = (key: string, fallback?: any) => {
   }
 
   try {
+    localStorageCache[key] = item;
     return JSON.parse(item as any);
   } catch (e) {
+    localStorageCache[key] = item;
     return item;
   }
 };
 
 export const setStorage = (key: string, value: string) => {
+  localStorageCache[key] = value;
   return window.localStorage.setItem(key, value);
 };
 
