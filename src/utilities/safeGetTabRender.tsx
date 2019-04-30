@@ -1,4 +1,3 @@
-import { configureScope } from '@sentry/browser';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 
@@ -20,12 +19,10 @@ export const safeGetTabRender = (tabs: Tab[], selectedTab: number) => {
      * error and return a default error render() function.
      */
 
-    configureScope(scope => {
-      scope.setExtra('Selected tab', selectedTab);
-      scope.setExtra('Location', window.location.search);
+    reportException('Attempted to render undefined tab.', {
+      'Selected tab': selectedTab,
+      Location: window.location.search
     });
-
-    reportException('Attempted to render undefined tab.');
     return <ErrorState errorText={'An unexpected error occurred.'} />;
   };
 

@@ -20,7 +20,6 @@
  *
  */
 
-import { captureException, configureScope } from '@sentry/browser';
 import * as classNames from 'classnames';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -54,6 +53,8 @@ import {
 } from 'src/services/account';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+
+import { reportException } from 'src/exceptionReporting';
 
 import CreditCardDialog from './PaymentBits/CreditCardDialog';
 import PaypalDialog from './PaymentBits/PaypalDialog';
@@ -394,11 +395,10 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
         /**
          * Send the error off to sentry with the USD amount in the tags
          */
-        configureScope(scope => {
-          scope.setExtra('Raw USD', usd);
-          scope.setExtra('USD converted to number', (+usd).toFixed(2));
+        reportException(cleanedError, {
+          'Raw USD': usd,
+          'USD converted to number': (+usd).toFixed(2)
         });
-        captureException(cleanedError);
 
         this.setState({
           isStagingPaypalPayment: false,
