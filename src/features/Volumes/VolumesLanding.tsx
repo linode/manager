@@ -674,6 +674,6 @@ export default compose<CombinedProps, Props>(
 
 const RenderError = () => {
   return (
-    <ErrorState errorText="There was an error loading your volumes. Please try again later" />
+    <ErrorState errorText="There was an error loading your Volumes. Please try again later" />
   );
 };
