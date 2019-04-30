@@ -1,7 +1,7 @@
 import AddCircle from '@material-ui/icons/AddCircle';
 import * as classNames from 'classnames';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { clone, pathOr } from 'ramda';
+import { clone } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
@@ -15,6 +15,7 @@ import Typography from 'src/components/core/Typography';
 import Select from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import { getTags } from 'src/services/tags';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import TagsPanelItem from './TagsPanelItem';
 
 type ClassNames =
@@ -314,14 +315,11 @@ class TagsPanel extends React.Component<CombinedProps, State> {
           });
         })
         .catch(e => {
-          this.setState({ loading: false });
-          const tagError = pathOr(
-            'Error while creating tag',
-            ['response', 'data', 'errors', 0, 'reason'],
-            e
+          const tagError = getErrorStringOrDefault(
+            e,
+            'Error while creating tag'
           );
-          // display the first error in the array or a generic one
-          this.setState({ tagError });
+          this.setState({ loading: false, tagError });
         });
     }
   };
