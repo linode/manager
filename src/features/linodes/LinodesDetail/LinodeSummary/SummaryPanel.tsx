@@ -23,6 +23,8 @@ import { formatRegion } from 'src/utilities';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodeNetSummary from './LinodeNetSummary';
 
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+
 type ClassNames = 'region' | 'volumeLink' | 'regionInner';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
@@ -93,6 +95,7 @@ class SummaryPanel extends React.Component<CombinedProps> {
     const {
       classes,
       linodeVolumes,
+      linodeVolumesError,
       linodeTags,
       linodeId,
       linodeRegion,
@@ -114,13 +117,19 @@ class SummaryPanel extends React.Component<CombinedProps> {
             className={classes.section}
             data-qa-volumes={linodeVolumes.length}
           >
-            Volumes:&#160;
-            <Link
-              className={classes.volumeLink}
-              to={`/linodes/${linodeId}/volumes`}
-            >
-              {linodeVolumes.length}
-            </Link>
+            <Typography>
+              Volumes:&#160;
+              {linodeVolumesError ? (
+                getErrorStringOrDefault(linodeVolumesError)
+              ) : (
+                <Link
+                  className={classes.volumeLink}
+                  to={`/linodes/${linodeId}/volumes`}
+                >
+                  {linodeVolumes.length}
+                </Link>
+              )}
+            </Typography>
           </div>
           <div className={`${classes.section}`}>
             {formatRegion(linodeRegion)}
@@ -190,6 +199,7 @@ interface LinodeContextProps {
   linodeTags: string[];
   mostRecentBackup: string | null;
   linodeVolumes: Linode.Volume[];
+  linodeVolumesError?: Linode.ApiFieldError[];
   backupsEnabled: boolean;
   readOnly: boolean;
 }
@@ -203,6 +213,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id,
   backupsEnabled: linode.backups.enabled,
   linodeVolumes: linode._volumes,
+  linodeVolumesError: linode._volumesError,
   readOnly: linode._permissions === 'read_only'
 }));
 
