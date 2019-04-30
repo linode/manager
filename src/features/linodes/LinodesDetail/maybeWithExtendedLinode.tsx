@@ -54,7 +54,8 @@ export default compose<InnerProps, OutterProps>(
       return {
         linode: {
           ...linode,
-          _volumes: getVolumesForLinode(volumes, linodeId),
+          _volumes: getVolumesForLinode(volumes.itemsById, linodeId),
+          _volumesError: volumes.error ? volumes.error.read : undefined,
           _notifications: getNotificationsForLinode(notifications, linodeId),
           _type: getTypeById(types, type),
           _events: eventsForLinode(events, linodeId),

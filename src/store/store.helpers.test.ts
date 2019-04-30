@@ -80,6 +80,7 @@ describe('store.helpers', () => {
     it('should update state with error and complete loading', () => {
       expect(result).toEqual({
         ...createDefaultState(),
+        loading: false,
         error: [{ reason: 'Something bad happened.' }]
       });
     });

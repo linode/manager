@@ -23,7 +23,7 @@ export const onGetAllSuccess = <E extends Entity, S>(
   items: E[],
   state: S,
   update: (e: E) => E = i => i
-): MappedEntityState<E> =>
+): S =>
   Object.assign({}, state, {
     loading: false,
     lastUpdated: Date.now(),
@@ -34,12 +34,17 @@ export const onGetAllSuccess = <E extends Entity, S>(
     )
   });
 
-export const onError = <S = {}>(error: Linode.ApiFieldError[], state: S) =>
-  Object.assign({}, state, { error });
+export const onError = <S = {}, E = Linode.ApiFieldError[] | undefined>(
+  error: E,
+  state: S
+) => Object.assign({}, state, { error, loading: false });
 
-export const createDefaultState = <E extends Entity>(
-  override: Partial<MappedEntityState<E>> = {}
-): MappedEntityState<E> => ({
+export const createDefaultState = <
+  E extends Entity,
+  O = Linode.ApiFieldError[] | undefined
+>(
+  override: Partial<MappedEntityState<E, O>> = {}
+): MappedEntityState<E, O> => ({
   itemsById: {},
   items: [],
   loading: true,
@@ -48,24 +53,33 @@ export const createDefaultState = <E extends Entity>(
   ...override
 });
 
-export const onDeleteSuccess = <E extends Entity>(
+export const onDeleteSuccess = <
+  E extends Entity,
+  O = Linode.ApiFieldError[] | undefined
+>(
   id: string | number,
-  state: MappedEntityState<E>
-): MappedEntityState<E> => {
+  state: MappedEntityState<E, O>
+): MappedEntityState<E, O> => {
   return removeMany([String(id)], state);
 };
 
-export const onCreateOrUpdate = <E extends Entity>(
+export const onCreateOrUpdate = <
+  E extends Entity,
+  O = Linode.ApiFieldError[] | undefined
+>(
   entity: E,
-  state: MappedEntityState<E>
-): MappedEntityState<E> => {
+  state: MappedEntityState<E, O>
+): MappedEntityState<E, O> => {
   return addMany([entity], state);
 };
 
-export const removeMany = <E extends Entity>(
+export const removeMany = <
+  E extends Entity,
+  O = Linode.ApiFieldError[] | undefined
+>(
   list: string[],
-  state: MappedEntityState<E>
-): MappedEntityState<E> => {
+  state: MappedEntityState<E, O>
+): MappedEntityState<E, O> => {
   const itemsById = omit(list, state.itemsById);
 
   return {
@@ -75,10 +89,13 @@ export const removeMany = <E extends Entity>(
   };
 };
 
-export const addMany = <E extends Entity>(
+export const addMany = <
+  E extends Entity,
+  O = Linode.ApiFieldError[] | undefined
+>(
   list: E[],
-  state: MappedEntityState<E>
-): MappedEntityState<E> => {
+  state: MappedEntityState<E, O>
+): MappedEntityState<E, O> => {
   const itemsById = list.reduce(
     (map, item) => ({ ...map, [item.id]: item }),
     state.itemsById

@@ -1,5 +1,6 @@
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
+import { EntityError } from 'src/store/types';
 
 interface VolumesData {
   items: string[];
@@ -9,18 +10,18 @@ interface VolumesData {
 export interface Props {
   volumesData: VolumesData;
   volumesLoading: boolean;
-  volumesError?: Error;
+  volumesError?: EntityError;
 }
 
-export default <TInner extends {}, TOutter extends {}>(
+export default <TInner extends {}, TOuter extends {}>(
   mapVolumesToProps: (
-    ownProps: TOutter,
+    ownProps: TOuter,
     volumesData: VolumesData,
     volumesLoading: boolean,
-    volumesError?: Error
+    volumesError?: EntityError
   ) => TInner
 ) =>
-  connect((state: ApplicationState, ownProps: TOutter) => {
+  connect((state: ApplicationState, ownProps: TOuter) => {
     const { items, itemsById } = state.__resources.volumes;
 
     const volumesData = { items, itemsById };

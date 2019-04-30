@@ -1,3 +1,4 @@
+import { AxiosError } from 'axios';
 import {
   AttachVolumePayload,
   CloneVolumePayload,
@@ -21,44 +22,44 @@ export const actionCreator = actionCreatorFactory('@@manager/volumes');
 export const createVolumeActions = actionCreator.async<
   VolumeRequestPayload,
   Linode.Volume,
-  Linode.ApiFieldError[]
+  Error | AxiosError
 >(`create`);
 export const getOneVolumeActions = actionCreator.async<
   VolumeId,
   Linode.Volume,
-  Linode.ApiFieldError[]
+  Error | AxiosError
 >(`get-one`);
 export const updateVolumeActions = actionCreator.async<
   UpdateVolumeParams,
   Linode.Volume,
-  Linode.ApiFieldError[]
+  Error | AxiosError
 >(`update`);
 export const deleteVolumeActions = actionCreator.async<
   VolumeId,
   {},
-  Linode.ApiFieldError[]
+  Error | AxiosError
 >(`delete`);
 
 export const attachVolumeActions = actionCreator.async<
   AttachVolumeParams,
   Linode.Volume,
-  Linode.ApiFieldError[]
+  Error | AxiosError
 >(`attach`);
 export const detachVolumeActions = actionCreator.async<
   VolumeId,
   {},
-  Linode.ApiFieldError[]
+  Error | AxiosError
 >(`detach`);
 
 export const cloneVolumeActions = actionCreator.async<
   CloneVolumeParams,
   Linode.Volume,
-  Linode.ApiFieldError[]
+  Error | AxiosError
 >(`clone`);
 export const resizeVolumeActions = actionCreator.async<
   ResizeVolumeParams,
   Linode.Volume,
-  Linode.ApiFieldError[]
+  Error | AxiosError
 >(`resize`);
 
 // We want to provide the option NOT to set { loading: true } when requesting all Volumes.
@@ -70,5 +71,5 @@ export interface GetAllVolumesOptions {
 export const getAllVolumesActions = actionCreator.async<
   GetAllVolumesOptions,
   Linode.Volume[],
-  Linode.ApiFieldError[]
+  Error | AxiosError
 >('get-all');

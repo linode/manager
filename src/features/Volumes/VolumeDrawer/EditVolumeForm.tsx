@@ -74,7 +74,7 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = props => {
             onClose();
           })
           .catch(errorResponse => {
-            const defaultMessage = `Unable to rename this volume at this time. Please try again later.`;
+            const defaultMessage = `Unable to edit this Volume at this time. Please try again later.`;
             const mapErrorToStatus = (generalError: string) =>
               setStatus({ generalError });
 

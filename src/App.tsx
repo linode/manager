@@ -486,7 +486,7 @@ interface StateProps {
   settingsError?: Linode.ApiFieldError[] | Error;
   typesError?: Linode.ApiFieldError[];
   regionsError?: Linode.ApiFieldError[];
-  volumesError?: Linode.ApiFieldError[] | Error;
+  volumesError?: Linode.ApiFieldError[];
   bucketsError?: Error | Linode.ApiFieldError[];
   userId?: number;
   username: string;
@@ -505,7 +505,9 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
   settingsError: state.__resources.accountSettings.error,
   typesError: state.__resources.types.error,
   regionsError: state.__resources.regions.error,
-  volumesError: state.__resources.volumes.error,
+  volumesError: state.__resources.volumes.error
+    ? state.__resources.volumes.error.read
+    : undefined,
   bucketsError: state.__resources.buckets.error,
   userId: path(['data', 'uid'], state.__resources.profile),
   username: pathOr('', ['data', 'username'], state.__resources.profile),
