@@ -53,7 +53,7 @@ export const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
   });
 
   return (
-    <FormControl fullWidth>
+    <>
       <Select
         options={regionList}
         placeholder="All Regions"
@@ -71,7 +71,7 @@ export const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
           supporting block storage are displayed.
         </FormHelperText>
       )}
-    </FormControl>
+    </>
   );
 };
 

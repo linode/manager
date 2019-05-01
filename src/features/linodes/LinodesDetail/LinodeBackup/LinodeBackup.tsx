@@ -72,6 +72,7 @@ type ClassNames =
   | 'snapshotGeneralError'
   | 'scheduleAction'
   | 'chooseTime'
+  | 'chooseDay'
   | 'cancelButton';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
@@ -108,6 +109,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   chooseTime: {
     marginRight: theme.spacing.unit * 2
+  },
+  chooseDay: {
+    minWidth: 150
   },
   cancelButton: {
     marginBottom: theme.spacing.unit
@@ -666,13 +670,14 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
               isClearable={false}
               defaultValue={defaultTimeSelection}
               name="Time of Day"
+              noMarginTop
             />
             <FormHelperText>
               Windows displayed in {this.props.timezone}
             </FormHelperText>
           </FormControl>
 
-          <FormControl>
+          <FormControl className={classes.chooseDay}>
             <Select
               options={daySelection}
               defaultValue={defaultDaySelection}
@@ -681,6 +686,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
               label="Day of Week"
               placeholder="Choose a day"
               isClearable={false}
+              noMarginTop
             />
           </FormControl>
           <ActionsPanel className={classes.scheduleAction}>

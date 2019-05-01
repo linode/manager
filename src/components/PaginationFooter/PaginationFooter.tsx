@@ -91,6 +91,8 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
             defaultValue={defaultPagination}
             onChange={this.handleSizeChange}
             isClearable={false}
+            noMarginTop
+            medium
           />
         </Grid>
       </Grid>

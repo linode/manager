@@ -42,7 +42,7 @@ const SizeField: React.StatelessComponent<CombinedProps> = ({
     : undefined;
 
   return (
-    <FormControl fullWidth>
+    <>
       <TextField
         data-qa-size
         errorText={error}
@@ -60,7 +60,7 @@ const SizeField: React.StatelessComponent<CombinedProps> = ({
         {...rest}
       />
       <FormHelperText>The size of the new volume in GiB</FormHelperText>
-    </FormControl>
+    </>
   );
 };
 

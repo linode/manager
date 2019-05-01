@@ -182,7 +182,7 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
       : linodes;
 
     return (
-      <FormControl fullWidth>
+      <>
         <EnhancedSelect
           onBlur={onBlur}
           name={name}
@@ -203,7 +203,7 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
             Only Linodes in the selected region are displayed.
           </FormHelperText>
         )}
-      </FormControl>
+      </>
     );
   }
 }
