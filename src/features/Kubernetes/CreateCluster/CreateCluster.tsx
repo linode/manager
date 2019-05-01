@@ -36,7 +36,7 @@ export interface PoolNodeResponse {
 }
 
 export interface PoolNode {
-  type: Linode.LinodeType;
+  type: string | null;
   nodeCount: number;
 }
 

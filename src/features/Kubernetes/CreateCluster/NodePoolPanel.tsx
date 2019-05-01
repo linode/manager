@@ -42,7 +42,7 @@ export const NodePoolPanel: React.FunctionComponent<CombinedProps> = (props) => 
       />
       <Button
         type='secondary'
-        onClick={addNodePool}
+        onClick={() => addNodePool({ type: selectedType, nodeCount })}
       >
         Add Node Pool
       </Button>
