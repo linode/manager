@@ -13,7 +13,7 @@ export interface BucketsRequests {
 }
 
 export default connect(
-  // We dont' use mapStateToProps here, so we make it undefined
+  // We don't use mapStateToProps here, so we make it undefined
   undefined,
   {
     createBucket,
