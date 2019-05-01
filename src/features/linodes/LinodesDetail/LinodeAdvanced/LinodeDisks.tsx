@@ -6,6 +6,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import RootRef from 'src/components/core/RootRef';
 import {
   StyleRulesCallback,
   withStyles,
@@ -126,39 +127,46 @@ type CombinedProps = UserSSHKeyProps &
   WithStyles<ClassNames> &
   WithSnackbarProps;
 
-class LinodeDisks extends React.Component<CombinedProps, State> {
-  static defaultDrawerState: DrawerState = {
-    open: false,
-    submitting: false,
-    mode: 'create',
-    errors: undefined,
-    maximumSize: 0,
-    fields: {
-      label: '',
-      filesystem: 'ext4',
-      size: 0
-    }
-  };
-
-  static defaultImagizeDrawerState: ImagizeDrawerState = {
-    open: false,
-    description: '',
+const defaultDrawerState: DrawerState = {
+  open: false,
+  submitting: false,
+  mode: 'create',
+  errors: undefined,
+  maximumSize: 0,
+  fields: {
     label: '',
-    disk: undefined
-  };
+    filesystem: 'ext4',
+    size: 0
+  }
+};
 
-  static defaultConfirmDeleteState: ConfirmDeleteState = {
-    open: false,
-    id: undefined,
-    label: undefined,
-    submitting: false
-  };
+const defaultImagizeDrawerState: ImagizeDrawerState = {
+  open: false,
+  description: '',
+  label: '',
+  disk: undefined
+};
 
-  state: State = {
-    drawer: LinodeDisks.defaultDrawerState,
-    imagizeDrawer: LinodeDisks.defaultImagizeDrawerState,
-    confirmDelete: LinodeDisks.defaultConfirmDeleteState
-  };
+const defaultConfirmDeleteState: ConfirmDeleteState = {
+  open: false,
+  id: undefined,
+  label: undefined,
+  submitting: false
+};
+
+class LinodeDisks extends React.Component<CombinedProps, State> {
+  private disksHeader: React.RefObject<any>;
+  constructor(props: CombinedProps) {
+    super(props);
+
+    this.disksHeader = React.createRef();
+
+    this.state = {
+      drawer: defaultDrawerState,
+      imagizeDrawer: defaultImagizeDrawerState,
+      confirmDelete: defaultConfirmDeleteState
+    };
+  }
 
   errorState = (
     <ErrorState errorText="There was an error loading disk images." />
@@ -170,11 +178,13 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end">
-          <Grid item>
-            <Typography variant="h3" className={classes.headline}>
-              Disks
-            </Typography>
-          </Grid>
+          <RootRef rootRef={this.disksHeader}>
+            <Grid item>
+              <Typography variant="h3" className={classes.headline}>
+                Disks
+              </Typography>
+            </Grid>
+          </RootRef>
           <Grid item className={classes.addNewWrapper}>
             <AddNewLink
               onClick={this.openDrawerForCreation}
@@ -183,7 +193,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
             />
           </Grid>
         </Grid>
-        <Paginate data={disks}>
+        <Paginate data={disks} scrollToRef={this.disksHeader}>
           {({
             data: paginatedData,
             handlePageChange,
@@ -219,7 +229,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
                   page={page}
                   pageSize={pageSize}
                   count={count}
-                  handlePageChange={handlePageChange(false)}
+                  handlePageChange={handlePageChange}
                   handleSizeChange={handlePageSizeChange}
                   eventCategory="linode disks"
                 />
@@ -353,7 +363,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
   openImagizeDrawer = (disk: Linode.Disk) => () => {
     this.setImagizeDrawer({
-      ...LinodeDisks.defaultImagizeDrawerState,
+      ...defaultImagizeDrawerState,
       open: true,
       disk
     });
@@ -475,7 +485,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
     resizeLinodeDisk(diskId, size)
       .then(data => {
-        this.setDrawer(LinodeDisks.defaultDrawerState);
+        this.setDrawer(defaultDrawerState);
         this.props.enqueueSnackbar(`Disk queued for resizing.`, {
           variant: 'info'
         });
@@ -520,7 +530,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         : undefined
     })
       .then(_ => {
-        this.setDrawer(LinodeDisks.defaultDrawerState);
+        this.setDrawer(defaultDrawerState);
       })
       .catch(error => {
         const errors = path<Linode.ApiFieldError[]>(
@@ -549,7 +559,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
     updateLinodeDisk(diskId, { label })
       .then(_ => {
-        this.setDrawer(LinodeDisks.defaultDrawerState);
+        this.setDrawer(defaultDrawerState);
       })
       .catch(error => {
         const errors = path<Linode.ApiFieldError[]>(
