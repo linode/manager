@@ -1,5 +1,5 @@
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { compose, filter, map, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -7,6 +7,7 @@ import { StickyContainer } from 'react-sticky';
 import { compose as recompose } from 'recompose';
 
 import regionsContainer from 'src/containers/regions.container';
+import withTypes from 'src/containers/types.container';
 import withImages from 'src/containers/withImages.container';
 import withLinodes from 'src/containers/withLinodes.container';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
@@ -50,7 +51,6 @@ import { resetEventsPolling } from 'src/events';
 import { getOneClickApps } from 'src/features/StackScripts/stackScriptUtils';
 import { cloneLinode, CreateLinodeRequest } from 'src/services/linodes';
 
-import { ApplicationState } from 'src/store';
 import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { MapState } from 'src/store/types';
 
@@ -600,37 +600,6 @@ const connected = connect(
   mapStateToProps,
   { upsertLinode }
 );
-
-const withTypes = connect((state: ApplicationState, ownProps) => ({
-  typesData: compose(
-    map<Linode.LinodeType, ExtendedType>(type => {
-      const {
-        label,
-        memory,
-        vcpus,
-        disk,
-        price: { monthly, hourly }
-      } = type;
-      return {
-        ...type,
-        heading: label,
-        subHeadings: [
-          `$${monthly}/mo ($${hourly}/hr)`,
-          typeLabelDetails(memory, disk, vcpus)
-        ]
-      };
-    }),
-    /* filter out all the deprecated types because we don't to display them */
-    filter<any>((eachType: Linode.LinodeType) => {
-      if (!eachType.successor) {
-        return true;
-      }
-      return eachType.successor === null;
-    })
-  )(state.__resources.types.entities),
-  typesLoading: pathOr(false, ['loading'], state.__resources.types),
-  typesError: pathOr(undefined, ['error'], state.__resources.types)
-}));
 
 const withRegions = regionsContainer(({ data, loading, error }) => ({
   regionsData: data.map(r => ({ ...r, display: dcDisplayNames[r.id] })),

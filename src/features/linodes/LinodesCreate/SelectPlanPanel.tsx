@@ -38,6 +38,7 @@ interface Props {
   selectedDiskSize?: number;
   currentPlanHeading?: string;
   disabled?: boolean;
+  noHeader?: boolean;
 }
 
 const getNanodes = (types: ExtendedType[]) =>
@@ -167,7 +168,7 @@ export class SelectPlanPanel extends React.Component<
       <TabbedPanel
         rootClass={this.props.classes.root}
         error={this.props.error}
-        header="Linode Plan"
+        header={this.props.noHeader ? "" : "Linode Plan"}
         tabs={this.createTabs()}
         initTab={1}
       />

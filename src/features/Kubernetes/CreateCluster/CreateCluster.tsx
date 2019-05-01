@@ -13,6 +13,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
+import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { WithRegionsProps } from 'src/features/linodes/LinodesCreate/types';
 
 import NodePoolPanel from './NodePoolPanel';
@@ -60,7 +61,7 @@ interface State {
   version: KubernetesVersion;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & WithRegionsProps;
+type CombinedProps = Props & WithStyles<ClassNames> & WithRegionsProps & WithTypesProps;
 
 export class CreateCluster extends React.Component<CombinedProps, State> {
   state: State = {
@@ -84,12 +85,12 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, regionsData } = this.props;
+    const { classes, regionsData, typesData } = this.props;
     const {
       selectedRegion,
       selectedType,
       numberOfLinodes,
-      nodePools
+      nodePools,
     } = this.state;
     return (
       <React.Fragment>
@@ -113,6 +114,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
             <Grid item data-qa-kubernetes-create-node-pool-panel>
               <NodePoolPanel
                 pools={nodePools}
+                types={typesData}
                 nodeCount={numberOfLinodes}
                 selectedType={selectedType}
                 addNodePool={(pool: PoolNode) => console.log('adding', pool)}
@@ -155,7 +157,8 @@ const withRegions = regionsContainer(({ data, loading, error }) => ({
 
 const enhanced = compose<CombinedProps, Props>(
   styled,
-  withRegions
+  withRegions,
+  withTypes,
 );
 
 export default enhanced(CreateCluster);
