@@ -90,7 +90,10 @@ export class SecuritySettings extends React.Component<CombinedProps, State> {
         }
         this.setState(
           {
-            errors: getAPIErrorOrDefault(error),
+            errors: getAPIErrorOrDefault(
+              error,
+              'Unable to disable IP whitelisting. Please try again.'
+            ),
             ipWhitelistingToggle: true
           },
           () => {

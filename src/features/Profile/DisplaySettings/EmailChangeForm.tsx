@@ -79,7 +79,10 @@ export class EmailChangeForm extends React.Component<CombinedProps, State> {
         this.setState(
           {
             submitting: false,
-            errors: getAPIErrorOrDefault(error),
+            errors: getAPIErrorOrDefault(
+              error,
+              'Error updating email address.'
+            ),
             success: undefined
           },
           () => {

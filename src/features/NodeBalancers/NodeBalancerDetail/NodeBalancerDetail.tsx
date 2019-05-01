@@ -170,7 +170,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
           () => ({
             ApiError: getAPIErrorOrDefault(
               error,
-              'An unknown error occurred while updating NodeBalancer.',
+              'Error updating label',
               'label'
             ),
             labelInput: label
