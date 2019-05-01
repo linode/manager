@@ -200,9 +200,11 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
         });
       })
       .catch(error => {
+        const ApiError = getAPIErrorOrDefault(error, 'Error creating tag');
         this.setState({
-          ApiError: getAPIErrorOrDefault(error)
+          ApiError
         });
+        return Promise.reject(ApiError);
       });
   };
 
