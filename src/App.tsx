@@ -40,7 +40,7 @@ import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
 import { getAllVolumes } from 'src/store/volume/volume.requests';
 import composeState from 'src/utilities/composeState';
-import { notifications, theme as themeStorage } from 'src/utilities/storage';
+import { notifications } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
 import { isObjectStorageEnabled } from './constants';
 import BucketDrawer from './features/ObjectStorage/Buckets/BucketDrawer';
@@ -348,7 +348,7 @@ export class App extends React.Component<CombinedProps, State> {
         {profileLoading === false && (
           <React.Fragment>
             <>
-              <div {...themeDataAttr()} className={classes.appFrame}>
+              <div className={classes.appFrame}>
                 <SideMenu
                   open={menuOpen}
                   closeMenu={this.closeMenu}
@@ -437,17 +437,6 @@ export class App extends React.Component<CombinedProps, State> {
   }
 }
 
-const themeDataAttr = () => {
-  if (themeStorage.get() === 'dark') {
-    return {
-      'data-qa-theme-dark': true
-    };
-  }
-  return {
-    'data-qa-theme-light': true
-  };
-};
-
 interface DispatchProps {
   actions: {
     requestDomains: () => Promise<Linode.Domain[]>;
@@ -495,7 +484,7 @@ interface StateProps {
   settingsError?: Linode.ApiFieldError[] | Error;
   typesError?: Linode.ApiFieldError[];
   regionsError?: Linode.ApiFieldError[];
-  volumesError?: Linode.ApiFieldError[] | Error;
+  volumesError?: Linode.ApiFieldError[];
   bucketsError?: Error | Linode.ApiFieldError[];
   userId?: number;
   username: string;
@@ -514,7 +503,9 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
   settingsError: state.__resources.accountSettings.error,
   typesError: state.__resources.types.error,
   regionsError: state.__resources.regions.error,
-  volumesError: state.__resources.volumes.error,
+  volumesError: state.__resources.volumes.error
+    ? state.__resources.volumes.error.read
+    : undefined,
   bucketsError: state.__resources.buckets.error,
   userId: path(['data', 'uid'], state.__resources.profile),
   username: pathOr('', ['data', 'username'], state.__resources.profile),

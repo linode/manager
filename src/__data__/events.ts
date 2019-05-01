@@ -450,3 +450,81 @@ export const events: Linode.Event[] = [
     status: 'finished'
   }
 ];
+
+export const dupeEvents: Linode.Event[] = [
+  {
+    id: 1234,
+    time_remaining: 50,
+    seen: true,
+    created: '2018-12-02T20:23:43',
+    action: 'linode_boot',
+    read: false,
+    percent_complete: 100,
+    username: 'coolguymarty',
+    rate: null,
+    entity: {
+      id: 11440645,
+      label: 'linode11440645',
+      type: 'linode',
+      url: '/v4/linode/instances/11440645'
+    },
+    status: 'finished'
+  },
+  {
+    id: 1234,
+    time_remaining: 0,
+    seen: true,
+    created: '2018-12-02T20:23:43',
+    action: 'linode_boot',
+    read: false,
+    percent_complete: 100,
+    username: 'coolguymarty',
+    rate: null,
+    entity: {
+      id: 11440645,
+      label: 'linode11440645',
+      type: 'linode',
+      url: '/v4/linode/instances/11440645'
+    },
+    status: 'scheduled'
+  }
+];
+
+export const uniqueEvents: Linode.Event[] = [
+  {
+    id: 1234,
+    time_remaining: 50,
+    seen: true,
+    created: '2018-12-02T20:23:43',
+    action: 'linode_boot',
+    read: false,
+    percent_complete: 100,
+    username: 'coolguymarty',
+    rate: null,
+    entity: {
+      id: 11440645,
+      label: 'linode11440645',
+      type: 'linode',
+      url: '/v4/linode/instances/11440645'
+    },
+    status: 'finished'
+  },
+  {
+    id: 17950407,
+    time_remaining: 0,
+    seen: true,
+    created: '2018-12-02T20:23:43',
+    action: 'linode_boot',
+    read: false,
+    percent_complete: 100,
+    username: 'coolguymarty',
+    rate: null,
+    entity: {
+      id: 11440645,
+      label: 'linode11440645',
+      type: 'linode',
+      url: '/v4/linode/instances/11440645'
+    },
+    status: 'finished'
+  }
+];
