@@ -13,8 +13,6 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
-import InputLabel from 'src/components/core/InputLabel';
-import MenuItem from 'src/components/core/MenuItem';
 import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
@@ -28,13 +26,13 @@ import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import PromiseLoader, {
   PromiseLoaderResponse
 } from 'src/components/PromiseLoader';
-import Select from 'src/components/Select';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TextField from 'src/components/TextField';
@@ -413,20 +411,20 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     });
   };
 
-  handleSelectBackupWindow = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  handleSelectBackupWindow = (e: Item) => {
     this.setState({
       settingsForm: {
         ...this.state.settingsForm,
-        window: e.target.value as Linode.Window
+        window: e.value as Linode.Window
       }
     });
   };
 
-  handleSelectBackupTime = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  handleSelectBackupTime = (e: Item) => {
     this.setState({
       settingsForm: {
         ...this.state.settingsForm,
-        day: e.target.value as Linode.Day
+        day: e.value as Linode.Day
       }
     });
   };
@@ -625,6 +623,24 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       getErrorFor('backups.schedule.window') ||
       getErrorFor('backups.schedule.day');
 
+    const timeSelection = this.windows.map((window: Linode.Window[]) => {
+      const label = window[0];
+      return { label, value: window[1] };
+    });
+
+    const daySelection = this.days.map((day: string[]) => {
+      const label = day[0];
+      return { label, value: day[1] };
+    });
+
+    const defaultTimeSelection = timeSelection.find(eachOption => {
+      return eachOption.value === settingsForm.window;
+    });
+
+    const defaultDaySelection = daySelection.find(eachOption => {
+      return eachOption.value === settingsForm.day;
+    });
+
     return (
       <React.Fragment>
         <Paper className={classes.paper}>
@@ -641,38 +657,31 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             selected day is when the backup is promoted to the weekly slot.
           </Typography>
           <FormControl className={classes.chooseTime}>
-            <InputLabel htmlFor="window">Time of Day</InputLabel>
             <Select
-              value={settingsForm.window}
+              options={timeSelection}
               onChange={this.handleSelectBackupWindow}
-              inputProps={{ name: 'window', id: 'window' }}
               data-qa-time-select
-            >
-              {this.windows.map((window: Linode.Window[]) => (
-                <MenuItem key={window[0]} value={window[1]}>
-                  {window[0]}
-                </MenuItem>
-              ))}
-            </Select>
+              label="Time of Day"
+              placeholder="Choose a time"
+              isClearable={false}
+              defaultValue={defaultTimeSelection}
+              name="Time of Day"
+            />
             <FormHelperText>
               Windows displayed in {this.props.timezone}
             </FormHelperText>
           </FormControl>
 
           <FormControl>
-            <InputLabel htmlFor="day">Day of Week</InputLabel>
             <Select
-              value={settingsForm.day}
+              options={daySelection}
+              defaultValue={defaultDaySelection}
               onChange={this.handleSelectBackupTime}
-              inputProps={{ name: 'day', id: 'day' }}
               data-qa-weekday-select
-            >
-              {this.days.map((day: string[]) => (
-                <MenuItem key={day[0]} value={day[1]}>
-                  {day[0]}
-                </MenuItem>
-              ))}
-            </Select>
+              label="Day of Week"
+              placeholder="Choose a day"
+              isClearable={false}
+            />
           </FormControl>
           <ActionsPanel className={classes.scheduleAction}>
             <Button
