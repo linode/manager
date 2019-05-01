@@ -16,7 +16,7 @@ import {
   WithTheme
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-import { isObjectStorageEnabled } from 'src/constants';
+import { isKubernetesEnabled, isObjectStorageEnabled } from 'src/constants';
 import { MapState } from 'src/store/types';
 import { sendEvent } from 'src/utilities/analytics';
 import AdditionalMenuItems from './AdditionalMenuItems';
@@ -293,6 +293,14 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       key: 'longview'
     });
     // }
+
+    if (isKubernetesEnabled) {
+      primaryLinks.push({
+        display: 'Kubernetes',
+        href: '/kubernetes',
+        key: 'kubernetes'
+      });
+    }
 
     if (isManagedAccount) {
       primaryLinks.push({
