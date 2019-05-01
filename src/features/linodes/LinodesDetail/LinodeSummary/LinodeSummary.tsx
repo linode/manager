@@ -236,7 +236,19 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   }
 
   getStats = () => {
-    const { linodeId } = this.props;
+    const { linodeId, linodeCreated } = this.props;
+
+    // Stats will not be available for a Linode for at least 5 minutes after
+    // it's been created, so no need to do an expensive `/stats` request until
+    // 5 minutes have passed.
+    const fiveMinutesAgo = moment().subtract(5, 'minutes');
+    if (moment.utc(linodeCreated).isAfter(fiveMinutesAgo)) {
+      return this.setState({
+        dataIsLoading: false,
+        isTooEarlyForGraphData: true
+      });
+    }
+
     const { rangeSelection } = this.state;
     if (!linodeId) {
       return;
@@ -267,8 +279,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         if (!this.mounted) {
           return;
         }
-
-        const { linodeCreated } = this.props;
 
         // If a Linode has just been created, we'll get an error from the API when
         // requesting stats (since there's no data available yet.) In this case,
