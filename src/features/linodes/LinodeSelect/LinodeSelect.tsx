@@ -76,7 +76,7 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
         handleChange(selected ? selected.value : null)
       }
       errorText={getErrorStringOrDefault(
-        generalError || linodeError || linodesError || []
+        generalError || linodeError || linodesError || ''
       )}
     />
   );
