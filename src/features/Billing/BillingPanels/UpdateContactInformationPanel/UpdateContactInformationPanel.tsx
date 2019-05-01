@@ -16,7 +16,7 @@ import { withAccount } from 'src/features/Billing/context';
 import { Requestable } from 'src/requestableContext';
 import { updateAccountInfo } from 'src/services/account';
 import composeState from 'src/utilities/composeState';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import CountryData, { Region } from './countryRegionData';
@@ -120,25 +120,25 @@ class UpdateContactInformationPanel extends React.Component<
     const { classes } = this.props;
     const { fields, submissionErrors, success } = this.state;
 
-    const hasErrorFor = getAPIErrorFor(
-      {
-        address_1: 'address',
-        address_2: 'address 2',
-        city: 'city',
-        company: 'company',
-        country: 'country',
-        email: 'email',
-        first_name: 'first name',
-        last_name: 'last name',
-        phone: 'phone',
-        state: 'state / province',
-        tax_id: 'tax ID',
-        zip: 'zip / postal code'
-      },
+    const errorMap = getErrorMap(
+      [
+        'address_1',
+        'address_2',
+        'city',
+        'country',
+        'company',
+        'email',
+        'first_name',
+        'last_name',
+        'phone',
+        'state',
+        'tax_id',
+        'zip'
+      ],
       submissionErrors
     );
 
-    const generalError = hasErrorFor('none');
+    const generalError = errorMap.none;
 
     const countryResults = CountryData.map(country => {
       return {
@@ -195,14 +195,14 @@ class UpdateContactInformationPanel extends React.Component<
         <Grid
           item
           xs={12}
-          updateFor={[fields.company, hasErrorFor('company'), classes]}
+          updateFor={[fields.company, errorMap.company, classes]}
         >
           <Grid container>
             <Grid item xs={12} sm={6}>
               <TextField
                 label="Company Name"
                 value={defaultTo(account.company, fields.company)}
-                errorText={hasErrorFor('company')}
+                errorText={errorMap.company}
                 onChange={this.updateCompany}
                 data-qa-company
               />
@@ -214,13 +214,13 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.email, hasErrorFor('email'), classes]}
+          updateFor={[fields.email, errorMap.email, classes]}
         >
           <TextField
             label="Email"
             type="email"
             value={defaultTo(account.email, fields.email)}
-            errorText={hasErrorFor('email')}
+            errorText={errorMap.email}
             onChange={this.updateEmail}
             data-qa-contact-email
           />
@@ -230,13 +230,13 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.phone, hasErrorFor('phone'), classes]}
+          updateFor={[fields.phone, errorMap.phone, classes]}
         >
           <TextField
             label="Phone Number"
             type="tel"
             value={defaultTo(account.phone, fields.phone)}
-            errorText={hasErrorFor('phone')}
+            errorText={errorMap.phone}
             onChange={this.updatePhone}
             data-qa-contact-phone
           />
@@ -246,12 +246,12 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.first_name, hasErrorFor('first_name'), classes]}
+          updateFor={[fields.first_name, errorMap.first_name, classes]}
         >
           <TextField
             label="First Name"
             value={defaultTo(account.first_name, fields.first_name)}
-            errorText={hasErrorFor('first_name')}
+            errorText={errorMap.first_name}
             onChange={this.updateFirstName}
             data-qa-contact-first-name
           />
@@ -261,12 +261,12 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.last_name, hasErrorFor('last_name'), classes]}
+          updateFor={[fields.last_name, errorMap.last_name, classes]}
         >
           <TextField
             label="Last Name"
             value={defaultTo(account.last_name, fields.last_name)}
-            errorText={hasErrorFor('last_name')}
+            errorText={errorMap.last_name}
             onChange={this.updateLastName}
             data-qa-contact-last-name
           />
@@ -276,12 +276,12 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.address_1, hasErrorFor('address_1'), classes]}
+          updateFor={[fields.address_1, errorMap.address_1, classes]}
         >
           <TextField
             label="Address"
             value={defaultTo(account.address_1, fields.address_1)}
-            errorText={hasErrorFor('address_1')}
+            errorText={errorMap.address_1}
             onChange={this.updateAddress1}
             data-qa-contact-address-1
           />
@@ -291,12 +291,12 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.address_2, hasErrorFor('address2'), classes]}
+          updateFor={[fields.address_2, errorMap.address2, classes]}
         >
           <TextField
             label="Address 2"
             value={defaultTo(account.address_2, fields.address_2)}
-            errorText={hasErrorFor('address_2')}
+            errorText={errorMap.address_2}
             onChange={this.updateAddress2}
             data-qa-contact-address-2
           />
@@ -306,12 +306,12 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.city, hasErrorFor('city'), classes]}
+          updateFor={[fields.city, errorMap.city, classes]}
         >
           <TextField
             label="City"
             value={defaultTo(account.city, fields.city)}
-            errorText={hasErrorFor('city')}
+            errorText={errorMap.city}
             onChange={this.updateCity}
             data-qa-contact-city
           />
@@ -325,9 +325,9 @@ class UpdateContactInformationPanel extends React.Component<
             fields.state,
             fields.zip,
             fields.country,
-            hasErrorFor('state'),
-            hasErrorFor('zip'),
-            hasErrorFor('country'),
+            errorMap.state,
+            errorMap.zip,
+            errorMap.country,
             classes
           ]}
         >
@@ -335,7 +335,7 @@ class UpdateContactInformationPanel extends React.Component<
             <Grid item xs={12} sm={7}>
               <EnhancedSelect
                 label="State / Province"
-                errorText={hasErrorFor('state')}
+                errorText={errorMap.state}
                 onChange={this.updateState}
                 data-qa-contact-province
                 placeholder="Select a State"
@@ -354,7 +354,7 @@ class UpdateContactInformationPanel extends React.Component<
               <TextField
                 label="Zip / Postal Code"
                 value={defaultTo(account.zip, fields.zip)}
-                errorText={hasErrorFor('zip')}
+                errorText={errorMap.zip}
                 onChange={this.updateZip}
                 data-qa-contact-post-code
               />
@@ -366,11 +366,11 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.country, hasErrorFor('country'), classes]}
+          updateFor={[fields.country, errorMap.country, classes]}
         >
           <EnhancedSelect
             label="Country"
-            errorText={hasErrorFor('country')}
+            errorText={errorMap.country}
             onChange={this.updateCountry}
             data-qa-contact-country
             placeholder="Select a Country"
@@ -388,12 +388,12 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.tax_id, hasErrorFor('tax_id'), classes]}
+          updateFor={[fields.tax_id, errorMap.tax_id, classes]}
         >
           <TextField
             label="Tax ID"
             value={defaultTo(account.tax_id, fields.tax_id)}
-            errorText={hasErrorFor('tax_id')}
+            errorText={errorMap.tax_id}
             onChange={this.updateTaxID}
             data-qa-contact-tax-id
           />
@@ -509,18 +509,12 @@ class UpdateContactInformationPanel extends React.Component<
         });
       })
       .catch(response => {
-        const fallbackError = [
-          {
-            reason: 'Unable to save your contact information. Please try again.'
-          }
-        ];
         this.setState(
           {
             submitting: false,
-            submissionErrors: pathOr(
-              fallbackError,
-              ['response', 'data', 'errors'],
-              response
+            submissionErrors: getAPIErrorOrDefault(
+              response,
+              'Unable to save your contact information. Please try again.'
             )
           },
           () => {

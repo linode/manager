@@ -1,5 +1,4 @@
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -26,6 +25,7 @@ import {
   withLinodeDetailContext
 } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { linodeReboot } from 'src/services/linodes';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import LinodeConfigActionMenu from '../LinodeSettings/LinodeConfigActionMenu';
 import LinodeConfigDrawer from '../LinodeSettings/LinodeConfigDrawer';
 
@@ -203,10 +203,9 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
         resetEventsPolling();
       })
       .catch(errorResponse => {
-        const errors = pathOr(
-          [{ reason: `Error booting ${label}` }],
-          ['response', 'data', 'errors'],
-          errorResponse
+        const errors = getAPIErrorOrDefault(
+          errorResponse,
+          `Error booting ${label}`
         );
         errors.map((error: Linode.ApiFieldError) => {
           this.props.enqueueSnackbar(error.reason, {

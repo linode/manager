@@ -1,5 +1,4 @@
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -25,6 +24,7 @@ import { linodeInTransition } from 'src/features/linodes/transitions';
 import { resizeLinode } from 'src/services/linodes';
 import { ApplicationState } from 'src/store';
 import { withNotifications } from 'src/store/notification/notification.containers';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import LinodePermissionsError from '../LinodePermissionsError';
 
 type ClassNames = 'root' | 'title' | 'subTitle' | 'currentPlanContainer';
@@ -129,10 +129,9 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         history.push(`/linodes/${linodeId}/summary`);
       })
       .catch(errorResponse => {
-        pathOr(
-          [{ reason: 'There was an issue resizing your Linode.' }],
-          ['response', 'data', 'errors'],
-          errorResponse
+        getAPIErrorOrDefault(
+          errorResponse,
+          'There was an issue resizing your Linode.'
         ).forEach((err: Linode.ApiFieldError) =>
           enqueueSnackbar(err.reason, {
             variant: 'error'
