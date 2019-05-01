@@ -14,6 +14,10 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { getEventsForEntity } from 'src/utilities/getEventsForEntity';
 import ActivitySummaryContent from './ActivitySummaryContent';
 
+import {
+  filterUniqueEvents,
+  percentCompleteHasUpdated
+} from 'src/features/Events/Event.helpers';
 import { ExtendedEvent } from 'src/store/events/event.helpers';
 
 type ClassNames = 'root' | 'header' | 'viewMore';
@@ -52,7 +56,7 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
     events: []
   };
 
-  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
+  componentDidUpdate(prevProps: CombinedProps) {
     if (
       !equals(this.props.inProgressEvents, prevProps.inProgressEvents) ||
       percentCompleteHasUpdated(
@@ -138,55 +142,6 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
     );
   }
 }
-
-/**
- * The point of this function is to ensure we don't have an activity stream
- * that looks like:
- *
- * Linode hello_world has been booted
- * Linode hello_world has been created
- * Linode hello_world is scheduled to be booted
- * Linode hello_world is scheduled to be created
- *
- * Basically, we're creating a cache and only adding to the cache if the Event
- * ID doesn't already exist in the cache. This ensures that "has been created"
- * events will replace the "is scheduled to" events
- */
-export const filterUniqueEvents = (events: Linode.Event[]) => {
-  return events.reduce((acc, event) => {
-    const foundEventInAcc = acc.some(
-      (eachAccumEvent: Linode.Event) => eachAccumEvent.id === event.id
-    );
-    return foundEventInAcc ? acc : [...acc, event];
-  }, []);
-};
-
-/**
- * Takes in the inProgressEvents which are sourced from Redux. These are a key-value
- * pair where the key is the ID of the event in progress and the value is the percent_complete
- * So it ends up comparing the values similar to
- *
- * {
- *    1234: 50
- * }
- *
- * and
- *
- * {
- *   1234: 79
- * }
- *
- * the "50" and the "79" are the things being compared
- */
-export const percentCompleteHasUpdated = (
-  prevEventsInProgress: Record<number, number>,
-  nextEventsInProgress: Record<number, number>
-) => {
-  return Object.keys(prevEventsInProgress).some(
-    eachEventID =>
-      prevEventsInProgress[eachEventID] !== nextEventsInProgress[eachEventID]
-  );
-};
 
 const styled = withStyles(styles);
 
