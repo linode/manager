@@ -17,6 +17,7 @@ import {
   WithTheme
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
+import { isKubernetesEnabled } from 'src/constants';
 import { MapState } from 'src/store/types';
 import { isObjectStorageEnabled } from 'src/utilities/accountCapabilities';
 import { sendSpacingToggleEvent, sendThemeToggleEvent } from 'src/utilities/ga';
@@ -302,6 +303,14 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       key: 'longview'
     });
     // }
+
+    if (isKubernetesEnabled) {
+      primaryLinks.push({
+        display: 'Kubernetes',
+        href: '/kubernetes',
+        key: 'kubernetes'
+      });
+    }
 
     if (isManagedAccount) {
       primaryLinks.push({
