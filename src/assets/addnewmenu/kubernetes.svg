@@ -1,0 +1,72 @@
+<!-- <svg id="Layer_1" data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 111 107.01">
+  <defs>
+  </defs>
+  <title>Kubernetes</title>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="55.5 11.39 37.29 0.88 19.08 11.39 19.08 11.39 37.29 21.9 37.29 21.9 55.5 11.39"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="55.5 11.39 37.29 21.9 37.29 42.93 55.5 32.41 55.5 11.39"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="19.08 11.39 19.08 32.41 37.29 42.93 37.29 21.9 19.08 11.39"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="37.29 42.93 19.08 32.41 0.88 42.93 0.88 42.93 19.08 53.44 19.08 53.44 37.29 42.93"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="37.29 42.93 19.08 53.44 19.08 74.46 37.29 63.95 37.29 42.93"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="0.88 42.93 0.88 63.95 19.08 74.46 19.08 53.44 0.88 42.93"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="55.5 74.6 37.29 64.08 19.08 74.6 19.08 74.6 37.29 85.11 37.29 85.11 55.5 74.6"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="55.5 74.6 37.29 85.11 37.29 106.14 55.5 95.62 55.5 74.6"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="19.08 74.6 19.08 95.62 37.29 106.14 37.29 85.11 19.08 74.6"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="91.92 11.39 73.71 0.88 55.5 11.39 55.5 11.39 73.71 21.9 73.71 21.9 91.92 11.39"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="91.92 11.39 73.71 21.9 73.71 42.93 91.92 32.41 91.92 11.39"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="55.5 11.39 55.5 32.41 73.71 42.93 73.71 21.9 55.5 11.39"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="91.92 74.6 73.71 64.08 55.5 74.6 55.5 74.6 73.71 85.11 73.71 85.11 91.92 74.6"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="91.92 74.6 73.71 85.11 73.71 106.14 91.92 95.62 91.92 74.6"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="55.5 74.6 55.5 95.62 73.71 106.14 73.71 85.11 55.5 74.6"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="110.13 42.93 91.92 32.41 73.71 42.93 73.71 42.93 91.92 53.44 91.92 53.44 110.13 42.93"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="110.13 42.93 91.92 53.44 91.92 74.46 110.13 63.95 110.13 42.93"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="73.71 42.93 73.71 63.95 91.92 74.46 91.92 53.44 73.71 42.93"/>
+  <polygon class="cls-2" fill="#fff" stroke-width="1.96" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="73.71 42.93 55.5 32.41 37.29 42.93 37.29 42.93 55.5 53.44 55.5 53.44 73.71 42.93"/>
+  <polygon class="cls-2" fill="#fff" stroke-width="1.96" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="73.71 42.93 55.5 53.44 55.5 74.46 73.71 63.95 73.71 42.93"/>
+  <polygon class="cls-2" fill="#fff" stroke-width="1.96" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="37.29 42.93 37.29 63.95 55.5 74.46 55.5 53.44 37.29 42.93"/>
+</svg> -->
+
+
+
+<svg width="50" height="50" viewBox="0 0 111 107.01" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <desc>Kubernetes</desc>
+    <defs>
+        <circle id="path-1" cx="24" cy="24" r="24"></circle>
+    </defs>
+    <g id="ui-kit---1440" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="sticker-sheet" transform="translate(-267.000000, -93.000000)">
+            <g id="create:dropdown" transform="translate(251.000000, 73.000000)">
+                <g id="linode-:-hover">
+                    <g id="icon" transform="translate(16.000000, 20.000000)">
+                        <g id="Oval-2">
+                            <use fill="#F4F4F4" fill-rule="evenodd" xlink:href="#path-1" class="circle"></use>
+                            <circle stroke="#F4F4F4" stroke-width="2" cx="24" cy="24" r="23" class="outerCircle"></circle>
+                        </g>
+                        <g id="Group-11" transform="translate(12.000000, 12.000000)" class="insidePath">
+                            <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="55.5 11.39 37.29 0.88 19.08 11.39 19.08 11.39 37.29 21.9 37.29 21.9 55.5 11.39"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="55.5 11.39 37.29 21.9 37.29 42.93 55.5 32.41 55.5 11.39"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="19.08 11.39 19.08 32.41 37.29 42.93 37.29 21.9 19.08 11.39"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="37.29 42.93 19.08 32.41 0.88 42.93 0.88 42.93 19.08 53.44 19.08 53.44 37.29 42.93"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="37.29 42.93 19.08 53.44 19.08 74.46 37.29 63.95 37.29 42.93"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="0.88 42.93 0.88 63.95 19.08 74.46 19.08 53.44 0.88 42.93"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="55.5 74.6 37.29 64.08 19.08 74.6 19.08 74.6 37.29 85.11 37.29 85.11 55.5 74.6"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="55.5 74.6 37.29 85.11 37.29 106.14 55.5 95.62 55.5 74.6"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="19.08 74.6 19.08 95.62 37.29 106.14 37.29 85.11 19.08 74.6"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="91.92 11.39 73.71 0.88 55.5 11.39 55.5 11.39 73.71 21.9 73.71 21.9 91.92 11.39"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="91.92 11.39 73.71 21.9 73.71 42.93 91.92 32.41 91.92 11.39"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="55.5 11.39 55.5 32.41 73.71 42.93 73.71 21.9 55.5 11.39"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="91.92 74.6 73.71 64.08 55.5 74.6 55.5 74.6 73.71 85.11 73.71 85.11 91.92 74.6"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="91.92 74.6 73.71 85.11 73.71 106.14 91.92 95.62 91.92 74.6"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="55.5 74.6 55.5 95.62 73.71 106.14 73.71 85.11 55.5 74.6"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="110.13 42.93 91.92 32.41 73.71 42.93 73.71 42.93 91.92 53.44 91.92 53.44 110.13 42.93"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="110.13 42.93 91.92 53.44 91.92 74.46 110.13 63.95 110.13 42.93"/>
+  <polygon class="cls-1" fill="none" stroke-width="1.75" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="73.71 42.93 73.71 63.95 91.92 74.46 91.92 53.44 73.71 42.93"/>
+  <polygon class="cls-2" fill="#fff" stroke-width="1.96" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="73.71 42.93 55.5 32.41 37.29 42.93 37.29 42.93 55.5 53.44 55.5 53.44 73.71 42.93"/>
+  <polygon class="cls-2" fill="#fff" stroke-width="1.96" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="73.71 42.93 55.5 53.44 55.5 74.46 73.71 63.95 73.71 42.93"/>
+  <polygon class="cls-2" fill="#fff" stroke-width="1.96" stroke="#3683dc" stroke-linecap="round" stroke-linejoin="round" points="37.29 42.93 37.29 63.95 55.5 74.46 55.5 53.44 37.29 42.93"/>
+</g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

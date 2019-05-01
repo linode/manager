@@ -5,6 +5,7 @@ import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { bindActionCreators, compose } from 'redux';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
+import KubernetesIcon from 'src/assets/addnewmenu/kubernetes.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
@@ -142,7 +143,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
         e.preventDefault();
       },
       body: `Create and manage Kubernetes Clusters for highly available container workloads`,
-      ItemIcon: DomainIcon // @todo update icon
+      ItemIcon: KubernetesIcon
     }
   ];
 
