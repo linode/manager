@@ -1,9 +1,9 @@
 version: '3.1'
 services:
   selenium:
-    image: selenium/hub:3.13.0-argon
+    image: selenium/hub:3.141.59-neon
   chrome:
-    image: selenium/node-chrome:3.13.0-argon
+    image: selenium/node-chrome:3.141.59-neon
     volumes:
       - /dev/shm:/dev/shm #Mitigates the Chromium issue described at https://code.google.com/p/chromium/issues/detail?id=519952
     environment:
