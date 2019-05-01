@@ -160,7 +160,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
                 </Paper>
                 <PaginationFooter
                   count={count}
-                  handlePageChange={handlePageChange()}
+                  handlePageChange={handlePageChange}
                   handleSizeChange={handlePageSizeChange}
                   page={page}
                   pageSize={pageSize}
