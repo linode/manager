@@ -36,7 +36,10 @@ type ClassNames =
   | 'suggestionDescription'
   | 'resultContainer'
   | 'tagContainer'
-  | 'selectedMenuItem';
+  | 'selectedMenuItem'
+  | 'medium'
+  | 'small'
+  | 'noMarginTop';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   '@keyframes dash': {
@@ -254,9 +257,15 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       }
     }
   },
+  medium: {
+    minHeight: 40
+  },
   small: {
     minHeight: 35,
     minWidth: 'auto'
+  },
+  noMarginTop: {
+    marginTop: 0
   }
 });
 
@@ -309,8 +318,10 @@ export interface EnhancedSelectProps {
   onInputChange?: (inputValue: string, actionMeta: ActionMeta) => void;
   loadOptions?: (inputValue: string) => Promise<Item | Item[]> | undefined;
   filterOption?: (option: Item, inputValue: string) => boolean | null;
+  medium?: boolean;
   small?: boolean;
   guidance?: string | React.ReactNode;
+  noMarginTop?: boolean;
 }
 
 // Material-UI versions of several React-Select components.
@@ -366,7 +377,9 @@ class Select extends React.PureComponent<CombinedProps, {}> {
       onMenuClose,
       onBlur,
       blurInputOnSelect,
+      medium,
       small,
+      noMarginTop,
       ...restOfProps
     } = this.props;
 
@@ -414,7 +427,11 @@ class Select extends React.PureComponent<CombinedProps, {}> {
           InputLabelProps: {
             shrink: true
           },
-          className: small && classes.small
+          className: classNames({
+            [classes.medium]: medium,
+            [classes.small]: small,
+            [classes.noMarginTop]: noMarginTop
+          })
         }}
         value={value}
         onBlur={onBlur}
