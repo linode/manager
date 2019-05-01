@@ -400,7 +400,17 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       return null;
     }
 
-    const { private: privateIPs, public: publicIPs, shared: sharedIPs } = ipv4;
+    const {
+      private: privateIPs,
+      public: publicIPs,
+      shared: sharedIPs,
+      reserved: reservedIPs
+    } = ipv4;
+
+    // `ipv4.reserved` contains both Public and Private IPs, so we use the `public` field to differentiate.
+    // Splitting them into two arrays so we can order as desired (Public, then Private).
+    const publicReservedIps = reservedIPs.filter(ip => ip.public);
+    const privateReservedIps = reservedIPs.filter(ip => !ip.public);
 
     return (
       <React.Fragment>
@@ -460,6 +470,12 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
               )}
               {privateIPs.map((ip: Linode.IPAddress) =>
                 this.renderIPRow(ip, 'Private')
+              )}
+              {publicReservedIps.map((ip: Linode.IPAddress) =>
+                this.renderIPRow(ip, 'Public Reserved')
+              )}
+              {privateReservedIps.map((ip: Linode.IPAddress) =>
+                this.renderIPRow(ip, 'Private Reserved')
               )}
               {sharedIPs.map((ip: Linode.IPAddress) =>
                 this.renderIPRow(ip, 'Shared')
