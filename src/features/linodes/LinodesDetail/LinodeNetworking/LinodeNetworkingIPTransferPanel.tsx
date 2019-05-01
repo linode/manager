@@ -391,7 +391,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
             this.setState({
               error: getAPIErrorOrDefault(
                 err,
-                'Unable to transfer IP addresses at this time. Please try again later.'
+                'Unable to refresh IPs. Please reload the screen.'
               )
             });
           });
