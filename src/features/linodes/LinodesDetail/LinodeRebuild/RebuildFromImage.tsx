@@ -1,4 +1,4 @@
-import { Formik } from 'formik';
+import { Formik, FormikProps } from 'formik';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -60,6 +60,16 @@ export type CombinedProps = WithImagesProps &
   RouteComponentProps &
   WithSnackbarProps;
 
+interface RebuildFromImageForm {
+  image: string;
+  root_pass: string;
+}
+
+const initialValues: RebuildFromImageForm = {
+  image: '',
+  root_pass: ''
+};
+
 export const RebuildFromImage: React.StatelessComponent<
   CombinedProps
 > = props => {
@@ -78,62 +88,54 @@ export const RebuildFromImage: React.StatelessComponent<
 
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
 
-  const initialValues = {
-    image: '',
-    root_pass: ''
+  const handleFormSubmit = (
+    { image, root_pass }: RebuildFromImageForm,
+    { setSubmitting, setStatus, setErrors }: FormikProps<RebuildFromImageForm>
+  ) => {
+    setSubmitting(true);
+
+    // `status` holds general error messages
+    setStatus(undefined);
+
+    const params: RebuildRequest = {
+      image,
+      root_pass,
+      authorized_users: userSSHKeys.filter(u => u.selected).map(u => u.username)
+    };
+
+    // @todo: eventually this should be a dispatched action instead of a services library call
+    rebuildLinode(linodeId, params)
+      .then(_ => {
+        // Reset events polling since an in-progress event (rebuild) is happening.
+        resetEventsPolling();
+
+        setSubmitting(false);
+        setIsDialogOpen(false);
+
+        enqueueSnackbar('Linode rebuild started', {
+          variant: 'info'
+        });
+        history.push(`/linodes/${linodeId}/summary`);
+      })
+      .catch(errorResponse => {
+        const defaultMessage = `There was an issue rebuilding your Linode.`;
+        const mapErrorToStatus = (generalError: string) =>
+          setStatus({ generalError });
+
+        setSubmitting(false);
+        handleFieldErrors(setErrors, errorResponse);
+        handleGeneralErrors(mapErrorToStatus, errorResponse, defaultMessage);
+        setIsDialogOpen(false);
+        scrollErrorIntoView();
+      });
   };
+
   return (
     <Formik
       initialValues={initialValues}
       validationSchema={RebuildLinodeSchema}
       validateOnChange={false}
-      onSubmit={(
-        values,
-        { setSubmitting, setStatus, setErrors, resetForm }
-      ) => {
-        setSubmitting(true);
-
-        // `status` holds general error messages
-        setStatus(undefined);
-
-        const { image, root_pass } = values;
-
-        const params: RebuildRequest = {
-          image,
-          root_pass,
-          authorized_users: userSSHKeys
-            .filter(u => u.selected)
-            .map(u => u.username)
-        };
-
-        // @todo: eventually this should be a dispatched action instead of a services library call
-        rebuildLinode(linodeId, params)
-          .then(_ => {
-            resetEventsPolling();
-
-            setIsDialogOpen(false);
-
-            enqueueSnackbar('Linode rebuild started', {
-              variant: 'info'
-            });
-            history.push(`/linodes/${linodeId}/summary`);
-          })
-          .catch(errorResponse => {
-            const defaultMessage = `There was an issue rebuilding your Linode.`;
-            const mapErrorToStatus = (generalError: string) =>
-              setStatus({ generalError });
-
-            setSubmitting(false);
-            handleFieldErrors(setErrors, errorResponse);
-            handleGeneralErrors(
-              mapErrorToStatus,
-              errorResponse,
-              defaultMessage
-            );
-            setIsDialogOpen(false);
-            scrollErrorIntoView();
-          });
-      }}
+      onSubmit={handleFormSubmit}
       render={formikProps => {
         const {
           errors,
@@ -145,10 +147,14 @@ export const RebuildFromImage: React.StatelessComponent<
           validateForm
         } = formikProps;
 
-        const handleOpen = () => {
+        // The "Rebuild" button opens a confirmation modal.
+        // We'd like to validate the form before this happens.
+        const handleRebuildButtonClick = () => {
           validateForm().then(maybeErrors => {
+            // If there aren't any errors, we can open the modal.
             if (isEmpty(maybeErrors)) {
               setIsDialogOpen(true);
+              // The form receives the errors automatically, and we scroll them into view.
             } else {
               scrollErrorIntoView();
             }
@@ -193,8 +199,8 @@ export const RebuildFromImage: React.StatelessComponent<
               <Button
                 type="secondary"
                 className="destructive"
-                onClick={handleOpen}
-                data-qa-rebuild
+                onClick={handleRebuildButtonClick}
+                data-testid="rebuild-button"
                 disabled={disabled}
               >
                 Rebuild
