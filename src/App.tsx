@@ -77,6 +77,10 @@ const Kubernetes = DefaultLoader({
   loader: () => import('src/features/Kubernetes')
 });
 
+const KubernetesCreate = DefaultLoader({
+  loader: () => import('src/features/Kubernetes/CreateCluster')
+});
+
 const ObjectStorage = DefaultLoader({
   loader: () => import('src/features/ObjectStorage')
 });
@@ -386,7 +390,17 @@ export class App extends React.Component<CombinedProps, State> {
                             />
                           )}
                           {isKubernetesEnabled && (
-                            <Route path="/kubernetes" component={Kubernetes} />
+                            <>
+                              <Route
+                                exact
+                                path="/kubernetes"
+                                component={Kubernetes}
+                              />
+                              <Route
+                                path="/kubernetes/create"
+                                component={KubernetesCreate}
+                              />
+                            </>
                           )}
                           <Route path="/account" component={Account} />
                           <Route

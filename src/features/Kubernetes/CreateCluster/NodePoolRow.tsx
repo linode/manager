@@ -13,10 +13,7 @@ import { PoolNode } from './CreateCluster';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-
-  },
-
+  root: {}
 });
 
 interface Props {
@@ -26,16 +23,16 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const NodePoolRow: React.FunctionComponent<CombinedProps> = (props) => {
+export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
   return (
     <TableRow>
-      <TableCell></TableCell>
-      <TableCell></TableCell>
-      <TableCell></TableCell>
-      <TableCell></TableCell>
+      <TableCell>a</TableCell>
+      <TableCell>b</TableCell>
+      <TableCell>c</TableCell>
+      <TableCell>d</TableCell>
     </TableRow>
-  )
-}
+  );
+};
 
 const styled = withStyles(styles);
 

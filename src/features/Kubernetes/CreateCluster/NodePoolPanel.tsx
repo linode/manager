@@ -13,15 +13,12 @@ import NodePoolDisplayTable from './NodePoolDisplayTable';
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-
-  },
-
+  root: {}
 });
 
 interface Props {
   pools: PoolNode[];
-  selectedType: string | null;
+  selectedType?: string;
   nodeCount: number;
   addNodePool: (pool: PoolNode) => void;
   deleteNodePool: (poolIdx: number) => void;
@@ -31,23 +28,23 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const NodePoolPanel: React.FunctionComponent<CombinedProps> = (props) => {
+export const NodePoolPanel: React.FunctionComponent<CombinedProps> = props => {
   const { addNodePool, deleteNodePool, pools, selectedType, nodeCount } = props;
 
   return (
     <React.Fragment>
-      <NodePoolDisplayTable 
+      <NodePoolDisplayTable
         pools={pools}
-        handleDelete={(poolIdx: number) => deleteNodePool(poolIdx) }
+        handleDelete={(poolIdx: number) => deleteNodePool(poolIdx)}
       />
       <Button
-        type='secondary'
+        type="secondary"
         onClick={() => addNodePool({ type: selectedType, nodeCount })}
       >
         Add Node Pool
       </Button>
     </React.Fragment>
-  )
+  );
 };
 
 const styled = withStyles(styles);

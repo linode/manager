@@ -1,1 +1,1 @@
-export * from './CreateCluster';
+export { default } from './CreateCluster';
