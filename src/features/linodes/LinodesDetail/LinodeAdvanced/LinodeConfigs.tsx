@@ -5,6 +5,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import RootRef from 'src/components/core/RootRef';
 import {
   StyleRulesCallback,
   withStyles,
@@ -94,11 +95,13 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end">
-          <Grid item innerRef={this.configsPanel}>
-            <Typography variant="h3" className={classes.headline}>
-              Configuration
-            </Typography>
-          </Grid>
+          <RootRef rootRef={this.configsPanel}>
+            <Grid item>
+              <Typography variant="h3" className={classes.headline}>
+                Configuration
+              </Typography>
+            </Grid>
+          </RootRef>
           <Grid item className={classes.addNewWrapper}>
             <AddNewLink
               onClick={this.openConfigDrawerForCreation}
