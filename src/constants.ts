@@ -32,12 +32,15 @@ export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
 /** Google Analytics and Tag Manager */
 export const GA_ID = process.env.REACT_APP_GA_ID;
 export const GTM_ID = process.env.REACT_APP_GTM_ID;
-/** for hardcoding token used for API Requests. Example: "Bearer 1234" */
+/** for hard-coding token used for API Requests. Example: "Bearer 1234" */
 export const ACCESS_TOKEN = process.env.REACT_APP_ACCESS_TOKEN;
 
 // Features
 export const isObjectStorageEnabled =
   process.env.REACT_APP_IS_OBJECT_STORAGE_ENABLED === 'true';
+
+export const isKubernetesEnabled =
+  process.env.REACT_APP_KUBERNETES_ENABLED === 'true';
 
 export const DISABLE_EVENT_THROTTLE =
   Boolean(process.env.REACT_APP_DISABLE_EVENT_THROTTLE) || false;
