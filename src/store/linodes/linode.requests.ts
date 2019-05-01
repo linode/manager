@@ -61,7 +61,7 @@ export const requestLinodes: ThunkActionCreator<
         getLinodesActions.failed({
           error: getAPIErrorOrDefault(
             err,
-            'There was an error retrieving your Linodes.'
+            'There was an error retrieving your Linodes. Please try again later.'
           )
         })
       );
