@@ -60,7 +60,7 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
     const isOptional = field.hasOwnProperty('default');
     if (isMultiSelect(field)) {
       return (
-        <Grid item xs={12} sm={6} md={4} key={field.name}>
+        <Grid item xs={12} lg={5} key={field.name}>
           <UserDefinedMultiSelect
             key={field.name}
             field={field}
@@ -75,7 +75,7 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
     }
     if (isOneSelect(field)) {
       return (
-        <Grid item xs={12} sm={6} md={4} key={field.name}>
+        <Grid item xs={12} lg={5} key={field.name}>
           <UserDefinedSelect
             field={field}
             updateFormState={handleChange}
@@ -90,7 +90,7 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
     }
     if (isPasswordField(field.name)) {
       return (
-        <Grid item xs={12} sm={6} md={4} key={field.name}>
+        <Grid item xs={12} lg={5} key={field.name}>
           <UserDefinedText
             updateFormState={handleChange}
             isPassword={true}
@@ -105,7 +105,7 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
       );
     }
     return (
-      <Grid item xs={12} sm={6} md={4} key={field.name}>
+      <Grid item xs={12} lg={5} key={field.name}>
         <UserDefinedText
           updateFormState={handleChange}
           field={field}
