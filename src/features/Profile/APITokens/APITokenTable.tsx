@@ -1,5 +1,5 @@
 import * as moment from 'moment';
-import { compose, path } from 'ramda';
+import { compose } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -33,6 +33,7 @@ import {
   getPersonalAccessTokens,
   updatePersonalAccessToken
 } from 'src/services/profile';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import isPast from 'src/utilities/isPast';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import APITokenDrawer, { DrawerMode, genExpiryTups } from './APITokenDrawer';
@@ -247,9 +248,9 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
   };
 
   showDialogError(err: any) {
-    const apiError = path<Linode.ApiFieldError[]>(
-      ['response', 'data', 'error'],
-      err
+    const apiError = getAPIErrorOrDefault(
+      err,
+      'Unable to complete your request at this time.'
     );
 
     return this.setState({
@@ -258,13 +259,6 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
         open: true,
         submitting: false,
         errors: apiError
-          ? apiError
-          : [
-              {
-                field: 'none',
-                reason: 'Unable to complete your request at this time.'
-              }
-            ]
       }
     });
   }
@@ -345,7 +339,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
               {
                 form: {
                   ...form,
-                  errors: path(['response', 'data', 'errors'], errResponse)
+                  errors: getAPIErrorOrDefault(errResponse)
                 }
               },
               () => {
@@ -400,7 +394,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           {
             form: {
               ...this.state.form,
-              errors: path(['response', 'data', 'errors'], errResponse)
+              errors: getAPIErrorOrDefault(errResponse)
             }
           },
           () => {

@@ -1,4 +1,4 @@
-import { compose, flatten, lensPath, omit, pathOr, set } from 'ramda';
+import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -26,6 +26,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import Toggle from 'src/components/Toggle';
 import { getGrants, updateGrants, updateUser } from 'src/services/account';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -240,15 +241,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         })
         .catch(errResponse => {
           this.setState({
-            errors: pathOr(
-              [
-                {
-                  reason:
-                    'Error while updating global permissions for this user. Try again later'
-                }
-              ],
-              ['response', 'data', 'errors'],
-              errResponse
+            errors: getAPIErrorOrDefault(
+              errResponse,
+              'Error while updating global permissions for this user. Please try again later.'
             )
           });
           this.setState(set(lensPath(['saving', 'global']), false));
@@ -308,15 +303,9 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       })
       .catch(errResponse => {
         this.setState({
-          errors: pathOr(
-            [
-              {
-                reason:
-                  'Error while updating entity-specific permissions for this user. Try again later'
-              }
-            ],
-            ['response', 'data', 'errors'],
-            errResponse
+          errors: getAPIErrorOrDefault(
+            errResponse,
+            'Error while updating entity-specific permissions for this user. Please try again later'
           )
         });
         this.setState(set(lensPath(['saving', 'entity']), false));
@@ -368,17 +357,10 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           this.getUserGrants();
         })
         .catch(errResponse => {
-          const defaultError = [
-            {
-              reason:
-                'Error when updating user restricted status. Please try again later.'
-            }
-          ];
           this.setState({
-            errors: pathOr(
-              defaultError,
-              ['response', 'data', 'errors'],
-              errResponse
+            errors: getAPIErrorOrDefault(
+              errResponse,
+              'Error when updating user restricted status. Please try again later.'
             ),
             loadingGrants: false
           });

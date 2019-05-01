@@ -1,5 +1,6 @@
+import { AxiosError } from 'axios';
 import * as Bluebird from 'bluebird';
-import { compose, lensPath, pathOr, set } from 'ramda';
+import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -21,7 +22,11 @@ import { getNodeBalancers } from 'src/services/nodebalancers';
 import { createSupportTicket, uploadAttachment } from 'src/services/support';
 import { getVolumes } from 'src/services/volumes';
 import composeState from 'src/utilities/composeState';
-import { getErrorMap, getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import {
+  getAPIErrorOrDefault,
+  getErrorMap,
+  getErrorStringOrDefault
+} from 'src/utilities/errorUtils';
 import { getVersionString } from 'src/utilities/getVersionString';
 import AttachFileForm, { FileAttachment } from '../AttachFileForm';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
@@ -154,12 +159,10 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
     this.setState({ data: entityItems, loading: false });
   };
 
-  handleCatch = (errors: Linode.ApiFieldError[]) => {
-    const err: Linode.ApiFieldError[] = [
-      { field: 'none', reason: 'An unexpected error has ocurred.' }
-    ];
+  handleCatch = (errors: AxiosError) => {
+    // @todo replace with LinodeAPIFieldError[] when/if we return that from services
     this.setState({
-      errors: pathOr(err, ['response', 'data', 'errors'], errors),
+      errors: getAPIErrorOrDefault(errors),
       loading: false
     });
   };
@@ -301,7 +304,7 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         );
         return accumulator;
       })
-      .catch((attachmentErrors: Linode.ApiFieldError[]) => {
+      .catch(attachmentErrors => {
         /*
          * Note! We want the first few uploads to succeed even if the last few
          * fail! Don't try to aggregate errors!
@@ -397,11 +400,8 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         if (!this.mounted) {
           return;
         }
-        const err: Linode.ApiFieldError[] = [
-          { reason: 'An unexpected error has ocurred.' }
-        ];
         this.setState({
-          errors: pathOr(err, ['response', 'data', 'errors'], errors),
+          errors: getAPIErrorOrDefault(errors),
           submitting: false
         });
       });
