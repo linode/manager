@@ -141,6 +141,7 @@ namespace Linode {
     public: IPAddress[];
     private: IPAddress[];
     shared: IPAddress[];
+    reserved: IPAddress[];
   }
 
   export interface LinodeIPsResponseIPV6 {

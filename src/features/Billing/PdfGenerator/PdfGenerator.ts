@@ -7,22 +7,31 @@ import { reportException } from 'src/exceptionReporting';
 
 const leftMargin = 15; // space that needs to be applied to every parent element
 const baseFont = 'helvetica';
-const tableTopStart = 150; // AKA "top" CSS rule. Where the table header should start on the Y-axis
-const tableBodyStart = tableTopStart + 26; // where the table body should start on the Y-axis
-const calculateTableTotalsStart = (
-  items: Linode.InvoiceItem[],
-  itemsPerPage: number
-) => {
-  const howManyItemsOnLastPage = items.length % itemsPerPage;
-  return tableBodyStart + howManyItemsOnLastPage * 45;
-};
+
+/**
+ * Where the table headers should start on the Y-Axis. The reason for passing the Tax ID length
+ * is becasue if the Tax ID is a long string, we need to push the table down. JSPDF isn't smart
+ * enough to determine that by iteself
+ *
+ * @param taxIdLength how many digits the Tax ID is
+ */
+const tableTopStart = (taxIdLength: number) => 150 + (taxIdLength / 13) * 5;
+
+/**
+ * Where the table body should start on the Y-Axis. The reason for passing the Tax ID length
+ * is becasue if the Tax ID is a long string, we need to push the table down. JSPDF isn't smart
+ * enough to determine that by iteself
+ *
+ * @param taxIdLength how many digits the Tax ID is
+ */
+const tableBodyStart = (taxIdLength: number) => tableTopStart(taxIdLength) + 26;
 
 const renderDate = (v: null | string) =>
-  v ? formatDate(v, { format: `YYYY-MM-DD HH:mm:ss` }) : null;
+  v ? formatDate(v, { format: `YYYY-MM-DD HH:mm:ss` }) : '';
 
-const renderUnitPrice = (v: null | number) => (v ? `$${v}` : null);
+const renderUnitPrice = (v: null | number) => (v ? `$${v}` : '');
 
-const renderQuantity = (v: null | number) => (v ? v : null);
+const renderQuantity = (v: null | number) => (v ? v : '');
 
 const truncateLabel = (label: string) => {
   return label.length > 15 ? `${label.substr(0, 15)}...` : label;
@@ -165,10 +174,20 @@ const addFooter = (doc: jsPDF) => {
   });
 };
 
-const addTitle = (doc: jsPDF, ...textStrings: string[]) => {
+interface Title {
+  text: string;
+  leftMargin?: number;
+}
+
+const addTitle = (doc: jsPDF, ...textStrings: Title[]) => {
   doc.setFontSize(12);
   doc.setFontStyle('bold');
-  doc.text(`${textStrings.join(`\r\n`)}`, leftMargin, 130, { charSpace: 0.75 });
+  textStrings.forEach(eachString => {
+    doc.text(eachString.text, eachString.leftMargin || leftMargin, 130, {
+      charSpace: 0.75,
+      maxWidth: 100
+    });
+  });
   // reset text format
   doc.setFontStyle('normal');
 };
@@ -202,9 +221,9 @@ export const printInvoice = (
 
       const header = [
         { name: 'Description', prompt: 'Description', width: 150 },
-        { name: 'From', prompt: 'From', width: 83 },
-        { name: 'To', prompt: 'To', width: 83 },
-        { name: 'Quantity', prompt: 'QTY', width: 42 },
+        { name: 'From', prompt: 'From', width: 73 },
+        { name: 'To', prompt: 'To', width: 73 },
+        { name: 'Quantity', prompt: 'Quantity', width: 62 },
         { name: 'Unit Price', prompt: 'Unit\r\nPrice', width: 52 },
         { name: 'Amount', prompt: 'Amount', width: 62 },
         { name: 'Tax', prompt: 'Tax', width: 42 },
@@ -235,7 +254,7 @@ export const printInvoice = (
       });
 
       /** place table header */
-      doc.table(leftMargin, tableTopStart, [], header, {
+      doc.table(leftMargin, tableTopStart(account.tax_id.length), [], header, {
         fontSize: 10,
         printHeaders: true,
         autoSize: false
@@ -252,11 +271,17 @@ export const printInvoice = (
         when selecting the "Cell" example. The dark grey header is overtaking the
         table body
       */
-      doc.table(leftMargin, tableBodyStart, itemRows, header, {
-        fontSize: 9,
-        printHeaders: false,
-        autoSize: false
-      });
+      doc.table(
+        leftMargin,
+        tableBodyStart(account.tax_id.length),
+        itemRows,
+        header,
+        {
+          fontSize: 9,
+          printHeaders: false,
+          autoSize: false
+        }
+      );
     };
 
     const addTotalAmount = () => {
@@ -298,17 +323,11 @@ export const printInvoice = (
         }
       ];
 
-      doc.table(
-        leftMargin,
-        calculateTableTotalsStart(items, itemsPerPage),
-        tableTotalRows,
-        tableTotalHeaders,
-        {
-          fontSize: 13,
-          fontStyle: 'bold',
-          printHeaders: false
-        }
-      );
+      doc.table(leftMargin, 50, tableTotalRows, tableTotalHeaders, {
+        fontSize: 13,
+        fontStyle: 'bold',
+        printHeaders: false
+      });
 
       /** reset the font style back */
       doc.setFontStyle('normal');
@@ -319,7 +338,26 @@ export const printInvoice = (
       doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
       addLeftHeader(doc, index + 1, itemsChunks.length, date, 'Invoice');
       addRightHeader(doc, account);
-      addTitle(doc, `Invoice: #${invoiceId}`, `Tax ID: ${account.tax_id}`);
+
+      /** only show tax ID if there is one provided */
+      const strings = account.tax_id
+        ? [
+            {
+              text: `Invoice: #${invoiceId}`
+            },
+            {
+              /* 
+            300px left margin is a hacky way of aligning the text to the right 
+            because this library friggin stinks
+           */
+              text: `Tax ID: ${account.tax_id}`,
+              leftMargin: 300
+            }
+          ]
+        : [{ text: `Invoice: #${invoiceId}` }];
+
+      addTitle(doc, ...strings);
+
       addTable(itemsChunk);
       addFooter(doc);
       if (index < itemsChunks.length - 1) {
@@ -327,7 +365,9 @@ export const printInvoice = (
       }
     });
 
+    doc.addPage();
     addTotalAmount();
+    addFooter(doc);
 
     doc.save(`invoice-${date}.pdf`);
     return {
@@ -369,11 +409,17 @@ export const printPayment = (
         }
       ];
 
-      doc.table(leftMargin, tableTopStart, itemRows, header, {
-        fontSize: 12,
-        printHeaders: true,
-        autoSize: false
-      });
+      doc.table(
+        leftMargin,
+        tableTopStart(account.tax_id.length),
+        itemRows,
+        header,
+        {
+          fontSize: 12,
+          printHeaders: true,
+          autoSize: false
+        }
+      );
     };
 
     const addTotalAmount = () => {
@@ -409,7 +455,7 @@ export const printPayment = (
 
       doc.table(
         leftMargin,
-        tableBodyStart + 26,
+        tableBodyStart(account.tax_id.length) + 26,
         tableTotalRows,
         tableTotalHeaders,
         {
@@ -423,7 +469,7 @@ export const printPayment = (
     doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
     addLeftHeader(doc, 1, 1, date, 'Payment');
     addRightHeader(doc, account);
-    addTitle(doc, `Receipt for Payment #${payment.id}`);
+    addTitle(doc, { text: `Receipt for Payment #${payment.id}` });
     addTable();
     addFooter(doc);
     addTotalAmount();
