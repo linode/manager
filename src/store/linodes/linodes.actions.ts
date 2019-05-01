@@ -1,15 +1,5 @@
-import * as Bluebird from 'bluebird';
-import requestMostRecentBackupForLinode from 'src/features/linodes/LinodesLanding/requestMostRecentBackupForLinode';
-import {
-  CreateLinodeRequest,
-  getLinode,
-  getLinodes
-} from 'src/services/linodes';
-import { getAll } from 'src/utilities/getAll';
+import { CreateLinodeRequest } from 'src/services/linodes';
 import actionCreatorFactory from 'typescript-fsa';
-import { ThunkActionCreator } from '../types';
-
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 export const actionCreator = actionCreatorFactory(`@@manager/linodes`);
 
@@ -79,47 +69,10 @@ export const rebootLinodeActions = actionCreator.async<
   Linode.ApiFieldError[]
 >('reboot');
 
-// export const requestLinodes = createRequestThunk(
+// export const requestLinodes_ = createRequestThunk(
 //   getLinodesActions, () => {
 //     return getAll<Linode.Linode>(getLinodes)()
 //       .then(getBackupsForLinodes)
 //       .catch(e => getAPIErrorOrDefault(e))
 //   }
 // )
-
-export const requestLinodes: ThunkActionCreator<
-  Promise<Linode.Linode[]>
-> = () => dispatch => {
-  dispatch(getLinodesActions.started);
-
-  return getAll<Linode.Linode>(getLinodes)()
-    .then(getBackupsForLinodes)
-    .then(result => {
-      dispatch(getLinodesActions.done({ result }));
-      return result;
-    })
-    .catch(err => {
-      dispatch(
-        getLinodesActions.failed({
-          error: getAPIErrorOrDefault(
-            err,
-            'There was an error retrieving your Linodes.'
-          )
-        })
-      );
-      return err;
-    });
-};
-
-const getBackupsForLinodes = ({ data }: { data: Linode.Linode[] }) =>
-  Bluebird.map(data, requestMostRecentBackupForLinode);
-
-type RequestLinodeForStoreThunk = ThunkActionCreator<void>;
-export const requestLinodeForStore: RequestLinodeForStoreThunk = id => dispatch => {
-  getLinode(id)
-    .then(response => response.data)
-    .then(requestMostRecentBackupForLinode)
-    .then(linode => {
-      return dispatch(upsertLinode(linode));
-    });
-};

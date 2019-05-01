@@ -10,7 +10,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
 interface Props {
-  errorText: string;
+  errorText: string | JSX.Element;
   compact?: boolean;
   cozy?: boolean;
 }

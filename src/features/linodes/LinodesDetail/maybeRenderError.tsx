@@ -1,4 +1,4 @@
-import { path, pathOr } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -32,7 +32,7 @@ const collectErrors: MapState<InnerProps, OuterProps> = (
     error:
       configsError ||
       typesError ||
-      path(['error', 'read'], linodes) ||
+      path(['error', 'read'], linodes.error) ||
       types.error ||
       notifications.error ||
       linodeConfigs.error ||
@@ -56,17 +56,10 @@ export default compose(
     ({ error }) => Boolean(error),
     /** error is not the only prop, but it's the only one we care about */
     renderComponent((props: { error: Linode.ApiFieldError[] }) => {
-      /**
-       * props.error can either be an Error or Linode.APIFieldError
-       * so we need to handle for both and look for the suspended message
-       * in both paths
-       */
-      const errorTextFromAxios = getErrorStringOrDefault(
+      let errorText: string | JSX.Element = getErrorStringOrDefault(
         props.error,
-        'Unable to load Linode'
+        'There was an issue retrieving your Linodes. Please try again later.'
       );
-
-      let errorText = pathOr(errorTextFromAxios, ['error', 0, 'reason'], props);
 
       if (errorText.toLowerCase() === 'this linode has been suspended') {
         errorText = (
