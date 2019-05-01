@@ -50,7 +50,7 @@ import {
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
 import { MapState } from 'src/store/types';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 import {
   sendBackupsDisabledEvent,
@@ -339,14 +339,15 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         resetEventsPolling();
       })
       .catch(errorResponse => {
-        getAPIErrorOrDefault(
-          errorResponse,
-          'There was an error taking a snapshot'
-        ).forEach((err: Linode.ApiFieldError) =>
-          enqueueSnackbar(err.reason, {
-            variant: 'error'
-          })
-        );
+        this.setState({
+          snapshotForm: {
+            ...this.state.snapshotForm,
+            errors: getAPIErrorOrDefault(
+              errorResponse,
+              'There was an error taking a snapshot'
+            )
+          }
+        });
       });
   };
 
@@ -537,7 +538,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   SnapshotForm = (): JSX.Element | null => {
     const { classes, linodeInTransition, permissions } = this.props;
     const { snapshotForm } = this.state;
-    const getErrorFor = getAPIErrorFor({ label: 'Label' }, snapshotForm.errors);
+    const hasErrorFor = getErrorMap(['label'], snapshotForm.errors);
 
     const disabled = isReadOnly(permissions);
 
@@ -559,7 +560,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           </Typography>
           <FormControl className={classes.snapshotFormControl}>
             <TextField
-              errorText={getErrorFor('label')}
+              errorText={hasErrorFor.label}
               label="Name Snapshot"
               value={snapshotForm.label || ''}
               onChange={this.handleSnapshotNameChange}
@@ -577,8 +578,8 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
                 </Button>
               </div>
             </Tooltip>
-            {getErrorFor('none') && (
-              <FormHelperText error>{getErrorFor('none')}</FormHelperText>
+            {hasErrorFor.none && (
+              <FormHelperText error>{hasErrorFor.none}</FormHelperText>
             )}
           </FormControl>
         </Paper>
