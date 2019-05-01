@@ -4,7 +4,7 @@ module.exports = {
   version: '3.4.0',
   drivers: {
     chrome: {
-      version: '2.42',
+      version: '74.0.3729.6',
       arch: process.arch,
       baseURL: 'https://chromedriver.storage.googleapis.com'
     },
