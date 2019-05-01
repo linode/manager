@@ -5,9 +5,8 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
-import MenuItem from 'src/components/MenuItem';
-import Select from 'src/components/Select';
 import PaginationControls from '../PaginationControls';
 
 type ClassNames = 'root' | 'padded';
@@ -38,9 +37,15 @@ interface Props extends PaginationProps {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
+const options = [
+  { label: 'Show 25', value: 25 },
+  { label: 'Show 50', value: 50 },
+  { label: 'Show 75', value: 75 },
+  { label: 'Show 100', value: 100 }
+];
+
 class PaginationFooter extends React.PureComponent<CombinedProps> {
-  handleSizeChange = (e: React.ChangeEvent<HTMLSelectElement>) =>
-    this.props.handleSizeChange(+e.target.value);
+  handleSizeChange = (e: Item) => this.props.handleSizeChange(+e.value);
 
   render() {
     const {
@@ -56,6 +61,10 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
     if (count <= 25) {
       return null;
     }
+
+    const defaultPagination = options.find(eachOption => {
+      return eachOption.value === pageSize;
+    });
 
     return (
       <Grid
@@ -78,16 +87,11 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
         </Grid>
         <Grid item>
           <Select
-            value={pageSize}
+            options={options}
+            defaultValue={defaultPagination}
             onChange={this.handleSizeChange}
-            disableUnderline
-            pagination
-          >
-            <MenuItem value={25}>Show 25</MenuItem>
-            <MenuItem value={50}>Show 50</MenuItem>
-            <MenuItem value={75}>Show 75</MenuItem>
-            <MenuItem value={100}>Show 100</MenuItem>
-          </Select>
+            isClearable={false}
+          />
         </Grid>
       </Grid>
     );
