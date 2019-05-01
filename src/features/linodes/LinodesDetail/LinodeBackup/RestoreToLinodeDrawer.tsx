@@ -13,9 +13,8 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
-import MenuItem from 'src/components/MenuItem';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
-import Select from 'src/components/Select';
 import withProfile, { ProfileProps } from 'src/containers/profile.container';
 import { getLinodes, restoreBackup } from 'src/services/linodes';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector.ts';
@@ -129,8 +128,8 @@ export class RestoreToLinodeDrawer extends React.Component<
       });
   };
 
-  handleSelectLinode = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    this.setState({ selectedLinode: e.target.value });
+  handleSelectLinode = (e: Item<string>) => {
+    this.setState({ selectedLinode: e.value });
   };
 
   handleToggleOverwrite = () => {
@@ -159,6 +158,13 @@ export class RestoreToLinodeDrawer extends React.Component<
     const readOnly = canEditLinode(profile || null, Number(selectedLinode));
     const selectError = Boolean(linodeError) || readOnly;
 
+    const linodeList =
+      linodes &&
+      linodes.map(l => {
+        const label = l[1];
+        return { label, value: l[0] };
+      });
+
     return (
       <Drawer
         open={open}
@@ -175,23 +181,13 @@ export class RestoreToLinodeDrawer extends React.Component<
             Linode
           </InputLabel>
           <Select
-            value={selectedLinode || ''}
+            defaultValue={selectedLinode || ''}
+            options={linodeList}
             onChange={this.handleSelectLinode}
-            inputProps={{ name: 'linode', id: 'linode' }}
-            error={selectError}
-          >
-            <MenuItem value="none" disabled>
-              Select a Linode
-            </MenuItem>
-            {linodes &&
-              linodes.map(l => {
-                return (
-                  <MenuItem data-qa-restore-options key={l[0]} value={l[0]}>
-                    {l[1]}
-                  </MenuItem>
-                );
-              })}
-          </Select>
+            errorText={linodeError}
+            placeholder="Select a Linode"
+            isClearable={false}
+          />
           {selectError && (
             <FormHelperText error>
               {linodeError || "You don't have permission to edit this Linode."}
