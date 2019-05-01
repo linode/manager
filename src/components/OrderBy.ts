@@ -51,7 +51,7 @@ export const sortData = (orderBy: string, order: Order) =>
             : eachValue
         );
     }
-    /** basically, if orderByProp exists, do a pathOr with that insteead */
+    /** basically, if orderByProp exists, do a pathOr with that instead */
     const aValue = pathOr(0, !!orderByProp ? orderByProp : [orderBy], a);
     const bValue = pathOr(0, !!orderByProp ? orderByProp : [orderBy], b);
 
