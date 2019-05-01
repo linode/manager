@@ -7,8 +7,8 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import MenuItem from 'src/components/MenuItem';
-import Select from 'src/components/Select';
 import { titlecase } from 'src/features/linodes/presentation';
 
 type ClassNames = 'root';
@@ -56,6 +56,14 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = props => {
   return (
     <React.Fragment>
       {slots.map((slot, idx) => {
+        const deviceList = Object.entries(devices).map(([type, items]) => {
+          const device = titlecase(type);
+          return { label: device, value: device };
+          // ...(items as any[]).map(({ _id, label }) => {
+          //   return { label, value: _id };
+          // })
+        });
+
         return counter < idx ? null : (
           <FormControl
             updateFor={[getSelected(slot), classes]}
@@ -71,32 +79,12 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = props => {
               /dev/{slot}
             </InputLabel>
             <Select
-              fullWidth
-              value={getSelected(slot) || 'none'}
-              onChange={e => onChange(slot, e.target.value)}
-              inputProps={{
-                name: `rescueDevice_${slot}`,
-                id: `rescueDevice_${slot}`
-              }}
+              options={deviceList}
+              defaultValue={getSelected(slot) || 'none'}
+              onChange={(e: Item<string>) => onChange(slot, e.value)}
               disabled={disabled}
-            >
-              <MenuItem value="none">None</MenuItem>
-              {Object.entries(devices).map(([type, items]) => [
-                <MenuItem
-                  className="selectHeader"
-                  disabled
-                  key={type}
-                  data-qa-type={titlecase(type)}
-                >
-                  {titlecase(type)}
-                </MenuItem>,
-                ...(items as any[]).map(({ _id, label }) => (
-                  <MenuItem key={_id} value={_id} data-qa-option={label}>
-                    {label}
-                  </MenuItem>
-                ))
-              ])}
-            </Select>
+              placeholder={'None'}
+            />
           </FormControl>
         );
       })}
