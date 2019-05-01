@@ -58,7 +58,7 @@ export default compose(
     renderComponent((props: { error: Linode.ApiFieldError[] }) => {
       let errorText: string | JSX.Element = getErrorStringOrDefault(
         props.error,
-        'There was an issue retrieving your Linodes. Please try again later.'
+        'There was an issue retrieving your Linode. Please try again later.'
       );
 
       if (errorText.toLowerCase() === 'this linode has been suspended') {

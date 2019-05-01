@@ -68,11 +68,3 @@ export const rebootLinodeActions = actionCreator.async<
   {},
   Linode.ApiFieldError[]
 >('reboot');
-
-// export const requestLinodes_ = createRequestThunk(
-//   getLinodesActions, () => {
-//     return getAll<Linode.Linode>(getLinodes)()
-//       .then(getBackupsForLinodes)
-//       .catch(e => getAPIErrorOrDefault(e))
-//   }
-// )
