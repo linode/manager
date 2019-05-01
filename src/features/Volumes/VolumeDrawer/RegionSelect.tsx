@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import {
   StyleRulesCallback,

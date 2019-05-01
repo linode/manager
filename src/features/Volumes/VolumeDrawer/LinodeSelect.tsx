@@ -1,7 +1,6 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import _Option from 'react-select/lib/components/Option';
-import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import {
   StyleRulesCallback,
