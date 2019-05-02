@@ -80,6 +80,7 @@ export const NodePoolPanel: React.FunctionComponent<CombinedProps> = props => {
         <Grid item className={classes.gridItem}>
           <NodePoolDisplayTable
             pools={pools}
+            types={types}
             handleDelete={(poolIdx: number) => deleteNodePool(poolIdx)}
           />
         </Grid>

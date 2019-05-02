@@ -8,6 +8,8 @@ import {
 } from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import { displayTypeForKubePoolNode } from 'src/features/linodes/presentation';
 
 import { PoolNode } from './CreateCluster';
 
@@ -19,6 +21,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 interface Props {
   pool: PoolNode;
+  type?: ExtendedType;
   idx: number;
   handleDelete: (poolIdx: number) => void;
 }
@@ -26,10 +29,13 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
-  const { pool, idx, handleDelete } = props;
+  const { pool, idx, handleDelete, type } = props;
+  const typeLabel = type
+    ? displayTypeForKubePoolNode(type.class, type.memory, type.vcpus)
+    : 'Unknown type'; // This should never happen, but better not to crash if it does.
   return (
     <TableRow>
-      <TableCell>{pool.type}</TableCell>
+      <TableCell>{typeLabel}</TableCell>
       <TableCell>{pool.nodeCount}</TableCell>
       <TableCell>$3</TableCell>
       <TableCell>

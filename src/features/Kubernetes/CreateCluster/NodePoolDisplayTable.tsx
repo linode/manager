@@ -10,7 +10,7 @@ import TableHead from 'src/components/core/TableHead';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-
+import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { PoolNode } from './CreateCluster';
 import NodePoolRow from './NodePoolRow';
 
@@ -24,6 +24,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 interface Props {
   pools: PoolNode[];
+  types: ExtendedType[];
   handleDelete: (poolIdx: number) => void;
 }
 
@@ -32,7 +33,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const NodePoolDisplayTable: React.FunctionComponent<
   CombinedProps
 > = props => {
-  const { classes, handleDelete, pools } = props;
+  const { classes, handleDelete, pools, types } = props;
   return (
     <Table tableClass={classes.root} spacingTop={16}>
       <TableHead>
@@ -44,14 +45,20 @@ export const NodePoolDisplayTable: React.FunctionComponent<
         </TableRow>
       </TableHead>
       <TableBody>
-        {pools.map((thisPool, idx) => (
-          <NodePoolRow
-            key={`node-pool-row-${idx}`}
-            idx={idx}
-            pool={thisPool}
-            handleDelete={() => handleDelete(idx)}
-          />
-        ))}
+        {pools.map((thisPool, idx) => {
+          const thisPoolType = types.find(
+            thisType => thisType.id === thisPool.type
+          );
+          return (
+            <NodePoolRow
+              key={`node-pool-row-${idx}`}
+              idx={idx}
+              pool={thisPool}
+              type={thisPoolType}
+              handleDelete={() => handleDelete(idx)}
+            />
+          );
+        })}
       </TableBody>
     </Table>
   );
