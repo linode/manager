@@ -8,7 +8,8 @@ import {
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
-// import Typography from 'src/components/core/Typography';
+import Typography from 'src/components/core/Typography';
+import TextField from 'src/components/TextField';
 
 import SelectPlanPanel, {
   ExtendedType
@@ -17,7 +18,7 @@ import SelectPlanPanel, {
 import { PoolNode } from './CreateCluster';
 import NodePoolDisplayTable from './NodePoolDisplayTable';
 
-type ClassNames = 'root' | 'title' | 'gridItem';
+type ClassNames = 'root' | 'title' | 'gridItem' | 'nodeCountInput';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
@@ -28,7 +29,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginBottom: theme.spacing.unit
   },
   gridItem: {
-    paddingLeft: theme.spacing.unit * 3
+    paddingLeft: theme.spacing.unit * 3,
+    marginBottom: theme.spacing.unit * 2
+  },
+  nodeCountInput: {
+    maxWidth: '5em'
   }
 });
 
@@ -54,6 +59,7 @@ export const NodePoolPanel: React.FunctionComponent<CombinedProps> = props => {
     pools,
     selectedType,
     nodeCount,
+    updateNodeCount,
     types
   } = props;
 
@@ -67,6 +73,15 @@ export const NodePoolPanel: React.FunctionComponent<CombinedProps> = props => {
             onSelect={handleTypeSelect}
             header="Add Node Pools"
             copy="Add groups of Linodes to your cluster with a chosen size."
+          />
+        </Grid>
+        <Grid item className={classes.gridItem}>
+          <Typography variant="body1">Number of Linodes</Typography>
+          <TextField
+            type="number"
+            value={nodeCount}
+            tiny
+            onChange={e => updateNodeCount(+e.target.value)}
           />
         </Grid>
         <Grid item className={classes.gridItem}>
