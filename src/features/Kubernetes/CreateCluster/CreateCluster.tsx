@@ -77,6 +77,11 @@ export const getMonthlyPrice = (pool: PoolNode, types?: ExtendedType[]) => {
   return thisType ? thisType.price.monthly * pool.nodeCount : 0;
 };
 
+export const getTotalClusterPrice = (pools: PoolNode[]) =>
+  pools.reduce((accumulator, node) => {
+    return accumulator + node.totalMonthlyPrice;
+  }, 0);
+
 export class CreateCluster extends React.Component<CombinedProps, State> {
   state: State = {
     selectedRegion: undefined,
@@ -162,7 +167,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
             <CheckoutBar
               data-qa-checkout-bar
               heading="Cluster Summary"
-              calculatedPrice={0}
+              calculatedPrice={getTotalClusterPrice(nodePools)}
               isMakingRequest={false}
               disabled={false}
               onDeploy={this.createCluster}
