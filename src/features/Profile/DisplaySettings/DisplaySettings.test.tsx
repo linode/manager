@@ -12,6 +12,7 @@ describe('Email change form', () => {
       username="exampleuser"
       email="me@this.com"
       timezone="America/Barbados"
+      loggedInAsCustomer={false}
       actions={{
         updateProfile: update
       }}

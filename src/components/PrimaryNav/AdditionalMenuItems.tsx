@@ -8,6 +8,7 @@ import {
 } from '@material-ui/core/styles';
 
 import NavItem, { PrimaryLink } from './NavItem';
+// import { sendAdaEvent } from 'src/utilities/ga';
 
 type ClassNames = 'root';
 
@@ -51,11 +52,7 @@ const AdditionalMenuItems: React.FC<CombinedProps> = props => {
   //   }
 
   //   setAdaError('');
-  //   sendEvent({
-  //     category: 'Support Bot',
-  //     action: 'Open',
-  //     label: location.pathname
-  //   });
+  //   sendAdaEvent();
   //   ada.show();
   // };
 

@@ -6,7 +6,6 @@ import {
   isEmpty,
   lensPath,
   over,
-  path,
   pathOr,
   prepend,
   propEq
@@ -36,6 +35,10 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { deleteDomainRecord } from 'src/services/domains';
+import {
+  getAPIErrorOrDefault,
+  getErrorStringOrDefault
+} from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import ActionMenu from './DomainRecordActionMenu';
 import Drawer from './DomainRecordDrawer';
@@ -242,17 +245,12 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         }));
       })
       .catch(errorResponse => {
-        const errors = path<Linode.ApiFieldError[]>(
-          ['response', 'data', 'errors'],
-          errorResponse
-        );
-        if (errors) {
-          this.updateConfirmDialog(c => ({
-            ...c,
-            submitting: false,
-            errors
-          }));
-        }
+        const errors = getAPIErrorOrDefault(errorResponse);
+        this.updateConfirmDialog(c => ({
+          ...c,
+          submitting: false,
+          errors
+        }));
       });
     this.updateConfirmDialog(c => ({ ...c, submitting: true }));
   };
@@ -763,7 +761,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                             </Paper>
                             <PaginationFooter
                               count={count}
-                              handlePageChange={handlePageChange()}
+                              handlePageChange={handlePageChange}
                               handleSizeChange={handlePageSizeChange}
                               page={page}
                               pageSize={pageSize}
@@ -784,6 +782,11 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           onClose={this.handleCloseDialog}
           title="Confirm Deletion"
           actions={this.renderDialogActions}
+          error={
+            confirmDialog.errors
+              ? getErrorStringOrDefault(confirmDialog.errors)
+              : undefined
+          }
         >
           Are you sure you want to delete this record?
         </ConfirmationDialog>

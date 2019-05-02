@@ -37,6 +37,8 @@ import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
 import TotalTraffic, { TotalTrafficProps } from './TotalTraffic';
 
+import { ExtendedEvent } from 'src/store/events/event.helpers';
+
 setUpCharts();
 
 type ClassNames =
@@ -234,7 +236,19 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   }
 
   getStats = () => {
-    const { linodeId } = this.props;
+    const { linodeId, linodeCreated } = this.props;
+
+    // Stats will not be available for a Linode for at least 5 minutes after
+    // it's been created, so no need to do an expensive `/stats` request until
+    // 5 minutes have passed.
+    const fiveMinutesAgo = moment().subtract(5, 'minutes');
+    if (moment.utc(linodeCreated).isAfter(fiveMinutesAgo)) {
+      return this.setState({
+        dataIsLoading: false,
+        isTooEarlyForGraphData: true
+      });
+    }
+
     const { rangeSelection } = this.state;
     if (!linodeId) {
       return;
@@ -265,8 +279,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         if (!this.mounted) {
           return;
         }
-
-        const { linodeCreated } = this.props;
 
         // If a Linode has just been created, we'll get an error from the API when
         // requesting stats (since there's no data available yet.) In this case,
@@ -693,7 +705,11 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             </Grid>
 
             <Grid item>
-              <ActivitySummary linodeId={linode.id} />
+              <ActivitySummary
+                eventsFromRedux={this.props.events}
+                linodeId={linode.id}
+                inProgressEvents={this.props.inProgressEvents}
+              />
             </Grid>
 
             <Grid item className="py0">
@@ -755,11 +771,19 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 interface WithTypesProps {
   typesData: Linode.LinodeType[];
   timezone: string;
+  inProgressEvents: Record<number, number>;
+  events: ExtendedEvent[];
 }
 
 const withTypes = connect((state: ApplicationState, ownProps) => ({
   typesData: state.__resources.types.entities,
-  timezone: pathOr('UTC', ['__resources', 'profile', 'data', 'timezone'], state)
+  timezone: pathOr(
+    'UTC',
+    ['__resources', 'profile', 'data', 'timezone'],
+    state
+  ),
+  inProgressEvents: state.events.inProgressEvents,
+  events: state.events.events
 }));
 
 const enhanced = compose<CombinedProps, {}>(

@@ -16,11 +16,11 @@ import {
   isRestrictedUser
 } from 'src/features/Profile/permissionsHelpers';
 import { MapState } from 'src/store/types';
-import { sendEvent } from 'src/utilities/analytics';
 import {
   getAPIErrorOrDefault,
   handleUnauthorizedErrors
 } from 'src/utilities/errorUtils';
+import { sendStackscriptsSearchEvent } from 'src/utilities/ga';
 import StackScriptTableHead from '../Partials/StackScriptTableHead';
 import {
   AcceptedFilters,
@@ -327,11 +327,7 @@ const withStackScriptBase = (isSelecting: boolean) => (
         didSearch: true // table will show default empty state unless didSearch is true
       });
 
-      sendEvent({
-        category: 'stackscripts',
-        action: 'search',
-        label: lowerCaseValue
-      });
+      sendStackscriptsSearchEvent(lowerCaseValue);
 
       request(
         filteredUser,

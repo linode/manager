@@ -1,11 +1,11 @@
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import RootRef from 'src/components/core/RootRef';
 import {
   StyleRulesCallback,
   withStyles,
@@ -26,6 +26,7 @@ import {
   withLinodeDetailContext
 } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { linodeReboot } from 'src/services/linodes';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import LinodeConfigActionMenu from '../LinodeSettings/LinodeConfigActionMenu';
 import LinodeConfigDrawer from '../LinodeSettings/LinodeConfigDrawer';
 
@@ -86,17 +87,21 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
     configDrawer: this.defaultConfigDrawerState
   };
 
+  configsPanel = React.createRef();
+
   render() {
     const { classes, readOnly } = this.props;
 
     return (
       <React.Fragment>
         <Grid container justify="space-between" alignItems="flex-end">
-          <Grid item>
-            <Typography variant="h3" className={classes.headline}>
-              Configuration
-            </Typography>
-          </Grid>
+          <RootRef rootRef={this.configsPanel}>
+            <Grid item>
+              <Typography variant="h3" className={classes.headline}>
+                Configuration
+              </Typography>
+            </Grid>
+          </RootRef>
           <Grid item className={classes.addNewWrapper}>
             <AddNewLink
               onClick={this.openConfigDrawerForCreation}
@@ -203,10 +208,9 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
         resetEventsPolling();
       })
       .catch(errorResponse => {
-        const errors = pathOr(
-          [{ reason: `Error booting ${label}` }],
-          ['response', 'data', 'errors'],
-          errorResponse
+        const errors = getAPIErrorOrDefault(
+          errorResponse,
+          `Error booting ${label}`
         );
         errors.map((error: Linode.ApiFieldError) => {
           this.props.enqueueSnackbar(error.reason, {
@@ -256,7 +260,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
 
   linodeConfigsTable = () => {
     return (
-      <Paginate data={this.props.configs}>
+      <Paginate data={this.props.configs} scrollToRef={this.configsPanel}>
         {({
           data: paginatedData,
           handlePageChange,
@@ -286,7 +290,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
                 count={count}
                 page={page}
                 pageSize={pageSize}
-                handlePageChange={handlePageChange(false)}
+                handlePageChange={handlePageChange}
                 handleSizeChange={handlePageSizeChange}
                 eventCategory="linode configs"
               />

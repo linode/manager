@@ -1,15 +1,15 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { domains, linodes } from 'src/__data__/groupImports';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendImportDisplayGroupSubmitEvent } from 'src/utilities/ga';
 import {
   createLabel,
   getGroupImportList,
   TagImportDrawer,
   withUpdates
 } from './TagImportDrawer';
-jest.mock('src/utilities/analytics', () => ({
-  sendEvent: jest.fn()
+jest.mock('src/utilities/ga', () => ({
+  sendImportDisplayGroupSubmitEvent: jest.fn()
 }));
 
 const props = {
@@ -68,42 +68,38 @@ describe('TagImportDrawer', () => {
 
   it('should send a GA event on success', () => {
     component.find('[data-qa-submit]').simulate('click');
-    expect(sendEvent).toHaveBeenCalled();
+    expect(sendImportDisplayGroupSubmitEvent).toHaveBeenCalled();
   });
 
   it('should send a GA event with the number of Linodes and Domains with imported tags', () => {
     component.find('[data-qa-submit]').simulate('click');
-    expect(sendEvent).toHaveBeenCalledWith(
-      expect.objectContaining({
-        label: 'Linodes: 3; Domains: 2'
-      })
+    expect(sendImportDisplayGroupSubmitEvent).toHaveBeenCalledWith(
+      createLabel(3, 2),
+      5
     );
   });
 
   it('should send a GA event with category of "Dashboard"', () => {
     component.find('[data-qa-submit]').simulate('click');
-    expect(sendEvent).toHaveBeenCalledWith(
-      expect.objectContaining({
-        category: 'dashboard'
-      })
+    expect(sendImportDisplayGroupSubmitEvent).toHaveBeenCalledWith(
+      createLabel(3, 2),
+      5
     );
   });
 
   it('should send a GA event with value of number of Linodes + number of Domains', () => {
     component.find('[data-qa-submit]').simulate('click');
-    expect(sendEvent).toHaveBeenCalledWith(
-      expect.objectContaining({
-        value: 5
-      })
+    expect(sendImportDisplayGroupSubmitEvent).toHaveBeenCalledWith(
+      createLabel(3, 2),
+      5
     );
   });
 
   it('should send a GA event with action of "import display groups"', () => {
     component.find('[data-qa-submit]').simulate('click');
-    expect(sendEvent).toHaveBeenCalledWith(
-      expect.objectContaining({
-        action: 'import display groups'
-      })
+    expect(sendImportDisplayGroupSubmitEvent).toHaveBeenCalledWith(
+      createLabel(3, 2),
+      5
     );
   });
 });
