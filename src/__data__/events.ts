@@ -1,3 +1,5 @@
+import { ExtendedEvent } from 'src/store/events/event.helpers';
+
 export const events: Linode.Event[] = [
   {
     id: 18029754,
@@ -451,48 +453,9 @@ export const events: Linode.Event[] = [
   }
 ];
 
-export const dupeEvents: Linode.Event[] = [
-  {
-    id: 1234,
-    time_remaining: 50,
-    seen: true,
-    created: '2018-12-02T20:23:43',
-    action: 'linode_boot',
-    read: false,
-    percent_complete: 100,
-    username: 'coolguymarty',
-    rate: null,
-    entity: {
-      id: 11440645,
-      label: 'linode11440645',
-      type: 'linode',
-      url: '/v4/linode/instances/11440645'
-    },
-    status: 'finished'
-  },
-  {
-    id: 1234,
-    time_remaining: 0,
-    seen: true,
-    created: '2018-12-02T20:23:43',
-    action: 'linode_boot',
-    read: false,
-    percent_complete: 100,
-    username: 'coolguymarty',
-    rate: null,
-    entity: {
-      id: 11440645,
-      label: 'linode11440645',
-      type: 'linode',
-      url: '/v4/linode/instances/11440645'
-    },
-    status: 'scheduled'
-  }
-];
-
 export const uniqueEvents: Linode.Event[] = [
   {
-    id: 1234,
+    id: 1231234,
     time_remaining: 50,
     seen: true,
     created: '2018-12-02T20:23:43',
@@ -528,3 +491,23 @@ export const uniqueEvents: Linode.Event[] = [
     status: 'finished'
   }
 ];
+
+export const reduxEvent: ExtendedEvent = {
+  _initial: false,
+  id: 123551234,
+  time_remaining: 50,
+  seen: true,
+  created: '2018-12-02T20:23:43',
+  action: 'linode_boot',
+  read: false,
+  percent_complete: 100,
+  username: 'coolguymarty',
+  rate: null,
+  entity: {
+    id: 11440645,
+    label: 'linode11440645',
+    type: 'linode',
+    url: '/v4/linode/instances/11440645'
+  },
+  status: 'finished'
+};

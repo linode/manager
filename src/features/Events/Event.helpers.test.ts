@@ -1,4 +1,4 @@
-import { dupeEvents, uniqueEvents } from 'src/__data__/events';
+import { reduxEvent, uniqueEvents } from 'src/__data__/events';
 import {
   filterUniqueEvents,
   percentCompleteHasUpdated,
@@ -19,7 +19,7 @@ const nextTime = '1556810370715';
 
 describe('Utility Functions', () => {
   it('should filter out unique events', () => {
-    expect(filterUniqueEvents(dupeEvents)).toHaveLength(1);
+    expect(filterUniqueEvents([reduxEvent, reduxEvent])).toHaveLength(1);
     expect(filterUniqueEvents(uniqueEvents)).toHaveLength(2);
   });
 

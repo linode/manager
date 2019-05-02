@@ -70,7 +70,7 @@ const appendToEvents = (oldEvents: Linode.Event[], newEvents: Linode.Event[]) =>
     setDeletedEvents // Add a _deleted entry for each new event
   )(newEvents);
 
-interface ReducerState {
+export interface ReducerState {
   inProgressEvents: Record<number, number>;
   eventsFromRedux: ExtendedEvent[];
   reactStateEvents: Linode.Event[];
@@ -85,7 +85,7 @@ interface Payload {
   entityId?: number;
 }
 
-interface ReducerActions {
+export interface ReducerActions {
   type: 'append' | 'prepend';
   payload: Payload;
 }
@@ -161,7 +161,10 @@ export const reducer: React.Reducer<ReducerState, ReducerActions> = (
     case 'append':
     default:
       return {
-        reactStateEvents: nextReactEvents,
+        reactStateEvents: appendToEvents(
+          state.reactStateEvents,
+          nextReactEvents
+        ),
         eventsFromRedux: nextReduxEvents,
         inProgressEvents: nextInProgressEvents,
         mostRecentEventTime: nextMostRecentEventTime
@@ -216,10 +219,7 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
       type: 'append',
       payload: {
         eventsFromRedux: props.eventsFromRedux,
-        reactStateEvents: appendToEvents(
-          events.reactStateEvents,
-          response.data
-        ),
+        reactStateEvents: response.data,
         entityId: props.entityId,
         inProgressEvents: props.inProgressEvents,
         mostRecentEventTime: props.mostRecentEventTime
