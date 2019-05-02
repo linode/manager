@@ -1,14 +1,12 @@
 import { defaultTo } from 'ramda';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
-import InputLabel from 'src/components/core/InputLabel';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import MenuItem from 'src/components/MenuItem';
 import { titlecase } from 'src/features/linodes/presentation';
 
 type ClassNames = 'root';
@@ -58,10 +56,13 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = props => {
       {slots.map((slot, idx) => {
         const deviceList = Object.entries(devices).map(([type, items]) => {
           const device = titlecase(type);
-          return { label: device, value: device };
-          // ...(items as any[]).map(({ _id, label }) => {
-          //   return { label, value: _id };
-          // })
+          return {
+            label: device,
+            value: type,
+            options: (items as any[]).map(({ _id, label }) => {
+              return { label, value: _id };
+            })
+          };
         });
 
         return counter < idx ? null : (
@@ -70,41 +71,32 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = props => {
             key={slot}
             fullWidth
           >
-            <InputLabel
-              htmlFor={`rescueDevice_${slot}`}
-              disableAnimation
-              shrink={true}
-              disabled={disabled}
-            >
-              /dev/{slot}
-            </InputLabel>
             <Select
               options={deviceList}
               defaultValue={getSelected(slot) || 'none'}
               onChange={(e: Item<string>) => onChange(slot, e.value)}
               disabled={disabled}
               placeholder={'None'}
+              isClearable={false}
+              label={`/dev/${slot}`}
+              noMarginTop
             />
           </FormControl>
         );
       })}
       {rescue && (
         <FormControl fullWidth>
-          <InputLabel
-            htmlFor={`rescueDevice_sdh`}
-            disableAnimation
-            shrink={true}
-            disabled={disabled}
-          >
-            /dev/sdh
-          </InputLabel>
           <Select
             disabled
-            value={'finnix'}
-            inputProps={{ name: `rescueDevice_sdh`, id: `rescueDevice_sdh` }}
-          >
-            <MenuItem value="finnix">Finnix Media</MenuItem>
-          </Select>
+            onChange={() => onChange}
+            options={[]}
+            defaultValue={'finnix'}
+            name="rescueDevice_sdh"
+            id="rescueDevice_sdh"
+            label="/dev/sdh"
+            placeholder="Finnix Media"
+            noMarginTop
+          />
         </FormControl>
       )}
     </React.Fragment>
