@@ -11,12 +11,15 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import { Item } from 'src/components/EnhancedSelect/Select';
+import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { WithRegionsProps } from 'src/features/linodes/LinodesCreate/types';
+import { getTagsAsStrings } from 'src/utilities/tagUtils';
 
 import NodePoolPanel from './NodePoolPanel';
 
@@ -61,6 +64,7 @@ interface State {
   numberOfLinodes: number;
   nodePools: PoolNode[];
   label: string;
+  tags: Item<string>[];
   version: KubernetesVersion;
 }
 
@@ -89,16 +93,18 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     numberOfLinodes: 1,
     nodePools: [],
     label: '',
+    tags: [],
     version: '1.14'
   };
 
   createCluster = () => {
-    const { selectedRegion, nodePools, label, version } = this.state;
+    const { selectedRegion, nodePools, label, tags, version } = this.state;
     const payload = {
       selectedRegion,
       nodePools,
       label,
-      version
+      version,
+      tags: getTagsAsStrings(tags)
     };
     console.log(payload);
   };
@@ -121,14 +127,25 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     });
   };
 
+  updateLabel = (newLabel: string) => {
+    this.setState({ label: newLabel });
+  };
+
+  updateTags = (newTags: Item<string>[]) => {
+    this.setState({ tags: newTags });
+  };
+
   render() {
     const { classes, regionsData, typesData } = this.props;
     const {
+      label,
       selectedRegion,
       selectedType,
       numberOfLinodes,
-      nodePools
+      nodePools,
+      tags
     } = this.state;
+
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
@@ -159,6 +176,21 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
                 }}
                 updateNodeCount={(newCount: number) => {
                   this.setState({ numberOfLinodes: newCount });
+                }}
+              />
+            </Grid>
+            <Grid item>
+              <LabelAndTagsPanel
+                labelFieldProps={{
+                  errorText: undefined,
+                  label: 'Cluster Label',
+                  onChange: e => this.updateLabel(e.target.value),
+                  value: label
+                }}
+                tagsInputProps={{
+                  value: tags,
+                  onChange: this.updateTags,
+                  tagError: undefined
                 }}
               />
             </Grid>

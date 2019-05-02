@@ -41,7 +41,7 @@ export const NodePoolDisplayTable: React.FunctionComponent<
           <TableCell data-qa-table-header="Plan">Plan</TableCell>
           <TableCell data-qa-table-header="Node Count">Node Count</TableCell>
           <TableCell data-qa-table-header="Pricing">Pricing</TableCell>
-          <TableCell /> {/* Blank cell for delete button */}
+          <TableCell />
         </TableRow>
       </TableHead>
       <TableBody>
