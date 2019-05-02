@@ -89,7 +89,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     },
     '& .react-select__group-heading': {
       textTransform: 'initial',
-      fontSize: '.9rem'
+      fontSize: '1rem',
+      color: theme.color.headline,
+      fontFamily: theme.font.bold,
+      paddingLeft: 10,
+      paddingRight: 10
     },
     '& .react-select__menu-list': {
       padding: theme.spacing.unit / 2,
