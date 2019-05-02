@@ -44,13 +44,19 @@ interface Props {
   nodeCount: number;
   addNodePool: (pool: PoolNode) => void;
   deleteNodePool: (poolIdx: number) => void;
-  handleTypeSelect: (newType: string) => void;
+  handleTypeSelect: (newType?: string) => void;
   updateNodeCount: (newCount: number) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const NodePoolPanel: React.FunctionComponent<CombinedProps> = props => {
+  const [typeError, setTypeError] = React.useState<string | undefined>(
+    undefined
+  );
+  const [countError, setCountError] = React.useState<string | undefined>(
+    undefined
+  );
   const {
     classes,
     addNodePool,
@@ -63,6 +69,30 @@ export const NodePoolPanel: React.FunctionComponent<CombinedProps> = props => {
     types
   } = props;
 
+  const submitForm = () => {
+    /** Do simple client validation for the two input fields */
+    setTypeError(undefined);
+    setCountError(undefined);
+    if (!selectedType) {
+      setTypeError('Please select a type.');
+      return;
+    }
+    if (typeof nodeCount !== 'number') {
+      setCountError('Invalid value.');
+      return;
+    }
+
+    /** Add pool and reset form state. */
+    addNodePool({ type: selectedType, nodeCount });
+    handleTypeSelect(undefined);
+    updateNodeCount(1);
+  };
+
+  const selectType = (newType: string) => {
+    setTypeError(undefined);
+    handleTypeSelect(newType);
+  };
+
   return (
     <Paper className={classes.root}>
       <Grid container direction="column">
@@ -70,7 +100,8 @@ export const NodePoolPanel: React.FunctionComponent<CombinedProps> = props => {
           <SelectPlanPanel
             types={types}
             selectedID={selectedType}
-            onSelect={handleTypeSelect}
+            onSelect={selectType}
+            error={typeError}
             header="Add Node Pools"
             copy="Add groups of Linodes to your cluster with a chosen size."
           />
@@ -78,17 +109,15 @@ export const NodePoolPanel: React.FunctionComponent<CombinedProps> = props => {
         <Grid item className={classes.gridItem}>
           <Typography variant="body1">Number of Linodes</Typography>
           <TextField
+            tiny
             type="number"
             value={nodeCount}
-            tiny
             onChange={e => updateNodeCount(+e.target.value)}
+            errorText={countError}
           />
         </Grid>
         <Grid item className={classes.gridItem}>
-          <Button
-            type="secondary"
-            onClick={() => addNodePool({ type: selectedType, nodeCount })}
-          >
+          <Button type="secondary" onClick={submitForm}>
             Add Node Pool
           </Button>
         </Grid>
