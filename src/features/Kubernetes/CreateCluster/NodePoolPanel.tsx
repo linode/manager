@@ -7,9 +7,11 @@ import {
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
+// import Typography from 'src/components/core/Typography';
 
-import SelectPlanPanel, { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import SelectPlanPanel, {
+  ExtendedType
+} from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 
 import { PoolNode } from './CreateCluster';
 import NodePoolDisplayTable from './NodePoolDisplayTable';
@@ -19,11 +21,10 @@ type ClassNames = 'root' | 'title';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2,
-    padding: theme.spacing.unit * 2
+    marginBottom: theme.spacing.unit * 2
   },
   title: {
-    marginBottom: theme.spacing.unit,
+    marginBottom: theme.spacing.unit
   }
 });
 
@@ -41,20 +42,24 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const NodePoolPanel: React.FunctionComponent<CombinedProps> = props => {
-  const { classes, addNodePool, deleteNodePool, handleTypeSelect, pools, selectedType, nodeCount, types } = props;
+  const {
+    classes,
+    addNodePool,
+    deleteNodePool,
+    handleTypeSelect,
+    pools,
+    selectedType,
+    nodeCount,
+    types
+  } = props;
 
   return (
-    <Paper className={classes.root} >
-      <Typography variant="h2" className={classes.title} data-qa-tp-title>
-        Add Node Pools
-      </Typography>
-      <Typography variant="body1">
-        Add groups of Linodes to your cluster with a chosen size.
-      </Typography>
+    <Paper className={classes.root}>
       <SelectPlanPanel
         types={types}
         onSelect={handleTypeSelect}
-        noHeader
+        header="Add Node Pools"
+        copy="Add groups of Linodes to your cluster with a chosen size."
       />
       <NodePoolDisplayTable
         pools={pools}

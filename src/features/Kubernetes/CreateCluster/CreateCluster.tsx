@@ -61,7 +61,10 @@ interface State {
   version: KubernetesVersion;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & WithRegionsProps & WithTypesProps;
+type CombinedProps = Props &
+  WithStyles<ClassNames> &
+  WithRegionsProps &
+  WithTypesProps;
 
 export class CreateCluster extends React.Component<CombinedProps, State> {
   state: State = {
@@ -84,13 +87,28 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     console.log(payload);
   };
 
+  addPool = (pool: PoolNode) => {
+    const { nodePools } = this.state;
+    this.setState({
+      nodePools: [...nodePools, pool]
+    });
+  };
+
+  removePool = (poolIdx: number) => {
+    const { nodePools } = this.state;
+    const updatedPools = nodePools.splice(poolIdx, 1);
+    this.setState({
+      nodePools: updatedPools
+    });
+  };
+
   render() {
     const { classes, regionsData, typesData } = this.props;
     const {
       selectedRegion,
       selectedType,
       numberOfLinodes,
-      nodePools,
+      nodePools
     } = this.state;
     return (
       <React.Fragment>
@@ -114,19 +132,17 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
             <Grid item data-qa-kubernetes-create-node-pool-panel>
               <NodePoolPanel
                 pools={nodePools}
-                types={typesData}
+                types={typesData || []}
                 nodeCount={numberOfLinodes}
                 selectedType={selectedType}
-                addNodePool={(pool: PoolNode) => console.log('adding', pool)}
-                deleteNodePool={(poolIdx: number) =>
-                  console.log(`deleting node pool ${poolIdx}`)
-                }
-                handleTypeSelect={(newType: string) =>
-                  console.log('selecting plan' + newType)
-                }
-                updateNodeCount={(newCount: number) =>
-                  console.log(`updating node count to ${newCount}`)
-                }
+                addNodePool={(pool: PoolNode) => this.addPool(pool)}
+                deleteNodePool={(poolIdx: number) => this.removePool(poolIdx)}
+                handleTypeSelect={(newType: string) => {
+                  this.setState({ selectedType: newType });
+                }}
+                updateNodeCount={(newCount: number) => {
+                  this.setState({ numberOfLinodes: newCount });
+                }}
               />
             </Grid>
           </Grid>
@@ -158,7 +174,7 @@ const withRegions = regionsContainer(({ data, loading, error }) => ({
 const enhanced = compose<CombinedProps, Props>(
   styled,
   withRegions,
-  withTypes,
+  withTypes
 );
 
 export default enhanced(CreateCluster);
