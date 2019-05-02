@@ -22,6 +22,15 @@ const stackscript_data = array()
 //     otherwise: string().notRequired()
 //   });
 
+// Covers length and character requirements. Chain with other constraints using .concat().
+const rootPasswordValidation = string()
+  .min(6, 'Password must be between 6 and 128 characters.')
+  .max(128, 'Password must be between 6 and 128 characters.')
+  .matches(
+    /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\]))|((?=.*[A-Z])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\]))|((?=.*[0-9])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\])))/,
+    'Password must contain at least 2 of the following classes: uppercase letters, lowercase letters, numbers, and punctuation.'
+  );
+
 export const ResizeLinodeDiskSchema = object({
   size: number()
     .required()
@@ -130,7 +139,9 @@ const SSHKeySchema = object({
 
 export const RebuildLinodeSchema = object({
   image: string().required('An image is required.'),
-  root_pass: string().required('Password cannot be blank.'),
+  root_pass: string()
+    .required('Password cannot be blank.')
+    .concat(rootPasswordValidation),
   authorized_keys: array().of(SSHKeySchema),
   authorized_users: array().of(string()),
   stackscript_id: number().notRequired(),
@@ -222,12 +233,7 @@ export const CreateLinodeDiskSchema = object({
       .required(
         'You must provide a root password when deploying from an image.'
       )
-      .min(6, 'Password must be between 6 and 128 characters.')
-      .max(128, 'Password must be between 6 and 128 characters.')
-      .matches(
-        /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9]))|((?=.*[a-z])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\]))|((?=.*[A-Z])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\]))|((?=.*[0-9])(?=.*[!"#$%&'()*+,-.\/:;<=>?@\[\]^_`{|}~\\])))/,
-        'Password must contain at least 2 of the following classes: uppercase letters, lowercase letters, numbers, and punctuation.'
-      ),
+      .concat(rootPasswordValidation),
     // .test('is-strong-password', 'Please choose a stronger password.', (value: string) => return zxcvbn(value).score > 3),
     otherwise: string().notRequired()
   }),

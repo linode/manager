@@ -24,11 +24,11 @@ describe('BucketActionMenu', () => {
   });
 
   it('executes the onRemove function when the "Delete" option is clicked', () => {
-    const { getByText } = render(
+    const { getAllByText } = render(
       wrapWithTheme(<BucketActionMenu {...props} />)
     );
 
-    fireEvent.click(getByText('Delete'));
+    fireEvent.click(getAllByText('Delete')[0]);
     expect(mockOnRemove).toHaveBeenCalledWith('a-cluster', 'my-test-bucket');
   });
 });

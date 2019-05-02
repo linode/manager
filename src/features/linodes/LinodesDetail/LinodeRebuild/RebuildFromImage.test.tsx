@@ -1,54 +1,58 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
+import {
+  cleanup,
+  fireEvent,
+  render,
+  waitForElement
+} from 'react-testing-library';
 import { images } from 'src/__data__/images';
-import { linode1 } from 'src/__data__/linodes';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { RebuildFromImage } from './RebuildFromImage';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
+import { CombinedProps, RebuildFromImage } from './RebuildFromImage';
 
-jest.mock('src/services/linodes', () => ({
-  rebuildLinode: jest.fn().mockImplementation(() => Promise.resolve(linode1))
-}));
+jest.mock('src/utilities/scrollErrorIntoView');
+
+afterEach(cleanup);
+
+const props: CombinedProps = {
+  classes: { root: '', error: '' },
+  linodeId: 1234,
+  imagesData: images,
+  imagesLoading: false,
+  userSSHKeys: [],
+  closeSnackbar: jest.fn(),
+  enqueueSnackbar: jest.fn(),
+  ...reactRouterProps
+};
 
 describe('RebuildFromImage', () => {
-  const wrapper = shallow(
-    <RebuildFromImage
-      classes={{ root: '', error: '' }}
-      linodeId={1234}
-      imagesData={images}
-      imagesLoading={false}
-      userSSHKeys={[]}
-      closeSnackbar={jest.fn()}
-      enqueueSnackbar={jest.fn()}
-      {...reactRouterProps}
-    />
-  );
-
-  it('renders without crashing', () => {
-    expect(wrapper).toHaveLength(1);
-  });
-
-  it('renders a SelectImage panel with images', () => {
-    expect(wrapper.find('[data-qa-select-image]')).toHaveLength(1);
-    expect(wrapper.find('[data-qa-select-image]').prop('images')).toEqual(
-      images
+  it('renders a SelectImage panel', () => {
+    const { queryByText } = render(
+      wrapWithTheme(<RebuildFromImage {...props} />)
     );
+    expect(queryByText('Select Image')).toBeInTheDocument();
   });
 
-  it('defaults the selectedImage to an empty string', () => {
-    expect(wrapper.find('[data-qa-select-image]').prop('selectedImageID')).toBe(
-      ''
+  it('validates the form upon clicking the "Rebuild" button', async () => {
+    const { getByTestId, getByText } = render(
+      wrapWithTheme(<RebuildFromImage {...props} />)
     );
+    fireEvent.click(getByTestId('rebuild-button'));
+    await waitForElement(() => [
+      getByText('An image is required.'),
+      getByText('Password cannot be blank.')
+    ]);
   });
 
-  it('renders an AccessPanel', () => {
-    expect(wrapper.find('[data-qa-access-panel]')).toHaveLength(1);
-  });
-
-  it('defaults the password to an empty string', () => {
-    expect(wrapper.find('[data-qa-access-panel]').prop('password')).toBe('');
-  });
-
-  it('renders an Rebuild Button', () => {
-    expect(wrapper.find('[data-qa-rebuild]')).toHaveLength(1);
+  it('opens a confirmation modal after form has been validated', async () => {
+    const { getByTestId, getByText, getByPlaceholderText } = render(
+      wrapWithTheme(<RebuildFromImage {...props} />)
+    );
+    fireEvent.click(getByText('Ubuntu'));
+    fireEvent.change(getByPlaceholderText('Enter a password.'), {
+      target: { value: 'AAbbCC1234!!' }
+    });
+    fireEvent.click(getByTestId('rebuild-button'));
+    await waitForElement(() => getByText('Confirm Linode Rebuild'));
   });
 });
