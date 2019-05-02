@@ -28,6 +28,7 @@ import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import PromiseLoader, {
   PromiseLoaderResponse
@@ -50,7 +51,7 @@ import {
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
 import { MapState } from 'src/store/types';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { formatDate } from 'src/utilities/formatDate';
 import {
   sendBackupsDisabledEvent,
@@ -67,7 +68,9 @@ type ClassNames =
   | 'paper'
   | 'title'
   | 'subTitle'
+  | 'snapshotNameField'
   | 'snapshotFormControl'
+  | 'snapshotGeneralError'
   | 'scheduleAction'
   | 'chooseTime'
   | 'cancelButton';
@@ -87,11 +90,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   snapshotFormControl: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignItems: 'flex-start',
     flexWrap: 'wrap',
     '& > div': {
       width: 'auto',
       marginRight: theme.spacing.unit * 2
+    },
+    '& button': {
+      marginTop: theme.spacing.unit * 4
     }
   },
   scheduleAction: {
@@ -106,6 +112,12 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   cancelButton: {
     marginBottom: theme.spacing.unit
+  },
+  snapshotNameField: {
+    minWidth: 275
+  },
+  snapshotGeneralError: {
+    minWidth: '100%'
   }
 });
 
@@ -339,14 +351,15 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         resetEventsPolling();
       })
       .catch(errorResponse => {
-        getAPIErrorOrDefault(
-          errorResponse,
-          'There was an error taking a snapshot'
-        ).forEach((err: Linode.ApiFieldError) =>
-          enqueueSnackbar(err.reason, {
-            variant: 'error'
-          })
-        );
+        this.setState({
+          snapshotForm: {
+            ...this.state.snapshotForm,
+            errors: getAPIErrorOrDefault(
+              errorResponse,
+              'There was an error taking a snapshot'
+            )
+          }
+        });
       });
   };
 
@@ -537,7 +550,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   SnapshotForm = (): JSX.Element | null => {
     const { classes, linodeInTransition, permissions } = this.props;
     const { snapshotForm } = this.state;
-    const getErrorFor = getAPIErrorFor({ label: 'Label' }, snapshotForm.errors);
+    const hasErrorFor = getErrorMap(['label'], snapshotForm.errors);
 
     const disabled = isReadOnly(permissions);
 
@@ -558,12 +571,22 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             it.
           </Typography>
           <FormControl className={classes.snapshotFormControl}>
+            {hasErrorFor.none && (
+              <Notice
+                spacingBottom={8}
+                className={classes.snapshotGeneralError}
+                error
+              >
+                {hasErrorFor.none}
+              </Notice>
+            )}
             <TextField
-              errorText={getErrorFor('label')}
+              errorText={hasErrorFor.label}
               label="Name Snapshot"
               value={snapshotForm.label || ''}
               onChange={this.handleSnapshotNameChange}
               data-qa-manual-name
+              className={classes.snapshotNameField}
             />
             <Tooltip title={linodeInTransition ? 'This Linode is busy' : ''}>
               <div>
@@ -577,9 +600,6 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
                 </Button>
               </div>
             </Tooltip>
-            {getErrorFor('none') && (
-              <FormHelperText error>{getErrorFor('none')}</FormHelperText>
-            )}
           </FormControl>
         </Paper>
       </React.Fragment>
