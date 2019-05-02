@@ -39,7 +39,7 @@ import {
   DomainActionsProps,
   withDomainActions
 } from 'src/store/domains/domains.container';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
 type ClassNames =
@@ -384,11 +384,7 @@ const withLocalStorage = localStorageContainer<
     toggleGroupByTag: state => (checked: boolean) => {
       storage.groupDomainsByTag.set(checked ? 'true' : 'false');
 
-      sendEvent({
-        category: DomainsLanding.eventCategory,
-        action: 'group by tag',
-        label: String(checked)
-      });
+      sendGroupByTagEnabledEvent(DomainsLanding.eventCategory, checked);
 
       return {
         ...state,

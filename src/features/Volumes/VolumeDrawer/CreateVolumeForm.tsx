@@ -20,8 +20,8 @@ import {
 } from 'src/features/Profile/permissionsHelpers';
 import { CreateVolumeSchema } from 'src/services/volumes/volumes.schema.ts';
 import { MapState } from 'src/store/types';
-import { sendEvent } from 'src/utilities/analytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { sendCreateVolumeEvent } from 'src/utilities/ga';
 import ConfigSelect from './ConfigSelect';
 import LabelField from './LabelField';
 import LinodeSelect from './LinodeSelect';
@@ -95,11 +95,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               `Volume scheduled for creation.`
             );
             // GA Event
-            sendEvent({
-              category: 'Create Volume',
-              action: 'Create Volume',
-              label: `${label}: ${size}GiB`
-            });
+            sendCreateVolumeEvent(`${label}: ${size}GiB`);
           })
           .catch(errorResponse => {
             const defaultMessage = `Unable to create a volume at this time. Please try again later.`;

@@ -46,8 +46,8 @@ import {
   WithNodeBalancerActions
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
 import { MapState } from 'src/store/types';
-import { sendEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { sendCreateNodeBalancerEvent } from 'src/utilities/ga';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import NodeBalancerConfigPanel from './NodeBalancerConfigPanel';
@@ -309,11 +309,9 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       .then(nodeBalancer => {
         this.props.history.push(`/nodebalancers/${nodeBalancer.id}/summary`);
         // GA Event
-        sendEvent({
-          category: 'NodeBalancer',
-          action: 'Create NodeBalancer',
-          label: `${nodeBalancer.label}: ${nodeBalancer.region}`
-        });
+        sendCreateNodeBalancerEvent(
+          `${nodeBalancer.label}: ${nodeBalancer.region}`
+        );
       })
       .catch(errorResponse => {
         const errors = getAPIErrorOrDefault(errorResponse);

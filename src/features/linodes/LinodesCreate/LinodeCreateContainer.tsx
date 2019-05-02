@@ -55,8 +55,8 @@ import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { MapState } from 'src/store/types';
 
 import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
-import { sendEvent } from 'src/utilities/analytics';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { sendCreateLinodeEvent } from 'src/utilities/ga';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type StackScript = Linode.StackScript.Response;
@@ -692,9 +692,5 @@ const handleAnalytics = (
     eventLabel = label;
   }
 
-  sendEvent({
-    category: 'Create Linode',
-    action: eventAction,
-    label: eventLabel
-  });
+  sendCreateLinodeEvent(eventAction, eventLabel);
 };

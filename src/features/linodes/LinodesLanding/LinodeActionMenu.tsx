@@ -11,7 +11,10 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 import { powerOnLinode } from './powerActions';
 
-import { sendEvent } from 'src/utilities/analytics';
+import {
+  sendLinodeActionEvent,
+  sendLinodeActionMenuItemEvent
+} from 'src/utilities/ga';
 
 import { getLinodeConfigs } from 'src/services/linodes';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector.ts';
@@ -62,10 +65,7 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
         this.setState({ hasMadeConfigsRequest: true, configsError: err });
       });
 
-    sendEvent({
-      category: 'Linode Action Menu',
-      action: 'Open Action Menu'
-    });
+    sendLinodeActionEvent();
   };
 
   createLinodeActions = () => {
@@ -95,10 +95,7 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
         {
           title: 'Launch Console',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendEvent({
-              category: 'Linode Action Menu Item',
-              action: 'Launch Console'
-            });
+            sendLinodeActionMenuItemEvent('Launch Console');
             lishLaunch(linodeId);
             e.preventDefault();
             e.stopPropagation();
@@ -108,10 +105,7 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
         {
           title: 'View Graphs',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendEvent({
-              category: 'Linode Action Menu Item',
-              action: 'View Linode Graphs'
-            });
+            sendLinodeActionMenuItemEvent('View Linode Graphs');
             push(`/linodes/${linodeId}/summary`);
             e.preventDefault();
             e.stopPropagation();
@@ -120,10 +114,7 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
         {
           title: 'Resize',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendEvent({
-              category: 'Linode Action Menu Item',
-              action: 'Navigate to Resize Page'
-            });
+            sendLinodeActionMenuItemEvent('Navigate to Resize Page');
             push(`/linodes/${linodeId}/resize`);
             e.preventDefault();
             e.stopPropagation();
@@ -133,10 +124,7 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
         {
           title: 'View Backups',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendEvent({
-              category: 'Linode Action Menu Item',
-              action: 'Navigate to Backups Page'
-            });
+            sendLinodeActionMenuItemEvent('Navigate to Backups Page');
             push(`/linodes/${linodeId}/backup`);
             e.preventDefault();
             e.stopPropagation();
@@ -145,10 +133,7 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
         {
           title: 'Settings',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendEvent({
-              category: 'Linode Action Menu Item',
-              action: 'Navigate to Settings Page'
-            });
+            sendLinodeActionMenuItemEvent('Navigate to Settings Page');
             push(`/linodes/${linodeId}/settings`);
             e.preventDefault();
             e.stopPropagation();
@@ -157,10 +142,7 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
         {
           title: 'Delete',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendEvent({
-              category: 'Linode Action Menu Item',
-              action: 'Delete Linode'
-            });
+            sendLinodeActionMenuItemEvent('Delete Linode');
             e.preventDefault();
             e.stopPropagation();
             toggleConfirmation('delete', linodeId, linodeLabel);
@@ -183,10 +165,7 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
             ? "You don't have permission to modify this Linode"
             : undefined,
           onClick: e => {
-            sendEvent({
-              category: 'Linode Action Menu Item',
-              action: 'Power On Linode'
-            });
+            sendLinodeActionMenuItemEvent('Power On Linode');
             powerOnLinode(openConfigDrawer, linodeId, linodeLabel);
             closeMenu();
           }
@@ -202,10 +181,7 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
               ? "You don't have permission to modify this Linode."
               : undefined,
             onClick: (e: React.MouseEvent<HTMLElement>) => {
-              sendEvent({
-                category: 'Linode Action Menu Item',
-                action: 'Reboot Linode'
-              });
+              sendLinodeActionMenuItemEvent('Reboot Linode');
               e.preventDefault();
               e.stopPropagation();
               toggleConfirmation('reboot', linodeId, linodeLabel);
@@ -216,10 +192,7 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
           {
             title: 'Power Off',
             onClick: e => {
-              sendEvent({
-                category: 'Linode Action Menu Item',
-                action: 'Power Off Linode'
-              });
+              sendLinodeActionMenuItemEvent('Power Off Linode');
               e.preventDefault();
               e.stopPropagation();
               toggleConfirmation('power_down', linodeId, linodeLabel);
@@ -234,10 +207,7 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
         actions.splice(-2, 1, {
           title: 'Enable Backups',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendEvent({
-              category: 'Linode Action Menu Item',
-              action: 'Enable Backups'
-            });
+            sendLinodeActionMenuItemEvent('Enable Backups');
             push({
               pathname: `/linodes/${linodeId}/backup`,
               state: { enableOnLoad: true }

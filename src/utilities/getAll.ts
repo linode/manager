@@ -1,7 +1,7 @@
 import * as Bluebird from 'bluebird';
 import { range } from 'ramda';
 
-import { sendEvent } from 'src/utilities/analytics';
+import { sendFetchAllEvent } from 'src/utilities/ga';
 
 import { getDomains } from 'src/services/domains';
 import { getLinodes } from 'src/services/linodes';
@@ -244,10 +244,5 @@ const sendGetAllRequestToAnalytics = (howManyThingsRequested: number) => {
    * send an event with the number of requested entities
    * and the URL pathname and query string
    */
-  sendEvent({
-    category: 'Search',
-    action: 'Data fetch all entities',
-    label: bucketText,
-    value: howManyThingsRequested
-  });
+  sendFetchAllEvent(bucketText, howManyThingsRequested);
 };

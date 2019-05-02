@@ -3,7 +3,7 @@ import { compose } from 'recompose';
 import Tooltip from 'src/components/core/Tooltip';
 import IconButton from 'src/components/IconButton';
 
-import { sendEvent } from 'src/utilities/analytics';
+import { sendAdaEvent } from 'src/utilities/ga';
 
 import AdaIcon from 'src/assets/icons/ada.svg';
 
@@ -54,11 +54,7 @@ const AdaLink: React.FC<CombinedProps> = props => {
       return;
     }
     setAdaError('');
-    sendEvent({
-      category: 'Support Bot',
-      action: 'Open',
-      label: location.pathname
-    });
+    sendAdaEvent();
     ada.show();
   };
 

@@ -19,8 +19,8 @@ import LoginAsCustomerCallback from 'src/layouts/LoginAsCustomerCallback';
 import Logout from 'src/layouts/Logout';
 import OAuthCallbackPage from 'src/layouts/OAuth';
 import store from 'src/store';
-import { sendEvent } from 'src/utilities/analytics';
 import 'src/utilities/createImageBitmap';
+import { sendCurrentThemeSettingsEvent } from 'src/utilities/ga';
 import 'src/utilities/request';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 import { spacing as spacingChoice, theme } from 'src/utilities/storage';
@@ -43,11 +43,7 @@ const themeChoice = theme.get() === 'dark' ? 'Dark Theme' : 'Light Theme';
 const spacingMode =
   spacingChoice.get() === 'compact' ? 'Compact Mode' : 'Normal Mode';
 
-sendEvent({
-  category: 'Theme Choice',
-  action: `${themeChoice} | ${spacingMode}`,
-  label: location.pathname
-});
+sendCurrentThemeSettingsEvent(`${themeChoice} | ${spacingMode}`);
 
 /**
  * Send pageviews unless blacklisted.

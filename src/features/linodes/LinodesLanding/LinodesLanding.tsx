@@ -35,9 +35,12 @@ import LinodeConfigSelectionDrawer, {
 import { ApplicationState } from 'src/store';
 import { deleteLinode } from 'src/store/linodes/linode.requests';
 import { MapState } from 'src/store/types';
-import { sendEvent } from 'src/utilities/analytics';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
+import {
+  sendGroupByTagEnabledEvent,
+  sendLinodesViewEvent
+} from 'src/utilities/ga';
 import { storage, views } from 'src/utilities/storage';
 import CardView from './CardView';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
@@ -151,11 +154,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       views.linode.set('list');
     }
 
-    sendEvent({
-      category: ListLinodes.eventCategory,
-      action: 'switch view',
-      label: style
-    });
+    sendLinodesViewEvent(ListLinodes.eventCategory, style);
   };
 
   selectConfig = (id: number) => {
@@ -558,11 +557,7 @@ const toggleGroupState = withStateHandlers(
     toggleGroupByTag: (state, ownProps) => (e, checked) => {
       storage.views.grouped.set(checked ? 'true' : 'false');
 
-      sendEvent({
-        category: ListLinodes.eventCategory,
-        action: 'group by tag',
-        label: String(checked)
-      });
+      sendGroupByTagEnabledEvent(ListLinodes.eventCategory, checked);
 
       return { ...state, groupByTags: checked };
     }
