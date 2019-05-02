@@ -18,7 +18,7 @@ import {
 import Grid from 'src/components/Grid';
 import { isObjectStorageEnabled } from 'src/constants';
 import { MapState } from 'src/store/types';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendSpacingToggleEvent, sendThemeToggleEvent } from 'src/utilities/ga';
 import AdditionalMenuItems from './AdditionalMenuItems';
 import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
@@ -370,11 +370,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     // Checking the previous spacingUnit value to determine which way to switch.
     const eventLabel = spacingUnit.unit === 8 ? 'compact' : 'normal';
     toggleSpacing();
-    sendEvent({
-      category: 'Theme Choice',
-      action: 'Spacing Toggle',
-      label: eventLabel
-    });
+    sendSpacingToggleEvent(eventLabel);
   };
 
   handleThemeToggle = () => {
@@ -383,11 +379,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     const eventLabel = theme.name === 'darkTheme' ? 'light' : 'dark';
 
     toggleTheme();
-    sendEvent({
-      category: 'Theme Choice',
-      action: 'Theme Toggle',
-      label: eventLabel
-    });
+    sendThemeToggleEvent(eventLabel);
   };
 
   renderPrimaryLink = (primaryLink: PrimaryLink, isLast: boolean) => {

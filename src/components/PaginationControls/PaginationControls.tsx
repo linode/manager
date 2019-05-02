@@ -4,7 +4,7 @@ import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 
 import PageButton from 'src/components/PaginationControls/PageButton';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendPaginationEvent } from 'src/utilities/ga';
 
 import PageNumbers from './PageNumbers';
 
@@ -39,11 +39,7 @@ export class PaginationControls extends React.Component<Props, {}> {
       return;
     }
 
-    sendEvent({
-      category: eventCategory,
-      action: 'pagination',
-      label: eventLabel
-    });
+    sendPaginationEvent(eventCategory, eventLabel);
   };
 
   handleFirstPageClick = () => {

@@ -21,7 +21,7 @@ import {
   transitionText
 } from 'src/features/linodes/transitions';
 import { lishLaunch } from 'src/features/Lish';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendLinodeActionMenuItemEvent } from 'src/utilities/ga';
 import { typeLabelDetails } from '../presentation';
 import hasMutationAvailable, {
   HasMutationAvailable
@@ -71,19 +71,13 @@ export type CombinedProps = Props &
 
 export class LinodeCard extends React.PureComponent<CombinedProps> {
   handleConsoleButtonClick = () => {
-    sendEvent({
-      category: 'Linode Action Menu Item',
-      action: 'Launch Console'
-    });
+    sendLinodeActionMenuItemEvent('Launch Console');
     const { id } = this.props;
     lishLaunch(id);
   };
 
   handleRebootButtonClick = () => {
-    sendEvent({
-      category: 'Linode Action Menu Item',
-      action: 'Reboot Linode'
-    });
+    sendLinodeActionMenuItemEvent('Reboot Linode');
     const { id, label, toggleConfirmation } = this.props;
     toggleConfirmation('reboot', id, label);
   };

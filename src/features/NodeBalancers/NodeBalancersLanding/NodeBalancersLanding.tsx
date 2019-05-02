@@ -33,7 +33,7 @@ import {
   WithNodeBalancerActions
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
 import { nodeBalancersWithConfigs } from 'src/store/nodeBalancer/nodeBalancer.selectors';
-import { sendEvent } from 'src/utilities/analytics';
+import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import ListGroupedNodeBalancers from './ListGroupedNodeBalancers';
 import ListNodeBalancers from './ListNodeBalancers';
@@ -374,11 +374,7 @@ const withLocalStorage = localStorageContainer<
     toggleGroupByTag: state => (checked: boolean) => {
       storage.groupNodeBalancersByTag.set(checked ? 'true' : 'false');
 
-      sendEvent({
-        category: NodeBalancersLanding.eventCategory,
-        action: 'group by tag',
-        label: String(checked)
-      });
+      sendGroupByTagEnabledEvent(NodeBalancersLanding.eventCategory, checked);
 
       return {
         ...state,
