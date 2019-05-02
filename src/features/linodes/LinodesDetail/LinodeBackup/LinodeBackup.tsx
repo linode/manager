@@ -87,11 +87,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   snapshotFormControl: {
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'flex-end',
+    alignItems: 'flex-start',
     flexWrap: 'wrap',
     '& > div': {
       width: 'auto',
       marginRight: theme.spacing.unit * 2
+    },
+    '& button': {
+      marginTop: theme.spacing.unit * 4
     }
   },
   scheduleAction: {
