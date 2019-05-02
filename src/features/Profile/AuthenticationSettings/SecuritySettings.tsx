@@ -1,4 +1,4 @@
-import { lensPath, pathOr, set } from 'ramda';
+import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -12,6 +12,7 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
 import { updateProfile } from 'src/services/profile';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -87,13 +88,11 @@ export class SecuritySettings extends React.Component<CombinedProps, State> {
         if (!this.mounted) {
           return;
         }
-        const fallbackError = [{ reason: 'An unexpected error occured.' }];
         this.setState(
           {
-            errors: pathOr(
-              fallbackError,
-              ['response', 'data', 'errors'],
-              error
+            errors: getAPIErrorOrDefault(
+              error,
+              'Unable to disable IP whitelisting. Please try again.'
             ),
             ipWhitelistingToggle: true
           },

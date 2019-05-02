@@ -19,6 +19,7 @@ import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
 import { getLinodes } from 'src/services/linodes';
 import { shareAddresses } from 'src/services/networking';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames =
@@ -136,8 +137,8 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
           loading: false
         });
       })
-      .catch(response => {
-        const errors = pathOr([], ['response', 'data', 'errors'], response);
+      .catch(errorResponse => {
+        const errors = getAPIErrorOrDefault(errorResponse);
         if (!this.mounted) {
           return;
         }
@@ -282,11 +283,10 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
           successMessage: 'IP Sharing updated successfully'
         });
       })
-      .catch(response => {
-        const errors = pathOr(
-          [{ reason: 'Unable to complete request at this time.' }],
-          ['response', 'data', 'errors'],
-          response
+      .catch(errorResponse => {
+        const errors = getAPIErrorOrDefault(
+          errorResponse,
+          'Unable to complete request at this time.'
         );
 
         if (!this.mounted) {

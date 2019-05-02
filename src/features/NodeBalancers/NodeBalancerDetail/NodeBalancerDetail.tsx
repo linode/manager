@@ -35,7 +35,10 @@ import {
   withNodeBalancerActions,
   WithNodeBalancerActions
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import {
+  getAPIErrorOrDefault,
+  getErrorStringOrDefault
+} from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { NodeBalancerProvider } from './context';
@@ -61,10 +64,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-const defaultError = [
-  { reason: 'An unknown error occurred while updating NodeBalancer.' }
-];
-
 type RouteProps = RouteComponentProps<{ nodeBalancerId?: string }>;
 
 interface State {
@@ -89,35 +88,44 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   pollInterval: number;
 
   requestNodeBalancer = (nodeBalancerId: number) =>
-    getNodeBalancer(+nodeBalancerId).then(nodeBalancer => {
-      return getNodeBalancerConfigs(nodeBalancer.id)
-        .then(({ data: configs }) => {
-          return {
-            ...nodeBalancer,
-            down: configs.reduce((acc: number, config) => {
-              return acc + config.nodes_status.down;
-            }, 0), // add the downtime for each config together
-            up: configs.reduce((acc: number, config) => {
-              return acc + config.nodes_status.up;
-            }, 0), // add the uptime for each config together
-            configPorts: configs.reduce((acc: [number], config) => {
-              return [...acc, { configId: config.id, port: config.port }];
-            }, [])
-          };
-        })
-        .then((response: Linode.ExtendedNodeBalancer) => {
-          this.setState({ nodeBalancer: response });
-          this.props.clearLoadingAndErrors();
-        })
-        .catch(error => {
-          this.props.setErrorAndClearLoading(
-            getErrorStringOrDefault(
-              error,
-              'There was an error loading your NodeBalancer.'
-            )
-          );
-        });
-    });
+    getNodeBalancer(+nodeBalancerId)
+      .then(nodeBalancer => {
+        return getNodeBalancerConfigs(nodeBalancer.id)
+          .then(({ data: configs }) => {
+            return {
+              ...nodeBalancer,
+              down: configs.reduce((acc: number, config) => {
+                return acc + config.nodes_status.down;
+              }, 0), // add the downtime for each config together
+              up: configs.reduce((acc: number, config) => {
+                return acc + config.nodes_status.up;
+              }, 0), // add the uptime for each config together
+              configPorts: configs.reduce((acc: [number], config) => {
+                return [...acc, { configId: config.id, port: config.port }];
+              }, [])
+            };
+          })
+          .then((response: Linode.ExtendedNodeBalancer) => {
+            this.setState({ nodeBalancer: response });
+            this.props.clearLoadingAndErrors();
+          })
+          .catch(error => {
+            this.props.setErrorAndClearLoading(
+              getErrorStringOrDefault(
+                error,
+                'There was an error loading your NodeBalancer.'
+              )
+            );
+          });
+      })
+      .catch(errorResponse => {
+        this.props.setErrorAndClearLoading(
+          getErrorStringOrDefault(
+            errorResponse,
+            'There was an error loading your NodeBalancer.'
+          )
+        );
+      });
 
   componentDidMount() {
     const { nodeBalancerId } = this.props.match.params;
@@ -169,10 +177,10 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
       .catch(error => {
         this.setState(
           () => ({
-            ApiError: pathOr(
-              defaultError,
-              ['response', 'data', 'errors'],
-              error
+            ApiError: getAPIErrorOrDefault(
+              error,
+              'Error updating label',
+              'label'
             ),
             labelInput: label
           }),
@@ -193,14 +201,20 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
       return;
     }
 
-    return updateNodeBalancer({ nodeBalancerId: nodeBalancer.id, tags }).then(
-      () => {
+    return updateNodeBalancer({ nodeBalancerId: nodeBalancer.id, tags })
+      .then(() => {
         this.setState({
           nodeBalancer: { ...nodeBalancer, tags },
           ApiError: undefined
         });
-      }
-    );
+      })
+      .catch(error => {
+        const ApiError = getAPIErrorOrDefault(error, 'Error creating tag');
+        this.setState({
+          ApiError
+        });
+        return Promise.reject(ApiError);
+      });
   };
 
   cancelUpdate = () => {
@@ -265,16 +279,16 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
       return <CircleProgress />;
     }
 
-    /** Empty State */
-    if (!nodeBalancer) {
-      return null;
-    }
-
     /** Error State */
     if (error) {
       return (
         <ErrorState errorText="There was an error retrieving your NodeBalancer. Please reload and try again." />
       );
+    }
+
+    /** Empty State */
+    if (!nodeBalancer) {
+      return null;
     }
 
     const hasErrorFor = getAPIErrorsFor(

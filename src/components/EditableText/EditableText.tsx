@@ -236,7 +236,7 @@ export class EditableText extends React.Component<FinalProps, State> {
       </Typography>
     );
 
-    return !isEditing ? (
+    return !isEditing && !errorText ? (
       <div className={`${classes.container} ${classes.initial}`}>
         <React.Fragment>
           {!!labelLink ? (

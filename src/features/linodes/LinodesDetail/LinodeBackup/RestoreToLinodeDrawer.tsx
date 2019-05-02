@@ -1,4 +1,3 @@
-import { path } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -20,6 +19,7 @@ import Select from 'src/components/Select';
 import withProfile, { ProfileProps } from 'src/containers/profile.container';
 import { getLinodes, restoreBackup } from 'src/services/linodes';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector.ts';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -123,12 +123,9 @@ export class RestoreToLinodeDrawer extends React.Component<
         if (!this.mounted) {
           return;
         }
-        this.setState(
-          { errors: path(['response', 'data', 'errors'], errResponse) },
-          () => {
-            scrollErrorIntoView();
-          }
-        );
+        this.setState({ errors: getAPIErrorOrDefault(errResponse) }, () => {
+          scrollErrorIntoView();
+        });
       });
   };
 
