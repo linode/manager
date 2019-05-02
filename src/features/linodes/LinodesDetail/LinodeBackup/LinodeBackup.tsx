@@ -28,6 +28,7 @@ import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import PromiseLoader, {
   PromiseLoaderResponse
@@ -67,8 +68,9 @@ type ClassNames =
   | 'paper'
   | 'title'
   | 'subTitle'
-  | 'spapshotNameField'
+  | 'snapshotNameField'
   | 'snapshotFormControl'
+  | 'snapshotGeneralError'
   | 'scheduleAction'
   | 'chooseTime'
   | 'cancelButton';
@@ -111,8 +113,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   cancelButton: {
     marginBottom: theme.spacing.unit
   },
-  spapshotNameField: {
+  snapshotNameField: {
     minWidth: 275
+  },
+  snapshotGeneralError: {
+    minWidth: '100%'
   }
 });
 
@@ -566,13 +571,22 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             it.
           </Typography>
           <FormControl className={classes.snapshotFormControl}>
+            {hasErrorFor.none && (
+              <Notice
+                spacingBottom={8}
+                className={classes.snapshotGeneralError}
+                error
+              >
+                {hasErrorFor.none}
+              </Notice>
+            )}
             <TextField
               errorText={hasErrorFor.label}
               label="Name Snapshot"
               value={snapshotForm.label || ''}
               onChange={this.handleSnapshotNameChange}
               data-qa-manual-name
-              className={classes.spapshotNameField}
+              className={classes.snapshotNameField}
             />
             <Tooltip title={linodeInTransition ? 'This Linode is busy' : ''}>
               <div>
@@ -586,9 +600,6 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
                 </Button>
               </div>
             </Tooltip>
-            {hasErrorFor.none && (
-              <FormHelperText error>{hasErrorFor.none}</FormHelperText>
-            )}
           </FormControl>
         </Paper>
       </React.Fragment>
