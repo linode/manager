@@ -18,9 +18,8 @@ type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-
-  },
-
+    maxWidth: '50%'
+  }
 });
 
 interface Props {
@@ -30,10 +29,12 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const NodePoolDisplayTable: React.FunctionComponent<CombinedProps> = (props) => {
+export const NodePoolDisplayTable: React.FunctionComponent<
+  CombinedProps
+> = props => {
   const { classes, handleDelete, pools } = props;
   return (
-    <Table tableClass={classes.root} border spacingTop={16}>
+    <Table tableClass={classes.root} spacingTop={16}>
       <TableHead>
         <TableRow>
           <TableCell data-qa-table-header="Plan">Plan</TableCell>
@@ -43,15 +44,17 @@ export const NodePoolDisplayTable: React.FunctionComponent<CombinedProps> = (pro
         </TableRow>
       </TableHead>
       <TableBody>
-        {
-          pools.map((thisPool, idx) => (
-            <NodePoolRow key={`node-pool-row-${idx}`} pool={thisPool} handleDelete={() => handleDelete(idx) } />
-          ))
-        }
+        {pools.map((thisPool, idx) => (
+          <NodePoolRow
+            key={`node-pool-row-${idx}`}
+            pool={thisPool}
+            handleDelete={() => handleDelete(idx)}
+          />
+        ))}
       </TableBody>
     </Table>
-  )
-}
+  );
+};
 
 const styled = withStyles(styles);
 
