@@ -10,7 +10,7 @@ const someEvent: Linode.Event[] = [
     action: 'linode_boot',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11440645,
