@@ -269,7 +269,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     if (isObjectStorageEnabled) {
       primaryLinks.push({
         display: 'Object Storage',
-        href: '/object-storage',
+        href: '/object-storage/buckets',
         key: 'objectStorage'
       });
     }
