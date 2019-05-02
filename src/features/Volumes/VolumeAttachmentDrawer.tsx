@@ -19,6 +19,7 @@ import Select from 'src/components/Select';
 import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
+import withLinodes from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/events';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
@@ -49,9 +50,14 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
+interface LinodesProps {
+  linodesError?: boolean;
+}
+
 type CombinedProps = Props &
   VolumesRequests &
   WithStyles<ClassNames> &
+  LinodesProps &
   StateProps;
 
 class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
@@ -153,7 +159,14 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { open, volumeLabel, disabled, linodeRegion, readOnly } = this.props;
+    const {
+      open,
+      volumeLabel,
+      disabled,
+      linodesError,
+      linodeRegion,
+      readOnly
+    } = this.props;
     const { configs, selectedLinode, selectedConfig, errors } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(this.errorResources, errors);
@@ -182,12 +195,11 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
           generalError={generalError}
           disabled={disabled || readOnly}
         />
-        {!linodeError &&
-          (!generalError && (
-            <FormHelperText>
-              Only Linodes in this Volume's region are displayed.
-            </FormHelperText>
-          ))}
+        {!(linodeError || generalError || linodesError) && (
+          <FormHelperText>
+            Only Linodes in this Volume's region are displayed.
+          </FormHelperText>
+        )}
 
         {/* Config Selection */}
         {configs.length > 1 && (
@@ -270,6 +282,10 @@ const styled = withStyles(styles);
 const enhanced = compose<CombinedProps, Props>(
   styled,
   withVolumesRequests,
+  withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
+    ...ownProps,
+    linodesError
+  })),
   connected
 );
 
