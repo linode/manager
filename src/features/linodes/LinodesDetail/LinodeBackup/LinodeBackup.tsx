@@ -67,6 +67,7 @@ type ClassNames =
   | 'paper'
   | 'title'
   | 'subTitle'
+  | 'spapshotNameField'
   | 'snapshotFormControl'
   | 'scheduleAction'
   | 'chooseTime'
@@ -109,6 +110,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   cancelButton: {
     marginBottom: theme.spacing.unit
+  },
+  spapshotNameField: {
+    minWidth: 275
   }
 });
 
@@ -568,6 +572,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
               value={snapshotForm.label || ''}
               onChange={this.handleSnapshotNameChange}
               data-qa-manual-name
+              className={classes.spapshotNameField}
             />
             <Tooltip title={linodeInTransition ? 'This Linode is busy' : ''}>
               <div>
