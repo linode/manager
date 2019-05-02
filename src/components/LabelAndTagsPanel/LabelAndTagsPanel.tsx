@@ -6,6 +6,7 @@ import {
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TagsInput, { TagsInputProps } from 'src/components/TagsInput';
@@ -31,10 +32,20 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 const styled = withStyles(styles);
 
+interface SelectInputProps {
+  label?: string;
+  selectError?: string;
+  value: Item<any>;
+  options: Item<any>[];
+  isClearable?: boolean;
+  onChange: (selected: Item<any>) => void;
+}
+
 interface Props {
   error?: string;
   labelFieldProps?: TextFieldProps;
   tagsInputProps?: TagsInputProps;
+  selectInputProps?: SelectInputProps;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -48,7 +59,13 @@ export class InfoPanel extends React.Component<CombinedProps> {
   };
 
   render() {
-    const { classes, error, labelFieldProps, tagsInputProps } = this.props;
+    const {
+      classes,
+      error,
+      labelFieldProps,
+      selectInputProps,
+      tagsInputProps
+    } = this.props;
 
     return (
       <React.Fragment>
@@ -56,6 +73,7 @@ export class InfoPanel extends React.Component<CombinedProps> {
           <div className={classes.inner}>
             {error && <Notice text={error} error />}
             <TextField {...labelFieldProps} data-qa-label-input />
+            {selectInputProps && <Select {...selectInputProps} />}
             {tagsInputProps && <TagsInput {...tagsInputProps} />}
           </div>
         </Paper>

@@ -46,8 +46,11 @@ export interface PoolNode {
   totalMonthlyPrice: number;
 }
 
-type KubernetesVersion = '1.13' | '1.14'; // @todo don't hard code this
-// const KubernetesVersionOptions = ['1.13', '1.14'].map(version => ({ label: version, value: version }));
+// @todo don't hard code this
+const KubernetesVersionOptions = ['1.13', '1.14'].map(version => ({
+  label: version,
+  value: version
+}));
 
 // @todo move to Kubernetes.ts
 // interface KubeNodePoolResponse {
@@ -65,7 +68,7 @@ interface State {
   nodePools: PoolNode[];
   label: string;
   tags: Item<string>[];
-  version: KubernetesVersion;
+  version: Item<string>;
 }
 
 type CombinedProps = Props &
@@ -94,7 +97,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     nodePools: [],
     label: '',
     tags: [],
-    version: '1.14'
+    version: { value: '1.14', label: '1.14' }
   };
 
   createCluster = () => {
@@ -103,7 +106,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       selectedRegion,
       nodePools,
       label,
-      version,
+      version: version.value,
       tags: getTagsAsStrings(tags)
     };
     console.log(payload);
@@ -143,7 +146,8 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       selectedType,
       numberOfLinodes,
       nodePools,
-      tags
+      tags,
+      version
     } = this.state;
 
     return (
@@ -186,6 +190,14 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
                   label: 'Cluster Label',
                   onChange: e => this.updateLabel(e.target.value),
                   value: label
+                }}
+                selectInputProps={{
+                  label: 'Version',
+                  value: version,
+                  options: KubernetesVersionOptions,
+                  onChange: (selected: Item<string>) =>
+                    this.setState({ version: selected }),
+                  isClearable: false
                 }}
                 tagsInputProps={{
                   value: tags,
