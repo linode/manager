@@ -15,6 +15,7 @@ import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
+import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { WithRegionsProps } from 'src/features/linodes/LinodesCreate/types';
 
 import NodePoolPanel from './NodePoolPanel';
@@ -39,6 +40,7 @@ export interface PoolNodeResponse {
 export interface PoolNode {
   type?: string;
   nodeCount: number;
+  totalMonthlyPrice: number;
 }
 
 type KubernetesVersion = '1.13' | '1.14'; // @todo don't hard code this
@@ -67,6 +69,14 @@ type CombinedProps = Props &
   WithRegionsProps &
   WithTypesProps;
 
+export const getMonthlyPrice = (pool: PoolNode, types?: ExtendedType[]) => {
+  if (!types) {
+    return 0;
+  }
+  const thisType = types.find(type => type.id === pool.type);
+  return thisType ? thisType.price.monthly * pool.nodeCount : 0;
+};
+
 export class CreateCluster extends React.Component<CombinedProps, State> {
   state: State = {
     selectedRegion: undefined,
@@ -90,8 +100,11 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
 
   addPool = (pool: PoolNode) => {
     const { nodePools } = this.state;
+    const { typesData } = this.props;
+    const monthlyPrice = getMonthlyPrice(pool, typesData);
+    const poolWithPrice = { ...pool, totalMonthlyPrice: monthlyPrice };
     this.setState({
-      nodePools: [...nodePools, pool]
+      nodePools: [...nodePools, poolWithPrice]
     });
   };
 

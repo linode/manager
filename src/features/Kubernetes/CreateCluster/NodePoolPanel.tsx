@@ -82,8 +82,12 @@ export const NodePoolPanel: React.FunctionComponent<CombinedProps> = props => {
       return;
     }
 
-    /** Add pool and reset form state. */
-    addNodePool({ type: selectedType, nodeCount });
+    /**
+     * Add pool and reset form state.
+     * Price is calculated from the parent component when adding
+     * bc this component doesn't have access to types data.
+     */
+    addNodePool({ type: selectedType, nodeCount, totalMonthlyPrice: 0 });
     handleTypeSelect(undefined);
     updateNodeCount(1);
   };
