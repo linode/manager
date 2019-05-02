@@ -9,7 +9,7 @@ export const events: Linode.Event[] = [
     action: 'linode_reboot',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11241778,
@@ -27,7 +27,7 @@ export const events: Linode.Event[] = [
     action: 'linode_reboot',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11241778,
@@ -45,7 +45,7 @@ export const events: Linode.Event[] = [
     action: 'linode_reboot',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11241778,
@@ -63,7 +63,7 @@ export const events: Linode.Event[] = [
     action: 'linode_shutdown',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11642886,
@@ -81,7 +81,7 @@ export const events: Linode.Event[] = [
     action: 'linode_boot',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11642886,
@@ -99,7 +99,7 @@ export const events: Linode.Event[] = [
     action: 'linode_reboot',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11241778,
@@ -117,7 +117,7 @@ export const events: Linode.Event[] = [
     action: 'linode_shutdown',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11440645,
@@ -135,7 +135,7 @@ export const events: Linode.Event[] = [
     action: 'linode_delete',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11440645,
@@ -153,7 +153,7 @@ export const events: Linode.Event[] = [
     action: 'linode_shutdown',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11440645,
@@ -171,7 +171,7 @@ export const events: Linode.Event[] = [
     action: 'linode_boot',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11440645,
@@ -189,7 +189,7 @@ export const events: Linode.Event[] = [
     action: 'linode_shutdown',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11440645,
@@ -207,7 +207,7 @@ export const events: Linode.Event[] = [
     action: 'linode_boot',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11440645,
@@ -225,7 +225,7 @@ export const events: Linode.Event[] = [
     action: 'linode_shutdown',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11440645,
@@ -243,7 +243,7 @@ export const events: Linode.Event[] = [
     action: 'linode_boot',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11440645,
@@ -261,7 +261,7 @@ export const events: Linode.Event[] = [
     action: 'linode_shutdown',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11440645,
@@ -279,7 +279,7 @@ export const events: Linode.Event[] = [
     action: 'linode_boot',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11440645,
@@ -297,7 +297,7 @@ export const events: Linode.Event[] = [
     action: 'linode_shutdown',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11440645,
@@ -315,7 +315,7 @@ export const events: Linode.Event[] = [
     action: 'linode_boot',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11440645,
@@ -333,7 +333,7 @@ export const events: Linode.Event[] = [
     action: 'linode_shutdown',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11440645,
@@ -351,7 +351,7 @@ export const events: Linode.Event[] = [
     action: 'linode_boot',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11440645,
@@ -369,7 +369,7 @@ export const events: Linode.Event[] = [
     action: 'linode_shutdown',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11440645,
@@ -387,7 +387,7 @@ export const events: Linode.Event[] = [
     action: 'linode_boot',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11440645,
@@ -405,7 +405,7 @@ export const events: Linode.Event[] = [
     action: 'linode_shutdown',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11440645,
@@ -423,7 +423,7 @@ export const events: Linode.Event[] = [
     action: 'linode_boot',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11440645,
@@ -441,7 +441,7 @@ export const events: Linode.Event[] = [
     action: 'linode_shutdown',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11440645,
@@ -462,7 +462,7 @@ export const uniqueEvents: Linode.Event[] = [
     action: 'linode_boot',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11440645,
@@ -480,7 +480,7 @@ export const uniqueEvents: Linode.Event[] = [
     action: 'linode_boot',
     read: false,
     percent_complete: 100,
-    username: 'coolguymarty',
+    username: 'test',
     rate: null,
     entity: {
       id: 11440645,
@@ -501,7 +501,7 @@ export const reduxEvent: ExtendedEvent = {
   action: 'linode_boot',
   read: false,
   percent_complete: 100,
-  username: 'coolguymarty',
+  username: 'test',
   rate: null,
   entity: {
     id: 11440645,
