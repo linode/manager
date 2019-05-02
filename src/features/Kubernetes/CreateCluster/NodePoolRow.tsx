@@ -1,3 +1,4 @@
+import Close from '@material-ui/icons/Close';
 import * as React from 'react';
 
 import {
@@ -18,18 +19,22 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 interface Props {
   pool: PoolNode;
+  idx: number;
   handleDelete: (poolIdx: number) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
+  const { pool, idx, handleDelete } = props;
   return (
     <TableRow>
-      <TableCell>a</TableCell>
-      <TableCell>b</TableCell>
-      <TableCell>c</TableCell>
-      <TableCell>d</TableCell>
+      <TableCell>{pool.type}</TableCell>
+      <TableCell>{pool.nodeCount}</TableCell>
+      <TableCell>$3</TableCell>
+      <TableCell>
+        <Close onClick={() => handleDelete(idx)} />
+      </TableCell>
     </TableRow>
   );
 };

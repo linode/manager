@@ -47,6 +47,7 @@ export const NodePoolDisplayTable: React.FunctionComponent<
         {pools.map((thisPool, idx) => (
           <NodePoolRow
             key={`node-pool-row-${idx}`}
+            idx={idx}
             pool={thisPool}
             handleDelete={() => handleDelete(idx)}
           />

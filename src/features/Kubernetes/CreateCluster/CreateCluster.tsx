@@ -1,3 +1,4 @@
+import { remove } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -96,7 +97,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
 
   removePool = (poolIdx: number) => {
     const { nodePools } = this.state;
-    const updatedPools = nodePools.splice(poolIdx, 1);
+    const updatedPools = remove(poolIdx, 1, nodePools);
     this.setState({
       nodePools: updatedPools
     });
@@ -113,13 +114,11 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
+        <Typography variant="h1" data-qa-title className={classes.title}>
+          Create a Kubernetes Cluster
+        </Typography>
         <Grid container direction="row" wrap="nowrap" justify="space-between">
           <Grid container item direction="column" xs={9}>
-            <Grid item>
-              <Typography variant="h1" data-qa-title className={classes.title}>
-                Create a Kubernetes Cluster
-              </Typography>
-            </Grid>
             <Grid item data-qa-kubernetes-create-region-select>
               <SelectRegionPanel
                 regions={regionsData || []}
