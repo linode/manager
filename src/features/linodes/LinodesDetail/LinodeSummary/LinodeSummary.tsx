@@ -3,9 +3,6 @@ import { map, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-import FormControl from 'src/components/core/FormControl';
-import InputLabel from 'src/components/core/InputLabel';
-import MenuItem from 'src/components/core/MenuItem';
 import {
   StyleRulesCallback,
   withStyles,
@@ -13,9 +10,9 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
-import Select from 'src/components/Select';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
@@ -46,6 +43,7 @@ type ClassNames =
   | 'sidebar'
   | 'headerWrapper'
   | 'chart'
+  | 'chartSelect'
   | 'leftLegend'
   | 'bottomLegend'
   | 'graphTitle'
@@ -120,6 +118,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
     },
     totalTraffic: {
       margin: '12px'
+    },
+    chartSelect: {
+      maxWidth: 150
     }
   };
 };
@@ -157,7 +158,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     dataIsLoading: false
   };
 
-  rangeSelectOptions: (typeof MenuItem)[] = [];
+  rangeSelectOptions: Item[] = [];
 
   constructor(props: CombinedProps) {
     super(props);
@@ -214,11 +215,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           : `${testYear}-${testMonth}-01`;
     } while (moment(formattedTestDate).diff(creationFirstOfMonth) >= 0);
     (this.rangeSelectOptions as Linode.TodoAny) = options.map(option => {
-      return (
-        <MenuItem key={option[0]} value={option[0]}>
-          {option[1]}
-        </MenuItem>
-      );
+      return { label: option[1], value: option[0] };
     });
   }
 
@@ -299,8 +296,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       });
   };
 
-  handleChartRangeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value;
+  handleChartRangeChange = (e: Item<string>) => {
+    const value = e.value;
     this.setState({ rangeSelection: value }, () => {
       this.getStats();
     });
@@ -655,12 +652,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   render() {
     const { linodeData: linode, classes, typesData } = this.props;
 
-    const {
-      dataIsLoading,
-      statsError,
-      rangeSelection,
-      isTooEarlyForGraphData
-    } = this.state;
+    const { dataIsLoading, statsError, isTooEarlyForGraphData } = this.state;
 
     // Shared props for all stats charts
     const chartProps = {
@@ -714,19 +706,20 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
             <Grid item className="py0">
               <div className={classes.graphControls}>
-                <FormControl>
-                  <InputLabel htmlFor="chartRange" disableAnimation hidden>
-                    Select Time Range
-                  </InputLabel>
-                  <Select
-                    value={rangeSelection}
-                    onChange={this.handleChartRangeChange}
-                    inputProps={{ name: 'chartRange', id: 'chartRange' }}
-                    small
-                  >
-                    {this.rangeSelectOptions}
-                  </Select>
-                </FormControl>
+                <Select
+                  options={this.rangeSelectOptions}
+                  defaultValue={this.rangeSelectOptions[0]}
+                  onChange={this.handleChartRangeChange}
+                  name="chartRange"
+                  id="chartRange"
+                  small
+                  label="Select Time Range"
+                  hideLabel
+                  className={classes.chartSelect}
+                  isClearable={false}
+                  menuIsOpen={true}
+                  data-qa-item="chartRange"
+                />
               </div>
             </Grid>
 

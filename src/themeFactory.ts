@@ -44,6 +44,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     '@keyframes dash': any;
     bg: any;
     color: any;
+    visually: any;
     font?: any;
     animateCircleIcon?: any;
     notificationList: any;
@@ -56,6 +57,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
     '@keyframes dash'?: any;
     bg?: any;
     color?: any;
+    visually?: any;
     font?: any;
     animateCircleIcon?: any;
     notificationList?: any;
@@ -105,6 +107,24 @@ const iconCircleAnimation = {
     transition: 'fill .2s ease-in-out .2s, stroke .2s ease-in-out .2s',
     stroke: 'white'
   }
+};
+
+const visuallyVisible = {
+  /* https://snook.ca/archives/html_and_css/hiding-content-for-accessibility */
+  position: 'relative',
+  height: 'auto',
+  width: 'auto',
+  overflow: 'initial',
+  clip: 'none'
+};
+
+const visuallyHidden = {
+  /* https://snook.ca/archives/html_and_css/hiding-content-for-accessibility */
+  position: 'absolute !important',
+  height: 1,
+  width: 1,
+  overflow: 'hidden',
+  clip: 'rect(1px, 1px, 1px, 1px)'
 };
 
 const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
@@ -277,6 +297,10 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
         fontSize: '1.075rem',
         lineHeight: '1.5rem'
       }
+    },
+    visually: {
+      visible: visuallyVisible,
+      hidden: visuallyHidden
     },
     overrides: {
       MuiAppBar: {

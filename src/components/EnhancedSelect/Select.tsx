@@ -39,7 +39,9 @@ type ClassNames =
   | 'selectedMenuItem'
   | 'medium'
   | 'small'
-  | 'noMarginTop';
+  | 'noMarginTop'
+  | 'inline'
+  | 'hideLabel';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   '@keyframes dash': {
@@ -213,18 +215,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   suggestionItem: {
     padding: theme.spacing.unit
   },
-  // suggestionIcon: {
-  //   '& svg': {
-  //     width: '40px',
-  //     height: '40px'
-  //   },
-  //   '& .circle': {
-  //     fill: theme.bg.offWhiteDT
-  //   },
-  //   '& .outerCircle': {
-  //     stroke: theme.bg.main
-  //   }
-  // },
   suggestionTitle: {
     fontSize: '1rem',
     color: theme.palette.text.primary,
@@ -270,6 +260,17 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   noMarginTop: {
     marginTop: 0
+  },
+  inline: {
+    display: 'inline-flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    '& label': {
+      marginRight: theme.spacing.unit
+    }
+  },
+  hideLabel: {
+    '& label': { ...theme.visually.hidden }
   }
 });
 
@@ -326,6 +327,8 @@ export interface EnhancedSelectProps {
   small?: boolean;
   guidance?: string | React.ReactNode;
   noMarginTop?: boolean;
+  inline?: boolean;
+  hideLabel?: boolean;
 }
 
 // Material-UI versions of several React-Select components.
@@ -384,6 +387,8 @@ class Select extends React.PureComponent<CombinedProps, {}> {
       medium,
       small,
       noMarginTop,
+      inline,
+      hideLabel,
       ...restOfProps
     } = this.props;
 
@@ -434,7 +439,9 @@ class Select extends React.PureComponent<CombinedProps, {}> {
           className: classNames({
             [classes.medium]: medium,
             [classes.small]: small,
-            [classes.noMarginTop]: noMarginTop
+            [classes.noMarginTop]: noMarginTop,
+            [classes.inline]: inline,
+            [classes.hideLabel]: hideLabel
           })
         }}
         value={value}
