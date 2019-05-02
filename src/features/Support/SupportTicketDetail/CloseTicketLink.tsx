@@ -1,4 +1,3 @@
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -6,6 +5,7 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { closeSupportTicket } from 'src/services/support';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import scrollTo from 'src/utilities/scrollTo';
 
 interface Props {
@@ -73,18 +73,16 @@ class CloseTicketLink extends React.Component<CombinedProps, State> {
         closeTicketSuccess();
       })
       .catch(errorResponse => {
-        const defaultError = [{ reason: 'Your ticket could not be closed.' }];
-        const errors = pathOr(
-          defaultError,
-          ['response', 'data', 'errors'],
-          errorResponse
+        const apiError = getErrorStringOrDefault(
+          errorResponse,
+          'Ticket could not be closed.'
         );
         if (!this.mounted) {
           return;
         }
         this.setState({
           isClosingTicket: false,
-          ticketCloseError: errors[0].reason
+          ticketCloseError: apiError
         });
       });
   };

@@ -1,4 +1,3 @@
-import { pathOr } from 'ramda';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
@@ -9,6 +8,7 @@ import {
 } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import { confirmTwoFactor } from 'src/services/profile';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import ConfirmToken from './ConfirmToken';
@@ -88,13 +88,10 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
         if (!this.mounted) {
           return;
         }
-        const fallbackError = [
-          { field: 'tfa_code', reason: 'Could not confirm code.' }
-        ];
-        let APIErrors = pathOr(
-          fallbackError,
-          ['response', 'data', 'errors'],
-          error
+        let APIErrors = getAPIErrorOrDefault(
+          error,
+          'Could not confirm code.',
+          'tfa_code'
         );
         APIErrors = APIErrors.filter((err: Linode.ApiFieldError) => {
           // Filter potentially confusing API error

@@ -1,5 +1,5 @@
 import SettingsBackupRestore from '@material-ui/icons/SettingsBackupRestore';
-import { path, pathOr } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
@@ -19,6 +19,7 @@ import ToggleState from 'src/components/ToggleState';
 import { getTFAToken } from 'src/services/profile';
 import { handleUpdate } from 'src/store/profile/profile.actions';
 import { MapState } from 'src/store/types';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import DisableTwoFactorDialog from './DisableTwoFactorDialog';
@@ -181,18 +182,11 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
         });
       })
       .catch(error => {
-        const fallbackError = [
-          {
-            reason:
-              'There was an error retrieving your secret key. Please try again.'
-          }
-        ];
         this.setState(
           {
-            errors: pathOr(
-              fallbackError,
-              ['response', 'data', 'errors'],
-              error
+            errors: getAPIErrorOrDefault(
+              error,
+              'There was an error retrieving your secret key. Please try again.'
             ),
             loading: false
           },

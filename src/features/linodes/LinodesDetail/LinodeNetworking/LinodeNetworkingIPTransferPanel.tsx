@@ -5,7 +5,6 @@ import {
   isNil,
   lensPath,
   over,
-  path,
   set,
   uniq,
   view,
@@ -30,6 +29,7 @@ import Select from 'src/components/Select';
 import TextField from 'src/components/TextField';
 import { getLinodes } from 'src/services/linodes';
 import { assignAddresses } from 'src/services/networking';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 type ClassNames =
   | 'containerDivider'
@@ -378,7 +378,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
     });
 
     assignAddresses(createRequestData(this.state.ips, this.props.linodeRegion))
-      .then(response => {
+      .then(() => {
         return Promise.all([this.props.refreshIPs(), this.getLinodes()])
           .then(() => {
             this.setState({
@@ -387,38 +387,23 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
               successMessage: 'IP transferred successfully.'
             });
           })
-          .catch(() => {
+          .catch(err => {
             this.setState({
-              error: [
-                {
-                  field: 'none',
-                  reason: 'Unable to refresh IPs. Please reload the screen.'
-                }
-              ]
+              error: getAPIErrorOrDefault(
+                err,
+                'Unable to refresh IPs. Please reload the screen.'
+              )
             });
           });
       })
-      .catch(response => {
-        const apiErrors = path<Linode.ApiFieldError[]>(
-          ['response', 'data', 'errors'],
-          response
+      .catch(err => {
+        const apiErrors = getAPIErrorOrDefault(
+          err,
+          'Unable to transfer IP addresses at this time. Please try again later.'
         );
 
-        if (apiErrors) {
-          return this.setState({
-            error: uniq(apiErrors),
-            submitting: false
-          });
-        }
-
-        this.setState({
-          error: [
-            {
-              field: 'none',
-              reason:
-                'Unable to transfer IP addresses at this time. Please try again later.'
-            }
-          ],
+        return this.setState({
+          error: uniq(apiErrors),
           submitting: false
         });
       });

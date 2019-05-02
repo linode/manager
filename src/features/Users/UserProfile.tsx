@@ -123,9 +123,7 @@ class UserProfile extends React.Component<CombinedProps> {
           {success && (
             <Notice success>User Profile updated successfully</Notice>
           )}
-          {generalError && (
-            <Notice error>Error when updating user profile</Notice>
-          )}
+          {generalError && <Notice error text={generalError} />}
           <Typography variant="h2" data-qa-profile-header>
             User Profile
           </Typography>

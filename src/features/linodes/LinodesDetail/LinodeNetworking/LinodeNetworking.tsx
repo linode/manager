@@ -23,6 +23,7 @@ import TableCell from 'src/components/TableCell';
 import { ZONES } from 'src/constants';
 import { getLinodeIPs } from 'src/services/linodes';
 import { upsertLinode as _upsertLinode } from 'src/store/linodes/linodes.actions';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
 import CreateIPv4Drawer from './CreateIPv4Drawer';
@@ -150,13 +151,9 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     return getLinodeIPs(this.props.linode.id)
       .then(ips => this.setState({ linodeIPs: ips, initialLoading: false }))
       .catch(errorResponse => {
-        const defaultError = [
-          { reason: 'There was an error retrieving your network information.' }
-        ];
-        const errors = pathOr(
-          defaultError,
-          ['response', 'data', 'errors'],
-          errorResponse
+        const errors = getAPIErrorOrDefault(
+          errorResponse,
+          'There was an error retrieving your network information.'
         );
         this.setState({
           IPRequestError: errors[0].reason,
