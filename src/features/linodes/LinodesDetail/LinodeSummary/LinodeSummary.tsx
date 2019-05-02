@@ -709,6 +709,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 eventsFromRedux={this.props.events}
                 linodeId={linode.id}
                 inProgressEvents={this.props.inProgressEvents}
+                mostRecentEventTime={this.props.mostRecentEventTime}
               />
             </Grid>
 
@@ -773,6 +774,7 @@ interface WithTypesProps {
   timezone: string;
   inProgressEvents: Record<number, number>;
   events: ExtendedEvent[];
+  mostRecentEventTime: string;
 }
 
 const withTypes = connect((state: ApplicationState, ownProps) => ({
@@ -783,7 +785,8 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
     state
   ),
   inProgressEvents: state.events.inProgressEvents,
-  events: state.events.events
+  events: state.events.events,
+  mostRecentEventTime: state.events.mostRecentEventTime
 }));
 
 const enhanced = compose<CombinedProps, {}>(

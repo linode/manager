@@ -14,6 +14,7 @@ const props = {
   linodeId: 123456,
   eventsFromRedux: [],
   inProgressEvents: [],
+  mostRecentEventTime: '',
   classes: {
     root: '',
     header: '',

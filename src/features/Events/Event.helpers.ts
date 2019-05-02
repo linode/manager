@@ -1,3 +1,5 @@
+import { equals } from 'ramda';
+
 /**
  * The point of this function is to ensure we don't have an activity stream
  * that looks like:
@@ -44,5 +46,26 @@ export const percentCompleteHasUpdated = (
   return Object.keys(prevEventsInProgress).some(
     eachEventID =>
       prevEventsInProgress[eachEventID] !== nextEventsInProgress[eachEventID]
+  );
+};
+
+interface Payload {
+  mostRecentEventTime: string;
+  inProgressEvents: Record<number, number>;
+}
+
+/**
+ * shouldComponentUpdate logic to determine if the list of events should update
+ *
+ * This is abstracted because it's shared logic between the EventsLanding the Activity Summary
+ */
+export const shouldUpdateEvents = (prevProps: Payload, nextProps: Payload) => {
+  return (
+    !equals(prevProps.mostRecentEventTime, nextProps.mostRecentEventTime) ||
+    (!equals(prevProps.inProgressEvents, nextProps.inProgressEvents) ||
+      percentCompleteHasUpdated(
+        prevProps.inProgressEvents,
+        nextProps.inProgressEvents
+      ))
   );
 };

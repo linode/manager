@@ -1,5 +1,5 @@
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { compose as rCompose, concat, equals, uniq } from 'ramda';
+import { compose as rCompose, concat, uniq } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import Waypoint from 'react-waypoint';
@@ -26,7 +26,7 @@ import { setDeletedEvents } from 'src/store/events/event.helpers';
 import areEntitiesLoading from 'src/store/selectors/entitiesLoading';
 
 import { ExtendedEvent } from 'src/store/events/event.helpers';
-import { filterUniqueEvents, percentCompleteHasUpdated } from './Event.helpers';
+import { filterUniqueEvents, shouldUpdateEvents } from './Event.helpers';
 import EventRow from './EventRow';
 
 type ClassNames = 'root' | 'header' | 'labelCell' | 'timeCell' | 'noMoreEvents';
@@ -74,19 +74,23 @@ interface ReducerState {
   inProgressEvents: Record<number, number>;
   eventsFromRedux: ExtendedEvent[];
   reactStateEvents: Linode.Event[];
+  mostRecentEventTime: string;
+}
+
+interface Payload {
+  inProgressEvents: Record<number, number>;
+  eventsFromRedux: ExtendedEvent[];
+  reactStateEvents: Linode.Event[];
+  mostRecentEventTime: string;
+  entityId?: number;
 }
 
 interface ReducerActions {
   type: 'append' | 'prepend';
-  payload: {
-    inProgressEvents: Record<number, number>;
-    eventsFromRedux: ExtendedEvent[];
-    reactStateEvents: Linode.Event[];
-    entityId?: number;
-  };
+  payload: Payload;
 }
 
-const reducer: React.Reducer<ReducerState, ReducerActions> = (
+export const reducer: React.Reducer<ReducerState, ReducerActions> = (
   state,
   action
 ) => {
@@ -95,6 +99,7 @@ const reducer: React.Reducer<ReducerState, ReducerActions> = (
       eventsFromRedux: nextReduxEvents,
       inProgressEvents: nextInProgressEvents,
       reactStateEvents: nextReactEvents,
+      mostRecentEventTime: nextMostRecentEventTime,
       entityId
     }
   } = action;
@@ -102,12 +107,21 @@ const reducer: React.Reducer<ReducerState, ReducerActions> = (
   switch (action.type) {
     case 'prepend':
       if (
-        !equals(state.inProgressEvents, nextInProgressEvents) ||
-        percentCompleteHasUpdated(nextInProgressEvents, state.inProgressEvents)
+        shouldUpdateEvents(
+          {
+            mostRecentEventTime: state.mostRecentEventTime,
+            inProgressEvents: state.inProgressEvents
+          },
+          {
+            mostRecentEventTime: nextMostRecentEventTime,
+            inProgressEvents: nextInProgressEvents
+          }
+        )
       ) {
         return {
           eventsFromRedux: nextReduxEvents,
           inProgressEvents: nextInProgressEvents,
+          mostRecentEventTime: nextMostRecentEventTime,
           reactStateEvents: filterUniqueEvents([
             /* 
               Pop new events from Redux on the top of the event stream, with some conditions
@@ -141,14 +155,16 @@ const reducer: React.Reducer<ReducerState, ReducerActions> = (
       return {
         eventsFromRedux: nextReduxEvents,
         reactStateEvents: nextReactEvents,
-        inProgressEvents: nextInProgressEvents
+        inProgressEvents: nextInProgressEvents,
+        mostRecentEventTime: nextMostRecentEventTime
       };
     case 'append':
     default:
       return {
         reactStateEvents: nextReactEvents,
         eventsFromRedux: nextReduxEvents,
-        inProgressEvents: nextInProgressEvents
+        inProgressEvents: nextInProgressEvents,
+        mostRecentEventTime: nextMostRecentEventTime
       };
   }
 };
@@ -166,7 +182,8 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
     {
       inProgressEvents: props.inProgressEvents,
       eventsFromRedux: props.eventsFromRedux,
-      reactStateEvents: []
+      reactStateEvents: [],
+      mostRecentEventTime: props.mostRecentEventTime
     }
   );
 
@@ -204,7 +221,8 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
           response.data
         ),
         entityId: props.entityId,
-        inProgressEvents: props.inProgressEvents
+        inProgressEvents: props.inProgressEvents,
+        mostRecentEventTime: props.mostRecentEventTime
       }
     });
     setLoading(false);
@@ -244,7 +262,8 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
         eventsFromRedux,
         inProgressEvents,
         reactStateEvents: events.reactStateEvents,
-        entityId: props.entityId
+        entityId: props.entityId,
+        mostRecentEventTime: props.mostRecentEventTime
       }
     });
   }, [props.eventsFromRedux, props.inProgressEvents]);
@@ -356,12 +375,14 @@ interface StateProps {
   entitiesLoading: boolean;
   inProgressEvents: Record<number, number>;
   eventsFromRedux: ExtendedEvent[];
+  mostRecentEventTime: string;
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
   entitiesLoading: areEntitiesLoading(state.__resources),
   inProgressEvents: state.events.inProgressEvents,
-  eventsFromRedux: state.events.events
+  eventsFromRedux: state.events.events,
+  mostRecentEventTime: state.events.mostRecentEventTime
 });
 
 const connected = connect(mapStateToProps);

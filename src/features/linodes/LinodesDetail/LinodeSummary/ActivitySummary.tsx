@@ -1,4 +1,3 @@
-import { equals } from 'ramda';
 import * as React from 'react';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
@@ -16,7 +15,7 @@ import ActivitySummaryContent from './ActivitySummaryContent';
 
 import {
   filterUniqueEvents,
-  percentCompleteHasUpdated
+  shouldUpdateEvents
 } from 'src/features/Events/Event.helpers';
 import { ExtendedEvent } from 'src/store/events/event.helpers';
 
@@ -39,6 +38,7 @@ interface Props {
   linodeId: number;
   inProgressEvents: Record<number, number>;
   eventsFromRedux: ExtendedEvent[];
+  mostRecentEventTime: string;
 }
 
 interface State {
@@ -57,11 +57,28 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
   };
 
   componentDidUpdate(prevProps: CombinedProps) {
+    /**
+     * This condition checks either the most recent event time has changed OR
+     * if the in progress events have changed or that the in-progress events have new percentages
+     *
+     * This is necessary because we have 2 types of events: ones that have percent and ones that
+     * don't.
+     *
+     * Events that don't have a percentage won't affect the inProgressEvents state, which is why
+     * we're checking the mostRecentEvent time becasue that will update when we get a new event
+     *
+     * That being said, mostRecentEventTime will NOT be updated when a event's percentage updates
+     */
     if (
-      !equals(this.props.inProgressEvents, prevProps.inProgressEvents) ||
-      percentCompleteHasUpdated(
-        this.props.inProgressEvents,
-        prevProps.inProgressEvents
+      shouldUpdateEvents(
+        {
+          mostRecentEventTime: prevProps.mostRecentEventTime,
+          inProgressEvents: prevProps.inProgressEvents
+        },
+        {
+          mostRecentEventTime: this.props.mostRecentEventTime,
+          inProgressEvents: this.props.inProgressEvents
+        }
       )
     ) {
       this.setState({
