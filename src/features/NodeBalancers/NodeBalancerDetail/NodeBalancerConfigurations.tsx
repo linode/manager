@@ -42,6 +42,7 @@ import {
   withNodeBalancerConfigActions,
   WithNodeBalancerConfigActions
 } from 'src/store/nodeBalancerConfig/nodeBalancerConfig.containers';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import NodeBalancerConfigPanel from '../NodeBalancerConfigPanel';
 import { lensFrom } from '../NodeBalancerCreate';
@@ -309,7 +310,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         const newConfigs = clone(this.state.configs);
         newConfigs[idx] = { ...nodeBalancerConfig, nodes: [] };
         const newNodes = clone(this.state.configs[idx].nodes);
-        //    while maintaing node data
+        //    while maintaining node data
         newConfigs[idx].nodes = newNodes;
 
         // reset errors
@@ -330,10 +331,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       })
       .catch(errorResponse => {
         // update errors
-        const errors = path<Linode.ApiFieldError[]>(
-          ['response', 'data', 'errors'],
-          errorResponse
-        );
+        const errors = getAPIErrorOrDefault(errorResponse);
         const newErrors = clone(this.state.configErrors);
         newErrors[idx] = errors || [];
         this.setState(
@@ -484,7 +482,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
                 }
                 this.resetSubmitting(idx);
               })
-              .catch(requestFailure => {
+              .catch(_ => {
                 this.resetSubmitting(idx);
               });
           }
@@ -492,10 +490,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       })
       .catch(errorResponse => {
         // update errors
-        const errors = path<Linode.ApiFieldError[]>(
-          ['response', 'data', 'errors'],
-          errorResponse
-        );
+        const errors = getAPIErrorOrDefault(errorResponse);
         const newErrors = clone(this.state.configErrors);
         newErrors[idx] = errors || [];
         this.setNodeErrors(idx, newErrors[idx]);
@@ -769,7 +764,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       })
       .catch(errResponse => {
         /* Set errors for this node */
-        const errors = pathOr([], ['response', 'data', 'errors'], errResponse);
+        const errors = getAPIErrorOrDefault(errResponse);
         this.updateNodeErrors(configIdx, nodeIdx, errors);
         /* Return false as a Promise for the sake of aggregating results */
         return false;
@@ -836,7 +831,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       })
       .catch(errResponse => {
         /* Set errors for this node */
-        const errors = pathOr([], ['response', 'data', 'errors'], errResponse);
+        const errors = getAPIErrorOrDefault(errResponse);
         this.updateNodeErrors(configIdx, nodeIdx, errors);
         /* Return false as a Promise for the sake of aggregating results */
         return false;

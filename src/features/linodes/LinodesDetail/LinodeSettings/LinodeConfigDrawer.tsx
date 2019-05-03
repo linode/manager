@@ -632,10 +632,9 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         })
         .catch(error => {
           this.setState({
-            errors: pathOr(
-              [{ reason: 'Unable to update config. Please try again.' }],
-              ['response', 'data', 'errors'],
-              error
+            errors: getAPIErrorOrDefault(
+              error,
+              'Unable to update config. Please try again.'
             )
           });
         });
@@ -755,11 +754,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       .catch(error => {
         this.setState({
           loading: { ...this.state.loading, kernels: false },
-          errors: pathOr(
-            [{ reason: 'Unable to load kernels.' }],
-            ['response', 'data', 'errors'],
-            error
-          )
+          errors: getAPIErrorOrDefault(error, 'Unable to load kernels.')
         });
       });
   };
