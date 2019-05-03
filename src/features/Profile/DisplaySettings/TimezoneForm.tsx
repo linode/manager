@@ -86,6 +86,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
   };
 
   handleTimezoneChange = (timezone: Item) => {
+    console.log(timezone);
     if (timezone) {
       this.setState(set(lensPath(['updatedTimezone']), timezone));
     } else {
@@ -140,6 +141,10 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
     const generalError = hasErrorFor('none');
     const timezoneError = hasErrorFor('timezone');
 
+    const defaultTimeZone = timezoneList.find(eachZone => {
+      return eachZone.label === timezoneDisplay;
+    });
+
     return (
       <React.Fragment>
         <Paper className={classes.root}>
@@ -162,16 +167,17 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
           {generalError && <Notice error text={generalError} />}
           <Typography variant="body1" data-qa-copy>
             This setting converts the dates and times displayed in the Linode
-            Manager to a timezone of your choice. Your current timezone is:{' '}
-            <strong>{timezoneDisplay}</strong>.
+            Manager to a timezone of your choice.{' '}
           </Typography>
           <React.Fragment>
             <Select
               options={timezoneList}
-              placeholder={'Choose a timezone.'}
+              placeholder={'Choose a timezone'}
               errorText={timezoneError}
               onChange={this.handleTimezoneChange}
               data-qa-tz-select
+              defaultValue={defaultTimeZone}
+              isClearable={false}
             />
             <ActionsPanel>
               <Button
