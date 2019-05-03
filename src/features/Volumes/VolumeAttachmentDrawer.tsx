@@ -13,9 +13,8 @@ import {
   withStyles
 } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
-import MenuItem from 'src/components/MenuItem';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
-import Select from 'src/components/Select';
 import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
@@ -104,8 +103,8 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
     }
   };
 
-  changeSelectedConfig = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    this.setState({ selectedConfig: e.target.value });
+  changeSelectedConfig = (e: Item<string>) => {
+    this.setState({ selectedConfig: e.value });
   };
 
   handleClose = () => {
@@ -172,6 +171,15 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
     const configError = hasErrorFor('config_id');
     const generalError = hasErrorFor('none');
 
+    const configList =
+      configs &&
+      configs.map(el => {
+        return {
+          label: el[1],
+          value: el[0]
+        };
+      });
+
     return (
       <Drawer
         open={open}
@@ -212,21 +220,16 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
               Config
             </InputLabel>
             <Select
-              value={selectedConfig || ''}
+              options={configList}
+              defaultValue={selectedConfig || ''}
               onChange={this.changeSelectedConfig}
-              inputProps={{ name: 'config', id: 'config' }}
-              error={Boolean(configError)}
+              name="config"
+              id="config"
+              errorText={linodeError}
               disabled={disabled || readOnly}
-            >
-              {configs &&
-                configs.map(el => {
-                  return (
-                    <MenuItem key={el[0]} value={el[0]}>
-                      {el[1]}
-                    </MenuItem>
-                  );
-                })}
-            </Select>
+              label="Config"
+              isClearable={false}
+            />
             {Boolean(configError) && (
               <FormHelperText error>{configError}</FormHelperText>
             )}

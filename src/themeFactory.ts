@@ -657,6 +657,14 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
           marginLeft: -(spacingUnit + 3)
         }
       },
+      MuiFormGroup: {
+        root: {
+          '&[role="radiogroup"]': {
+            marginTop: spacingUnit,
+            marginBottom: spacingUnit * 2
+          }
+        }
+      },
       MuiFormLabel: {
         root: {
           color: '#555',

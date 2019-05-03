@@ -78,6 +78,7 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
       errorText={getErrorStringOrDefault(
         generalError || linodeError || linodesError || ''
       )}
+      isClearable={false}
     />
   );
 };
