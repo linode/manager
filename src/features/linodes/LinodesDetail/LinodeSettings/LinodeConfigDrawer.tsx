@@ -357,7 +357,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
           </FormControl>
         </Grid>
 
-        <Divider className={classes.divider} />
+        <Divider className={classes.divider} style={{ marginTop: 0 }} />
 
         <Grid
           item
