@@ -28,6 +28,7 @@ import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import PromiseLoader, {
@@ -780,6 +781,13 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
 
   render() {
     const { backupsEnabled, linodeLabel } = this.props;
+
+    if (this.props.backups.error) {
+      /** @todo remove promise loader and source backups from Redux */
+      return (
+        <ErrorState errorText="There was an issue retrieving your backups" />
+      );
+    }
 
     return (
       <React.Fragment>
