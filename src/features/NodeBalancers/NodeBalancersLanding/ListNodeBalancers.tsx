@@ -39,7 +39,7 @@ interface Props {
   orderBy: string;
   order: 'asc' | 'desc';
   handleOrderChange: (orderBy: string, order?: 'asc' | 'desc') => void;
-  toggleDialog: (id: number) => void;
+  toggleDialog: (id: number, label: string) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
