@@ -11,7 +11,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { PoolNode } from './CreateCluster';
+import { PoolNode } from '.././types';
 import NodePoolRow from './NodePoolRow';
 
 type ClassNames = 'root';

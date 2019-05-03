@@ -19,11 +19,16 @@ import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
-import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { WithRegionsProps } from 'src/features/linodes/LinodesCreate/types';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { getTagsAsStrings } from 'src/utilities/tagUtils';
 
+import {
+  getMonthlyPrice,
+  getTotalClusterPrice,
+  KubernetesVersionOptions
+} from '.././kubeUtils';
+import { PoolNode } from '.././types';
 import NodePoolPanel from './NodePoolPanel';
 
 type ClassNames = 'root' | 'title' | 'checkoutBar' | 'inner';
@@ -41,32 +46,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 interface Props {}
 
-export interface PoolNodeResponse {
-  id: number;
-  status: string;
-}
-
-export interface PoolNode {
-  type?: string;
-  nodeCount: number;
-  totalMonthlyPrice: number;
-}
-
-// @todo don't hard code this
-const KubernetesVersionOptions = ['1.13', '1.14'].map(version => ({
-  label: version,
-  value: version
-}));
-
-// @todo move to Kubernetes.ts
-// interface KubeNodePoolResponse {
-//   count: number;
-//   id: number;
-//   linodes: PoolNode[];
-//   lkeid: number;
-//   type: Linode.LinodeType;
-// }
-
 interface State {
   selectedRegion?: string;
   selectedType?: string;
@@ -81,19 +60,6 @@ type CombinedProps = Props &
   WithStyles<ClassNames> &
   WithRegionsProps &
   WithTypesProps;
-
-export const getMonthlyPrice = (pool: PoolNode, types?: ExtendedType[]) => {
-  if (!types) {
-    return 0;
-  }
-  const thisType = types.find(type => type.id === pool.type);
-  return thisType ? thisType.price.monthly * pool.nodeCount : 0;
-};
-
-export const getTotalClusterPrice = (pools: PoolNode[]) =>
-  pools.reduce((accumulator, node) => {
-    return accumulator + node.totalMonthlyPrice;
-  }, 0);
 
 export class CreateCluster extends React.Component<CombinedProps, State> {
   state: State = {

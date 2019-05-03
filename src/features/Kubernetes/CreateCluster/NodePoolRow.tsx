@@ -13,7 +13,7 @@ import TableRow from 'src/components/TableRow';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { displayTypeForKubePoolNode } from 'src/features/linodes/presentation';
 
-import { PoolNode } from './CreateCluster';
+import { PoolNode } from '.././types';
 
 type ClassNames = 'root';
 

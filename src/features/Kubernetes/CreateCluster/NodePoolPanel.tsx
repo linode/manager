@@ -17,7 +17,7 @@ import SelectPlanPanel, {
   ExtendedType
 } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 
-import { PoolNode } from './CreateCluster';
+import { PoolNode } from '.././types';
 import NodePoolDisplayTable from './NodePoolDisplayTable';
 
 type ClassNames = 'root' | 'title' | 'gridItem' | 'nodeCountInput';
