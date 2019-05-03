@@ -40,7 +40,8 @@ type ClassNames =
   | 'grantTable'
   | 'selectAll'
   | 'tableSubheading'
-  | 'permSelect';
+  | 'permSelect'
+  | 'setAll';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   topGrid: {
@@ -88,6 +89,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   selectAll: {
     cursor: 'pointer'
+  },
+  setAll: {
+    width: 300,
+    marginTop: theme.spacing.unit / 2,
+    '& .react-select__menu': {
+      maxWidth: 153,
+      right: 0
+    }
   }
 });
 
@@ -722,6 +731,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               label="Set all permissions to:"
               isClearable={false}
               inline
+              className={classes.setAll}
+              noMarginTop
             />
           </Grid>
         </Grid>
