@@ -98,8 +98,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
 
   addPool = (pool: PoolNode) => {
     const { nodePools } = this.state;
-    const { typesData } = this.props;
-    const monthlyPrice = getMonthlyPrice(pool, typesData);
+    const monthlyPrice = getMonthlyPrice(pool);
     const poolWithPrice = { ...pool, totalMonthlyPrice: monthlyPrice };
     this.setState({
       nodePools: [...nodePools, poolWithPrice]

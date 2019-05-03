@@ -2,7 +2,7 @@ import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 
 import CheckoutBar from 'src/components/CheckoutBar';
-import { getTotalClusterPrice } from './kubeUtils';
+import { getTotalClusterMemoryAndCPU, getTotalClusterPrice } from './kubeUtils';
 import { PoolNode } from './types';
 
 interface Props {
@@ -47,8 +47,7 @@ export const getDisplaySections = (
 ) => {
   const displaySections = [];
 
-  const totalRAM = 0;
-  const totalCPU = 0;
+  const { RAM: totalRAM, CPU: totalCPU } = getTotalClusterMemoryAndCPU(pools);
 
   if (region) {
     displaySections.push({
@@ -60,14 +59,14 @@ export const getDisplaySections = (
   if (totalRAM) {
     displaySections.push({
       title: 'Total RAM',
-      details: totalRAM
+      details: `${totalRAM / 1024}GB`
     });
   }
 
   if (totalCPU) {
     displaySections.push({
       title: 'Total CPU',
-      details: totalCPU
+      details: `${totalCPU}${totalCPU === 1 ? 'CPU' : 'CPUs'}`
     });
   }
 
