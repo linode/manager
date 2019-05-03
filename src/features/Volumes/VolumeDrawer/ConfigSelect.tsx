@@ -119,12 +119,14 @@ class ConfigSelect extends React.Component<CombinedProps, State> {
         return { label, value: v };
       });
 
+    console.log('now:' + value);
+
     return (
       <FormControl fullWidth>
         <Select
           options={configList}
           name={name}
-          value={value}
+          defaultValue={configList[0]}
           onChange={(e: Item) => {
             onChange(+e.value);
           }}
@@ -132,6 +134,9 @@ class ConfigSelect extends React.Component<CombinedProps, State> {
           id={name}
           label="Config"
           errorText={error}
+          noMarginTop
+          isClearable={false}
+          placeholder="Select a Config"
           {...rest}
         />
       </FormControl>
