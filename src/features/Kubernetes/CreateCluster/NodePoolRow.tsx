@@ -42,7 +42,7 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
         <Typography>{typeLabel}</Typography>
       </TableCell>
       <TableCell>
-        <Typography>{pool.nodeCount}</Typography>
+        <Typography>{pool.count}</Typography>
       </TableCell>
       <TableCell>
         <Typography>{`${displayPrice(pool.totalMonthlyPrice)}/mo`}</Typography>

@@ -20,7 +20,7 @@ import SelectPlanPanel, {
 import { PoolNode } from '.././types';
 import NodePoolDisplayTable from './NodePoolDisplayTable';
 
-type ClassNames = 'root' | 'title' | 'gridItem' | 'nodeCountInput';
+type ClassNames = 'root' | 'title' | 'gridItem' | 'countInput';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
@@ -34,7 +34,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     paddingLeft: theme.spacing.unit * 3,
     marginBottom: theme.spacing.unit * 2
   },
-  nodeCountInput: {
+  countInput: {
     maxWidth: '5em'
   }
 });
@@ -116,7 +116,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
      * Price is calculated from the parent component
      * bc this component doesn't have access to types data.
      */
-    addNodePool({ type: selectedType, nodeCount, totalMonthlyPrice: 0 });
+    addNodePool({ type: selectedType, count: nodeCount, totalMonthlyPrice: 0 });
     handleTypeSelect(undefined);
     updateNodeCount(1);
   };

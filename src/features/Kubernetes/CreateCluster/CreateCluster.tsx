@@ -1,4 +1,4 @@
-import { remove } from 'ramda';
+import { pick, remove } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -20,6 +20,7 @@ import { dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { WithRegionsProps } from 'src/features/linodes/LinodesCreate/types';
+import { createKubernetesCluster } from 'src/services/kubernetes';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { getTagsAsStrings } from 'src/utilities/tagUtils';
 
@@ -74,14 +75,28 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
 
   createCluster = () => {
     const { selectedRegion, nodePools, label, tags, version } = this.state;
+    if (!selectedRegion) {
+      // Error!
+      return;
+    }
+
+    /**
+     * Typing is a nightmare here, but this has the correct node_pool shape.
+     * We need to remove the calculated price, which is used for client-side
+     * calculations, and send only type and count to the API.
+     */
+    const node_pools = nodePools.map(pick(['type', 'count'])) as any;
     const payload = {
-      selectedRegion,
-      nodePools,
+      region: selectedRegion,
+      node_pools,
       label,
       version: version.value,
       tags: getTagsAsStrings(tags)
     };
     console.log(payload);
+    createKubernetesCluster(payload)
+      .then(response => console.log(response))
+      .catch(err => console.log(err));
   };
 
   addPool = (pool: PoolNode) => {

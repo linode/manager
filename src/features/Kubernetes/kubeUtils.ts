@@ -12,7 +12,7 @@ export const getMonthlyPrice = (pool: PoolNode, types?: ExtendedType[]) => {
     return 0;
   }
   const thisType = types.find(type => type.id === pool.type);
-  return thisType ? thisType.price.monthly * pool.nodeCount : 0;
+  return thisType ? thisType.price.monthly * pool.count : 0;
 };
 
 export const getTotalClusterPrice = (pools: PoolNode[]) =>
