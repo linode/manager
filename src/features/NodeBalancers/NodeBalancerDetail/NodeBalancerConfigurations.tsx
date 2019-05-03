@@ -1027,7 +1027,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           configIdx={idx}
           onSave={this.onSaveConfig(idx)}
           submitting={configSubmitting[idx]}
-          onDelete={this.onDeleteConfig(idx, config.port)}
+          onDelete={() => this.onDeleteConfig(idx, config.port)}
           errors={configErrors[idx]}
           nodeMessage={panelNodeMessages[idx]}
           algorithm={view(L.algorithmLens, this.state)}
@@ -1160,9 +1160,14 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
         <ConfirmationDialog
           onClose={this.onCloseConfirmation}
-          title={`Delete this configuration on port ${
-            this.state.deleteConfigConfirmDialog.portToDelete
-          }?`}
+          title={
+            typeof this.state.deleteConfigConfirmDialog.portToDelete !==
+            'undefined'
+              ? `Delete this configuration on port ${
+                  this.state.deleteConfigConfirmDialog.portToDelete
+                }?`
+              : 'Delete this configuration?'
+          }
           error={this.confirmationConfigError()}
           actions={this.renderConfigConfirmationActions}
           open={this.state.deleteConfigConfirmDialog.open}
