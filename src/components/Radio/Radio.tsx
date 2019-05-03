@@ -14,6 +14,7 @@ type CSSClasses = 'root' | 'checked' | 'disabled' | 'warning' | 'error';
 const styles: StyleRulesCallback<CSSClasses> = theme => ({
   root: {
     color: '#ccc',
+    padding: '4px 10px',
     transition: theme.transitions.create(['color']),
     '& .defaultFill': {
       transition: theme.transitions.create(['fill'])

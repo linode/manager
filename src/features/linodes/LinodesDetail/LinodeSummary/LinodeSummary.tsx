@@ -717,7 +717,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                   hideLabel
                   className={classes.chartSelect}
                   isClearable={false}
-                  menuIsOpen={true}
                   data-qa-item="chartRange"
                 />
               </div>

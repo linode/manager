@@ -86,7 +86,6 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
   };
 
   handleTimezoneChange = (timezone: Item) => {
-    console.log(timezone);
     if (timezone) {
       this.setState(set(lensPath(['updatedTimezone']), timezone));
     } else {
