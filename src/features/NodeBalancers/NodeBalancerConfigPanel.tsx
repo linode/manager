@@ -1222,11 +1222,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       )}
                       {(forEdit || configIdx !== 0) && (
                         <Button
-                          onClick={
-                            typeof this.props.onDelete === 'function'
-                              ? this.props.onDelete()
-                              : undefined
-                          }
+                          onClick={this.props.onDelete}
                           type="secondary"
                           destructive
                           data-qa-delete-config

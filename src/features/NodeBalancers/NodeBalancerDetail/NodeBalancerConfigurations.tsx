@@ -1027,7 +1027,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           configIdx={idx}
           onSave={this.onSaveConfig(idx)}
           submitting={configSubmitting[idx]}
-          onDelete={() => this.onDeleteConfig(idx, config.port)}
+          onDelete={this.onDeleteConfig(idx, config.port)}
           errors={configErrors[idx]}
           nodeMessage={panelNodeMessages[idx]}
           algorithm={view(L.algorithmLens, this.state)}
