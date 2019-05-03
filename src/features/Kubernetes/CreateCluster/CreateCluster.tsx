@@ -21,6 +21,7 @@ import regionsContainer from 'src/containers/regions.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { WithRegionsProps } from 'src/features/linodes/LinodesCreate/types';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { getTagsAsStrings } from 'src/utilities/tagUtils';
 
 import NodePoolPanel from './NodePoolPanel';
@@ -144,7 +145,13 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, regionsData, typesData } = this.props;
+    const {
+      classes,
+      regionsData,
+      typesData,
+      typesLoading,
+      typesError
+    } = this.props;
     const {
       label,
       selectedRegion,
@@ -176,6 +183,10 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
               <NodePoolPanel
                 pools={nodePools}
                 types={typesData || []}
+                typesLoading={typesLoading}
+                typesError={
+                  typesError ? getErrorStringOrDefault(typesError) : undefined
+                }
                 nodeCount={numberOfLinodes}
                 selectedType={selectedType}
                 addNodePool={(pool: PoolNode) => this.addPool(pool)}

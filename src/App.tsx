@@ -390,17 +390,7 @@ export class App extends React.Component<CombinedProps, State> {
                             />
                           )}
                           {isKubernetesEnabled && (
-                            <>
-                              <Route
-                                exact
-                                path="/kubernetes"
-                                component={Kubernetes}
-                              />
-                              <Route
-                                path="/kubernetes/create"
-                                component={KubernetesCreate}
-                              />
-                            </>
+                            <Route path="/kubernetes" component={Kubernetes} />
                           )}
                           <Route path="/account" component={Account} />
                           <Route

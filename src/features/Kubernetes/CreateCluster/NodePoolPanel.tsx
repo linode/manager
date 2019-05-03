@@ -1,6 +1,7 @@
 import * as React from 'react';
 
 import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
@@ -9,6 +10,7 @@ import {
   withStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import ErrorState from 'src/components/ErrorState';
 import TextField from 'src/components/TextField';
 
 import SelectPlanPanel, {
@@ -40,6 +42,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface Props {
   pools: PoolNode[];
   types: ExtendedType[];
+  typesLoading: boolean;
+  typesError?: string;
   selectedType?: string;
   nodeCount: number;
   addNodePool: (pool: PoolNode) => void;
@@ -51,6 +55,31 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const NodePoolPanel: React.FunctionComponent<CombinedProps> = props => {
+  const { classes } = props;
+  return (
+    <Paper className={classes.root}>
+      <RenderLoadingOrContent {...props} />
+    </Paper>
+  );
+};
+
+const RenderLoadingOrContent: React.FunctionComponent<
+  CombinedProps
+> = props => {
+  const { typesError, typesLoading } = props;
+
+  if (typesError) {
+    return <ErrorState errorText={typesError} />;
+  }
+
+  if (typesLoading) {
+    return <CircleProgress />;
+  }
+
+  return <Panel {...props} />;
+};
+
+const Panel: React.FunctionComponent<CombinedProps> = props => {
   const [typeError, setTypeError] = React.useState<string | undefined>(
     undefined
   );
@@ -84,7 +113,7 @@ export const NodePoolPanel: React.FunctionComponent<CombinedProps> = props => {
 
     /**
      * Add pool and reset form state.
-     * Price is calculated from the parent component when adding
+     * Price is calculated from the parent component
      * bc this component doesn't have access to types data.
      */
     addNodePool({ type: selectedType, nodeCount, totalMonthlyPrice: 0 });
@@ -98,42 +127,40 @@ export const NodePoolPanel: React.FunctionComponent<CombinedProps> = props => {
   };
 
   return (
-    <Paper className={classes.root}>
-      <Grid container direction="column">
-        <Grid item>
-          <SelectPlanPanel
-            types={types}
-            selectedID={selectedType}
-            onSelect={selectType}
-            error={typeError}
-            header="Add Node Pools"
-            copy="Add groups of Linodes to your cluster with a chosen size."
-          />
-        </Grid>
-        <Grid item className={classes.gridItem}>
-          <Typography variant="body1">Number of Linodes</Typography>
-          <TextField
-            tiny
-            type="number"
-            value={nodeCount}
-            onChange={e => updateNodeCount(+e.target.value)}
-            errorText={countError}
-          />
-        </Grid>
-        <Grid item className={classes.gridItem}>
-          <Button type="secondary" onClick={submitForm}>
-            Add Node Pool
-          </Button>
-        </Grid>
-        <Grid item className={classes.gridItem}>
-          <NodePoolDisplayTable
-            pools={pools}
-            types={types}
-            handleDelete={(poolIdx: number) => deleteNodePool(poolIdx)}
-          />
-        </Grid>
+    <Grid container direction="column">
+      <Grid item>
+        <SelectPlanPanel
+          types={types}
+          selectedID={selectedType}
+          onSelect={selectType}
+          error={typeError}
+          header="Add Node Pools"
+          copy="Add groups of Linodes to your cluster with a chosen size."
+        />
       </Grid>
-    </Paper>
+      <Grid item className={classes.gridItem}>
+        <Typography variant="body1">Number of Linodes</Typography>
+        <TextField
+          tiny
+          type="number"
+          value={nodeCount}
+          onChange={e => updateNodeCount(+e.target.value)}
+          errorText={countError}
+        />
+      </Grid>
+      <Grid item className={classes.gridItem}>
+        <Button type="secondary" onClick={submitForm}>
+          Add Node Pool
+        </Button>
+      </Grid>
+      <Grid item className={classes.gridItem}>
+        <NodePoolDisplayTable
+          pools={pools}
+          types={types}
+          handleDelete={(poolIdx: number) => deleteNodePool(poolIdx)}
+        />
+      </Grid>
+    </Grid>
   );
 };
 
