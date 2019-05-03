@@ -24,6 +24,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import { getTicket, getTicketReplies } from 'src/services/support';
 import { MapState } from 'src/store/types';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
 import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
@@ -218,10 +219,9 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
       this.loadReplies(),
       this.handleJoinedPromise
     ).catch(err => {
-      const error = [{ reason: 'Ticket not found.' }];
       this.setState({
         loading: false,
-        errors: pathOr(error, ['response', 'data', 'errors'], err)
+        errors: getAPIErrorOrDefault(err, 'Ticket not found.')
       });
     });
   };

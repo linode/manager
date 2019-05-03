@@ -1,4 +1,4 @@
-import { path, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -25,6 +25,7 @@ import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import { getLinodeConfigs } from 'src/services/linodes';
 import { MapState } from 'src/store/types';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -144,12 +145,9 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
         this.handleClose();
       })
       .catch(error => {
-        this.setState(
-          { errors: path(['response', 'data', 'errors'], error) },
-          () => {
-            scrollErrorIntoView();
-          }
-        );
+        this.setState({ errors: getAPIErrorOrDefault(error) }, () => {
+          scrollErrorIntoView();
+        });
       });
   };
 
