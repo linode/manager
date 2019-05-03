@@ -226,6 +226,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
           value={selectedDisk}
           data-qa-select-linode
           disabled={disabled}
+          isClearable={false}
         />
         <PasswordInput
           autoComplete="new-password"
