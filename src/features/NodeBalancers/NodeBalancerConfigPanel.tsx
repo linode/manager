@@ -210,8 +210,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   onHealthCheckTimeoutChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.props.onHealthCheckTimeoutChange(e.target.value);
 
-  onHealthCheckTypeChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.props.onHealthCheckTypeChange(e.target.value);
+  onHealthCheckTypeChange = (e: Item<string>) =>
+    this.props.onHealthCheckTypeChange(e.value);
 
   onPortChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.props.onPortChange(e.target.value);
@@ -406,6 +406,32 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
 
     const conditionalText = this.displayProtocolText(protocol);
 
+    const typeOptions = [
+      {
+        label: 'None',
+        value: 'none'
+      },
+      {
+        label: 'TCP Connection',
+        value: 'connection',
+        isDisabled: protocol === 'http' || protocol === 'https'
+      },
+      {
+        label: 'HTTP Status',
+        value: 'http',
+        disabled: protocol === 'tcp'
+      },
+      {
+        label: 'HTTP Body',
+        value: 'http_body',
+        disabled: protocol === 'tcp'
+      }
+    ];
+
+    const defaultType = typeOptions.find(eachType => {
+      return eachType.value === healthCheckType;
+    });
+
     return (
       <Grid item xs={12} md={4} xl={2}>
         <Grid container>
@@ -430,33 +456,19 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
             xs={12}
           >
             <Grid item xs={12}>
-              <TextField
+              <Select
+                options={typeOptions}
                 label="Type"
-                value={healthCheckType}
-                select
+                defaultValue={defaultType || typeOptions[0]}
                 onChange={this.onHealthCheckTypeChange}
                 errorText={hasErrorFor('check')}
-                errorGroup={forEdit ? `${configIdx}` : undefined}
+                // errorGroup={forEdit ? `${configIdx}` : undefined}
                 data-qa-active-check-select
                 small
                 disabled={disabled}
-              >
-                <MenuItem value="none">None</MenuItem>
-                <MenuItem
-                  value="connection"
-                  disabled={protocol === 'http' || protocol === 'https'}
-                >
-                  TCP Connection
-                </MenuItem>
-
-                <MenuItem value="http" disabled={protocol === 'tcp'}>
-                  HTTP Status
-                </MenuItem>
-
-                <MenuItem value="http_body" disabled={protocol === 'tcp'}>
-                  HTTP Body
-                </MenuItem>
-              </TextField>
+                isClearable={false}
+                noMarginTop
+              />
               <FormHelperText>
                 Active health checks proactively check the health of back-end
                 nodes. {conditionalText}
@@ -490,6 +502,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-active-check-interval
                   disabled={disabled}
+                  small
                 />
                 <FormHelperText>
                   Seconds between health check probes
@@ -520,6 +533,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-active-check-timeout
                   disabled={disabled}
+                  small
                 />
                 <FormHelperText>
                   Seconds to wait before considering the probe a failure. 1-30.
@@ -549,6 +563,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   }}
                   data-qa-active-check-attempts
                   disabled={disabled}
+                  small
                 />
                 <FormHelperText>
                   Number of failed probes before taking a node out of rotation.
@@ -576,6 +591,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     errorText={hasErrorFor('check_path')}
                     errorGroup={forEdit ? `${configIdx}` : undefined}
                     disabled={disabled}
+                    small
                   />
                 </Grid>
               )}
@@ -600,6 +616,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     errorText={hasErrorFor('check_body')}
                     errorGroup={forEdit ? `${configIdx}` : undefined}
                     disabled={disabled}
+                    small
                   />
                 </Grid>
               )}
@@ -692,17 +709,29 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
       { label: 'HTTPS', value: 'https' }
     ];
 
+    const defaultProtocol = protocolOptions.find(eachProtocol => {
+      return eachProtocol.value === protocol;
+    });
+
     const algOptions = [
       { label: 'Round Robin', value: 'roundrobin' },
       { label: 'Least Connections', value: 'leastconn' },
       { label: 'Source', value: 'source' }
     ];
 
+    const defaultAlg = algOptions.find(eachAlg => {
+      return eachAlg.value === algorithm;
+    });
+
     const sessionOptions = [
       { label: 'None', value: 'none' },
       { label: 'Table', value: 'table' },
       { label: 'HTTP Cookie', value: 'http_cookie' }
     ];
+
+    const defaultSession = sessionOptions.find(eachSession => {
+      return eachSession.value === sessionStickiness;
+    });
 
     return (
       <Grid item xs={12}>
@@ -758,7 +787,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 <Select
                   options={protocolOptions}
                   label="Protocol"
-                  defaultValue={protocolOptions[0]}
+                  defaultValue={defaultProtocol || protocolOptions[0]}
                   onChange={this.onProtocolChange}
                   errorText={hasErrorFor('protocol')}
                   // errorGroup={forEdit ? `${configIdx}` : undefined}
@@ -822,7 +851,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 <Select
                   options={algOptions}
                   label="Algorithm"
-                  defaultValue={algOptions[0]}
+                  defaultValue={defaultAlg || algOptions[0]}
                   onChange={this.onAlgorithmChange}
                   errorText={hasErrorFor('algorithm')}
                   // errorGroup={forEdit ? `${configIdx}` : undefined}
@@ -843,7 +872,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 <Select
                   options={sessionOptions}
                   label="Session Stickiness"
-                  defaultValue={sessionOptions[1]}
+                  defaultValue={defaultSession || sessionOptions[1]}
                   onChange={this.onSessionStickinessChange}
                   errorText={hasErrorFor('stickiness')}
                   // errorGroup={forEdit ? `${configIdx}` : undefined}

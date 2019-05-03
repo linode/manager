@@ -132,6 +132,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
         backgroundColor: theme.bg.white
       }
     },
+    '& .react-select__option--is-disabled': {
+      opacity: '.5',
+      cursor: 'initial'
+    },
     '& .react-select__single-value': {
       color: theme.palette.text.primary,
       overflow: 'initial'
