@@ -194,9 +194,13 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
     return (
       <TableRow key={range.range}>
-        <TableCell parentColumn="Address">{`${range.range}/${
-          range.prefix
-        }`}</TableCell>
+        <TableCell parentColumn="Address">
+          <React.Fragment>
+            {range.range}
+            <span style={{ margin: '0 5px 0 5px' }}>/</span>
+            {range.prefix}
+          </React.Fragment>
+        </TableCell>
         <TableCell />
         <TableCell />
         <TableCell parentColumn="Type">{type}</TableCell>
@@ -216,7 +220,13 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     return (
       <TableRow key={ip.address} data-qa-ip={ip.address}>
         <TableCell parentColumn="Address" data-qa-ip-address>
-          {ip.type !== 'ipv4' ? `${ip.address}/${ip.prefix}` : ip.address}
+          {ip.address}
+          {type === 'Link Local' && (
+            <React.Fragment>
+              <span style={{ margin: '0 5px 0 5px' }}>/</span>
+              {ip.prefix}
+            </React.Fragment>
+          )}
         </TableCell>
         <TableCell parentColumn="Default Gateway">{ip.gateway}</TableCell>
         <TableCell parentColumn="Reverse DNS" data-qa-rdns>
