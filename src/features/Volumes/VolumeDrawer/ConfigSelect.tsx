@@ -119,8 +119,6 @@ class ConfigSelect extends React.Component<CombinedProps, State> {
         return { label, value: v };
       });
 
-    console.log('now:' + value);
-
     return (
       <FormControl fullWidth>
         <Select
