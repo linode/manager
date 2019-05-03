@@ -221,12 +221,6 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       <TableRow key={ip.address} data-qa-ip={ip.address}>
         <TableCell parentColumn="Address" data-qa-ip-address>
           {ip.address}
-          {type === 'Link Local' && (
-            <React.Fragment>
-              <span style={{ margin: '0 5px 0 5px' }}>/</span>
-              {ip.prefix}
-            </React.Fragment>
-          )}
         </TableCell>
         <TableCell parentColumn="Default Gateway">{ip.gateway}</TableCell>
         <TableCell parentColumn="Reverse DNS" data-qa-rdns>
