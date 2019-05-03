@@ -1,8 +1,8 @@
 import { pick, remove } from 'ramda';
 import * as React from 'react';
+import { StickyContainer } from 'react-sticky';
 import { compose } from 'recompose';
 
-import CheckoutBar from 'src/components/CheckoutBar';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
@@ -24,11 +24,8 @@ import { createKubernetesCluster } from 'src/services/kubernetes';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { getTagsAsStrings } from 'src/utilities/tagUtils';
 
-import {
-  getMonthlyPrice,
-  getTotalClusterPrice,
-  KubernetesVersionOptions
-} from '.././kubeUtils';
+import KubeCheckoutBar from '.././KubeCheckoutBar';
+import { getMonthlyPrice, KubernetesVersionOptions } from '.././kubeUtils';
 import { PoolNode } from '.././types';
 import NodePoolPanel from './NodePoolPanel';
 
@@ -133,6 +130,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       typesLoading,
       typesError
     } = this.props;
+
     const {
       label,
       selectedRegion,
@@ -144,7 +142,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     } = this.state;
 
     return (
-      <React.Fragment>
+      <StickyContainer>
         <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
         <Typography variant="h1" data-qa-title className={classes.title}>
           Create a Kubernetes Cluster
@@ -210,18 +208,15 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
             </Grid>
           </Grid>
           <Grid xs={3} item container justify="center" alignItems="flex-start">
-            <CheckoutBar
-              data-qa-checkout-bar
-              heading="Cluster Summary"
-              calculatedPrice={getTotalClusterPrice(nodePools)}
-              isMakingRequest={false}
-              disabled={false}
-              onDeploy={this.createCluster}
-              displaySections={[]}
+            <KubeCheckoutBar
+              label={label}
+              region={selectedRegion}
+              pools={nodePools}
+              createCluster={this.createCluster}
             />
           </Grid>
         </Grid>
-      </React.Fragment>
+      </StickyContainer>
     );
   }
 }
