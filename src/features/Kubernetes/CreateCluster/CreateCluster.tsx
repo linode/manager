@@ -4,6 +4,7 @@ import { compose } from 'recompose';
 
 import CheckoutBar from 'src/components/CheckoutBar';
 import Grid from 'src/components/core/Grid';
+import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
   WithStyles,
@@ -11,9 +12,10 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import { Item } from 'src/components/EnhancedSelect/Select';
-import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
+import TagsInput from 'src/components/TagsInput';
+import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
@@ -23,14 +25,17 @@ import { getTagsAsStrings } from 'src/utilities/tagUtils';
 
 import NodePoolPanel from './NodePoolPanel';
 
-type ClassNames = 'root' | 'title' | 'checkoutBar';
+type ClassNames = 'root' | 'title' | 'checkoutBar' | 'inner';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   title: {
     marginBottom: theme.spacing.unit + theme.spacing.unit / 2
   },
-  checkoutBar: {}
+  checkoutBar: {},
+  inner: {
+    padding: theme.spacing.unit * 3
+  }
 });
 
 interface Props {}
@@ -184,27 +189,32 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
               />
             </Grid>
             <Grid item>
-              <LabelAndTagsPanel
-                labelFieldProps={{
-                  errorText: undefined,
-                  label: 'Cluster Label',
-                  onChange: e => this.updateLabel(e.target.value),
-                  value: label
-                }}
-                selectInputProps={{
-                  label: 'Version',
-                  value: version,
-                  options: KubernetesVersionOptions,
-                  onChange: (selected: Item<string>) =>
-                    this.setState({ version: selected }),
-                  isClearable: false
-                }}
-                tagsInputProps={{
-                  value: tags,
-                  onChange: this.updateTags,
-                  tagError: undefined
-                }}
-              />
+              <Paper data-qa-label-header>
+                <div className={classes.inner}>
+                  {/* {error && <Notice text={error} error />} */}
+                  <TextField
+                    data-qa-label-input
+                    errorText={undefined}
+                    label="Cluster Label"
+                    onChange={e => this.updateLabel(e.target.value)}
+                    value={label}
+                  />
+                  <Select
+                    label="Version"
+                    value={version}
+                    options={KubernetesVersionOptions}
+                    onChange={(selected: Item<string>) =>
+                      this.setState({ version: selected })
+                    }
+                    isClearable={false}
+                  />
+                  <TagsInput
+                    value={tags}
+                    onChange={this.updateTags}
+                    tagError={undefined}
+                  />
+                </div>
+              </Paper>
             </Grid>
           </Grid>
           <Grid xs={3} item container justify="center" alignItems="flex-start">
