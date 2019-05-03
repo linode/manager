@@ -266,7 +266,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     '& label': {
-      marginRight: theme.spacing.unit
+      marginRight: theme.spacing.unit,
+      whiteSpace: 'nowrap',
+      position: 'relative',
+      top: 1
     }
   },
   hideLabel: {
