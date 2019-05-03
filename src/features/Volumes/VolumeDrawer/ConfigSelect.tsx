@@ -5,10 +5,7 @@ import {
 } from '@material-ui/core/styles';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
-import FormHelperText from 'src/components/core/FormHelperText';
-import InputLabel from 'src/components/core/InputLabel';
-import MenuItem from 'src/components/core/MenuItem';
-import Select from 'src/components/Select';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { getLinodeConfigs } from 'src/services/linodes';
 
 type ClassNames = 'root';
@@ -112,41 +109,31 @@ class ConfigSelect extends React.Component<CombinedProps, State> {
     const { error, onChange, name, onBlur, value, ...rest } = this.props;
     const { loading, configs } = this.state;
 
-    const hasError = Boolean(error);
-
     if (!loading && configs.length <= 1) {
       return null;
     }
 
+    const configList =
+      configs &&
+      configs.map(([v, label]) => {
+        return { label, value: v };
+      });
+
     return (
       <FormControl fullWidth>
-        <InputLabel
-          htmlFor={name}
-          disableAnimation
-          shrink={true}
-          error={hasError}
-        >
-          Config
-        </InputLabel>
         <Select
+          options={configList}
           name={name}
           value={value}
-          onChange={e => {
-            onChange(+e.target.value);
+          onChange={(e: Item) => {
+            onChange(+e.value);
           }}
           onBlur={onBlur}
-          inputProps={{ name, id: name }}
-          error={hasError}
+          id={name}
+          label="Config"
+          errorText={error}
           {...rest}
-        >
-          {configs &&
-            configs.map(([v, label]) => (
-              <MenuItem key={v} value={v}>
-                {label}
-              </MenuItem>
-            ))}
-        </Select>
-        {hasError && <FormHelperText error>{error}</FormHelperText>}
+        />
       </FormControl>
     );
   }
