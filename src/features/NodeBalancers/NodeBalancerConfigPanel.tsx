@@ -16,6 +16,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
@@ -186,8 +187,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
 
   static defaultProps: Partial<Props> = {};
 
-  onAlgorithmChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.props.onAlgorithmChange(e.target.value);
+  onAlgorithmChange = (e: Item<string>) =>
+    this.props.onAlgorithmChange(e.value);
 
   onCheckPassiveChange = (
     e: React.ChangeEvent<HTMLInputElement>,
@@ -218,13 +219,11 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   onPrivateKeyChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.props.onPrivateKeyChange(e.target.value);
 
-  onProtocolChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  onProtocolChange = (e: Item<string>) => {
     const { healthCheckType } = this.props;
-    const {
-      target: { value: protocol }
-    } = e;
+    const { value: protocol } = e;
 
-    this.props.onProtocolChange(e.target.value);
+    this.props.onProtocolChange(e.value);
 
     if (
       protocol === 'tcp' &&
@@ -240,8 +239,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     }
   };
 
-  onSessionStickinessChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.props.onSessionStickinessChange(e.target.value);
+  onSessionStickinessChange = (e: Item<string>) =>
+    this.props.onSessionStickinessChange(e.value);
 
   onSslCertificateChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.props.onSslCertificateChange(e.target.value);
@@ -687,6 +686,24 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
 
     const globalFormError = hasErrorFor('none');
 
+    const protocolOptions = [
+      { label: 'TCP', value: 'tcp' },
+      { label: 'HTTP', value: 'http' },
+      { label: 'HTTPS', value: 'https' }
+    ];
+
+    const algOptions = [
+      { label: 'Round Robin', value: 'roundrobin' },
+      { label: 'Least Connections', value: 'leastconn' },
+      { label: 'Source', value: 'source' }
+    ];
+
+    const sessionOptions = [
+      { label: 'None', value: 'none' },
+      { label: 'Table', value: 'table' },
+      { label: 'HTTP Cookie', value: 'http_cookie' }
+    ];
+
     return (
       <Grid item xs={12}>
         <Paper className={classes.root} data-qa-label-header>
@@ -722,12 +739,12 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   Port Configuration
                 </Typography>
               </Grid>
-              <Grid item xs={6} sm={4} md={3} lg={2}>
+              <Grid item xs={6} md={3}>
                 <TextField
                   type="number"
                   label="Port"
                   required
-                  value={port || ''}
+                  defaultValue={port || ''}
                   onChange={this.onPortChange}
                   errorText={hasErrorFor('port') || hasErrorFor('configs')}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
@@ -737,28 +754,20 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 />
                 <FormHelperText>Listen on this port</FormHelperText>
               </Grid>
-              <Grid item xs={6} sm={4} md={3} lg={2}>
-                <TextField
+              <Grid item xs={6} md={3}>
+                <Select
+                  options={protocolOptions}
                   label="Protocol"
-                  value={protocol}
-                  select
+                  defaultValue={protocolOptions[0]}
                   onChange={this.onProtocolChange}
                   errorText={hasErrorFor('protocol')}
-                  errorGroup={forEdit ? `${configIdx}` : undefined}
+                  // errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-protocol-select
-                  small
                   disabled={disabled}
-                >
-                  <MenuItem value="tcp" data-qa-option="tcp">
-                    TCP
-                  </MenuItem>
-                  <MenuItem value="http" data-qa-option="http">
-                    HTTP
-                  </MenuItem>
-                  <MenuItem value="https" data-qa-option="https">
-                    HTTPS
-                  </MenuItem>
-                </TextField>
+                  noMarginTop
+                  small
+                  isClearable={false}
+                />
               </Grid>
 
               {protocol === 'https' && (
@@ -809,28 +818,20 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 </Grid>
               )}
 
-              <Grid item xs={6} sm={4} md={3} lg={2}>
-                <TextField
+              <Grid item xs={6} md={3}>
+                <Select
+                  options={algOptions}
                   label="Algorithm"
-                  value={algorithm}
-                  select
+                  defaultValue={algOptions[0]}
                   onChange={this.onAlgorithmChange}
                   errorText={hasErrorFor('algorithm')}
-                  errorGroup={forEdit ? `${configIdx}` : undefined}
+                  // errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-algorithm-select
                   small
                   disabled={disabled}
-                >
-                  <MenuItem value="roundrobin" data-qa-option="roundrobin">
-                    Round Robin
-                  </MenuItem>
-                  <MenuItem value="leastconn" data-qa-option="leastconn">
-                    Least Connections
-                  </MenuItem>
-                  <MenuItem value="source" data-qa-option="source">
-                    Source
-                  </MenuItem>
-                </TextField>
+                  isClearable={false}
+                  noMarginTop
+                />
                 <FormHelperText>
                   Roundrobin. Least connections assigns connections to the
                   backend with the least connections. Source uses the client's
@@ -838,28 +839,20 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 </FormHelperText>
               </Grid>
 
-              <Grid item xs={6} sm={4} md={3} lg={2}>
-                <TextField
+              <Grid item xs={6} md={3}>
+                <Select
+                  options={sessionOptions}
                   label="Session Stickiness"
-                  value={sessionStickiness}
-                  select
+                  defaultValue={sessionOptions[1]}
                   onChange={this.onSessionStickinessChange}
                   errorText={hasErrorFor('stickiness')}
-                  errorGroup={forEdit ? `${configIdx}` : undefined}
+                  // errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-session-stickiness-select
                   small
                   disabled={disabled}
-                >
-                  <MenuItem value="none" data-qa-option="none">
-                    None
-                  </MenuItem>
-                  <MenuItem value="table" data-qa-option="table">
-                    Table
-                  </MenuItem>
-                  <MenuItem value="http_cookie" data-qa-option="http_cookie">
-                    HTTP Cookie
-                  </MenuItem>
-                </TextField>
+                  isClearable={false}
+                  noMarginTop
+                />
                 <FormHelperText>
                   Route subsequent requests from the client to the same backend
                 </FormHelperText>
