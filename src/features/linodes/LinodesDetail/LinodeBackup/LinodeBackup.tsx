@@ -785,7 +785,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     if (this.props.backups.error) {
       /** @todo remove promise loader and source backups from Redux */
       return (
-        <ErrorState errorText="There was an issue retrieving your backups" />
+        <ErrorState errorText="There was an issue retrieving your backups." />
       );
     }
 
