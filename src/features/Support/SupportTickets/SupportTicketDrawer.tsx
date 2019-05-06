@@ -4,6 +4,7 @@ import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import FormHelperText from 'src/components/core/FormHelperText';
 import {
   StyleRulesCallback,
   withStyles,
@@ -11,8 +12,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
-import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
-import MenuItem from 'src/components/MenuItem';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
@@ -226,13 +226,13 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
     ]);
   };
 
-  handleEntityTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+  handleEntityTypeChange = (e: Item<string>) => {
     // Don't reset things if the type hasn't changed
-    if (this.state.ticket.entity_type === e.target.value) {
+    if (this.state.ticket.entity_type === e.value) {
       return;
     }
     this.composeState([
-      set(L.entity_type, e.target.value),
+      set(L.entity_type, e.value),
       set(L.entity_id, undefined),
       set(L.inputValue, ''),
       set(L.data, []),
@@ -408,12 +408,8 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
   };
 
   renderEntityTypes = () => {
-    return Object.keys(entityMap).map((key: string, idx: number) => {
-      return (
-        <MenuItem key={idx} value={entityMap[key]}>
-          {key}
-        </MenuItem>
-      );
+    return Object.keys(entityMap).map((key: string) => {
+      return { label: key, value: entityMap[key] };
     });
   };
 
@@ -433,6 +429,15 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
 
     const hasNoEntitiesMessage = this.getHasNoEntitiesMessage();
 
+    const topicOptions = [
+      ...this.renderEntityTypes(),
+      { label: 'None/General', value: 'general' }
+    ];
+
+    const defaultTopic = topicOptions.find(eachTopic => {
+      return eachTopic.value === ticket.entity_type;
+    });
+
     return (
       <Drawer
         open={this.props.open}
@@ -448,36 +453,35 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
           <a href="https://status.linode.com">status.linode.com</a>.
         </Typography>
 
-        <TextField
-          select
+        <Select
+          options={topicOptions}
           label="What is this regarding?"
-          value={ticket.entity_type}
+          defaultValue={defaultTopic}
           onChange={this.handleEntityTypeChange}
           data-qa-ticket-entity-type
-        >
-          <MenuItem key={'none'} value={'none'}>
-            Choose a Product
-          </MenuItem>
-          {this.renderEntityTypes()}
-          <MenuItem key={'general'} value={'general'}>
-            None/General
-          </MenuItem>
-        </TextField>
+          placeholder="Choose a Product"
+          isClearable={false}
+        />
 
         {!['none', 'general'].includes(ticket.entity_type) && (
-          <EnhancedSelect
-            options={data}
-            value={ticket.entity_id}
-            handleSelect={this.handleEntityIDChange}
-            disabled={data.length === 0}
-            errorText={inputError}
-            helperText={hasNoEntitiesMessage}
-            placeholder={`Select a ${entityIdtoNameMap[ticket.entity_type]}`}
-            label={entityIdtoNameMap[ticket.entity_type]}
-            inputValue={inputValue}
-            onInputValueChange={this.onInputValueChange}
-            data-qa-ticket-entity-id
-          />
+          <>
+            <Select
+              options={data}
+              defaultValue={ticket.entity_id}
+              disabled={data.length === 0}
+              errorText={inputError}
+              placeholder={`Select a ${entityIdtoNameMap[ticket.entity_type]}`}
+              label={entityIdtoNameMap[ticket.entity_type]}
+              inputValue={inputValue}
+              onChange={this.handleEntityIDChange}
+              onInputChange={this.onInputValueChange}
+              data-qa-ticket-entity-id
+              isClearable={false}
+            />
+            {hasNoEntitiesMessage && (
+              <FormHelperText>{hasNoEntitiesMessage}</FormHelperText>
+            )}
+          </>
         )}
 
         <TextField
