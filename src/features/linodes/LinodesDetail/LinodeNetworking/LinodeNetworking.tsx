@@ -194,7 +194,13 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
     return (
       <TableRow key={range.range}>
-        <TableCell parentColumn="Address">{range.range}</TableCell>
+        <TableCell parentColumn="Address">
+          <React.Fragment>
+            {range.range}
+            <span style={{ margin: '0 5px 0 5px' }}>/</span>
+            {range.prefix}
+          </React.Fragment>
+        </TableCell>
         <TableCell />
         <TableCell />
         <TableCell parentColumn="Type">{type}</TableCell>
