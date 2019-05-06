@@ -38,13 +38,13 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
 
   return (
     <TableRow>
-      <TableCell>
+      <TableCell parentColumn="Plan">
         <Typography>{typeLabel}</Typography>
       </TableCell>
-      <TableCell>
+      <TableCell parentColumn="Node Count">
         <Typography>{pool.count}</Typography>
       </TableCell>
-      <TableCell>
+      <TableCell parentColumn="Pricing">
         <Typography>{`${displayPrice(pool.totalMonthlyPrice)}/mo`}</Typography>
       </TableCell>
       <TableCell>
