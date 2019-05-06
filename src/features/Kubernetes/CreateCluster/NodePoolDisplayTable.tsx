@@ -10,6 +10,7 @@ import TableHead from 'src/components/core/TableHead';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { PoolNode } from '.././types';
 import NodePoolRow from './NodePoolRow';
@@ -45,20 +46,27 @@ export const NodePoolDisplayTable: React.FunctionComponent<
         </TableRow>
       </TableHead>
       <TableBody>
-        {pools.map((thisPool, idx) => {
-          const thisPoolType = types.find(
-            thisType => thisType.id === thisPool.type
-          );
-          return (
-            <NodePoolRow
-              key={`node-pool-row-${idx}`}
-              idx={idx}
-              pool={thisPool}
-              type={thisPoolType}
-              handleDelete={() => handleDelete(idx)}
-            />
-          );
-        })}
+        {pools.length === 0 ? (
+          <TableRowEmptyState
+            colSpan={12}
+            message={"You haven't added any node pools yet."}
+          />
+        ) : (
+          pools.map((thisPool, idx) => {
+            const thisPoolType = types.find(
+              thisType => thisType.id === thisPool.type
+            );
+            return (
+              <NodePoolRow
+                key={`node-pool-row-${idx}`}
+                idx={idx}
+                pool={thisPool}
+                type={thisPoolType}
+                handleDelete={() => handleDelete(idx)}
+              />
+            );
+          })
+        )}
       </TableBody>
     </Table>
   );
