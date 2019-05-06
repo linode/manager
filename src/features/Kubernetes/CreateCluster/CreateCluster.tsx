@@ -212,7 +212,12 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
                 apiError={errorMap.node_pools}
                 typesLoading={typesLoading}
                 typesError={
-                  typesError ? getErrorStringOrDefault(typesError) : undefined
+                  typesError
+                    ? getErrorStringOrDefault(
+                        typesError,
+                        'Error loading Linode type information.'
+                      )
+                    : undefined
                 }
                 nodeCount={numberOfLinodes}
                 selectedType={selectedType}
