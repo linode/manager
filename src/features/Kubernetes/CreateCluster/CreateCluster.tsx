@@ -28,6 +28,7 @@ import {
   getErrorMap,
   getErrorStringOrDefault
 } from 'src/utilities/errorUtils';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { getTagsAsStrings } from 'src/utilities/tagUtils';
 
 import KubeCheckoutBar from '.././KubeCheckoutBar';
@@ -48,8 +49,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-interface Props {}
-
 interface State {
   selectedRegion?: string;
   selectedType?: string;
@@ -61,8 +60,7 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props &
-  RouteComponentProps<{}> &
+type CombinedProps = RouteComponentProps<{}> &
   WithStyles<ClassNames> &
   WithRegionsProps &
   WithTypesProps;
@@ -88,30 +86,41 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       errors: undefined
     });
 
+    /**
+     * Simple client error checking; @todo replace with Formik if appropriate.
+     * Otherwise can probably use a Yup schema directly.
+     */
+    const clientErrors: Linode.ApiFieldError[] = [];
+
     if (!selectedRegion) {
-      this.setState({
-        errors: [{ field: 'region', reason: 'Region is required.' }]
-      });
-      return;
+      clientErrors.push({ field: 'region', reason: 'Region is required.' });
     }
 
     if (nodePools.length < 1) {
-      this.setState({
-        errors: [
-          { field: 'node_pools', reason: 'Please add at least one node pool.' }
-        ]
+      clientErrors.push({
+        field: 'node_pools',
+        reason: 'Please add at least one node pool.'
       });
+    }
+
+    if (clientErrors.length > 0) {
+      this.setState(
+        {
+          errors: clientErrors
+        },
+        () => scrollErrorIntoView()
+      );
       return;
     }
 
     /**
-     * Typing is a nightmare here, but this has the correct node_pool shape.
+     * Typing is difficult here, but this has the correct node_pool shape.
      * We need to remove the calculated price, which is used for client-side
      * calculations, and send only type and count to the API.
      */
     const node_pools = nodePools.map(pick(['type', 'count'])) as any;
     const payload = {
-      region: selectedRegion,
+      region: selectedRegion!, // We know this is defined bc we just checked for it above
       node_pools,
       label,
       version: version.value,
@@ -268,7 +277,7 @@ const withRegions = regionsContainer(({ data, loading, error }) => ({
   regionsError: error
 }));
 
-const enhanced = compose<CombinedProps, Props>(
+const enhanced = compose<CombinedProps, {}>(
   styled,
   withRouter,
   withRegions,
