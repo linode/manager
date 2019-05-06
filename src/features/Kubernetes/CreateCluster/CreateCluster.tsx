@@ -1,5 +1,6 @@
 import { pick, remove } from 'ramda';
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
 import { compose } from 'recompose';
 
@@ -13,6 +14,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import TagsInput from 'src/components/TagsInput';
 import TextField from 'src/components/TextField';
@@ -21,7 +23,11 @@ import regionsContainer from 'src/containers/regions.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { WithRegionsProps } from 'src/features/linodes/LinodesCreate/types';
 import { createKubernetesCluster } from 'src/services/kubernetes';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import {
+  getAPIErrorOrDefault,
+  getErrorMap,
+  getErrorStringOrDefault
+} from 'src/utilities/errorUtils';
 import { getTagsAsStrings } from 'src/utilities/tagUtils';
 
 import KubeCheckoutBar from '.././KubeCheckoutBar';
@@ -52,9 +58,11 @@ interface State {
   label: string;
   tags: Item<string>[];
   version: Item<string>;
+  errors?: Linode.ApiFieldError[];
 }
 
 type CombinedProps = Props &
+  RouteComponentProps<{}> &
   WithStyles<ClassNames> &
   WithRegionsProps &
   WithTypesProps;
@@ -67,13 +75,32 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     nodePools: [],
     label: '',
     tags: [],
-    version: { value: '1.14', label: '1.14' }
+    version: { value: '1.14', label: '1.14' },
+    errors: undefined
   };
 
   createCluster = () => {
     const { selectedRegion, nodePools, label, tags, version } = this.state;
+    const {
+      history: { push }
+    } = this.props;
+    this.setState({
+      errors: undefined
+    });
+
     if (!selectedRegion) {
-      // Error!
+      this.setState({
+        errors: [{ field: 'region', reason: 'Region is required.' }]
+      });
+      return;
+    }
+
+    if (nodePools.length < 1) {
+      this.setState({
+        errors: [
+          { field: 'node_pools', reason: 'Please add at least one node pool.' }
+        ]
+      });
       return;
     }
 
@@ -90,10 +117,14 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       version: version.value,
       tags: getTagsAsStrings(tags)
     };
-    console.log(payload);
+
     createKubernetesCluster(payload)
-      .then(response => console.log(response))
-      .catch(err => console.log(err));
+      .then(_ => push('/kubernetes'))
+      .catch(err =>
+        this.setState({
+          errors: getAPIErrorOrDefault(err, 'Error creating your cluster')
+        })
+      );
   };
 
   addPool = (pool: PoolNode) => {
@@ -131,6 +162,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     } = this.props;
 
     const {
+      errors,
       label,
       selectedRegion,
       selectedType,
@@ -140,16 +172,23 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       version
     } = this.state;
 
+    const errorMap = getErrorMap(
+      ['region', 'node_pools', 'label', 'tags'],
+      errors
+    );
+
     return (
       <StickyContainer>
         <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
         <Typography variant="h1" data-qa-title className={classes.title}>
           Create a Kubernetes Cluster
         </Typography>
+        {errorMap.none && <Notice text={errorMap.none} error />}
         <Grid container direction="row" wrap="nowrap" justify="space-between">
           <Grid container item direction="column" xs={9}>
             <Grid item data-qa-kubernetes-create-region-select>
               <SelectRegionPanel
+                error={errorMap.region}
                 regions={regionsData || []}
                 selectedID={selectedRegion}
                 handleSelection={(regionID: string) =>
@@ -161,6 +200,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
               <NodePoolPanel
                 pools={nodePools}
                 types={typesData || []}
+                apiError={errorMap.node_pools}
                 typesLoading={typesLoading}
                 typesError={
                   typesError ? getErrorStringOrDefault(typesError) : undefined
@@ -180,10 +220,9 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
             <Grid item>
               <Paper data-qa-label-header>
                 <div className={classes.inner}>
-                  {/* {error && <Notice text={error} error />} */}
                   <TextField
                     data-qa-label-input
-                    errorText={undefined}
+                    errorText={errorMap.label}
                     label="Cluster Label"
                     onChange={e => this.updateLabel(e.target.value)}
                     value={label}
@@ -191,6 +230,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
                   <Select
                     label="Version"
                     value={version}
+                    errorText={errorMap.version}
                     options={KubernetesVersionOptions}
                     onChange={(selected: Item<string>) =>
                       this.setState({ version: selected })
@@ -200,7 +240,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
                   <TagsInput
                     value={tags}
                     onChange={this.updateTags}
-                    tagError={undefined}
+                    tagError={errorMap.tags}
                   />
                 </div>
               </Paper>
@@ -230,6 +270,7 @@ const withRegions = regionsContainer(({ data, loading, error }) => ({
 
 const enhanced = compose<CombinedProps, Props>(
   styled,
+  withRouter,
   withRegions,
   withTypes
 );

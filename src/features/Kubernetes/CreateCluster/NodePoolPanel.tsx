@@ -44,6 +44,7 @@ interface Props {
   types: ExtendedType[];
   typesLoading: boolean;
   typesError?: string;
+  apiError?: string;
   selectedType?: string;
   nodeCount: number;
   addNodePool: (pool: PoolNode) => void;
@@ -89,6 +90,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
   const {
     classes,
     addNodePool,
+    apiError,
     deleteNodePool,
     handleTypeSelect,
     pools,
@@ -133,7 +135,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           types={types}
           selectedID={selectedType}
           onSelect={selectType}
-          error={typeError}
+          error={apiError || typeError}
           header="Add Node Pools"
           copy="Add groups of Linodes to your cluster with a chosen size."
         />
