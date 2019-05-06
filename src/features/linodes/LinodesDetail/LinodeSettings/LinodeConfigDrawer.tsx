@@ -396,7 +396,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               defaultValue={kernel}
               onChange={this.handleChangeKernel}
               errorText={errorFor('kernel')}
-              // errorGroup="linode-config-drawer"
+              errorGroup="linode-config-drawer"
               disabled={readOnly}
               isClearable={false}
             />

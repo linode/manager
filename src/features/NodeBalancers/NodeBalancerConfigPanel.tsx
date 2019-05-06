@@ -462,7 +462,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 defaultValue={defaultType || typeOptions[0]}
                 onChange={this.onHealthCheckTypeChange}
                 errorText={hasErrorFor('check')}
-                // errorGroup={forEdit ? `${configIdx}` : undefined}
+                errorGroup={forEdit ? `${configIdx}` : undefined}
                 data-qa-active-check-select
                 small
                 disabled={disabled}
@@ -790,7 +790,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   defaultValue={defaultProtocol || protocolOptions[0]}
                   onChange={this.onProtocolChange}
                   errorText={hasErrorFor('protocol')}
-                  // errorGroup={forEdit ? `${configIdx}` : undefined}
+                  errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-protocol-select
                   disabled={disabled}
                   noMarginTop
@@ -854,7 +854,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   defaultValue={defaultAlg || algOptions[0]}
                   onChange={this.onAlgorithmChange}
                   errorText={hasErrorFor('algorithm')}
-                  // errorGroup={forEdit ? `${configIdx}` : undefined}
+                  errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-algorithm-select
                   small
                   disabled={disabled}
@@ -875,7 +875,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   defaultValue={defaultSession || sessionOptions[1]}
                   onChange={this.onSessionStickinessChange}
                   errorText={hasErrorFor('stickiness')}
-                  // errorGroup={forEdit ? `${configIdx}` : undefined}
+                  errorGroup={forEdit ? `${configIdx}` : undefined}
                   data-qa-session-stickiness-select
                   small
                   disabled={disabled}
