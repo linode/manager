@@ -336,6 +336,7 @@ export interface EnhancedSelectProps {
   noMarginTop?: boolean;
   inline?: boolean;
   hideLabel?: boolean;
+  errorGroup?: string;
 }
 
 // Material-UI versions of several React-Select components.
@@ -396,6 +397,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
       noMarginTop,
       inline,
       hideLabel,
+      errorGroup,
       ...restOfProps
     } = this.props;
 
