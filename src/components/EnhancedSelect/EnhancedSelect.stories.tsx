@@ -97,9 +97,9 @@ class Example extends React.Component<{}, State> {
     );
   };
 
-  loadOptions = (inputValue: string): Promise<Item[]> => {
+  loadOptions = (inputValue?: string): Promise<Item[]> => {
     return new Promise(resolve => {
-      setTimeout(() => resolve(this.filterFruit(inputValue)), 2000);
+      setTimeout(() => resolve(this.filterFruit(inputValue || '')), 2000);
     });
   };
 
