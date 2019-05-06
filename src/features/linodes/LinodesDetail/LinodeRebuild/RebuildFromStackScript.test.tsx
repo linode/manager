@@ -1,52 +1,63 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
+import {
+  cleanup,
+  fireEvent,
+  render,
+  waitForElement
+} from 'react-testing-library';
 import { images } from 'src/__data__/images';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { RebuildFromStackScript } from './RebuildFromStackScript';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
+import {
+  CombinedProps,
+  RebuildFromStackScript
+} from './RebuildFromStackScript';
 
-// @todo: These tests don't work now that RebuildFromStackScript has been Formik'd
-describe.skip('RebuildFromImage', () => {
-  const wrapper = shallow(
-    <RebuildFromStackScript
-      classes={{
-        root: '',
-        error: '',
-        emptyImagePanel: '',
-        emptyImagePanelText: ''
-      }}
-      linodeId={1234}
-      imagesData={images}
-      imagesLoading={false}
-      userSSHKeys={[]}
-      closeSnackbar={jest.fn()}
-      enqueueSnackbar={jest.fn()}
-      {...reactRouterProps}
-    />
-  );
+jest.mock('src/utilities/scrollErrorIntoView');
 
-  it('renders without crashing', () => {
-    expect(wrapper).toHaveLength(1);
+afterEach(cleanup);
+
+const props: CombinedProps = {
+  type: 'community',
+  classes: {
+    root: '',
+    error: '',
+    emptyImagePanel: '',
+    emptyImagePanelText: ''
+  },
+  linodeId: 1234,
+  imagesData: images,
+  imagesLoading: false,
+  userSSHKeys: [],
+  closeSnackbar: jest.fn(),
+  enqueueSnackbar: jest.fn(),
+  ...reactRouterProps
+};
+
+describe('RebuildFromStackScript', () => {
+  it('renders a SelectImage panel', () => {
+    const { queryByText } = render(
+      wrapWithTheme(<RebuildFromStackScript {...props} />)
+    );
+    expect(queryByText('Select Image')).toBeInTheDocument();
   });
 
-  it('renders a SelectStackScript panel with images', () => {
-    expect(wrapper.find('[data-qa-select-stackscript]')).toHaveLength(1);
+  it('renders a SelectStackScript panel', () => {
+    const { queryByText } = render(
+      wrapWithTheme(<RebuildFromStackScript {...props} />)
+    );
+    expect(queryByText('Select StackScript')).toBeInTheDocument();
   });
 
-  it('defaults the selectedImage to undefined', () => {
-    expect(
-      wrapper.find('[data-qa-select-stackscript]').prop('selectedId')
-    ).toBe(undefined);
-  });
-
-  it('renders an AccessPanel', () => {
-    expect(wrapper.find('[data-qa-access-panel]')).toHaveLength(1);
-  });
-
-  it('defaults the password to an empty string', () => {
-    expect(wrapper.find('[data-qa-access-panel]').prop('password')).toBe('');
-  });
-
-  it('renders an Rebuild Button', () => {
-    expect(wrapper.find('[data-qa-rebuild]')).toHaveLength(1);
+  it('validates the form upon clicking the "Rebuild" button', async () => {
+    const { getByTestId, getByText } = render(
+      wrapWithTheme(<RebuildFromStackScript {...props} />)
+    );
+    fireEvent.click(getByTestId('rebuild-button'));
+    await waitForElement(() => [
+      getByText('A StackScript is required.'),
+      getByText('An image is required.'),
+      getByText('Password cannot be blank.')
+    ]);
   });
 });

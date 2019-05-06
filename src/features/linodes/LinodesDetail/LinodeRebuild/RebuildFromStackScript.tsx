@@ -190,9 +190,6 @@ export const RebuildFromStackScript: React.StatelessComponent<
     return maybeErrors;
   };
 
-  const isUDFRequired = (udf: Linode.StackScript.UserDefinedField) =>
-    !udf.hasOwnProperty('default');
-
   return (
     <Formik
       initialValues={initialValues}
@@ -330,6 +327,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
                 className="destructive"
                 onClick={handleRebuildButtonClick}
                 data-qa-rebuild
+                data-testid="rebuild-button"
               >
                 Rebuild
               </Button>
@@ -388,3 +386,6 @@ const getUDFErrors = (errors: Linode.ApiFieldError[] | undefined) => {
       })
     : undefined;
 };
+
+const isUDFRequired = (udf: Linode.StackScript.UserDefinedField) =>
+  !udf.hasOwnProperty('default');
