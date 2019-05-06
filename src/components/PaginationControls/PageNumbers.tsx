@@ -15,7 +15,21 @@ interface Props {
   handlePageClick: (n: number) => void;
 }
 
-class PageNumbers extends React.PureComponent<Props & StyleProps> {
+export type CombinedProps = Props & StyleProps;
+
+// This component handles page numbering for the pagination footer.
+// The first and last page are always shown, and depending on the number
+// of pages (and the selected page number), ellipses may be shown.
+//
+// Examples: ("*" denotes selected page)
+// 1 2 *3* 4 5 6
+// 1 2 3 *4* 5 ... 7
+// 1 ... 3 4 *5* 6 7
+// 1 ... 5 6 *7* 8 9 ... 11
+//
+// On smaller viewports, only 3 page numbers are shown in the middle,
+// so the last example becomes 1 ... 6 *7* 8 ... 11
+export class PageNumbers extends React.PureComponent<CombinedProps> {
   forceRefresh = debounce(400, false, () => {
     /**
      * forcing update because we want the shown page numbers to update
@@ -34,29 +48,39 @@ class PageNumbers extends React.PureComponent<Props & StyleProps> {
 
   render() {
     const { numOfPages, currentPage, classes, ...rest } = this.props;
+
+    const pageNumbers = pageNumbersToRender(currentPage, numOfPages);
+
     return (
       <React.Fragment>
-        {/** display "1 ... " if we're on a page higher than 5 */
-        currentPage >= 5 ? (
+        {/* We always want to start with "1", so if it isn't already the first
+        element in pageNumbers, add it here. */}
+        {pageNumbers[0] !== 1 && (
           <React.Fragment>
             <PageNumber
               number={1}
               data-qa-page-to={1}
+              data-testid={1}
               disabled={currentPage === 1}
               aria-label={`Page 1`}
               {...rest}
             >
               1
             </PageNumber>
-            <div className={classes.ellipses}>
-              <span className={classes.ellipsesInner}>...</span>
-            </div>
+            {/* We want an ellipsis here, unless the first element of pageNumbers is 2, because
+             "1 ... 2" is incorrect. */}
+            {pageNumbers[0] !== 2 && (
+              <div data-testid="leading-ellipsis" className={classes.ellipses}>
+                <span className={classes.ellipsesInner}>...</span>
+              </div>
+            )}
           </React.Fragment>
-        ) : null}
-        {pageNumbersToRender(currentPage, numOfPages).map(eachPage => (
+        )}
+        {pageNumbers.map(eachPage => (
           <PageNumber
             number={eachPage}
             data-qa-page-to={eachPage}
+            data-testid={eachPage}
             key={eachPage}
             disabled={eachPage === currentPage}
             aria-label={`Page ${eachPage}`}
@@ -65,16 +89,21 @@ class PageNumbers extends React.PureComponent<Props & StyleProps> {
             {eachPage}
           </PageNumber>
         ))}
-        {/* if we have more than 5 pages and we're on a page that is
-        not one of the last 5 pages, show " ... lastPage# " */
-        numOfPages > 5 && currentPage <= numOfPages - 4 ? (
+        {/* We always want to end with the last page, so if it isn't already the last
+        element in pageNumbers, add it here. */}
+        {pageNumbers[pageNumbers.length - 1] !== numOfPages && (
           <React.Fragment>
-            <div className={classes.ellipses}>
-              <span className={classes.ellipsesInner}>...</span>
-            </div>
+            {/* We want an ellipsis here, unless the last element of pageNumbers is equal to
+            numPages-1, because "6 ... 7" is incorrect. */}
+            {pageNumbers[pageNumbers.length - 1] !== numOfPages - 1 && (
+              <div data-testid="trailing-ellipsis" className={classes.ellipses}>
+                <span className={classes.ellipsesInner}>...</span>
+              </div>
+            )}
             <PageNumber
               number={numOfPages}
               data-qa-page-to={numOfPages}
+              data-testid={numOfPages}
               disabled={currentPage === numOfPages}
               aria-label={`Page ${numOfPages}`}
               {...rest}
@@ -82,7 +111,7 @@ class PageNumbers extends React.PureComponent<Props & StyleProps> {
               {numOfPages}
             </PageNumber>
           </React.Fragment>
-        ) : null}
+        )}
       </React.Fragment>
     );
   }
