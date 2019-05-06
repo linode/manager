@@ -19,7 +19,6 @@ import {
 } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import {
   default as _TextField,
@@ -318,57 +317,64 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     );
   };
 
-  ProtocolField = () => (
-    <TextField
-      select
-      label="Protocol"
-      value={defaultTo(
-        DomainRecordDrawer.defaultFieldsState(this.props).protocol,
-        (this.state.fields as EditableRecordFields).protocol
-      )}
-      onChange={e => this.setProtocol(e.target.value)}
-      data-qa-protocol
-    >
-      <MenuItem value="tcp" data-qa-protocol-options>
-        tcp
-      </MenuItem>
-      <MenuItem value="udp" data-qa-protocol-options>
-        udp
-      </MenuItem>
-      <MenuItem value="xmpp" data-qa-protocol-options>
-        xmpp
-      </MenuItem>
-      <MenuItem value="tls" data-qa-protocol-options>
-        tls
-      </MenuItem>
-      <MenuItem value="smtp" data-qa-protocol-options>
-        smtp
-      </MenuItem>
-    </TextField>
-  );
+  ProtocolField = () => {
+    const protocolOptions = [
+      { label: 'tcp', value: 'tcp' },
+      { label: 'udp', value: 'udp' },
+      { label: 'xmpp', value: 'xmpp' },
+      { label: 'tls', value: 'tls' },
+      { label: 'smtp', value: 'smtp' }
+    ];
 
-  TagField = () => (
-    <TextField
-      label="Tag"
-      select
-      value={defaultTo(
-        DomainRecordDrawer.defaultFieldsState(this.props).tag,
-        (this.state.fields as EditableRecordFields).tag
-      )}
-      onChange={e => this.setTag(e.target.value)}
-      data-qa-caa-tag
-    >
-      <MenuItem value="issue" data-qa-caa-tags>
-        issue
-      </MenuItem>
-      <MenuItem value="issuewild" data-qa-caa-tags>
-        issuewild
-      </MenuItem>
-      <MenuItem value="iodef" data-qa-caa-tags>
-        iodef
-      </MenuItem>
-    </TextField>
-  );
+    const defaultProtocol = protocolOptions.find(eachProtocol => {
+      return (
+        eachProtocol.value ===
+        defaultTo(
+          DomainRecordDrawer.defaultFieldsState(this.props).protocol,
+          (this.state.fields as EditableRecordFields).protocol
+        )
+      );
+    });
+
+    return (
+      <Select
+        options={protocolOptions}
+        label="Protocol"
+        defaultValue={defaultProtocol}
+        onChange={(e: Item) => this.setProtocol(e.value)}
+        data-qa-protocol
+        isClearable={false}
+      />
+    );
+  };
+
+  TagField = () => {
+    const tagOptions = [
+      { label: 'issue', value: 'issue' },
+      { label: 'issuewild', value: 'issuewild' },
+      { label: 'iodef', value: 'iodef' }
+    ];
+
+    const defaultTag = tagOptions.find(eachTag => {
+      return (
+        eachTag.value ===
+        defaultTo(
+          DomainRecordDrawer.defaultFieldsState(this.props).tag,
+          (this.state.fields as EditableRecordFields).tag
+        )
+      );
+    });
+    return (
+      <Select
+        label="Tag"
+        options={tagOptions}
+        defaultValue={defaultTag || tagOptions[0]}
+        onChange={(e: Item) => this.setTag(e.value)}
+        data-qa-caa-tag
+        isClearable={false}
+      />
+    );
+  };
 
   DomainTransferField = () => (
     <TextField
