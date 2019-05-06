@@ -1232,7 +1232,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   alignItems="center"
                 >
                   <Grid item>
-                    <ActionsPanel>
+                    <ActionsPanel style={{ paddingLeft: 0 }}>
                       {forEdit && (
                         <Button
                           type="primary"
