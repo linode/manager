@@ -3,6 +3,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
+import KubeIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
 import LoadingIcon from 'src/assets/icons/entityIcons/loading.svg';
 import NodeBalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
@@ -69,7 +70,8 @@ export type Variant =
   | 'nodebalancer'
   | 'volume'
   | 'domain'
-  | 'stackscript';
+  | 'stackscript'
+  | 'kube';
 
 interface Props {
   variant: Variant;
@@ -88,7 +90,8 @@ const iconMap = {
   nodebalancer: NodeBalancerIcon,
   volume: VolumeIcon,
   domain: DomainIcon,
-  stackscript: StackScriptIcon
+  stackscript: StackScriptIcon,
+  kube: KubeIcon
 };
 
 const getIcon = (variant: Variant) => {
