@@ -2,6 +2,7 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 
 import { clusters } from 'src/__data__/kubernetes';
+import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { ClusterContent, ClusterList } from './ClusterList';
 
 const props = {
@@ -9,7 +10,8 @@ const props = {
     root: '',
     title: '',
     labelHeader: ''
-  }
+  },
+  ...reactRouterProps
 };
 
 const contentProps = {

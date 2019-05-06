@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import 'rxjs/add/operator/filter';
 import AddNewLink from 'src/components/AddNewLink';
 import Paper from 'src/components/core/Paper';
@@ -38,10 +40,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = WithStyles<ClassNames>;
+type CombinedProps = RouteComponentProps<{}> & WithStyles<ClassNames>;
 
 export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
-  const { classes } = props;
+  const { classes, history } = props;
   const [clusters, setClusters] = React.useState<Linode.KubernetesCluster[]>(
     []
   );
@@ -85,8 +87,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
           <Grid container alignItems="flex-end">
             <Grid item className="pt0">
               <AddNewLink
-                disabled={true}
-                onClick={() => null} // @todo enable creation flow
+                onClick={() => history.push('/kubernetes/create')} // @todo enable creation flow
                 label="Add a Cluster"
               />
             </Grid>
@@ -216,4 +217,9 @@ export const ClusterContent: React.FunctionComponent<ContentProps> = props => {
 
 const styled = withStyles(styles);
 
-export default styled(ClusterList);
+const enhanced = compose<CombinedProps, {}>(
+  styled,
+  withRouter
+);
+
+export default enhanced(ClusterList);
