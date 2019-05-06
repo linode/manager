@@ -117,3 +117,37 @@ export const dcDisplayCountry = {
 
 // At this time, the following regions do not support block storage.
 export const regionsWithoutBlockStorage = ['us-southeast', 'ap-northeast-1a'];
+
+export const allowedHTMLTags = [
+  'a',
+  'abbr',
+  'acronym',
+  'b',
+  'blockquote',
+  'br',
+  'code',
+  'del',
+  'em',
+  'hr',
+  'i',
+  'li',
+  'ol',
+  'ul',
+  'p',
+  'pre',
+  'h1',
+  'h2',
+  'h3',
+  'h4',
+  'h5',
+  'h6',
+  'strong',
+  'table',
+  'tbody',
+  'td',
+  'th',
+  'thead',
+  'tr'
+];
+
+export const allowedHTMLAttr = ['href', 'lang', 'title', 'align'];

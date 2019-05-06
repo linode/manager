@@ -16,6 +16,7 @@ import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
+import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import truncateText from 'src/utilities/truncateText';
 
 type ClassNames =
@@ -328,8 +329,11 @@ export class ExpandableTicketPanel extends React.Component<
       return;
     }
 
-    const truncatedText = truncateText(data.description, 175);
-    const text = open ? data.description : truncatedText;
+    /** get rid of malicious HTML */
+    const sanitizedText = sanitizeHTML(data.description);
+
+    const truncatedText = truncateText(sanitizedText, 175);
+    const text = open ? sanitizedText : truncatedText;
 
     return (
       <Grid item className={classes.root}>
@@ -369,14 +373,19 @@ export class ExpandableTicketPanel extends React.Component<
             </Grid>
             <Grid
               item
-              xs={truncatedText !== data.description ? 11 : 12}
-              sm={truncatedText !== data.description ? 6 : 7}
-              md={truncatedText !== data.description ? 8 : 9}
+              xs={truncatedText !== sanitizedText ? 11 : 12}
+              sm={truncatedText !== sanitizedText ? 6 : 7}
+              md={truncatedText !== sanitizedText ? 8 : 9}
               className={classes.descCol}
             >
-              <Typography className={classes.formattedText}>{text}</Typography>
+              <Typography
+                className={classes.formattedText}
+                dangerouslySetInnerHTML={{
+                  __html: text
+                }}
+              />
             </Grid>
-            {truncatedText !== data.description && (
+            {truncatedText !== sanitizedText && (
               <Grid
                 item
                 xs={1}
