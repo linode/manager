@@ -1,5 +1,15 @@
 import Axios, { AxiosError, AxiosPromise, AxiosResponse } from 'axios';
-import { compose, isEmpty, isNil, lensPath, not, omit, set, when } from 'ramda';
+import {
+  compose,
+  isEmpty,
+  isNil,
+  lensPath,
+  not,
+  omit,
+  pathOr,
+  set,
+  when
+} from 'ramda';
 import { ObjectSchema, ValidationError } from 'yup';
 
 const L = {
@@ -114,7 +124,16 @@ export default <T>(...fns: Function[]): AxiosPromise<T> => {
     });
   }
 
-  return Axios(config);
+  return Axios(config).catch(err => {
+    const defaultError = [{ reason: 'An unexpected error occurred.' }];
+    return Promise.reject(
+      pathOr<Linode.ApiFieldError[]>(
+        defaultError,
+        ['response', 'data', 'errors'],
+        err
+      )
+    );
+  });
 
   /*
    * If in the future, we want to hook into every single
@@ -203,7 +222,7 @@ export const mockAPIFieldErrors = (
 ): Linode.ApiFieldError[] => {
   return fields.reduce(
     (result, field) => [...result, { field, reason: `${field} is incorrect.` }],
-    [{ reason: 'A general error has occured.' }]
+    [{ reason: 'A general error has occurred.' }]
   );
 };
 
@@ -235,8 +254,13 @@ export const CancellableRequest = <T>(
   return {
     cancel: source.cancel,
     request: () =>
-      Axios({ ...config, cancelToken: source.token }).then(
-        response => response.data
-      )
+      Axios({ ...config, cancelToken: source.token })
+        .then(response => response.data)
+        .catch(err => {
+          const defaultError = [{ reason: 'An unexpected error occurred.' }];
+          return Promise.reject(
+            pathOr(defaultError, ['response', 'data', 'errors'], err)
+          );
+        })
   };
 };

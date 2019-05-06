@@ -18,7 +18,7 @@ import { pathOr } from 'ramda';
  *
  */
 export const getAPIErrorOrDefault = (
-  errorResponse: AxiosError | Error,
+  errorResponse: Linode.ApiFieldError[],
   defaultError: string = 'An unexpected error occurred.',
   field?: string
 ): Linode.ApiFieldError[] => {
@@ -26,7 +26,7 @@ export const getAPIErrorOrDefault = (
     ? [{ reason: defaultError, field }]
     : [{ reason: defaultError }];
 
-  return pathOr(_defaultError, ['response', 'data', 'errors'], errorResponse);
+  return errorResponse || _defaultError;
 };
 
 export const handleUnauthorizedErrors = (
