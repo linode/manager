@@ -32,7 +32,7 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { getTagsAsStrings } from 'src/utilities/tagUtils';
 
 import KubeCheckoutBar from '.././KubeCheckoutBar';
-import { getMonthlyPrice, KubernetesVersionOptions } from '.././kubeUtils';
+import { KubernetesVersionOptions } from '.././kubeUtils';
 import { PoolNode } from '.././types';
 import NodePoolPanel from './NodePoolPanel';
 
@@ -115,7 +115,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
 
     /**
      * Typing is difficult here, but this has the correct node_pool shape.
-     * We need to remove the calculated price, which is used for client-side
+     * We need to remove the monthly price, which is used for client-side
      * calculations, and send only type and count to the API.
      */
     const node_pools = nodePools.map(pick(['type', 'count'])) as any;
@@ -128,7 +128,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     };
 
     createKubernetesCluster(payload)
-      .then(_ => push('/kubernetes'))
+      .then(_ => push('/kubernetes')) // No detail page yet, so redirect to landing.
       .catch(err =>
         this.setState({
           errors: getAPIErrorOrDefault(err, 'Error creating your cluster')
@@ -138,10 +138,8 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
 
   addPool = (pool: PoolNode) => {
     const { nodePools } = this.state;
-    const monthlyPrice = getMonthlyPrice(pool);
-    const poolWithPrice = { ...pool, totalMonthlyPrice: monthlyPrice };
     this.setState({
-      nodePools: [...nodePools, poolWithPrice]
+      nodePools: [...nodePools, pool]
     });
   };
 
@@ -277,7 +275,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles);
 
 const withRegions = regionsContainer(({ data, loading, error }) => ({
-  regionsData: data.map(r => ({ ...r, display: dcDisplayNames[r.id] })),
+  regionsData: data.map(r => ({ ...r, display: dcDisplayNames[r.id] })), // @todo DRY this up
   regionsLoading: loading,
   regionsError: error
 }));

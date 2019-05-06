@@ -12,13 +12,13 @@ export const KubernetesVersionOptions = ['1.13', '1.14'].map(version => ({
   value: version
 }));
 
-export const getMonthlyPrice = (pool: PoolNode) => {
+export const getMonthlyPrice = (type: string, count: number) => {
   const types = getTypes();
   if (!types) {
     return 0;
   }
-  const thisType = types.find((type: ExtendedType) => type.id === pool.type);
-  return thisType ? thisType.price.monthly * pool.count : 0;
+  const thisType = types.find((t: ExtendedType) => t.id === type);
+  return thisType ? thisType.price.monthly * count : 0;
 };
 
 export const getTotalClusterPrice = (pools: PoolNode[]) =>

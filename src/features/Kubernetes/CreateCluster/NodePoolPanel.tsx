@@ -17,6 +17,7 @@ import SelectPlanPanel, {
   ExtendedType
 } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 
+import { getMonthlyPrice } from '.././kubeUtils';
 import { PoolNode } from '.././types';
 import NodePoolDisplayTable from './NodePoolDisplayTable';
 
@@ -115,10 +116,12 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
 
     /**
      * Add pool and reset form state.
-     * Price is calculated from the parent component
-     * bc this component doesn't have access to types data.
      */
-    addNodePool({ type: selectedType, count: nodeCount, totalMonthlyPrice: 0 });
+    addNodePool({
+      type: selectedType,
+      count: nodeCount,
+      totalMonthlyPrice: getMonthlyPrice(selectedType, nodeCount)
+    });
     handleTypeSelect(undefined);
     updateNodeCount(1);
   };
