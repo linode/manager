@@ -37,7 +37,7 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
     : 'Unknown type'; // This should never happen, but better not to crash if it does.
 
   return (
-    <TableRow>
+    <TableRow data-testid={'node-pool-table-row'}>
       <TableCell parentColumn="Plan">
         <Typography>{typeLabel}</Typography>
       </TableCell>
@@ -48,7 +48,10 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
         <Typography>{`${displayPrice(pool.totalMonthlyPrice)}/mo`}</Typography>
       </TableCell>
       <TableCell>
-        <Close onClick={() => handleDelete(idx)} />
+        <Close
+          onClick={() => handleDelete(idx)}
+          data-testid={`delete-node-row-${idx}`}
+        />
       </TableCell>
     </TableRow>
   );
