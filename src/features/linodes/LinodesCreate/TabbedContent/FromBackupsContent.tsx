@@ -28,7 +28,7 @@ import {
   WithDisplayData,
   WithLinodesTypesRegionsAndImages
 } from '../types';
-import { extendLinodes } from '../utilities';
+import { extendLinodes, getRegionIDFromLinodeID } from '../utilities';
 import { renderBackupsDisplaySection } from './utils';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
@@ -158,6 +158,15 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     });
   };
 
+  // Find regionID from the selectedLinodeID, and update the parent state.
+  updateRegion() {
+    const regionID = getRegionIDFromLinodeID(
+      this.props.linodesData,
+      +this.props.selectedLinodeID!
+    );
+    this.props.updateRegionID(regionID || '');
+  }
+
   componentWillUnmount() {
     this.mounted = false;
   }
@@ -167,6 +176,13 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     this.getLinodesWithBackups(this.props.linodesData);
     // If there is a selected Linode ID (from props), make sure its information
     // is set to state as if it had been selected manually.
+    this.updateRegion();
+  }
+
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (prevProps.selectedLinodeID !== this.props.selectedLinodeID) {
+      this.updateRegion();
+    }
   }
 
   render() {
@@ -354,7 +370,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                     heading="Linode Summary"
                     calculatedPrice={calculatedPrice}
                     isMakingRequest={isGettingBackups}
-                    disabled={disabled}
+                    disabled={this.props.formIsSubmitting || disabled}
                     onDeploy={this.createLinode}
                     displaySections={displaySections}
                     {...props}
