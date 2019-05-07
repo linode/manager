@@ -4,6 +4,50 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.55.0] - 2019-05-06
+
+### Added:
+- Improve GA Event Imports in Manager
+- Local storage optimizations
+- Remove Volumes From MaybeRenderError
+- Add error handling documentation
+- Replace all pathOr<string>s with getErrorStringOrDefault
+- Placement of Object Storage in Primary Navbar
+- Add /buckets to OBJ link in PrimaryNav
+- Add Ada google analytics
+- Reverse sorting arrows for sortable tables
+- Explicitly display regions error in Linode volumes form
+- Taxes and Subtotal on Invoice
+- Fixed positioning of ADA CTA
+- Add docs for pushing tags to upstream
+- Add polling for NBs on landing page
+- Add polling to NB detail
+- Check region filtering
+- Make Linode dropdown menus searchable via React Select
+
+### Changed:
+- Scroll-to logic for Disks and Configs page changes
+- Stats request optimization
+- Display reserved IPs in IPv4 table (Linode Detail)
+- Style Updates to Invoice PDF
+- Update Activity Stream Based on Events
+- Sentry Updates
+- Move Object Storage keys to the OBJ Landing page
+- Update Notistack and make toasts dismissible
+- Update IP address listing on card view and styling
+- Paginate Disks and Configs with Paginate Render Props Component
+- Removing tag column and cells styles updates
+- Lish tabs style updates
+- Sync up with disk select changes and reset disk options on Linode select clear
+- adjustments to UDF widths for medium + breakpoints
+- Manual backup errors appear within form instead of as toasts
+
+### Fixed:
+- Fix issue with error appearing on volume attach drawer
+- Fix pre-selected Cluster select
+- fix to action menu on mobile (align right for consistency)
+
+
 ## [v0.54.0] - 2019-04-23
 
 ### Added:
