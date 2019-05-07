@@ -2,8 +2,6 @@ import * as classNames from 'classnames';
 import * as moment from 'moment';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import Collapse from 'src/assets/icons/minus-square.svg';
-import Expand from 'src/assets/icons/plus-square.svg';
 import UserIcon from 'src/assets/icons/user.svg';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
@@ -15,9 +13,8 @@ import {
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
-import IconButton from 'src/components/IconButton';
-import { sanitizeHTML } from 'src/utilities/sanitize-html';
-import truncateText from 'src/utilities/truncateText';
+
+import TicketDetailBody from './TicketDetailText';
 
 type ClassNames =
   | 'root'
@@ -25,15 +22,9 @@ type ClassNames =
   | 'leftIcon'
   | 'userName'
   | 'paper'
-  | 'paperOpen'
   | 'avatarCol'
   | 'userCol'
-  | 'descCol'
-  | 'expCol'
-  | 'expButton'
-  | 'toggle'
   | 'isCurrentUser'
-  | 'formattedText'
   | 'hivelyContainer'
   | 'hivelyLink'
   | 'hivelyLinkIcon'
@@ -80,11 +71,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   paper: {
     padding: theme.spacing.unit * 3
   },
-  paperOpen: {
-    '& $descCol': {
-      animation: 'fadeIn 225ms linear forwards'
-    }
-  },
   avatarCol: {
     minWidth: 60
   },
@@ -92,31 +78,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     minWidth: 200,
     paddingRight: `${theme.spacing.unit * 4}px !important`
   },
-  descCol: {},
-  expCol: {
-    display: 'flex',
-    justifyContent: 'flex-end'
-  },
-  expButton: {
-    position: 'relative',
-    top: -theme.spacing.unit,
-    left: theme.spacing.unit,
-    [theme.breakpoints.down('sm')]: {
-      position: 'absolute',
-      top: 16,
-      right: 16,
-      left: 'auto'
-    }
-  },
-  toggle: {
-    height: 24,
-    width: 24
-  },
   isCurrentUser: {
     backgroundColor: theme.color.grey2
-  },
-  formattedText: {
-    whiteSpace: 'pre-line'
   },
   hivelyLink: {
     textDecoration: 'none',
@@ -151,7 +114,6 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 interface State {
-  open: boolean;
   data?: Data;
 }
 
@@ -201,7 +163,6 @@ export class ExpandableTicketPanel extends React.Component<
   constructor(props: CombinedProps) {
     super(props);
     this.state = {
-      open: pathOr(true, ['open'], this.props),
       data: this.getData()
     };
   }
@@ -213,10 +174,6 @@ export class ExpandableTicketPanel extends React.Component<
   componentWillUnmount() {
     this.mounted = false;
   }
-
-  togglePanel = () => {
-    this.setState({ open: !this.state.open });
-  };
 
   getData = () => {
     const { parentTicket, ticket, reply, ticketUpdated } = this.props;
@@ -324,23 +281,16 @@ export class ExpandableTicketPanel extends React.Component<
 
   render() {
     const { classes, isCurrentUser } = this.props;
-    const { data, open } = this.state;
+    const { data } = this.state;
     if (!data) {
       return;
     }
-
-    /** get rid of malicious HTML */
-    const sanitizedText = sanitizeHTML(data.description);
-
-    const truncatedText = truncateText(sanitizedText, 175);
-    const text = open ? sanitizedText : truncatedText;
 
     return (
       <Grid item className={classes.root}>
         <Paper
           className={classNames({
             [classes.paper]: true,
-            [classes.paperOpen]: open,
             [classes.isCurrentUser]: isCurrentUser
           })}
         >
@@ -371,39 +321,8 @@ export class ExpandableTicketPanel extends React.Component<
                 </Grid>
               </Grid>
             </Grid>
-            <Grid
-              item
-              xs={truncatedText !== sanitizedText ? 11 : 12}
-              sm={truncatedText !== sanitizedText ? 6 : 7}
-              md={truncatedText !== sanitizedText ? 8 : 9}
-              className={classes.descCol}
-            >
-              <Typography
-                className={classes.formattedText}
-                dangerouslySetInnerHTML={{
-                  __html: text
-                }}
-              />
-            </Grid>
-            {truncatedText !== sanitizedText && (
-              <Grid
-                item
-                xs={1}
-                onClick={this.togglePanel}
-                className={classes.expCol}
-              >
-                <IconButton
-                  className={classes.expButton}
-                  aria-label="Expand full answer"
-                >
-                  {open ? (
-                    <Collapse className={classes.toggle} />
-                  ) : (
-                    <Expand className={classes.toggle} />
-                  )}
-                </IconButton>
-              </Grid>
-            )}
+            <div id="ticket-iframe" />
+            <TicketDetailBody text={data.description} open={this.props.open} />
           </Grid>
           {shouldRenderHively(data.from_linode, data.updated, data.username) &&
             this.renderHively(data.username, data.ticket_id, data.reply_id)}
