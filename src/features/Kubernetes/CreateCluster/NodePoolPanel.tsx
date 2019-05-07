@@ -144,7 +144,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
         />
       </Grid>
       <Grid item className={classes.gridItem}>
-        <Typography variant="body1">Number of Linodes</Typography>
+        <Typography variant="h3">Number of Linodes</Typography>
         <TextField
           tiny
           type="number"

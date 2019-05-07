@@ -19,7 +19,9 @@ type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    maxWidth: '50%'
+    maxWidth: '50%',
+    border: `1px solid ${theme.palette.divider}`,
+    borderBottom: 0
   }
 });
 
