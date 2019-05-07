@@ -227,6 +227,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         selectedLinodeID: id,
         selectedDiskSize: diskSize,
         selectedTypeID: undefined,
+        selectedBackupID: undefined,
         selectedRegionID
       });
     }
