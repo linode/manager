@@ -92,7 +92,6 @@ interface State {
     submitting: boolean;
     errors?: Linode.ApiFieldError[];
     idxToDelete?: number;
-    portToDelete?: number;
   };
 }
 
@@ -329,13 +328,12 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       });
   };
 
-  onDeleteConfig = (configIdx: number, port?: number) => () =>
+  onDeleteConfig = (configIdx: number) => () =>
     this.setState({
       deleteConfigConfirmDialog: {
         ...clone(NodeBalancerCreate.defaultDeleteConfigConfirmDialogState),
         open: true,
-        idxToDelete: configIdx,
-        portToDelete: port
+        idxToDelete: configIdx
       }
     });
 
@@ -640,10 +638,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                         onNodeWeightChange={(nodeIndex, value) =>
                           this.onNodeWeightChange(idx, nodeIndex, value)
                         }
-                        onDelete={this.onDeleteConfig(
-                          idx,
-                          nodeBalancerConfig.port
-                        )}
+                        onDelete={this.onDeleteConfig(idx)}
                         disabled={disabled}
                       />
                     </Paper>
@@ -698,14 +693,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
         <ConfirmationDialog
           onClose={this.onCloseConfirmation}
-          title={
-            typeof this.state.deleteConfigConfirmDialog.portToDelete !==
-            'undefined'
-              ? `Delete this configuration on port ${
-                  this.state.deleteConfigConfirmDialog.portToDelete
-                }?`
-              : 'Delete this configuration?'
-          }
+          title={'Delete this configuration?'}
           error={this.confirmationConfigError()}
           actions={this.renderConfigConfirmationActions}
           open={this.state.deleteConfigConfirmDialog.open}

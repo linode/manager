@@ -914,9 +914,10 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   onCloseConfirmation = () =>
     this.setState({
-      deleteConfigConfirmDialog: clone(
-        NodeBalancerConfigurations.defaultDeleteConfigConfirmDialogState
-      )
+      deleteConfigConfirmDialog: {
+        ...this.state.deleteConfigConfirmDialog,
+        open: false
+      }
     });
 
   confirmationConfigError = () =>
