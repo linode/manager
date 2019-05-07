@@ -7,7 +7,7 @@ import Request, {
   setXFilter
 } from '../index';
 
-// import { createKubeClusterSchema } from './kubernetes.schema';
+import { createKubeClusterSchema } from './kubernetes.schema';
 
 // Payload types
 export interface CreateKubeClusterPayload {
@@ -42,5 +42,5 @@ export const createKubernetesCluster = (data: CreateKubeClusterPayload) =>
   Request<Linode.KubernetesCluster>(
     setMethod('POST'),
     setURL(`${API_ROOT}/lke/clusters`),
-    setData(data)
+    setData(data, createKubeClusterSchema)
   ).then(response => response.data);

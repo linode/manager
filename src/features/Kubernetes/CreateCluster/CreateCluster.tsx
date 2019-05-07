@@ -54,7 +54,7 @@ interface State {
   selectedType?: string;
   numberOfLinodes: number;
   nodePools: PoolNode[];
-  label: string;
+  label?: string;
   tags: Item<string>[];
   version: Item<string>;
   errors?: Linode.ApiFieldError[];
@@ -71,7 +71,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     selectedType: undefined,
     numberOfLinodes: 1,
     nodePools: [],
-    label: '',
+    label: undefined,
     tags: [],
     version: { value: '1.14', label: '1.14' },
     errors: undefined
@@ -82,36 +82,10 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     const {
       history: { push }
     } = this.props;
+
     this.setState({
       errors: undefined
     });
-
-    /**
-     * Simple client error checking; @todo replace with Formik if appropriate.
-     * Otherwise can probably use a Yup schema directly.
-     */
-    const clientErrors: Linode.ApiFieldError[] = [];
-
-    if (!selectedRegion) {
-      clientErrors.push({ field: 'region', reason: 'Region is required.' });
-    }
-
-    if (nodePools.length < 1) {
-      clientErrors.push({
-        field: 'node_pools',
-        reason: 'Please add at least one node pool.'
-      });
-    }
-
-    if (clientErrors.length > 0) {
-      this.setState(
-        {
-          errors: clientErrors
-        },
-        () => scrollErrorIntoView()
-      );
-      return;
-    }
 
     /**
      * Typing is difficult here, but this has the correct node_pool shape.
@@ -130,9 +104,12 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     createKubernetesCluster(payload)
       .then(_ => push('/kubernetes')) // No detail page yet, so redirect to landing.
       .catch(err =>
-        this.setState({
-          errors: getAPIErrorOrDefault(err, 'Error creating your cluster')
-        })
+        this.setState(
+          {
+            errors: getAPIErrorOrDefault(err, 'Error creating your cluster')
+          },
+          scrollErrorIntoView
+        )
       );
   };
 
@@ -152,7 +129,11 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
   };
 
   updateLabel = (newLabel: string) => {
-    this.setState({ label: newLabel });
+    /**
+     * If the new label is an empty string, use undefined.
+     * This allows it to pass Yup validation.
+     */
+    this.setState({ label: newLabel ? newLabel : undefined });
   };
 
   updateTags = (newTags: Item<string>[]) => {
@@ -260,7 +241,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
           </Grid>
           <Grid xs={3} item container justify="center" alignItems="flex-start">
             <KubeCheckoutBar
-              label={label}
+              label={label || ''}
               region={selectedRegion}
               pools={nodePools}
               createCluster={this.createCluster}
