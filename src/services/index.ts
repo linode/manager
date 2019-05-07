@@ -82,7 +82,7 @@ export const setData = <T>(
 
 /**
  * Attempt to convert a Yup error to our pattern. The only magic here is the recursive call
- * to itself since we have nested structures (think NodeBalacners).
+ * to itself since we have nested structures (think NodeBalancers).
  */
 const convertYupToLinodeErrors = (
   validationError: ValidationError
@@ -120,10 +120,9 @@ const reduceRequestConfig = (...fns: Function[]) =>
 export default <T>(...fns: Function[]): AxiosPromise<T> => {
   const config = reduceRequestConfig(...fns);
   if (config.validationErrors) {
-    return Promise.reject({
-      config: omit(['validationErrors'], config),
-      response: { data: { errors: config.validationErrors } }
-    });
+    return Promise.reject(
+      config.validationErrors // All failed requests, client or server errors, should be Linode.ApiFieldError[]
+    );
   }
 
   return Axios(config).catch(err => {
