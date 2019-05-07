@@ -12,6 +12,8 @@ import {
 } from 'ramda';
 import { ObjectSchema, ValidationError } from 'yup';
 
+import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
+
 const L = {
   url: lensPath(['url']),
   method: lensPath(['method']),
@@ -125,7 +127,7 @@ export default <T>(...fns: Function[]): AxiosPromise<T> => {
   }
 
   return Axios(config).catch(err => {
-    const defaultError = [{ reason: 'An unexpected error occurred.' }];
+    const defaultError = [{ reason: DEFAULT_ERROR_MESSAGE }];
     return Promise.reject(
       pathOr<Linode.ApiFieldError[]>(
         defaultError,
@@ -257,7 +259,7 @@ export const CancellableRequest = <T>(
       Axios({ ...config, cancelToken: source.token })
         .then(response => response.data)
         .catch(err => {
-          const defaultError = [{ reason: 'An unexpected error occurred.' }];
+          const defaultError = [{ reason: DEFAULT_ERROR_MESSAGE }];
           return Promise.reject(
             pathOr(defaultError, ['response', 'data', 'errors'], err)
           );

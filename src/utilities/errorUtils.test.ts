@@ -1,3 +1,4 @@
+import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import { getAPIErrorOrDefault, getErrorStringOrDefault } from './errorUtils';
 
 const error = [{ field: 'a field', reason: 'a reason' }];
@@ -9,25 +10,13 @@ const multiError = [
 
 describe('Error handling utilities', () => {
   describe('getAPIErrorOrDefault', () => {
-    it.skip('if no error is passed in, it should return a default API error using the provided string', () => {
-      expect(getAPIErrorOrDefault([], 'Default error')).toEqual([
-        { reason: 'Default error' }
-      ]);
-    });
-
-    it.skip('should provide a default error if no error string is provided', () => {
-      expect(getAPIErrorOrDefault([])).toEqual([
-        { reason: 'An unexpected error occurred.' }
-      ]);
-    });
-
-    it('should use the optional 3rd param as a field name for the default error (if provided)', () => {
+    it('should override a default error', () => {
       expect(
-        getAPIErrorOrDefault(undefined as any, 'Label error', 'label')
-      ).toEqual([
-        // @todo fix this
-        { field: 'label', reason: 'Label error' }
-      ]);
+        getAPIErrorOrDefault(
+          [{ reason: DEFAULT_ERROR_MESSAGE }],
+          'New error message'
+        )
+      ).toEqual([{ reason: 'New error message' }]);
     });
   });
 

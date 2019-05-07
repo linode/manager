@@ -1,12 +1,21 @@
-import { AxiosError } from 'axios';
 import { pathOr } from 'ramda';
+import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
 
 /**
+ *
+ * Override the default error message provided by our Axios
+ * interceptor with a more situation-specific message.
+ *
+ * @todo rename this method
+ * @todo make the second argument required, so we're not
+ * overriding the default error with the same default error
+ * in some cases.
+ *
  * @example
  *
  * fetchData()
  *  .then()
- *  .catch((e: AxiosError) => getAPIErrorOrDefault(e, 'There was an error', 'label'))
+ *  .catch((e: Linode.ApiFieldError[]) => getAPIErrorOrDefault(e, 'There was an error', 'label'))
  *
  * @param { AxiosError } - Error response from some API request
  * @param { string } - Default error message on the "reason" key
@@ -19,14 +28,22 @@ import { pathOr } from 'ramda';
  */
 export const getAPIErrorOrDefault = (
   errorResponse: Linode.ApiFieldError[],
-  defaultError: string = 'An unexpected error occurred.',
+  defaultError: string = DEFAULT_ERROR_MESSAGE,
   field?: string
 ): Linode.ApiFieldError[] => {
   const _defaultError = field
     ? [{ reason: defaultError, field }]
     : [{ reason: defaultError }];
 
-  return errorResponse || _defaultError;
+  return isDefaultError(errorResponse) ? _defaultError : errorResponse;
+};
+
+const isDefaultError = (errorResponse: Linode.ApiFieldError[]) => {
+  return (
+    errorResponse &&
+    errorResponse.length === 1 &&
+    errorResponse[0].reason === DEFAULT_ERROR_MESSAGE
+  );
 };
 
 export const handleUnauthorizedErrors = (
@@ -66,7 +83,7 @@ export const handleUnauthorizedErrors = (
 };
 
 export const getErrorStringOrDefault = (
-  errors: Linode.ApiFieldError[] | AxiosError | string,
+  errors: Linode.ApiFieldError[] | string,
   defaultError: string = 'An unexpected error occurred.'
 ): string => {
   if (typeof errors === 'string') {
