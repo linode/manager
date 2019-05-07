@@ -148,8 +148,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     if (params && params !== {}) {
       this.setState({
         // This set is for creating from a Backup
-        selectedBackupID: params.backupID,
-        selectedLinodeID: params.linodeID
+        selectedBackupID: isNaN(+params.backupID)
+          ? undefined
+          : +params.backupID,
+        selectedLinodeID: isNaN(+params.linodeID) ? undefined : +params.linodeID
       });
     }
     this.setState({ appInstancesLoading: true });
