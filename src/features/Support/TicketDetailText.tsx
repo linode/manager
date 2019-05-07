@@ -13,7 +13,6 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
 
-import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import truncateText from 'src/utilities/truncateText';
 
 type ClassNames = 'root' | 'formattedText' | 'expCol' | 'expButton' | 'toggle';
@@ -55,19 +54,17 @@ const TicketDetailText: React.FC<CombinedProps> = props => {
   const [panelOpen, togglePanel] = React.useState<boolean>(props.open || true);
   const { text, classes } = props;
 
-  /** get rid of malicious HTML */
-  const sanitizedText = sanitizeHTML(text);
-
-  const truncatedText = truncateText(sanitizedText, 175);
-  const ticketReplyBody = open ? sanitizedText : truncatedText;
+  /** note that the HTML is being sanitized in ExpandableTicketPanel */
+  const truncatedText = truncateText(text, 175);
+  const ticketReplyBody = panelOpen ? text : truncatedText;
 
   return (
     <React.Fragment>
       <Grid
         item
-        xs={truncatedText !== sanitizedText ? 11 : 12}
-        sm={truncatedText !== sanitizedText ? 6 : 7}
-        md={truncatedText !== sanitizedText ? 8 : 9}
+        xs={truncatedText !== text ? 11 : 12}
+        sm={truncatedText !== text ? 6 : 7}
+        md={truncatedText !== text ? 8 : 9}
       >
         <Typography
           className={classes.formattedText}
@@ -76,7 +73,7 @@ const TicketDetailText: React.FC<CombinedProps> = props => {
           }}
         />
       </Grid>
-      {truncatedText !== sanitizedText && (
+      {truncatedText !== text && (
         <Grid
           item
           xs={1}
@@ -87,7 +84,7 @@ const TicketDetailText: React.FC<CombinedProps> = props => {
             className={classes.expButton}
             aria-label="Expand full answer"
           >
-            {open ? (
+            {panelOpen ? (
               <Collapse className={classes.toggle} />
             ) : (
               <Expand className={classes.toggle} />

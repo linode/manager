@@ -14,6 +14,7 @@ import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 
+import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import TicketDetailBody from './TicketDetailText';
 
 type ClassNames =
@@ -188,7 +189,7 @@ export class ExpandableTicketPanel extends React.Component<
         gravatar_id: ticket.gravatar_id,
         gravatarUrl: pathOr('not found', ['gravatarUrl'], ticket),
         date: ticket.opened,
-        description: ticket.description,
+        description: sanitizeHTML(ticket.description),
         username: ticket.opened_by,
         from_linode: false,
         updated: ticket.updated
@@ -200,7 +201,7 @@ export class ExpandableTicketPanel extends React.Component<
         gravatar_id: reply.gravatar_id,
         gravatarUrl: pathOr('not found', ['gravatarUrl'], reply),
         date: reply.created,
-        description: reply.description,
+        description: sanitizeHTML(reply.description),
         username: reply.created_by,
         from_linode: reply.from_linode,
         updated: ticketUpdated!
@@ -282,8 +283,13 @@ export class ExpandableTicketPanel extends React.Component<
   render() {
     const { classes, isCurrentUser } = this.props;
     const { data } = this.state;
-    if (!data) {
-      return;
+
+    /**
+     * data.description will be a blank string if it contained ONLY malicious markup
+     * because we sanitize it in this.getData()
+     */
+    if (!data || !data.description) {
+      return null;
     }
 
     return (
@@ -321,7 +327,6 @@ export class ExpandableTicketPanel extends React.Component<
                 </Grid>
               </Grid>
             </Grid>
-            <div id="ticket-iframe" />
             <TicketDetailBody text={data.description} open={this.props.open} />
           </Grid>
           {shouldRenderHively(data.from_linode, data.updated, data.username) &&
