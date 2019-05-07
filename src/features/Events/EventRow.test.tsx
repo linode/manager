@@ -11,8 +11,7 @@ const props: RowProps = {
     root: '',
     message: ''
   },
-  linkTarget: jest.fn(),
-  isEventsLandingForEntity: false
+  linkTarget: jest.fn()
 };
 
 describe('EventRow component', () => {
@@ -28,21 +27,21 @@ describe('EventRow component', () => {
   });
 
   it("should only render an entity icon if it's not an events page for a specific entity", () => {
-    row.setProps({ isEventsLandingForEntity: true });
+    row.setProps({ entityId: 1 });
     expect(row.find('[data-qa-entity-icon]')).toHaveLength(0);
 
-    row.setProps({ isEventsLandingForEntity: false });
+    row.setProps({ entityId: 0 });
     expect(row.find('[data-qa-entity-icon]')).toHaveLength(1);
   });
 
   it("should only include a link if it's not an events page for a specific entity", () => {
-    row.setProps({ isEventsLandingForEntity: true });
+    row.setProps({ entityId: 1 });
     let tableRowProps: any = row
       .find('WithStyles(withRouter(TableRow))')
       .props();
     expect(tableRowProps.rowLink).toBe(undefined);
 
-    row.setProps({ isEventsLandingForEntity: false });
+    row.setProps({ entityId: 0 });
     tableRowProps = row.find('WithStyles(withRouter(TableRow))').props();
     expect(tableRowProps.rowLink).toBeDefined();
   });

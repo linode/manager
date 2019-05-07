@@ -24,7 +24,7 @@ type CombinedProps = WithStyles<ClassNames> & StateProps;
 export const LinodeActivity: React.StatelessComponent<
   CombinedProps
 > = props => {
-  const { classes } = props;
+  const { classes, linodeID } = props;
 
   return (
     <React.Fragment>
@@ -36,10 +36,10 @@ export const LinodeActivity: React.StatelessComponent<
         Activity Feed
       </Typography>
       <EventsLanding
+        entityId={linodeID}
         getEventsRequest={(params: any = {}) =>
           getEventsForEntity(params, 'linode', props.linodeID)
         }
-        isEventsLandingForEntity={true}
         errorMessage="There was an error retrieving activity for this Linode."
         data-qa-events-landing-for-linode
       />

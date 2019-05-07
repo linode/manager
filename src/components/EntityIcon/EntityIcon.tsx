@@ -104,7 +104,8 @@ const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
     size,
     className,
     marginTop,
-    stopAnimation
+    stopAnimation,
+    ...rest
   } = props;
 
   const iconSize = size
@@ -147,6 +148,7 @@ const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
       data-qa-entity-status={status || 'undefined'}
       data-qa-is-loading={loading || 'false'}
       aria-label={`${variant} is ${finalStatus}`}
+      {...rest}
     >
       <Icon
         className={classNames({

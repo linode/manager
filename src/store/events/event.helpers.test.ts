@@ -102,7 +102,7 @@ describe('event.helpers', () => {
           action: 'linode_delete',
           read: false,
           percent_complete: 100,
-          username: 'coolguymarty',
+          username: 'test',
           rate: null,
           entity: {
             id: 11440645,
@@ -120,7 +120,7 @@ describe('event.helpers', () => {
           action: 'linode_boot',
           read: false,
           percent_complete: 100,
-          username: 'coolguymarty',
+          username: 'test',
           rate: null,
           entity: {
             id: 11440645,
@@ -141,7 +141,7 @@ describe('event.helpers', () => {
           action: 'linode_delete',
           read: false,
           percent_complete: 100,
-          username: 'coolguymarty',
+          username: 'test',
           rate: null,
           entity: {
             id: 11440645,
@@ -160,7 +160,7 @@ describe('event.helpers', () => {
           action: 'linode_boot',
           read: false,
           percent_complete: 100,
-          username: 'coolguymarty',
+          username: 'test',
           rate: null,
           entity: {
             id: 11440645,
@@ -189,7 +189,7 @@ describe('event.helpers', () => {
           action: 'linode_delete',
           read: false,
           percent_complete: 100,
-          username: 'coolguymarty',
+          username: 'test',
           rate: null,
           entity: null,
           status: 'finished'
@@ -202,7 +202,7 @@ describe('event.helpers', () => {
           action: 'linode_shutdown',
           read: false,
           percent_complete: 60,
-          username: 'coolguymarty',
+          username: 'test',
           rate: null,
           entity: null,
           status: 'started'
@@ -215,7 +215,7 @@ describe('event.helpers', () => {
           action: 'linode_boot',
           read: false,
           percent_complete: 100,
-          username: 'coolguymarty',
+          username: 'test',
           rate: null,
           entity: null,
           status: 'finished'
@@ -230,7 +230,7 @@ describe('event.helpers', () => {
           action: 'linode_shutdown',
           read: false,
           percent_complete: 70,
-          username: 'coolguymarty',
+          username: 'test',
           rate: null,
           entity: null,
           status: 'started'
@@ -247,7 +247,7 @@ describe('event.helpers', () => {
           action: 'linode_delete',
           read: false,
           percent_complete: 100,
-          username: 'coolguymarty',
+          username: 'test',
           rate: null,
           entity: null,
           status: 'finished'
@@ -260,7 +260,7 @@ describe('event.helpers', () => {
           action: 'linode_shutdown',
           read: false,
           percent_complete: 70,
-          username: 'coolguymarty',
+          username: 'test',
           rate: null,
           entity: null,
           status: 'started'
@@ -273,7 +273,7 @@ describe('event.helpers', () => {
           action: 'linode_boot',
           read: false,
           percent_complete: 100,
-          username: 'coolguymarty',
+          username: 'test',
           rate: null,
           entity: null,
           status: 'finished'

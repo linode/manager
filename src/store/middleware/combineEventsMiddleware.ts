@@ -33,8 +33,11 @@ const eventsMiddlewareFactory = (
       /**
        * We can bail immediately if there is no associated entity since we need an entity
        * to update the store.
+       *
+       * but we still need to dispatch the action to add the event to the store
        */
       if (!isEntityEvent(event)) {
+        next(action);
         return;
       }
 

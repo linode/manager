@@ -23,7 +23,7 @@ describe('events.reducer', () => {
             action: 'linode_reboot',
             read: false,
             percent_complete: 100,
-            username: 'coolguymarty',
+            username: 'test',
             rate: null,
             entity: {
               id: 11241778,
@@ -41,7 +41,7 @@ describe('events.reducer', () => {
             action: 'linode_shutdown',
             read: false,
             percent_complete: 80,
-            username: 'coolguymarty',
+            username: 'test',
             rate: null,
             entity: {
               id: 11642886,

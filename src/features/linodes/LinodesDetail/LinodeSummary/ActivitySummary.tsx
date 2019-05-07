@@ -1,4 +1,3 @@
-import { equals } from 'ramda';
 import * as React from 'react';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
@@ -14,6 +13,10 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { getEventsForEntity } from 'src/utilities/getEventsForEntity';
 import ActivitySummaryContent from './ActivitySummaryContent';
 
+import {
+  filterUniqueEvents,
+  shouldUpdateEvents
+} from 'src/features/Events/Event.helpers';
 import { ExtendedEvent } from 'src/store/events/event.helpers';
 
 type ClassNames = 'root' | 'header' | 'viewMore';
@@ -35,6 +38,7 @@ interface Props {
   linodeId: number;
   inProgressEvents: Record<number, number>;
   eventsFromRedux: ExtendedEvent[];
+  mostRecentEventTime: string;
 }
 
 interface State {
@@ -52,12 +56,29 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
     events: []
   };
 
-  componentDidUpdate(prevProps: CombinedProps, prevState: State) {
+  componentDidUpdate(prevProps: CombinedProps) {
+    /**
+     * This condition checks either the most recent event time has changed OR
+     * if the in progress events have changed or that the in-progress events have new percentages
+     *
+     * This is necessary because we have 2 types of events: ones that have percent and ones that
+     * don't.
+     *
+     * Events that don't have a percentage won't affect the inProgressEvents state, which is why
+     * we're checking the mostRecentEvent time becasue that will update when we get a new event
+     *
+     * That being said, mostRecentEventTime will NOT be updated when a event's percentage updates
+     */
     if (
-      !equals(this.props.inProgressEvents, prevProps.inProgressEvents) ||
-      percentCompleteHasUpdated(
-        this.props.inProgressEvents,
-        prevProps.inProgressEvents
+      shouldUpdateEvents(
+        {
+          mostRecentEventTime: prevProps.mostRecentEventTime,
+          inProgressEvents: prevProps.inProgressEvents
+        },
+        {
+          mostRecentEventTime: this.props.mostRecentEventTime,
+          inProgressEvents: this.props.inProgressEvents
+        }
       )
     ) {
       this.setState({
@@ -138,55 +159,6 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
     );
   }
 }
-
-/**
- * The point of this function is to ensure we don't have an activity stream
- * that looks like:
- *
- * Linode hello_world has been booted
- * Linode hello_world has been created
- * Linode hello_world is scheduled to be booted
- * Linode hello_world is scheduled to be created
- *
- * Basically, we're creating a cache and only adding to the cache if the Event
- * ID doesn't already exist in the cache. This ensures that "has been created"
- * events will replace the "is scheduled to" events
- */
-export const filterUniqueEvents = (events: Linode.Event[]) => {
-  return events.reduce((acc, event) => {
-    const foundEventInAcc = acc.some(
-      (eachAccumEvent: Linode.Event) => eachAccumEvent.id === event.id
-    );
-    return foundEventInAcc ? acc : [...acc, event];
-  }, []);
-};
-
-/**
- * Takes in the inProgressEvents which are sourced from Redux. These are a key-value
- * pair where the key is the ID of the event in progress and the value is the percent_complete
- * So it ends up comparing the values similar to
- *
- * {
- *    1234: 50
- * }
- *
- * and
- *
- * {
- *   1234: 79
- * }
- *
- * the "50" and the "79" are the things being compared
- */
-export const percentCompleteHasUpdated = (
-  prevEventsInProgress: Record<number, number>,
-  nextEventsInProgress: Record<number, number>
-) => {
-  return Object.keys(prevEventsInProgress).some(
-    eachEventID =>
-      prevEventsInProgress[eachEventID] !== nextEventsInProgress[eachEventID]
-  );
-};
 
 const styled = withStyles(styles);
 

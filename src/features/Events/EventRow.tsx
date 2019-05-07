@@ -36,7 +36,7 @@ interface ExtendedEvent extends Linode.Event {
 
 interface Props {
   event: ExtendedEvent;
-  isEventsLandingForEntity: boolean;
+  entityId?: number;
 }
 
 export const onUnfound = (event: ExtendedEvent) => {
@@ -48,7 +48,7 @@ export const onUnfound = (event: ExtendedEvent) => {
 type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 export const EventRow: React.StatelessComponent<CombinedProps> = props => {
-  const { event, isEventsLandingForEntity, classes } = props;
+  const { event, entityId, classes } = props;
   const type = pathOr<string>('linode', ['entity', 'type'], event);
   const id = pathOr<string | number>(-1, ['entity', 'id'], event);
   const entity = getEntityByIDFromStore(type, id);
@@ -65,7 +65,7 @@ export const EventRow: React.StatelessComponent<CombinedProps> = props => {
     message: eventMessageGenerator(event, onUnfound),
     status: pathOr(undefined, ['status'], entity),
     type,
-    isEventsLandingForEntity,
+    entityId,
     classes
   };
 
@@ -74,7 +74,7 @@ export const EventRow: React.StatelessComponent<CombinedProps> = props => {
 
 export interface RowProps extends WithStyles<ClassNames> {
   message?: string | void;
-  isEventsLandingForEntity: boolean;
+  entityId?: number;
   linkTarget?: (e: React.MouseEvent<HTMLElement>) => void;
   type: 'linode' | 'domain' | 'nodebalancer' | 'stackscript' | 'volume';
   status?: string;
@@ -84,7 +84,7 @@ export interface RowProps extends WithStyles<ClassNames> {
 export const Row: React.StatelessComponent<RowProps> = props => {
   const {
     classes,
-    isEventsLandingForEntity,
+    entityId,
     linkTarget,
     message,
     status,
@@ -100,15 +100,14 @@ export const Row: React.StatelessComponent<RowProps> = props => {
   }
 
   return (
-    <TableRow
-      rowLink={isEventsLandingForEntity ? undefined : (linkTarget as any)}
-    >
+    <TableRow rowLink={entityId ? undefined : (linkTarget as any)}>
       {/** We don't use the event argument, so typing isn't critical here. */}
       {/* Only display entity icon on the Global EventsLanding page */}
-      {!isEventsLandingForEntity && (
+      {!entityId && (
         <TableCell data-qa-event-icon-cell compact>
-          <Hidden smDown data-qa-entity-icon>
+          <Hidden smDown>
             <EntityIcon
+              data-qa-entity-icon
               variant={type}
               status={status}
               size={28}
