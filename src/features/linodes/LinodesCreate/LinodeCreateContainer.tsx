@@ -58,6 +58,7 @@ import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendCreateLinodeEvent } from 'src/utilities/ga';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { getRegionIDFromLinodeID } from './utilities';
 
 type StackScript = Linode.StackScript.Response;
 
@@ -116,14 +117,6 @@ const defaultState: State = {
   formIsSubmitting: false,
   errors: undefined,
   appInstancesLoading: false
-};
-
-const getRegionIDFromLinodeID = (
-  linodes: Linode.Linode[],
-  id: number
-): string | undefined => {
-  const thisLinode = linodes.find(linode => linode.id === id);
-  return thisLinode ? thisLinode.region : undefined;
 };
 
 const trimOneClickFromLabel = (script: StackScript) => {
