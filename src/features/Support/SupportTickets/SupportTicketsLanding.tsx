@@ -1,6 +1,7 @@
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
 import AddNewLink from 'src/components/AddNewLink';
 import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
@@ -143,6 +144,7 @@ export class SupportTicketsLanding extends React.PureComponent<
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Support Tickets" />
+        <AbuseTicketBanner />
         <Grid container justify="space-between" updateFor={[classes]}>
           <Grid item className={classes.titleWrapper}>
             <Breadcrumb
