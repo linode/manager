@@ -15,6 +15,6 @@ describe('LinodeActivity', () => {
     const props: any = wrapper
       .find('[data-qa-events-landing-for-linode]')
       .props();
-    expect(props.isEventsLandingForEntity).toBe(true);
+    expect(props.entityId).toBe(123);
   });
 });

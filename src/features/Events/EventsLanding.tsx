@@ -25,6 +25,8 @@ import { ApplicationState } from 'src/store';
 import { setDeletedEvents } from 'src/store/events/event.helpers';
 import areEntitiesLoading from 'src/store/selectors/entitiesLoading';
 
+import { ExtendedEvent } from 'src/store/events/event.helpers';
+import { filterUniqueEvents, shouldUpdateEvents } from './Event.helpers';
 import EventRow from './EventRow';
 
 type ClassNames = 'root' | 'header' | 'labelCell' | 'timeCell' | 'noMoreEvents';
@@ -51,7 +53,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 interface Props {
   getEventsRequest?: typeof getEvents;
-  isEventsLandingForEntity?: boolean;
+  // isEventsLandingForEntity?: boolean;
+  entityId?: number;
   errorMessage?: string; // Custom error message (for an entity's Activity page, for example)
 }
 
@@ -67,14 +70,125 @@ const appendToEvents = (oldEvents: Linode.Event[], newEvents: Linode.Event[]) =>
     setDeletedEvents // Add a _deleted entry for each new event
   )(newEvents);
 
+export interface ReducerState {
+  inProgressEvents: Record<number, number>;
+  eventsFromRedux: ExtendedEvent[];
+  reactStateEvents: Linode.Event[];
+  mostRecentEventTime: string;
+}
+
+interface Payload {
+  inProgressEvents: Record<number, number>;
+  eventsFromRedux: ExtendedEvent[];
+  reactStateEvents: Linode.Event[];
+  mostRecentEventTime: string;
+  entityId?: number;
+}
+
+export interface ReducerActions {
+  type: 'append' | 'prepend';
+  payload: Payload;
+}
+
+export const reducer: React.Reducer<ReducerState, ReducerActions> = (
+  state,
+  action
+) => {
+  const {
+    payload: {
+      eventsFromRedux: nextReduxEvents,
+      inProgressEvents: nextInProgressEvents,
+      reactStateEvents: nextReactEvents,
+      mostRecentEventTime: nextMostRecentEventTime,
+      entityId
+    }
+  } = action;
+
+  switch (action.type) {
+    case 'prepend':
+      if (
+        shouldUpdateEvents(
+          {
+            mostRecentEventTime: state.mostRecentEventTime,
+            inProgressEvents: state.inProgressEvents
+          },
+          {
+            mostRecentEventTime: nextMostRecentEventTime,
+            inProgressEvents: nextInProgressEvents
+          }
+        )
+      ) {
+        return {
+          eventsFromRedux: nextReduxEvents,
+          inProgressEvents: nextInProgressEvents,
+          mostRecentEventTime: nextMostRecentEventTime,
+          reactStateEvents: filterUniqueEvents([
+            /* 
+              Pop new events from Redux on the top of the event stream, with some conditions
+            */
+            ...nextReduxEvents.filter(eachEvent => {
+              return (
+                /** all events from Redux will have this flag as a boolean value */
+                !eachEvent._initial &&
+                /**
+                 * so here we're basically determining whether or not
+                 * an entityID prop was passed, and if so, only show the events
+                 * that pertain to that entity. This is useful because it helps
+                 * us show only relevant events on the Linode Activity panel, for example
+                 */
+                (typeof entityId === 'undefined' ||
+                  (eachEvent.entity && eachEvent.entity.id === entityId))
+              );
+            }),
+            /* 
+            at this point, the state is populated with events from the cDM 
+            request (which don't include the "_initial flag"), but it might also
+            contain events from Redux as well. We only want the ones where the "_initial" 
+            flag doesn't exist
+            */
+            ...nextReactEvents.filter(
+              eachEvent => typeof eachEvent._initial === 'undefined'
+            )
+          ])
+        };
+      }
+      return {
+        eventsFromRedux: nextReduxEvents,
+        reactStateEvents: nextReactEvents,
+        inProgressEvents: nextInProgressEvents,
+        mostRecentEventTime: nextMostRecentEventTime
+      };
+    case 'append':
+    default:
+      return {
+        reactStateEvents: appendToEvents(
+          state.reactStateEvents,
+          nextReactEvents
+        ),
+        eventsFromRedux: nextReduxEvents,
+        inProgressEvents: nextInProgressEvents,
+        mostRecentEventTime: nextMostRecentEventTime
+      };
+  }
+};
+
 export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
-  const [events, setEvents] = React.useState<Linode.Event[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
   const [loadMoreEvents, setLoadMoreEvents] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>(undefined);
   const [currentPage, setCurrentPage] = React.useState<number>(1);
   const [isRequesting, setRequesting] = React.useState<boolean>(false);
   const [initialLoaded, setInitialLoaded] = React.useState<boolean>(false);
+
+  const [events, dispatch] = React.useReducer<ReducerState, ReducerActions>(
+    reducer,
+    {
+      inProgressEvents: props.inProgressEvents,
+      eventsFromRedux: props.eventsFromRedux,
+      reactStateEvents: [],
+      mostRecentEventTime: props.mostRecentEventTime
+    }
+  );
 
   const getNext = () => {
     if (isRequesting) {
@@ -100,7 +214,17 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
   ) => {
     setCurrentPage(currentPage + 1);
     setLoadMoreEvents(true);
-    setEvents(appendToEvents(events, response.data));
+    /** append our events to component state */
+    dispatch({
+      type: 'append',
+      payload: {
+        eventsFromRedux: props.eventsFromRedux,
+        reactStateEvents: response.data,
+        entityId: props.entityId,
+        inProgressEvents: props.inProgressEvents,
+        mostRecentEventTime: props.mostRecentEventTime
+      }
+    });
     setLoading(false);
     setRequesting(false);
     setError(undefined);
@@ -125,18 +249,32 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
       });
   }, []);
 
-  const {
-    classes,
-    entitiesLoading,
-    isEventsLandingForEntity,
-    errorMessage
-  } = props;
+  /**
+   * For the purposes of concat-ing the events from Redux and React state
+   * so we can display events in real-time
+   */
+  React.useEffect(() => {
+    const { eventsFromRedux, inProgressEvents } = props;
+    /** in this case, we're getting new events from Redux, so we want to prepend */
+    dispatch({
+      type: 'prepend',
+      payload: {
+        eventsFromRedux,
+        inProgressEvents,
+        reactStateEvents: events.reactStateEvents,
+        entityId: props.entityId,
+        mostRecentEventTime: props.mostRecentEventTime
+      }
+    });
+  }, [props.eventsFromRedux, props.inProgressEvents]);
+
+  const { classes, entitiesLoading, errorMessage, entityId } = props;
   const isLoading = loading || entitiesLoading;
 
   return (
     <>
       {/* Only display this title on the main Events landing page */}
-      {!isEventsLandingForEntity && (
+      {!entityId && (
         <Typography variant="h1" className={classes.header}>
           Events
         </Typography>
@@ -146,9 +284,7 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
           <TableHead>
             <TableRow>
               {/* Cell for icon (global EventsLanding only) */}
-              {!isEventsLandingForEntity && (
-                <TableCell style={{ padding: 0, width: '1%' }} />
-              )}
+              {!entityId && <TableCell style={{ padding: 0, width: '1%' }} />}
               <TableCell
                 data-qa-events-subject-header
                 className={classes.labelCell}
@@ -167,10 +303,10 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
             {renderTableBody(
               isLoading,
               isRequesting,
-              isEventsLandingForEntity,
               errorMessage,
+              entityId,
               error,
-              events
+              events.reactStateEvents
             )}
           </TableBody>
         </Table>
@@ -194,8 +330,8 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
 export const renderTableBody = (
   loading: boolean,
   isRequesting: boolean,
-  isEventsLandingForEntity: boolean = false,
   errorMessage = 'There was an error retrieving the events on your account.',
+  entityId?: number,
   error?: string,
   events?: Linode.Event[]
 ) => {
@@ -222,9 +358,9 @@ export const renderTableBody = (
       <>
         {events.map((thisEvent, idx) => (
           <EventRow
+            entityId={entityId}
             key={`event-list-item-${idx}`}
             event={thisEvent}
-            isEventsLandingForEntity={isEventsLandingForEntity}
           />
         ))}
         {isRequesting && <TableRowLoading colSpan={12} transparent />}
@@ -237,10 +373,16 @@ const styled = withStyles(styles);
 
 interface StateProps {
   entitiesLoading: boolean;
+  inProgressEvents: Record<number, number>;
+  eventsFromRedux: ExtendedEvent[];
+  mostRecentEventTime: string;
 }
 
 const mapStateToProps = (state: ApplicationState) => ({
-  entitiesLoading: areEntitiesLoading(state.__resources)
+  entitiesLoading: areEntitiesLoading(state.__resources),
+  inProgressEvents: state.events.inProgressEvents,
+  eventsFromRedux: state.events.events,
+  mostRecentEventTime: state.events.mostRecentEventTime
 });
 
 const connected = connect(mapStateToProps);

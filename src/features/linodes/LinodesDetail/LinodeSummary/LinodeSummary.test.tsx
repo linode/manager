@@ -7,6 +7,7 @@ import { LinodeSummary } from './LinodeSummary';
 describe('LinodeSummary', () => {
   const wrapper = shallow(
     <LinodeSummary
+      mostRecentEventTime=""
       events={[]}
       inProgressEvents={[]}
       linodeCreated="2018-11-01T00:00:00"
