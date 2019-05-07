@@ -47,6 +47,7 @@ type CombinedProps = Props &
 class TableRow extends React.Component<CombinedProps> {
   rowClick = (
     e: React.ChangeEvent<HTMLTableRowElement>,
+    ev: React.MouseEvent<HTMLElement>,
     target: string | onClickFn
   ) => {
     const body = document.body as any;
@@ -54,9 +55,6 @@ class TableRow extends React.Component<CombinedProps> {
     const isButton =
       e.target.tagName === 'BUTTON' || e.target.closest('button');
     const isAnchor = e.target.tagName === 'A' || e.target.closest('a');
-    // const hasButtonRole =
-    //   e.target.querySelector('[role="button"]') ||
-    //   e.target.closest('[role="button"]');
 
     if (
       body.getAttribute('style') === null ||
@@ -65,9 +63,13 @@ class TableRow extends React.Component<CombinedProps> {
     ) {
       if (!isButton && !isAnchor) {
         e.stopPropagation();
+        // return if no modal is open
         if (typeof target === 'string') {
-          this.props.history.push(target);
-          // return if a modal is open
+          !ev.metaKey && !ev.ctrlKey
+            ? // if no meta or ctrl key is pressed (new tab)
+              this.props.history.push(target)
+            : // else open in new tab/window
+              window.open(target, '_blank');
         }
         if (typeof target === 'function') {
           target(e);
@@ -93,9 +95,9 @@ class TableRow extends React.Component<CombinedProps> {
 
     return (
       <_TableRow
-        onClick={(e: any) => rowLink && this.rowClick(e, rowLink)}
+        onClick={(e: any) => rowLink && this.rowClick(e, e, rowLink)}
         onKeyUp={(e: any) =>
-          rowLink && e.keyCode === 13 && this.rowClick(e, rowLink)
+          rowLink && e.keyCode === 13 && this.rowClick(e, e, rowLink)
         }
         hover={rowLink !== undefined}
         role={role}
