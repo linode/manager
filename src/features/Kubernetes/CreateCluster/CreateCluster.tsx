@@ -62,6 +62,7 @@ interface State {
   tags: Item<string>[];
   version: Item<string>;
   errors?: Linode.ApiFieldError[];
+  submitting: boolean;
 }
 
 type CombinedProps = RouteComponentProps<{}> &
@@ -78,7 +79,8 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     label: undefined,
     tags: [],
     version: { value: '1.14', label: '1.14' },
-    errors: undefined
+    errors: undefined,
+    submitting: false
   };
 
   createCluster = () => {
@@ -88,7 +90,8 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     } = this.props;
 
     this.setState({
-      errors: undefined
+      errors: undefined,
+      submitting: true
     });
 
     /**
@@ -98,7 +101,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
      */
     const node_pools = nodePools.map(pick(['type', 'count'])) as any;
     const payload = {
-      region: selectedRegion!, // We know this is defined bc we just checked for it above
+      region: selectedRegion,
       node_pools,
       label,
       version: version.value,
@@ -110,7 +113,8 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       .catch(err =>
         this.setState(
           {
-            errors: getAPIErrorOrDefault(err, 'Error creating your cluster')
+            errors: getAPIErrorOrDefault(err, 'Error creating your cluster'),
+            submitting: false
           },
           scrollErrorIntoView
         )
@@ -161,6 +165,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       numberOfLinodes,
       nodePools,
       tags,
+      submitting,
       version
     } = this.state;
 
@@ -245,6 +250,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
               region={selectedRegion}
               pools={nodePools}
               createCluster={this.createCluster}
+              submitting={submitting}
             />
           </Grid>
         </Grid>

@@ -9,11 +9,12 @@ interface Props {
   label: string;
   region?: string;
   pools: PoolNode[];
+  submitting: boolean;
   createCluster: () => void;
 }
 
 export const KubeCheckoutBar: React.FunctionComponent<Props> = props => {
-  const { label, region, pools, createCluster } = props;
+  const { label, region, pools, submitting, createCluster } = props;
   return (
     <Sticky topOffset={-24} disableCompensation>
       {(stickyProps: StickyProps) => {
@@ -25,7 +26,7 @@ export const KubeCheckoutBar: React.FunctionComponent<Props> = props => {
               data-qa-checkout-bar
               heading="Cluster Summary"
               calculatedPrice={getTotalClusterPrice(pools)}
-              isMakingRequest={false}
+              isMakingRequest={submitting}
               disabled={false}
               onDeploy={createCluster}
               displaySections={displaySections}
