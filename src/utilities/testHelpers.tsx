@@ -1,9 +1,11 @@
 import * as React from 'react';
+import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
 import { render } from 'react-testing-library';
 
 import { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
+import store from 'src/store';
 
 export let createPromiseLoaderResponse: <T>(r: T) => PromiseLoaderResponse<T>;
 createPromiseLoaderResponse = response => ({ response });
@@ -20,7 +22,9 @@ createResourcePage = data => ({
 export const wrapWithTheme = (ui: any) => {
   return (
     <LinodeThemeWrapper>
-      <MemoryRouter>{ui}</MemoryRouter>
+      <Provider store={store}>
+        <MemoryRouter>{ui}</MemoryRouter>
+      </Provider>
     </LinodeThemeWrapper>
   );
 };

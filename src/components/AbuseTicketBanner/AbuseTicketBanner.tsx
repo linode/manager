@@ -13,18 +13,23 @@ interface Props {
 
 export const AbuseTicketBanner: React.FunctionComponent<Props> = props => {
   const { abuseTickets } = props;
+
+  if (!abuseTickets || abuseTickets.length === 0) {
+    return null;
+  }
+
   return (
-    <>
+    <Grid item xs={12}>
       {abuseTickets.map((thisTicket, idx) => (
-        <Grid item xs={12} key={`ticket-banner-${idx}`}>
-          <Notice important error>
-            You have an open abuse ticket. Please{' '}
-            <Link to={thisTicket.entity!.url}>click here</Link> to view this
-            ticket.
-          </Notice>
-        </Grid>
+        <Notice important error key={`ticket-banner-${idx}`}>
+          You have an open abuse ticket. Please{' '}
+          <Link data-testid="abuse-ticket-link" to={thisTicket.entity!.url}>
+            click here
+          </Link>{' '}
+          to view this ticket.
+        </Notice>
       ))}
-    </>
+    </Grid>
   );
 };
 
