@@ -77,7 +77,9 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
     setIsLoading(true);
 
     const { cluster, label } = bucketToRemove;
-    deleteBucket({ cluster, label })
+    // Passing in `force: 1` as a param to delete ALL items within
+    // the bucket before deleting the bucket itself.
+    deleteBucket({ cluster, label, params: { force: 1 } })
       .then(() => {
         removeBucketConfirmationDialog.close();
         setIsLoading(false);
