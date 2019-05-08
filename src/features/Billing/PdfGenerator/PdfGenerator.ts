@@ -1,5 +1,5 @@
 import * as jsPDF from 'jspdf';
-import { splitEvery } from 'ramda';
+import { pathOr, splitEvery } from 'ramda';
 import formatDate from 'src/utilities/formatDate';
 import LinodeLogo from './LinodeLogo';
 
@@ -68,16 +68,26 @@ const formatDescription = (desc?: string) => {
 
   if (isVolume) {
     const [volLabel, volID] = descChunks[1].split(' ');
-    return `${descChunks[0]}\r\n${truncateLabel(volLabel)} ${
-      descChunks[2]
-    }\r\n${volID}`;
+    return `${descChunks[0]}\r\n${truncateLabel(volLabel)} ${pathOr(
+      '',
+      [2],
+      descChunks
+    )}\r\n${volID}`;
   }
 
   if (isBackup) {
-    const [backupLabel, backupID] = descChunks[2].split(' ');
-    return `${descChunks[0]}\r\n${descChunks[1]}\r\n${truncateLabel(
-      backupLabel
-    )}\r\n${backupID}`;
+    const base = `${descChunks[0]}\r\n${descChunks[1]}`;
+    if (descChunks.length >= 3) {
+      /**
+       * Backup labels can take 2 forms:
+       * Backup Service - Linode 4GB - my_label (12686081)
+       * Backup Service - Linode 8GB
+       * If we arrive here, we're dealing with the former.
+       */
+      const [backupLabel, backupID] = descChunks[2].split(' ');
+      return `${base}\r\n${truncateLabel(backupLabel)}\r\n${backupID}`;
+    }
+    return base;
   }
 
   const [entityLabel, entityID] = descChunks[1].split(' ');
@@ -348,7 +358,7 @@ export const printInvoice = (
             {
               /* 
             300px left margin is a hacky way of aligning the text to the right 
-            because this library friggin stinks
+            because this library stinks
            */
               text: `Tax ID: ${account.tax_id}`,
               leftMargin: 300
