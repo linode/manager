@@ -3,6 +3,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import { reportException } from 'src/exceptionReporting';
 import { getKubeConfig } from 'src/services/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -38,8 +39,18 @@ export const ClusterActionMenu: React.FunctionComponent<
     getKubeConfig(clusterId)
       .then(response => {
         // Convert to utf-8 from base64
-        const decodedFile = window.atob(response.kubeconfig);
-        downloadFile('kubeconfig.yaml', decodedFile);
+        try {
+          const decodedFile = window.atob(response.kubeconfig);
+          downloadFile('kubeconfig.yaml', decodedFile);
+        } catch (e) {
+          reportException(e, {
+            'Encoded response': response.kubeconfig
+          });
+          enqueueSnackbar('Error parsing your kubeconfig file', {
+            variant: 'error'
+          });
+          return;
+        }
       })
       .catch(errorResponse => {
         const error = getErrorStringOrDefault(
