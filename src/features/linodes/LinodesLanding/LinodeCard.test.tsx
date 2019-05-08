@@ -1,5 +1,6 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
+import { mockNotification } from 'src/__data__/notifications';
 import { light } from 'src/themes';
 import {
   CombinedProps,
@@ -63,21 +64,6 @@ describe('LinodeRow', () => {
     linodeNotifications: [],
     displayType: 'Some Fancy Name',
     imageLabel: 'string'
-  };
-
-  const mockNotification: Linode.Notification = {
-    entity: {
-      url: 'doesnt/matter/',
-      type: 'linode',
-      label: 'my-linode',
-      id: 8675309
-    },
-    label: "Here's a notification!",
-    message: 'Something something... whatever.',
-    severity: 'major',
-    when: null,
-    until: null,
-    type: 'migration_pending'
   };
 
   it('should render', () => {

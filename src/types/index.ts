@@ -67,6 +67,7 @@ namespace Linode {
     severity: NotificationSeverity;
     when: null | string;
     until: null | string;
+    body: null | string;
   }
 
   export interface Entity {
