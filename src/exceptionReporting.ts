@@ -49,8 +49,9 @@ if (SENTRY_URL) {
       'conduitPage'
     ],
     whitelistUrls: [
-      /** anything from either *.linode.com or linode.com */
-      /https?:\/\/((cdn|www)\.)?linode\.com/
+      /** anything from either *.linode.com/* or localhost:3000 */
+      /linode.com{1}/g,
+      /localhost:3000{1}/g
     ]
   });
 }
