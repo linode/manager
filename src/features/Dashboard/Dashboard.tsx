@@ -2,6 +2,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
+import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
 import {
   StyleRulesCallback,
   withStyles,
@@ -69,6 +70,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
   return (
     <React.Fragment>
       <Grid container spacing={24}>
+        <AbuseTicketBanner />
         <DocumentTitleSegment segment="Dashboard" />
         <Grid item xs={12}>
           <Typography variant="h1" data-qa-dashboard-header>
