@@ -4,6 +4,22 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.56.0] - 2019-05-08
+
+### Changed:
+- Update Sentry Whitelist URLs
+- Display bucket size using base 2 instead of base 10
+- Update Events Landing in Real-Time
+- Validate Rebuild from Image form before modal opens
+
+### Fixed:
+- App crashes when downloading an invoice PDF for unlabeled backups
+- Deploy new Linode from backup
+- Fixing Sentry Errors
+- Prefix Length to the IPv6 Pools and Ranges
+- Pagination Footer numbering
+
+
 ## [v0.55.0] - 2019-05-06
 
 ### Added:
