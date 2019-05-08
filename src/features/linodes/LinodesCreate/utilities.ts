@@ -36,3 +36,11 @@ export const formatLinodeSubheading = (
     : `${typeLabel}`;
   return [subheading];
 };
+
+export const getRegionIDFromLinodeID = (
+  linodes: Linode.Linode[],
+  id: number
+): string | undefined => {
+  const thisLinode = linodes.find(linode => linode.id === id);
+  return thisLinode ? thisLinode.region : undefined;
+};

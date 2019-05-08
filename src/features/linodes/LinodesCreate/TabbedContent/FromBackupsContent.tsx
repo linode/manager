@@ -28,8 +28,10 @@ import {
   WithDisplayData,
   WithLinodesTypesRegionsAndImages
 } from '../types';
-import { extendLinodes } from '../utilities';
+import { extendLinodes, getRegionIDFromLinodeID } from '../utilities';
 import { renderBackupsDisplaySection } from './utils';
+
+import { reportException } from 'src/exceptionReporting';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
@@ -158,6 +160,25 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     });
   };
 
+  // Find regionID from the selectedLinodeID, and update the parent state.
+  updateRegion(selectedLinodeID: number) {
+    /**
+     * this should never happen, but this is coming from a query string
+     * so this is just a sanity check
+     */
+    if (typeof selectedLinodeID !== 'number') {
+      reportException(`selectedLinodeID's type is not a number`, {
+        selectedLinodeID
+      });
+      throw new Error('selectedLinodeID is not a number');
+    }
+    const regionID = getRegionIDFromLinodeID(
+      this.props.linodesData,
+      selectedLinodeID
+    );
+    this.props.updateRegionID(regionID || '');
+  }
+
   componentWillUnmount() {
     this.mounted = false;
   }
@@ -167,15 +188,20 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
     this.getLinodesWithBackups(this.props.linodesData);
     // If there is a selected Linode ID (from props), make sure its information
     // is set to state as if it had been selected manually.
+    if (this.props.selectedLinodeID) {
+      this.updateRegion(this.props.selectedLinodeID);
+    }
+  }
+
+  componentDidUpdate(prevProps: CombinedProps) {
+    const { selectedLinodeID } = this.props;
+    if (!!selectedLinodeID && prevProps.selectedLinodeID !== selectedLinodeID) {
+      this.updateRegion(selectedLinodeID);
+    }
   }
 
   render() {
-    const {
-      backups,
-      linodesWithBackups,
-      isGettingBackups,
-      selectedBackupInfo
-    } = this.state;
+    const { backups, linodesWithBackups, selectedBackupInfo } = this.state;
     const {
       accountBackupsEnabled,
       classes,
@@ -353,8 +379,8 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
                   <CheckoutBar
                     heading="Linode Summary"
                     calculatedPrice={calculatedPrice}
-                    isMakingRequest={isGettingBackups}
-                    disabled={disabled}
+                    isMakingRequest={this.props.formIsSubmitting}
+                    disabled={this.props.formIsSubmitting || disabled}
                     onDeploy={this.createLinode}
                     displaySections={displaySections}
                     {...props}
