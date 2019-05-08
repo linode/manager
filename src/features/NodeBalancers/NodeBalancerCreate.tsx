@@ -693,7 +693,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
 
         <ConfirmationDialog
           onClose={this.onCloseConfirmation}
-          title="Confirm Deletion"
+          title={'Delete this configuration?'}
           error={this.confirmationConfigError()}
           actions={this.renderConfigConfirmationActions}
           open={this.state.deleteConfigConfirmDialog.open}

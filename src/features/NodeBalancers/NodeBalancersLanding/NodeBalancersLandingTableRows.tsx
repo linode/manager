@@ -44,7 +44,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 interface Props {
   data: Linode.NodeBalancerWithConfigs[];
-  toggleDialog: (id: number) => void;
+  toggleDialog: (id: number, label: string) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -119,6 +119,7 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<
               <NodeBalancerActionMenu
                 nodeBalancerId={nodeBalancer.id}
                 toggleDialog={toggleDialog}
+                label={nodeBalancer.label}
               />
             </TableCell>
           </TableRow>
