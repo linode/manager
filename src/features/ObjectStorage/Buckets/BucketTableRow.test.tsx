@@ -52,7 +52,7 @@ describe('BucketTableRow', () => {
         .find('[data-qa-size]')
         .childAt(0)
         .text()
-    ).toBe('812 MB');
+    ).toBe('775 MB');
   });
 
   it('should render the region in a human-readable manner', () => {

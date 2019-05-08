@@ -1,4 +1,3 @@
-import * as prettyBytes from 'pretty-bytes';
 import * as React from 'react';
 // @todo: uncomment this Link import when a bucket landing page exists
 // import { Link } from 'react-router-dom';
@@ -14,6 +13,7 @@ import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { formatRegion } from 'src/utilities/formatRegion';
+import { readableBytes } from 'src/utilities/unitConversions';
 import BucketActionMenu from './BucketActionMenu';
 
 type ClassNames = 'root' | 'labelStatusWrapper' | 'bucketRow';
@@ -82,7 +82,7 @@ export const BucketTableRow: React.StatelessComponent<
       <TableCell parentColumn="Size">
         <Grid>
           <Typography variant="body1" data-qa-size>
-            {prettyBytes(size)}
+            {readableBytes(size).formatted}
           </Typography>
         </Grid>
         <Grid>

@@ -12,7 +12,7 @@ import TagsPanel from 'src/components/TagsPanel';
 import styled, { StyleProps } from 'src/containers/SummaryPanels.styles';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import { formatRegion } from 'src/utilities';
-import { convertMegabytesTo } from 'src/utilities/convertMegabytesTo';
+import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { NodeBalancerConsumer } from '../context';
 
 type ClassNames =
