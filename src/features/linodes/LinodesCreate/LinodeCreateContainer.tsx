@@ -58,6 +58,7 @@ import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendCreateLinodeEvent } from 'src/utilities/ga';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { getRegionIDFromLinodeID } from './utilities';
 
 type StackScript = Linode.StackScript.Response;
 
@@ -118,14 +119,6 @@ const defaultState: State = {
   appInstancesLoading: false
 };
 
-const getRegionIDFromLinodeID = (
-  linodes: Linode.Linode[],
-  id: number
-): string | undefined => {
-  const thisLinode = linodes.find(linode => linode.id === id);
-  return thisLinode ? thisLinode.region : undefined;
-};
-
 const trimOneClickFromLabel = (script: StackScript) => {
   return {
     ...script,
@@ -155,8 +148,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     if (params && params !== {}) {
       this.setState({
         // This set is for creating from a Backup
-        selectedBackupID: params.backupID,
-        selectedLinodeID: params.linodeID
+        selectedBackupID: isNaN(+params.backupID)
+          ? undefined
+          : +params.backupID,
+        selectedLinodeID: isNaN(+params.linodeID) ? undefined : +params.linodeID
       });
     }
     this.setState({ appInstancesLoading: true });
@@ -227,6 +222,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         selectedLinodeID: id,
         selectedDiskSize: diskSize,
         selectedTypeID: undefined,
+        selectedBackupID: undefined,
         selectedRegionID
       });
     }
