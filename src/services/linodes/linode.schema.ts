@@ -137,7 +137,8 @@ const SSHKeySchema = object({
   created: string()
 });
 
-export const RebuildLinodeSchema = object({
+// Include `shape()` here so that the schema can be extended without TS complaining.
+export const RebuildLinodeSchema = object().shape({
   image: string().required('An image is required.'),
   root_pass: string()
     .required('Password cannot be blank.')
@@ -147,6 +148,10 @@ export const RebuildLinodeSchema = object({
   stackscript_id: number().notRequired(),
   stackscript_data,
   booted: boolean().notRequired()
+});
+
+export const RebuildLinodeFromStackScriptSchema = RebuildLinodeSchema.shape({
+  stackscript_id: number().required('A StackScript is required.')
 });
 
 export const IPAllocationSchema = object({
