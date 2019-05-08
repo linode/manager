@@ -13,7 +13,9 @@ interface Props {
 
 type CombinedProps = Props & WithSnackbarProps;
 
-const ImagesActionMenu: React.FunctionComponent<CombinedProps> = props => {
+export const ClusterActionMenu: React.FunctionComponent<
+  CombinedProps
+> = props => {
   const { clusterId, enqueueSnackbar } = props;
   const createActions = () => {
     return (closeMenu: Function): Action[] => {
@@ -53,4 +55,4 @@ const ImagesActionMenu: React.FunctionComponent<CombinedProps> = props => {
 
 const enhanced = compose<CombinedProps, Props>(withSnackbar);
 
-export default enhanced(ImagesActionMenu);
+export default enhanced(ClusterActionMenu);
