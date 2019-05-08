@@ -168,7 +168,7 @@ export class SelectPlanPanel extends React.Component<
     const { classes, copy, error, header } = this.props;
     return (
       <TabbedPanel
-        rootClass={classes.root}
+        rootClass={`${classes.root} tabbedPanel`}
         error={error}
         header={header || 'Linode Plan'}
         copy={copy}

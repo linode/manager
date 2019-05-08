@@ -49,7 +49,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   inner: {
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing.unit * 3,
+    paddingTop: `${theme.spacing.unit}px !important`
   }
 });
 

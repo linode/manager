@@ -26,7 +26,10 @@ type ClassNames = 'root' | 'title' | 'gridItem' | 'countInput';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing.unit * 2,
+    '& .tabbedPanel': {
+      marginTop: 0
+    }
   },
   title: {
     marginBottom: theme.spacing.unit
