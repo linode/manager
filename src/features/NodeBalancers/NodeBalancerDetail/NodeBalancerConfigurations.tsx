@@ -7,7 +7,6 @@ import {
   Lens,
   lensPath,
   over,
-  path,
   pathOr,
   set,
   view
@@ -428,7 +427,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         const newConfigs = clone(this.state.configs);
         newConfigs[idx] = { ...nodeBalancerConfig, nodes: [] };
         const newNodes = clone(this.state.configs[idx].nodes);
-        //    while maintaing node data
+        //    while maintaining node data
         newConfigs[idx].nodes = newNodes;
 
         // reset errors
@@ -605,24 +604,12 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         });
       })
       .catch(err => {
-        const apiError = path<Linode.ApiFieldError[]>(
-          ['response', 'data', 'error'],
-          err
-        );
-
         return this.setState(
           {
             deleteConfigConfirmDialog: {
               ...this.state.deleteConfigConfirmDialog,
               submitting: false,
-              errors: apiError
-                ? apiError
-                : [
-                    {
-                      field: 'none',
-                      reason: 'Unable to complete your request at this time.'
-                    }
-                  ]
+              errors: err
             }
           },
           () => {
@@ -708,10 +695,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         /* Return false as a Promise for the sake of aggregating results */
         return false;
         /* @todo:
-        const apiError = path<Linode.ApiFieldError[]>(['response', 'data', 'error'], err);
-
             place an error on the node and set toDelete to undefined
-
         */
       });
   };

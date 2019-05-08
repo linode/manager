@@ -1,18 +1,6 @@
 import Axios, { AxiosError, AxiosPromise, AxiosResponse } from 'axios';
-import {
-  compose,
-  isEmpty,
-  isNil,
-  lensPath,
-  not,
-  omit,
-  pathOr,
-  set,
-  when
-} from 'ramda';
+import { compose, isEmpty, isNil, lensPath, not, omit, set, when } from 'ramda';
 import { ObjectSchema, ValidationError } from 'yup';
-
-import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
 
 const L = {
   url: lensPath(['url']),
@@ -125,16 +113,7 @@ export default <T>(...fns: Function[]): AxiosPromise<T> => {
     );
   }
 
-  return Axios(config).catch(err => {
-    const defaultError = [{ reason: DEFAULT_ERROR_MESSAGE }];
-    return Promise.reject(
-      pathOr<Linode.ApiFieldError[]>(
-        defaultError,
-        ['response', 'data', 'errors'],
-        err
-      )
-    );
-  });
+  return Axios(config);
 
   /*
    * If in the future, we want to hook into every single
@@ -255,13 +234,8 @@ export const CancellableRequest = <T>(
   return {
     cancel: source.cancel,
     request: () =>
-      Axios({ ...config, cancelToken: source.token })
-        .then(response => response.data)
-        .catch(err => {
-          const defaultError = [{ reason: DEFAULT_ERROR_MESSAGE }];
-          return Promise.reject(
-            pathOr(defaultError, ['response', 'data', 'errors'], err)
-          );
-        })
+      Axios({ ...config, cancelToken: source.token }).then(
+        response => response.data
+      )
   };
 };
