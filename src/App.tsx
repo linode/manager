@@ -42,7 +42,6 @@ import { getAllVolumes } from 'src/store/volume/volume.requests';
 import composeState from 'src/utilities/composeState';
 import { notifications } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
-import { isObjectStorageEnabled } from './constants';
 import BucketDrawer from './features/ObjectStorage/Buckets/BucketDrawer';
 import { requestClusters } from './store/clusters/clusters.actions';
 import {
@@ -50,6 +49,7 @@ import {
   WithNodeBalancerActions
 } from './store/nodeBalancer/nodeBalancer.containers';
 import { MapState } from './store/types';
+import { isObjectStorageEnabled } from './utilities/betaPrograms';
 
 shim(); // allows for .finally() usage
 
@@ -207,7 +207,8 @@ export class App extends React.Component<CombinedProps, State> {
   async componentDidMount() {
     const {
       actions,
-      nodeBalancerActions: { getAllNodeBalancersWithConfigs }
+      nodeBalancerActions: { getAllNodeBalancersWithConfigs },
+      betaPrograms
     } = this.props;
 
     const dataFetchingPromises: Promise<any>[] = [
@@ -224,7 +225,7 @@ export class App extends React.Component<CombinedProps, State> {
     ];
 
     // Make these requests only if the feature is enabled.
-    if (isObjectStorageEnabled) {
+    if (isObjectStorageEnabled(betaPrograms)) {
       dataFetchingPromises.push(actions.requestBuckets());
       dataFetchingPromises.push(actions.requestClusters());
     }
@@ -305,7 +306,8 @@ export class App extends React.Component<CombinedProps, State> {
       volumesError,
       settingsError,
       profileError,
-      bucketsError
+      bucketsError,
+      betaPrograms
     } = this.props;
 
     if (hasError) {
@@ -375,7 +377,7 @@ export class App extends React.Component<CombinedProps, State> {
                             path="/stackscripts"
                             component={StackScripts}
                           />
-                          {isObjectStorageEnabled && (
+                          {isObjectStorageEnabled(betaPrograms) && (
                             <Route
                               path="/object-storage"
                               component={ObjectStorage}
@@ -418,7 +420,7 @@ export class App extends React.Component<CombinedProps, State> {
                 <DomainDrawer />
                 <VolumeDrawer />
                 <BackupDrawer />
-                {isObjectStorageEnabled && <BucketDrawer />}
+                {isObjectStorageEnabled(betaPrograms) && <BucketDrawer />}
               </div>
             </>
           </React.Fragment>
@@ -481,6 +483,7 @@ interface StateProps {
   username: string;
   documentation: Linode.Doc[];
   isLoggedInAsCustomer: boolean;
+  betaPrograms: string[];
 }
 
 const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
@@ -504,6 +507,11 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
   isLoggedInAsCustomer: pathOr(
     false,
     ['authentication', 'loggedInAsCustomer'],
+    state
+  ),
+  betaPrograms: pathOr(
+    [],
+    ['__resources', 'profile', 'data', 'beta_programs'],
     state
   )
 });

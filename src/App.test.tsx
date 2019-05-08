@@ -51,6 +51,7 @@ it('renders without crashing', () => {
             documentation={[]}
             toggleTheme={jest.fn()}
             toggleSpacing={jest.fn()}
+            betaPrograms={[]}
           />
         </StaticRouter>
       </Provider>

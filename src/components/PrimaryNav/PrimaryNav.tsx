@@ -1,5 +1,6 @@
 import Settings from '@material-ui/icons/Settings';
 import * as classNames from 'classnames';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
@@ -16,13 +17,12 @@ import {
   WithTheme
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-import { isObjectStorageEnabled } from 'src/constants';
 import { MapState } from 'src/store/types';
+import { isObjectStorageEnabled } from 'src/utilities/betaPrograms';
 import { sendSpacingToggleEvent, sendThemeToggleEvent } from 'src/utilities/ga';
 import AdditionalMenuItems from './AdditionalMenuItems';
 import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
-
 import { linkIsActive } from './utils';
 
 interface PrimaryLink {
@@ -251,7 +251,8 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     const {
       hasAccountAccess,
       // isLongviewEnabled,
-      isManagedAccount
+      isManagedAccount,
+      betaPrograms
     } = this.props;
 
     const primaryLinks: PrimaryLink[] = [
@@ -266,7 +267,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     primaryLinks.push({ display: 'Volumes', href: '/volumes', key: 'volumes' });
     // }
 
-    if (isObjectStorageEnabled) {
+    if (isObjectStorageEnabled(betaPrograms)) {
       primaryLinks.push({
         display: 'Object Storage',
         href: '/object-storage/buckets',
@@ -550,6 +551,7 @@ interface StateProps {
   hasAccountAccess: boolean;
   isManagedAccount: boolean;
   // isLongviewEnabled: boolean;
+  betaPrograms: string[];
 }
 
 const userHasAccountAccess = (profile: Linode.Profile) => {
@@ -576,15 +578,21 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
   if (!account || !profile) {
     return {
       hasAccountAccess: false,
-      isManagedAccount: false
+      isManagedAccount: false,
       // isLongviewEnabled: false,
+      betaPrograms: []
     };
   }
 
   return {
     hasAccountAccess: userHasAccountAccess(profile),
-    isManagedAccount: accountHasManaged(account)
+    isManagedAccount: accountHasManaged(account),
     // isLongviewEnabled: accountHasLongviewSubscription(account),
+    betaPrograms: pathOr(
+      [],
+      ['__resources', 'profile', 'data', 'beta_programs'],
+      state
+    )
   };
 };
 
