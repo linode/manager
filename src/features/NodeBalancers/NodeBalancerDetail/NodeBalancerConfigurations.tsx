@@ -109,6 +109,7 @@ interface State {
     submitting: boolean;
     errors?: Linode.ApiFieldError[];
     idxToDelete?: number;
+    portToDelete?: number;
   };
 }
 
@@ -153,7 +154,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     submitting: false,
     open: false,
     errors: undefined,
-    idxToDelete: undefined
+    idxToDelete: undefined,
+    portToDelete: undefined
   };
 
   static defaultDeleteNodeConfirmDialogState = {
@@ -907,9 +909,10 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   onCloseConfirmation = () =>
     this.setState({
-      deleteConfigConfirmDialog: clone(
-        NodeBalancerConfigurations.defaultDeleteConfigConfirmDialogState
-      )
+      deleteConfigConfirmDialog: {
+        ...this.state.deleteConfigConfirmDialog,
+        open: false
+      }
     });
 
   confirmationConfigError = () =>
@@ -937,14 +940,15 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
   onSaveConfig = (idx: number) => () => this.saveConfig(idx);
 
-  onDeleteConfig = (idx: number) => () => {
+  onDeleteConfig = (idx: number, port: number) => () => {
     this.setState({
       deleteConfigConfirmDialog: {
         ...clone(
           NodeBalancerConfigurations.defaultDeleteConfigConfirmDialogState
         ),
         open: true,
-        idxToDelete: idx
+        idxToDelete: idx,
+        portToDelete: port
       }
     });
   };
@@ -1019,7 +1023,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           configIdx={idx}
           onSave={this.onSaveConfig(idx)}
           submitting={configSubmitting[idx]}
-          onDelete={this.onDeleteConfig(idx)}
+          onDelete={this.onDeleteConfig(idx, config.port)}
           errors={configErrors[idx]}
           nodeMessage={panelNodeMessages[idx]}
           algorithm={view(L.algorithmLens, this.state)}
@@ -1152,7 +1156,14 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
 
         <ConfirmationDialog
           onClose={this.onCloseConfirmation}
-          title="Confirm Deletion"
+          title={
+            typeof this.state.deleteConfigConfirmDialog.portToDelete !==
+            'undefined'
+              ? `Delete this configuration on port ${
+                  this.state.deleteConfigConfirmDialog.portToDelete
+                }?`
+              : 'Delete this configuration?'
+          }
           error={this.confirmationConfigError()}
           actions={this.renderConfigConfirmationActions}
           open={this.state.deleteConfigConfirmDialog.open}

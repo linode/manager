@@ -94,6 +94,7 @@ interface DeleteConfirmDialogState {
 interface State {
   deleteConfirmDialog: DeleteConfirmDialogState;
   selectedNodeBalancerId?: number;
+  selectedNodeBalancerLabel: string;
 }
 
 type CombinedProps = WithNodeBalancerActions &
@@ -116,7 +117,8 @@ export class NodeBalancersLanding extends React.Component<
   };
 
   state: State = {
-    deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState
+    deleteConfirmDialog: NodeBalancersLanding.defaultDeleteConfirmDialogState,
+    selectedNodeBalancerLabel: ''
   };
 
   pollInterval: number;
@@ -139,9 +141,10 @@ export class NodeBalancersLanding extends React.Component<
 
   static docs = [NodeBalancerGettingStarted, NodeBalancerReference];
 
-  toggleDialog = (nodeBalancerId: number) => {
+  toggleDialog = (nodeBalancerId: number, label: string) => {
     this.setState({
       selectedNodeBalancerId: nodeBalancerId,
+      selectedNodeBalancerLabel: label,
       deleteConfirmDialog: {
         ...this.state.deleteConfirmDialog,
         open: !this.state.deleteConfirmDialog.open
@@ -292,7 +295,7 @@ export class NodeBalancersLanding extends React.Component<
         </OrderBy>
         <ConfirmationDialog
           onClose={this.closeConfirmationDialog}
-          title="Confirm Deletion"
+          title={`Delete ${this.state.selectedNodeBalancerLabel}?`}
           error={(this.state.deleteConfirmDialog.errors || [])
             .map(e => e.reason)
             .join(',')}

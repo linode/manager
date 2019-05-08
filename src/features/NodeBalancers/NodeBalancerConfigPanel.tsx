@@ -121,7 +121,7 @@ interface Props {
   forEdit?: boolean;
   submitting?: boolean;
   onSave?: () => void;
-  onDelete?: () => void;
+  onDelete?: any;
 
   algorithm: 'roundrobin' | 'leastconn' | 'source';
   onAlgorithmChange: (v: string) => void;
@@ -312,8 +312,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   };
 
   onSave = this.props.onSave;
-
-  onDelete = this.props.onDelete;
 
   handleSelectSuggestion = (selection: string) => {
     const { currentNodeAddressIndex } = this.state;
@@ -1224,7 +1222,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       )}
                       {(forEdit || configIdx !== 0) && (
                         <Button
-                          onClick={this.onDelete}
+                          onClick={this.props.onDelete}
                           type="secondary"
                           destructive
                           data-qa-delete-config

@@ -122,12 +122,11 @@ class NodeBalancers extends Page {
     }
 
     configDelete() {
-        const confirmTitle = 'Confirm Deletion';
         const confirmMsg = 'Are you sure you want to delete this NodeBalancer Configuration?';
         this.deleteButton.click();
         this.dialogTitle.waitForVisible(constants.wait.normal);
 
-        expect(this.dialogTitle.getText()).toBe(confirmTitle);
+        expect(this.dialogTitle.getText()).toMatch('Delete');
         expect(this.dialogContent.getText()).toBe(confirmMsg);
         expect(this.dialogConfirm.getText()).toBe('Delete');
         expect(this.dialogCancel.getText()).toBe('Cancel');
