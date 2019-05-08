@@ -43,4 +43,17 @@ export const createKubernetesCluster = (data: CreateKubeClusterPayload) =>
     setMethod('POST'),
     setURL(`${API_ROOT}/lke/clusters`),
     setData(data, createKubeClusterSchema)
+  ).then(response => response.data)
+ 
+/** getKubeConfig
+ *
+ * Returns a base64 encoded string of a cluster's kubeconfig.yaml
+ *
+ * @param clusterId
+ */
+
+export const getKubeConfig = (clusterId: string) =>
+  Request<Linode.KubeConfigResponse>(
+    setMethod('GET'),
+    setURL(`${API_ROOT}/lke/clusters/${clusterId}/kubeconfig`)
   ).then(response => response.data);

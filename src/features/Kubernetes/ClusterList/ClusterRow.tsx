@@ -70,10 +70,7 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
         {cluster.region}
       </TableCell>
       <TableCell>
-        <ActionMenu
-          clusterId={cluster.id}
-          downloadKubeConfig={() => console.log('downloading!')}
-        />
+        <ActionMenu clusterId={cluster.id} />
       </TableCell>
     </TableRow>
   );
