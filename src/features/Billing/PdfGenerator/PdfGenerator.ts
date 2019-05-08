@@ -10,8 +10,8 @@ const baseFont = 'helvetica';
 
 /**
  * Where the table headers should start on the Y-Axis. The reason for passing the Tax ID length
- * is becasue if the Tax ID is a long string, we need to push the table down. JSPDF isn't smart
- * enough to determine that by iteself
+ * is because if the Tax ID is a long string, we need to push the table down. JSPDF isn't smart
+ * enough to determine that by itself
  *
  * @param taxIdLength how many digits the Tax ID is
  */
@@ -19,8 +19,8 @@ const tableTopStart = (taxIdLength: number) => 150 + (taxIdLength / 13) * 5;
 
 /**
  * Where the table body should start on the Y-Axis. The reason for passing the Tax ID length
- * is becasue if the Tax ID is a long string, we need to push the table down. JSPDF isn't smart
- * enough to determine that by iteself
+ * is because if the Tax ID is a long string, we need to push the table down. JSPDF isn't smart
+ * enough to determine that by itself
  *
  * @param taxIdLength how many digits the Tax ID is
  */
@@ -59,7 +59,7 @@ const formatDescription = (desc?: string) => {
   const isVolume = /^Storage/.test(desc);
 
   /** create an array like ["Backup service", "Linode 2GB", "MyLinode (1234)"] */
-  const descChunks = desc.split(' - ');
+  const descChunks = desc ? desc.split(' - ') : [];
 
   if (descChunks.length < 2) {
     /** in this case, it's probably a manual payment from admin */
@@ -80,8 +80,8 @@ const formatDescription = (desc?: string) => {
     )}\r\n${backupID}`;
   }
 
-  const [entitiyLabel, entitiyID] = descChunks[1].split(' ');
-  return `${descChunks[0]}\r\n${truncateLabel(entitiyLabel)}\r\n${entitiyID}`;
+  const [entityLabel, entityID] = descChunks[1].split(' ');
+  return `${descChunks[0]}\r\n${truncateLabel(entityLabel)}\r\n${entityID}`;
 };
 
 const addLeftHeader = (
