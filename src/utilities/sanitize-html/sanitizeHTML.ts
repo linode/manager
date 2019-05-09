@@ -7,4 +7,4 @@ export const sanitizeHTML = (text: string) =>
     allowedAttributes: {
       '*': allowedHTMLAttr
     }
-  });
+  }).trim();

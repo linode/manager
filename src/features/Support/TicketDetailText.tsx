@@ -44,7 +44,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 interface Props {
-  text: string;
+  text?: string;
+  dangerouslySetInnerHTML?: {
+    __html: string;
+  };
   open?: boolean;
 }
 
@@ -52,11 +55,24 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const TicketDetailText: React.FC<CombinedProps> = props => {
   const [panelOpen, togglePanel] = React.useState<boolean>(props.open || true);
-  const { text, classes } = props;
+  const { text, classes, dangerouslySetInnerHTML } = props;
 
-  /** note that the HTML is being sanitized in ExpandableTicketPanel */
-  const truncatedText = truncateText(text, 175);
-  const ticketReplyBody = panelOpen ? text : truncatedText;
+  if (!!text && !!dangerouslySetInnerHTML) {
+    throw new Error(
+      'The "text" and "html" props are mutually exclusive. Please choose only one'
+    );
+  }
+
+  const ticketBody =
+    !text && !dangerouslySetInnerHTML
+      ? ''
+      : !!text
+      ? text
+      : /** at this point we've handled for the cases where dangerouslySetInnerHTML doesn't exist */
+        dangerouslySetInnerHTML!.__html;
+
+  const truncatedText = truncateText(ticketBody, 175);
+  const ticketReplyBody = panelOpen ? ticketBody : truncatedText;
 
   return (
     <React.Fragment>
@@ -66,12 +82,18 @@ const TicketDetailText: React.FC<CombinedProps> = props => {
         sm={truncatedText !== text ? 6 : 7}
         md={truncatedText !== text ? 8 : 9}
       >
-        <Typography
-          className={classes.formattedText}
-          dangerouslySetInnerHTML={{
-            __html: ticketReplyBody
-          }}
-        />
+        {props.text ? (
+          <Typography className={classes.formattedText}>
+            {ticketReplyBody}
+          </Typography>
+        ) : (
+          <Typography
+            className={classes.formattedText}
+            dangerouslySetInnerHTML={{
+              __html: ticketReplyBody
+            }}
+          />
+        )}
       </Grid>
       {truncatedText !== text && (
         <Grid

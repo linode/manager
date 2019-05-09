@@ -181,6 +181,11 @@ export class ExpandableTicketPanel extends React.Component<
     if (!ticket && !reply) {
       return;
     }
+
+    /**
+     * @todo convert markdown to markup before sanitization
+     */
+
     let data: Data;
     if (ticket) {
       data = {
@@ -327,7 +332,12 @@ export class ExpandableTicketPanel extends React.Component<
                 </Grid>
               </Grid>
             </Grid>
-            <TicketDetailBody text={data.description} open={this.props.open} />
+            <TicketDetailBody
+              open={this.props.open}
+              dangerouslySetInnerHTML={{
+                __html: data.description
+              }}
+            />
           </Grid>
           {shouldRenderHively(data.from_linode, data.updated, data.username) &&
             this.renderHively(data.username, data.ticket_id, data.reply_id)}
