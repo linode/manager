@@ -1,0 +1,54 @@
+import * as React from 'react';
+
+import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
+import CloseTicketLink from '../CloseTicketLink';
+
+interface Props {
+  isSubmitting: boolean;
+  closeTicketSuccess: () => void;
+  submitForm: () => void;
+  closable: boolean;
+  ticketId: number;
+}
+
+type CombinedProps = Props;
+
+const ReplyActions: React.FC<CombinedProps> = props => {
+  const {
+    isSubmitting,
+    submitForm,
+    closeTicketSuccess,
+    closable,
+    ticketId
+  } = props;
+
+  return (
+    <React.Fragment>
+      <ActionsPanel style={{ marginTop: 16 }}>
+        <Button type="primary" loading={isSubmitting} onClick={submitForm}>
+          Add Update
+        </Button>
+      </ActionsPanel>
+      {closable && (
+        <CloseTicketLink
+          ticketId={ticketId}
+          closeTicketSuccess={closeTicketSuccess}
+        />
+      )}
+    </React.Fragment>
+  );
+};
+
+/**
+ * only update if isSubmitting or submitForm changes
+ */
+export default React.memo(
+  ReplyActions,
+  (prevProps: CombinedProps, nextProps: CombinedProps) => {
+    return (
+      prevProps.isSubmitting === nextProps.isSubmitting &&
+      prevProps.submitForm === nextProps.submitForm
+    );
+  }
+);
