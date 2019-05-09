@@ -2,8 +2,6 @@ import * as classNames from 'classnames';
 import * as moment from 'moment';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import Collapse from 'src/assets/icons/minus-square.svg';
-import Expand from 'src/assets/icons/plus-square.svg';
 import UserIcon from 'src/assets/icons/user.svg';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
@@ -15,8 +13,9 @@ import {
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
-import IconButton from 'src/components/IconButton';
-import truncateText from 'src/utilities/truncateText';
+
+import { sanitizeHTML } from 'src/utilities/sanitize-html';
+import TicketDetailBody from './TicketDetailText';
 
 type ClassNames =
   | 'root'
@@ -24,15 +23,9 @@ type ClassNames =
   | 'leftIcon'
   | 'userName'
   | 'paper'
-  | 'paperOpen'
   | 'avatarCol'
   | 'userCol'
-  | 'descCol'
-  | 'expCol'
-  | 'expButton'
-  | 'toggle'
   | 'isCurrentUser'
-  | 'formattedText'
   | 'hivelyContainer'
   | 'hivelyLink'
   | 'hivelyLinkIcon'
@@ -79,11 +72,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   paper: {
     padding: theme.spacing.unit * 3
   },
-  paperOpen: {
-    '& $descCol': {
-      animation: 'fadeIn 225ms linear forwards'
-    }
-  },
   avatarCol: {
     minWidth: 60
   },
@@ -91,31 +79,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     minWidth: 200,
     paddingRight: `${theme.spacing.unit * 4}px !important`
   },
-  descCol: {},
-  expCol: {
-    display: 'flex',
-    justifyContent: 'flex-end'
-  },
-  expButton: {
-    position: 'relative',
-    top: -theme.spacing.unit,
-    left: theme.spacing.unit,
-    [theme.breakpoints.down('sm')]: {
-      position: 'absolute',
-      top: 16,
-      right: 16,
-      left: 'auto'
-    }
-  },
-  toggle: {
-    height: 24,
-    width: 24
-  },
   isCurrentUser: {
     backgroundColor: theme.color.grey2
-  },
-  formattedText: {
-    whiteSpace: 'pre-line'
   },
   hivelyLink: {
     textDecoration: 'none',
@@ -150,7 +115,6 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 interface State {
-  open: boolean;
   data?: Data;
 }
 
@@ -200,7 +164,6 @@ export class ExpandableTicketPanel extends React.Component<
   constructor(props: CombinedProps) {
     super(props);
     this.state = {
-      open: pathOr(true, ['open'], this.props),
       data: this.getData()
     };
   }
@@ -213,15 +176,16 @@ export class ExpandableTicketPanel extends React.Component<
     this.mounted = false;
   }
 
-  togglePanel = () => {
-    this.setState({ open: !this.state.open });
-  };
-
   getData = () => {
     const { parentTicket, ticket, reply, ticketUpdated } = this.props;
     if (!ticket && !reply) {
       return;
     }
+
+    /**
+     * @todo convert markdown to markup before sanitization
+     */
+
     let data: Data;
     if (ticket) {
       data = {
@@ -230,7 +194,7 @@ export class ExpandableTicketPanel extends React.Component<
         gravatar_id: ticket.gravatar_id,
         gravatarUrl: pathOr('not found', ['gravatarUrl'], ticket),
         date: ticket.opened,
-        description: ticket.description,
+        description: sanitizeHTML(ticket.description),
         username: ticket.opened_by,
         from_linode: false,
         updated: ticket.updated
@@ -242,7 +206,7 @@ export class ExpandableTicketPanel extends React.Component<
         gravatar_id: reply.gravatar_id,
         gravatarUrl: pathOr('not found', ['gravatarUrl'], reply),
         date: reply.created,
-        description: reply.description,
+        description: sanitizeHTML(reply.description),
         username: reply.created_by,
         from_linode: reply.from_linode,
         updated: ticketUpdated!
@@ -323,20 +287,21 @@ export class ExpandableTicketPanel extends React.Component<
 
   render() {
     const { classes, isCurrentUser } = this.props;
-    const { data, open } = this.state;
-    if (!data) {
-      return;
-    }
+    const { data } = this.state;
 
-    const truncatedText = truncateText(data.description, 175);
-    const text = open ? data.description : truncatedText;
+    /**
+     * data.description will be a blank string if it contained ONLY malicious markup
+     * because we sanitize it in this.getData()
+     */
+    if (!data || !data.description) {
+      return null;
+    }
 
     return (
       <Grid item className={classes.root}>
         <Paper
           className={classNames({
             [classes.paper]: true,
-            [classes.paperOpen]: open,
             [classes.isCurrentUser]: isCurrentUser
           })}
         >
@@ -367,34 +332,12 @@ export class ExpandableTicketPanel extends React.Component<
                 </Grid>
               </Grid>
             </Grid>
-            <Grid
-              item
-              xs={truncatedText !== data.description ? 11 : 12}
-              sm={truncatedText !== data.description ? 6 : 7}
-              md={truncatedText !== data.description ? 8 : 9}
-              className={classes.descCol}
-            >
-              <Typography className={classes.formattedText}>{text}</Typography>
-            </Grid>
-            {truncatedText !== data.description && (
-              <Grid
-                item
-                xs={1}
-                onClick={this.togglePanel}
-                className={classes.expCol}
-              >
-                <IconButton
-                  className={classes.expButton}
-                  aria-label="Expand full answer"
-                >
-                  {open ? (
-                    <Collapse className={classes.toggle} />
-                  ) : (
-                    <Expand className={classes.toggle} />
-                  )}
-                </IconButton>
-              </Grid>
-            )}
+            <TicketDetailBody
+              open={this.props.open}
+              dangerouslySetInnerHTML={{
+                __html: data.description
+              }}
+            />
           </Grid>
           {shouldRenderHively(data.from_linode, data.updated, data.username) &&
             this.renderHively(data.username, data.ticket_id, data.reply_id)}
