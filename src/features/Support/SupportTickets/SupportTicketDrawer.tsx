@@ -1,4 +1,3 @@
-import { AxiosError } from 'axios';
 import * as Bluebird from 'bluebird';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
@@ -159,10 +158,10 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
     this.setState({ data: entityItems, loading: false });
   };
 
-  handleCatch = (errors: AxiosError) => {
+  handleCatch = (errors: Linode.ApiFieldError[]) => {
     // @todo replace with LinodeAPIFieldError[] when/if we return that from services
     this.setState({
-      errors: getAPIErrorOrDefault(errors),
+      errors,
       loading: false
     });
   };

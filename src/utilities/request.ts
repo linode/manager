@@ -1,7 +1,7 @@
 import Axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { pathOr } from 'ramda';
 
-import { ACCESS_TOKEN } from 'src/constants';
+import { ACCESS_TOKEN, DEFAULT_ERROR_MESSAGE } from 'src/constants';
 
 import store from 'src/store';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
@@ -27,7 +27,14 @@ export const handleError = (error: AxiosError) => {
     store.dispatch(handleLogout());
   }
 
-  return Promise.reject(error);
+  // Downstream components should only have to handle ApiFieldErrors, not AxiosErrors.
+  return Promise.reject(
+    pathOr(
+      [{ reason: DEFAULT_ERROR_MESSAGE }],
+      ['response', 'data', 'errors'],
+      error
+    )
+  );
 };
 
 Axios.interceptors.request.use(
@@ -50,7 +57,7 @@ Axios.interceptors.request.use(
 /*
 Interceptor that initiates re-authentication if:
   * The response is HTTP 401 "Unauthorized"
-  * The API is in Maintainence mode
-Also rejects non-error responses if the API is in Maintainence mode
+  * The API is in Maintenance mode
+Also rejects non-error responses if the API is in Maintenance mode
 */
 Axios.interceptors.response.use(handleSuccess, handleError);

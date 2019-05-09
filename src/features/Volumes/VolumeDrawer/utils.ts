@@ -1,20 +1,14 @@
-import { isEmpty, isNil, path } from 'ramda';
+import { isEmpty, isNil } from 'ramda';
 
 export const isNilOrEmpty = (v: any) => isNil(v) || isEmpty(v);
 
 export const maybeCastToNumber = (v: string | number) =>
   isNilOrEmpty(v) ? undefined : Number(v);
 
-export const handleFieldErrors = (callback: Function, response: any) => {
-  const fieldErrors = path<Linode.ApiFieldError[]>(
-    ['response', 'data', 'errors'],
-    response
-  );
-
-  if (!fieldErrors) {
-    return;
-  }
-
+export const handleFieldErrors = (
+  callback: Function,
+  fieldErrors: Linode.ApiFieldError[]
+) => {
   const mappedFieldErrors = fieldErrors.reduce(
     (result, { field, reason }) =>
       field ? { ...result, [field]: reason } : result,
@@ -28,14 +22,9 @@ export const handleFieldErrors = (callback: Function, response: any) => {
 
 export const handleGeneralErrors = (
   callback: Function,
-  errors: any,
+  apiErrors: Linode.ApiFieldError[],
   defaultMessage: string = 'An error has occurred.'
 ) => {
-  const apiErrors = path<Linode.ApiFieldError[]>(
-    ['response', 'data', 'errors'],
-    errors
-  );
-
   if (!apiErrors) {
     return callback(defaultMessage);
   }
