@@ -133,16 +133,22 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     finished: e => `Linode ${e.entity!.label} has booted.`
   },
   lassie_reboot: {
-    scheduled: e => `Linode ${e.entity!.label} is scheduled to reboot via the Lassie watchdog service.`,
-    started: e => `Linode ${e.entity!.label} is booting via the Lassie watchdog service.`,
-    failed: e => `Linode ${e.entity!.label} could not be booted via the Lassie watchdog service.`,
-    finished: e => `Linode ${e.entity!.label} has booted via the Lassie watchdog service.`
+    scheduled: e => `Linode ${e.entity!.label} is scheduled to reboot by the Lassie watchdog service.`,
+    started: e => `Linode ${e.entity!.label} is booting  by the Lassie watchdog service.`,
+    failed: e => `Linode ${e.entity!.label} could not be booted by the Lassie watchdog service.`,
+    finished: e => `Linode ${e.entity!.label} has booted by the Lassie watchdog service.`
   },
   host_reboot: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled to reboot via a Host initiated restart`,
     started: e => `Linode ${e.entity!.label} is booting via a Host initiated restart.`,
     failed: e => `Linode ${e.entity!.label} could not be booted via a Host initiated restart.`,
     finished: e => `Linode ${e.entity!.label} has booted via a Host initiated restart.`
+  },
+  lish_boot: {
+    scheduled: e => `Linode ${e.entity!.label} is scheduled to reboot via Lish.`,
+    started: e => `Linode ${e.entity!.label} is booting via Lish.`,
+    failed: e => `Linode ${e.entity!.label} could not be booted via Lish.`,
+    finished: e => `Linode ${e.entity!.label} has booted via Lish.`
   },
   linode_clone: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled to be cloned.`,
