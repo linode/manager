@@ -133,10 +133,10 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     finished: e => `Linode ${e.entity!.label} has booted.`
   },
   lassie_reboot: {
-    scheduled: e => `Linode ${e.entity!.label} is scheduled to reboot by the Lassie watchdog service.`,
-    started: e => `Linode ${e.entity!.label} is booting  by the Lassie watchdog service.`,
+    scheduled: e => `Linode ${e.entity!.label} is scheduled to be rebooted by the Lassie watchdog service.`,
+    started: e => `Linode ${e.entity!.label} is being booted by the Lassie watchdog service.`,
     failed: e => `Linode ${e.entity!.label} could not be booted by the Lassie watchdog service.`,
-    finished: e => `Linode ${e.entity!.label} has booted by the Lassie watchdog service.`
+    finished: e => `Linode ${e.entity!.label} has been booted by the Lassie watchdog service.`
   },
   host_reboot: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled to reboot (Host initiated restart).`,
