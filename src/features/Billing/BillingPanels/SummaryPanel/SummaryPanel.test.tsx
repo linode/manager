@@ -21,6 +21,9 @@ describe('SummaryPanel', () => {
     balance: 0,
     balance_uninvoiced: 0,
     active_since: 'hello world'
+    // [BETA]
+    // @todo: Uncomment this when it becomes generally available
+    // capabilities: ['Linodes', 'NodeBalancers', 'Block Storage']
   };
 
   const mockClasses: any = {
