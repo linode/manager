@@ -62,8 +62,8 @@ export const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
         disabled={disabled}
         label="Region"
         isClearable={false}
+        errorText={error}
       />
-      {error && <FormHelperText error>{error}</FormHelperText>}
       {!error && shouldOnlyDisplayRegionsWithBlockStorage && (
         <FormHelperText data-qa-volume-region>
           The datacenter where the new volume should be created. Only regions
