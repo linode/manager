@@ -13,6 +13,9 @@ interface Props {
   createCluster: () => void;
 }
 
+const priceHelperText =
+  'This is an estimate. Deploying additional services or resizing may impact your recurring cost.';
+
 export const KubeCheckoutBar: React.FunctionComponent<Props> = props => {
   const { label, region, pools, submitting, createCluster } = props;
   return (
@@ -30,6 +33,7 @@ export const KubeCheckoutBar: React.FunctionComponent<Props> = props => {
               disabled={false}
               onDeploy={createCluster}
               displaySections={displaySections}
+              priceHelperText={priceHelperText}
             />
             {/* {this.props.documentation.length > 0 && (
               <DocsSidebar docs={this.props.documentation} />
