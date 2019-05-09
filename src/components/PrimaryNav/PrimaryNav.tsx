@@ -242,10 +242,10 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
   }
 
   componentDidUpdate(prevProps: CombinedProps) {
-    // Re-create menu items if account access has changed, or if profile
-    // has been updated. If profile has been updated (i.e. when it actually loads)
+    // Re-create menu items if account access has changed (via profile), or if account
+    // has been updated. If account has been updated (i.e. when it actually loads)
     // there maybe be additional menu items we want to display, depending on
-    // `profile.capabilities`.
+    // `account.capabilities`.
     if (
       prevProps.hasAccountAccess !== this.props.hasAccountAccess ||
       prevProps.isManagedAccount !== this.props.isManagedAccount ||
