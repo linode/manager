@@ -77,10 +77,6 @@ const Kubernetes = DefaultLoader({
   loader: () => import('src/features/Kubernetes')
 });
 
-const KubernetesCreate = DefaultLoader({
-  loader: () => import('src/features/Kubernetes/CreateCluster')
-});
-
 const ObjectStorage = DefaultLoader({
   loader: () => import('src/features/ObjectStorage')
 });

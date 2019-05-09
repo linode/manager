@@ -8,8 +8,8 @@ import {
 
 import DefaultLoader from 'src/components/DefaultLoader';
 
-const ClusterList = DefaultLoader({
-  loader: () => import('./ClusterList')
+const KubernetesLanding = DefaultLoader({
+  loader: () => import('./KubernetesLanding')
 });
 
 const ClusterCreate = DefaultLoader({
@@ -18,7 +18,7 @@ const ClusterCreate = DefaultLoader({
 
 type Props = RouteComponentProps<{}>;
 
-class KubernetesRoutes extends React.Component<Props> {
+class Kubernetes extends React.Component<Props> {
   render() {
     const {
       match: { path }
@@ -27,11 +27,10 @@ class KubernetesRoutes extends React.Component<Props> {
     return (
       <Switch>
         <Route component={ClusterCreate} path={`${path}/create`} />
-        {/* <Route component={ClusterDetail} path={`${path}/:linodeId`} /> */}
-        <Route component={ClusterList} path={path} exact />
+        <Route component={KubernetesLanding} path={path} exact />
       </Switch>
     );
   }
 }
 
-export default withRouter(KubernetesRoutes);
+export default withRouter(Kubernetes);

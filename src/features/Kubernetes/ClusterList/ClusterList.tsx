@@ -20,12 +20,7 @@ import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
-import { getKubernetesClusters } from 'src/services/kubernetes';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ClusterRow from './ClusterRow';
 
 type ClassNames = 'root' | 'title' | 'labelHeader';
@@ -40,33 +35,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = RouteComponentProps<{}> & WithStyles<ClassNames>;
+interface Props {
+  clusters: Linode.KubernetesCluster[];
+}
+
+type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<ClassNames>;
 
 export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
-  const { classes, history } = props;
-  const [clusters, setClusters] = React.useState<Linode.KubernetesCluster[]>(
-    []
-  );
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<string | undefined>(undefined);
-
-  React.useEffect(() => {
-    setLoading(true);
-    getKubernetesClusters()
-      .then(response => {
-        setClusters(response.data);
-        setLoading(false);
-      })
-      .catch(err => {
-        setLoading(false);
-        setError(
-          getErrorStringOrDefault(
-            err,
-            'There was an error loading your Kubernetes Clusters.'
-          )
-        );
-      });
-  }, []);
+  const { classes, clusters, history } = props;
 
   return (
     <React.Fragment>
@@ -151,11 +127,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      <ClusterContent
-                        loading={loading}
-                        error={error}
-                        data={data}
-                      />
+                      <ClusterContent data={data} />
                     </TableBody>
                   </Table>
                 </Paper>
@@ -177,31 +149,11 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
 };
 
 interface ContentProps {
-  loading: boolean;
-  error?: string;
   data: Linode.KubernetesCluster[];
 }
 
 export const ClusterContent: React.FunctionComponent<ContentProps> = props => {
-  const { data, error, loading } = props;
-  if (error) {
-    return <TableRowError data-qa-cluster-error message={error} colSpan={12} />;
-  }
-
-  if (loading) {
-    return <TableRowLoading data-qa-cluster-loading colSpan={12} />;
-  }
-
-  if (data.length === 0) {
-    return (
-      <TableRowEmptyState
-        data-qa-cluster-empty
-        message={"You don't have any Kubernetes Clusters."}
-        colSpan={12}
-      />
-    );
-  }
-
+  const { data } = props;
   return (
     <>
       {data.map((cluster, idx) => (
@@ -217,7 +169,7 @@ export const ClusterContent: React.FunctionComponent<ContentProps> = props => {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, Props>(
   styled,
   withRouter
 );
