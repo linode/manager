@@ -50,7 +50,7 @@ import {
   WithNodeBalancerActions
 } from './store/nodeBalancer/nodeBalancer.containers';
 import { MapState } from './store/types';
-import { isObjectStorageEnabled } from './utilities/betaPrograms';
+import { isObjectStorageEnabled } from './utilities/accountCapabilities';
 
 shim(); // allows for .finally() usage
 
@@ -302,7 +302,7 @@ export class App extends React.Component<CombinedProps, State> {
       settingsError,
       profileError,
       bucketsError,
-      betaPrograms
+      accountCapabilities
     } = this.props;
 
     if (hasError) {
@@ -372,7 +372,7 @@ export class App extends React.Component<CombinedProps, State> {
                             path="/stackscripts"
                             component={StackScripts}
                           />
-                          {isObjectStorageEnabled(betaPrograms) && (
+                          {isObjectStorageEnabled(accountCapabilities) && (
                             <Route
                               path="/object-storage"
                               component={ObjectStorage}
@@ -415,7 +415,9 @@ export class App extends React.Component<CombinedProps, State> {
                 <DomainDrawer />
                 <VolumeDrawer />
                 <BackupDrawer />
-                {isObjectStorageEnabled(betaPrograms) && <BucketDrawer />}
+                {isObjectStorageEnabled(accountCapabilities) && (
+                  <BucketDrawer />
+                )}
               </div>
             </>
           </React.Fragment>
@@ -480,7 +482,7 @@ interface StateProps {
   username: string;
   documentation: Linode.Doc[];
   isLoggedInAsCustomer: boolean;
-  betaPrograms: string[];
+  accountCapabilities: Linode.AccountCapability[];
 }
 
 const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
@@ -506,9 +508,9 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
     ['authentication', 'loggedInAsCustomer'],
     state
   ),
-  betaPrograms: pathOr(
+  accountCapabilities: pathOr(
     [],
-    ['__resources', 'profile', 'data', 'beta_programs'],
+    ['__resources', 'account', 'data', 'capabilities'],
     state
   )
 });

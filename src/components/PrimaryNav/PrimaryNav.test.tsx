@@ -45,7 +45,7 @@ describe('PrimaryNav', () => {
           hasAccountAccess={false}
           isManagedAccount={false}
           betaPrograms={[]}
-          profileLastUpdated={0}
+          accountLastUpdated={0}
           {...reactRouterProps}
         />
       );
@@ -107,8 +107,8 @@ describe('PrimaryNav', () => {
           toggleTheme={jest.fn()}
           hasAccountAccess={true}
           isManagedAccount={false}
-          betaPrograms={[]}
-          profileLastUpdated={0}
+          accountCapabilities={[]}
+          accountLastUpdated={0}
           {...reactRouterProps}
         />
       );
@@ -134,8 +134,8 @@ describe('PrimaryNav', () => {
           toggleTheme={jest.fn()}
           hasAccountAccess={false}
           isManagedAccount={true}
-          betaPrograms={[]}
-          profileLastUpdated={0}
+          accountCapabilities={[]}
+          accountLastUpdated={0}
           {...reactRouterProps}
         />
       );
@@ -161,8 +161,13 @@ describe('PrimaryNav', () => {
           toggleTheme={jest.fn()}
           hasAccountAccess={false}
           isManagedAccount={true}
-          betaPrograms={['Object Storage EAP']}
-          profileLastUpdated={0}
+          accountCapabilities={[
+            'Linodes',
+            'NodeBalancers',
+            'Block Storage',
+            'Object Storage'
+          ]}
+          accountLastUpdated={0}
           {...reactRouterProps}
         />
       );

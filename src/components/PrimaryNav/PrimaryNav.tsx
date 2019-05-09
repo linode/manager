@@ -18,7 +18,7 @@ import {
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { MapState } from 'src/store/types';
-import { isObjectStorageEnabled } from 'src/utilities/betaPrograms';
+import { isObjectStorageEnabled } from 'src/utilities/accountCapabilities';
 import { sendSpacingToggleEvent, sendThemeToggleEvent } from 'src/utilities/ga';
 import AdditionalMenuItems from './AdditionalMenuItems';
 import SpacingToggle from './SpacingToggle';
@@ -249,7 +249,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     if (
       prevProps.hasAccountAccess !== this.props.hasAccountAccess ||
       prevProps.isManagedAccount !== this.props.isManagedAccount ||
-      prevProps.profileLastUpdated !== this.props.profileLastUpdated
+      prevProps.accountLastUpdated !== this.props.accountLastUpdated
     ) {
       this.createMenuItems();
     }
@@ -260,7 +260,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       hasAccountAccess,
       // isLongviewEnabled,
       isManagedAccount,
-      betaPrograms
+      accountCapabilities
     } = this.props;
 
     const primaryLinks: PrimaryLink[] = [
@@ -275,7 +275,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     primaryLinks.push({ display: 'Volumes', href: '/volumes', key: 'volumes' });
     // }
 
-    if (isObjectStorageEnabled(betaPrograms)) {
+    if (isObjectStorageEnabled(accountCapabilities)) {
       primaryLinks.push({
         display: 'Object Storage',
         href: '/object-storage/buckets',
@@ -559,8 +559,8 @@ interface StateProps {
   hasAccountAccess: boolean;
   isManagedAccount: boolean;
   // isLongviewEnabled: boolean;
-  betaPrograms: string[];
-  profileLastUpdated: number;
+  accountCapabilities: Linode.AccountCapability[];
+  accountLastUpdated: number;
 }
 
 const userHasAccountAccess = (profile: Linode.Profile) => {
@@ -583,15 +583,15 @@ const accountHasManaged = (account: Linode.AccountSettings) => account.managed;
 const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
   const account = state.__resources.accountSettings.data;
   const profile = state.__resources.profile.data;
-  const profileLastUpdated = state.__resources.profile.lastUpdated;
+  const accountLastUpdated = state.__resources.account.lastUpdated;
 
   if (!account || !profile) {
     return {
       hasAccountAccess: false,
       isManagedAccount: false,
       // isLongviewEnabled: false,
-      betaPrograms: [],
-      profileLastUpdated
+      accountCapabilities: [],
+      accountLastUpdated
     };
   }
 
@@ -599,12 +599,12 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
     hasAccountAccess: userHasAccountAccess(profile),
     isManagedAccount: accountHasManaged(account),
     // isLongviewEnabled: accountHasLongviewSubscription(account),
-    betaPrograms: pathOr(
+    accountCapabilities: pathOr(
       [],
-      ['__resources', 'profile', 'data', 'beta_programs'],
+      ['__resources', 'account', 'data', 'capabilities'],
       state
     ),
-    profileLastUpdated
+    accountLastUpdated
   };
 };
 
