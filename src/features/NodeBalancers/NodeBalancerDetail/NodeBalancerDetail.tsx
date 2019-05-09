@@ -88,43 +88,38 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
   pollInterval: number;
 
   requestNodeBalancer = (nodeBalancerId: number) =>
-    getNodeBalancer(+nodeBalancerId)
-      .then(nodeBalancer => {
-        return getNodeBalancerConfigs(nodeBalancer.id)
-          .then(({ data: configs }) => {
-            return {
-              ...nodeBalancer,
-              down: configs.reduce((acc: number, config) => {
-                return acc + config.nodes_status.down;
-              }, 0), // add the downtime for each config together
-              up: configs.reduce((acc: number, config) => {
-                return acc + config.nodes_status.up;
-              }, 0), // add the uptime for each config together
-              configPorts: configs.reduce((acc: [number], config) => {
-                return [...acc, { configId: config.id, port: config.port }];
-              }, [])
-            };
-          })
-          .then((response: Linode.ExtendedNodeBalancer) => {
-            this.setState({ nodeBalancer: response });
-            this.props.clearLoadingAndErrors();
-          })
-          .catch(error => {
-            this.props.setErrorAndClearLoading(
-              getErrorStringOrDefault(
-                error,
-                'There was an error loading your NodeBalancer.'
-              )
-            );
-          });
+    Promise.all([
+      getNodeBalancer(+nodeBalancerId),
+      getNodeBalancerConfigs(+nodeBalancerId)
+    ])
+      .then(([nodeBalancer, configsData]) => {
+        const { data: configs } = configsData;
+        return {
+          ...nodeBalancer,
+          down: configs.reduce((acc: number, config) => {
+            return acc + config.nodes_status.down;
+          }, 0), // add the downtime for each config together
+          up: configs.reduce((acc: number, config) => {
+            return acc + config.nodes_status.up;
+          }, 0), // add the uptime for each config together
+          configPorts: configs.reduce((acc: [number], config) => {
+            return [...acc, { configId: config.id, port: config.port }];
+          }, [])
+        };
       })
-      .catch(errorResponse => {
-        this.props.setErrorAndClearLoading(
-          getErrorStringOrDefault(
-            errorResponse,
-            'There was an error loading your NodeBalancer.'
-          )
-        );
+      .then((nodeBalancer: Linode.ExtendedNodeBalancer) => {
+        this.setState({ nodeBalancer });
+        this.props.clearLoadingAndErrors();
+      })
+      .catch(error => {
+        if (!this.state.nodeBalancer) {
+          this.props.setErrorAndClearLoading(
+            getErrorStringOrDefault(
+              error,
+              'There was an error loading your NodeBalancer.'
+            )
+          );
+        }
       });
 
   componentDidMount() {
