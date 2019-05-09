@@ -6,7 +6,6 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
-import FormHelperText from 'src/components/core/FormHelperText';
 import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
@@ -164,11 +163,8 @@ class LishSettings extends React.Component<CombinedProps, State> {
                   onChange={this.onListAuthMethodChange}
                   label="Authentication Mode"
                   isClearable={false}
+                  errorText={authMethodError}
                 />
-
-                {authMethodError && (
-                  <FormHelperText error>{authMethodError}</FormHelperText>
-                )}
               </FormControl>
               {Array.from(Array(authorizedKeysCount)).map((value, idx) => (
                 <div className={classes.sshWrap} key={idx}>
