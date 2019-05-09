@@ -75,6 +75,7 @@
     "sanitize-html": "^1.20.1",
     "search-string": "^3.1.0",
     "showdown": "^1.9.0",
+    "showdown-highlightjs-extension": "^0.1.2",
     "throttle-debounce": "^2.0.0",
     "typeface-lato": "^0.0.54",
     "typeface-ubuntu-mono": "^0.0.54",
