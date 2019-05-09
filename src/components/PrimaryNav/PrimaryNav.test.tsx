@@ -44,7 +44,7 @@ describe('PrimaryNav', () => {
           toggleTheme={jest.fn()}
           hasAccountAccess={false}
           isManagedAccount={false}
-          betaPrograms={[]}
+          accountCapabilities={[]}
           accountLastUpdated={0}
           {...reactRouterProps}
         />
