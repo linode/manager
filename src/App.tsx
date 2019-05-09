@@ -79,7 +79,7 @@ const Images = DefaultLoader({
 });
 
 const Kubernetes = DefaultLoader({
-  loader: () => import('src/features/Kubernetes/ClusterList')
+  loader: () => import('src/features/Kubernetes')
 });
 
 const ObjectStorage = DefaultLoader({
