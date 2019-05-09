@@ -41,5 +41,14 @@ describe('isObjectStorageEnabled', () => {
         isObjectStorageEnabled(['Hello', 'World', 'Object Storage EAP'])
       ).toBe(true);
     });
+    it('fuzzes matches text', () => {
+      jest.mock('src/constants', () => mockFalse);
+      const { isObjectStorageEnabled } = require('./betaPrograms');
+      expect(isObjectStorageEnabled(['object storage'])).toBe(true);
+      expect(isObjectStorageEnabled(['objectstorage'])).toBe(true);
+      expect(isObjectStorageEnabled(['OBJECT STORAGE'])).toBe(true);
+      expect(isObjectStorageEnabled(['OBJECT STORAGE123'])).toBe(true);
+      expect(isObjectStorageEnabled(['', 'obj', '123'])).toBe(false);
+    });
   });
 });
