@@ -117,3 +117,6 @@ export const dcDisplayCountry = {
 
 // At this time, the following regions do not support block storage.
 export const regionsWithoutBlockStorage = ['us-southeast', 'ap-northeast-1a'];
+
+// Default error message for non-API errors
+export const DEFAULT_ERROR_MESSAGE = 'An unexpected error occurred.';
