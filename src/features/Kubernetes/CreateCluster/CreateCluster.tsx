@@ -14,6 +14,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import TagsInput from 'src/components/TagsInput';
@@ -61,7 +62,7 @@ interface State {
   nodePools: PoolNode[];
   label?: string;
   tags: Item<string>[];
-  version: Item<string>;
+  version?: Item<string>;
   errors?: Linode.ApiFieldError[];
   submitting: boolean;
 }
@@ -79,7 +80,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     nodePools: [],
     label: undefined,
     tags: [],
-    version: { value: '1.14', label: '1.14' },
+    version: undefined,
     errors: undefined,
     submitting: false
   };
@@ -96,16 +97,17 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     });
 
     /**
-     * Typing is difficult here, but this has the correct node_pool shape.
      * We need to remove the monthly price, which is used for client-side
      * calculations, and send only type and count to the API.
      */
-    const node_pools = nodePools.map(pick(['type', 'count'])) as any;
+    const node_pools = nodePools.map(
+      pick(['type', 'count'])
+    ) as Linode.PoolNodeRequest[];
     const payload = {
       region: selectedRegion,
       node_pools,
       label,
-      version: version.value,
+      version: version ? version.value : undefined,
       tags: getTagsAsStrings(tags)
     };
 
@@ -155,7 +157,8 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       regionsData,
       typesData,
       typesLoading,
-      typesError
+      typesError,
+      regionsError
     } = this.props;
 
     const {
@@ -171,9 +174,18 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     } = this.state;
 
     const errorMap = getErrorMap(
-      ['region', 'node_pools', 'label', 'tags'],
+      ['region', 'node_pools', 'label', 'tags', 'version'],
       errors
     );
+
+    if (typesError || regionsError) {
+      /**
+       * This information is necessary to create a Cluster.
+       * Otherwise, show an error state.
+       */
+
+      return <ErrorState errorText={'An unexpected error occurred.'} />;
+    }
 
     return (
       <StickyContainer>
@@ -225,13 +237,14 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
                   errorText={errorMap.label}
                   label="Cluster Label"
                   onChange={e => this.updateLabel(e.target.value)}
-                  value={label}
+                  value={label || ''}
                 />
                 <Select
                   label="Version"
-                  value={version}
+                  value={version || null}
                   errorText={errorMap.version}
                   options={KubernetesVersionOptions}
+                  placeholder={'Select a Kubernetes version'}
                   onChange={(selected: Item<string>) =>
                     this.setState({ version: selected })
                   }

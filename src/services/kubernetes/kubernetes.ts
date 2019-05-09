@@ -13,8 +13,8 @@ import { createKubeClusterSchema } from './kubernetes.schema';
 export interface CreateKubeClusterPayload {
   label?: string; // Label will be assigned by the API if not provided
   region?: string; // Will be caught by Yup if undefined
-  node_pools: Linode.PoolNodeRequest;
-  version: string;
+  node_pools: Linode.PoolNodeRequest[];
+  version?: string; // Will be caught by Yup if undefined
   tags: string[];
 }
 

@@ -87,7 +87,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
           <Grid container alignItems="flex-end">
             <Grid item className="pt0">
               <AddNewLink
-                onClick={() => history.push('/kubernetes/create')} // @todo enable creation flow
+                onClick={() => history.push('/kubernetes/create')}
                 label="Add a Cluster"
               />
             </Grid>

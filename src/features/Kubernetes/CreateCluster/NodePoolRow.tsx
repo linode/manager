@@ -15,10 +15,14 @@ import { displayTypeForKubePoolNode } from 'src/features/linodes/presentation';
 
 import { PoolNode } from '.././types';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'link';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
+  root: {},
+  link: {
+    textDecoration: 'none',
+    color: 'inherit'
+  }
 });
 
 interface Props {
@@ -31,7 +35,7 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
-  const { pool, idx, handleDelete, type } = props;
+  const { classes, pool, idx, handleDelete, type } = props;
   const typeLabel = type
     ? displayTypeForKubePoolNode(type.class, type.memory, type.vcpus)
     : 'Unknown type'; // This should never happen, but better not to crash if it does.
@@ -48,10 +52,12 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
         <Typography>{`${displayPrice(pool.totalMonthlyPrice)}/mo`}</Typography>
       </TableCell>
       <TableCell>
-        <Close
-          onClick={() => handleDelete(idx)}
-          data-testid={`delete-node-row-${idx}`}
-        />
+        <a className={classes.link}>
+          <Close
+            onClick={() => handleDelete(idx)}
+            data-testid={`delete-node-row-${idx}`}
+          />
+        </a>
       </TableCell>
     </TableRow>
   );
