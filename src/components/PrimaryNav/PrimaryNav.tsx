@@ -217,7 +217,7 @@ interface State {
   anchorEl?: HTMLElement;
 }
 
-type CombinedProps = Props & StateProps & WithTheme;
+export type CombinedProps = Props & StateProps & WithTheme;
 
 export class PrimaryNav extends React.Component<CombinedProps, State> {
   state: State = {
@@ -242,7 +242,15 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
   }
 
   componentDidUpdate(prevProps: CombinedProps) {
-    if (prevProps.hasAccountAccess !== this.props.hasAccountAccess) {
+    // Re-create menu items if account access has changed, or if profile
+    // has been updated. If profile has been updated (i.e. when it actually loads)
+    // there maybe be additional menu items we want to display, depending on
+    // `profile.capabilities`.
+    if (
+      prevProps.hasAccountAccess !== this.props.hasAccountAccess ||
+      prevProps.isManagedAccount !== this.props.isManagedAccount ||
+      prevProps.profileLastUpdated !== this.props.profileLastUpdated
+    ) {
       this.createMenuItems();
     }
   }
@@ -271,7 +279,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       primaryLinks.push({
         display: 'Object Storage',
         href: '/object-storage/buckets',
-        key: 'objectStorage'
+        key: 'object-storage'
       });
     }
 
@@ -552,6 +560,7 @@ interface StateProps {
   isManagedAccount: boolean;
   // isLongviewEnabled: boolean;
   betaPrograms: string[];
+  profileLastUpdated: number;
 }
 
 const userHasAccountAccess = (profile: Linode.Profile) => {
@@ -574,13 +583,15 @@ const accountHasManaged = (account: Linode.AccountSettings) => account.managed;
 const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
   const account = state.__resources.accountSettings.data;
   const profile = state.__resources.profile.data;
+  const profileLastUpdated = state.__resources.profile.lastUpdated;
 
   if (!account || !profile) {
     return {
       hasAccountAccess: false,
       isManagedAccount: false,
       // isLongviewEnabled: false,
-      betaPrograms: []
+      betaPrograms: [],
+      profileLastUpdated
     };
   }
 
@@ -592,7 +603,8 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
       [],
       ['__resources', 'profile', 'data', 'beta_programs'],
       state
-    )
+    ),
+    profileLastUpdated
   };
 };
 

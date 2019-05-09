@@ -44,6 +44,8 @@ describe('PrimaryNav', () => {
           toggleTheme={jest.fn()}
           hasAccountAccess={false}
           isManagedAccount={false}
+          betaPrograms={[]}
+          profileLastUpdated={0}
           {...reactRouterProps}
         />
       );
@@ -105,6 +107,8 @@ describe('PrimaryNav', () => {
           toggleTheme={jest.fn()}
           hasAccountAccess={true}
           isManagedAccount={false}
+          betaPrograms={[]}
+          profileLastUpdated={0}
           {...reactRouterProps}
         />
       );
@@ -130,6 +134,8 @@ describe('PrimaryNav', () => {
           toggleTheme={jest.fn()}
           hasAccountAccess={false}
           isManagedAccount={true}
+          betaPrograms={[]}
+          profileLastUpdated={0}
           {...reactRouterProps}
         />
       );
@@ -139,6 +145,33 @@ describe('PrimaryNav', () => {
 
     it('should have a managed link', () => {
       expect(findLinkInPrimaryNav('managed')).toHaveLength(1);
+    });
+  });
+
+  describe('when customer has OBJ access', () => {
+    let wrapper;
+    let findLinkInPrimaryNav: Function;
+
+    beforeAll(() => {
+      wrapper = shallow(
+        <PrimaryNav
+          classes={mockClasses}
+          theme={{ spacing: [] }}
+          closeMenu={jest.fn()}
+          toggleTheme={jest.fn()}
+          hasAccountAccess={false}
+          isManagedAccount={true}
+          betaPrograms={['Object Storage EAP']}
+          profileLastUpdated={0}
+          {...reactRouterProps}
+        />
+      );
+
+      findLinkInPrimaryNav = findLinkIn(wrapper);
+    });
+
+    it('should have an object storage link', () => {
+      expect(findLinkInPrimaryNav('object-storage')).toHaveLength(1);
     });
   });
 });
