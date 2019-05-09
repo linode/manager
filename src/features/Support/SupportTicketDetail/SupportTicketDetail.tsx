@@ -30,7 +30,7 @@ import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
 import TicketAttachmentList from '../TicketAttachmentList';
 import AttachmentError from './AttachmentError';
-import TicketReply from './TicketReply';
+import TicketReply from './TabbedReply/TicketReply';
 
 type ClassNames =
   | 'root'

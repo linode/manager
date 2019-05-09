@@ -16,9 +16,9 @@ import { createReply, uploadAttachment } from 'src/services/support';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
-import AttachFileForm, { FileAttachment } from '../AttachFileForm';
-import { reshapeFiles } from '../ticketUtils';
-import CloseTicketLink from './CloseTicketLink';
+import AttachFileForm, { FileAttachment } from '../../AttachFileForm';
+import { reshapeFiles } from '../../ticketUtils';
+import CloseTicketLink from '../CloseTicketLink';
 
 type ClassNames = 'root' | 'form' | 'replyField';
 
