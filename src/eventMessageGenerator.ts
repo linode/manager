@@ -132,6 +132,18 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     failed: e => `Linode ${e.entity!.label} could not be booted.`,
     finished: e => `Linode ${e.entity!.label} has booted.`
   },
+  lassie_reboot: {
+    scheduled: e => `Linode ${e.entity!.label} is scheduled to reboot via the Lassie watchdog service.`,
+    started: e => `Linode ${e.entity!.label} is booting via the Lassie watchdog service.`,
+    failed: e => `Linode ${e.entity!.label} could not be booted via the Lassie watchdog service.`,
+    finished: e => `Linode ${e.entity!.label} has booted via the Lassie watchdog service.`
+  },
+  host_reboot: {
+    scheduled: e => `Linode ${e.entity!.label} is scheduled to reboot via a Host initiated restart`,
+    started: e => `Linode ${e.entity!.label} is booting via a Host initiated restart.`,
+    failed: e => `Linode ${e.entity!.label} could not be booted via a Host initiated restart.`,
+    finished: e => `Linode ${e.entity!.label} has booted via a Host initiated restart.`
+  },
   linode_clone: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled to be cloned.`,
     started: e => `Linode ${e.entity!.label} is being cloned.`,
