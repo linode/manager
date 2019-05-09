@@ -47,7 +47,7 @@ type CombinedProps = Props &
 class TableRow extends React.Component<CombinedProps> {
   rowClick = (
     e: React.ChangeEvent<HTMLTableRowElement>,
-    ev: React.MouseEvent<HTMLElement>,
+    ev: React.MouseEvent<HTMLElement>, // added a second event for the purpose of capturing keyDown (open in new tab)
     target: string | onClickFn
   ) => {
     const body = document.body as any;
@@ -95,7 +95,7 @@ class TableRow extends React.Component<CombinedProps> {
 
     return (
       <_TableRow
-        onClick={(e: any) => rowLink && this.rowClick(e, e, rowLink)}
+        onClick={(e: any) => rowLink && this.rowClick(e, e, rowLink)} // same argument, different methods (one to stop propagation, one to add the listener for meta/ctrl key)
         onKeyUp={(e: any) =>
           rowLink && e.keyCode === 13 && this.rowClick(e, e, rowLink)
         }
