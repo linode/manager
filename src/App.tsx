@@ -207,8 +207,7 @@ export class App extends React.Component<CombinedProps, State> {
   async componentDidMount() {
     const {
       actions,
-      nodeBalancerActions: { getAllNodeBalancersWithConfigs },
-      betaPrograms
+      nodeBalancerActions: { getAllNodeBalancersWithConfigs }
     } = this.props;
 
     const dataFetchingPromises: Promise<any>[] = [
@@ -223,12 +222,6 @@ export class App extends React.Component<CombinedProps, State> {
       actions.requestVolumes(),
       getAllNodeBalancersWithConfigs()
     ];
-
-    // Make these requests only if the feature is enabled.
-    if (isObjectStorageEnabled(betaPrograms)) {
-      dataFetchingPromises.push(actions.requestBuckets());
-      dataFetchingPromises.push(actions.requestClusters());
-    }
 
     try {
       await Promise.all(dataFetchingPromises);
