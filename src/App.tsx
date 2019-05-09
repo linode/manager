@@ -29,6 +29,7 @@ import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import { ApplicationState } from 'src/store';
+import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestDomains } from 'src/store/domains/domains.actions';
@@ -211,6 +212,7 @@ export class App extends React.Component<CombinedProps, State> {
     } = this.props;
 
     const dataFetchingPromises: Promise<any>[] = [
+      actions.requestAccount(),
       actions.requestProfile(),
       actions.requestDomains(),
       actions.requestImages(),
@@ -425,6 +427,7 @@ export class App extends React.Component<CombinedProps, State> {
 
 interface DispatchProps {
   actions: {
+    requestAccount: () => Promise<Linode.Account>;
     requestDomains: () => Promise<Linode.Domain[]>;
     requestImages: () => Promise<Linode.Image[]>;
     requestLinodes: () => Promise<Linode.Linode[]>;
@@ -444,6 +447,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
 ) => {
   return {
     actions: {
+      requestAccount: () => dispatch(requestAccount()),
       requestDomains: () => dispatch(requestDomains()),
       requestImages: () => dispatch(requestImages()),
       requestLinodes: () => dispatch(requestLinodes()),
