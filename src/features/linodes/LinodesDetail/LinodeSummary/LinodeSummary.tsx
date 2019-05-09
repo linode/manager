@@ -295,7 +295,11 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           ['reason'],
           errorResponse[0]
         );
-        this.setState({ dataIsLoading: false, statsError: errorText });
+
+        /** only show an error if stats aren't already loaded */
+        return !this.state.stats
+          ? this.setState({ dataIsLoading: false, statsError: errorText })
+          : this.setState({ dataIsLoading: false });
       });
   };
 

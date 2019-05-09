@@ -201,7 +201,11 @@ class TablesPanel extends React.Component<CombinedProps, State> {
           ['reason'],
           errorResponse[0]
         );
-        this.setState({ loadingStats: false, statsError });
+
+        /** only show an error if stats aren't already loaded */
+        return !this.state.stats
+          ? this.setState({ loadingStats: false, statsError })
+          : this.setState({ loadingStats: false });
       });
   };
 
