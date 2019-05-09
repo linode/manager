@@ -138,7 +138,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     <Grid container direction="column">
       <Grid item>
         <SelectPlanPanel
-          types={types}
+          types={types.filter(t => !/nanode/.test(t.class))} // No Nanodes in clusters
           selectedID={selectedType}
           onSelect={selectType}
           error={apiError || typeError}
