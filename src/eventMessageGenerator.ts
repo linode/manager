@@ -145,10 +145,10 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     finished: e => `Linode ${e.entity!.label} has booted (Host initiated restart).`
   },
   lish_boot: {
-    scheduled: e => `Linode ${e.entity!.label} is scheduled to boot (Lish boot).`,
-    started: e => `Linode ${e.entity!.label} is booting (Lish boot).`,
-    failed: e => `Linode ${e.entity!.label} could not be booted (Lish boot).`,
-    finished: e => `Linode ${e.entity!.label} has booted (Lish boot).`
+    scheduled: e => `Linode ${e.entity!.label} is scheduled to boot (Lish initiated boot).`,
+    started: e => `Linode ${e.entity!.label} is booting (Lish initiated boot).`,
+    failed: e => `Linode ${e.entity!.label} could not be booted (Lish initiated boot).`,
+    finished: e => `Linode ${e.entity!.label} has booted (Lish initiated boot).`
   },
   linode_clone: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled to be cloned.`,
