@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { branch, compose, renderComponent } from 'recompose';
 import ErrorState from 'src/components/ErrorState';
 import { MapState } from 'src/store/types';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface OuterProps {
   configsError?: Linode.ApiFieldError[];
@@ -56,10 +56,10 @@ export default compose(
     ({ error }) => Boolean(error),
     /** error is not the only prop, but it's the only one we care about */
     renderComponent((props: { error: Linode.ApiFieldError[] }) => {
-      let errorText: string | JSX.Element = getErrorStringOrDefault(
+      let errorText: string | JSX.Element = getAPIErrorOrDefault(
         props.error,
         'There was an issue retrieving your Linode. Please try again later.'
-      );
+      )[0].reason;
 
       if (errorText.toLowerCase() === 'this linode has been suspended') {
         errorText = (
