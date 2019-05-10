@@ -9,8 +9,9 @@ import { Converter } from 'showdown';
 import 'showdown-highlightjs-extension';
 
 import Paper from 'src/components/core/Paper';
+import Typography from 'src/components/core/Typography';
 
-// import { sanitizeHTML } from 'src/utilities/sanitize-html';
+import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
 type ClassNames = 'root';
 
@@ -37,12 +38,13 @@ const PreviewReply: React.FC<CombinedProps> = props => {
   }).makeHtml(value);
 
   return (
-    <Paper
-      className={classes.root}
-      dangerouslySetInnerHTML={{
-        __html: markupToMarkdown
-      }}
-    />
+    <Paper className={classes.root}>
+      <Typography
+        dangerouslySetInnerHTML={{
+          __html: sanitizeHTML(markupToMarkdown)
+        }}
+      />
+    </Paper>
   );
 };
 
