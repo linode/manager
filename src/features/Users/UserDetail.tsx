@@ -23,6 +23,7 @@ import Notice from 'src/components/Notice';
 import TabLink from 'src/components/TabLink';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getUser, updateUser } from 'src/services/account';
+import { updateProfile } from 'src/services/profile';
 import { handleUpdate } from 'src/store/profile/profile.actions';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -83,6 +84,9 @@ interface State {
   createdUsername?: string;
   email: string;
   restricted?: boolean;
+  accountSaving: boolean;
+  accountErrors?: Linode.ApiFieldError[];
+  accountSuccess?: boolean;
   profileSaving: boolean;
   profileErrors?: Linode.ApiFieldError[];
   profileSuccess?: boolean;
@@ -90,6 +94,7 @@ interface State {
 
 class UserDetail extends React.Component<CombinedProps> {
   state: State = {
+    accountSaving: false,
     profileSaving: false,
     email: '',
     username: ''
@@ -178,7 +183,13 @@ class UserDetail extends React.Component<CombinedProps> {
     });
   };
 
-  onSave = () => {
+  onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      email: e.target.value
+    });
+  };
+
+  onSaveAccount = () => {
     const {
       history,
       match: { path },
@@ -193,9 +204,9 @@ class UserDetail extends React.Component<CombinedProps> {
     }
 
     this.setState({
-      profileSuccess: false,
-      profileSaving: true,
-      profileErrors: []
+      accountSuccess: false,
+      accountSaving: true,
+      accountErrors: []
     });
 
     updateUser(originalUsername, { username, restricted })
@@ -206,7 +217,15 @@ class UserDetail extends React.Component<CombinedProps> {
         this.setState({
           originalUsername: user.username,
           username: user.username,
-          profileSaving: false
+          accountSaving: false,
+          accountErrors: undefined,
+          profileErrors: undefined,
+          // We update `email` state here in case the user has
+          // entered text in the `email` text input, but hasn't
+          // clicked "Save". If we didn't do this, they'd see a success
+          // message along with the un-submitted email, which could
+          // give the false impression they've updated their email.
+          email: user.email
         });
 
         /**
@@ -225,11 +244,63 @@ class UserDetail extends React.Component<CombinedProps> {
       })
       .catch(errResponse => {
         this.setState({
+          accountErrors: getAPIErrorOrDefault(
+            errResponse,
+            'Error updating user profile'
+          ),
+          accountSaving: false,
+          accountSuccess: false,
+          // We need to clear profileSuccess here too, otherwise we could
+          // end up with a Success Notice and Error Notice at the same time.
+          profileSuccess: false
+        });
+      });
+  };
+
+  onSaveProfile = () => {
+    const { email, originalUsername } = this.state;
+    const {
+      actions: { updateCurrentUser }
+    } = this.props;
+
+    this.setState({
+      profileSuccess: false,
+      profileSaving: true,
+      profileErrors: []
+    });
+
+    updateProfile({ email })
+      .then(profile => {
+        this.setState({
+          profileSaving: false,
+          profileSuccess: true,
+          accountErrors: undefined,
+          profileErrors: undefined,
+          // We update `username` state here, in case the user has
+          // entered text in the `username` text input, but hasn't
+          // clicked "Save". If we didn't do this, they'd see a success
+          // message along with the un-submitted username, which could
+          // give the false impression they've updated their username.
+          username: profile.username
+        });
+        /**
+         * If the user we updated is the current user, we need to reflect that change at the global level.
+         */
+        if (profile.username === originalUsername) {
+          updateCurrentUser(profile);
+        }
+      })
+      .catch(errResponse => {
+        this.setState({
           profileErrors: getAPIErrorOrDefault(
             errResponse,
             'Error updating user profile'
           ),
-          profileSaving: false
+          profileSaving: false,
+          profileSuccess: false,
+          // We need to clear accountSuccess here too, otherwise we could
+          // end up with Success Notice and Error Notice at the same time.
+          accountSuccess: false
         });
       });
   };
@@ -240,18 +311,27 @@ class UserDetail extends React.Component<CombinedProps> {
       email,
       profileSaving,
       profileSuccess,
-      profileErrors
+      profileErrors,
+      accountSaving,
+      accountSuccess,
+      accountErrors,
+      originalUsername
     } = this.state;
     return (
       <UserProfile
         username={username}
         email={email}
         changeUsername={this.onChangeUsername}
-        save={this.onSave}
-        reset={this.onReset}
-        saving={profileSaving}
-        success={profileSuccess || false}
-        errors={profileErrors}
+        changeEmail={this.onChangeEmail}
+        saveAccount={this.onSaveAccount}
+        accountSaving={accountSaving}
+        accountSuccess={accountSuccess || false}
+        accountErrors={accountErrors}
+        saveProfile={this.onSaveProfile}
+        profileSaving={profileSaving}
+        profileSuccess={profileSuccess || false}
+        profileErrors={profileErrors}
+        originalUsername={originalUsername}
       />
     );
   };
@@ -378,13 +458,14 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 
 interface DispatchProps {
   actions: {
-    updateCurrentUser: (user: Linode.User) => void;
+    updateCurrentUser: (user: Linode.User | Linode.Profile) => void;
   };
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
   actions: {
-    updateCurrentUser: (u: Linode.User) => dispatch(handleUpdate(u))
+    updateCurrentUser: (u: Linode.User | Linode.Profile) =>
+      dispatch(handleUpdate(u))
   }
 });
 

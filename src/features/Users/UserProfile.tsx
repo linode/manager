@@ -7,7 +7,6 @@ import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import InputLabel from 'src/components/core/InputLabel';
 import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
@@ -69,11 +68,16 @@ interface Props {
   username: string;
   email?: string;
   changeUsername: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  save: () => void;
-  reset: () => void;
-  saving: boolean;
-  success: boolean;
-  errors?: Linode.ApiFieldError[];
+  changeEmail: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  saveAccount: () => void;
+  accountSaving: boolean;
+  accountSuccess: boolean;
+  accountErrors?: Linode.ApiFieldError[];
+  saveProfile: () => void;
+  profileSaving: boolean;
+  profileSuccess: boolean;
+  profileErrors?: Linode.ApiFieldError[];
+  originalUsername?: string;
 }
 
 interface State {
@@ -109,18 +113,36 @@ class UserProfile extends React.Component<CombinedProps> {
       username,
       email,
       changeUsername,
-      save,
-      reset,
-      saving,
-      success,
-      errors
+      changeEmail,
+      saveAccount,
+      accountSaving,
+      accountSuccess,
+      accountErrors,
+      saveProfile,
+      profileSaving,
+      profileSuccess,
+      profileErrors,
+      profileUsername,
+      originalUsername
     } = this.props;
-    const hasErrorFor = getAPIErrorsFor({ username: 'Username' }, errors);
-    const generalError = hasErrorFor('none');
+
+    const hasAccountErrorFor = getAPIErrorsFor(
+      { username: 'Username' },
+      accountErrors
+    );
+
+    const hasProfileErrorFor = getAPIErrorsFor(
+      { email: 'Email' },
+      profileErrors
+    );
+
+    const generalError =
+      hasAccountErrorFor('none') || hasProfileErrorFor('none');
+
     return (
       <Paper className={classes.root}>
         <div className={classes.inner}>
-          {success && (
+          {(accountSuccess || profileSuccess) && (
             <Notice success>User Profile updated successfully</Notice>
           )}
           {generalError && <Notice error text={generalError} />}
@@ -132,27 +154,39 @@ class UserProfile extends React.Component<CombinedProps> {
             label="Username"
             value={username}
             onChange={changeUsername}
-            errorText={hasErrorFor('username')}
+            errorText={hasAccountErrorFor('username')}
             data-qa-username
           />
-          {/* API doesn't allow changing user email address */}
-          <div className={classes.emailField}>
-            <InputLabel>Email Address</InputLabel>
-            <Typography data-qa-email className={classes.emailAddress}>
-              {email}
-            </Typography>
-          </div>
-          <ActionsPanel style={{ marginTop: 16 }}>
+          <ActionsPanel>
             <Button
               type="primary"
-              loading={saving}
-              onClick={save}
+              loading={accountSaving}
+              onClick={saveAccount}
               data-qa-submit
             >
               Save
             </Button>
-            <Button type="cancel" onClick={reset} data-qa-cancel>
-              Cancel
+          </ActionsPanel>
+          <TextField
+            // This should be disabled if this is NOT the current user.
+            disabled={profileUsername !== originalUsername}
+            className={classes.field}
+            label="Email"
+            value={email}
+            onChange={changeEmail}
+            errorText={hasProfileErrorFor('email')}
+            data-qa-username
+          />
+          <ActionsPanel>
+            <Button
+              // This should be disabled if this is NOT the current user.
+              disabled={profileUsername !== originalUsername}
+              type="primary"
+              loading={profileSaving}
+              onClick={saveProfile}
+              data-qa-submit
+            >
+              Save
             </Button>
           </ActionsPanel>
         </div>
