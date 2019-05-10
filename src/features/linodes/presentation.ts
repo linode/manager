@@ -44,3 +44,16 @@ export const displayType = (
 
   return 'Unknown Plan';
 };
+
+export const displayTypeForKubePoolNode = (
+  category: string,
+  memory: number,
+  vcpus: number
+) => {
+  const formattedCategory = category === 'highmem' ? 'High Memory' : category;
+  const label = titlecase(formattedCategory);
+  const memG = memory / 1024;
+  const size = `${memG}GB`;
+  const cpus = `${vcpus} CPU${vcpus !== 1 ? 's' : ''}`;
+  return `${label} ${size}, ${cpus}`;
+};
