@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import 'rxjs/add/operator/filter';
 import AddNewLink from 'src/components/AddNewLink';
 import Paper from 'src/components/core/Paper';
@@ -18,12 +20,7 @@ import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
-import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
 import TableSortCell from 'src/components/TableSortCell';
-import { getKubernetesClusters } from 'src/services/kubernetes';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ClusterRow from './ClusterRow';
 
 type ClassNames = 'root' | 'title' | 'labelHeader';
@@ -38,33 +35,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = WithStyles<ClassNames>;
+interface Props {
+  clusters: Linode.KubernetesCluster[];
+}
+
+type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<ClassNames>;
 
 export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
-  const { classes } = props;
-  const [clusters, setClusters] = React.useState<Linode.KubernetesCluster[]>(
-    []
-  );
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<string | undefined>(undefined);
-
-  React.useEffect(() => {
-    setLoading(true);
-    getKubernetesClusters()
-      .then(response => {
-        setClusters(response.data);
-        setLoading(false);
-      })
-      .catch(err => {
-        setLoading(false);
-        setError(
-          getErrorStringOrDefault(
-            err,
-            'There was an error loading your Kubernetes Clusters.'
-          )
-        );
-      });
-  }, []);
+  const { classes, clusters, history } = props;
 
   return (
     <React.Fragment>
@@ -85,8 +63,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
           <Grid container alignItems="flex-end">
             <Grid item className="pt0">
               <AddNewLink
-                disabled={true}
-                onClick={() => null} // @todo enable creation flow
+                onClick={() => history.push('/kubernetes/create')}
                 label="Add a Cluster"
               />
             </Grid>
@@ -150,11 +127,12 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      <ClusterContent
-                        loading={loading}
-                        error={error}
-                        data={data}
-                      />
+                      {data.map((cluster, idx) => (
+                        <ClusterRow
+                          key={`kubernetes-cluster-list-${idx}`}
+                          cluster={cluster}
+                        />
+                      ))}
                     </TableBody>
                   </Table>
                 </Paper>
@@ -175,45 +153,11 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
   );
 };
 
-interface ContentProps {
-  loading: boolean;
-  error?: string;
-  data: Linode.KubernetesCluster[];
-}
-
-export const ClusterContent: React.FunctionComponent<ContentProps> = props => {
-  const { data, error, loading } = props;
-  if (error) {
-    return <TableRowError data-qa-cluster-error message={error} colSpan={12} />;
-  }
-
-  if (loading) {
-    return <TableRowLoading data-qa-cluster-loading colSpan={12} />;
-  }
-
-  if (data.length === 0) {
-    return (
-      <TableRowEmptyState
-        data-qa-cluster-empty
-        message={"You don't have any Kubernetes Clusters."}
-        colSpan={12}
-      />
-    );
-  }
-
-  return (
-    <>
-      {data.map((cluster, idx) => (
-        <ClusterRow
-          data-qa-cluster-row
-          key={`kubernetes-cluster-list-${idx}`}
-          cluster={cluster}
-        />
-      ))}
-    </>
-  );
-};
-
 const styled = withStyles(styles);
 
-export default styled(ClusterList);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withRouter
+);
+
+export default enhanced(ClusterList);
