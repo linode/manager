@@ -4,7 +4,6 @@ import {
   WithStyles
 } from '@material-ui/core/styles';
 import * as React from 'react';
-import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import TextField from 'src/components/TextField';
@@ -42,7 +41,7 @@ const SizeField: React.StatelessComponent<CombinedProps> = ({
     : undefined;
 
   return (
-    <FormControl fullWidth>
+    <>
       <TextField
         data-qa-size
         errorText={error}
@@ -60,7 +59,7 @@ const SizeField: React.StatelessComponent<CombinedProps> = ({
         {...rest}
       />
       <FormHelperText>The size of the new volume in GiB</FormHelperText>
-    </FormControl>
+    </>
   );
 };
 

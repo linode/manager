@@ -5,7 +5,6 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import MenuItem from 'src/components/core/MenuItem';
 import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
@@ -17,10 +16,10 @@ import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
-import Select from 'src/components/Select';
 import SelectionCard from 'src/components/SelectionCard';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
@@ -41,7 +40,8 @@ type ClassNames =
   | 'grantTable'
   | 'selectAll'
   | 'tableSubheading'
-  | 'permSelect';
+  | 'permSelect'
+  | 'setAll';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   topGrid: {
@@ -89,6 +89,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   selectAll: {
     cursor: 'pointer'
+  },
+  setAll: {
+    width: 300,
+    marginTop: theme.spacing.unit / 2,
+    '& .react-select__menu': {
+      maxWidth: 153,
+      right: 0
+    }
   }
 });
 
@@ -677,19 +685,30 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     );
   };
 
-  setAllEntitiesTo = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    const value = e.target.value === 'null' ? null : e.target.value;
+  setAllEntitiesTo = (e: Item) => {
+    const value = e.value === 'null' ? null : e.value;
     this.entityPerms.map((entity: Linode.GrantType) =>
       this.entitySetAllTo(entity, value as Linode.GrantLevel)()
     );
     this.setState({
-      setAllPerm: e.target.value as 'null' | 'read_only' | 'read_write'
+      setAllPerm: e.value as 'null' | 'read_only' | 'read_write'
     });
   };
 
   renderSpecificPerms = () => {
     const { classes } = this.props;
     const { grants, success, setAllPerm, saving } = this.state;
+
+    const permOptions = [
+      { label: 'None', value: 'null' },
+      { label: 'Read Only', value: 'read_only' },
+      { label: 'Read Write', value: 'read_write' }
+    ];
+
+    const defaultPerm = permOptions.find(eachPerm => {
+      return eachPerm.value === setAllPerm;
+    });
+
     return (
       <Paper className={classes.globalSection} data-qa-entity-section>
         <Grid container justify="space-between" alignItems="center">
@@ -701,23 +720,20 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               Specific Permissions
             </Typography>
           </Grid>
+
           <Grid item>
-            <Grid container alignItems="center" className={classes.permSelect}>
-              <Grid item>
-                <Typography>Set all permissions to:</Typography>
-              </Grid>
-              <Grid item>
-                <Select
-                  value={setAllPerm}
-                  onChange={this.setAllEntitiesTo}
-                  inputProps={{ name: 'setall', id: 'setall' }}
-                >
-                  <MenuItem value="null">None</MenuItem>
-                  <MenuItem value="read_only">Read Only</MenuItem>
-                  <MenuItem value="read_write">Read Write</MenuItem>
-                </Select>
-              </Grid>
-            </Grid>
+            <Select
+              options={permOptions}
+              defaultValue={defaultPerm}
+              onChange={this.setAllEntitiesTo}
+              name="setall"
+              id="setall"
+              label="Set all permissions to:"
+              isClearable={false}
+              inline
+              className={classes.setAll}
+              noMarginTop
+            />
           </Grid>
         </Grid>
         <div className={classes.section}>

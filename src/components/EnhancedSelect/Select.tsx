@@ -1,7 +1,6 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import ReactSelect from 'react-select';
-import Async, { AsyncProps } from 'react-select/lib/Async';
 import CreatableSelect, {
   Props as CreatableSelectProps
 } from 'react-select/lib/Creatable';
@@ -37,7 +36,12 @@ type ClassNames =
   | 'suggestionDescription'
   | 'resultContainer'
   | 'tagContainer'
-  | 'selectedMenuItem';
+  | 'selectedMenuItem'
+  | 'medium'
+  | 'small'
+  | 'noMarginTop'
+  | 'inline'
+  | 'hideLabel';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   '@keyframes dash': {
@@ -87,7 +91,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     },
     '& .react-select__group-heading': {
       textTransform: 'initial',
-      fontSize: '.9rem'
+      fontSize: '1rem',
+      color: theme.color.headline,
+      fontFamily: theme.font.bold,
+      paddingLeft: 10,
+      paddingRight: 10
     },
     '& .react-select__menu-list': {
       padding: theme.spacing.unit / 2,
@@ -123,6 +131,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       '&.react-select__option--is-focused': {
         backgroundColor: theme.bg.white
       }
+    },
+    '& .react-select__option--is-disabled': {
+      opacity: '.5',
+      cursor: 'initial'
     },
     '& .react-select__single-value': {
       color: theme.palette.text.primary,
@@ -207,18 +219,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   suggestionItem: {
     padding: theme.spacing.unit
   },
-  // suggestionIcon: {
-  //   '& svg': {
-  //     width: '40px',
-  //     height: '40px'
-  //   },
-  //   '& .circle': {
-  //     fill: theme.bg.offWhiteDT
-  //   },
-  //   '& .outerCircle': {
-  //     stroke: theme.bg.main
-  //   }
-  // },
   suggestionTitle: {
     fontSize: '1rem',
     color: theme.palette.text.primary,
@@ -255,9 +255,29 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       }
     }
   },
+  medium: {
+    minHeight: 40
+  },
   small: {
     minHeight: 35,
     minWidth: 'auto'
+  },
+  noMarginTop: {
+    marginTop: 0
+  },
+  inline: {
+    display: 'inline-flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    '& label': {
+      marginRight: theme.spacing.unit,
+      whiteSpace: 'nowrap',
+      position: 'relative',
+      top: 1
+    }
+  },
+  hideLabel: {
+    '& label': { ...theme.visually.hidden }
   }
 });
 
@@ -299,7 +319,7 @@ export interface EnhancedSelectProps {
   isClearable?: boolean;
   isMulti?: boolean;
   isLoading?: boolean;
-  variant?: 'async' | 'creatable';
+  variant?: 'creatable';
   value?: Item | Item[] | null;
   label?: string;
   placeholder?: string;
@@ -310,8 +330,13 @@ export interface EnhancedSelectProps {
   onInputChange?: (inputValue: string, actionMeta: ActionMeta) => void;
   loadOptions?: (inputValue: string) => Promise<Item | Item[]> | undefined;
   filterOption?: (option: Item, inputValue: string) => boolean | null;
+  medium?: boolean;
   small?: boolean;
   guidance?: string | React.ReactNode;
+  noMarginTop?: boolean;
+  inline?: boolean;
+  hideLabel?: boolean;
+  errorGroup?: string;
 }
 
 // Material-UI versions of several React-Select components.
@@ -367,7 +392,12 @@ class Select extends React.PureComponent<CombinedProps, {}> {
       onMenuClose,
       onBlur,
       blurInputOnSelect,
+      medium,
       small,
+      noMarginTop,
+      inline,
+      hideLabel,
+      errorGroup,
       ...restOfProps
     } = this.props;
 
@@ -387,13 +417,9 @@ class Select extends React.PureComponent<CombinedProps, {}> {
 
     // If async, pass loadOptions instead of options. A Select can't be both Creatable and Async.
     // (AsyncCreatable exists, but we have not adapted it.)
-    type PossibleProps = BaseSelectProps | CreatableProps | AsyncProps<any>;
+    type PossibleProps = BaseSelectProps | CreatableProps;
     const BaseSelect: React.ComponentClass<PossibleProps> =
-      variant === 'creatable'
-        ? CreatableSelect
-        : variant === 'async'
-        ? Async
-        : ReactSelect;
+      variant === 'creatable' ? CreatableSelect : ReactSelect;
 
     return (
       <BaseSelect
@@ -403,10 +429,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
         isSearchable
         blurInputOnSelect={blurInputOnSelect}
         isLoading={isLoading}
-        defaultOptions
-        cacheOptions={false}
         filterOption={filterOption}
-        loadOptions={loadOptions}
         isMulti={isMulti}
         isDisabled={disabled}
         classes={classes}
@@ -422,7 +445,13 @@ class Select extends React.PureComponent<CombinedProps, {}> {
           InputLabelProps: {
             shrink: true
           },
-          className: small && classes.small
+          className: classNames({
+            [classes.medium]: medium,
+            [classes.small]: small,
+            [classes.noMarginTop]: noMarginTop,
+            [classes.inline]: inline,
+            [classes.hideLabel]: hideLabel
+          })
         }}
         value={value}
         onBlur={onBlur}

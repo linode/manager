@@ -18,7 +18,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
-import MenuItem from 'src/components/MenuItem';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import {
   default as _TextField,
@@ -240,29 +240,35 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     <this.MSSelect label="Retry Rate" field="retry_sec" fn={this.setRetrySec} />
   );
 
-  ExpireField = () => (
-    <TextField
-      label="Expire Rate"
-      select
-      value={defaultTo(
-        DomainRecordDrawer.defaultFieldsState(this.props).expire_sec,
-        (this.state.fields as EditableDomainFields).expire_sec
-      )}
-      onChange={e => this.setExpireSec(+e.target.value)}
-      data-qa-expire-rate
-    >
-      <MenuItem value={0}>Default</MenuItem>
-      <MenuItem value={604800} data-qa-expire-options>
-        1 week
-      </MenuItem>
-      <MenuItem value={1209600} data-qa-expire-options>
-        2 weeks
-      </MenuItem>
-      <MenuItem value={2419200} data-qa-expire-options>
-        4 weeks
-      </MenuItem>
-    </TextField>
-  );
+  ExpireField = () => {
+    const rateOptions = [
+      { label: 'Default', value: 0 },
+      { label: '1 week', value: 604800 },
+      { label: '2 weeks', value: 1209600 },
+      { label: '4 weeks', value: 2419200 }
+    ];
+
+    const defaultRate = rateOptions.find(eachRate => {
+      return (
+        eachRate.value ===
+        defaultTo(
+          DomainRecordDrawer.defaultFieldsState(this.props).expire_sec,
+          (this.state.fields as EditableDomainFields).expire_sec
+        )
+      );
+    });
+
+    return (
+      <Select
+        options={rateOptions}
+        label="Expire Rate"
+        defaultValue={defaultRate}
+        onChange={(e: Item) => this.setExpireSec(+e.value)}
+        data-qa-expire-rate
+        isClearable={false}
+      />
+    );
+  };
 
   MSSelect = ({
     label,
@@ -272,108 +278,103 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     label: string;
     field: keyof EditableRecordFields | keyof EditableDomainFields;
     fn: (v: number) => void;
-  }) => (
-    <TextField
-      label={label}
-      select
-      value={defaultTo(
-        DomainRecordDrawer.defaultFieldsState(this.props)[field],
-        this.state.fields[field]
-      )}
-      onChange={e => fn(+e.target.value)}
-      data-qa-domain-select={label}
-    >
-      <MenuItem value={0}>Default</MenuItem>
-      <MenuItem value={300} data-qa-options>
-        5 minutes
-      </MenuItem>
-      <MenuItem value={3600} data-qa-options>
-        1 hour
-      </MenuItem>
-      <MenuItem value={7200} data-qa-options>
-        2 hours
-      </MenuItem>
-      <MenuItem value={14400} data-qa-options>
-        4 hours
-      </MenuItem>
-      <MenuItem value={28800} data-qa-options>
-        8 hours
-      </MenuItem>
-      <MenuItem value={57600} data-qa-options>
-        16 hours
-      </MenuItem>
-      <MenuItem value={86400} data-qa-options>
-        1 day
-      </MenuItem>
-      <MenuItem value={172800} data-qa-options>
-        2 days
-      </MenuItem>
-      <MenuItem value={345600} data-qa-options>
-        4 days
-      </MenuItem>
-      <MenuItem value={604800} data-qa-options>
-        1 week
-      </MenuItem>
-      <MenuItem value={1209600} data-qa-options>
-        2 weeks
-      </MenuItem>
-      <MenuItem value={2419200} data-qa-options>
-        4 weeks
-      </MenuItem>
-    </TextField>
-  );
+  }) => {
+    const MSSelectOptions = [
+      { label: 'Default', value: 0 },
+      { label: '5 minutes', value: 300 },
+      { label: '1 hour', value: 3600 },
+      { label: '2 hours', value: 7200 },
+      { label: '4 hours', value: 14400 },
+      { label: '8 hours', value: 28800 },
+      { label: '16 hours', value: 57600 },
+      { label: '1 day', value: 86400 },
+      { label: '2 days', value: 172800 },
+      { label: '4 days', value: 345600 },
+      { label: '1 week', value: 604800 },
+      { label: '2 weeks', value: 1209600 },
+      { label: '4 weeks', value: 2419200 }
+    ];
 
-  ProtocolField = () => (
-    <TextField
-      select
-      label="Protocol"
-      value={defaultTo(
-        DomainRecordDrawer.defaultFieldsState(this.props).protocol,
-        (this.state.fields as EditableRecordFields).protocol
-      )}
-      onChange={e => this.setProtocol(e.target.value)}
-      data-qa-protocol
-    >
-      <MenuItem value="tcp" data-qa-protocol-options>
-        tcp
-      </MenuItem>
-      <MenuItem value="udp" data-qa-protocol-options>
-        udp
-      </MenuItem>
-      <MenuItem value="xmpp" data-qa-protocol-options>
-        xmpp
-      </MenuItem>
-      <MenuItem value="tls" data-qa-protocol-options>
-        tls
-      </MenuItem>
-      <MenuItem value="smtp" data-qa-protocol-options>
-        smtp
-      </MenuItem>
-    </TextField>
-  );
+    const defaultOption = MSSelectOptions.find(eachOption => {
+      return (
+        eachOption.value ===
+        defaultTo(
+          DomainRecordDrawer.defaultFieldsState(this.props)[field],
+          this.state.fields[field]
+        )
+      );
+    });
 
-  TagField = () => (
-    <TextField
-      label="Tag"
-      select
-      value={defaultTo(
-        DomainRecordDrawer.defaultFieldsState(this.props).tag,
-        (this.state.fields as EditableRecordFields).tag
-      )}
-      onChange={e => this.setTag(e.target.value)}
-      data-qa-caa-tag
-    >
-      <MenuItem value="issue" data-qa-caa-tags>
-        issue
-      </MenuItem>
-      <MenuItem value="issuewild" data-qa-caa-tags>
-        issuewild
-      </MenuItem>
-      <MenuItem value="iodef" data-qa-caa-tags>
-        iodef
-      </MenuItem>
-    </TextField>
-  );
+    return (
+      <Select
+        options={MSSelectOptions}
+        label={label}
+        defaultValue={defaultOption}
+        onChange={(e: Item) => fn(+e.value)}
+        data-qa-domain-select={label}
+        isClearable={false}
+      />
+    );
+  };
+
+  ProtocolField = () => {
+    const protocolOptions = [
+      { label: 'tcp', value: 'tcp' },
+      { label: 'udp', value: 'udp' },
+      { label: 'xmpp', value: 'xmpp' },
+      { label: 'tls', value: 'tls' },
+      { label: 'smtp', value: 'smtp' }
+    ];
+
+    const defaultProtocol = protocolOptions.find(eachProtocol => {
+      return (
+        eachProtocol.value ===
+        defaultTo(
+          DomainRecordDrawer.defaultFieldsState(this.props).protocol,
+          (this.state.fields as EditableRecordFields).protocol
+        )
+      );
+    });
+
+    return (
+      <Select
+        options={protocolOptions}
+        label="Protocol"
+        defaultValue={defaultProtocol}
+        onChange={(e: Item) => this.setProtocol(e.value)}
+        data-qa-protocol
+        isClearable={false}
+      />
+    );
+  };
+
+  TagField = () => {
+    const tagOptions = [
+      { label: 'issue', value: 'issue' },
+      { label: 'issuewild', value: 'issuewild' },
+      { label: 'iodef', value: 'iodef' }
+    ];
+
+    const defaultTag = tagOptions.find(eachTag => {
+      return (
+        eachTag.value ===
+        defaultTo(
+          DomainRecordDrawer.defaultFieldsState(this.props).tag,
+          (this.state.fields as EditableRecordFields).tag
+        )
+      );
+    });
+    return (
+      <Select
+        label="Tag"
+        options={tagOptions}
+        defaultValue={defaultTag || tagOptions[0]}
+        onChange={(e: Item) => this.setTag(e.value)}
+        data-qa-caa-tag
+        isClearable={false}
+      />
+    );
+  };
 
   DomainTransferField = () => (
     <TextField
