@@ -1,6 +1,7 @@
 import CA from 'flag-icon-css/flags/4x3/ca.svg';
 import DE from 'flag-icon-css/flags/4x3/de.svg';
 import UK from 'flag-icon-css/flags/4x3/gb.svg';
+import IN from 'flag-icon-css/flags/4x3/in.svg';
 import JP from 'flag-icon-css/flags/4x3/jp.svg';
 import SG from 'flag-icon-css/flags/4x3/sg.svg';
 import US from 'flag-icon-css/flags/4x3/us.svg';
@@ -31,7 +32,8 @@ const flags = {
   ),
   uk: () => <UK width="32" height="24" viewBox="0 0 640 480" />,
   de: () => <DE width="32" height="24" viewBox="0 0 720 480" />,
-  ca: () => <CA width="32" height="24" viewBox="0 0 640 480" />
+  ca: () => <CA width="32" height="24" viewBox="0 0 640 480" />,
+  in: () => <IN width="32" height="24" viewBox="0 0 640 480" />
 };
 
 export interface ExtendedRegion extends Linode.Region {
@@ -62,7 +64,7 @@ const getEURegions = (regions: ExtendedRegion[]) =>
   regions.filter(r => /(de|uk)/.test(r.country));
 
 const getASRegions = (regions: ExtendedRegion[]) =>
-  regions.filter(r => /(jp|sg)/.test(r.country));
+  regions.filter(r => /(jp|sg|in)/.test(r.country));
 
 const renderCard = (
   handleSelection: Function,

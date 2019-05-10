@@ -70,7 +70,8 @@ export const ZONES: Record<string, Linode.ZoneName> = {
   'ap-south': 'singapore',
   'ap-south-1a': 'singapore',
   'ca-central': 'toronto1',
-  'ca-east': 'toronto1' // @todo Fallback for old Toronto ID; remove once DB has been updated.
+  'ca-east': 'toronto1', // @todo Fallback for old Toronto ID; remove once DB has been updated.
+  'ap-west': 'mumbai1'
 };
 
 export const dcDisplayNames = {
@@ -91,7 +92,8 @@ export const dcDisplayNames = {
   'eu-central': 'Frankfurt, DE',
   'ap-northeast': 'Tokyo 2, JP',
   'ca-central': 'Toronto, ON',
-  'ca-east': 'Toronto, ON' // @todo Fallback for old Toronto ID; remove once DB has been updated.
+  'ca-east': 'Toronto, ON', // @todo Fallback for old Toronto ID; remove once DB has been updated.
+  'ap-west': 'Mumbai, IN'
 };
 
 export const dcDisplayCountry = {
@@ -112,7 +114,8 @@ export const dcDisplayCountry = {
   'eu-central': 'DE',
   'ap-northeast': 'JP',
   'ca-central': 'CA',
-  'ca-east': 'CA'
+  'ca-east': 'CA',
+  'ap-west': 'IN'
 };
 
 // At this time, the following regions do not support block storage.
