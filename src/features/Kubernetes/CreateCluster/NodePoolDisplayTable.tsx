@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { compose } from 'recompose';
 
 import {
   StyleRulesCallback,
@@ -65,6 +66,7 @@ export const NodePoolDisplayTable: React.FunctionComponent<
                 pool={thisPool}
                 type={thisPoolType}
                 handleDelete={() => handleDelete(idx)}
+                updateFor={[thisPool, thisPoolType, classes]}
               />
             );
           })
@@ -76,4 +78,9 @@ export const NodePoolDisplayTable: React.FunctionComponent<
 
 const styled = withStyles(styles);
 
-export default styled(NodePoolDisplayTable);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  React.memo
+);
+
+export default enhanced(NodePoolDisplayTable);

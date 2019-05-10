@@ -35,7 +35,11 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
   const { classes, cluster } = props;
   return (
-    <TableRow key={cluster.id} data-qa-cluster-cell={cluster.id}>
+    <TableRow
+      key={cluster.id}
+      data-qa-cluster-cell={cluster.id}
+      data-testid={'cluster-row'}
+    >
       <TableCell
         parentColumn="Cluster Label"
         className={classes.label}

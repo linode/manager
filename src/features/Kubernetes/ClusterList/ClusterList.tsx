@@ -127,7 +127,12 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      <ClusterContent data={data} />
+                      {data.map((cluster, idx) => (
+                        <ClusterRow
+                          key={`kubernetes-cluster-list-${idx}`}
+                          cluster={cluster}
+                        />
+                      ))}
                     </TableBody>
                   </Table>
                 </Paper>
@@ -145,25 +150,6 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
         )}
       </OrderBy>
     </React.Fragment>
-  );
-};
-
-interface ContentProps {
-  data: Linode.KubernetesCluster[];
-}
-
-export const ClusterContent: React.FunctionComponent<ContentProps> = props => {
-  const { data } = props;
-  return (
-    <>
-      {data.map((cluster, idx) => (
-        <ClusterRow
-          data-qa-cluster-row
-          key={`kubernetes-cluster-list-${idx}`}
-          cluster={cluster}
-        />
-      ))}
-    </>
   );
 };
 

@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
 
 import CheckoutBar from 'src/components/CheckoutBar';
+import renderGuard from 'src/components/RenderGuard';
 import { getTotalClusterMemoryAndCPU, getTotalClusterPrice } from './kubeUtils';
 import { PoolNode } from './types';
 
@@ -84,4 +85,4 @@ export const getDisplaySections = (
   return displaySections;
 };
 
-export default KubeCheckoutBar;
+export default renderGuard(KubeCheckoutBar);

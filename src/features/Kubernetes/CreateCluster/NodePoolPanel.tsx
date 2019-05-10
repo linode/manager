@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { compose } from 'recompose';
 
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
@@ -11,6 +12,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
+import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 
 import SelectPlanPanel, {
@@ -174,4 +176,9 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-export default styled(NodePoolPanel);
+const enhanced = compose<CombinedProps, Props & RenderGuardProps>(
+  styled,
+  renderGuard
+);
+
+export default enhanced(NodePoolPanel);

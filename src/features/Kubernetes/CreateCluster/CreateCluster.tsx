@@ -203,6 +203,12 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
               handleSelection={(regionID: string) =>
                 this.setState({ selectedRegion: regionID })
               }
+              updateFor={[
+                errorMap.region,
+                regionsData,
+                selectedRegion,
+                classes
+              ]}
             />
 
             <NodePoolPanel
@@ -228,6 +234,15 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
               updateNodeCount={(newCount: number) => {
                 this.setState({ numberOfLinodes: newCount });
               }}
+              updateFor={[
+                nodePools,
+                typesData,
+                errorMap,
+                typesLoading,
+                numberOfLinodes,
+                selectedType,
+                classes
+              ]}
             />
 
             <Paper data-qa-label-header>
@@ -265,6 +280,13 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
               pools={nodePools}
               createCluster={this.createCluster}
               submitting={submitting}
+              updateFor={[
+                label,
+                selectedRegion,
+                nodePools,
+                submitting,
+                classes
+              ]}
             />
           </Grid>
         </Grid>

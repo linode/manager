@@ -1,5 +1,6 @@
 import Close from '@material-ui/icons/Close';
 import * as React from 'react';
+import { compose } from 'recompose';
 
 import {
   StyleRulesCallback,
@@ -8,6 +9,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { displayPrice } from 'src/components/DisplayPrice';
+import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
@@ -65,4 +67,9 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-export default styled(NodePoolRow);
+const enhanced = compose<CombinedProps, Props & RenderGuardProps>(
+  styled,
+  renderGuard
+);
+
+export default enhanced(NodePoolRow);
