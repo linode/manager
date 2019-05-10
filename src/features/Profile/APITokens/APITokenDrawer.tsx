@@ -4,8 +4,6 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
-import InputLabel from 'src/components/core/InputLabel';
-import MenuItem from 'src/components/core/MenuItem';
 import {
   StyleRulesCallback,
   withStyles,
@@ -16,8 +14,8 @@ import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Radio from 'src/components/Radio';
-import Select from 'src/components/Select';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TextField from 'src/components/TextField';
@@ -181,8 +179,8 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
     this.props.onChange('label', e.target.value);
   };
 
-  handleExpiryChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
-    this.props.onChange('expiry', e.target.value);
+  handleExpiryChange = (e: Item<string>) => {
+    this.props.onChange('expiry', e.value);
   };
 
   // return whether all scopes selected in the create token flow are the same
@@ -382,6 +380,14 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
 
     const errorFor = getAPIErrorFor(this.errorResources, errors);
 
+    const expiryList = expiryTups.map((expiryTup: Expiry) => {
+      return { label: expiryTup[0], value: expiryTup[1] };
+    });
+
+    const defaultExpiry = expiryList.find(eachOption => {
+      return eachOption.value === expiry;
+    });
+
     return (
       <Drawer
         title={
@@ -404,18 +410,15 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
         )}
         {mode === 'create' && (
           <FormControl>
-            <InputLabel htmlFor="expiry">Expiry</InputLabel>
             <Select
-              value={expiry || expiryTups[0][1]}
+              options={expiryList}
+              defaultValue={defaultExpiry || expiryTups[0][1]}
               onChange={this.handleExpiryChange}
-              inputProps={{ name: 'expiry', id: 'expiry' }}
-            >
-              {expiryTups.map((expiryTup: Expiry) => (
-                <MenuItem key={expiryTup[0]} value={expiryTup[1]}>
-                  {expiryTup[0]}
-                </MenuItem>
-              ))}
-            </Select>
+              name="expiry"
+              id="expiry"
+              label="Expiry"
+              isClearable={false}
+            />
           </FormControl>
         )}
         {mode === 'view' && (

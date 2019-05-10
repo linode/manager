@@ -24,9 +24,9 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
@@ -278,6 +278,21 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       volumes: this.props.volumes
     };
 
+    const kernelList = kernels.map(eachKernel => {
+      return { label: eachKernel.label, value: eachKernel.id };
+    });
+
+    const pathsOptions = [
+      { label: '/dev/sda', value: '/dev/sda' },
+      { label: '/dev/sdb', value: '/dev/sdc' },
+      { label: '/dev/sdc', value: '/dev/sdc' },
+      { label: '/dev/sdd', value: '/dev/sdd' },
+      { label: '/dev/sde', value: '/dev/sde' },
+      { label: '/dev/sdf', value: '/dev/sdf' },
+      { label: '/dev/sdg', value: '/dev/sdg' },
+      { label: '/dev/sdh', value: '/dev/sdh' }
+    ];
+
     return (
       <React.Fragment>
         {generalError && (
@@ -357,7 +372,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
           </FormControl>
         </Grid>
 
-        <Divider className={classes.divider} />
+        <Divider className={classes.divider} style={{ marginTop: 0 }} />
 
         <Grid
           item
@@ -375,28 +390,16 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         >
           <Typography variant="h3">Boot Settings</Typography>
           {kernels && (
-            <TextField
-              label="Kernel"
-              select={true}
-              value={kernel}
+            <Select
+              options={kernelList}
+              label="Select a Kernel"
+              defaultValue={kernel}
               onChange={this.handleChangeKernel}
               errorText={errorFor('kernel')}
               errorGroup="linode-config-drawer"
               disabled={readOnly}
-            >
-              <MenuItem value="none" disabled>
-                <em>Select a Kernel</em>
-              </MenuItem>
-              {kernels.map(eachKernel => (
-                <MenuItem
-                  // Can't use ID for key until DBA-162 is closed.
-                  key={`${eachKernel.id}-${eachKernel.label}`}
-                  value={eachKernel.id}
-                >
-                  {eachKernel.label}
-                </MenuItem>
-              ))}
-            </TextField>
+              isClearable={false}
+            />
           )}
 
           <FormControl
@@ -470,35 +473,31 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                 />
               }
             />
-
-            <TextField
-              label={`${useCustomRoot ? 'Custom ' : ''}Root Device`}
-              value={root_device}
-              onChange={this.handleRootDeviceChange}
-              inputProps={{ name: 'root_device', id: 'root_device' }}
-              select={!useCustomRoot}
-              fullWidth
-              autoFocus={useCustomRoot && true}
-              errorText={errorFor('root_device')}
-              errorGroup="linode-config-drawer"
-              disabled={readOnly}
-            >
-              {!useCustomRoot &&
-                [
-                  '/dev/sda',
-                  '/dev/sdb',
-                  '/dev/sdc',
-                  '/dev/sdd',
-                  '/dev/sde',
-                  '/dev/sdf',
-                  '/dev/sdg',
-                  '/dev/sdh'
-                ].map(path => (
-                  <MenuItem key={path} value={path}>
-                    {path}
-                  </MenuItem>
-                ))}
-            </TextField>
+            {!useCustomRoot ? (
+              <Select
+                options={pathsOptions}
+                label="Root Device"
+                defaultValue={root_device}
+                onChange={this.handleRootDeviceChange}
+                name="root_device"
+                id="root_device"
+                errorText={errorFor('root_device')}
+                disabled={readOnly}
+                isClearable={false}
+              />
+            ) : (
+              <TextField
+                label="Custom"
+                value={root_device}
+                onChange={this.handleRootDeviceChangeTextfield}
+                inputProps={{ name: 'root_device', id: 'root_device' }}
+                fullWidth
+                autoFocus={true}
+                errorText={errorFor('root_device')}
+                errorGroup="linode-config-drawer"
+                disabled={readOnly}
+              />
+            )}
           </FormControl>
         </Grid>
 
@@ -710,7 +709,10 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       helpers: { ...this.state.fields.helpers, distro: result }
     });
 
-  handleRootDeviceChange = (e: React.ChangeEvent<HTMLInputElement>) =>
+  handleRootDeviceChange = (e: Item<string>) =>
+    this.updateField({ root_device: e.value || '' });
+
+  handleRootDeviceChangeTextfield = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.updateField({ root_device: e.target.value || '' });
 
   handleUseCustomRootChange = (e: any, useCustomRoot: boolean) =>
@@ -735,8 +737,8 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   handleChangeComments = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.updateField({ comments: e.target.value || '' });
 
-  handleChangeKernel = (e: React.ChangeEvent<HTMLSelectElement>) =>
-    this.updateField({ kernel: e.target.value });
+  handleChangeKernel = (e: Item<string>) =>
+    this.updateField({ kernel: e.value });
 
   handleChangeLabel = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.updateField({ label: e.target.value || '' });

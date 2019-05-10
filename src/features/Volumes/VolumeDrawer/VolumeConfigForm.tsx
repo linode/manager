@@ -15,10 +15,10 @@ type ClassNames = 'root' | 'copySection' | 'copyField';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   copySection: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing.unit * 3
   },
   copyField: {
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing.unit / 2
   }
 });
 

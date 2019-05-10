@@ -53,7 +53,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     }
   },
   left: {
-    left: theme.spacing.unit + theme.spacing.unit / 2
+    left: -(theme.spacing.unit + theme.spacing.unit / 2)
   },
   label: {
     whiteSpace: 'nowrap'

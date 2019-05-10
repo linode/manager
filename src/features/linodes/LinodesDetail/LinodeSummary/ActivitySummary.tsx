@@ -22,9 +22,7 @@ import { ExtendedEvent } from 'src/store/events/event.helpers';
 type ClassNames = 'root' | 'header' | 'viewMore';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {
-    marginBottom: theme.spacing.unit * 4
-  },
+  root: {},
   header: {
     marginBottom: theme.spacing.unit * 2
   },
