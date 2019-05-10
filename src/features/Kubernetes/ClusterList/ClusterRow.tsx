@@ -35,7 +35,11 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
   const { classes, cluster } = props;
   return (
-    <TableRow key={cluster.id} data-qa-cluster-cell={cluster.id}>
+    <TableRow
+      key={cluster.id}
+      data-qa-cluster-cell={cluster.id}
+      data-testid={'cluster-row'}
+    >
       <TableCell
         parentColumn="Cluster Label"
         className={classes.label}
@@ -43,7 +47,7 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
       >
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item className="py0">
-            <EntityIcon variant="linode" marginTop={1} />
+            <EntityIcon variant="kube" marginTop={1} />
           </Grid>
           <Grid item>
             <Typography variant="h3">{cluster.label}</Typography>

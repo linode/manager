@@ -7,6 +7,24 @@ namespace Linode {
     label: string;
     version: string;
     id: string;
-    node_pools: any[]; // @todo type this
+    node_pools: KubeNodePoolResponse[];
+  }
+
+  export interface KubeNodePoolResponse {
+    count: number;
+    id: number;
+    linodes: PoolNodeResponse[];
+    lkeid: number;
+    type: string;
+  }
+
+  export interface PoolNodeResponse {
+    id: number;
+    status: string;
+  }
+
+  export interface PoolNodeRequest {
+    type: string;
+    count: number;
   }
 }
