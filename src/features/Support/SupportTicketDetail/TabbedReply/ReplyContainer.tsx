@@ -18,6 +18,7 @@ import TabbedReply from './TabbedReply';
 import { createReply, uploadAttachment } from 'src/services/support';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
 type ClassNames = 'root';
 
@@ -49,6 +50,19 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
   const [files, setFiles] = React.useState<FileAttachment[]>([]);
 
   const submitForm = () => {
+    const sanitizedInput = sanitizeHTML(value);
+
+    if (sanitizedInput !== value) {
+      return setErrors([
+        {
+          reason: `You cannot submit a reply with the current markup. We recommend not entering
+        any actual HTML markup, and instead prefer markdown. Please see the reference guide for
+        allowed markdown values.`,
+          field: 'description'
+        }
+      ]);
+    }
+
     setSubmitting(true);
     setErrors(undefined);
 
