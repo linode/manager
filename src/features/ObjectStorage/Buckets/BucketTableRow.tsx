@@ -79,15 +79,17 @@ export const BucketTableRow: React.StatelessComponent<
         {/* @todo: uncomment this <Link/> when a bucket landing page exists*/}
         {/* </Link> */}
       </TableCell>
+      <TableCell parentColumn="Objects">
+        <Grid>
+          <Typography variant="body2" data-qa-num-objects>
+            {`${objects} ${objects === 1 ? 'object' : 'objects'}`}
+          </Typography>
+        </Grid>
+      </TableCell>
       <TableCell parentColumn="Size">
         <Grid>
           <Typography variant="body1" data-qa-size>
             {readableBytes(size).formatted}
-          </Typography>
-        </Grid>
-        <Grid>
-          <Typography variant="body2" data-qa-num-objects>
-            {`${objects} ${objects === 1 ? 'item' : 'items'}`}
           </Typography>
         </Grid>
       </TableCell>
