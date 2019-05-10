@@ -55,9 +55,9 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
     if (sanitizedInput !== value) {
       return setErrors([
         {
-          reason: `You cannot submit a reply with the current markup. We recommend not entering
-        any actual HTML markup, and instead prefer markdown. Please see the reference guide for
-        allowed markdown values.`,
+          reason: `You cannot submit a reply with the currently inputted value. 
+        While some markdown is supported, we recommend not attempting to submit HTML directly,
+         and instead prefer markdown. Please see the reference guide for allowed markdown values.`,
           field: 'description'
         }
       ]);
