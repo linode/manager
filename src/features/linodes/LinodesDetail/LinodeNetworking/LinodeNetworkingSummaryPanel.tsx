@@ -13,7 +13,7 @@ import Grid from 'src/components/Grid';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import { MapState } from 'src/store/types';
 
-import { ipv4DNSResolvers, ipv6DNSResolvers } from './resolvers';
+import { getIPv6DNSResolvers, ipv4DNSResolvers } from './resolvers';
 
 type ClassNames = 'root' | 'title' | 'section' | 'individualContainer' | 'ips';
 
@@ -40,7 +40,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 const styled = withStyles(styles);
 
 interface Props {
-  linodeRegion: string;
+  linodeRegion: Linode.ZoneName;
   linodeLabel: string;
   linkLocal?: string;
   sshIPAddress?: string;
@@ -108,7 +108,7 @@ const LinodeNetworkingSummaryPanel: React.StatelessComponent<
               />
               <StyledSummarySection
                 title="DNS Resolvers (IPv6)"
-                renderValue={renderIPv6DNSResolvers()}
+                renderValue={renderIPv6DNSResolvers(linodeRegion)}
               />
             </Grid>
           </Grid>
@@ -138,15 +138,15 @@ const getIPv4DNSResolvers = (region: string) => {
   return pathOr(ipv4DNSResolvers.newark, [region], ipv4DNSResolvers);
 };
 
-const renderIPv4DNSResolvers = (region: string) => () => (
+const renderIPv4DNSResolvers = (region: Linode.ZoneName) => () => (
   <div style={{ display: 'flex', alignItems: 'center' }}>
     <IPAddress ips={getIPv4DNSResolvers(region)} copyRight showMore />
   </div>
 );
 
-const renderIPv6DNSResolvers = () => () => (
+const renderIPv6DNSResolvers = (region: Linode.ZoneName) => () => (
   <div style={{ display: 'flex', alignItems: 'center' }}>
-    <IPAddress ips={ipv6DNSResolvers} copyRight showMore />
+    <IPAddress ips={getIPv6DNSResolvers(region)} copyRight showMore />
   </div>
 );
 

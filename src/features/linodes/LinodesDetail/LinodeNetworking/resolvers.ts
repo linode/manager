@@ -1,4 +1,7 @@
-export const ipv4DNSResolvers = {
+// @todo: In principle, everything in this file should be returned by the API.
+// We have no choice but to hard-code these at the moment.
+
+export const ipv4DNSResolvers: Record<Linode.ZoneName, string[]> = {
   newark: [
     '66.228.42.5',
     '96.126.106.5',
@@ -103,15 +106,41 @@ export const ipv4DNSResolvers = {
   ]
 };
 
-export const ipv6DNSResolvers = [
-  '2600:3c00::', // Dallas, TX
-  '2600:3c01::', // Fremont, CA
-  '2600:3c02::', // Atlanta, GA
-  '2600:3c03::', // Newark, NJ
-  '2a01:7e00::', // London, UK
-  '2400:8900::', // Tokyo, JP
-  '2400:8901::', // Singapore, SG
-  '2a01:7e01::', // Frankfurt, DE
-  '2400:8902::', // Shinagawa1, JP
-  '2600:3C04::' // Toronto, CAN
-];
+// Returns all 7 IPv6 resolvers for a given region.
+//
+// Each region has a prefix and 7 IPv6 resolvers that begin with this prefix.
+// The tails of each resolver follow a convention standardized across all regions:
+// ::5
+// ::6
+// ::7
+// ::8
+// ::9
+// ::b
+// ::c
+export const getIPv6DNSResolvers = (region: Linode.ZoneName) => {
+  const prefix = ipv6DNSResolverPrefixes[region];
+
+  return [
+    `${prefix}5`,
+    `${prefix}6`,
+    `${prefix}7`,
+    `${prefix}8`,
+    `${prefix}9`,
+    `${prefix}b`,
+    `${prefix}c`
+  ];
+};
+
+// IPv6 Prefixes for each region.
+export const ipv6DNSResolverPrefixes: Record<Linode.ZoneName, string> = {
+  newark: '2600:3c03::',
+  dallas: '2600:3c00::',
+  fremont: '2600:3c01::',
+  atlanta: '2600:3c02::',
+  london: '2a01:7e00::',
+  tokyo: '2400:8900::',
+  singapore: '2400:8901::',
+  frankfurt: '2a01:7e01::',
+  shinagawa1: '2400:8902::',
+  toronto1: '2600:3C04::'
+};
