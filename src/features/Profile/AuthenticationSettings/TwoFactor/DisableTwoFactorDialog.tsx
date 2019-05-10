@@ -116,7 +116,7 @@ class DialogActions extends React.PureComponent<ActionsProps, {}> {
           onClick={this.handleSubmit}
           data-qa-submit
         >
-          Disable Two-factor Authenitcation
+          Disable Two-factor Authentication
         </Button>
       </ActionsPanel>
     );
