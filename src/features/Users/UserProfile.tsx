@@ -38,6 +38,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     flexGrow: 1,
     width: '100%',
     marginTop: theme.spacing.unit,
+    marginBottom: theme.spacing.unit * 3,
     backgroundColor: theme.color.white
   },
   deleteRoot: {
@@ -136,61 +137,80 @@ class UserProfile extends React.Component<CombinedProps> {
       profileErrors
     );
 
-    const generalError =
-      hasAccountErrorFor('none') || hasProfileErrorFor('none');
+    const generalAccountError = hasAccountErrorFor('none');
+
+    const generalProfileError = hasProfileErrorFor('none');
 
     return (
-      <Paper className={classes.root}>
-        <div className={classes.inner}>
-          {(accountSuccess || profileSuccess) && (
-            <Notice success>User Profile updated successfully</Notice>
-          )}
-          {generalError && <Notice error text={generalError} />}
-          <Typography variant="h2" data-qa-profile-header>
-            User Profile
-          </Typography>
-          <TextField
-            className={classes.field}
-            label="Username"
-            value={username}
-            onChange={changeUsername}
-            errorText={hasAccountErrorFor('username')}
-            data-qa-username
-          />
-          <ActionsPanel>
-            <Button
-              type="primary"
-              loading={accountSaving}
-              onClick={saveAccount}
-              data-qa-submit
-            >
-              Save
-            </Button>
-          </ActionsPanel>
-          <TextField
-            // This should be disabled if this is NOT the current user.
-            disabled={profileUsername !== originalUsername}
-            className={classes.field}
-            label="Email"
-            value={email}
-            onChange={changeEmail}
-            errorText={hasProfileErrorFor('email')}
-            data-qa-username
-          />
-          <ActionsPanel>
-            <Button
+      <React.Fragment>
+        <Typography variant="h2" data-qa-profile-header>
+          User Profile
+        </Typography>
+        <Paper className={classes.root}>
+          <div className={classes.inner}>
+            {accountSuccess && (
+              <Notice success spacingBottom={0}>
+                Username updated successfully
+              </Notice>
+            )}
+            {generalAccountError && (
+              <Notice error text={generalAccountError} spacingBottom={0} />
+            )}
+            <TextField
+              className={classes.field}
+              label="Username"
+              value={username}
+              onChange={changeUsername}
+              errorText={hasAccountErrorFor('username')}
+              data-qa-username
+            />
+            <ActionsPanel>
+              <Button
+                type="primary"
+                loading={accountSaving}
+                onClick={saveAccount}
+                data-qa-submit
+              >
+                Save
+              </Button>
+            </ActionsPanel>
+          </div>
+        </Paper>
+        <Paper className={classes.root}>
+          <div className={classes.inner}>
+            {profileSuccess && (
+              <Notice success spacingBottom={0}>
+                Email updated successfully
+              </Notice>
+            )}
+            {generalProfileError && (
+              <Notice error text={generalProfileError} spacingBottom={0} />
+            )}
+            <TextField
               // This should be disabled if this is NOT the current user.
               disabled={profileUsername !== originalUsername}
-              type="primary"
-              loading={profileSaving}
-              onClick={saveProfile}
-              data-qa-submit
-            >
-              Save
-            </Button>
-          </ActionsPanel>
-        </div>
-      </Paper>
+              className={classes.field}
+              label="Email"
+              value={email}
+              onChange={changeEmail}
+              errorText={hasProfileErrorFor('email')}
+              data-qa-username
+            />
+            <ActionsPanel>
+              <Button
+                // This should be disabled if this is NOT the current user.
+                disabled={profileUsername !== originalUsername}
+                type="primary"
+                loading={profileSaving}
+                onClick={saveProfile}
+                data-qa-submit
+              >
+                Save
+              </Button>
+            </ActionsPanel>
+          </div>
+        </Paper>
+      </React.Fragment>
     );
   };
 

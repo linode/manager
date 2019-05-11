@@ -140,7 +140,7 @@ class UserDetail extends React.Component<CombinedProps> {
 
     if (locationState) {
       this.setState({
-        profileSuccess: clone(locationState.success),
+        accountSuccess: clone(locationState.success),
         createdUsername: clone(locationState.newUsername)
       });
       /* don't show the success message again on refresh */
@@ -218,14 +218,7 @@ class UserDetail extends React.Component<CombinedProps> {
           originalUsername: user.username,
           username: user.username,
           accountSaving: false,
-          accountErrors: undefined,
-          profileErrors: undefined,
-          // We update `email` state here in case the user has
-          // entered text in the `email` text input, but hasn't
-          // clicked "Save". If we didn't do this, they'd see a success
-          // message along with the un-submitted email, which could
-          // give the false impression they've updated their email.
-          email: user.email
+          accountErrors: undefined
         });
 
         /**
@@ -246,13 +239,10 @@ class UserDetail extends React.Component<CombinedProps> {
         this.setState({
           accountErrors: getAPIErrorOrDefault(
             errResponse,
-            'Error updating user profile'
+            'Error updating username'
           ),
           accountSaving: false,
-          accountSuccess: false,
-          // We need to clear profileSuccess here too, otherwise we could
-          // end up with a Success Notice and Error Notice at the same time.
-          profileSuccess: false
+          accountSuccess: false
         });
       });
   };
@@ -274,14 +264,7 @@ class UserDetail extends React.Component<CombinedProps> {
         this.setState({
           profileSaving: false,
           profileSuccess: true,
-          accountErrors: undefined,
-          profileErrors: undefined,
-          // We update `username` state here, in case the user has
-          // entered text in the `username` text input, but hasn't
-          // clicked "Save". If we didn't do this, they'd see a success
-          // message along with the un-submitted username, which could
-          // give the false impression they've updated their username.
-          username: profile.username
+          profileErrors: undefined
         });
         /**
          * If the user we updated is the current user, we need to reflect that change at the global level.
@@ -294,13 +277,10 @@ class UserDetail extends React.Component<CombinedProps> {
         this.setState({
           profileErrors: getAPIErrorOrDefault(
             errResponse,
-            'Error updating user profile'
+            'Error updating email'
           ),
           profileSaving: false,
-          profileSuccess: false,
-          // We need to clear accountSuccess here too, otherwise we could
-          // end up with Success Notice and Error Notice at the same time.
-          accountSuccess: false
+          profileSuccess: false
         });
       });
   };
