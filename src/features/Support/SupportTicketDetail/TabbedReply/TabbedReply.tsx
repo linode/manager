@@ -37,7 +37,15 @@ const TabbedReply: React.FC<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
+/** only update on error and value change */
+const memoized = (component: React.FC<CombinedProps>) =>
+  React.memo<CombinedProps>(component, (prevProps, nextProps) => {
+    return (
+      prevProps.error === nextProps.error && prevProps.value === nextProps.value
+    );
+  });
+
 export default compose<CombinedProps, ReplyProps>(
   styled,
-  React.memo
+  memoized
 )(TabbedReply);
