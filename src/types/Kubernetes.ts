@@ -27,4 +27,8 @@ namespace Linode {
     type: string;
     count: number;
   }
+
+  export interface KubeConfigResponse {
+    kubeconfig: string;
+  }
 }
