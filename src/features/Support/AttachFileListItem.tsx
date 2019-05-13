@@ -16,7 +16,7 @@ import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import TextField from 'src/components/TextField';
 
-import { FileAttachment } from './AttachFileForm';
+import { FileAttachment } from './index';
 
 type ClassNames =
   | 'root'
