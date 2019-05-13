@@ -206,7 +206,9 @@ class UserDetail extends React.Component<CombinedProps> {
     this.setState({
       accountSuccess: false,
       accountSaving: true,
-      accountErrors: []
+      accountErrors: [],
+      profileSuccess: false,
+      profileErrors: []
     });
 
     updateUser(originalUsername, { username, restricted })
@@ -256,7 +258,9 @@ class UserDetail extends React.Component<CombinedProps> {
     this.setState({
       profileSuccess: false,
       profileSaving: true,
-      profileErrors: []
+      profileErrors: [],
+      accountSuccess: false,
+      accountErrors: []
     });
 
     updateProfile({ email })
