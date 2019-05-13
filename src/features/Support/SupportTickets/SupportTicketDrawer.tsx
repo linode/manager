@@ -27,9 +27,9 @@ import {
   getErrorStringOrDefault
 } from 'src/utilities/errorUtils';
 import { getVersionString } from 'src/utilities/getVersionString';
-import AttachFileForm, { FileAttachment } from '../AttachFileForm';
+import AttachFileForm from '../AttachFileForm';
+import { FileAttachment } from '../index';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
-import { reshapeFiles } from '../ticketUtils';
 
 type ClassNames = 'root' | 'suffix' | 'actionPanel';
 
@@ -271,14 +271,6 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
     this.setState({ inputValue });
   };
 
-  handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { files } = e.target;
-    if (files && files.length) {
-      const reshapedFiles = reshapeFiles(files);
-      this.setState(set(L.files, [...this.state.files, ...reshapedFiles]));
-    }
-  };
-
   updateFiles = (files: FileAttachment[]) => {
     this.setState(set(L.files, files));
   };
@@ -508,7 +500,6 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         <AttachFileForm
           inlineDisplay
           files={files}
-          handleFileSelected={this.handleFileSelected}
           updateFiles={this.updateFiles}
         />
 

@@ -2,6 +2,7 @@ import * as classNames from 'classnames';
 import * as moment from 'moment';
 import { pathOr } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import UserIcon from 'src/assets/icons/user.svg';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
@@ -14,6 +15,7 @@ import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 
+import { Converter } from 'showdown';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import TicketDetailBody from './TicketDetailText';
 
@@ -114,10 +116,6 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-interface State {
-  data?: Data;
-}
-
 interface Data {
   gravatar_id: string;
   gravatarUrl: string;
@@ -156,72 +154,61 @@ export const shouldRenderHively = (
   }
 };
 
-export class ExpandableTicketPanel extends React.Component<
-  CombinedProps,
-  State
-> {
-  mounted: boolean = false;
-  constructor(props: CombinedProps) {
-    super(props);
-    this.state = {
-      data: this.getData()
-    };
-  }
+export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
+  const {
+    classes,
+    isCurrentUser,
+    parentTicket,
+    ticket,
+    open,
+    reply,
+    ticketUpdated
+  } = props;
 
-  componentDidMount() {
-    this.mounted = true;
-  }
+  const [data, setData] = React.useState<Data | undefined>(undefined);
 
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
-  getData = () => {
-    const { parentTicket, ticket, reply, ticketUpdated } = this.props;
+  React.useEffect(() => {
     if (!ticket && !reply) {
       return;
     }
-
-    /**
-     * @todo convert markdown to markup before sanitization
-     */
-
-    let data: Data;
     if (ticket) {
-      data = {
+      /** convert markdown to mark up */
+      const convertedMarkdown = new Converter().makeHtml(ticket.description);
+
+      return setData({
         ticket_id: String(ticket.id),
         reply_id: '',
         gravatar_id: ticket.gravatar_id,
         gravatarUrl: pathOr('not found', ['gravatarUrl'], ticket),
         date: ticket.opened,
-        description: sanitizeHTML(ticket.description),
+        description: sanitizeHTML(convertedMarkdown),
         username: ticket.opened_by,
         from_linode: false,
         updated: ticket.updated
-      };
+      });
     } else if (reply) {
-      data = {
+      /** convert markdown to markup */
+      const convertedMarkdown = new Converter().makeHtml(reply.description);
+
+      return setData({
         ticket_id: parentTicket ? String(parentTicket) : '',
         reply_id: String(reply.id),
         gravatar_id: reply.gravatar_id,
         gravatarUrl: pathOr('not found', ['gravatarUrl'], reply),
         date: reply.created,
-        description: sanitizeHTML(reply.description),
+        description: sanitizeHTML(convertedMarkdown),
         username: reply.created_by,
         from_linode: reply.from_linode,
         updated: ticketUpdated!
-      };
+      });
     }
+  }, []);
 
-    return data!;
-  };
-
-  renderHively = (
+  const renderHively = (
     linodeUsername: string,
     ticketId: string,
     replyId: string
   ) => {
-    const { classes } = this.props;
     const href = `https://secure.teamhively.com/ratings/add/account/587/source/hs/ext/${linodeUsername}/ticket/${ticketId}-${replyId}/rating/`;
     return (
       <div className={classes.hivelyContainer}>
@@ -271,9 +258,7 @@ export class ExpandableTicketPanel extends React.Component<
     );
   };
 
-  renderAvatar(url: string) {
-    const { classes } = this.props;
-
+  const renderAvatar = (url: string) => {
     return url !== 'not found' ? (
       <div className={classes.userWrapper}>
         <img src={url} className={classes.leftIcon} alt="Gravatar" />
@@ -283,70 +268,65 @@ export class ExpandableTicketPanel extends React.Component<
         <UserIcon className={classes.leftIcon} />
       </div>
     );
+  };
+
+  /**
+   * data.description will be a blank string if it contained ONLY malicious markup
+   * because we sanitize it in this.getData()
+   */
+  if (!data || !data.description) {
+    return null;
   }
 
-  render() {
-    const { classes, isCurrentUser } = this.props;
-    const { data } = this.state;
-
-    /**
-     * data.description will be a blank string if it contained ONLY malicious markup
-     * because we sanitize it in this.getData()
-     */
-    if (!data || !data.description) {
-      return null;
-    }
-
-    return (
-      <Grid item className={classes.root}>
-        <Paper
-          className={classNames({
-            [classes.paper]: true,
-            [classes.isCurrentUser]: isCurrentUser
-          })}
+  return (
+    <Grid item className={classes.root}>
+      <Paper
+        className={classNames({
+          [classes.paper]: true,
+          [classes.isCurrentUser]: isCurrentUser
+        })}
+      >
+        <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="flex-start"
         >
-          <Grid
-            container
-            direction="row"
-            justify="space-between"
-            alignItems="flex-start"
-          >
-            <Grid item xs={11} sm={5} md={3} className={classes.userCol}>
-              <Grid container wrap="nowrap">
-                <Grid item style={{ paddingLeft: 0 }}>
-                  {this.renderAvatar(data.gravatarUrl)}
-                </Grid>
-                <Grid item>
-                  <Typography className={classes.userName}>
-                    {data.username}
-                  </Typography>
-                  {data.from_linode && (
-                    <Typography variant="body1">Linode Expert</Typography>
-                  )}
-                  <Typography variant="body1" style={{ marginTop: 8 }}>
-                    <DateTimeDisplay
-                      value={data.date}
-                      humanizeCutoff={'month'}
-                    />
-                  </Typography>
-                </Grid>
+          <Grid item xs={11} sm={5} md={3} className={classes.userCol}>
+            <Grid container wrap="nowrap">
+              <Grid item style={{ paddingLeft: 0 }}>
+                {renderAvatar(data.gravatarUrl)}
+              </Grid>
+              <Grid item>
+                <Typography className={classes.userName}>
+                  {data.username}
+                </Typography>
+                {data.from_linode && (
+                  <Typography variant="body1">Linode Expert</Typography>
+                )}
+                <Typography variant="body1" style={{ marginTop: 8 }}>
+                  <DateTimeDisplay value={data.date} humanizeCutoff={'month'} />
+                </Typography>
               </Grid>
             </Grid>
-            <TicketDetailBody
-              open={this.props.open}
-              dangerouslySetInnerHTML={{
-                __html: data.description
-              }}
-            />
           </Grid>
-          {shouldRenderHively(data.from_linode, data.updated, data.username) &&
-            this.renderHively(data.username, data.ticket_id, data.reply_id)}
-        </Paper>
-      </Grid>
-    );
-  }
-}
+          <TicketDetailBody
+            open={open}
+            dangerouslySetInnerHTML={{
+              __html: data.description
+            }}
+          />
+        </Grid>
+        {shouldRenderHively(data.from_linode, data.updated, data.username) &&
+          renderHively(data.username, data.ticket_id, data.reply_id)}
+      </Paper>
+    </Grid>
+  );
+};
 
 const styled = withStyles(styles);
 
-export default styled(ExpandableTicketPanel);
+export default compose<CombinedProps, Props>(
+  styled,
+  React.memo
+)(ExpandableTicketPanel);
