@@ -1,3 +1,4 @@
+import { path } from 'ramda';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 
@@ -14,5 +15,5 @@ export default <TInner extends {}, TOuter extends {}>(
   connect((state: ApplicationState, ownProps: TOuter) => {
     const { loading, error, entities } = state.__resources.linodes;
 
-    return mapToProps(ownProps, entities, loading, error);
+    return mapToProps(ownProps, entities, loading, path(['read'], error));
   });
