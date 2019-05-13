@@ -22,18 +22,20 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
-type ClassNames = 'root' | 'reference';
+type ClassNames = 'root' | 'reference' | 'referenceRoot';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     width: '100%',
     marginLeft: theme.spacing.unit * 2
   },
-  reference: {
-    // backgroundColor: theme.palette.divider,
+  referenceRoot: {
     '& > p': {
       marginBottom: theme.spacing.unit
-    },
+    }
+  },
+  reference: {
+    // backgroundColor: theme.palette.divider,
     [theme.breakpoints.up('sm')]: {
       marginTop: theme.spacing.unit * 7,
       padding: `0 !important`
@@ -185,7 +187,7 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
         </Grid>
       </Grid>
       <Grid className={classes.reference} item sm={3} xs={12}>
-        <Reference />
+        <Reference rootClass={classes.referenceRoot} />
       </Grid>
     </Grid>
   );
