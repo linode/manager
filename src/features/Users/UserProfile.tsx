@@ -193,6 +193,11 @@ class UserProfile extends React.Component<CombinedProps> {
               label="Email"
               value={email}
               onChange={changeEmail}
+              tooltipText={
+                profileUsername !== originalUsername
+                  ? "You can't change another user's email address"
+                  : ''
+              }
               errorText={hasProfileErrorFor('email')}
               data-qa-username
             />
