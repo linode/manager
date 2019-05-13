@@ -11,6 +11,8 @@ import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 
+import ActionMenu from './ClusterActionMenu';
+
 type ClassNames = 'root' | 'label' | 'clusterDescription';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
@@ -66,6 +68,9 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
       </TableCell>
       <TableCell parentColumn="Region" data-qa-cluster-region>
         {cluster.region}
+      </TableCell>
+      <TableCell>
+        <ActionMenu clusterId={cluster.id} />
       </TableCell>
     </TableRow>
   );
