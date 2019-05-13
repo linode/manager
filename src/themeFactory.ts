@@ -866,6 +866,11 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       },
       MuiPaper: {
         root: {
+          '& pre': {
+            backgroundColor: '#eee',
+            padding: '8px',
+            fontSize: '1rem'
+          },
           '& span.hljs-comment, & span.hljs-quote': {
             color: '#655f6d'
           },

@@ -400,6 +400,11 @@ export const dark = () =>
       MuiPaper: {
         root: {
           backgroundColor: '#32363c',
+          '& pre': {
+            backgroundColor: '#181C21',
+            padding: '8px',
+            fontSize: '1rem'
+          },
           '& span.hljs-comment, & span.hljs-quote': {
             color: '#655f6d'
           },
@@ -432,7 +437,7 @@ export const dark = () =>
             & span.hljs-symbol,
             & span.hljs-bullet
           `]: {
-            color: '#2a9292'
+            color: '#25ffff'
           },
           [`
             & span.hljs-title,
@@ -444,7 +449,7 @@ export const dark = () =>
             & span.hljs-keyword,
             & span.hljs-selector-tag
           `]: {
-            color: '#955ae7'
+            color: '#8c73af'
           },
           [`
             & span.hljs-deletion,
