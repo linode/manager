@@ -1,10 +1,5 @@
-import { pathOr } from 'ramda';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import store from 'src/store';
 import { ExtendedPoolNode, PoolNode } from './types';
-
-const getTypes = () =>
-  pathOr(false, ['__resources', 'types', 'entities'], store.getState());
 
 // @todo don't hard code this
 export const KubernetesVersionOptions = ['1.13', '1.14'].map(version => ({
@@ -12,8 +7,11 @@ export const KubernetesVersionOptions = ['1.13', '1.14'].map(version => ({
   value: version
 }));
 
-export const getMonthlyPrice = (type: string, count: number) => {
-  const types = getTypes();
+export const getMonthlyPrice = (
+  type: string,
+  count: number,
+  types: ExtendedType[]
+) => {
   if (!types) {
     return 0;
   }

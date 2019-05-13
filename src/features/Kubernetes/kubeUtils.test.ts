@@ -7,18 +7,6 @@ import {
   getTotalClusterPrice
 } from './kubeUtils';
 
-jest.mock('src/store', () => ({
-  default: {
-    getState: () => ({
-      __resources: {
-        types: {
-          entities: extendedTypes
-        }
-      }
-    })
-  }
-}));
-
 const mockNodePool = {
   type: extendedTypes[0].id,
   count: 4,
@@ -35,13 +23,15 @@ describe('helper functions', () => {
   describe('getMonthlyPrice', () => {
     it('should multiply node price by node count', () => {
       const expectedPrice = extendedTypes[0].price.monthly * mockNodePool.count;
-      expect(getMonthlyPrice(mockNodePool.type, mockNodePool.count)).toBe(
-        expectedPrice
-      );
+      expect(
+        getMonthlyPrice(mockNodePool.type, mockNodePool.count, extendedTypes)
+      ).toBe(expectedPrice);
     });
 
     it('should return zero for bad input', () => {
-      expect(getMonthlyPrice(badNodePool.type, badNodePool.count)).toBe(0);
+      expect(
+        getMonthlyPrice(badNodePool.type, badNodePool.count, extendedTypes)
+      ).toBe(0);
     });
   });
 

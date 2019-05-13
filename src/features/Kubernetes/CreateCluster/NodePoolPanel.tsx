@@ -125,7 +125,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     addNodePool({
       type: selectedType,
       count: nodeCount,
-      totalMonthlyPrice: getMonthlyPrice(selectedType, nodeCount)
+      totalMonthlyPrice: getMonthlyPrice(selectedType, nodeCount, types)
     });
     handleTypeSelect(undefined);
     updateNodeCount(1);
