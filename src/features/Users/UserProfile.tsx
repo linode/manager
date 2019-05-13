@@ -7,7 +7,6 @@ import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import InputLabel from 'src/components/core/InputLabel';
 import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
@@ -39,6 +38,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     flexGrow: 1,
     width: '100%',
     marginTop: theme.spacing.unit,
+    marginBottom: theme.spacing.unit * 3,
     backgroundColor: theme.color.white
   },
   deleteRoot: {
@@ -69,11 +69,16 @@ interface Props {
   username: string;
   email?: string;
   changeUsername: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  save: () => void;
-  reset: () => void;
-  saving: boolean;
-  success: boolean;
-  errors?: Linode.ApiFieldError[];
+  changeEmail: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  saveAccount: () => void;
+  accountSaving: boolean;
+  accountSuccess: boolean;
+  accountErrors?: Linode.ApiFieldError[];
+  saveProfile: () => void;
+  profileSaving: boolean;
+  profileSuccess: boolean;
+  profileErrors?: Linode.ApiFieldError[];
+  originalUsername?: string;
 }
 
 interface State {
@@ -109,54 +114,108 @@ class UserProfile extends React.Component<CombinedProps> {
       username,
       email,
       changeUsername,
-      save,
-      reset,
-      saving,
-      success,
-      errors
+      changeEmail,
+      saveAccount,
+      accountSaving,
+      accountSuccess,
+      accountErrors,
+      saveProfile,
+      profileSaving,
+      profileSuccess,
+      profileErrors,
+      profileUsername,
+      originalUsername
     } = this.props;
-    const hasErrorFor = getAPIErrorsFor({ username: 'Username' }, errors);
-    const generalError = hasErrorFor('none');
+
+    const hasAccountErrorFor = getAPIErrorsFor(
+      { username: 'Username' },
+      accountErrors
+    );
+
+    const hasProfileErrorFor = getAPIErrorsFor(
+      { email: 'Email' },
+      profileErrors
+    );
+
+    const generalAccountError = hasAccountErrorFor('none');
+
+    const generalProfileError = hasProfileErrorFor('none');
+
     return (
-      <Paper className={classes.root}>
-        <div className={classes.inner}>
-          {success && (
-            <Notice success>User Profile updated successfully</Notice>
-          )}
-          {generalError && <Notice error text={generalError} />}
-          <Typography variant="h2" data-qa-profile-header>
-            User Profile
-          </Typography>
-          <TextField
-            className={classes.field}
-            label="Username"
-            value={username}
-            onChange={changeUsername}
-            errorText={hasErrorFor('username')}
-            data-qa-username
-          />
-          {/* API doesn't allow changing user email address */}
-          <div className={classes.emailField}>
-            <InputLabel>Email Address</InputLabel>
-            <Typography data-qa-email className={classes.emailAddress}>
-              {email}
-            </Typography>
+      <React.Fragment>
+        <Typography variant="h2" data-qa-profile-header>
+          User Profile
+        </Typography>
+        <Paper className={classes.root}>
+          <div className={classes.inner}>
+            {accountSuccess && (
+              <Notice success spacingBottom={0}>
+                Username updated successfully
+              </Notice>
+            )}
+            {generalAccountError && (
+              <Notice error text={generalAccountError} spacingBottom={0} />
+            )}
+            <TextField
+              className={classes.field}
+              label="Username"
+              value={username}
+              onChange={changeUsername}
+              errorText={hasAccountErrorFor('username')}
+              data-qa-username
+            />
+            <ActionsPanel>
+              <Button
+                type="primary"
+                loading={accountSaving}
+                onClick={saveAccount}
+                data-qa-submit
+              >
+                Save
+              </Button>
+            </ActionsPanel>
           </div>
-          <ActionsPanel style={{ marginTop: 16 }}>
-            <Button
-              type="primary"
-              loading={saving}
-              onClick={save}
-              data-qa-submit
-            >
-              Save
-            </Button>
-            <Button type="cancel" onClick={reset} data-qa-cancel>
-              Cancel
-            </Button>
-          </ActionsPanel>
-        </div>
-      </Paper>
+        </Paper>
+        <Paper className={classes.root}>
+          <div className={classes.inner}>
+            {profileSuccess && (
+              <Notice success spacingBottom={0}>
+                Email updated successfully
+              </Notice>
+            )}
+            {generalProfileError && (
+              <Notice error text={generalProfileError} spacingBottom={0} />
+            )}
+            <TextField
+              // This should be disabled if this is NOT the current user.
+              disabled={profileUsername !== originalUsername}
+              className={classes.field}
+              label="Email"
+              value={email}
+              onChange={changeEmail}
+              tooltipText={
+                profileUsername !== originalUsername
+                  ? "You can't change another user's email address"
+                  : ''
+              }
+              errorText={hasProfileErrorFor('email')}
+              data-qa-username
+            />
+            <ActionsPanel>
+              <Button
+                // This should be disabled if this is NOT the current user.
+                disabled={profileUsername !== originalUsername}
+                type="primary"
+                loading={profileSaving}
+                onClick={saveProfile}
+                data-qa-submit
+              >
+                Save
+              </Button>
+            </ActionsPanel>
+          </div>
+        </Paper>
+      </React.Fragment>
     );
   };
 
