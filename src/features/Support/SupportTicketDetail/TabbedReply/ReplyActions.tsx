@@ -50,15 +50,4 @@ const ReplyActions: React.FC<CombinedProps> = props => {
   );
 };
 
-/**
- * only update if isSubmitting or form value changes
- */
-export default React.memo(
-  ReplyActions,
-  (prevProps: CombinedProps, nextProps: CombinedProps) => {
-    return (
-      prevProps.isSubmitting === nextProps.isSubmitting &&
-      prevProps.value === nextProps.value
-    );
-  }
-);
+export default React.memo(ReplyActions);

@@ -48,12 +48,12 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
   const [files, setFiles] = React.useState<FileAttachment[]>([]);
 
-  const submitForm = (description: string) => {
+  const submitForm = () => {
     setSubmitting(true);
     setErrors(undefined);
 
     /* Send the reply */
-    createReply({ description, ticket_id: props.ticketId })
+    createReply({ description: value, ticket_id: props.ticketId })
       .then(response => {
         /** onSuccess callback */
         onSuccess(response);
