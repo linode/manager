@@ -98,7 +98,7 @@ export const BucketTableRow: React.StatelessComponent<
           {formatRegion(region)}
         </Typography>
       </TableCell>
-      <TableCell parentColumn="created">
+      <TableCell parentColumn="Created">
         <DateTimeDisplay
           value={created}
           humanizeCutoff="month"
