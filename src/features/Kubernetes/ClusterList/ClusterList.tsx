@@ -49,6 +49,10 @@ type CombinedProps = Props &
 
 export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
   const { classes, clusters, history, typesData } = props;
+  /**
+   * Not ideal having this run on render, but interactions on this view
+   * don't generally trigger re-renders.
+   */
   const extendedClusters: ExtendedCluster[] = clusters.map(cluster => {
     const { CPU: totalCPU, RAM: totalMemory } = getTotalClusterMemoryAndCPU(
       cluster.node_pools,
