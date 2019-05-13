@@ -47,6 +47,7 @@ interface Props {
   error?: string;
   copy?: string;
   rootClass?: string;
+  innerClass?: string;
   tabs: Tab[];
   [index: string]: any;
   initTab?: number;
@@ -75,6 +76,7 @@ class TabbedPanel extends React.Component<CombinedProps> {
       copy,
       error,
       rootClass,
+      innerClass,
       ...rest
     } = this.props;
     const { value } = this.state;
@@ -83,7 +85,7 @@ class TabbedPanel extends React.Component<CombinedProps> {
 
     return (
       <Paper className={`${classes.root} ${rootClass}`} data-qa-tp={header}>
-        <div className={`${classes.inner}`}>
+        <div className={`${classes.inner} ${innerClass}`}>
           {error && <Notice text={error} error />}
           <Typography variant="h2" data-qa-tp-title>
             {header}

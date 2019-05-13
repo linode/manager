@@ -1,9 +1,13 @@
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 
-const MarkdownReference: React.FC<{}> = () => {
+interface Props {
+  rootClass?: string;
+}
+
+const MarkdownReference: React.FC<Props> = props => {
   return (
-    <React.Fragment>
+    <div className={props.rootClass}>
       <Typography>
         <strong>Tips</strong>
       </Typography>
@@ -36,7 +40,7 @@ const MarkdownReference: React.FC<{}> = () => {
           __html: `<pre style="white-space: pre-wrap;">const someCode = "hello world"</pre>`
         }}
       />
-    </React.Fragment>
+    </div>
   );
 };
 
