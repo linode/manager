@@ -1,11 +1,11 @@
-import { pathOr } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { branch, compose, renderComponent } from 'recompose';
 import ErrorState from 'src/components/ErrorState';
 import { MapState } from 'src/store/types';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface OuterProps {
   configsError?: Linode.ApiFieldError[];
@@ -32,7 +32,7 @@ const collectErrors: MapState<InnerProps, OuterProps> = (
     error:
       configsError ||
       typesError ||
-      linodes.error ||
+      path(['error', 'read'], linodes.error) ||
       types.error ||
       notifications.error ||
       linodeConfigs.error ||
@@ -40,27 +40,26 @@ const collectErrors: MapState<InnerProps, OuterProps> = (
   };
 };
 
-/**
- * Collect possible errors from Redux, configs request, and disks requests.
- * If any are defined, render the ErrorComponent. (early return)
+/*
+  Collect possible errors from Redux, configs request, and disks requests.
+  If any are defined, render the ErrorComponent. (early return)
+  
+  IMPORTANT NOTE: The errors we're collecting here should only be the errors that
+  dictate when the Linode detail page should bomb. You'll notice that we're not 
+  collecting volumes errors here, and it's because we don't want to crash the entire
+  page if there was an issue loading the volumes.
  */
 
 export default compose(
   connect(collectErrors),
   branch(
     ({ error }) => Boolean(error),
-    renderComponent((props: any) => {
-      /**
-       * props.error can either be an Error or Linode.APIFieldError
-       * so we need to handle for both and look for the suspended message
-       * in both paths
-       */
-      const errorTextFromAxios = getErrorStringOrDefault(
+    /** error is not the only prop, but it's the only one we care about */
+    renderComponent((props: { error: Linode.ApiFieldError[] }) => {
+      let errorText: string | JSX.Element = getAPIErrorOrDefault(
         props.error,
-        'Unable to load Linode'
-      );
-
-      let errorText = pathOr(errorTextFromAxios, ['error', 0, 'reason'], props);
+        'There was an issue retrieving your Linode. Please try again later.'
+      )[0].reason;
 
       if (errorText.toLowerCase() === 'this linode has been suspended') {
         errorText = (

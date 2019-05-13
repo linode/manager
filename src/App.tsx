@@ -33,7 +33,7 @@ import { requestAccountSettings } from 'src/store/accountSettings/accountSetting
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestDomains } from 'src/store/domains/domains.actions';
 import { requestImages } from 'src/store/image/image.requests';
-import { requestLinodes } from 'src/store/linodes/linodes.actions';
+import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
 import { requestNotifications } from 'src/store/notification/notification.requests';
 import { requestProfile } from 'src/store/profile/profile.requests';
@@ -487,7 +487,7 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
   /** Profile */
   profileLoading: state.__resources.profile.loading,
   profileError: state.__resources.profile.error,
-  linodesError: state.__resources.linodes.error,
+  linodesError: path(['read'], state.__resources.linodes.error),
   domainsError: state.__resources.domains.error,
   imagesError: state.__resources.images.error,
   notificationsError: state.__resources.notifications.error,

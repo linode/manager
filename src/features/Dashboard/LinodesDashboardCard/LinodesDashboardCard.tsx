@@ -1,4 +1,4 @@
-import { compose, pathOr, prop, sortBy, take } from 'ramda';
+import { compose, path, pathOr, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -195,7 +195,7 @@ const withUpdatingLinodes = connect((state: ApplicationState, ownProps: {}) => {
     )(state.__resources.linodes.entities),
     linodeCount: state.__resources.linodes.entities.length,
     loading: state.__resources.linodes.loading,
-    error: state.__resources.linodes.error
+    error: path(['read'], state.__resources.linodes.error)
   };
 });
 
