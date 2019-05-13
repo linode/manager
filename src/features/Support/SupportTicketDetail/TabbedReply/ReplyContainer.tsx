@@ -56,8 +56,8 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
       return setErrors([
         {
           reason: `You cannot submit a reply with the currently inputted value. 
-        While some markdown is supported, we recommend not attempting to submit HTML directly,
-         and instead prefer markdown. Please see the reference guide for allowed markdown values.`,
+        While some Markdown is supported, we recommend not attempting to submit HTML directly,
+         and instead prefer Markdown. Please see the reference guide for allowed Markdown values.`,
           field: 'description'
         }
       ]);
