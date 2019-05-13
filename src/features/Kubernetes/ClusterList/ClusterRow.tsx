@@ -10,9 +10,8 @@ import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
-import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 
-import { getTotalClusterMemoryAndCPU } from './../kubeUtils';
+import { ExtendedCluster } from './../types';
 import ActionMenu from './ClusterActionMenu';
 
 type ClassNames = 'root' | 'label' | 'clusterDescription';
@@ -31,18 +30,13 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 interface Props {
-  cluster: Linode.KubernetesCluster;
-  typesData: ExtendedType[];
+  cluster: ExtendedCluster;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
-  const { classes, cluster, typesData } = props;
-  const { RAM, CPU } = getTotalClusterMemoryAndCPU(
-    cluster.node_pools,
-    typesData
-  );
+  const { classes, cluster } = props;
   return (
     <TableRow
       key={cluster.id}
@@ -77,10 +71,10 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
         {cluster.region}
       </TableCell>
       <TableCell parentColumn="Total Memory" data-qa-cluster-memory>
-        {`${RAM / 1024}GB`}
+        {`${cluster.totalMemory / 1024}GB`}
       </TableCell>
       <TableCell parentColumn="Total CPUs" data-qa-cluster-cpu>
-        {`${CPU} ${CPU === 1 ? 'CPU' : 'CPUs'}`}
+        {`${cluster.totalCPU} ${cluster.totalCPU === 1 ? 'CPU' : 'CPUs'}`}
       </TableCell>
       <TableCell>
         <ActionMenu clusterId={cluster.id} />

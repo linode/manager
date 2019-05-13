@@ -22,6 +22,8 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
+import { getTotalClusterMemoryAndCPU } from './../kubeUtils';
+import { ExtendedCluster } from './../types';
 import ClusterRow from './ClusterRow';
 
 type ClassNames = 'root' | 'title' | 'labelHeader';
@@ -47,6 +49,17 @@ type CombinedProps = Props &
 
 export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
   const { classes, clusters, history, typesData } = props;
+  const extendedClusters: ExtendedCluster[] = clusters.map(cluster => {
+    const { CPU: totalCPU, RAM: totalMemory } = getTotalClusterMemoryAndCPU(
+      cluster.node_pools,
+      typesData || []
+    );
+    return {
+      ...cluster,
+      totalMemory,
+      totalCPU
+    };
+  });
 
   return (
     <React.Fragment>
@@ -74,7 +87,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
           </Grid>
         </Grid>
       </Grid>
-      <OrderBy data={clusters} orderBy={'label'} order={'asc'}>
+      <OrderBy data={extendedClusters} orderBy={'label'} order={'asc'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <Paginate data={orderedData}>
             {({
@@ -128,8 +141,8 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
                           Region
                         </TableSortCell>
                         <TableSortCell
-                          active={orderBy === 'memory'}
-                          label={'memory'}
+                          active={orderBy === 'totalMemory'}
+                          label={'totalMemory'}
                           direction={order}
                           handleClick={handleOrderChange}
                           data-qa-kubernetes-clusters-memory-header
@@ -137,8 +150,8 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
                           Total Memory
                         </TableSortCell>
                         <TableSortCell
-                          active={orderBy === 'cpu'}
-                          label={'cpu'}
+                          active={orderBy === 'totalCPU'}
+                          label={'totalCPU'}
                           direction={order}
                           handleClick={handleOrderChange}
                           data-qa-kubernetes-clusters-cpu-header
@@ -149,10 +162,9 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {data.map((cluster, idx) => (
+                      {data.map((cluster: ExtendedCluster, idx: number) => (
                         <ClusterRow
                           key={`kubernetes-cluster-list-${idx}`}
-                          typesData={typesData || []}
                           cluster={cluster}
                         />
                       ))}
