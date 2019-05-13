@@ -53,6 +53,6 @@ const memoized = (component: React.FC<CombinedProps>) =>
   });
 
 export default compose<CombinedProps, ReplyProps>(
-  styled,
-  memoized
+  memoized,
+  styled
 )(TabbedReply);

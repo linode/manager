@@ -13,6 +13,7 @@ import Notice from 'src/components/Notice';
 
 import AttachFileForm from '../../AttachFileForm';
 import { FileAttachment } from '../../index';
+import Reference from './MarkdownReference';
 import ReplyActions from './ReplyActions';
 import TabbedReply from './TabbedReply';
 
@@ -21,12 +22,25 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'reference';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     width: '100%',
     marginLeft: theme.spacing.unit * 2
+  },
+  reference: {
+    // backgroundColor: theme.palette.divider,
+    '& > p': {
+      marginBottom: theme.spacing.unit
+    },
+    [theme.breakpoints.up('sm')]: {
+      marginTop: theme.spacing.unit * 7,
+      padding: `0 !important`
+    },
+    [theme.breakpoints.down('xs')]: {
+      padding: `${theme.spacing.unit * 2}px !important`
+    }
   }
 });
 
@@ -140,36 +154,46 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
   const errorMap = getErrorMap(['description'], errors);
 
   return (
-    <React.Fragment>
-      {errorMap.none && (
-        <Notice error spacingBottom={8} spacingTop={16} text={errorMap.none} />
-      )}
-      <TabbedReply
-        error={errorMap.description}
-        handleChange={setValue}
-        value={value}
-      />
-      <Grid className={classes.root} item>
-        <AttachFileForm
-          files={files}
-          updateFiles={(filesToAttach: FileAttachment[]) =>
-            setFiles(filesToAttach)
-          }
-        />
-        <ReplyActions
-          isSubmitting={isSubmitting}
+    <Grid container>
+      <Grid item sm={9} xs={12}>
+        {errorMap.none && (
+          <Notice
+            error
+            spacingBottom={8}
+            spacingTop={16}
+            text={errorMap.none}
+          />
+        )}
+        <TabbedReply
+          error={errorMap.description}
+          handleChange={setValue}
           value={value}
-          submitForm={submitForm}
-          {...rest}
         />
+        <Grid className={classes.root} item>
+          <AttachFileForm
+            files={files}
+            updateFiles={(filesToAttach: FileAttachment[]) =>
+              setFiles(filesToAttach)
+            }
+          />
+          <ReplyActions
+            isSubmitting={isSubmitting}
+            value={value}
+            submitForm={submitForm}
+            {...rest}
+          />
+        </Grid>
       </Grid>
-    </React.Fragment>
+      <Grid className={classes.reference} item sm={3} xs={12}>
+        <Reference />
+      </Grid>
+    </Grid>
   );
 };
 
 const styled = withStyles(styles);
 
 export default compose<CombinedProps, Props>(
-  styled,
-  React.memo
+  React.memo,
+  styled
 )(ReplyContainer);
