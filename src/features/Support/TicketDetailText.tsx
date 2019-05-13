@@ -95,7 +95,7 @@ const TicketDetailText: React.FC<CombinedProps> = props => {
           />
         )}
       </Grid>
-      {truncatedText !== text && (
+      {truncatedText !== ticketBody && (
         <Grid
           item
           xs={1}
