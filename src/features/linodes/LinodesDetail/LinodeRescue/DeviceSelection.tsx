@@ -47,9 +47,9 @@ export const getSelectedOption = (
   }
   // Ramda's flatten doesn't seem able to handle the typing issues here, but this returns an array of Item<string>.
   const optionsList = (flatten(
-    options.map(option => option.options)
+    options.map(group => group.options)
   ) as unknown) as Item<string>[];
-  return optionsList.find(option => option.value === selectedValue);
+  return optionsList.find(option => option.value === selectedValue) || null;
 };
 
 const DeviceSelection: React.StatelessComponent<CombinedProps> = props => {
