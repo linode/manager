@@ -23,16 +23,19 @@ import bucketRequestsContainer, {
   BucketsRequests
 } from 'src/containers/bucketRequests.container';
 import useOpenClose from 'src/hooks/useOpenClose';
-import { DeleteBucketRequest } from 'src/store/bucket/bucket.requests';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { readableBytes } from 'src/utilities/unitConversions';
 import BucketTableRow from './BucketTableRow';
 
-type ClassNames = 'root' | 'label';
+type ClassNames = 'root' | 'label' | 'confirmationCopy';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   label: {
     paddingLeft: 65
+  },
+  confirmationCopy: {
+    marginTop: theme.spacing.unit
   }
 });
 
@@ -45,22 +48,19 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames> & BucketsRequests;
 
-type BucketToRemove = DeleteBucketRequest;
-
 export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
   const { data, orderBy, order, handleOrderChange, classes } = props;
 
   const removeBucketConfirmationDialog = useOpenClose();
-  const [
-    bucketToRemove,
-    setBucketToRemove
-  ] = React.useState<BucketToRemove | null>(null);
+  const [bucketToRemove, setBucketToRemove] = React.useState<
+    Linode.Bucket | undefined
+  >(undefined);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>('');
   const [confirmBucketName, setConfirmBucketName] = React.useState<string>('');
 
-  const handleClickRemove = (cluster: string, label: string) => {
-    setBucketToRemove({ cluster, label });
+  const handleClickRemove = (bucket: Linode.Bucket) => {
+    setBucketToRemove(bucket);
     setError('');
     removeBucketConfirmationDialog.open();
   };
@@ -116,6 +116,39 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
       </Button>
     </ActionsPanel>
   );
+
+  const deleteBucketConfirmationMessage = () => {
+    if (!bucketToRemove) {
+      return null;
+    }
+
+    const { label, size, objects } = bucketToRemove;
+    const maybePluralizedObject = objects === 1 ? 'object' : 'objects';
+
+    return (
+      <React.Fragment>
+        {size > 0 ? (
+          <Typography>
+            This bucket contains{' '}
+            <strong>
+              {objects} {maybePluralizedObject}
+            </strong>{' '}
+            totalling <strong>{readableBytes(size).formatted}</strong> that will
+            be deleted along with the bucket. Deleting a bucket is permanent and
+            can't be undone.
+          </Typography>
+        ) : (
+          <Typography>
+            Deleting a bucket is permanent and can't be undone.{' '}
+          </Typography>
+        )}
+        <Typography className={classes.confirmationCopy}>
+          To confirm deletion, type the name of the bucket ({label}) in the
+          field below:
+        </Typography>
+      </React.Fragment>
+    );
+  };
 
   return (
     <Paginate data={data} pageSize={25}>
@@ -198,7 +231,7 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
           <ConfirmationDialog
             open={removeBucketConfirmationDialog.isOpen}
             onClose={() => {
-              setBucketToRemove(null);
+              setBucketToRemove(undefined);
               removeBucketConfirmationDialog.close();
             }}
             title={
@@ -209,13 +242,8 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
             actions={actions}
             error={error}
           >
-            <Typography>
-              Are you sure you want to delete this bucket? This action{' '}
-              <strong>cannot</strong> be undone, and will result in permanent
-              data loss.
-            </Typography>
+            <Typography>{deleteBucketConfirmationMessage()}</Typography>
             <TextField
-              label="Type the name of the bucket to confirm."
               onChange={e => setConfirmBucketName(e.target.value)}
               expand
             />
@@ -228,7 +256,7 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
 
 interface RenderDataProps {
   data: Linode.Bucket[];
-  onRemove: (cluster: string, bucketLabel: string) => void;
+  onRemove: (bucket: Linode.Bucket) => void;
 }
 
 const RenderData: React.StatelessComponent<RenderDataProps> = props => {
@@ -237,7 +265,11 @@ const RenderData: React.StatelessComponent<RenderDataProps> = props => {
   return (
     <>
       {data.map(bucket => (
-        <BucketTableRow {...bucket} key={bucket.label} onRemove={onRemove} />
+        <BucketTableRow
+          {...bucket}
+          key={bucket.label}
+          onRemove={() => onRemove(bucket)}
+        />
       ))}
     </>
   );
