@@ -141,6 +141,15 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
                     Name
                   </TableSortCell>
                   <TableSortCell
+                    active={orderBy === 'objects'}
+                    label="objects"
+                    direction={order}
+                    handleClick={handleOrderChange}
+                    data-qa-objects
+                  >
+                    Objects
+                  </TableSortCell>
+                  <TableSortCell
                     active={orderBy === 'size'}
                     label="size"
                     direction={order}

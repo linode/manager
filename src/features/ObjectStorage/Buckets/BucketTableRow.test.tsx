@@ -79,14 +79,14 @@ describe('BucketTableRow', () => {
     expect(actionMenuProps.onRemove).toBe(mockOnRemove);
   });
 
-  it('should correctly pluralize the number of items in the bucket', () => {
+  it('should correctly pluralize the number of objects in the bucket', () => {
     wrapper.setProps({ objects: 0 });
     expect(
       wrapper
         .find('[data-qa-num-objects]')
         .childAt(0)
         .text()
-    ).toBe('0 items');
+    ).toBe('0 objects');
 
     wrapper.setProps({ objects: 1 });
     expect(
@@ -94,7 +94,7 @@ describe('BucketTableRow', () => {
         .find('[data-qa-num-objects]')
         .childAt(0)
         .text()
-    ).toBe('1 item');
+    ).toBe('1 object');
 
     wrapper.setProps({ objects: 24 });
     expect(
@@ -102,6 +102,6 @@ describe('BucketTableRow', () => {
         .find('[data-qa-num-objects]')
         .childAt(0)
         .text()
-    ).toBe('24 items');
+    ).toBe('24 objects');
   });
 });

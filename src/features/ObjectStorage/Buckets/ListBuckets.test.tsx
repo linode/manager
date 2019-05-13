@@ -25,6 +25,9 @@ describe('ListBuckets', () => {
   it('renders a "Name" column', () => {
     expect(innerComponent.find('[data-qa-name]')).toHaveLength(1);
   });
+  it('renders an "Objects" column', () => {
+    expect(innerComponent.find('[data-qa-objects]')).toHaveLength(1);
+  });
   it('renders a "Size" column', () => {
     expect(innerComponent.find('[data-qa-size]')).toHaveLength(1);
   });
