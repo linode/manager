@@ -38,7 +38,10 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
   inputRef = React.createRef<HTMLInputElement>();
 
   shouldComponentUpdate(nextProps: CombinedProps) {
-    return !equals(this.props.files, nextProps.files);
+    return (
+      !equals(this.props.files, nextProps.files) ||
+      !equals(this.props.classes, nextProps.classes)
+    );
   }
 
   clickAttachButton = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -111,7 +114,4 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, Props>(
-  styled,
-  React.memo
-)(AttachFileForm);
+export default compose<CombinedProps, Props>(styled)(AttachFileForm);

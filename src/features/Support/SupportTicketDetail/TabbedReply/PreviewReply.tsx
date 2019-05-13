@@ -52,6 +52,6 @@ const PreviewReply: React.FC<CombinedProps> = props => {
 const styled = withStyles(styles);
 
 export default compose<CombinedProps, Props>(
-  styled,
-  React.memo
+  React.memo,
+  styled
 )(PreviewReply);
