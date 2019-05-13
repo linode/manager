@@ -10,7 +10,8 @@ const props = {
     root: '',
     label: '',
     clusterDescription: ''
-  }
+  },
+  typesData: []
 };
 
 const component = shallow(<ClusterRow {...props} />);

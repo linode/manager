@@ -1,7 +1,7 @@
 import { pathOr } from 'ramda';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import store from 'src/store';
-import { PoolNode } from './types';
+import { ExtendedPoolNode, PoolNode } from './types';
 
 const getTypes = () =>
   pathOr(false, ['__resources', 'types', 'entities'], store.getState());
@@ -21,7 +21,7 @@ export const getMonthlyPrice = (type: string, count: number) => {
   return thisType ? thisType.price.monthly * count : 0;
 };
 
-export const getTotalClusterPrice = (pools: PoolNode[]) =>
+export const getTotalClusterPrice = (pools: ExtendedPoolNode[]) =>
   pools.reduce((accumulator, node) => {
     return accumulator + node.totalMonthlyPrice;
   }, 0);
@@ -31,8 +31,10 @@ interface ClusterData {
   RAM: number;
 }
 
-export const getTotalClusterMemoryAndCPU = (pools: PoolNode[]) => {
-  const types = getTypes();
+export const getTotalClusterMemoryAndCPU = (
+  pools: PoolNode[],
+  types: ExtendedType[]
+) => {
   if (!types) {
     return { RAM: 0, CPU: 0 };
   }

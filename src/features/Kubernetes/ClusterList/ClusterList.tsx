@@ -21,6 +21,7 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
+import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import ClusterRow from './ClusterRow';
 
 type ClassNames = 'root' | 'title' | 'labelHeader';
@@ -39,10 +40,13 @@ interface Props {
   clusters: Linode.KubernetesCluster[];
 }
 
-type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  RouteComponentProps<{}> &
+  WithTypesProps &
+  WithStyles<ClassNames>;
 
 export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
-  const { classes, clusters, history } = props;
+  const { classes, clusters, history, typesData } = props;
 
   return (
     <React.Fragment>
@@ -123,6 +127,24 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
                         >
                           Region
                         </TableSortCell>
+                        <TableSortCell
+                          active={orderBy === 'memory'}
+                          label={'memory'}
+                          direction={order}
+                          handleClick={handleOrderChange}
+                          data-qa-kubernetes-clusters-memory-header
+                        >
+                          Total Memory
+                        </TableSortCell>
+                        <TableSortCell
+                          active={orderBy === 'cpu'}
+                          label={'cpu'}
+                          direction={order}
+                          handleClick={handleOrderChange}
+                          data-qa-kubernetes-clusters-cpu-header
+                        >
+                          Total CPUs
+                        </TableSortCell>
                         <TableCell />
                       </TableRow>
                     </TableHead>
@@ -130,6 +152,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
                       {data.map((cluster, idx) => (
                         <ClusterRow
                           key={`kubernetes-cluster-list-${idx}`}
+                          typesData={typesData || []}
                           cluster={cluster}
                         />
                       ))}
@@ -157,7 +180,8 @@ const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
   styled,
-  withRouter
+  withRouter,
+  withTypes
 );
 
 export default enhanced(ClusterList);

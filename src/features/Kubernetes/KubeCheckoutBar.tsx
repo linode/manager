@@ -3,14 +3,16 @@ import { Sticky, StickyProps } from 'react-sticky';
 
 import CheckoutBar from 'src/components/CheckoutBar';
 import renderGuard from 'src/components/RenderGuard';
+import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { getTotalClusterMemoryAndCPU, getTotalClusterPrice } from './kubeUtils';
-import { PoolNode } from './types';
+import { ExtendedPoolNode } from './types';
 
 interface Props {
   label: string;
   region?: string;
-  pools: PoolNode[];
+  pools: ExtendedPoolNode[];
   submitting: boolean;
+  typesData: ExtendedType[];
   createCluster: () => void;
 }
 
@@ -18,11 +20,16 @@ const priceHelperText =
   'This is an estimate. Deploying additional services or resizing may impact your recurring cost.';
 
 export const KubeCheckoutBar: React.FunctionComponent<Props> = props => {
-  const { label, region, pools, submitting, createCluster } = props;
+  const { label, region, pools, submitting, createCluster, typesData } = props;
   return (
     <Sticky topOffset={-24} disableCompensation>
       {(stickyProps: StickyProps) => {
-        const displaySections = getDisplaySections(label, region, pools);
+        const displaySections = getDisplaySections(
+          label,
+          region,
+          pools,
+          typesData
+        );
 
         return (
           <div>
@@ -49,11 +56,15 @@ export const KubeCheckoutBar: React.FunctionComponent<Props> = props => {
 export const getDisplaySections = (
   label: string,
   region: string | undefined,
-  pools: PoolNode[]
+  pools: ExtendedPoolNode[],
+  typesData: ExtendedType[]
 ) => {
   const displaySections = [];
 
-  const { RAM: totalRAM, CPU: totalCPU } = getTotalClusterMemoryAndCPU(pools);
+  const { RAM: totalRAM, CPU: totalCPU } = getTotalClusterMemoryAndCPU(
+    pools,
+    typesData
+  );
 
   if (region) {
     displaySections.push({
