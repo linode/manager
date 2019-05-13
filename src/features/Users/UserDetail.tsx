@@ -23,6 +23,7 @@ import Notice from 'src/components/Notice';
 import TabLink from 'src/components/TabLink';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getUser, updateUser } from 'src/services/account';
+import { updateProfile } from 'src/services/profile';
 import { handleUpdate } from 'src/store/profile/profile.actions';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -83,6 +84,9 @@ interface State {
   createdUsername?: string;
   email: string;
   restricted?: boolean;
+  accountSaving: boolean;
+  accountErrors?: Linode.ApiFieldError[];
+  accountSuccess?: boolean;
   profileSaving: boolean;
   profileErrors?: Linode.ApiFieldError[];
   profileSuccess?: boolean;
@@ -90,6 +94,7 @@ interface State {
 
 class UserDetail extends React.Component<CombinedProps> {
   state: State = {
+    accountSaving: false,
     profileSaving: false,
     email: '',
     username: ''
@@ -135,7 +140,7 @@ class UserDetail extends React.Component<CombinedProps> {
 
     if (locationState) {
       this.setState({
-        profileSuccess: clone(locationState.success),
+        accountSuccess: clone(locationState.success),
         createdUsername: clone(locationState.newUsername)
       });
       /* don't show the success message again on refresh */
@@ -178,7 +183,13 @@ class UserDetail extends React.Component<CombinedProps> {
     });
   };
 
-  onSave = () => {
+  onChangeEmail = (e: React.ChangeEvent<HTMLInputElement>) => {
+    this.setState({
+      email: e.target.value
+    });
+  };
+
+  onSaveAccount = () => {
     const {
       history,
       match: { path },
@@ -193,8 +204,10 @@ class UserDetail extends React.Component<CombinedProps> {
     }
 
     this.setState({
+      accountSuccess: false,
+      accountSaving: true,
+      accountErrors: [],
       profileSuccess: false,
-      profileSaving: true,
       profileErrors: []
     });
 
@@ -206,7 +219,8 @@ class UserDetail extends React.Component<CombinedProps> {
         this.setState({
           originalUsername: user.username,
           username: user.username,
-          profileSaving: false
+          accountSaving: false,
+          accountErrors: undefined
         });
 
         /**
@@ -225,11 +239,52 @@ class UserDetail extends React.Component<CombinedProps> {
       })
       .catch(errResponse => {
         this.setState({
+          accountErrors: getAPIErrorOrDefault(
+            errResponse,
+            'Error updating username'
+          ),
+          accountSaving: false,
+          accountSuccess: false
+        });
+      });
+  };
+
+  onSaveProfile = () => {
+    const { email, originalUsername } = this.state;
+    const {
+      actions: { updateCurrentUser }
+    } = this.props;
+
+    this.setState({
+      profileSuccess: false,
+      profileSaving: true,
+      profileErrors: [],
+      accountSuccess: false,
+      accountErrors: []
+    });
+
+    updateProfile({ email })
+      .then(profile => {
+        this.setState({
+          profileSaving: false,
+          profileSuccess: true,
+          profileErrors: undefined
+        });
+        /**
+         * If the user we updated is the current user, we need to reflect that change at the global level.
+         */
+        if (profile.username === originalUsername) {
+          updateCurrentUser(profile);
+        }
+      })
+      .catch(errResponse => {
+        this.setState({
           profileErrors: getAPIErrorOrDefault(
             errResponse,
-            'Error updating user profile'
+            'Error updating email'
           ),
-          profileSaving: false
+          profileSaving: false,
+          profileSuccess: false
         });
       });
   };
@@ -240,18 +295,27 @@ class UserDetail extends React.Component<CombinedProps> {
       email,
       profileSaving,
       profileSuccess,
-      profileErrors
+      profileErrors,
+      accountSaving,
+      accountSuccess,
+      accountErrors,
+      originalUsername
     } = this.state;
     return (
       <UserProfile
         username={username}
         email={email}
         changeUsername={this.onChangeUsername}
-        save={this.onSave}
-        reset={this.onReset}
-        saving={profileSaving}
-        success={profileSuccess || false}
-        errors={profileErrors}
+        changeEmail={this.onChangeEmail}
+        saveAccount={this.onSaveAccount}
+        accountSaving={accountSaving}
+        accountSuccess={accountSuccess || false}
+        accountErrors={accountErrors}
+        saveProfile={this.onSaveProfile}
+        profileSaving={profileSaving}
+        profileSuccess={profileSuccess || false}
+        profileErrors={profileErrors}
+        originalUsername={originalUsername}
       />
     );
   };
@@ -378,13 +442,14 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 
 interface DispatchProps {
   actions: {
-    updateCurrentUser: (user: Linode.User) => void;
+    updateCurrentUser: (user: Linode.User | Linode.Profile) => void;
   };
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
   actions: {
-    updateCurrentUser: (u: Linode.User) => dispatch(handleUpdate(u))
+    updateCurrentUser: (u: Linode.User | Linode.Profile) =>
+      dispatch(handleUpdate(u))
   }
 });
 
