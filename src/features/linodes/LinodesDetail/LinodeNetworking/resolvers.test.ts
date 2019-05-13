@@ -5,6 +5,10 @@ describe('getIPv6DNSResolvers', () => {
     expect(getIPv6DNSResolvers('atlanta')).toHaveLength(7);
   });
 
+  it('should return an empty array if the region is not found', () => {
+    expect(getIPv6DNSResolvers('fake-region' as any)).toHaveLength(0);
+  });
+
   it('should begin all resolvers with the prefix for the given region', () => {
     const resolvers = getIPv6DNSResolvers('atlanta');
     resolvers.forEach(resolver => {

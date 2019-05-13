@@ -120,6 +120,10 @@ export const ipv4DNSResolvers: Record<Linode.ZoneName, string[]> = {
 export const getIPv6DNSResolvers = (region: Linode.ZoneName) => {
   const prefix = ipv6DNSResolverPrefixes[region];
 
+  if (!region || !prefix) {
+    return [];
+  }
+
   return [
     `${prefix}5`,
     `${prefix}6`,
