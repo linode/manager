@@ -21,6 +21,7 @@ import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
+import { AppDetailDrawer } from 'src/features/OneClickApps';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import AddonsPanel from '../AddonsPanel';
 import SelectAppPanel from '../SelectAppPanel';
@@ -384,6 +385,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
             }}
           </Sticky>
         </Grid>
+        <AppDetailDrawer open={true} stackscriptID={12345} />
       </React.Fragment>
     );
   }
