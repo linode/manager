@@ -284,7 +284,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
 
     const pathsOptions = [
       { label: '/dev/sda', value: '/dev/sda' },
-      { label: '/dev/sdb', value: '/dev/sdc' },
+      { label: '/dev/sdb', value: '/dev/sdb' },
       { label: '/dev/sdc', value: '/dev/sdc' },
       { label: '/dev/sdd', value: '/dev/sdd' },
       { label: '/dev/sde', value: '/dev/sde' },
