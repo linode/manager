@@ -96,13 +96,14 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
           </Typography>
         </ExpansionPanel>
         <ConfirmationDialog
-          title={`Confirm Deletion of ${this.props.linodeLabel}`}
+          title={`Delete ${this.props.linodeLabel}?`}
           actions={this.renderConfirmationActions}
           open={this.state.open}
           onClose={this.closeDeleteDialog}
         >
           <Typography>
-            Deleting a Linode will result in permanent data loss. Are you sure?
+            Are you sure you want to delete your Linode? This will result in
+            permanent data loss.
           </Typography>
         </ConfirmationDialog>
       </React.Fragment>
