@@ -1,11 +1,12 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 import UserIcon from 'src/assets/icons/user.svg';
 import ButtonBase from 'src/components/core/ButtonBase';
 import Hidden from 'src/components/core/Hidden';
+
 import Menu from 'src/components/core/Menu';
 import MenuItem from 'src/components/core/MenuItem';
 import {
@@ -131,14 +132,18 @@ export class UserMenu extends React.Component<CombinedProps, State> {
   renderMenuLink(menuLink: MenuLink) {
     const { classes } = this.props;
     return (
-      <MenuItem
-        key={menuLink.display}
-        className={classes.menuItem}
-        onClick={() => this.navigate(menuLink.href)}
-        data-qa-menu-link={menuLink.display}
-      >
-        {menuLink.display}
-      </MenuItem>
+      <React.Fragment key={menuLink.display}>
+        <Link
+          role="menuitem"
+          to={menuLink.href}
+          href="javascript:void(0)"
+          onClick={() => this.navigate(menuLink.href)}
+          className={classes.menuItem}
+          data-qa-menu-link={menuLink.display}
+        >
+          <MenuItem>{menuLink.display}</MenuItem>
+        </Link>
+      </React.Fragment>
     );
   }
 
