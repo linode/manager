@@ -21,10 +21,16 @@ const queryString = `http://localhost:81/DVWA/vulnerabilities/xss_r/?name=<scrip
 const a = '<a href="helloworld.com">Hello world</a>';
 const aLang = '<a lang="en-us"></a>';
 
-it('should get rid of all script tags', () => {
-  expect(sanitizeHTML(script)).toBe('');
-  expect(sanitizeHTML(script2)).toBe('');
-  expect(sanitizeHTML(xhrScript)).toBe('');
+it('should render script tags as text inside a p tag', () => {
+  expect(sanitizeHTML(script)).toBe(
+    '<p>&lt;script src=&gt;&lt;/script&gt;</p>'
+  );
+  expect(sanitizeHTML(script2)).toBe(
+    '<p>&lt;script&gt;&lt;/script&gt;&lt;script&gt;&lt;/script&gt;</p>'
+  );
+  expect(sanitizeHTML(xhrScript)).toBe(
+    '<p>&lt;script&gt;&lt;/script&gt;&lt;script&gt;&lt;/script&gt;</p>'
+  );
 });
 
 it('should remove unwanted blacklisted tags', () => {
@@ -42,7 +48,7 @@ it('should not allow CSS attacks', () => {
 
 it('should not allow query string attacks', () => {
   expect(sanitizeHTML(queryString)).toBe(
-    'http://localhost:81/DVWA/vulnerabilities/xss_r/?name='
+    'http://localhost:81/DVWA/vulnerabilities/xss_r/?name=<p>&lt;script src=http://192.168.149.128/xss.js&gt;&lt;/script&gt;</p>'
   );
 });
 
