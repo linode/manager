@@ -26,19 +26,20 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 interface Props {
   value: string;
+  error?: string;
 }
 
 type CombinedProps = WithStyles<ClassNames> & Props;
 
 const PreviewReply: React.FC<CombinedProps> = props => {
-  const { classes, value } = props;
+  const { classes, value, error } = props;
 
   const markupToMarkdown = new Converter({
     extensions: ['highlightjs']
   }).makeHtml(value);
 
   return (
-    <Paper className={classes.root}>
+    <Paper className={classes.root} error={error}>
       <Typography
         dangerouslySetInnerHTML={{
           __html: sanitizeHTML(markupToMarkdown)
