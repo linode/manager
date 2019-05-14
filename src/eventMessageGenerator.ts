@@ -132,6 +132,24 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     failed: e => `Linode ${e.entity!.label} could not be booted.`,
     finished: e => `Linode ${e.entity!.label} has booted.`
   },
+  lassie_reboot: {
+    scheduled: e => `Linode ${e.entity!.label} is scheduled to be rebooted by the Lassie watchdog service.`,
+    started: e => `Linode ${e.entity!.label} is being booted by the Lassie watchdog service.`,
+    failed: e => `Linode ${e.entity!.label} could not be booted by the Lassie watchdog service.`,
+    finished: e => `Linode ${e.entity!.label} has been booted by the Lassie watchdog service.`
+  },
+  host_reboot: {
+    scheduled: e => `Linode ${e.entity!.label} is scheduled to reboot (Host initiated restart).`,
+    started: e => `Linode ${e.entity!.label} is booting (Host initiated restart).`,
+    failed: e => `Linode ${e.entity!.label} could not be booted (Host initiated restart).`,
+    finished: e => `Linode ${e.entity!.label} has booted (Host initiated restart).`
+  },
+  lish_boot: {
+    scheduled: e => `Linode ${e.entity!.label} is scheduled to boot (Lish initiated boot).`,
+    started: e => `Linode ${e.entity!.label} is booting (Lish initiated boot).`,
+    failed: e => `Linode ${e.entity!.label} could not be booted (Lish initiated boot).`,
+    finished: e => `Linode ${e.entity!.label} has booted (Lish initiated boot).`
+  },
   linode_clone: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled to be cloned.`,
     started: e => `Linode ${e.entity!.label} is being cloned.`,
