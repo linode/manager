@@ -21,6 +21,7 @@ import Grid from 'src/components/Grid';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import { ZONES } from 'src/constants';
+import { reportException } from 'src/exceptionReporting';
 import { getLinodeIPs } from 'src/services/linodes';
 import { upsertLinode as _upsertLinode } from 'src/store/linodes/linodes.actions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -324,6 +325,14 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       return null;
     }
 
+    const zoneName = ZONES[linodeRegion];
+
+    if (!zoneName) {
+      reportException(`Unknown region: ${linodeRegion}`, {
+        linodeID
+      });
+    }
+
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`${linodeLabel} - Networking`} />
@@ -332,7 +341,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
           linkLocal={path(['ipv6', 'link_local', 'address'], linodeIPs)}
           sshIPAddress={firstPublicIPAddress}
           linodeLabel={linodeLabel}
-          linodeRegion={ZONES[linodeRegion]}
+          linodeRegion={zoneName}
         />
 
         {this.renderIPv4()}

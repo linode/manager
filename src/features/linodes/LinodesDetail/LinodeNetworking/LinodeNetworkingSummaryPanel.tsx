@@ -13,9 +13,15 @@ import Grid from 'src/components/Grid';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import { MapState } from 'src/store/types';
 
-import { ipv4DNSResolvers, ipv6DNSResolvers } from './resolvers';
+import { getIPv6DNSResolvers, ipv4DNSResolvers } from './resolvers';
 
-type ClassNames = 'root' | 'title' | 'section' | 'individualContainer' | 'ips';
+type ClassNames =
+  | 'root'
+  | 'title'
+  | 'section'
+  | 'individualContainer'
+  | 'ips'
+  | 'error';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
@@ -34,13 +40,16 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   ips: {
     padding: `0 ${theme.spacing.unit}px !important`
+  },
+  error: {
+    color: theme.palette.status.errorDark
   }
 });
 
 const styled = withStyles(styles);
 
 interface Props {
-  linodeRegion: string;
+  linodeRegion: Linode.ZoneName;
   linodeLabel: string;
   linkLocal?: string;
   sshIPAddress?: string;
@@ -75,6 +84,16 @@ const LinodeNetworkingSummaryPanel: React.StatelessComponent<
   CombinedProps
 > = props => {
   const { classes, sshIPAddress, username, linodeRegion, linodeLabel } = props;
+
+  const v4Resolvers = getIPv4DNSResolvers(linodeRegion);
+  const v6Resolvers = getIPv6DNSResolvers(linodeRegion);
+
+  const renderErrorMessage = () => (
+    <Typography className={classes.error} component="span">
+      There was an error loading DNS resolvers.
+    </Typography>
+  );
+
   return (
     <Grid container justify="space-between">
       <Grid item xs={12}>
@@ -104,11 +123,19 @@ const LinodeNetworkingSummaryPanel: React.StatelessComponent<
             <Grid item xs={12} md={6}>
               <StyledSummarySection
                 title="DNS Resolvers (IPv4)"
-                renderValue={renderIPv4DNSResolvers(linodeRegion)}
+                renderValue={
+                  v4Resolvers.length > 0
+                    ? renderDNSResolvers(v4Resolvers)
+                    : renderErrorMessage
+                }
               />
               <StyledSummarySection
                 title="DNS Resolvers (IPv6)"
-                renderValue={renderIPv6DNSResolvers()}
+                renderValue={
+                  v6Resolvers.length > 0
+                    ? renderDNSResolvers(v6Resolvers)
+                    : renderErrorMessage
+                }
               />
             </Grid>
           </Grid>
@@ -138,15 +165,9 @@ const getIPv4DNSResolvers = (region: string) => {
   return pathOr(ipv4DNSResolvers.newark, [region], ipv4DNSResolvers);
 };
 
-const renderIPv4DNSResolvers = (region: string) => () => (
+const renderDNSResolvers = (ips: string[]) => () => (
   <div style={{ display: 'flex', alignItems: 'center' }}>
-    <IPAddress ips={getIPv4DNSResolvers(region)} copyRight showMore />
-  </div>
-);
-
-const renderIPv6DNSResolvers = () => () => (
-  <div style={{ display: 'flex', alignItems: 'center' }}>
-    <IPAddress ips={ipv6DNSResolvers} copyRight showMore />
+    <IPAddress ips={ips} copyRight showMore />
   </div>
 );
 
