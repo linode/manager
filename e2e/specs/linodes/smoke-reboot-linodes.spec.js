@@ -34,7 +34,7 @@ describe('List Linodes - Actions - Reboot Suite', () => {
         it('should reboot linode on click', () => {
             linodes = ListLinodes.linode;
             linodes[0].$(ListLinodes.rebootButton.selector).click();
-            ListLinodes.acceptDialog('Confirm Reboot');
+            ListLinodes.acceptDialog('Reboot');
         });
 
         it('should update status on reboot to rebooting', () => {
@@ -61,7 +61,7 @@ describe('List Linodes - Actions - Reboot Suite', () => {
 
         it('should reboot linode on click', () => {
             ListLinodes.selectActionMenuItemV2(ListLinodes.getLinodeSelector(linode), 'Reboot');
-            ListLinodes.acceptDialog('Confirm Reboot');
+            ListLinodes.acceptDialog('Reboot');
         });
 
         it('should update status on reboot to rebooting', () => {

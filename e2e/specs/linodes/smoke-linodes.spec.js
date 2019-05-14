@@ -10,7 +10,7 @@ import ListLinodes from '../../pageobjects/list-linodes';
 import LinodeDetail from '../../pageobjects/linode-detail/linode-detail.page';
 import SearchResults from '../../pageobjects/search-results.page';
 
-xdescribe('List Linodes Suite', () => {
+describe('List Linodes Suite', () => {
     const linode = {
         linodeLabel: `AutoLinode${timestamp()}`,
         privateIp: false,
@@ -18,7 +18,16 @@ xdescribe('List Linodes Suite', () => {
     }
 
     const assertActionMenuItems = (linode) => {
-        const expectedOptions = ['Reboot', 'Power Off', 'Launch Console', 'View Graphs', 'Resize', 'Enable Backups', 'Settings'];
+        const expectedOptions = [
+            'Reboot', 
+            'Power Off',
+            'Launch Console',
+            'View Graphs', 
+            'Resize',
+            'View Backups',
+            'Enable Backups',
+            'Delete'
+            ];
         ListLinodes.actionMenuOptionExists($(ListLinodes.getLinodeSelector(linode)), expectedOptions);
         browser.click('body');
         ListLinodes.actionMenuItem.waitForExist(constants.wait.normal, true);
@@ -47,7 +56,7 @@ xdescribe('List Linodes Suite', () => {
         }
     });
 
-    it('should display with documentation', () => {
+    xit('should display with documentation', () => {
             ListLinodes.assertDocsDisplay();
     });
 
@@ -96,7 +105,7 @@ xdescribe('List Linodes Suite', () => {
         it('should display copy to clipboard elements', () => {
             copyButtons = flatten(ListLinodes.linode.map(l => l.$$(ListLinodes.copyIp.selector)));
             const linodesLength = ListLinodes.linode.length;
-            const expectedCopyButtons = linodesLength * 2;
+            const expectedCopyButtons = linodesLength;
 
             expect(copyButtons.length).toEqual(expectedCopyButtons);
         });
@@ -114,13 +123,6 @@ xdescribe('List Linodes Suite', () => {
 
         it('should display action menu and linode action menu items', () => {
             assertActionMenuItems(linode.linodeLabel);
-        });
-
-        it('tags should be clickable in list view and navigate to search result page for the tag', () => {
-            expect(ListLinodes.tag.isVisible()).toBe(true);
-            ListLinodes.tag.click();
-            SearchResults.waitForSearchResult('linodes',linode.linodeLabel);
-            expect(browser.getUrl()).toContain(`?query=${linode.tags[0]}`);
         });
     });
 });
