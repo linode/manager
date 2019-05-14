@@ -22,7 +22,7 @@ export const getObjectStorageKeys = (params?: any, filters?: any) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${API_ROOT}beta/account/s3-keys`)
+    setURL(`${API_ROOT}beta/object-storage/keys`)
   ).then(response => response.data);
 
 /**
@@ -33,7 +33,7 @@ export const getObjectStorageKeys = (params?: any, filters?: any) =>
 export const createObjectStorageKeys = (data: ObjectStorageKeyRequest) =>
   Request<Linode.ObjectStorageKey>(
     setMethod('POST'),
-    setURL(`${API_ROOT}beta/account/s3-keys`),
+    setURL(`${API_ROOT}beta/object-storage/keys`),
     setData(data, createObjectStorageKeysSchema)
   ).then(response => response.data);
 
@@ -48,7 +48,7 @@ export const updateObjectStorageKey = (
 ) =>
   Request<Linode.ObjectStorageKey>(
     setMethod('PUT'),
-    setURL(`${API_ROOT}beta/account/s3-keys/${id}`),
+    setURL(`${API_ROOT}beta/object-storage/keys/${id}`),
     setData(data, createObjectStorageKeysSchema)
   ).then(response => response.data);
 
@@ -60,5 +60,5 @@ export const updateObjectStorageKey = (
 export const revokeObjectStorageKey = (id: number) =>
   Request<Linode.ObjectStorageKey>(
     setMethod('DELETE'),
-    setURL(`${API_ROOT}beta/account/s3-keys/${id}`)
+    setURL(`${API_ROOT}beta/object-storage/keys/${id}`)
   ).then(response => response.data);
