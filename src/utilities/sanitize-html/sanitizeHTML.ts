@@ -5,6 +5,8 @@ export const sanitizeHTML = (text: string) =>
   sanitize(text, {
     allowedTags: allowedHTMLTags,
     allowedAttributes: {
-      '*': allowedHTMLAttr
+      '*': allowedHTMLAttr,
+      /** only allowing classes on spans for the sole purpose of code highlighting */
+      span: ['class']
     }
   }).trim();
