@@ -59,23 +59,15 @@ export const AppDetailDrawer: React.FunctionComponent<
       }
     >
       <Grid container direction="column" alignItems="center" justify="center">
-        <Grid
-          container
-          item
-          direction="row"
-          alignItems="center"
-          justify="center"
-        >
-          <Grid item className={classes.logo}>
-            <img src={`${APP_ROOT}/${app.logo_url}`} alt={`${app.name} logo`} />
-          </Grid>
-          <Grid item>
-            <Typography variant="h1">{app.name}</Typography>
-          </Grid>
+        <Grid item className={classes.logo}>
+          <img src={`${APP_ROOT}/${app.logo_url}`} alt={`${app.name} logo`} />
         </Grid>
         <Grid item>
-          <Divider className={classes.divider} />
+          <Typography variant="h1">{app.name}</Typography>
         </Grid>
+      </Grid>
+      <Divider className={classes.divider} />
+      <Grid container direction="column" alignItems="center" justify="center">
         <Grid item>
           <Typography variant="h2" className={classes.summary}>
             {app.summary}
