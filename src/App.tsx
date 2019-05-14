@@ -24,6 +24,8 @@ import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
 import Footer from 'src/features/Footer';
+import ObjectStorageErrorState from 'src/features/ObjectStorage/ObjectStorageErrorState';
+import ObjectStorageLoadingState from 'src/features/ObjectStorage/ObjectStorageLoadingState';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
@@ -302,7 +304,9 @@ export class App extends React.Component<CombinedProps, State> {
       settingsError,
       profileError,
       bucketsError,
-      accountCapabilities
+      accountCapabilities,
+      accountLoading,
+      accountError
     } = this.props;
 
     if (hasError) {
@@ -372,11 +376,10 @@ export class App extends React.Component<CombinedProps, State> {
                             path="/stackscripts"
                             component={StackScripts}
                           />
-                          {isObjectStorageEnabled(accountCapabilities) && (
-                            <Route
-                              path="/object-storage"
-                              component={ObjectStorage}
-                            />
+                          {getObjectStorageRoute(
+                            accountLoading,
+                            accountCapabilities,
+                            accountError
                           )}
                           <Route path="/account" component={Account} />
                           <Route
@@ -426,6 +429,33 @@ export class App extends React.Component<CombinedProps, State> {
     );
   }
 }
+
+// Render the correct <Route /> component for Object Storage,
+// depending on whether /account is loading or has errors, and
+// whether or not the feature is enabled for this account.
+const getObjectStorageRoute = (
+  accountLoading: boolean,
+  accountCapabilities: Linode.AccountCapability[],
+  accountError?: Error | Linode.ApiFieldError[]
+) => {
+  let component;
+
+  if (accountLoading) {
+    component = ObjectStorageLoadingState;
+  } else if (accountError) {
+    component = ObjectStorageErrorState;
+  } else if (isObjectStorageEnabled(accountCapabilities)) {
+    component = ObjectStorage;
+  }
+
+  // If Object Storage is not enabled for this account, return `null`,
+  // which will appear as a 404
+  if (!component) {
+    return null;
+  }
+
+  return <Route path="/object-storage" component={component} />;
+};
 
 interface DispatchProps {
   actions: {
@@ -483,6 +513,8 @@ interface StateProps {
   documentation: Linode.Doc[];
   isLoggedInAsCustomer: boolean;
   accountCapabilities: Linode.AccountCapability[];
+  accountLoading: boolean;
+  accountError?: Error | Linode.ApiFieldError[];
 }
 
 const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
@@ -512,7 +544,9 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
     [],
     ['__resources', 'account', 'data', 'capabilities'],
     state
-  )
+  ),
+  accountLoading: state.__resources.account.loading,
+  accountError: state.__resources.account.error
 });
 
 export const connected = connect(

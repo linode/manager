@@ -53,6 +53,7 @@ it('renders without crashing', () => {
             toggleTheme={jest.fn()}
             toggleSpacing={jest.fn()}
             accountCapabilities={[]}
+            accountLoading={false}
           />
         </StaticRouter>
       </Provider>
