@@ -137,7 +137,6 @@ export class UserMenu extends React.Component<CombinedProps, State> {
           role="menuitem"
           to={menuLink.href}
           href="javascript:void(0)"
-          onClick={() => this.navigate(menuLink.href)}
           className={classes.menuItem}
           data-qa-menu-link={menuLink.display}
         >
