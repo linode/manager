@@ -30,8 +30,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     fontSize: '1em'
   },
   divider: {
-    backgroundColor: 'black',
-    height: '5px' // this ought to be huge but I see nothing...
+    margin: theme.spacing.unit * 2
   }
 });
 
@@ -58,7 +57,7 @@ export const AppDetailDrawer: React.FunctionComponent<
         '' /* Empty so that we can display the logo beneath the close button rather than a text title */
       }
     >
-      <Grid container direction="column" alignItems="center" justify="center">
+      <Grid container direction="row" alignItems="center" justify="center">
         <Grid item className={classes.logo}>
           <img src={`${APP_ROOT}/${app.logo_url}`} alt={`${app.name} logo`} />
         </Grid>
