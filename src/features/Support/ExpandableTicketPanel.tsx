@@ -3,6 +3,8 @@ import * as moment from 'moment';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+import { Converter } from 'showdown';
+import 'showdown-highlightjs-extension';
 import UserIcon from 'src/assets/icons/user.svg';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
@@ -15,7 +17,6 @@ import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 
-import { Converter } from 'showdown';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 import TicketDetailBody from './TicketDetailText';
 
@@ -173,7 +174,9 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
     }
     if (ticket) {
       /** convert markdown to mark up */
-      const convertedMarkdown = new Converter().makeHtml(ticket.description);
+      const convertedMarkdown = new Converter({
+        extensions: ['highlightjs']
+      }).makeHtml(ticket.description);
 
       return setData({
         ticket_id: String(ticket.id),
@@ -188,7 +191,9 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
       });
     } else if (reply) {
       /** convert markdown to markup */
-      const convertedMarkdown = new Converter().makeHtml(reply.description);
+      const convertedMarkdown = new Converter({
+        extensions: ['highlightjs']
+      }).makeHtml(reply.description);
 
       return setData({
         ticket_id: parentTicket ? String(parentTicket) : '',

@@ -6,6 +6,7 @@ import {
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+import { Converter } from 'showdown';
 
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -18,6 +19,7 @@ import TabbedReply from './TabbedReply';
 import { createReply, uploadAttachment } from 'src/services/support';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
 type ClassNames = 'root';
 
@@ -49,10 +51,33 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
   const [files, setFiles] = React.useState<FileAttachment[]>([]);
 
   const submitForm = () => {
+    /** user may have entered markdown so convert it all to markup */
+    const rawMarkup = new Converter().makeHtml(value);
+    const sanitizedMarkup = sanitizeHTML(rawMarkup);
+
+    /**
+     * at this point, we might have an empty string or an empty p tag
+     * if the user entered ONLY bad markup. In this case, just display an
+     * error because it's not going to serve as a useful customer support ticket
+     */
+    if (sanitizedMarkup === '<p></p>' || !sanitizedMarkup) {
+      return setErrors([
+        {
+          reason: `Looks like you're attempting to submit a reply with non-allowed Markup.
+          While some Markup is supported, we recommend you use our reference guide and write your
+          reply as Markdown.`,
+          field: 'description'
+        }
+      ]);
+    }
+
     setSubmitting(true);
     setErrors(undefined);
 
-    /* Send the reply */
+    /* 
+      Send the reply as the user entered it to the server - no restrictions here 
+      since we're sanitizing again at render time.
+    */
     createReply({ description: value, ticket_id: props.ticketId })
       .then(response => {
         /** onSuccess callback */
