@@ -393,7 +393,9 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             <Select
               options={kernelList}
               label="Select a Kernel"
-              defaultValue={kernel}
+              defaultValue={kernelList.find(
+                thisKernel => thisKernel.value === kernel
+              )}
               onChange={this.handleChangeKernel}
               errorText={errorFor('kernel')}
               errorGroup="linode-config-drawer"
@@ -477,11 +479,14 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               <Select
                 options={pathsOptions}
                 label="Root Device"
-                defaultValue={root_device}
+                defaultValue={pathsOptions.find(
+                  device => device.value === root_device
+                )}
                 onChange={this.handleRootDeviceChange}
                 name="root_device"
                 id="root_device"
                 errorText={errorFor('root_device')}
+                placeholder="None"
                 disabled={readOnly}
                 isClearable={false}
               />
