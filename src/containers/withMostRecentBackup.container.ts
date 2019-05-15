@@ -1,14 +1,14 @@
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 
-export default <TInner extends {}, TOutter extends {}>(
-  propsSelector: (ownProps: TOutter) => number,
+export default <TInner extends {}, TOuter extends {}>(
+  propsSelector: (ownProps: TOuter) => number,
   mapBackupToProps: (
-    ownProps: TOutter,
+    ownProps: TOuter,
     mostRecentBackup: string | null
   ) => TInner
 ) =>
-  connect((state: ApplicationState, ownProps: TOutter) => {
+  connect((state: ApplicationState, ownProps: TOuter) => {
     const linodeId = propsSelector(ownProps);
 
     const linode = state.__resources.linodes.entities.find(

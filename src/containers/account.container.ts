@@ -20,16 +20,16 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   requestAccount: () => dispatch(requestAccount())
 });
 
-export default <TInner extends {}, TOutter extends {}>(
+export default <TInner extends {}, TOuter extends {}>(
   mapAccountToProps: (
-    ownProps: TOutter,
+    ownProps: TOuter,
     accountLoading: boolean,
     account?: Linode.Account,
     accountError?: Linode.ApiFieldError[] | Error
   ) => TInner
 ) =>
   connect(
-    (state: ApplicationState, ownProps: TOutter) => {
+    (state: ApplicationState, ownProps: TOuter) => {
       const account = state.__resources.account.data;
       const accountLoading = state.__resources.account.loading;
       const accountError = state.__resources.account.error;

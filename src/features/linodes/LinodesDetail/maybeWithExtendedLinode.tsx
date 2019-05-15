@@ -14,7 +14,7 @@ import { getNotificationsForLinode } from 'src/store/notification/notification.s
 import { getVolumesForLinode } from 'src/store/volume/volume.selector';
 import { ExtendedLinode } from './types';
 
-interface OutterProps {
+interface OuterProps {
   linodeId: number;
 }
 
@@ -26,8 +26,8 @@ interface InnerProps {
  * Retrieve the Linode any it's extended information from Redux.
  * If the Linode cannot be found, render the NotFound component. (early return)
  */
-export default compose<InnerProps, OutterProps>(
-  connect((state: ApplicationState, ownProps: OutterProps) => {
+export default compose<InnerProps, OuterProps>(
+  connect((state: ApplicationState, ownProps: OuterProps) => {
     const { linodeId } = ownProps;
     return {
       linode: findLinodeById(state.__resources.linodes, linodeId)
