@@ -1,0 +1,12 @@
+diff --git a/node_modules/@types/sanitize-html/index.d.ts b/node_modules/@types/sanitize-html/index.d.ts
+index 383ab80..a313d2c 100644
+--- a/node_modules/@types/sanitize-html/index.d.ts
++++ b/node_modules/@types/sanitize-html/index.d.ts
+@@ -47,6 +47,7 @@ declare namespace sanitize {
+     allowedStyles?:  { [index: string]: { [index: string]: RegExp[] } };
+     allowedClasses?: { [index: string]: string[] } | boolean;
+     allowedIframeHostnames?: string[];
++    escapeDisallowedTags?: boolean;
+     allowedSchemes?: string[] | boolean;
+     allowedSchemesByTag?: { [index: string]: string[] } | boolean;
+     allowedSchemesAppliedToAttributes?: string[];
