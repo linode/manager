@@ -43,13 +43,13 @@ describe('helper functions', () => {
     it('should sum up the total CPU cores of all nodes', () => {
       expect(
         getTotalClusterMemoryAndCPU(nodePoolRequests, extendedTypes)
-      ).toHaveProperty('CPU', 3);
+      ).toHaveProperty('CPU', 11); // 1 Nanode (1CPU) + 5 2GB (2CPU each)
     });
 
     it('should sum up the total RAM of all pools', () => {
       expect(
         getTotalClusterMemoryAndCPU(nodePoolRequests, extendedTypes)
-      ).toHaveProperty('RAM', 6144);
+      ).toHaveProperty('RAM', 22528); // 2048 + (5 * 4096)
     });
 
     it("should return 0 if it can't match the data", () => {

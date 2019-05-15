@@ -45,8 +45,8 @@ export const getTotalClusterMemoryAndCPU = (
         return accumulator;
       }
       return {
-        RAM: accumulator.RAM + thisType.memory,
-        CPU: accumulator.CPU + thisType.vcpus
+        RAM: accumulator.RAM + thisType.memory * thisPool.count,
+        CPU: accumulator.CPU + thisType.vcpus * thisPool.count
       };
     },
     { RAM: 0, CPU: 0 }
