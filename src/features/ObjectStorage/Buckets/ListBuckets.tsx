@@ -231,7 +231,6 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
           <ConfirmationDialog
             open={removeBucketConfirmationDialog.isOpen}
             onClose={() => {
-              setBucketToRemove(undefined);
               removeBucketConfirmationDialog.close();
             }}
             title={
