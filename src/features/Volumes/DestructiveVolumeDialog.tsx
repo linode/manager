@@ -21,6 +21,8 @@ interface Props {
   onClose: () => void;
   onDetach: () => void;
   onDelete: () => void;
+  volumeLabel: string;
+  linodeLabel: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -50,9 +52,10 @@ class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
   };
 
   render() {
+    const { volumeLabel: label, linodeLabel } = this.props;
     const title = {
-      detach: 'Detach Volume',
-      delete: 'Delete Volume'
+      detach: `Detach ${label ? label : 'Volume'}?`,
+      delete: `Delete ${label ? label : 'Volume'}?`
     }[this.props.mode];
 
     return (
@@ -63,7 +66,8 @@ class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
         actions={this.renderActions}
       >
         <Typography>
-          Are you sure you want to {this.props.mode} this volume?
+          Are you sure you want to {this.props.mode} this volume
+          {`${linodeLabel ? ` from ${linodeLabel}?` : '?'}`}
         </Typography>
       </ConfirmationDialog>
     );

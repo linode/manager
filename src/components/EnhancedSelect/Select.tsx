@@ -395,6 +395,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
       medium,
       small,
       noMarginTop,
+      textFieldProps,
       inline,
       hideLabel,
       errorGroup,
@@ -439,6 +440,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
         classNamePrefix="react-select"
         styles={styleOverrides}
         textFieldProps={{
+          ...textFieldProps,
           label,
           errorText,
           disabled,
