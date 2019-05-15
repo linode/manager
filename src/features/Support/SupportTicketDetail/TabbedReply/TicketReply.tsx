@@ -10,6 +10,8 @@ type ClassNames = 'replyField';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   replyField: {
+    maxHeight: 200,
+    marginTop: 0,
     '& > div': {
       maxWidth: '100% !important'
     }
@@ -34,7 +36,7 @@ class TicketReply extends React.Component<CombinedProps> {
         <TextField
           className={classes.replyField}
           multiline
-          rows={5}
+          rows={9}
           value={value}
           placeholder={placeholder || 'Enter your reply'}
           data-qa-ticket-description

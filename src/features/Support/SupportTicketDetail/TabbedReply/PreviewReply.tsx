@@ -18,8 +18,7 @@ type ClassNames = 'root';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     border: '1px solid #ccc',
-    minHeight: '140px',
-    marginTop: theme.spacing.unit * 2,
+    height: 200,
     padding: `9px 12px 9px 12px`
   }
 });

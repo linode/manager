@@ -1,15 +1,38 @@
 import * as React from 'react';
+import {
+  StyleRulesCallback,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+
+type ClassNames = 'root' | 'header' | 'example';
+
+const styles: StyleRulesCallback<ClassNames> = theme => ({
+  root: {},
+  header: {
+    marginTop: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit
+  },
+  example: {
+    margin: `${theme.spacing.unit * 2}px 0`,
+    padding: theme.spacing.unit * 2,
+    border: `1px solid ${theme.color.border2}`
+  }
+});
 
 interface Props {
   rootClass?: string;
 }
 
-const MarkdownReference: React.FC<Props> = props => {
+type CombinedProps = Props & WithStyles<ClassNames>;
+
+const MarkdownReference: React.FC<CombinedProps> = props => {
+  const { classes } = props;
   return (
     <div className={props.rootClass}>
-      <Typography>
-        <strong>Tips</strong>
+      <Typography variant="h2" className={classes.header}>
+        Tips
       </Typography>
       <Typography>
         You can use Markdown to format your question. For more examples see the
@@ -18,30 +41,36 @@ const MarkdownReference: React.FC<Props> = props => {
           Markdown Cheatsheet.
         </a>
       </Typography>
-      <Typography>
+      <Typography className={classes.header}>
         <strong>Examples</strong>
       </Typography>
-      <Typography>[I am a link](https://google.com)</Typography>
-      <Typography
-        dangerouslySetInnerHTML={{
-          __html: "<a href='#'>I am a link</a>"
-        }}
-      />
-      <br />
-      <Typography>
-        ```
+      <div className={classes.example}>
+        <Typography>[I am a link](https://google.com)</Typography>
         <br />
-        const someCode = 'hello world';
-        <br />
-        ```
-      </Typography>
-      <Typography
-        dangerouslySetInnerHTML={{
-          __html: `<pre style="white-space: pre-wrap;">const someCode = "hello world"</pre>`
-        }}
-      />
+        <Typography
+          dangerouslySetInnerHTML={{
+            __html: "<a href='#'>I am a link</a>"
+          }}
+        />
+      </div>
+      <div className={classes.example}>
+        <Typography>
+          ```
+          <br />
+          const someCode = 'hello world';
+          <br />
+          ```
+        </Typography>
+        <Typography
+          dangerouslySetInnerHTML={{
+            __html: `<pre style="white-space: pre-wrap;">const someCode = "hello world"</pre>`
+          }}
+        />
+      </div>
     </div>
   );
 };
 
-export default React.memo(MarkdownReference);
+const styled = withStyles(styles);
+
+export default React.memo(styled(MarkdownReference));

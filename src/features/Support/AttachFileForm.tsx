@@ -19,9 +19,8 @@ type ClassNames = 'root' | 'attachFileButton';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   attachFileButton: {
-    paddingLeft: 14,
-    paddingRight: 20,
-    marginTop: theme.spacing.unit,
+    padding: '4px 8px 4px 4px',
+    marginTop: theme.spacing.unit * 2,
     marginBottom: theme.spacing.unit * 2
   }
 });

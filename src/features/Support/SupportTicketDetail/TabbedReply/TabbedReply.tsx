@@ -50,6 +50,7 @@ const TabbedReply: React.FC<CombinedProps> = props => {
       header=""
       tabs={tabs}
       innerClass={innerClass}
+      noPadding
     />
   );
 };

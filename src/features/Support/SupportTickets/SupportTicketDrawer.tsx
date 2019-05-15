@@ -59,8 +59,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     padding: 0
   },
   reference: {
-    backgroundColor: theme.palette.divider,
-    padding: theme.spacing.unit,
     '& > p': {
       marginBottom: theme.spacing.unit
     }
