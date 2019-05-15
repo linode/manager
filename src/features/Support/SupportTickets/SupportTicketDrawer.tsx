@@ -32,7 +32,17 @@ import AttachFileForm from '../AttachFileForm';
 import { FileAttachment } from '../index';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 
-type ClassNames = 'root' | 'suffix' | 'actionPanel';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import Reference from '../SupportTicketDetail/TabbedReply/MarkdownReference';
+import TabbedReply from '../SupportTicketDetail/TabbedReply/TabbedReply';
+
+type ClassNames =
+  | 'root'
+  | 'suffix'
+  | 'actionPanel'
+  | 'innerReply'
+  | 'rootReply'
+  | 'reference';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
@@ -42,6 +52,17 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   actionPanel: {
     marginTop: theme.spacing.unit * 2
+  },
+  innerReply: {
+    padding: 0
+  },
+  rootReply: {
+    padding: 0
+  },
+  reference: {
+    '& > p': {
+      marginBottom: theme.spacing.unit
+    }
   }
 });
 
@@ -104,11 +125,6 @@ const entityIdtoNameMap = {
   volume_id: 'Volume',
   domain_id: 'Domain',
   nodebalancer_id: 'NodeBalancer'
-};
-
-const text = {
-  placeholder:
-    "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
 };
 
 export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
@@ -219,11 +235,8 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
     this.setState(set(L.summary, e.target.value));
   };
 
-  handleDescriptionInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.composeState([
-      set(L.description, e.target.value),
-      set(L.errors, undefined)
-    ]);
+  handleDescriptionInputChange = (value: string) => {
+    this.composeState([set(L.description, value), set(L.errors, undefined)]);
   };
 
   handleEntityTypeChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
@@ -392,10 +405,13 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         if (!this.mounted) {
           return;
         }
-        this.setState({
-          errors: getAPIErrorOrDefault(errors),
-          submitting: false
-        });
+        this.setState(
+          {
+            errors: getAPIErrorOrDefault(errors),
+            submitting: false
+          },
+          () => scrollErrorIntoView()
+        );
       });
   };
 
@@ -480,26 +496,23 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
           errorText={summaryError}
           data-qa-ticket-summary
         />
-
-        <TextField
-          label="Description"
-          required
-          multiline
-          rows={4}
+        <TabbedReply
+          error={descriptionError}
+          handleChange={this.handleDescriptionInputChange}
           value={ticket.description}
-          onChange={this.handleDescriptionInputChange}
-          placeholder={text.placeholder}
-          errorText={descriptionError}
-          data-qa-ticket-description
+          innerClass={this.props.classes.innerReply}
+          rootClass={this.props.classes.rootReply}
+          placeholder={
+            "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
+          }
         />
-
         {/* <TicketAttachmentList attachments={attachments} /> */}
         <AttachFileForm
           inlineDisplay
           files={files}
           updateFiles={this.updateFiles}
         />
-
+        <Reference rootClass={this.props.classes.reference} />
         <ActionsPanel style={{ marginTop: 16 }}>
           <Button
             onClick={this.onSubmit}

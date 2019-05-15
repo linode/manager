@@ -307,13 +307,6 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   tfa_enabled: {
     notification: e => `Two-factor authentication has been enabled.`
   },
-  // ticket_attachment_upload: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
   ticket_create: {
     notification: e => `New support ticket "${e.entity!.label}" created.`
   },
@@ -326,6 +319,10 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   // },
   ticket_update: {
     notification: e => `Support ticket "${e.entity!.label}" has been updated.`
+  },
+  ticket_attachment_upload: {
+    notification: e =>
+      `File has been successfully uploaded to support ticket ${e.entity!.label}`
   },
   volume_attach: {
     // @todo Once we have better events, display the name of the attached Linode

@@ -387,13 +387,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
           <Notice success text={'Ticket has been closed.'} />
         )}
 
-        <Grid
-          container
-          direction="column"
-          justify="center"
-          alignItems="center"
-          className={classes.listParent}
-        >
+        <Grid container className={classes.listParent}>
           {/* If the ticket isn't blank, display it, followed by replies (if any). */}
           {ticket.description && (
             <ExpandableTicketPanel
