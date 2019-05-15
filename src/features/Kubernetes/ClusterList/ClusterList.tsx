@@ -21,6 +21,9 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
+import withTypes, { WithTypesProps } from 'src/containers/types.container';
+import { getTotalClusterMemoryAndCPU } from './../kubeUtils';
+import { ExtendedCluster } from './../types';
 import ClusterRow from './ClusterRow';
 
 type ClassNames = 'root' | 'title' | 'labelHeader';
@@ -39,10 +42,28 @@ interface Props {
   clusters: Linode.KubernetesCluster[];
 }
 
-type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  RouteComponentProps<{}> &
+  WithTypesProps &
+  WithStyles<ClassNames>;
 
 export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
-  const { classes, clusters, history } = props;
+  const { classes, clusters, history, typesData } = props;
+  /**
+   * Not ideal having this run on render, but interactions on this view
+   * don't generally trigger re-renders.
+   */
+  const extendedClusters: ExtendedCluster[] = clusters.map(cluster => {
+    const { CPU: totalCPU, RAM: totalMemory } = getTotalClusterMemoryAndCPU(
+      cluster.node_pools,
+      typesData || []
+    );
+    return {
+      ...cluster,
+      totalMemory,
+      totalCPU
+    };
+  });
 
   return (
     <React.Fragment>
@@ -70,7 +91,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
           </Grid>
         </Grid>
       </Grid>
-      <OrderBy data={clusters} orderBy={'label'} order={'asc'}>
+      <OrderBy data={extendedClusters} orderBy={'label'} order={'asc'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <Paginate data={orderedData}>
             {({
@@ -123,11 +144,29 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
                         >
                           Region
                         </TableSortCell>
+                        <TableSortCell
+                          active={orderBy === 'totalMemory'}
+                          label={'totalMemory'}
+                          direction={order}
+                          handleClick={handleOrderChange}
+                          data-qa-kubernetes-clusters-memory-header
+                        >
+                          Total Memory
+                        </TableSortCell>
+                        <TableSortCell
+                          active={orderBy === 'totalCPU'}
+                          label={'totalCPU'}
+                          direction={order}
+                          handleClick={handleOrderChange}
+                          data-qa-kubernetes-clusters-cpu-header
+                        >
+                          Total CPUs
+                        </TableSortCell>
                         <TableCell />
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {data.map((cluster, idx) => (
+                      {data.map((cluster: ExtendedCluster, idx: number) => (
                         <ClusterRow
                           key={`kubernetes-cluster-list-${idx}`}
                           cluster={cluster}
@@ -157,7 +196,8 @@ const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
   styled,
-  withRouter
+  withRouter,
+  withTypes
 );
 
 export default enhanced(ClusterList);

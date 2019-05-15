@@ -34,7 +34,7 @@ import { getTagsAsStrings } from 'src/utilities/tagUtils';
 
 import KubeCheckoutBar from '.././KubeCheckoutBar';
 import { KubernetesVersionOptions } from '.././kubeUtils';
-import { PoolNode } from '.././types';
+import { ExtendedPoolNode } from '.././types';
 import NodePoolPanel from './NodePoolPanel';
 
 type ClassNames = 'root' | 'title' | 'sidebar' | 'inner';
@@ -59,7 +59,7 @@ interface State {
   selectedRegion?: string;
   selectedType?: string;
   numberOfLinodes: number;
-  nodePools: PoolNode[];
+  nodePools: ExtendedPoolNode[];
   label?: string;
   tags: Item<string>[];
   version?: Item<string>;
@@ -124,7 +124,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       );
   };
 
-  addPool = (pool: PoolNode) => {
+  addPool = (pool: ExtendedPoolNode) => {
     const { nodePools } = this.state;
     this.setState({
       nodePools: [...nodePools, pool]
@@ -226,7 +226,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
               }
               nodeCount={numberOfLinodes}
               selectedType={selectedType}
-              addNodePool={(pool: PoolNode) => this.addPool(pool)}
+              addNodePool={(pool: ExtendedPoolNode) => this.addPool(pool)}
               deleteNodePool={(poolIdx: number) => this.removePool(poolIdx)}
               handleTypeSelect={(newType: string) => {
                 this.setState({ selectedType: newType });
@@ -280,11 +280,13 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
               pools={nodePools}
               createCluster={this.createCluster}
               submitting={submitting}
+              typesData={typesData || []}
               updateFor={[
                 label,
                 selectedRegion,
                 nodePools,
                 submitting,
+                typesData,
                 classes
               ]}
             />
