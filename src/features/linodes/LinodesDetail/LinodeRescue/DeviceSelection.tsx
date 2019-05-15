@@ -1,4 +1,4 @@
-import { defaultTo } from 'ramda';
+import { defaultTo, flatten } from 'ramda';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
 import {
@@ -6,7 +6,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
 import { titlecase } from 'src/features/linodes/presentation';
 
 type ClassNames = 'root';
@@ -38,6 +38,20 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
+export const getSelectedOption = (
+  selectedValue: string,
+  options: GroupType<string>[]
+) => {
+  if (!selectedValue) {
+    return null;
+  }
+  // Ramda's flatten doesn't seem able to handle the typing issues here, but this returns an array of Item<string>.
+  const optionsList = (flatten(
+    options.map(group => group.options)
+  ) as unknown) as Item<string>[];
+  return optionsList.find(option => option.value === selectedValue) || null;
+};
+
 const DeviceSelection: React.StatelessComponent<CombinedProps> = props => {
   const {
     devices,
@@ -65,15 +79,23 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = props => {
           };
         });
 
+        deviceList.unshift({
+          value: '',
+          label: '',
+          options: [{ value: null, label: 'None' }]
+        });
+
+        const selectedDevice = getSelectedOption(getSelected(slot), deviceList);
+
         return counter < idx ? null : (
           <FormControl
-            updateFor={[getSelected(slot), classes]}
+            updateFor={[selectedDevice, deviceList, classes]}
             key={slot}
             fullWidth
           >
             <Select
               options={deviceList}
-              defaultValue={getSelected(slot) || 'none'}
+              value={selectedDevice}
               onChange={(e: Item<string>) => onChange(slot, e.value)}
               disabled={disabled}
               placeholder={'None'}
