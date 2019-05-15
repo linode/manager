@@ -8,16 +8,15 @@ import { WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import { getLinodeStatsByDate } from 'src/services/linodes';
-import { MapState } from 'src/store/types';
-import { isRecent } from 'src/utilities/isRecent.ts';
-
 import {
   ClassNames,
   renderPercentageString,
   styled
 } from 'src/features/Dashboard/TransferDashboardCard/TransferDashboardCard';
-import { getMonthlyTraffic } from 'src/utilities/statMetrics';
+import { getLinodeTransfer } from 'src/services/linodes';
+import { MapState } from 'src/store/types';
+import { isRecent } from 'src/utilities/isRecent.ts';
+import { readableBytes } from 'src/utilities/unitConversions';
 
 interface Props {
   linodeId: number;
@@ -40,14 +39,12 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
 
   componentDidMount() {
     const { linodeId } = this.props;
-    const now = moment();
-    const year = now.format('YYYY');
-    const month = now.format('MM');
-    getLinodeStatsByDate(linodeId, year, month)
-      .then(resp => {
+    getLinodeTransfer(linodeId)
+      .then(({ used }) => {
         this.setState({
-          used: getMonthlyTraffic(resp.data),
-          loading: false
+          used,
+          loading: false,
+          error: false
         });
       })
       .catch(() => {
@@ -62,8 +59,21 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
     const { total, classes, isTooEarlyForStats } = this.props;
     const { used, loading, error } = this.state;
 
-    const usedInGb = Math.ceil(used / 8e9);
+    const usedInGb = used / 1024 / 1024 / 1024;
+
     const usagePercent = 100 - ((total - usedInGb) * 100) / total;
+
+    const readableUsed = readableBytes(used, {
+      maxUnit: 'GB',
+      round: { MB: 0, GB: 1 }
+    });
+
+    const totalInBytes = total * 1024 * 1024 * 1024;
+    const readableFree = readableBytes(totalInBytes - used, {
+      maxUnit: 'GB',
+      round: { MB: 0, GB: 1 },
+      handleNegatives: false
+    });
 
     if (loading) {
       return (
@@ -143,11 +153,11 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
           </Typography>
 
           <Typography className={classes.itemText}>
-            Used: <strong>{usedInGb}</strong> GB
+            Used: <strong>{readableUsed.value}</strong> {readableUsed.unit}
           </Typography>
           <Divider className={classes.divider} />
           <Typography className={classes.itemText}>
-            Free: <strong>{Math.floor(total - usedInGb)}</strong> GB
+            Free: <strong>{readableFree.value}</strong> {readableFree.unit}
           </Typography>
         </Grid>
       </Grid>
