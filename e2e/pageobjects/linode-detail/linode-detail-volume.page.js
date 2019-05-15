@@ -156,20 +156,19 @@ export class VolumeDetail extends Page {
         browser.waitForVisible('[data-qa-volume-label] input', constants.wait.normal);
         browser.trySetValue('[data-qa-volume-label] input', volume.label);
         browser.trySetValue('[data-qa-size] input', volume.size);
-
+        
         if (volume.hasOwnProperty('region')) {
-            this.selectRegion(volume.region);
-            browser.waitForValue('[data-qa-select-region] input', constants.wait.normal);
+            $('[data-qa-select-region]').click();
+            browser.trySetValue('[data-qa-select-region] input', volume.region);
+            /** press the enter key to select first value */
+            browser.keys("\uE007");
         }
 
         if (volume.hasOwnProperty('attachedLinode')) {
-            this.selectLinodeOrVolume.click();
-            this.selectOption.waitForVisible(constants.wait.normal);
-
-            const optionToSelect =
-                this.selectOptions.filter(opt => opt.getText().includes(volume.attachedLinode));
-
-            optionToSelect[0].click();
+            $('[data-qa-select-linode]').click();
+            browser.trySetValue('[data-qa-select-linode] input', volume.attachedLinode);
+            /** press the enter key to select first value */
+            browser.keys("\uE007");
         }
 
         if(volume.hasOwnProperty('tag')) {
