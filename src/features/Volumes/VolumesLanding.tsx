@@ -180,7 +180,9 @@ interface State {
   destructiveDialog: {
     open: boolean;
     mode: 'detach' | 'delete';
+    volumeLabel: string;
     volumeId?: number;
+    linodeLabel: string;
   };
 }
 
@@ -208,7 +210,9 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     },
     destructiveDialog: {
       open: false,
-      mode: 'detach'
+      mode: 'detach',
+      volumeLabel: '',
+      linodeLabel: ''
     }
   };
 
@@ -246,22 +250,30 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     });
   };
 
-  handleDetach = (volumeId: number) => {
+  handleDetach = (
+    volumeId: number,
+    volumeLabel: string,
+    linodeLabel: string
+  ) => {
     this.setState({
       destructiveDialog: {
         open: true,
         mode: 'detach',
-        volumeId
+        volumeId,
+        volumeLabel,
+        linodeLabel
       }
     });
   };
 
-  handleDelete = (volumeId: number) => {
+  handleDelete = (volumeId: number, volumeLabel: string) => {
     this.setState({
       destructiveDialog: {
         open: true,
         mode: 'delete',
-        volumeId
+        volumeId,
+        volumeLabel,
+        linodeLabel: ''
       }
     });
   };
@@ -343,6 +355,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         />
         <DestructiveVolumeDialog
           open={this.state.destructiveDialog.open}
+          volumeLabel={this.state.destructiveDialog.volumeLabel}
+          linodeLabel={this.state.destructiveDialog.linodeLabel}
           mode={this.state.destructiveDialog.mode}
           onClose={this.closeDestructiveDialog}
           onDetach={this.detachVolume}
