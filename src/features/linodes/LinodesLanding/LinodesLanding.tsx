@@ -419,10 +419,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
             <ConfirmationDialog
               title={
                 actionOption === 'reboot'
-                  ? 'Confirm Reboot'
+                  ? `Reboot ${this.state.selectedLinodeLabel}?`
                   : actionOption === 'power_down'
-                  ? 'Powering Off'
-                  : 'Confirm Delete'
+                  ? `Power Off ${this.state.selectedLinodeLabel}?`
+                  : `Delete ${this.state.selectedLinodeLabel}?`
               }
               actions={this.renderConfirmationActions}
               open={confirmationOpen}
@@ -454,7 +454,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           Cancel
         </Button>
         <Button
-          type="primary"
+          type="secondary"
           onClick={this.executeAction}
           data-qa-confirm-cancel
           loading={confirmationLoading}

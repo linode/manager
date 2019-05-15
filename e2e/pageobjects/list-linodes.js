@@ -125,13 +125,13 @@ export class ListLinodes extends Page {
             // Select from action menu
             linode.$(this.linodeActionMenu.selector).click();
             browser.click('[data-qa-action-menu-item="Reboot"]');
-            this.acceptDialog('Confirm Reboot');
+            this.acceptDialog('Reboot');
             browser.waitForVisible('[data-qa-loading]');
         }
 
         if (activeView === 'grid') {
             linode.$(this.rebootButton).click();
-            this.acceptDialog('Confirm Reboot');
+            this.acceptDialog('Reboot');
             browser.waitForVisible('[data-qa-circular-progress]');
         }
 
@@ -146,7 +146,7 @@ export class ListLinodes extends Page {
 
     powerOff(linode) {
         this.selectActionMenuItemV2(this.getLinodeSelector(linode),'Power Off');
-        this.acceptDialog('Powering Off');
+        this.acceptDialog('Power Off');
 
         browser.waitUntil(function() {
             return browser.isVisible(`${this.getLinodeSelector(linode)} [data-qa-entity-status="offline"]`);
@@ -178,7 +178,7 @@ export class ListLinodes extends Page {
         this.confirmDialogTitle.waitForVisible();
         this.confirmDialogCancel.waitForVisible();
         this.confirmDialogSubmit.waitForVisible();
-        expect(this.confirmDialogTitle.getText()).toBe(dialogTitle);
+        expect(this.confirmDialogTitle.getText()).toMatch(dialogTitle);
         this.confirmDialogSubmit.click();
         this.confirmDialogTitle.waitForVisible(constants.wait.normal, true);
     }
