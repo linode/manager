@@ -34,7 +34,9 @@ const PreviewReply: React.FC<CombinedProps> = props => {
   const { classes, value, error } = props;
 
   const markupToMarkdown = new Converter({
-    extensions: ['highlightjs']
+    extensions: ['highlightjs'],
+    simplifiedAutoLink: true,
+    openLinksInNewWindow: true
   }).makeHtml(value);
 
   return (
