@@ -32,6 +32,7 @@ import AttachFileForm from '../AttachFileForm';
 import { FileAttachment } from '../index';
 import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import Reference from '../SupportTicketDetail/TabbedReply/MarkdownReference';
 import TabbedReply from '../SupportTicketDetail/TabbedReply/TabbedReply';
 
@@ -404,10 +405,13 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         if (!this.mounted) {
           return;
         }
-        this.setState({
-          errors: getAPIErrorOrDefault(errors),
-          submitting: false
-        });
+        this.setState(
+          {
+            errors: getAPIErrorOrDefault(errors),
+            submitting: false
+          },
+          () => scrollErrorIntoView()
+        );
       });
   };
 

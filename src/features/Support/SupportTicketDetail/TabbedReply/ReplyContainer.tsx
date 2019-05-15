@@ -38,6 +38,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     // backgroundColor: theme.palette.divider,
     [theme.breakpoints.up('sm')]: {
       marginTop: theme.spacing.unit * 7,
+      marginRight: theme.spacing.unit / 2,
+      marginLeft: theme.spacing.unit / 2,
       padding: `0 !important`
     },
     [theme.breakpoints.down('xs')]: {
@@ -157,7 +159,7 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
 
   return (
     <Grid container>
-      <Grid item sm={9} xs={12}>
+      <Grid item sm={8} xs={12}>
         {errorMap.none && (
           <Notice
             error

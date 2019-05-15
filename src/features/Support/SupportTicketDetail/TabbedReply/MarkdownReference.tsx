@@ -35,7 +35,7 @@ const MarkdownReference: React.FC<CombinedProps> = props => {
         Tips
       </Typography>
       <Typography>
-        You can use Markdown to format your question. For more examples see the
+        You can use Markdown to format your question. For more examples see this
         <a target="_blank" href="http://demo.showdownjs.com/">
           {' '}
           Markdown Cheatsheet.
@@ -49,7 +49,7 @@ const MarkdownReference: React.FC<CombinedProps> = props => {
         <br />
         <Typography
           dangerouslySetInnerHTML={{
-            __html: "<a href='#'>I am a link</a>"
+            __html: '<a>I am a link</a>'
           }}
         />
       </div>
