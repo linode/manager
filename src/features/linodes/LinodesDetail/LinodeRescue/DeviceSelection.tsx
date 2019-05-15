@@ -82,7 +82,7 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = props => {
         deviceList.unshift({
           value: '',
           label: '',
-          options: [{ value: 'None', label: 'None' }]
+          options: [{ value: null, label: 'None' }]
         });
 
         const selectedDevice = getSelectedOption(getSelected(slot), deviceList);
