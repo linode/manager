@@ -133,7 +133,7 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
         </Typography>
       ) : (
         <Typography>
-          Deleting a bucket is permanent and can't be undone.{' '}
+          Deleting a bucket is permanent and can't be undone.
         </Typography>
       )}
       <Typography className={classes.confirmationCopy}>
