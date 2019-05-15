@@ -15,7 +15,7 @@ import TableRow from 'src/components/TableRow';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { displayTypeForKubePoolNode } from 'src/features/linodes/presentation';
 
-import { PoolNode } from '.././types';
+import { ExtendedPoolNode } from '.././types';
 
 type ClassNames = 'root' | 'link';
 
@@ -28,7 +28,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 interface Props {
-  pool: PoolNode;
+  pool: ExtendedPoolNode;
   type?: ExtendedType;
   idx: number;
   handleDelete: (poolIdx: number) => void;

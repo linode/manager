@@ -1,10 +1,5 @@
-import { pathOr } from 'ramda';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import store from 'src/store';
-import { PoolNode } from './types';
-
-const getTypes = () =>
-  pathOr(false, ['__resources', 'types', 'entities'], store.getState());
+import { ExtendedPoolNode, PoolNode } from './types';
 
 // @todo don't hard code this
 export const KubernetesVersionOptions = ['1.13', '1.14'].map(version => ({
@@ -12,8 +7,11 @@ export const KubernetesVersionOptions = ['1.13', '1.14'].map(version => ({
   value: version
 }));
 
-export const getMonthlyPrice = (type: string, count: number) => {
-  const types = getTypes();
+export const getMonthlyPrice = (
+  type: string,
+  count: number,
+  types: ExtendedType[]
+) => {
   if (!types) {
     return 0;
   }
@@ -21,7 +19,7 @@ export const getMonthlyPrice = (type: string, count: number) => {
   return thisType ? thisType.price.monthly * count : 0;
 };
 
-export const getTotalClusterPrice = (pools: PoolNode[]) =>
+export const getTotalClusterPrice = (pools: ExtendedPoolNode[]) =>
   pools.reduce((accumulator, node) => {
     return accumulator + node.totalMonthlyPrice;
   }, 0);
@@ -31,8 +29,10 @@ interface ClusterData {
   RAM: number;
 }
 
-export const getTotalClusterMemoryAndCPU = (pools: PoolNode[]) => {
-  const types = getTypes();
+export const getTotalClusterMemoryAndCPU = (
+  pools: PoolNode[],
+  types: ExtendedType[]
+) => {
   if (!types) {
     return { RAM: 0, CPU: 0 };
   }
@@ -45,8 +45,8 @@ export const getTotalClusterMemoryAndCPU = (pools: PoolNode[]) => {
         return accumulator;
       }
       return {
-        RAM: accumulator.RAM + thisType.memory,
-        CPU: accumulator.CPU + thisType.vcpus
+        RAM: accumulator.RAM + thisType.memory * thisPool.count,
+        CPU: accumulator.CPU + thisType.vcpus * thisPool.count
       };
     },
     { RAM: 0, CPU: 0 }

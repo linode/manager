@@ -20,7 +20,7 @@ import SelectPlanPanel, {
 } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 
 import { getMonthlyPrice } from '.././kubeUtils';
-import { PoolNode } from '.././types';
+import { ExtendedPoolNode } from '.././types';
 import NodePoolDisplayTable from './NodePoolDisplayTable';
 
 type ClassNames = 'root' | 'title' | 'gridItem' | 'countInput';
@@ -46,14 +46,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 interface Props {
-  pools: PoolNode[];
+  pools: ExtendedPoolNode[];
   types: ExtendedType[];
   typesLoading: boolean;
   typesError?: string;
   apiError?: string;
   selectedType?: string;
   nodeCount: number;
-  addNodePool: (pool: PoolNode) => void;
+  addNodePool: (pool: ExtendedPoolNode) => void;
   deleteNodePool: (poolIdx: number) => void;
   handleTypeSelect: (newType?: string) => void;
   updateNodeCount: (newCount: number) => void;
@@ -125,7 +125,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     addNodePool({
       type: selectedType,
       count: nodeCount,
-      totalMonthlyPrice: getMonthlyPrice(selectedType, nodeCount)
+      totalMonthlyPrice: getMonthlyPrice(selectedType, nodeCount, types)
     });
     handleTypeSelect(undefined);
     updateNodeCount(1);

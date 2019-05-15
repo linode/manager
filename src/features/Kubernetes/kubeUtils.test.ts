@@ -7,18 +7,6 @@ import {
   getTotalClusterPrice
 } from './kubeUtils';
 
-jest.mock('src/store', () => ({
-  default: {
-    getState: () => ({
-      __resources: {
-        types: {
-          entities: extendedTypes
-        }
-      }
-    })
-  }
-}));
-
 const mockNodePool = {
   type: extendedTypes[0].id,
   count: 4,
@@ -35,13 +23,15 @@ describe('helper functions', () => {
   describe('getMonthlyPrice', () => {
     it('should multiply node price by node count', () => {
       const expectedPrice = extendedTypes[0].price.monthly * mockNodePool.count;
-      expect(getMonthlyPrice(mockNodePool.type, mockNodePool.count)).toBe(
-        expectedPrice
-      );
+      expect(
+        getMonthlyPrice(mockNodePool.type, mockNodePool.count, extendedTypes)
+      ).toBe(expectedPrice);
     });
 
     it('should return zero for bad input', () => {
-      expect(getMonthlyPrice(badNodePool.type, badNodePool.count)).toBe(0);
+      expect(
+        getMonthlyPrice(badNodePool.type, badNodePool.count, extendedTypes)
+      ).toBe(0);
     });
   });
 
@@ -51,28 +41,31 @@ describe('helper functions', () => {
 
   describe('Get total cluster memory/CPUs', () => {
     it('should sum up the total CPU cores of all nodes', () => {
-      expect(getTotalClusterMemoryAndCPU(nodePoolRequests)).toHaveProperty(
-        'CPU',
-        3
-      );
+      expect(
+        getTotalClusterMemoryAndCPU(nodePoolRequests, extendedTypes)
+      ).toHaveProperty('CPU', 11); // 1 Nanode (1CPU) + 5 2GB (2CPU each)
     });
 
     it('should sum up the total RAM of all pools', () => {
-      expect(getTotalClusterMemoryAndCPU(nodePoolRequests)).toHaveProperty(
-        'RAM',
-        6144
-      );
+      expect(
+        getTotalClusterMemoryAndCPU(nodePoolRequests, extendedTypes)
+      ).toHaveProperty('RAM', 22528); // 2048 + (5 * 4096)
     });
 
     it("should return 0 if it can't match the data", () => {
-      expect(getTotalClusterMemoryAndCPU([badNodePool])).toEqual({
-        CPU: 0,
-        RAM: 0
-      });
+      expect(getTotalClusterMemoryAndCPU([badNodePool], extendedTypes)).toEqual(
+        {
+          CPU: 0,
+          RAM: 0
+        }
+      );
     });
 
     it('should return 0 if no pools are given', () => {
-      expect(getTotalClusterMemoryAndCPU([])).toEqual({ CPU: 0, RAM: 0 });
+      expect(getTotalClusterMemoryAndCPU([], extendedTypes)).toEqual({
+        CPU: 0,
+        RAM: 0
+      });
     });
   });
 });

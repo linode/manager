@@ -13,7 +13,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { PoolNode } from '.././types';
+import { ExtendedPoolNode } from '.././types';
 import NodePoolRow from './NodePoolRow';
 
 type ClassNames = 'root';
@@ -27,7 +27,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 interface Props {
-  pools: PoolNode[];
+  pools: ExtendedPoolNode[];
   types: ExtendedType[];
   handleDelete: (poolIdx: number) => void;
 }
