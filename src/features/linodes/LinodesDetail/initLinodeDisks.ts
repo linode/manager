@@ -3,7 +3,7 @@ import { compose, lifecycle } from 'recompose';
 import { GetAllLinodeConfigsRequest } from 'src/store/linodes/config/config.actions';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 
-interface OutterProps {
+interface OuterProps {
   linodeId: number;
 }
 
@@ -16,27 +16,26 @@ export default compose(
     undefined,
     { getAllLinodeDisks }
   ),
-  lifecycle<
-    OutterProps & { getAllLinodeDisks: GetAllLinodeConfigsRequest },
-    {}
-  >({
-    componentDidMount() {
-      // tslint:disable-next-line:no-shadowed-variable
-      const { linodeId, getAllLinodeDisks } = this.props;
+  lifecycle<OuterProps & { getAllLinodeDisks: GetAllLinodeConfigsRequest }, {}>(
+    {
+      componentDidMount() {
+        // tslint:disable-next-line:no-shadowed-variable
+        const { linodeId, getAllLinodeDisks } = this.props;
 
-      getAllLinodeDisks({ linodeId });
-    },
+        getAllLinodeDisks({ linodeId });
+      },
 
-    componentDidUpdate(prevProps) {
-      // tslint:disable-next-line:no-shadowed-variable
-      const { linodeId, getAllLinodeDisks } = this.props;
-      const { linodeId: prevLinodeId } = this.props;
+      componentDidUpdate(prevProps) {
+        // tslint:disable-next-line:no-shadowed-variable
+        const { linodeId, getAllLinodeDisks } = this.props;
+        const { linodeId: prevLinodeId } = this.props;
 
-      if (linodeId === prevLinodeId) {
-        return;
+        if (linodeId === prevLinodeId) {
+          return;
+        }
+
+        getAllLinodeDisks({ linodeId });
       }
-
-      getAllLinodeDisks({ linodeId });
     }
-  })
+  )
 );

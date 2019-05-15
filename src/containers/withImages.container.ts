@@ -11,15 +11,15 @@ export interface WithImages {
   imageError?: string;
 }
 
-export default <TInner extends {}, TOutter extends {}>(
+export default <TInner extends {}, TOuter extends {}>(
   mapImagesToProps: (
-    ownProps: TOutter,
+    ownProps: TOuter,
     images: Linode.Image[],
     imagesLoading: boolean,
     imageError?: string
   ) => TInner
 ) =>
-  connect((state: ApplicationState, ownProps: TOutter) => {
+  connect((state: ApplicationState, ownProps: TOuter) => {
     const images = state.__resources.images.entities;
     const imagesLoading = state.__resources.images.loading;
     const { error } = state.__resources.images;

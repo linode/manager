@@ -3,7 +3,7 @@ import { compose, lifecycle } from 'recompose';
 import { GetAllLinodeConfigsRequest } from 'src/store/linodes/config/config.actions';
 import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
 
-interface OutterProps {
+interface OuterProps {
   linodeId: number;
 }
 
@@ -17,7 +17,7 @@ export default compose(
     { getAllLinodeConfigs }
   ),
   lifecycle<
-    OutterProps & { getAllLinodeConfigs: GetAllLinodeConfigsRequest },
+    OuterProps & { getAllLinodeConfigs: GetAllLinodeConfigsRequest },
     {}
   >({
     componentDidMount() {

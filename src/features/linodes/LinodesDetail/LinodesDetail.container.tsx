@@ -7,7 +7,7 @@ import maybeRenderLoading from './maybeRenderLoading';
 import maybeWithExtendedLinode from './maybeWithExtendedLinode';
 import { ExtendedLinode } from './types';
 
-interface OutterProps {
+interface OuterProps {
   linodeId: number;
 }
 
@@ -15,7 +15,7 @@ export interface InnerProps {
   linode: ExtendedLinode;
 }
 
-export default compose<InnerProps, OutterProps>(
+export default compose<InnerProps, OuterProps>(
   // initLinode,
   initLinodeConfigs,
   initLinodeDisks,
