@@ -385,7 +385,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
             }}
           </Sticky>
         </Grid>
-        <AppDetailDrawer open={true} stackscriptID={12345} />
+        <AppDetailDrawer open={true} stackscriptID={'GitLab'} />
       </React.Fragment>
     );
   }

@@ -35,7 +35,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 interface Props {
-  stackscriptID: number;
+  stackscriptID: string;
   open: boolean;
 }
 
@@ -45,7 +45,9 @@ export const AppDetailDrawer: React.FunctionComponent<
   CombinedProps
 > = props => {
   const { classes, stackscriptID, open } = props;
-  const app = oneClickApps.find(eachApp => eachApp.id === stackscriptID);
+  const app = oneClickApps.find(eachApp =>
+    Boolean(stackscriptID.match(eachApp.name))
+  ); // This is horrible
   if (!app) {
     return null;
   }
@@ -79,7 +81,7 @@ export const AppDetailDrawer: React.FunctionComponent<
         </Grid>
         <LinkSection
           title="More info"
-          links={[{ title: 'about.gitlab.com', href: 'about.gitlab.com' }]}
+          links={[{ title: app.href, href: app.href }]}
           icon={Link}
         />
         <LinkSection
