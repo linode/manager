@@ -58,6 +58,11 @@ interface AuthGetAndSet {
   set: (value: string) => void;
 }
 
+interface GetAndSetBool {
+  get: () => boolean;
+  set: (v: 'true' | 'false') => void;
+}
+
 export interface Storage {
   authentication: {
     token: AuthGetAndSet;
@@ -105,10 +110,7 @@ export interface Storage {
     get: () => 'true' | 'false';
     set: () => void;
   };
-  groupDomainsByTag: {
-    get: () => boolean;
-    set: (v: 'true' | 'false') => void;
-  };
+  groupDomainsByTag: GetAndSetBool;
   groupNodeBalancersByTag: {
     get: () => boolean;
     set: (v: 'true' | 'false') => void;
