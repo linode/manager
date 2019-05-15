@@ -47,6 +47,8 @@ interface ReadableBytesOptions {
 }
 
 type StorageSymbol = 'bytes' | 'KB' | 'MB' | 'GB' | 'TB';
+
+// This code inspired by: https://ourcodeworld.com/articles/read/713/converting-bytes-to-human-readable-values-kb-mb-gb-tb-pb-eb-zb-yb-with-javascript
 export const readableBytes = (
   num: number,
   options: ReadableBytesOptions = {}
