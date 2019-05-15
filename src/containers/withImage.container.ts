@@ -1,11 +1,11 @@
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 
-export default <TInner extends {}, TOutter extends {}>(
-  propsSelector: (ownProps: TOutter) => null | string,
-  mapImageToProps: (ownProps: TOutter, image?: Linode.Image) => TInner
+export default <TInner extends {}, TOuter extends {}>(
+  propsSelector: (ownProps: TOuter) => null | string,
+  mapImageToProps: (ownProps: TOuter, image?: Linode.Image) => TInner
 ) =>
-  connect((state: ApplicationState, ownProps: TOutter) => {
+  connect((state: ApplicationState, ownProps: TOuter) => {
     const imageId = propsSelector(ownProps);
 
     if (!imageId) {

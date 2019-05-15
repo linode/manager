@@ -7,7 +7,7 @@ import { MapState } from 'src/store/types';
 const isLoading = (state: { loading: boolean; lastUpdated: number }) =>
   state.lastUpdated === 0 && state.loading;
 
-interface OutterProps {
+interface OuterProps {
   configsLoading: boolean;
   disksLoading: boolean;
 }
@@ -16,7 +16,7 @@ interface InnerProps {
   loading: boolean;
 }
 
-const collectLoadingState: MapState<InnerProps, OutterProps> = (
+const collectLoadingState: MapState<InnerProps, OuterProps> = (
   state,
   ownProps
 ) => {

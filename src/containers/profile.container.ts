@@ -5,10 +5,10 @@ export interface ProfileProps {
   profile?: Linode.Profile;
 }
 
-export default <TInner extends {}, TOutter extends {}>(
-  mapAccountToProps: (ownProps: TOutter, account?: Linode.Profile) => TInner
+export default <TInner extends {}, TOuter extends {}>(
+  mapAccountToProps: (ownProps: TOuter, account?: Linode.Profile) => TInner
 ) =>
-  connect((state: ApplicationState, ownProps: TOutter) => {
+  connect((state: ApplicationState, ownProps: TOuter) => {
     const profile = state.__resources.profile.data;
 
     return mapAccountToProps(ownProps, profile);
