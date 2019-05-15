@@ -1,7 +1,8 @@
 import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { pathOr } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { connect, MapStateToProps } from 'react-redux';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -42,11 +43,15 @@ import {
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
+import Notice from 'src/components/Notice';
+import { ApplicationState } from 'src/store';
+
 type ClassNames =
   | 'root'
   | 'titleWrapper'
   | 'title'
   | 'domain'
+  | 'dnsWarning'
   | 'tagWrapper'
   | 'tagGroup';
 
@@ -60,6 +65,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   domain: {
     width: '60%'
+  },
+  dnsWarning: {
+    '& h3:first-child': {
+      marginBottom: theme.spacing.unit
+    }
   },
   tagWrapper: {
     marginTop: theme.spacing.unit / 2,
@@ -94,15 +104,16 @@ interface State {
   };
 }
 
-type CombinedProps = WithDomainsProps &
+export type CombinedProps = WithDomainsProps &
   DomainActionsProps &
   LocalStorageProps &
   WithStyles<ClassNames> &
   RouteComponentProps<{}> &
+  StateProps &
   DispatchProps &
   WithSnackbarProps;
 
-class DomainsLanding extends React.Component<CombinedProps, State> {
+export class DomainsLanding extends React.Component<CombinedProps, State> {
   static eventCategory = `domains landing`;
   state: State = {
     importDrawer: {
@@ -203,6 +214,8 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
     const { domainsError, domainsData, domainsLoading } = this.props;
 
+    const domainsLength = domainsData.length;
+
     if (domainsLoading) {
       return <RenderLoading />;
     }
@@ -211,7 +224,7 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
       return <RenderError />;
     }
 
-    if (domainsData.length === 0) {
+    if (domainsLength === 0) {
       return <RenderEmpty onClick={this.props.openForCreating} />;
     }
 
@@ -261,6 +274,18 @@ class DomainsLanding extends React.Component<CombinedProps, State> {
             </Grid>
           </Grid>
         </Grid>
+        {this.props.howManyLinodesOnAccount === 0 && domainsLength > 0 && (
+          <Notice warning important className={classes.dnsWarning}>
+            <Typography variant="h3">
+              Your DNS zones are not being served.
+            </Typography>
+            <Typography>
+              Your domains will not be served by Linode's nameservers unless you
+              have at least one active Linode on your account.
+              <Link to="/linodes/create"> You can create one here.</Link>
+            </Typography>
+          </Notice>
+        )}
         <Grid item xs={12}>
           {/* Duplication starts here. How can we refactor this? */}
           <OrderBy data={domainsData} order={'asc'} orderBy={'domain'}>
@@ -367,7 +392,6 @@ interface LocalStorageState {
 
 interface LocalStorageUpdater {
   toggleGroupByTag: (checked: boolean) => Partial<LocalStorageState>;
-  [key: string]: (...args: any[]) => Partial<LocalStorageState>;
 }
 
 const withLocalStorage = localStorageContainer<
@@ -394,8 +418,24 @@ const withLocalStorage = localStorageContainer<
   })
 );
 
+interface StateProps {
+  howManyLinodesOnAccount: number;
+}
+
+const mapStateToProps: MapStateToProps<
+  StateProps,
+  {},
+  ApplicationState
+> = state => ({
+  howManyLinodesOnAccount: pathOr(
+    [],
+    ['__resources', 'linodes', 'results'],
+    state
+  ).length
+});
+
 export const connected = connect(
-  undefined,
+  mapStateToProps,
   { openForCreating, openForCloning, openForEditing }
 );
 
