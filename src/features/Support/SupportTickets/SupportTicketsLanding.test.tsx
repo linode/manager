@@ -19,13 +19,16 @@ describe('Support Tickets Landing', () => {
     expect(titleText).toBe('Customer Support');
   });
 
-  it('should have an Icon Text Link', () => {
+  it('should have an Open New Ticket Button', () => {
     expect(component.find('[data-qa-open-ticket-link]')).toHaveLength(1);
   });
 
-  it('icon text link text should read "Open New Ticket"', () => {
-    const iconText = component.find('[data-qa-open-ticket-link]').prop('label');
-    expect(iconText).toBe('Open New Ticket');
+  it('button text should read "Open New Ticket"', () => {
+    const openTicketButton = component
+      .find('[data-qa-open-ticket-link]')
+      .children()
+      .text();
+    expect(openTicketButton).toContain('Open New Ticket');
   });
 });
 

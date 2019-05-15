@@ -1,8 +1,8 @@
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import AddNewLink from 'src/components/AddNewLink';
 import Breadcrumb from 'src/components/Breadcrumb';
+import Button from 'src/components/Button';
 import AppBar from 'src/components/core/AppBar';
 import {
   StyleRulesCallback,
@@ -155,11 +155,13 @@ export class SupportTicketsLanding extends React.PureComponent<
           <Grid item>
             <Grid container alignItems="flex-end">
               <Grid item>
-                <AddNewLink
+                <Button
+                  type="primary"
                   onClick={this.openDrawer}
-                  label="Open New Ticket"
                   data-qa-open-ticket-link
-                />
+                >
+                  Open New Ticket
+                </Button>
               </Grid>
             </Grid>
           </Grid>
