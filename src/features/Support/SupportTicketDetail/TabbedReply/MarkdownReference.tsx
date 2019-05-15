@@ -38,7 +38,7 @@ const MarkdownReference: React.FC<CombinedProps> = props => {
         You can use Markdown to format your question. For more examples see this
         <a target="_blank" href="http://demo.showdownjs.com/">
           {' '}
-          Markdown Cheatsheet.
+          Markdown cheatsheet.
         </a>
       </Typography>
       <Typography className={classes.header}>

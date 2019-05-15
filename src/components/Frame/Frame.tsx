@@ -4,7 +4,7 @@
  * but requires that we upgrade to MUIv4
  *
  * Please note. This example does not work: https://github.com/mui-org/material-ui/issues/13625#issuecomment-461304324
- * because we have ammended our base MUI theme with extra properties so we end up with
+ * because we have amended our base MUI theme with extra properties so we end up with
  * errors such as "theme.bg is undefined"
  */
 
