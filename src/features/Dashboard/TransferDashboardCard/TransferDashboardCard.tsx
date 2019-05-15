@@ -136,7 +136,7 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
     }
 
     if (errors) {
-      /** If it's an error state, we're not going to diplay it at all.  */
+      /** If it's an error state, we're not going to display it at all.  */
       return this.renderErrorState(errors);
     }
 

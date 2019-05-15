@@ -11,13 +11,13 @@ import TableSortLabel from 'src/components/core/TableSortLabel';
 import Sort from 'src/assets/icons/sort.svg';
 import SortUp from 'src/assets/icons/sortUp.svg';
 
-type ClassNames = 'root' | 'intialIcon' | 'noWrap';
+type ClassNames = 'root' | 'initialIcon' | 'noWrap';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     color: theme.palette.text.primary
   },
-  intialIcon: {
+  initialIcon: {
     margin: '2px 4px 0 4px'
   },
   noWrap: {
@@ -67,7 +67,7 @@ class TableSortCell extends React.PureComponent<CombinedProps, {}> {
           hideSortIcon={true}
         >
           {children}
-          {!active && <Sort className={classes.intialIcon} />}
+          {!active && <Sort className={classes.initialIcon} />}
         </TableSortLabel>
         {isLoading && <CircleProgress mini sort />}
       </TableCell>

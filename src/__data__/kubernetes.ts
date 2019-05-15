@@ -78,3 +78,11 @@ export const clusters: Linode.KubernetesCluster[] = [
     version: '1.13.5'
   }
 ];
+
+export const extendedClusters = clusters.map(cluster => {
+  return {
+    ...cluster,
+    totalMemory: 10,
+    totalCPU: 2
+  };
+});
