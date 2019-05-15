@@ -12,6 +12,11 @@ import Reply, { Props as ReplyProps } from './TicketReply';
 
 type ClassNames = 'root';
 
+interface Props {
+  rootClass?: string;
+  innerClass?: string;
+}
+
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     padding: theme.spacing.unit,
@@ -19,10 +24,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = ReplyProps & WithStyles<ClassNames>;
+type CombinedProps = Props & ReplyProps & WithStyles<ClassNames>;
 
 const TabbedReply: React.FC<CombinedProps> = props => {
-  const { classes, value, error, ...rest } = props;
+  const { innerClass, rootClass, classes, value, error, ...rest } = props;
 
   const tabs: Tab[] = [
     {
@@ -39,7 +44,15 @@ const TabbedReply: React.FC<CombinedProps> = props => {
     }
   ];
 
-  return <TabbedPanel rootClass={classes.root} header="" tabs={tabs} />;
+  return (
+    <TabbedPanel
+      rootClass={rootClass || classes.root}
+      header=""
+      tabs={tabs}
+      innerClass={innerClass}
+      noPadding
+    />
+  );
 };
 
 const styled = withStyles(styles);
@@ -52,7 +65,7 @@ const memoized = (component: React.FC<CombinedProps>) =>
     );
   });
 
-export default compose<CombinedProps, ReplyProps>(
-  styled,
-  memoized
+export default compose<CombinedProps, ReplyProps & Props>(
+  memoized,
+  styled
 )(TabbedReply);

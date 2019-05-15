@@ -10,6 +10,8 @@ type ClassNames = 'replyField';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   replyField: {
+    maxHeight: 200,
+    marginTop: 0,
     '& > div': {
       maxWidth: '100% !important'
     }
@@ -20,22 +22,24 @@ export interface Props {
   error?: string;
   handleChange: (value: string) => void;
   value: string;
+  placeholder?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class TicketReply extends React.Component<CombinedProps> {
   render() {
-    const { classes, value, handleChange, error } = this.props;
+    const { placeholder, classes, value, handleChange, error } = this.props;
 
     return (
       <React.Fragment>
         <TextField
           className={classes.replyField}
           multiline
-          rows={5}
+          rows={9}
           value={value}
-          placeholder="Enter your reply"
+          placeholder={placeholder || 'Enter your reply'}
+          data-qa-ticket-description
           onChange={e => handleChange(e.target.value)}
           errorText={error}
         />

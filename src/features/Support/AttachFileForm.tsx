@@ -19,9 +19,8 @@ type ClassNames = 'root' | 'attachFileButton';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   attachFileButton: {
-    paddingLeft: 14,
-    paddingRight: 20,
-    marginTop: theme.spacing.unit,
+    padding: '4px 8px 4px 4px',
+    marginTop: theme.spacing.unit * 2,
     marginBottom: theme.spacing.unit * 2
   }
 });
@@ -38,7 +37,10 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
   inputRef = React.createRef<HTMLInputElement>();
 
   shouldComponentUpdate(nextProps: CombinedProps) {
-    return !equals(this.props.files, nextProps.files);
+    return (
+      !equals(this.props.files, nextProps.files) ||
+      !equals(this.props.classes, nextProps.classes)
+    );
   }
 
   clickAttachButton = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -111,7 +113,4 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, Props>(
-  styled,
-  React.memo
-)(AttachFileForm);
+export default compose<CombinedProps, Props>(styled)(AttachFileForm);

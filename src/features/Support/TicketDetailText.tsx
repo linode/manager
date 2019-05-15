@@ -78,9 +78,9 @@ const TicketDetailText: React.FC<CombinedProps> = props => {
     <React.Fragment>
       <Grid
         item
-        xs={truncatedText !== text ? 11 : 12}
-        sm={truncatedText !== text ? 6 : 7}
-        md={truncatedText !== text ? 8 : 9}
+        xs={truncatedText !== ticketBody ? 11 : 12}
+        sm={truncatedText !== ticketBody ? 6 : 7}
+        md={truncatedText !== ticketBody ? 8 : 9}
       >
         {props.text ? (
           <Typography className={classes.formattedText}>
@@ -121,6 +121,6 @@ const TicketDetailText: React.FC<CombinedProps> = props => {
 const styled = withStyles(styles, { withTheme: true });
 
 export default compose<CombinedProps, Props>(
-  styled,
-  React.memo
+  React.memo,
+  styled
 )(TicketDetailText);
