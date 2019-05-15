@@ -1,11 +1,12 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'redux';
+import { Link } from 'react-router-dom';
+import { compose } from 'recompose';
 import UserIcon from 'src/assets/icons/user.svg';
 import ButtonBase from 'src/components/core/ButtonBase';
 import Hidden from 'src/components/core/Hidden';
+
 import Menu from 'src/components/core/Menu';
 import MenuItem from 'src/components/core/MenuItem';
 import {
@@ -93,9 +94,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   }
 });
 
-type CombinedProps = StateProps &
-  WithStyles<CSSClasses> &
-  RouteComponentProps<{}>;
+type CombinedProps = StateProps & WithStyles<CSSClasses>;
 
 interface State {
   anchorEl?: HTMLElement;
@@ -122,23 +121,19 @@ export class UserMenu extends React.Component<CombinedProps, State> {
     this.setState({ anchorEl: undefined });
   };
 
-  navigate(href: string) {
-    const { history } = this.props;
-    history.push(href);
-    this.handleClose();
-  }
-
   renderMenuLink(menuLink: MenuLink) {
     const { classes } = this.props;
     return (
-      <MenuItem
-        key={menuLink.display}
+      <Link
+        role="menuitem"
+        to={menuLink.href}
+        href="javascript:void(0)"
         className={classes.menuItem}
-        onClick={() => this.navigate(menuLink.href)}
         data-qa-menu-link={menuLink.display}
+        key={menuLink.display}
       >
-        {menuLink.display}
-      </MenuItem>
+        <MenuItem key={menuLink.display}>{menuLink.display}</MenuItem>
+      </Link>
     );
   }
 
@@ -248,13 +243,7 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => ({
   username: pathOr('', ['data', 'username'], state.__resources.profile)
 });
 
-export default compose<
-  Linode.TodoAny,
-  Linode.TodoAny,
-  Linode.TodoAny,
-  Linode.TodoAny
->(
+export default compose<CombinedProps, {}>(
   connect(mapStateToProps),
-  withStyles(styles),
-  withRouter
+  withStyles(styles)
 )(UserMenu);
