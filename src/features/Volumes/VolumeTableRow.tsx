@@ -99,8 +99,12 @@ interface Props {
   ) => void;
   openForConfig: (volumeLabel: string, volumePath: string) => void;
   handleAttach: (volumeId: number, label: string, regionID: string) => void;
-  handleDetach: (volumeId: number) => void;
-  handleDelete: (volumeId: number) => void;
+  handleDetach: (
+    volumeId: number,
+    volumeLabel: string,
+    linodeLabel: string
+  ) => void;
+  handleDelete: (volumeId: number, volumeLabel: string) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -229,6 +233,7 @@ export const VolumeTableRow: React.StatelessComponent<
           onEdit={openForEdit}
           onResize={openForResize}
           onClone={openForClone}
+          volumeLabel={volume.label}
           /**
            * This is a safer check than volume.linode_id (see logic in addAttachedLinodeInfoToVolume() from VolumesLanding)
            * as it actually checks to see if the Linode exists before adding linodeLabel and linodeStatus.

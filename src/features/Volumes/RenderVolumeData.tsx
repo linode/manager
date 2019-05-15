@@ -21,8 +21,12 @@ export interface RenderVolumeDataProps {
   ) => void;
   openForConfig: (volumeLabel: string, volumePath: string) => void;
   handleAttach: (volumeId: number, label: string, regionID: string) => void;
-  handleDetach: (volumeId: number) => void;
-  handleDelete: (volumeId: number) => void;
+  handleDetach: (
+    volumeId: number,
+    volumeLabel: string,
+    linodeLabel: string
+  ) => void;
+  handleDelete: (volumeId: number, volumeLabel: string) => void;
 }
 
 const RenderData: React.StatelessComponent<
