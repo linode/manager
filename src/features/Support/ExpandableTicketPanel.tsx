@@ -175,7 +175,9 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
     if (ticket) {
       /** convert markdown to mark up */
       const convertedMarkdown = new Converter({
-        extensions: ['highlightjs']
+        extensions: ['highlightjs'],
+        simplifiedAutoLink: true,
+        openLinksInNewWindow: true
       }).makeHtml(ticket.description);
 
       return setData({
@@ -192,7 +194,9 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
     } else if (reply) {
       /** convert markdown to markup */
       const convertedMarkdown = new Converter({
-        extensions: ['highlightjs']
+        extensions: ['highlightjs'],
+        simplifiedAutoLink: true,
+        openLinksInNewWindow: true
       }).makeHtml(reply.description);
 
       return setData({

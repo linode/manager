@@ -154,4 +154,4 @@ export const allowedHTMLTags = [
   'tr'
 ];
 
-export const allowedHTMLAttr = ['href', 'lang', 'title', 'align'];
+export const allowedHTMLAttr = ['href', 'lang', 'title', 'align', 'target'];
