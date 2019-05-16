@@ -32,7 +32,11 @@ beforeEach(() => {
       classes={{
         root: '',
         suffix: '',
-        actionPanel: ''
+        actionPanel: '',
+        innerReply: '',
+        rootReply: '',
+        reference: '',
+        expPanelSummary: ''
       }}
       open={true}
       onClose={jest.fn()}
