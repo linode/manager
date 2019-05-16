@@ -123,7 +123,7 @@ exports.config = {
     sync: true,
     //
     // Level of logging verbosity: silent | verbose | command | data | result | error
-    logLevel: argv.logLevel ? argv.logLevel : 'error',
+    logLevel: argv.logLevel ? argv.logLevel : 'silent',
     //
     // Enables colors for log output.
     coloredLogs: true,
@@ -208,7 +208,7 @@ exports.config = {
         expectationResultHandler: function(passed, assertion) {
             // do something
         },
-        stopOnSpecFailure: true
+        stopOnSpecFailure: false
     },
 
     mountebankConfig: {
@@ -237,7 +237,6 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      */
     onPrepare: function (config, capabilities, user) {
-        console.log("onPrepare");
 
         if ((parallelRunners > 1) && (CRED_STORE_MODE === 'fs')) {
             throw new Error("***** Can't use filesystem cred store when parallelRunners > 1.\n***** Set CRED_STORE_MODE=mongolocal in .env and launch mongodb by running: docker run -d -p 27017:27017 mongo");
@@ -309,8 +308,6 @@ exports.config = {
                 creds = testCreds;
             }).catch((err) => console.log(err));
         });
-        console.log("creds are");
-        console.log(creds);
         credStore.login(creds.username, creds.password, false);
     },
     /**
@@ -408,7 +405,6 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      */
     onComplete: function(exitCode, config, capabilities) {
-        console.log("onComplete");
         // delete all data created during the test and remove test credentials from
         // the underlying store
         return credStore.cleanupAccounts();
