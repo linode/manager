@@ -7,15 +7,12 @@ import {
 import Grid from 'src/components/Grid';
 
 type CSSClasses =
-  | 'root'
   | 'icon'
   | 'checked'
   | 'flex'
   | 'heading'
   | 'innerGrid'
-  | 'subheading'
-  | 'disabled'
-  | 'showCursor';
+  | 'subheading';
 
 const styles: StyleRulesCallback<CSSClasses> = theme => ({
   '@keyframes fadeIn': {
@@ -24,31 +21,6 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     },
     to: {
       opacity: 1
-    }
-  },
-  root: {
-    minWidth: 200,
-    padding: theme.spacing.unit * 2,
-    justifyContent: 'center',
-    alignItems: 'center',
-    display: 'flex',
-    outline: 0,
-    '&.checked $innerGrid': {
-      borderColor: theme.palette.primary.main,
-      '& span': {
-        color: theme.palette.primary.main
-      }
-    },
-    '&:focus $innerGrid': {
-      outline: `1px dotted ${theme.color.focusBorder}`
-    },
-    '& .disabledInnerGrid': {
-      width: '100%',
-      backgroundColor: theme.bg.offWhiteDT,
-      border: '1px solid ' + `${theme.color.grey1}`
-    },
-    '& [class^="fl-"]': {
-      transition: 'color 225ms ease-in-out'
     }
   },
   icon: {
@@ -72,15 +44,6 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
       borderColor: theme.palette.primary.main,
       fontSize: '16px',
       color: theme.palette.primary.main
-    }
-  },
-  showCursor: {
-    cursor: 'pointer'
-  },
-  disabled: {
-    cursor: 'not-allowed',
-    '& > div': {
-      opacity: 0.4
     }
   },
   heading: {

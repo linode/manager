@@ -133,8 +133,8 @@ export const oneClickApps: OCA[] = [
           'https://linode.com/docs/platform/one-click/deploy-lamp-stack-with-one-click-apps/'
       }
     ],
-    logo_url: 'assets/lamp_color.svg',
-    href: 'https://www.ibm.com/cloud/learn/lamp-stack-explained'
+    logo_url: 'assets/lamp_flame_color.svg'
+    // href: 'https://www.ibm.com/cloud/learn/lamp-stack-explained' Not sure this is kosher.
   },
   {
     name: 'Rust',

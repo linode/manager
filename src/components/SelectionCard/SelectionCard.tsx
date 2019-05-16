@@ -17,10 +17,8 @@ import CardBase from './CardBase';
 type CSSClasses =
   | 'root'
   | 'icon'
+  | 'info'
   | 'checked'
-  | 'flex'
-  | 'heading'
-  | 'innerGrid'
   | 'disabled'
   | 'showCursor';
 
@@ -203,7 +201,7 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
     switch (variant) {
       case 'info':
         return (
-          <Grid item className={`${classes.icon}`} xs={2}>
+          <Grid item className={`${classes.info}`} xs={2}>
             <Info onClick={this.handleInfoClick} />
           </Grid>
         );
