@@ -18,14 +18,13 @@ import {
   withDocumentTitleProvider
 } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import LandingLoading from 'src/components/LandingLoading';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
 import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
 import Footer from 'src/features/Footer';
-import ObjectStorageErrorState from 'src/features/ObjectStorage/ObjectStorageErrorState';
-import ObjectStorageLoadingState from 'src/features/ObjectStorage/ObjectStorageLoadingState';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
@@ -53,6 +52,8 @@ import {
 } from './store/nodeBalancer/nodeBalancer.containers';
 import { MapState } from './store/types';
 import { isObjectStorageEnabled } from './utilities/accountCapabilities';
+
+import ErrorState from 'src/components/ErrorState';
 
 shim(); // allows for .finally() usage
 
@@ -441,9 +442,11 @@ const getObjectStorageRoute = (
   let component;
 
   if (accountLoading) {
-    component = ObjectStorageLoadingState;
+    component = () => <LandingLoading delayInMS={1000} />;
   } else if (accountError) {
-    component = ObjectStorageErrorState;
+    component = () => (
+      <ErrorState errorText="An error has occurred. Please reload and try again." />
+    );
   } else if (isObjectStorageEnabled(accountCapabilities)) {
     component = ObjectStorage;
   }
