@@ -48,7 +48,7 @@ export const getLinodeStatsByDate = (
  */
 export const getLinodeTransfer = (linodeId: number) =>
   Request<Linode.NetworkUtilization>(
-    setURL(`${API_ROOT}/linode/instances/${linodeId}/transferpool`),
+    setURL(`${API_ROOT}/linode/instances/${linodeId}/transfer`),
     setMethod('GET')
   ).then(response => response.data);
 
