@@ -1,4 +1,4 @@
-import { WithSnackbarProps } from 'notistack';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
 import {
@@ -51,7 +51,16 @@ const Notifications: React.StatelessComponent<CombinedProps> = props => {
         enqueueSnackbar(successMessage, { variant: 'success' });
         requestNotifications();
       })
-      .catch(_ => undefined);
+      .catch(_ => {
+        const errorMessage =
+          type === 'migration_scheduled'
+            ? 'An error occurred entering the migration queue.'
+            : 'An error occurred scheduling your migration.';
+
+        enqueueSnackbar(errorMessage, {
+          variant: 'error'
+        });
+      });
   };
 
   return (
@@ -95,6 +104,7 @@ interface ContextProps {
 
 const enhanced = compose<CombinedProps, {}>(
   styled,
+  withSnackbar,
   withLinodeDetailContext<ContextProps>(({ linode }) => ({
     linodeNotifications: linode._notifications,
     linodeId: linode.id,
