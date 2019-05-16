@@ -4,6 +4,41 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.57.0] - 2019-05-20
+
+### Added:
+
+- Markdown and Markup Support for Support Tickets and Replies
+- Notice for domains when they aren't being served
+- Abuse ticket banner
+- Enable ctrl+click on profile dropdown buttons and clickable rows
+- Ability to update email from Account -> User Profile
+- Add event messages for host reboots, Lassie reboots, and Lish boots
+- Create a Kubernetes cluster
+- Action menu item to download Kubernetes kubeconfig.yaml
+
+### Changed:
+
+- Include the Linode Label in delete dialog modals
+- Include Linode and Volume labels in Volume dialog modals
+- Re-enable plan type copy and update the text
+- Small style change for NodeBalancer config action panel
+- Update timezone selection
+- Update Linode backup selects
+- Copy in delete Bucket confirmation modal
+- Object Storage: separate "Size" column into "Objects" and "Size"
+- Improved Select components across the app
+
+### Fixed:
+
+- Linode network transfer stats
+- Linode migration success/error states
+- IPv6 DNS Resolvers
+- Typo in Disable TFA dialog
+- Block device assignment
+- Issue where error views were displaying after data was loaded
+
+
 ## [v0.56.0] - 2019-05-08
 
 ### Changed:
