@@ -114,7 +114,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
       setTypeError('Please select a type.');
       return;
     }
-    if (typeof nodeCount !== 'number') {
+    if (typeof nodeCount !== 'number' || nodeCount < 0) {
       setCountError('Invalid value.');
       return;
     }
