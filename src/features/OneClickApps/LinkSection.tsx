@@ -60,12 +60,10 @@ export const LinkSection: React.FunctionComponent<CombinedProps> = props => {
           <Typography className={classes.title}>{title}</Typography>
         </Grid>
       </Grid>
-      <Grid container item>
+      <Grid container item className={classes.link}>
         {links.map((link, idx) => (
           <Grid item key={`${title}-link-item-${idx}`}>
-            <a className={classes.link} href={link.href}>
-              {link.title}
-            </a>
+            <a href={link.href}>{link.title}</a>
           </Grid>
         ))}
       </Grid>

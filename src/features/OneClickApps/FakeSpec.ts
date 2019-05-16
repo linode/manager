@@ -24,7 +24,7 @@ export const oneClickApps: OCA[] = [
       for you and your team. GitLab is the most popular self-hosted Git repository,
       so you'll benefit from a robust set of integrated tools and an active community.`,
     summary:
-      'More than a self-hosted Git repository: use GitLab to manage all the stages of your DevOps lifecycle.',
+      'More than a self-hosted Git repository: use GitLab to manage all the stages of your DevOps life cycle.',
     related_guides: [
       {
         title: 'Deploy GitLab with One-Click Apps',
@@ -43,6 +43,71 @@ export const oneClickApps: OCA[] = [
     ],
     href: 'about.gitlab.com',
     logo_url: 'assets/gitlab_color.svg'
+  },
+  {
+    name: 'Drupal',
+    description: ` Drupal is a content management system (CMS) designed for building custom
+      websites for personal and business use. Built for high performance and
+      scalability, Drupal provides the necessary tools to create rich,
+      interactive community websites with forums, user blogs, and private messaging.
+      Drupal also has support for personal publishing projects and can power podcasts,
+      blogs, and knowledge-based systems, all within a single, unified platform.`,
+    summary: `Powerful content management system built on PHP and supported by a database.
+      engine. Drupal sites can be rich and interactive, and the Drupal API eases development.`,
+    related_guides: [
+      {
+        title: 'Deploy Drupal with One-Click Apps',
+        href:
+          'https://linode.com/docs/platform/one-click/deploying-drupal-with-one-click-apps/'
+      },
+      {
+        title: 'Update and Secure Drupal 8 on Ubuntu or Debian',
+        href:
+          'https://linode.com/docs/websites/cms/update-and-secure-drupal-8-on-ubuntu/'
+      }
+    ],
+    href: 'https://www.drupal.org/',
+    logo_url: 'assets/drupal_color.svg'
+  },
+  {
+    name: 'LAMP',
+    description: `The LAMP stack consists of the Linux operating system,
+      the Apache HTTP Server, the MySQL relational database management system,
+      and the PHP programming language.
+      This software environment is a foundation for popular PHP application
+      frameworks like WordPress, Drupal, and Laravel. Upload your existing
+      PHP application code to your new app or use a PHP framework to write
+      a new application on the Linode.`,
+    summary: `Build PHP-based applications with the LAMP software stack: Linux, Apache,
+      MySQL, and PHP. The LAMP stack is the foundation for popular frameworks
+      like WordPress and Drupal.`,
+    related_guides: [
+      {
+        title: 'Deploy a LAMP Stack with One-Click Apps',
+        href:
+          'https://linode.com/docs/platform/one-click/deploy-lamp-stack-with-one-click-apps/'
+      }
+    ],
+    logo_url: 'assets/lamp_color.svg',
+    href: 'https://www.ibm.com/cloud/learn/lamp-stack-explained'
+  },
+  {
+    name: 'WooCommerce',
+    description: `WooCommerce is an open source eCommerce platform built to integrate with
+      WordPress. You can use WooCommerce to securely sell both digital and
+      physical goods, and take payments via major credit cards, bank transfers,
+      PayPal, and other providers like Stripe. With more than 300 extensions to
+      choose from, WooCommerce is extremely flexible.`,
+    summary: `Highly customizable, secure, open source eCommerce platform built to integrate with Wordpress.`,
+    related_guides: [
+      {
+        title: 'Deploy WooCommerce with One-Click Apps',
+        href:
+          'https://linode.com/docs/platform/one-click/one-click-woocommerce/'
+      }
+    ],
+    href: 'https://woocommerce.com/features/',
+    logo_url: 'assets/woocommerce_color.svg'
   },
   {
     name: 'WordPress',

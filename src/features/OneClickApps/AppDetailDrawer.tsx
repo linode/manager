@@ -81,11 +81,13 @@ export const AppDetailDrawer: React.FunctionComponent<
             {app.description}
           </Typography>
         </Grid>
-        <LinkSection
-          title="More info"
-          links={[{ title: app.href, href: app.href }]}
-          icon={Link}
-        />
+        {app.href && (
+          <LinkSection
+            title="More info"
+            links={[{ title: app.href, href: app.href }]}
+            icon={Link}
+          />
+        )}
         <LinkSection
           title="Guides"
           links={app.related_guides || []}
