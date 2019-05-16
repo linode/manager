@@ -12,6 +12,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
@@ -39,6 +40,7 @@ type ClassNames =
   | 'root'
   | 'suffix'
   | 'actionPanel'
+  | 'expPanelSummary'
   | 'innerReply'
   | 'rootReply'
   | 'reference';
@@ -52,11 +54,16 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   actionPanel: {
     marginTop: theme.spacing.unit * 2
   },
+  expPanelSummary: {
+    backgroundColor: theme.bg.offWhite,
+    borderTop: `1px solid ${theme.bg.main}`
+  },
   innerReply: {
     padding: 0
   },
   rootReply: {
-    padding: 0
+    padding: 0,
+    marginBottom: theme.spacing.unit * 2
   },
   reference: {
     '& > p': {
@@ -421,6 +428,7 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
   };
 
   render() {
+    const { classes } = this.props;
     const { data, errors, files, inputValue, submitting, ticket } = this.state;
     const requirementsMet =
       ticket.description.length > 0 && ticket.summary.length > 0;
@@ -510,6 +518,12 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
           }
         />
         {/* <TicketAttachmentList attachments={attachments} /> */}
+        <ExpansionPanel
+          heading="Tips"
+          detailProps={{ className: classes.expPanelSummary }}
+        >
+          <Reference rootClass={this.props.classes.reference} />
+        </ExpansionPanel>
         <AttachFileForm
           inlineDisplay
           files={files}
@@ -534,7 +548,6 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
             Cancel
           </Button>
         </ActionsPanel>
-        <Reference rootClass={this.props.classes.reference} />
       </Drawer>
     );
   }

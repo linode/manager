@@ -35,7 +35,8 @@ beforeEach(() => {
         actionPanel: '',
         innerReply: '',
         rootReply: '',
-        reference: ''
+        reference: '',
+        expPanelSummary: ''
       }}
       open={true}
       onClose={jest.fn()}

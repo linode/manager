@@ -20,7 +20,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     border: '1px solid #ccc',
     height: 200,
     padding: `9px 12px 9px 12px`,
-    overflowY: 'scroll'
+    overflowY: 'auto'
   }
 });
 

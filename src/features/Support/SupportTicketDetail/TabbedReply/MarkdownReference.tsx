@@ -32,9 +32,6 @@ const MarkdownReference: React.FC<CombinedProps> = props => {
   const { classes } = props;
   return (
     <div className={props.rootClass}>
-      <Typography variant="h2" className={classes.header}>
-        Tips
-      </Typography>
       <Typography>
         You can use Markdown to format your{' '}
         {props.isReply ? 'reply' : 'question'}. For more examples see this
