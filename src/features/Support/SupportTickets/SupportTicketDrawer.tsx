@@ -515,7 +515,6 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
           files={files}
           updateFiles={this.updateFiles}
         />
-        <Reference rootClass={this.props.classes.reference} />
         <ActionsPanel style={{ marginTop: 16 }}>
           <Button
             onClick={this.onSubmit}
@@ -535,6 +534,7 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
             Cancel
           </Button>
         </ActionsPanel>
+        <Reference rootClass={this.props.classes.reference} />
       </Drawer>
     );
   }

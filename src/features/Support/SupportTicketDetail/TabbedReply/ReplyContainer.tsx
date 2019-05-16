@@ -20,12 +20,15 @@ import { createReply, uploadAttachment } from 'src/services/support';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
-type ClassNames = 'root' | 'reference' | 'referenceRoot';
+type ClassNames = 'root' | 'reference' | 'referenceRoot' | 'inner';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     width: '100%',
     marginLeft: theme.spacing.unit * 2
+  },
+  inner: {
+    padding: theme.spacing.unit
   },
   referenceRoot: {
     '& > p': {
@@ -149,6 +152,7 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
         <TabbedReply
           error={errorMap.description}
           handleChange={setValue}
+          innerClass={classes.inner}
           isReply
           value={value}
         />
