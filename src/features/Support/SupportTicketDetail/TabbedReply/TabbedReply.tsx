@@ -15,6 +15,7 @@ type ClassNames = 'root';
 interface Props {
   rootClass?: string;
   innerClass?: string;
+  isReply?: boolean;
 }
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
@@ -31,7 +32,7 @@ const TabbedReply: React.FC<CombinedProps> = props => {
 
   const tabs: Tab[] = [
     {
-      title: 'Reply',
+      title: props.isReply ? 'Reply' : 'Description',
       render: () => {
         return <Reply {...rest} value={value} error={error} />;
       }

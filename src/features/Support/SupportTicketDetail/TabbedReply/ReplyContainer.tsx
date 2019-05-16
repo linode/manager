@@ -149,6 +149,7 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
         <TabbedReply
           error={errorMap.description}
           handleChange={setValue}
+          isReply
           value={value}
         />
         <Grid className={classes.root} item>
@@ -167,7 +168,7 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
         </Grid>
       </Grid>
       <Grid className={classes.reference} item sm={3} xs={12}>
-        <Reference rootClass={classes.referenceRoot} />
+        <Reference isReply rootClass={classes.referenceRoot} />
       </Grid>
     </Grid>
   );

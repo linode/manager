@@ -42,7 +42,4 @@ const _Paper: React.FC<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, PaperProps>(
-  // React.memo,
-  styled
-)(_Paper);
+export default compose<CombinedProps, PaperProps>(styled)(_Paper);

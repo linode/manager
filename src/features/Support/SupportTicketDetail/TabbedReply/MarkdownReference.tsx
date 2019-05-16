@@ -23,6 +23,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 interface Props {
   rootClass?: string;
+  isReply?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -35,7 +36,8 @@ const MarkdownReference: React.FC<CombinedProps> = props => {
         Tips
       </Typography>
       <Typography>
-        You can use Markdown to format your question. For more examples see this
+        You can use Markdown to format your{' '}
+        {props.isReply ? 'reply' : 'question'}. For more examples see this
         <a target="_blank" href="http://demo.showdownjs.com/">
           {' '}
           Markdown cheatsheet.
