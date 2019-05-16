@@ -147,6 +147,11 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     this.setState({ label: newLabel ? newLabel : undefined });
   };
 
+  updateNodeCount = (newCount: number) => {
+    const numberOfLinodes = newCount > 0 ? newCount : 0;
+    this.setState({ numberOfLinodes });
+  };
+
   updateTags = (newTags: Item<string>[]) => {
     this.setState({ tags: newTags });
   };
@@ -231,9 +236,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
               handleTypeSelect={(newType: string) => {
                 this.setState({ selectedType: newType });
               }}
-              updateNodeCount={(newCount: number) => {
-                this.setState({ numberOfLinodes: newCount });
-              }}
+              updateNodeCount={this.updateNodeCount}
               updateFor={[
                 nodePools,
                 typesData,
