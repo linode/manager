@@ -2,7 +2,7 @@ export interface OCA {
   description: string;
   name: string;
   related_guides?: Doc[];
-  href: string;
+  href?: string;
   logo_url: string;
   summary: string;
 }
@@ -13,6 +13,51 @@ export interface Doc {
 }
 
 export const oneClickApps: OCA[] = [
+  {
+    name: 'Ark',
+    description: `Ark: Survival Evolved is a multiplayer action-survival game released in 2017.
+      You are placed on a series of fictional islands inhabited by dinosaurs and
+      other prehistoric animals. In Ark, the main objective is to survive. Ark is
+      an ongoing battle where animals and other players have the ability to destroy you.
+      You must build structures, farm resources, breed dinosaurs, and even set up
+      trading hubs with neighboring tribes. Hosting an Ark server gives you control
+      of the entire game. You can define the leveling speed, the amount of players,
+      and the types of weapons available.`,
+    summary: `Multiplayer action-survival game where you are placed on a series of fictional
+      islands inhabited by prehistoric creatures. You have only one objective: survive.`,
+    related_guides: [
+      {
+        title: 'Deploy an ARK: Survival Evolved Server with One-Click Apps',
+        href:
+          'https://linode.com/docs/platform/one-click/deploying-ark-survival-evolved-with-one-click-apps/'
+      }
+    ],
+    logo_url: 'assets/ark_color.svg',
+    href: 'https://survivetheark.com/'
+  },
+  {
+    name: 'CS:GO',
+    description: `The LAMP stack consists of the Linux operating system,
+      the Apache HTTP Server, the MySQL relational database management system,
+      and the PHP programming language.
+      This software environment is a foundation for popular PHP application
+      frameworks like WordPress, Drupal, and Laravel. Upload your existing
+      PHP application code to your new app or use a PHP framework to write
+      a new application on the Linode.`,
+    summary: `Global Offensive is a fast-paced first person shooter. In CS:GO there are two teams: Terrorists and Counter-Terrorists.
+      The teams compete against each other to complete objectives or to eliminate the opposing team.
+      A competitive match requires two teams of five players, but hosting your own server allows you control over team size and server location,
+      so you and your friends can play with low latency. Up to 64 players can be hosted on a single server.`,
+    related_guides: [
+      {
+        title: 'Deploy Counter-Strike: Global Offensive with One-Click Apps',
+        href:
+          'https://linode.com/docs/platform/one-click/deploying-cs-go-with-one-click-apps/'
+      }
+    ],
+    logo_url: 'assets/csgo_color.svg',
+    href: 'https://blog.counter-strike.net/index.php/about/'
+  },
   {
     name: 'GitLab',
     description: `GitLab is a complete solution for all aspects of your software development.
@@ -90,6 +135,187 @@ export const oneClickApps: OCA[] = [
     ],
     logo_url: 'assets/lamp_color.svg',
     href: 'https://www.ibm.com/cloud/learn/lamp-stack-explained'
+  },
+  {
+    name: 'Rust',
+    description: `In Rust, you play as a survivor and must work with or against other players
+      to ensure your own survival. Players are able to steal, lie, cheat, or
+      trick each other. Build a shelter, hunt animals for food, craft weapons and
+      armor, and much more. Hosting your own Rust server allows you to customize
+      settings and curate the number of players in the world.`,
+    summary: `A free-for-all battle for survival in a harsh open-world environment.
+    In Rust, you can do anything--but so can everyone else.`,
+    related_guides: [
+      {
+        title: 'Deploy Rust with One-Click Apps',
+        href:
+          'https://linode.com/docs/platform/one-click/deploying-rust-with-one-click-apps/'
+      }
+    ],
+    logo_url: 'assets/rust_color.svg',
+    href: 'https://rust.facepunch.com/'
+  },
+  {
+    name: 'Terraria',
+    description: `Terraria is a two-dimensional sandbox game in which players explore the
+      world, collect resources, build structures, and battle enemies in
+      procedurally generated environments. In Terraria a player begins by digging
+      for ore, and the further they dig the more adventure they find. Multiplayer
+      mode can be either cooperative or PvP.
+      Hosting your own Terraria server gives you control over the world, the players,
+      and the objectives. Your world, your rules.`,
+    summary: `Adventure, collect resources, build structures, and battle enemies in
+      this wildly creative two-dimensional sandbox game.`,
+    related_guides: [
+      {
+        title: 'Deploy a Terraria Server with One-Click Apps',
+        href:
+          'https://linode.com/docs/platform/one-click/deploying-terraria-with-one-click-apps/'
+      }
+    ],
+    logo_url: 'assets/terraria_color.svg',
+    href: 'https://terraria.org/'
+  },
+  {
+    name: 'TF2',
+    description: `Team Fortress 2 is a team-based multiplayer first-person shooter.
+      In TF2, you and your team choose from 9 unique classes and play against
+      an enemy team in a variety of game modes. These modes include capture the
+      flag, king of the hill, and even a battle pitting your team against a
+      robotic horde. Setting up a personal game server puts you in control of
+      what game modes and maps you use, as well as a variety of other settings
+      to customize your experience.`,
+    summary: `Choose from 9 unique classes in this highly original FPS. Compete against
+      players around the world in a variety of modes such as capture the flag,
+      king of the hill, and more.`,
+    related_guides: [
+      {
+        title: 'Deploy a Team Fortress 2 Server with One-Click Apps',
+        href:
+          'https://linode.com/docs/platform/one-click/deploying-team-fortress-2-with-one-click-apps/'
+      }
+    ],
+    logo_url: 'assets/teamfortress_color.svg',
+    href: 'http://www.teamfortress.com/'
+  },
+  {
+    name: 'WooCommerce',
+    description: `WooCommerce is an open source eCommerce platform built to integrate with
+      WordPress. You can use WooCommerce to securely sell both digital and
+      physical goods, and take payments via major credit cards, bank transfers,
+      PayPal, and other providers like Stripe. With more than 300 extensions to
+      choose from, WooCommerce is extremely flexible.`,
+    summary: `Highly customizable, secure, open source eCommerce platform built to integrate with Wordpress.`,
+    related_guides: [
+      {
+        title: 'Deploy WooCommerce with One-Click Apps',
+        href:
+          'https://linode.com/docs/platform/one-click/one-click-woocommerce/'
+      }
+    ],
+    href: 'https://woocommerce.com/features/',
+    logo_url: 'assets/woocommerce_color.svg'
+  },
+  {
+    name: 'MERN',
+    description: `MERN is a full stack platform that contains everything you need to build a web application:
+      - MongoDB is a document database used to persist your application's data.
+      - Express serves as the web application framework.
+      - React is used to build your application's user interfaces. React offers a
+      sever-side rendering function which makes it easier for search engines to crawl your web application.
+      - Node.js serves as the run-time environment for your application.
+      All of these technologies are well-established, offer robust feature sets,
+      and are well-supported by their maintaining organizations. These
+      characteristics make them a great choice for your applications. Upload your
+      existing MERN website code to your new Linode, or use MERN's scaffolding tool
+      to start writing new web applications on the Linode.`,
+    summary: `Build production-ready universal apps with the MERN stack: MongoDB, Express, React, and Node.js.`,
+    related_guides: [
+      {
+        title: 'Deploy a MERN Stack with One-Click Apps',
+        href:
+          'https://linode.com/docs/platform/one-click/deploy-mern-with-one-click-apps/'
+      }
+    ],
+    logo_url: 'assets/mern_color.svg'
+  },
+  {
+    name: 'OpenVPN',
+    description: `OpenVPN is a widely trusted, free, and open-source virtual private network
+      (VPN) application. OpenVPN creates network tunnels between groups of
+      computers that are not on the same local network, and it uses OpenSSL
+      to encrypt your traffic.`,
+    summary: `Widely trusted, free, and open-source virtual private network (VPN)
+      application. OpenVPN securely connects your computer to your servers,
+      or to the public Internet.`,
+    related_guides: [
+      {
+        title: 'Deploy OpenVPN Access Server with One-Click Apps',
+        href: 'https://linode.com/docs/platform/one-click/one-click-openvpn/'
+      },
+      {
+        title: 'Manage OpenVPN with OpenVPN Access Server',
+        href:
+          'https://linode.com/docs/networking/vpn/install-openvpn-access-server-on-linux/'
+      },
+      {
+        title: 'Configure OpenVPN Client Devices',
+        href:
+          'https://linode.com/docs/networking/vpn/configuring-openvpn-client-devices/'
+      }
+    ],
+    href:
+      'https://openvpn.net/community-resources/reference-manual-for-openvpn-2-4/',
+    logo_url: 'assets/openvpn_color.svg'
+  },
+  {
+    name: 'Minecraft',
+    description: `With over 100 million users around the world, Minecraft is the most popular
+      online game of all time. Less of a game and more of a lifestyle choice, you
+      and other players are free to build and explore in a 3D generated world made
+      up of millions of mineable blocks. Collect resources by leveling mountains,
+      taming forests, and venturing out to sea. Choose a home from the varied list
+      of biomes like ice worlds, flower plains, and jungles. Build ancient castles
+      or modern mega cities, and fill them with redstone circuit contraptions and
+      villagers. Fight off nightly invasions of Skeletons, Zombies, and explosive
+      Creepers, or adventure to the End and the Nether to summon the fabled End
+      Dragon and the chaotic Wither. If that is not enough, Minecraft is also
+      highly moddable and customizable. You decide the rules when hosting your own
+      Minecraft server for you and your friends to play together in this highly
+      addictive game.`,
+    summary: `Build, explore, and adventure in your own 3D generated world.`,
+    related_guides: [
+      {
+        title: 'Deploy A Minecraft Server with One-Click Apps',
+        href:
+          'https://linode.com/docs/platform/one-click/deploying-minecraft-with-one-click-apps/'
+      }
+    ],
+    href: 'https://www.minecraft.net/',
+    logo_url: 'assets/minecraft_color.svg'
+  },
+  {
+    name: 'WireGuard',
+    description: `WireGuard is a simple, fast, and modern virtual private network (VPN) which utilizes
+      state-of-the-art cryptography. It aims to be faster and leaner than other VPN protocols
+      such as OpenVPN and IPSec, and it has a much smaller source code footprint.
+      Configuring WireGuard is as simple as configuring SSH. A connection is established by an
+      exchange of public keys between server and client, and only a client whose public key is
+      present in the server's configuration file is considered authorized. WireGuard sets up
+      standard network interfaces which behave similarly to other common network interfaces,
+      like eth0. This makes it possible to configure and manage WireGuard interfaces using
+      standard networking tools such as ifconfig and ip.`,
+    summary: `Modern VPN which utilizes state-of-the-art cryptography. It aims to be faster
+      and leaner than other VPN protocols and has a smaller source code footprint.`,
+    related_guides: [
+      {
+        title: 'Deploy WireGuard with One-Click Apps',
+        href:
+          'https://linode.com/docs/platform/one-click/deploy-wireguard-with-one-click-apps/'
+      }
+    ],
+    href: 'https://www.wireguard.com/',
+    logo_url: 'assets/wireguard_color.svg'
   },
   {
     name: 'WooCommerce',
