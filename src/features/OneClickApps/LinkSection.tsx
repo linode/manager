@@ -20,7 +20,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   link: {
     marginLeft: theme.spacing.unit * 4,
-    fontSize: '1.1em',
+    fontSize: '1em',
     lineHeight: 2
   },
   title: {

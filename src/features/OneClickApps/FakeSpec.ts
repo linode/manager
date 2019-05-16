@@ -264,8 +264,6 @@ export const oneClickApps: OCA[] = [
           'https://linode.com/docs/networking/vpn/configuring-openvpn-client-devices/'
       }
     ],
-    href:
-      'https://openvpn.net/community-resources/reference-manual-for-openvpn-2-4/',
     logo_url: 'assets/openvpn_color.svg'
   },
   {

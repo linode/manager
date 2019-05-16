@@ -15,7 +15,13 @@ import { APP_ROOT } from 'src/constants';
 import { oneClickApps } from './FakeSpec';
 import LinkSection from './LinkSection';
 
-type ClassNames = 'root' | 'logo' | 'summary' | 'description' | 'divider';
+type ClassNames =
+  | 'root'
+  | 'logo'
+  | 'summary'
+  | 'description'
+  | 'divider'
+  | 'image';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
@@ -31,6 +37,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   divider: {
     margin: theme.spacing.unit * 2
+  },
+  image: {
+    maxWidth: '50px'
   }
 });
 
@@ -63,7 +72,11 @@ export const AppDetailDrawer: React.FunctionComponent<
     >
       <Grid container direction="row" alignItems="center" justify="center">
         <Grid item className={classes.logo}>
-          <img src={`${APP_ROOT}/${app.logo_url}`} alt={`${app.name} logo`} />
+          <img
+            className={classes.image}
+            src={`${APP_ROOT}/${app.logo_url}`}
+            alt={`${app.name} logo`}
+          />
         </Grid>
         <Grid item>
           <Typography variant="h1">{app.name}</Typography>
