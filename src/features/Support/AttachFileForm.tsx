@@ -1,44 +1,32 @@
-import { remove } from 'ramda';
+import AttachFile from '@material-ui/icons/AttachFile';
+import { equals, remove } from 'ramda';
 import * as React from 'react';
-
+import { compose } from 'recompose';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
 
-import AttachFile from '@material-ui/icons/AttachFile';
-
 import Button from 'src/components/Button';
 
 import AttachFileListItem from './AttachFileListItem';
+import { FileAttachment } from './index';
+import { reshapeFiles } from './ticketUtils';
 
 type ClassNames = 'root' | 'attachFileButton';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   attachFileButton: {
-    paddingLeft: 14,
-    paddingRight: 20,
-    marginTop: theme.spacing.unit,
+    padding: '4px 8px 4px 4px',
+    marginTop: theme.spacing.unit * 2,
     marginBottom: theme.spacing.unit * 2
   }
 });
 
-export interface FileAttachment {
-  name: string;
-  file: File;
-  /* Used to keep track of initial upload status */
-  uploading: boolean;
-  /* Used to ensure that the file doesn't get uploaded again */
-  uploaded: boolean;
-  /* Each file needs to keep track of its own errors because each request hits the same endpoint */
-  errors?: Linode.ApiFieldError[];
-}
-
 interface Props {
   files: FileAttachment[];
-  handleFileSelected: any;
   updateFiles: any;
   inlineDisplay?: boolean;
 }
@@ -48,9 +36,26 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export class AttachFileForm extends React.Component<CombinedProps, {}> {
   inputRef = React.createRef<HTMLInputElement>();
 
+  shouldComponentUpdate(nextProps: CombinedProps) {
+    return (
+      !equals(this.props.files, nextProps.files) ||
+      !equals(this.props.classes, nextProps.classes)
+    );
+  }
+
   clickAttachButton = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (this.inputRef.current) {
       this.inputRef.current.click();
+    }
+  };
+
+  handleFileSelected = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { files: selectedFiles } = e.target;
+    const { updateFiles, files } = this.props;
+
+    if (selectedFiles && selectedFiles.length) {
+      const reshapedFiles = reshapeFiles(selectedFiles);
+      updateFiles([...files, ...reshapedFiles]);
     }
   };
 
@@ -65,7 +70,7 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
   };
 
   selectFile = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.props.handleFileSelected(e);
+    this.handleFileSelected(e);
     if (this.inputRef.current) {
       this.inputRef.current.value = '';
     }
@@ -108,4 +113,4 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
 
 const styled = withStyles(styles);
 
-export default styled(AttachFileForm);
+export default compose<CombinedProps, Props>(styled)(AttachFileForm);

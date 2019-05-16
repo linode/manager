@@ -30,7 +30,7 @@ import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
 import TicketAttachmentList from '../TicketAttachmentList';
 import AttachmentError from './AttachmentError';
-import TicketReply from './TicketReply';
+import Reply from './TabbedReply';
 
 type ClassNames =
   | 'root'
@@ -387,13 +387,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
           <Notice success text={'Ticket has been closed.'} />
         )}
 
-        <Grid
-          container
-          direction="column"
-          justify="center"
-          alignItems="center"
-          className={classes.listParent}
-        >
+        <Grid container className={classes.listParent}>
           {/* If the ticket isn't blank, display it, followed by replies (if any). */}
           {ticket.description && (
             <ExpandableTicketPanel
@@ -406,7 +400,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
           <TicketAttachmentList attachments={ticket.attachments} />
           {/* If the ticket is open, allow users to reply to it. */}
           {['open', 'new'].includes(ticket.status) && (
-            <TicketReply
+            <Reply
               ticketId={ticket.id}
               closable={ticket.closable}
               onSuccess={this.onCreateReplySuccess}

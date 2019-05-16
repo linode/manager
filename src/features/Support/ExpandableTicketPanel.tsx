@@ -2,8 +2,9 @@ import * as classNames from 'classnames';
 import * as moment from 'moment';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import Collapse from 'src/assets/icons/minus-square.svg';
-import Expand from 'src/assets/icons/plus-square.svg';
+import { compose } from 'recompose';
+import { Converter } from 'showdown';
+import 'showdown-highlightjs-extension';
 import UserIcon from 'src/assets/icons/user.svg';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
@@ -15,8 +16,9 @@ import {
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
-import IconButton from 'src/components/IconButton';
-import truncateText from 'src/utilities/truncateText';
+
+import { sanitizeHTML } from 'src/utilities/sanitize-html';
+import TicketDetailBody from './TicketDetailText';
 
 type ClassNames =
   | 'root'
@@ -24,15 +26,9 @@ type ClassNames =
   | 'leftIcon'
   | 'userName'
   | 'paper'
-  | 'paperOpen'
   | 'avatarCol'
   | 'userCol'
-  | 'descCol'
-  | 'expCol'
-  | 'expButton'
-  | 'toggle'
   | 'isCurrentUser'
-  | 'formattedText'
   | 'hivelyContainer'
   | 'hivelyLink'
   | 'hivelyLinkIcon'
@@ -79,11 +75,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   paper: {
     padding: theme.spacing.unit * 3
   },
-  paperOpen: {
-    '& $descCol': {
-      animation: 'fadeIn 225ms linear forwards'
-    }
-  },
   avatarCol: {
     minWidth: 60
   },
@@ -91,31 +82,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     minWidth: 200,
     paddingRight: `${theme.spacing.unit * 4}px !important`
   },
-  descCol: {},
-  expCol: {
-    display: 'flex',
-    justifyContent: 'flex-end'
-  },
-  expButton: {
-    position: 'relative',
-    top: -theme.spacing.unit,
-    left: theme.spacing.unit,
-    [theme.breakpoints.down('sm')]: {
-      position: 'absolute',
-      top: 16,
-      right: 16,
-      left: 'auto'
-    }
-  },
-  toggle: {
-    height: 24,
-    width: 24
-  },
   isCurrentUser: {
     backgroundColor: theme.color.grey2
-  },
-  formattedText: {
-    whiteSpace: 'pre-line'
   },
   hivelyLink: {
     textDecoration: 'none',
@@ -148,11 +116,6 @@ interface Props {
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
-
-interface State {
-  open: boolean;
-  data?: Data;
-}
 
 interface Data {
   gravatar_id: string;
@@ -192,72 +155,69 @@ export const shouldRenderHively = (
   }
 };
 
-export class ExpandableTicketPanel extends React.Component<
-  CombinedProps,
-  State
-> {
-  mounted: boolean = false;
-  constructor(props: CombinedProps) {
-    super(props);
-    this.state = {
-      open: pathOr(true, ['open'], this.props),
-      data: this.getData()
-    };
-  }
+export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
+  const {
+    classes,
+    isCurrentUser,
+    parentTicket,
+    ticket,
+    open,
+    reply,
+    ticketUpdated
+  } = props;
 
-  componentDidMount() {
-    this.mounted = true;
-  }
+  const [data, setData] = React.useState<Data | undefined>(undefined);
 
-  componentWillUnmount() {
-    this.mounted = false;
-  }
-
-  togglePanel = () => {
-    this.setState({ open: !this.state.open });
-  };
-
-  getData = () => {
-    const { parentTicket, ticket, reply, ticketUpdated } = this.props;
+  React.useEffect(() => {
     if (!ticket && !reply) {
       return;
     }
-    let data: Data;
     if (ticket) {
-      data = {
+      /** convert markdown to mark up */
+      const convertedMarkdown = new Converter({
+        extensions: ['highlightjs'],
+        simplifiedAutoLink: true,
+        openLinksInNewWindow: true
+      }).makeHtml(ticket.description);
+
+      return setData({
         ticket_id: String(ticket.id),
         reply_id: '',
         gravatar_id: ticket.gravatar_id,
         gravatarUrl: pathOr('not found', ['gravatarUrl'], ticket),
         date: ticket.opened,
-        description: ticket.description,
+        description: sanitizeHTML(convertedMarkdown),
         username: ticket.opened_by,
         from_linode: false,
         updated: ticket.updated
-      };
+      });
     } else if (reply) {
-      data = {
+      /** convert markdown to markup */
+      const convertedMarkdown = new Converter({
+        extensions: ['highlightjs'],
+        simplifiedAutoLink: true,
+        openLinksInNewWindow: true
+      }).makeHtml(reply.description);
+
+      return setData({
         ticket_id: parentTicket ? String(parentTicket) : '',
         reply_id: String(reply.id),
         gravatar_id: reply.gravatar_id,
         gravatarUrl: pathOr('not found', ['gravatarUrl'], reply),
         date: reply.created,
-        description: reply.description,
+        description: sanitizeHTML(convertedMarkdown),
         username: reply.created_by,
         from_linode: reply.from_linode,
         updated: ticketUpdated!
-      };
+      });
     }
+  }, []);
 
-    return data!;
-  };
-
-  renderHively = (
+  const renderHively = (
     linodeUsername: string,
     ticketId: string,
     replyId: string
   ) => {
-    const { classes } = this.props;
     const href = `https://secure.teamhively.com/ratings/add/account/587/source/hs/ext/${linodeUsername}/ticket/${ticketId}-${replyId}/rating/`;
     return (
       <div className={classes.hivelyContainer}>
@@ -307,9 +267,7 @@ export class ExpandableTicketPanel extends React.Component<
     );
   };
 
-  renderAvatar(url: string) {
-    const { classes } = this.props;
-
+  const renderAvatar = (url: string) => {
     return url !== 'not found' ? (
       <div className={classes.userWrapper}>
         <img src={url} className={classes.leftIcon} alt="Gravatar" />
@@ -319,91 +277,65 @@ export class ExpandableTicketPanel extends React.Component<
         <UserIcon className={classes.leftIcon} />
       </div>
     );
+  };
+
+  /**
+   * data.description will be a blank string if it contained ONLY malicious markup
+   * because we sanitize it in this.getData()
+   */
+  if (!data || !data.description) {
+    return null;
   }
 
-  render() {
-    const { classes, isCurrentUser } = this.props;
-    const { data, open } = this.state;
-    if (!data) {
-      return;
-    }
-
-    const truncatedText = truncateText(data.description, 175);
-    const text = open ? data.description : truncatedText;
-
-    return (
-      <Grid item className={classes.root}>
-        <Paper
-          className={classNames({
-            [classes.paper]: true,
-            [classes.paperOpen]: open,
-            [classes.isCurrentUser]: isCurrentUser
-          })}
+  return (
+    <Grid item className={classes.root}>
+      <Paper
+        className={classNames({
+          [classes.paper]: true,
+          [classes.isCurrentUser]: isCurrentUser
+        })}
+      >
+        <Grid
+          container
+          direction="row"
+          justify="space-between"
+          alignItems="flex-start"
         >
-          <Grid
-            container
-            direction="row"
-            justify="space-between"
-            alignItems="flex-start"
-          >
-            <Grid item xs={11} sm={5} md={3} className={classes.userCol}>
-              <Grid container wrap="nowrap">
-                <Grid item style={{ paddingLeft: 0 }}>
-                  {this.renderAvatar(data.gravatarUrl)}
-                </Grid>
-                <Grid item>
-                  <Typography className={classes.userName}>
-                    {data.username}
-                  </Typography>
-                  {data.from_linode && (
-                    <Typography variant="body1">Linode Expert</Typography>
-                  )}
-                  <Typography variant="body1" style={{ marginTop: 8 }}>
-                    <DateTimeDisplay
-                      value={data.date}
-                      humanizeCutoff={'month'}
-                    />
-                  </Typography>
-                </Grid>
+          <Grid item xs={11} sm={5} md={3} className={classes.userCol}>
+            <Grid container wrap="nowrap">
+              <Grid item style={{ paddingLeft: 0 }}>
+                {renderAvatar(data.gravatarUrl)}
+              </Grid>
+              <Grid item>
+                <Typography className={classes.userName}>
+                  {data.username}
+                </Typography>
+                {data.from_linode && (
+                  <Typography variant="body1">Linode Expert</Typography>
+                )}
+                <Typography variant="body1" style={{ marginTop: 8 }}>
+                  <DateTimeDisplay value={data.date} humanizeCutoff={'month'} />
+                </Typography>
               </Grid>
             </Grid>
-            <Grid
-              item
-              xs={truncatedText !== data.description ? 11 : 12}
-              sm={truncatedText !== data.description ? 6 : 7}
-              md={truncatedText !== data.description ? 8 : 9}
-              className={classes.descCol}
-            >
-              <Typography className={classes.formattedText}>{text}</Typography>
-            </Grid>
-            {truncatedText !== data.description && (
-              <Grid
-                item
-                xs={1}
-                onClick={this.togglePanel}
-                className={classes.expCol}
-              >
-                <IconButton
-                  className={classes.expButton}
-                  aria-label="Expand full answer"
-                >
-                  {open ? (
-                    <Collapse className={classes.toggle} />
-                  ) : (
-                    <Expand className={classes.toggle} />
-                  )}
-                </IconButton>
-              </Grid>
-            )}
           </Grid>
-          {shouldRenderHively(data.from_linode, data.updated, data.username) &&
-            this.renderHively(data.username, data.ticket_id, data.reply_id)}
-        </Paper>
-      </Grid>
-    );
-  }
-}
+          <TicketDetailBody
+            open={open}
+            dangerouslySetInnerHTML={{
+              __html: data.description
+            }}
+          />
+        </Grid>
+        {shouldRenderHively(data.from_linode, data.updated, data.username) &&
+          renderHively(data.username, data.ticket_id, data.reply_id)}
+      </Paper>
+    </Grid>
+  );
+};
 
 const styled = withStyles(styles);
 
-export default styled(ExpandableTicketPanel);
+export default compose<CombinedProps, Props>(
+  React.memo,
+  styled
+)(ExpandableTicketPanel);
