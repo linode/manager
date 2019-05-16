@@ -7,6 +7,7 @@ import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 
+import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 
@@ -20,15 +21,28 @@ import { createReply, uploadAttachment } from 'src/services/support';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
-type ClassNames = 'root' | 'reference' | 'referenceRoot' | 'inner';
+type ClassNames =
+  | 'root'
+  | 'replyContainer'
+  | 'reference'
+  | 'expPanelSummary'
+  | 'referenceRoot'
+  | 'inner';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    width: '100%',
-    marginLeft: theme.spacing.unit * 2
+    paddingLeft: theme.spacing.unit,
+    paddingRight: theme.spacing.unit
   },
   inner: {
-    padding: theme.spacing.unit
+    padding: 0
+  },
+  replyContainer: {
+    maxWidth: 600
+  },
+  expPanelSummary: {
+    backgroundColor: theme.bg.offWhite,
+    borderTop: `1px solid ${theme.bg.main}`
   },
   referenceRoot: {
     '& > p': {
@@ -140,7 +154,7 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
 
   return (
     <Grid container>
-      <Grid item sm={8} xs={12}>
+      <Grid item xs={12} className={classes.replyContainer}>
         {errorMap.none && (
           <Notice
             error
@@ -157,6 +171,14 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
           value={value}
         />
         <Grid className={classes.root} item>
+          <ExpansionPanel
+            heading="Tips"
+            detailProps={{ className: classes.expPanelSummary }}
+          >
+            <Reference isReply rootClass={classes.referenceRoot} />
+          </ExpansionPanel>
+        </Grid>
+        <Grid className={classes.root} item>
           <AttachFileForm
             files={files}
             updateFiles={(filesToAttach: FileAttachment[]) =>
@@ -170,9 +192,6 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
             {...rest}
           />
         </Grid>
-      </Grid>
-      <Grid className={classes.reference} item sm={3} xs={12}>
-        <Reference isReply rootClass={classes.referenceRoot} />
       </Grid>
     </Grid>
   );
