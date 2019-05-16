@@ -40,6 +40,19 @@ export const getLinodeStatsByDate = (
   ).then(response => response.data);
 
 /**
+ * getLinodeTransfer
+ *
+ * Returns current network transfer information for your Linode.
+ *
+ * @param linodeId { number } The id of the Linode to retrieve network transfer information for.
+ */
+export const getLinodeTransfer = (linodeId: number) =>
+  Request<Linode.NetworkUtilization>(
+    setURL(`${API_ROOT}/linode/instances/${linodeId}/transfer`),
+    setMethod('GET')
+  ).then(response => response.data);
+
+/**
  * getLinodeKernels
  *
  * Returns a paginated list of available kernels.
