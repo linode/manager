@@ -18,6 +18,7 @@ export interface BucketRequestPayload {
 export interface DeleteBucketRequestPayload {
   cluster: string;
   label: string;
+  params?: { force: number };
 }
 
 /**
@@ -53,11 +54,18 @@ export const createBucket = (data: BucketRequestPayload) =>
  *
  * Removes a Bucket from your account.
  *
- * @param bucketId { number } The ID of the bucket to delete.
+ * NOTE: By default, attempting to delete a non-empty bucket
+ * will result in an error. Passing `force: 1` as a param will
+ * delete every item in the bucket, then delete the bucket itself.
  *
  */
-export const deleteBucket = ({ cluster, label }: DeleteBucketRequestPayload) =>
+export const deleteBucket = ({
+  cluster,
+  label,
+  params
+}: DeleteBucketRequestPayload) =>
   Request<Linode.Bucket>(
     setURL(`${API_ROOT}beta/object-storage/buckets/${cluster}/${label}`),
+    setParams(params),
     setMethod('DELETE')
   );

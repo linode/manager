@@ -31,7 +31,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 interface BucketTableRowProps extends Linode.Bucket {
-  onRemove: (cluster: string, bucketLabel: string) => void;
+  onRemove: () => void;
 }
 
 type CombinedProps = BucketTableRowProps & WithStyles<ClassNames>;

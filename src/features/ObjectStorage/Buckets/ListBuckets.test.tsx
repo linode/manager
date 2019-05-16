@@ -6,7 +6,7 @@ import { ListBuckets } from './ListBuckets';
 describe('ListBuckets', () => {
   const wrapper = shallow(
     <ListBuckets
-      classes={{ root: '', label: '' }}
+      classes={{ root: '', label: '', confirmationCopy: '' }}
       data={buckets}
       orderBy="label"
       order="asc"
