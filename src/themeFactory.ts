@@ -901,7 +901,8 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
           '& pre': {
             backgroundColor: '#eee',
             padding: '8px',
-            fontSize: '1rem'
+            fontSize: '1rem',
+            overflowX: 'auto'
           },
           '& span.hljs-comment, & span.hljs-quote': {
             color: '#655f6d'
