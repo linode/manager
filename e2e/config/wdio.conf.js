@@ -208,7 +208,7 @@ exports.config = {
         expectationResultHandler: function(passed, assertion) {
             // do something
         },
-        stopOnSpecFailure: true
+        stopOnSpecFailure: false,
     },
 
     mountebankConfig: {
