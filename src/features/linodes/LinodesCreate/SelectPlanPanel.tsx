@@ -91,6 +91,7 @@ export class SelectPlanPanel extends React.Component<
         subheadings={type.subHeadings}
         disabled={planTooSmall || isSamePlan || disabled}
         tooltip={tooltip}
+        variant="check"
       />
     );
   };

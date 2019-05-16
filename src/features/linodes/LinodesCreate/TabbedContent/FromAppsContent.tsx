@@ -83,7 +83,17 @@ type CombinedProps = WithStyles<ClassNames> &
   StateProps &
   SetDocsProps;
 
-class FromAppsContent extends React.PureComponent<CombinedProps> {
+interface State {
+  detailDrawerOpen: boolean;
+  selectedScriptForDrawer: string;
+}
+
+class FromAppsContent extends React.PureComponent<CombinedProps, State> {
+  state: State = {
+    detailDrawerOpen: false,
+    selectedScriptForDrawer: ''
+  };
+
   handleSelectStackScript = (
     id: number,
     label: string,
@@ -163,6 +173,19 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
     });
   };
 
+  openDrawer = (stackScriptLabel: string) => {
+    this.setState({
+      detailDrawerOpen: true,
+      selectedScriptForDrawer: stackScriptLabel
+    });
+  };
+
+  closeDrawer = () => {
+    this.setState({
+      detailDrawerOpen: false
+    });
+  };
+
   render() {
     const {
       accountBackupsEnabled,
@@ -217,6 +240,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
             selectedStackScriptID={selectedStackScriptID}
             disabled={userCannotCreateLinode}
             handleClick={this.handleSelectStackScript}
+            openDrawer={this.openDrawer}
             error={hasErrorFor('stackscript_id')}
           />
           {!userCannotCreateLinode &&
@@ -385,7 +409,11 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
             }}
           </Sticky>
         </Grid>
-        <AppDetailDrawer open={true} stackscriptID={'GitLab'} />
+        <AppDetailDrawer
+          open={this.state.detailDrawerOpen}
+          stackscriptID={this.state.selectedScriptForDrawer}
+          onClose={this.closeDrawer}
+        />
       </React.Fragment>
     );
   }

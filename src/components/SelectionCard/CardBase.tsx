@@ -162,7 +162,7 @@ export const CardBase: React.FunctionComponent<CombinedProps> = props => {
           );
         })}
       </Grid>
-      {/* Render children? */}
+      {props.children}
     </Grid>
   );
 };

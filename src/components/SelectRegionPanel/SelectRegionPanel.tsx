@@ -82,6 +82,7 @@ const renderCard = (
     heading={region.country.toUpperCase()}
     subheadings={[region.display]}
     disabled={disabled}
+    variant="check"
   />
 );
 

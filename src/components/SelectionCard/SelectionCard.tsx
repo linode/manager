@@ -1,4 +1,5 @@
 import Check from '@material-ui/icons/Check';
+import Info from '@material-ui/icons/Info';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import Fade from 'src/components/core/Fade';
@@ -11,6 +12,8 @@ import {
 import Tooltip from 'src/components/core/Tooltip';
 import Grid from 'src/components/Grid';
 
+import CardBase from './CardBase';
+
 type CSSClasses =
   | 'root'
   | 'icon'
@@ -18,7 +21,6 @@ type CSSClasses =
   | 'flex'
   | 'heading'
   | 'innerGrid'
-  | 'subheading'
   | 'disabled'
   | 'showCursor';
 
@@ -127,6 +129,7 @@ const styles = (theme: Theme) =>
 
 export interface Props {
   onClick?: (e: React.SyntheticEvent<HTMLElement>) => void;
+  onClickInfo?: () => void;
   onKeyPress?: (e: React.SyntheticEvent<HTMLElement>) => void;
   renderIcon?: () => JSX.Element;
   heading: string;
@@ -134,6 +137,7 @@ export interface Props {
   checked?: boolean;
   disabled?: boolean;
   tooltip?: string;
+  variant?: 'check' | 'info';
 }
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
@@ -171,54 +175,59 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
     }
   };
 
+  handleInfoClick = (e: React.MouseEvent<any>) => {
+    const { onClickInfo } = this.props;
+    if (onClickInfo) {
+      e.stopPropagation();
+      e.preventDefault();
+      onClickInfo();
+    }
+  };
+
   content = () => {
-    const { checked, classes, heading, renderIcon, subheadings } = this.props;
+    const { heading, renderIcon, subheadings } = this.props;
 
     return (
-      <Grid
-        container
-        alignItems="center"
-        justify="space-between"
-        className={classes.innerGrid}
+      <CardBase
+        heading={heading}
+        renderIcon={renderIcon}
+        subheadings={subheadings}
       >
-        {renderIcon && (
-          <Grid item className={classes.icon}>
-            {renderIcon()}
-          </Grid>
-        )}
-        <Grid item xs={10} className={classes.flex}>
-          <div
-            className={classes.heading}
-            data-qa-select-card-heading={heading}
-          >
-            {heading}
-          </div>
-          {subheadings.map((subheading, idx) => {
-            return (
-              <div
-                key={idx}
-                className={classes.subheading}
-                data-qa-select-card-subheading={subheading}
-              >
-                {subheading}
-              </div>
-            );
-          })}
-        </Grid>
-        <Grid
-          item
-          className={`${classes.icon} ${classes.checked}`}
-          data-qa-checked={checked}
-          xs={2}
-        >
-          {checked && (
-            <Fade in={checked}>
-              <Check />
-            </Fade>
-          )}
-        </Grid>
-      </Grid>
+        {this.renderVariant()}
+      </CardBase>
     );
+  };
+
+  renderVariant = () => {
+    const { classes, checked, variant } = this.props;
+    switch (variant) {
+      case 'info':
+        return (
+          <Grid item className={`${classes.icon}`} xs={2}>
+            <Info onClick={this.handleInfoClick} />
+          </Grid>
+        );
+      /**
+       * The vast majority of these components use the check variant, so
+       * keep that as the default case.
+       */
+      case 'check':
+      default:
+        return (
+          <Grid
+            item
+            className={`${classes.icon} ${classes.checked}`}
+            data-qa-checked={checked}
+            xs={2}
+          >
+            {checked && (
+              <Fade in={checked}>
+                <Check />
+              </Fade>
+            )}
+          </Grid>
+        );
+    }
   };
 
   render() {

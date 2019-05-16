@@ -37,6 +37,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface Props {
   stackscriptID: string;
   open: boolean;
+  onClose: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -44,7 +45,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const AppDetailDrawer: React.FunctionComponent<
   CombinedProps
 > = props => {
-  const { classes, stackscriptID, open } = props;
+  const { classes, stackscriptID, open, onClose } = props;
   const app = oneClickApps.find(eachApp =>
     Boolean(stackscriptID.match(eachApp.name))
   ); // This is horrible
@@ -55,6 +56,7 @@ export const AppDetailDrawer: React.FunctionComponent<
   return (
     <Drawer
       open={open}
+      onClose={onClose}
       title={
         '' /* Empty so that we can display the logo beneath the close button rather than a text title */
       }
