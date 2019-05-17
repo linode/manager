@@ -1,4 +1,6 @@
-export const nodePoolRequests = [
+import { ExtendedPoolNode } from 'src/features/Kubernetes/types';
+
+export const nodePoolRequests: ExtendedPoolNode[] = [
   {
     type: 'g5-standard-1',
     count: 1,
