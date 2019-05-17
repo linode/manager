@@ -102,8 +102,8 @@ class PasswordInput extends React.Component<CombinedProps, State> {
         {!hideHelperText && (
           <Typography variant="body1" className={classes.infoText}>
             Password must be at least 6 characters and contain at least two of
-            the following character classes: uppercase, lowercase, numeric, and
-            punctuation.
+            the following character classes: uppercase letters, lowercase
+            letters, numbers, and punctuation.
           </Typography>
         )}
       </React.Fragment>
