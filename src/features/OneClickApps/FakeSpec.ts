@@ -37,13 +37,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'CS:GO',
-    description: `The LAMP stack consists of the Linux operating system,
-      the Apache HTTP Server, the MySQL relational database management system,
-      and the PHP programming language.
-      This software environment is a foundation for popular PHP application
-      frameworks like WordPress, Drupal, and Laravel. Upload your existing
-      PHP application code to your new app or use a PHP framework to write
-      a new application on the Linode.`,
+    description: `Fast-paced, competitive FPS. Partner with your team to compete the objective at hand, or take matters into your own hands and go solo.`,
     summary: `Global Offensive is a fast-paced first person shooter. In CS:GO there are two teams: Terrorists and Counter-Terrorists.
       The teams compete against each other to complete objectives or to eliminate the opposing team.
       A competitive match requires two teams of five players, but hosting your own server allows you control over team size and server location,
@@ -91,7 +85,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Drupal',
-    description: ` Drupal is a content management system (CMS) designed for building custom
+    description: `Drupal is a content management system (CMS) designed for building custom
       websites for personal and business use. Built for high performance and
       scalability, Drupal provides the necessary tools to create rich,
       interactive community websites with forums, user blogs, and private messaging.
