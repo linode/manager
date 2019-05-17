@@ -519,7 +519,7 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         />
         {/* <TicketAttachmentList attachments={attachments} /> */}
         <ExpansionPanel
-          heading="Tips"
+          heading="Formatting Tips"
           detailProps={{ className: classes.expPanelSummary }}
         >
           <Reference rootClass={this.props.classes.reference} />
