@@ -1,0 +1,10 @@
+.caret {
+  position: 'relative';
+	top: 2;
+	left: 2;
+	margin-left: 8px;  
+}
+
+.button-dropdown {
+	padding-right: 22px !important;
+}

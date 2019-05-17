@@ -1,0 +1,54 @@
+version: '3.1'
+services:
+  selenium:
+    image: selenium/hub:3.13.0-argon
+  chrome:
+    image: selenium/node-chrome:3.13.0-argon
+    volumes:
+      - /dev/shm:/dev/shm #Mitigates the Chromium issue described at https://code.google.com/p/chromium/issues/detail?id=519952
+    environment:
+      - HUB_PORT_4444_TCP_ADDR=selenium
+      - HUB_PORT_4444_TCP_PORT=4444
+      - SCREEN_HEIGHT=1080
+      - SCREEN_WIDTH=1600
+    depends_on:
+      - selenium
+  manager-local:
+    environment:
+      - HTTPS=true
+      - REACT_APP_APP_ROOT=${REACT_APP_APP_ROOT}
+      - REACT_APP_LOGIN_ROOT=${REACT_APP_LOGIN_ROOT}
+      - REACT_APP_CLIENT_ID=${REACT_APP_CLIENT_ID}
+      - REACT_APP_API_ROOT=${REACT_APP_API_ROOT}
+      - REACT_APP_ALGOLIA_APPLICATION_ID='KGUN8FAIPF'
+      - REACT_APP_ALGOLIA_SEARCH_KEY='d4847002cd30392fe0fbd00a1da933ed'
+      - REACT_APP_TEST_ENVIRONMENT=true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    entrypoint: ["/src/scripts/start_manager.sh"]
+    depends_on:
+      - chrome
+  manager-e2e:
+    environment:
+      - CRED_STORE_MODE=${CRED_STORE_MODE}
+      - DOCKER=true
+      - REACT_APP_APP_ROOT=${REACT_APP_APP_ROOT}
+      - REACT_APP_API_ROOT=${REACT_APP_API_ROOT}
+      - MANAGER_USER=${MANAGER_USER}
+      - MANAGER_PASS=${MANAGER_PASS}
+      - MANAGER_USER_2=${MANAGER_USER_2}
+      - MANAGER_PASS_2=${MANAGER_PASS_2}
+      - MANAGER_OAUTH=${MANAGER_OAUTH}
+      - MANAGER_OAUTH_2=${MANAGER_OAUTH_2}
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./e2e/test-results:/src/e2e/test-results
+    entrypoint: ["./scripts/wait-for-it.sh", "-t", "500", "-s", "manager-local:3000", "--", "yarn", "e2e", "--log"]
+    depends_on:
+      - manager-local
+      - mongodb
+  mongodb:
+    image: mongo:latest

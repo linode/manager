@@ -1,0 +1,2648 @@
+{
+  "imposters": [{
+    "protocol": "https",
+    "port": 8088,
+    "key": "-----BEGIN RSA PRIVATE KEY-----\nMIICXAIBAAKBgQDEBCigM4IEQA7QIQLj+tjh2JrUXgHajpDuJkYAD0o6pon7HGJt\nNA8C//UcB2Y2zAQVWf2nD0gVL+4UScTI0oJ83eNlC1XPKMuXMt07TUDwXxKYVx3Y\nw2xgDppEDFk9cAw2oNQK4vIAsHdlzfilzoa7d00jTJ75PJp4Oewji1BZOwIDAQAB\nAoGAZodmWKWYlHCNTwB1apqDZ17NXdfuUEvSMz+BzfYxdYw3EEpAka5xS7hmlUqp\nhHAikqiHrSKpKavwdFxBummiJpPEVUeGS6xK40vuU9AjyELbuRHCbSdZIud66QSW\nRIpAQv+aFpYM4RkrAYAr+CHm7A5WFSooO7hjlq/4M6kgIEECQQDo1o+sbiNo/pRP\nlp2pUW/dwX6yybWTQ0WnlZPfS9Pl6bSiOcjWYgjtR5GkVb29coMaqaxs76cTfIBV\nt7Fm11UXAkEA14Pk4AsTJUF0OsmifbPvVs8/qE4r1nBcLNg8RxsVxo8kQiJd427g\nW4+yYkq5H9e3KFjg6pPa2T7VgzCnqZy7fQJBAKG1Qpty8szc4oxUArOxh4vv8tqh\nFKZuNlYpoEWZGFW5dmak00NxWtnQtun3UovcmAlQhhwyZUs3ULo3ldHjA4kCQBiB\natj+6WJnGuxEWTGp8CES184vdVSg2hpPTCtZrRQy2pCaj8p4pRJEOKhsjrhMMwtn\nb8u8nDnvpx+PvMDQjZECQFkM/xvQmTG3lf32J0Xo5L3RGORm9kQfODBjLqKIK3Kd\niGeNkwZLszDs1EKEVDoUTH1egcqC4UlO+FJc5wjYYqk=\n-----END RSA PRIVATE KEY-----\n",
+    "cert": "-----BEGIN CERTIFICATE-----\nMIICITCCAYoCCQDX01G4alp5vTANBgkqhkiG9w0BAQUFADBVMQswCQYDVQQGEwJV\nUzELMAkGA1UECBMCVFgxDzANBgNVBAcTBkRhbGxhczETMBEGA1UEChMKbW91bnRl\nYmFuazETMBEGA1UEAxMKbW91bnRlYmFuazAeFw0xNzAyMjYxODM5NTdaFw0yNzAy\nMjQxODM5NTdaMFUxCzAJBgNVBAYTAlVTMQswCQYDVQQIEwJUWDEPMA0GA1UEBxMG\nRGFsbGFzMRMwEQYDVQQKEwptb3VudGViYW5rMRMwEQYDVQQDEwptb3VudGViYW5r\nMIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDEBCigM4IEQA7QIQLj+tjh2JrU\nXgHajpDuJkYAD0o6pon7HGJtNA8C//UcB2Y2zAQVWf2nD0gVL+4UScTI0oJ83eNl\nC1XPKMuXMt07TUDwXxKYVx3Yw2xgDppEDFk9cAw2oNQK4vIAsHdlzfilzoa7d00j\nTJ75PJp4Oewji1BZOwIDAQABMA0GCSqGSIb3DQEBBQUAA4GBAA1zMTMj6acy2SU2\n8Idc1pxavI6vGyAMZYa8Y3NgDIygufOtJ0CzzWVOe/ofOWOguMpgdQec3nSjgHzC\nXr55Mgp+mS8+YJKslMy7XkzJwT3Ak2RZ5N+9E86Ep0NViBqQndqhudrI4xJL7w5P\ngDAvH84dZ4pp3gPCDpd/AlxzXXfy\n-----END CERTIFICATE-----\n",
+    "mutualAuth": true,
+    "name": "Linode-API",
+    "stubs": [{
+      "predicates": [{
+        "deepEquals": {
+          "method": "GET"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/account/events"
+        }
+      }, {
+        "deepEquals": {
+          "query": {
+            "page_size": "25"
+          }
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 401,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:18 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 56,
+            "Connection": "keep-alive",
+            "Cache-Control": "private, max-age=0, s-maxage=0, no-cache, no-store",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "events:read_only",
+            "X-Frame-Options": "DENY",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": "Authorization, X-Filter",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903198",
+            "Retry-After": "119"
+          },
+          "body": "{\"errors\": [{\"reason\": \"Authorization token required\"}]}",
+          "_mode": "text"
+        }
+      }, {
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:25 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 8289,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "events:read_only",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "398",
+            "X-RateLimit-Reset": "1551903203",
+            "Retry-After": "117",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"pages\": 655, \"page\": 1, \"data\": [{\"entity\": {\"url\": \"/v4/domains/1208734\", \"id\": 1208734, \"type\": \"domain\", \"label\": \"test-usering1234.org\"}, \"time_remaining\": null, \"rate\": null, \"created\": \"2019-03-06T19:52:33\", \"seen\": false, \"id\": 23168142, \"action\": \"domain_create\", \"status\": \"notification\", \"percent_complete\": null, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/volumes/27810\", \"id\": 27810, \"type\": \"volume\", \"label\": \"test-usering\"}, \"time_remaining\": 0, \"rate\": null, \"created\": \"2019-03-06T18:42:58\", \"seen\": false, \"id\": 23164388, \"action\": \"volume_attach\", \"status\": \"finished\", \"percent_complete\": 100, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/volumes/27810\", \"id\": 27810, \"type\": \"volume\", \"label\": \"test-usering\"}, \"time_remaining\": 0, \"rate\": null, \"created\": \"2019-03-06T18:42:33\", \"seen\": false, \"id\": 23164377, \"action\": \"volume_detach\", \"status\": \"finished\", \"percent_complete\": 100, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/volumes/27810\", \"id\": 27810, \"type\": \"volume\", \"label\": \"test-usering\"}, \"time_remaining\": 0, \"rate\": null, \"created\": \"2019-03-06T18:41:54\", \"seen\": false, \"id\": 23164368, \"action\": \"volume_attach\", \"status\": \"finished\", \"percent_complete\": 100, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/volumes/27810\", \"id\": 27810, \"type\": \"volume\", \"label\": \"test-usering\"}, \"time_remaining\": 0, \"rate\": null, \"created\": \"2019-03-06T18:41:27\", \"seen\": false, \"id\": 23164348, \"action\": \"volume_detach\", \"status\": \"finished\", \"percent_complete\": 100, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/volumes/27810\", \"id\": 27810, \"type\": \"volume\", \"label\": \"test-usering\"}, \"time_remaining\": null, \"rate\": null, \"created\": \"2019-03-06T18:39:28\", \"seen\": false, \"id\": 23164239, \"action\": \"volume_attach\", \"status\": \"notification\", \"percent_complete\": null, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/linode/instances/13122149\", \"id\": 13122149, \"type\": \"linode\", \"label\": \"debian-us-east\"}, \"time_remaining\": 0, \"rate\": null, \"created\": \"2019-03-06T18:39:17\", \"seen\": false, \"id\": 23164226, \"action\": \"linode_create\", \"status\": \"finished\", \"percent_complete\": 100, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/linode/instances/13122149\", \"id\": 13122149, \"type\": \"linode\", \"label\": \"debian-us-east\"}, \"time_remaining\": 0, \"rate\": null, \"created\": \"2019-03-06T18:39:17\", \"seen\": false, \"id\": 23164227, \"action\": \"linode_boot\", \"status\": \"finished\", \"percent_complete\": 100, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/volumes/27810\", \"id\": 27810, \"type\": \"volume\", \"label\": \"test-usering\"}, \"time_remaining\": null, \"rate\": null, \"created\": \"2019-03-06T18:14:50\", \"seen\": false, \"id\": 23163115, \"action\": \"volume_create\", \"status\": \"notification\", \"percent_complete\": null, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/nodebalancers/44829\", \"id\": 44829, \"type\": \"nodebalancer\", \"label\": \"abA1551890900372\"}, \"time_remaining\": null, \"rate\": null, \"created\": \"2019-03-06T16:50:47\", \"seen\": false, \"id\": 23158483, \"action\": \"nodebalancer_create\", \"status\": \"notification\", \"percent_complete\": null, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/nodebalancers/44821\", \"id\": 44821, \"type\": \"nodebalancer\", \"label\": \"test-usering2\"}, \"time_remaining\": null, \"rate\": null, \"created\": \"2019-03-06T16:29:11\", \"seen\": false, \"id\": 23157295, \"action\": \"nodebalancer_create\", \"status\": \"notification\", \"percent_complete\": null, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/nodebalancers/44819\", \"id\": 44819, \"type\": \"nodebalancer\", \"label\": \"test-usering\"}, \"time_remaining\": null, \"rate\": null, \"created\": \"2019-03-06T16:28:46\", \"seen\": false, \"id\": 23157258, \"action\": \"nodebalancer_update\", \"status\": \"notification\", \"percent_complete\": null, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/nodebalancers/44819\", \"id\": 44819, \"type\": \"nodebalancer\", \"label\": \"test-usering\"}, \"time_remaining\": null, \"rate\": null, \"created\": \"2019-03-06T16:28:29\", \"seen\": false, \"id\": 23157179, \"action\": \"nodebalancer_create\", \"status\": \"notification\", \"percent_complete\": null, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/linode/instances/13120732\", \"id\": 13120732, \"type\": \"linode\", \"label\": \"debian-us-central\"}, \"time_remaining\": null, \"rate\": null, \"created\": \"2019-03-06T16:27:46\", \"seen\": false, \"id\": 23157071, \"action\": \"linode_addip\", \"status\": \"notification\", \"percent_complete\": null, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/linode/instances/13120732\", \"id\": 13120732, \"type\": \"linode\", \"label\": \"debian-us-central\"}, \"time_remaining\": 0, \"rate\": null, \"created\": \"2019-03-06T16:27:45\", \"seen\": false, \"id\": 23157069, \"action\": \"linode_create\", \"status\": \"finished\", \"percent_complete\": 100, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/linode/instances/13120732\", \"id\": 13120732, \"type\": \"linode\", \"label\": \"debian-us-central\"}, \"time_remaining\": 0, \"rate\": null, \"created\": \"2019-03-06T16:27:45\", \"seen\": false, \"id\": 23157070, \"action\": \"linode_boot\", \"status\": \"finished\", \"percent_complete\": 100, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/volumes/27769\", \"id\": 27769, \"type\": \"volume\", \"label\": \"bbA1551884860991.org\"}, \"time_remaining\": null, \"rate\": null, \"created\": \"2019-03-06T15:07:49\", \"seen\": false, \"id\": 23152413, \"action\": \"volume_delete\", \"status\": \"notification\", \"percent_complete\": null, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/volumes/27772\", \"id\": 27772, \"type\": \"volume\", \"label\": \"acA1551884860991.org\"}, \"time_remaining\": null, \"rate\": null, \"created\": \"2019-03-06T15:07:48\", \"seen\": false, \"id\": 23152408, \"action\": \"volume_delete\", \"status\": \"notification\", \"percent_complete\": null, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/volumes/27770\", \"id\": 27770, \"type\": \"volume\", \"label\": \"aaA1551884860991.org\"}, \"time_remaining\": null, \"rate\": null, \"created\": \"2019-03-06T15:07:48\", \"seen\": false, \"id\": 23152409, \"action\": \"volume_delete\", \"status\": \"notification\", \"percent_complete\": null, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/volumes/27768\", \"id\": 27768, \"type\": \"volume\", \"label\": \"abA1551884860991.org\"}, \"time_remaining\": null, \"rate\": null, \"created\": \"2019-03-06T15:07:48\", \"seen\": false, \"id\": 23152410, \"action\": \"volume_delete\", \"status\": \"notification\", \"percent_complete\": null, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/volumes/27771\", \"id\": 27771, \"type\": \"volume\", \"label\": \"baA1551884860991.org\"}, \"time_remaining\": null, \"rate\": null, \"created\": \"2019-03-06T15:07:48\", \"seen\": false, \"id\": 23152411, \"action\": \"volume_delete\", \"status\": \"notification\", \"percent_complete\": null, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/volumes/27773\", \"id\": 27773, \"type\": \"volume\", \"label\": \"bcA1551884860991.org\"}, \"time_remaining\": null, \"rate\": null, \"created\": \"2019-03-06T15:07:48\", \"seen\": false, \"id\": 23152412, \"action\": \"volume_delete\", \"status\": \"notification\", \"percent_complete\": null, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/volumes/27773\", \"id\": 27773, \"type\": \"volume\", \"label\": \"bcA1551884860991.org\"}, \"time_remaining\": null, \"rate\": null, \"created\": \"2019-03-06T15:07:47\", \"seen\": false, \"id\": 23152407, \"action\": \"volume_create\", \"status\": \"notification\", \"percent_complete\": null, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/volumes/27772\", \"id\": 27772, \"type\": \"volume\", \"label\": \"acA1551884860991.org\"}, \"time_remaining\": null, \"rate\": null, \"created\": \"2019-03-06T15:07:46\", \"seen\": false, \"id\": 23152406, \"action\": \"volume_create\", \"status\": \"notification\", \"percent_complete\": null, \"username\": \"prod-test-user-010\", \"read\": false}, {\"entity\": {\"url\": \"/v4/volumes/27771\", \"id\": 27771, \"type\": \"volume\", \"label\": \"baA1551884860991.org\"}, \"time_remaining\": null, \"rate\": null, \"created\": \"2019-03-06T15:07:45\", \"seen\": false, \"id\": 23152405, \"action\": \"volume_create\", \"status\": \"notification\", \"percent_complete\": null, \"username\": \"prod-test-user-010\", \"read\": false}], \"results\": 16362}",
+          "_mode": "text"
+        }
+      }, {
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:26 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 49,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "events:read_only",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903206",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"pages\": 1, \"page\": 1, \"results\": 0, \"data\": []}",
+          "_mode": "text"
+        }
+      }, {
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:28 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 49,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "events:read_only",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "398",
+            "X-RateLimit-Reset": "1551903205",
+            "Retry-After": "116",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"pages\": 1, \"page\": 1, \"results\": 0, \"data\": []}",
+          "_mode": "text"
+        }
+      }, {
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:33 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 49,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "events:read_only",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "396",
+            "X-RateLimit-Reset": "1551903203",
+            "Retry-After": "109",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"pages\": 1, \"results\": 0, \"page\": 1, \"data\": []}",
+          "_mode": "text"
+        }
+      }, {
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:42 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 49,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "events:read_only",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903222",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"page\": 1, \"pages\": 1, \"data\": [], \"results\": 0}",
+          "_mode": "text"
+        }
+      }, {
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:58 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 49,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "events:read_only",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "395",
+            "X-RateLimit-Reset": "1551903203",
+            "Retry-After": "84",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"page\": 1, \"pages\": 1, \"data\": [], \"results\": 0}",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "GET"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/favicon.ico"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:19 GMT",
+            "Content-Type": "image/vnd.microsoft.icon",
+            "Content-Length": 1150,
+            "Connection": "keep-alive",
+            "Last-Modified": "Wed, 16 Apr 2014 13:52:43 GMT",
+            "ETag": "\"47e-4f7293b08e0c0\"",
+            "Accept-Ranges": "bytes",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "AAABAAEAEBAAAAAAIABoBAAAFgAAACgAAAAQAAAAIAAAAAEAIAAAAAAAQAQAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABIFkPEQyrBWUA2QCvANkAQQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABIFkPQSBZD+8QlwjFANkA/wDZAP8A2QC/ANkAQQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABIFkPjyBZD/8gWQ//C64FwQDZAP8A2QD/ANkA/wDZAP8A2QC/ANkAQQAAAAEAAAABAAAAAQAAAAEgWQ8RIFkPzyBZD/8gWQ//IFkP/wPPAdEA2QD/ANkA/wDZAP8A2QD/ANkA/wDZAP8A2QC/AAAAAQAAAAEAAAABIFkPcSBZD/8gWQ//IFkP/yBZD/8B0wHZANkA/wDZAP8A2QD/ANkA/wDZAP8A2QD/ANkA/wAAAAEAAAABAAAAASBZD6EgWQ//IFkP/yBZD/8gWQ//ANkA/wDZAP8A2QD/ANkA/wDZAP8A2QD/ANkA/wDZAP8AAAABAAAAAQAAAAEgWQ/fIFkP/yBZD/8gWQ//GXUM2QDZAP8A2QD/ANkA/wDZAP8A2QD/ANkA/wDZAP8A2QDRAAAAAQAAAAEgWQ8RIFkP/yBZD/8gWQ//IFkP/xaACtEA2QD/ANkA/wDZAP8A2QD/ANkA/wDZAP8A2QD/ANkAwQAAAAEAAAABIFkPUSBZD/8gWQ//IFkP/x9XD/EQegi1AdIA2QDZAP8A2QD/ANkA/wDZAP8A2QD/ANkA/wDZAMEAAAABAAAAASBZD4EgWQ//IFkP/xtMDcMWPwvjFj4L/xY+C/8RYAnZBrIDwQDWAOUA2QD/ANkA/wDZAP8A2QDBAAAAAQAAAAEgWQ/BHlMO2RdAC88WPgv/Fj4L/xY+C/8WPgv/Fj4L/xY+C/8WPgv/D20IzwS9AsMA2ADxANkAwQAAAAEAAAABGEMMixY+C/8WPgv/Fj4L/xY+C/8WPgv/Fj4L/xY+C/8WPgv/Fj4L/xY+C/8WPgv/Fj4L4RY+CyEAAAABAAAAAQAAAAEWPgshFj4LcRY+C7EWPgv/Fj4L/xY+C/8WPgv/Fj4L/xY+C/8WPgvRFj4LYQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAARY+C1EWPguhFj4L4RY+C8EWPgtBAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAAAAQAAAAEAAAABAAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//wAA//8AAP//AAD//w==",
+          "_mode": "binary"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "OPTIONS"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/linode/types"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:22 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "GET, OPTIONS, HEAD",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903202",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "OPTIONS"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/nodebalancers/"
+        }
+      }, {
+        "deepEquals": {
+          "query": {
+            "page_size": "100"
+          }
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:22 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "GET, OPTIONS, POST, HEAD",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903202",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "OPTIONS"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/linode/types-legacy"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:22 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "GET, OPTIONS, HEAD",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "398",
+            "X-RateLimit-Reset": "1551903202",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "OPTIONS"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/linode/instances/"
+        }
+      }, {
+        "deepEquals": {
+          "query": {
+            "page_size": "100"
+          }
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:22 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "GET, OPTIONS, HEAD, POST",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903202",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "OPTIONS"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/volumes"
+        }
+      }, {
+        "deepEquals": {
+          "query": {
+            "page_size": "100"
+          }
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:22 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "GET, OPTIONS, HEAD, POST",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903202",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "OPTIONS"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/images"
+        }
+      }, {
+        "deepEquals": {
+          "query": {
+            "page_size": "100"
+          }
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:22 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "OPTIONS, GET, HEAD, POST",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903202",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "OPTIONS"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/account/notifications"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:23 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "GET, OPTIONS, HEAD",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903203",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "OPTIONS"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/domains"
+        }
+      }, {
+        "deepEquals": {
+          "query": {
+            "page_size": "100"
+          }
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:23 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "GET, OPTIONS, HEAD, POST",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903203",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "OPTIONS"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/account/settings"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:23 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "GET, OPTIONS, PUT, HEAD",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "397",
+            "X-RateLimit-Reset": "1551903202",
+            "Retry-After": "118",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "OPTIONS"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/regions"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:23 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "OPTIONS, GET, HEAD",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903203",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "OPTIONS"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/profile"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:23 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "GET, OPTIONS, HEAD, PUT",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "398",
+            "X-RateLimit-Reset": "1551903202",
+            "Retry-After": "118",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "OPTIONS"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/account/events"
+        }
+      }, {
+        "deepEquals": {
+          "query": {
+            "page_size": "25"
+          }
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:23 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "OPTIONS, HEAD, GET",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization,x-filter",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903203",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }, {
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:33 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "GET, OPTIONS, HEAD",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization,x-filter",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903213",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }, {
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:41 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "OPTIONS, GET, HEAD",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization,x-filter",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "398",
+            "X-RateLimit-Reset": "1551903204",
+            "Retry-After": "102",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }, {
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:58 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "GET, OPTIONS, HEAD",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization,x-filter",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "398",
+            "X-RateLimit-Reset": "1551903205",
+            "Retry-After": "86",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "GET"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/linode/types"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:23 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 6110,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=900", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903203",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"page\": 1, \"pages\": 1, \"data\": [{\"disk\": 25600, \"memory\": 1024, \"label\": \"Nanode 1GB\", \"successor\": null, \"price\": {\"hourly\": 0.0075, \"monthly\": 5.0}, \"vcpus\": 1, \"transfer\": 1000, \"network_out\": 1000, \"class\": \"nanode\", \"addons\": {\"backups\": {\"price\": {\"hourly\": 0.003, \"monthly\": 2.0}}}, \"id\": \"g6-nanode-1\"}, {\"disk\": 51200, \"memory\": 2048, \"label\": \"Linode 2GB\", \"successor\": null, \"price\": {\"hourly\": 0.015, \"monthly\": 10.0}, \"vcpus\": 1, \"transfer\": 2000, \"network_out\": 2000, \"class\": \"standard\", \"addons\": {\"backups\": {\"price\": {\"hourly\": 0.004, \"monthly\": 2.5}}}, \"id\": \"g6-standard-1\"}, {\"disk\": 81920, \"memory\": 4096, \"label\": \"Linode 4GB\", \"successor\": null, \"price\": {\"hourly\": 0.03, \"monthly\": 20.0}, \"vcpus\": 2, \"transfer\": 4000, \"network_out\": 4000, \"class\": \"standard\", \"addons\": {\"backups\": {\"price\": {\"hourly\": 0.008, \"monthly\": 5.0}}}, \"id\": \"g6-standard-2\"}, {\"disk\": 163840, \"memory\": 8192, \"label\": \"Linode 8GB\", \"successor\": null, \"price\": {\"hourly\": 0.06, \"monthly\": 40.0}, \"vcpus\": 4, \"transfer\": 5000, \"network_out\": 5000, \"class\": \"standard\", \"addons\": {\"backups\": {\"price\": {\"hourly\": 0.015, \"monthly\": 10.0}}}, \"id\": \"g6-standard-4\"}, {\"disk\": 327680, \"memory\": 16384, \"label\": \"Linode 16GB\", \"successor\": null, \"price\": {\"hourly\": 0.12, \"monthly\": 80.0}, \"vcpus\": 6, \"transfer\": 8000, \"network_out\": 6000, \"class\": \"standard\", \"addons\": {\"backups\": {\"price\": {\"hourly\": 0.03, \"monthly\": 20.0}}}, \"id\": \"g6-standard-6\"}, {\"disk\": 655360, \"memory\": 32768, \"label\": \"Linode 32GB\", \"successor\": null, \"price\": {\"hourly\": 0.24, \"monthly\": 160.0}, \"vcpus\": 8, \"transfer\": 16000, \"network_out\": 7000, \"class\": \"standard\", \"addons\": {\"backups\": {\"price\": {\"hourly\": 0.06, \"monthly\": 40.0}}}, \"id\": \"g6-standard-8\"}, {\"disk\": 1310720, \"memory\": 65536, \"label\": \"Linode 64GB\", \"successor\": null, \"price\": {\"hourly\": 0.48, \"monthly\": 320.0}, \"vcpus\": 16, \"transfer\": 20000, \"network_out\": 9000, \"class\": \"standard\", \"addons\": {\"backups\": {\"price\": {\"hourly\": 0.12, \"monthly\": 80.0}}}, \"id\": \"g6-standard-16\"}, {\"disk\": 1966080, \"memory\": 98304, \"label\": \"Linode 96GB\", \"successor\": null, \"price\": {\"hourly\": 0.72, \"monthly\": 480.0}, \"vcpus\": 20, \"transfer\": 20000, \"network_out\": 10000, \"class\": \"standard\", \"addons\": {\"backups\": {\"price\": {\"hourly\": 0.18, \"monthly\": 120.0}}}, \"id\": \"g6-standard-20\"}, {\"disk\": 2621440, \"memory\": 131072, \"label\": \"Linode 128GB\", \"successor\": null, \"price\": {\"hourly\": 0.96, \"monthly\": 640.0}, \"vcpus\": 24, \"transfer\": 20000, \"network_out\": 11000, \"class\": \"standard\", \"addons\": {\"backups\": {\"price\": {\"hourly\": 0.24, \"monthly\": 160.0}}}, \"id\": \"g6-standard-24\"}, {\"disk\": 3932160, \"memory\": 196608, \"label\": \"Linode 192GB\", \"successor\": null, \"price\": {\"hourly\": 1.44, \"monthly\": 960.0}, \"vcpus\": 32, \"transfer\": 20000, \"network_out\": 12000, \"class\": \"standard\", \"addons\": {\"backups\": {\"price\": {\"hourly\": 0.36, \"monthly\": 240.0}}}, \"id\": \"g6-standard-32\"}, {\"disk\": 20480, \"memory\": 24576, \"label\": \"Linode 24GB\", \"successor\": null, \"price\": {\"hourly\": 0.09, \"monthly\": 60.0}, \"vcpus\": 1, \"transfer\": 5000, \"network_out\": 5000, \"class\": \"highmem\", \"addons\": {\"backups\": {\"price\": {\"hourly\": 0.0075, \"monthly\": 5.0}}}, \"id\": \"g6-highmem-1\"}, {\"disk\": 40960, \"memory\": 49152, \"label\": \"Linode 48GB\", \"successor\": null, \"price\": {\"hourly\": 0.18, \"monthly\": 120.0}, \"vcpus\": 2, \"transfer\": 6000, \"network_out\": 6000, \"class\": \"highmem\", \"addons\": {\"backups\": {\"price\": {\"hourly\": 0.015, \"monthly\": 10.0}}}, \"id\": \"g6-highmem-2\"}, {\"disk\": 92160, \"memory\": 92160, \"label\": \"Linode 90GB\", \"successor\": null, \"price\": {\"hourly\": 0.36, \"monthly\": 240.0}, \"vcpus\": 4, \"transfer\": 7000, \"network_out\": 7000, \"class\": \"highmem\", \"addons\": {\"backups\": {\"price\": {\"hourly\": 0.03, \"monthly\": 20.0}}}, \"id\": \"g6-highmem-4\"}, {\"disk\": 204800, \"memory\": 153600, \"label\": \"Linode 150GB\", \"successor\": null, \"price\": {\"hourly\": 0.72, \"monthly\": 480.0}, \"vcpus\": 8, \"transfer\": 8000, \"network_out\": 8000, \"class\": \"highmem\", \"addons\": {\"backups\": {\"price\": {\"hourly\": 0.06, \"monthly\": 40.0}}}, \"id\": \"g6-highmem-8\"}, {\"disk\": 348160, \"memory\": 307200, \"label\": \"Linode 300GB\", \"successor\": null, \"price\": {\"hourly\": 1.44, \"monthly\": 960.0}, \"vcpus\": 16, \"transfer\": 9000, \"network_out\": 9000, \"class\": \"highmem\", \"addons\": {\"backups\": {\"price\": {\"hourly\": 0.12, \"monthly\": 80.0}}}, \"id\": \"g6-highmem-16\"}, {\"disk\": 25600, \"memory\": 4096, \"label\": \"Dedicated 4GB\", \"successor\": null, \"price\": {\"hourly\": 0.045, \"monthly\": 30.0}, \"vcpus\": 2, \"transfer\": 4000, \"network_out\": 4000, \"class\": \"dedicated\", \"addons\": {\"backups\": {\"price\": {\"hourly\": 0.008, \"monthly\": 5.0}}}, \"id\": \"g6-dedicated-2\"}, {\"disk\": 51200, \"memory\": 8192, \"label\": \"Dedicated 8GB\", \"successor\": null, \"price\": {\"hourly\": 0.09, \"monthly\": 60.0}, \"vcpus\": 4, \"transfer\": 5000, \"network_out\": 5000, \"class\": \"dedicated\", \"addons\": {\"backups\": {\"price\": {\"hourly\": 0.015, \"monthly\": 10.0}}}, \"id\": \"g6-dedicated-4\"}, {\"disk\": 102400, \"memory\": 16384, \"label\": \"Dedicated 16GB\", \"successor\": null, \"price\": {\"hourly\": 0.18, \"monthly\": 120.0}, \"vcpus\": 8, \"transfer\": 6000, \"network_out\": 6000, \"class\": \"dedicated\", \"addons\": {\"backups\": {\"price\": {\"hourly\": 0.03, \"monthly\": 20.0}}}, \"id\": \"g6-dedicated-8\"}, {\"disk\": 204800, \"memory\": 32768, \"label\": \"Dedicated 32GB\", \"successor\": null, \"price\": {\"hourly\": 0.36, \"monthly\": 240.0}, \"vcpus\": 16, \"transfer\": 7000, \"network_out\": 7000, \"class\": \"dedicated\", \"addons\": {\"backups\": {\"price\": {\"hourly\": 0.06, \"monthly\": 40.0}}}, \"id\": \"g6-dedicated-16\"}, {\"disk\": 409600, \"memory\": 65536, \"label\": \"Dedicated 64GB\", \"successor\": null, \"price\": {\"hourly\": 0.72, \"monthly\": 480.0}, \"vcpus\": 32, \"transfer\": 8000, \"network_out\": 8000, \"class\": \"dedicated\", \"addons\": {\"backups\": {\"price\": {\"hourly\": 0.12, \"monthly\": 80.0}}}, \"id\": \"g6-dedicated-32\"}, {\"disk\": 614400, \"memory\": 98304, \"label\": \"Dedicated 96GB\", \"successor\": null, \"price\": {\"hourly\": 1.08, \"monthly\": 720.0}, \"vcpus\": 48, \"transfer\": 9000, \"network_out\": 9000, \"class\": \"dedicated\", \"addons\": {\"backups\": {\"price\": {\"hourly\": 0.18, \"monthly\": 120.0}}}, \"id\": \"g6-dedicated-48\"}], \"results\": 21}",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "GET"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/volumes"
+        }
+      }, {
+        "deepEquals": {
+          "query": {
+            "page_size": "100"
+          }
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:23 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 313,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "volumes:read_only",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903203",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"pages\": 1, \"results\": 1, \"page\": 1, \"data\": [{\"created\": \"2019-03-06T18:14:50\", \"tags\": [\"alabama\"], \"label\": \"test-usering\", \"updated\": \"2019-03-06T18:14:50\", \"size\": 20, \"status\": \"active\", \"linode_id\": 13122149, \"id\": 27810, \"filesystem_path\": \"/dev/disk/by-id/scsi-0Linode_Volume_test-usering\", \"region\": \"us-east\"}]}",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "GET"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/nodebalancers/"
+        }
+      }, {
+        "deepEquals": {
+          "query": {
+            "page_size": "100"
+          }
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:23 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 1240,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "nodebalancers:read_only",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903203",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"pages\": 1, \"page\": 1, \"results\": 3, \"data\": [{\"label\": \"test-usering\", \"hostname\": \"nb-104-237-148-10.newark.nodebalancer.linode.com\", \"id\": 44819, \"tags\": [\"alpha\"], \"client_conn_throttle\": 0, \"created\": \"2019-03-06T16:28:29\", \"region\": \"us-east\", \"transfer\": {\"total\": 0.5212240219116211, \"in\": 0.49224853515625, \"out\": 0.028975486755371094}, \"ipv4\": \"127.0.0.1\", \"ipv6\": \"fe80::ab8\", \"updated\": \"2019-03-06T16:28:29\"}, {\"label\": \"test-usering2\", \"hostname\": \"nb-104-237-148-11.newark.nodebalancer.linode.com\", \"id\": 44821, \"tags\": [\"beta\"], \"client_conn_throttle\": 0, \"created\": \"2019-03-06T16:29:11\", \"region\": \"us-east\", \"transfer\": {\"total\": 0.5315179824829102, \"in\": 0.4971504211425781, \"out\": 0.03436756134033203}, \"ipv4\": \"127.0.0.1\", \"ipv6\": \"fe80::ab8\", \"updated\": \"2019-03-06T16:29:11\"}, {\"label\": \"abA1551890900372\", \"hostname\": \"nb-69-164-223-253.newark.nodebalancer.linode.com\", \"id\": 44829, \"tags\": [\"bA1551890900343\"], \"client_conn_throttle\": 0, \"created\": \"2019-03-06T16:50:47\", \"region\": \"us-east\", \"transfer\": {\"total\": 0.4571056365966797, \"in\": 0.43665504455566406, \"out\": 0.020450592041015625}, \"ipv4\": \"127.0.0.1\", \"ipv6\": \"fe80::ab8\", \"updated\": \"2019-03-06T16:50:47\"}]}",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "GET"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/linode/instances/"
+        }
+      }, {
+        "deepEquals": {
+          "query": {
+            "page_size": "100"
+          }
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:23 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 1266,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "linodes:read_only",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903203",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"pages\": 1, \"page\": 1, \"data\": [{\"hypervisor\": \"kvm\", \"ipv6\": \"fe80::ab8/64\", \"type\": \"g6-nanode-1\", \"status\": \"running\", \"alerts\": {\"network_out\": 10, \"cpu\": 90, \"io\": 10000, \"transfer_quota\": 80, \"network_in\": 10}, \"region\": \"us-central\", \"created\": \"2019-03-06T16:27:45\", \"updated\": \"2019-03-06T16:30:20\", \"specs\": {\"memory\": 1024, \"vcpus\": 1, \"disk\": 25600, \"transfer\": 1000}, \"backups\": {\"schedule\": {\"day\": \"Scheduling\", \"window\": \"Scheduling\"}, \"enabled\": true}, \"watchdog_enabled\": true, \"id\": 13120732, \"ipv4\": [\"127.0.0.1\", \"127.0.0.1\"], \"group\": \"\", \"image\": \"linode/debian9\", \"tags\": [], \"label\": \"debian-us-central\"}, {\"hypervisor\": \"kvm\", \"ipv6\": \"fe80::ab8/64\", \"type\": \"g6-nanode-1\", \"status\": \"running\", \"alerts\": {\"network_out\": 10, \"cpu\": 90, \"io\": 10000, \"transfer_quota\": 80, \"network_in\": 10}, \"region\": \"us-east\", \"created\": \"2019-03-06T18:39:17\", \"updated\": \"2019-03-06T18:39:17\", \"specs\": {\"memory\": 1024, \"vcpus\": 1, \"disk\": 25600, \"transfer\": 1000}, \"backups\": {\"schedule\": {\"day\": null, \"window\": null}, \"enabled\": false}, \"watchdog_enabled\": true, \"id\": 13122149, \"ipv4\": [\"127.0.0.1\"], \"group\": \"\", \"image\": \"linode/debian9\", \"tags\": [], \"label\": \"debian-us-east\"}], \"results\": 2}",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "GET"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/linode/types-legacy"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:23 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 18728,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=900", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903203",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"pages\": 1, \"results\": 60, \"page\": 1, \"data\": [{\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.008, \"monthly\": 5.0}}}, \"label\": \"Linode 4GB (pending upgrade)\", \"transfer\": 2000, \"memory\": 512, \"price\": {\"hourly\": 0.03, \"monthly\": 20.0}, \"vcpus\": 8, \"disk\": 24576, \"class\": null, \"id\": \"standard-1\", \"network_out\": 250, \"successor\": \"g6-standard-2\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.012, \"monthly\": 7.5}}}, \"label\": \"Linode 6GB (pending upgrade)\", \"transfer\": 3000, \"memory\": 768, \"price\": {\"hourly\": 0.045, \"monthly\": 30.0}, \"vcpus\": 8, \"disk\": 36864, \"class\": null, \"id\": \"standard-2\", \"network_out\": 250, \"successor\": \"g6-standard-3-s\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.015, \"monthly\": 10.0}}}, \"label\": \"Linode 8GB (pending upgrade)\", \"transfer\": 4000, \"memory\": 1024, \"price\": {\"hourly\": 0.06, \"monthly\": 40.0}, \"vcpus\": 8, \"disk\": 49152, \"class\": null, \"id\": \"standard-3\", \"network_out\": 250, \"successor\": \"g6-standard-4\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.024, \"monthly\": 15.0}}}, \"label\": \"Linode 10GB (pending upgrade)\", \"transfer\": 6000, \"memory\": 1536, \"price\": {\"hourly\": 0.09, \"monthly\": 60.0}, \"vcpus\": 8, \"disk\": 73728, \"class\": null, \"id\": \"standard-4\", \"network_out\": 250, \"successor\": \"g6-standard-4-s\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.03, \"monthly\": 20.0}}}, \"label\": \"Linode 16GB (pending upgrade)\", \"transfer\": 8000, \"memory\": 2048, \"price\": {\"hourly\": 0.12, \"monthly\": 80.0}, \"vcpus\": 8, \"disk\": 98304, \"class\": null, \"id\": \"standard-5\", \"network_out\": 250, \"successor\": \"g6-standard-6\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.06, \"monthly\": 40.0}}}, \"label\": \"Linode 32GB (pending upgrade)\", \"transfer\": 16000, \"memory\": 4096, \"price\": {\"hourly\": 0.24, \"monthly\": 160.0}, \"vcpus\": 8, \"disk\": 196608, \"class\": null, \"id\": \"standard-6\", \"network_out\": 250, \"successor\": \"g6-standard-8\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.12, \"monthly\": 80.0}}}, \"label\": \"Linode 64GB (pending upgrade)\", \"transfer\": 20000, \"memory\": 8192, \"price\": {\"hourly\": 0.48, \"monthly\": 320.0}, \"vcpus\": 8, \"disk\": 393216, \"class\": null, \"id\": \"standard-7\", \"network_out\": 250, \"successor\": \"g6-standard-16\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.18, \"monthly\": 120.0}}}, \"label\": \"Linode 96GB (pending upgrade)\", \"transfer\": 20000, \"memory\": 12288, \"price\": {\"hourly\": 0.72, \"monthly\": 480.0}, \"vcpus\": 8, \"disk\": 589824, \"class\": null, \"id\": \"standard-8\", \"network_out\": 250, \"successor\": \"g6-standard-20\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.24, \"monthly\": 160.0}}}, \"label\": \"Linode 128GB (pending upgrade)\", \"transfer\": 20000, \"memory\": 16384, \"price\": {\"hourly\": 0.96, \"monthly\": 640.0}, \"vcpus\": 8, \"disk\": 786432, \"class\": null, \"id\": \"standard-9\", \"network_out\": 250, \"successor\": \"g6-standard-24\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.3, \"monthly\": 200.0}}}, \"label\": \"Linode 160GB (pending upgrade)\", \"transfer\": 20000, \"memory\": 20480, \"price\": {\"hourly\": 1.2, \"monthly\": 800.0}, \"vcpus\": 8, \"disk\": 983040, \"class\": null, \"id\": \"standard-10\", \"network_out\": 250, \"successor\": \"g6-standard-20-s\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.008, \"monthly\": 5.0}}}, \"label\": \"Linode 4GB (pending upgrade)\", \"transfer\": 2000, \"memory\": 1024, \"price\": {\"hourly\": 0.03, \"monthly\": 20.0}, \"vcpus\": 8, \"disk\": 24576, \"class\": null, \"id\": \"standard-46\", \"network_out\": 250, \"successor\": \"g6-standard-2\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.012, \"monthly\": 7.5}}}, \"label\": \"Linode 6GB (pending upgrade)\", \"transfer\": 3000, \"memory\": 1536, \"price\": {\"hourly\": 0.05, \"monthly\": 30.0}, \"vcpus\": 8, \"disk\": 36864, \"class\": null, \"id\": \"standard-47\", \"network_out\": 250, \"successor\": \"g6-standard-3-s\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.015, \"monthly\": 10.0}}}, \"label\": \"Linode 8GB (pending upgrade)\", \"transfer\": 4000, \"memory\": 2048, \"price\": {\"hourly\": 0.06, \"monthly\": 40.0}, \"vcpus\": 8, \"disk\": 49152, \"class\": null, \"id\": \"standard-48\", \"network_out\": 250, \"successor\": \"g6-standard-4\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.024, \"monthly\": 15.0}}}, \"label\": \"Linode 10GB (pending upgrade)\", \"transfer\": 6000, \"memory\": 3072, \"price\": {\"hourly\": 0.09, \"monthly\": 60.0}, \"vcpus\": 8, \"disk\": 73728, \"class\": null, \"id\": \"standard-49\", \"network_out\": 250, \"successor\": \"g6-standard-4-s\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.03, \"monthly\": 20.0}}}, \"label\": \"Linode 16GB (pending upgrade)\", \"transfer\": 8000, \"memory\": 4096, \"price\": {\"hourly\": 0.12, \"monthly\": 80.0}, \"vcpus\": 8, \"disk\": 98304, \"class\": null, \"id\": \"standard-50\", \"network_out\": 250, \"successor\": \"g6-standard-6\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.06, \"monthly\": 40.0}}}, \"label\": \"Linode 32GB (pending upgrade)\", \"transfer\": 16000, \"memory\": 8192, \"price\": {\"hourly\": 0.24, \"monthly\": 160.0}, \"vcpus\": 8, \"disk\": 196608, \"class\": null, \"id\": \"standard-51\", \"network_out\": 250, \"successor\": \"g6-standard-8\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.12, \"monthly\": 80.0}}}, \"label\": \"Linode 64GB (pending upgrade)\", \"transfer\": 20000, \"memory\": 16384, \"price\": {\"hourly\": 0.5, \"monthly\": 320.0}, \"vcpus\": 8, \"disk\": 393216, \"class\": null, \"id\": \"standard-52\", \"network_out\": 250, \"successor\": \"g6-standard-16\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.18, \"monthly\": 120.0}}}, \"label\": \"Linode 96GB (pending upgrade)\", \"transfer\": 20000, \"memory\": 24576, \"price\": {\"hourly\": 0.72, \"monthly\": 480.0}, \"vcpus\": 8, \"disk\": 589824, \"class\": null, \"id\": \"standard-53\", \"network_out\": 250, \"successor\": \"g6-standard-20\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.24, \"monthly\": 160.0}}}, \"label\": \"Linode 128GB (pending upgrade)\", \"transfer\": 20000, \"memory\": 32768, \"price\": {\"hourly\": 0.96, \"monthly\": 640.0}, \"vcpus\": 8, \"disk\": 786432, \"class\": null, \"id\": \"standard-54\", \"network_out\": 250, \"successor\": \"g6-standard-24\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.3, \"monthly\": 200.0}}}, \"label\": \"Linode 160GB (pending upgrade)\", \"transfer\": 20000, \"memory\": 40960, \"price\": {\"hourly\": 1.2, \"monthly\": 800.0}, \"vcpus\": 8, \"disk\": 983040, \"class\": null, \"id\": \"standard-55\", \"network_out\": 250, \"successor\": \"g6-standard-20-s\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.008, \"monthly\": 5.0}}}, \"label\": \"Linode 4GB (pending upgrade)\", \"transfer\": 2000, \"memory\": 1024, \"price\": {\"hourly\": 0.03, \"monthly\": 20.0}, \"vcpus\": 8, \"disk\": 49152, \"class\": null, \"id\": \"standard-92\", \"network_out\": 250, \"successor\": \"g6-standard-2\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.012, \"monthly\": 7.5}}}, \"label\": \"Linode 6GB (pending upgrade)\", \"transfer\": 3000, \"memory\": 1536, \"price\": {\"hourly\": 0.05, \"monthly\": 30.0}, \"vcpus\": 8, \"disk\": 73728, \"class\": null, \"id\": \"standard-93\", \"network_out\": 250, \"successor\": \"g6-standard-3-s\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.015, \"monthly\": 10.0}}}, \"label\": \"Linode 8GB (pending upgrade)\", \"transfer\": 4000, \"memory\": 2048, \"price\": {\"hourly\": 0.06, \"monthly\": 40.0}, \"vcpus\": 8, \"disk\": 98304, \"class\": null, \"id\": \"standard-94\", \"network_out\": 250, \"successor\": \"g6-standard-4\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.024, \"monthly\": 15.0}}}, \"label\": \"Linode 10GB (pending upgrade)\", \"transfer\": 6000, \"memory\": 3072, \"price\": {\"hourly\": 0.09, \"monthly\": 60.0}, \"vcpus\": 8, \"disk\": 147456, \"class\": null, \"id\": \"standard-95\", \"network_out\": 250, \"successor\": \"g6-standard-4-s\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.03, \"monthly\": 20.0}}}, \"label\": \"Linode 16GB (pending upgrade)\", \"transfer\": 8000, \"memory\": 4096, \"price\": {\"hourly\": 0.12, \"monthly\": 80.0}, \"vcpus\": 8, \"disk\": 196608, \"class\": null, \"id\": \"standard-96\", \"network_out\": 250, \"successor\": \"g6-standard-6\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.06, \"monthly\": 40.0}}}, \"label\": \"Linode 32GB (pending upgrade)\", \"transfer\": 16000, \"memory\": 8192, \"price\": {\"hourly\": 0.24, \"monthly\": 160.0}, \"vcpus\": 8, \"disk\": 393216, \"class\": null, \"id\": \"standard-97\", \"network_out\": 250, \"successor\": \"g6-standard-8\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.12, \"monthly\": 80.0}}}, \"label\": \"Linode 64GB (pending upgrade)\", \"transfer\": 20000, \"memory\": 16384, \"price\": {\"hourly\": 0.48, \"monthly\": 320.0}, \"vcpus\": 8, \"disk\": 786432, \"class\": null, \"id\": \"standard-98\", \"network_out\": 250, \"successor\": \"g6-standard-16\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.18, \"monthly\": 120.0}}}, \"label\": \"Linode 96GB (pending upgrade)\", \"transfer\": 20000, \"memory\": 24576, \"price\": {\"hourly\": 0.72, \"monthly\": 480.0}, \"vcpus\": 8, \"disk\": 1179648, \"class\": null, \"id\": \"standard-99\", \"network_out\": 250, \"successor\": \"g6-standard-20\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.24, \"monthly\": 160.0}}}, \"label\": \"Linode 128GB (pending upgrade)\", \"transfer\": 20000, \"memory\": 32768, \"price\": {\"hourly\": 0.96, \"monthly\": 640.0}, \"vcpus\": 8, \"disk\": 1572864, \"class\": null, \"id\": \"standard-100\", \"network_out\": 250, \"successor\": \"g6-standard-24\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.3, \"monthly\": 200.0}}}, \"label\": \"Linode 160GB (pending upgrade)\", \"transfer\": 20000, \"memory\": 40960, \"price\": {\"hourly\": 1.2, \"monthly\": 800.0}, \"vcpus\": 8, \"disk\": 1966080, \"class\": null, \"id\": \"standard-101\", \"network_out\": 250, \"successor\": \"g6-standard-20-s\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.004, \"monthly\": 2.5}}}, \"label\": \"Linode 2GB (pending upgrade)\", \"transfer\": 2000, \"memory\": 1024, \"price\": {\"hourly\": 0.015, \"monthly\": 10.0}, \"vcpus\": 1, \"disk\": 24576, \"class\": \"standard\", \"id\": \"g4-standard-1\", \"network_out\": 125, \"successor\": \"g6-standard-1\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.008, \"monthly\": 5.0}}}, \"label\": \"Linode 4GB (pending upgrade)\", \"transfer\": 3000, \"memory\": 2048, \"price\": {\"hourly\": 0.03, \"monthly\": 20.0}, \"vcpus\": 2, \"disk\": 49152, \"class\": \"standard\", \"id\": \"g4-standard-2\", \"network_out\": 250, \"successor\": \"g6-standard-2\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.012, \"monthly\": 7.5}}}, \"label\": \"Linode 6GB (pending upgrade)\", \"transfer\": 3000, \"memory\": 3072, \"price\": {\"hourly\": 0.05, \"monthly\": 30.0}, \"vcpus\": 3, \"disk\": 73728, \"class\": null, \"id\": \"g4-standard-3-2\", \"network_out\": 375, \"successor\": \"g6-standard-3-s\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.015, \"monthly\": 10.0}}}, \"label\": \"Linode 8GB (pending upgrade)\", \"transfer\": 4000, \"memory\": 4096, \"price\": {\"hourly\": 0.06, \"monthly\": 40.0}, \"vcpus\": 4, \"disk\": 98304, \"class\": \"standard\", \"id\": \"g4-standard-4\", \"network_out\": 500, \"successor\": \"g6-standard-4\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.024, \"monthly\": 15.0}}}, \"label\": \"Linode 10GB (pending upgrade)\", \"transfer\": 6000, \"memory\": 6144, \"price\": {\"hourly\": 0.09, \"monthly\": 60.0}, \"vcpus\": 4, \"disk\": 147456, \"class\": null, \"id\": \"g4-standard-4-s\", \"network_out\": 750, \"successor\": \"g6-standard-4-s\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.03, \"monthly\": 20.0}}}, \"label\": \"Linode 16GB (pending upgrade)\", \"transfer\": 8000, \"memory\": 8192, \"price\": {\"hourly\": 0.12, \"monthly\": 80.0}, \"vcpus\": 6, \"disk\": 196608, \"class\": \"standard\", \"id\": \"g4-standard-6\", \"network_out\": 1000, \"successor\": \"g6-standard-6\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.06, \"monthly\": 40.0}}}, \"label\": \"Linode 32GB (pending upgrade)\", \"transfer\": 16000, \"memory\": 16384, \"price\": {\"hourly\": 0.24, \"monthly\": 160.0}, \"vcpus\": 8, \"disk\": 393216, \"class\": \"standard\", \"id\": \"g4-standard-8\", \"network_out\": 2000, \"successor\": \"g6-standard-8\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.12, \"monthly\": 80.0}}}, \"label\": \"Linode 64GB (pending upgrade)\", \"transfer\": 20000, \"memory\": 32768, \"price\": {\"hourly\": 0.48, \"monthly\": 320.0}, \"vcpus\": 12, \"disk\": 786432, \"class\": \"standard\", \"id\": \"g4-standard-12\", \"network_out\": 4000, \"successor\": \"g6-standard-16\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.18, \"monthly\": 120.0}}}, \"label\": \"Linode 96GB (pending upgrade)\", \"transfer\": 20000, \"memory\": 49152, \"price\": {\"hourly\": 0.72, \"monthly\": 480.0}, \"vcpus\": 16, \"disk\": 1179648, \"class\": \"standard\", \"id\": \"g4-standard-16\", \"network_out\": 6000, \"successor\": \"g6-standard-20\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.24, \"monthly\": 160.0}}}, \"label\": \"Linode 128GB (pending upgrade)\", \"transfer\": 20000, \"memory\": 65536, \"price\": {\"hourly\": 0.96, \"monthly\": 640.0}, \"vcpus\": 20, \"disk\": 1572864, \"class\": \"standard\", \"id\": \"g4-standard-20\", \"network_out\": 8000, \"successor\": \"g6-standard-24\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.3, \"monthly\": 200.0}}}, \"label\": \"Linode 160GB (pending upgrade)\", \"transfer\": 20000, \"memory\": 81920, \"price\": {\"hourly\": 1.2, \"monthly\": 800.0}, \"vcpus\": 20, \"disk\": 1966080, \"class\": null, \"id\": \"g4-standard-20-s1\", \"network_out\": 10000, \"successor\": \"g6-standard-20-s\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.3, \"monthly\": 200.0}}}, \"label\": \"Linode 192GB (pending upgrade)\", \"transfer\": 20000, \"memory\": 98304, \"price\": {\"hourly\": 1.44, \"monthly\": 960.0}, \"vcpus\": 20, \"disk\": 1966080, \"class\": null, \"id\": \"g4-standard-20-s2\", \"network_out\": 10000, \"successor\": \"g6-standard-32\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.003, \"monthly\": 2.0}}}, \"label\": \"Nanode 1GB (pending upgrade)\", \"transfer\": 1000, \"memory\": 1024, \"price\": {\"hourly\": 0.0075, \"monthly\": 5.0}, \"vcpus\": 1, \"disk\": 20480, \"class\": \"nanode\", \"id\": \"g5-nanode-1\", \"network_out\": 1000, \"successor\": \"g6-nanode-1\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.004, \"monthly\": 2.5}}}, \"label\": \"Linode 2GB (pending upgrade)\", \"transfer\": 2000, \"memory\": 2048, \"price\": {\"hourly\": 0.015, \"monthly\": 10.0}, \"vcpus\": 1, \"disk\": 30720, \"class\": \"standard\", \"id\": \"g5-standard-1\", \"network_out\": 1000, \"successor\": \"g6-standard-1\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.008, \"monthly\": 5.0}}}, \"label\": \"Linode 4GB (pending upgrade)\", \"transfer\": 3000, \"memory\": 4096, \"price\": {\"hourly\": 0.03, \"monthly\": 20.0}, \"vcpus\": 2, \"disk\": 49152, \"class\": \"standard\", \"id\": \"g5-standard-2\", \"network_out\": 1000, \"successor\": \"g6-standard-2\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.012, \"monthly\": 7.5}}}, \"label\": \"Linode 6GB (pending upgrade)\", \"transfer\": 3000, \"memory\": 6144, \"price\": {\"hourly\": 0.05, \"monthly\": 30.0}, \"vcpus\": 3, \"disk\": 73728, \"class\": null, \"id\": \"g5-standard-3-s\", \"network_out\": 1000, \"successor\": \"g6-standard-3-s\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.015, \"monthly\": 10.0}}}, \"label\": \"Linode 8GB (pending upgrade)\", \"transfer\": 4000, \"memory\": 8192, \"price\": {\"hourly\": 0.06, \"monthly\": 40.0}, \"vcpus\": 4, \"disk\": 98304, \"class\": \"standard\", \"id\": \"g5-standard-4\", \"network_out\": 1000, \"successor\": \"g6-standard-4\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.024, \"monthly\": 15.0}}}, \"label\": \"Linode 10GB (pending upgrade)\", \"transfer\": 6000, \"memory\": 10240, \"price\": {\"hourly\": 0.09, \"monthly\": 60.0}, \"vcpus\": 4, \"disk\": 147456, \"class\": null, \"id\": \"g5-standard-4-s\", \"network_out\": 1000, \"successor\": \"g6-standard-4-s\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.03, \"monthly\": 20.0}}}, \"label\": \"Linode 16GB (pending upgrade)\", \"transfer\": 8000, \"memory\": 12288, \"price\": {\"hourly\": 0.12, \"monthly\": 80.0}, \"vcpus\": 6, \"disk\": 196608, \"class\": \"standard\", \"id\": \"g5-standard-6\", \"network_out\": 1000, \"successor\": \"g6-standard-6\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.06, \"monthly\": 40.0}}}, \"label\": \"Linode 32GB (pending upgrade)\", \"transfer\": 16000, \"memory\": 24576, \"price\": {\"hourly\": 0.24, \"monthly\": 160.0}, \"vcpus\": 8, \"disk\": 393216, \"class\": \"standard\", \"id\": \"g5-standard-8\", \"network_out\": 2000, \"successor\": \"g6-standard-8\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.12, \"monthly\": 80.0}}}, \"label\": \"Linode 64GB (pending upgrade)\", \"transfer\": 20000, \"memory\": 49152, \"price\": {\"hourly\": 0.48, \"monthly\": 320.0}, \"vcpus\": 12, \"disk\": 786432, \"class\": \"standard\", \"id\": \"g5-standard-12\", \"network_out\": 4000, \"successor\": \"g6-standard-16\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.18, \"monthly\": 120.0}}}, \"label\": \"Linode 96GB (pending upgrade)\", \"transfer\": 20000, \"memory\": 65536, \"price\": {\"hourly\": 0.72, \"monthly\": 480.0}, \"vcpus\": 16, \"disk\": 1179648, \"class\": \"standard\", \"id\": \"g5-standard-16\", \"network_out\": 6000, \"successor\": \"g6-standard-20\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.24, \"monthly\": 160.0}}}, \"label\": \"Linode 128GB (pending upgrade)\", \"transfer\": 20000, \"memory\": 81920, \"price\": {\"hourly\": 0.96, \"monthly\": 640.0}, \"vcpus\": 20, \"disk\": 1572864, \"class\": \"standard\", \"id\": \"g5-standard-20\", \"network_out\": 8000, \"successor\": \"g6-standard-24\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.3, \"monthly\": 200.0}}}, \"label\": \"Linode 160GB (pending upgrade)\", \"transfer\": 20000, \"memory\": 102400, \"price\": {\"hourly\": 1.2, \"monthly\": 800.0}, \"vcpus\": 20, \"disk\": 1966080, \"class\": null, \"id\": \"g5-standard-20-s1\", \"network_out\": 10000, \"successor\": \"g6-standard-20-s\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.3, \"monthly\": 200.0}}}, \"label\": \"Linode 192GB (pending upgrade)\", \"transfer\": 20000, \"memory\": 122880, \"price\": {\"hourly\": 1.44, \"monthly\": 960.0}, \"vcpus\": 20, \"disk\": 1966080, \"class\": null, \"id\": \"g5-standard-20-s2\", \"network_out\": 10000, \"successor\": \"g6-standard-32\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.008, \"monthly\": 5.0}}}, \"label\": \"Linode 24GB (pending upgrade)\", \"transfer\": 5000, \"memory\": 16384, \"price\": {\"hourly\": 0.09, \"monthly\": 60.0}, \"vcpus\": 1, \"disk\": 20480, \"class\": \"highmem\", \"id\": \"g5-highmem-1\", \"network_out\": 1000, \"successor\": \"g6-highmem-1\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.015, \"monthly\": 10.0}}}, \"label\": \"Linode 48GB (pending upgrade)\", \"transfer\": 6000, \"memory\": 32768, \"price\": {\"hourly\": 0.18, \"monthly\": 120.0}, \"vcpus\": 2, \"disk\": 40960, \"class\": \"highmem\", \"id\": \"g5-highmem-2\", \"network_out\": 1500, \"successor\": \"g6-highmem-2\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.03, \"monthly\": 20.0}}}, \"label\": \"Linode 90GB (pending upgrade)\", \"transfer\": 7000, \"memory\": 61440, \"price\": {\"hourly\": 0.36, \"monthly\": 240.0}, \"vcpus\": 4, \"disk\": 92160, \"class\": \"highmem\", \"id\": \"g5-highmem-4\", \"network_out\": 3000, \"successor\": \"g6-highmem-4\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.06, \"monthly\": 40.0}}}, \"label\": \"Linode 150GB (pending upgrade)\", \"transfer\": 8000, \"memory\": 102400, \"price\": {\"hourly\": 0.72, \"monthly\": 480.0}, \"vcpus\": 8, \"disk\": 204800, \"class\": \"highmem\", \"id\": \"g5-highmem-8\", \"network_out\": 6000, \"successor\": \"g6-highmem-8\"}, {\"addons\": {\"backups\": {\"price\": {\"hourly\": 0.09, \"monthly\": 60.0}}}, \"label\": \"Linode 300GB (pending upgrade)\", \"transfer\": 9000, \"memory\": 204800, \"price\": {\"hourly\": 1.44, \"monthly\": 960.0}, \"vcpus\": 16, \"disk\": 348160, \"class\": \"highmem\", \"id\": \"g5-highmem-16\", \"network_out\": 10000, \"successor\": \"g6-highmem-16\"}]}",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "GET"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/images"
+        }
+      }, {
+        "deepEquals": {
+          "query": {
+            "page_size": "100"
+          }
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:23 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 4392,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903203",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"pages\": 1, \"page\": 1, \"results\": 18, \"data\": [{\"description\": null, \"vendor\": \"Arch\", \"created_by\": \"linode\", \"deprecated\": false, \"label\": \"Arch Linux\", \"type\": \"manual\", \"expiry\": null, \"size\": 1800, \"id\": \"linode/arch\", \"created\": \"2016-06-13T20:31:34\", \"is_public\": true}, {\"description\": null, \"vendor\": \"CentOS\", \"created_by\": \"linode\", \"deprecated\": false, \"label\": \"CentOS 7\", \"type\": \"manual\", \"expiry\": null, \"size\": 1900, \"id\": \"linode/centos7\", \"created\": \"2014-07-08T14:07:21\", \"is_public\": true}, {\"description\": null, \"vendor\": \"CoreOS\", \"created_by\": \"linode\", \"deprecated\": false, \"label\": \"CoreOS Container Linux\", \"type\": \"manual\", \"expiry\": null, \"size\": 5000, \"id\": \"linode/containerlinux\", \"created\": \"2017-06-06T20:44:00\", \"is_public\": true}, {\"description\": \"\", \"vendor\": \"Debian\", \"created_by\": \"linode\", \"deprecated\": false, \"label\": \"Debian 8\", \"type\": \"manual\", \"expiry\": null, \"size\": 1300, \"id\": \"linode/debian8\", \"created\": \"2015-04-27T20:26:41\", \"is_public\": true}, {\"description\": null, \"vendor\": \"Debian\", \"created_by\": \"linode\", \"deprecated\": false, \"label\": \"Debian 9\", \"type\": \"manual\", \"expiry\": null, \"size\": 1200, \"id\": \"linode/debian9\", \"created\": \"2017-06-16T20:02:29\", \"is_public\": true}, {\"description\": null, \"vendor\": \"Fedora\", \"created_by\": \"linode\", \"deprecated\": false, \"label\": \"Fedora 28\", \"type\": \"manual\", \"expiry\": null, \"size\": 2500, \"id\": \"linode/fedora28\", \"created\": \"2018-05-01T16:06:52\", \"is_public\": true}, {\"description\": null, \"vendor\": \"Fedora\", \"created_by\": \"linode\", \"deprecated\": false, \"label\": \"Fedora 29\", \"type\": \"manual\", \"expiry\": null, \"size\": 2300, \"id\": \"linode/fedora29\", \"created\": \"2018-10-30T17:00:44\", \"is_public\": true}, {\"description\": null, \"vendor\": \"Gentoo\", \"created_by\": \"linode\", \"deprecated\": false, \"label\": \"Gentoo\", \"type\": \"manual\", \"expiry\": null, \"size\": 4700, \"id\": \"linode/gentoo\", \"created\": \"2016-10-25T17:31:25\", \"is_public\": true}, {\"description\": null, \"vendor\": \"openSUSE\", \"created_by\": \"linode\", \"deprecated\": false, \"label\": \"openSUSE Leap 15.0\", \"type\": \"manual\", \"expiry\": null, \"size\": 3400, \"id\": \"linode/opensuse15.0\", \"created\": \"2018-05-24T21:27:09\", \"is_public\": true}, {\"description\": null, \"vendor\": \"Slackware\", \"created_by\": \"linode\", \"deprecated\": false, \"label\": \"Slackware 14.2\", \"type\": \"manual\", \"expiry\": null, \"size\": 6000, \"id\": \"linode/slackware14.2\", \"created\": \"2016-10-13T13:14:34\", \"is_public\": true}, {\"description\": null, \"vendor\": \"Ubuntu\", \"created_by\": \"linode\", \"deprecated\": false, \"label\": \"Ubuntu 16.04 LTS\", \"type\": \"manual\", \"expiry\": null, \"size\": 2500, \"id\": \"linode/ubuntu16.04lts\", \"created\": \"2016-04-22T18:11:29\", \"is_public\": true}, {\"description\": null, \"vendor\": \"Ubuntu\", \"created_by\": \"linode\", \"deprecated\": false, \"label\": \"Ubuntu 18.04 LTS\", \"type\": \"manual\", \"expiry\": null, \"size\": 2550, \"id\": \"linode/ubuntu18.04\", \"created\": \"2018-04-26T22:23:37\", \"is_public\": true}, {\"description\": null, \"vendor\": \"Ubuntu\", \"created_by\": \"linode\", \"deprecated\": false, \"label\": \"Ubuntu 18.10\", \"type\": \"manual\", \"expiry\": null, \"size\": 2500, \"id\": \"linode/ubuntu18.10\", \"created\": \"2018-10-18T16:52:07\", \"is_public\": true}, {\"description\": null, \"vendor\": \"CentOS\", \"created_by\": \"linode\", \"deprecated\": true, \"label\": \"CentOS 6.8\", \"type\": \"manual\", \"expiry\": null, \"size\": 1024, \"id\": \"linode/centos6.8\", \"created\": \"2014-04-28T19:19:34\", \"is_public\": true}, {\"description\": null, \"vendor\": \"Fedora\", \"created_by\": \"linode\", \"deprecated\": true, \"label\": \"Fedora 27\", \"type\": \"manual\", \"expiry\": null, \"size\": 1900, \"id\": \"linode/fedora27\", \"created\": \"2017-12-14T21:06:30\", \"is_public\": true}, {\"description\": null, \"vendor\": \"openSUSE\", \"created_by\": \"linode\", \"deprecated\": true, \"label\": \"openSUSE Leap 42.3\", \"type\": \"manual\", \"expiry\": null, \"size\": 1900, \"id\": \"linode/opensuse42.3\", \"created\": \"2017-07-27T18:03:05\", \"is_public\": true}, {\"description\": null, \"vendor\": \"Slackware\", \"created_by\": \"linode\", \"deprecated\": true, \"label\": \"Slackware 14.1\", \"type\": \"manual\", \"expiry\": null, \"size\": 1000, \"id\": \"linode/slackware14.1\", \"created\": \"2013-11-25T16:11:02\", \"is_public\": true}, {\"description\": null, \"vendor\": \"Ubuntu\", \"created_by\": \"linode\", \"deprecated\": true, \"label\": \"Ubuntu 14.04 LTS\", \"type\": \"manual\", \"expiry\": null, \"size\": 1500, \"id\": \"linode/ubuntu14.04lts\", \"created\": \"2014-04-17T19:42:07\", \"is_public\": true}]}",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "GET"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/account/notifications"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:24 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 49,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903204",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"page\": 1, \"results\": 0, \"data\": [], \"pages\": 1}",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "GET"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/regions"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:24 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 396,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=900", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "398",
+            "X-RateLimit-Reset": "1551903203",
+            "Retry-After": "118",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"pages\": 1, \"results\": 9, \"page\": 1, \"data\": [{\"country\": \"us\", \"id\": \"us-central\"}, {\"country\": \"us\", \"id\": \"us-west\"}, {\"country\": \"us\", \"id\": \"us-southeast\"}, {\"country\": \"us\", \"id\": \"us-east\"}, {\"country\": \"uk\", \"id\": \"eu-west\"}, {\"country\": \"sg\", \"id\": \"ap-south\"}, {\"country\": \"de\", \"id\": \"eu-central\"}, {\"country\": \"jp\", \"id\": \"ap-northeast\"}, {\"country\": \"jp\", \"id\": \"ap-northeast-1a\"}, {\"country\": \"ca\", \"id\": \"ca-central\"}]}",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "GET"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/domains"
+        }
+      }, {
+        "deepEquals": {
+          "query": {
+            "page_size": "100"
+          }
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:24 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 307,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "domains:read_only",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903204",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"pages\": 1, \"page\": 1, \"data\": [{\"retry_sec\": 0, \"axfr_ips\": [], \"type\": \"slave\", \"status\": \"active\", \"description\": \"\", \"domain\": \"test-usering1234.org\", \"refresh_sec\": 0, \"soa_email\": \"\", \"ttl_sec\": 0, \"master_ips\": [\"127.0.0.1\"], \"id\": 1208734, \"group\": \"\", \"expire_sec\": 0, \"tags\": [\"test-user\"]}], \"results\": 1}",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "GET"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/profile"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:24 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 1241,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "398",
+            "X-RateLimit-Reset": "1551903204",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"email\": \"nwisnewski@linode.com\", \"two_factor_auth\": false, \"username\": \"prod-test-user-010\", \"timezone\": \"Pacific/Rarotonga\", \"lish_auth_method\": \"password_keys\", \"ip_whitelist_enabled\": false, \"restricted\": false, \"authorized_keys\": [\"ssh-rsa MIICIjANBgkqhkiG9w0BAQEFAAOCAg8AMIICCgKCAgEAq5X9wwTT0hnEgyXnHaWZCfBp4z3DGdxaDsp1m+mdaDBUEDqtZ+6/GNAjkq7JipeXmg8YD3oKdlwm2jupv2lji4LbLHPu9umhRWpQsIOPS8pcEAvpzvA99fpdZYrMI03DZyuSiK5NjRRsusbLVaMhkv3/9dkChyly0d0JSCjA2/C71VOXSUAljxtRFIQ3qtMeN+EsMNDRYrLjMBCJmuGr2/my3mGHapa4QbwdOgqhCyerr/W7/nZeqEIyTWpIkX9dMppCGq2gcqW40s4ISGnFXN8YoTlbnXtq18jrZG6O0D1+HNUJvc4RdSxq+xZPILM40xQFUb0YdqLcPXcW/yZjQ7runP3cHndN72t0JYabu0+YL14t6ZS9gX7lc3vDv7Y1exYwgaup+H5kPCpaEYzRmMEtaOn0oVAeBrunAsIFoOiAOLn/SdmU7jtG9eWCskDRwchCm1rz9CeDkOQllUZg6RItbJGUqfV7GvK/8byfhdjzsD2QPW0b+xCWjPjTJXBzhudm9FESQJ+uLA7cQisM9iLF3R9KAmRotM/X9UdlBLqy1Kjp/6JBR89DXgco/XKAGZOA97n/H3agoJ+KA4hw7Mi68XccKcBQiNY0v9I6RKCzaa4wEeTxmk69oRK57iXp1BG8mqYnaiDZF2fXqrIG/IUq+qtU3p7u7QwhTqRYjYcCAwEAAQ== pthiel@linode.com\"], \"uid\": 996129, \"email_notifications\": true, \"referrals\": {\"pending\": 0, \"credit\": 0, \"code\": \"87058745b4b15481bde1759e921934ef0d7a4d3a\", \"url\": \"https://www.linode.com/?r=87058745b4b15481bde1759e921934ef0d7a4d3a\", \"completed\": 0, \"total\": 0}}",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "GET"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/account/settings"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:24 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 99,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "account:read_only",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903204",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"longview_subscription\": null, \"network_helper\": true, \"managed\": false, \"backups_enabled\": false}",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "OPTIONS"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/nodebalancers/44819/configs"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:24 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "OPTIONS, GET, HEAD, POST",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903204",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "OPTIONS"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/linode/instances/13120732/backups"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:24 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "GET, OPTIONS, HEAD, POST",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "398",
+            "X-RateLimit-Reset": "1551903202",
+            "Retry-After": "117",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "OPTIONS"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/nodebalancers/"
+        }
+      }, {
+        "deepEquals": {
+          "query": {
+            "page_size": "25"
+          }
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:25 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "POST, GET, OPTIONS, HEAD",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization,x-filter",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "398",
+            "X-RateLimit-Reset": "1551903203",
+            "Retry-After": "117",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "OPTIONS"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/account/transfer"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:25 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "GET, OPTIONS, HEAD",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903205",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "OPTIONS"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/volumes"
+        }
+      }, {
+        "deepEquals": {
+          "query": {
+            "page_size": "25"
+          }
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:25 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "GET, OPTIONS, HEAD, POST",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization,x-filter",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903205",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "GET"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/nodebalancers/44819/configs"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:25 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 457,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "nodebalancers:read_only",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903205",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"pages\": 1, \"page\": 1, \"results\": 1, \"data\": [{\"check\": \"none\", \"nodes_status\": {\"up\": 1, \"down\": 0}, \"stickiness\": \"table\", \"ssl_key\": null, \"check_attempts\": 2, \"id\": 39409, \"nodebalancer_id\": 44819, \"ssl_cert\": null, \"cipher_suite\": \"recommended\", \"ssl_fingerprint\": \"\", \"ssl_commonname\": \"\", \"check_timeout\": 3, \"check_body\": \"\", \"algorithm\": \"roundrobin\", \"check_passive\": true, \"protocol\": \"http\", \"check_path\": \"\", \"port\": 80, \"check_interval\": 5}]}",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "GET"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/linode/instances/13120732/backups"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:25 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 69,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "linodes:read_only",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "398",
+            "X-RateLimit-Reset": "1551903203",
+            "Retry-After": "117",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"snapshot\": {\"in_progress\": null, \"current\": null}, \"automatic\": []}",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "OPTIONS"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/nodebalancers/44821/configs"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:25 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "POST, GET, OPTIONS, HEAD",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "397",
+            "X-RateLimit-Reset": "1551903203",
+            "Retry-After": "117",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "GET"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/nodebalancers/"
+        }
+      }, {
+        "deepEquals": {
+          "query": {
+            "page_size": "25"
+          }
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:25 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 1240,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "nodebalancers:read_only",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903205",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"pages\": 1, \"page\": 1, \"data\": [{\"updated\": \"2019-03-06T16:50:47\", \"ipv6\": \"fe80::ab8\", \"client_conn_throttle\": 0, \"ipv4\": \"127.0.0.1\", \"region\": \"us-east\", \"label\": \"abA1551890900372\", \"hostname\": \"nb-69-164-223-253.newark.nodebalancer.linode.com\", \"created\": \"2019-03-06T16:50:47\", \"transfer\": {\"total\": 0.4571056365966797, \"out\": 0.020450592041015625, \"in\": 0.43665504455566406}, \"tags\": [\"bA1551890900343\"], \"id\": 44829}, {\"updated\": \"2019-03-06T16:28:29\", \"ipv6\": \"fe80::ab8\", \"client_conn_throttle\": 0, \"ipv4\": \"127.0.0.1\", \"region\": \"us-east\", \"label\": \"test-usering\", \"hostname\": \"nb-104-237-148-10.newark.nodebalancer.linode.com\", \"created\": \"2019-03-06T16:28:29\", \"transfer\": {\"total\": 0.5212240219116211, \"out\": 0.028975486755371094, \"in\": 0.49224853515625}, \"tags\": [\"alpha\"], \"id\": 44819}, {\"updated\": \"2019-03-06T16:29:11\", \"ipv6\": \"fe80::ab8\", \"client_conn_throttle\": 0, \"ipv4\": \"127.0.0.1\", \"region\": \"us-east\", \"label\": \"test-usering2\", \"hostname\": \"nb-104-237-148-11.newark.nodebalancer.linode.com\", \"created\": \"2019-03-06T16:29:11\", \"transfer\": {\"total\": 0.5315179824829102, \"out\": 0.03436756134033203, \"in\": 0.4971504211425781}, \"tags\": [\"beta\"], \"id\": 44821}], \"results\": 3}",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "GET"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/account/transfer"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:25 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 41,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "account:read_only",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "397",
+            "X-RateLimit-Reset": "1551903203",
+            "Retry-After": "117",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"quota\": 1838, \"used\": 1, \"billable\": 0}",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "GET"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/volumes"
+        }
+      }, {
+        "deepEquals": {
+          "query": {
+            "page_size": "25"
+          }
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:25 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 313,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "volumes:read_only",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903205",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"data\": [{\"size\": 20, \"id\": 27810, \"tags\": [\"alabama\"], \"status\": \"active\", \"label\": \"test-usering\", \"filesystem_path\": \"/dev/disk/by-id/scsi-0Linode_Volume_test-usering\", \"created\": \"2019-03-06T18:14:50\", \"linode_id\": 13122149, \"updated\": \"2019-03-06T18:14:50\", \"region\": \"us-east\"}], \"page\": 1, \"pages\": 1, \"results\": 1}",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "GET"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/nodebalancers/44821/configs"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:26 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 457,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "nodebalancers:read_only",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903206",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"pages\": 1, \"page\": 1, \"data\": [{\"protocol\": \"http\", \"port\": 80, \"stickiness\": \"table\", \"ssl_cert\": null, \"check\": \"none\", \"cipher_suite\": \"recommended\", \"algorithm\": \"roundrobin\", \"check_timeout\": 3, \"nodes_status\": {\"up\": 1, \"down\": 0}, \"check_body\": \"\", \"ssl_commonname\": \"\", \"check_interval\": 5, \"id\": 39410, \"check_path\": \"\", \"check_passive\": true, \"check_attempts\": 2, \"nodebalancer_id\": 44821, \"ssl_fingerprint\": \"\", \"ssl_key\": null}], \"results\": 1}",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "OPTIONS"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/nodebalancers/44829/configs"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:26 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "GET, OPTIONS, HEAD, POST",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903206",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "GET"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/nodebalancers/44829/configs"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:27 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 49,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "nodebalancers:read_only",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "397",
+            "X-RateLimit-Reset": "1551903203",
+            "Retry-After": "115",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"pages\": 1, \"results\": 0, \"page\": 1, \"data\": []}",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "OPTIONS"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/tags"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:33 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "OPTIONS, POST, HEAD, GET",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "398",
+            "X-RateLimit-Reset": "1551903203",
+            "Retry-After": "109",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "OPTIONS"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/account/users"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:33 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "POST, GET, OPTIONS, HEAD",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "396",
+            "X-RateLimit-Reset": "1551903203",
+            "Retry-After": "109",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "OPTIONS"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/profile/sshkeys"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:33 GMT",
+            "Content-Type": "text/html; charset=utf-8",
+            "Content-Length": 0,
+            "Connection": "keep-alive",
+            "Allow": "POST, OPTIONS, HEAD, GET",
+            "X-OAuth-Scopes": "unknown",
+            "X-Accepted-OAuth-Scopes": "*",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "http://localhost:3000",
+            "Access-Control-Allow-Methods": "GET",
+            "Access-Control-Allow-Headers": "authorization",
+            "X-Spec-Version": "4.0.17",
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "397",
+            "X-RateLimit-Reset": "1551903203",
+            "Retry-After": "109",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Cache-Control": "private, max-age=60, s-maxage=60",
+            "Content-Security-Policy": "default-src 'none'",
+            "Vary": "Authorization, X-Filter",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "GET"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/tags"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:33 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 3056,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "account:read_only",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "396",
+            "X-RateLimit-Reset": "1551903203",
+            "Retry-After": "109",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"page\": 1, \"pages\": 6, \"data\": [{\"label\": \"$tag\"}, {\"label\": \"12\"}, {\"label\": \"12341234123412341234\"}, {\"label\": \"A1544133439805\"}, {\"label\": \"A1544192304144\"}, {\"label\": \"A1544654685221\"}, {\"label\": \"A1544660642429\"}, {\"label\": \"A1544824843770\"}, {\"label\": \"A1544837202143\"}, {\"label\": \"A1544886996944\"}, {\"label\": \"A1545052481438\"}, {\"label\": \"A1545052623890\"}, {\"label\": \"A1548695911758\"}, {\"label\": \"A1549472283725\"}, {\"label\": \"A1549477157086\"}, {\"label\": \"A1549489924347\"}, {\"label\": \"A1549490516835\"}, {\"label\": \"A1550515625107\"}, {\"label\": \"A1550600981102\"}, {\"label\": \"aA1546546063227\"}, {\"label\": \"aA1546546185962\"}, {\"label\": \"aA1546546477259\"}, {\"label\": \"aA1546546749405\"}, {\"label\": \"aA1546547146067\"}, {\"label\": \"aA1546549646626\"}, {\"label\": \"aA1546550790216\"}, {\"label\": \"aA1546551224481\"}, {\"label\": \"aA1546553387833\"}, {\"label\": \"aA1546553868227\"}, {\"label\": \"aA1546554292916\"}, {\"label\": \"aA1546554717597\"}, {\"label\": \"aA1546564390465\"}, {\"label\": \"aA1546564784108\"}, {\"label\": \"aA1546565161504\"}, {\"label\": \"aA1546565449459\"}, {\"label\": \"aA1546565610399\"}, {\"label\": \"aA1546565811010\"}, {\"label\": \"aA1546565951538\"}, {\"label\": \"aA1546567162643\"}, {\"label\": \"aA1546610252470\"}, {\"label\": \"aa1546636939507\"}, {\"label\": \"aa1546637315645\"}, {\"label\": \"aa1546637526369\"}, {\"label\": \"aa1546867972814\"}, {\"label\": \"aa1546868603901\"}, {\"label\": \"aa1546868899235\"}, {\"label\": \"aa1546871323680\"}, {\"label\": \"aa1546871680775\"}, {\"label\": \"aA1546871776818\"}, {\"label\": \"aA1546871990019\"}, {\"label\": \"aa1547767130141\"}, {\"label\": \"aa1547767267573\"}, {\"label\": \"aa1547767341485\"}, {\"label\": \"aa1547767463667\"}, {\"label\": \"aa1547767549853\"}, {\"label\": \"aA1547930341558\"}, {\"label\": \"aA1548714148081\"}, {\"label\": \"aA1549558875464\"}, {\"label\": \"aA1549575409577\"}, {\"label\": \"aa1549660233639\"}, {\"label\": \"aa1550601846272\"}, {\"label\": \"aa1550702576565\"}, {\"label\": \"aA1551201541650\"}, {\"label\": \"aa1551392382958\"}, {\"label\": \"aA1551881162180\"}, {\"label\": \"aa1551884163553\"}, {\"label\": \"aa1551884860986\"}, {\"label\": \"abcd\"}, {\"label\": \"ad\"}, {\"label\": \"alabama\"}, {\"label\": \"alph\"}, {\"label\": \"alpha\"}, {\"label\": \"as\"}, {\"label\": \"Auto-A1544045031820\"}, {\"label\": \"Auto-A1544045093808\"}, {\"label\": \"Auto-A1544045367367\"}, {\"label\": \"Auto-A1544054109012\"}, {\"label\": \"Auto-A1544054175917\"}, {\"label\": \"Auto-A1544054290189\"}, {\"label\": \"Auto-A1544054433541\"}, {\"label\": \"Auto-A1544054606017\"}, {\"label\": \"Auto-A1544054742197\"}, {\"label\": \"Auto-A1544055117667\"}, {\"label\": \"Auto-A1544055206976\"}, {\"label\": \"Auto-A1544055329159\"}, {\"label\": \"Auto-A1544055436302\"}, {\"label\": \"Auto-A1544055691485\"}, {\"label\": \"Auto-A1544063893520\"}, {\"label\": \"Auto-A1544063998778\"}, {\"label\": \"Auto-A1544064152034\"}, {\"label\": \"Auto-A1544064263160\"}, {\"label\": \"Auto-A1544064509431\"}, {\"label\": \"Auto-A1544064780162\"}, {\"label\": \"Auto-A1544064894117\"}, {\"label\": \"Auto-A1544065069290\"}, {\"label\": \"Auto-A1544066747194\"}, {\"label\": \"Auto-A1544066837983\"}, {\"label\": \"Auto-A1544066925352\"}, {\"label\": \"Auto-A1544067032126\"}, {\"label\": \"Auto-A1544067152890\"}], \"results\": 542}",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "GET"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/account/users"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:33 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 149,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "account:read_only",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903213",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"pages\": 1, \"page\": 1, \"results\": 1, \"data\": [{\"ssh_keys\": [], \"username\": \"prod-test-user-010\", \"email\": \"nwisnewski@linode.com\", \"restricted\": false}]}",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "predicates": [{
+        "deepEquals": {
+          "method": "GET"
+        }
+      }, {
+        "deepEquals": {
+          "path": "/v4/profile/sshkeys"
+        }
+      }, {
+        "deepEquals": {
+          "query": {}
+        }
+      }, {
+        "deepEquals": {
+          "body": ""
+        }
+      }],
+      "responses": [{
+        "is": {
+          "statusCode": 200,
+          "headers": {
+            "Server": "nginx",
+            "Date": "Wed, 06 Mar 2019 20:11:33 GMT",
+            "Content-Type": "application/json",
+            "Content-Length": 49,
+            "Connection": "keep-alive",
+            "Cache-Control": ["private, max-age=0, s-maxage=0, no-cache, no-store", "private, max-age=60, s-maxage=60"],
+            "X-OAuth-Scopes": "*",
+            "X-Accepted-OAuth-Scopes": "account:read_only",
+            "X-Frame-Options": ["DENY", "DENY"],
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "HEAD, GET, OPTIONS, POST, PUT, DELETE",
+            "Access-Control-Allow-Headers": "Authorization, Origin, X-Requested-With, Content-Type, Accept, X-Filter",
+            "X-Spec-Version": "4.0.17",
+            "Vary": ["Authorization, X-Filter", "Authorization, X-Filter"],
+            "X-RateLimit-Limit": "400",
+            "X-RateLimit-Remaining": "399",
+            "X-RateLimit-Reset": "1551903213",
+            "Retry-After": "119",
+            "Access-Control-Allow-Credentials": "true",
+            "Access-Control-Expose-Headers": "X-OAuth-Scopes, X-Accepted-OAuth-Scopes, X-Status",
+            "Content-Security-Policy": "default-src 'none'",
+            "X-Content-Type-Options": "nosniff",
+            "X-XSS-Protection": "1; mode=block",
+            "Strict-Transport-Security": "max-age=31536000"
+          },
+          "body": "{\"pages\": 1, \"page\": 1, \"results\": 0, \"data\": []}",
+          "_mode": "text"
+        }
+      }]
+    }, {
+      "responses": [{
+        "proxy": {
+          "to": "https://api.linode.com/v4",
+          "mode": "proxyAlways",
+          "predicateGenerators": [{
+            "matches": {
+              "method": true,
+              "path": true,
+              "query": true,
+              "body": true
+            }
+          }],
+          "injectHeaders": {
+            "Accept-Encoding": "identity"
+          }
+        }
+      }]
+    }]
+  }]
+}
