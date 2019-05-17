@@ -27,21 +27,24 @@ jest.mock('src/store', () => ({
 afterEach(cleanup);
 
 describe('Abuse ticket banner', () => {
-  it('should render a banner for each abuse ticket', () => {
-    const { rerender, queryAllByText } = render(
+  it('should render a banner for an abuse ticket', () => {
+    const { queryAllByText } = render(
       wrapWithTheme(
         <AbuseTicketBanner abuseTickets={[abuseTicketNotification]} />
       )
     );
-    expect(queryAllByText(/abuse/)).toHaveLength(1);
-    rerender(
+    expect(queryAllByText(/an open abuse ticket/)).toHaveLength(1);
+  });
+
+  it('should aggregate multiple abuse tickets', () => {
+    const { queryAllByText } = render(
       wrapWithTheme(
         <AbuseTicketBanner
           abuseTickets={[abuseTicketNotification, abuseTicketNotification]}
         />
       )
     );
-    expect(queryAllByText(/abuse/)).toHaveLength(2);
+    expect(queryAllByText(/2 open abuse tickets/)).toHaveLength(1);
   });
 
   it('should link to the ticket', () => {
