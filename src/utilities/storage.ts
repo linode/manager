@@ -34,6 +34,7 @@ const THEME = 'themeChoice';
 const SPACING = 'spacingChoice';
 const PAGE_SIZE = 'PAGE_SIZE';
 const BETA_NOTIFICATION = 'BetaNotification';
+const VAT_NOTIFICATION = 'vatNotification';
 const LINODE_VIEW = 'linodesViewStyle';
 const GROUP_LINODES = 'GROUP_LINODES';
 const HIDE_DISPLAY_GROUPS_CTA = 'importDisplayGroupsCTA';
@@ -51,6 +52,7 @@ type Theme = 'dark' | 'light';
 export type Spacing = 'compact' | 'normal';
 export type PageSize = number;
 type Beta = 'open' | 'closed';
+type Notification = 'show' | 'hide';
 type LinodeView = 'grid' | 'list';
 
 interface AuthGetAndSet {
@@ -86,6 +88,10 @@ export interface Storage {
     welcome: {
       get: () => Beta;
       set: (open: Beta) => void;
+    };
+    VAT: {
+      get: () => Notification;
+      set: (show: Notification) => void;
     };
   };
   views: {
@@ -163,6 +169,10 @@ export const storage: Storage = {
       /** Leaving the LS key alone so it's not popping for those who've dismissed it. */
       get: () => getStorage(BETA_NOTIFICATION, 'open'),
       set: open => setStorage(BETA_NOTIFICATION, open)
+    },
+    VAT: {
+      get: () => getStorage(VAT_NOTIFICATION, 'show'),
+      set: show => setStorage(VAT_NOTIFICATION, show)
     }
   },
   views: {

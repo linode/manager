@@ -20,6 +20,7 @@ import {
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
+import VATBanner from 'src/components/VATBanner';
 import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
@@ -357,6 +358,7 @@ export class App extends React.Component<CombinedProps, State> {
                     isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
                     username={this.props.username}
                   />
+                  <VATBanner />
                   <div className={classes.wrapper} id="main-content">
                     <Grid container spacing={0} className={classes.grid}>
                       <Grid item className={classes.switchWrapper}>
