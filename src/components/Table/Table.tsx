@@ -55,7 +55,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
         }
       },
       '& .data': {
-        marginLeft: 0
+        marginLeft: 0,
+        textAlign: 'left'
       }
     }
   },
