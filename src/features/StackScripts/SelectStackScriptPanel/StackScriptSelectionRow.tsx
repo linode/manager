@@ -123,10 +123,7 @@ export class StackScriptSelectionRow extends React.Component<
               {updated}
             </Typography>
           </TableCell>
-          <TableCell
-            className={classes.stackScriptCell}
-            data-qa-stackscript-images
-          >
+          <TableCell data-qa-stackscript-images>
             {displayTagsAndShowMore(images)}
           </TableCell>
         </TableRow>
