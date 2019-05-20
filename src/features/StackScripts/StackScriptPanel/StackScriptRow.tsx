@@ -2,9 +2,9 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
 import { withStyles, WithStyles } from 'src/components/core/styles';
-import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import StackScriptsActionMenu from 'src/features/StackScripts/StackScriptPanel/StackScriptActionMenu';
 import { StackScriptCategory } from 'src/features/StackScripts/stackScriptUtils';
@@ -59,7 +59,7 @@ export class StackScriptRow extends React.Component<CombinedProps, {}> {
       return (
         <React.Fragment>
           <Link to={`/stackscripts/${stackScriptID}`}>
-            <Typography variant="h3">
+            <Typography variant="h3" className={classes.libTitle}>
               {stackScriptUsername && (
                 <span
                   className={`${classes.libRadioLabel} ${
@@ -72,7 +72,9 @@ export class StackScriptRow extends React.Component<CombinedProps, {}> {
               <span className={classes.libRadioLabel}>{label}</span>
             </Typography>
           </Link>
-          <Typography variant="body1">{description}</Typography>
+          <Typography variant="body1" className={classes.libDescription}>
+            {description}
+          </Typography>
         </React.Fragment>
       );
     };
@@ -83,20 +85,24 @@ export class StackScriptRow extends React.Component<CombinedProps, {}> {
           <TableCell
             className={classes.stackScriptCell}
             data-qa-stackscript-title
+            parentColumn="StackScript"
           >
             {renderLabel()}
           </TableCell>
-          <TableCell>
+          <TableCell parentColumn="Active Deploys">
             <Typography variant="h3" data-qa-stackscript-deploys>
               {deploymentsActive}
             </Typography>
           </TableCell>
-          <TableCell>
+          <TableCell parentColumn="Last Revision">
             <Typography variant="h3" data-qa-stackscript-revision>
               {updated}
             </Typography>
           </TableCell>
-          <TableCell data-qa-stackscript-images>
+          <TableCell
+            data-qa-stackscript-images
+            parentColumn="Compatible Images"
+          >
             {displayTagsAndShowMore(images)}
           </TableCell>
           <TableCell>

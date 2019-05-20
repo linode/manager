@@ -51,13 +51,8 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
     cursor: 'pointer'
   },
   libTitle: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    maxWidth: '100%',
-    justifyContent: 'space-between',
-    paddingBottom: '0 !important',
-    '& h3': {
-      marginRight: 10
+    [theme.breakpoints.between('sm', 'md')]: {
+      wordBreak: 'break-all'
     }
   },
   libTitleLink: {
@@ -66,9 +61,9 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
     fontSize: '.9rem'
   },
   libDescription: {
-    paddingTop: '0 !important',
-    [theme.breakpoints.up('md')]: {
-      paddingRight: '100px !important'
+    marginTop: theme.spacing.unit / 2,
+    [theme.breakpoints.between('sm', 'md')]: {
+      wordBreak: 'break-all'
     }
   },
   images: {
@@ -76,11 +71,7 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginRight: theme.spacing.unit,
     marginBottom: theme.spacing.unit
   },
-  stackScriptCell: {
-    '& p': {
-      marginTop: theme.spacing.unit / 2
-    }
-  },
+  stackScriptCell: {},
   stackScriptUsername: {
     color: theme.color.grey1
   },
