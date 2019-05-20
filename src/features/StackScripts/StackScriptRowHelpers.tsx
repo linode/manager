@@ -77,15 +77,14 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginBottom: theme.spacing.unit
   },
   stackScriptCell: {
-    maxWidth: '200px'
+    '& p': {
+      marginTop: theme.spacing.unit / 2
+    }
   },
   stackScriptUsername: {
     color: theme.color.grey1
   },
   deployButton: {
-    // marginLeft: -26,
-    // width: '100%',
-    // justifyContent: 'flex-start',
     whiteSpace: 'nowrap',
     border: 0
   },
@@ -121,5 +120,5 @@ export const displayTagsAndShowMore: (s: string[]) => JSX.Element[][] = compose<
 >(
   over(lensIndex(1), unless(isEmpty, createShowMore)),
   over(lensIndex(0), createTags),
-  splitAt(3)
+  splitAt(1)
 );

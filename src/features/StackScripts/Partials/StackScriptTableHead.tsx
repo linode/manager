@@ -16,6 +16,7 @@ type ClassNames =
   | 'stackscriptTitles'
   | 'deploys'
   | 'revisions'
+  | 'tags'
   | 'tr'
   | 'tableHead';
 
@@ -25,16 +26,19 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     width: 84
   },
   stackscriptTitles: {
-    width: '45%',
+    width: '60%',
     minWidth: 200
   },
   deploys: {
-    width: '15%',
+    width: '13%',
     minWidth: 140
   },
   revisions: {
-    width: '15%',
+    width: '13%',
     minWidth: 150
+  },
+  tags: {
+    width: '13%'
   },
   tr: {
     height: 48
@@ -128,7 +132,10 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
             Last Revision
           </Cell>
           <TableCell
-            className={classes.tableHead}
+            className={classNames({
+              [classes.tableHead]: true,
+              [classes.tags]: true
+            })}
             data-qa-stackscript-compatible-images
           >
             Compatible Images
