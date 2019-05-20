@@ -43,6 +43,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     padding: '0 !important',
     marginRight: theme.spacing.unit * 2,
     position: 'fixed',
+    zIndex: 2,
     right: 0,
     bottom: 8,
     [theme.breakpoints.up('sm')]: {
