@@ -90,14 +90,12 @@ export class StackScriptRow extends React.Component<CombinedProps, {}> {
             {renderLabel()}
           </TableCell>
           <TableCell parentColumn="Active Deploys">
-            <Typography variant="h3" data-qa-stackscript-deploys>
+            <Typography data-qa-stackscript-deploys>
               {deploymentsActive}
             </Typography>
           </TableCell>
           <TableCell parentColumn="Last Revision">
-            <Typography variant="h3" data-qa-stackscript-revision>
-              {updated}
-            </Typography>
+            <Typography data-qa-stackscript-revision>{updated}</Typography>
           </TableCell>
           <TableCell
             data-qa-stackscript-images
