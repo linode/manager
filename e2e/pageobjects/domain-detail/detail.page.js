@@ -5,10 +5,6 @@ import Page from '../page';
 class DomainDetail extends Page {
     get domainTitle() { return this.breadcrumbStaticText; }
     get domainRecords() { return ['SOA Record','NS Record','MX Record','A/AAAA Record','CNAME Record','TXT Record','SRV Record','CAA Record']; }
-    get protocolSelect(){ return $('[data-qa-protocol] div'); }
-    get protocolOptions() { return $$('[data-qa-protocol-options]'); }
-    get caaTagSelect() { return $('[data-qa-caa-tag] div'); }
-    get caaTagOptions() { return $$('[data-qa-caa-tags]'); }
     get confirmButton() { return $('[data-qa-record-save]'); }
     get cancelButton() { return $('[data-qa-record-cancel]'); }
 
@@ -44,10 +40,17 @@ class DomainDetail extends Page {
         return rowColumnSelector[index];
     }
 
-    selectDropdownOption(dropdown) {
+    selectDropdownOption(dropdown, value) {
         this.selectElementByLabel(dropdown).click();
-        // Select the first option
-        browser.keys(["\ue015", "\uE007"]);
+        if (value) {
+            // Try to assign the requested value
+            browser.trySetValue(`[data-qa-domain-select="${dropdown}"] input`, value);
+            browser.keys(["\uE007"]);
+        } else {
+            // Select the first option
+            browser.keys(["\ue015", "\uE007"]);
+        }
+
         return this.selectInputByLabel(dropdown).getText();
     }
 
@@ -126,7 +129,7 @@ class DomainDetail extends Page {
             this.inputElementByLabel(label).waitForVisible(constants.wait.normal);
         });
         this.selectElementByLabel('TTL').waitForVisible(constants.wait.normal);
-        this.protocolSelect.waitForVisible(constants.wait.normal);
+        this.selectElementByLabel('Protocol').waitForVisible(constants.wait.normal);
         expect(this.drawerTitle.getText()).toContain('SRV Record');
     }
 
@@ -136,7 +139,7 @@ class DomainDetail extends Page {
             this.inputElementByLabel(label).waitForVisible(constants.wait.normal);
         });
         this.selectElementByLabel('TTL').waitForVisible(constants.wait.normal);
-        this.caaTagSelect.waitForVisible(constants.wait.normal);
+        this.selectElementByLabel('caa tag').waitForVisible(constants.wait.normal);
         expect(this.drawerTitle.getText()).toContain('CAA Record');
     }
 
@@ -189,10 +192,7 @@ class DomainDetail extends Page {
     addSrvRecord(service,protocol,priority,weight,port,target){
         this.srvRecordDrawerDisplays();
         this.inputElementByLabel('Service').setValue(service);
-        this.protocolSelect.click();
-        browser.pause(1000);
-        this.protocolOptions.find( option => option.getText() === protocol).click();
-        this.protocolOptions[0].waitForVisible(constants.wait.normal, true);
+        this.selectDropdownOption('Protocol', protocol);
         this.inputElementByLabel('Priority').setValue(priority);
         this.inputElementByLabel('Weight').setValue(weight);
         this.inputElementByLabel('Port').setValue(port);
@@ -206,10 +206,7 @@ class DomainDetail extends Page {
         this.caaRecordDrawerDisplays()
         this.inputElementByLabel('Name').setValue(name);
         this.inputElementByLabel('Value').setValue(value);
-        this.caaTagSelect.click();
-        browser.pause(1000);
-        this.caaTagOptions.find( option => option.getText() === tag).click();
-        this.caaTagOptions[0].waitForVisible(constants.wait.normal, true);
+        this.selectDropdownOption('caa tag', tag);
         const ttl = this.selectDropdownOption('TTL');
         this.saveRecord();
         return ttl;

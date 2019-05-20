@@ -360,7 +360,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         onChange={(e: Item) => this.setProtocol(e.value)}
         isClearable={false}
         textFieldProps={{
-          'data-qa-protocol': true
+          'data-qa-domain-select': 'Protocol'
         }}
       />
     );
@@ -390,7 +390,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         onChange={(e: Item) => this.setTag(e.value)}
         isClearable={false}
         textFieldProps={{
-          'data-qa-caa-tag': true
+          'data-qa-domain-select': 'caa tag'
         }}
       />
     );

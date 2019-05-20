@@ -284,7 +284,7 @@ describe('Domains - Detail - Add Records Suite', () => {
             const priority = '20';
             const weight = '10';
             const port = '8080';
-            const target =  `target${timestamp()}`;
+            const target = `target${timestamp()}`;
             DomainDetail.addRecordButtonElementByLabel('SRV Record').click();
             const ttl = DomainDetail.addSrvRecord(serviceName, protocol,priority,weight,port,target);
             const serviceNameCell = DomainDetail.domainTableCellValue('SRV Record','Name',0);
@@ -294,7 +294,7 @@ describe('Domains - Detail - Add Records Suite', () => {
             const portCell = DomainDetail.domainTableCellValue('SRV Record','Port',0);
             const targetCell = DomainDetail.domainTableCellValue('SRV Record','Target',0);
             const ttlCell = DomainDetail.domainTableCellValue('SRV Record','TTL',0);
-            expect(serviceNameCell.getText()).toEqual(`_${serviceName}.${protocol}._${protocol}`);
+            expect(serviceNameCell.getText()).toEqual(`_${serviceName}._${protocol}`);
             expect(domainCell.getText()).toEqual(domainName);
             expect(priorityCell.getText()).toEqual(priority);
             expect(weightCell.getText()).toEqual(weight);
@@ -319,7 +319,7 @@ describe('Domains - Detail - Add Records Suite', () => {
             const portCell = DomainDetail.domainTableCellValue('SRV Record','Port',0);
             const targetCell = DomainDetail.domainTableCellValue('SRV Record','Target',0);
             const ttlCell = DomainDetail.domainTableCellValue('SRV Record','TTL',0);
-            expect(serviceNameCell.getText()).toEqual(`_${serviceNameUpdate}.${protocolUpdate}._${protocolUpdate}`);
+            expect(serviceNameCell.getText()).toEqual(`_${serviceNameUpdate}._${protocolUpdate}`);
             expect(domainCell.getText()).toEqual(domainName);
             expect(priorityCell.getText()).toEqual(priorityUpdate);
             expect(weightCell.getText()).toEqual(weightUpdate);
