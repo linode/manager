@@ -288,6 +288,9 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
               </Typography>
             </Notice>
           )}
+        {this.props.location.state && this.props.location.state.recordError && (
+          <Notice error text={this.props.location.state.recordError} />
+        )}
         <Grid item xs={12}>
           {/* Duplication starts here. How can we refactor this? */}
           <OrderBy data={domainsData} order={'asc'} orderBy={'domain'}>

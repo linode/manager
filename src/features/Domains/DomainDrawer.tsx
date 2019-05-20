@@ -40,9 +40,10 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-// import { reportException } from 'src/exceptionReporting'
+import { reportException } from 'src/exceptionReporting';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import NodeBalancerSelect from 'src/features/NodeBalancers/NodeBalancerSelect';
+import { createDomainRecord } from 'src/services/domains/records';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 type ClassNames = 'root' | 'masterIPErrorNotice' | 'addIP';
@@ -80,6 +81,52 @@ type CombinedProps = WithStyles<ClassNames> &
   RouteComponentProps<{}> &
   StateProps &
   WithSnackbarProps;
+
+const generateDefaultDomainRecords = (
+  domain: string,
+  domainID: number,
+  ipv4?: string,
+  ipv6?: string
+) => {
+  /** at this point, the IPv6 is including the prefix and we need to strip that */
+  const cleanedIPv6 = ipv6 ? ipv6.substr(0, ipv6.indexOf('/')) : ipv6;
+
+  return Promise.all([
+    createDomainRecord(domainID, {
+      type: 'A',
+      target: ipv4
+    }),
+    createDomainRecord(domainID, {
+      type: 'A',
+      target: ipv4,
+      name: 'www'
+    }),
+    createDomainRecord(domainID, {
+      type: 'A',
+      target: ipv4,
+      name: 'mail'
+    }),
+    createDomainRecord(domainID, {
+      type: 'AAAA',
+      target: cleanedIPv6
+    }),
+    createDomainRecord(domainID, {
+      type: 'AAAA',
+      target: cleanedIPv6,
+      name: 'www'
+    }),
+    createDomainRecord(domainID, {
+      type: 'AAAA',
+      target: cleanedIPv6,
+      name: 'mail'
+    }),
+    createDomainRecord(domainID, {
+      type: 'MX',
+      priority: 10,
+      target: `mail.${domain}`
+    })
+  ]);
+};
 
 const masterIPsLens = lensPath(['master_ips']);
 const masterIPLens = (idx: number) =>
@@ -260,38 +307,35 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             disabled={disabled}
           />
         )}
-        {isCreatingSlaveDomain ||
-          (isEditingSlaveDomain && (
-            <React.Fragment>
-              {masterIPsError && (
-                <Notice
-                  className={classes.masterIPErrorNotice}
-                  error
-                  text={`Master IP addresses must be valid IPv4 addresses.`}
-                />
-              )}
-              {Array.from(Array(this.state.masterIPsCount)).map(
-                (slave, idx) => (
-                  <TextField
-                    key={idx}
-                    label="Master Nameserver IP Address"
-                    InputProps={{ 'aria-label': `ip-address-${idx}` }}
-                    value={viewMasterIP(idx, this.state) || ''}
-                    onChange={this.updateMasterIPAddress(idx)}
-                    data-qa-master-ip={idx}
-                    disabled={disabled}
-                  />
-                )
-              )}
-              <AddNewLink
-                onClick={this.addIPField}
-                className={classes.addIP}
-                label="Add IP"
-                data-qa-add-master-ip-field
+        {(isCreatingSlaveDomain || isEditingSlaveDomain) && (
+          <React.Fragment>
+            {masterIPsError && (
+              <Notice
+                className={classes.masterIPErrorNotice}
+                error
+                text={`Master IP addresses must be valid IPv4 addresses.`}
+              />
+            )}
+            {Array.from(Array(this.state.masterIPsCount)).map((slave, idx) => (
+              <TextField
+                key={idx}
+                label="Master Nameserver IP Address"
+                InputProps={{ 'aria-label': `ip-address-${idx}` }}
+                value={viewMasterIP(idx, this.state) || ''}
+                onChange={this.updateMasterIPAddress(idx)}
+                data-qa-master-ip={idx}
                 disabled={disabled}
               />
-            </React.Fragment>
-          ))}
+            ))}
+            <AddNewLink
+              onClick={this.addIPField}
+              className={classes.addIP}
+              label="Add IP"
+              data-qa-add-master-ip-field
+              disabled={disabled}
+            />
+          </React.Fragment>
+        )}
         <TagsInput
           value={tags}
           onChange={this.updateTags}
@@ -386,8 +430,22 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     }
   };
 
-  redirect = (id: number | '') => {
-    this.props.history.push(`/domains/${id}`);
+  redirect = (id: number | '', state?: Record<string, string>) => {
+    const returnPath = !!id ? `/domains/${id}/records` : '/domains';
+    this.props.history.push(returnPath, state);
+  };
+
+  redirectToLandingOrDetail = (
+    type: 'master' | 'slave',
+    domainID: number,
+    state: Record<string, string> = {}
+  ) => {
+    if (type === 'master' && domainID) {
+      this.redirect(domainID, state);
+    } else {
+      this.redirect('', state);
+    }
+    this.closeDrawer();
   };
 
   create = () => {
@@ -401,6 +459,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
       selectedDefaultNodeBalancer
     } = this.state;
     const { domainActions } = this.props;
+
     const tags = this.state.tags.map(tag => tag.value);
 
     const finalMasterIPs = master_ips.filter(v => v !== '');
@@ -467,13 +526,66 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
          * with the first IPv4 and IPv6 from the Linode or NodeBalancer they
          * selected.
          */
-
-        if (type === 'master' && domainData.id) {
-          this.redirect(domainData.id);
-        } else {
-          this.redirect('');
+        if (defaultRecordsSetting === 'linode') {
+          return generateDefaultDomainRecords(
+            domainData.domain,
+            domainData.id,
+            path(['ipv4', 0], selectedDefaultLinode),
+            path(['ipv6'], selectedDefaultLinode)
+          )
+            .then(() => {
+              return this.redirectToLandingOrDetail(type, domainData.id);
+            })
+            .catch((e: Linode.ApiFieldError[]) => {
+              reportException(
+                `Default DNS Records couldn't be created from Linode: ${
+                  e[0].reason
+                }`,
+                {
+                  selectedLinode: this.state.selectedDefaultLinode!.id,
+                  domainID: domainData.id,
+                  ipv4: path(['ipv4', 0], selectedDefaultLinode),
+                  ipv6: path(['ipv6'], selectedDefaultLinode)
+                }
+              );
+              return this.redirectToLandingOrDetail(type, domainData.id, {
+                recordError:
+                  'There was an issue creating default domain records.'
+              });
+            });
         }
-        this.closeDrawer();
+
+        if (defaultRecordsSetting === 'nodebalancer') {
+          return generateDefaultDomainRecords(
+            domainData.domain,
+            domainData.id,
+            path(['ipv4'], selectedDefaultNodeBalancer),
+            path(['ipv6'], selectedDefaultLinode)
+          )
+            .then(() => {
+              return this.redirectToLandingOrDetail(type, domainData.id);
+            })
+            .catch((e: Linode.ApiFieldError[]) => {
+              reportException(
+                `Default DNS Records couldn't be created from NodeBalancer: ${
+                  e[0].reason
+                }`,
+                {
+                  selectedNodeBalancer: this.state.selectedDefaultNodeBalancer!
+                    .id,
+                  domainID: domainData.id,
+                  ipv4: path(['ipv4'], selectedDefaultNodeBalancer),
+                  ipv6: path(['ipv6'], selectedDefaultNodeBalancer)
+                }
+              );
+              return this.redirectToLandingOrDetail(type, domainData.id, {
+                recordError:
+                  'There was an issue creating default domain records.'
+              });
+            });
+        }
+
+        return this.redirectToLandingOrDetail(type, domainData.id);
       })
       .catch(err => {
         if (!this.mounted) {
