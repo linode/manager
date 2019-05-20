@@ -121,7 +121,7 @@ export const VATBanner: React.FunctionComponent<CombinedProps> = props => {
 const styled = withStyles(styles);
 
 const withAccount = AccountContainer(
-  (ownProps, accountLoading, lastUpdated, accountData) => ({
+  (ownProps, accountLoading, lastUpdated, accountData, accountError) => ({
     ...ownProps,
     country: path(['country'], accountData),
     taxId: path(['tax_id'], accountData),
