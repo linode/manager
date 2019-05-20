@@ -41,7 +41,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   tableHead: {
     position: 'sticky',
-    top: theme.spacing.unit * 9,
+    top: theme.spacing.unit * 12,
     backgroundColor: theme.bg.tableHeader,
     paddingTop: 0,
     paddingBottom: 0,
