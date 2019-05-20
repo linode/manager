@@ -196,7 +196,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
         <LinodeSelect
           selectedLinode={selectedLinode}
           region={linodeRegion}
-          handleChange={this.changeSelectedLinode}
+          handleChange={linode => this.changeSelectedLinode(linode.id)}
           linodeError={linodeError}
           generalError={generalError}
           disabled={disabled || readOnly}

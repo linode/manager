@@ -41,6 +41,10 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import LinodeSelect from 'src/features/linodes/LinodeSelect';
+import NodeBalancerSelect from 'src/features/NodeBalancers/NodeBalancerSelect';
+
 type ClassNames = 'root' | 'masterIPErrorNotice' | 'addIP';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
@@ -53,6 +57,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
+type DefaultRecordsType = 'none' | 'linode' | 'nodebalancer';
+
 interface State {
   domain: string;
   type: 'master' | 'slave';
@@ -63,6 +69,9 @@ interface State {
   submitting: boolean;
   master_ips: string[];
   masterIPsCount: number;
+  defaultRecordsSetting: DefaultRecordsType;
+  selectedDefaultLinode?: Linode.Linode;
+  selectedDefaultNodeBalancer?: Linode.NodeBalancer;
 }
 
 type CombinedProps = WithStyles<ClassNames> &
@@ -98,7 +107,8 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     submitting: false,
     errors: [],
     master_ips: [],
-    masterIPsCount: 1
+    masterIPsCount: 1,
+    defaultRecordsSetting: 'none'
   };
 
   state: State = {
@@ -166,6 +176,11 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
 
     const title = mode === EDITING ? 'Edit Domain' : 'Add a new Domain';
 
+    const isCreatingMasterDomain = mode === CREATING && type === 'master';
+    const isEditingMasterDomain = mode === EDITING && type === 'master';
+    const isCreatingSlaveDomain = mode === CREATING && type === 'slave';
+    const isEditingSlaveDomain = mode === EDITING && type === 'slave';
+
     return (
       <Drawer title={title} open={open} onClose={this.closeDrawer}>
         {generalError && !disabled && (
@@ -224,51 +239,116 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             disabled={disabled}
           />
         )}
-        {(mode === CREATING || mode === EDITING) && type === 'master' && (
-          <TextField
-            errorText={errorFor('soa_email')}
-            value={soaEmail}
-            label="SOA Email Address"
-            onChange={this.updateEmailAddress}
-            data-qa-soa-email
-            disabled={disabled}
-          />
-        )}
-        {(mode === CREATING || mode === EDITING) && type === 'slave' && (
-          <React.Fragment>
-            {masterIPsError && (
-              <Notice
-                className={classes.masterIPErrorNotice}
-                error
-                text={`Master IP addresses must be valid IPv4 addresses.`}
-              />
-            )}
-            {Array.from(Array(this.state.masterIPsCount)).map((slave, idx) => (
-              <TextField
-                key={idx}
-                label="Master Nameserver IP Address"
-                InputProps={{ 'aria-label': `ip-address-${idx}` }}
-                value={viewMasterIP(idx, this.state) || ''}
-                onChange={this.updateMasterIPAddress(idx)}
-                data-qa-master-ip={idx}
-                disabled={disabled}
-              />
-            ))}
-            <AddNewLink
-              onClick={this.addIPField}
-              className={classes.addIP}
-              label="Add IP"
-              data-qa-add-master-ip-field
+        {isCreatingMasterDomain ||
+          (isEditingMasterDomain && (
+            <TextField
+              errorText={errorFor('soa_email')}
+              value={soaEmail}
+              label="SOA Email Address"
+              onChange={this.updateEmailAddress}
+              data-qa-soa-email
               disabled={disabled}
             />
-          </React.Fragment>
-        )}
+          ))}
+        {isCreatingSlaveDomain ||
+          (isEditingSlaveDomain && (
+            <React.Fragment>
+              {masterIPsError && (
+                <Notice
+                  className={classes.masterIPErrorNotice}
+                  error
+                  text={`Master IP addresses must be valid IPv4 addresses.`}
+                />
+              )}
+              {Array.from(Array(this.state.masterIPsCount)).map(
+                (slave, idx) => (
+                  <TextField
+                    key={idx}
+                    label="Master Nameserver IP Address"
+                    InputProps={{ 'aria-label': `ip-address-${idx}` }}
+                    value={viewMasterIP(idx, this.state) || ''}
+                    onChange={this.updateMasterIPAddress(idx)}
+                    data-qa-master-ip={idx}
+                    disabled={disabled}
+                  />
+                )
+              )}
+              <AddNewLink
+                onClick={this.addIPField}
+                className={classes.addIP}
+                label="Add IP"
+                data-qa-add-master-ip-field
+                disabled={disabled}
+              />
+            </React.Fragment>
+          ))}
         <TagsInput
           value={tags}
           onChange={this.updateTags}
           tagError={errorFor('tags')}
           disabled={disabled}
         />
+        {isCreatingMasterDomain && (
+          <Select
+            isClearable={false}
+            onChange={(value: Item<DefaultRecordsType>) =>
+              this.updateInsertDefaultRecords(value.value)
+            }
+            defaultValue={{
+              value: 'none',
+              label: 'Do not insert default records for me.'
+            }}
+            textFieldProps={{
+              helperText: `Once this domain is created, we\'ll go ahead and automatically
+                create some domain records (A/AAAA and MX) to get you started.`
+            }}
+            label="Insert Default Records"
+            options={[
+              {
+                value: 'none',
+                label: 'Do not insert default records for me.'
+              },
+              {
+                value: 'linode',
+                label: 'Insert default decords from one of my Linodes.'
+              },
+              {
+                value: 'nodebalancer',
+                label: 'Insert default decords from one of my NodeBalancers.'
+              }
+            ]}
+          />
+        )}
+        {isCreatingMasterDomain &&
+          this.state.defaultRecordsSetting === 'linode' && (
+            <LinodeSelect
+              textFieldProps={{
+                helperText: `We'll automatically create domain records for both the first IPv4 and IPv6
+              on this Linode.`
+              }}
+              handleChange={this.updateSelectedLinode}
+              selectedLinode={
+                this.state.selectedDefaultLinode
+                  ? this.state.selectedDefaultLinode.id
+                  : null
+              }
+            />
+          )}
+        {isCreatingMasterDomain &&
+          this.state.defaultRecordsSetting === 'nodebalancer' && (
+            <NodeBalancerSelect
+              textFieldProps={{
+                helperText: `We'll automatically create domain records for both the first IPv4 and IPv6
+              on this Linode.`
+              }}
+              handleChange={this.updateSelectedNodeBalancer}
+              selectedNodeBalancer={
+                this.state.selectedDefaultNodeBalancer
+                  ? this.state.selectedDefaultNodeBalancer.id
+                  : null
+              }
+            />
+          )}
         <ActionsPanel>
           {!submitting ? (
             <Button
@@ -482,8 +562,18 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
   updateEmailAddress = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.setState({ soaEmail: e.target.value });
 
+  updateSelectedLinode = (linode: Linode.Linode) =>
+    this.setState({ selectedDefaultLinode: linode });
+
+  updateSelectedNodeBalancer = (nodebalancer: Linode.NodeBalancer) =>
+    this.setState({ selectedDefaultNodeBalancer: nodebalancer });
+
   updateTags = (selected: Tag[]) => {
     this.setState({ tags: selected });
+  };
+
+  updateInsertDefaultRecords = (value: DefaultRecordsType) => {
+    this.setState({ defaultRecordsSetting: value });
   };
 
   updateType = (

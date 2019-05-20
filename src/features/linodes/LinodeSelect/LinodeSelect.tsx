@@ -7,6 +7,7 @@ import {
 } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+import { Props as TextFieldProps } from 'src/components/TextField';
 import withLinodes from 'src/containers/withLinodes.container';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
@@ -28,7 +29,8 @@ interface Props {
   selectedLinode: number | null;
   disabled?: boolean;
   region?: string;
-  handleChange: (linodeId: number | null) => void;
+  handleChange: (linode: Linode.Linode) => void;
+  textFieldProps?: TextFieldProps;
 }
 
 type CombinedProps = Props & WithLinodesProps & WithStyles<ClassNames>;
@@ -36,7 +38,8 @@ type CombinedProps = Props & WithLinodesProps & WithStyles<ClassNames>;
 const linodesToItems = (linodes: Linode.Linode[]): Item<number>[] =>
   linodes.map(thisLinode => ({
     value: thisLinode.id,
-    label: thisLinode.label
+    label: thisLinode.label,
+    data: thisLinode
   }));
 
 const linodeFromItems = (linodes: Item<number>[], linodeId: number | null) => {
@@ -72,13 +75,14 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
       options={options}
       disabled={disabled}
       isLoading={linodesLoading}
-      onChange={(selected: Item<number> | null) =>
-        handleChange(selected ? selected.value : null)
-      }
+      onChange={(selected: Item<number>) => {
+        return handleChange(selected.data);
+      }}
       errorText={getErrorStringOrDefault(
         generalError || linodeError || linodesError || ''
       )}
       isClearable={false}
+      textFieldProps={props.textFieldProps}
     />
   );
 };
