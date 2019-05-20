@@ -27,11 +27,13 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   stackscriptTitles: {
     width: '60%',
-    minWidth: 200
+    minWidth: 150
   },
   deploys: {
     width: '13%',
-    minWidth: 140
+    [theme.breakpoints.up('lg')]: {
+      minWidth: 140
+    }
   },
   revisions: {
     width: '13%',

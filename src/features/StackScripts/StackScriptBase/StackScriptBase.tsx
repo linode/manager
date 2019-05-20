@@ -459,10 +459,11 @@ const withStackScriptBase = (isSelecting: boolean) => (
                 />
               </div>
               <Table
-                isResponsive={false}
+                // isResponsive={false}
                 aria-label="List of StackScripts"
                 noOverflow={true}
                 tableClass={classes.table}
+                removeLabelonMobile={false}
               >
                 <StackScriptTableHead
                   handleClickTableHeader={this.handleClickTableHeader}
