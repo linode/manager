@@ -51,7 +51,7 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
     cursor: 'pointer'
   },
   libTitle: {
-    [theme.breakpoints.between('sm', 'md')]: {
+    [theme.breakpoints.down('sm')]: {
       wordBreak: 'break-all'
     }
   },
@@ -62,8 +62,8 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   libDescription: {
     marginTop: theme.spacing.unit / 2,
-    [theme.breakpoints.between('sm', 'md')]: {
-      wordBreak: 'break-all'
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 12
     }
   },
   images: {

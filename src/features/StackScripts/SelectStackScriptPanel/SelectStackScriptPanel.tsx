@@ -171,6 +171,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
         return (
           <React.Fragment>
             <Table
+              // removeLabelonMobile
               // isResponsive={false}
               aria-label="List of StackScripts"
               noOverflow={true}
