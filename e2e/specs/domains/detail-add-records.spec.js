@@ -56,7 +56,7 @@ describe('Domains - Detail - Add Records Suite', () => {
         expectedTagsDisplay();
     });
 
-    it('A tag can be added to the domain detial page', () => {
+    it('A tag can be added to the domain detail page', () => {
         const domainDetailTag = `Auto2-${timestamp()}`;
         DomainDetail.addTagToTagPanel(domainDetailTag);
         domainTags.push(domainDetailTag);
@@ -65,7 +65,7 @@ describe('Domains - Detail - Add Records Suite', () => {
 
     describe('SOA Record Update', () => {
 
-        it('SOA recored table shows master domain name and email', () => {
+        it('SOA record table shows master domain name and email', () => {
             checkSoaTableValues(domainName,domainEmail,'Default','Default','Default','Default');
         });
 
@@ -79,12 +79,7 @@ describe('Domains - Detail - Add Records Suite', () => {
             const ttl = DomainDetail.selectDropdownOption('Default TTL');
             const refresh = DomainDetail.selectDropdownOption('Refresh Rate');
             const retry = DomainDetail.selectDropdownOption('Retry Rate');
-            DomainDetail.expireRateSelect.click();
-            DomainDetail.exireRateOptions[0].waitForVisible(constants.wait.normal);
-            DomainDetail.exireRateOptions[0].click();
-            DomainDetail.exireRateOptions[0].waitForVisible(constants.wait.normal, true);
-            browser.pause(500);
-            const expire = DomainDetail.expireRateSelect.getText();
+            const expire = DomainDetail.selectDropdownOption('Expire Rate')
             DomainDetail.saveRecord();
             checkSoaTableValues(domainName,domainEmail,ttl,refresh,retry,expire);
             expect(DomainDetail.domainTitle.getText()).toEqual(domainName);

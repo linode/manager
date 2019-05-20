@@ -276,8 +276,10 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         label="Expire Rate"
         defaultValue={defaultRate}
         onChange={(e: Item) => this.setExpireSec(+e.value)}
-        data-qa-expire-rate
         isClearable={false}
+        textFieldProps={{
+          'data-qa-domain-select': 'Expire Rate'
+        }}
       />
     );
   };
@@ -323,8 +325,10 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         label={label}
         defaultValue={defaultOption}
         onChange={(e: Item) => fn(+e.value)}
-        data-qa-domain-select={label}
         isClearable={false}
+        textFieldProps={{
+          'data-qa-domain-select': label
+        }}
       />
     );
   };
@@ -354,8 +358,10 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         label="Protocol"
         defaultValue={defaultProtocol}
         onChange={(e: Item) => this.setProtocol(e.value)}
-        data-qa-protocol
         isClearable={false}
+        textFieldProps={{
+          'data-qa-protocol': true
+        }}
       />
     );
   };
@@ -382,8 +388,10 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         options={tagOptions}
         defaultValue={defaultTag || tagOptions[0]}
         onChange={(e: Item) => this.setTag(e.value)}
-        data-qa-caa-tag
         isClearable={false}
+        textFieldProps={{
+          'data-qa-caa-tag': true
+        }}
       />
     );
   };

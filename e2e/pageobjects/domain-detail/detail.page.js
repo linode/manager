@@ -5,8 +5,6 @@ import Page from '../page';
 class DomainDetail extends Page {
     get domainTitle() { return this.breadcrumbStaticText; }
     get domainRecords() { return ['SOA Record','NS Record','MX Record','A/AAAA Record','CNAME Record','TXT Record','SRV Record','CAA Record']; }
-    get expireRateSelect() { return $('[data-qa-expire-rate] div'); }
-    get exireRateOptions() { return $$('[data-qa-expire-options]'); }
     get protocolSelect(){ return $('[data-qa-protocol] div'); }
     get protocolOptions() { return $$('[data-qa-protocol-options]'); }
     get caaTagSelect() { return $('[data-qa-caa-tag] div'); }
@@ -26,7 +24,11 @@ class DomainDetail extends Page {
         return button;
     }
 
-    selectElelementByLabel(label){
+    selectElementByLabel(label){
+        return $(`[data-qa-domain-select="${label}"]`)
+    }
+
+    selectInputByLabel(label){
         return $(`[data-qa-domain-select="${label}"] div`)
     }
 
@@ -43,12 +45,10 @@ class DomainDetail extends Page {
     }
 
     selectDropdownOption(dropdown) {
-        const options = '[data-qa-options]';
-        this.selectElelementByLabel(dropdown).click();
-        browser.pause(1000);
-        $$(options)[0].click();
-        $(options).waitForVisible(constants.wait.normal,true);
-        return this.selectElelementByLabel(dropdown).getText();
+        this.selectElementByLabel(dropdown).click();
+        // Select the first option
+        browser.keys(["\ue015", "\uE007"]);
+        return this.selectInputByLabel(dropdown).getText();
     }
 
     domainDetailDisplays(domainName) {
@@ -57,7 +57,9 @@ class DomainDetail extends Page {
             this.recordHeaderElementByLabel(record).waitForVisible(constants.wait.normal);
         });
         this.domainRecords.forEach((record) => {
-            this.addRecordButtonElementByLabel(record).waitForVisible(constants.wait.normal);
+            if (record !== 'SOA Record') {
+                this.addRecordButtonElementByLabel(record).waitForVisible(constants.wait.normal);
+            }
         });
         expect(this.domainTitle.getText()).toEqual(domainName);
     }
@@ -67,11 +69,10 @@ class DomainDetail extends Page {
         ['Domain', 'SOA Email'].forEach((label) => {
             this.inputElementByLabel(label).waitForVisible(constants.wait.normal);
         });
-        ['Default TTL', 'Refresh Rate', 'Retry Rate'].forEach((label) => {
-            this.selectElelementByLabel(label).waitForVisible(constants.wait.normal);
+        ['Default TTL', 'Refresh Rate', 'Retry Rate', 'Expire Rate'].forEach((label) => {
+            this.selectElementByLabel(label).waitForVisible(constants.wait.normal);
         });
-        this.expireRateSelect.waitForVisible(constants.wait.normal);
-        expect(this.drawerTitle.getText()).toEqual('Edit SOA Record');
+        expect(this.drawerTitle.getText()).toMatch(/edit/i);
     }
 
     nsRecordDrawerDisplays(){
@@ -79,7 +80,7 @@ class DomainDetail extends Page {
         ['Name Server', 'Subdomain'].forEach((label) => {
             this.inputElementByLabel(label).waitForVisible(constants.wait.normal);
         });
-        this.selectElelementByLabel('TTL').waitForVisible(constants.wait.normal);
+        this.selectElementByLabel('TTL').waitForVisible(constants.wait.normal);
         expect(this.drawerTitle.getText()).toContain('NS Record');
     }
 
@@ -88,7 +89,7 @@ class DomainDetail extends Page {
         ['Mail Server', 'Preference', 'Subdomain'].forEach((label) => {
             this.inputElementByLabel(label).waitForVisible(constants.wait.normal);
         });
-        this.selectElelementByLabel('TTL').waitForVisible(constants.wait.normal);
+        this.selectElementByLabel('TTL').waitForVisible(constants.wait.normal);
         expect(this.drawerTitle.getText()).toContain('MX Record');
     }
 
@@ -97,7 +98,7 @@ class DomainDetail extends Page {
         ['Hostname', 'IP Address'].forEach((label) => {
             this.inputElementByLabel(label).waitForVisible(constants.wait.normal);
         });
-        this.selectElelementByLabel('TTL').waitForVisible(constants.wait.normal);
+        this.selectElementByLabel('TTL').waitForVisible(constants.wait.normal);
         expect(this.drawerTitle.getText()).toContain('AAAA Record');
     }
 
@@ -106,7 +107,7 @@ class DomainDetail extends Page {
         ['Hostname', 'Alias to'].forEach((label) => {
             this.inputElementByLabel(label).waitForVisible(constants.wait.normal);
         });
-        this.selectElelementByLabel('TTL').waitForVisible(constants.wait.normal);
+        this.selectElementByLabel('TTL').waitForVisible(constants.wait.normal);
         expect(this.drawerTitle.getText()).toContain('CNAME Record');
     }
 
@@ -115,7 +116,7 @@ class DomainDetail extends Page {
         ['Hostname', 'Value'].forEach((label) => {
             this.inputElementByLabel(label).waitForVisible(constants.wait.normal);
         });
-        this.selectElelementByLabel('TTL').waitForVisible(constants.wait.normal);
+        this.selectElementByLabel('TTL').waitForVisible(constants.wait.normal);
         expect(this.drawerTitle.getText()).toContain('TXT Record');
     }
 
@@ -124,7 +125,7 @@ class DomainDetail extends Page {
         ['Service', 'Priority', 'Weight', 'Port'].forEach((label) => {
             this.inputElementByLabel(label).waitForVisible(constants.wait.normal);
         });
-        this.selectElelementByLabel('TTL').waitForVisible(constants.wait.normal);
+        this.selectElementByLabel('TTL').waitForVisible(constants.wait.normal);
         this.protocolSelect.waitForVisible(constants.wait.normal);
         expect(this.drawerTitle.getText()).toContain('SRV Record');
     }
@@ -134,7 +135,7 @@ class DomainDetail extends Page {
         ['Name', 'Value'].forEach((label) => {
             this.inputElementByLabel(label).waitForVisible(constants.wait.normal);
         });
-        this.selectElelementByLabel('TTL').waitForVisible(constants.wait.normal);
+        this.selectElementByLabel('TTL').waitForVisible(constants.wait.normal);
         this.caaTagSelect.waitForVisible(constants.wait.normal);
         expect(this.drawerTitle.getText()).toContain('CAA Record');
     }
