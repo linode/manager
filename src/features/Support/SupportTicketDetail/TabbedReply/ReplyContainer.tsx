@@ -172,7 +172,7 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
         />
         <Grid className={classes.root} item>
           <ExpansionPanel
-            heading="Tips"
+            heading="Formatting Tips"
             detailProps={{ className: classes.expPanelSummary }}
           >
             <Reference isReply rootClass={classes.referenceRoot} />
