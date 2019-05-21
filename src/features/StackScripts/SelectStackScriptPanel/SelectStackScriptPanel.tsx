@@ -50,10 +50,13 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   selecting: {
     minHeight: '400px',
     maxHeight: '1000px',
-    overflowX: 'auto',
+    // overflowX: 'auto',
     overflowY: 'scroll',
-    paddingTop: 0,
-    marginTop: theme.spacing.unit * 2
+    paddingTop: 0
+    // '.tableWrapper': {
+    //   maxHeight: '1000px',
+    //   overflowY: 'auto',
+    // }
   },
   link: {
     display: 'block',
@@ -73,9 +76,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       padding: theme.spacing.unit * 3
     }
   },
-  header: {
-    paddingBottom: theme.spacing.unit * 2
-  }
+  header: {}
 });
 
 interface Props extends RenderGuardProps {
@@ -171,8 +172,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
         return (
           <React.Fragment>
             <Table
-              // removeLabelonMobile
-              // isResponsive={false}
+              isResponsive={false}
               aria-label="List of StackScripts"
               noOverflow={true}
               tableClass={classes.table}

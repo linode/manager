@@ -15,6 +15,7 @@ export type ClassNames =
   | 'libTitleLink'
   | 'libDescription'
   | 'colImages'
+  | 'selectionGrid'
   | 'stackScriptCell'
   | 'stackScriptUsername'
   | 'deployButton'
@@ -64,6 +65,9 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginTop: theme.spacing.unit / 2,
     [theme.breakpoints.down('sm')]: {
       fontSize: 12
+    },
+    [theme.breakpoints.between('sm', 'lg')]: {
+      wordBreak: 'break-word'
     }
   },
   images: {
@@ -71,7 +75,19 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginRight: theme.spacing.unit,
     marginBottom: theme.spacing.unit
   },
-  stackScriptCell: {},
+  selectionGrid: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    [theme.breakpoints.up('sm')]: {
+      flexWrap: 'nowrap',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }
+  },
+  stackScriptCell: {
+    width: '100%'
+  },
   stackScriptUsername: {
     color: theme.color.grey1
   },
@@ -81,7 +97,12 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   detailsButton: {
     textAlign: 'left',
-    padding: 0
+    padding: 0,
+    marginTop: -theme.spacing.unit,
+    [theme.breakpoints.up('sm')]: {
+      marginTop: 0,
+      width: 100
+    }
   }
 });
 

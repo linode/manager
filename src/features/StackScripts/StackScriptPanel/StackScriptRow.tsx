@@ -72,9 +72,11 @@ export class StackScriptRow extends React.Component<CombinedProps, {}> {
               <span className={classes.libRadioLabel}>{label}</span>
             </Typography>
           </Link>
-          <Typography variant="body1" className={classes.libDescription}>
-            {description}
-          </Typography>
+          {description && (
+            <Typography variant="body1" className={classes.libDescription}>
+              {description}
+            </Typography>
+          )}
         </React.Fragment>
       );
     };
@@ -82,11 +84,7 @@ export class StackScriptRow extends React.Component<CombinedProps, {}> {
     return (
       <React.Fragment>
         <TableRow data-qa-table-row={label}>
-          <TableCell
-            className={classes.stackScriptCell}
-            data-qa-stackscript-title
-            parentColumn="StackScript"
-          >
+          <TableCell data-qa-stackscript-title parentColumn="StackScript">
             {renderLabel()}
           </TableCell>
           <TableCell parentColumn="Active Deploys">

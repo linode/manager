@@ -113,35 +113,41 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
           >
             StackScript
           </Cell>
-          <Cell
-            className={classNames({
-              [classes.tableHead]: true,
-              [classes.deploys]: true
-            })}
-            data-qa-stackscript-active-deploy-header
-            {...maybeAddSortingProps('deploys')}
-          >
-            Active Deploys
-          </Cell>
-          <Cell
-            className={classNames({
-              [classes.tableHead]: true,
-              [classes.revisions]: true
-            })}
-            data-qa-stackscript-revision-header
-            {...maybeAddSortingProps('revision')}
-          >
-            Last Revision
-          </Cell>
-          <TableCell
-            className={classNames({
-              [classes.tableHead]: true,
-              [classes.tags]: true
-            })}
-            data-qa-stackscript-compatible-images
-          >
-            Compatible Images
-          </TableCell>
+          {!isSelecting && (
+            <Cell
+              className={classNames({
+                [classes.tableHead]: true,
+                [classes.deploys]: true
+              })}
+              data-qa-stackscript-active-deploy-header
+              {...maybeAddSortingProps('deploys')}
+            >
+              Active Deploys
+            </Cell>
+          )}
+          {!isSelecting && (
+            <Cell
+              className={classNames({
+                [classes.tableHead]: true,
+                [classes.revisions]: true
+              })}
+              data-qa-stackscript-revision-header
+              {...maybeAddSortingProps('revision')}
+            >
+              Last Revision
+            </Cell>
+          )}
+          {!isSelecting && (
+            <TableCell
+              className={classNames({
+                [classes.tableHead]: true,
+                [classes.tags]: true
+              })}
+              data-qa-stackscript-compatible-images
+            >
+              Compatible Images
+            </TableCell>
+          )}
           {!isSelecting && (
             <TableCell
               className={classNames({
