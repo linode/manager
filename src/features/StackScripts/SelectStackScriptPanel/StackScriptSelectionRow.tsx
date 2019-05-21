@@ -95,9 +95,9 @@ export class StackScriptSelectionRow extends React.Component<
           </Grid>
           <Grid item>
             <Button
+              compact
               className={classes.detailsButton}
               onClick={openDrawer}
-              noBold
             >
               Show Details
             </Button>
