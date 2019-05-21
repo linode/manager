@@ -9,6 +9,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
+import FormHelperText from 'src/components/core/FormHelperText';
 import RadioGroup from 'src/components/core/RadioGroup';
 import {
   StyleRulesCallback,
@@ -88,8 +89,16 @@ const generateDefaultDomainRecords = (
   ipv4?: string,
   ipv6?: string
 ) => {
-  /** at this point, the IPv6 is including the prefix and we need to strip that */
-  const cleanedIPv6 = ipv6 ? ipv6.substr(0, ipv6.indexOf('/')) : ipv6;
+  /**
+   * at this point, the IPv6 is including the prefix and we need to strip that
+   *
+   * BUT
+   *
+   * this logic only applies to Linodes' ipv6, not nodebalancers. No stripping
+   * needed for NodeBalancers.
+   */
+  const cleanedIPv6 =
+    ipv6 && ipv6.includes('/') ? ipv6.substr(0, ipv6.indexOf('/')) : ipv6;
 
   return Promise.all([
     createDomainRecord(domainID, {
@@ -345,67 +354,78 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           disabled={disabled}
         />
         {isCreatingMasterDomain && (
-          <Select
-            isClearable={false}
-            onChange={(value: Item<DefaultRecordsType>) =>
-              this.updateInsertDefaultRecords(value.value)
-            }
-            defaultValue={{
-              value: 'none',
-              label: 'Do not insert default records for me.'
-            }}
-            textFieldProps={{
-              helperText: `If specified, we can automatically create some domain records 
-              (A/AAAA and MX) to get you started, based on a Linode or NodeBalancer that you specify.`
-            }}
-            label="Insert Default Records"
-            options={[
-              {
+          <React.Fragment>
+            <Select
+              isClearable={false}
+              onChange={(value: Item<DefaultRecordsType>) =>
+                this.updateInsertDefaultRecords(value.value)
+              }
+              defaultValue={{
                 value: 'none',
                 label: 'Do not insert default records for me.'
-              },
-              {
-                value: 'linode',
-                label: 'Insert default records from one of my Linodes.'
-              },
-              {
-                value: 'nodebalancer',
-                label: 'Insert default records from one of my NodeBalancers.'
-              }
-            ]}
-          />
+              }}
+              label="Insert Default Records"
+              options={[
+                {
+                  value: 'none',
+                  label: 'Do not insert default records for me.'
+                },
+                {
+                  value: 'linode',
+                  label: 'Insert default records from one of my Linodes.'
+                },
+                {
+                  value: 'nodebalancer',
+                  label: 'Insert default records from one of my NodeBalancers.'
+                }
+              ]}
+            />
+            <FormHelperText>
+              If specified, we can automatically create some domain records
+              (A/AAAA and MX) to get you started, based on one of your Linodes
+              or NodeBalancers.
+            </FormHelperText>
+          </React.Fragment>
         )}
         {isCreatingMasterDomain &&
           this.state.defaultRecordsSetting === 'linode' && (
-            <LinodeSelect
-              textFieldProps={{
-                helperText: `We'll automatically create domain records for both the first IPv4 and IPv6
-              on this Linode.`
-              }}
-              linodeError={errorMap.defaultLinode}
-              handleChange={this.updateSelectedLinode}
-              selectedLinode={
-                this.state.selectedDefaultLinode
-                  ? this.state.selectedDefaultLinode.id
-                  : null
-              }
-            />
+            <React.Fragment>
+              <LinodeSelect
+                linodeError={errorMap.defaultLinode}
+                handleChange={this.updateSelectedLinode}
+                selectedLinode={
+                  this.state.selectedDefaultLinode
+                    ? this.state.selectedDefaultLinode.id
+                    : null
+                }
+              />
+              {!errorMap.defaultLinode && (
+                <FormHelperText>
+                  We'll automatically create domain records for both the first
+                  IPv4 and IPv6 on this Linode.
+                </FormHelperText>
+              )}
+            </React.Fragment>
           )}
         {isCreatingMasterDomain &&
           this.state.defaultRecordsSetting === 'nodebalancer' && (
-            <NodeBalancerSelect
-              nodeBalancerError={errorMap.defaultNodeBalancer}
-              textFieldProps={{
-                helperText: `We'll automatically create domain records for both the first IPv4 and IPv6
-              on this NodeBalancer.`
-              }}
-              handleChange={this.updateSelectedNodeBalancer}
-              selectedNodeBalancer={
-                this.state.selectedDefaultNodeBalancer
-                  ? this.state.selectedDefaultNodeBalancer.id
-                  : null
-              }
-            />
+            <React.Fragment>
+              <NodeBalancerSelect
+                nodeBalancerError={errorMap.defaultNodeBalancer}
+                handleChange={this.updateSelectedNodeBalancer}
+                selectedNodeBalancer={
+                  this.state.selectedDefaultNodeBalancer
+                    ? this.state.selectedDefaultNodeBalancer.id
+                    : null
+                }
+              />
+              {!errorMap.defaultNodeBalancer && (
+                <FormHelperText>
+                  We'll automatically create domain records for both the first
+                  IPv4 and IPv6 on this NodeBalancer.
+                </FormHelperText>
+              )}
+            </React.Fragment>
           )}
         <ActionsPanel>
           <Button
