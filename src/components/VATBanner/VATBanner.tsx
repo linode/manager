@@ -137,6 +137,14 @@ interface LocalStorageUpdater {
   hideVATBanner: () => Partial<LocalStorageState>;
 }
 
+interface LocalStorageState {
+  showVATBanner: boolean;
+}
+
+interface LocalStorageUpdater {
+  hideVATBanner: () => Partial<LocalStorageState>;
+}
+
 const withLocalStorage = localStorageContainer<
   LocalStorageState,
   LocalStorageUpdater,
