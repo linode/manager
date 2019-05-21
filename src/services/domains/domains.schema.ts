@@ -17,7 +17,9 @@ const domainSchemaBase = object().shape({
     .max(255, 'Description must be between 1 and 255 characters.'),
   retry_sec: number(),
   master_ips: array().of(string()),
-  axfr_ips: array().of(string()),
+  axfr_ips: array()
+    .of(string())
+    .typeError('Must be a comma-separated list of IP addresses.'),
   expire_sec: number(),
   refresh_sec: number(),
   ttl_sec: number()

@@ -165,6 +165,18 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     expire_sec: 'expire rate'
   };
 
+  handleTransferUpdate = (e: React.ChangeEvent<HTMLInputElement>) => {
+    /**
+     * This is a textarea input type, and users
+     * are expected to input a comma-separated list of IPs.
+     * However, the API is expecting an array
+     * of strings. If the user clears the input, set axfr_ips to [].
+     * Otherwise, split the list into an array.
+     */
+    const transferIPs = e.target.value === '' ? [] : e.target.value.split(',');
+    this.updateField('axfr_ips')(transferIPs);
+  };
+
   TextField = ({ label, field }: _TextFieldProps) => (
     <TextField
       label={label}
@@ -264,8 +276,10 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         label="Expire Rate"
         defaultValue={defaultRate}
         onChange={(e: Item) => this.setExpireSec(+e.value)}
-        data-qa-expire-rate
         isClearable={false}
+        textFieldProps={{
+          'data-qa-domain-select': 'Expire Rate'
+        }}
       />
     );
   };
@@ -311,8 +325,10 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         label={label}
         defaultValue={defaultOption}
         onChange={(e: Item) => fn(+e.value)}
-        data-qa-domain-select={label}
         isClearable={false}
+        textFieldProps={{
+          'data-qa-domain-select': label
+        }}
       />
     );
   };
@@ -342,8 +358,10 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         label="Protocol"
         defaultValue={defaultProtocol}
         onChange={(e: Item) => this.setProtocol(e.value)}
-        data-qa-protocol
         isClearable={false}
+        textFieldProps={{
+          'data-qa-domain-select': 'Protocol'
+        }}
       />
     );
   };
@@ -370,8 +388,10 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         options={tagOptions}
         defaultValue={defaultTag || tagOptions[0]}
         onChange={(e: Item) => this.setTag(e.value)}
-        data-qa-caa-tag
         isClearable={false}
+        textFieldProps={{
+          'data-qa-domain-select': 'caa tag'
+        }}
       />
     );
   };
@@ -380,16 +400,20 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     <TextField
       multiline
       label="Domain Transfers"
+      placeholder="192.0.2.0,192.0.2.1"
       errorText={getAPIErrorsFor(
         DomainRecordDrawer.errorFields,
         this.state.errors
       )('axfr_ips')}
+      // Include some warnings and info from the API docs.
+      helperText={`Comma-separated list of IPs that may perform a zone transfer for this Domain. 
+        This is potentially dangerous, and should be left empty unless you intend to use it.`}
       rows="3"
       value={defaultTo(
         DomainRecordDrawer.defaultFieldsState(this.props).axfr_ips,
         (this.state.fields as EditableDomainFields).axfr_ips
       )}
-      onChange={e => this.updateField('axfr_ips')(e.target.value)}
+      onChange={this.handleTransferUpdate}
     />
   );
 
@@ -412,6 +436,17 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     const data = {
       ...this.filterDataByType(this.state.fields, type)
     } as Partial<EditableDomainFields>;
+
+    if (data.axfr_ips) {
+      /**
+       * Don't submit blank strings to the API.
+       * Also trim the resulting array, since '192.0.2.0, 192.0.2.1'
+       * will submit ' 192.0.2.1', which is also an invalid value.
+       */
+      data.axfr_ips = data.axfr_ips
+        .filter(ip => ip !== '')
+        .map(ip => ip.trim());
+    }
 
     domainActions
       .updateDomain({ domainId, ...data, status: 'active' })
