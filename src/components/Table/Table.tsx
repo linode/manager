@@ -31,7 +31,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       '& tbody > tr': {
         marginBottom: 0,
         '& > td:first-child': {
-          backgroundColor: theme.bg.tableHeader
+          backgroundColor: theme.bg.tableHeader,
+          '& .data': {
+            textAlign: 'left'
+          }
         }
       },
       '& tr': {
@@ -55,8 +58,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
         }
       },
       '& .data': {
-        marginLeft: 0,
-        textAlign: 'left'
+        marginLeft: 0
       }
     }
   },
