@@ -559,7 +559,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             domainData.domain,
             domainData.id,
             path(['ipv4'], selectedDefaultNodeBalancer),
-            path(['ipv6'], selectedDefaultLinode)
+            path(['ipv6'], selectedDefaultNodeBalancer)
           )
             .then(() => {
               return this.redirectToLandingOrDetail(type, domainData.id);
