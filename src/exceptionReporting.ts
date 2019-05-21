@@ -88,6 +88,11 @@ export const reportException = (
       ['__resources', 'profile', 'data', 'uid'],
       store.getState()
     );
+    const username = pathOr(
+      'Could not get username',
+      ['__resources', 'profile', 'data', 'username'],
+      store.getState()
+    );
 
     configureScope(scopes => {
       if (extra) {
@@ -103,8 +108,9 @@ export const reportException = (
       }
 
       scopes.setUser({
-        id: userID,
-        email: userEmail
+        user_id: userID,
+        email: userEmail,
+        username
       });
     });
 
