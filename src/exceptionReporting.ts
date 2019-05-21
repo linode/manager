@@ -57,7 +57,7 @@ if (SENTRY_URL) {
 }
 
 window.addEventListener('unhandledrejection', (err: PromiseRejectionEvent) => {
-  captureException(err.reason);
+  reportException(err.reason);
 });
 
 export const reportException = (
