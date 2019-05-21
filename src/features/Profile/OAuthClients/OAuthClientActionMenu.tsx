@@ -148,11 +148,13 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
   };
 
   render() {
+    const { editPayload } = this.props;
+
     return (
       <React.Fragment>
         <ActionMenu createActions={this.createLinodeActions()} />
         <ConfirmationDialog
-          title="Confirm Delete"
+          title={`Delete ${editPayload.label}?`}
           open={this.state.confirmDeleteOpen}
           actions={this.deleteDialogActions}
           onClose={this.closeConfirmDelete}
@@ -162,7 +164,7 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
           </Typography>
         </ConfirmationDialog>
         <ConfirmationDialog
-          title="Confirm Reset"
+          title={`Reset secret for ${editPayload.label}?`}
           open={this.state.confirmResetOpen}
           actions={this.resetDialogActions}
           onClose={this.closeConfirmReset}
