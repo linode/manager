@@ -1,5 +1,7 @@
 import * as React from 'react';
 import { compose } from 'recompose';
+import Chip from 'src/components/core/Chip';
+import Divider from 'src/components/core/Divider';
 import {
   StyleRulesCallback,
   withStyles,
@@ -17,7 +19,11 @@ type CSSClasses =
   | 'author'
   | 'description'
   | 'scriptHeading'
-  | 'descriptionText';
+  | 'descriptionText'
+  | 'deploymentSection'
+  | 'dateTimeDisplay'
+  | 'compatibleImages'
+  | 'divider';
 
 const styles: StyleRulesCallback<CSSClasses> = theme => {
   return {
@@ -27,24 +33,37 @@ const styles: StyleRulesCallback<CSSClasses> = theme => {
         padding: theme.spacing.unit * 4
       }
     },
-    deployments: {},
+    deployments: {
+      marginTop: theme.spacing.unit
+    },
     author: {
       marginTop: theme.spacing.unit * 2,
       marginBottom: theme.spacing.unit * 2
     },
     description: {
-      marginTop: theme.spacing.unit * 4,
-      marginBottom: theme.spacing.unit * 4,
-      paddingTop: theme.spacing.unit * 4,
-      paddingBottom: theme.spacing.unit * 4,
-      whiteSpace: 'pre-wrap',
-      borderTop: `1px solid ${theme.color.grey2}`,
-      borderBottom: `1px solid ${theme.color.grey2}`
+      whiteSpace: 'pre-wrap'
     },
     scriptHeading: {
-      marginBottom: theme.spacing.unit
+      marginBottom: theme.spacing.unit,
+      fontSize: '1rem'
     },
     descriptionText: {
+      marginBottom: theme.spacing.unit * 2
+    },
+    deploymentSection: {
+      marginTop: theme.spacing.unit,
+      fontSize: '1rem'
+    },
+    dateTimeDisplay: {
+      display: 'inline-block',
+      fontSize: '1rem'
+    },
+    compatibleImages: {
+      display: 'block',
+      marginTop: theme.spacing.unit
+    },
+    divider: {
+      marginTop: theme.spacing.unit * 2,
       marginBottom: theme.spacing.unit * 2
     }
   };
@@ -78,17 +97,22 @@ export class StackScript extends React.Component<CombinedProps> {
     } = this.props;
 
     const compatibleImages =
-      images
-        .reduce((acc: string[], image: string) => {
-          const imageObj = imagesData.find(i => i.id === image);
+      images.reduce((acc: any[], image: string) => {
+        const imageObj = imagesData.find(i => i.id === image);
 
-          if (imageObj) {
-            acc.push(imageObj.label);
-          }
+        if (imageObj) {
+          acc.push(
+            <Chip
+              key={imageObj.id}
+              label={imageObj.label}
+              component="span"
+              clickable={false}
+            />
+          );
+        }
 
-          return acc;
-        }, [])
-        .join(', ') || 'No compatible images found';
+        return acc;
+      }, []) || 'No compatible images found';
 
     return (
       <div className={classes.root}>
@@ -107,32 +131,47 @@ export class StackScript extends React.Component<CombinedProps> {
             data-qa-community-stack-link
           />
         </Typography>
-        <Typography
-          variant="body2"
-          className={classes.deployments}
-          data-qa-stack-deployments
-        >
-          {deployments_total} deployments &bull; {deployments_active} still
-          active &bull; last rev.{' '}
-          <DateTimeDisplay value={updated} humanizeCutoff={'never'} />
-        </Typography>
-        <div className={classes.description}>
-          {description && (
+        <div data-qa-stack-deployments className={classes.deployments}>
+          <Typography className={classes.deploymentSection}>
+            <strong>{deployments_total}</strong> deployments
+          </Typography>
+          <Typography className={classes.deploymentSection}>
+            <strong>{deployments_active}</strong> still active
+          </Typography>
+          <Typography className={classes.deploymentSection}>
+            <strong>Last revision: </strong>
+            <DateTimeDisplay
+              value={updated}
+              humanizeCutoff={'never'}
+              className={classes.dateTimeDisplay}
+            />
+          </Typography>
+          <Divider className={classes.divider} />
+        </div>
+        {description && (
+          <div className={classes.description}>
             <Typography
-              variant="body2"
               className={classes.descriptionText}
               data-qa-stack-description
             >
               {description}
             </Typography>
-          )}
-          <Typography variant="body2" data-qa-compatible-distro>
-            <strong>Compatible with: </strong>
-            {compatibleImages}
+            <Divider className={classes.divider} />
+          </div>
+        )}
+        <div>
+          <Typography
+            data-qa-compatible-distro
+            className={classes.deploymentSection}
+            style={{ marginTop: 0 }}
+          >
+            <strong>Compatible with:</strong>
+            <span className={classes.compatibleImages}>{compatibleImages}</span>
           </Typography>
+          <Divider className={classes.divider} />
         </div>
-        <Typography variant="h3" className={classes.scriptHeading}>
-          Script:
+        <Typography className={classes.scriptHeading}>
+          <strong>Script:s</strong>
         </Typography>
         <ScriptCode script={script} />
       </div>

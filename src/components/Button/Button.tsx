@@ -17,7 +17,6 @@ type ClassNames =
   | 'cancel'
   | 'remove'
   | 'compact'
-  | 'noBold'
   | 'hidden'
   | 'reg';
 
@@ -28,7 +27,6 @@ export interface Props extends ButtonProps {
   className?: string;
   tooltipText?: string;
   compact?: boolean;
-  noBold?: boolean;
 }
 
 const styles: StyleRulesCallback = theme => ({
@@ -112,10 +110,6 @@ const styles: StyleRulesCallback = theme => ({
   reg: {
     display: 'flex',
     alignItems: 'center'
-  },
-  noBold: {
-    fontSize: '0.875rem',
-    fontFamily: theme.font.normal
   }
 });
 
@@ -148,7 +142,6 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = props => {
     tooltipText,
     type,
     compact,
-    noBold,
     className,
     ...rest
   } = props;
@@ -177,8 +170,7 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = props => {
         <span
           className={classNames({
             [classes.hidden]: loading,
-            [classes.reg]: !loading,
-            [classes.noBold]: noBold
+            [classes.reg]: !loading
           })}
         >
           {props.children}

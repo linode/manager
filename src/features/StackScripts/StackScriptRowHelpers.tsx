@@ -96,12 +96,16 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
     border: 0
   },
   detailsButton: {
-    textAlign: 'left',
     padding: 0,
+    fontSize: '0.875rem',
     marginTop: -theme.spacing.unit,
     [theme.breakpoints.up('sm')]: {
+      padding: theme.spacing.unit,
       marginTop: 0,
       width: 100
+    },
+    '&:hover, &:focus': {
+      backgroundColor: 'transparent'
     }
   }
 });
