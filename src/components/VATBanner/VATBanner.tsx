@@ -152,12 +152,12 @@ const withLocalStorage = localStorageContainer<
 >(
   storage => {
     return {
-      showVATBanner: storage.notifications.VAT.get() === 'show'
+      showVATBanner: storage.notifications.get('VAT', true) || true
     };
   },
   storage => ({
     hideVATBanner: state => () => {
-      storage.notifications.VAT.set('hide');
+      storage.notifications.set('VAT', false);
 
       return {
         ...state,

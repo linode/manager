@@ -109,7 +109,7 @@ class WelcomeBanner extends React.Component<CombinedProps, {}> {
       storage.loginCloudManager.set('-1');
     }
 
-    storage.notifications.welcome.set('closed');
+    storage.notifications.set('welcome', false);
   };
 
   render() {

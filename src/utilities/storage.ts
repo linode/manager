@@ -1,4 +1,5 @@
 import * as Cookies from 'js-cookie';
+import { pathOr } from 'ramda';
 
 const localStorageCache = {};
 
@@ -30,11 +31,24 @@ export const setStorage = (key: string, value: string) => {
   return window.localStorage.setItem(key, value);
 };
 
+export const setNotificationField = (key: string, value: boolean) => {
+  const _notifications = JSON.parse(getStorage(NOTIFICATIONS));
+  const updatedNotifications = {
+    ..._notifications,
+    [key]: value
+  };
+  setStorage(NOTIFICATIONS, JSON.stringify(updatedNotifications));
+};
+
+export const getNotificationField = (key: string, fallback?: boolean) => {
+  const _notifications = JSON.parse(getStorage(NOTIFICATIONS));
+  return pathOr(fallback, [key], _notifications);
+};
+
+const NOTIFICATIONS = 'notifications';
 const THEME = 'themeChoice';
 const SPACING = 'spacingChoice';
 const PAGE_SIZE = 'PAGE_SIZE';
-const BETA_NOTIFICATION = 'BetaNotification';
-const VAT_NOTIFICATION = 'vatNotification';
 const LINODE_VIEW = 'linodesViewStyle';
 const GROUP_LINODES = 'GROUP_LINODES';
 const HIDE_DISPLAY_GROUPS_CTA = 'importDisplayGroupsCTA';
@@ -51,8 +65,6 @@ const EXPIRE = 'authentication/expire';
 type Theme = 'dark' | 'light';
 export type Spacing = 'compact' | 'normal';
 export type PageSize = number;
-type Beta = 'open' | 'closed';
-type Notification = 'show' | 'hide';
 type LinodeView = 'grid' | 'list';
 
 interface AuthGetAndSet {
@@ -85,14 +97,8 @@ export interface Storage {
     set: (perPage: PageSize) => void;
   };
   notifications: {
-    welcome: {
-      get: () => Beta;
-      set: (open: Beta) => void;
-    };
-    VAT: {
-      get: () => Notification;
-      set: (show: Notification) => void;
-    };
+    get: (field: string, fallback: boolean) => boolean | undefined;
+    set: (field: string, value: boolean) => void;
   };
   views: {
     linode: {
@@ -165,15 +171,9 @@ export const storage: Storage = {
     set: v => setStorage(PAGE_SIZE, `${v}`)
   },
   notifications: {
-    welcome: {
-      /** Leaving the LS key alone so it's not popping for those who've dismissed it. */
-      get: () => getStorage(BETA_NOTIFICATION, 'open'),
-      set: open => setStorage(BETA_NOTIFICATION, open)
-    },
-    VAT: {
-      get: () => getStorage(VAT_NOTIFICATION, 'show'),
-      set: show => setStorage(VAT_NOTIFICATION, show)
-    }
+    get: (field: string, fallback: boolean) =>
+      getNotificationField(field, fallback),
+    set: (field: string, value: boolean) => setNotificationField(field, value)
   },
   views: {
     linode: {

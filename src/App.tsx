@@ -271,7 +271,7 @@ export class App extends React.Component<CombinedProps, State> {
         }
       });
 
-    if (notifications.welcome.get() === 'open') {
+    if (notifications.get('welcome', true)) {
       this.setState({ welcomeBanner: true });
     }
   }
@@ -291,7 +291,7 @@ export class App extends React.Component<CombinedProps, State> {
 
   closeWelcomeBanner = () => {
     this.setState({ welcomeBanner: false });
-    notifications.welcome.set('closed');
+    notifications.set('welcome', false);
   };
 
   render() {
