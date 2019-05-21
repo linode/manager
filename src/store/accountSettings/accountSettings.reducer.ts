@@ -9,7 +9,7 @@ import {
 } from './accountSettings.actions';
 
 export type State = RequestableData<Linode.AccountSettings> & {
-  updateError?: Error;
+  updateError?: Linode.ApiFieldError[];
 };
 
 // DEFAULT STATE

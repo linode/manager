@@ -1,9 +1,11 @@
-import { getAccountInfo } from 'src/services/account';
+import { getAccountInfo, updateAccountInfo } from 'src/services/account';
 import { ThunkActionCreator } from 'src/store/types';
+import { createRequestThunk } from '../store.helpers';
 import {
   profileRequest,
   profileRequestFail,
-  profileRequestSuccess
+  profileRequestSuccess,
+  updateAccountActions
 } from './account.actions';
 
 /**
@@ -23,3 +25,8 @@ export const requestAccount: ThunkActionCreator<
       return err;
     });
 };
+
+export const updateAccount = createRequestThunk(
+  updateAccountActions,
+  ({ ...data }) => updateAccountInfo(data)
+);

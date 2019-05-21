@@ -47,7 +47,7 @@ import events, {
 } from 'src/store/events/event.reducer';
 import images, {
   defaultState as defaultImagesState,
-  State as ImagesStata
+  State as ImagesState
 } from 'src/store/image/image.reducer';
 import linodeCreateReducer, {
   defaultState as linodeCreateDefaultState,
@@ -143,7 +143,7 @@ export interface ResourcesState {
   account: AccountState;
   accountSettings: AccountSettingsState;
   domains: DomainsState;
-  images: ImagesStata;
+  images: ImagesState;
   linodes: LinodesState;
   linodeConfigs: LinodeConfigsState;
   linodeDisks: LinodeDisksState;

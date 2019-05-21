@@ -1,20 +1,21 @@
 import { Reducer } from 'redux';
-import { RequestableData } from 'src/store/types';
+import { RequestableDataWithEntityError } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import {
   profileRequest,
   profileRequestFail,
-  profileRequestSuccess
+  profileRequestSuccess,
+  updateAccountActions
 } from './account.actions';
 
 /**
  * State
  */
-export type State = RequestableData<Linode.Account>;
+export type State = RequestableDataWithEntityError<Linode.Account>;
 
 export const defaultState: State = {
   loading: false,
-  error: undefined,
+  error: {},
   lastUpdated: 0,
   data: undefined
 };
@@ -36,7 +37,42 @@ const reducer: Reducer<State> = (state: State = defaultState, action) => {
   if (isType(action, profileRequestFail)) {
     const { payload } = action;
 
-    return { ...state, loading: false, error: payload };
+    return {
+      ...state,
+      loading: false,
+      error: { ...state.error, read: payload }
+    };
+  }
+
+  if (isType(action, updateAccountActions.started)) {
+    return {
+      ...state,
+      loading: true
+    };
+  }
+
+  if (isType(action, updateAccountActions.done)) {
+    const { result } = action.payload;
+
+    return {
+      ...state,
+      loading: false,
+      data: result,
+      lastUpdated: Date.now()
+    };
+  }
+
+  if (isType(action, updateAccountActions.failed)) {
+    const { error } = action.payload;
+
+    return {
+      ...state,
+      loading: false,
+      error: {
+        ...state.error,
+        update: error
+      }
+    };
   }
 
   return state;

@@ -1,5 +1,6 @@
-import { compose, defaultTo, lensPath, pathOr, set } from 'ramda';
+import { defaultTo, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import {
@@ -12,11 +13,12 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { withAccount } from 'src/features/Billing/context';
-import { Requestable } from 'src/requestableContext';
-import { updateAccountInfo } from 'src/services/account';
+import AccountContainer, {
+  AccountProps,
+  DispatchProps
+} from 'src/containers/account.container';
 import composeState from 'src/utilities/composeState';
-import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import { getErrorMap } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 import CountryData, { Region } from './countryRegionData';
@@ -37,7 +39,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 interface State {
   submitting: boolean;
-  submissionErrors?: Linode.ApiFieldError[];
   success?: string;
   fields: {
     address_1?: string;
@@ -55,7 +56,7 @@ interface State {
   };
 }
 
-type CombinedProps = Requestable<Linode.Account> & WithStyles<ClassNames>;
+type CombinedProps = AccountProps & DispatchProps & WithStyles<ClassNames>;
 
 const field = (path: string[]) => lensPath(['fields', ...path]);
 
@@ -99,17 +100,17 @@ class UpdateContactInformationPanel extends React.Component<
   }
 
   renderContent = () => {
-    const { loading, errors, data, lastUpdated } = this.props;
+    const { account, accountLoading, accountError, lastUpdated } = this.props;
 
-    if (loading && lastUpdated === 0) {
+    if (accountLoading && lastUpdated === 0) {
       return this.renderLoading();
     }
 
-    if (errors) {
-      return this.renderErrors(errors);
+    if (accountError.read) {
+      return this.renderErrors(accountError.read || []);
     }
 
-    return data ? this.renderForm(data) : this.renderEmpty();
+    return account ? this.renderForm(account) : this.renderEmpty();
   };
 
   renderLoading = () => null;
@@ -117,8 +118,8 @@ class UpdateContactInformationPanel extends React.Component<
   renderErrors = (e: Linode.ApiFieldError[]) => null;
 
   renderForm = (account: Linode.Account) => {
-    const { classes } = this.props;
-    const { fields, submissionErrors, success } = this.state;
+    const { classes, accountError } = this.props;
+    const { fields, success } = this.state;
 
     const errorMap = getErrorMap(
       [
@@ -135,7 +136,7 @@ class UpdateContactInformationPanel extends React.Component<
         'tax_id',
         'zip'
       ],
-      submissionErrors
+      accountError.update
     );
 
     const generalError = errorMap.none;
@@ -403,9 +404,9 @@ class UpdateContactInformationPanel extends React.Component<
   };
 
   renderFormActions = () => {
-    const { loading, lastUpdated, errors } = this.props;
+    const { accountLoading, lastUpdated, accountError } = this.props;
 
-    if ((loading && lastUpdated === 0) || errors) {
+    if ((accountLoading && lastUpdated === 0) || accountError.read) {
       return null;
     }
 
@@ -482,52 +483,30 @@ class UpdateContactInformationPanel extends React.Component<
 
   submitForm = () => {
     this.setState({
-      submissionErrors: undefined,
       success: undefined,
       submitting: true
     });
 
-    updateAccountInfo(this.state.fields)
-      .then(updatedAccount => {
-        this.props.update(existingAccount => {
-          /* API returns:
-           * credit_card: {"expiry": null, "last_four": null}
-           * rather than credit_card = null. The merge will therefore
-           * overwrite the previous values for expiration/last 4 digits
-           * with null, so we need to manually set them here.
-           */
-          return {
-            ...existingAccount,
-            ...updatedAccount,
-            credit_card: existingAccount.credit_card
-          };
-        });
-
+    this.props
+      .updateAccount(this.state.fields)
+      .then(_ => {
         this.setState({
-          success: 'Contact information successfully updated.',
+          success: 'Account information updated.',
           submitting: false
         });
       })
-      .catch(response => {
-        this.setState(
-          {
-            submitting: false,
-            submissionErrors: getAPIErrorOrDefault(
-              response,
-              'Unable to save your contact information. Please try again.'
-            )
-          },
-          () => {
-            scrollErrorIntoView();
-          }
-        );
+      .catch(_ => {
+        this.setState({
+          submitting: false,
+          success: undefined
+        });
+        scrollErrorIntoView();
       });
   };
 
   resetForm = () =>
     this.setState({
       fields: {},
-      submissionErrors: undefined,
       submitting: false,
       success: undefined
     });
@@ -535,11 +514,19 @@ class UpdateContactInformationPanel extends React.Component<
 
 const styled = withStyles(styles);
 
-const accountContext = withAccount();
+const withAccount = AccountContainer(
+  (ownProps, accountLoading, accountError, accountData, lastUpdated) => ({
+    ...ownProps,
+    accountLoading,
+    accountError,
+    account: accountData,
+    lastUpdated
+  })
+);
 
 const enhanced = compose(
   styled,
-  accountContext
+  withAccount
 );
 
 export default enhanced(

@@ -66,7 +66,15 @@ export interface RequestableData<D> {
   lastUpdated: number;
   loading: boolean;
   data?: D;
-  error?: Error | Linode.ApiFieldError[];
+  error?: Linode.ApiFieldError[];
+}
+
+// Rename to RequestableData and delete above when all components are using this pattern
+export interface RequestableDataWithEntityError<D> {
+  lastUpdated: number;
+  loading: boolean;
+  data?: D;
+  error: EntityError;
 }
 
 export interface RequestableRequiredData<D> extends RequestableData<D> {
