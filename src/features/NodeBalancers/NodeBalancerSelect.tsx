@@ -76,6 +76,11 @@ const NodeBalancerSelect: React.StatelessComponent<CombinedProps> = props => {
     : nodeBalancersData;
   const options = nodeBalancersToItems(nodeBalancer);
 
+  const noOptionsMessage =
+    !nodeBalancerError && !nodeBalancersLoading && options.length === 0
+      ? 'You have no NodeBalancers to choose from'
+      : 'No Options';
+
   return (
     <EnhancedSelect
       label="NodeBalancer"
@@ -92,6 +97,7 @@ const NodeBalancerSelect: React.StatelessComponent<CombinedProps> = props => {
       )}
       isClearable={false}
       textFieldProps={props.textFieldProps}
+      noOptionsMessage={() => noOptionsMessage}
     />
   );
 };

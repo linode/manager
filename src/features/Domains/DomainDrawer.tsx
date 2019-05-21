@@ -353,9 +353,8 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               label: 'Do not insert default records for me.'
             }}
             textFieldProps={{
-              helperText: `Once this domain is created, we\'ll go ahead and automatically
-                create some domain records (A/AAAA and MX) to get you started, based on a Linode
-                or NodeBalancer that you specify.`
+              helperText: `If specified, we can automatically create some domain records 
+              (A/AAAA and MX) to get you started, based on a Linode or NodeBalancer that you specify.`
             }}
             label="Insert Default Records"
             options={[
@@ -365,11 +364,11 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               },
               {
                 value: 'linode',
-                label: 'Insert default decords from one of my Linodes.'
+                label: 'Insert default records from one of my Linodes.'
               },
               {
                 value: 'nodebalancer',
-                label: 'Insert default decords from one of my NodeBalancers.'
+                label: 'Insert default records from one of my NodeBalancers.'
               }
             ]}
           />

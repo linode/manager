@@ -67,6 +67,11 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
     : linodesData;
   const options = linodesToItems(linodes);
 
+  const noOptionsMessage =
+    !linodeError && !linodesLoading && options.length === 0
+      ? 'You have no Linodes to choose from'
+      : 'No Options';
+
   return (
     <EnhancedSelect
       label="Linode"
@@ -83,6 +88,7 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
       )}
       isClearable={false}
       textFieldProps={props.textFieldProps}
+      noOptionsMessage={() => noOptionsMessage}
     />
   );
 };
