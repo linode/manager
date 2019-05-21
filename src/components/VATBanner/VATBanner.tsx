@@ -159,6 +159,14 @@ const withLocalStorage = localStorageContainer<
   })
 );
 
+interface LocalStorageState {
+  showVATBanner: boolean;
+}
+
+interface LocalStorageUpdater {
+  hideVATBanner: () => Partial<LocalStorageState>;
+}
+
 const enhanced = compose<CombinedProps, {}>(
   React.memo,
   styled,
