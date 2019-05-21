@@ -155,7 +155,9 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     errors: [],
     master_ips: [],
     masterIPsCount: 1,
-    defaultRecordsSetting: 'none'
+    defaultRecordsSetting: 'none',
+    selectedDefaultLinode: undefined,
+    selectedDefaultNodeBalancer: undefined
   };
 
   state: State = {
