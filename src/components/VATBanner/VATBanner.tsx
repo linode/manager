@@ -12,7 +12,7 @@ import { EU_COUNTRIES } from 'src/constants';
 import AccountContainer, {
   DispatchProps
 } from 'src/containers/account.container';
-import { notifications } from 'src/utilities/storage';
+import localStorageContainer from 'src/containers/localStorage.container';
 
 type ClassNames = 'root';
 
@@ -29,7 +29,11 @@ interface AccountProps {
   taxId?: string;
 }
 
-type CombinedProps = AccountProps & DispatchProps & WithStyles<ClassNames>;
+type CombinedProps = AccountProps &
+  DispatchProps &
+  LocalStorageState &
+  LocalStorageUpdater &
+  WithStyles<ClassNames>;
 
 const message = (
   <div>
@@ -48,8 +52,7 @@ const message = (
 );
 
 export const shouldShowVatBanner = (
-  showLocal: boolean,
-  showLocalStorage: 'hide' | 'show',
+  showBanner: boolean,
   country?: string,
   taxId?: string
 ) => {
@@ -60,7 +63,7 @@ export const shouldShowVatBanner = (
   /**
    * If the user has previously dismissed the banner, don't show it
    */
-  if (!showLocal || showLocalStorage === 'hide') {
+  if (!showBanner) {
     return false;
   }
 
@@ -76,20 +79,11 @@ export const VATBanner: React.FunctionComponent<CombinedProps> = props => {
     props.requestAccount();
   }, []);
 
-  const [showBanner, setBanner] = React.useState<boolean>(true);
-
-  const hideBanner = () => {
-    notifications.VAT.set('hide');
-    setBanner(false);
-  };
+  const { showVATBanner, hideVATBanner } = props;
 
   const { classes, country, taxId } = props;
 
-  const previouslyDismissedBanner = notifications.VAT.get();
-
-  if (
-    !shouldShowVatBanner(showBanner, previouslyDismissedBanner, country, taxId)
-  ) {
+  if (!shouldShowVatBanner(showVATBanner, country, taxId)) {
     return null;
   }
 
@@ -99,7 +93,7 @@ export const VATBanner: React.FunctionComponent<CombinedProps> = props => {
         important
         warning
         dismissible
-        onClose={hideBanner}
+        onClose={hideVATBanner}
         text={message}
         spacingBottom={0}
       />
@@ -117,9 +111,40 @@ const withAccount = AccountContainer(
   })
 );
 
+interface LocalStorageState {
+  showVATBanner: boolean;
+}
+
+interface LocalStorageUpdater {
+  hideVATBanner: () => Partial<LocalStorageState>;
+}
+
+const withLocalStorage = localStorageContainer<
+  LocalStorageState,
+  LocalStorageUpdater,
+  {}
+>(
+  storage => {
+    return {
+      showVATBanner: storage.notifications.VAT.get() === 'show'
+    };
+  },
+  storage => ({
+    hideVATBanner: state => () => {
+      storage.notifications.VAT.set('hide');
+
+      return {
+        ...state,
+        showVATBanner: false
+      };
+    }
+  })
+);
+
 const enhanced = compose<CombinedProps, {}>(
   styled,
-  withAccount
+  withAccount,
+  withLocalStorage
 );
 
 export default enhanced(VATBanner);
