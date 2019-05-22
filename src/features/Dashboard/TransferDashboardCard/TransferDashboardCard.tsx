@@ -142,15 +142,10 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
                 max={100}
                 value={Math.ceil(poolUsagePct)}
                 className={classes.poolUsageProgress}
-              >
-                <span className={classes.circleChildren}>
-                  <Typography className={classes.used} data-qa-transfer-used>
-                    {renderPercentageString(poolUsagePct)}
-                  </Typography>
-                </span>
-              </BarPercent>
+              />
               <Typography>
-                You have used {renderPercentageString(poolUsagePct)} of your
+                You have used{' '}
+                <strong>{renderPercentageString(poolUsagePct)}</strong> of your
                 available network transfer during the current billing cycle.
               </Typography>
               <Divider className={classes.divider} />
