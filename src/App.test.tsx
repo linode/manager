@@ -36,6 +36,7 @@ it('renders without crashing', () => {
             userId={123456}
             profileLoading={false}
             actions={{
+              requestAccount: jest.fn(),
               requestDomains: jest.fn(),
               requestImages: jest.fn(),
               requestLinodes: jest.fn(),
@@ -51,6 +52,8 @@ it('renders without crashing', () => {
             documentation={[]}
             toggleTheme={jest.fn()}
             toggleSpacing={jest.fn()}
+            accountCapabilities={[]}
+            accountLoading={false}
           />
         </StaticRouter>
       </Provider>

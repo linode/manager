@@ -1,5 +1,6 @@
 import Settings from '@material-ui/icons/Settings';
 import * as classNames from 'classnames';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
@@ -16,13 +17,12 @@ import {
   WithTheme
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-import { isObjectStorageEnabled } from 'src/constants';
 import { MapState } from 'src/store/types';
+import { isObjectStorageEnabled } from 'src/utilities/accountCapabilities';
 import { sendSpacingToggleEvent, sendThemeToggleEvent } from 'src/utilities/ga';
 import AdditionalMenuItems from './AdditionalMenuItems';
 import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
-
 import { linkIsActive } from './utils';
 
 interface PrimaryLink {
@@ -217,7 +217,7 @@ interface State {
   anchorEl?: HTMLElement;
 }
 
-type CombinedProps = Props & StateProps & WithTheme;
+export type CombinedProps = Props & StateProps & WithTheme;
 
 export class PrimaryNav extends React.Component<CombinedProps, State> {
   state: State = {
@@ -242,7 +242,15 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
   }
 
   componentDidUpdate(prevProps: CombinedProps) {
-    if (prevProps.hasAccountAccess !== this.props.hasAccountAccess) {
+    // Re-create menu items if account access has changed (via profile), or if account
+    // has been updated. If account has been updated (i.e. when it actually loads)
+    // there maybe be additional menu items we want to display, depending on
+    // `account.capabilities`.
+    if (
+      prevProps.hasAccountAccess !== this.props.hasAccountAccess ||
+      prevProps.isManagedAccount !== this.props.isManagedAccount ||
+      prevProps.accountLastUpdated !== this.props.accountLastUpdated
+    ) {
       this.createMenuItems();
     }
   }
@@ -251,7 +259,8 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     const {
       hasAccountAccess,
       // isLongviewEnabled,
-      isManagedAccount
+      isManagedAccount,
+      accountCapabilities
     } = this.props;
 
     const primaryLinks: PrimaryLink[] = [
@@ -266,11 +275,11 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     primaryLinks.push({ display: 'Volumes', href: '/volumes', key: 'volumes' });
     // }
 
-    if (isObjectStorageEnabled) {
+    if (isObjectStorageEnabled(accountCapabilities)) {
       primaryLinks.push({
         display: 'Object Storage',
         href: '/object-storage/buckets',
-        key: 'objectStorage'
+        key: 'object-storage'
       });
     }
 
@@ -550,6 +559,8 @@ interface StateProps {
   hasAccountAccess: boolean;
   isManagedAccount: boolean;
   // isLongviewEnabled: boolean;
+  accountCapabilities: Linode.AccountCapability[];
+  accountLastUpdated: number;
 }
 
 const userHasAccountAccess = (profile: Linode.Profile) => {
@@ -572,19 +583,28 @@ const accountHasManaged = (account: Linode.AccountSettings) => account.managed;
 const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
   const account = state.__resources.accountSettings.data;
   const profile = state.__resources.profile.data;
+  const accountLastUpdated = state.__resources.account.lastUpdated;
 
   if (!account || !profile) {
     return {
       hasAccountAccess: false,
-      isManagedAccount: false
+      isManagedAccount: false,
       // isLongviewEnabled: false,
+      accountCapabilities: [],
+      accountLastUpdated
     };
   }
 
   return {
     hasAccountAccess: userHasAccountAccess(profile),
-    isManagedAccount: accountHasManaged(account)
+    isManagedAccount: accountHasManaged(account),
     // isLongviewEnabled: accountHasLongviewSubscription(account),
+    accountCapabilities: pathOr(
+      [],
+      ['__resources', 'account', 'data', 'capabilities'],
+      state
+    ),
+    accountLastUpdated
   };
 };
 

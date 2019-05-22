@@ -24,7 +24,17 @@ namespace Linode {
     city: string;
     phone: string;
     company: string;
+    // [BETA]
+    // @todo: Uncomment this when it becomes generally available
+    // capabilities: AccountCapability[];
   }
+
+  // [BETA]
+  export type AccountCapability =
+    | 'Linodes'
+    | 'NodeBalancers'
+    | 'Block Storage'
+    | 'Object Storage';
 
   export interface AccountSettings {
     managed: boolean;
