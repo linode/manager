@@ -1,4 +1,5 @@
 import * as React from 'react';
+import BarPercent from 'src/components/BarPercent';
 import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
@@ -38,33 +39,12 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   grid: {
-    flexWrap: 'wrap',
-    flexDirection: 'column',
-    textAlign: 'center',
-    alignItems: 'center',
-    [theme.breakpoints.up('sm')]: {
-      flexWrap: 'nowrap',
-      flexDirection: 'row',
-      textAlign: 'left'
-    },
-    [theme.breakpoints.up('md')]: {
-      flexWrap: 'wrap',
-      flexDirection: 'column',
-      textAlign: 'center'
-    },
-    [theme.breakpoints.up('lg')]: {
-      flexDirection: 'row',
-      flexWrap: 'nowrap',
-      textAlign: 'left'
-    }
+    paddingLeft: 8,
+    paddingRight: 8
   },
   poolUsageProgress: {
-    margin: 0,
-    height: 'auto',
-    [theme.breakpoints.up('lg')]: {
-      margin: '8px auto',
-      paddingRight: theme.spacing.unit * 2
-    }
+    marginBottom: theme.spacing.unit * 2,
+    [theme.breakpoints.up('lg')]: {}
   },
   circleChildren: {
     textAlign: 'center',
@@ -151,17 +131,15 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
         <Paper className={classes.root}>
           <Grid
             container
-            direction="column"
-            justify="center"
-            wrap="nowrap"
             className={classes.grid}
             data-qa-card="Monthly Transfer"
           >
-            <Grid item>
-              <CircleProgress
-                variant="static"
-                noTopMargin
-                green
+            <Grid item container direction="column">
+              <Typography variant="h2" className={classes.title}>
+                This Month's Network Transfer Pool
+              </Typography>
+              <BarPercent
+                max={100}
                 value={Math.ceil(poolUsagePct)}
                 className={classes.poolUsageProgress}
               >
@@ -170,12 +148,7 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
                     {renderPercentageString(poolUsagePct)}
                   </Typography>
                 </span>
-              </CircleProgress>
-            </Grid>
-            <Grid item container direction="column">
-              <Typography variant="h2" className={classes.title}>
-                This Month's Network Transfer Pool
-              </Typography>
+              </BarPercent>
               <Typography>
                 You have used {renderPercentageString(poolUsagePct)} of your
                 available network transfer during the current billing cycle.
