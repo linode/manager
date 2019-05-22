@@ -76,12 +76,7 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
         this.setState(
           compose(
             setSubmitting(false),
-            setErrors([
-              {
-                field: 'none',
-                reason: `Unable to ${value ? 'disable' : 'enable'} Watchdog.`
-              }
-            ])
+            setErrors(`Unable to ${value ? 'disable' : 'enable'} Watchdog.`)
           )
         );
       });
@@ -149,7 +144,7 @@ const L = {
 
 const setCurrentStatus = (v: boolean) => set(L.currentStatus, v);
 
-const setErrors = (v: Linode.ApiFieldError[]) => set(L.error, v);
+const setErrors = (v: string) => set(L.error, v);
 
 const setSubmitting = (v: boolean) => set(L.submitting, v);
 
