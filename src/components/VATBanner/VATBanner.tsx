@@ -27,6 +27,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface AccountProps {
   country?: string;
   taxId?: string;
+  lastUpdated: number;
 }
 
 type CombinedProps = AccountProps &
@@ -37,17 +38,16 @@ type CombinedProps = AccountProps &
 
 const message = (
   <div>
-    {`Starting 1 June 2019, VAT may be applied to your Linode services.
-    For more information please see `}
+    {`Starting 1 June 2019, `}
     <a
       href="https://www.linode.com/docs/platform/billing-and-support/tax-information/#value-added-tax-in-the-european-union"
       target="_blank"
     >
-      Value Added Tax in the European Union
+      value added tax
     </a>
-    {`. To ensure the correct VAT rate is applied, please verify that your `}
-    <Link to="/account/billing">contact information</Link>
-    {` is up to date.`}
+    {` may be applied to your Linode services. To ensure proper billing, please confirm the accuracy of your account information by `}
+    <Link to="/account/billing">clicking here</Link>
+    {`.`}
   </div>
 );
 
@@ -76,7 +76,10 @@ export const shouldShowVatBanner = (
 
 export const VATBanner: React.FunctionComponent<CombinedProps> = props => {
   React.useEffect(() => {
-    props.requestAccount();
+    if (props.lastUpdated === 0) {
+      // If we haven't already requested account data, do it here:
+      props.requestAccount();
+    }
   }, []);
 
   const { showVATBanner, hideVATBanner } = props;
@@ -104,10 +107,11 @@ export const VATBanner: React.FunctionComponent<CombinedProps> = props => {
 const styled = withStyles(styles);
 
 const withAccount = AccountContainer(
-  (ownProps, accountLoading, accountData) => ({
+  (ownProps, accountLoading, lastUpdated, accountData) => ({
     ...ownProps,
     country: path(['country'], accountData),
-    taxId: path(['tax_id'], accountData)
+    taxId: path(['tax_id'], accountData),
+    accountUpdated: lastUpdated
   })
 );
 
