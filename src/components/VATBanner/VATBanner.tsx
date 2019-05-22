@@ -1,6 +1,6 @@
 import { path } from 'ramda';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import {
   StyleRulesCallback,
@@ -34,28 +34,19 @@ type CombinedProps = AccountProps &
   DispatchProps &
   LocalStorageState &
   LocalStorageUpdater &
+  RouteComponentProps &
   WithStyles<ClassNames>;
-
-const message = (
-  <div>
-    {`Starting 1 June 2019, `}
-    <a
-      href="https://www.linode.com/docs/platform/billing-and-support/tax-information/#value-added-tax-in-the-european-union"
-      target="_blank"
-    >
-      value added tax
-    </a>
-    {` may be applied to your Linode services. To ensure proper billing, please confirm the accuracy of your account information by `}
-    <Link to="/account/billing">clicking here</Link>
-    {`.`}
-  </div>
-);
 
 export const shouldShowVatBanner = (
   showBanner: boolean,
   country?: string,
   taxId?: string
 ) => {
+  /**
+   * If there's no country data for this user,
+   * or the data hasn't loaded yet, we can't determine
+   * if the user is in the EU. Don't show the banner.
+   */
   if (!country) {
     return false;
   }
@@ -85,6 +76,26 @@ export const VATBanner: React.FunctionComponent<CombinedProps> = props => {
   const { showVATBanner, hideVATBanner } = props;
 
   const { classes, country, taxId } = props;
+
+  const message = (
+    <div>
+      {`Starting 1 June 2019, `}
+      <a
+        href="https://www.linode.com/docs/platform/billing-and-support/tax-information/#value-added-tax-in-the-european-union"
+        target="_blank"
+      >
+        value added tax
+      </a>
+      {` may be applied to your Linode services. To ensure proper billing, please confirm the accuracy of your account information by `}
+      {props.location.pathname.match('/account/billing') ? (
+        // Don't link to /account/billing if you're already on account/billing
+        `in Update Contact Information below`
+      ) : (
+        <Link to="/account/billing">clicking here</Link>
+      )}
+      {`.`}
+    </div>
+  );
 
   if (!shouldShowVatBanner(showVATBanner, country, taxId)) {
     return null;
@@ -146,9 +157,11 @@ const withLocalStorage = localStorageContainer<
 );
 
 const enhanced = compose<CombinedProps, {}>(
+  React.memo,
   styled,
   withAccount,
-  withLocalStorage
+  withLocalStorage,
+  withRouter
 );
 
 export default enhanced(VATBanner);
