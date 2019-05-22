@@ -111,7 +111,7 @@ describe('Profile - OAuth Clients Suite', () => {
             const actionMenuItems = $$('[data-qa-action-menu-item]')
                 .map(item => item.getAttribute('data-qa-action-menu-item'));
 
-            expect(actionMenuItems).toContain('Reset Secret');
+            expect(actionMenuItems).toMatch(/Reset/);
         });
 
         it('should display the reset dialog', () => {
@@ -123,8 +123,8 @@ describe('Profile - OAuth Clients Suite', () => {
 
             const title = $(dialogTitle).getText();
             const msg = $(dialogContent).getText();
-            expect(title).toBe('Confirm Reset');
-            expect(msg).toBe('Are you sure you want to permanently reset the secret for this app?');
+            expect(title).toMatch(/reset/i);
+            expect(msg).toMatch(/reset/i);
         });
 
         it('should close on cancel', () => {
@@ -156,12 +156,11 @@ describe('Profile - OAuth Clients Suite', () => {
             profile.selectActionMenu(editedClient.label, "Delete");
             browser.waitForVisible(dialogTitle);
             
-            const deleteMsg = 'Are you sure you want to permanently delete this app?';
             const dialogMsg = $(dialogContent).getText();
             deleteButton = $(dialogConfirm);
             cancelButton = $(dialogCancel);
             
-            expect(dialogMsg).toContain(deleteMsg);
+            expect(dialogMsg).toMatch(/delete/i);
             expect(deleteButton.isVisible()).toBe(true);
             expect(cancelButton.isVisible()).toBe(true);
         });
