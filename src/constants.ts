@@ -36,7 +36,7 @@ export const GTM_ID = process.env.REACT_APP_GTM_ID;
 export const ACCESS_TOKEN = process.env.REACT_APP_ACCESS_TOKEN;
 
 // Features
-export const isObjectStorageEnabled =
+export const isObjectStorageEnabledForEnvironment =
   process.env.REACT_APP_IS_OBJECT_STORAGE_ENABLED === 'true';
 
 export const DISABLE_EVENT_THROTTLE =

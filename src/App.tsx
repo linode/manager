@@ -18,6 +18,7 @@ import {
   withDocumentTitleProvider
 } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import LandingLoading from 'src/components/LandingLoading';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
 import { events$ } from 'src/events';
@@ -29,6 +30,7 @@ import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import { ApplicationState } from 'src/store';
+import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestDomains } from 'src/store/domains/domains.actions';
@@ -42,7 +44,6 @@ import { getAllVolumes } from 'src/store/volume/volume.requests';
 import composeState from 'src/utilities/composeState';
 import { notifications } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
-import { isObjectStorageEnabled } from './constants';
 import BucketDrawer from './features/ObjectStorage/Buckets/BucketDrawer';
 import { requestClusters } from './store/clusters/clusters.actions';
 import {
@@ -50,6 +51,9 @@ import {
   WithNodeBalancerActions
 } from './store/nodeBalancer/nodeBalancer.containers';
 import { MapState } from './store/types';
+import { isObjectStorageEnabled } from './utilities/accountCapabilities';
+
+import ErrorState from 'src/components/ErrorState';
 
 shim(); // allows for .finally() usage
 
@@ -211,6 +215,7 @@ export class App extends React.Component<CombinedProps, State> {
     } = this.props;
 
     const dataFetchingPromises: Promise<any>[] = [
+      actions.requestAccount(),
       actions.requestProfile(),
       actions.requestDomains(),
       actions.requestImages(),
@@ -222,12 +227,6 @@ export class App extends React.Component<CombinedProps, State> {
       actions.requestVolumes(),
       getAllNodeBalancersWithConfigs()
     ];
-
-    // Make these requests only if the feature is enabled.
-    if (isObjectStorageEnabled) {
-      dataFetchingPromises.push(actions.requestBuckets());
-      dataFetchingPromises.push(actions.requestClusters());
-    }
 
     try {
       await Promise.all(dataFetchingPromises);
@@ -305,7 +304,10 @@ export class App extends React.Component<CombinedProps, State> {
       volumesError,
       settingsError,
       profileError,
-      bucketsError
+      bucketsError,
+      accountCapabilities,
+      accountLoading,
+      accountError
     } = this.props;
 
     if (hasError) {
@@ -375,11 +377,10 @@ export class App extends React.Component<CombinedProps, State> {
                             path="/stackscripts"
                             component={StackScripts}
                           />
-                          {isObjectStorageEnabled && (
-                            <Route
-                              path="/object-storage"
-                              component={ObjectStorage}
-                            />
+                          {getObjectStorageRoute(
+                            accountLoading,
+                            accountCapabilities,
+                            accountError
                           )}
                           <Route path="/account" component={Account} />
                           <Route
@@ -418,7 +419,9 @@ export class App extends React.Component<CombinedProps, State> {
                 <DomainDrawer />
                 <VolumeDrawer />
                 <BackupDrawer />
-                {isObjectStorageEnabled && <BucketDrawer />}
+                {isObjectStorageEnabled(accountCapabilities) && (
+                  <BucketDrawer />
+                )}
               </div>
             </>
           </React.Fragment>
@@ -428,8 +431,38 @@ export class App extends React.Component<CombinedProps, State> {
   }
 }
 
+// Render the correct <Route /> component for Object Storage,
+// depending on whether /account is loading or has errors, and
+// whether or not the feature is enabled for this account.
+const getObjectStorageRoute = (
+  accountLoading: boolean,
+  accountCapabilities: Linode.AccountCapability[],
+  accountError?: Error | Linode.ApiFieldError[]
+) => {
+  let component;
+
+  if (accountLoading) {
+    component = () => <LandingLoading delayInMS={1000} />;
+  } else if (accountError) {
+    component = () => (
+      <ErrorState errorText="An error has occurred. Please reload and try again." />
+    );
+  } else if (isObjectStorageEnabled(accountCapabilities)) {
+    component = ObjectStorage;
+  }
+
+  // If Object Storage is not enabled for this account, return `null`,
+  // which will appear as a 404
+  if (!component) {
+    return null;
+  }
+
+  return <Route path="/object-storage" component={component} />;
+};
+
 interface DispatchProps {
   actions: {
+    requestAccount: () => Promise<Linode.Account>;
     requestDomains: () => Promise<Linode.Domain[]>;
     requestImages: () => Promise<Linode.Image[]>;
     requestLinodes: () => Promise<Linode.Linode[]>;
@@ -449,6 +482,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
 ) => {
   return {
     actions: {
+      requestAccount: () => dispatch(requestAccount()),
       requestDomains: () => dispatch(requestDomains()),
       requestImages: () => dispatch(requestImages()),
       requestLinodes: () => dispatch(requestLinodes()),
@@ -481,6 +515,9 @@ interface StateProps {
   username: string;
   documentation: Linode.Doc[];
   isLoggedInAsCustomer: boolean;
+  accountCapabilities: Linode.AccountCapability[];
+  accountLoading: boolean;
+  accountError?: Error | Linode.ApiFieldError[];
 }
 
 const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
@@ -505,7 +542,14 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
     false,
     ['authentication', 'loggedInAsCustomer'],
     state
-  )
+  ),
+  accountCapabilities: pathOr(
+    [],
+    ['__resources', 'account', 'data', 'capabilities'],
+    state
+  ),
+  accountLoading: state.__resources.account.loading,
+  accountError: state.__resources.account.error
 });
 
 export const connected = connect(

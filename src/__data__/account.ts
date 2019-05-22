@@ -18,6 +18,9 @@ export const account: Linode.Account = {
   city: 'philadelphia',
   phone: '2151231234',
   company: 'mmckenna'
+  // [BETA]
+  // @todo: Uncomment this when it becomes generally available
+  // capabilities: ['Linodes', 'NodeBalancers', 'Block Storage']
 };
 
 export const accountSettings: Linode.AccountSettings = {
