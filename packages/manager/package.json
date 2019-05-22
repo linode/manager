@@ -188,7 +188,7 @@
     "autoprefixer": "^9.4.8",
     "axe-core": "^3.1.1",
     "babel-core": "^7.0.0-bridge.0",
-    "babel-jest": "^23.6.0",
+    "babel-jest": "^24.8.0",
     "babel-loader": "^8.0.5",
     "babel-preset-react-app": "^7.0.0",
     "case-sensitive-paths-webpack-plugin": "^2.2.0",
