@@ -7,6 +7,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Placeholder from 'src/components/Placeholder';
 
@@ -26,8 +27,8 @@ const NodeBalancerLandingEmptyState: React.StatelessComponent<
     <React.Fragment>
       <DocumentTitleSegment segment="NodeBalancers" />
       <Placeholder
-        title="Add a NodeBalancer"
-        copy="Adding a NodeBalancer is easy. Click below to add a NodeBalancer."
+        title="Add NodeBalancers!"
+        copy={<EmptyCopy />}
         icon={NodeBalancer}
         buttonProps={{
           onClick: () => history.push('/nodebalancers/create'),
@@ -37,6 +38,24 @@ const NodeBalancerLandingEmptyState: React.StatelessComponent<
     </React.Fragment>
   );
 };
+
+const EmptyCopy = () => (
+  <>
+    <Typography variant="subtitle1">
+      <a
+        href="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
+        target="_blank"
+        className="h-u"
+      >
+        Learn how to use NodeBalancers with your Linode
+      </a>
+      &nbsp;or&nbsp;
+      <a href="https://www.linode.com/docs/" target="_blank" className="h-u">
+        visit our guides and tutorials.
+      </a>
+    </Typography>
+  </>
+);
 
 const styled = withStyles(styles);
 
