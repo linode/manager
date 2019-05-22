@@ -269,6 +269,7 @@ const withStackScriptBase = (isSelecting: boolean) => (
 
       this.getDataAtPage(1, filterWithSearch, true);
       this.setState({
+        currentPage: 1,
         sortOrder: nextSortOrder,
         currentFilterType: filterInfo.currentFilter,
         currentFilter: {
@@ -453,9 +454,12 @@ const withStackScriptBase = (isSelecting: boolean) => (
                   onSearch={this.handleSearch}
                   className={classes.searchBar}
                   isSearching={isSearching}
-                  /** uncomment when we upgrade to MUI v3 */
-                  // toolTipText={`Hint: try searching for a specific item by prepending your
-                  // search term with "username:", "label:", or "description:"`}
+                  toolTipText={
+                    this.props.category === 'community'
+                      ? `Hint: try searching for a specific item by prepending your
+                  search term with "username:", "label:", or "description:"`
+                      : ''
+                  }
                 />
               </div>
               <Table
