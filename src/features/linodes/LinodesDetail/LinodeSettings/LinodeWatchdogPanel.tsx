@@ -58,7 +58,11 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
     const {
       linodeActions: { updateLinode }
     } = this.props;
-    this.setState(setSubmitting(true));
+    this.setState({
+      submitting: true,
+      errors: undefined,
+      success: undefined
+    });
 
     updateLinode({ linodeId: this.props.linodeId, watchdog_enabled: value })
       .then(response => {
@@ -76,7 +80,7 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
         this.setState(
           compose(
             setSubmitting(false),
-            setErrors(`Unable to ${value ? 'disable' : 'enable'} Watchdog.`)
+            setErrors(`Unable to ${!value ? 'disable' : 'enable'} Watchdog.`)
           )
         );
       });
