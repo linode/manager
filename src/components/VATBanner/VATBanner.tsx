@@ -86,7 +86,7 @@ export const VATBanner: React.FunctionComponent<CombinedProps> = props => {
       >
         value added tax
       </a>
-      {` may be applied to your Linode services. To ensure proper billing, please confirm the accuracy of your account information by `}
+      {` may be applied to your Linode services. To ensure proper billing, please confirm the accuracy of your account information `}
       {props.location.pathname.match('/account/billing') ? (
         // Don't link to /account/billing if you're already on account/billing
         `in Update Contact Information below`
