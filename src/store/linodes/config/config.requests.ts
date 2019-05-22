@@ -79,6 +79,6 @@ export const getAllLinodeConfigs: ThunkActionCreator<Promise<Entity[]>> = (
     return data;
   } catch (error) {
     dispatch(failed({ params, error }));
-    throw error;
+    return error;
   }
 };
