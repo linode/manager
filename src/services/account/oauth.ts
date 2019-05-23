@@ -89,7 +89,7 @@ export const resetOAuthClientSecret = (clientId: number | string) =>
  * @param clientId { number } the ID of the client to be updated
  */
 export const updateOAuthClient = (
-  clientId: number,
+  clientId: string,
   data: Partial<OAuthClientRequest>
 ) =>
   Request<OAuthClient>(

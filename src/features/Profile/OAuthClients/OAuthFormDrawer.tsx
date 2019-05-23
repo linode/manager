@@ -10,6 +10,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
+import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
@@ -21,10 +22,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 interface Props {
   open: boolean;
+  loading: boolean;
   label?: string;
   redirect_uri?: string;
   public: boolean;
-  errors?: { field: string; reason: string }[];
+  errors?: Linode.ApiFieldError[];
   edit?: boolean;
   onClose: () => void;
   onSubmit: () => void;
@@ -43,6 +45,7 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = props => {
     public: isPublic,
     edit,
     errors,
+    loading,
     onClose,
     onSubmit
   } = props;
@@ -60,6 +63,7 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = props => {
       open={open}
       onClose={onClose}
     >
+      {hasErrorFor('none') && <Notice text={hasErrorFor('none')} error />}
       <TextField
         value={label || ''}
         errorText={hasErrorFor('label')}
@@ -88,7 +92,12 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = props => {
         />
       </FormControl>
       <ActionsPanel>
-        <Button type="primary" onClick={onSubmit} data-qa-submit>
+        <Button
+          type="primary"
+          onClick={onSubmit}
+          loading={loading}
+          data-qa-submit
+        >
           Submit
         </Button>
         <Button
