@@ -1,5 +1,4 @@
 import Check from '@material-ui/icons/Check';
-import Info from '@material-ui/icons/Info';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import Fade from 'src/components/core/Fade';
@@ -13,6 +12,8 @@ import Tooltip from 'src/components/core/Tooltip';
 import Grid from 'src/components/Grid';
 
 import CardBase from './CardBase';
+
+import Info from 'src/assets/icons/info.svg';
 
 type CSSClasses =
   | 'root'

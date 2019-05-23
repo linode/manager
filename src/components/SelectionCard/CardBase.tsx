@@ -56,13 +56,14 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     color: theme.palette.text.primary
   },
   innerGrid: {
+    position: 'relative',
     width: '100%',
     height: '100%',
     minHeight: 70,
     backgroundColor: theme.bg.offWhiteDT,
     border: '1px solid ' + `${theme.bg.main}`,
     margin: 0,
-    padding: '0 !important',
+    padding: `0 ${theme.spacing.unit}px !important`,
     transition: `
       ${'background-color 225ms ease-in-out, '}
       ${'border-color 225ms ease-in-out'}
@@ -70,6 +71,17 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     '&:hover': {
       backgroundColor: theme.bg.main,
       borderColor: theme.color.border2
+    },
+    '&:before': {
+      content: '""',
+      display: 'block',
+      position: 'absolute',
+      top: 0,
+      left: 0,
+      width: 5,
+      height: '100%',
+      backgroundColor: 'transparent',
+      transition: theme.transitions.create('backgroundColor')
     }
   },
   flex: {
@@ -102,7 +114,7 @@ export const CardBase: React.FunctionComponent<CombinedProps> = props => {
       container
       alignItems="center"
       justify="space-between"
-      className={classes.innerGrid}
+      className={`${classes.innerGrid} innerGrid`}
     >
       {renderIcon && (
         <Grid item className={classes.icon}>
