@@ -11,8 +11,10 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import { getNumUnseenEvents } from 'src/store/events/event.helpers';
 import { markAllSeen } from 'src/store/events/event.request';
 import { MapState, ThunkDispatch } from 'src/store/types';
+import { removeBlacklistedEvents } from 'src/utilities/eventUtils';
 import UserEventsButton from './UserEventsButton';
 import UserEventsList from './UserEventsList';
 
@@ -76,9 +78,11 @@ export class UserEventsMenu extends React.Component<CombinedProps, State> {
     const {
       classes,
       events,
-      unseenCount,
       history: { push }
     } = this.props;
+
+    const filteredEvents = removeBlacklistedEvents(events);
+    const unseenCount = getNumUnseenEvents(filteredEvents);
 
     return (
       <React.Fragment>
@@ -106,7 +110,10 @@ export class UserEventsMenu extends React.Component<CombinedProps, State> {
                 }}
               >
                 <MenuList className={classes.dropDown}>
-                  <UserEventsList events={events} closeMenu={this.closeMenu} />
+                  <UserEventsList
+                    events={filteredEvents}
+                    closeMenu={this.closeMenu}
+                  />
                 </MenuList>
                 <Button
                   data-qa-view-all-events
@@ -155,12 +162,10 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 
 interface StateProps {
   events: Linode.Event[];
-  unseenCount: number;
 }
 const mapStateToProps: MapState<StateProps, {}> = state => {
   return {
-    events: state.events.events,
-    unseenCount: state.events.countUnseenEvents
+    events: state.events.events
   };
 };
 
