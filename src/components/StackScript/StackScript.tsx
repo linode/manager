@@ -142,7 +142,7 @@ export class StackScript extends React.Component<CombinedProps> {
             <strong>Last revision: </strong>
             <DateTimeDisplay
               value={updated}
-              humanizeCutoff={'never'}
+              humanizeCutoff={'month'}
               className={classes.dateTimeDisplay}
             />
           </Typography>
@@ -171,7 +171,7 @@ export class StackScript extends React.Component<CombinedProps> {
           <Divider className={classes.divider} />
         </div>
         <Typography className={classes.scriptHeading}>
-          <strong>Script:s</strong>
+          <strong>Script:</strong>
         </Typography>
         <ScriptCode script={script} />
       </div>
