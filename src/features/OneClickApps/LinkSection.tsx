@@ -7,6 +7,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import ExternalLink from 'src/components/ExternalLink';
 
 type ClassNames = 'root' | 'icon' | 'link' | 'title';
 
@@ -67,7 +68,7 @@ export const LinkSection: React.FunctionComponent<CombinedProps> = props => {
         {links.map((link, idx) => (
           <Grid item key={`${title}-link-item-${idx}`}>
             <Typography>
-              <a href={link.href}>{link.title}</a>
+              <ExternalLink link={link.href} text={link.title} />
             </Typography>
           </Grid>
         ))}
