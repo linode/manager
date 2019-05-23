@@ -52,7 +52,17 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     paddingTop: 0,
     paddingBottom: 0,
     height: 48,
-    zIndex: 5
+    zIndex: 5,
+    '&:first-child::before': {
+      content: '""',
+      backgroundColor: theme.bg.tableHeader,
+      position: 'absolute',
+      width: 5,
+      top: 0,
+      borderBottom: `2px solid ${theme.palette.divider}`,
+      height: 48,
+      left: -5
+    }
   }
 });
 
@@ -98,14 +108,12 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
           {!!isSelecting && (
             <TableCell
               className={classNames({
-                [classes.tableHead]: true,
                 [classes.stackscriptLabel]: true
               })}
             />
           )}
           <Cell
             className={classNames({
-              [classes.tableHead]: true,
               [classes.stackscriptTitles]: true
             })}
             data-qa-stackscript-table-header
@@ -116,7 +124,6 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
           {!isSelecting && (
             <Cell
               className={classNames({
-                [classes.tableHead]: true,
                 [classes.deploys]: true
               })}
               data-qa-stackscript-active-deploy-header
@@ -128,7 +135,6 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
           {!isSelecting && (
             <Cell
               className={classNames({
-                [classes.tableHead]: true,
                 [classes.revisions]: true
               })}
               data-qa-stackscript-revision-header
@@ -140,7 +146,6 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
           {!isSelecting && (
             <TableCell
               className={classNames({
-                [classes.tableHead]: true,
                 [classes.tags]: true
               })}
               data-qa-stackscript-compatible-images
@@ -151,7 +156,6 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
           {!isSelecting && (
             <TableCell
               className={classNames({
-                [classes.tableHead]: true,
                 [classes.stackscriptLabel]: true
               })}
             />

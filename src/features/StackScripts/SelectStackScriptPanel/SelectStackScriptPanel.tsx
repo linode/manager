@@ -50,13 +50,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   selecting: {
     minHeight: '400px',
     maxHeight: '1000px',
-    // overflowX: 'auto',
     overflowY: 'scroll',
     paddingTop: 0
-    // '.tableWrapper': {
-    //   maxHeight: '1000px',
-    //   overflowY: 'auto',
-    // }
   },
   link: {
     display: 'block',
@@ -176,6 +171,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
               aria-label="List of StackScripts"
               noOverflow={true}
               tableClass={classes.table}
+              stickyHeader
             >
               <StackScriptTableHead
                 currentFilterType={null}
