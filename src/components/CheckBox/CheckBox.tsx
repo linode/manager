@@ -9,6 +9,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import HelpIcon from 'src/components/HelpIcon';
 
 type CSSClasses = 'root' | 'checked' | 'disabled' | 'warning' | 'error';
 
@@ -67,13 +68,14 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
 
 interface Props extends CheckboxProps {
   variant?: 'warning' | 'error';
-  text?: string;
+  text?: string | JSX.Element;
+  toolTipText?: string;
 }
 
 type FinalProps = Props & WithStyles<CSSClasses>;
 
 const LinodeCheckBox: React.StatelessComponent<FinalProps> = props => {
-  const { classes, ...rest } = props;
+  const { toolTipText, text, classes, ...rest } = props;
 
   const classnames = classNames({
     [classes.root]: true,
@@ -85,19 +87,22 @@ const LinodeCheckBox: React.StatelessComponent<FinalProps> = props => {
 
   if (props.text) {
     return (
-      <FormControlLabel
-        control={
-          <Checkbox
-            color="primary"
-            className={classnames}
-            icon={<CheckboxIcon />}
-            checkedIcon={<CheckboxCheckedIcon />}
-            data-qa-checked={props.checked}
-            {...rest}
-          />
-        }
-        label={props.text}
-      />
+      <React.Fragment>
+        <FormControlLabel
+          control={
+            <Checkbox
+              color="primary"
+              className={classnames}
+              icon={<CheckboxIcon />}
+              checkedIcon={<CheckboxCheckedIcon />}
+              data-qa-checked={props.checked}
+              {...rest}
+            />
+          }
+          label={props.text}
+        />
+        {toolTipText && <HelpIcon text={toolTipText} />}
+      </React.Fragment>
     );
   }
 
