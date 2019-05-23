@@ -69,6 +69,7 @@ interface LinodeContextProps {
   linodeStatus?: Linode.LinodeStatus;
   linodeLabel: string;
   permissions: Linode.GrantLevel;
+  linodeDisks: Linode.Disk[];
 }
 
 interface State {
@@ -168,7 +169,8 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       linodeType,
       linodeLabel,
       permissions,
-      classes
+      classes,
+      linodeDisks
     } = this.props;
     const type = [...currentTypesData, ...deprecatedTypesData].find(
       t => t.id === linodeType
@@ -190,6 +192,33 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           ]
         : []
       : [];
+
+    /**
+     * the user should only be given the option to automatically resize
+     * their disks under the 2 following conditions:
+     *
+     * 1. They have 1 ext disk (and nothing else)
+     * 2. They have 1 ext disk and 1 swap disk (and nothing else)
+     *
+     * If they have more than 2 disks, no automatic resizing is going to
+     * take place server-side, so given them the option to toggle
+     * the checkbox is pointless.
+     */
+    const linodeHasOneExtDisk =
+      linodeDisks.reduce((acc, eachDisk) => {
+        return eachDisk.filesystem === 'ext3' || eachDisk.filesystem === 'ext4'
+          ? [...acc, eachDisk.filesystem]
+          : acc;
+      }, []).length === 1;
+    const linodeHasOneSwapDisk =
+      linodeDisks.reduce((acc, eachDisk) => {
+        return eachDisk.filesystem === 'swap'
+          ? [...acc, eachDisk.filesystem]
+          : acc;
+      }, []).length === 1;
+    const shouldRenderAutoResizeDiskOption =
+      (linodeDisks.length === 1 && linodeHasOneExtDisk) ||
+      (linodeDisks.length === 2 && linodeHasOneSwapDisk && linodeHasOneExtDisk);
 
     return (
       <React.Fragment>
@@ -238,17 +267,19 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           selectedID={this.state.selectedId}
           disabled={disabled}
         />
-        <Paper className={`${classes.checkbox} ${classes.root}`}>
-          <Typography variant="h2" className={classes.title}>
-            Auto Resize Disks
-          </Typography>
-          <Checkbox
-            checked={this.state.autoDiskResize}
-            onChange={this.handleToggleAutoDisksResize}
-            text={`Would you like the disks on this Linode automatically resized to
+        {shouldRenderAutoResizeDiskOption && (
+          <Paper className={`${classes.checkbox} ${classes.root}`}>
+            <Typography variant="h2" className={classes.title}>
+              Auto Resize Disks
+            </Typography>
+            <Checkbox
+              checked={this.state.autoDiskResize}
+              onChange={this.handleToggleAutoDisksResize}
+              text={`Would you like the disks on this Linode automatically resized to
             scale with the Linode's new size? We recommend you keep this enabled.`}
-          />
-        </Paper>
+            />
+          </Paper>
+        )}
         <ActionsPanel>
           <Button
             disabled={
@@ -293,7 +324,8 @@ const linodeContext = withLinodeDetailContext(state => {
     linodeType: linode.type,
     linodeStatus: linode.status,
     linodeLabel: linode.label,
-    permissions: linode._permissions
+    permissions: linode._permissions,
+    linodeDisks: linode._disks
   };
 });
 
