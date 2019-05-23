@@ -465,6 +465,7 @@ const withStackScriptBase = (isSelecting: boolean) => (
                 tableClass={classes.table}
                 removeLabelonMobile={!isSelecting}
                 border
+                stickyHeader
               >
                 <StackScriptTableHead
                   handleClickTableHeader={this.handleClickTableHeader}
