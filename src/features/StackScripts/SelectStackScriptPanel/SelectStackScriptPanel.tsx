@@ -67,8 +67,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   inner: {
     padding: theme.spacing.unit * 2,
+    paddingTop: 0,
     [theme.breakpoints.up('sm')]: {
-      padding: theme.spacing.unit * 3
+      padding: theme.spacing.unit * 3,
+      paddingTop: 0
     }
   },
   header: {}
@@ -149,14 +151,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const {
-      category,
-      classes,
-      header,
-      request,
-      selectedId,
-      error
-    } = this.props;
+    const { category, classes, request, selectedId, error } = this.props;
     const { stackScript, stackScriptLoading, stackScriptError } = this.state;
 
     if (selectedId) {
@@ -207,9 +202,6 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
       <Paper className={classes.panel}>
         <div className={classes.inner}>
           {error && <Notice text={error} error />}
-          <Typography className={classes.header} variant="h2" data-qa-tp-title>
-            {header}
-          </Typography>
           {stackScriptError && (
             <Typography variant="body2">
               An error occurred while loading the selected StackScript.
