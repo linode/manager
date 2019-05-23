@@ -11,6 +11,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import { Props as TextFieldProps } from 'src/components/TextField';
 /* TODO will be refactoring enhanced select to be an abstraction.
 Styles added in this file and the below imports will be utilized for the abstraction. */
 import DropdownIndicator from './components/DropdownIndicator';
@@ -361,7 +362,12 @@ type CombinedProps = EnhancedSelectProps &
 
 interface BaseSelectProps extends SelectProps<any> {
   classes: any;
-  textFieldProps?: any;
+  /* 
+   textFieldProps isn't native to react-select 
+   but we're using the MUI select element so any props that
+   can be passed to the MUI TextField element can be passed here
+  */
+  textFieldProps?: TextFieldProps;
 }
 
 interface CreatableProps extends CreatableSelectProps<any> {}
@@ -439,6 +445,11 @@ class Select extends React.PureComponent<CombinedProps, {}> {
         })}
         classNamePrefix="react-select"
         styles={styleOverrides}
+        /* 
+          textFieldProps isn't native to react-select 
+          but we're using the MUI select element so any props that
+          can be passed to the MUI TextField element can be passed here
+         */
         textFieldProps={{
           ...textFieldProps,
           label,

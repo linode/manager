@@ -274,17 +274,22 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
             </Grid>
           </Grid>
         </Grid>
-        {this.props.howManyLinodesOnAccount === 0 && domainsLength > 0 && (
-          <Notice warning important className={classes.dnsWarning}>
-            <Typography variant="h3">
-              Your DNS zones are not being served.
-            </Typography>
-            <Typography>
-              Your domains will not be served by Linode's nameservers unless you
-              have at least one active Linode on your account.
-              <Link to="/linodes/create"> You can create one here.</Link>
-            </Typography>
-          </Notice>
+        {!this.props.linodesLoading &&
+          this.props.howManyLinodesOnAccount === 0 &&
+          domainsLength > 0 && (
+            <Notice warning important className={classes.dnsWarning}>
+              <Typography variant="h3">
+                Your DNS zones are not being served.
+              </Typography>
+              <Typography>
+                Your domains will not be served by Linode's nameservers unless
+                you have at least one active Linode on your account.
+                <Link to="/linodes/create"> You can create one here.</Link>
+              </Typography>
+            </Notice>
+          )}
+        {this.props.location.state && this.props.location.state.recordError && (
+          <Notice error text={this.props.location.state.recordError} />
         )}
         <Grid item xs={12}>
           {/* Duplication starts here. How can we refactor this? */}
@@ -420,6 +425,7 @@ const withLocalStorage = localStorageContainer<
 
 interface StateProps {
   howManyLinodesOnAccount: number;
+  linodesLoading: boolean;
 }
 
 const mapStateToProps: MapStateToProps<
@@ -431,7 +437,8 @@ const mapStateToProps: MapStateToProps<
     [],
     ['__resources', 'linodes', 'results'],
     state
-  ).length
+  ).length,
+  linodesLoading: pathOr(false, ['linodes', 'loading'], state.__resources)
 });
 
 export const connected = connect(
