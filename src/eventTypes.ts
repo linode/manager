@@ -131,6 +131,11 @@ const EventTypeMap = {
     pastTenseAction: 'Resized',
     redirectUrl: getLinodeRedirectUrl
   },
+  linode_mutate: {
+    presentTenseAction: 'Upgrading',
+    pastTenseAction: 'Upgraded',
+    redirectUrl: getLinodeRedirectUrl
+  },
   linode_clone: {
     presentTenseAction: 'Cloning',
     pastTenseAction: 'Cloned',
