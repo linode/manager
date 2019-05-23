@@ -1,5 +1,3 @@
-import LibraryBook from '@material-ui/icons/LibraryBooks';
-import Link from '@material-ui/icons/Link';
 import * as React from 'react';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
@@ -14,6 +12,9 @@ import { APP_ROOT } from 'src/constants';
 
 import { oneClickApps } from './FakeSpec';
 import LinkSection from './LinkSection';
+
+import LibraryBook from 'src/assets/icons/guides.svg';
+import Link from 'src/assets/icons/moreInfo.svg';
 
 type ClassNames =
   | 'root'
