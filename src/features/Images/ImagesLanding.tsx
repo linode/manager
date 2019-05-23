@@ -20,7 +20,6 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
-import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -32,7 +31,6 @@ import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
-import { Images } from 'src/documentation';
 import { deleteImage } from 'src/services/images';
 import { ApplicationState } from 'src/store';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -88,16 +86,6 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
       submitting: false
     }
   };
-
-  static docs: Linode.Doc[] = [
-    Images,
-    {
-      title: 'Deploy an Image to a Linode',
-      src:
-        'https://linode.com/docs/quick-answers/linode-platform/deploy-an-image-to-a-linode/',
-      body: `This QuickAnswer will show you how to deploy a Linux distribution to your Linode.`
-    }
-  ];
 
   openForCreate = () => {
     this.setState({
@@ -483,7 +471,6 @@ const withPrivateImages = connect(
 const styled = withStyles(styles);
 
 export default compose<CombinedProps, {}>(
-  setDocs(ImagesLanding.docs),
   withRouter,
   withPrivateImages,
   styled,
