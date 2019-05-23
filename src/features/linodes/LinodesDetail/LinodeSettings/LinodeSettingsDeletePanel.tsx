@@ -34,6 +34,7 @@ interface Props {
 
 interface State {
   open: boolean;
+  errors?: Linode.ApiFieldError[];
 }
 
 type CombinedProps = Props &
@@ -58,13 +59,10 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
         resetEventsPolling();
         this.props.history.push('/linodes');
       })
-      .catch(error => {
-        this.setState(
-          set(lensPath(['errors']), error.response.data.errors),
-          () => {
-            scrollErrorIntoView();
-          }
-        );
+      .catch((error: Linode.ApiFieldError[]) => {
+        this.setState(set(lensPath(['errors']), error), () => {
+          scrollErrorIntoView();
+        });
       });
   };
 
@@ -78,6 +76,8 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
 
   render() {
     const { readOnly } = this.props;
+    const { errors } = this.state;
+
     return (
       <React.Fragment>
         <ExpansionPanel heading="Delete Linode">
@@ -100,6 +100,7 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
           actions={this.renderConfirmationActions}
           open={this.state.open}
           onClose={this.closeDeleteDialog}
+          error={errors ? errors[0].reason : undefined}
         >
           <Typography>
             Are you sure you want to delete your Linode? This will result in

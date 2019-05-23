@@ -18,6 +18,7 @@ import {
 } from 'src/store/linodes/linode.containers';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
+import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AlertSection from './AlertSection';
 
 type ClassNames = 'root';
@@ -266,13 +267,16 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         );
       })
       .catch(error => {
-        this.setState({
-          submitting: false,
-          errors: getAPIErrorOrDefault(
-            error,
-            'Unable to update alerts thresholds.'
-          )
-        });
+        this.setState(
+          {
+            submitting: false,
+            errors: getAPIErrorOrDefault(
+              error,
+              'Unable to update alerts thresholds.'
+            )
+          },
+          () => scrollErrorIntoView()
+        );
       });
   };
 

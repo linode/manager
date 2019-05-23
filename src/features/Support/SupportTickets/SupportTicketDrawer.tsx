@@ -182,7 +182,6 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
   };
 
   handleCatch = (errors: Linode.ApiFieldError[]) => {
-    // @todo replace with LinodeAPIFieldError[] when/if we return that from services
     this.setState({
       errors,
       loading: false

@@ -85,10 +85,10 @@ class LinodeSettingsPasswordPanel extends React.Component<
           )
         );
       })
-      .catch(error => {
+      .catch((errors: Linode.ApiFieldError[]) => {
         this.setState(
           compose(
-            set(lensPath(['errors']), error.response.data.errors),
+            set(lensPath(['errors']), errors),
             set(lensPath(['submitting']), false)
           ),
           () => {
