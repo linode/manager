@@ -559,7 +559,7 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
     state
   ),
   accountLoading: state.__resources.account.loading,
-  accountError: state.__resources.account.error
+  accountError: state.__resources.account.error.read
 });
 
 export const connected = connect(
