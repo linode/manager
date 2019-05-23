@@ -267,7 +267,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
         color: primaryColors.headline,
         fontSize: '1rem',
         fontFamily: spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold,
-        lineHeight: '1rem'
+        lineHeight: '1.2rem'
       },
       body1: {
         fontSize: '0.875rem',
@@ -276,7 +276,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       },
       body2: {
         fontSize: '0.875rem',
-        lineHeight: '1rem'
+        lineHeight: '1.2rem'
       },
       caption: {
         fontSize: '0.625rem',

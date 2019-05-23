@@ -18,6 +18,7 @@ import LinkSection from './LinkSection';
 type ClassNames =
   | 'root'
   | 'logo'
+  | 'appName'
   | 'summary'
   | 'description'
   | 'divider'
@@ -26,20 +27,25 @@ type ClassNames =
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   logo: {
-    marginRight: theme.spacing.unit * 2
+    marginRight: theme.spacing.unit
+  },
+  appName: {
+    fontSize: '2.3rem',
+    fontFamily: theme.font.normal,
+    color: theme.color.grey1
   },
   summary: {
     marginTop: theme.spacing.unit * 2,
+    marginBottom: theme.spacing.unit * 2,
+    textAlign: 'center'
+  },
+  description: {},
+  divider: {
+    marginTop: theme.spacing.unit * 3,
     marginBottom: theme.spacing.unit * 2
   },
-  description: {
-    fontSize: '1em'
-  },
-  divider: {
-    margin: theme.spacing.unit * 2
-  },
   image: {
-    maxWidth: '50px'
+    maxWidth: 50
   }
 });
 
@@ -79,13 +85,15 @@ export const AppDetailDrawer: React.FunctionComponent<
           />
         </Grid>
         <Grid item>
-          <Typography variant="h1">{app.name}</Typography>
+          <Typography variant="h2" className={classes.appName}>
+            {app.name}
+          </Typography>
         </Grid>
       </Grid>
       <Divider className={classes.divider} />
       <Grid container direction="column" alignItems="center" justify="center">
         <Grid item>
-          <Typography variant="h2" className={classes.summary}>
+          <Typography variant="h3" className={classes.summary}>
             {app.summary}
           </Typography>
         </Grid>
