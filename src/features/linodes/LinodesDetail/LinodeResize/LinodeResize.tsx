@@ -27,12 +27,22 @@ import { withNotifications } from 'src/store/notification/notification.container
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import LinodePermissionsError from '../LinodePermissionsError';
 
-type ClassNames = 'root' | 'title' | 'subTitle' | 'currentPlanContainer';
+import Checkbox from 'src/components/CheckBox';
+
+type ClassNames =
+  | 'root'
+  | 'title'
+  | 'subTitle'
+  | 'currentPlanContainer'
+  | 'checkbox';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     padding: theme.spacing.unit * 3,
     paddingBottom: theme.spacing.unit * 2
+  },
+  checkbox: {
+    marginTop: theme.spacing.unit * 3
   },
   title: {
     marginBottom: theme.spacing.unit * 2
@@ -65,6 +75,7 @@ interface State {
   selectedId: string;
   isLoading: boolean;
   errors?: Linode.ApiFieldError[];
+  autoDiskResize: boolean;
 }
 
 interface NotificationProps {
@@ -81,7 +92,8 @@ type CombinedProps = WithTypesProps &
 export class LinodeResize extends React.Component<CombinedProps, State> {
   state: State = {
     selectedId: '',
-    isLoading: false
+    isLoading: false,
+    autoDiskResize: true
   };
 
   static extendType = (type: Linode.LinodeType): ExtendedType => {
@@ -118,7 +130,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
     this.setState({ isLoading: true });
 
-    resizeLinode(linodeId, selectedId)
+    resizeLinode(linodeId, selectedId, this.state.autoDiskResize)
       .then(_ => {
         this.setState({ selectedId: '', isLoading: false });
         resetEventsPolling();
@@ -143,6 +155,10 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
   handleSelectPlan = (id: string) => {
     this.setState({ selectedId: id });
+  };
+
+  handleToggleAutoDisksResize = () => {
+    this.setState({ autoDiskResize: !this.state.autoDiskResize });
   };
 
   render() {
@@ -222,6 +238,17 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           selectedID={this.state.selectedId}
           disabled={disabled}
         />
+        <Paper className={`${classes.checkbox} ${classes.root}`}>
+          <Typography variant="h2" className={classes.title}>
+            Auto Resize Disks
+          </Typography>
+          <Checkbox
+            checked={this.state.autoDiskResize}
+            onChange={this.handleToggleAutoDisksResize}
+            text={`Would you like the disks on this Linode automatically resized to
+            scale with the Linode's new size? We recommend you keep this enabled.`}
+          />
+        </Paper>
         <ActionsPanel>
           <Button
             disabled={
