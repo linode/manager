@@ -14,33 +14,52 @@ type ClassNames =
   | 'root'
   | 'stackscriptLabel'
   | 'stackscriptTitles'
+  | 'selectingStackscriptTitles'
   | 'deploys'
   | 'revisions'
   | 'tags'
+  | 'actionMenu'
   | 'tr'
   | 'tableHead';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
-  stackscriptLabel: {
-    width: 84
-  },
+  stackscriptLabel: {},
   stackscriptTitles: {
     width: '60%',
-    minWidth: 150
+    [theme.breakpoints.up('lg')]: {
+      minWidth: 150
+    }
+  },
+  selectingStackscriptTitles: {
+    width: 'calc(100% - 65px)'
   },
   deploys: {
-    width: '13%',
+    width: '10%',
     [theme.breakpoints.up('lg')]: {
+      width: '12%',
       minWidth: 140
     }
   },
   revisions: {
-    width: '13%',
-    minWidth: 150
+    width: '10%',
+    [theme.breakpoints.up('lg')]: {
+      width: '12%',
+      minWidth: 150
+    }
   },
   tags: {
-    width: '13%'
+    width: '10%',
+    [theme.breakpoints.up('lg')]: {
+      width: '12%',
+      minWidth: 100
+    }
+  },
+  actionMenu: {
+    width: '10%',
+    [theme.breakpoints.up('lg')]: {
+      width: 65
+    }
   },
   tr: {
     height: 48
@@ -100,7 +119,8 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
           <Cell
             className={classNames({
               [classes.tableHead]: true,
-              [classes.stackscriptTitles]: true
+              [classes.stackscriptTitles]: true,
+              [classes.selectingStackscriptTitles]: isSelecting
             })}
             data-qa-stackscript-table-header
             {...maybeAddSortingProps('label')}
