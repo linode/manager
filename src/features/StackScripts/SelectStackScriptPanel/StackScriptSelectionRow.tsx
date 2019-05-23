@@ -11,11 +11,7 @@ import Radio from 'src/components/Radio';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TableRow from 'src/components/TableRow';
 import { openStackScriptDrawer as openStackScriptDrawerAction } from 'src/store/stackScriptDrawer';
-import {
-  ClassNames,
-  // displayTagsAndShowMore,
-  styles
-} from '../StackScriptRowHelpers';
+import { ClassNames, styles } from '../StackScriptRowHelpers';
 
 export interface Props {
   label: string;
@@ -52,9 +48,6 @@ export class StackScriptSelectionRow extends React.Component<
       checked,
       label,
       description,
-      // images,
-      // deploymentsActive,
-      // updated,
       stackScriptID,
       stackScriptUsername,
       openStackScriptDrawer,
@@ -126,19 +119,6 @@ export class StackScriptSelectionRow extends React.Component<
           >
             {renderLabel()}
           </TableCell>
-          {/* <TableCell>
-            <Typography variant="h3" data-qa-stackscript-deploys>
-              {deploymentsActive}
-            </Typography>
-          </TableCell>
-          <TableCell>
-            <Typography variant="h3" data-qa-stackscript-revision>
-              {updated}
-            </Typography>
-          </TableCell>
-          <TableCell data-qa-stackscript-images>
-            {displayTagsAndShowMore(images)}
-          </TableCell> */}
         </TableRow>
       </React.Fragment>
     );

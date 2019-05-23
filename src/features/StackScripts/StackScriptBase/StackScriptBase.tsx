@@ -459,11 +459,11 @@ const withStackScriptBase = (isSelecting: boolean) => (
                 />
               </div>
               <Table
-                isResponsive={!isSelecting && true}
+                isResponsive={!isSelecting}
                 aria-label="List of StackScripts"
                 noOverflow={true}
                 tableClass={classes.table}
-                removeLabelonMobile={!isSelecting && true}
+                removeLabelonMobile={!isSelecting}
                 border
               >
                 <StackScriptTableHead
