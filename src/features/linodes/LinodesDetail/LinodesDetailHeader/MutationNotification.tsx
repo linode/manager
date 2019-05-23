@@ -1,14 +1,19 @@
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
+import { Action } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
+import { resetEventsPolling } from 'src/events';
 import { startMutation } from 'src/services/linodes';
+import { ApplicationState } from 'src/store';
+import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import {
   withTypes,
   WithTypes
@@ -36,6 +41,7 @@ type CombinedProps = MutationDrawerProps &
   ContextProps &
   WithTypes &
   WithSnackbarProps &
+  DispatchProps &
   WithStyles<ClassNames>;
 
 const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
@@ -51,7 +57,8 @@ const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
     mutationFailed,
     mutationDrawerError,
     mutationDrawerLoading,
-    mutationDrawerOpen
+    mutationDrawerOpen,
+    updateLinode
   } = props;
 
   /** Mutate */
@@ -77,6 +84,8 @@ const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
     startMutation(linodeId)
       .then(() => {
         closeMutationDrawer();
+        resetEventsPolling();
+        updateLinode(linodeId);
         enqueueSnackbar('Linode upgrade has been initiated.', {
           variant: 'info'
         });
@@ -97,9 +106,8 @@ const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
   return (
     <>
       <Notice important warning>
-        This Linode has pending&nbsp;
-        <Link to={`/linodes/${props.linodeId}/resize`}>upgrades available</Link>
-        . To learn more about this upgrade and what it includes,&nbsp;
+        This Linode has free upgrade available. To learn more about this upgrade
+        and what it includes,&nbsp;
         <span
           className={classes.pendingMutationLink}
           onClick={openMutationDrawer}
@@ -145,8 +153,26 @@ interface ContextProps {
   linodeType?: Linode.LinodeType | null;
 }
 
+interface DispatchProps {
+  updateLinode: (id: number) => any;
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
+) => {
+  return {
+    updateLinode: (id: number) => dispatch(requestLinodeForStore(id))
+  };
+};
+
+const connected = connect(
+  undefined,
+  mapDispatchToProps
+);
+
 const enhanced = compose<CombinedProps, {}>(
   styled,
+  connected,
   withTypes(),
   withLinodeDetailContext<ContextProps>(({ linode }) => ({
     linodeSpecs: linode.specs,
