@@ -1,4 +1,3 @@
-import { captureException } from '@sentry/browser';
 import * as moment from 'moment';
 import { compose } from 'ramda';
 import * as React from 'react';
@@ -9,6 +8,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import eventMessageGenerator from 'src/eventMessageGenerator';
+import { reportException } from 'src/exceptionReporting';
 import { ExtendedEvent } from 'src/store/events/event.helpers';
 import createClickHandlerForNotification from 'src/utilities/getEventsActionLink';
 import UserEventsListItem, {
@@ -17,7 +17,7 @@ import UserEventsListItem, {
 
 const reportUnfoundEvent = (event: Linode.Event) =>
   process.env.NODE_ENV === 'production'
-    ? captureException
+    ? reportException
     : // tslint:disable-next-line
       console.log('Unknown API event received.', {
         extra: { event }
@@ -25,7 +25,7 @@ const reportUnfoundEvent = (event: Linode.Event) =>
 
 const reportEventError = (e: Linode.Event, err: Error) =>
   process.env.NODE_ENV === 'production'
-    ? captureException(err)
+    ? reportException(err)
     : console.log('Event Error', err); /* tslint:disable-line */
 
 type ClassNames = 'root';
