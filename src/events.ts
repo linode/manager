@@ -10,13 +10,10 @@
  * The next step is to move this logic into a Redux connected component so we can more easily
  * access Redux and control the start of the event loop.
  */
-import * as moment from 'moment';
-import { pathOr } from 'ramda';
 import { Subject } from 'rxjs/Subject';
 import { DISABLE_EVENT_THROTTLE } from 'src/constants';
 import store from 'src/store';
 import { getEvents } from 'src/store/events/event.request';
-import { requestNotifications } from './store/notification/notification.requests';
 
 export const events$ = new Subject<Linode.Event>();
 
@@ -43,21 +40,6 @@ export const resetEventsPolling = (newPollIteration = 1) => {
 export const requestEvents = () => {
   inProgress = true;
   return store.dispatch(getEvents() as any).then((events: Linode.Event[]) => {
-    const notificationsLastUpdated = store.getState().__resources.notifications
-      .lastUpdated;
-    const lastEventAction = pathOr(undefined, [0, 'action'], events);
-    const lastEventCreated = pathOr(undefined, [0, 'created'], events);
-
-    if (
-      shouldRequestNotifications(
-        notificationsLastUpdated,
-        lastEventAction,
-        lastEventCreated
-      )
-    ) {
-      store.dispatch(requestNotifications() as any);
-    }
-
     const reversed = events.reverse();
 
     /**
@@ -104,40 +86,3 @@ setInterval(
   /* the following is the Nyquist rate for the minimum polling interval */
   INTERVAL / 2 - 1
 );
-
-/**
- * shouldRequestNotifications
- *
- * We may want to request notifications upon receiving an event, depending on the
- * type of the event, and the last time we requested notifications.
- *
- * EXAMPLE:
- *
- * 1) User clicks "Resize Linode"
- * 2) There is now a `migration_imminent` notification on the Linode.
- * 3) In the next few minutes, the resize is kicked off.
- * 4) The `migration_imminent` notification on the Linode goes away.
- */
-export const shouldRequestNotifications = (
-  notificationsLastUpdated: number,
-  lastEventAction?: Linode.EventAction,
-  lastEventCreated?: string
-) => {
-  if (!lastEventAction || !lastEventCreated) {
-    return false;
-  }
-
-  return (
-    eventsWithRelevantNotifications.includes(lastEventAction) &&
-    // if the event was created after the last time notifications were updated
-    moment.utc(lastEventCreated).isAfter(moment.utc(notificationsLastUpdated))
-  );
-};
-
-const eventsWithRelevantNotifications: Linode.EventAction[] = [
-  'linode_resize',
-  'linode_resize_create',
-  'linode_migrate',
-  'linode_mutate',
-  'linode_mutate_create'
-];
