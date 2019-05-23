@@ -91,7 +91,10 @@ export const VATBanner: React.FunctionComponent<CombinedProps> = props => {
         // Don't link to /account/billing if you're already on account/billing
         `in Update Contact Information below`
       ) : (
-        <Link to="/account/billing">clicking here</Link>
+        <>
+          {`by `}
+          <Link to="/account/billing">clicking here</Link>
+        </>
       )}
       {`.`}
     </div>
