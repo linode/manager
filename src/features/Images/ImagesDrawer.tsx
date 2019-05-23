@@ -308,7 +308,7 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           <LinodeSelect
             selectedLinode={selectedLinode}
             linodeError={linodeError}
-            handleChange={changeLinode}
+            handleChange={linode => changeLinode(linode.id)}
             updateFor={[selectedLinode, linodeError, classes]}
           />
         )}

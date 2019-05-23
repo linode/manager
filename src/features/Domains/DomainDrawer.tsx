@@ -5,11 +5,11 @@ import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { bindActionCreators } from 'redux';
-import Reload from 'src/assets/icons/reload.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
+import FormHelperText from 'src/components/core/FormHelperText';
 import RadioGroup from 'src/components/core/RadioGroup';
 import {
   StyleRulesCallback,
@@ -38,8 +38,14 @@ import {
   withDomainActions
 } from 'src/store/domains/domains.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import { reportException } from 'src/exceptionReporting';
+import LinodeSelect from 'src/features/linodes/LinodeSelect';
+import NodeBalancerSelect from 'src/features/NodeBalancers/NodeBalancerSelect';
+import { createDomainRecord } from 'src/services/domains/records';
+import { getErrorMap } from 'src/utilities/errorUtils';
 
 type ClassNames = 'root' | 'masterIPErrorNotice' | 'addIP';
 
@@ -53,6 +59,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
+type DefaultRecordsType = 'none' | 'linode' | 'nodebalancer';
+
 interface State {
   domain: string;
   type: 'master' | 'slave';
@@ -63,6 +71,9 @@ interface State {
   submitting: boolean;
   master_ips: string[];
   masterIPsCount: number;
+  defaultRecordsSetting: DefaultRecordsType;
+  selectedDefaultLinode?: Linode.Linode;
+  selectedDefaultNodeBalancer?: Linode.NodeBalancer;
 }
 
 type CombinedProps = WithStyles<ClassNames> &
@@ -71,6 +82,60 @@ type CombinedProps = WithStyles<ClassNames> &
   RouteComponentProps<{}> &
   StateProps &
   WithSnackbarProps;
+
+const generateDefaultDomainRecords = (
+  domain: string,
+  domainID: number,
+  ipv4?: string,
+  ipv6?: string
+) => {
+  /**
+   * at this point, the IPv6 is including the prefix and we need to strip that
+   *
+   * BUT
+   *
+   * this logic only applies to Linodes' ipv6, not nodebalancers. No stripping
+   * needed for NodeBalancers.
+   */
+  const cleanedIPv6 =
+    ipv6 && ipv6.includes('/') ? ipv6.substr(0, ipv6.indexOf('/')) : ipv6;
+
+  return Promise.all([
+    createDomainRecord(domainID, {
+      type: 'A',
+      target: ipv4
+    }),
+    createDomainRecord(domainID, {
+      type: 'A',
+      target: ipv4,
+      name: 'www'
+    }),
+    createDomainRecord(domainID, {
+      type: 'A',
+      target: ipv4,
+      name: 'mail'
+    }),
+    createDomainRecord(domainID, {
+      type: 'AAAA',
+      target: cleanedIPv6
+    }),
+    createDomainRecord(domainID, {
+      type: 'AAAA',
+      target: cleanedIPv6,
+      name: 'www'
+    }),
+    createDomainRecord(domainID, {
+      type: 'AAAA',
+      target: cleanedIPv6,
+      name: 'mail'
+    }),
+    createDomainRecord(domainID, {
+      type: 'MX',
+      priority: 10,
+      target: `mail.${domain}`
+    })
+  ]);
+};
 
 const masterIPsLens = lensPath(['master_ips']);
 const masterIPLens = (idx: number) =>
@@ -98,7 +163,10 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     submitting: false,
     errors: [],
     master_ips: [],
-    masterIPsCount: 1
+    masterIPsCount: 1,
+    defaultRecordsSetting: 'none',
+    selectedDefaultLinode: undefined,
+    selectedDefaultNodeBalancer: undefined
   };
 
   state: State = {
@@ -159,12 +227,28 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
       tags
     } = this.state;
 
-    const errorFor = getAPIErrorFor(this.errorResources, errors);
+    const errorMap = getErrorMap(
+      [
+        'master_ips',
+        'domain',
+        'type',
+        'soa_email',
+        'tags',
+        'defaultNodeBalancer',
+        'defaultLinode'
+      ],
+      errors
+    );
 
-    const generalError = errorFor('none');
-    const masterIPsError = errorFor('master_ips');
+    const generalError = errorMap.none;
+    const masterIPsError = errorMap.master_ips;
 
     const title = mode === EDITING ? 'Edit Domain' : 'Add a new Domain';
+
+    const isCreatingMasterDomain = mode === CREATING && type === 'master';
+    const isEditingMasterDomain = mode === EDITING && type === 'master';
+    const isCreatingSlaveDomain = mode === CREATING && type === 'slave';
+    const isEditingSlaveDomain = mode === EDITING && type === 'slave';
 
     return (
       <Drawer title={title} open={open} onClose={this.closeDrawer}>
@@ -206,7 +290,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         </RadioGroup>
         <TextField
           errorText={
-            (mode === CREATING || mode === EDITING || '') && errorFor('domain')
+            (mode === CREATING || mode === EDITING || '') && errorMap.domain
           }
           value={domain}
           disabled={mode === CLONING || disabled}
@@ -216,7 +300,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         />
         {mode === CLONING && (
           <TextField
-            errorText={errorFor('domain')}
+            errorText={errorMap.domain}
             value={cloneName}
             label="New Domain"
             onChange={this.updateCloneLabel}
@@ -224,9 +308,9 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             disabled={disabled}
           />
         )}
-        {(mode === CREATING || mode === EDITING) && type === 'master' && (
+        {(isCreatingMasterDomain || isEditingMasterDomain) && (
           <TextField
-            errorText={errorFor('soa_email')}
+            errorText={errorMap.soa_email}
             value={soaEmail}
             label="SOA Email Address"
             onChange={this.updateEmailAddress}
@@ -234,7 +318,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             disabled={disabled}
           />
         )}
-        {(mode === CREATING || mode === EDITING) && type === 'slave' && (
+        {(isCreatingSlaveDomain || isEditingSlaveDomain) && (
           <React.Fragment>
             {masterIPsError && (
               <Notice
@@ -266,24 +350,93 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         <TagsInput
           value={tags}
           onChange={this.updateTags}
-          tagError={errorFor('tags')}
+          tagError={errorMap.tags}
           disabled={disabled}
         />
-        <ActionsPanel>
-          {!submitting ? (
-            <Button
-              type="primary"
-              onClick={this.submit}
-              data-qa-submit
-              disabled={disabled}
-            >
-              {mode === EDITING ? 'Update' : 'Create'}
-            </Button>
-          ) : (
-            <Button type="secondary" disabled className="loading">
-              <Reload />
-            </Button>
+        {isCreatingMasterDomain && (
+          <React.Fragment>
+            <Select
+              isClearable={false}
+              onChange={(value: Item<DefaultRecordsType>) =>
+                this.updateInsertDefaultRecords(value.value)
+              }
+              defaultValue={{
+                value: 'none',
+                label: 'Do not insert default records for me.'
+              }}
+              label="Insert Default Records"
+              options={[
+                {
+                  value: 'none',
+                  label: 'Do not insert default records for me.'
+                },
+                {
+                  value: 'linode',
+                  label: 'Insert default records from one of my Linodes.'
+                },
+                {
+                  value: 'nodebalancer',
+                  label: 'Insert default records from one of my NodeBalancers.'
+                }
+              ]}
+            />
+            <FormHelperText>
+              If specified, we can automatically create some domain records
+              (A/AAAA and MX) to get you started, based on one of your Linodes
+              or NodeBalancers.
+            </FormHelperText>
+          </React.Fragment>
+        )}
+        {isCreatingMasterDomain &&
+          this.state.defaultRecordsSetting === 'linode' && (
+            <React.Fragment>
+              <LinodeSelect
+                linodeError={errorMap.defaultLinode}
+                handleChange={this.updateSelectedLinode}
+                selectedLinode={
+                  this.state.selectedDefaultLinode
+                    ? this.state.selectedDefaultLinode.id
+                    : null
+                }
+              />
+              {!errorMap.defaultLinode && (
+                <FormHelperText>
+                  We'll automatically create domain records for both the first
+                  IPv4 and IPv6 on this Linode.
+                </FormHelperText>
+              )}
+            </React.Fragment>
           )}
+        {isCreatingMasterDomain &&
+          this.state.defaultRecordsSetting === 'nodebalancer' && (
+            <React.Fragment>
+              <NodeBalancerSelect
+                nodeBalancerError={errorMap.defaultNodeBalancer}
+                handleChange={this.updateSelectedNodeBalancer}
+                selectedNodeBalancer={
+                  this.state.selectedDefaultNodeBalancer
+                    ? this.state.selectedDefaultNodeBalancer.id
+                    : null
+                }
+              />
+              {!errorMap.defaultNodeBalancer && (
+                <FormHelperText>
+                  We'll automatically create domain records for both the first
+                  IPv4 and IPv6 on this NodeBalancer.
+                </FormHelperText>
+              )}
+            </React.Fragment>
+          )}
+        <ActionsPanel>
+          <Button
+            type="primary"
+            onClick={this.submit}
+            data-qa-submit
+            loading={submitting}
+            disabled={disabled}
+          >
+            {mode === EDITING ? 'Update' : 'Create'}
+          </Button>
           <Button onClick={this.closeDrawer} type="cancel" data-qa-cancel>
             Cancel
           </Button>
@@ -292,26 +445,42 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     );
   }
 
-  errorResources = {
-    domain: 'Domain',
-    type: 'Type',
-    soa_email: 'SOA Email',
-    tags: 'Tags'
-  };
-
   resetInternalState = () => {
     if (this.mounted) {
       this.setState({ ...this.defaultState });
     }
   };
 
-  redirect = (id: number | '') => {
-    this.props.history.push(`/domains/${id}`);
+  redirect = (id: number | '', state?: Record<string, string>) => {
+    const returnPath = !!id ? `/domains/${id}/records` : '/domains';
+    this.props.history.push(returnPath, state);
+  };
+
+  redirectToLandingOrDetail = (
+    type: 'master' | 'slave',
+    domainID: number,
+    state: Record<string, string> = {}
+  ) => {
+    if (type === 'master' && domainID) {
+      this.redirect(domainID, state);
+    } else {
+      this.redirect('', state);
+    }
+    this.closeDrawer();
   };
 
   create = () => {
-    const { domain, type, soaEmail, master_ips } = this.state;
+    const {
+      domain,
+      type,
+      soaEmail,
+      master_ips,
+      defaultRecordsSetting,
+      selectedDefaultLinode,
+      selectedDefaultNodeBalancer
+    } = this.state;
     const { domainActions } = this.props;
+
     const tags = this.state.tags.map(tag => tag.value);
 
     const finalMasterIPs = master_ips.filter(v => v !== '');
@@ -329,6 +498,36 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
       return;
     }
 
+    /**
+     * In this case, the user wants default domain records created, but
+     * they haven't supplied a Linode or NodeBalancer
+     */
+    if (defaultRecordsSetting === 'linode') {
+      if (!selectedDefaultLinode) {
+        return this.setState({
+          errors: [
+            {
+              reason: 'Please select a Linode.',
+              field: 'defaultLinode'
+            }
+          ]
+        });
+      }
+    }
+
+    if (defaultRecordsSetting === 'nodebalancer') {
+      if (!selectedDefaultNodeBalancer) {
+        return this.setState({
+          errors: [
+            {
+              reason: 'Please select a NodeBalancer.',
+              field: 'defaultNodeBalancer'
+            }
+          ]
+        });
+      }
+    }
+
     const data =
       type === 'master'
         ? { domain, type, tags, soa_email: soaEmail }
@@ -341,12 +540,73 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         if (!this.mounted) {
           return;
         }
-        if (type === 'master' && domainData.id) {
-          this.redirect(domainData.id);
-        } else {
-          this.redirect('');
+
+        /**
+         * now we check to see if the user wanted us to automatically create
+         * domain records for them. If so, create some A/AAAA and MX records
+         * with the first IPv4 and IPv6 from the Linode or NodeBalancer they
+         * selected.
+         */
+        if (defaultRecordsSetting === 'linode') {
+          return generateDefaultDomainRecords(
+            domainData.domain,
+            domainData.id,
+            path(['ipv4', 0], selectedDefaultLinode),
+            path(['ipv6'], selectedDefaultLinode)
+          )
+            .then(() => {
+              return this.redirectToLandingOrDetail(type, domainData.id);
+            })
+            .catch((e: Linode.ApiFieldError[]) => {
+              reportException(
+                `Default DNS Records couldn't be created from Linode: ${
+                  e[0].reason
+                }`,
+                {
+                  selectedLinode: this.state.selectedDefaultLinode!.id,
+                  domainID: domainData.id,
+                  ipv4: path(['ipv4', 0], selectedDefaultLinode),
+                  ipv6: path(['ipv6'], selectedDefaultLinode)
+                }
+              );
+              return this.redirectToLandingOrDetail(type, domainData.id, {
+                recordError:
+                  'There was an issue creating default domain records.'
+              });
+            });
         }
-        this.closeDrawer();
+
+        if (defaultRecordsSetting === 'nodebalancer') {
+          return generateDefaultDomainRecords(
+            domainData.domain,
+            domainData.id,
+            path(['ipv4'], selectedDefaultNodeBalancer),
+            path(['ipv6'], selectedDefaultNodeBalancer)
+          )
+            .then(() => {
+              return this.redirectToLandingOrDetail(type, domainData.id);
+            })
+            .catch((e: Linode.ApiFieldError[]) => {
+              reportException(
+                `Default DNS Records couldn't be created from NodeBalancer: ${
+                  e[0].reason
+                }`,
+                {
+                  selectedNodeBalancer: this.state.selectedDefaultNodeBalancer!
+                    .id,
+                  domainID: domainData.id,
+                  ipv4: path(['ipv4'], selectedDefaultNodeBalancer),
+                  ipv6: path(['ipv6'], selectedDefaultNodeBalancer)
+                }
+              );
+              return this.redirectToLandingOrDetail(type, domainData.id, {
+                recordError:
+                  'There was an issue creating default domain records.'
+              });
+            });
+        }
+
+        return this.redirectToLandingOrDetail(type, domainData.id);
       })
       .catch(err => {
         if (!this.mounted) {
@@ -482,8 +742,18 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
   updateEmailAddress = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.setState({ soaEmail: e.target.value });
 
+  updateSelectedLinode = (linode: Linode.Linode) =>
+    this.setState({ selectedDefaultLinode: linode });
+
+  updateSelectedNodeBalancer = (nodebalancer: Linode.NodeBalancer) =>
+    this.setState({ selectedDefaultNodeBalancer: nodebalancer });
+
   updateTags = (selected: Tag[]) => {
     this.setState({ tags: selected });
+  };
+
+  updateInsertDefaultRecords = (value: DefaultRecordsType) => {
+    this.setState({ defaultRecordsSetting: value });
   };
 
   updateType = (

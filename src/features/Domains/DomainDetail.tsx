@@ -21,6 +21,7 @@ import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import PromiseLoader, {
   PromiseLoaderResponse
 } from 'src/components/PromiseLoader/PromiseLoader';
@@ -49,13 +50,22 @@ interface PreloadedProps {
   records: PromiseLoaderResponse<Linode.DomainRecord>;
 }
 
-type ClassNames = 'main' | 'sidebar' | 'domainSidebar' | 'titleWrapper';
+type ClassNames =
+  | 'main'
+  | 'sidebar'
+  | 'domainSidebar'
+  | 'titleWrapper'
+  | 'error';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   main: {
     [theme.breakpoints.up('md')]: {
       order: 1
     }
+  },
+  error: {
+    marginTop: `${theme.spacing.unit * 3}px !important`,
+    marginBottom: `0 !important`
   },
   sidebar: {
     [theme.breakpoints.up('md')]: {
@@ -266,6 +276,13 @@ class DomainDetail extends React.Component<CombinedProps, State> {
             />
           </Grid>
         </Grid>
+        {this.props.location.state && this.props.location.state.recordError && (
+          <Notice
+            className={classes.error}
+            error
+            text={this.props.location.state.recordError}
+          />
+        )}
         <AppBar position="static" color="default">
           <Tabs
             value={this.tabs.findIndex(tab => matches(tab.routeName))}
