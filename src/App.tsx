@@ -44,6 +44,7 @@ import { getAllVolumes } from 'src/store/volume/volume.requests';
 import composeState from 'src/utilities/composeState';
 import { notifications } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
+import { isKubernetesEnabled } from './constants';
 import BucketDrawer from './features/ObjectStorage/Buckets/BucketDrawer';
 import { requestClusters } from './store/clusters/clusters.actions';
 import {
@@ -75,6 +76,10 @@ const Domains = DefaultLoader({
 
 const Images = DefaultLoader({
   loader: () => import('src/features/Images')
+});
+
+const Kubernetes = DefaultLoader({
+  loader: () => import('src/features/Kubernetes')
 });
 
 const ObjectStorage = DefaultLoader({
@@ -381,6 +386,9 @@ export class App extends React.Component<CombinedProps, State> {
                             accountLoading,
                             accountCapabilities,
                             accountError
+                          )}
+                          {isKubernetesEnabled && (
+                            <Route path="/kubernetes" component={Kubernetes} />
                           )}
                           <Route path="/account" component={Account} />
                           <Route
