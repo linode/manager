@@ -25,13 +25,16 @@ import LinodeNetSummary from './LinodeNetSummary';
 
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
-type ClassNames = 'region' | 'volumeLink' | 'regionInner';
+type ClassNames = 'region' | 'volumeLink' | 'regionInner' | 'ipSection';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   title: {},
   summarySection: {},
   section: {},
+  ipSection: {
+    paddingTop: theme.spacing.unit
+  },
   main: {},
   sidebar: {},
   domainSidebar: {},
@@ -134,22 +137,22 @@ class SummaryPanel extends React.Component<CombinedProps> {
           <div className={`${classes.section}`}>
             {formatRegion(linodeRegion)}
           </div>
+          <div className={`${classes.section} ${classes.ipSection}`}>
+            <Typography variant="h3" className={classes.title} data-qa-title>
+              IP Addresses
+            </Typography>
+            <div className={classes.section}>
+              <IPAddress ips={linodeIpv4} copyRight showAll />
+              {linodeIpv6 && (
+                <div className={classes.section}>
+                  <IPAddress ips={[linodeIpv6]} copyRight showAll />
+                </div>
+              )}
+            </div>
+          </div>
         </Paper>
         <Paper className={classes.summarySection}>
           <LinodeNetSummary linodeId={linodeId} />
-        </Paper>
-        <Paper className={classes.summarySection}>
-          <Typography variant="h3" className={classes.title} data-qa-title>
-            IP Addresses
-          </Typography>
-          <div className={classes.section}>
-            <IPAddress ips={linodeIpv4} copyRight showAll />
-            {linodeIpv6 && (
-              <div className={classes.section}>
-                <IPAddress ips={[linodeIpv6]} copyRight showAll />
-              </div>
-            )}
-          </div>
         </Paper>
         <Paper className={classes.summarySection} style={{ paddingBottom: 24 }}>
           <Typography variant="h3" className={classes.title} data-qa-title>
