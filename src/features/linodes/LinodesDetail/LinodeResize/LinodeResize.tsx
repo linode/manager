@@ -278,8 +278,8 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             {!shouldEnableAutoResizeDiskOption && (
               <HelpIcon
                 className={classes.toolTip}
-                text={`Your disk can only be automatically resized if you have one ext
-                disk or one ext disk and one swap disk.`}
+                text={`Your ext disk can only be automatically resized if you have one ext
+                disk or one ext disk and one swap disk on this Linode.`}
               />
             )}
           </Typography>
