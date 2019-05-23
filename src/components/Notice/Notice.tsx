@@ -1,3 +1,4 @@
+import Close from '@material-ui/icons/Close';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import Error from 'src/assets/icons/alert.svg';
@@ -25,7 +26,8 @@ type ClassNames =
   | 'successList'
   | 'flag'
   | 'breakWords'
-  | 'icon';
+  | 'icon'
+  | 'closeIcon';
 
 const styles: StyleRulesCallback = theme => {
   const {
@@ -109,12 +111,15 @@ const styles: StyleRulesCallback = theme => {
       color: 'white',
       marginLeft: -(theme.spacing.unit * 2 + 22),
       marginRight: 18
+    },
+    closeIcon: {
+      paddingLeft: theme.spacing.unit
     }
   };
 };
 
 interface Props extends GridProps {
-  text?: string;
+  text?: string | JSX.Element;
   html?: string;
   error?: boolean;
   errorGroup?: string;
@@ -129,6 +134,9 @@ interface Props extends GridProps {
   spacingBottom?: 0 | 8 | 16 | 24;
   breakWords?: boolean;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
+  // Dismissible Props
+  dismissible?: boolean;
+  onClose?: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -139,6 +147,7 @@ const Notice: React.StatelessComponent<CombinedProps> = props => {
     className,
     important,
     text,
+    dismissible,
     error,
     breakWords,
     errorGroup,
@@ -150,6 +159,7 @@ const Notice: React.StatelessComponent<CombinedProps> = props => {
     html,
     notificationList,
     onClick,
+    onClose,
     spacingTop,
     spacingBottom
   } = props;
@@ -214,6 +224,11 @@ const Notice: React.StatelessComponent<CombinedProps> = props => {
           (warning && <Warning className={classes.icon} />) ||
           (error && <Error className={classes.icon} />))}
       <div className={classes.inner}>{c}</div>
+      {dismissible && (
+        <Grid item className={classes.closeIcon}>
+          <Close onClick={onClose} />
+        </Grid>
+      )}
     </Grid>
   );
 };
