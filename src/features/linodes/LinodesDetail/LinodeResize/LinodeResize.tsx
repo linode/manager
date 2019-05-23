@@ -274,7 +274,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         />
         <Paper className={`${classes.checkbox} ${classes.root}`}>
           <Typography variant="h2" className={classes.title}>
-            Auto Resize Disks
+            Auto Resize Disk
             {!shouldEnableAutoResizeDiskOption && (
               <HelpIcon
                 className={classes.toolTip}
