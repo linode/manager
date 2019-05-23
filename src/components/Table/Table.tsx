@@ -75,7 +75,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     borderTop: 0,
     '& th': {
       position: 'sticky',
-      top: theme.spacing.unit * 12,
       backgroundColor: theme.bg.tableHeader,
       paddingTop: 0,
       paddingBottom: 0,

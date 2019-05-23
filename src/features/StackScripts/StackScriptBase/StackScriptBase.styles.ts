@@ -26,7 +26,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     width: '100%',
     top: 0,
     zIndex: 11,
-    paddingTop: theme.spacing.unit * 3,
+    paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 3,
     backgroundColor: theme.bg.white
   },

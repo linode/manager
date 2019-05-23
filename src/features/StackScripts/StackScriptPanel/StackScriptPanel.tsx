@@ -32,9 +32,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     backgroundColor: theme.color.white
   },
   creating: {
-    paddingTop: 0,
-    marginTop: theme.spacing.unit * 2,
-    '-webkit-appearance': 'none'
+    paddingTop: 0
   },
   link: {
     display: 'block',
