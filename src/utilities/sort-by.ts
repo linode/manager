@@ -24,7 +24,7 @@ export const sortByUTFDate = (a: string, b: string, order: SortOrder) => {
   if (order === 'asc') {
     return result; // ascending order
   }
-  return -result; // decending order
+  return -result; // descending order
 };
 
 export const sortByNumber = (a: number, b: number, order: SortOrder) => {
@@ -37,7 +37,7 @@ export const sortByNumber = (a: number, b: number, order: SortOrder) => {
   if (order === 'asc') {
     return result; // ascending order
   }
-  return -result; // decending order
+  return -result; // descending order
 };
 
 export const sortByArrayLength = (a: any[], b: any[], order: SortOrder) => {

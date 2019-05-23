@@ -25,7 +25,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const TableRowEmptyState: React.StatelessComponent<CombinedProps> = props => {
   const { classes } = props;
   return (
-    <TableRow>
+    <TableRow data-testid={'table-row-empty'}>
       <TableCell colSpan={props.colSpan} className={classes.root}>
         {props.message || 'No items to display.'}
       </TableCell>

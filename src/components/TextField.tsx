@@ -19,7 +19,8 @@ type ClassNames =
   | 'helpWrapperTextField'
   | 'expand'
   | 'small'
-  | 'selectSmall';
+  | 'selectSmall'
+  | 'tiny';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
@@ -53,6 +54,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       width: 24,
       height: 24
     }
+  },
+  tiny: {
+    width: '3em'
   }
 });
 
@@ -65,6 +69,7 @@ export type Props = TextFieldProps & {
   [index: string]: any;
   expand?: boolean;
   small?: boolean;
+  tiny?: boolean;
 };
 
 type CombinedProps = Props & WithTheme & WithStyles<ClassNames>;
@@ -102,6 +107,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
       className,
       expand,
       small,
+      tiny,
       ...textFieldProps
     } = this.props;
 
@@ -144,7 +150,8 @@ class LinodeTextField extends React.Component<CombinedProps> {
               'input',
               {
                 [classes.expand]: expand,
-                [classes.small]: small
+                [classes.small]: small,
+                [classes.tiny]: tiny
               },
               className
             ),

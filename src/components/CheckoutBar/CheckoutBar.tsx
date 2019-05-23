@@ -15,7 +15,8 @@ type ClassNames =
   | 'noBorder'
   | 'sidebarTitle'
   | 'detail'
-  | 'createButton';
+  | 'createButton'
+  | 'price';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   '@keyframes fadeIn': {
@@ -60,6 +61,12 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     [theme.breakpoints.up('lg')]: {
       width: '100%'
     }
+  },
+  price: {
+    fontSize: '.8rem',
+    color: theme.color.headline,
+    lineHeight: '1.5em',
+    marginTop: theme.spacing.unit
   }
 });
 
@@ -70,6 +77,7 @@ interface Props {
   disabled?: boolean;
   isMakingRequest?: boolean;
   displaySections?: { title: string; details?: string | number }[];
+  priceHelperText?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -87,8 +95,11 @@ class CheckoutBar extends React.Component<CombinedProps> {
       calculatedPrice,
       disabled,
       displaySections,
-      isMakingRequest
+      isMakingRequest,
+      priceHelperText
     } = this.props;
+
+    const price = calculatedPrice ? calculatedPrice : 0;
 
     return (
       <div className={classes.root}>
@@ -123,10 +134,12 @@ class CheckoutBar extends React.Component<CombinedProps> {
             className={`${classes.checkoutSection} ${classes.noBorder}`}
             data-qa-total-price
           >
-            <DisplayPrice
-              price={calculatedPrice ? calculatedPrice : 0}
-              interval="mo"
-            />
+            <DisplayPrice price={price} interval="mo" />
+            {priceHelperText && price > 0 && (
+              <Typography className={classes.price}>
+                {priceHelperText}
+              </Typography>
+            )}
           </div>
         }
 

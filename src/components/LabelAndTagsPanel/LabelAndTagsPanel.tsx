@@ -30,7 +30,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 const styled = withStyles(styles);
-
 interface Props {
   error?: string;
   labelFieldProps?: TextFieldProps;

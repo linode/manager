@@ -35,3 +35,9 @@ export const renderWithTheme = (ui: any) => {
     </LinodeThemeWrapper>
   );
 };
+
+export const includesActions = (actions: string[], query: any) => {
+  for (const action of actions) {
+    expect(query(action)).toBeInTheDocument();
+  }
+};
