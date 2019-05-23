@@ -2,8 +2,8 @@ import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  openSecretModal: (id: string) => void;
-  openDeleteModal: (id: string) => void;
+  openSecretModal: (id: string, label: string) => void;
+  openDeleteModal: (id: string, label: string) => void;
   openEditDrawer: (
     isPublic: boolean,
     redirectUri: string,
@@ -19,7 +19,7 @@ interface Props {
 type CombinedProps = Props;
 
 class OAuthClientActionMenu extends React.Component<CombinedProps> {
-  createLinodeActions = () => {
+  createActions = () => {
     const { label, redirectUri, isPublic, clientID } = this.props;
     return (closeMenu: Function): Action[] => {
       const actions = [
@@ -34,14 +34,14 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
           title: 'Reset Secret',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             closeMenu();
-            this.props.openSecretModal(clientID);
+            this.props.openSecretModal(clientID, label);
           }
         },
         {
           title: 'Delete',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             closeMenu();
-            this.props.openDeleteModal(clientID);
+            this.props.openDeleteModal(clientID, label);
           }
         }
       ];
@@ -51,7 +51,7 @@ class OAuthClientActionMenu extends React.Component<CombinedProps> {
   };
 
   render() {
-    return <ActionMenu createActions={this.createLinodeActions()} />;
+    return <ActionMenu createActions={this.createActions()} />;
   }
 }
 

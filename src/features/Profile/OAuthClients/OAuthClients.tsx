@@ -97,18 +97,20 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
 
   static docs = [LinodeAPI];
 
-  openSecretModal = (id: string) =>
+  openSecretModal = (id: string, label: string) =>
     this.setState({
       secretModalOpen: true,
       modalErrors: undefined,
+      clientLabel: label,
       clientID: id
     });
 
-  openDeleteModal = (id: string) =>
+  openDeleteModal = (id: string, label: string) =>
     this.setState({
       deleteModalOpen: true,
       modalErrors: undefined,
-      clientID: id
+      clientID: id,
+      clientLabel: label
     });
 
   closeModals = () =>
