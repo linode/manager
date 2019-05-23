@@ -427,7 +427,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment="Images" />
         <Placeholder
           title="Add an Image"
-          copy="Adding a new image is easy. Click below to add an image."
+          copy={<EmptyCopy />}
           buttonProps={{
             onClick: this.openForCreate,
             children: 'Add an Image'
@@ -438,6 +438,31 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     );
   };
 }
+
+const EmptyCopy = () => (
+  <>
+    <Typography variant="subtitle1">
+      Adding an image is easy. Click here to
+    </Typography>
+    <Typography variant="subtitle1">
+      <a
+        href="https://linode.com/docs/platform/disk-images/linode-images-new-manager/"
+        target="_blank"
+        className="h-u"
+      >
+        learn more about Images
+      </a>
+      &nbsp;or&nbsp;
+      <a
+        href="https://linode.com/docs/quick-answers/linode-platform/deploy-an-image-to-a-linode"
+        target="_blank"
+        className="h-u"
+      >
+        deploy an Image to a Linode.
+      </a>
+    </Typography>
+  </>
+);
 
 interface WithPrivateImages {
   imagesData: Linode.Image[];
