@@ -294,13 +294,13 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             text={
               !shouldEnableAutoResizeDiskOption ? (
                 `Would you like your disk on this Linode automatically resized to
-            scale with this Linode's new size? We recommend you keep this enabled.`
+            scale with this Linode's new size? We recommend you keep this option enabled.`
               ) : (
                 <Typography>
                   Would you like the disk{' '}
                   <strong>{linodeExtDiskLabels[0]}</strong> to be automatically
                   scaled with this Linode's new size? We recommend you keep this
-                  enabled
+                  option enabled.
                 </Typography>
               )
             }
