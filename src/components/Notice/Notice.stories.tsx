@@ -11,6 +11,12 @@ storiesOf('Notice', module).add('All Notices', () => (
       <Notice error important text="This is an important error notice" />
       <Notice warning important text="This is an important warning notice" />
       <Notice success important text="This is an important success notice" />
+      <Notice
+        warning
+        text="This is a dismissible Notice"
+        dismissible
+        onClose={() => console.log('Dismissed!')}
+      />
     </div>
   </React.Fragment>
 ));

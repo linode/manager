@@ -8,6 +8,7 @@ export interface AccountProps {
   account?: Linode.Account;
   accountLoading: boolean;
   accountError?: Linode.ApiFieldError[] | Error;
+  lastUpdated: number;
 }
 
 export interface DispatchProps {
@@ -24,6 +25,7 @@ export default <TInner extends {}, TOuter extends {}>(
   mapAccountToProps: (
     ownProps: TOuter,
     accountLoading: boolean,
+    lastUpdated: number,
     account?: Linode.Account,
     accountError?: Linode.ApiFieldError[] | Error
   ) => TInner
@@ -33,8 +35,15 @@ export default <TInner extends {}, TOuter extends {}>(
       const account = state.__resources.account.data;
       const accountLoading = state.__resources.account.loading;
       const accountError = state.__resources.account.error;
+      const lastUpdated = state.__resources.account.lastUpdated;
 
-      return mapAccountToProps(ownProps, accountLoading, account, accountError);
+      return mapAccountToProps(
+        ownProps,
+        accountLoading,
+        lastUpdated,
+        account,
+        accountError
+      );
     },
     mapDispatchToProps
   );

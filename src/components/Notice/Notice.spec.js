@@ -12,9 +12,9 @@ describe('Notice Suite', () => {
         navigateToStory(component, childStories[0]);
     });
 
-    it('should display three notices', () => {
+    it('should display all the notices', () => {
         notices = $$('[data-qa-notice]');
-        expect(notices.length).toEqual(6);
+        expect(notices.length).toEqual(7);
     });
 
     it('should display an error notice', () => {
