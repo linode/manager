@@ -154,7 +154,7 @@ interface ContextProps {
 }
 
 interface DispatchProps {
-  updateLinode: (id: number) => any;
+  updateLinode: (id: number) => void;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
