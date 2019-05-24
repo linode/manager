@@ -1,4 +1,4 @@
-import { isEmpty } from 'ramda';
+import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import {
@@ -178,7 +178,17 @@ export class SelectPlanPanel extends React.Component<
   };
 
   render() {
-    const { classes, copy, error, header } = this.props;
+    const { classes, copy, error, header, types, selectedID } = this.props;
+
+    // Determine initial plan category tab based on selectedTypeID
+    // (if there is one).
+    const selectedTypeClass: Linode.LinodeTypeClass = pathOr(
+      'standard', // Use `standard` by default
+      ['class'],
+      types.find(type => type.id === selectedID)
+    );
+    const initialTab = tabOrder.indexOf(selectedTypeClass);
+
     return (
       <TabbedPanel
         rootClass={`${classes.root} tabbedPanel`}
@@ -186,7 +196,7 @@ export class SelectPlanPanel extends React.Component<
         header={header || 'Linode Plan'}
         copy={copy}
         tabs={this.createTabs()}
-        initTab={1}
+        initTab={initialTab}
       />
     );
   }
@@ -201,3 +211,10 @@ export default compose<
   RenderGuard,
   styled
 )(SelectPlanPanel);
+
+const tabOrder: Linode.LinodeTypeClass[] = [
+  'nanode',
+  'standard',
+  'dedicated',
+  'highmem'
+];
