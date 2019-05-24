@@ -1,5 +1,6 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import ListItem from 'src/components/core/ListItem';
 import {
   StyleRulesCallback,
@@ -88,6 +89,7 @@ const userEventsListItem: React.StatelessComponent<CombinedProps> = props => {
     onClick,
     className
   } = props;
+
   return (
     <ListItem
       className={classNames(
@@ -105,10 +107,17 @@ const userEventsListItem: React.StatelessComponent<CombinedProps> = props => {
       button={Boolean(onClick)}
       role="menuitem"
     >
-      <Typography variant="h3" className={classes.title}>
-        {title}
-      </Typography>
-      {content && <div className={classes.content}>{content}</div>}
+      <Link
+        role="menuitem"
+        to={'/'}
+        href="javascript:void(0)"
+        onClick={onClick}
+      >
+        <Typography variant="h3" className={classes.title}>
+          {title}
+        </Typography>
+        {content && <div className={classes.content}>{content}</div>}
+      </Link>
     </ListItem>
   );
 };

@@ -2,6 +2,7 @@ import Modal from '@material-ui/core/Modal';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
 import MenuList from 'src/components/core/MenuList';
 import Paper from 'src/components/core/Paper';
@@ -108,16 +109,26 @@ export class UserEventsMenu extends React.Component<CombinedProps, State> {
                 <MenuList className={classes.dropDown}>
                   <UserEventsList events={events} closeMenu={this.closeMenu} />
                 </MenuList>
-                <Button
-                  data-qa-view-all-events
-                  className={classes.viewAll}
+                <Link
+                  role="menuitem"
+                  to={'/events'}
+                  href="javascript:void(0)"
                   onClick={(e: any) => {
                     push('/events');
                     this.closeMenu(e);
                   }}
                 >
-                  View All Events
-                </Button>
+                  <Button
+                    data-qa-view-all-events
+                    className={classes.viewAll}
+                    onClick={(e: any) => {
+                      push('/events');
+                      this.closeMenu(e);
+                    }}
+                  >
+                    View All Events
+                  </Button>
+                </Link>
               </Paper>
             </Modal>
           )}
