@@ -103,15 +103,6 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
           ...readOnlyProps
         },
         {
-          title: 'View Graphs',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendLinodeActionMenuItemEvent('View Linode Graphs');
-            push(`/linodes/${linodeId}/summary`);
-            e.preventDefault();
-            e.stopPropagation();
-          }
-        },
-        {
           title: 'Resize',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendLinodeActionMenuItemEvent('Navigate to Resize Page');
