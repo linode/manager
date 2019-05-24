@@ -51,7 +51,9 @@ const RecentInvoicesRow: React.FC<CombinedProps> = props => {
     setPDFError(undefined);
     setGeneratingPDF(true);
 
-    getAll<Linode.InvoiceItem>(() => getInvoiceItems(invoice.id))()
+    getAll<Linode.InvoiceItem>((params, filter) =>
+      getInvoiceItems(invoice.id, params, filter)
+    )()
       .then(response => {
         const invoiceItems = response.data;
         const result = printInvoice(thisAccount, thisItem, invoiceItems);

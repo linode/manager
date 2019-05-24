@@ -84,8 +84,8 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
       this.props.requestAccount();
     }
 
-    const getAllInvoiceItems = getAll<Linode.InvoiceItem>(() =>
-      getInvoiceItems(+invoiceId)
+    const getAllInvoiceItems = getAll<Linode.InvoiceItem>((params, filter) =>
+      getInvoiceItems(+invoiceId, params, filter)
     );
 
     Promise.all([getInvoice(+invoiceId), getAllInvoiceItems()])
