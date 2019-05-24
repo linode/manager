@@ -153,6 +153,8 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
             <LinodeActionMenu
               linodeId={id}
               linodeLabel={label}
+              linodeRegion={region}
+              linodeType={type}
               linodeStatus={status}
               linodeBackups={backups}
               openConfigDrawer={openConfigDrawer}
