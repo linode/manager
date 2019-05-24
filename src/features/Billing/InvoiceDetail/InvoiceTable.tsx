@@ -9,6 +9,9 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 
+import Paginate from 'src/components/Paginate';
+import PaginationFooter from 'src/components/PaginationFooter';
+
 interface Props {
   loading: boolean;
   errors?: Linode.ApiFieldError[];
@@ -58,38 +61,57 @@ const RenderData: React.StatelessComponent<{
 }> = props => {
   const { items } = props;
   return (
-    <>
-      {items.map(
-        ({ label, from, to, quantity, unit_price, amount, tax, total }) => (
-          <TableRow key={`${label}-${from}-${to}`}>
-            <TableCell parentColumn="Description" data-qa-descrition>
-              {label}
-            </TableCell>
-            <TableCell parentColumn="From" data-qa-from>
-              {renderDate(from)}
-            </TableCell>
-            <TableCell parentColumn="To" data-qa-to>
-              {renderDate(to)}
-            </TableCell>
-            <TableCell parentColumn="Quantity" data-qa-quantity>
-              {renderQuantity(quantity)}
-            </TableCell>
-            <TableCell parentColumn="Unit Price" data-qa-unit-price>
-              {renderUnitPrice(unit_price)}
-            </TableCell>
-            <TableCell parentColumn="Amount (USD)" data-qa-amount>
-              ${amount}
-            </TableCell>
-            <TableCell parentColumn="Tax (USD)" data-qa-tax>
-              ${tax}
-            </TableCell>
-            <TableCell parentColumn="Total (USD)" data-qa-total>
-              ${total}
-            </TableCell>
-          </TableRow>
-        )
+    <Paginate data={items} pageSize={25}>
+      {({
+        data: paginatedData,
+        count,
+        handlePageChange,
+        handlePageSizeChange,
+        page,
+        pageSize
+      }) => (
+        <React.Fragment>
+          {paginatedData.map(
+            ({ label, from, to, quantity, unit_price, amount, tax, total }) => (
+              <TableRow key={`${label}-${from}-${to}`}>
+                <TableCell parentColumn="Description" data-qa-descrition>
+                  {label}
+                </TableCell>
+                <TableCell parentColumn="From" data-qa-from>
+                  {renderDate(from)}
+                </TableCell>
+                <TableCell parentColumn="To" data-qa-to>
+                  {renderDate(to)}
+                </TableCell>
+                <TableCell parentColumn="Quantity" data-qa-quantity>
+                  {renderQuantity(quantity)}
+                </TableCell>
+                <TableCell parentColumn="Unit Price" data-qa-unit-price>
+                  {renderUnitPrice(unit_price)}
+                </TableCell>
+                <TableCell parentColumn="Amount (USD)" data-qa-amount>
+                  ${amount}
+                </TableCell>
+                <TableCell parentColumn="Tax (USD)" data-qa-tax>
+                  ${tax}
+                </TableCell>
+                <TableCell parentColumn="Total (USD)" data-qa-total>
+                  ${total}
+                </TableCell>
+              </TableRow>
+            )
+          )}
+          <PaginationFooter
+            eventCategory="invoice_items"
+            count={count}
+            page={page}
+            pageSize={pageSize}
+            handlePageChange={handlePageChange}
+            handleSizeChange={handlePageSizeChange}
+          />
+        </React.Fragment>
       )}
-    </>
+    </Paginate>
   );
 };
 
