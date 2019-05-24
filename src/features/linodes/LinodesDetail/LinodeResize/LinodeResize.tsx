@@ -99,7 +99,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
   state: State = {
     selectedId: '',
     isLoading: false,
-    autoDiskResize: true
+    autoDiskResize: shouldEnableAutoResizeDiskOption(this.props.linodeDisks)[1]
   };
 
   static extendType = (type: Linode.LinodeType): ExtendedType => {
@@ -198,32 +198,10 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         : []
       : [];
 
-    /**
-     * the user should only be given the option to automatically resize
-     * their disks under the 2 following conditions:
-     *
-     * 1. They have 1 ext disk (and nothing else)
-     * 2. They have 1 ext disk and 1 swap disk (and nothing else)
-     *
-     * If they have more than 2 disks, no automatic resizing is going to
-     * take place server-side, so given them the option to toggle
-     * the checkbox is pointless.
-     */
-    const linodeExtDiskLabels = linodeDisks.reduce((acc, eachDisk) => {
-      return eachDisk.filesystem === 'ext3' || eachDisk.filesystem === 'ext4'
-        ? [...acc, eachDisk.label]
-        : acc;
-    }, []);
-    const linodeHasOneExtDisk = linodeExtDiskLabels.length === 1;
-    const linodeHasOneSwapDisk =
-      linodeDisks.reduce((acc, eachDisk) => {
-        return eachDisk.filesystem === 'swap'
-          ? [...acc, eachDisk.filesystem]
-          : acc;
-      }, []).length === 1;
-    const shouldEnableAutoResizeDiskOption =
-      (linodeDisks.length === 1 && linodeHasOneExtDisk) ||
-      (linodeDisks.length === 2 && linodeHasOneSwapDisk && linodeHasOneExtDisk);
+    const [
+      diskToResize,
+      _shouldEnableAutoResizeDiskOption
+    ] = shouldEnableAutoResizeDiskOption(linodeDisks);
 
     return (
       <React.Fragment>
@@ -275,7 +253,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         <Paper className={`${classes.checkbox} ${classes.root}`}>
           <Typography variant="h2" className={classes.title}>
             Auto Resize Disk
-            {!shouldEnableAutoResizeDiskOption && (
+            {!_shouldEnableAutoResizeDiskOption && (
               <HelpIcon
                 className={classes.toolTip}
                 text={`Your ext disk can only be automatically resized if you have one ext
@@ -284,23 +262,22 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             )}
           </Typography>
           <Checkbox
-            disabled={!shouldEnableAutoResizeDiskOption}
+            disabled={!_shouldEnableAutoResizeDiskOption}
             checked={
-              !shouldEnableAutoResizeDiskOption
+              !_shouldEnableAutoResizeDiskOption
                 ? false
                 : this.state.autoDiskResize
             }
             onChange={this.handleToggleAutoDisksResize}
             text={
-              !shouldEnableAutoResizeDiskOption ? (
+              !_shouldEnableAutoResizeDiskOption ? (
                 `Would you like your disk on this Linode automatically resized to
             scale with this Linode's new size? We recommend you keep this option enabled.`
               ) : (
                 <Typography>
-                  Would you like the disk{' '}
-                  <strong>{linodeExtDiskLabels[0]}</strong> to be automatically
-                  scaled with this Linode's new size? We recommend you keep this
-                  option enabled.
+                  Would you like the disk <strong>{diskToResize}</strong> to be
+                  automatically scaled with this Linode's new size? We recommend
+                  you keep this option enabled.
                 </Typography>
               )
             }
@@ -354,6 +331,41 @@ const linodeContext = withLinodeDetailContext(state => {
     linodeDisks: linode._disks
   };
 });
+
+/**
+ * the user should only be given the option to automatically resize
+ * their disks under the 2 following conditions:
+ *
+ * 1. They have 1 ext disk (and nothing else)
+ * 2. They have 1 ext disk and 1 swap disk (and nothing else)
+ *
+ * If they have more than 2 disks, no automatic resizing is going to
+ * take place server-side, so given them the option to toggle
+ * the checkbox is pointless.
+ *
+ * @returns array of both the ext disk to resize and a boolean
+ * of whether the option should be enabled
+ */
+export const shouldEnableAutoResizeDiskOption = (
+  linodeDisks: Linode.Disk[]
+): [string | undefined, boolean] => {
+  const linodeExtDiskLabels = linodeDisks.reduce((acc, eachDisk) => {
+    return eachDisk.filesystem === 'ext3' || eachDisk.filesystem === 'ext4'
+      ? [...acc, eachDisk.label]
+      : acc;
+  }, []);
+  const linodeHasOneExtDisk = linodeExtDiskLabels.length === 1;
+  const linodeHasOneSwapDisk =
+    linodeDisks.reduce((acc, eachDisk) => {
+      return eachDisk.filesystem === 'swap'
+        ? [...acc, eachDisk.filesystem]
+        : acc;
+    }, []).length === 1;
+  const shouldEnable =
+    (linodeDisks.length === 1 && linodeHasOneExtDisk) ||
+    (linodeDisks.length === 2 && linodeHasOneSwapDisk && linodeHasOneExtDisk);
+  return [linodeExtDiskLabels[0], shouldEnable];
+};
 
 export default compose<CombinedProps, {}>(
   linodeContext,

@@ -104,14 +104,14 @@ export const linodeShutdown = (linodeId: number | string) =>
 export const resizeLinode = (
   linodeId: number,
   type: string,
-  allow_auto_disk_linode: boolean = true
+  allow_auto_disk_resize: boolean = true
 ) =>
   Request<{}>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/resize`),
     setMethod('POST'),
     setData({
       type,
-      allow_auto_disk_linode
+      allow_auto_disk_resize
     })
   );
 
