@@ -208,7 +208,11 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
         if (!this.mounted) {
           return;
         }
-        return this.setState({ ...this.defaultState });
+        return this.setState({
+          ...this.defaultState,
+          secretModalSuccessOpen: true,
+          secret: data.secret
+        });
       })
       .then(data => {
         if (!this.mounted) {
