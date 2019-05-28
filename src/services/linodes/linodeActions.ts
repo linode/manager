@@ -97,12 +97,22 @@ export const linodeShutdown = (linodeId: number | string) =>
  *
  * @param linodeId { number } The id of the Linode to resize.
  * @param type { string } the new size of the Linode
+ * @param auto_resize_linode { boolean } do you want to resize your disks after
+ * the Linode is resized? NOTE: Unless the user has 1 ext disk or 1 ext disk and
+ * 1 swap disk, this flag does nothing, regardless of whether it's true or false
  */
-export const resizeLinode = (linodeId: number, type: string) =>
+export const resizeLinode = (
+  linodeId: number,
+  type: string,
+  allow_auto_disk_resize: boolean = true
+) =>
   Request<{}>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/resize`),
     setMethod('POST'),
-    setData({ type })
+    setData({
+      type,
+      allow_auto_disk_resize
+    })
   );
 
 /**

@@ -136,9 +136,6 @@ class SummaryPanel extends React.Component<CombinedProps> {
           </div>
         </Paper>
         <Paper className={classes.summarySection}>
-          <LinodeNetSummary linodeId={linodeId} />
-        </Paper>
-        <Paper className={classes.summarySection}>
           <Typography variant="h3" className={classes.title} data-qa-title>
             IP Addresses
           </Typography>
@@ -150,6 +147,9 @@ class SummaryPanel extends React.Component<CombinedProps> {
               </div>
             )}
           </div>
+        </Paper>
+        <Paper className={classes.summarySection}>
+          <LinodeNetSummary linodeId={linodeId} />
         </Paper>
         <Paper className={classes.summarySection} style={{ paddingBottom: 24 }}>
           <Typography variant="h3" className={classes.title} data-qa-title>

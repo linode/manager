@@ -1,9 +1,10 @@
 import { mount, shallow } from 'enzyme';
 import * as React from 'react';
+import { extDisk, swapDisk } from 'src/__data__/disks';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { types } from 'src/__data__/types';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import { LinodeResize } from './LinodeResize';
+import { LinodeResize, shouldEnableAutoResizeDiskOption } from './LinodeResize';
 
 describe('LinodeResize', () => {
   const mockTypes = types.map(LinodeResize.extendType);
@@ -11,6 +12,7 @@ describe('LinodeResize', () => {
   const component = shallow(
     <LinodeResize
       closeSnackbar={jest.fn()}
+      linodeDisks={[]}
       enqueueSnackbar={jest.fn()}
       requestNotifications={jest.fn()}
       {...reactRouterProps}
@@ -32,6 +34,7 @@ describe('LinodeResize', () => {
     const componentWithTheme = mount(
       <LinodeThemeWrapper>
         <LinodeResize
+          linodeDisks={[]}
           closeSnackbar={jest.fn()}
           enqueueSnackbar={jest.fn()}
           requestNotifications={jest.fn()}
@@ -68,6 +71,7 @@ describe('LinodeResize', () => {
               closeSnackbar={jest.fn()}
               enqueueSnackbar={jest.fn()}
               requestNotifications={jest.fn()}
+              linodeDisks={[]}
               {...reactRouterProps}
               classes={{
                 root: '',
@@ -101,6 +105,7 @@ describe('LinodeResize', () => {
           <LinodeThemeWrapper>
             <LinodeResize
               closeSnackbar={jest.fn()}
+              linodeDisks={[]}
               enqueueSnackbar={jest.fn()}
               requestNotifications={jest.fn()}
               {...reactRouterProps}
@@ -139,5 +144,41 @@ describe('LinodeResize', () => {
     component.setState({ selectedId: '' });
     const submitBtn = component.find('[data-qa-submit]');
     expect(submitBtn.prop('disabled')).toBeTruthy();
+  });
+
+  describe('utility functions', () => {
+    it('should allow for resizing disk with one ext disk with label "Arch Linux Disk"', () => {
+      const [diskLabel, shouldEnable] = shouldEnableAutoResizeDiskOption([
+        extDisk
+      ]);
+      expect(diskLabel).toBe('Arch Linux Disk');
+      expect(shouldEnable).toBeTruthy();
+    });
+
+    it('should not allow resizing disk with only one swap disk', () => {
+      const [diskLabel, shouldEnable] = shouldEnableAutoResizeDiskOption([
+        swapDisk
+      ]);
+      expect(diskLabel).toBe(undefined);
+      expect(shouldEnable).toBeFalsy();
+    });
+
+    it('should allow for resizing with one swap and one ext disk', () => {
+      const [diskLabel, shouldEnable] = shouldEnableAutoResizeDiskOption([
+        extDisk,
+        swapDisk
+      ]);
+      expect(diskLabel).toBe('Arch Linux Disk');
+      expect(shouldEnable).toBeTruthy();
+    });
+
+    it('should not allow resizing disk with more than one ext disk', () => {
+      const [diskLabel, shouldEnable] = shouldEnableAutoResizeDiskOption([
+        extDisk,
+        extDisk
+      ]);
+      expect(diskLabel).toBe('Arch Linux Disk');
+      expect(shouldEnable).toBeFalsy();
+    });
   });
 });

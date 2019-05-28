@@ -27,12 +27,27 @@ import { withNotifications } from 'src/store/notification/notification.container
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import LinodePermissionsError from '../LinodePermissionsError';
 
-type ClassNames = 'root' | 'title' | 'subTitle' | 'currentPlanContainer';
+import Checkbox from 'src/components/CheckBox';
+import HelpIcon from 'src/components/HelpIcon';
+
+type ClassNames =
+  | 'root'
+  | 'title'
+  | 'subTitle'
+  | 'toolTip'
+  | 'currentPlanContainer'
+  | 'checkbox';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     padding: theme.spacing.unit * 3,
     paddingBottom: theme.spacing.unit * 2
+  },
+  checkbox: {
+    marginTop: theme.spacing.unit * 3
+  },
+  toolTip: {
+    paddingTop: theme.spacing.unit
   },
   title: {
     marginBottom: theme.spacing.unit * 2
@@ -59,12 +74,14 @@ interface LinodeContextProps {
   linodeStatus?: Linode.LinodeStatus;
   linodeLabel: string;
   permissions: Linode.GrantLevel;
+  linodeDisks: Linode.Disk[];
 }
 
 interface State {
   selectedId: string;
   isLoading: boolean;
   errors?: Linode.ApiFieldError[];
+  autoDiskResize: boolean;
 }
 
 interface NotificationProps {
@@ -81,7 +98,8 @@ type CombinedProps = WithTypesProps &
 export class LinodeResize extends React.Component<CombinedProps, State> {
   state: State = {
     selectedId: '',
-    isLoading: false
+    isLoading: false,
+    autoDiskResize: shouldEnableAutoResizeDiskOption(this.props.linodeDisks)[1]
   };
 
   static extendType = (type: Linode.LinodeType): ExtendedType => {
@@ -118,7 +136,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
 
     this.setState({ isLoading: true });
 
-    resizeLinode(linodeId, selectedId)
+    resizeLinode(linodeId, selectedId, this.state.autoDiskResize)
       .then(_ => {
         this.setState({ selectedId: '', isLoading: false });
         resetEventsPolling();
@@ -145,6 +163,10 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     this.setState({ selectedId: id });
   };
 
+  handleToggleAutoDisksResize = () => {
+    this.setState({ autoDiskResize: !this.state.autoDiskResize });
+  };
+
   render() {
     const {
       currentTypesData,
@@ -152,7 +174,8 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       linodeType,
       linodeLabel,
       permissions,
-      classes
+      classes,
+      linodeDisks
     } = this.props;
     const type = [...currentTypesData, ...deprecatedTypesData].find(
       t => t.id === linodeType
@@ -174,6 +197,11 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           ]
         : []
       : [];
+
+    const [
+      diskToResize,
+      _shouldEnableAutoResizeDiskOption
+    ] = shouldEnableAutoResizeDiskOption(linodeDisks);
 
     return (
       <React.Fragment>
@@ -222,6 +250,39 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           selectedID={this.state.selectedId}
           disabled={disabled}
         />
+        <Paper className={`${classes.checkbox} ${classes.root}`}>
+          <Typography variant="h2" className={classes.title}>
+            Auto Resize Disk
+            {!_shouldEnableAutoResizeDiskOption && (
+              <HelpIcon
+                className={classes.toolTip}
+                text={`Your ext disk can only be automatically resized if you have one ext
+                disk or one ext disk and one swap disk on this Linode.`}
+              />
+            )}
+          </Typography>
+          <Checkbox
+            disabled={!_shouldEnableAutoResizeDiskOption}
+            checked={
+              !_shouldEnableAutoResizeDiskOption
+                ? false
+                : this.state.autoDiskResize
+            }
+            onChange={this.handleToggleAutoDisksResize}
+            text={
+              !_shouldEnableAutoResizeDiskOption ? (
+                `Would you like your disk on this Linode automatically resized to
+            scale with this Linode's new size? We recommend you keep this option enabled.`
+              ) : (
+                <Typography>
+                  Would you like the disk <strong>{diskToResize}</strong> to be
+                  automatically scaled with this Linode's new size? We recommend
+                  you keep this option enabled.
+                </Typography>
+              )
+            }
+          />
+        </Paper>
         <ActionsPanel>
           <Button
             disabled={
@@ -266,9 +327,45 @@ const linodeContext = withLinodeDetailContext(state => {
     linodeType: linode.type,
     linodeStatus: linode.status,
     linodeLabel: linode.label,
-    permissions: linode._permissions
+    permissions: linode._permissions,
+    linodeDisks: linode._disks
   };
 });
+
+/**
+ * the user should only be given the option to automatically resize
+ * their disks under the 2 following conditions:
+ *
+ * 1. They have 1 ext disk (and nothing else)
+ * 2. They have 1 ext disk and 1 swap disk (and nothing else)
+ *
+ * If they have more than 2 disks, no automatic resizing is going to
+ * take place server-side, so given them the option to toggle
+ * the checkbox is pointless.
+ *
+ * @returns array of both the ext disk to resize and a boolean
+ * of whether the option should be enabled
+ */
+export const shouldEnableAutoResizeDiskOption = (
+  linodeDisks: Linode.Disk[]
+): [string | undefined, boolean] => {
+  const linodeExtDiskLabels = linodeDisks.reduce((acc, eachDisk) => {
+    return eachDisk.filesystem === 'ext3' || eachDisk.filesystem === 'ext4'
+      ? [...acc, eachDisk.label]
+      : acc;
+  }, []);
+  const linodeHasOneExtDisk = linodeExtDiskLabels.length === 1;
+  const linodeHasOneSwapDisk =
+    linodeDisks.reduce((acc, eachDisk) => {
+      return eachDisk.filesystem === 'swap'
+        ? [...acc, eachDisk.filesystem]
+        : acc;
+    }, []).length === 1;
+  const shouldEnable =
+    (linodeDisks.length === 1 && linodeHasOneExtDisk) ||
+    (linodeDisks.length === 2 && linodeHasOneSwapDisk && linodeHasOneExtDisk);
+  return [linodeExtDiskLabels[0], shouldEnable];
+};
 
 export default compose<CombinedProps, {}>(
   linodeContext,

@@ -15,7 +15,7 @@ storiesOf('Notice', module).add('All Notices', () => (
         warning
         text="This is a dismissible Notice"
         dismissible
-        onClose={() => console.log('Dismissed!')} /* tslint:disable-line */
+        onClose={() => null}
       />
     </div>
   </React.Fragment>
