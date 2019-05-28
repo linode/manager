@@ -11,6 +11,7 @@ import eventMessageGenerator from 'src/eventMessageGenerator';
 import { reportException } from 'src/exceptionReporting';
 import { ExtendedEvent } from 'src/store/events/event.helpers';
 import createClickHandlerForNotification from 'src/utilities/getEventsActionLink';
+import createLinkHandlerForNotification from 'src/utilities/getEventsActionLinkStrings';
 import UserEventsListItem, {
   Props as UserEventsListItemProps
 } from './UserEventsListItem';
@@ -75,8 +76,14 @@ export const UserEventsList: React.StatelessComponent<
             }
           );
 
+          const linkPath = createLinkHandlerForNotification(
+            event.action,
+            event.entity,
+            event._deleted
+          );
+
           return title
-            ? [...result, { title, content, success, error, onClick }]
+            ? [...result, { title, content, success, error, onClick, linkPath }]
             : result;
         }, [])
         .map((reducedProps: UserEventsListItemProps, key: number) => (

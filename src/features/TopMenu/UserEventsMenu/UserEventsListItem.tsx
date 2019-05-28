@@ -74,6 +74,7 @@ export interface Props {
   error?: boolean;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   className?: any;
+  linkPath: string | undefined;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -87,7 +88,8 @@ const userEventsListItem: React.StatelessComponent<CombinedProps> = props => {
     success,
     error,
     onClick,
-    className
+    className,
+    linkPath
   } = props;
 
   return (
@@ -109,7 +111,7 @@ const userEventsListItem: React.StatelessComponent<CombinedProps> = props => {
     >
       <Link
         role="menuitem"
-        to={'/'}
+        to={linkPath ? linkPath : '/'}
         href="javascript:void(0)"
         onClick={onClick}
       >
