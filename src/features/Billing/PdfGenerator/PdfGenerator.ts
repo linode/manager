@@ -120,7 +120,7 @@ const addLeftHeader = (
   addLine('Remit to:');
   doc.setFontStyle('normal');
 
-  addLine(`Linode, LLC`);
+  addLine(`Linode`);
   addLine('249 Arch St.');
   addLine('Philadelphia, PA 19106');
   addLine('USA');

@@ -21,6 +21,7 @@ import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { ThunkDispatch } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { getAll } from 'src/utilities/getAll';
 import InvoiceTable from './InvoiceTable';
 
 type ClassNames = 'root' | 'backButton' | 'titleWrapper' | 'totals';
@@ -83,7 +84,11 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
       this.props.requestAccount();
     }
 
-    Promise.all([getInvoice(+invoiceId), getInvoiceItems(+invoiceId)])
+    const getAllInvoiceItems = getAll<Linode.InvoiceItem>((params, filter) =>
+      getInvoiceItems(+invoiceId, params, filter)
+    );
+
+    Promise.all([getInvoice(+invoiceId), getAllInvoiceItems()])
       .then(([invoice, { data: items }]) => {
         this.setState({
           loading: false,
