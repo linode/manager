@@ -217,6 +217,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
               loading={isBusy}
               size={34}
               marginTop={1}
+              noTooltip
             />
             <span className={classes.buttonText}>{buttonText()}</span>
           </div>

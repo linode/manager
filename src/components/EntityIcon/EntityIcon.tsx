@@ -16,6 +16,7 @@ import {
   withTheme,
   WithTheme
 } from 'src/components/core/styles';
+import Tooltip from 'src/components/core/Tooltip';
 import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 
 type ClassNames =
@@ -81,6 +82,7 @@ interface Props {
   className?: any;
   marginTop?: number;
   stopAnimation?: boolean;
+  noTooltip?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & WithTheme;
@@ -108,6 +110,7 @@ const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
     className,
     marginTop,
     stopAnimation,
+    noTooltip,
     ...rest
   } = props;
 
@@ -136,6 +139,17 @@ const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
   const finalStatus =
     variant === 'domain' ? status && getStatusForDomain(status) : status;
 
+  const icon = (
+    <Icon
+      className={classNames({
+        [classes.icon]: true,
+        ['loading']: loading
+      })}
+      width={iconSize}
+      height={iconSize}
+    />
+  );
+
   return (
     <div
       className={classNames(
@@ -153,14 +167,11 @@ const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
       aria-label={`${variant} is ${finalStatus}`}
       {...rest}
     >
-      <Icon
-        className={classNames({
-          [classes.icon]: true,
-          ['loading']: loading
-        })}
-        width={iconSize}
-        height={iconSize}
-      />
+      {finalStatus && !noTooltip ? (
+        <Tooltip title={finalStatus}>{icon}</Tooltip>
+      ) : (
+        icon
+      )}
       {loading && (
         <div className={classes.loading}>
           <LoadingIcon
