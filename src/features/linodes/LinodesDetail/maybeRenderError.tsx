@@ -35,7 +35,7 @@ const collectErrors: MapState<InnerProps, OuterProps> = (
       path(['error', 'read'], linodes.error) ||
       types.error ||
       notifications.error ||
-      linodeConfigs.error ||
+      path(['error', 'read'], linodeConfigs) ||
       linodeDisks.error
   };
 };
