@@ -262,7 +262,11 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 }));
 
 const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
-  diskError: pathOr(undefined, ['__resources', 'linodeDisks', 'error'], state)
+  diskError: pathOr(
+    undefined,
+    ['__resources', 'linodeDisks', 'error', 'read'],
+    state
+  )
 });
 
 const connected = connect(mapStateToProps);
