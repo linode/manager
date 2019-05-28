@@ -22,7 +22,7 @@ describe('List Linodes Suite', () => {
             'Reboot',
             'Power Off',
             'Launch Console',
-            'Clone Linode',
+            'Clone',
             'Resize',
             'View Backups',
             'Enable Backups',

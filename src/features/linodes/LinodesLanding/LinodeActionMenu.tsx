@@ -144,9 +144,9 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
           ...readOnlyProps
         },
         {
-          title: 'Clone Linode',
+          title: 'Clone',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendLinodeActionMenuItemEvent('Clone Linode');
+            sendLinodeActionMenuItemEvent('Clone');
             push({
               pathname: '/linodes/create',
               search: this.buildQueryStringForLinodeClone()
