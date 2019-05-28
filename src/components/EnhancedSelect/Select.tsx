@@ -475,7 +475,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
         onCreateOption={createNew}
         placeholder={placeholder || 'Select a value...'}
         noOptionsMessage={this.props.noOptionsMessage || (() => 'No results')}
-        menuPlacement="auto"
+        menuPlacement={this.props.menuPlacement || 'auto'}
         onMenuClose={onMenuClose}
       />
     );

@@ -92,6 +92,7 @@ class PaginationFooter extends React.PureComponent<CombinedProps> {
             onChange={this.handleSizeChange}
             isClearable={false}
             noMarginTop
+            menuPlacement="top"
             medium
           />
         </Grid>

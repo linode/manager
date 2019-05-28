@@ -101,14 +101,26 @@ const RenderData: React.StatelessComponent<{
               </TableRow>
             )
           )}
-          <PaginationFooter
-            eventCategory="invoice_items"
-            count={count}
-            page={page}
-            pageSize={pageSize}
-            handlePageChange={handlePageChange}
-            handleSizeChange={handlePageSizeChange}
-          />
+          <TableRow>
+            <TableCell
+              style={{
+                paddingTop: 2,
+                '& div:firstChild': {
+                  marginTop: 0
+                }
+              }}
+              colSpan={8}
+            >
+              <PaginationFooter
+                eventCategory="invoice_items"
+                count={count}
+                page={page}
+                pageSize={pageSize}
+                handlePageChange={handlePageChange}
+                handleSizeChange={handlePageSizeChange}
+              />
+            </TableCell>
+          </TableRow>
         </React.Fragment>
       )}
     </Paginate>
