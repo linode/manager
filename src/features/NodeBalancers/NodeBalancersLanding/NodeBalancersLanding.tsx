@@ -401,7 +401,7 @@ export const enhanced = compose<CombinedProps, {}>(
     return {
       nodeBalancersCount: items.length,
       nodeBalancersData: nodeBalancersWithConfigs(__resources),
-      nodeBalancersError: error,
+      nodeBalancersError: path(['read'], error),
       // In this component we only want to show loading state on initial load
       nodeBalancersLoading: nodeBalancersLoading && lastUpdated === 0
     };
