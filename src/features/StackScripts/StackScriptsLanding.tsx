@@ -9,12 +9,10 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import withImagesContainer from 'src/containers/withImages.container';
-import { StackScripts } from 'src/documentation';
 import StackScriptPanel from './StackScriptPanel';
 
 type ClassNames = 'root' | 'title';
@@ -26,14 +24,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = SetDocsProps &
-  WithImagesProps &
+type CombinedProps = WithImagesProps &
   WithStyles<ClassNames> &
   RouteComponentProps<{}>;
 
 export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
-  static docs = [StackScripts];
-
   goToCreateStackScript = () => {
     const { history } = this.props;
     history.push('/stackscripts/create');
@@ -103,6 +98,5 @@ export default compose(
   })),
 
   styled,
-  withRouter,
-  setDocs(StackScriptsLanding.docs)
+  withRouter
 )(StackScriptsLanding);
