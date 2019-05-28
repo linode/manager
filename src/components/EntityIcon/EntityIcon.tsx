@@ -27,7 +27,9 @@ type ClassNames =
   | 'offline'
   | 'loading'
   | 'loadingIcon'
-  | 'animated';
+  | 'animated'
+  | 'tooltip'
+  | 'accessibleStatus';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   '@keyframes rotate': {
@@ -63,6 +65,12 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   animated: {
     animation: 'rotate 2s linear infinite'
+  },
+  accessibleStatus: {
+    ...theme.visually.hidden
+  },
+  tooltip: {
+    marginTop: -8
   }
 });
 
@@ -168,7 +176,15 @@ const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
       {...rest}
     >
       {finalStatus && !noTooltip ? (
-        <Tooltip title={finalStatus}>{icon}</Tooltip>
+        <Tooltip
+          title={finalStatus}
+          PopperProps={{ className: classes.tooltip }}
+        >
+          <span>
+            <span className={classes.accessibleStatus}>{finalStatus}</span>
+            {icon}
+          </span>
+        </Tooltip>
       ) : (
         icon
       )}
