@@ -461,7 +461,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 onChange={this.onHealthCheckTypeChange}
                 errorText={hasErrorFor('check')}
                 errorGroup={forEdit ? `${configIdx}` : undefined}
-                data-qa-active-check-select
+                textFieldProps={{
+                  'data-qa-active-check-select': true
+                }}
                 small
                 disabled={disabled}
                 isClearable={false}
@@ -789,7 +791,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   onChange={this.onProtocolChange}
                   errorText={hasErrorFor('protocol')}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
-                  data-qa-protocol-select
+                  textFieldProps={{
+                    'data-qa-protocol-select': true
+                  }}
                   disabled={disabled}
                   noMarginTop
                   small
@@ -853,7 +857,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   onChange={this.onAlgorithmChange}
                   errorText={hasErrorFor('algorithm')}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
-                  data-qa-algorithm-select
+                  textFieldProps={{
+                    'data-qa-algorithm-select': true
+                  }}
                   small
                   disabled={disabled}
                   isClearable={false}
@@ -874,7 +880,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   onChange={this.onSessionStickinessChange}
                   errorText={hasErrorFor('stickiness')}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
-                  data-qa-session-stickiness-select
+                  textFieldProps={{
+                    'data-qa-session-stickiness-select': true
+                  }}
                   small
                   disabled={disabled}
                   isClearable={false}
