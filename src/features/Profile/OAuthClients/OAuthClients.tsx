@@ -185,6 +185,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
         }
 
         return this.setState({
+          ...this.defaultState,
           secret,
           secretModalSuccessOpen: true,
           isResetting: false
@@ -202,13 +203,18 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
 
     createOAuthClient({
       label: this.state.clientLabel,
-      redirect_uri: this.state.redirectUri
+      redirect_uri: this.state.redirectUri,
+      public: this.state.isPublic
     })
       .then(data => {
         if (!this.mounted) {
           return;
         }
-        return this.setState({ ...this.defaultState });
+        return this.setState({
+          ...this.defaultState,
+          secretModalSuccessOpen: true,
+          secret: data.secret
+        });
       })
       .then(data => {
         if (!this.mounted) {

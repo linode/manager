@@ -18,6 +18,7 @@ type Page<T> = Linode.ResourcePage<T>;
 export interface OAuthClientRequest {
   label: string;
   redirect_uri: string;
+  public?: boolean;
 }
 
 /**
