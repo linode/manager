@@ -1,7 +1,6 @@
-import Close from '@material-ui/icons/Close';
 import * as React from 'react';
 import { compose } from 'recompose';
-
+import Button from 'src/components/Button';
 import {
   StyleRulesCallback,
   WithStyles,
@@ -12,6 +11,7 @@ import { displayPrice } from 'src/components/DisplayPrice';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import TextField from 'src/components/TextField';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { displayTypeForKubePoolNode } from 'src/features/linodes/presentation';
 
@@ -22,8 +22,7 @@ type ClassNames = 'root' | 'link';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   link: {
-    textDecoration: 'none',
-    color: 'inherit'
+    color: `${theme.palette.primary.main} !important`
   }
 });
 
@@ -48,18 +47,24 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
         <Typography>{typeLabel}</Typography>
       </TableCell>
       <TableCell parentColumn="Node Count">
-        <Typography>{pool.count}</Typography>
+        <TextField
+          small
+          tiny
+          type="number"
+          value={pool.count}
+          onChange={e => e.target.value}
+        />
       </TableCell>
       <TableCell parentColumn="Pricing">
         <Typography>{`${displayPrice(pool.totalMonthlyPrice)}/mo`}</Typography>
       </TableCell>
       <TableCell>
-        <a className={classes.link}>
-          <Close
-            onClick={() => handleDelete(idx)}
-            data-testid={`delete-node-row-${idx}`}
-          />
-        </a>
+        <Button
+          type="remove"
+          data-testid={`delete-node-row-${idx}`}
+          onClick={() => handleDelete(idx)}
+          className={classes.link}
+        />
       </TableCell>
     </TableRow>
   );
