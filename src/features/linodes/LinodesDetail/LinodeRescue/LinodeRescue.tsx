@@ -58,7 +58,7 @@ interface ContextProps {
 }
 
 interface StateProps {
-  diskError?: string;
+  diskError?: Linode.ApiFieldError[];
 }
 
 interface VolumesProps {
