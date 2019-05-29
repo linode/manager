@@ -348,7 +348,7 @@ interface NodeBalancerWithConfigs extends Linode.NodeBalancer {
 interface WithNodeBalancers {
   nodeBalancersCount: number;
   nodeBalancersData: NodeBalancerWithConfigs[];
-  nodeBalancersError?: Error;
+  nodeBalancersError?: Linode.ApiFieldError[];
   nodeBalancersLoading: boolean;
 }
 
