@@ -45,7 +45,7 @@ When you plan on releasing a new version of Cloud Manager:
 14. Deploy to the production environment by merging `staging` into `master` with `git checkout master && git pull && git merge staging && git push origin master` 
 15. Once your new version has being deployed to production, open a PR to merge `master` branch into `develop` branch - **DO NOT SQUASH MERGE**
     * Seriously...**DO NOT SQUASH MERGE**
-16. Finally, on GitHub, create a new release from the Git tag you've just pushed to `master` branch
+16. Finally, on GitHub, create a new release from the Git tag you've just pushed to `master` branch. **Do not have an open PR if you plan on hotfixing to master. The build will not succeed if there is an open master -> develop PR**
 
 ## Pushing a Hotfix
 
