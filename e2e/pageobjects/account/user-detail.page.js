@@ -8,7 +8,7 @@ class UserDetail extends Page {
     get deleteSubHeader() { return $('[data-qa-delete-user-header]'); }
     get deleteButton() { return $('[data-qa-confirm-delete]'); }
     get usernameField() { return $('[data-qa-username]'); }
-    get emailField() { return $('[data-qa-email]'); }
+    get emailWarningToolTip() { return $('[data-qa-help-tooltip]'); }
     get saveButton() { return this.submitButton; }
     get usernameWarning() { return $(`${this.usernameField.selector} p`); }
 
@@ -23,9 +23,9 @@ class UserDetail extends Page {
         expect(this.deleteSubHeader.isVisible()).toBe(true);
         expect(this.deleteButton.isExisting()).toBe(true);
         expect(this.usernameField.isVisible()).toBe(true);
-        expect(this.emailField.isVisible()).toBe(true);
+
+        expect(this.emailWarningToolTip.isVisible()).toBe(true);
         expect(this.saveButton.isVisible()).toBe(true);
-        expect(this.cancelButton.isVisible()).toBe(true);
     }
 
 
