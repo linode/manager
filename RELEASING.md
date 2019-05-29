@@ -41,10 +41,11 @@ When you plan on releasing a new version of Cloud Manager:
     * This will apply the Git tags and update the version number in the `package.json`
     * This will also automatically commit the changes with the commit message `vX.X.X`
 12. Push changes to staging with `git push origin staging && git push origin --tags`
-13. Deploy to the production environment by merging `staging` into `master` with `git checkout master && git pull && git merge staging && git push origin master` 
-14. Once your new version has being deployed to production, open a PR to merge `master` branch into `develop` branch - **DO NOT SQUASH MERGE**
+13. IMPORTANT: Wait for the new changes to deploy to staging before merging to master.
+14. Deploy to the production environment by merging `staging` into `master` with `git checkout master && git pull && git merge staging && git push origin master` 
+15. Once your new version has being deployed to production, open a PR to merge `master` branch into `develop` branch - **DO NOT SQUASH MERGE**
     * Seriously...**DO NOT SQUASH MERGE**
-15. Finally, on GitHub, create a new release from the Git tag you've just pushed to `master` branch
+16. Finally, on GitHub, create a new release from the Git tag you've just pushed to `master` branch
 
 ## Pushing a Hotfix
 
