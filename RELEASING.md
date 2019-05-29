@@ -62,6 +62,8 @@ whether `staging` has a git tag commit. If it does
 1. Run `git checkout staging && git pull && git checkout testing && git rebase -i staging`
 2. Then proceed to merge testing into staging
 
+Finally, start again at step 11 of the above instructions
+
 At the end of the release process, `master` branch will be merged back into `develop`, so don't fear that you also need to apply your changes to `develop`.
 
 ## Generating the changelog
