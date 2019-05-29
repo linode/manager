@@ -56,6 +56,12 @@ In the case where the release process has been initated and you need to push a h
 3. Create a PR against `testing` branch
 4. Merge on approval
 
+Then when merging the newly updated `testing` into staging, you'll need to check
+whether `staging` has a git tag commit. If it does
+
+1. Run `git checkout staging && git pull && git checkout testing && git rebase -i staging`
+2. Then proceed to merge testing into staging
+
 At the end of the release process, `master` branch will be merged back into `develop`, so don't fear that you also need to apply your changes to `develop`.
 
 ## Generating the changelog
