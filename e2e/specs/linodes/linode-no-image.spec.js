@@ -28,6 +28,7 @@ describe('Can not boot a linode without an Image', () => {
     ListLinodes.openActionMenu(
       $(ListLinodes.getLinodeSelector(linode.linodeLabel))
     );
+    ListLinodes.toolTipIcon.waitForVisible(constants.wait.normal);
     const toolTipIcon = ListLinodes.powerOnMenu.$(
       ListLinodes.toolTipIcon.selector
     );
@@ -47,6 +48,6 @@ describe('Can not boot a linode without an Image', () => {
       ListLinodes.toolTipIcon.selector
     );
     toolTipIcon.moveToObject();
-    expect(ListLinodes.toolTipMessage.getText()).toMatch(toolTipMessage);
+    expect(ListLinodes.toolTipMessage.getText()).toBe(toolTipMessage);
   });
 });
