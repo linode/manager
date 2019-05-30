@@ -14,39 +14,58 @@ type ClassNames =
   | 'root'
   | 'stackscriptLabel'
   | 'stackscriptTitles'
+  | 'selectingStackscriptTitles'
   | 'deploys'
   | 'revisions'
+  | 'tags'
+  | 'actionMenu'
   | 'tr'
   | 'tableHead';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
-  stackscriptLabel: {
-    width: 84
-  },
+  stackscriptLabel: {},
   stackscriptTitles: {
-    width: '45%',
-    minWidth: 200
+    width: '60%',
+    [theme.breakpoints.up('lg')]: {
+      minWidth: 150
+    }
+  },
+  selectingStackscriptTitles: {
+    width: 'calc(100% - 65px)'
   },
   deploys: {
-    width: '15%',
-    minWidth: 140
+    width: '10%',
+    [theme.breakpoints.up('lg')]: {
+      width: '12%',
+      minWidth: 140
+    }
   },
   revisions: {
-    width: '15%',
-    minWidth: 150
+    width: '10%',
+    [theme.breakpoints.up('lg')]: {
+      width: '12%',
+      minWidth: 150
+    }
+  },
+  tags: {
+    width: '10%',
+    [theme.breakpoints.up('lg')]: {
+      width: '12%',
+      minWidth: 100
+    }
+  },
+  actionMenu: {
+    width: '10%',
+    [theme.breakpoints.up('lg')]: {
+      width: 65
+    }
   },
   tr: {
     height: 48
   },
   tableHead: {
-    position: 'sticky',
-    top: theme.spacing.unit * 9,
-    backgroundColor: theme.bg.tableHeader,
-    paddingTop: 0,
-    paddingBottom: 0,
-    height: 48,
-    zIndex: 5
+    top: theme.spacing.unit * 11
   }
 });
 
@@ -100,39 +119,49 @@ class StackScriptTableHead extends React.Component<CombinedProps, {}> {
           <Cell
             className={classNames({
               [classes.tableHead]: true,
-              [classes.stackscriptTitles]: true
+              [classes.stackscriptTitles]: true,
+              [classes.selectingStackscriptTitles]: isSelecting
             })}
             data-qa-stackscript-table-header
             {...maybeAddSortingProps('label')}
           >
             StackScript
           </Cell>
-          <Cell
-            className={classNames({
-              [classes.tableHead]: true,
-              [classes.deploys]: true
-            })}
-            data-qa-stackscript-active-deploy-header
-            {...maybeAddSortingProps('deploys')}
-          >
-            Active Deploys
-          </Cell>
-          <Cell
-            className={classNames({
-              [classes.tableHead]: true,
-              [classes.revisions]: true
-            })}
-            data-qa-stackscript-revision-header
-            {...maybeAddSortingProps('revision')}
-          >
-            Last Revision
-          </Cell>
-          <TableCell
-            className={classes.tableHead}
-            data-qa-stackscript-compatible-images
-          >
-            Compatible Images
-          </TableCell>
+          {!isSelecting && (
+            <Cell
+              className={classNames({
+                [classes.tableHead]: true,
+                [classes.deploys]: true
+              })}
+              data-qa-stackscript-active-deploy-header
+              {...maybeAddSortingProps('deploys')}
+            >
+              Active Deploys
+            </Cell>
+          )}
+          {!isSelecting && (
+            <Cell
+              className={classNames({
+                [classes.tableHead]: true,
+                [classes.revisions]: true
+              })}
+              data-qa-stackscript-revision-header
+              {...maybeAddSortingProps('revision')}
+            >
+              Last Revision
+            </Cell>
+          )}
+          {!isSelecting && (
+            <TableCell
+              className={classNames({
+                [classes.tableHead]: true,
+                [classes.tags]: true
+              })}
+              data-qa-stackscript-compatible-images
+            >
+              Compatible Images
+            </TableCell>
+          )}
           {!isSelecting && (
             <TableCell
               className={classNames({
