@@ -27,7 +27,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     fontSize: '1em',
     lineHeight: 2
   },
-  title: {}
+  title: {
+    marginTop: theme.spacing.unit,
+    marginBottom: theme.spacing.unit
+  }
 });
 
 interface Link {
@@ -59,15 +62,13 @@ export const LinkSection: React.FunctionComponent<CombinedProps> = props => {
           <Icon className={classes.icon} />
         </Grid>
         <Grid item>
-          <Typography variant="h3" className={classes.title}>
-            {title}
-          </Typography>
+          <Typography variant="h3">{title}</Typography>
         </Grid>
       </Grid>
       <Grid container item className={classes.link}>
         {links.map((link, idx) => (
           <Grid item key={`${title}-link-item-${idx}`}>
-            <Typography>
+            <Typography className={classes.title}>
               <ExternalLink link={link.href} text={link.title} />
             </Typography>
           </Grid>

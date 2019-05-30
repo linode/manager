@@ -31,9 +31,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginRight: theme.spacing.unit
   },
   appName: {
-    fontSize: '2.3rem',
+    fontSize: '2.4rem',
     fontFamily: theme.font.normal,
-    color: theme.color.grey1
+    color: theme.color.grey4
   },
   summary: {
     marginTop: theme.spacing.unit * 2,
