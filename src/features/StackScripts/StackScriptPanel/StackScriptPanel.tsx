@@ -32,12 +32,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     backgroundColor: theme.color.white
   },
   creating: {
-    height: 400,
-    overflowX: 'auto',
-    paddingTop: 0,
-    marginTop: theme.spacing.unit * 2,
-    overflowY: 'scroll',
-    '-webkit-appearance': 'none'
+    paddingTop: 0
   },
   link: {
     display: 'block',

@@ -126,7 +126,7 @@ const withStackScriptBase = (isSelecting: boolean) => (
 
       return request(
         filteredUser,
-        { page, page_size: 50 },
+        { page, page_size: 25 },
         filter,
         stackScriptGrants
       )
@@ -464,10 +464,13 @@ const withStackScriptBase = (isSelecting: boolean) => (
                 />
               </div>
               <Table
-                isResponsive={false}
+                isResponsive={!isSelecting}
                 aria-label="List of StackScripts"
                 noOverflow={true}
                 tableClass={classes.table}
+                removeLabelonMobile={!isSelecting}
+                border
+                stickyHeader
               >
                 <StackScriptTableHead
                   handleClickTableHeader={this.handleClickTableHeader}

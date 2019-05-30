@@ -167,7 +167,12 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = props => {
         )}
       >
         {loading && <Reload />}
-        <span className={loading ? classes.hidden : classes.reg}>
+        <span
+          className={classNames({
+            [classes.hidden]: loading,
+            [classes.reg]: !loading
+          })}
+        >
           {props.children}
         </span>
         {type === 'remove' && 'Remove'}
