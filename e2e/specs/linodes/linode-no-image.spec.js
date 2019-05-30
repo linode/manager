@@ -9,7 +9,7 @@ import LinodeDetail from '../../pageobjects/linode-detail/linode-detail.page';
 
 describe('Can not boot a linode without an Image', () => {
   const toolTipMessage =
-    'An image needs to be added before powering on a Linode';
+    'A config needs to be added before powering on a Linode';
   const linode = {
     linodeLabel: `Auto${timestamp()}`,
     noImage: true
