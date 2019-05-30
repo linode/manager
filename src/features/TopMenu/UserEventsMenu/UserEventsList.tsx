@@ -66,19 +66,15 @@ export const UserEventsList: React.StatelessComponent<
 
           const success = event.status !== 'failed' && !event.seen;
           const error = event.status === 'failed';
-          const onClick = (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
-            createClickHandlerForNotification(
-              event.action,
-              event.entity,
-              event._deleted,
-              (s: string) => {
-                closeMenu();
-                push(s);
-              }
-            );
-          };
-          // );
+          const onClick = createClickHandlerForNotification(
+            event.action,
+            event.entity,
+            event._deleted,
+            (s: string) => {
+              closeMenu();
+              push(s);
+            }
+          );
 
           const linkPath = createLinkHandlerForNotification(
             event.action,

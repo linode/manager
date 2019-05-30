@@ -114,6 +114,7 @@ export class UserEventsMenu extends React.Component<CombinedProps, State> {
                   to={'/events'}
                   href="javascript:void(0)"
                   onClick={(e: any) => {
+                    e.preventDefault();
                     push('/events');
                     this.closeMenu(e);
                   }}
