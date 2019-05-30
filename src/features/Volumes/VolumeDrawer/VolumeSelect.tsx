@@ -177,6 +177,9 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
           onBlur={onBlur}
           name={name}
           label="Volume"
+          textFieldProps={{
+            'data-qa-select-volume': true
+          }}
           placeholder="Select a Volume"
           value={this.getSelectedVolume(selectedVolumeId)}
           isLoading={loading}

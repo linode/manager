@@ -30,8 +30,13 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
     }
 
     const getLinodeOptions = () => {
-        VolumeDetail.selectLinodeOrVolume.click();
+        VolumeDetail.linodeSelect.click();
         VolumeDetail.selectOption.waitForVisible(constants.wait.normal);
+        /** 
+         * react select caches options so we need to wait for the dropdown options to 
+         * update and remove the old options that don't apply anymore
+         */
+        browser.pause(1000)
         const linodes = VolumeDetail.selectOptions.map(option => option.getText());
         const justLinodes = linodes.filter(options => options != 'Select a Linode');
         $('body').click();
@@ -90,7 +95,6 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
         browser.pause(500);
         expect(getLinodeOptions()).toEqual([linodeEast.linodeLabel]);
         VolumeDetail.selectRegion('us-central');
-        browser.pause(500);
         expect(getLinodeOptions()).toEqual([linodeCentral.linodeLabel]);
     });
 
@@ -136,11 +140,6 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
         expect(VolumeDetail.volumeCellLabel.getText()).toContain(testVolume.label);
     });
 
-    it('should display the tags added to the volume', () => {
-        VolumeDetail.hoverVolumeTags(testVolume.label);
-        VolumeDetail.checkTagsApplied([testVolume.tag]);
-    });
-
     it('expected action menu options are displayed for a detached volume', () => {
         const volumeActionMenu = `${VolumeDetail.volumeCellElem.selector} ${VolumeDetail.actionMenu.selector}`;
         $(volumeActionMenu).waitForVisible(constants.wait.true);
@@ -158,23 +157,22 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
         browser.pause(500);
         VolumeDetail.selectActionMenuItemV2(VolumeDetail.volumeCellElem.selector, 'Edit Volume');
         VolumeDetail.editVolume(testVolume.label, tag2);
-        browser.pause(1000);
-        VolumeDetail.hoverVolumeTags(testVolume.label);
-        VolumeDetail.checkTagsApplied(testVolume.tag);
+        browser.waitForVisible(`[data-qa-volume-cell-label="${testVolume.label}"]`)
     });
 
     it('can resize a volume', () => {
-        testVolume['size'] = 100;
+        testVolume['size'] = 30;
         VolumeDetail.selectActionMenuItemV2(VolumeDetail.volumeCellElem.selector, 'Resize');
         VolumeDetail.resizeVolume(testVolume.size);
-        expect(VolumeDetail.umountCommand.getAttribute('value')).toEqual(`umount /dev/disk/by-id/scsi-0Linode_Volume_${testVolume.label}`);
-        expect(VolumeDetail.fileSystemCheckCommand.getAttribute('value')).toEqual(`e2fsck -f /dev/disk/by-id/scsi-0Linode_Volume_${testVolume.label}`);
-        expect(VolumeDetail.resizeFileSystemCommand.getAttribute('value')).toEqual(`resize2fs /dev/disk/by-id/scsi-0Linode_Volume_${testVolume.label}`);
-        expect(VolumeDetail.mountCommand.getAttribute('value')).toEqual(`mount /dev/disk/by-id/scsi-0Linode_Volume_${testVolume.label} /mnt/${testVolume.label}`);
+        expect(VolumeDetail.umountCommand.getAttribute('value')).toMatch(/umount/);
+        expect(VolumeDetail.fileSystemCheckCommand.getAttribute('value')).toMatch(/e2fsck/);
+        expect(VolumeDetail.resizeFileSystemCommand.getAttribute('value')).toMatch(/resize2fs/);
+        expect(VolumeDetail.mountCommand.getAttribute('value')).toMatch(/mount/);
         VolumeDetail.closeVolumeDrawer();
+
         browser.waitUntil(() => {
             return VolumeDetail.volumeCellSize.getText().includes(testVolume.size);
-        }, constants.wait.normal);
+        }, constants.wait.veryLong);
     });
 
     it('can attached a detached volume', () =>  {
@@ -190,7 +188,6 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
         VolumeDetail.assertActionMenuItems(true);
         $('body').click();
         VolumeDetail.actionMenuItem.waitForVisible(constants.wait.normal,true);
-        browser.pause(750);
         VolumeDetail.selectActionMenuItemV2(VolumeDetail.volumeCellElem.selector, 'Detach');
         VolumeDetail.confirmDetachORDelete();
         VolumeDetail.toastDisplays('Volume successfully detached.',constants.wait.minute*3);
@@ -206,7 +203,6 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
     });
 
     it('can delete a volume', () => {
-        browser.pause(500);
         VolumeDetail.selectActionMenuItemV2(VolumeDetail.volumeCellElem.selector, 'Delete');
         VolumeDetail.confirmDetachORDelete();
         VolumeDetail.toastDisplays('Volume successfully deleted.',constants.wait.minute);

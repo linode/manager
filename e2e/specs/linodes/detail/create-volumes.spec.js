@@ -155,7 +155,6 @@ describe('Linode Detail - Volumes Suite', () => {
             VolumeDetail.createButton.click();
             VolumeDetail.volumeAttachedToLinodeDrawerDisplays();
             VolumeDetail.attachExistingVolume.click();
-            VolumeDetail.attachExistingVolumeToLinodeDrawerDisplays();
         });
 
         afterEach(() => {
@@ -170,7 +169,7 @@ describe('Linode Detail - Volumes Suite', () => {
 
         it('only volumes in the current linode\'s data center should display', () => {
             checkEnvironment();
-            VolumeDetail.selectLinodeOrVolume.$('..').$('..').click();
+            VolumeDetail.volumeSelect.click();
             VolumeDetail.selectOption.waitForVisible(constants.wait.normal);
             const volumes = VolumeDetail.selectOptions.map(option => option.getText());
             expect(volumes.includes(volumeEast.label)).toBe(true);
@@ -195,17 +194,6 @@ describe('Linode Detail - Volumes Suite', () => {
             VolumeDetail.closeVolumeDrawer();
         });
 
-
-
-        it('volume created successfully with tag', () => {
-
-            expect(VolumeDetail.volumeCellLabel.getText()).toContain(testVolume.label);
-            expect(VolumeDetail.volumeCellSize.getText()).toContain(testVolume.size);
-
-            VolumeDetail.hoverVolumeTags(testVolume.label);
-            VolumeDetail.checkTagsApplied([testVolume.tags]);
-        });
-
         it('should display volumes attached to linode in summary', () => {
             checkAttachedVolumeInSummary();
         });
@@ -224,7 +212,6 @@ describe('Linode Detail - Volumes Suite', () => {
         it('can attach an existing volume', () => {
             VolumeDetail.createButton.click();
             VolumeDetail.attachExistingVolumeToLinode(volumeEast.label);
-            browser.pause(500);
         });
 
         it('volume attached successfully', () => {

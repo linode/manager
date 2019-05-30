@@ -10,8 +10,8 @@ export class VolumeDetail extends Page {
     get size() { return $('[data-qa-size]'); }
     get region() { return $('[data-qa-select-region]'); }
     get regionField() { return $('[data-qa-region]'); }
-    get selectLinodeOrVolume() { return $(`${this.drawerBase.selector} [data-qa-enhanced-select]`); }
-    get linodeSelect() { return $('[data-qa-linode-select]'); }
+    get volumeSelect() { return $(`${this.drawerBase.selector} [data-qa-select-volume]`); }
+    get linodeSelect() { return $('[data-qa-select-linode]'); }
     get linodeAttachOption() { return $('[data-qa-linode-menu-item]'); }
     get attachedTo() { return $('[data-qa-attach-to]'); }
     get attachRegion() { return $('[data-qa-attach-to-region]'); }
@@ -26,7 +26,6 @@ export class VolumeDetail extends Page {
     get volumeCellSize() { return $('[data-qa-volume-size]') }
     get volumeFsPath() { return $('[data-qa-fs-path]'); }
     get volumeActionMenu() { return $('[data-qa-action-menu]'); }
-    get volumeSelect() { return $('[data-qa-volume-select] span'); }
     get volumeOptions() { return $$('[data-value]'); }
     get attachButton() { return $('[data-qa-confirm-attach]'); }
     get cloneLabel() { return $('[data-qa-clone-from] input'); }
@@ -76,7 +75,7 @@ export class VolumeDetail extends Page {
         expect(this.region.isVisible()).toBe(true);
         expect(this.submit.isVisible()).toBe(true);
         expect(this.cancel.isVisible()).toBe(true);
-        this.selectLinodeOrVolume.waitForVisible(constants.wait.normal);
+        this.linodeSelect.waitForVisible(constants.wait.normal);
     }
 
     volumeAttachedToLinodeDrawerDisplays() {
@@ -88,19 +87,15 @@ export class VolumeDetail extends Page {
         this.tagsMultiSelect.waitForVisible(constants.wait.normal);
     }
 
-    attachExistingVolumeToLinodeDrawerDisplays() {
-        this.selectLinodeOrVolume.waitForVisible(constants.wait.normal);
-    }
-
     attachExistingVolumeToLinode(volumeLabel){
         this.drawerBase.waitForVisible(constants.wait.normal);
-        this.attachExistingVolumeToLinodeDrawerDisplays();
         this.attachExistingVolume.click();
-        this.attachExistingVolumeToLinodeDrawerDisplays();
-        this.selectLinodeOrVolume.$('..').$('..').click();
-        this.selectOption.waitForVisible(constants.wait.normal);
-        this.selectOptions.find(option => option.getText() === volumeLabel).click();
-        this.selectOption.waitForVisible(constants.wait.normal,true);
+
+        this.volumeSelect.click();
+        browser.trySetValue('[data-qa-select-volume] input', volumeLabel);
+        /** press enter key and select first value */
+        browser.keys("\uE007");
+
         this.submit.click();
         this.drawerBase.waitForVisible(constants.wait.normal,true);
     }
@@ -220,18 +215,17 @@ export class VolumeDetail extends Page {
         this.mountCommand.waitForVisible(constants.wait.normal);
     }
 
-    attachVolumeFromVolumeLanding(linode) {
+    attachVolumeFromVolumeLanding(linodeLabel) {
         this.drawerBase.waitForVisible(constants.wait.normal);
         this.linodeSelect.waitForVisible(constants.wait.normal);
         this.linodeSelect.click();
-        this.linodeAttachOption.waitForVisible(constants.wait.normal);
-        const linodeAttach = this.linodeAttachOption.selector.replace(']','');
-        browser.jsClick(`${linodeAttach}="${linode}"]`)
-        this.linodeAttachOption.waitForVisible(constants.wait.normal,true);
+        browser.trySetValue('[data-qa-select-linode] input', linodeLabel);
+        /** press the enter key to select first value */
+        browser.keys("\uE007");
         this.submitButton.click();
         this.drawerBase.waitForVisible(constants.wait.normal,false);
         const attachedTo = this.volumeAttachment.selector.replace(']','');
-        $(`${attachedTo}="${linode}"`).waitForVisible(constants.wait.minute);
+        $(`${attachedTo}="${linodeLabel}"`).waitForVisible(constants.wait.minute);
     }
 
     detachVolume(volume, detach=true) {
@@ -360,15 +354,10 @@ export class VolumeDetail extends Page {
     }
 
     selectRegion(region) {
-        this.region.waitForVisible();
-        this.region.click();
-        const regionSelector = this.attachRegion.selector.replace(']','');
-        const volumeRegion = `${regionSelector}="${region}"]`;
-        browser.waitUntil(() => {
-            return this.attachRegions.length > 0;
-        }, constants.wait.normal);
-        browser.jsClick(volumeRegion);
-        this.attachRegion.waitForVisible(constants.wait.short, true);
+        $('[data-qa-select-region]').click();
+        browser.trySetValue('[data-qa-select-region] input', region);
+        /** press the enter key to select first value */
+        browser.keys("\uE007");
     }
 
     checkVolumeConfigurationCommands(volumeLabel){

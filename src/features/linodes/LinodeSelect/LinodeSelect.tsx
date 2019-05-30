@@ -87,7 +87,10 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
         generalError || linodeError || linodesError || ''
       )}
       isClearable={false}
-      textFieldProps={props.textFieldProps}
+      textFieldProps={{
+        ...props.textFieldProps,
+        'data-qa-select-linode': true
+      }}
       noOptionsMessage={() => noOptionsMessage}
     />
   );
