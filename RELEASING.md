@@ -30,7 +30,7 @@ When you plan on releasing a new version of Cloud Manager:
 3. While `testing` branch is checked out, [generate the Changelog](#generating-the-changelog) first
 4. Review the Changelog and update manually if necessary
     * This includes getting rid of any references to PR numbers, JIRA ticket numbers or grammar and spelling mistakes
-    * You should also ensure that everything in the Chaneglog is user-facing. Removing anything that users won't directly be interacting with
+    * You should also ensure that everything in the Changelog is user-facing. Removing anything that users won't directly be interacting with
 5. Push the changes from your local `testing` branch to the upstream with `git push origin testing`
 6. At this point, you can begin deploying to the rest of the environments
 7. Deploy to the staging environment by merging `testing` into `staging` with `git checkout staging && git pull && git merge testing && git push origin staging`
@@ -49,7 +49,7 @@ When you plan on releasing a new version of Cloud Manager:
 
 ## Pushing a Hotfix
 
-In the case where the release process has been initated and you need to push a hotfix - in other words, if `develop` has already been merged into `testing`, is slated for release, and there is some bug fix, styling change, or E2E test that needs to be resovled:
+In the case where the release process has been initiated and you need to push a hotfix - in other words, if `develop` has already been merged into `testing`, is slated for release, and there is some bug fix, styling change, or E2E test that needs to be resolved:
 
 1. Make a branch from `testing` branch
 2. Make your changes
