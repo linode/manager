@@ -110,7 +110,6 @@ const userEventsListItem: React.StatelessComponent<CombinedProps> = props => {
       role="menuitem"
     >
       <Link
-        role="menuitem"
         to={linkPath ? linkPath : '/'}
         href="javascript:void(0)"
         onClick={onClick}
