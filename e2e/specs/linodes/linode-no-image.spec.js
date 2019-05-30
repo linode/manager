@@ -33,7 +33,7 @@ describe('Can not boot a linode without an Image', () => {
     );
     toolTipIcon.waitForVisible(constants.wait.normal);
     toolTipIcon.moveToObject();
-    expect(ListLinodes.toolTipMessage.getText()).toBe(toolTipMessage);
+    expect(ListLinodes.toolTipMessage.getText()).toMatch(toolTipMessage);
   });
 
   it('Power on tool tip displays for a linode without an image on Linode detail page', () => {
@@ -47,6 +47,6 @@ describe('Can not boot a linode without an Image', () => {
       ListLinodes.toolTipIcon.selector
     );
     toolTipIcon.moveToObject();
-    expect(ListLinodes.toolTipMessage.getText()).toBe(toolTipMessage);
+    expect(ListLinodes.toolTipMessage.getText()).toMatch(toolTipMessage);
   });
 });
