@@ -31,12 +31,13 @@ interface Props {
   type?: ExtendedType;
   idx: number;
   handleDelete: (poolIdx: number) => void;
+  handleChange: (nodeCount: number) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
-  const { classes, pool, idx, handleDelete, type } = props;
+  const { classes, pool, idx, handleDelete, type, handleChange } = props;
   const typeLabel = type
     ? displayTypeForKubePoolNode(type.class, type.memory, type.vcpus)
     : 'Unknown type'; // This should never happen, but better not to crash if it does.
@@ -47,12 +48,13 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
         <Typography>{typeLabel}</Typography>
       </TableCell>
       <TableCell parentColumn="Node Count">
+        {/* @todo make the onchange work */}
         <TextField
           small
           tiny
           type="number"
           value={pool.count}
-          onChange={e => e.target.value}
+          onChange={e => handleChange(+e.target.value)}
         />
       </TableCell>
       <TableCell parentColumn="Pricing">

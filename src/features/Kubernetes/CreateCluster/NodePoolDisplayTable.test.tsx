@@ -10,7 +10,8 @@ import NodePoolDisplayTable from './NodePoolDisplayTable';
 const props = {
   types: extendedTypes,
   pools: nodePoolRequests,
-  handleDelete: jest.fn()
+  handleDelete: jest.fn(),
+  handleChange: jest.fn()
 };
 
 const emptyProps = {
