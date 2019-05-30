@@ -32,6 +32,8 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
+let ada: any;
+
 const AdaLink: React.FC<CombinedProps> = props => {
   const [adaError, setAdaError] = React.useState<string>('');
 
@@ -47,7 +49,7 @@ const AdaLink: React.FC<CombinedProps> = props => {
         'There was an issue loading the support bot. Please try again later.'
       );
     }
-  });
+  }, []);
 
   const handleAdaInit = () => {
     if (typeof ada === 'undefined') {
@@ -59,7 +61,6 @@ const AdaLink: React.FC<CombinedProps> = props => {
   };
 
   /** ada chat bot */
-  let ada: any;
   const { classes } = props;
 
   return adaError === '' ? (
@@ -76,6 +77,6 @@ const AdaLink: React.FC<CombinedProps> = props => {
 const styled = withStyles(styles);
 
 export default compose<CombinedProps, Props>(
-  styled,
-  React.memo
+  React.memo,
+  styled
 )(AdaLink);
