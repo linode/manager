@@ -81,6 +81,10 @@ const styles = (theme: Theme) =>
         color: theme.palette.primary.main
       }
     },
+
+    '&:focus .innerGrid': {
+      outline: `1px dotted ${theme.color.focusBorder}`
+    },
     showCursor: {
       cursor: 'pointer'
     },
