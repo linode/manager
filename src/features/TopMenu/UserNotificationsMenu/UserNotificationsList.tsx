@@ -8,6 +8,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { dcDisplayNames } from 'src/constants';
+import { reportException } from 'src/exceptionReporting';
 import UserNotificationListItem from './UserNotificationListItem';
 
 type ClassNames = 'emptyText';
@@ -73,6 +74,16 @@ const interceptNotification = (
     notification.entity.type === 'region'
   ) {
     const convertedRegion = dcDisplayNames[notification.entity.id];
+
+    if (!convertedRegion) {
+      reportException(
+        'Could not find the DC name for the outage notification',
+        {
+          rawRegion: notification.entity.id,
+          convertedRegion
+        }
+      );
+    }
 
     /** replace "this facility" with the name of the datacenter */
     return {
