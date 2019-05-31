@@ -80,21 +80,13 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
         expect(volumeFieldsText[1].getText()).toEqual(regionHelpText);
     });
 
-    it('should display volume price dynamically based on size', () => {
-        [200, 333, 450].forEach( (price) => {
-            $(`${VolumeDetail.size.selector} input`).setValue(price);
-            const volumePrice = price * 0.1;
-            expect(VolumeDetail.volumePrice.getText()).toEqual(`$${volumePrice.toFixed(2)}`);
-            expect(VolumeDetail.volumePriceBillingInterval.getText()).toContain('mo');
-        });
-    });
-
     it('should only display linodes in a selected region', () => {
         checkEnvironment();
         VolumeDetail.selectRegion('us-east');
         browser.pause(500);
         expect(getLinodeOptions()).toEqual([linodeEast.linodeLabel]);
         VolumeDetail.selectRegion('us-central');
+        browser.pause(500);
         expect(getLinodeOptions()).toEqual([linodeCentral.linodeLabel]);
     });
 

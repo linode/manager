@@ -91,12 +91,18 @@ export class VolumeDetail extends Page {
         this.drawerBase.waitForVisible(constants.wait.normal);
         this.attachExistingVolume.click();
 
+        /** click the select input */
         this.volumeSelect.click();
+        /** set the value */
         browser.trySetValue('[data-qa-select-volume] input', volumeLabel);
+        /** wait for option to appear */
+        browser.waitForVisible('[data-qa-option]', constants.wait.normal)
         /** press enter key and select first value */
         browser.keys("\uE007");
 
+        $('body').click();
         this.submit.click();
+        
         this.drawerBase.waitForVisible(constants.wait.normal,true);
     }
 
@@ -264,6 +270,7 @@ export class VolumeDetail extends Page {
         this.label.$('input').setValue(newClone);
         const volumePrice = currentSize * 0.1;
         expect(this.volumePrice.getText()).toEqual(`$${volumePrice.toFixed(2)}`);
+        this.submitButton.waitForVisible(constants.wait.normal)
         this.submitButton.click();
         this.drawerBase.waitForVisible(constants.wait.normal,true);
         browser.waitUntil(() => {

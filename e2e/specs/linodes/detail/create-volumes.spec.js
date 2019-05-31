@@ -117,6 +117,9 @@ describe('Linode Detail - Volumes Suite', () => {
             [200, 333, 450].forEach( (price) => {
                 $(`${VolumeDetail.size.selector} input`).setValue(price);
                 const volumePrice = price * 0.1;
+
+                /** this expect seems to run before the state is actually updated */
+                browser.pause(500);
                 expect(VolumeDetail.volumePrice.getText()).toEqual(`$${volumePrice.toFixed(2)}`);
                 expect(VolumeDetail.volumePriceBillingInterval.getText()).toContain('mo');
             });
@@ -210,6 +213,7 @@ describe('Linode Detail - Volumes Suite', () => {
     describe('Attach Existing Volume - Detach Volume', () => {
 
         it('can attach an existing volume', () => {
+            VolumeDetail.createButton.waitForVisible(constants.wait.normal)
             VolumeDetail.createButton.click();
             VolumeDetail.attachExistingVolumeToLinode(volumeEast.label);
         });
