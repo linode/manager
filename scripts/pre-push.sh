@@ -2,7 +2,7 @@
 
 # Confirm Branch includes M3 Ticket
 BRANCH_NAME=$(git rev-parse --abbrev-ref HEAD)
-BRANCH_INCLUDES_TICKET=$(git rev-parse --abbrev-ref HEAD | egrep -i '(M3-[0-9]*)|feature|develop|master|release-.*|OBJ.*|LKE.*|OCA.*')
+BRANCH_INCLUDES_TICKET=$(git rev-parse --abbrev-ref HEAD | egrep -i '(M3-[0-9]*)|feature|staging|develop|testing|master|release-.*|OBJ.*|LKE.*|OCA.*')
 RED='\033[0;31m'
 
 if [ $BRANCH_INCLUDES_TICKET ]
