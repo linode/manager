@@ -22,42 +22,23 @@ describe('Account - User Detail - Username Suite', () => {
             UserDetail.baseElementsDisplay();
         });
 
-        it('should clear username changes on cancel', () => {
-            const originalUsername = browser.getText(`${UserDetail.usernameField.selector} input`);
-            browser.setValue(`${UserDetail.usernameField.selector} input`, `someTest${new Date().getTime()}`);
-            UserDetail.cancelButton.click();
-            const updatedUsername = browser.getText(`${UserDetail.usernameField.selector} input`);
-
-            expect(updatedUsername).toBe(originalUsername);
-        });
-
-        it('should fail to update username on empty string', () => {
-            UserDetail.updateUsername(' ');
-            UserDetail.usernameWarning.waitForVisible(constants.wait.normal);
-            expect(UserDetail.usernameWarning.getText()).toContain('Username must be between');
-            UserDetail.cancelButton.click();
-        });
-
         it('should fail validation on bad username value', () => {
             const badUsername = '$%#5364é-';
             UserDetail.updateUsername(badUsername);
             UserDetail.usernameWarning.waitForVisible(constants.wait.normal);
             expect(UserDetail.usernameWarning.getText()).toContain('Username must only use ASCII characters');
-            UserDetail.cancelButton.click();
         });
 
         it('should fail to update when submitting an existing username', () => {
             UserDetail.updateUsername(browser.options.testUser);
             UserDetail.usernameWarning.waitForVisible(constants.wait.normal);
             expect(UserDetail.usernameWarning.getText()).toContain('Username taken');
-            UserDetail.cancelButton.click();
-
         });
 
         it('should succeed updating with a legitimate username', () => {
             userConfig['username'] = `Test${new Date().getTime()}`;
             UserDetail.updateUsername(userConfig.username);
-            UserDetail.waitForNotice('User Profile updated successfully', constants.wait.normal);
+            UserDetail.waitForNotice('Username updated successfully', constants.wait.normal);
         });
     });
 

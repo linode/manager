@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 import {
   StyleRulesCallback,
@@ -9,13 +10,23 @@ import createMailto from './createMailto';
 
 import AdaLink from './AdaLink';
 
-type CSSClasses = 'container' | 'link' | 'version' | 'adaLink';
+type CSSClasses =
+  | 'container'
+  | 'linkContainer'
+  | 'link'
+  | 'version'
+  | 'feedbackLink'
+  | 'adaLink';
 
 const styles: StyleRulesCallback<CSSClasses> = theme => ({
   container: {
     width: '100%',
     backgroundColor: theme.bg.main,
     margin: 0,
+    [theme.breakpoints.down('xs')]: {
+      flexDirection: 'column',
+      alignItems: 'flex-start'
+    },
     [theme.breakpoints.up('md')]: {
       paddingLeft: theme.spacing.unit * 17 + 79 // 215
     },
@@ -25,6 +36,12 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   },
   version: {
     flex: 1
+  },
+  linkContainer: {
+    [theme.breakpoints.down('xs')]: {
+      paddingTop: '0 !important',
+      paddingBottom: '0 !important'
+    }
   },
   link: {
     color: theme.palette.text.primary,
@@ -39,10 +56,20 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
       marginRight: theme.spacing.unit
     }
   },
+  feedbackLink: {
+    [theme.breakpoints.down('xs')]: {
+      marginBottom: theme.spacing.unit
+    },
+    [theme.breakpoints.up('xs')]: {
+      paddingLeft: 0,
+      marginRight: 60
+    }
+  },
   adaLink: {
     padding: '0 !important',
     marginRight: theme.spacing.unit * 2,
     position: 'fixed',
+    zIndex: 2,
     right: 0,
     bottom: 8,
     [theme.breakpoints.up('sm')]: {
@@ -69,7 +96,12 @@ export class Footer extends React.PureComponent<CombinedProps> {
         <Grid item className={classes.version}>
           {this.renderVersion(classes.link)}
         </Grid>
-        <Grid item>
+        <Grid
+          item
+          className={classNames({
+            [classes.linkContainer]: true
+          })}
+        >
           <a
             className={classes.link}
             href="https://developers.linode.com"
@@ -78,7 +110,13 @@ export class Footer extends React.PureComponent<CombinedProps> {
             API Reference
           </a>
         </Grid>
-        <Grid item style={{ paddingLeft: 0, marginRight: 60 }}>
+        <Grid
+          item
+          className={classNames({
+            [classes.linkContainer]: true,
+            [classes.feedbackLink]: true
+          })}
+        >
           <a
             className={classes.link}
             href={createMailto(window.navigator.userAgent || '')}

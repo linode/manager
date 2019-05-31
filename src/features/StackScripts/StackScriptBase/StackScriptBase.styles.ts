@@ -26,12 +26,16 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     width: '100%',
     top: 0,
     zIndex: 11,
+    paddingTop: theme.spacing.unit * 2,
     paddingBottom: theme.spacing.unit * 3,
     backgroundColor: theme.bg.white
   },
   searchBar: {
     marginTop: 0,
-    backgroundColor: theme.color.white
+    backgroundColor: theme.color.white,
+    '& > div': {
+      marginRight: 0
+    }
   },
   // Styles to override base placeholder styles for StackScript null state
   stackscriptPlaceholder: {

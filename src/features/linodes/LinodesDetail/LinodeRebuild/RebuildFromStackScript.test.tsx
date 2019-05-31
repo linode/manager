@@ -43,10 +43,10 @@ describe('RebuildFromStackScript', () => {
   });
 
   it('renders a SelectStackScript panel', () => {
-    const { queryByText } = render(
+    const { queryByPlaceholderText } = render(
       wrapWithTheme(<RebuildFromStackScript {...props} />)
     );
-    expect(queryByText('Select StackScript')).toBeInTheDocument();
+    expect(queryByPlaceholderText('Search by Label, Username, or Description'));
   });
 
   it('validates the form upon clicking the "Rebuild" button', async () => {

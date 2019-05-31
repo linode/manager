@@ -29,5 +29,10 @@ export default <TInner extends {}, TOuter extends {}>(
       eachKey => itemsById[eachKey]
     );
 
-    return mapToProps(ownProps, nodeBalancers, loading, error);
+    return mapToProps(
+      ownProps,
+      nodeBalancers,
+      loading,
+      error ? error.read : undefined
+    );
   });

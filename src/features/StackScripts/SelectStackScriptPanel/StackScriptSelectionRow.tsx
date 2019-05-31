@@ -6,15 +6,12 @@ import Button from 'src/components/Button';
 import { withStyles, WithStyles } from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
+import Grid from 'src/components/Grid';
 import Radio from 'src/components/Radio';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TableRow from 'src/components/TableRow';
 import { openStackScriptDrawer as openStackScriptDrawerAction } from 'src/store/stackScriptDrawer';
-import {
-  ClassNames,
-  displayTagsAndShowMore,
-  styles
-} from '../StackScriptRowHelpers';
+import { ClassNames, styles } from '../StackScriptRowHelpers';
 
 export interface Props {
   label: string;
@@ -51,9 +48,6 @@ export class StackScriptSelectionRow extends React.Component<
       checked,
       label,
       description,
-      images,
-      deploymentsActive,
-      updated,
       stackScriptID,
       stackScriptUsername,
       openStackScriptDrawer,
@@ -66,30 +60,42 @@ export class StackScriptSelectionRow extends React.Component<
         openStackScriptDrawer(stackScriptID);
       };
       return (
-        <React.Fragment>
-          <Typography variant="h3">
-            {stackScriptUsername && (
+        <Grid container alignItems="center" className={classes.selectionGrid}>
+          <Grid item>
+            <Typography variant="h3">
+              {stackScriptUsername && (
+                <label
+                  htmlFor={`${stackScriptID}`}
+                  className={`${classes.libRadioLabel} ${
+                    classes.stackScriptUsername
+                  }`}
+                >
+                  {stackScriptUsername} /&nbsp;
+                </label>
+              )}
               <label
                 htmlFor={`${stackScriptID}`}
-                className={`${classes.libRadioLabel} ${
-                  classes.stackScriptUsername
-                }`}
+                className={classes.libRadioLabel}
               >
-                {stackScriptUsername} /&nbsp;
+                {label}
               </label>
+            </Typography>
+            {description && (
+              <Typography variant="body1" className={classes.libDescription}>
+                {description}
+              </Typography>
             )}
-            <label
-              htmlFor={`${stackScriptID}`}
-              className={classes.libRadioLabel}
+          </Grid>
+          <Grid item>
+            <Button
+              compact
+              className={classes.detailsButton}
+              onClick={openDrawer}
             >
-              {label}
-            </label>
-          </Typography>
-          <Typography variant="body1">{description}</Typography>
-          <Button className={classes.detailsButton} onClick={openDrawer}>
-            Show Details
-          </Button>
-        </React.Fragment>
+              Show Details
+            </Button>
+          </Grid>
+        </Grid>
       );
     };
 
@@ -112,22 +118,6 @@ export class StackScriptSelectionRow extends React.Component<
             data-qa-stackscript-title
           >
             {renderLabel()}
-          </TableCell>
-          <TableCell>
-            <Typography variant="h3" data-qa-stackscript-deploys>
-              {deploymentsActive}
-            </Typography>
-          </TableCell>
-          <TableCell>
-            <Typography variant="h3" data-qa-stackscript-revision>
-              {updated}
-            </Typography>
-          </TableCell>
-          <TableCell
-            className={classes.stackScriptCell}
-            data-qa-stackscript-images
-          >
-            {displayTagsAndShowMore(images)}
           </TableCell>
         </TableRow>
       </React.Fragment>
