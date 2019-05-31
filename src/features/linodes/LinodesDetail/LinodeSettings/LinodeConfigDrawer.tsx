@@ -87,6 +87,7 @@ interface EditableFields {
 interface Props {
   linodeHypervisor: 'kvm' | 'xen';
   linodeRegion: string;
+  maxMemory: number;
   open: boolean;
   linodeConfigId?: number;
   onClose: () => void;
@@ -198,7 +199,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { open, onClose, linodeConfigId } = this.props;
+    const { open, onClose, maxMemory, linodeConfigId } = this.props;
     const { errors } = this.state;
     const loading = Object.values(this.state.loading).some(v => v === true);
 
