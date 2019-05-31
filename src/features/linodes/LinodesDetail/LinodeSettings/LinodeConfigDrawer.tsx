@@ -118,7 +118,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     fields: LinodeConfigDrawer.defaultFieldsValues()
   };
 
-  static defaultFieldsValues: () => EditableFields => ({
+  static defaultFieldsValues: () => EditableFields = () => ({
     comments: '',
     devices: {},
     helpers: {
