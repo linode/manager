@@ -281,8 +281,10 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
           <Select
             defaultValue={state.mode}
             options={actionsList}
+            textFieldProps={{
+              'data-qa-ip-transfer-action-menu': state.mode
+            }}
             onChange={this.onModeChange(state.sourceIP)}
-            data-qa-ip-transfer-action-menu
             disabled={readOnly}
             placeholder="Select Action"
             isClearable={false}
@@ -310,6 +312,9 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
       <Grid item xs={12} className={classes.autoGridsm}>
         <Select
           options={linodeList}
+          textFieldProps={{
+            'data-qa-linode-select': true
+          }}
           disabled={readOnly || this.state.linodes.length === 1}
           defaultValue={defaultLinode}
           onChange={this.onSelectedLinodeChange(sourceIP)}
@@ -338,7 +343,9 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
           defaultValue={defaultIP}
           options={IPList}
           onChange={this.onSelectedIPChange(sourceIP)}
-          data-qa-swap-ip-action-menu
+          textFieldProps={{
+            'data-qa-swap-ip-action-menu': true
+          }}
           isClearable={false}
           noMarginTop
         />

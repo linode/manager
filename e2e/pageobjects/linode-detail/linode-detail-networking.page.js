@@ -12,10 +12,9 @@ class Networking extends Page {
     get ipTransferSubheading() { return $('[data-qa-transfer-ip-label]'); }
     get ipTransferActionMenu() { return $('[data-qa-ip-transfer-action-menu]'); }
     get ipTransferActionMenus() { return $$('[data-qa-ip-transfer-action-menu]'); }
-    get moveIpButton() { return $('[data-qa-transfer-action="move"]'); }
-    get swapIpButton() { return $('[data-qa-transfer-action="swap"]') }
+    get moveIpButton() { return $('[data-qa-option="move"]'); }
+    get swapIpButton() { return $('[data-qa-option="swap"]') }
     get swapIpActionMenu() { return $('[data-qa-swap-ip-action-menu]'); }
-    get swapWithIps() { return $$('[data-qa-swap-with]'); }
     get ipTransferSave() { return $('[data-qa-ip-transfer-save]'); }
     get ipTransferCancel() { return $('[data-qa-ip-transfer-cancel]'); }
     get addPrivateIp() { return this.addIcon('Add Private IPv4'); }
