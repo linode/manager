@@ -199,7 +199,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { open, onClose, maxMemory, linodeConfigId } = this.props;
+    const { open, onClose, linodeConfigId } = this.props;
     const { errors } = this.state;
     const loading = Object.values(this.state.loading).some(v => v === true);
 
@@ -238,7 +238,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   );
 
   renderForm = (errors?: Linode.ApiFieldError[]) => {
-    const { onClose, classes, readOnly } = this.props;
+    const { onClose, maxMemory, classes, readOnly } = this.props;
 
     const {
       kernels,
