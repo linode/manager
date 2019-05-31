@@ -48,12 +48,10 @@ describe('Linode Detail - Netwrking - IP Sharing', () => {
         Networking.shareIpSelect.click();
         Networking.ipShareOption.waitForVisible(constants.wait.normal);
         expect(Networking.ipShareSelection(linodeOtherDcIp).isVisible()).toBe(false);
-        $('body').click();
-        Networking.ipShareOption.waitForVisible(constants.wait.normal, true);
-        browser.pause(500);
     });
 
     it('Can share an Ip with a linode in the same datacenter', () => {
+        $('body').click()
         Networking.selectIpForSharing(linode2Ip);
         Networking.ipTableRow(linode2Ip).waitForVisible(constants.wait.normal);
     });
