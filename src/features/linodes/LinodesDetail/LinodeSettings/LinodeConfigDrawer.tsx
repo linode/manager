@@ -143,7 +143,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     if (this.isOpening(prevProps.open, this.props.open)) {
       /** Reset the form to the default create state. */
       this.setState({
-        fields: LinodeConfigDrawer.defaultFieldsValues(this.props.maxMemory)
+        fields: LinodeConfigDrawer.defaultFieldsValues()
       });
 
       if (this.state.errors) {
@@ -174,10 +174,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                 devices: createStringsFromDevices(config.devices),
                 kernel: config.kernel,
                 comments: config.comments,
-                memory_limit:
-                  config.memory_limit === 0
-                    ? this.props.maxMemory
-                    : config.memory_limit,
+                memory_limit: config.memory_limit,
                 run_level: config.run_level,
                 virt_mode: config.virt_mode,
                 helpers: config.helpers,
