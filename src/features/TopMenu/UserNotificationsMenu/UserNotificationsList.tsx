@@ -88,8 +88,14 @@ const interceptNotification = (
     /** replace "this facility" with the name of the datacenter */
     return {
       ...notification,
-      label: notification.label.replace('this facility', convertedRegion),
-      message: notification.message.replace('this facility', convertedRegion)
+      label: notification.label.replace(
+        'this facility',
+        convertedRegion || 'one of our facilities'
+      ),
+      message: notification.message.replace(
+        'this facility',
+        convertedRegion || 'one of our facilities'
+      )
     };
   }
 
