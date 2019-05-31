@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.59.0] - 2019-05-31
+
+### Changed:
+- Add name of data center in outage notifications
+- Update table cell styles
+
+### Fixed:
+- Main search bar styles
+
+
 ## [v0.58.0] - 2019-05-29
 
 ### Added:
