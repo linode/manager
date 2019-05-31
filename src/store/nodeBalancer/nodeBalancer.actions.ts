@@ -45,5 +45,5 @@ export type GetNodeBalancerWithConfigsParams = BalancerParams;
 export const getNodeBalancerWithConfigsActions = actionCreator.async<
   GetNodeBalancerWithConfigsParams,
   Linode.NodeBalancer,
-  Linode.ApiFieldError
+  Linode.ApiFieldError[]
 >(`get`);

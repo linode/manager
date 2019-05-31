@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { MappedEntityState } from 'src/store/types';
+import { EntityError, MappedEntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import {
   createDefaultState,
@@ -17,7 +17,7 @@ import {
   updateNodeBalancersActions
 } from './nodeBalancer.actions';
 
-export type State = MappedEntityState<Linode.NodeBalancer>;
+export type State = MappedEntityState<Linode.NodeBalancer, EntityError>;
 
 export const defaultState: State = createDefaultState();
 
@@ -43,7 +43,15 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
   if (isType(action, getAllNodeBalancersActions.failed)) {
     const { error } = action.payload;
-    return onError(error, state);
+    return onError<
+      MappedEntityState<Linode.NodeBalancer, EntityError>,
+      EntityError
+    >(
+      {
+        read: error
+      },
+      state
+    );
   }
 
   /** Create */
