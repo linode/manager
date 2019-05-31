@@ -87,7 +87,6 @@ interface EditableFields {
 interface Props {
   linodeHypervisor: 'kvm' | 'xen';
   linodeRegion: string;
-  maxMemory: number;
   open: boolean;
   linodeConfigId?: number;
   onClose: () => void;
@@ -114,13 +113,10 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     loading: {
       kernels: false
     },
-    kernels: [],
-    fields: LinodeConfigDrawer.defaultFieldsValues(this.props.maxMemory)
+    kernels: []
   };
 
-  static defaultFieldsValues: (
-    maxMemory: number
-  ) => EditableFields = maxMemory => ({
+  static defaultFieldsValues: () => EditableFields => ({
     comments: '',
     devices: {},
     helpers: {
@@ -132,7 +128,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     },
     kernel: 'linode/latest-64bit',
     label: '',
-    memory_limit: maxMemory,
+    memory_limit: 0,
     root_device: '/dev/sda',
     run_level: 'default',
     useCustomRoot: false,
@@ -241,7 +237,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   );
 
   renderForm = (errors?: Linode.ApiFieldError[]) => {
-    const { onClose, maxMemory, classes, readOnly } = this.props;
+    const { onClose, classes, readOnly } = this.props;
 
     const {
       kernels,
