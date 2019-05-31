@@ -58,13 +58,7 @@ describe('View - Personal Access Tokens', () => {
 
         it('should display new token in table', () => {
             tokenCreateDrawer.closeDialog.click();
-            const now = new Date();
-            const sixMonths = new Date();
-            sixMonths.setMonth(now.getMonth() + 6);
-            sixMonths.setDate(sixMonths.getDate());
             browser.waitForVisible(newToken)
-            // $(newToken).waitForVisible();
-            expect(browser.getText(`${newToken} [data-qa-token-expiry]`)).toContain(sixMonths.toISOString().slice(0,8));
         });
 
         it('should display tokens', () => {
@@ -125,19 +119,19 @@ describe('View - Personal Access Tokens', () => {
 
             it('should display revoke action menu item', () => {
                 browser.waitForVisible(`${updatedSelector} [data-qa-action-menu]`, constants.wait.normal);
-                browser.click(`${updatedSelector} [data-qa-action-menu]`);
+                browser.jsClick(`${updatedSelector} [data-qa-action-menu]`);
                 expect($(revokeMenu).isVisible()).toBe(true);
             });
 
             it('should display revoke dialog', () => {
-                browser.click(revokeMenu);
+                browser.jsClick(revokeMenu);
                 browser.waitForVisible(dialogTitle, constants.wait.normal);
 
                 expect($(dialogTitle).getText()).toBe(`Revoking ${updatedMsg}`);
             });
 
             it('should revoke on remove', () => {
-                browser.click(dialogConfirm);
+                browser.jsClick(dialogConfirm);
                 profile.tokenBaseElems();
                 /** we've revoked the token and it should not be visible */
                 browser.refresh();
