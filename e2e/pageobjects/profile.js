@@ -222,11 +222,11 @@ export class Profile extends Page {
 
   tokenBaseElems() {
     browser.waitForVisible('[data-qa-profile-header]', constants.wait.normal);
+    browser.waitForVisible('[data-qa-tabs] [data-qa-tab="API Tokens"]', constants.wait.normal)
     expect(this.profileHeader.isVisible()).toBe(true);
-    expect(this.profileTab('API Tokens').isVisible()).toBe(true);
     expect(this.tokenCreate.waitForVisible(constants.wait.normal)).toBe(true);
-    expect(this.tableHeader.length).toBe(3);
-    expect(this.tableHead.length).toBe(3);
+    expect(this.tableHeader.length).toBe(2);
+    expect(this.tableHead.length).toBe(2);
   }
 
   oauthBaseElems() {
