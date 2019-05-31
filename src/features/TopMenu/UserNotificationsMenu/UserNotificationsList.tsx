@@ -7,6 +7,8 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import { dcDisplayNames } from 'src/constants';
+import { reportException } from 'src/exceptionReporting';
 import UserNotificationListItem from './UserNotificationListItem';
 
 type ClassNames = 'emptyText';
@@ -43,8 +45,9 @@ class UserNotificationsList extends React.Component<CombinedProps, {}> {
     }
 
     return (notifications || []).map((notification, idx) => {
+      const interceptedNotification = interceptNotification(notification);
       const onClick = createClickHandlerForNotification(
-        notification,
+        interceptedNotification,
         (targetPath: string) => {
           closeMenu();
           push(targetPath);
@@ -52,25 +55,59 @@ class UserNotificationsList extends React.Component<CombinedProps, {}> {
       );
       return React.createElement(UserNotificationListItem, {
         key: idx,
-        label: notification.label,
-        message: notification.message,
-        severity: notification.severity,
+        label: interceptedNotification.label,
+        message: interceptedNotification.message,
+        severity: interceptedNotification.severity,
         onClick
       });
     });
   }
 }
 
-const createClickHandlerForNotification = (
-  notification: null | Linode.Notification,
-  onClick: (path: string) => void
-) => {
-  if (!notification) {
-    return;
+const interceptNotification = (
+  notification: Linode.Notification
+): Linode.Notification => {
+  /** this is an outage to one of the datacenters */
+  if (
+    notification.type === 'outage' &&
+    notification.entity &&
+    notification.entity.type === 'region'
+  ) {
+    const convertedRegion = dcDisplayNames[notification.entity.id];
+
+    if (!convertedRegion) {
+      reportException(
+        'Could not find the DC name for the outage notification',
+        {
+          rawRegion: notification.entity.id,
+          convertedRegion
+        }
+      );
+    }
+
+    /** replace "this facility" with the name of the datacenter */
+    return {
+      ...notification,
+      label: notification.label.replace(
+        'this facility',
+        convertedRegion || 'one of our facilities'
+      ),
+      message: notification.message.replace(
+        'this facility',
+        convertedRegion || 'one of our facilities'
+      )
+    };
   }
 
+  return notification;
+};
+
+const createClickHandlerForNotification = (
+  notification: Linode.Notification,
+  onClick: (path: string) => void
+) => {
   /**
-   * Privacy poliicy changes can only be made in CF manager for now, so we have to
+   * Privacy policy changes can only be made in CF manager for now, so we have to
    * link externally.
    */
   if (

@@ -33,7 +33,11 @@ describe('StackScript', () => {
           author: '',
           description: '',
           scriptHeading: '',
-          descriptionText: ''
+          descriptionText: '',
+          deploymentSection: '',
+          dateTimeDisplay: '',
+          compatibleImages: '',
+          divider: ''
         }}
       />
     );

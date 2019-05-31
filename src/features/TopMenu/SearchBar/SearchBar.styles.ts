@@ -55,7 +55,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     '& .react-select__value-container': {
       overflow: 'hidden',
       '& p': {
-        fontSize: '1rem'
+        fontSize: '1rem',
+        overflow: 'visible'
       }
     },
     '& .react-select__indicators': {

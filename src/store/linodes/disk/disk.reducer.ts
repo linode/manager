@@ -9,7 +9,7 @@ import {
   onStart,
   removeMany
 } from 'src/store/store.helpers';
-import { MappedEntityState } from 'src/store/types';
+import { EntityError, MappedEntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import { deleteLinode, deleteLinodeActions } from '../linodes.actions';
 import {
@@ -22,9 +22,9 @@ import {
 } from './disk.actions';
 import { Entity } from './disk.types';
 
-export type State = MappedEntityState<Entity>;
+export type State = MappedEntityState<Entity, EntityError>;
 
-export const defaultState: State = createDefaultState<Entity>();
+export const defaultState: State = createDefaultState<Entity, EntityError>();
 
 const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, deleteLinodeActions.done)) {
@@ -95,7 +95,12 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
   if (isType(action, getAllLinodeDisksActions.failed)) {
     const { error } = action.payload;
-    return onError(error, state);
+    return onError<MappedEntityState<Entity, EntityError>, EntityError>(
+      {
+        read: error
+      },
+      state
+    );
   }
 
   return state;
