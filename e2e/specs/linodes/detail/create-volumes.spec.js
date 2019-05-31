@@ -218,22 +218,22 @@ describe('Linode Detail - Volumes Suite', () => {
             VolumeDetail.attachExistingVolumeToLinode(volumeEast.label);
         });
 
-        it('volume attached successfully', () => {
-            VolumeDetail.volumeCellElem.waitForVisible(constants.wait.long);
-            expect(VolumeDetail.volumeCellLabel.getText()).toContain(volumeEast.label);
-            expect(VolumeDetail.volumeCellSize.getText()).toContain('20');
-        });
+        // it('volume attached successfully', () => {
+        //     VolumeDetail.volumeCellElem.waitForVisible(constants.wait.long);
+        //     expect(VolumeDetail.volumeCellLabel.getText()).toContain(volumeEast.label);
+        //     expect(VolumeDetail.volumeCellSize.getText()).toContain('20');
+        // });
 
-        it('should display volumes attached to linode in summary', () => {
-            checkAttachedVolumeInSummary();
-        });
+        // it('should display volumes attached to linode in summary', () => {
+        //     checkAttachedVolumeInSummary();
+        // });
 
-        it('should show current linode in volume detail page attached to row', () => {
-            checkVolumeDetail(volumeEast.label,testLinode);
-        });
+        // it('should show current linode in volume detail page attached to row', () => {
+        //     checkVolumeDetail(volumeEast.label,testLinode);
+        // });
 
-        it('volume can be detached from linode', () => {
-            detachVolume();
-        });
+        // it('volume can be detached from linode', () => {
+        //     detachVolume();
+        // });
     });
 });

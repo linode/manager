@@ -88,7 +88,7 @@ export class VolumeDetail extends Page {
     }
 
     attachExistingVolumeToLinode(volumeLabel){
-        this.drawerBase.waitForVisible(constants.wait.normal);
+        this.attachExistingVolume.waitForVisible(constants.wait.normal);
         this.attachExistingVolume.click();
 
         /** click the select input */
@@ -100,7 +100,7 @@ export class VolumeDetail extends Page {
         /** press enter key and select first value */
         browser.keys("\uE007");
 
-        $('body').click();
+        this.submit.waitForVisible(constants.wait.normal)
         this.submit.click();
         
         this.drawerBase.waitForVisible(constants.wait.normal,true);
