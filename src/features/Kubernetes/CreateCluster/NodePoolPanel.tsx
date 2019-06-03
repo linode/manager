@@ -57,6 +57,7 @@ interface Props {
   deleteNodePool: (poolIdx: number) => void;
   handleTypeSelect: (newType?: string) => void;
   updateNodeCount: (newCount: number) => void;
+  updatePool: (poolIdx: number, updatedPool: ExtendedPoolNode) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -103,6 +104,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     selectedType,
     nodeCount,
     updateNodeCount,
+    updatePool,
     types
   } = props;
 
@@ -168,7 +170,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           pools={pools}
           types={types}
           handleDelete={(poolIdx: number) => deleteNodePool(poolIdx)}
-          handleChange={(nodeCount: number) => updateNodeCount(nodeCount)}
+          updatePool={updatePool}
         />
       </Grid>
     </Grid>

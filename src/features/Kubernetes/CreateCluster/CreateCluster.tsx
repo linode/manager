@@ -1,4 +1,4 @@
-import { pick, remove } from 'ramda';
+import { pick, remove, update } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
@@ -131,6 +131,13 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     });
   };
 
+  updatePool = (poolIdx: number, updatedPool: ExtendedPoolNode) => {
+    const { nodePools } = this.state;
+    this.setState({
+      nodePools: update(poolIdx, updatedPool, nodePools)
+    });
+  };
+
   removePool = (poolIdx: number) => {
     const { nodePools } = this.state;
     const updatedPools = remove(poolIdx, 1, nodePools);
@@ -234,6 +241,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
               updateNodeCount={(newCount: number) => {
                 this.setState({ numberOfLinodes: newCount });
               }}
+              updatePool={this.updatePool}
               updateFor={[
                 nodePools,
                 typesData,

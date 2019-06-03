@@ -11,7 +11,8 @@ const props = {
   types: extendedTypes,
   pools: nodePoolRequests,
   handleDelete: jest.fn(),
-  handleChange: jest.fn()
+  handleChange: jest.fn(),
+  updatePool: jest.fn()
 };
 
 const emptyProps = {
