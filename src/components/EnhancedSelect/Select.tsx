@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import ReactSelect from 'react-select';

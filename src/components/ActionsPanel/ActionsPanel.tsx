@@ -1,29 +1,25 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import { compose } from 'ramda';
 import * as React from 'react';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import RenderGuard from 'src/components/RenderGuard';
 
 type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    paddingTop: theme.spacing(2),
-    paddingBottom: theme.spacing(1),
-    '& > button': {
-      marginBottom: theme.spacing(1)
-    },
-    '& > :first-child': {
-      marginRight: theme.spacing(1)
+    root: {
+      paddingTop: theme.spacing(2),
+      paddingBottom: theme.spacing(1),
+      '& > button': {
+        marginBottom: theme.spacing(1)
+      },
+      '& > :first-child': {
+        marginRight: theme.spacing(1)
+      }
     }
-  }
-});
+  });
 
 interface Props {
   className?: string;

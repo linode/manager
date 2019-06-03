@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as moment from 'moment-timezone';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path, pathOr, sortBy } from 'ramda';
@@ -14,12 +15,7 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Paper from 'src/components/core/Paper';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -78,53 +74,53 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  paper: {
-    padding: theme.spacing(3),
-    marginBottom: theme.spacing(3)
-  },
-  title: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(2)
-  },
-  subTitle: {
-    marginBottom: theme.spacing(1)
-  },
-  snapshotFormControl: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    flexWrap: 'wrap',
-    '& > div': {
-      width: 'auto',
+    paper: {
+      padding: theme.spacing(3),
+      marginBottom: theme.spacing(3)
+    },
+    title: {
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(2)
+    },
+    subTitle: {
+      marginBottom: theme.spacing(1)
+    },
+    snapshotFormControl: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      flexWrap: 'wrap',
+      '& > div': {
+        width: 'auto',
+        marginRight: theme.spacing(2)
+      },
+      '& button': {
+        marginTop: theme.spacing(4)
+      }
+    },
+    scheduleAction: {
+      padding: 0,
+      '& button': {
+        marginLeft: 0,
+        marginTop: theme.spacing(2)
+      }
+    },
+    chooseTime: {
       marginRight: theme.spacing(2)
     },
-    '& button': {
-      marginTop: theme.spacing(4)
+    chooseDay: {
+      minWidth: 150
+    },
+    cancelButton: {
+      marginBottom: theme.spacing(1)
+    },
+    snapshotNameField: {
+      minWidth: 275
+    },
+    snapshotGeneralError: {
+      minWidth: '100%'
     }
-  },
-  scheduleAction: {
-    padding: 0,
-    '& button': {
-      marginLeft: 0,
-      marginTop: theme.spacing(2)
-    }
-  },
-  chooseTime: {
-    marginRight: theme.spacing(2)
-  },
-  chooseDay: {
-    minWidth: 150
-  },
-  cancelButton: {
-    marginBottom: theme.spacing(1)
-  },
-  snapshotNameField: {
-    minWidth: 275
-  },
-  snapshotGeneralError: {
-    minWidth: '100%'
-  }
-});
+  });
 
 interface ContextProps {
   linodeID: number;

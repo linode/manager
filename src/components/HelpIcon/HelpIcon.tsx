@@ -1,12 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import HelpOutline from '@material-ui/icons/HelpOutline';
 import * as React from 'react';
 import IconButton from 'src/components/core/IconButton';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 
 interface Props {
@@ -18,8 +14,8 @@ type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {}
-});
+    root: {}
+  });
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 

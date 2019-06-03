@@ -1,22 +1,18 @@
-import * as React from 'react';
 import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import * as React from 'react';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 
 type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    display: 'inline-block',
-    backgroundImage: 'linear-gradient( #efefef 20px, transparent 0 )',
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: '0 0'
-  }
-});
+    root: {
+      display: 'inline-block',
+      backgroundImage: 'linear-gradient( #efefef 20px, transparent 0 )',
+      backgroundRepeat: 'no-repeat',
+      backgroundPosition: '0 0'
+    }
+  });
 
 interface Props {
   width?: number;

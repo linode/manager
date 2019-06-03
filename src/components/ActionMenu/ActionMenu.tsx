@@ -1,13 +1,9 @@
+import { WithStyles } from '@material-ui/core/styles';
 import MoreHoriz from '@material-ui/icons/MoreHoriz';
 import * as React from 'react';
 import IconButton from 'src/components/core/IconButton';
 import Menu from 'src/components/core/Menu';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import MenuItem from 'src/components/MenuItem';
 
 export interface Action {
@@ -28,52 +24,52 @@ type CSSClasses =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end'
-  },
-  item: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-    paddingTop: theme.spacing(1) * 1.5,
-    paddingBottom: theme.spacing(1) * 1.5,
-    fontFamily: 'LatoWeb',
-    fontSize: '.9rem',
-    color: theme.color.blueDTwhite,
-    transition: `
+    root: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end'
+    },
+    item: {
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+      paddingTop: theme.spacing(1) * 1.5,
+      paddingBottom: theme.spacing(1) * 1.5,
+      fontFamily: 'LatoWeb',
+      fontSize: '.9rem',
+      color: theme.color.blueDTwhite,
+      transition: `
       ${'color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, '}
       ${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}
     `,
-    '&:hover, &:focus': {
-      backgroundColor: theme.palette.primary.main,
-      color: '#fff'
-    }
-  },
-  button: {
-    width: 26,
-    padding: 0,
-    '& svg': {
-      fontSize: '28px'
+      '&:hover, &:focus': {
+        backgroundColor: theme.palette.primary.main,
+        color: '#fff'
+      }
     },
-    '&[aria-expanded="true"] .kebob': {
-      fill: theme.palette.primary.dark
+    button: {
+      width: 26,
+      padding: 0,
+      '& svg': {
+        fontSize: '28px'
+      },
+      '&[aria-expanded="true"] .kebob': {
+        fill: theme.palette.primary.dark
+      }
+    },
+    actionSingleLink: {
+      marginRight: theme.spacing(1),
+      whiteSpace: 'nowrap',
+      float: 'right',
+      fontFamily: theme.font.bold
+    },
+    hidden: {
+      height: 0,
+      padding: 0
+    },
+    menu: {
+      maxWidth: theme.spacing(25)
     }
-  },
-  actionSingleLink: {
-    marginRight: theme.spacing(1),
-    whiteSpace: 'nowrap',
-    float: 'right',
-    fontFamily: theme.font.bold
-  },
-  hidden: {
-    height: 0,
-    padding: 0
-  },
-  menu: {
-    maxWidth: theme.spacing(25)
-  }
-});
+  });
 
 interface Props {
   createActions: (closeMenu: Function) => Action[];

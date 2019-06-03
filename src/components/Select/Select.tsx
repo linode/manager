@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import * as classNames from 'classnames';
 import * as React from 'react';
@@ -6,12 +7,7 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import Input, { InputProps } from 'src/components/core/Input';
 import { MenuProps } from 'src/components/core/Menu';
 import Select, { SelectProps } from 'src/components/core/Select';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import HelpIcon from 'src/components/HelpIcon';
 
 type ClassNames =
@@ -25,59 +21,59 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  inputError: {
-    borderColor: `${theme.color.red} !important`,
-    '&[class*="focused"]': {
-      borderColor: theme.color.red
-    }
-  },
-  textError: {
-    marginTop: theme.spacing(1),
-    color: theme.color.red,
-    fontSize: '0.8571428571428571rem',
-    minHeight: '1em',
-    lineHeight: '1em'
-  },
-  inputSucess: {
-    borderColor: `${theme.color.green} !important`,
-    '&[class*="focused"]': {
-      borderColor: theme.color.green
+    inputError: {
+      borderColor: `${theme.color.red} !important`,
+      '&[class*="focused"]': {
+        borderColor: theme.color.red
+      }
     },
-    '& + p': {
-      color: theme.color.green
-    }
-  },
-  helpWrapper: {
-    display: 'flex',
-    alignItems: 'flex-end'
-  },
-  helpWrapperSelectField: {
-    width: 415,
-    [theme.breakpoints.down('xs')]: {
-      width: '100%'
-    }
-  },
-  pagination: {
-    minHeight: 40,
-    '& [role="button"]': {
-      padding: '13px 32px 13px 16px',
-      minHeight: 40
-    }
-  },
-  small: {
-    minHeight: 32,
-    '& [role="button"]': {
+    textError: {
+      marginTop: theme.spacing(1),
+      color: theme.color.red,
+      fontSize: '0.8571428571428571rem',
+      minHeight: '1em',
+      lineHeight: '1em'
+    },
+    inputSucess: {
+      borderColor: `${theme.color.green} !important`,
+      '&[class*="focused"]': {
+        borderColor: theme.color.green
+      },
+      '& + p': {
+        color: theme.color.green
+      }
+    },
+    helpWrapper: {
+      display: 'flex',
+      alignItems: 'flex-end'
+    },
+    helpWrapperSelectField: {
+      width: 415,
+      [theme.breakpoints.down('xs')]: {
+        width: '100%'
+      }
+    },
+    pagination: {
+      minHeight: 40,
+      '& [role="button"]': {
+        padding: '13px 32px 13px 16px',
+        minHeight: 40
+      }
+    },
+    small: {
       minHeight: 32,
-      padding: '8px 32px 0 8px',
-      minWidth: 132
-    },
-    '& svg': {
-      marginTop: 0,
-      width: 24,
-      height: 24
+      '& [role="button"]': {
+        minHeight: 32,
+        padding: '8px 32px 0 8px',
+        minWidth: 132
+      },
+      '& svg': {
+        marginTop: 0,
+        width: 24,
+        height: 24
+      }
     }
-  }
-});
+  });
 
 interface Props extends SelectProps {
   tooltipText?: string;

@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { compose, head, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -5,12 +6,7 @@ import { compose as recompose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -55,52 +51,52 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  title: {
-    marginTop: `${theme.spacing(1)}px`,
-    marginBottom: `${theme.spacing(2)}px`
-  },
-  address: {
-    width: '30%'
-  },
-  reverseDNS: {
-    width: '30%'
-  },
-  defaultGateway: {
-    width: '20%'
-  },
-  type: {
-    width: '20%'
-  },
-  action: {
-    textAlign: 'right',
-    '& a': {
-      marginRight: theme.spacing(1)
-    }
-  },
-  ipv4Container: {
-    [theme.breakpoints.down('sm')]: {
-      justifyContent: 'flex-start',
-      '& button': {
-        marginLeft: -14
+    root: {},
+    title: {
+      marginTop: `${theme.spacing(1)}px`,
+      marginBottom: `${theme.spacing(2)}px`
+    },
+    address: {
+      width: '30%'
+    },
+    reverseDNS: {
+      width: '30%'
+    },
+    defaultGateway: {
+      width: '20%'
+    },
+    type: {
+      width: '20%'
+    },
+    action: {
+      textAlign: 'right',
+      '& a': {
+        marginRight: theme.spacing(1)
       }
+    },
+    ipv4Container: {
+      [theme.breakpoints.down('sm')]: {
+        justifyContent: 'flex-start',
+        '& button': {
+          marginLeft: -14
+        }
+      }
+    },
+    ipv4Title: {
+      marginBottom: theme.spacing(2),
+      marginTop: theme.spacing(4)
+    },
+    ipv4TitleContainer: {
+      flex: 1,
+      [theme.breakpoints.down('sm')]: {
+        flexBasis: '100%'
+      }
+    },
+    netActionsTitle: {
+      marginBottom: theme.spacing(2),
+      marginTop: theme.spacing(4)
     }
-  },
-  ipv4Title: {
-    marginBottom: theme.spacing(2),
-    marginTop: theme.spacing(4)
-  },
-  ipv4TitleContainer: {
-    flex: 1,
-    [theme.breakpoints.down('sm')]: {
-      flexBasis: '100%'
-    }
-  },
-  netActionsTitle: {
-    marginBottom: theme.spacing(2),
-    marginTop: theme.spacing(4)
-  }
-});
+  });
 
 interface State {
   linodeIPs?: Linode.LinodeIPsResponse;

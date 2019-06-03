@@ -1,13 +1,9 @@
+import { WithStyles } from '@material-ui/core/styles';
 import Close from '@material-ui/icons/Close';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Drawer, { DrawerProps } from 'src/components/core/Drawer';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 

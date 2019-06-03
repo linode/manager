@@ -1,29 +1,25 @@
+import { WithStyles } from '@material-ui/core/styles';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import * as React from 'react';
 import { IndicatorProps } from 'react-select/lib/components/indicators';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'enhancedSelectDropdown';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  enhancedSelectDropdown: {
-    color: '#aaa !important',
-    width: 28,
-    height: 28,
-    opacity: 0.5,
-    marginTop: 0,
-    transition: 'color 225ms ease-in-out',
-    marginRight: '4px',
-    pointerEvents: 'none'
-  }
-});
+    root: {},
+    enhancedSelectDropdown: {
+      color: '#aaa !important',
+      width: 28,
+      height: 28,
+      opacity: 0.5,
+      marginTop: 0,
+      transition: 'color 225ms ease-in-out',
+      marginRight: '4px',
+      pointerEvents: 'none'
+    }
+  });
 
 interface Props extends IndicatorProps<any> {}
 
