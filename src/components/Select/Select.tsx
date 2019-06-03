@@ -7,7 +7,7 @@ import Input, { InputProps } from 'src/components/core/Input';
 import { MenuProps } from 'src/components/core/Menu';
 import Select, { SelectProps } from 'src/components/core/Select';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -22,7 +22,8 @@ type ClassNames =
   | 'pagination'
   | 'small';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   inputError: {
     borderColor: `${theme.color.red} !important`,
     '&[class*="focused"]': {

@@ -7,7 +7,7 @@ import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import Button from 'src/components/core/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -30,7 +30,8 @@ type ClassNames =
   | 'progress'
   | 'loading';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   '@keyframes fadeIn': {
     from: {
       opacity: 0

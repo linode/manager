@@ -3,7 +3,7 @@ import * as classNames from 'classnames';
 import * as copy from 'copy-to-clipboard';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -20,7 +20,8 @@ interface State {
 
 type CSSClasses = 'root' | 'copied' | 'standAlone';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   '@keyframes popUp': {
     from: {
       opacity: 0,

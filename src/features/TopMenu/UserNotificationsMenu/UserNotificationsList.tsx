@@ -2,7 +2,7 @@ import { compose, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -13,7 +13,8 @@ import UserNotificationListItem from './UserNotificationListItem';
 
 type ClassNames = 'emptyText';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   emptyText: {
     padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
     fontFamily: theme.font.bold

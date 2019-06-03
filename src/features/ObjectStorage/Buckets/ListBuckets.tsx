@@ -5,7 +5,7 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
@@ -29,7 +29,8 @@ import BucketTableRow from './BucketTableRow';
 
 type ClassNames = 'root' | 'label' | 'confirmationCopy';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   label: {
     paddingLeft: 65

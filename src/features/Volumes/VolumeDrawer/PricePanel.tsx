@@ -1,5 +1,5 @@
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from '@material-ui/styles';
@@ -20,7 +20,8 @@ const getClampedPrice = (newSize: number, currentSize: number) =>
       : getPrice(MAX_VOLUME_SIZE)
     : getPrice(currentSize);
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     marginTop: theme.spacing(4)
   }

@@ -5,7 +5,7 @@ import CheckboxCheckedIcon from 'src/assets/icons/checkboxChecked.svg';
 import Checkbox, { CheckboxProps } from 'src/components/core/Checkbox';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -13,7 +13,8 @@ import HelpIcon from 'src/components/HelpIcon';
 
 type CSSClasses = 'root' | 'checked' | 'disabled' | 'warning' | 'error';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     color: '#ccc',
     transition: theme.transitions.create(['color']),

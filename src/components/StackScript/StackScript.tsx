@@ -3,7 +3,7 @@ import { compose } from 'recompose';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';

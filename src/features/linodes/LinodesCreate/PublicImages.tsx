@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -11,7 +11,8 @@ import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 
 type ClassNames = 'root' | 'flatImagePanelSelections';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   flatImagePanelSelections: {
     marginTop: theme.spacing(2),
     padding: `${theme.spacing(1)}px 0`

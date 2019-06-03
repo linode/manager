@@ -2,7 +2,7 @@ import { Form, Formik } from 'formik';
 import * as React from 'react';
 import { compose } from 'recompose';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -23,7 +23,8 @@ import { CreateBucketSchema } from 'src/services/objectStorage/buckets.schema';
 import ClusterSelect from './ClusterSelect';
 
 type ClassNames = 'root' | 'textWrapper';
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   textWrapper: {
     marginBottom: theme.spacing(1) + 2

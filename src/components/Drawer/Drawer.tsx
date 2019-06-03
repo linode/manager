@@ -3,7 +3,7 @@ import * as React from 'react';
 import Button from 'src/components/Button';
 import Drawer, { DrawerProps } from 'src/components/core/Drawer';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';

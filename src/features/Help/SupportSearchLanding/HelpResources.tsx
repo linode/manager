@@ -5,7 +5,7 @@ import Chat from 'src/assets/icons/chat.svg';
 import Community from 'src/assets/icons/community.svg';
 import Support from 'src/assets/icons/support.svg';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -24,7 +24,8 @@ type ClassNames =
   | 'icon'
   | 'ada';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   wrapper: {
     marginTop: theme.spacing(4)

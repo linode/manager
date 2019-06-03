@@ -3,7 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -35,7 +35,8 @@ type ClassNames =
   | 'actionsCol'
   | 'wrapHeader';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   labelGridWrapper: {
     paddingLeft: `${theme.spacing(1) / 2}px !important`,

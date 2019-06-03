@@ -2,7 +2,7 @@ import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -22,7 +22,8 @@ export interface ExtendedLinode extends Linode.Linode {
 
 type ClassNames = 'root' | 'creating' | 'table' | 'link';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     marginBottom: theme.spacing(3)
   },

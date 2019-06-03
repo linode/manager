@@ -1,3 +1,4 @@
+import { WithStyles, WithTheme } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -11,11 +12,10 @@ import NodeBalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
 import StackScriptIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
-  WithStyles,
-  withTheme,
-  WithTheme
+  withTheme
 } from 'src/components/core/styles';
 import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 
@@ -29,42 +29,43 @@ type ClassNames =
   | 'loadingIcon'
   | 'animated';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  '@keyframes rotate': {
-    from: {
-      transform: 'rotate(0deg)'
+const styles = (theme: Theme) =>
+  createStyles({
+    '@keyframes rotate': {
+      from: {
+        transform: 'rotate(0deg)'
+      },
+      to: {
+        transform: 'rotate(360deg)'
+      }
     },
-    to: {
-      transform: 'rotate(360deg)'
+    root: {
+      position: 'relative',
+      color: 'transparent',
+      display: 'flex'
+    },
+    default: {
+      color: theme.color.grey2
+    },
+    icon: {},
+    running: {
+      color: theme.color.green
+    },
+    offline: {
+      color: theme.color.red
+    },
+    loading: {
+      position: 'absolute',
+      top: 0,
+      left: 0
+    },
+    loadingIcon: {
+      fill: theme.color.offBlack
+    },
+    animated: {
+      animation: 'rotate 2s linear infinite'
     }
-  },
-  root: {
-    position: 'relative',
-    color: 'transparent',
-    display: 'flex'
-  },
-  default: {
-    color: theme.color.grey2
-  },
-  icon: {},
-  running: {
-    color: theme.color.green
-  },
-  offline: {
-    color: theme.color.red
-  },
-  loading: {
-    position: 'absolute',
-    top: 0,
-    left: 0
-  },
-  loadingIcon: {
-    fill: theme.color.offBlack
-  },
-  animated: {
-    animation: 'rotate 2s linear infinite'
-  }
-});
+  });
 
 export type Variant =
   | 'linode'

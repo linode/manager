@@ -6,7 +6,7 @@ import CloudUpload from '@material-ui/icons/CloudUpload';
 
 import InputAdornment from 'src/components/core/InputAdornment';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -25,7 +25,8 @@ type ClassNames =
   | 'closeIcon'
   | 'uploadProgress';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   attachmentsContainer: {
     maxWidth: 800

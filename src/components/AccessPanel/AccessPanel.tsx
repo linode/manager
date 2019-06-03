@@ -4,7 +4,7 @@ import { compose } from 'recompose';
 import CheckBox from 'src/components/CheckBox';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -30,7 +30,8 @@ type ClassNames =
   | 'passwordInputOuter'
   | 'isOptional';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     flexGrow: 1,
     width: '100%',

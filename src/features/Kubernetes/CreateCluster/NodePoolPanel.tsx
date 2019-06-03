@@ -6,7 +6,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
@@ -25,7 +25,8 @@ import NodePoolDisplayTable from './NodePoolDisplayTable';
 
 type ClassNames = 'root' | 'title' | 'gridItem' | 'countInput';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     marginTop: theme.spacing(2),
     marginBottom: theme.spacing(2),

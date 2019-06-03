@@ -1,26 +1,22 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import * as React from 'react';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import PaginationControls from '../PaginationControls';
 
 type ClassNames = 'root' | 'padded';
 
-const styles: StyleRulesCallback<ClassNames> = theme => {
-  return {
+const styles = (theme: Theme) =>
+  createStyles({
     root: {
       marginTop: theme.spacing(1)
     },
     padded: {
       padding: `0 ${theme.spacing(2)}px ${theme.spacing(1)}px`
     }
-  };
-};
+  });
 
 export interface PaginationProps {
   count: number;

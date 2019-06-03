@@ -1,14 +1,15 @@
 import * as React from 'react';
 import Button, { ButtonProps } from 'src/components/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
 
 type CSSClasses = 'root';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     backgroundColor: theme.bg.white,
     border: '1px solid ' + `${theme.color.borderPagination}`,

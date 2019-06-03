@@ -1,5 +1,5 @@
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from '@material-ui/styles';
@@ -17,7 +17,8 @@ import { AppsData } from './types';
 
 type ClassNames = 'flatImagePanelSelections' | 'panel' | 'loading';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   flatImagePanelSelections: {
     marginTop: theme.spacing(2),
     padding: `${theme.spacing(1)}px 0`

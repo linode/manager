@@ -1,9 +1,6 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import LinearProgress from 'src/components/LinearProgress';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -11,24 +8,25 @@ import { linodeInTransition } from 'src/features/linodes/transitions';
 
 type ClassNames = 'bodyRow' | 'status' | 'bodyCell';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  bodyRow: {
-    height: 'auto',
-    '&:before': {
-      borderBottomColor: 'transparent'
+const styles = (theme: Theme) =>
+  createStyles({
+    bodyRow: {
+      height: 'auto',
+      '&:before': {
+        borderBottomColor: 'transparent'
+      }
+    },
+    bodyCell: {
+      border: 0,
+      paddingBottom: 0
+    },
+    status: {
+      textTransform: 'capitalize',
+      marginBottom: theme.spacing(1),
+      color: theme.palette.text.primary,
+      fontSize: '.92rem'
     }
-  },
-  bodyCell: {
-    border: 0,
-    paddingBottom: 0
-  },
-  status: {
-    textTransform: 'capitalize',
-    marginBottom: theme.spacing(1),
-    color: theme.palette.text.primary,
-    fontSize: '.92rem'
-  }
-});
+  });
 
 interface Props {
   linodeId: number;

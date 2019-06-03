@@ -5,7 +5,7 @@ import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
 import {
-  StyleRulesCallback,
+  createStyles,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
@@ -32,7 +32,8 @@ type ClassNames =
   | 'addNewIP'
   | 'remove';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   addNewButton: {
     marginTop: theme.spacing(3),
     marginBottom: -theme.spacing(2)

@@ -7,7 +7,7 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import MenuItem from 'src/components/core/MenuItem';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -23,7 +23,8 @@ import ImageAndPassword from '../LinodeSettings/ImageAndPassword';
 
 type ClassNames = 'root' | 'section' | 'divider';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   section: {},
   divider: {

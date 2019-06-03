@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -34,7 +34,8 @@ type ClassNames =
   | 'actionsCol'
   | 'wrapHeader';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     marginTop: 0
   },

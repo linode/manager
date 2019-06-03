@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose, withProps } from 'recompose';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -32,7 +32,8 @@ type CombinedProps = { dispatch: ThunkDispatch } & WithTypes &
 
 type ClassNames = 'backButton';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   backButton: {
     margin: `5px 0 0 -${theme.spacing(2)}px`,
     '& svg': {

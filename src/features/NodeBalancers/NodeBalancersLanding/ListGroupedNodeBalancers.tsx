@@ -1,7 +1,7 @@
 import { compose } from 'ramda';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -31,7 +31,8 @@ type ClassNames =
   | 'tagHeader'
   | 'paginationCell';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   ip: { width: '30%', minWidth: 200 },
   nameCell: { width: '15%', minWidth: 150 },
   nodeStatus: { width: '10%', minWidth: 100 },

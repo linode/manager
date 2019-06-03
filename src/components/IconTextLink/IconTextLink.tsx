@@ -2,7 +2,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -10,7 +10,8 @@ import SvgIcon from 'src/components/core/SvgIcon';
 
 type CSSClasses = 'root' | 'active' | 'disabled' | 'icon' | 'left' | 'label';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     display: 'flex',
     alignItems: 'flex-start',

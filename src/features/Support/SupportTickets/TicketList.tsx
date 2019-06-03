@@ -2,7 +2,7 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -24,7 +24,8 @@ interface Props extends PaginationProps<Linode.SupportTicket> {
   newTicket?: Linode.SupportTicket;
 }
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {}
 });
 

@@ -15,7 +15,7 @@ import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -75,7 +75,8 @@ type ClassNames =
   | 'chooseDay'
   | 'cancelButton';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   paper: {
     padding: theme.spacing(3),
     marginBottom: theme.spacing(3)

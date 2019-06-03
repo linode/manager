@@ -1,19 +1,17 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import { formatRegion } from 'src/utilities';
 
 type CSSClasses = 'regionIndicator';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
-  regionIndicator: {
-    alignItems: 'center',
-    whiteSpace: 'nowrap'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    regionIndicator: {
+      alignItems: 'center',
+      whiteSpace: 'nowrap'
+    }
+  });
 
 interface Props {
   region: string;

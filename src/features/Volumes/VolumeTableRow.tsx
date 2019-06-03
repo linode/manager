@@ -1,11 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import EntityIcon from 'src/components/EntityIcon';
@@ -28,54 +25,55 @@ type ClassNames =
   | 'linodeVolumesWrapper'
   | 'systemPath';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  title: {
-    marginBottom: theme.spacing(2)
-  },
-  // styles for /volumes table
-  volumesWrapper: {},
-  // styles for linodes/id/volumes table
-  linodeVolumesWrapper: {
-    '& $labelCol': {
-      width: '20%',
-      minWidth: 200
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    title: {
+      marginBottom: theme.spacing(2)
     },
-    '& $sizeCol': {
+    // styles for /volumes table
+    volumesWrapper: {},
+    // styles for linodes/id/volumes table
+    linodeVolumesWrapper: {
+      '& $labelCol': {
+        width: '20%',
+        minWidth: 200
+      },
+      '& $sizeCol': {
+        width: '15%',
+        minWidth: 100
+      },
+      '& $pathCol': {
+        width: '55%',
+        minWidth: 350
+      }
+    },
+    labelCol: {
+      width: '25%',
+      minWidth: 150,
+      paddingLeft: 65
+    },
+    labelStatusWrapper: {
+      display: 'flex',
+      flexFlow: 'row nowrap',
+      alignItems: 'center'
+    },
+    attachmentCol: {
       width: '15%',
-      minWidth: 100
+      minWidth: 150
     },
-    '& $pathCol': {
-      width: '55%',
-      minWidth: 350
+    sizeCol: {
+      width: '10%',
+      minWidth: 75
+    },
+    pathCol: {
+      width: '25%',
+      minWidth: 250
+    },
+    systemPath: {
+      wordBreak: 'break-all'
     }
-  },
-  labelCol: {
-    width: '25%',
-    minWidth: 150,
-    paddingLeft: 65
-  },
-  labelStatusWrapper: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center'
-  },
-  attachmentCol: {
-    width: '15%',
-    minWidth: 150
-  },
-  sizeCol: {
-    width: '10%',
-    minWidth: 75
-  },
-  pathCol: {
-    width: '25%',
-    minWidth: 250
-  },
-  systemPath: {
-    wordBreak: 'break-all'
-  }
-});
+  });
 
 interface Props {
   volume: ExtendedVolume;

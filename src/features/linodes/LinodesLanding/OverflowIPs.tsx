@@ -1,28 +1,26 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import Chip from 'src/components/core/Chip';
 import Popover from 'src/components/core/Popover';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import IPAddress from './IPAddress';
 
 type CSSClasses = 'chip' | 'label' | 'popover';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
-  chip: {
-    height: theme.typography.body1.fontSize,
-    marginLeft: theme.spacing(1) / 2
-  },
-  label: {
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1)
-  },
-  popover: {
-    padding: theme.spacing(2)
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    chip: {
+      height: theme.typography.body1.fontSize,
+      marginLeft: theme.spacing(1) / 2
+    },
+    label: {
+      paddingLeft: theme.spacing(1),
+      paddingRight: theme.spacing(1)
+    },
+    popover: {
+      padding: theme.spacing(2)
+    }
+  });
 
 interface Props {
   ips: string[];

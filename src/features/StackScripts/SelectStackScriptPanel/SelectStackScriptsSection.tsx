@@ -1,7 +1,7 @@
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -15,7 +15,8 @@ import StackScriptSelectionRow from './StackScriptSelectionRow';
 
 type ClassNames = 'root' | 'loadingWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   loadingWrapper: {
     border: 0,

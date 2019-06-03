@@ -3,7 +3,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import Fade from 'src/components/core/Fade';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -21,7 +21,8 @@ type CSSClasses =
   | 'disabled'
   | 'showCursor';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   '@keyframes fadeIn': {
     from: {
       opacity: 0

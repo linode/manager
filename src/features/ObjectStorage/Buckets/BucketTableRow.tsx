@@ -2,7 +2,7 @@ import * as React from 'react';
 // @todo: uncomment this Link import when a bucket landing page exists
 // import { Link } from 'react-router-dom';
 import {
-  StyleRulesCallback,
+  createStyles,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
@@ -18,7 +18,8 @@ import BucketActionMenu from './BucketActionMenu';
 
 type ClassNames = 'root' | 'labelStatusWrapper' | 'bucketRow';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   bucketRow: {
     backgroundColor: theme.bg.white

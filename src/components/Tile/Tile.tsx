@@ -2,7 +2,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -12,7 +12,8 @@ import Notice from 'src/components/Notice';
 
 type ClassNames = 'root' | 'card' | 'clickableTile' | 'icon' | 'tileTitle';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   '@keyframes dash': {
     to: {
       'stroke-dashoffset': 0

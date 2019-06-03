@@ -6,7 +6,7 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -41,7 +41,8 @@ import {
 import VolumesActionsPanel from './VolumesActionsPanel';
 
 type ClassNames = 'root' | 'textWrapper';
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   textWrapper: {
     marginBottom: theme.spacing(1) + 2

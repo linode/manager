@@ -2,7 +2,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from '@material-ui/styles';
@@ -12,7 +12,8 @@ import NavItem, { PrimaryLink } from './NavItem';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {}
 });
 

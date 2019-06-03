@@ -3,7 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -39,7 +39,8 @@ import VolumesActionsPanel from './VolumesActionsPanel';
 
 type ClassNames = 'copy';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   copy: {
     marginTop: theme.spacing(1)
   }

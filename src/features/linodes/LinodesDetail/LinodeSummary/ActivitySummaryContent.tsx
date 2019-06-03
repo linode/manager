@@ -1,13 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
-import {
-  StyleRulesCallback,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 
@@ -15,12 +10,13 @@ import ActivityRow from './ActivityRow';
 
 type ClassNames = 'root' | 'emptyState';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
-  emptyState: {
-    padding: theme.spacing(2)
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    emptyState: {
+      padding: theme.spacing(2)
+    }
+  });
 
 interface Props {
   error?: string;

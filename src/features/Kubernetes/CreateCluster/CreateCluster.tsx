@@ -7,7 +7,7 @@ import { compose } from 'recompose';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
@@ -39,7 +39,8 @@ import NodePoolPanel from './NodePoolPanel';
 
 type ClassNames = 'root' | 'title' | 'sidebar' | 'inner';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   title: {
     marginBottom: theme.spacing(1) + theme.spacing(1) / 2

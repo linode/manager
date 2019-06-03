@@ -1,5 +1,5 @@
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from '@material-ui/styles';
@@ -10,7 +10,8 @@ import Typography from 'src/components/core/Typography';
 
 type ClassNames = 'root' | 'primaryColor' | 'loadingText';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     padding: theme.spacing(2) + theme.spacing(1) / 4,
     backgroundColor: theme.color.grey2

@@ -1,7 +1,7 @@
 import MenuItem from '@material-ui/core/MenuItem';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';

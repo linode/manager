@@ -7,7 +7,7 @@ import { compose } from 'recompose';
 
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -35,7 +35,8 @@ import EventRow from './EventRow';
 
 type ClassNames = 'root' | 'header' | 'labelCell' | 'timeCell' | 'noMoreEvents';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   header: {
     marginBottom: theme.spacing(1)

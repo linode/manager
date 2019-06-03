@@ -2,7 +2,7 @@ import * as React from 'react';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -13,7 +13,8 @@ type ClassNames = 'root' | 'button';
 
 type CombinedProps = WithStyles<ClassNames>;
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     padding: theme.spacing(3),
     marginBottom: theme.spacing(3)

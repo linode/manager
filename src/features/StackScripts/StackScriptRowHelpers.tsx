@@ -21,7 +21,8 @@ export type ClassNames =
   | 'deployButton'
   | 'detailsButton';
 
-export const styles: StyleRulesCallback<ClassNames> = theme => ({
+export const styles = (theme: Theme) =>
+  createStyles({
   root: {
     padding: theme.spacing(2),
     borderBottom: `solid 1px ${theme.palette.grey['200']}`

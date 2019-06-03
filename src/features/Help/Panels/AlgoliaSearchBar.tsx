@@ -4,7 +4,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles,
   WithTheme
@@ -24,58 +24,57 @@ type ClassNames =
   | 'enhancedSelectWrapper'
   | 'textfield';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    position: 'relative'
-  },
-  searchItem: {
-    '& em': {
-      fontStyle: 'normal',
-      color: theme.palette.primary.main
-    }
-  },
-  searchIcon: {
-    position: 'absolute',
-    color: theme.color.grey1,
-    zIndex: 3,
-    bottom: 12,
-    left: 5
-  },
-  searchItemHighlighted: {
-    backgroundColor: theme.color.grey2,
-    cursor: 'pointer'
-  },
-  textfield: {
-    backgroundColor: theme.color.white,
-    margin: 0,
-    flex: 1,
-    minHeight: 'initial',
-    '& input:focus': {
-      outline: '1px dotted #606469'
-    }
-  },
-  enhancedSelectWrapper: {
-    margin: '0 auto',
-    width: 300,
-    maxHeight: 500,
-    '& .react-select__value-container': {
-      paddingLeft: theme.spacing.unit * 4
-    },
-    '& .input': {
-      maxWidth: '100%',
-      '& p': {
-        paddingLeft: theme.spacing.unit * 3,
-        color: theme.color.grey1
-      },
-      '& > div': {
-        marginRight: 0
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    searchItem: {
+      '& em': {
+        fontStyle: 'normal',
+        color: theme.palette.primary.main
       }
     },
-    [theme.breakpoints.up('md')]: {
-      width: 500
+    searchIcon: {
+      position: 'absolute',
+      color: theme.color.grey1,
+      zIndex: 3,
+      bottom: 12,
+      left: 5
+    },
+    searchItemHighlighted: {
+      backgroundColor: theme.color.grey2,
+      cursor: 'pointer'
+    },
+    textfield: {
+      backgroundColor: theme.color.white,
+      margin: 0,
+      flex: 1,
+      minHeight: 'initial',
+      '& input:focus': {
+        outline: '1px dotted #606469'
+      }
+    },
+    enhancedSelectWrapper: {
+      margin: '0 auto',
+      width: 300,
+      maxHeight: 500,
+      '& .react-select__value-container': {
+        paddingLeft: theme.spacing.unit * 4
+      },
+      '& .input': {
+        maxWidth: '100%',
+        '& p': {
+          paddingLeft: theme.spacing.unit * 3,
+          color: theme.color.grey1
+        },
+        '& > div': {
+          marginRight: 0
+        }
+      },
+      [theme.breakpoints.up('md')]: {
+        width: 500
+      }
     }
-  }
-});
+  });
 
 /* Need to override the default RS filtering; otherwise entities whose label
  * doesn't match the search term will be automatically filtered, meaning that

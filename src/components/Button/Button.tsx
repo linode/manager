@@ -4,7 +4,7 @@ import * as React from 'react';
 import Reload from 'src/assets/icons/reload.svg';
 import Button, { ButtonProps } from 'src/components/core/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';

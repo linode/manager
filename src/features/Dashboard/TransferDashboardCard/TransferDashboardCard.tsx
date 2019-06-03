@@ -4,7 +4,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -27,7 +27,8 @@ export type ClassNames =
   | 'itemText'
   | 'itemTextFirst';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     marginTop: 0,
     padding: `${theme.spacing(4)}px ${theme.spacing(3)}px`

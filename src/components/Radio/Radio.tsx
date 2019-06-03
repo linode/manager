@@ -2,7 +2,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import Radio, { RadioProps } from 'src/components/core/Radio';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -11,7 +11,8 @@ import RadioIconRadioed from '../../assets/icons/radioRadioed.svg';
 
 type CSSClasses = 'root' | 'checked' | 'disabled' | 'warning' | 'error';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     color: '#ccc',
     padding: '4px 10px',

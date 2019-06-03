@@ -1,7 +1,7 @@
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   Theme,
   withStyles,
   WithStyles
@@ -17,7 +17,8 @@ import BackupLinodes from './BackupLinodes';
 
 type ClassNames = 'root' | 'container';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     width: '100%'
   },

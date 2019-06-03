@@ -1,10 +1,7 @@
+import { WithStyles } from '@material-ui/core/styles';
 import Cached from '@material-ui/icons/Cached';
 import * as React from 'react';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 
 interface Props {
@@ -14,38 +11,39 @@ interface Props {
 
 type CSSClasses = 'grey' | 'dot' | 'green' | 'red' | 'transition';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
-  '@keyframes rotate': {
-    from: {
-      transform: 'rotate(0deg)'
+const styles = (theme: Theme) =>
+  createStyles({
+    '@keyframes rotate': {
+      from: {
+        transform: 'rotate(0deg)'
+      },
+      to: {
+        transform: 'rotate(360deg)'
+      }
     },
-    to: {
-      transform: 'rotate(360deg)'
+    dot: {
+      fontSize: '1.5rem',
+      userSelect: 'none'
+    },
+    transition: {
+      position: 'relative',
+      top: 1,
+      left: -1,
+      '& svg': {
+        animation: 'rotate 2s linear infinite',
+        fill: theme.color.offBlack
+      }
+    },
+    green: {
+      color: '#01b159'
+    },
+    red: {
+      color: '#d01e1e'
+    },
+    grey: {
+      color: '#efefef'
     }
-  },
-  dot: {
-    fontSize: '1.5rem',
-    userSelect: 'none'
-  },
-  transition: {
-    position: 'relative',
-    top: 1,
-    left: -1,
-    '& svg': {
-      animation: 'rotate 2s linear infinite',
-      fill: theme.color.offBlack
-    }
-  },
-  green: {
-    color: '#01b159'
-  },
-  red: {
-    color: '#d01e1e'
-  },
-  grey: {
-    color: '#efefef'
-  }
-});
+  });
 
 const LinodeStatusIndicator = (props: Props & WithStyles<CSSClasses>) => {
   const { classes, status } = props;

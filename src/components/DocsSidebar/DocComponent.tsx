@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -16,7 +16,8 @@ export interface Doc {
 
 type CSSClasses = 'root' | 'title' | 'titleLink' | 'body';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     marginTop: theme.spacing(2)
   },

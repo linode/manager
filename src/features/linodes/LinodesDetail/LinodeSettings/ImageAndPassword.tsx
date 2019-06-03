@@ -1,12 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
-
 import AccessPanel, { UserSSHKeyObject } from 'src/components/AccessPanel';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { ImageSelect } from 'src/features/Images';
@@ -15,9 +11,10 @@ import LinodePermissionsError from '../LinodePermissionsError';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {}
+  });
 
 interface ContextProps {
   permissions: Linode.GrantLevel;
