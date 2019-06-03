@@ -12,10 +12,9 @@ class Networking extends Page {
     get ipTransferSubheading() { return $('[data-qa-transfer-ip-label]'); }
     get ipTransferActionMenu() { return $('[data-qa-ip-transfer-action-menu]'); }
     get ipTransferActionMenus() { return $$('[data-qa-ip-transfer-action-menu]'); }
-    get moveIpButton() { return $('[data-qa-transfer-action="move"]'); }
-    get swapIpButton() { return $('[data-qa-transfer-action="swap"]') }
+    get moveIpButton() { return $('[data-qa-option="move"]'); }
+    get swapIpButton() { return $('[data-qa-option="swap"]') }
     get swapIpActionMenu() { return $('[data-qa-swap-ip-action-menu]'); }
-    get swapWithIps() { return $$('[data-qa-swap-with]'); }
     get ipTransferSave() { return $('[data-qa-ip-transfer-save]'); }
     get ipTransferCancel() { return $('[data-qa-ip-transfer-cancel]'); }
     get addPrivateIp() { return this.addIcon('Add Private IPv4'); }
@@ -54,8 +53,8 @@ class Networking extends Page {
 
     get domainName() { return $('[data-qa-domain-name]'); }
     get lookupError() { return $('[data-qa-error]'); }
-    get shareIpSelect() { return $('[data-qa-share-ip]>div>div'); }
-    get ipShareOption() { return $('[data-ip-idx]'); }
+    get shareIpSelect() { return $('[data-qa-share-ip] > div'); }
+    get ipShareOption() { return $('[data-qa-option]'); }
     get removeSharedIp() { return $('[data-qa-remove-shared-ip]'); }
 
     landingElemsDisplay() {
@@ -183,13 +182,12 @@ class Networking extends Page {
         this.shareIpSelect.click();
         this.ipShareSelection(ipValue).waitForVisible(constants.wait.normal);
         this.ipShareSelection(ipValue).click();
-        browser.pause(500);
         this.submitButton.click();
         this.waitForNotice('IP Sharing updated successfully');
     }
 
     ipShareSelection(ipValue){
-        return $(`[data-ip-idx][data-value="${ipValue}"]`);
+        return $(`[data-qa-option="${ipValue}"]`);
     }
 
     ipTableRow(ipValue){
