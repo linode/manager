@@ -1,10 +1,7 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { Props as TextFieldProps } from 'src/components/TextField';
@@ -13,9 +10,10 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {}
+  });
 
 interface WithLinodesProps {
   linodesData: Linode.Linode[];

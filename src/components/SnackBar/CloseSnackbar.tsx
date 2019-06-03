@@ -2,7 +2,7 @@ import Close from '@material-ui/icons/Close';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -15,7 +15,8 @@ interface Props {
   text: string;
 }
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   icon: {
     color: theme.palette.text.primary,
     padding: theme.spacing(1)

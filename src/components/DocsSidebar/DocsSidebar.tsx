@@ -4,7 +4,7 @@ import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -19,7 +19,8 @@ type ClassNames =
   | 'mobileActive'
   | 'toggleButton';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     [theme.breakpoints.up('md')]: {
       marginTop: theme.spacing(3)

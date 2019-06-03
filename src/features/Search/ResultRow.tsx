@@ -5,7 +5,7 @@ import { compose } from 'recompose';
 
 import Hidden from 'src/components/core/Hidden';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -35,7 +35,8 @@ type ClassNames =
   | 'createdCell'
   | 'tagCell';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   transition: theme.transitions.create(['background-color']),
   root: {
     paddingTop: '0 !important',

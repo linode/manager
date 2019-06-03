@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
@@ -14,7 +14,8 @@ import SortableVolumesTableHeader from './SortableVolumesTableHeader';
 
 type ClassNames = 'root' | 'volumesWrapper' | 'linodeVolumesWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   // styles for /volumes table
   volumesWrapper: {},

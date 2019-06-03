@@ -8,7 +8,7 @@ import AccessPanel from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -33,7 +33,8 @@ import SelectImagePanel from './SelectImagePanel';
 
 type ClassNames = 'root' | 'error';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     paddingTop: theme.spacing(3)
   },

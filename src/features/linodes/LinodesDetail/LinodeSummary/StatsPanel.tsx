@@ -1,40 +1,37 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import {
-  StyleRulesCallback,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 
 type ClassNames = 'root' | 'spinner' | 'title' | 'graphsUnavailable';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {
-    padding: theme.spacing(2),
-    marginBottom: theme.spacing(2)
-  },
-  spinner: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%'
-  },
-  graphsUnavailable: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    width: '100%',
-    padding: theme.spacing(2),
-    paddingTop: 0
-  },
-  title: {
-    padding: theme.spacing(2)
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(2),
+      marginBottom: theme.spacing(2)
+    },
+    spinner: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '100%'
+    },
+    graphsUnavailable: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      width: '100%',
+      padding: theme.spacing(2),
+      paddingTop: 0
+    },
+    title: {
+      padding: theme.spacing(2)
+    }
+  });
 
 interface Props {
   renderBody: () => JSX.Element;

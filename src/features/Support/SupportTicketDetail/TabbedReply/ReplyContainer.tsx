@@ -1,5 +1,5 @@
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from '@material-ui/styles';
@@ -29,7 +29,8 @@ type ClassNames =
   | 'referenceRoot'
   | 'inner';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     paddingLeft: theme.spacing(1),
     paddingRight: theme.spacing(1)

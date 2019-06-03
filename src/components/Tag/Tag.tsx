@@ -6,7 +6,7 @@ import { compose } from 'recompose';
 import Button from 'src/components/core/Button';
 import Chip, { ChipProps } from 'src/components/core/Chip';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';

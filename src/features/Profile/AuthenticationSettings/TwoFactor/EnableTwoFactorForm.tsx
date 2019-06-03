@@ -2,7 +2,7 @@ import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import {
-  StyleRulesCallback,
+  createStyles,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
@@ -16,7 +16,8 @@ import QRCodeForm from './QRCodeForm';
 
 type ClassNames = 'root' | 'divider';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   divider: {
     margin: `${theme.spacing(3)}px 0`,

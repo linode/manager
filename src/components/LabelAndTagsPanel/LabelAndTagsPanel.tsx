@@ -2,7 +2,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
@@ -13,7 +13,8 @@ import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
 type ClassNames = 'root' | 'inner' | 'expPanelButton';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     flexGrow: 1,
     width: '100%',

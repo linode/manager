@@ -7,7 +7,7 @@ import Button from 'src/components/Button';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -31,7 +31,8 @@ type ClassNames =
   | 'emptyCell'
   | 'headerCell';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     marginBottom: theme.spacing(2) + theme.spacing(1) / 2
   },

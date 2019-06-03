@@ -7,7 +7,7 @@ import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import CircleProgress from 'src/components/CircleProgress';
 import {
-  StyleRulesCallback,
+  createStyles,
   Theme,
   withStyles,
   WithStyles
@@ -32,7 +32,8 @@ import NetworkHelper from './NetworkHelper';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {}
 });
 

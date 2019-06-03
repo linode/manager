@@ -8,14 +8,15 @@ import { sendAdaEvent } from 'src/utilities/ga';
 import AdaIcon from 'src/assets/icons/ada.svg';
 
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from '@material-ui/styles';
 
 type ClassNames = 'root' | 'disabled';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     width: 44,
     height: 44,

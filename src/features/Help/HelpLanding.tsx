@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -11,7 +11,8 @@ import SearchPanel from './Panels/SearchPanel';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     [theme.breakpoints.up('lg')]: {
       padding: `${theme.spacing(2)}px ${theme.spacing(14)}px`

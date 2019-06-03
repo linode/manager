@@ -1,12 +1,9 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as copy from 'copy-to-clipboard';
 import { tail } from 'ramda';
 import * as React from 'react';
 import CopyTooltip from 'src/components/CopyTooltip';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import ShowMore from 'src/components/ShowMore';
 
 type CSSClasses =
@@ -20,80 +17,81 @@ type CSSClasses =
   | 'ipLink'
   | 'hide';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
-  '@keyframes popUp': {
-    from: {
-      opacity: 0,
-      top: -10,
-      transform: 'scale(.1)'
+const styles = (theme: Theme) =>
+  createStyles({
+    '@keyframes popUp': {
+      from: {
+        opacity: 0,
+        top: -10,
+        transform: 'scale(.1)'
+      },
+      to: {
+        opacity: 1,
+        top: -40,
+        transform: 'scale(1)'
+      }
     },
-    to: {
-      opacity: 1,
-      top: -40,
-      transform: 'scale(1)'
-    }
-  },
-  root: {
-    marginBottom: theme.spacing(1) / 2,
-    width: '100%',
-    maxWidth: '100%',
-    '&:last-child': {
-      marginBottom: 0
+    root: {
+      marginBottom: theme.spacing(1) / 2,
+      width: '100%',
+      maxWidth: '100%',
+      '&:last-child': {
+        marginBottom: 0
+      },
+      '&:hover': {
+        '& $hide': {
+          opacity: 1
+        }
+      }
     },
-    '&:hover': {
-      '& $hide': {
+    row: {
+      display: 'flex',
+      alignItems: 'flex-start',
+      width: '100%'
+    },
+    multipleAddresses: {
+      '&:not(:last-child)': {
+        marginBottom: theme.spacing(1) / 2
+      }
+    },
+    left: {
+      marginLeft: theme.spacing(1)
+    },
+    right: {
+      marginLeft: theme.spacing(1),
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    icon: {
+      '& svg': {
+        width: 12,
+        height: 12
+      }
+    },
+    ip: {
+      color: theme.palette.text.primary,
+      fontSize: '.9rem'
+    },
+    ipLink: {
+      color: theme.palette.primary.main,
+      top: -1,
+      position: 'relative',
+      display: 'inline-block',
+      transition: theme.transitions.create(['color'])
+    },
+    hide: {
+      [theme.breakpoints.up('md')]: {
+        // Hide until the component is hovered,
+        // when props.showCopyOnHover is true (only on desktop)
+        opacity: 0
+      },
+      transition: theme.transitions.create(['opacity']),
+      '&:focus': {
         opacity: 1
       }
     }
-  },
-  row: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    width: '100%'
-  },
-  multipleAddresses: {
-    '&:not(:last-child)': {
-      marginBottom: theme.spacing(1) / 2
-    }
-  },
-  left: {
-    marginLeft: theme.spacing(1)
-  },
-  right: {
-    marginLeft: theme.spacing(1),
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  icon: {
-    '& svg': {
-      width: 12,
-      height: 12
-    }
-  },
-  ip: {
-    color: theme.palette.text.primary,
-    fontSize: '.9rem'
-  },
-  ipLink: {
-    color: theme.palette.primary.main,
-    top: -1,
-    position: 'relative',
-    display: 'inline-block',
-    transition: theme.transitions.create(['color'])
-  },
-  hide: {
-    [theme.breakpoints.up('md')]: {
-      // Hide until the component is hovered,
-      // when props.showCopyOnHover is true (only on desktop)
-      opacity: 0
-    },
-    transition: theme.transitions.create(['opacity']),
-    '&:focus': {
-      opacity: 1
-    }
-  }
-});
+  });
 
 interface Props {
   ips: string[];

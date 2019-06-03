@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Button from 'src/components/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -10,7 +10,8 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 
 type ClassNames = 'root' | 'helperText';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   helperText: {
     marginBottom: theme.spacing(2)

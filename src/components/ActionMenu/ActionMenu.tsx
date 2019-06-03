@@ -3,7 +3,7 @@ import * as React from 'react';
 import IconButton from 'src/components/core/IconButton';
 import Menu from 'src/components/core/Menu';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -25,7 +25,8 @@ type CSSClasses =
   | 'hidden'
   | 'menu';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     display: 'flex',
     alignItems: 'center',

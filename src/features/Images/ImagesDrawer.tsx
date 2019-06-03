@@ -4,7 +4,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -23,7 +23,8 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root' | 'suffix' | 'actionPanel' | 'helperText';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   suffix: {
     fontSize: '.9rem',

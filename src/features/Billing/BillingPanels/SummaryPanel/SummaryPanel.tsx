@@ -4,7 +4,7 @@ import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -18,7 +18,8 @@ import { withAccount } from '../../context';
 
 type ClassNames = 'expired' | 'balance' | 'positive' | 'negative' | 'wordWrap';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   title: {},
   summarySection: {},

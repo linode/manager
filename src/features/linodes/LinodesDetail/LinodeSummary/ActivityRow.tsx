@@ -1,11 +1,6 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-
-import {
-  StyleRulesCallback,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
@@ -14,14 +9,15 @@ import { onUnfound } from 'src/features/Events/EventRow';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {
-    padding: theme.spacing(1),
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    width: '100%',
-    margin: 0
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(1),
+      borderBottom: `1px solid ${theme.palette.divider}`,
+      width: '100%',
+      margin: 0
+    }
+  });
 
 interface Props {
   event: Linode.Event;

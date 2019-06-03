@@ -5,7 +5,7 @@ import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   Theme,
   withStyles,
   WithStyles
@@ -23,7 +23,8 @@ type ClassNames =
   | 'title'
   | 'ctaLink';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     width: '100%'
   },

@@ -1,13 +1,10 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as moment from 'moment';
 import { map, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -51,8 +48,8 @@ type ClassNames =
   | 'graphControls'
   | 'totalTraffic';
 
-const styles: StyleRulesCallback<ClassNames> = theme => {
-  return {
+const styles = (theme: Theme) =>
+  createStyles({
     main: {
       [theme.breakpoints.up('md')]: {
         order: 1
@@ -87,9 +84,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
       fontSize: 14
     },
     bottomLegend: {
-      margin: `${theme.spacing(2)}px ${theme.spacing(1)}px ${
-        theme.spacing(1)
-      }px`,
+      margin: `${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(
+        1
+      )}px`,
       padding: 10,
       color: '#777',
       backgroundColor: theme.bg.offWhiteDT,
@@ -122,8 +119,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
     chartSelect: {
       maxWidth: 150
     }
-  };
-};
+  });
 
 interface LinodeContextProps {
   linodeCreated: string;

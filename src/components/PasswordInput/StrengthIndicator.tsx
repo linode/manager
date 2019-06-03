@@ -2,7 +2,7 @@ import * as classNames from 'classnames';
 import { isNil } from 'ramda';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -15,7 +15,8 @@ interface Props {
 }
 type ClassNames = 'root' | 'block' | 'strengthText' | 'strengthLabel';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     maxWidth: `calc(415px + ${theme.spacing(1)}px)`,
     [theme.breakpoints.down('xs')]: {

@@ -2,7 +2,7 @@ import * as QRCode from 'qrcode.react';
 import { compose } from 'ramda';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
@@ -18,7 +18,8 @@ declare module 'qrcode.react' {
 
 type ClassNames = 'root' | 'instructions' | 'qrcodeContainer';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   instructions: {
     marginTop: theme.spacing(2)

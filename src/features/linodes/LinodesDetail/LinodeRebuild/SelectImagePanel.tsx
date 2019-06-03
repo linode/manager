@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -14,7 +14,8 @@ import { distroIcons, getMyImages, groupImages } from 'src/utilities/images';
 
 export type ClassNames = 'root' | 'flatImagePanel' | 'flatImagePanelSelections';
 
-export const styles: StyleRulesCallback<ClassNames> = theme => ({
+export const styles = (theme: Theme) =>
+  createStyles({
   flatImagePanel: {
     padding: theme.spacing(3)
   },

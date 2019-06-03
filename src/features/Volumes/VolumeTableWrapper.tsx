@@ -1,5 +1,5 @@
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from '@material-ui/styles';
@@ -12,7 +12,8 @@ import SortableVolumesTableHeader from './SortableVolumesTableHeader';
 
 type ClassNames = 'root' | 'paperWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   paperWrapper: {
     backgroundColor: 'transparent'

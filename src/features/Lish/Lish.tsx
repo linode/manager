@@ -8,7 +8,7 @@ import {
 } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -21,7 +21,8 @@ import Weblish from './Weblish';
 
 type ClassNames = 'tabs' | 'tabRoot' | 'progress' | 'notFound';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   tabs: {
     backgroundColor: theme.bg.offWhite,
     margin: 0

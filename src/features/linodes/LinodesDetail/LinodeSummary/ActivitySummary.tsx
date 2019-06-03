@@ -1,12 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
-import {
-  StyleRulesCallback,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ViewAllLink from 'src/components/ViewAllLink';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -22,16 +18,17 @@ import { removeBlacklistedEvents } from 'src/utilities/eventUtils';
 
 type ClassNames = 'root' | 'header' | 'viewMore';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
-  header: {
-    marginBottom: theme.spacing(2)
-  },
-  viewMore: {
-    position: 'relative',
-    top: 2
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    header: {
+      marginBottom: theme.spacing(2)
+    },
+    viewMore: {
+      position: 'relative',
+      top: 2
+    }
+  });
 
 interface Props {
   linodeId: number;

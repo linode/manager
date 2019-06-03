@@ -1,5 +1,5 @@
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from '@material-ui/styles';
@@ -9,7 +9,8 @@ import Typography from 'src/components/core/Typography';
 
 type ClassNames = 'guidance' | 'text' | 'helpIcon';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   guidance: {
     backgroundColor: theme.bg.offWhiteDT,
     borderTop: `1px solid ${theme.palette.divider}`,

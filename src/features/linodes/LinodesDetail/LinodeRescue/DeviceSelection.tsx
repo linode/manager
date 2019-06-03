@@ -2,7 +2,7 @@ import { defaultTo, flatten } from 'ramda';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -11,7 +11,8 @@ import { titlecase } from 'src/features/linodes/presentation';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {}
 });
 

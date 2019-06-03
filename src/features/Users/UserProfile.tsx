@@ -9,7 +9,7 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -33,7 +33,8 @@ type ClassNames =
   | 'emailField'
   | 'emailAddress';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     flexGrow: 1,
     width: '100%',

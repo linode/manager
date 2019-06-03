@@ -31,7 +31,7 @@ import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -68,7 +68,8 @@ type ClassNames =
   | 'paypalButtonWrapper'
   | 'PaypalHidden';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   positive: {
     color: theme.color.green

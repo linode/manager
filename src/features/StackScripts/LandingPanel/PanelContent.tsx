@@ -1,5 +1,5 @@
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from '@material-ui/styles';
@@ -24,7 +24,8 @@ import StackScriptTable from './Table/StackScriptTable';
 
 type ClassNames = 'root' | 'searchWrapper' | 'searchBar';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   searchWrapper: {
     marginBottom: theme.spacing(3)

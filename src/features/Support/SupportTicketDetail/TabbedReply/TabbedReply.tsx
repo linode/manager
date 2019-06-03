@@ -1,5 +1,5 @@
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from '@material-ui/styles';
@@ -18,7 +18,8 @@ interface Props {
   isReply?: boolean;
 }
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     padding: theme.spacing(1),
     backgroundColor: 'transparent'

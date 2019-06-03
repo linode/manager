@@ -5,7 +5,7 @@ import { compose } from 'recompose';
 
 import Hidden from 'src/components/core/Hidden';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -22,7 +22,8 @@ import getEventsActionLink from 'src/utilities/getEventsActionLink';
 
 type ClassNames = 'root' | 'message';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   message: {
     wordBreak: 'break-all',

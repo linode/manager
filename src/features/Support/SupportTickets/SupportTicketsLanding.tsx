@@ -6,7 +6,7 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import AppBar from 'src/components/core/AppBar';
 import {
-  StyleRulesCallback,
+  createStyles,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
@@ -22,7 +22,8 @@ import TicketList from './TicketList';
 
 type ClassNames = 'root' | 'title' | 'titleWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   title: {
     marginBottom: theme.spacing(2)

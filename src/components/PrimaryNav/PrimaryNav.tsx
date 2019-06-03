@@ -11,7 +11,7 @@ import IconButton from 'src/components/core/IconButton';
 import ListItemText from 'src/components/core/ListItemText';
 import Menu from 'src/components/core/Menu';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles,
   WithTheme
@@ -55,7 +55,8 @@ type ClassNames =
   | 'activeSettings'
   | 'settingsBackdrop';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   menuGrid: {
     minHeight: 64,
     width: '100%',

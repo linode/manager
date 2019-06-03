@@ -1,7 +1,7 @@
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -13,7 +13,8 @@ import SortUp from 'src/assets/icons/sortUp.svg';
 
 type ClassNames = 'root' | 'initialIcon' | 'noWrap';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     color: theme.palette.text.primary
   },

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -9,7 +9,8 @@ import TableRow from 'src/components/core/TableRow';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     textAlign: 'center'
   }

@@ -3,7 +3,7 @@ import { compose } from 'recompose';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Button from 'src/components/core/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
@@ -12,7 +12,8 @@ import Notice from 'src/components/Notice';
 
 type ClassNames = 'helperText' | 'confirmationDialog';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   helperText: {
     marginBottom: theme.spacing(3)
   },

@@ -5,7 +5,7 @@ import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -70,7 +70,8 @@ type ClassNames =
   | 'readOnlyCell'
   | 'readWritecell';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   permsTable: {
     marginTop: theme.spacing(3)
   },

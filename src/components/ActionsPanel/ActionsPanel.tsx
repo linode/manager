@@ -2,7 +2,7 @@ import * as classNames from 'classnames';
 import { compose } from 'ramda';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -10,7 +10,8 @@ import RenderGuard from 'src/components/RenderGuard';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     paddingTop: theme.spacing(2),
     paddingBottom: theme.spacing(1),

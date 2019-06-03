@@ -7,7 +7,7 @@ import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -32,7 +32,8 @@ import DeviceSelection, {
 
 type ClassNames = 'root' | 'title' | 'intro';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     padding: theme.spacing(3),
     paddingBottom: theme.spacing(1),

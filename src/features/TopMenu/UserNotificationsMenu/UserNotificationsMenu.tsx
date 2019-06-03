@@ -4,7 +4,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Menu from 'src/components/core/Menu';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -18,7 +18,8 @@ import UserNotificationsList from './UserNotificationsList';
 
 type ClassNames = 'root' | 'dropDown' | 'hidden';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     transform: `translate(-${theme.spacing(1)}px, ${theme.spacing(1)}px)`
   },

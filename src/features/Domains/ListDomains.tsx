@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
@@ -17,7 +17,8 @@ import DomainTableRow from 'src/features/Domains/DomainTableRow';
 
 type ClassNames = 'root' | 'label';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   label: {
     paddingLeft: theme.spacing(3) + 41

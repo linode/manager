@@ -2,7 +2,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import FormHelperText from 'src/components/core/FormHelperText';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -17,7 +17,8 @@ export const regionSupportMessage =
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {}
 });
 interface Props {

@@ -1,13 +1,10 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import InputAdornment from 'src/components/core/InputAdornment';
-import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
@@ -16,55 +13,56 @@ import Toggle from 'src/components/Toggle';
 
 type ClassNames = 'root' | 'switch' | 'copy' | 'usage' | 'usageWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0
+const styles = (theme: Theme) =>
+  createStyles({
+    '@keyframes fadeIn': {
+      from: {
+        opacity: 0
+      },
+      to: {
+        opacity: 1
+      }
     },
-    to: {
-      opacity: 1
-    }
-  },
-  root: {
-    minHeight: theme.spacing(16),
-    position: 'relative',
-    padding: `${theme.spacing(3)}px 0`,
-    '&:last-of-type + hr': {
-      display: 'none'
+    root: {
+      minHeight: theme.spacing(16),
+      position: 'relative',
+      padding: `${theme.spacing(3)}px 0`,
+      '&:last-of-type + hr': {
+        display: 'none'
+      },
+      '& .toggleLabel > span:last-child': {
+        position: 'absolute',
+        left: `calc(58px + ${theme.spacing(4)}px)`,
+        top: theme.spacing(5),
+        ...theme.typography.h3
+      }
     },
-    '& .toggleLabel > span:last-child': {
-      position: 'absolute',
-      left: `calc(58px + ${theme.spacing(4)}px)`,
-      top: theme.spacing(5),
-      ...theme.typography.h3
-    }
-  },
-  switch: {
-    width: 50,
-    padding: '2px 0 !important'
-  },
-  copy: {
-    [theme.breakpoints.down('sm')]: {
-      flexBasis: '100%'
+    switch: {
+      width: 50,
+      padding: '2px 0 !important'
     },
-    [theme.breakpoints.up('md')]: {
-      margin: `${theme.spacing(4)}px ${theme.spacing(4)}px 0`
+    copy: {
+      [theme.breakpoints.down('sm')]: {
+        flexBasis: '100%'
+      },
+      [theme.breakpoints.up('md')]: {
+        margin: `${theme.spacing(4)}px ${theme.spacing(4)}px 0`
+      },
+      [theme.breakpoints.up('lg')]: {
+        width: 600
+      }
     },
-    [theme.breakpoints.up('lg')]: {
-      width: 600
+    usageWrapper: {
+      [theme.breakpoints.down('md')]: {
+        width: '100%'
+      }
+    },
+    usage: {
+      animation: 'fadeIn .3s ease-in-out forwards',
+      marginTop: 0,
+      maxWidth: 150
     }
-  },
-  usageWrapper: {
-    [theme.breakpoints.down('md')]: {
-      width: '100%'
-    }
-  },
-  usage: {
-    animation: 'fadeIn .3s ease-in-out forwards',
-    marginTop: 0,
-    maxWidth: 150
-  }
-});
+  });
 
 interface Props {
   title: string;

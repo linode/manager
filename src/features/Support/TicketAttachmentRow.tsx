@@ -2,7 +2,7 @@ import * as React from 'react';
 
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   Theme,
   withStyles,
   WithStyles
@@ -17,7 +17,8 @@ type ClassNames =
   | 'attachmentRow'
   | 'attachmentIcon';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   attachmentPaper: {
     padding: `

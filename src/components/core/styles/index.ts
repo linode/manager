@@ -12,6 +12,7 @@ export {
   makeStyles,
   withStyles,
   withTheme,
+  // WithStyles,
   useTheme
 } from '@material-ui/styles';
 

@@ -1,12 +1,9 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { FormikBag } from 'formik';
 import * as React from 'react';
 import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
-import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
@@ -28,14 +25,13 @@ import RevokeAccessKeyDialog from './RevokeAccessKeyDialog';
 
 type ClassNames = 'headline';
 
-const styles: StyleRulesCallback<ClassNames> = theme => {
-  return {
+const styles = (theme: Theme) =>
+  createStyles({
     headline: {
       marginTop: theme.spacing(2),
       marginBottom: theme.spacing(2)
     }
-  };
-};
+  });
 
 type Props = PaginationProps<Linode.ObjectStorageKey> & WithStyles<ClassNames>;
 

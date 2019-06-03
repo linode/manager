@@ -2,7 +2,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -19,7 +19,8 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   link: {
     '&:hover': {
       textDecoration: 'underline'

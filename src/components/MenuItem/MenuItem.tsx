@@ -4,7 +4,7 @@ import CircularProgress from 'src/components/core/CircularProgress';
 import IconButton from 'src/components/core/IconButton';
 import MenuItem, { MenuItemProps } from 'src/components/core/MenuItem';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -24,7 +24,8 @@ interface Props {
   isLoading?: boolean;
 }
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     position: 'relative',
     flexWrap: 'wrap',

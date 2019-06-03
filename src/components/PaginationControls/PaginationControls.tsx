@@ -12,7 +12,8 @@ import { StyleRulesCallback, withStyles } from 'src/components/core/styles';
 
 type CSSClasses = 'root';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     display: 'flex',
     flexWrap: 'wrap',

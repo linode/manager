@@ -1,7 +1,7 @@
 import { compose, lensPath, set, view } from 'ramda';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -23,7 +23,8 @@ import { AccountProvider } from './context';
 
 type ClassNames = 'root' | 'main' | 'sidebar' | 'heading';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   main: {
     [theme.breakpoints.up('md')]: {

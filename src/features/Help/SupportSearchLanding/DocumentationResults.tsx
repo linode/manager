@@ -1,12 +1,9 @@
+import { WithStyles } from '@material-ui/core/styles';
 import OpenInNew from '@material-ui/icons/OpenInNew';
 import * as React from 'react';
 import ListItem from 'src/components/core/ListItem';
 import Paper from 'src/components/core/Paper';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
 type ClassNames =
@@ -20,9 +17,8 @@ type ClassNames =
   | 'link'
   | 'searchItem';
 
-const styles: StyleRulesCallback<ClassNames> = theme => {
-  // const { palette: { status } } = theme;
-  return {
+const styles = (theme: Theme) =>
+  createStyles({
     root: {},
     resultsContainer: {
       '& em': {
@@ -60,8 +56,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
         backgroundColor: theme.bg.offWhite
       }
     }
-  };
-};
+  });
 
 export interface SearchResult {
   data: {

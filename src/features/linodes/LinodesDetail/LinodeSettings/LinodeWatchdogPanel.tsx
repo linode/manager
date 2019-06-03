@@ -1,12 +1,9 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
@@ -21,12 +18,13 @@ import {
 
 type ClassNames = 'root' | 'shutDownWatchdog';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  shutDownWatchdog: {
-    margin: `${theme.spacing(2)}px 0`
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    shutDownWatchdog: {
+      margin: `${theme.spacing(2)}px 0`
+    }
+  });
 
 interface Props {
   linodeId: number;

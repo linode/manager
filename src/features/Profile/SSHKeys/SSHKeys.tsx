@@ -4,7 +4,7 @@ import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -29,7 +29,8 @@ import SSHKeyCreationDrawer from './SSHKeyCreationDrawer';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {}
 });
 

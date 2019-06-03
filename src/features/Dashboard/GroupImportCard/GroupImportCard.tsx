@@ -6,7 +6,7 @@ import Close from '@material-ui/icons/Close';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   Theme,
   withStyles,
   WithStyles
@@ -16,7 +16,8 @@ import DashboardCard from '../DashboardCard';
 
 type ClassNames = 'root' | 'section' | 'title' | 'button' | 'icon';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     width: '100%'
   },

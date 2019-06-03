@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -14,7 +14,8 @@ import TablesPanel from './TablesPanel';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   main: {
     [theme.breakpoints.up('md')]: {

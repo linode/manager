@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -23,7 +23,8 @@ type ClassNames =
   | 'ips'
   | 'error';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     marginTop: theme.spacing(2),
     padding: theme.spacing(3),

@@ -4,7 +4,7 @@ import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import InputAdornment from 'src/components/core/InputAdornment';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -13,7 +13,8 @@ import { debounce } from 'throttle-debounce';
 
 type ClassNames = 'root' | 'searchIcon';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   searchIcon: {
     color: `${theme.color.grey1} !important`

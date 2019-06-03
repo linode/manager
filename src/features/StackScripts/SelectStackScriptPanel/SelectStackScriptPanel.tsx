@@ -6,7 +6,7 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -38,7 +38,8 @@ type ClassNames =
   | 'inner'
   | 'header';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     marginBottom: theme.spacing(3)
   },

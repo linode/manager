@@ -4,7 +4,7 @@ import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -25,7 +25,8 @@ import CountryData, { Region } from './countryRegionData';
 
 type ClassNames = 'root' | 'mainFormContainer' | 'stateZip';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   mainFormContainer: {
     maxWidth: 860

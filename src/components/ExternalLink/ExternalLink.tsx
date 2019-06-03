@@ -2,14 +2,15 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'icon' | 'absoluteIcon' | 'black';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     display: 'inline-flex',
     alignItems: 'baseline',

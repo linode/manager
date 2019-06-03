@@ -15,7 +15,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -40,7 +40,8 @@ type ClassNames =
   | 'emptyStateText'
   | 'autoGridsm';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   containerDivider: {
     marginTop: theme.spacing(1)
   },

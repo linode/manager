@@ -3,7 +3,7 @@ import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -38,7 +38,8 @@ import Modals from './Modals';
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   title: {
     margin: `0 0 ${theme.spacing(2)}px`

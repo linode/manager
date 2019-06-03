@@ -2,7 +2,7 @@ import OpenInNew from '@material-ui/icons/OpenInNew';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import {
-  StyleRulesCallback,
+  createStyles,
   Theme,
   withStyles,
   WithStyles
@@ -14,7 +14,8 @@ import Toggle from 'src/components/Toggle';
 
 type ClassNames = 'root' | 'footnote' | 'link' | 'icon';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   footnote: {
     fontSize: 14,

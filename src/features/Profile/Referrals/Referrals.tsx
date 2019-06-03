@@ -3,7 +3,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -15,7 +15,8 @@ import { MapState } from 'src/store/types';
 
 type ClassNames = 'root' | 'results' | 'title' | 'copyField';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     padding: theme.spacing(3)
   },

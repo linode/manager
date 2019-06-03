@@ -2,7 +2,7 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -29,7 +29,8 @@ import { ThunkDispatch } from 'src/store/types';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {}
 });
 

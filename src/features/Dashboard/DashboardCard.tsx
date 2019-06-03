@@ -1,7 +1,7 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
@@ -10,7 +10,8 @@ import Grid from 'src/components/Grid';
 
 type ClassNames = 'root' | 'container' | 'headerAction';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   container: {
     marginTop: theme.spacing(3)

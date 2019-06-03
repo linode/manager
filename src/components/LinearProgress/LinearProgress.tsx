@@ -3,14 +3,15 @@ import LinearProgress, {
   LinearProgressProps
 } from 'src/components/core/LinearProgress';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
 
 type CSSClasses = 'root';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {}
 });
 

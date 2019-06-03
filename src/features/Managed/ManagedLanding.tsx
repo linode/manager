@@ -2,7 +2,7 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import ManagedIcon from 'src/assets/icons/managed.svg';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -13,7 +13,8 @@ import Placeholder from 'src/components/Placeholder';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {}
 });
 

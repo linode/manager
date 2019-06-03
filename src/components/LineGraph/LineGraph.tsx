@@ -3,7 +3,7 @@ import { clone, curry } from 'ramda';
 import * as React from 'react';
 import { ChartData, Line } from 'react-chartjs-2';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -13,7 +13,8 @@ setUpCharts();
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {}
 });
 

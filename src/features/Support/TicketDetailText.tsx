@@ -1,5 +1,5 @@
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from '@material-ui/styles';
@@ -17,7 +17,8 @@ import truncateText from 'src/utilities/truncateText';
 
 type ClassNames = 'root' | 'formattedText' | 'expCol' | 'expButton' | 'toggle';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   expCol: {
     display: 'flex',

@@ -3,14 +3,15 @@ import * as React from 'react';
 import ListItemText from 'src/components/core/ListItemText';
 import MenuItem, { MenuItemProps } from 'src/components/core/MenuItem';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'error' | 'warning' | 'success';
 
-const styles: StyleRulesCallback<ClassNames> = theme => {
+const styles = (theme: Theme) =>
+  createStyles({
   const {
     palette: { status }
   } = theme;

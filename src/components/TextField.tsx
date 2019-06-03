@@ -4,7 +4,7 @@ import { clamp, equals } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles,
   WithTheme
@@ -22,7 +22,8 @@ type ClassNames =
   | 'selectSmall'
   | 'tiny';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   helpWrapper: {
     display: 'flex',

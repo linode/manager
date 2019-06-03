@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -21,7 +21,8 @@ type ClassNames =
   | 'nodeTransfer'
   | 'hostName';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   title: {},
   summarySection: {},

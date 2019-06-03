@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
@@ -20,7 +20,8 @@ type ClassNames =
   | 'volumesWrapper'
   | 'linodeVolumesWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   // styles for /volumes table
   volumesWrapper: {},

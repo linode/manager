@@ -2,7 +2,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -11,7 +11,8 @@ import TableRow from 'src/components/core/TableRow';
 
 type ClassNames = 'root' | 'tableCell' | 'transparent';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   tableCell: {
     padding: 17,

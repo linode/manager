@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
@@ -8,7 +8,8 @@ import TextField from 'src/components/TextField';
 
 type ClassNames = 'replyField';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   replyField: {
     maxHeight: 200,
     marginTop: 0,

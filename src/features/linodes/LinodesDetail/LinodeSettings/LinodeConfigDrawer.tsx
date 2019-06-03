@@ -3,7 +3,7 @@
  * should source it directly from there rather than making an additional request. OR We can source
  * it from there and make the (thunk) request to get the latest/greatest information.
  */
-
+import { WithStyles } from '@material-ui/core/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -17,11 +17,7 @@ import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormGroup from 'src/components/core/FormGroup';
 import FormLabel from 'src/components/core/FormLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -53,15 +49,16 @@ import {
 
 type ClassNames = 'section' | 'divider';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  section: {
-    marginTop: theme.spacing(2)
-  },
-  divider: {
-    margin: `${theme.spacing(2)}px ${theme.spacing(1)}px 0 `,
-    width: `calc(100% - ${theme.spacing(2)}px)`
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    section: {
+      marginTop: theme.spacing(2)
+    },
+    divider: {
+      margin: `${theme.spacing(2)}px ${theme.spacing(1)}px 0 `,
+      width: `calc(100% - ${theme.spacing(2)}px)`
+    }
+  });
 
 interface Helpers {
   updatedb_disabled: boolean;

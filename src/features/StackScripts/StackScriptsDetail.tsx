@@ -6,7 +6,7 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -32,7 +32,8 @@ interface State {
 
 type ClassNames = 'root' | 'titleWrapper' | 'cta' | 'button';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   titleWrapper: {
     display: 'flex',

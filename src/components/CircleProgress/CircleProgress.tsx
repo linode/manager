@@ -4,7 +4,7 @@ import CircularProgress, {
   CircularProgressProps
 } from 'src/components/core/CircularProgress';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -22,7 +22,8 @@ type CSSClasses =
   | 'green'
   | 'valueInside';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     display: 'flex',
     alignItems: 'center',

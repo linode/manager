@@ -3,7 +3,7 @@ import * as React from 'react';
 import AppBar from 'src/components/core/AppBar';
 import IconButton from 'src/components/core/IconButton';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -17,7 +17,8 @@ import UserNotificationsMenu from './UserNotificationsMenu';
 
 type ClassNames = 'root' | 'flex' | 'appBar' | 'toolbar' | 'navIconHide';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     color: theme.palette.text.primary
   },

@@ -1,5 +1,5 @@
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from '@material-ui/styles';
@@ -20,7 +20,8 @@ import { getAll } from 'src/utilities/getAll';
 
 type ClassNames = 'root' | 'button';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   button: {
     padding: 0

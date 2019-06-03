@@ -2,7 +2,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import IconButton from 'src/components/core/IconButton';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -16,7 +16,8 @@ type ClassNames =
   | 'isCritical'
   | 'smaller';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     marginRight: -theme.spacing(1),
     position: 'relative',

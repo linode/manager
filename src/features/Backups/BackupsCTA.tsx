@@ -4,7 +4,7 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   Theme,
   withStyles,
   WithStyles
@@ -20,7 +20,8 @@ interface Props {
   dismissed: () => void;
 }
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     padding: theme.spacing(2),
     margin: `${theme.spacing(1)}px 0 ${theme.spacing(3)}px 0`,

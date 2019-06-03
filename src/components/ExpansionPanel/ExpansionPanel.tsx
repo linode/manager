@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import Minus from 'src/assets/icons/minus-square.svg';
 import Plus from 'src/assets/icons/plus-square.svg';
@@ -10,11 +11,7 @@ import ExpansionPanelDetails, {
 import ExpansionPanelSummary, {
   ExpansionPanelSummaryProps
 } from 'src/components/core/ExpansionPanelSummary';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography, { TypographyProps } from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
@@ -22,11 +19,11 @@ import Notice from '../Notice';
 
 type ClassNames = 'root' | 'success' | 'warning' | 'error';
 
-const styles: StyleRulesCallback<ClassNames> = theme => {
+const styles = (theme: Theme) => {
   const {
     palette: { status }
   } = theme;
-  return {
+  return createStyles({
     root: {},
     success: {
       backgroundColor: status.success,
@@ -64,7 +61,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
         color: theme.palette.text.primary
       }
     }
-  };
+  });
 };
 
 export interface Props extends ExpansionPanelProps {

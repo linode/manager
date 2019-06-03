@@ -11,7 +11,7 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -57,7 +57,8 @@ type ClassNames =
   | 'titleWrapper'
   | 'error';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   main: {
     [theme.breakpoints.up('md')]: {
       order: 1

@@ -4,7 +4,7 @@ import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -25,7 +25,8 @@ import withEditableLabelState, {
 
 type ClassNames = 'titleWrapper' | 'controls' | 'launchButton';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   titleWrapper: {
     display: 'flex',
     alignItems: 'center'

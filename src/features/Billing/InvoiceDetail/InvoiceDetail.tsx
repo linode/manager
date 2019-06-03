@@ -6,7 +6,7 @@ import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -26,7 +26,8 @@ import InvoiceTable from './InvoiceTable';
 
 type ClassNames = 'root' | 'backButton' | 'titleWrapper' | 'totals';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`
   },

@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -9,11 +10,7 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -51,39 +48,40 @@ type ClassNames =
   | 'ip'
   | 'tagGroup';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  titleWrapper: {
-    flex: 1
-  },
-  title: {
-    marginBottom: theme.spacing(1) + theme.spacing(1) / 2
-  },
-  nameCell: {
-    width: '15%',
-    minWidth: 150
-  },
-  nodeStatus: {
-    width: '10%',
-    minWidth: 100
-  },
-  transferred: {
-    width: '10%',
-    minWidth: 100
-  },
-  ports: {
-    width: '10%',
-    minWidth: 50
-  },
-  ip: {
-    width: '30%',
-    minWidth: 200
-  },
-  tagGroup: {
-    flexDirection: 'row-reverse',
-    marginBottom: theme.spacing(1)
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    titleWrapper: {
+      flex: 1
+    },
+    title: {
+      marginBottom: theme.spacing(1) + theme.spacing(1) / 2
+    },
+    nameCell: {
+      width: '15%',
+      minWidth: 150
+    },
+    nodeStatus: {
+      width: '10%',
+      minWidth: 100
+    },
+    transferred: {
+      width: '10%',
+      minWidth: 100
+    },
+    ports: {
+      width: '10%',
+      minWidth: 50
+    },
+    ip: {
+      width: '30%',
+      minWidth: 200
+    },
+    tagGroup: {
+      flexDirection: 'row-reverse',
+      marginBottom: theme.spacing(1)
+    }
+  });
 
 interface DeleteConfirmDialogState {
   open: boolean;

@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   Theme,
   withStyles,
   WithStyles
@@ -10,7 +10,8 @@ import Currency from 'src/components/Currency';
 
 type ClassNames = 'root' | 'price' | 'per';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   price: {
     fontSize: '1.5rem',

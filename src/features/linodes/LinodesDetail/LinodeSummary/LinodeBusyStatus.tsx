@@ -1,12 +1,9 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { head } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import LinearProgress from 'src/components/LinearProgress';
 import { transitionText } from 'src/features/linodes/transitions';
@@ -14,16 +11,17 @@ import { withLinodeDetailContext } from '../linodeDetailContext';
 
 type ClassNames = 'root' | 'status';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    padding: theme.spacing(3),
-    marginTop: theme.spacing(2)
-  },
-  status: {
-    textTransform: 'capitalize',
-    marginBottom: theme.spacing(1)
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(3),
+      marginTop: theme.spacing(2)
+    },
+    status: {
+      textTransform: 'capitalize',
+      marginBottom: theme.spacing(1)
+    }
+  });
 
 interface LinodeDetailContextProps {
   status: string;

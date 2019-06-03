@@ -9,7 +9,8 @@ diff a/src/features/Billing/BillingPanels/RecentInvoicesPanel/RecentInvoicesPane
 @@ -27,2 +31,2 @@ type ClassNames = 'root';
 -const styles: StyleRulesCallback<ClassNames> = (theme) => ({
 -  root: {},
-+const styles: StyleRulesCallback<ClassNames> = theme => ({
++const styles = (theme: Theme) =>
+  createStyles({
 +  root: {}
 @@ -36 +40 @@ interface PdfGenerationError {
 -  itemId: number | undefined

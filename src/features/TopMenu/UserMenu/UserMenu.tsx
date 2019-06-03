@@ -10,7 +10,7 @@ import Hidden from 'src/components/core/Hidden';
 import Menu from 'src/components/core/Menu';
 import MenuItem from 'src/components/core/MenuItem';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -36,7 +36,8 @@ type CSSClasses =
   | 'menuItem'
   | 'hidden';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   menu: {
     transform: `translateY(${theme.spacing(1)}px)`
   },

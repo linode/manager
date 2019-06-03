@@ -2,7 +2,7 @@ import * as React from 'react';
 import Drawer from 'src/components/core/Drawer';
 import Hidden from 'src/components/core/Hidden';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -10,7 +10,8 @@ import PrimaryNav from 'src/components/PrimaryNav';
 
 type ClassNames = 'menuPaper' | 'menuDocked';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   menuPaper: {
     height: '100%',
     width: theme.spacing(14) + 103, // 215

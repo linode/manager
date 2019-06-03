@@ -1,10 +1,7 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { compose } from 'ramda';
 import * as React from 'react';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
@@ -28,38 +25,39 @@ type ClassNames =
   | 'paginationCell'
   | 'groupContainer';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  tagGridRow: {
-    marginBottom: 20
-  },
-  tagHeaderRow: {
-    backgroundColor: theme.bg.main,
-    height: 'auto',
-    '& td': {
-      // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
-      padding: `${theme.spacing(2) + 4}px 0 ${theme.spacing(1) + 2}px`,
-      borderBottom: 'none'
-    }
-  },
-  groupContainer: {
-    '&:first-of-type': {
-      '& $tagHeaderRow > td': {
-        padding: '10px 0'
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    tagGridRow: {
+      marginBottom: 20
+    },
+    tagHeaderRow: {
+      backgroundColor: theme.bg.main,
+      height: 'auto',
+      '& td': {
+        // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
+        padding: `${theme.spacing(2) + 4}px 0 ${theme.spacing(1) + 2}px`,
+        borderBottom: 'none'
+      }
+    },
+    groupContainer: {
+      '&:first-of-type': {
+        '& $tagHeaderRow > td': {
+          padding: '10px 0'
+        }
+      }
+    },
+    tagHeader: {
+      marginBottom: 2
+    },
+    tagHeaderOuter: {},
+    paginationCell: {
+      paddingTop: 2,
+      '& div:first-child': {
+        marginTop: 0
       }
     }
-  },
-  tagHeader: {
-    marginBottom: 2
-  },
-  tagHeaderOuter: {},
-  paginationCell: {
-    paddingTop: 2,
-    '& div:first-child': {
-      marginTop: 0
-    }
-  }
-});
+  });
 
 interface Props {
   openConfigDrawer: (

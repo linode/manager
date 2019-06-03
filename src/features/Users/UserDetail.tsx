@@ -11,7 +11,7 @@ import UserIcon from 'src/assets/icons/user.svg';
 import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
 import {
-  StyleRulesCallback,
+  createStyles,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
@@ -33,7 +33,8 @@ import UserProfile from './UserProfile';
 
 type ClassNames = 'titleWrapper' | 'avatar' | 'backButton' | 'emptyImage';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   '@keyframes fadeIn': {
     from: {
       opacity: 0

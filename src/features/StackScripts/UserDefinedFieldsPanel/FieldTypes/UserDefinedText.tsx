@@ -1,7 +1,7 @@
 import * as React from 'react';
 import AccessPanel from 'src/components/AccessPanel';
 import {
-  StyleRulesCallback,
+  createStyles,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
@@ -10,7 +10,8 @@ import TextField from 'src/components/TextField';
 
 type ClassNames = 'root' | 'accessPanel';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   accessPanel: {
     marginTop: 0

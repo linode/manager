@@ -9,7 +9,7 @@ import UserIcon from 'src/assets/icons/user.svg';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
@@ -34,7 +34,8 @@ type ClassNames =
   | 'hivelyLinkIcon'
   | 'hivelyImage';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   '@keyframes fadeIn': {
     from: {
       opacity: 0

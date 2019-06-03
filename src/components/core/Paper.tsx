@@ -1,6 +1,6 @@
 import Paper, { PaperProps as _PaperProps } from '@material-ui/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from '@material-ui/styles';
@@ -10,7 +10,8 @@ import FormHelperText from './FormHelperText';
 
 type ClassNames = 'error' | 'errorText';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   error: {
     borderColor: `#ca0813 !important`
   },
