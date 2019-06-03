@@ -8,6 +8,8 @@ ORIGIN=sys.argv[3]
 
 START_INSERT=5
 
+NOT_INCLUDED_IN_LOG = []
+
 TEST_KEYWORDS = ['test', 'script', 'storybook', 'e2e']
 BREAKING_KEYWORDS = ['break', 'deprecate']
 CHANGED_KEYWORDS = ['update', 'change']
@@ -27,6 +29,10 @@ def generateJQLQuery(ticket_list):
             jql_query+=clean_ticket+')'
         else:
             jql_query+=clean_ticket+','
+    print('~~~~~~~~NOT INCLUDED IN CHANGELOG~~~~~~~')
+    for i,commit in enumerate(NOT_INCLUDED_IN_LOG):
+        print(commit)
+    print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
     print('~~~~~~~~TICKETS IN RELEASE~~~~~~~~')
     print(jql_query.replace(' ','-'))
     print('~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~')
@@ -60,7 +66,7 @@ def generateChangeLog(release, date, origin):
             commit_array[i]=commit.lstrip(jira_key)
 
         if(checkKeyWords(TEST_KEYWORDS, commit.lower())):
-            commit_array.pop(i)
+            NOT_INCLUDED_IN_LOG.append(commit_array[i])
             continue
 
         if(checkKeyWords(BREAKING_KEYWORDS, commit.lower())):
