@@ -2,7 +2,7 @@ import {
   StyleRulesCallback,
   withStyles,
   WithStyles
-} from '@material-ui/core/styles';
+} from '@material-ui/styles';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Radio from 'src/components/core/Radio';

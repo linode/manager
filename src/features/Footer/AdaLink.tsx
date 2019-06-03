@@ -11,7 +11,7 @@ import {
   StyleRulesCallback,
   withStyles,
   WithStyles
-} from '@material-ui/core/styles';
+} from '@material-ui/styles';
 
 type ClassNames = 'root' | 'disabled';
 

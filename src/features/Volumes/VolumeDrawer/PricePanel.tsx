@@ -2,7 +2,7 @@ import {
   StyleRulesCallback,
   withStyles,
   WithStyles
-} from '@material-ui/core/styles';
+} from '@material-ui/styles';
 import * as React from 'react';
 import DisplayPrice from 'src/components/DisplayPrice';
 import { MAX_VOLUME_SIZE } from 'src/constants';

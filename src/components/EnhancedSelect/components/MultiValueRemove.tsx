@@ -2,7 +2,7 @@ import {
   StyleRulesCallback,
   withStyles,
   WithStyles
-} from '@material-ui/core/styles';
+} from '@material-ui/styles';
 import Close from '@material-ui/icons/Close';
 import * as React from 'react';
 import { components as reactSelectComponents } from 'react-select';
