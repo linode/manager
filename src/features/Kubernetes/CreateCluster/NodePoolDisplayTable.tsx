@@ -30,7 +30,7 @@ interface Props {
   pools: ExtendedPoolNode[];
   types: ExtendedType[];
   handleDelete: (poolIdx: number) => void;
-  handleChange: (poolCount: number) => void;
+  // handleChange: (poolCount: number) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -38,7 +38,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const NodePoolDisplayTable: React.FunctionComponent<
   CombinedProps
 > = props => {
-  const { classes, handleDelete, pools, types, handleChange } = props;
+  const { classes, handleDelete, pools, types } = props;
   return (
     <Table tableClass={classes.root} spacingTop={16}>
       <TableHead>
@@ -67,7 +67,7 @@ export const NodePoolDisplayTable: React.FunctionComponent<
                 pool={thisPool}
                 type={thisPoolType}
                 handleDelete={() => handleDelete(idx)}
-                handleChange={() => handleChange(thisPool.count)}
+                // handleChange={() => handleChange(thisPool.count)}
                 updateFor={[thisPool, thisPoolType, classes]}
               />
             );

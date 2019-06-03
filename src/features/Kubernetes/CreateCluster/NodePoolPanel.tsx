@@ -168,7 +168,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           pools={pools}
           types={types}
           handleDelete={(poolIdx: number) => deleteNodePool(poolIdx)}
-          handleChange={(nodeCount: number) => updateNodeCount(nodeCount)}
+          // handleChange={(nodeCount: number) => updateNodeCount(nodeCount)}
         />
       </Grid>
     </Grid>
