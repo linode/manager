@@ -1,14 +1,10 @@
+import { WithStyles } from '@material-ui/core/styles';
 import Search from '@material-ui/icons/Search';
 import * as ClassNames from 'classnames';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import InputAdornment from 'src/components/core/InputAdornment';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TextField from 'src/components/TextField';
 import { debounce } from 'throttle-debounce';
 
@@ -16,11 +12,11 @@ type ClassNames = 'root' | 'searchIcon';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  searchIcon: {
-    color: `${theme.color.grey1} !important`
-  }
-});
+    root: {},
+    searchIcon: {
+      color: `${theme.color.grey1} !important`
+    }
+  });
 
 interface Props {
   placeholderText: string;

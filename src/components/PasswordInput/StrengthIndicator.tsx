@@ -1,12 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import { isNil } from 'ramda';
 import * as React from 'react';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
@@ -18,34 +14,34 @@ type ClassNames = 'root' | 'block' | 'strengthText' | 'strengthLabel';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    maxWidth: `calc(415px + ${theme.spacing(1)}px)`,
-    [theme.breakpoints.down('xs')]: {
-      maxWidth: `calc(100% + ${theme.spacing(1)}px)`
+    root: {
+      maxWidth: `calc(415px + ${theme.spacing(1)}px)`,
+      [theme.breakpoints.down('xs')]: {
+        maxWidth: `calc(100% + ${theme.spacing(1)}px)`
+      }
+    },
+    block: {
+      backgroundColor: '#C9CACB',
+      height: '4px',
+      transition: 'background-color .5s ease-in-out',
+      '&[class*="strength-"]': {
+        backgroundColor: theme.palette.primary.main
+      }
+    },
+    strengthText: {
+      position: 'relative',
+      fontSize: '.85rem',
+      textAlign: 'right',
+      [theme.breakpoints.down('xs')]: {
+        textAlign: 'center'
+      }
+    },
+    strengthLabel: {
+      [theme.breakpoints.down('xs')]: {
+        display: 'none'
+      }
     }
-  },
-  block: {
-    backgroundColor: '#C9CACB',
-    height: '4px',
-    transition: 'background-color .5s ease-in-out',
-    '&[class*="strength-"]': {
-      backgroundColor: theme.palette.primary.main
-    }
-  },
-  strengthText: {
-    position: 'relative',
-    fontSize: '.85rem',
-    textAlign: 'right',
-    [theme.breakpoints.down('xs')]: {
-      textAlign: 'center'
-    }
-  },
-  strengthLabel: {
-    [theme.breakpoints.down('xs')]: {
-      display: 'none'
-    }
-  }
-});
+  });
 
 const styled = withStyles<ClassNames>(styles);
 

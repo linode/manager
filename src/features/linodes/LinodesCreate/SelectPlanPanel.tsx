@@ -1,12 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
@@ -23,14 +19,14 @@ type ClassNames = 'root' | 'copy';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    marginTop: theme.spacing(3)
-  },
-  copy: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(3)
-  }
-});
+    root: {
+      marginTop: theme.spacing(3)
+    },
+    copy: {
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(3)
+    }
+  });
 
 interface Props {
   types: ExtendedType[];

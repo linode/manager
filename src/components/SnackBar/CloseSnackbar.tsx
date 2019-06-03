@@ -1,12 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import Close from '@material-ui/icons/Close';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import IconButton from 'src/components/IconButton';
 
 type ClassNames = 'icon';
@@ -18,11 +14,11 @@ interface Props {
 
 const styles = (theme: Theme) =>
   createStyles({
-  icon: {
-    color: theme.palette.text.primary,
-    padding: theme.spacing(1)
-  }
-});
+    icon: {
+      color: theme.palette.text.primary,
+      padding: theme.spacing(1)
+    }
+  });
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 

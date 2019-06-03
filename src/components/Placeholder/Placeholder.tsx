@@ -1,12 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import Button, { ButtonProps } from 'src/components/Button';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
@@ -14,52 +10,61 @@ type ClassNames = 'root' | 'title' | 'copy' | 'icon' | 'button';
 
 const styles = (theme: Theme) =>
   createStyles({
-  '@keyframes scaleIn': {
-    from: {
-      transform: 'translateX( -10px ) rotateY( -180deg )'
+    '@keyframes scaleIn': {
+      from: {
+        transform: 'translateX( -10px ) rotateY( -180deg )'
+      },
+      to: {
+        transformOrigin: 'center center'
+      }
     },
-    to: {
-      transformOrigin: 'center center'
-    }
-  },
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0
+    '@keyframes fadeIn': {
+      from: {
+        opacity: 0
+      },
+      to: {
+        opacity: 1
+      }
     },
-    to: {
-      opacity: 1
-    }
-  },
-  root: {
-    padding: `${theme.spacing(2)}px 0`,
-    [theme.breakpoints.up('md')]: {
-      padding: `${theme.spacing(10)}px 0`
-    }
-  },
-  copy: {
-    textAlign: 'center',
-    maxWidth: '85%',
-    marginTop: -theme.spacing(3),
-    [theme.breakpoints.up('md')]: {
-      maxWidth: 800
-    }
-  },
-  icon: {
-    '&.animate': {
-      animation: 'scaleIn .5s ease-in-out'
+    root: {
+      padding: `${theme.spacing(2)}px 0`,
+      [theme.breakpoints.up('md')]: {
+        padding: `${theme.spacing(10)}px 0`
+      }
     },
-    width: '120px',
-    height: '120px',
-    [theme.breakpoints.up('md')]: {
-      width: '150px',
-      height: '150px'
+    copy: {
+      textAlign: 'center',
+      maxWidth: '85%',
+      marginTop: -theme.spacing(3),
+      [theme.breakpoints.up('md')]: {
+        maxWidth: 800
+      }
     },
-    '& .outerCircle': {
-      fill: theme.color.absWhite,
-      stroke: theme.bg.offWhite
+    icon: {
+      '&.animate': {
+        animation: 'scaleIn .5s ease-in-out'
+      },
+      width: '120px',
+      height: '120px',
+      [theme.breakpoints.up('md')]: {
+        width: '150px',
+        height: '150px'
+      },
+      '& .outerCircle': {
+        fill: theme.color.absWhite,
+        stroke: theme.bg.offWhite
+      },
+      '& .circle': {
+        fill: theme.color.absWhite
+      },
+      '& .insidePath path': {
+        opacity: 0,
+        animation: 'fadeIn .2s ease-in-out forwards .3s',
+        stroke: theme.palette.primary.main
+      }
     },
-    '& .circle': {
-      fill: theme.color.absWhite
+    title: {
+      textAlign: 'center'
     },
     '& .insidePath path': {
       opacity: 0,
@@ -68,15 +73,11 @@ const styles = (theme: Theme) =>
     },
     '& .bucket.insidePath path': {
       fill: theme.palette.primary.main
+    },
+    button: {
+      marginBottom: theme.spacing(4)
     }
-  },
-  title: {
-    textAlign: 'center'
-  },
-  button: {
-    marginBottom: theme.spacing(4)
-  }
-});
+  });
 
 export interface Props {
   icon?: React.ComponentType<any>;

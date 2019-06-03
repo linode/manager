@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as Promise from 'bluebird';
 import { compose as ramdaCompose, pathOr } from 'ramda';
 import * as React from 'react';
@@ -6,12 +7,7 @@ import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import CheckoutBar from 'src/components/CheckoutBar';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
@@ -38,14 +34,14 @@ type ClassNames = 'root' | 'main' | 'sidebar';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  main: {},
-  sidebar: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: '-130px !important'
+    root: {},
+    main: {},
+    sidebar: {
+      [theme.breakpoints.up('md')]: {
+        marginTop: '-130px !important'
+      }
     }
-  }
-});
+  });
 
 interface Props {
   disabled?: boolean;

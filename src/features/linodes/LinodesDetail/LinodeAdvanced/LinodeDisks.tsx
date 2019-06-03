@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -6,12 +7,7 @@ import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import RootRef from 'src/components/core/RootRef';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableHead from 'src/components/core/TableHead';
@@ -51,39 +47,39 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  headline: {
-    marginBottom: theme.spacing(2),
-    [theme.breakpoints.down('xs')]: {
-      marginBottom: 0,
-      marginTop: theme.spacing(2)
+    root: {},
+    headline: {
+      marginBottom: theme.spacing(2),
+      [theme.breakpoints.down('xs')]: {
+        marginBottom: 0,
+        marginTop: theme.spacing(2)
+      }
+    },
+    addNewWrapper: {
+      [theme.breakpoints.down('xs')]: {
+        width: '100%',
+        marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
+        marginTop: -theme.spacing(1)
+      }
+    },
+    loadingContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    tableContainer: {
+      marginTop: -theme.spacing(2)
+    },
+    diskSpaceWrapper: {
+      backgroundColor: theme.bg.tableHeader,
+      border: `1px solid ${theme.color.diskSpaceBorder}`,
+      padding: theme.spacing(2),
+      minHeight: '250px',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center'
     }
-  },
-  addNewWrapper: {
-    [theme.breakpoints.down('xs')]: {
-      width: '100%',
-      marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
-      marginTop: -theme.spacing(1)
-    }
-  },
-  loadingContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  tableContainer: {
-    marginTop: -theme.spacing(2)
-  },
-  diskSpaceWrapper: {
-    backgroundColor: theme.bg.tableHeader,
-    border: `1px solid ${theme.color.diskSpaceBorder}`,
-    padding: theme.spacing(2),
-    minHeight: '250px',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center'
-  }
-});
+  });
 
 type Filesystem = 'raw' | 'swap' | 'ext3' | 'ext4' | 'initrd' | '_none_';
 

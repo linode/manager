@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import CA from 'flag-icon-css/flags/4x3/ca.svg';
 import DE from 'flag-icon-css/flags/4x3/de.svg';
 import UK from 'flag-icon-css/flags/4x3/gb.svg';
@@ -8,12 +9,7 @@ import US from 'flag-icon-css/flags/4x3/us.svg';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
@@ -46,10 +42,10 @@ type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    marginTop: theme.spacing(3)
-  }
-});
+    root: {
+      marginTop: theme.spacing(3)
+    }
+  });
 
 interface Props {
   regions: ExtendedRegion[];

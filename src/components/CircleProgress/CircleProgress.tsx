@@ -1,14 +1,10 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import CircularProgress, {
   CircularProgressProps
 } from 'src/components/core/CircularProgress';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 
 type CSSClasses =
   | 'root'
@@ -25,90 +21,90 @@ type CSSClasses =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'relative',
-    width: '100%',
-    margin: '0 auto 20px',
-    [theme.breakpoints.up('md')]: {
-      flex: 1,
-      height: 300
-    }
-  },
-  progress: {
-    position: 'relative',
-    [theme.breakpoints.down('xs')]: {
-      width: '72px !important',
-      height: '72px !important'
-    }
-  },
-  top: {
-    width: 70,
-    height: 70,
-    borderRadius: '50%',
-    border: '1px solid #999',
-    [theme.breakpoints.up('sm')]: {
-      width: 120,
-      height: 120
-    }
-  },
-  topWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    position: 'absolute',
-    width: '100%',
-    height: '100%'
-  },
-  noTopMargin: {
-    [theme.breakpoints.up('md')]: {
-      top: 0,
-      height: 'auto'
-    }
-  },
-  mini: {
-    padding: theme.spacing(1) * 1.3
-  },
-  tag: {
-    width: '12px !important',
-    height: '12px !important',
-    padding: 0,
-    marginLeft: 4,
-    marginRight: 4,
-    '& circle': {
-      stroke: 'white'
-    }
-  },
-  sort: {
-    width: '14px !important',
-    height: '14px !important',
-    padding: 0,
-    position: 'relative',
-    top: 4,
-    marginLeft: 8,
-    marginRight: 4
-  },
-  valueInside: {
-    position: 'absolute',
-    marginTop: 4
-  },
-  hasValueInside: {},
-  green: {
-    '& circle': {
-      stroke: theme.color.green
+    root: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'relative',
+      width: '100%',
+      margin: '0 auto 20px',
+      [theme.breakpoints.up('md')]: {
+        flex: 1,
+        height: 300
+      }
     },
-    '& $progress': {
-      width: '93px !important',
-      height: '93px !important'
+    progress: {
+      position: 'relative',
+      [theme.breakpoints.down('xs')]: {
+        width: '72px !important',
+        height: '72px !important'
+      }
     },
-    '& $top': {
-      width: 85,
-      height: 85
+    top: {
+      width: 70,
+      height: 70,
+      borderRadius: '50%',
+      border: '1px solid #999',
+      [theme.breakpoints.up('sm')]: {
+        width: 120,
+        height: 120
+      }
+    },
+    topWrapper: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      position: 'absolute',
+      width: '100%',
+      height: '100%'
+    },
+    noTopMargin: {
+      [theme.breakpoints.up('md')]: {
+        top: 0,
+        height: 'auto'
+      }
+    },
+    mini: {
+      padding: theme.spacing(1) * 1.3
+    },
+    tag: {
+      width: '12px !important',
+      height: '12px !important',
+      padding: 0,
+      marginLeft: 4,
+      marginRight: 4,
+      '& circle': {
+        stroke: 'white'
+      }
+    },
+    sort: {
+      width: '14px !important',
+      height: '14px !important',
+      padding: 0,
+      position: 'relative',
+      top: 4,
+      marginLeft: 8,
+      marginRight: 4
+    },
+    valueInside: {
+      position: 'absolute',
+      marginTop: 4
+    },
+    hasValueInside: {},
+    green: {
+      '& circle': {
+        stroke: theme.color.green
+      },
+      '& $progress': {
+        width: '93px !important',
+        height: '93px !important'
+      },
+      '& $top': {
+        width: 85,
+        height: 85
+      }
     }
-  }
-});
+  });
 
 interface Props extends CircularProgressProps {
   noTopMargin?: boolean;

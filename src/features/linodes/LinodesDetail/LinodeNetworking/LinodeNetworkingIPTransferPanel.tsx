@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import {
   both,
   compose,
@@ -14,12 +15,7 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ExpansionPanel from 'src/components/ExpansionPanel';
@@ -43,47 +39,47 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  containerDivider: {
-    marginTop: theme.spacing(1)
-  },
-  mobileFieldWrapper: {
-    [theme.breakpoints.down('xs')]: {
-      width: '100%'
+    containerDivider: {
+      marginTop: theme.spacing(1)
+    },
+    mobileFieldWrapper: {
+      [theme.breakpoints.down('xs')]: {
+        width: '100%'
+      }
+    },
+    ipField: {
+      marginTop: 0,
+      width: '100%',
+      [theme.breakpoints.up('sm')]: {
+        width: 175
+      }
+    },
+    ipFieldLabel: {
+      width: '100%',
+      [theme.breakpoints.up('sm')]: {
+        width: `calc(175px + ${theme.spacing(2)}px)`
+      }
+    },
+    actionsLabel: {
+      [theme.breakpoints.down('sm')]: {
+        display: 'none'
+      }
+    },
+    autoGridsm: {
+      minWidth: 175,
+      [theme.breakpoints.up('sm')]: {
+        maxWidth: 'auto',
+        flexBasis: 'auto'
+      }
+    },
+    networkActionText: {
+      marginBottom: theme.spacing(2)
+    },
+    emptyStateText: {
+      marginTop: theme.spacing(2),
+      color: theme.color.grey1
     }
-  },
-  ipField: {
-    marginTop: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: 175
-    }
-  },
-  ipFieldLabel: {
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: `calc(175px + ${theme.spacing(2)}px)`
-    }
-  },
-  actionsLabel: {
-    [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    }
-  },
-  autoGridsm: {
-    minWidth: 175,
-    [theme.breakpoints.up('sm')]: {
-      maxWidth: 'auto',
-      flexBasis: 'auto'
-    }
-  },
-  networkActionText: {
-    marginBottom: theme.spacing(2)
-  },
-  emptyStateText: {
-    marginTop: theme.spacing(2),
-    color: theme.color.grey1
-  }
-});
+  });
 
 interface Props {
   linodeID: number;
