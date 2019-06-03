@@ -127,7 +127,14 @@ const trimOneClickFromLabel = (script: StackScript) => {
 };
 
 class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
-  state: State = defaultState;
+  params = getParamsFromUrl(this.props.location.search);
+
+  state: State = {
+    ...defaultState,
+    // These can be passed in as query params
+    selectedTypeID: this.params.typeID,
+    selectedRegionID: this.params.regionID
+  };
 
   componentDidUpdate(prevProps: CombinedProps) {
     /**

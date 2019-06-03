@@ -92,6 +92,7 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
       disk,
       vcpus,
       region,
+      type,
       ipv4,
       ipv6,
       tags,
@@ -134,6 +135,8 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
                 <LinodeActionMenu
                   linodeId={id}
                   linodeLabel={label}
+                  linodeRegion={region}
+                  linodeType={type}
                   linodeStatus={status}
                   linodeBackups={backups}
                   openConfigDrawer={openConfigDrawer}
