@@ -2,7 +2,7 @@ import Backup from '@material-ui/icons/Backup';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -18,7 +18,8 @@ type ClassNames =
   | 'backupLink'
   | 'backupText';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   icon: {
     fontSize: 18,
     fill: theme.color.grey1

@@ -6,7 +6,7 @@ import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
 import InsertPhoto from '@material-ui/icons/InsertPhoto';
 
 import {
-  StyleRulesCallback,
+  createStyles,
   Theme,
   withStyles,
   WithStyles
@@ -20,7 +20,8 @@ import TicketAttachmentRow from './TicketAttachmentRow';
 
 type ClassNames = 'root' | 'attachmentPaperWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   attachmentPaperWrapper: {
     overflowX: 'auto'

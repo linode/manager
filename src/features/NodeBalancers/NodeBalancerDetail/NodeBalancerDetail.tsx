@@ -13,7 +13,7 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import AppBar from 'src/components/core/AppBar';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -48,7 +48,8 @@ import NodeBalancerSummary from './NodeBalancerSummary';
 
 type ClassNames = 'root' | 'titleWrapper' | 'backButton';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   titleWrapper: {
     display: 'flex',

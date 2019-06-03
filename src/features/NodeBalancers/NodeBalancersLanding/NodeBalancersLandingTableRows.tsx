@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -17,7 +17,8 @@ import NodeBalancerActionMenu from './NodeBalancerActionMenu';
 
 type ClassNames = 'tagWrapper' | 'ipsWrapper' | 'icon';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   tagWrapper: {
     marginTop: theme.spacing(1) / 2,
     '& [class*="MuiChip"]': {

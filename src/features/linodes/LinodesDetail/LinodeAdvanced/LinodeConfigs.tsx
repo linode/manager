@@ -7,7 +7,7 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import RootRef from 'src/components/core/RootRef';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -34,7 +34,8 @@ import Paginate from 'src/components/Paginate';
 
 type ClassNames = 'root' | 'headline' | 'addNewWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   headline: {
     marginBottom: theme.spacing(2),

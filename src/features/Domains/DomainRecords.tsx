@@ -18,7 +18,7 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -45,7 +45,8 @@ import Drawer from './DomainRecordDrawer';
 
 type ClassNames = 'root' | 'cells' | 'titles' | 'linkContainer';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     [theme.breakpoints.down('xs')]: {
       flexDirection: 'column',

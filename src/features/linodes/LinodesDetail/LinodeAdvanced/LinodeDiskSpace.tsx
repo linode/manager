@@ -1,5 +1,5 @@
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from '@material-ui/styles';
@@ -18,7 +18,8 @@ type ClassNames =
   | 'textOuter'
   | 'code';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   header: {
     marginTop: theme.spacing(1) + 6,

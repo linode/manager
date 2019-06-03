@@ -2,7 +2,7 @@ import { compose, concat, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles,
   WithTheme
@@ -20,7 +20,8 @@ type ClassNames =
   | 'enhancedSelectWrapper'
   | 'textfield';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   searchItem: {
     '& em': {

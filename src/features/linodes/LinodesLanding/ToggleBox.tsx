@@ -1,13 +1,10 @@
+import { WithStyles } from '@material-ui/core/styles';
 import ViewList from '@material-ui/icons/ViewList';
 import ViewModule from '@material-ui/icons/ViewModule';
 import * as React from 'react';
 import { compose } from 'redux';
 import Button from 'src/components/Button';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 
 type CSSClasses =
   | 'root'
@@ -17,55 +14,56 @@ type CSSClasses =
   | 'buttonRight'
   | 'icon';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
-  root: {
-    margin: 8,
-    marginRight: -8
-  },
-  button: {
-    borderWidth: 1,
-    borderStyle: 'solid',
-    borderColor: theme.color.boxShadow,
-    borderRadius: 0,
-    fontFamily: theme.font.bold,
-    textTransform: 'inherit',
-    width: 80,
-    minWidth: 80,
-    padding: '6px 14px 5px 12px',
-    minHeight: 'inherit',
-    fontSize: '1rem',
-    lineHeight: '1.3em',
-    color: theme.palette.text.primary,
-    '&:focus': {
-      backgroundColor: theme.color.white
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      margin: 8,
+      marginRight: -8
     },
-    '&:hover': {
-      backgroundColor: 'transparent',
-      '& $icon': {
-        opacity: 1
+    button: {
+      borderWidth: 1,
+      borderStyle: 'solid',
+      borderColor: theme.color.boxShadow,
+      borderRadius: 0,
+      fontFamily: theme.font.bold,
+      textTransform: 'inherit',
+      width: 80,
+      minWidth: 80,
+      padding: '6px 14px 5px 12px',
+      minHeight: 'inherit',
+      fontSize: '1rem',
+      lineHeight: '1.3em',
+      color: theme.palette.text.primary,
+      '&:focus': {
+        backgroundColor: theme.color.white
+      },
+      '&:hover': {
+        backgroundColor: 'transparent',
+        '& $icon': {
+          opacity: 1
+        }
       }
+    },
+    buttonActive: {
+      backgroundColor: theme.color.white,
+      '&:hover': {
+        backgroundColor: theme.color.white
+      }
+    },
+    buttonLeft: {
+      width: 79
+    },
+    buttonRight: {
+      borderLeftWidth: 0
+    },
+    icon: {
+      marginRight: 6,
+      width: 18,
+      height: 18,
+      opacity: 0.4,
+      transition: 'opacity 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
     }
-  },
-  buttonActive: {
-    backgroundColor: theme.color.white,
-    '&:hover': {
-      backgroundColor: theme.color.white
-    }
-  },
-  buttonLeft: {
-    width: 79
-  },
-  buttonRight: {
-    borderLeftWidth: 0
-  },
-  icon: {
-    marginRight: 6,
-    width: 18,
-    height: 18,
-    opacity: 0.4,
-    transition: 'opacity 400ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
-  }
-});
+  });
 
 interface Props {
   handleClick: (v: 'grid' | 'list') => void;

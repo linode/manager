@@ -1,12 +1,13 @@
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
 
 type ClassNames = 'ellipses' | 'ellipsesInner';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   ellipses: {
     padding: theme.spacing(1),
     color: theme.color.black,

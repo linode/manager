@@ -1,7 +1,7 @@
 import { SnackbarProvider, SnackbarProviderProps } from 'notistack';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -10,7 +10,8 @@ import CloseSnackbar from './CloseSnackbar';
 
 type ClassNames = 'root' | 'info' | 'success' | 'error' | 'warning';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   info: {
     backgroundColor: theme.bg.white,

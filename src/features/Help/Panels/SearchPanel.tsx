@@ -2,7 +2,7 @@ import * as React from 'react';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -11,7 +11,8 @@ import AlgoliaSearchBar from './AlgoliaSearchBar';
 
 type ClassNames = 'root' | 'bgIcon' | 'searchHeading';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     padding: theme.spacing(4),
     backgroundColor: theme.color.green,

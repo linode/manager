@@ -1,13 +1,10 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import BackupStatus from 'src/components/BackupStatus';
 import Paper from 'src/components/core/Paper';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import TagsPanel from 'src/components/TagsPanel';
@@ -27,45 +24,46 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 type ClassNames = 'region' | 'volumeLink' | 'regionInner';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  title: {},
-  summarySection: {},
-  section: {},
-  main: {},
-  sidebar: {},
-  domainSidebar: {},
-  titleWrapper: {},
-  region: {
-    [theme.breakpoints.between('sm', 'md')]: {
-      flexBasis: '100%',
-      maxWidth: '100%',
-      display: 'flex'
-    }
-  },
-  regionInner: {
-    [theme.breakpoints.only('xs')]: {
-      padding: `0 ${theme.spacing(1)}px !important`
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    title: {},
+    summarySection: {},
+    section: {},
+    main: {},
+    sidebar: {},
+    domainSidebar: {},
+    titleWrapper: {},
+    region: {
+      [theme.breakpoints.between('sm', 'md')]: {
+        flexBasis: '100%',
+        maxWidth: '100%',
+        display: 'flex'
+      }
     },
-    [theme.breakpoints.up('lg')]: {
-      '&:first-of-type': {
-        padding: `${theme.spacing(1)}px ${theme.spacing(1)}px 0 ${
-          theme.spacing(1)
-        }px !important`
-      },
-      '&:last-of-type': {
+    regionInner: {
+      [theme.breakpoints.only('xs')]: {
         padding: `0 ${theme.spacing(1)}px !important`
+      },
+      [theme.breakpoints.up('lg')]: {
+        '&:first-of-type': {
+          padding: `${theme.spacing(1)}px ${theme.spacing(
+            1
+          )}px 0 ${theme.spacing(1)}px !important`
+        },
+        '&:last-of-type': {
+          padding: `0 ${theme.spacing(1)}px !important`
+        }
+      }
+    },
+    volumeLink: {
+      color: theme.palette.primary.main,
+      fontSize: '1rem',
+      '&:hover, &:focus': {
+        textDecoration: 'underline'
       }
     }
-  },
-  volumeLink: {
-    color: theme.palette.primary.main,
-    fontSize: '1rem',
-    '&:hover, &:focus': {
-      textDecoration: 'underline'
-    }
-  }
-});
+  });
 
 type CombinedProps = LinodeContextProps &
   LinodeActionsProps &

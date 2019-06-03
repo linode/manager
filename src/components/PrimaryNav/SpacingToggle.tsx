@@ -1,7 +1,7 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles,
   WithTheme
@@ -10,7 +10,8 @@ import Toggle from 'src/components/Toggle';
 
 type ClassNames = 'switchWrapper' | 'switchText' | 'toggle';
 
-export const styles: StyleRulesCallback<ClassNames> = theme => ({
+export const styles = (theme: Theme) =>
+  createStyles({
   switchText: {
     color: '#777',
     fontSize: '.8rem',

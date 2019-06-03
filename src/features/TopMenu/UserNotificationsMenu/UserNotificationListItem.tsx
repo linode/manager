@@ -2,7 +2,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import ListItem from 'src/components/core/ListItem';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';

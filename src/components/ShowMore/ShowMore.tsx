@@ -3,14 +3,15 @@ import * as React from 'react';
 import Chip, { ChipProps } from 'src/components/core/Chip';
 import Popover from 'src/components/core/Popover';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
 
 type CSSClasses = 'chip' | 'label' | 'popover' | 'link';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   chip: {
     position: 'relative',
     marginLeft: theme.spacing(1) / 2,

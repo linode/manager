@@ -3,7 +3,7 @@ import { equals, remove } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -16,7 +16,8 @@ import { reshapeFiles } from './ticketUtils';
 
 type ClassNames = 'root' | 'attachFileButton';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   attachFileButton: {
     padding: '4px 8px 4px 4px',

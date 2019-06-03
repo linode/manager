@@ -8,7 +8,7 @@ import AccessPanel from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -45,7 +45,8 @@ import {
 
 type ClassNames = 'sidebar' | 'emptyImagePanel' | 'emptyImagePanelText';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   sidebar: {
     [theme.breakpoints.up('md')]: {
       marginTop: '-130px !important'

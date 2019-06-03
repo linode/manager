@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -21,7 +21,8 @@ type ClassNames =
   | 'title'
   | 'transferred';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   ip: { width: '30%', minWidth: 200 },
   nameCell: { width: '15%', minWidth: 150 },
   nodeStatus: { width: '10%', minWidth: 100 },

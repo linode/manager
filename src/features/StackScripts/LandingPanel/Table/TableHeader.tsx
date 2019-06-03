@@ -1,5 +1,5 @@
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from '@material-ui/styles';
@@ -13,7 +13,8 @@ import TableSortCell from 'src/components/TableSortCell';
 
 type ClassNames = 'root' | 'activeDeploys' | 'lastRevision';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   activeDeploys: {
     minWidth: 140

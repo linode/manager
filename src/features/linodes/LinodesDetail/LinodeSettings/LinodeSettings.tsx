@@ -1,9 +1,6 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { LinodeDetailContextConsumer } from '../linodeDetailContext';
@@ -16,12 +13,13 @@ import LinodeWatchdogPanel from './LinodeWatchdogPanel';
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  title: {
-    marginBottom: theme.spacing(2)
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    title: {
+      marginBottom: theme.spacing(2)
+    }
+  });
 
 type CombinedProps = WithStyles<ClassNames>;
 

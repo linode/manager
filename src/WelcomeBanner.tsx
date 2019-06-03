@@ -1,6 +1,6 @@
 import Hidden from '@material-ui/core/Hidden';
+import { WithStyles } from '@material-ui/core/styles';
 import Close from '@material-ui/icons/Close';
-
 import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -9,11 +9,7 @@ import Resource from 'src/assets/icons/resource.svg';
 import Streamline from 'src/assets/icons/streamline.svg';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { storage } from 'src/utilities/storage';
@@ -28,67 +24,68 @@ type ClassNames =
   | 'actions'
   | 'closeIcon';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  dialog: {
-    '& [role="document"]': {
-      maxWidth: 960,
-      maxHeight: '100%',
-      overflowY: 'auto',
-      margin: '0 auto'
-    },
-    '& .dialog-title': {
-      border: 0,
-      textAlign: 'center',
-      marginBottom: 0,
-      '& h2': {
-        fontSize: '1.5rem'
+const styles = (theme: Theme) =>
+  createStyles({
+    dialog: {
+      '& [role="document"]': {
+        maxWidth: 960,
+        maxHeight: '100%',
+        overflowY: 'auto',
+        margin: '0 auto'
+      },
+      '& .dialog-title': {
+        border: 0,
+        textAlign: 'center',
+        marginBottom: 0,
+        '& h2': {
+          fontSize: '1.5rem'
+        }
       }
-    }
-  },
-  content: {
-    padding: `0 ${theme.spacing(4)}px`,
-    textAlign: 'center',
-    [theme.breakpoints.down('sm')]: {
-      padding: 0
-    }
-  },
-  item: {
-    margin: '0 auto',
-    maxWidth: 220,
-    [theme.breakpoints.down('sm')]: {
-      maxWidth: '100%'
-    }
-  },
-  itemTitle: {
-    marginBottom: theme.spacing(1)
-  },
-  itemDesc: {
-    margin: '0 auto',
-    [theme.breakpoints.down('sm')]: {
-      maxWidth: 400
-    }
-  },
-  icon: {
-    margin: theme.spacing(2),
-    color: theme.palette.primary.main,
-    [theme.breakpoints.down('sm')]: {
-      maxWidth: 75
     },
-    '& .imp': {
-      fill: theme.bg.pureWhite
+    content: {
+      padding: `0 ${theme.spacing(4)}px`,
+      textAlign: 'center',
+      [theme.breakpoints.down('sm')]: {
+        padding: 0
+      }
+    },
+    item: {
+      margin: '0 auto',
+      maxWidth: 220,
+      [theme.breakpoints.down('sm')]: {
+        maxWidth: '100%'
+      }
+    },
+    itemTitle: {
+      marginBottom: theme.spacing(1)
+    },
+    itemDesc: {
+      margin: '0 auto',
+      [theme.breakpoints.down('sm')]: {
+        maxWidth: 400
+      }
+    },
+    icon: {
+      margin: theme.spacing(2),
+      color: theme.palette.primary.main,
+      [theme.breakpoints.down('sm')]: {
+        maxWidth: 75
+      },
+      '& .imp': {
+        fill: theme.bg.pureWhite
+      }
+    },
+    actions: {
+      marginTop: theme.spacing(2)
+    },
+    closeIcon: {
+      position: 'absolute',
+      top: 5,
+      right: 5,
+      fill: theme.palette.text.primary,
+      cursor: 'pointer'
     }
-  },
-  actions: {
-    marginTop: theme.spacing(2)
-  },
-  closeIcon: {
-    position: 'absolute',
-    top: 5,
-    right: 5,
-    fill: theme.palette.text.primary,
-    cursor: 'pointer'
-  }
-});
+  });
 
 interface Props {
   open: boolean;
@@ -190,7 +187,7 @@ class WelcomeBanner extends React.Component<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles<ClassNames>(styles);
+const styled = withStyles(styles);
 
 const enhanced = compose<any, any, any>(
   withRouter,

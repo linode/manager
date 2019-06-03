@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { PlaceholderProps } from 'react-select/lib/components/Placeholder';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -9,7 +9,8 @@ import Typography from 'src/components/core/Typography';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     position: 'absolute',
     left: '10px',

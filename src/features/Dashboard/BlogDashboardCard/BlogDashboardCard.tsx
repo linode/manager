@@ -4,7 +4,7 @@ import { compose, map, pathOr, take } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -22,7 +22,8 @@ type ClassNames = 'root' | 'itemTitle';
 
 const req = Axios.create();
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     padding: theme.spacing(3),
     borderBottom: `1px solid ${theme.palette.divider}`

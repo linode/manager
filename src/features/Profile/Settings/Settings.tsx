@@ -4,7 +4,7 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -18,7 +18,8 @@ import { MapState } from 'src/store/types';
 
 type ClassNames = 'root' | 'title' | 'label';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     padding: theme.spacing(3),
     marginTop: theme.spacing(2)

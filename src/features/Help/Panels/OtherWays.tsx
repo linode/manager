@@ -4,7 +4,7 @@ import Community from 'src/assets/icons/community.svg';
 import Documentation from 'src/assets/icons/document.svg';
 import Support from 'src/assets/icons/support.svg';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -14,7 +14,8 @@ import Tile from 'src/components/Tile';
 
 type ClassNames = 'root' | 'wrapper' | 'heading';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   wrapper: {
     marginTop: theme.spacing(2)

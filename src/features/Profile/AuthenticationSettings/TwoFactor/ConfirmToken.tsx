@@ -3,7 +3,7 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
@@ -14,7 +14,8 @@ import TextField from 'src/components/TextField';
 
 type ClassNames = 'root' | 'warning';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   warning: {
     marginTop: theme.spacing(2),

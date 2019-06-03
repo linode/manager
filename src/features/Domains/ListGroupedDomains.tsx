@@ -1,7 +1,7 @@
 import { compose } from 'ramda';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -26,7 +26,8 @@ type ClassNames =
   | 'paginationCell'
   | 'groupContainer';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   tagGridRow: {
     marginBottom: theme.spacing(2) + theme.spacing(1) / 2

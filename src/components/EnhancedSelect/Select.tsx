@@ -7,7 +7,7 @@ import CreatableSelect, {
 import { Props as SelectProps } from 'react-select/lib/Select';
 import { StylesConfig } from 'react-select/lib/styles';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -44,7 +44,8 @@ type ClassNames =
   | 'inline'
   | 'hideLabel';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   '@keyframes dash': {
     to: {
       'stroke-dashoffset': 0

@@ -1,5 +1,5 @@
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -15,7 +15,8 @@ type ClassNames =
 
 export type StyleProps = WithStyles<ClassNames>;
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   region: {
     [theme.breakpoints.between('sm', 'md')]: {
       flexBasis: '100%',

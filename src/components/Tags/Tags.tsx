@@ -1,10 +1,7 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { splitAt } from 'ramda';
 import * as React from 'react';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import ShowMore from 'src/components/ShowMore';
 import Tag from 'src/components/Tag';
 
@@ -15,15 +12,14 @@ export interface Props {
 
 type ClassNames = 'root' | 'tag';
 
-const styles: StyleRulesCallback<ClassNames> = theme => {
-  return {
+const styles = (theme: Theme) =>
+  createStyles({
     root: {},
     tag: {
       color: theme.palette.text.primary,
       fontFamily: 'LatoWeb'
     }
-  };
-};
+  });
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 

@@ -3,7 +3,7 @@ import { compose } from 'recompose';
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
 import ListItem from 'src/components/core/ListItem';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -13,7 +13,8 @@ import RenderGuard from 'src/components/RenderGuard';
 
 type ClassNames = 'root' | 'label' | 'source' | 'icon' | 'row';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     flexDirection: 'column',
     alignItems: 'flex-start'

@@ -10,7 +10,7 @@
 
 // import NoSsr from '@material-ui/core/NoSsr'
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles,
   WithTheme
@@ -25,7 +25,8 @@ import { compose } from 'recompose';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {}
 });
 

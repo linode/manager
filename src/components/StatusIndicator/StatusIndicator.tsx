@@ -1,7 +1,7 @@
 import Cached from '@material-ui/icons/Cached';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -17,7 +17,8 @@ const defaultStyles = {
   'user-select': 'none'
 };
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   '@keyframes rotate': {
     from: {
       transform: 'rotate(0deg)'

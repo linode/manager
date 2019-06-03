@@ -4,7 +4,7 @@ import { compose } from 'redux';
 import KubernetesSvg from 'src/assets/addnewmenu/kubernetes.svg';
 import Button from 'src/components/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -13,7 +13,8 @@ import Grid from 'src/components/Grid';
 
 type CSSClasses = 'root' | 'copy' | 'icon' | 'title';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   '@keyframes scaleIn': {
     from: {
       transform: 'translateX( -10px ) rotateY( -180deg )'

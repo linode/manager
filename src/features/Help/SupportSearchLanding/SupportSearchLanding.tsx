@@ -6,7 +6,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import IconButton from 'src/components/core/IconButton';
 import InputAdornment from 'src/components/core/InputAdornment';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -29,7 +29,8 @@ type ClassNames =
   | 'searchField'
   | 'searchIcon';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     maxWidth: '100%',
     display: 'flex',

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
@@ -18,7 +18,8 @@ import { ExtendedPoolNode } from '.././types';
 
 type ClassNames = 'root' | 'link';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {},
   link: {
     color: `${theme.palette.primary.main} !important`

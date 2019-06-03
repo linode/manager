@@ -3,7 +3,7 @@ import * as React from 'react';
 import AppBar from 'src/components/core/AppBar';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
@@ -15,7 +15,8 @@ import Notice from '../Notice';
 
 type ClassNames = 'root' | 'inner' | 'copy' | 'tabs' | 'panelBody';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     flexGrow: 1,
     width: '100%',

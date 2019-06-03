@@ -7,7 +7,7 @@ import MenuList from 'src/components/core/MenuList';
 import Paper from 'src/components/core/Paper';
 import Popper from 'src/components/core/Popper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -20,7 +20,8 @@ import UserEventsList from './UserEventsList';
 
 type ClassNames = 'root' | 'dropDown' | 'hidden' | 'viewAll';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     boxShadow: `0 0 5px ${theme.color.boxShadow}`,
     outline: 0,

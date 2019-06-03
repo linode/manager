@@ -3,7 +3,7 @@ import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   Theme,
   withStyles,
   WithStyles
@@ -20,7 +20,8 @@ type ClassNames =
   | 'toggleLabel'
   | 'toggleLabelText';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     backgroundColor: theme.bg.offWhite,
     padding: theme.spacing(1)

@@ -2,7 +2,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 
 import {
-  StyleRulesCallback,
+  createStyles,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
@@ -18,7 +18,8 @@ import NodePoolRow from './NodePoolRow';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     maxWidth: '50%',
     border: `1px solid ${theme.palette.divider}`,

@@ -1,9 +1,6 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -22,65 +19,66 @@ type ClassNames =
   | 'text'
   | 'tableHeadInner';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    '& *': {
-      height: 'auto',
-      border: 'none',
-      backgroundColor: 'transparent'
-    },
-    '& td:first-child': {
-      backgroundColor: 'transparent !important'
-    },
-    [theme.breakpoints.down('sm')]: {
-      '& td': {
-        justifyContent: 'normal'
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      '& *': {
+        height: 'auto',
+        border: 'none',
+        backgroundColor: 'transparent'
+      },
+      '& td:first-child': {
+        backgroundColor: 'transparent !important'
+      },
+      [theme.breakpoints.down('sm')]: {
+        '& td': {
+          justifyContent: 'normal'
+        }
       }
-    }
-  },
-  tableHeadInner: {
-    paddingBottom: 4
-  },
-  red: {
-    '&:before': {
-      backgroundColor: theme.color.red
-    }
-  },
-  yellow: {
-    '&:before': {
-      backgroundColor: theme.color.yellow
-    }
-  },
-  blue: {
-    '&:before': {
-      backgroundColor: theme.palette.primary.main
-    }
-  },
-  green: {
-    '&:before': {
-      backgroundColor: theme.color.green
-    }
-  },
-  legend: {
-    [theme.breakpoints.up('md')]: {
-      width: '38%'
     },
-    '& > div': {
-      display: 'flex',
-      alignItems: 'center',
+    tableHeadInner: {
+      paddingBottom: 4
+    },
+    red: {
       '&:before': {
-        content: '""',
-        display: 'inline-block',
-        width: 20,
-        height: 20,
-        marginRight: theme.spacing(1)
+        backgroundColor: theme.color.red
       }
+    },
+    yellow: {
+      '&:before': {
+        backgroundColor: theme.color.yellow
+      }
+    },
+    blue: {
+      '&:before': {
+        backgroundColor: theme.palette.primary.main
+      }
+    },
+    green: {
+      '&:before': {
+        backgroundColor: theme.color.green
+      }
+    },
+    legend: {
+      [theme.breakpoints.up('md')]: {
+        width: '38%'
+      },
+      '& > div': {
+        display: 'flex',
+        alignItems: 'center',
+        '&:before': {
+          content: '""',
+          display: 'inline-block',
+          width: 20,
+          height: 20,
+          marginRight: theme.spacing(1)
+        }
+      }
+    },
+    text: {
+      color: theme.color.black
     }
-  },
-  text: {
-    color: theme.color.black
-  }
-});
+  });
 
 interface MetricsDisplayProps {
   rows: MetricsDisplayRow[];

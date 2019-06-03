@@ -9,7 +9,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -45,7 +45,8 @@ import { RebuildDialog } from './RebuildDialog';
 
 type ClassNames = 'root' | 'error' | 'emptyImagePanel' | 'emptyImagePanelText';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const styles = (theme: Theme) =>
+  createStyles({
   root: {
     paddingTop: theme.spacing(3)
   },
