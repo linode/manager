@@ -43,7 +43,6 @@ const getRunnerCount = () => {
 }
 
 const parallelRunners = getRunnerCount();
-console.log("parallel runners: " + parallelRunners);
 
 // NOTE: credStore provides a promise-based API.  In order to work correctly with WDIO, any calls in
 // lifecycle methods *other than* onPrepare and onComplete should be wrapped using WDIO's browser.call
@@ -58,7 +57,6 @@ const credStores = {
 };
 
 let CRED_STORE_MODE = process.env.CRED_STORE_MODE ? process.env.CRED_STORE_MODE : 'fs';
-console.log("process.env.CRED_STORE_MODE set to: " + CRED_STORE_MODE);
 
 if (!(CRED_STORE_MODE in credStores)) {
     let msg = "CRED_STORE_MODE must be one of: ";
@@ -237,8 +235,6 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      */
     onPrepare: function (config, capabilities, user) {
-        console.log("onPrepare");
-
         if ((parallelRunners > 1) && (CRED_STORE_MODE === 'fs')) {
             throw new Error("***** Can't use filesystem cred store when parallelRunners > 1.\n***** Set CRED_STORE_MODE=mongolocal in .env and launch mongodb by running: docker run -d -p 27017:27017 mongo");
         }
@@ -309,8 +305,6 @@ exports.config = {
                 creds = testCreds;
             }).catch((err) => console.log(err));
         });
-        console.log("creds are");
-        console.log(creds);
         credStore.login(creds.username, creds.password, false);
     },
     /**
@@ -390,7 +384,7 @@ exports.config = {
 
         // Set "inUse:false" on the account under test in the credentials file
         browser.call(
-            () => credStore.checkinCreds(specs[0]).then((creds) => console.log(creds))
+            () => credStore.checkinCreds(specs[0]).then((creds) => creds)
         );
     },
     /**
@@ -408,9 +402,8 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      */
     onComplete: function(exitCode, config, capabilities) {
-        console.log("onComplete");
-        // delete all data created during the test and remove test credentials from
-        // the underlying store
+        /* delete all data created during the test and remove test credentials
+           from the underlying store */
         return credStore.cleanupAccounts();
     }
 }
