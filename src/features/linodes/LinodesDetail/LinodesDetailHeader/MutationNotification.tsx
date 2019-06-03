@@ -106,8 +106,8 @@ const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
   return (
     <>
       <Notice important warning>
-        This Linode has free upgrade available. To learn more about this upgrade
-        and what it includes,&nbsp;
+        This Linode has a free upgrade available. To learn more about this
+        upgrade and what it includes,&nbsp;
         <span
           className={classes.pendingMutationLink}
           onClick={openMutationDrawer}

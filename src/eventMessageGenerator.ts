@@ -209,7 +209,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for an upgrade.`,
     started: e => `Linode ${e.entity!.label} is being upgraded.`,
     failed: e => `Linode ${e.entity!.label} could not be upgraded.`,
-    finished: e => `Linode ${e.entity!.label} was upgraded.`
+    finished: e => `Linode ${e.entity!.label} has been upgraded.`
   },
   linode_reboot: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for a reboot.`,
