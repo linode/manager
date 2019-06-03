@@ -4,6 +4,7 @@ import updateById from 'src/utilities/updateById';
 import updateOrAdd from 'src/utilities/updateOrAdd';
 import { isType } from 'typescript-fsa';
 import {
+  addNotificationsToLinodes,
   createLinodeActions,
   deleteLinode,
   deleteLinodeActions,
@@ -13,6 +14,8 @@ import {
   updateMultipleLinodes,
   upsertLinode
 } from './linodes.actions';
+
+import { addNotificationsToLinodes as _addNotificationsToLinodes } from './linodes.helpers';
 
 const getId = <E extends HasNumericID>({ id }: E) => id;
 
@@ -144,6 +147,18 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       params: { linodeId }
     } = action.payload;
     const entities = state.entities.filter(({ id }) => id !== linodeId);
+
+    return {
+      ...state,
+      entities,
+      results: entities.map(getId)
+    };
+  }
+
+  if (isType(action, addNotificationsToLinodes)) {
+    const { payload: notifications } = action;
+
+    const entities = _addNotificationsToLinodes(notifications, state.entities);
 
     return {
       ...state,
