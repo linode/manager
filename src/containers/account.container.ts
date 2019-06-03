@@ -2,23 +2,30 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { ApplicationState } from 'src/store';
-import { requestAccount } from 'src/store/account/account.requests';
+import {
+  requestAccount,
+  updateAccount
+} from 'src/store/account/account.requests';
+import { EntityError } from 'src/store/types';
 
 export interface AccountProps {
   account?: Linode.Account;
   accountLoading: boolean;
-  accountError?: Linode.ApiFieldError[] | Error;
-  lastUpdated: number;
+  accountError: EntityError;
+  lastUpdated?: number;
 }
 
 export interface DispatchProps {
   requestAccount: () => void;
+  updateAccount: (data: Partial<Linode.Account>) => Promise<any>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => ({
-  requestAccount: () => dispatch(requestAccount())
+  requestAccount: () => dispatch(requestAccount()),
+  updateAccount: (data: Partial<Linode.Account>) =>
+    dispatch(updateAccount(data))
 });
 
 export default <TInner extends {}, TOuter extends {}>(
@@ -26,8 +33,8 @@ export default <TInner extends {}, TOuter extends {}>(
     ownProps: TOuter,
     accountLoading: boolean,
     lastUpdated: number,
+    accountError: EntityError,
     account?: Linode.Account,
-    accountError?: Linode.ApiFieldError[] | Error
   ) => TInner
 ) =>
   connect(
@@ -41,8 +48,8 @@ export default <TInner extends {}, TOuter extends {}>(
         ownProps,
         accountLoading,
         lastUpdated,
+        accountError,
         account,
-        accountError
       );
     },
     mapDispatchToProps
