@@ -47,7 +47,8 @@ const reducer: Reducer<State> = (state: State = defaultState, action) => {
   if (isType(action, updateAccountActions.started)) {
     return {
       ...state,
-      loading: true
+      loading: true,
+      error: { ...state.error, update: undefined }
     };
   }
 
@@ -58,7 +59,8 @@ const reducer: Reducer<State> = (state: State = defaultState, action) => {
       ...state,
       loading: false,
       data: result,
-      lastUpdated: Date.now()
+      lastUpdated: Date.now(),
+      error: { ...state.error, update: undefined, read: undefined }
     };
   }
 
