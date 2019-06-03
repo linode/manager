@@ -1,6 +1,6 @@
 export interface Action {
   type: string;
-  error?: Error;
+  error?: Linode.ApiFieldError[];
   data?: any;
 }
 
@@ -15,7 +15,7 @@ export const UPDATE = '@manager/notifications/UPDATE';
 // ACTION CREATORS
 export const startRequest: ActionCreator = () => ({ type: LOAD });
 
-export const handleError: ActionCreator = (error: Error) => ({
+export const handleError: ActionCreator = (error: Linode.ApiFieldError[]) => ({
   type: ERROR,
   error
 });

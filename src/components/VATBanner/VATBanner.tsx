@@ -28,6 +28,8 @@ interface AccountProps {
   country?: string;
   taxId?: string;
   lastUpdated: number;
+  accountLoading?: boolean;
+  accountError: boolean;
 }
 
 type CombinedProps = AccountProps &
@@ -75,7 +77,11 @@ export const VATBanner: React.FunctionComponent<CombinedProps> = props => {
 
   const { showVATBanner, hideVATBanner } = props;
 
-  const { classes, country, taxId } = props;
+  const { accountLoading, accountError, classes, country, taxId } = props;
+
+  if (accountLoading || accountError) {
+    return null;
+  }
 
   const message = (
     <div>
@@ -121,11 +127,12 @@ export const VATBanner: React.FunctionComponent<CombinedProps> = props => {
 const styled = withStyles(styles);
 
 const withAccount = AccountContainer(
-  (ownProps, accountLoading, lastUpdated, accountData) => ({
+  (ownProps, accountLoading, lastUpdated, accountError, accountData) => ({
     ...ownProps,
     country: path(['country'], accountData),
     taxId: path(['tax_id'], accountData),
-    accountUpdated: lastUpdated
+    accountUpdated: lastUpdated,
+    accountError: accountError.read
   })
 );
 
@@ -158,6 +165,14 @@ const withLocalStorage = localStorageContainer<
     }
   })
 );
+
+interface LocalStorageState {
+  showVATBanner: boolean;
+}
+
+interface LocalStorageUpdater {
+  hideVATBanner: () => Partial<LocalStorageState>;
+}
 
 const enhanced = compose<CombinedProps, {}>(
   React.memo,

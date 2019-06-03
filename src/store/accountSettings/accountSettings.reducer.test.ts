@@ -8,7 +8,7 @@ import {
 } from './accountSettings.actions';
 import reducer, { defaultState } from './accountSettings.reducer';
 
-const error = Error();
+const error = [{ reason: 'An error occurred.' }];
 const updatedSettings = { backups_enabled: false, ...accountSettings };
 
 describe('Redux duck for Account settings', () => {
