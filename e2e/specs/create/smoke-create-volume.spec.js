@@ -83,10 +83,10 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
     it('should only display linodes in a selected region', () => {
         checkEnvironment();
         VolumeDetail.selectRegion('us-east');
-        browser.pause(500);
+        browser.pause(1000);
         expect(getLinodeOptions()).toEqual([linodeEast.linodeLabel]);
         VolumeDetail.selectRegion('us-central');
-        browser.pause(500);
+        browser.pause(1000);
         expect(getLinodeOptions()).toEqual([linodeCentral.linodeLabel]);
     });
 
