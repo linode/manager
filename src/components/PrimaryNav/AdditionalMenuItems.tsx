@@ -5,7 +5,7 @@ import {
   StyleRulesCallback,
   withStyles,
   WithStyles
-} from '@material-ui/core/styles';
+} from '@material-ui/styles';
 
 import NavItem, { PrimaryLink } from './NavItem';
 // import { sendAdaEvent } from 'src/utilities/ga';

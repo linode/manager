@@ -2,7 +2,7 @@ import {
   StyleRulesCallback,
   withStyles,
   WithStyles
-} from '@material-ui/core/styles';
+} from '@material-ui/styles';
 import { compose, pathOr, split } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';

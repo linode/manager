@@ -3,7 +3,7 @@ import {
   StyleRulesCallback,
   withStyles,
   WithStyles
-} from '@material-ui/core/styles';
+} from '@material-ui/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 import FormHelperText from './FormHelperText';

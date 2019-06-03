@@ -14,7 +14,7 @@ import {
   withStyles,
   WithStyles,
   WithTheme
-} from '@material-ui/core/styles';
+} from '@material-ui/styles';
 // import { jssPreset, StylesProvider } from '@material-ui/styles'
 // import { create } from 'jss';
 // import rtl from 'jss-rtl';

@@ -1,16 +1,20 @@
 export {
   createGenerateClassName,
-  createMuiTheme,
+  // createMuiTheme,
   createStyles,
-  Direction,
+  // Direction,
   jssPreset,
-  MuiThemeProvider,
-  StyledComponentProps,
-  StyleRules,
-  StyleRulesCallback,
-  Theme,
-  WithStyles,
+  ThemeProvider,
+  // styledComponentProps,
+  // styleRules,
+  // styleRulesCallback,
+  // Theme,
+  makeStyles,
   withStyles,
   withTheme,
-  WithTheme
-} from '@material-ui/core/styles';
+  useTheme
+} from '@material-ui/styles';
+
+export { createMuiTheme } from '@material-ui/core/styles';
+
+export { Theme } from '@material-ui/core/styles/createMuiTheme';

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MuiThemeProvider } from 'src/components/core/styles';
+import { ThemeProvider } from 'src/components/core/styles';
 import { dark, light } from 'src/themes';
 import {
   Spacing,

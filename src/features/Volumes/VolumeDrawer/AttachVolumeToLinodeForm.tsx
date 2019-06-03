@@ -2,7 +2,7 @@ import {
   StyleRulesCallback,
   withStyles,
   WithStyles
-} from '@material-ui/core/styles';
+} from '@material-ui/styles';
 import { Form, Formik } from 'formik';
 import { pathOr } from 'ramda';
 import * as React from 'react';

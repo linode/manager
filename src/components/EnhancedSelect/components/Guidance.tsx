@@ -2,7 +2,7 @@ import {
   StyleRulesCallback,
   withStyles,
   WithStyles
-} from '@material-ui/core/styles';
+} from '@material-ui/styles';
 import HelpOutline from '@material-ui/icons/HelpOutline';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
