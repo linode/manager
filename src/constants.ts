@@ -118,6 +118,28 @@ export const dcDisplayCountry = {
   'ca-east': 'CA'
 };
 
+export type ContinentKey = 'NA' | 'EU' | 'AS';
+export const dcContinent: Record<string, ContinentKey> = {
+  'us-east-1a': 'NA',
+  'us-south-1a': 'NA',
+  'us-west-1a': 'NA',
+  'us-southeast-1a': 'NA',
+  'eu-central-1a': 'EU',
+  'eu-west-1a': 'EU',
+  'ap-northeast-1a': 'AS',
+  'ap-northeast-1b': 'AS',
+  'us-central': 'NA',
+  'us-west': 'NA',
+  'us-southeast': 'NA',
+  'us-east': 'NA',
+  'eu-west': 'EU',
+  'ap-south': 'AS',
+  'eu-central': 'EU',
+  'ap-northeast': 'AS',
+  'ca-central': 'NA',
+  'ca-east': 'NA'
+};
+
 // At this time, the following regions do not support block storage.
 export const regionsWithoutBlockStorage = ['us-southeast', 'ap-northeast-1a'];
 

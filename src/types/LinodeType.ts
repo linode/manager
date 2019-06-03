@@ -15,5 +15,5 @@ namespace Linode {
     vcpus: number;
   }
 
-  type LinodeTypeClass = 'nanode' | 'standard' | 'highmem';
+  export type LinodeTypeClass = 'nanode' | 'standard' | 'dedicated' | 'highmem';
 }

@@ -1,3 +1,4 @@
+import { stringify } from 'qs';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -16,13 +17,19 @@ import {
   sendLinodeActionMenuItemEvent
 } from 'src/utilities/ga';
 
+import regionsContainer, {
+  DefaultProps as WithRegionsProps
+} from 'src/containers/regions.container';
+import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { getLinodeConfigs } from 'src/services/linodes';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector.ts';
 import { MapState } from 'src/store/types';
 
-interface Props {
+export interface Props {
   linodeId: number;
   linodeLabel: string;
+  linodeRegion: string;
+  linodeType: string | null;
   linodeBackups: Linode.LinodeBackups;
   linodeStatus: string;
   noImage: boolean;
@@ -37,7 +44,11 @@ interface Props {
   ) => void;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}> & StateProps;
+export type CombinedProps = Props &
+  RouteComponentProps<{}> &
+  StateProps &
+  WithTypesProps &
+  WithRegionsProps;
 
 interface State {
   configs: Linode.Config[];
@@ -45,7 +56,7 @@ interface State {
   configsError?: Linode.ApiFieldError[];
 }
 
-class LinodeActionMenu extends React.Component<CombinedProps, State> {
+export class LinodeActionMenu extends React.Component<CombinedProps, State> {
   state: State = {
     configs: [],
     hasMadeConfigsRequest: false,
@@ -66,6 +77,36 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
       });
 
     sendLinodeActionEvent();
+  };
+
+  // When we clone a Linode from the action menu, we pass in several query string
+  // params so everything is selected for us when we get to the Create flow.
+  buildQueryStringForLinodeClone = () => {
+    const {
+      linodeId,
+      linodeRegion,
+      linodeType,
+      typesData,
+      regionsData
+    } = this.props;
+
+    const params: Record<string, string> = {
+      type: 'My Images',
+      subtype: 'Clone Linode',
+      linodeID: String(linodeId)
+    };
+
+    // If the type of this Linode is a valid (current) type, use it in the QS
+    if (typesData && typesData.some(type => type.id === linodeType)) {
+      params.typeID = linodeType!;
+    }
+
+    // If the region of this Linode is a valid region, use it in the QS
+    if (regionsData && regionsData.some(region => region.id === linodeRegion)) {
+      params.regionID = linodeRegion;
+    }
+
+    return stringify(params);
   };
 
   createLinodeActions = () => {
@@ -103,13 +144,17 @@ class LinodeActionMenu extends React.Component<CombinedProps, State> {
           ...readOnlyProps
         },
         {
-          title: 'View Graphs',
+          title: 'Clone',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendLinodeActionMenuItemEvent('View Linode Graphs');
-            push(`/linodes/${linodeId}/summary`);
+            sendLinodeActionMenuItemEvent('Clone');
+            push({
+              pathname: '/linodes/create',
+              search: this.buildQueryStringForLinodeClone()
+            });
             e.preventDefault();
             e.stopPropagation();
-          }
+          },
+          ...readOnlyProps
         },
         {
           title: 'Resize',
@@ -249,9 +294,12 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
 });
 
 const connected = connect(mapStateToProps);
+const withRegions = regionsContainer();
 
 const enhanced = compose<CombinedProps, Props>(
   connected,
+  withTypes,
+  withRegions,
   withRouter
 );
 

@@ -17,6 +17,7 @@ import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
+import { ContinentKey, dcContinent } from 'src/constants';
 
 const flags = {
   us: () => <US width="32" height="24" viewBox="0 0 720 480" />,
@@ -136,6 +137,13 @@ class SelectRegionPanel extends React.Component<
     if (this.props.regions.length === 0) {
       return null;
     }
+
+    // Determine initial tag selection based on which
+    // continent the selected region is in.
+    const tabOrder: ContinentKey[] = ['NA', 'EU', 'AS'];
+    const selectedContinent = dcContinent[this.props.selectedID || ''];
+    const initialTab = tabOrder.indexOf(selectedContinent || 'NA');
+
     return (
       <TabbedPanel
         rootClass={this.props.classes.root}
@@ -143,6 +151,7 @@ class SelectRegionPanel extends React.Component<
         header="Region"
         copy={this.props.copy}
         tabs={this.createTabs()}
+        initTab={initialTab}
       />
     );
   }

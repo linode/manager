@@ -19,10 +19,10 @@ describe('List Linodes Suite', () => {
 
     const assertActionMenuItems = (linode) => {
         const expectedOptions = [
-            'Reboot', 
+            'Reboot',
             'Power Off',
             'Launch Console',
-            'View Graphs', 
+            'Clone',
             'Resize',
             'View Backups',
             'Enable Backups',
@@ -77,7 +77,7 @@ describe('List Linodes Suite', () => {
             assertActionMenuItems(linode.linodeLabel);
         });
 
-        it('should display launch console button', () => {
+        it('should display  console button', () => {
             expect(ListLinodes.launchConsole.isVisible()).toBe(true);
         });
 
