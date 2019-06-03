@@ -42,7 +42,7 @@ type ClassNames = 'root' | 'title' | 'sidebar' | 'inner';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   title: {
-    marginBottom: theme.spacing.unit + theme.spacing.unit / 2
+    marginBottom: theme.spacing(1) + theme.spacing(1) / 2
   },
   sidebar: {
     [theme.breakpoints.up('md')]: {
@@ -50,8 +50,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   inner: {
-    padding: theme.spacing.unit * 3,
-    paddingTop: `${theme.spacing.unit}px !important`
+    padding: theme.spacing(3),
+    paddingTop: `${theme.spacing(1)}px !important`
   }
 });
 

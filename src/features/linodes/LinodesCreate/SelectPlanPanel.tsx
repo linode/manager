@@ -22,11 +22,11 @@ type ClassNames = 'root' | 'copy';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing(3)
   },
   copy: {
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit * 3
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(3)
   }
 });
 

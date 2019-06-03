@@ -13,12 +13,12 @@ type ClassNames = 'menuPaper' | 'menuDocked';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   menuPaper: {
     height: '100%',
-    width: theme.spacing.unit * 14 + 103, // 215
+    width: theme.spacing(14) + 103, // 215
     backgroundColor: theme.bg.navy,
     left: 'inherit',
     boxShadow: 'none',
     [theme.breakpoints.up('xl')]: {
-      width: theme.spacing.unit * 22 + 99 // 275
+      width: theme.spacing(22) + 99 // 275
     }
   },
   menuDocked: {

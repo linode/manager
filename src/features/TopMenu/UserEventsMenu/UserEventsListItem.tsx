@@ -24,7 +24,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
   return {
     root: {
       ...theme.notificationList,
-      padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`,
+      padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
       borderBottom: `1px solid ${theme.palette.divider}`,
       display: 'block',
       transition: theme.transitions.create(['border-color', 'opacity']),
@@ -34,7 +34,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
       }
     },
     title: {
-      marginBottom: theme.spacing.unit / 2
+      marginBottom: theme.spacing(1) / 2
     },
     content: {
       ...theme.typography.body1

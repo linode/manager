@@ -57,7 +57,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     flex: 1
   },
   title: {
-    marginBottom: theme.spacing.unit + theme.spacing.unit / 2
+    marginBottom: theme.spacing(1) + theme.spacing(1) / 2
   },
   nameCell: {
     width: '15%',
@@ -81,7 +81,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   tagGroup: {
     flexDirection: 'row-reverse',
-    marginBottom: theme.spacing.unit
+    marginBottom: theme.spacing(1)
   }
 });
 

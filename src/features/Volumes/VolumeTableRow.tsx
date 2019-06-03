@@ -31,7 +31,7 @@ type ClassNames =
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   title: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   },
   // styles for /volumes table
   volumesWrapper: {},

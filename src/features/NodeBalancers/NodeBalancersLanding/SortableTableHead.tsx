@@ -22,7 +22,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   nameCell: {
     width: '20%',
     minWidth: 150,
-    paddingLeft: theme.spacing.unit * 2 + 49
+    paddingLeft: theme.spacing(2) + 49
   },
   nodeStatus: {
     width: '15%',

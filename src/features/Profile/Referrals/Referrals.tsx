@@ -17,14 +17,14 @@ type ClassNames = 'root' | 'results' | 'title' | 'copyField';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing(3)
   },
   title: {},
   results: {
-    margin: `${theme.spacing.unit * 2}px 0`
+    margin: `${theme.spacing(2)}px 0`
   },
   copyField: {
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing(1)
   }
 });
 

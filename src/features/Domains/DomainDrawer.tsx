@@ -54,10 +54,10 @@ type ClassNames = 'root' | 'masterIPErrorNotice' | 'addIP';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   masterIPErrorNotice: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing(2)
   },
   addIP: {
-    left: -theme.spacing.unit * 2 + 3
+    left: -theme.spacing(2) + 3
   }
 });
 

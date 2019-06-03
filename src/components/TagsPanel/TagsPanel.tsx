@@ -45,16 +45,16 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     flexWrap: 'wrap'
   },
   tag: {
-    marginTop: theme.spacing.unit / 2,
-    marginRight: theme.spacing.unit,
+    marginTop: theme.spacing(1) / 2,
+    marginRight: theme.spacing(1),
     [theme.breakpoints.down('xs')]: {
-      marginRight: theme.spacing.unit * 2
+      marginRight: theme.spacing(2)
     }
   },
   addButtonWrapper: {
     width: '100%',
-    marginTop: theme.spacing.unit * 2 - 1,
-    marginBottom: theme.spacing.unit * 2 + 1
+    marginTop: theme.spacing(2) - 1,
+    marginBottom: theme.spacing(2) + 1
   },
   hasError: {
     marginTop: 0
@@ -70,18 +70,18 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     position: 'relative',
     top: 2,
     '& svg': {
-      marginRight: theme.spacing.unit
+      marginRight: theme.spacing(1)
     },
     '&:hover p': {
       color: theme.palette.primary.main
     }
   },
   tagsPanelItemWrapper: {
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing(2),
     position: 'relative'
   },
   selectTag: {
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing(1),
     width: '100%',
     position: 'relative',
     zIndex: 3,

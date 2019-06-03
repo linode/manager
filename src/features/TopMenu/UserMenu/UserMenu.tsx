@@ -38,10 +38,10 @@ type CSSClasses =
 
 const styles: StyleRulesCallback<CSSClasses> = theme => ({
   menu: {
-    transform: `translateY(${theme.spacing.unit}px)`
+    transform: `translateY(${theme.spacing(1)}px)`
   },
   button: {
-    padding: theme.spacing.unit,
+    padding: theme.spacing(1),
     borderRadius: 30,
     '&:hover, &.active': {
       '& $username': {
@@ -58,7 +58,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     }
   },
   userWrapper: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
     borderRadius: '50%',
     width: '42px',
     height: '42px',

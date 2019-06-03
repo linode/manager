@@ -87,8 +87,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     height: 45,
     position: 'absolute',
     zIndex: 10,
-    left: theme.spacing.unit * 2,
-    top: theme.spacing.unit * 2
+    left: theme.spacing(2),
+    top: theme.spacing(2)
   },
   paypalButtonWrapper: {
     position: 'relative',

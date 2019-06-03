@@ -31,10 +31,10 @@ type ClassNames = 'root' | 'title' | 'labelHeader';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   title: {
-    marginBottom: theme.spacing.unit + theme.spacing.unit / 2
+    marginBottom: theme.spacing(1) + theme.spacing(1) / 2
   },
   labelHeader: {
-    paddingLeft: theme.spacing.unit * 2 + 49
+    paddingLeft: theme.spacing(2) + 49
   }
 });
 

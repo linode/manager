@@ -47,7 +47,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   title: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   },
   userButton: {
     borderRadius: 30,
@@ -62,7 +62,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     borderRadius: '50%',
     width: 30,
     height: 30,
-    marginRight: theme.spacing.unit * 2,
+    marginRight: theme.spacing(2),
     animation: 'fadeIn 150ms linear forwards',
     [theme.breakpoints.up('md')]: {
       width: 50,
@@ -73,7 +73,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     display: 'inline',
     width: 30,
     height: 30,
-    marginRight: theme.spacing.unit * 2,
+    marginRight: theme.spacing(2),
     [theme.breakpoints.up('md')]: {
       width: 50,
       height: 50

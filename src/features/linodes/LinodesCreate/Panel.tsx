@@ -14,7 +14,7 @@ type ClassNames = 'root' | 'flatImagePanel';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   flatImagePanel: {
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing(3)
   },
   root: {}
 });

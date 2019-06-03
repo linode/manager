@@ -34,27 +34,27 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginBottom: 10
   },
   emptyResultWrapper: {
-    padding: `${theme.spacing.unit * 10}px ${theme.spacing.unit * 4}px`,
+    padding: `${theme.spacing(10)}px ${theme.spacing(4)}px`,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center'
   },
   emptyResult: {
-    padding: `${theme.spacing.unit * 10}px ${theme.spacing.unit * 4}px`,
+    padding: `${theme.spacing(10)}px ${theme.spacing(4)}px`,
     display: 'flex',
     flexDirection: 'column',
     justifyContent: 'center',
     alignItems: 'center',
     [theme.breakpoints.down('sm')]: {
-      padding: theme.spacing.unit * 4
+      padding: theme.spacing(4)
     }
   },
   errorIcon: {
     width: 60,
     height: 60,
     color: theme.palette.text.primary,
-    marginBottom: theme.spacing.unit * 4
+    marginBottom: theme.spacing(4)
   }
 });
 

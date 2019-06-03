@@ -19,8 +19,8 @@ type ClassNames = 'root' | 'divider';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   divider: {
-    margin: `${theme.spacing.unit * 3}px 0`,
-    width: `calc(100% - ${theme.spacing.unit * 2}px)`
+    margin: `${theme.spacing(3)}px 0`,
+    width: `calc(100% - ${theme.spacing(2)}px)`
   }
 });
 

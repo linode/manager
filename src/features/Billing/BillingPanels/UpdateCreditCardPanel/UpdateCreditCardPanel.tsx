@@ -36,13 +36,13 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     color: theme.color.red
   },
   currentccContainer: {
-    padding: `${theme.spacing.unit * 2}px 0 ${theme.spacing.unit * 4}px`
+    padding: `${theme.spacing(2)}px 0 ${theme.spacing(4)}px`
   },
   newccContainer: {
-    padding: `${theme.spacing.unit}px 0 0`
+    padding: `${theme.spacing(1)}px 0 0`
   },
   currentCCTitle: {
-    marginBottom: theme.spacing.unit
+    marginBottom: theme.spacing(1)
   },
   cardNumber: {
     minWidth: 225

@@ -45,7 +45,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   root: {
     width: '100%',
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
     position: 'relative',
     '& p': {
       margin: 0,
@@ -53,7 +53,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   userWrapper: {
-    marginTop: theme.spacing.unit / 2,
+    marginTop: theme.spacing(1) / 2,
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
@@ -73,14 +73,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     color: theme.color.headline
   },
   paper: {
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing(3)
   },
   avatarCol: {
     minWidth: 60
   },
   userCol: {
     minWidth: 200,
-    paddingRight: `${theme.spacing.unit * 4}px !important`
+    paddingRight: `${theme.spacing(4)}px !important`
   },
   isCurrentUser: {
     backgroundColor: theme.color.grey2
@@ -88,7 +88,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   hivelyLink: {
     textDecoration: 'none',
     color: theme.color.black,
-    marginRight: theme.spacing.unit * 2
+    marginRight: theme.spacing(2)
   },
   hivelyImage: {
     width: '25px',
@@ -98,11 +98,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing(3)
   },
   hivelyLinkIcon: {
     display: 'inline-block',
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing(1)
   }
 });
 

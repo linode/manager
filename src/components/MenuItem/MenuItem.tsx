@@ -30,13 +30,13 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     flexWrap: 'wrap',
     '&.hasTooltip': {
       opacity: 1,
-      paddingTop: theme.spacing.unit - 2,
-      paddingBottom: theme.spacing.unit + 2,
+      paddingTop: theme.spacing(1) - 2,
+      paddingBottom: theme.spacing(1) + 2,
       '&:hover, &:focus': {
         background: 'transparent',
         color: theme.palette.primary.main,
         '& $toolTip': {
-          marginTop: theme.spacing.unit,
+          marginTop: theme.spacing(1),
           maxHeight: 200,
           opacity: 1
         }

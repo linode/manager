@@ -15,10 +15,10 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     display: 'flex',
     alignItems: 'flex-start',
     cursor: 'pointer',
-    padding: theme.spacing.unit + theme.spacing.unit / 2,
+    padding: theme.spacing(1) + theme.spacing(1) / 2,
     color: theme.palette.primary.main,
     transition: theme.transitions.create(['color']),
-    margin: `0 -${theme.spacing.unit + theme.spacing.unit / 2}px 2px 0`,
+    margin: `0 -${theme.spacing(1) + theme.spacing(1) / 2}px 2px 0`,
     minHeight: 'auto',
     '&:hover': {
       color: theme.palette.primary.light,
@@ -46,14 +46,14 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   icon: {
     transition: theme.transitions.create(['fill', 'color']),
     fontSize: 18,
-    marginRight: theme.spacing.unit + 1,
+    marginRight: theme.spacing(1) + 1,
     color: theme.palette.primary.main,
     '& .border': {
       transition: theme.transitions.create(['color'])
     }
   },
   left: {
-    left: -(theme.spacing.unit + theme.spacing.unit / 2)
+    left: -(theme.spacing(1) + theme.spacing(1) / 2)
   },
   label: {
     whiteSpace: 'nowrap'

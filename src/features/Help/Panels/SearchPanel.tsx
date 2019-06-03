@@ -13,7 +13,7 @@ type ClassNames = 'root' | 'bgIcon' | 'searchHeading';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    padding: theme.spacing.unit * 4,
+    padding: theme.spacing(4),
     backgroundColor: theme.color.green,
     display: 'flex',
     flexDirection: 'column',
@@ -21,7 +21,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     justifyContent: 'center',
     position: 'relative',
     [theme.breakpoints.up('md')]: {
-      padding: theme.spacing.unit * 8
+      padding: theme.spacing(8)
     }
   },
   bgIcon: {

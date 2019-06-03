@@ -65,7 +65,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   main: {},
   sidebar: {},
   title: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing(3)
   }
 });
 

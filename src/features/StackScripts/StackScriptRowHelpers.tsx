@@ -23,12 +23,12 @@ export type ClassNames =
 
 export const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
     borderBottom: `solid 1px ${theme.palette.grey['200']}`
   },
   labelCell: {
     background: theme.bg.offWhite,
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   },
   respPadding: {
     [theme.breakpoints.down('md')]: {
@@ -36,7 +36,7 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   colImages: {
-    padding: theme.spacing.unit
+    padding: theme.spacing(1)
   },
   libTitleContainer: {
     display: 'flex'
@@ -62,7 +62,7 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
     fontSize: '.9rem'
   },
   libDescription: {
-    marginTop: theme.spacing.unit / 2,
+    marginTop: theme.spacing(1) / 2,
     [theme.breakpoints.down('sm')]: {
       fontSize: 12
     },
@@ -71,9 +71,9 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   images: {
-    marginLeft: theme.spacing.unit,
-    marginRight: theme.spacing.unit,
-    marginBottom: theme.spacing.unit
+    marginLeft: theme.spacing(1),
+    marginRight: theme.spacing(1),
+    marginBottom: theme.spacing(1)
   },
   selectionGrid: {
     flexDirection: 'column',
@@ -98,9 +98,9 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
   detailsButton: {
     padding: 0,
     fontSize: '0.875rem',
-    marginTop: -theme.spacing.unit,
+    marginTop: -theme.spacing(1),
     [theme.breakpoints.up('sm')]: {
-      padding: theme.spacing.unit,
+      padding: theme.spacing(1),
       marginTop: 0,
       width: 100
     },

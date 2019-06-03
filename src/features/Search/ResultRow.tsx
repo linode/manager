@@ -116,7 +116,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     padding: 4
   },
   tag: {
-    margin: theme.spacing.unit / 2
+    margin: theme.spacing(1) / 2
   },
   link: {
     display: 'block'

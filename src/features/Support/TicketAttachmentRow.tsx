@@ -21,8 +21,8 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   attachmentPaper: {
     padding: `
-      ${theme.spacing.unit + theme.spacing.unit / 2}px
-      ${theme.spacing.unit * 3}px
+      ${theme.spacing(1) + theme.spacing(1) / 2}px
+      ${theme.spacing(3)}px
       0
     `,
     overflowX: 'auto',

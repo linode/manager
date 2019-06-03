@@ -26,10 +26,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   noCount: {
-    marginLeft: theme.spacing.unit
+    marginLeft: theme.spacing(1)
   },
   count: {
-    marginRight: theme.spacing.unit / 2
+    marginRight: theme.spacing(1) / 2
   },
   countNumber: {
     fontFamily: theme.font.bold

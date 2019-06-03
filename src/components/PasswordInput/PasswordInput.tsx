@@ -29,8 +29,8 @@ type ClassNames = 'container' | 'strengthIndicator' | 'infoText';
 const styles: StyleRulesCallback = theme => ({
   container: {
     position: 'relative',
-    marginBottom: theme.spacing.unit,
-    paddingBottom: theme.spacing.unit / 2
+    marginBottom: theme.spacing(1),
+    paddingBottom: theme.spacing(1) / 2
   },
   strengthIndicator: {
     position: 'absolute',

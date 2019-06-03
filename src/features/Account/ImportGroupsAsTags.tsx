@@ -13,7 +13,7 @@ type ClassNames = 'root' | 'helperText';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   helperText: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   }
 });
 

@@ -31,9 +31,9 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     }
   },
   root: {
-    padding: `${theme.spacing.unit * 2}px 0`,
+    padding: `${theme.spacing(2)}px 0`,
     [theme.breakpoints.up('md')]: {
-      padding: `${theme.spacing.unit * 10}px 0`
+      padding: `${theme.spacing(10)}px 0`
     }
   },
   copy: {

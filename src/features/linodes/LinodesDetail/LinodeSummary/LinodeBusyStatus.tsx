@@ -16,12 +16,12 @@ type ClassNames = 'root' | 'status';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    padding: theme.spacing.unit * 3,
-    marginTop: theme.spacing.unit * 2
+    padding: theme.spacing(3),
+    marginTop: theme.spacing(2)
   },
   status: {
     textTransform: 'capitalize',
-    marginBottom: theme.spacing.unit
+    marginBottom: theme.spacing(1)
   }
 });
 

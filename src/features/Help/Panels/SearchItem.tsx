@@ -29,11 +29,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     height: 12,
     position: 'relative',
     top: 5,
-    marginLeft: theme.spacing.unit / 2,
+    marginLeft: theme.spacing(1) / 2,
     color: theme.palette.primary.main
   },
   source: {
-    marginTop: theme.spacing.unit / 2,
+    marginTop: theme.spacing(1) / 2,
     color: theme.color.headline
   },
   row: {

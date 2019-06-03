@@ -31,7 +31,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     alignItems: 'center'
   },
   controls: {
-    marginTop: 9 - theme.spacing.unit / 2, // 4
+    marginTop: 9 - theme.spacing(1) / 2, // 4
     [theme.breakpoints.down('sm')]: {
       margin: 0,
       display: 'flex',

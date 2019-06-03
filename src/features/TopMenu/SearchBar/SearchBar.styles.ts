@@ -23,9 +23,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     display: 'flex',
     alignItems: 'center',
     backgroundColor: theme.bg.main,
-    padding: theme.spacing.unit,
-    marginLeft: theme.spacing.unit * 2,
-    marginRight: theme.spacing.unit * 2,
+    padding: theme.spacing(1),
+    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(2),
     transition: theme.transitions.create(['opacity']),
     [theme.breakpoints.down('sm')]: {
       backgroundColor: theme.bg.white,

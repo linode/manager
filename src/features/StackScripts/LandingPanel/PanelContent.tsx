@@ -27,7 +27,7 @@ type ClassNames = 'root' | 'searchWrapper' | 'searchBar';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   searchWrapper: {
-    marginBottom: theme.spacing.unit * 3
+    marginBottom: theme.spacing(3)
   },
   searchBar: {
     marginTop: 0,

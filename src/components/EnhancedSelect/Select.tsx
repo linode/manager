@@ -58,7 +58,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       boxShadow: 'none',
       border: `1px solid transparent`,
       backgroundColor: theme.bg.white,
-      minHeight: theme.spacing.unit * 5 - 2,
+      minHeight: theme.spacing(5) - 2,
       '&:hover': {
         border: `1px dotted #ccc`,
         cursor: 'text'
@@ -99,7 +99,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       paddingRight: 10
     },
     '& .react-select__menu-list': {
-      padding: theme.spacing.unit / 2,
+      padding: theme.spacing(1) / 2,
       backgroundColor: theme.bg.white,
       height: '101%',
       overflow: 'auto',
@@ -160,7 +160,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       paddingRight: 0
     },
     '& .react-select__clear-indicator': {
-      padding: theme.spacing.unit
+      padding: theme.spacing(1)
     },
     '& .react-select__multi-value__remove': {
       backgroundColor: 'transparent',
@@ -185,7 +185,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     },
     '& .react-select__dropdown-indicator': {},
     '& [class*="MuiFormHelperText-error"]': {
-      paddingBottom: theme.spacing.unit
+      paddingBottom: theme.spacing(1)
     }
   },
   input: {
@@ -196,10 +196,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     cursor: 'pointer'
   },
   noOptionsMessage: {
-    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 2}px`
+    padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`
   },
   divider: {
-    height: theme.spacing.unit * 2
+    height: theme.spacing(2)
   },
   suggestionRoot: {
     cursor: 'pointer',
@@ -218,7 +218,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     color: theme.palette.primary.main
   },
   suggestionItem: {
-    padding: theme.spacing.unit
+    padding: theme.spacing(1)
   },
   suggestionTitle: {
     fontSize: '1rem',
@@ -271,7 +271,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     flexDirection: 'row',
     alignItems: 'center',
     '& label': {
-      marginRight: theme.spacing.unit,
+      marginRight: theme.spacing(1),
       whiteSpace: 'nowrap',
       position: 'relative',
       top: 1

@@ -49,11 +49,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   emptyImagePanel: {
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing(3)
   },
   emptyImagePanelText: {
-    marginTop: theme.spacing.unit,
-    padding: `${theme.spacing.unit}px 0`
+    marginTop: theme.spacing(1),
+    padding: `${theme.spacing(1)}px 0`
   }
 });
 

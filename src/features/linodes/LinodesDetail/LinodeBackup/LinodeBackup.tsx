@@ -77,15 +77,15 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   paper: {
-    padding: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 3
+    padding: theme.spacing(3),
+    marginBottom: theme.spacing(3)
   },
   title: {
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit * 2
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(2)
   },
   subTitle: {
-    marginBottom: theme.spacing.unit
+    marginBottom: theme.spacing(1)
   },
   snapshotFormControl: {
     display: 'flex',
@@ -94,27 +94,27 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     flexWrap: 'wrap',
     '& > div': {
       width: 'auto',
-      marginRight: theme.spacing.unit * 2
+      marginRight: theme.spacing(2)
     },
     '& button': {
-      marginTop: theme.spacing.unit * 4
+      marginTop: theme.spacing(4)
     }
   },
   scheduleAction: {
     padding: 0,
     '& button': {
       marginLeft: 0,
-      marginTop: theme.spacing.unit * 2
+      marginTop: theme.spacing(2)
     }
   },
   chooseTime: {
-    marginRight: theme.spacing.unit * 2
+    marginRight: theme.spacing(2)
   },
   chooseDay: {
     minWidth: 150
   },
   cancelButton: {
-    marginBottom: theme.spacing.unit
+    marginBottom: theme.spacing(1)
   },
   snapshotNameField: {
     minWidth: 275

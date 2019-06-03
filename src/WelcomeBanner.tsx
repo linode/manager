@@ -46,7 +46,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   content: {
-    padding: `0 ${theme.spacing.unit * 4}px`,
+    padding: `0 ${theme.spacing(4)}px`,
     textAlign: 'center',
     [theme.breakpoints.down('sm')]: {
       padding: 0
@@ -60,7 +60,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   itemTitle: {
-    marginBottom: theme.spacing.unit
+    marginBottom: theme.spacing(1)
   },
   itemDesc: {
     margin: '0 auto',
@@ -69,7 +69,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   icon: {
-    margin: theme.spacing.unit * 2,
+    margin: theme.spacing(2),
     color: theme.palette.primary.main,
     [theme.breakpoints.down('sm')]: {
       maxWidth: 75
@@ -79,7 +79,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   actions: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing(2)
   },
   closeIcon: {
     position: 'absolute',

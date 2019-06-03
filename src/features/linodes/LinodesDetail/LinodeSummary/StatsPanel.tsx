@@ -14,8 +14,8 @@ type ClassNames = 'root' | 'spinner' | 'title' | 'graphsUnavailable';
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
-    padding: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2
+    padding: theme.spacing(2),
+    marginBottom: theme.spacing(2)
   },
   spinner: {
     display: 'flex',
@@ -28,11 +28,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     width: '100%',
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
     paddingTop: 0
   },
   title: {
-    padding: theme.spacing.unit * 2
+    padding: theme.spacing(2)
   }
 });
 

@@ -44,11 +44,11 @@ type ClassNames = 'headline' | 'paper' | 'labelCell' | 'createdCell';
 const styles: StyleRulesCallback<ClassNames> = theme => {
   return {
     headline: {
-      marginTop: theme.spacing.unit * 2,
-      marginBottom: theme.spacing.unit * 2
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
     },
     paper: {
-      marginBottom: theme.spacing.unit * 2
+      marginBottom: theme.spacing(2)
     },
     labelCell: {
       width: '40%'

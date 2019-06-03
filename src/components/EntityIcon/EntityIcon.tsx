@@ -116,7 +116,7 @@ const EntityIcon: React.StatelessComponent<CombinedProps> = props => {
 
   const iconSize = size
     ? size
-    : props.theme.spacing.unit === COMPACT_SPACING_UNIT
+    : props.theme.spacing(1) === COMPACT_SPACING_UNIT
     ? 34
     : 40;
 

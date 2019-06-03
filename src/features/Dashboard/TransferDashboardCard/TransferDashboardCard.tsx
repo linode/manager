@@ -30,7 +30,7 @@ export type ClassNames =
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     marginTop: 0,
-    padding: `${theme.spacing.unit * 4}px ${theme.spacing.unit * 3}px`
+    padding: `${theme.spacing(4)}px ${theme.spacing(3)}px`
   },
   card: {
     marginTop: 24,
@@ -43,7 +43,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     paddingRight: 8
   },
   poolUsageProgress: {
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing(2),
     [theme.breakpoints.up('lg')]: {}
   },
   circleChildren: {
@@ -57,7 +57,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     color: theme.color.green
   },
   quota: {
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing(1)
   },
   initialLoader: {
     minHeight: 150,
@@ -66,17 +66,17 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     justifyContent: 'center'
   },
   title: {
-    paddingBottom: theme.spacing.unit * 2
+    paddingBottom: theme.spacing(2)
   },
   divider: {
     backgroundColor: theme.palette.divider,
-    margin: `${theme.spacing.unit}px 0`
+    margin: `${theme.spacing(1)}px 0`
   },
   itemText: {
     fontSize: '1rem'
   },
   itemTextFirst: {
-    marginBottom: theme.spacing.unit
+    marginBottom: theme.spacing(1)
   }
 });
 

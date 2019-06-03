@@ -17,15 +17,15 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     flexGrow: 1,
     width: '100%',
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing(3),
     backgroundColor: theme.color.white
   },
   inner: {
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing(3)
   },
   expPanelButton: {
     padding: 0,
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing(2)
   }
 });
 

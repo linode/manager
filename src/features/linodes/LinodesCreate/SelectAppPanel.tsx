@@ -19,15 +19,15 @@ type ClassNames = 'flatImagePanelSelections' | 'panel' | 'loading';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   flatImagePanelSelections: {
-    marginTop: theme.spacing.unit * 2,
-    padding: `${theme.spacing.unit}px 0`
+    marginTop: theme.spacing(2),
+    padding: `${theme.spacing(1)}px 0`
   },
   panel: {
-    marginBottom: theme.spacing.unit * 3
+    marginBottom: theme.spacing(3)
   },
   loading: {
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2)
   }
 });
 

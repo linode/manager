@@ -22,8 +22,8 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    padding: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 3,
+    padding: theme.spacing(3),
+    marginBottom: theme.spacing(3),
     '& > div:last-child': {
       border: 0,
       marginBottom: 0,
@@ -31,7 +31,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   advDescription: {
-    margin: `${theme.spacing.unit * 2}px 0`
+    margin: `${theme.spacing(2)}px 0`
   },
   username: {
     color: theme.color.grey1
