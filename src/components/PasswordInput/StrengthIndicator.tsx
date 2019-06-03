@@ -17,9 +17,9 @@ type ClassNames = 'root' | 'block' | 'strengthText' | 'strengthLabel';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    maxWidth: `calc(415px + ${theme.spacing.unit}px)`,
+    maxWidth: `calc(415px + ${theme.spacing(1)}px)`,
     [theme.breakpoints.down('xs')]: {
-      maxWidth: `calc(100% + ${theme.spacing.unit}px)`
+      maxWidth: `calc(100% + ${theme.spacing(1)}px)`
     }
   },
   block: {

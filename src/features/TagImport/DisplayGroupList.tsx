@@ -13,13 +13,13 @@ type ClassNames = 'root' | 'groupBox' | 'groupItem';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     background: theme.bg.tableHeader,
-    padding: theme.spacing.unit * 2
+    padding: theme.spacing(2)
   },
   groupBox: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing(3)
   },
   groupItem: {
-    margin: theme.spacing.unit
+    margin: theme.spacing(1)
   }
 });
 

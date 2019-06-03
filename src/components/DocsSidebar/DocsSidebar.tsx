@@ -22,7 +22,7 @@ type ClassNames =
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing.unit * 3
+      marginTop: theme.spacing(3)
     },
     [theme.breakpoints.down('sm')]: {
       position: 'fixed !important',

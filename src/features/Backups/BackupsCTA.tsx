@@ -22,10 +22,10 @@ interface Props {
 
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
-    padding: theme.spacing.unit * 2,
-    margin: `${theme.spacing.unit}px 0 ${theme.spacing.unit * 3}px 0`,
+    padding: theme.spacing(2),
+    margin: `${theme.spacing(1)}px 0 ${theme.spacing(3)}px 0`,
     [theme.breakpoints.down('md')]: {
-      marginTop: -theme.spacing.unit,
+      marginTop: -theme.spacing(1),
       width: '100%'
     }
   },
@@ -35,11 +35,11 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     }
   },
   buttonsContainer: {
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing(1)
   },
   dismiss: {
-    paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 2,
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
     minWidth: 'auto'
   }
 });

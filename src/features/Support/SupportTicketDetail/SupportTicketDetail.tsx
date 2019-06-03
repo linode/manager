@@ -54,8 +54,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   titleWrapper: {
     display: 'flex',
     alignItems: 'flex-start',
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit * 2
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(2)
   },
   backButton: {
     margin: '-6px 0 0 -16px',
@@ -66,7 +66,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     padding: 0
   },
   label: {
-    marginBottom: theme.spacing.unit
+    marginBottom: theme.spacing(1)
   },
   ticketLabel: {
     position: 'relative',
@@ -84,7 +84,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   listParent: {},
   status: {
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing(1),
     color: theme.color.white
   },
   open: {

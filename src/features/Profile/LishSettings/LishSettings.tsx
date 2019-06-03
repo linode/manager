@@ -39,14 +39,14 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    padding: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit * 3
+    padding: theme.spacing(3),
+    paddingBottom: theme.spacing(3)
   },
   title: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   },
   intro: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   },
   modeControl: {
     display: 'flex'
@@ -56,10 +56,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     flexWrap: 'wrap'
   },
   addNew: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing(2)
   },
   sshWrap: {
-    margin: `${theme.spacing.unit}px 0`,
+    margin: `${theme.spacing(1)}px 0`,
     [theme.breakpoints.up('md')]: {
       display: 'flex',
       alignItems: 'flex-end'
@@ -73,7 +73,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   remove: {
     margin: '8px 0 0 -26px',
     [theme.breakpoints.up('md')]: {
-      margin: `0 0 ${theme.spacing.unit / 2}px 0`
+      margin: `0 0 ${theme.spacing(1) / 2}px 0`
     }
   }
 });

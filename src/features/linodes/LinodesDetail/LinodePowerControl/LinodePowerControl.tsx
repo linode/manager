@@ -50,7 +50,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     position: 'relative',
     transition: theme.transitions.create(['color', 'border-color']),
     minWidth: 145,
-    padding: `${theme.spacing.unit - 2}px ${theme.spacing.unit}px`,
+    padding: `${theme.spacing(1) - 2}px ${theme.spacing(1)}px`,
     '&:hover': {
       textDecoration: 'underline'
     },
@@ -60,7 +60,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   buttonText: {
-    marginLeft: theme.spacing.unit
+    marginLeft: theme.spacing(1)
   },
   caret: {
     color: theme.palette.primary.main,
@@ -68,14 +68,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     position: 'relative',
     top: 2,
     left: 2,
-    marginLeft: theme.spacing.unit / 2
+    marginLeft: theme.spacing(1) / 2
   },
   caretDisabled: {
     color: theme.color.disabledText
   },
   menuItem: {
     color: theme.palette.primary.main,
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
     outline: 0,
     borderBottom: `1px solid ${theme.palette.divider}`,
     '&:not(.hasTooltip)': {

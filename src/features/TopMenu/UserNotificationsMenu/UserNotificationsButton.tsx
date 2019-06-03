@@ -18,10 +18,10 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    marginRight: -theme.spacing.unit,
+    marginRight: -theme.spacing(1),
     position: 'relative',
     [theme.breakpoints.up('lg')]: {
-      marginLeft: theme.spacing.unit
+      marginLeft: theme.spacing(1)
     },
     '&.active $icon': {
       backgroundColor: theme.palette.text.primary

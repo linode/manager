@@ -16,7 +16,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   error: {
     color: '#C44742',
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing(2)
   },
   actions: {
     justifyContent: 'flex-end'

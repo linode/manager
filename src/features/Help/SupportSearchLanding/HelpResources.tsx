@@ -27,25 +27,25 @@ type ClassNames =
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   wrapper: {
-    marginTop: theme.spacing.unit * 4
+    marginTop: theme.spacing(4)
   },
   heading: {
     textAlign: 'center',
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   },
   card: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
     backgroundColor: theme.color.white,
-    padding: theme.spacing.unit * 4,
+    padding: theme.spacing(4),
     border: `1px solid ${theme.color.grey2}`,
     height: '100%'
   },
   tileTitle: {
     fontSize: '1.2rem',
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1)
   },
   icon: {
     margin: '0 auto 16px',

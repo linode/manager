@@ -35,12 +35,12 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       left: '0 !important',
       bottom: '0 !important',
       background: theme.color.white,
-      padding: theme.spacing.unit * 2
+      padding: theme.spacing(2)
     }
   },
   checkoutSection: {
     opacity: 0,
-    padding: `${theme.spacing.unit * 2}px 0`,
+    padding: `${theme.spacing(2)}px 0`,
     borderTop: `1px solid ${theme.color.border2}`,
     animation: 'fadeIn 225ms linear forwards'
   },
@@ -66,7 +66,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     fontSize: '.8rem',
     color: theme.color.headline,
     lineHeight: '1.5em',
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing(1)
   }
 });
 

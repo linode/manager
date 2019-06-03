@@ -24,13 +24,13 @@ type ClassNames =
 const styles: StyleRulesCallback = theme => ({
   paper: {
     width: 300,
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
     [theme.breakpoints.up('sm')]: {
       width: 480,
-      padding: theme.spacing.unit * 4
+      padding: theme.spacing(4)
     },
     '& .actionPanel': {
-      marginTop: theme.spacing.unit * 2
+      marginTop: theme.spacing(2)
     },
     '& .selectionCard': {
       maxWidth: '100%',
@@ -38,7 +38,7 @@ const styles: StyleRulesCallback = theme => ({
     }
   },
   drawerHeader: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   },
   drawerContent: {},
   button: {

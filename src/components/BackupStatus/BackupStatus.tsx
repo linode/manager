@@ -24,7 +24,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     fill: theme.color.grey1
   },
   noBackupText: {
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing(1)
   },
   root: {},
   wrapper: {

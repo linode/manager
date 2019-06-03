@@ -25,8 +25,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   expButton: {
     position: 'relative',
-    top: -theme.spacing.unit,
-    left: theme.spacing.unit,
+    top: -theme.spacing(1),
+    left: theme.spacing(1),
     [theme.breakpoints.down('sm')]: {
       position: 'absolute',
       top: 16,

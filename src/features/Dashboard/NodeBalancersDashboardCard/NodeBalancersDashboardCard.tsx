@@ -52,7 +52,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     paddingRight: '4px !important'
   },
   description: {
-    paddingTop: theme.spacing.unit / 2
+    paddingTop: theme.spacing(1) / 2
   },
   labelCol: {
     width: '70%'

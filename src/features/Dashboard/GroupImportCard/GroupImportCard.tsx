@@ -21,7 +21,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     width: '100%'
   },
   section: {
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing(3),
     borderBottom: `1px solid ${theme.palette.divider}`
   },
   title: {
@@ -30,18 +30,18 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
-    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 3}px !important`,
+    padding: `${theme.spacing(1)}px ${theme.spacing(3)}px !important`,
     [theme.breakpoints.down('md')]: {
       justifyContent: 'space-between',
       alignItems: 'flex-start'
     }
   },
   button: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing(3)
   },
   icon: {
     position: 'absolute',
-    top: theme.spacing.unit,
+    top: theme.spacing(1),
     right: 0,
     cursor: 'pointer',
     border: 'none',

@@ -36,7 +36,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     display: 'flex'
   },
   linkIcon: {
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing(1),
     color: theme.palette.primary.main,
     width: 14,
     height: 14

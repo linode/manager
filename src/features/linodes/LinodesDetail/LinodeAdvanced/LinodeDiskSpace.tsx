@@ -21,25 +21,25 @@ type ClassNames =
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   header: {
-    marginTop: theme.spacing.unit + 6,
-    marginBottom: theme.spacing.unit
+    marginTop: theme.spacing(1) + 6,
+    marginBottom: theme.spacing(1)
   },
   bar: {
-    marginBottom: theme.spacing.unit
+    marginBottom: theme.spacing(1)
   },
   text: {
-    margin: `${theme.spacing.unit + 2}px 0`,
+    margin: `${theme.spacing(1) + 2}px 0`,
     paddingRight: 40
   },
   divider: {
     backgroundColor: theme.color.grey2
   },
   textOuter: {
-    margin: `${theme.spacing.unit + 2}px 0`
+    margin: `${theme.spacing(1) + 2}px 0`
   },
   code: {
     color: theme.color.black,
-    margin: `0 0 ${theme.spacing.unit + 2}px`
+    margin: `0 0 ${theme.spacing(1) + 2}px`
   }
 });
 

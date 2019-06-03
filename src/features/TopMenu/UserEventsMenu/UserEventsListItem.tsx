@@ -40,7 +40,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
       padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`
     },
     title: {
-      marginBottom: theme.spacing.unit / 2
+      marginBottom: theme.spacing(1) / 2
     },
     content: {
       ...theme.typography.body1

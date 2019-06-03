@@ -22,7 +22,7 @@ const renderGuard = <P extends {}>(
         return (
           !equals(this.props.updateFor, nextProps.updateFor) ||
           this.props.theme.name !== nextProps.theme.name ||
-          this.props.theme.spacing.unit !== nextProps.theme.spacing.unit
+          this.props.theme.spacing(1) !== nextProps.theme.spacing(1)
         );
       }
       // if updateFor isn't provided, always update (this is React's default behavior)

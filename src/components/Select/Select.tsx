@@ -30,7 +30,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   textError: {
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing(1),
     color: theme.color.red,
     fontSize: '0.8571428571428571rem',
     minHeight: '1em',

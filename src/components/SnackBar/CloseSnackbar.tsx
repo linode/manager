@@ -18,7 +18,7 @@ interface Props {
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   icon: {
     color: theme.palette.text.primary,
-    padding: theme.spacing.unit
+    padding: theme.spacing(1)
   }
 });
 

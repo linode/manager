@@ -15,8 +15,8 @@ type ClassNames = 'root' | 'section';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   section: {
-    marginBottom: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
     borderBottom: `1px solid ${theme.palette.divider}`
   }
 });

@@ -23,7 +23,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     color: 'white',
     textAlign: 'center',
     minHeight: '30px',
-    margin: theme.spacing.unit * 2
+    margin: theme.spacing(2)
   },
   errorState: {
     '& *': {

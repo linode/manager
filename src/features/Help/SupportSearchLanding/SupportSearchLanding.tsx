@@ -48,7 +48,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     maxWidth: '100%'
   },
   searchBoxInner: {
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing(3),
     backgroundColor: theme.color.grey2,
     marginTop: 0,
     '& > div': {
@@ -57,11 +57,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   searchHeading: {
     color: theme.color.black,
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing(2),
     fontSize: '175%'
   },
   searchField: {
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing(3)
   },
   searchIcon: {
     marginRight: 0,

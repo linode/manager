@@ -20,7 +20,7 @@ interface Props {
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    padding: theme.spacing.unit,
+    padding: theme.spacing(1),
     backgroundColor: 'transparent'
   }
 });

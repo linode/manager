@@ -34,19 +34,19 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     flexGrow: 1,
     width: '100%',
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing(3),
     backgroundColor: theme.color.white
   },
   inner: {
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing(3)
   },
   panelBody: {
-    padding: `${theme.spacing.unit * 3}px 0 ${theme.spacing.unit}px`
+    padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`
   },
   cellCheckbox: {
     width: 50,
-    paddingLeft: theme.spacing.unit,
-    paddingRight: theme.spacing.unit
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1)
   },
   cellUser: {
     width: '30%'
@@ -54,11 +54,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   userWrapper: {
     display: 'inline-flex',
     alignItems: 'center',
-    marginTop: theme.spacing.unit / 2
+    marginTop: theme.spacing(1) / 2
   },
   gravatar: {
     borderRadius: '50%',
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing(1)
   },
   small: {
     '&$root': {

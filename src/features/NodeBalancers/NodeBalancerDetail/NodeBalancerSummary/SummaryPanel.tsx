@@ -32,7 +32,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   titleWrapper: {},
   NBsummarySection: {
     [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing.unit * 3 + 24
+      marginTop: theme.spacing(3) + 24
     }
   },
   IPgrouping: {

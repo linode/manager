@@ -24,7 +24,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   status: {
     textTransform: 'capitalize',
-    marginBottom: theme.spacing.unit,
+    marginBottom: theme.spacing(1),
     color: theme.palette.text.primary,
     fontSize: '.92rem'
   }

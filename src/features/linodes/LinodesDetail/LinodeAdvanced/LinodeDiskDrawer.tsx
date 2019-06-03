@@ -27,8 +27,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   section: {},
   divider: {
-    margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px 0 `,
-    width: `calc(100% - ${theme.spacing.unit * 2}px)`
+    margin: `${theme.spacing(2)}px ${theme.spacing(1)}px 0 `,
+    width: `calc(100% - ${theme.spacing(2)}px)`
   }
 });
 

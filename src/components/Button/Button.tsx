@@ -51,8 +51,8 @@ const styles: StyleRulesCallback = theme => ({
       fontSize: '.9rem',
       border: 0,
       color: '#C44742',
-      padding: `${theme.spacing.unit * 2 + 2}px  ${theme.spacing.unit * 2 +
-        2}px ${theme.spacing.unit * 3 + 2}px ${theme.spacing.unit * 2 + 2}px`,
+      padding: `${theme.spacing(2) + 2}px  ${theme.spacing(2) +
+        2}px ${theme.spacing(3) + 2}px ${theme.spacing(2) + 2}px`,
       transition: theme.transitions.create(['color', 'border-color']),
       '&:hover, &:focus': {
         color: '#DF6560'
@@ -67,8 +67,8 @@ const styles: StyleRulesCallback = theme => ({
       right: 0,
       bottom: 0,
       margin: '0 auto',
-      width: theme.spacing.unit + 14,
-      height: theme.spacing.unit + 14,
+      width: theme.spacing(1) + 14,
+      height: theme.spacing(1) + 14,
       animation: 'rotate 2s linear infinite'
     }
   },
@@ -101,8 +101,8 @@ const styles: StyleRulesCallback = theme => ({
     }
   },
   compact: {
-    paddingLeft: theme.spacing.unit * 2 - 2,
-    paddingRight: theme.spacing.unit * 2 - 2
+    paddingLeft: theme.spacing(2) - 2,
+    paddingRight: theme.spacing(2) - 2
   },
   hidden: {
     visibility: 'hidden'

@@ -151,19 +151,19 @@ const styles: StyleRulesCallback = theme => ({
   content: {
     flex: 1,
     [theme.breakpoints.up('md')]: {
-      marginLeft: theme.spacing.unit * 14 + 103 // 215
+      marginLeft: theme.spacing(14) + 103 // 215
     },
     [theme.breakpoints.up('xl')]: {
-      marginLeft: theme.spacing.unit * 22 + 99 // 275
+      marginLeft: theme.spacing(22) + 99 // 275
     }
   },
   wrapper: {
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing(3),
     transition: theme.transitions.create('opacity'),
     [theme.breakpoints.down('sm')]: {
-      paddingTop: theme.spacing.unit * 2,
-      paddingLeft: theme.spacing.unit * 2,
-      paddingRight: theme.spacing.unit * 2
+      paddingTop: theme.spacing(2),
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2)
     }
   },
   grid: {

@@ -14,7 +14,7 @@ type ClassNames = 'helperText' | 'confirmationDialog';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   helperText: {
-    marginBottom: theme.spacing.unit * 3
+    marginBottom: theme.spacing(3)
   },
   confirmationDialog: {
     paddingBottom: 0,

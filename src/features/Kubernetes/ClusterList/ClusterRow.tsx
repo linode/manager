@@ -25,7 +25,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   clusterDescription: {
-    paddingTop: theme.spacing.unit / 2
+    paddingTop: theme.spacing(1) / 2
   }
 });
 

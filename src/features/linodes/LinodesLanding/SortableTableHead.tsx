@@ -15,7 +15,7 @@ type ClassNames = 'root' | 'label' | 'tagHeader';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   label: {
-    paddingLeft: theme.spacing.unit * 2 + 49
+    paddingLeft: theme.spacing(2) + 49
   },
   tagHeader: {
     textAlign: 'center'

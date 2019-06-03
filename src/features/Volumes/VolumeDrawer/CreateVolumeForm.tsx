@@ -41,7 +41,7 @@ type ClassNames = 'copy';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   copy: {
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing(1)
   }
 });
 

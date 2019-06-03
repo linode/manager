@@ -42,16 +42,16 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   inner: {},
   divider: {
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1)
   },
   backendIPAction: {
     display: 'flex',
     alignItems: 'flex-end',
-    paddingLeft: theme.spacing.unit * 2,
-    marginLeft: -theme.spacing.unit,
+    paddingLeft: theme.spacing(2),
+    marginLeft: -theme.spacing(1),
     [theme.breakpoints.down('md')]: {
-      marginTop: -theme.spacing.unit
+      marginTop: -theme.spacing(1)
     },
     [theme.breakpoints.down('xs')]: {
       marginTop: 0
@@ -99,7 +99,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     color: theme.color.label
   },
   statusChip: {
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing(1),
     color: 'white',
     '&.undefined': {
       backgroundColor: theme.color.grey2,
@@ -107,7 +107,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   passiveChecks: {
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing(1)
   }
 });
 

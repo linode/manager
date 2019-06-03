@@ -30,7 +30,7 @@ const styles: StyleRulesCallback = theme => ({
   },
   caret: {
     color: theme.palette.primary.main,
-    marginRight: theme.spacing.unit / 2,
+    marginRight: theme.spacing(1) / 2,
     fontSize: 28,
     transition: 'transform .1s ease-in-out',
     '&.rotate': {

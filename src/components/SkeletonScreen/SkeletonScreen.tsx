@@ -24,8 +24,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     flexWrap: 'wrap',
     '& .line': {
       width: '100%',
-      height: theme.spacing.unit * 2,
-      marginTop: theme.spacing.unit,
+      height: theme.spacing(2),
+      marginTop: theme.spacing(1),
       backgroundImage: `
         linear-gradient(
           90deg,
@@ -40,7 +40,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   tableCol1: {
     width: '20%',
     minWidth: 100,
-    paddingRight: theme.spacing.unit * 3,
+    paddingRight: theme.spacing(3),
     '& .line': {
       height: 40
     }

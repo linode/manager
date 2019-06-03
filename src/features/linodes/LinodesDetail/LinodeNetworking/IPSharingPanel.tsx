@@ -34,11 +34,11 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   addNewButton: {
-    marginTop: theme.spacing.unit * 3,
-    marginBottom: -theme.spacing.unit * 2
+    marginTop: theme.spacing(3),
+    marginBottom: -theme.spacing(2)
   },
   containerDivider: {
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing(1)
   },
   ipField: {
     width: '100%',
@@ -47,15 +47,15 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   ipFieldLabel: {
     width: '100%',
     [theme.breakpoints.up('sm')]: {
-      width: `calc(175px + ${theme.spacing.unit * 2}px)`
+      width: `calc(175px + ${theme.spacing(2)}px)`
     }
   },
   noIPsMessage: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing(2),
     color: theme.color.grey1
   },
   networkActionText: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   },
   removeCont: {
     [theme.breakpoints.down('xs')]: {
@@ -63,7 +63,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   addNewIP: {
-    marginLeft: -(theme.spacing.unit + theme.spacing.unit / 2)
+    marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2)
   },
   remove: {
     [theme.breakpoints.down('xs')]: {

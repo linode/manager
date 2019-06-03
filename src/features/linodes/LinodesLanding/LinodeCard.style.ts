@@ -34,18 +34,18 @@ export type StyleProps = WithStyles<ClassNames> & WithTheme;
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   customeMQ: {
     '@media (min-width: 600px) and (max-width: 680px)': {
-      paddingLeft: theme.spacing.unit * 2,
-      paddingRight: theme.spacing.unit * 2
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2)
     },
     '@media (min-width: 1280px) and (max-width: 1400px)': {
-      paddingLeft: theme.spacing.unit * 2,
-      paddingRight: theme.spacing.unit * 2
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2)
     }
   },
   cardSection: {
     ...theme.typography.body1,
-    marginBottom: theme.spacing.unit,
-    paddingTop: theme.spacing.unit,
+    marginBottom: theme.spacing(1),
+    paddingTop: theme.spacing(1),
     paddingLeft: 3,
     paddingRight: 3,
     color: theme.palette.text.primary
@@ -57,13 +57,13 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     position: 'relative',
     '& .title': {
       minHeight: 48,
-      padding: `0 ${theme.spacing.unit * 3}px`
+      padding: `0 ${theme.spacing(3)}px`
     }
   },
   cardHeader: {
     fontFamily: theme.font.bold,
     color: 'black',
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing(1),
     // This is necessary for text to ellipsis responsively
     // without the need for a hard set width value that won't play well with flexbox.
     minWidth: 0
@@ -80,11 +80,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     height: '100%'
   },
   distroIcon: {
-    marginTop: theme.spacing.unit,
-    width: theme.spacing.unit * 3
+    marginTop: theme.spacing(1),
+    width: theme.spacing(3)
   },
   rightMargin: {
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing(1)
   },
   actionMenu: {
     position: 'relative',
@@ -126,7 +126,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     fontSize: '1.1rem',
     textTransform: 'capitalize',
     position: 'relative',
-    top: -theme.spacing.unit * 2
+    top: -theme.spacing(2)
   },
   flagContainer: {
     padding: 0,

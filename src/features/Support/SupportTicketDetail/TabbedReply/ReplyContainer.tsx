@@ -31,8 +31,8 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    paddingLeft: theme.spacing.unit,
-    paddingRight: theme.spacing.unit
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1)
   },
   inner: {
     padding: 0
@@ -46,19 +46,19 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   referenceRoot: {
     '& > p': {
-      marginBottom: theme.spacing.unit
+      marginBottom: theme.spacing(1)
     }
   },
   reference: {
     // backgroundColor: theme.palette.divider,
     [theme.breakpoints.up('sm')]: {
-      marginTop: theme.spacing.unit * 7,
-      marginRight: theme.spacing.unit / 2,
-      marginLeft: theme.spacing.unit / 2,
+      marginTop: theme.spacing(7),
+      marginRight: theme.spacing(1) / 2,
+      marginLeft: theme.spacing(1) / 2,
       padding: `0 !important`
     },
     [theme.breakpoints.down('xs')]: {
-      padding: `${theme.spacing.unit * 2}px !important`
+      padding: `${theme.spacing(2)}px !important`
     }
   }
 });

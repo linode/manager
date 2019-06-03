@@ -42,7 +42,7 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   containerDivider: {
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing(1)
   },
   mobileFieldWrapper: {
     [theme.breakpoints.down('xs')]: {
@@ -59,7 +59,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   ipFieldLabel: {
     width: '100%',
     [theme.breakpoints.up('sm')]: {
-      width: `calc(175px + ${theme.spacing.unit * 2}px)`
+      width: `calc(175px + ${theme.spacing(2)}px)`
     }
   },
   actionsLabel: {
@@ -75,10 +75,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   networkActionText: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   },
   emptyStateText: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing(2),
     color: theme.color.grey1
   }
 });

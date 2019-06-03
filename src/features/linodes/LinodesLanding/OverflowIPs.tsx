@@ -13,14 +13,14 @@ type CSSClasses = 'chip' | 'label' | 'popover';
 const styles: StyleRulesCallback<CSSClasses> = theme => ({
   chip: {
     height: theme.typography.body1.fontSize,
-    marginLeft: theme.spacing.unit / 2
+    marginLeft: theme.spacing(1) / 2
   },
   label: {
-    paddingLeft: theme.spacing.unit,
-    paddingRight: theme.spacing.unit
+    paddingLeft: theme.spacing(1),
+    paddingRight: theme.spacing(1)
   },
   popover: {
-    padding: theme.spacing.unit * 2
+    padding: theme.spacing(2)
   }
 });
 

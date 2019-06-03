@@ -29,18 +29,18 @@ type ClassNames = 'root' | 'title' | 'inner' | 'expPanelButton';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing(3)
   },
   title: {
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit * 2
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(2)
   },
   inner: {
-    paddingBottom: theme.spacing.unit * 3
+    paddingBottom: theme.spacing(3)
   },
   expPanelButton: {
     padding: 0,
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing(2)
   }
 });
 

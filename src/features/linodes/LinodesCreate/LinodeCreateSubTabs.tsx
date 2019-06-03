@@ -25,11 +25,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     backgroundColor: theme.color.white
   },
   inner: {
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 2}px 0 ${theme
-      .spacing.unit * 2}px`,
+    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px 0 ${theme
+      .spacing(2)}px`,
     [theme.breakpoints.up('sm')]: {
-      padding: `${theme.spacing.unit * 3}px ${theme.spacing.unit *
-        3}px 0 ${theme.spacing.unit * 3}px`
+      padding: `${theme.spacing(3)}px ${theme.spacing(3)}px 0 ${theme.spacing(3)}px`
     }
   }
 });

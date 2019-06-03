@@ -15,7 +15,7 @@ type ClassNames = 'emptyText';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   emptyText: {
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`,
+    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
     fontFamily: theme.font.bold
   }
 });

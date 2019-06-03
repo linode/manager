@@ -21,7 +21,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   CSVlinkContainer: {
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing(1)
   }
 });
 

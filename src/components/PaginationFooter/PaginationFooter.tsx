@@ -14,10 +14,10 @@ type ClassNames = 'root' | 'padded';
 const styles: StyleRulesCallback<ClassNames> = theme => {
   return {
     root: {
-      marginTop: theme.spacing.unit
+      marginTop: theme.spacing(1)
     },
     padded: {
-      padding: `0 ${theme.spacing.unit * 2}px ${theme.spacing.unit}px`
+      padding: `0 ${theme.spacing(2)}px ${theme.spacing(1)}px`
     }
   };
 };

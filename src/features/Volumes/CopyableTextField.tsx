@@ -16,7 +16,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     backgroundColor: theme.bg.offWhite
   },
   copyIcon: {
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing(1)
   }
 });
 

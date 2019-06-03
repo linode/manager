@@ -35,7 +35,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     paddingLeft: 65
   },
   confirmationCopy: {
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing(1)
   }
 });
 

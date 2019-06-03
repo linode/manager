@@ -42,25 +42,25 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    padding: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit * 2
+    padding: theme.spacing(3),
+    paddingBottom: theme.spacing(2)
   },
   checkbox: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing(3)
   },
   toolTip: {
-    paddingTop: theme.spacing.unit
+    paddingTop: theme.spacing(1)
   },
   title: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   },
   subTitle: {
-    marginTop: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(1)
   },
   currentPlanContainer: {
     '& .selectionCard': {
-      padding: `0 ${theme.spacing.unit}px 0 0`,
+      padding: `0 ${theme.spacing(1)}px 0 0`,
       cursor: 'not-allowed',
       '& > div, &:focus > div': {
         backgroundColor: theme.bg.main,

@@ -37,31 +37,31 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     flexGrow: 1,
     width: '100%',
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit * 3,
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(3),
     backgroundColor: theme.color.white
   },
   deleteRoot: {
     flexGrow: 1,
     width: '100%',
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing(3),
     backgroundColor: theme.color.white
   },
   inner: {
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing(3)
   },
   field: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing(3)
   },
   topMargin: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing(2)
   },
   emailField: {
-    marginTop: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 2
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(2)
   },
   emailAddress: {
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing(1)
   }
 });
 

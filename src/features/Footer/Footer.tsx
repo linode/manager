@@ -28,10 +28,10 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
       alignItems: 'flex-start'
     },
     [theme.breakpoints.up('md')]: {
-      paddingLeft: theme.spacing.unit * 17 + 79 // 215
+      paddingLeft: theme.spacing(17) + 79 // 215
     },
     [theme.breakpoints.up('xl')]: {
-      paddingLeft: theme.spacing.unit * 22 + 99 // 275
+      paddingLeft: theme.spacing(22) + 99 // 275
     }
   },
   version: {
@@ -52,13 +52,13 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
       textDecoration: 'underline'
     },
     [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing.unit,
-      marginRight: theme.spacing.unit
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1)
     }
   },
   feedbackLink: {
     [theme.breakpoints.down('xs')]: {
-      marginBottom: theme.spacing.unit
+      marginBottom: theme.spacing(1)
     },
     [theme.breakpoints.up('xs')]: {
       paddingLeft: 0,
@@ -67,13 +67,13 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   },
   adaLink: {
     padding: '0 !important',
-    marginRight: theme.spacing.unit * 2,
+    marginRight: theme.spacing(2),
     position: 'fixed',
     zIndex: 2,
     right: 0,
     bottom: 8,
     [theme.breakpoints.up('sm')]: {
-      marginRight: theme.spacing.unit * 3
+      marginRight: theme.spacing(3)
     }
   }
 });

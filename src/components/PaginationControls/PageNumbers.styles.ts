@@ -8,7 +8,7 @@ type ClassNames = 'ellipses' | 'ellipsesInner';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   ellipses: {
-    padding: theme.spacing.unit,
+    padding: theme.spacing(1),
     color: theme.color.black,
     backgroundColor: theme.bg.white,
     border: '1px solid ' + `${theme.color.borderPagination}`,

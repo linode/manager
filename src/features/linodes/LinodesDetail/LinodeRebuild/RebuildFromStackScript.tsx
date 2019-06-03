@@ -47,17 +47,17 @@ type ClassNames = 'root' | 'error' | 'emptyImagePanel' | 'emptyImagePanelText';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    paddingTop: theme.spacing.unit * 3
+    paddingTop: theme.spacing(3)
   },
   error: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing(2)
   },
   emptyImagePanel: {
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing(3)
   },
   emptyImagePanelText: {
-    marginTop: theme.spacing.unit,
-    padding: `${theme.spacing.unit}px 0`
+    marginTop: theme.spacing(1),
+    padding: `${theme.spacing(1)}px 0`
   }
 });
 

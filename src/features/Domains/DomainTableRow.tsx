@@ -39,7 +39,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     wordBreak: 'break-all'
   },
   tagWrapper: {
-    marginTop: theme.spacing.unit / 2,
+    marginTop: theme.spacing(1) / 2,
     '& [class*="MuiChip"]': {
       cursor: 'pointer'
     }

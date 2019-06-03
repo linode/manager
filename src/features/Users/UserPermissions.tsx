@@ -45,7 +45,7 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   topGrid: {
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing(1)
   },
   titleWrapper: {
     marginTop: 0,
@@ -63,18 +63,18 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   unrestrictedRoot: {
-    marginTop: theme.spacing.unit * 2,
-    padding: theme.spacing.unit * 3
+    marginTop: theme.spacing(2),
+    padding: theme.spacing(3)
   },
   globalSection: {
-    marginTop: theme.spacing.unit * 2,
-    padding: theme.spacing.unit * 3
+    marginTop: theme.spacing(2),
+    padding: theme.spacing(3)
   },
   globalRow: {
-    padding: `${theme.spacing.unit}px 0`
+    padding: `${theme.spacing(1)}px 0`
   },
   section: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing(2),
     paddingBottom: 0
   },
   grantTable: {
@@ -84,15 +84,15 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   tableSubheading: {
-    marginTop: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 2
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(2)
   },
   selectAll: {
     cursor: 'pointer'
   },
   setAll: {
     width: 300,
-    marginTop: theme.spacing.unit / 2,
+    marginTop: theme.spacing(1) / 2,
     '& .react-select__menu': {
       maxWidth: 153,
       right: 0

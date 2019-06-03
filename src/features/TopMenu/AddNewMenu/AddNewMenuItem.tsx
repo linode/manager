@@ -16,10 +16,10 @@ const styles: StyleRulesCallback = theme => ({
     }
   },
   root: {
-    paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 2,
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 2,
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(2),
     borderBottom: `1px solid ${theme.palette.divider}`,
     maxWidth: '350px',
     display: 'flex',
@@ -43,8 +43,8 @@ const styles: StyleRulesCallback = theme => ({
   content: {
     display: 'flex',
     flexDirection: 'column',
-    paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 2
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2)
   },
   titleLink: {
     textDecoration: 'none',

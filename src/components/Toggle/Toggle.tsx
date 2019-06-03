@@ -15,7 +15,7 @@ type CSSClasses = 'root' | 'checked' | 'disabled';
 
 const styles: StyleRulesCallback<CSSClasses> = theme => ({
   root: {
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing(1)
   },
   checked: {},
   disabled: {}

@@ -17,7 +17,7 @@ type ClassNames = 'root' | 'warning';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   warning: {
-    marginTop: theme.spacing.unit * 2,
+    marginTop: theme.spacing(2),
     marginLeft: '0 !important'
   }
 });

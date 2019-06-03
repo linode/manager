@@ -34,7 +34,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     }
   },
   root: {
-    marginBottom: theme.spacing.unit / 2,
+    marginBottom: theme.spacing(1) / 2,
     width: '100%',
     maxWidth: '100%',
     '&:last-child': {
@@ -53,14 +53,14 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   },
   multipleAddresses: {
     '&:not(:last-child)': {
-      marginBottom: theme.spacing.unit / 2
+      marginBottom: theme.spacing(1) / 2
     }
   },
   left: {
-    marginLeft: theme.spacing.unit
+    marginLeft: theme.spacing(1)
   },
   right: {
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing(1),
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center'

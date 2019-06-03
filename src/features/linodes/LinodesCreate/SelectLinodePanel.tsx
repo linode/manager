@@ -26,13 +26,13 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     flexGrow: 1,
     width: '100%',
     backgroundColor: theme.color.white,
-    marginBottom: theme.spacing.unit * 3
+    marginBottom: theme.spacing(3)
   },
   inner: {
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing(3)
   },
   panelBody: {
-    padding: `${theme.spacing.unit * 2}px 0 0`
+    padding: `${theme.spacing(2)}px 0 0`
   }
 });
 

@@ -13,7 +13,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     backgroundColor: theme.bg.white,
     border: '1px solid ' + `${theme.color.borderPagination}`,
     borderRight: 0,
-    padding: theme.spacing.unit,
+    padding: theme.spacing(1),
     minWidth: 40,
     height: 40,
     color: theme.palette.primary.main,

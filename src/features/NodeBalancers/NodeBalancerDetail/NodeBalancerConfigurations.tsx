@@ -61,11 +61,11 @@ type ClassNames = 'root' | 'title' | 'port' | 'nbStatuses';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   title: {
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit * 2
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(2)
   },
   port: {
-    marginRight: theme.spacing.unit * 2
+    marginRight: theme.spacing(2)
   },
   nbStatuses: {
     display: 'block',

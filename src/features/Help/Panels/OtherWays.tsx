@@ -17,11 +17,11 @@ type ClassNames = 'root' | 'wrapper' | 'heading';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   wrapper: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing(2)
   },
   heading: {
     textAlign: 'center',
-    marginBottom: theme.spacing.unit * 4
+    marginBottom: theme.spacing(4)
   }
 });
 

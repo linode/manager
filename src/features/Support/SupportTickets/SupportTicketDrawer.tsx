@@ -50,10 +50,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   suffix: {
     fontSize: '.9rem',
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing(1)
   },
   actionPanel: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing(2)
   },
   expPanelSummary: {
     backgroundColor: theme.bg.offWhite,
@@ -64,11 +64,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   rootReply: {
     padding: 0,
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   },
   reference: {
     '& > p': {
-      marginBottom: theme.spacing.unit
+      marginBottom: theme.spacing(1)
     }
   }
 });

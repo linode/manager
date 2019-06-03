@@ -35,7 +35,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   labelWrapper: {
     minHeight: 50,
-    paddingTop: theme.spacing.unit / 4
+    paddingTop: theme.spacing(1) / 4
   },
   root: {
     '& h3': {
@@ -52,7 +52,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     width: '70%'
   },
   status: {
-    marginLeft: theme.spacing.unit / 2,
+    marginLeft: theme.spacing(1) / 2,
     position: 'relative',
     top: 0,
     lineHeight: '0.8rem'
@@ -63,10 +63,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     alignItems: 'center'
   },
   loadingStatus: {
-    marginBottom: theme.spacing.unit / 2
+    marginBottom: theme.spacing(1) / 2
   },
   linodeDescription: {
-    paddingTop: theme.spacing.unit / 2
+    paddingTop: theme.spacing(1) / 2
   },
   labelStatusWrapper: {
     display: 'flex',

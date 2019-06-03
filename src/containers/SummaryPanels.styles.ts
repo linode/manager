@@ -45,23 +45,23 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   root: {
     [theme.breakpoints.up('md')]: {
-      paddingLeft: theme.spacing.unit,
-      paddingTop: theme.spacing.unit
+      paddingLeft: theme.spacing(1),
+      paddingTop: theme.spacing(1)
     },
     [theme.breakpoints.up('lg')]: {
-      padding: theme.spacing.unit,
+      padding: theme.spacing(1),
       paddingRight: 0
     }
   },
   title: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   },
   summarySection: {
-    padding: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 3
+    padding: theme.spacing(2),
+    marginBottom: theme.spacing(3)
   },
   section: {
-    marginBottom: theme.spacing.unit,
+    marginBottom: theme.spacing(1),
     ...theme.typography.body1,
     '& .dif': {
       position: 'relative',

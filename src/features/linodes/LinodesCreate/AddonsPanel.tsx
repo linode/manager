@@ -31,26 +31,26 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     flexGrow: 1,
     width: '100%',
-    marginTop: theme.spacing.unit * 3,
+    marginTop: theme.spacing(3),
     backgroundColor: theme.color.white
   },
   flex: {
     flex: 1
   },
   title: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   },
   divider: {
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing(1)
   },
   lastItem: {
     paddingBottom: '0 !important'
   },
   inner: {
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing(3)
   },
   panelBody: {
-    padding: `${theme.spacing.unit * 3}px 0 ${theme.spacing.unit}px`
+    padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`
   },
   label: {
     '& > span:last-child': {
@@ -59,7 +59,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       fontSize: '1rem',
       lineHeight: '1.2em',
       [theme.breakpoints.up('md')]: {
-        marginLeft: theme.spacing.unit * 2
+        marginLeft: theme.spacing(2)
       }
     }
   },
@@ -70,9 +70,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   caption: {
     marginTop: -8,
-    paddingLeft: theme.spacing.unit * 2 + 23, // 39,
+    paddingLeft: theme.spacing(2) + 23, // 39,
     [theme.breakpoints.up('md')]: {
-      paddingLeft: theme.spacing.unit * 4 + 23 // 55
+      paddingLeft: theme.spacing(4) + 23 // 55
     }
   }
 });

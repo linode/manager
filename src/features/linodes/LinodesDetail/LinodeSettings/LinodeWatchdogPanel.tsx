@@ -24,7 +24,7 @@ type ClassNames = 'root' | 'shutDownWatchdog';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   shutDownWatchdog: {
-    margin: `${theme.spacing.unit * 2}px 0`
+    margin: `${theme.spacing(2)}px 0`
   }
 });
 

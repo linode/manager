@@ -18,7 +18,7 @@ type CSSClasses = 'root' | 'title' | 'titleLink' | 'body';
 
 const styles: StyleRulesCallback<CSSClasses> = theme => ({
   root: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing(2)
   },
   title: {},
   titleLink: {
@@ -29,7 +29,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     }
   },
   body: {
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing(1)
   }
 });
 

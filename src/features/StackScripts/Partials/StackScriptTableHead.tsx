@@ -65,7 +65,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     height: 48
   },
   tableHead: {
-    top: theme.spacing.unit * 11
+    top: theme.spacing(11)
   }
 });
 

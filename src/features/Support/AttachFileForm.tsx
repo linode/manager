@@ -20,8 +20,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   attachFileButton: {
     padding: '4px 8px 4px 4px',
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2)
   }
 });
 

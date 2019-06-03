@@ -36,20 +36,20 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    padding: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 3
+    padding: theme.spacing(3),
+    paddingBottom: theme.spacing(2),
+    marginBottom: theme.spacing(3)
   },
   container: {
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
     justifyContent: 'left',
-    marginTop: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 3
+    marginTop: theme.spacing(3),
+    marginBottom: theme.spacing(3)
   },
   title: {
-    marginBottom: theme.spacing.unit
+    marginBottom: theme.spacing(1)
   },
   helpText: {
     maxWidth: 900
@@ -61,7 +61,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   showHideText: {
     fontSize: '1rem',
-    marginLeft: theme.spacing.unit * 2,
+    marginLeft: theme.spacing(2),
     color: theme.palette.text.primary
   }
 });

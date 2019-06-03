@@ -26,16 +26,16 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   root: {
-    minHeight: theme.spacing.unit * 16,
+    minHeight: theme.spacing(16),
     position: 'relative',
-    padding: `${theme.spacing.unit * 3}px 0`,
+    padding: `${theme.spacing(3)}px 0`,
     '&:last-of-type + hr': {
       display: 'none'
     },
     '& .toggleLabel > span:last-child': {
       position: 'absolute',
-      left: `calc(58px + ${theme.spacing.unit * 4}px)`,
-      top: theme.spacing.unit * 5,
+      left: `calc(58px + ${theme.spacing(4)}px)`,
+      top: theme.spacing(5),
       ...theme.typography.h3
     }
   },
@@ -48,7 +48,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       flexBasis: '100%'
     },
     [theme.breakpoints.up('md')]: {
-      margin: `${theme.spacing.unit * 4}px ${theme.spacing.unit * 4}px 0`
+      margin: `${theme.spacing(4)}px ${theme.spacing(4)}px 0`
     },
     [theme.breakpoints.up('lg')]: {
       width: 600

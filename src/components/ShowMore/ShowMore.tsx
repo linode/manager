@@ -13,7 +13,7 @@ type CSSClasses = 'chip' | 'label' | 'popover' | 'link';
 const styles: StyleRulesCallback<CSSClasses> = theme => ({
   chip: {
     position: 'relative',
-    marginLeft: theme.spacing.unit / 2,
+    marginLeft: theme.spacing(1) / 2,
     paddingLeft: 2,
     paddingRight: 2,
     backgroundColor: theme.bg.lightBlue,
@@ -42,7 +42,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     minWidth: 'auto',
     maxWidth: 400,
     overflow: 'visible',
-    padding: theme.spacing.unit,
+    padding: theme.spacing(1),
     [theme.breakpoints.down('xs')]: {
       maxWidth: 285
     }

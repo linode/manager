@@ -16,7 +16,7 @@ type ClassNames = 'root' | 'radioGroupLabel';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    margin: `${theme.spacing.unit * 3}px 0 0`
+    margin: `${theme.spacing(3)}px 0 0`
   },
   radioGroupLabel: {
     display: 'block'

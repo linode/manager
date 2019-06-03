@@ -40,7 +40,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginTop: 5
   },
   cta: {
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing(1),
     [theme.breakpoints.down('sm')]: {
       margin: 0,
       display: 'flex',
@@ -48,7 +48,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   button: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   }
 });
 

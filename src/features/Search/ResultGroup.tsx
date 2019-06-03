@@ -33,21 +33,21 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    marginBottom: theme.spacing.unit * 2 + theme.spacing.unit / 2
+    marginBottom: theme.spacing(2) + theme.spacing(1) / 2
   },
   entityHeadingWrapper: {},
   entityHeading: {
-    marginBottom: theme.spacing.unit + 2
+    marginBottom: theme.spacing(1) + 2
   },
   button: {
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing(1),
     width: '10%'
   },
   emptyCell: {
     padding: 0
   },
   headerCell: {
-    padding: `${theme.spacing.unit + 2}px ${theme.spacing.unit / 2}px`
+    padding: `${theme.spacing(1) + 2}px ${theme.spacing(1) / 2}px`
   }
 });
 

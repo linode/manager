@@ -42,7 +42,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginTop: 0,
     '& input': {
       minHeight: 32,
-      padding: theme.spacing.unit
+      padding: theme.spacing(1)
     }
   },
   selectSmall: {

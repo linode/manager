@@ -26,7 +26,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   icon: {
     display: 'inline-block',
     fontSize: '0.8em',
-    marginLeft: theme.spacing.unit / 3
+    marginLeft: theme.spacing(1) / 3
   }
 });
 

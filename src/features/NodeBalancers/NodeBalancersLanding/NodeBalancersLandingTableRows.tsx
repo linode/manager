@@ -19,7 +19,7 @@ type ClassNames = 'tagWrapper' | 'ipsWrapper' | 'icon';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   tagWrapper: {
-    marginTop: theme.spacing.unit / 2,
+    marginTop: theme.spacing(1) / 2,
     '& [class*="MuiChip"]': {
       cursor: 'pointer'
     }

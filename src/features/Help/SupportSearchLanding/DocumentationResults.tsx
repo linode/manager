@@ -30,21 +30,21 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
       }
     },
     noResultsContainer: {
-      padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`
+      padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`
     },
     moreResults: {
       fontSize: '1rem',
       fontWeight: 'bold',
-      marginTop: theme.spacing.unit * 2
+      marginTop: theme.spacing(2)
     },
     icon: {
       color: '#3683DC',
       fontSize: '0.8rem',
-      marginLeft: theme.spacing.unit
+      marginLeft: theme.spacing(1)
     },
     header: {
-      marginTop: theme.spacing.unit * 3,
-      marginBottom: theme.spacing.unit * 2
+      marginTop: theme.spacing(3),
+      marginBottom: theme.spacing(2)
     },
     label: {
       color: '#3683DC'

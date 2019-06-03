@@ -28,7 +28,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     color: `${theme.color.blueDTwhite} !important`
   },
   wrapper: {
-    paddingRight: theme.spacing.unit * 2
+    paddingRight: theme.spacing(2)
   }
 });
 
