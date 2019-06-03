@@ -64,23 +64,3 @@ export default (
       return;
   }
 };
-
-export const getLinkTargets = (entity: Linode.Entity | null) => {
-  if (entity === null) {
-    return '';
-  }
-  switch (entity.type) {
-    case 'linode':
-      return `/linodes/${entity.id}`;
-    case 'domain':
-      return `/domains/${entity.id}`;
-    case 'nodebalancer':
-      return `/nodebalancers/${entity.id}`;
-    case 'longview':
-      return '/longview';
-    case 'volume':
-      return '/volumes';
-    default:
-      return '';
-  }
-};

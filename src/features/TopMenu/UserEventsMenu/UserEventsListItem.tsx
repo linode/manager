@@ -72,9 +72,9 @@ export interface Props {
   success?: boolean;
   warning?: boolean;
   error?: boolean;
-  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   className?: any;
   linkPath: string | undefined;
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -87,9 +87,9 @@ const userEventsListItem: React.StatelessComponent<CombinedProps> = props => {
     warning,
     success,
     error,
-    onClick,
     className,
-    linkPath
+    linkPath,
+    onClick
   } = props;
 
   return (
