@@ -1,10 +1,11 @@
 import * as classNames from 'classnames';
 import { compose } from 'ramda';
 import * as React from 'react';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 import RenderGuard from 'src/components/RenderGuard';
 

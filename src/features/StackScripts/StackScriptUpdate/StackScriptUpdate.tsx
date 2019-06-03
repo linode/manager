@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -8,11 +9,7 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -35,25 +32,25 @@ type ClassNames = 'root' | 'backButton' | 'titleWrapper' | 'createTitle';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  backButton: {
-    margin: '5px 0 0 -16px',
-    '& svg': {
-      width: 34,
-      height: 34
+    root: {},
+    backButton: {
+      margin: '5px 0 0 -16px',
+      '& svg': {
+        width: 34,
+        height: 34
+      }
+    },
+    createTitle: {
+      lineHeight: '2.25em'
+    },
+    titleWrapper: {
+      display: 'flex',
+      marginTop: 5,
+      marginBottom: 20,
+      alignItems: 'center',
+      wordBreak: 'break-all'
     }
-  },
-  createTitle: {
-    lineHeight: '2.25em'
-  },
-  titleWrapper: {
-    display: 'flex',
-    marginTop: 5,
-    marginBottom: 20,
-    alignItems: 'center',
-    wordBreak: 'break-all'
-  }
-});
+  });
 
 interface PreloadedProps {
   stackScript: { response: Linode.StackScript.Response };

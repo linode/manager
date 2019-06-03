@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -5,11 +6,7 @@ import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
@@ -40,42 +37,42 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    marginBottom: theme.spacing(3)
-  },
-  table: {
-    flexGrow: 1,
-    width: '100%',
-    backgroundColor: theme.color.white
-  },
-  selecting: {
-    minHeight: '400px',
-    maxHeight: '1000px',
-    overflowY: 'scroll',
-    paddingTop: 0
-  },
-  link: {
-    display: 'block',
-    textAlign: 'right',
-    marginBottom: 24,
-    marginTop: theme.spacing(1)
-  },
-  panel: {
-    flexGrow: 1,
-    width: '100%',
-    backgroundColor: theme.color.white,
-    marginBottom: theme.spacing(3)
-  },
-  inner: {
-    padding: theme.spacing(2),
-    paddingTop: 0,
-    [theme.breakpoints.up('sm')]: {
-      padding: theme.spacing(3),
+    root: {
+      marginBottom: theme.spacing(3)
+    },
+    table: {
+      flexGrow: 1,
+      width: '100%',
+      backgroundColor: theme.color.white
+    },
+    selecting: {
+      minHeight: '400px',
+      maxHeight: '1000px',
+      overflowY: 'scroll',
       paddingTop: 0
-    }
-  },
-  header: {}
-});
+    },
+    link: {
+      display: 'block',
+      textAlign: 'right',
+      marginBottom: 24,
+      marginTop: theme.spacing(1)
+    },
+    panel: {
+      flexGrow: 1,
+      width: '100%',
+      backgroundColor: theme.color.white,
+      marginBottom: theme.spacing(3)
+    },
+    inner: {
+      padding: theme.spacing(2),
+      paddingTop: 0,
+      [theme.breakpoints.up('sm')]: {
+        padding: theme.spacing(3),
+        paddingTop: 0
+      }
+    },
+    header: {}
+  });
 
 interface Props extends RenderGuardProps {
   selectedId: number | undefined;

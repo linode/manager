@@ -1,13 +1,10 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import AddNewLink from 'src/components/AddNewLink';
 import CircleProgress from 'src/components/CircleProgress';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
@@ -19,11 +16,11 @@ type ClassNames = 'root' | 'title';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  title: {
-    marginBottom: theme.spacing(1) + theme.spacing(1) / 2
-  }
-});
+    root: {},
+    title: {
+      marginBottom: theme.spacing(1) + theme.spacing(1) / 2
+    }
+  });
 
 type CombinedProps = WithImagesProps &
   WithStyles<ClassNames> &

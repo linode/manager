@@ -1,10 +1,7 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import AccessPanel from 'src/components/AccessPanel';
-import {
-  createStyles,
-  WithStyles,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 
@@ -12,11 +9,11 @@ type ClassNames = 'root' | 'accessPanel';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  accessPanel: {
-    marginTop: 0
-  }
-});
+    root: {},
+    accessPanel: {
+      marginTop: 0
+    }
+  });
 
 interface Props {
   isPassword?: boolean;

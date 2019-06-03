@@ -1,12 +1,9 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Button from 'src/components/core/Button';
-import {
-  createStyles,
-  WithStyles,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 
@@ -14,14 +11,14 @@ type ClassNames = 'helperText' | 'confirmationDialog';
 
 const styles = (theme: Theme) =>
   createStyles({
-  helperText: {
-    marginBottom: theme.spacing(3)
-  },
-  confirmationDialog: {
-    paddingBottom: 0,
-    marginBottom: 0
-  }
-});
+    helperText: {
+      marginBottom: theme.spacing(3)
+    },
+    confirmationDialog: {
+      paddingBottom: 0,
+      marginBottom: 0
+    }
+  });
 
 interface Props {
   objectStorageKey: Linode.ObjectStorageKey | null;

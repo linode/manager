@@ -1,14 +1,11 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import timezones from 'src/assets/timezones/timezones';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  WithStyles,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
@@ -21,16 +18,16 @@ type ClassNames = 'root' | 'title';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    padding: theme.spacing(3),
-    paddingBottom: theme.spacing(3),
-    marginTop: theme.spacing(3)
-  },
-  select: {},
-  title: {
-    marginBottom: theme.spacing(2)
-  }
-});
+    root: {
+      padding: theme.spacing(3),
+      paddingBottom: theme.spacing(3),
+      marginTop: theme.spacing(3)
+    },
+    select: {},
+    title: {
+      marginBottom: theme.spacing(2)
+    }
+  });
 
 interface Props {
   timezone: string;

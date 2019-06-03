@@ -1,12 +1,9 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import TagsPanel from 'src/components/TagsPanel';
 import styled, { StyleProps } from 'src/containers/SummaryPanels.styles';
@@ -23,31 +20,31 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  title: {},
-  summarySection: {},
-  section: {},
-  main: {},
-  sidebar: {},
-  domainSidebar: {},
-  titleWrapper: {},
-  NBsummarySection: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing(3) + 24
+    root: {},
+    title: {},
+    summarySection: {},
+    section: {},
+    main: {},
+    sidebar: {},
+    domainSidebar: {},
+    titleWrapper: {},
+    NBsummarySection: {
+      [theme.breakpoints.up('md')]: {
+        marginTop: theme.spacing(3) + 24
+      }
+    },
+    IPgrouping: {
+      margin: '-2px 0 0 2px',
+      display: 'flex',
+      flexDirection: 'column'
+    },
+    nodeTransfer: {
+      marginTop: 12
+    },
+    hostName: {
+      wordBreak: 'break-word'
     }
-  },
-  IPgrouping: {
-    margin: '-2px 0 0 2px',
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  nodeTransfer: {
-    marginTop: 12
-  },
-  hostName: {
-    wordBreak: 'break-word'
-  }
-});
+  });
 
 interface Props {
   nodeBalancer: Linode.ExtendedNodeBalancer;

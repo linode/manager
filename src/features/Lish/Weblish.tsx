@@ -1,11 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import { Terminal } from 'xterm';
 import { getLishSchemeAndHostname, resizeViewPort } from '.';
@@ -14,21 +11,21 @@ type ClassNames = 'progress' | 'message' | 'errorState';
 
 const styles = (theme: Theme) =>
   createStyles({
-  progress: {
-    height: 'auto'
-  },
-  message: {
-    color: 'white',
-    textAlign: 'center',
-    minHeight: '30px',
-    margin: theme.spacing(2)
-  },
-  errorState: {
-    '& *': {
-      color: '#f4f4f4 !important'
+    progress: {
+      height: 'auto'
+    },
+    message: {
+      color: 'white',
+      textAlign: 'center',
+      minHeight: '30px',
+      margin: theme.spacing(2)
+    },
+    errorState: {
+      '& *': {
+        color: '#f4f4f4 !important'
+      }
     }
-  }
-});
+  });
 
 interface Props {
   linode: Linode.Linode;

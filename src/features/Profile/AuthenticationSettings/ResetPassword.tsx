@@ -1,11 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { LOGIN_ROOT } from 'src/constants';
 
@@ -15,14 +12,14 @@ type CombinedProps = WithStyles<ClassNames>;
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    padding: theme.spacing(3),
-    marginBottom: theme.spacing(3)
-  },
-  button: {
-    marginTop: theme.spacing(3)
-  }
-});
+    root: {
+      padding: theme.spacing(3),
+      marginBottom: theme.spacing(3)
+    },
+    button: {
+      marginTop: theme.spacing(3)
+    }
+  });
 
 const ResetPassword: React.StatelessComponent<CombinedProps> = props => {
   const { classes } = props;

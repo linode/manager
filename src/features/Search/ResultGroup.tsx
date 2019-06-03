@@ -1,16 +1,11 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { isEmpty, splitAt } from 'ramda';
 import * as React from 'react';
-
 import { compose, withStateHandlers } from 'recompose';
-
 import Button from 'src/components/Button';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableHead from 'src/components/core/TableHead';
@@ -33,24 +28,24 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    marginBottom: theme.spacing(2) + theme.spacing(1) / 2
-  },
-  entityHeadingWrapper: {},
-  entityHeading: {
-    marginBottom: theme.spacing(1) + 2
-  },
-  button: {
-    marginTop: theme.spacing(1),
-    width: '10%'
-  },
-  emptyCell: {
-    padding: 0
-  },
-  headerCell: {
-    padding: `${theme.spacing(1) + 2}px ${theme.spacing(1) / 2}px`
-  }
-});
+    root: {
+      marginBottom: theme.spacing(2) + theme.spacing(1) / 2
+    },
+    entityHeadingWrapper: {},
+    entityHeading: {
+      marginBottom: theme.spacing(1) + 2
+    },
+    button: {
+      marginTop: theme.spacing(1),
+      width: '10%'
+    },
+    emptyCell: {
+      padding: 0
+    },
+    headerCell: {
+      padding: `${theme.spacing(1) + 2}px ${theme.spacing(1) / 2}px`
+    }
+  });
 
 interface Props {
   entity: string;

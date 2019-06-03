@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import * as classNames from 'classnames';
@@ -6,11 +7,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Menu from 'src/components/core/Menu';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EntityIcon from 'src/components/EntityIcon';
 import MenuItem from 'src/components/MenuItem';
@@ -34,82 +31,82 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0
+    '@keyframes fadeIn': {
+      from: {
+        opacity: 0
+      },
+      to: {
+        opacity: 1
+      }
     },
-    to: {
-      opacity: 1
-    }
-  },
-  root: {
-    '& svg': {
-      transition: theme.transitions.create(['color'])
-    }
-  },
-  button: {
-    position: 'relative',
-    transition: theme.transitions.create(['color', 'border-color']),
-    minWidth: 145,
-    padding: `${theme.spacing(1) - 2}px ${theme.spacing(1)}px`,
-    '&:hover': {
-      textDecoration: 'underline'
+    root: {
+      '& svg': {
+        transition: theme.transitions.create(['color'])
+      }
     },
-    '&:hover, &.active': {
-      borderColor: theme.palette.primary.light,
-      backgroundColor: 'transparent'
-    }
-  },
-  buttonText: {
-    marginLeft: theme.spacing(1)
-  },
-  caret: {
-    color: theme.palette.primary.main,
-    transition: theme.transitions.create(['color']),
-    position: 'relative',
-    top: 2,
-    left: 2,
-    marginLeft: theme.spacing(1) / 2
-  },
-  caretDisabled: {
-    color: theme.color.disabledText
-  },
-  menuItem: {
-    color: theme.palette.primary.main,
-    padding: theme.spacing(2),
-    outline: 0,
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    '&:not(.hasTooltip)': {
-      '&:hover, &:focus': {
-        '& $buttonText': {
-          color: 'white'
-        },
-        '& svg': {
-          fill: '#FFF'
-        },
-        '& .insidePath *, ': {
-          stroke: '#fff'
-        },
-        '& svg:not(.loading) .outerCircle': {
-          stroke: '#fff'
+    button: {
+      position: 'relative',
+      transition: theme.transitions.create(['color', 'border-color']),
+      minWidth: 145,
+      padding: `${theme.spacing(1) - 2}px ${theme.spacing(1)}px`,
+      '&:hover': {
+        textDecoration: 'underline'
+      },
+      '&:hover, &.active': {
+        borderColor: theme.palette.primary.light,
+        backgroundColor: 'transparent'
+      }
+    },
+    buttonText: {
+      marginLeft: theme.spacing(1)
+    },
+    caret: {
+      color: theme.palette.primary.main,
+      transition: theme.transitions.create(['color']),
+      position: 'relative',
+      top: 2,
+      left: 2,
+      marginLeft: theme.spacing(1) / 2
+    },
+    caretDisabled: {
+      color: theme.color.disabledText
+    },
+    menuItem: {
+      color: theme.palette.primary.main,
+      padding: theme.spacing(2),
+      outline: 0,
+      borderBottom: `1px solid ${theme.palette.divider}`,
+      '&:not(.hasTooltip)': {
+        '&:hover, &:focus': {
+          '& $buttonText': {
+            color: 'white'
+          },
+          '& svg': {
+            fill: '#FFF'
+          },
+          '& .insidePath *, ': {
+            stroke: '#fff'
+          },
+          '& svg:not(.loading) .outerCircle': {
+            stroke: '#fff'
+          }
         }
       }
+    },
+    menuItemInner: {
+      display: 'flex',
+      alignItems: 'center'
+    },
+    buttonInner: {
+      display: 'flex',
+      animation: 'fadeIn .2s ease-in-out',
+      alignItems: 'center'
+    },
+    hidden: {
+      height: 0,
+      padding: 0
     }
-  },
-  menuItemInner: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  buttonInner: {
-    display: 'flex',
-    animation: 'fadeIn .2s ease-in-out',
-    alignItems: 'center'
-  },
-  hidden: {
-    height: 0,
-    padding: 0
-  }
-});
+  });
 
 interface Props {
   id: number;

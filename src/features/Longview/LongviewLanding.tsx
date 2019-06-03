@@ -1,10 +1,7 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { compose } from 'ramda';
 import * as React from 'react';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Placeholder from 'src/components/Placeholder';
@@ -14,8 +11,8 @@ type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {}
-});
+    root: {}
+  });
 
 type CombinedProps = WithStyles<ClassNames>;
 

@@ -1,10 +1,7 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import * as React from 'react';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableHead from 'src/components/core/TableHead';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -24,51 +21,51 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  stackscriptLabel: {},
-  stackscriptTitles: {
-    width: '60%',
-    [theme.breakpoints.up('lg')]: {
-      minWidth: 150
+    root: {},
+    stackscriptLabel: {},
+    stackscriptTitles: {
+      width: '60%',
+      [theme.breakpoints.up('lg')]: {
+        minWidth: 150
+      }
+    },
+    selectingStackscriptTitles: {
+      width: 'calc(100% - 65px)'
+    },
+    deploys: {
+      width: '10%',
+      [theme.breakpoints.up('lg')]: {
+        width: '12%',
+        minWidth: 140
+      }
+    },
+    revisions: {
+      width: '10%',
+      [theme.breakpoints.up('lg')]: {
+        width: '12%',
+        minWidth: 150
+      }
+    },
+    tags: {
+      width: '10%',
+      [theme.breakpoints.up('lg')]: {
+        width: '12%',
+        minWidth: 100
+      }
+    },
+    actionMenu: {
+      width: '10%',
+      [theme.breakpoints.up('lg')]: {
+        width: 65
+      }
+    },
+    tr: {
+      height: 48
+    },
+    tableHead: {
+      top: theme.spacing(11)
     }
-  },
-  selectingStackscriptTitles: {
-    width: 'calc(100% - 65px)'
-  },
-  deploys: {
-    width: '10%',
-    [theme.breakpoints.up('lg')]: {
-      width: '12%',
-      minWidth: 140
-    }
-  },
-  revisions: {
-    width: '10%',
-    [theme.breakpoints.up('lg')]: {
-      width: '12%',
-      minWidth: 150
-    }
-  },
-  tags: {
-    width: '10%',
-    [theme.breakpoints.up('lg')]: {
-      width: '12%',
-      minWidth: 100
-    }
-  },
-  actionMenu: {
-    width: '10%',
-    [theme.breakpoints.up('lg')]: {
-      width: 65
-    }
-  },
-  tr: {
-    height: 48
-  },
-  tableHead: {
-    top: theme.spacing(11)
-  }
-});
+  });
 
 type SortOrder = 'asc' | 'desc';
 

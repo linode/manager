@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -10,11 +11,7 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import MenuItem from 'src/components/core/MenuItem';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
@@ -40,77 +37,77 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  inner: {},
-  divider: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
-  },
-  backendIPAction: {
-    display: 'flex',
-    alignItems: 'flex-end',
-    paddingLeft: theme.spacing(2),
-    marginLeft: -theme.spacing(1),
-    [theme.breakpoints.down('md')]: {
-      marginTop: -theme.spacing(1)
+    root: {},
+    inner: {},
+    divider: {
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(1)
     },
-    [theme.breakpoints.down('xs')]: {
-      marginTop: 0
-    }
-  },
-  suggestionsParent: {
-    position: 'relative'
-  },
-  suggestions: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 80,
-    padding: 0,
-    boxShadow: `0 0 10px ${theme.color.boxShadow}`,
-    maxHeight: 150,
-    overflowY: 'auto',
-    width: '100%',
-    maxWidth: 415,
-    zIndex: 2
-  },
-  suggestionItem: {
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    color: theme.palette.text.primary,
-    '&:hover, &:focus': {
+    backendIPAction: {
+      display: 'flex',
+      alignItems: 'flex-end',
+      paddingLeft: theme.spacing(2),
+      marginLeft: -theme.spacing(1),
+      [theme.breakpoints.down('md')]: {
+        marginTop: -theme.spacing(1)
+      },
+      [theme.breakpoints.down('xs')]: {
+        marginTop: 0
+      }
+    },
+    suggestionsParent: {
+      position: 'relative'
+    },
+    suggestions: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: 80,
+      padding: 0,
+      boxShadow: `0 0 10px ${theme.color.boxShadow}`,
+      maxHeight: 150,
+      overflowY: 'auto',
+      width: '100%',
+      maxWidth: 415,
+      zIndex: 2
+    },
+    suggestionItem: {
+      borderBottom: `1px solid ${theme.palette.divider}`,
+      color: theme.palette.text.primary,
+      '&:hover, &:focus': {
+        backgroundColor: `${theme.palette.primary.main} !important`,
+        color: `white !important`
+      },
+      '&:last-item': {
+        border: 0
+      }
+    },
+    selectedSuggestionItem: {
       backgroundColor: `${theme.palette.primary.main} !important`,
-      color: `white !important`
+      color: '#fff !important'
     },
-    '&:last-item': {
-      border: 0
+    'chip-UP': {
+      backgroundColor: theme.color.green
+    },
+    'chip-DOWN': {
+      backgroundColor: theme.color.red
+    },
+    statusHeader: {
+      fontSize: '.9rem',
+      color: theme.color.label
+    },
+    statusChip: {
+      marginTop: theme.spacing(1),
+      color: 'white',
+      '&.undefined': {
+        backgroundColor: theme.color.grey2,
+        color: theme.palette.text.primary
+      }
+    },
+    passiveChecks: {
+      marginTop: theme.spacing(1)
     }
-  },
-  selectedSuggestionItem: {
-    backgroundColor: `${theme.palette.primary.main} !important`,
-    color: '#fff !important'
-  },
-  'chip-UP': {
-    backgroundColor: theme.color.green
-  },
-  'chip-DOWN': {
-    backgroundColor: theme.color.red
-  },
-  statusHeader: {
-    fontSize: '.9rem',
-    color: theme.color.label
-  },
-  statusChip: {
-    marginTop: theme.spacing(1),
-    color: 'white',
-    '&.undefined': {
-      backgroundColor: theme.color.grey2,
-      color: theme.palette.text.primary
-    }
-  },
-  passiveChecks: {
-    marginTop: theme.spacing(1)
-  }
-});
+  });
 
 const styled = withStyles(styles);
 

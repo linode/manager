@@ -1,9 +1,6 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import NodeBalancerCreationErrors, {
@@ -16,18 +13,18 @@ type ClassNames = 'root' | 'main' | 'sidebar';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  main: {
-    [theme.breakpoints.up('md')]: {
-      order: 1
+    root: {},
+    main: {
+      [theme.breakpoints.up('md')]: {
+        order: 1
+      }
+    },
+    sidebar: {
+      [theme.breakpoints.up('md')]: {
+        order: 2
+      }
     }
-  },
-  sidebar: {
-    [theme.breakpoints.up('md')]: {
-      order: 2
-    }
-  }
-});
+  });
 
 interface Props {
   nodeBalancer: Linode.ExtendedNodeBalancer;

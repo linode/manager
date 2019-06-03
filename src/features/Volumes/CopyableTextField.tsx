@@ -1,10 +1,11 @@
 import * as copy from 'copy-to-clipboard';
 import * as React from 'react';
 import CopyTooltip from 'src/components/CopyTooltip';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 

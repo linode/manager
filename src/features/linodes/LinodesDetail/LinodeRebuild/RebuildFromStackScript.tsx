@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { Formik, FormikProps } from 'formik';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty } from 'ramda';
@@ -8,11 +9,7 @@ import AccessPanel from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -47,20 +44,20 @@ type ClassNames = 'root' | 'error' | 'emptyImagePanel' | 'emptyImagePanelText';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    paddingTop: theme.spacing(3)
-  },
-  error: {
-    marginTop: theme.spacing(2)
-  },
-  emptyImagePanel: {
-    padding: theme.spacing(3)
-  },
-  emptyImagePanelText: {
-    marginTop: theme.spacing(1),
-    padding: `${theme.spacing(1)}px 0`
-  }
-});
+    root: {
+      paddingTop: theme.spacing(3)
+    },
+    error: {
+      marginTop: theme.spacing(2)
+    },
+    emptyImagePanel: {
+      padding: theme.spacing(3)
+    },
+    emptyImagePanelText: {
+      marginTop: theme.spacing(1),
+      padding: `${theme.spacing(1)}px 0`
+    }
+  });
 
 interface Props {
   type: 'community' | 'account';

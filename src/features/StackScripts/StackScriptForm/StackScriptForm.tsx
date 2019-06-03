@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -6,11 +7,7 @@ import FormControl from 'src/components/core/FormControl';
 import InputAdornment from 'src/components/core/InputAdornment';
 import InputLabel from 'src/components/core/InputLabel';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
@@ -37,71 +34,71 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    padding: theme.spacing(2)
-  },
-  backButton: {
-    margin: '5px 0 0 -16px',
-    '& svg': {
-      width: 34,
-      height: 34
-    }
-  },
-  createTitle: {
-    lineHeight: '2.25em'
-  },
-  divider: {
-    margin: `0 0 ${theme.spacing(2)}px 0`,
-    height: 0
-  },
-  labelField: {
-    '& input': {
-      paddingLeft: 0
-    }
-  },
-  titleWrapper: {
-    display: 'flex',
-    marginTop: 5
-  },
-  gridWithTips: {
-    maxWidth: '50%',
-    [theme.breakpoints.down('sm')]: {
-      maxWidth: '100%',
-      width: '100%'
-    }
-  },
-  tips: {
-    marginLeft: theme.spacing(4),
-    marginTop: `${theme.spacing(4)}px !important`,
-    padding: theme.spacing(4),
-    backgroundColor: theme.palette.divider,
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: 0
+    root: {
+      padding: theme.spacing(2)
     },
-    [theme.breakpoints.down('md')]: {
-      paddingLeft: theme.spacing(2)
+    backButton: {
+      margin: '5px 0 0 -16px',
+      '& svg': {
+        width: 34,
+        height: 34
+      }
+    },
+    createTitle: {
+      lineHeight: '2.25em'
+    },
+    divider: {
+      margin: `0 0 ${theme.spacing(2)}px 0`,
+      height: 0
+    },
+    labelField: {
+      '& input': {
+        paddingLeft: 0
+      }
+    },
+    titleWrapper: {
+      display: 'flex',
+      marginTop: 5
+    },
+    gridWithTips: {
+      maxWidth: '50%',
+      [theme.breakpoints.down('sm')]: {
+        maxWidth: '100%',
+        width: '100%'
+      }
+    },
+    tips: {
+      marginLeft: theme.spacing(4),
+      marginTop: `${theme.spacing(4)}px !important`,
+      padding: theme.spacing(4),
+      backgroundColor: theme.palette.divider,
+      [theme.breakpoints.down('lg')]: {
+        marginLeft: 0
+      },
+      [theme.breakpoints.down('md')]: {
+        paddingLeft: theme.spacing(2)
+      }
+    },
+    chipsContainer: {
+      maxWidth: 415
+    },
+    warning: {
+      marginTop: theme.spacing(4)
+    },
+    targetTag: {
+      margin: `${theme.spacing(1)}px ${theme.spacing(1)}px 0 0`
+    },
+    scriptTextarea: {
+      maxWidth: '100%',
+      height: 400,
+      '& textarea': {
+        height: '100%'
+      }
+    },
+    revisionTextarea: {
+      maxWidth: '100%'
     }
-  },
-  chipsContainer: {
-    maxWidth: 415
-  },
-  warning: {
-    marginTop: theme.spacing(4)
-  },
-  targetTag: {
-    margin: `${theme.spacing(1)}px ${theme.spacing(1)}px 0 0`
-  },
-  scriptTextarea: {
-    maxWidth: '100%',
-    height: 400,
-    '& textarea': {
-      height: '100%'
-    }
-  },
-  revisionTextarea: {
-    maxWidth: '100%'
-  }
-});
+  });
 
 interface TextFieldHandler {
   value: string;

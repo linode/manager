@@ -1,10 +1,11 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 import TableCell, { TableCellProps } from 'src/components/core/TableCell';
 

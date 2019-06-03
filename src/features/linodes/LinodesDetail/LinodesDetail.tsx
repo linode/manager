@@ -1,11 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose, withProps } from 'recompose';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import { WithTypes } from 'src/store/linodeType/linodeType.containers';
 import { ThunkDispatch } from 'src/store/types';
 import {
@@ -34,14 +31,14 @@ type ClassNames = 'backButton';
 
 const styles = (theme: Theme) =>
   createStyles({
-  backButton: {
-    margin: `5px 0 0 -${theme.spacing(2)}px`,
-    '& svg': {
-      width: 34,
-      height: 34
+    backButton: {
+      margin: `5px 0 0 -${theme.spacing(2)}px`,
+      '& svg': {
+        width: 34,
+        height: 34
+      }
     }
-  }
-});
+  });
 
 const LinodeDetail: React.StatelessComponent<CombinedProps> = props => {
   const { linode } = props;

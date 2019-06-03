@@ -1,11 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
@@ -22,23 +19,23 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    padding: theme.spacing(3),
-    marginBottom: theme.spacing(3),
-    '& > div:last-child': {
-      border: 0,
-      marginBottom: 0,
-      paddingBottom: 0
-    }
-  },
-  advDescription: {
-    margin: `${theme.spacing(2)}px 0`
-  },
-  username: {
-    color: theme.color.grey1
-  },
-  optionalFieldWrapper: {}
-});
+    root: {
+      padding: theme.spacing(3),
+      marginBottom: theme.spacing(3),
+      '& > div:last-child': {
+        border: 0,
+        marginBottom: 0,
+        paddingBottom: 0
+      }
+    },
+    advDescription: {
+      margin: `${theme.spacing(2)}px 0`
+    },
+    username: {
+      color: theme.color.grey1
+    },
+    optionalFieldWrapper: {}
+  });
 
 interface Props {
   errors?: Linode.ApiFieldError[];

@@ -6,10 +6,11 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 import { TextFieldProps } from 'src/components/core/TextField';
 import Typography, { TypographyProps } from 'src/components/core/Typography';

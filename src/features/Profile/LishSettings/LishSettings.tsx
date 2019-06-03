@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { dec, lensPath, path, remove, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -7,11 +8,7 @@ import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -39,45 +36,45 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    padding: theme.spacing(3),
-    paddingBottom: theme.spacing(3)
-  },
-  title: {
-    marginBottom: theme.spacing(2)
-  },
-  intro: {
-    marginBottom: theme.spacing(2)
-  },
-  modeControl: {
-    display: 'flex'
-  },
-  image: {
-    display: 'flex',
-    flexWrap: 'wrap'
-  },
-  addNew: {
-    marginTop: theme.spacing(2)
-  },
-  sshWrap: {
-    margin: `${theme.spacing(1)}px 0`,
-    [theme.breakpoints.up('md')]: {
+    root: {
+      padding: theme.spacing(3),
+      paddingBottom: theme.spacing(3)
+    },
+    title: {
+      marginBottom: theme.spacing(2)
+    },
+    intro: {
+      marginBottom: theme.spacing(2)
+    },
+    modeControl: {
+      display: 'flex'
+    },
+    image: {
       display: 'flex',
-      alignItems: 'flex-end'
+      flexWrap: 'wrap'
+    },
+    addNew: {
+      marginTop: theme.spacing(2)
+    },
+    sshWrap: {
+      margin: `${theme.spacing(1)}px 0`,
+      [theme.breakpoints.up('md')]: {
+        display: 'flex',
+        alignItems: 'flex-end'
+      }
+    },
+    keyTextarea: {
+      [theme.breakpoints.up('md')]: {
+        minWidth: 415
+      }
+    },
+    remove: {
+      margin: '8px 0 0 -26px',
+      [theme.breakpoints.up('md')]: {
+        margin: `0 0 ${theme.spacing(1) / 2}px 0`
+      }
     }
-  },
-  keyTextarea: {
-    [theme.breakpoints.up('md')]: {
-      minWidth: 415
-    }
-  },
-  remove: {
-    margin: '8px 0 0 -26px',
-    [theme.breakpoints.up('md')]: {
-      margin: `0 0 ${theme.spacing(1) / 2}px 0`
-    }
-  }
-});
+  });
 
 interface State {
   submitting: boolean;

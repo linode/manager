@@ -1,9 +1,10 @@
 import * as React from 'react';
 import Button, { ButtonProps } from 'src/components/Button';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 
 type CSSClasses = 'root';

@@ -2,10 +2,11 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import ListItemText from 'src/components/core/ListItemText';
 import MenuItem, { MenuItemProps } from 'src/components/core/MenuItem';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'error' | 'warning' | 'success';

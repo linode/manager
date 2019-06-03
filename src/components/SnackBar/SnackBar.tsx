@@ -1,9 +1,10 @@
 import { SnackbarProvider, SnackbarProviderProps } from 'notistack';
 import * as React from 'react';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 import { v4 } from 'uuid';
 import CloseSnackbar from './CloseSnackbar';

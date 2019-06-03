@@ -1,10 +1,11 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { defaultTo, flatten } from 'ramda';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
 import { titlecase } from 'src/features/linodes/presentation';

@@ -1,9 +1,10 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import PasswordInput from 'src/components/PasswordInput';

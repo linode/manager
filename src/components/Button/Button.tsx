@@ -3,10 +3,11 @@ import { always, cond, propEq } from 'ramda';
 import * as React from 'react';
 import Reload from 'src/assets/icons/reload.svg';
 import Button, { ButtonProps } from 'src/components/core/Button';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 import HelpIcon from 'src/components/HelpIcon';
 

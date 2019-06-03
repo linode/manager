@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import {
   matchPath,
@@ -7,11 +8,7 @@ import {
   withRouter
 } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import NotFound from 'src/components/NotFound';
@@ -23,33 +20,33 @@ type ClassNames = 'tabs' | 'tabRoot' | 'progress' | 'notFound';
 
 const styles = (theme: Theme) =>
   createStyles({
-  tabs: {
-    backgroundColor: theme.bg.offWhite,
-    margin: 0
-  },
-  tabRoot: {
-    margin: 0,
-    flexBasis: '50%',
-    transition: theme.transitions.create('background-color'),
-    '&[aria-selected="true"]': {
-      backgroundColor: theme.palette.primary.main,
-      color: 'white',
-      '&:hover': {
-        backgroundColor: theme.palette.primary.light,
-        color: 'white'
+    tabs: {
+      backgroundColor: theme.bg.offWhite,
+      margin: 0
+    },
+    tabRoot: {
+      margin: 0,
+      flexBasis: '50%',
+      transition: theme.transitions.create('background-color'),
+      '&[aria-selected="true"]': {
+        backgroundColor: theme.palette.primary.main,
+        color: 'white',
+        '&:hover': {
+          backgroundColor: theme.palette.primary.light,
+          color: 'white'
+        }
+      }
+    },
+    progress: {
+      height: 'auto'
+    },
+    notFound: {
+      color: '#f4f4f4 !important',
+      '& h1': {
+        color: '#f4f4f4 !important'
       }
     }
-  },
-  progress: {
-    height: 'auto'
-  },
-  notFound: {
-    color: '#f4f4f4 !important',
-    '& h1': {
-      color: '#f4f4f4 !important'
-    }
-  }
-});
+  });
 
 interface State {
   loading: boolean;

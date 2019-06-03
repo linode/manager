@@ -2,10 +2,11 @@ import * as moment from 'moment-timezone';
 import { clone, curry } from 'ramda';
 import * as React from 'react';
 import { ChartData, Line } from 'react-chartjs-2';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 import { setUpCharts } from 'src/utilities/charts';
 
