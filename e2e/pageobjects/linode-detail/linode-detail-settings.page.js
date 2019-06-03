@@ -120,7 +120,7 @@ class Settings extends Page {
     remove() {
         /** linode label sourced from the editable text H1 in the header */
         const linodeLabel = browser.getText('[data-qa-editable-text]');
-        const confirmTitle = `Confirm Deletion of ${linodeLabel}`;
+        const confirmTitle = `Delete ${linodeLabel}?`;
         const confirmContent = 'Deleting a Linode will result in permanent data loss. Are you sure?';
         this.delete.click();
         this.deleteDialogTitle.waitForText();
