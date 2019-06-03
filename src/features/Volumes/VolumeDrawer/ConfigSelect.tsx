@@ -2,7 +2,7 @@ import {
   StyleRulesCallback,
   withStyles,
   WithStyles
-} from '@material-ui/core/styles';
+} from '@material-ui/styles';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
