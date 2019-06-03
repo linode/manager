@@ -181,6 +181,9 @@ export class RestoreToLinodeDrawer extends React.Component<
             Linode
           </InputLabel>
           <Select
+            textFieldProps={{
+              'data-qa-select-linode': true
+            }}
             defaultValue={selectedLinode || ''}
             options={linodeList}
             onChange={this.handleSelectLinode}
