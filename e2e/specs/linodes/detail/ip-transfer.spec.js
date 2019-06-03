@@ -46,41 +46,52 @@ describe('Linode Detail - Ip Transfer Suite', () => {
 		Networking.waitForNotice(singlePublicIpError, constants.wait.normal, true);
 	});
 
-	it('should display swap ip action elements', () => {
-		Networking.ipTransferActionMenu.waitForVisible(constants.wait.normal);
-		Networking.ipTransferActionMenus[0].click();
-		Networking.swapIpButton.waitForVisible();
-		Networking.swapIpButton.click();
-		Networking.swapIpButton.waitForVisible(constants.wait.normal, true);
-		Networking.swapIpActionMenu.waitForVisible();
-		Networking.swapIpActionMenu.click();
-		browser.waitForVisible('[data-qa-swap-with]');
-
-		expect(Networking.swapWithIps.length).toBeGreaterThan(1);
-	});
-
 	it('should fail to swap public to private ips', () => {
 		const errorMsg = `${linodeA.id} must have no more than one private IP after assignment.`;
-		const privateIps =
-			Networking.swapWithIps
-				.filter(ip => !!ip.getText().match(/^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/))
-		privateIps[0].click();
 
-		browser.waitForVisible('[data-qa-swap-with]', constants.wait.normal, true);
+		chooseSwapAction();
 
+		/** select the first private IP in the list */
+		selectIP(true);
+
+		/** save the configuration */
 		Networking.ipTransferSave.click();
 		Networking.waitForNotice(errorMsg);
 	});
 
 	it('should successfully swap ips on a valid ip selection', () => {
-		Networking.swapIpActionMenu.click();
-		browser.waitForVisible('[data-qa-swap-with]');
 
-		const publicIps =
-			Networking.swapWithIps
-				.filter(ip => !!!ip.getText().match(/^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/));
-		publicIps[0].click();
-		browser.waitForVisible('[data-qa-swap-with]', constants.wait.normal, true);
+		/** chose swap fromthe dropdown */
+		chooseSwapAction();
+
+		/** click the first public IP in the list */
+		selectIP();
+
+		/** save the configuration */
 		Networking.ipTransferSave.click();
 	});
 });
+
+const chooseSwapAction = () => {
+	/** click the first actions dropdown */
+	Networking.ipTransferActionMenu.waitForVisible(constants.wait.normal);
+	Networking.ipTransferActionMenu.click();
+
+	Networking.swapIpButton.click();
+}
+
+const selectIP = (selectPrivIP = false) => {
+	/** open the IP selection dropdown */
+	const firstIPSelect = $('[data-qa-swap-ip-action-menu]');
+	firstIPSelect.click();
+
+	const filterFn = selectPrivIP === true
+		? ip => !!ip.getText().match(/^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/)
+		: ip => !ip.getText().match(/^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/)
+
+	/** click the first public IP in the list */
+	browser.waitForVisible('[data-qa-option]', constants.wait.normal);
+	const ips = $$(`[data-qa-option]`)
+		.filter(filterFn);
+	ips[0].click();
+}
