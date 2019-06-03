@@ -196,7 +196,12 @@ class UpdateContactInformationPanel extends React.Component<
         <Grid
           item
           xs={12}
-          updateFor={[fields.company, errorMap.company, classes]}
+          updateFor={[
+            account.company,
+            fields.company,
+            errorMap.company,
+            classes
+          ]}
         >
           <Grid container>
             <Grid item xs={12} sm={6}>
@@ -215,7 +220,7 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.email, errorMap.email, classes]}
+          updateFor={[account.email, fields.email, errorMap.email, classes]}
         >
           <TextField
             label="Email"
@@ -231,7 +236,7 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.phone, errorMap.phone, classes]}
+          updateFor={[account.phone, fields.phone, errorMap.phone, classes]}
         >
           <TextField
             label="Phone Number"
@@ -247,7 +252,12 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.first_name, errorMap.first_name, classes]}
+          updateFor={[
+            account.first_name,
+            fields.first_name,
+            errorMap.first_name,
+            classes
+          ]}
         >
           <TextField
             label="First Name"
@@ -262,7 +272,12 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.last_name, errorMap.last_name, classes]}
+          updateFor={[
+            account.last_name,
+            fields.last_name,
+            errorMap.last_name,
+            classes
+          ]}
         >
           <TextField
             label="Last Name"
@@ -277,7 +292,12 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.address_1, errorMap.address_1, classes]}
+          updateFor={[
+            account.address_1,
+            fields.address_1,
+            errorMap.address_1,
+            classes
+          ]}
         >
           <TextField
             label="Address"
@@ -292,7 +312,12 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.address_2, errorMap.address2, classes]}
+          updateFor={[
+            account.address_2,
+            fields.address_2,
+            errorMap.address2,
+            classes
+          ]}
         >
           <TextField
             label="Address 2"
@@ -307,7 +332,7 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.city, errorMap.city, classes]}
+          updateFor={[account.city, fields.city, errorMap.city, classes]}
         >
           <TextField
             label="City"
@@ -367,7 +392,12 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.country, errorMap.country, classes]}
+          updateFor={[
+            account.country,
+            fields.country,
+            errorMap.country,
+            classes
+          ]}
         >
           <EnhancedSelect
             label="Country"
@@ -389,7 +419,7 @@ class UpdateContactInformationPanel extends React.Component<
           item
           xs={12}
           sm={6}
-          updateFor={[fields.tax_id, errorMap.tax_id, classes]}
+          updateFor={[account.tax_id, fields.tax_id, errorMap.tax_id, classes]}
         >
           <TextField
             label="Tax ID"
@@ -515,7 +545,7 @@ class UpdateContactInformationPanel extends React.Component<
 const styled = withStyles(styles);
 
 const withAccount = AccountContainer(
-  (ownProps, accountLoading, accountError, accountData, lastUpdated) => ({
+  (ownProps, accountLoading, lastUpdated, accountError, accountData) => ({
     ...ownProps,
     accountLoading,
     accountError,
