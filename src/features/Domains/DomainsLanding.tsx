@@ -11,9 +11,10 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import FormControlLabel from 'src/components/core/FormControlLabel';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  WithStyles,
+  Theme,
   withStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';

@@ -6,9 +6,10 @@ import { compose } from 'recompose';
 
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  WithStyles,
+  Theme,
   withStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';

@@ -1,10 +1,7 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
@@ -17,12 +14,12 @@ type ClassNames = 'root' | 'loadingWrapper';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  loadingWrapper: {
-    border: 0,
-    paddingTop: 100
-  }
-});
+    root: {},
+    loadingWrapper: {
+      border: 0,
+      paddingTop: 100
+    }
+  });
 
 export interface Props {
   onSelect: (s: Linode.StackScript.Response) => void;

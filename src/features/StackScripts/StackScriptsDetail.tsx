@@ -1,15 +1,11 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { compose, path } from 'ramda';
 import * as React from 'react';
-
 import { RouteComponentProps } from 'react-router-dom';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
@@ -34,24 +30,24 @@ type ClassNames = 'root' | 'titleWrapper' | 'cta' | 'button';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  titleWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    marginTop: 5
-  },
-  cta: {
-    marginTop: theme.spacing(1),
-    [theme.breakpoints.down('sm')]: {
-      margin: 0,
+    root: {},
+    titleWrapper: {
       display: 'flex',
-      flexBasis: '100%'
+      alignItems: 'center',
+      marginTop: 5
+    },
+    cta: {
+      marginTop: theme.spacing(1),
+      [theme.breakpoints.down('sm')]: {
+        margin: 0,
+        display: 'flex',
+        flexBasis: '100%'
+      }
+    },
+    button: {
+      marginBottom: theme.spacing(2)
     }
-  },
-  button: {
-    marginBottom: theme.spacing(2)
-  }
-});
+  });
 
 interface ProfileProps {
   // From Profile container

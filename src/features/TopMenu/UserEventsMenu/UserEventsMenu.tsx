@@ -1,4 +1,5 @@
 import Modal from '@material-ui/core/Modal';
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -6,11 +7,7 @@ import Button from 'src/components/Button';
 import MenuList from 'src/components/core/MenuList';
 import Paper from 'src/components/core/Paper';
 import Popper from 'src/components/core/Popper';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import { getNumUnseenEvents } from 'src/store/events/event.helpers';
 import { markAllSeen } from 'src/store/events/event.request';
 import { MapState, ThunkDispatch } from 'src/store/types';
@@ -22,38 +19,38 @@ type ClassNames = 'root' | 'dropDown' | 'hidden' | 'viewAll';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    boxShadow: `0 0 5px ${theme.color.boxShadow}`,
-    outline: 0,
-    position: 'absolute',
-    right: theme.spacing(2),
-    top: 40 + theme.spacing(4)
-  },
-  dropDown: {
-    outline: 0,
-    overflowY: 'auto',
-    overflowX: 'hidden',
-    minHeight: 16,
-    maxWidth: 250,
-    maxHeight: 360,
-    [theme.breakpoints.up('sm')]: {
-      maxWidth: 450
+    root: {
+      boxShadow: `0 0 5px ${theme.color.boxShadow}`,
+      outline: 0,
+      position: 'absolute',
+      right: theme.spacing(2),
+      top: 40 + theme.spacing(4)
+    },
+    dropDown: {
+      outline: 0,
+      overflowY: 'auto',
+      overflowX: 'hidden',
+      minHeight: 16,
+      maxWidth: 250,
+      maxHeight: 360,
+      [theme.breakpoints.up('sm')]: {
+        maxWidth: 450
+      }
+    },
+    hidden: {
+      height: 0,
+      padding: 0
+    },
+    viewAll: {
+      backgroundColor: theme.bg.offWhiteDT,
+      width: '100%',
+      textAlign: 'left',
+      color: theme.color.headline,
+      '& > span': {
+        justifyContent: 'flex-start'
+      }
     }
-  },
-  hidden: {
-    height: 0,
-    padding: 0
-  },
-  viewAll: {
-    backgroundColor: theme.bg.offWhiteDT,
-    width: '100%',
-    textAlign: 'left',
-    color: theme.color.headline,
-    '& > span': {
-      justifyContent: 'flex-start'
-    }
-  }
-});
+  });
 
 interface State {
   anchorEl?: HTMLElement;

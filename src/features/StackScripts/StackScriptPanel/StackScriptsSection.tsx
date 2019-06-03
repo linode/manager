@@ -1,13 +1,10 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
@@ -29,12 +26,12 @@ type ClassNames = 'root' | 'loadingWrapper';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  loadingWrapper: {
-    border: 0,
-    paddingTop: 100
-  }
-});
+    root: {},
+    loadingWrapper: {
+      border: 0,
+      paddingTop: 100
+    }
+  });
 
 export interface Props {
   data: Linode.StackScript.Response[];

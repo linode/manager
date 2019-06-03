@@ -1,28 +1,25 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
 type ClassNames = 'root' | 'groupBox' | 'groupItem';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    background: theme.bg.tableHeader,
-    padding: theme.spacing(2)
-  },
-  groupBox: {
-    marginTop: theme.spacing(3)
-  },
-  groupItem: {
-    margin: theme.spacing(1)
-  }
-});
+    root: {
+      background: theme.bg.tableHeader,
+      padding: theme.spacing(2)
+    },
+    groupBox: {
+      marginTop: theme.spacing(3)
+    },
+    groupItem: {
+      margin: theme.spacing(1)
+    }
+  });
 
 interface Props {
   entity: 'Linode' | 'Domain';

@@ -1,13 +1,10 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  WithStyles,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { updateProfile } from 'src/services/profile';
@@ -19,14 +16,14 @@ type ClassNames = 'root' | 'title';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    padding: theme.spacing(3),
-    paddingBottom: theme.spacing(3)
-  },
-  title: {
-    marginBottom: theme.spacing(2)
-  }
-});
+    root: {
+      padding: theme.spacing(3),
+      paddingBottom: theme.spacing(3)
+    },
+    title: {
+      marginBottom: theme.spacing(2)
+    }
+  });
 
 interface Props {
   username: string;

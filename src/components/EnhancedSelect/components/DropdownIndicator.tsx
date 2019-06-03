@@ -1,10 +1,11 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import * as React from 'react';
 import { IndicatorProps } from 'react-select/lib/components/indicators';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'enhancedSelectDropdown';

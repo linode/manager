@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { any, last, pathOr } from 'ramda';
 import * as React from 'react';
@@ -12,11 +13,7 @@ import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import AppBar from 'src/components/core/AppBar';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import setDocs from 'src/components/DocsSidebar/setDocs';
@@ -50,20 +47,20 @@ type ClassNames = 'root' | 'titleWrapper' | 'backButton';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  titleWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    marginTop: 5
-  },
-  backButton: {
-    margin: '5px 0 0 -16px',
-    '& svg': {
-      width: 34,
-      height: 34
+    root: {},
+    titleWrapper: {
+      display: 'flex',
+      alignItems: 'center',
+      marginTop: 5
+    },
+    backButton: {
+      margin: '5px 0 0 -16px',
+      '& svg': {
+        width: 34,
+        height: 34
+      }
     }
-  }
-});
+  });
 
 type RouteProps = RouteComponentProps<{ nodeBalancerId?: string }>;
 

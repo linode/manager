@@ -1,11 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 // @todo: uncomment this Link import when a bucket landing page exists
 // import { Link } from 'react-router-dom';
-import {
-  createStyles,
-  WithStyles,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import EntityIcon from 'src/components/EntityIcon';
@@ -20,16 +17,16 @@ type ClassNames = 'root' | 'labelStatusWrapper' | 'bucketRow';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  bucketRow: {
-    backgroundColor: theme.bg.white
-  },
-  labelStatusWrapper: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center'
-  }
-});
+    root: {},
+    bucketRow: {
+      backgroundColor: theme.bg.white
+    },
+    labelStatusWrapper: {
+      display: 'flex',
+      flexFlow: 'row nowrap',
+      alignItems: 'center'
+    }
+  });
 
 interface BucketTableRowProps extends Linode.Bucket {
   onRemove: () => void;

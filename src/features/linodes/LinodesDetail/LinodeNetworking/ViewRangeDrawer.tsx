@@ -1,11 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { formatRegion } from 'src/utilities';
@@ -14,13 +11,13 @@ type ClassNames = 'root' | 'section';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  section: {
-    marginBottom: theme.spacing(2),
-    paddingBottom: theme.spacing(2),
-    borderBottom: `1px solid ${theme.palette.divider}`
-  }
-});
+    root: {},
+    section: {
+      marginBottom: theme.spacing(2),
+      paddingBottom: theme.spacing(2),
+      borderBottom: `1px solid ${theme.palette.divider}`
+    }
+  });
 
 interface Props {
   open: boolean;

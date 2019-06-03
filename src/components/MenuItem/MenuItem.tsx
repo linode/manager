@@ -3,10 +3,11 @@ import * as React from 'react';
 import CircularProgress from 'src/components/core/CircularProgress';
 import IconButton from 'src/components/core/IconButton';
 import MenuItem, { MenuItemProps } from 'src/components/core/MenuItem';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 
 type CSSClasses =

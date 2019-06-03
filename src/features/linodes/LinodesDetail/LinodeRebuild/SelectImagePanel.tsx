@@ -1,10 +1,7 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import RenderGuard from 'src/components/RenderGuard';
@@ -16,15 +13,15 @@ export type ClassNames = 'root' | 'flatImagePanel' | 'flatImagePanelSelections';
 
 export const styles = (theme: Theme) =>
   createStyles({
-  flatImagePanel: {
-    padding: theme.spacing(3)
-  },
-  flatImagePanelSelections: {
-    marginTop: theme.spacing(2),
-    padding: `${theme.spacing(1)}px 0`
-  },
-  root: {}
-});
+    flatImagePanel: {
+      padding: theme.spacing(3)
+    },
+    flatImagePanelSelections: {
+      marginTop: theme.spacing(2),
+      padding: `${theme.spacing(1)}px 0`
+    },
+    root: {}
+  });
 
 export interface Props {
   images: Linode.Image[];

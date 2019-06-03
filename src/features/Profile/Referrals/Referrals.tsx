@@ -1,12 +1,9 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { compose, path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
@@ -17,17 +14,17 @@ type ClassNames = 'root' | 'results' | 'title' | 'copyField';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    padding: theme.spacing(3)
-  },
-  title: {},
-  results: {
-    margin: `${theme.spacing(2)}px 0`
-  },
-  copyField: {
-    marginTop: theme.spacing(1)
-  }
-});
+    root: {
+      padding: theme.spacing(3)
+    },
+    title: {},
+    results: {
+      margin: `${theme.spacing(2)}px 0`
+    },
+    copyField: {
+      marginTop: theme.spacing(1)
+    }
+  });
 
 type CombinedProps = StateProps & WithStyles<ClassNames>;
 

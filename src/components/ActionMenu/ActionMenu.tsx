@@ -2,10 +2,11 @@ import MoreHoriz from '@material-ui/icons/MoreHoriz';
 import * as React from 'react';
 import IconButton from 'src/components/core/IconButton';
 import Menu from 'src/components/core/Menu';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 import MenuItem from 'src/components/MenuItem';
 

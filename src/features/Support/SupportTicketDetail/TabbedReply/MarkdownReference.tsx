@@ -1,26 +1,23 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
 type ClassNames = 'root' | 'header' | 'example';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  header: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(1)
-  },
-  example: {
-    margin: `${theme.spacing(2)}px 0`,
-    padding: theme.spacing(2),
-    border: `1px solid ${theme.color.border2}`
-  }
-});
+    root: {},
+    header: {
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(1)
+    },
+    example: {
+      margin: `${theme.spacing(2)}px 0`,
+      padding: theme.spacing(2),
+      border: `1px solid ${theme.color.border2}`
+    }
+  });
 
 interface Props {
   rootClass?: string;

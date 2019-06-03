@@ -2,10 +2,11 @@ import { parse } from 'querystring';
 import * as React from 'react';
 import AppBar from 'src/components/core/AppBar';
 import Paper from 'src/components/core/Paper';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 import MUITab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';

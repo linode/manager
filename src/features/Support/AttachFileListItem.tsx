@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose, withHandlers } from 'recompose';
 
@@ -5,11 +6,7 @@ import Close from '@material-ui/icons/Close';
 import CloudUpload from '@material-ui/icons/CloudUpload';
 
 import InputAdornment from 'src/components/core/InputAdornment';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 
 import Button from 'src/components/Button';
 import Grid from 'src/components/Grid';
@@ -27,33 +24,33 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  attachmentsContainer: {
-    maxWidth: 800
-  },
-  attachmentField: {
-    marginTop: 0,
-    width: 415,
-    [theme.breakpoints.down('xs')]: {
-      width: 165
+    root: {},
+    attachmentsContainer: {
+      maxWidth: 800
     },
-    '& > div ': {
-      backgroundColor: theme.bg.main,
-      border: 0
+    attachmentField: {
+      marginTop: 0,
+      width: 415,
+      [theme.breakpoints.down('xs')]: {
+        width: 165
+      },
+      '& > div ': {
+        backgroundColor: theme.bg.main,
+        border: 0
+      },
+      '& svg': {
+        color: theme.palette.text.primary,
+        width: 24,
+        fontSize: 22
+      }
     },
-    '& svg': {
-      color: theme.palette.text.primary,
-      width: 24,
-      fontSize: 22
+    closeIcon: {
+      cursor: 'pointer'
+    },
+    uploadProgress: {
+      maxWidth: 415
     }
-  },
-  closeIcon: {
-    cursor: 'pointer'
-  },
-  uploadProgress: {
-    maxWidth: 415
-  }
-});
+  });
 
 interface HandlerProps {
   onClick: () => void;

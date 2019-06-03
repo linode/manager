@@ -2,10 +2,11 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
 import ListItem from 'src/components/core/ListItem';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { Item } from 'src/components/EnhancedSelect';

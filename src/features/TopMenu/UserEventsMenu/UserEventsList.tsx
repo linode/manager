@@ -1,12 +1,9 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as moment from 'moment';
 import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import eventMessageGenerator from 'src/eventMessageGenerator';
 import { reportException } from 'src/exceptionReporting';
 import { ExtendedEvent } from 'src/store/events/event.helpers';
@@ -32,8 +29,8 @@ type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {}
-});
+    root: {}
+  });
 
 interface Props {
   events?: Linode.Event[];

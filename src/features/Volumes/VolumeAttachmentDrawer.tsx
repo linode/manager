@@ -7,9 +7,10 @@ import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputLabel from 'src/components/core/InputLabel';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  WithStyles,
+  Theme,
   withStyles
 } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';

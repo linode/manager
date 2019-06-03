@@ -6,10 +6,11 @@ import CreatableSelect, {
 } from 'react-select/lib/Creatable';
 import { Props as SelectProps } from 'react-select/lib/Select';
 import { StylesConfig } from 'react-select/lib/styles';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 import { Props as TextFieldProps } from 'src/components/TextField';
 /* TODO will be refactoring enhanced select to be an abstraction.

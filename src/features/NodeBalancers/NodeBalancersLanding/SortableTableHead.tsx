@@ -1,9 +1,6 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableHead from 'src/components/core/TableHead';
 import { OrderByProps } from 'src/components/OrderBy';
 import TableCell from 'src/components/TableCell';
@@ -20,32 +17,32 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  nameCell: {
-    width: '20%',
-    minWidth: 150,
-    paddingLeft: theme.spacing(2) + 49
-  },
-  nodeStatus: {
-    width: '15%',
-    minWidth: 100
-  },
-  transferred: {
-    width: '15%',
-    minWidth: 100
-  },
-  ports: {
-    width: '15%',
-    minWidth: 50
-  },
-  ip: {
-    width: '15%',
-    minWidth: 200
-  },
-  region: {
-    width: '15%',
-    minWidth: 150
-  }
-});
+    nameCell: {
+      width: '20%',
+      minWidth: 150,
+      paddingLeft: theme.spacing(2) + 49
+    },
+    nodeStatus: {
+      width: '15%',
+      minWidth: 100
+    },
+    transferred: {
+      width: '15%',
+      minWidth: 100
+    },
+    ports: {
+      width: '15%',
+      minWidth: 50
+    },
+    ip: {
+      width: '15%',
+      minWidth: 200
+    },
+    region: {
+      width: '15%',
+      minWidth: 150
+    }
+  });
 
 type CombinedProps = WithStyles<ClassNames> & Omit<OrderByProps, 'data'>;
 

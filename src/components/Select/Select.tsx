@@ -6,10 +6,11 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import Input, { InputProps } from 'src/components/core/Input';
 import { MenuProps } from 'src/components/core/Menu';
 import Select, { SelectProps } from 'src/components/core/Select';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 import HelpIcon from 'src/components/HelpIcon';
 

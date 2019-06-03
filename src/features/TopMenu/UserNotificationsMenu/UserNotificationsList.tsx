@@ -1,11 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { compose, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { dcDisplayNames } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
@@ -15,11 +12,11 @@ type ClassNames = 'emptyText';
 
 const styles = (theme: Theme) =>
   createStyles({
-  emptyText: {
-    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
-    fontFamily: theme.font.bold
-  }
-});
+    emptyText: {
+      padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
+      fontFamily: theme.font.bold
+    }
+  });
 
 interface Props {
   notifications: Linode.Notification[];

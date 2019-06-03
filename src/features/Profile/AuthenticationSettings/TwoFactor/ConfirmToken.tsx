@@ -1,12 +1,9 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { compose } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import {
-  createStyles,
-  WithStyles,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
@@ -16,12 +13,12 @@ type ClassNames = 'root' | 'warning';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  warning: {
-    marginTop: theme.spacing(2),
-    marginLeft: '0 !important'
-  }
-});
+    root: {},
+    warning: {
+      marginTop: theme.spacing(2),
+      marginLeft: '0 !important'
+    }
+  });
 
 interface Props {
   token: string;

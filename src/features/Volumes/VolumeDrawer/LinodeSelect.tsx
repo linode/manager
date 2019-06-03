@@ -2,10 +2,11 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import _Option from 'react-select/lib/components/Option';
 import FormHelperText from 'src/components/core/FormHelperText';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { getLinodes } from 'src/services/linodes';

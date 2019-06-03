@@ -1,11 +1,8 @@
 import InputLabel from '@material-ui/core/InputLabel';
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import MenuItem from 'src/components/MenuItem';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
@@ -16,13 +13,13 @@ type ClassNames = 'root' | 'radioGroupLabel';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    margin: `${theme.spacing(3)}px 0 0`
-  },
-  radioGroupLabel: {
-    display: 'block'
-  }
-});
+    root: {
+      margin: `${theme.spacing(3)}px 0 0`
+    },
+    radioGroupLabel: {
+      display: 'block'
+    }
+  });
 
 interface Props {
   updateFormState: (key: string, value: any) => void;

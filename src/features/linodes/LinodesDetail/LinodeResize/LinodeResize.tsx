@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -8,11 +9,7 @@ import { ThunkDispatch } from 'redux-thunk';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import SelectionCard from 'src/components/SelectionCard';
@@ -42,34 +39,34 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    padding: theme.spacing(3),
-    paddingBottom: theme.spacing(2)
-  },
-  checkbox: {
-    marginTop: theme.spacing(3)
-  },
-  toolTip: {
-    paddingTop: theme.spacing(1)
-  },
-  title: {
-    marginBottom: theme.spacing(2)
-  },
-  subTitle: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(1)
-  },
-  currentPlanContainer: {
-    '& .selectionCard': {
-      padding: `0 ${theme.spacing(1)}px 0 0`,
-      cursor: 'not-allowed',
-      '& > div, &:focus > div': {
-        backgroundColor: theme.bg.main,
-        borderColor: theme.color.border2
+    root: {
+      padding: theme.spacing(3),
+      paddingBottom: theme.spacing(2)
+    },
+    checkbox: {
+      marginTop: theme.spacing(3)
+    },
+    toolTip: {
+      paddingTop: theme.spacing(1)
+    },
+    title: {
+      marginBottom: theme.spacing(2)
+    },
+    subTitle: {
+      marginTop: theme.spacing(3),
+      marginBottom: theme.spacing(1)
+    },
+    currentPlanContainer: {
+      '& .selectionCard': {
+        padding: `0 ${theme.spacing(1)}px 0 0`,
+        cursor: 'not-allowed',
+        '& > div, &:focus > div': {
+          backgroundColor: theme.bg.main,
+          borderColor: theme.color.border2
+        }
       }
     }
-  }
-});
+  });
 
 interface LinodeContextProps {
   linodeId: number;
