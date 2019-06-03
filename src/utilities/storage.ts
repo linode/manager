@@ -32,7 +32,7 @@ export const setStorage = (key: string, value: string) => {
 };
 
 export const setNotificationField = (key: string, value: boolean) => {
-  const _notifications = JSON.parse(getStorage(NOTIFICATIONS));
+  const _notifications = getStorage(NOTIFICATIONS);
   const updatedNotifications = {
     ..._notifications,
     [key]: value
@@ -41,7 +41,7 @@ export const setNotificationField = (key: string, value: boolean) => {
 };
 
 export const getNotificationField = (key: string, fallback?: boolean) => {
-  const _notifications = JSON.parse(getStorage(NOTIFICATIONS));
+  const _notifications = getStorage(NOTIFICATIONS);
   return pathOr(fallback, [key], _notifications);
 };
 
