@@ -1,8 +1,9 @@
 import * as React from 'react';
 import { compose } from 'recompose';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  WithStyles,
+  Theme,
   withStyles
 } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';

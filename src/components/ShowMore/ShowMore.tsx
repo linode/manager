@@ -2,10 +2,11 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import Chip, { ChipProps } from 'src/components/core/Chip';
 import Popover from 'src/components/core/Popover';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 
 type CSSClasses = 'chip' | 'label' | 'popover' | 'link';

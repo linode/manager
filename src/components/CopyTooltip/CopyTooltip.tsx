@@ -2,10 +2,11 @@ import FileCopy from '@material-ui/icons/FileCopy';
 import * as classNames from 'classnames';
 import * as copy from 'copy-to-clipboard';
 import * as React from 'react';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 
 interface Props {

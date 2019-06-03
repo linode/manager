@@ -1,23 +1,20 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-import {
-  createStyles,
-  WithStyles,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TextField from 'src/components/TextField';
 
 type ClassNames = 'replyField';
 
 const styles = (theme: Theme) =>
   createStyles({
-  replyField: {
-    maxHeight: 200,
-    marginTop: 0,
-    '& > div': {
-      maxWidth: '100% !important'
+    replyField: {
+      maxHeight: 200,
+      marginTop: 0,
+      '& > div': {
+        maxWidth: '100% !important'
+      }
     }
-  }
-});
+  });
 
 export interface Props {
   error?: string;

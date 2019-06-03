@@ -1,13 +1,10 @@
+import { WithStyles } from '@material-ui/core/styles';
 import browser from 'browser-detect';
 import { compose } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import Menu from 'src/components/core/Menu';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import MenuItem from 'src/components/MenuItem';
 import GDPRNotification from 'src/GDPRNotification';
@@ -20,35 +17,35 @@ type ClassNames = 'root' | 'dropDown' | 'hidden';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    transform: `translate(-${theme.spacing(1)}px, ${theme.spacing(1)}px)`
-  },
-  dropDown: {
-    position: 'absolute',
-    outline: 0,
-    boxShadow: `0 0 5px ${theme.color.boxShadow}`,
-    overflowY: 'auto',
-    overflowX: 'hidden',
-    minHeight: 16,
-    width: 250,
-    maxHeight: 300,
-    [theme.breakpoints.up('sm')]: {
-      width: 380
+    root: {
+      transform: `translate(-${theme.spacing(1)}px, ${theme.spacing(1)}px)`
     },
-    '& .notification': {
-      margin: 0,
-      ...theme.notificationList,
-      ...theme.typography.h3,
-      '& p': {
-        ...theme.typography.h3
+    dropDown: {
+      position: 'absolute',
+      outline: 0,
+      boxShadow: `0 0 5px ${theme.color.boxShadow}`,
+      overflowY: 'auto',
+      overflowX: 'hidden',
+      minHeight: 16,
+      width: 250,
+      maxHeight: 300,
+      [theme.breakpoints.up('sm')]: {
+        width: 380
+      },
+      '& .notification': {
+        margin: 0,
+        ...theme.notificationList,
+        ...theme.typography.h3,
+        '& p': {
+          ...theme.typography.h3
+        }
       }
+    },
+    hidden: {
+      height: 0,
+      padding: 0
     }
-  },
-  hidden: {
-    height: 0,
-    padding: 0
-  }
-});
+  });
 
 interface State {
   anchorEl?: HTMLElement;

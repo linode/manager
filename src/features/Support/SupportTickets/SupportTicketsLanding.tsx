@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -5,11 +6,7 @@ import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import AppBar from 'src/components/core/AppBar';
-import {
-  createStyles,
-  WithStyles,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -24,16 +21,16 @@ type ClassNames = 'root' | 'title' | 'titleWrapper';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  title: {
-    marginBottom: theme.spacing(2)
-  },
-  titleWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    wordBreak: 'break-all'
-  }
-});
+    root: {},
+    title: {
+      marginBottom: theme.spacing(2)
+    },
+    titleWrapper: {
+      display: 'flex',
+      alignItems: 'center',
+      wordBreak: 'break-all'
+    }
+  });
 
 interface Props {
   history: any;

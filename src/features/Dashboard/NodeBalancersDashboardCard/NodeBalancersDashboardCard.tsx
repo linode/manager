@@ -3,10 +3,11 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';

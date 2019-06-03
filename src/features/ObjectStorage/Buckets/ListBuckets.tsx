@@ -1,14 +1,11 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  WithStyles,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -31,14 +28,14 @@ type ClassNames = 'root' | 'label' | 'confirmationCopy';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  label: {
-    paddingLeft: 65
-  },
-  confirmationCopy: {
-    marginTop: theme.spacing(1)
-  }
-});
+    root: {},
+    label: {
+      paddingLeft: 65
+    },
+    confirmationCopy: {
+      marginTop: theme.spacing(1)
+    }
+  });
 
 interface Props {
   data: Linode.Bucket[];

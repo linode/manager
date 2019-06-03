@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as Promise from 'bluebird';
 import {
   append,
@@ -17,11 +18,7 @@ import { compose as composeC } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ExpansionPanel from 'src/components/ExpansionPanel';
@@ -60,21 +57,21 @@ type ClassNames = 'root' | 'title' | 'port' | 'nbStatuses';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  title: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(2)
-  },
-  port: {
-    marginRight: theme.spacing(2)
-  },
-  nbStatuses: {
-    display: 'block',
-    [theme.breakpoints.up('sm')]: {
-      display: 'inline'
+    root: {},
+    title: {
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(2)
+    },
+    port: {
+      marginRight: theme.spacing(2)
+    },
+    nbStatuses: {
+      display: 'block',
+      [theme.breakpoints.up('sm')]: {
+        display: 'inline'
+      }
     }
-  }
-});
+  });
 
 interface Props {
   nodeBalancerLabel: string;

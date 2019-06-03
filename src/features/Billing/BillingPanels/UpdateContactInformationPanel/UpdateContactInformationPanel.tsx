@@ -3,10 +3,11 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import ExpansionPanel from 'src/components/ExpansionPanel';

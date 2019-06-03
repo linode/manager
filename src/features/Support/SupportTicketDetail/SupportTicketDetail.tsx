@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as Bluebird from 'bluebird';
 import * as classNames from 'classnames';
 import { compose, isEmpty, path, pathOr } from 'ramda';
@@ -11,11 +12,7 @@ import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import Chip from 'src/components/core/Chip';
-import {
-  createStyles,
-  WithStyles,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -47,54 +44,54 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  title: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  titleWrapper: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(2)
-  },
-  backButton: {
-    margin: '-6px 0 0 -16px',
-    '& svg': {
-      width: 34,
-      height: 34
+    root: {},
+    title: {
+      display: 'flex',
+      alignItems: 'center'
     },
-    padding: 0
-  },
-  label: {
-    marginBottom: theme.spacing(1)
-  },
-  ticketLabel: {
-    position: 'relative',
-    top: -3
-  },
-  labelIcon: {
-    paddingRight: 0,
-    '& .outerCircle': {
-      fill: theme.bg.offWhiteDT,
-      stroke: theme.bg.main
+    titleWrapper: {
+      display: 'flex',
+      alignItems: 'flex-start',
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(2)
     },
-    '& .circle': {
-      stroke: theme.bg.main
+    backButton: {
+      margin: '-6px 0 0 -16px',
+      '& svg': {
+        width: 34,
+        height: 34
+      },
+      padding: 0
+    },
+    label: {
+      marginBottom: theme.spacing(1)
+    },
+    ticketLabel: {
+      position: 'relative',
+      top: -3
+    },
+    labelIcon: {
+      paddingRight: 0,
+      '& .outerCircle': {
+        fill: theme.bg.offWhiteDT,
+        stroke: theme.bg.main
+      },
+      '& .circle': {
+        stroke: theme.bg.main
+      }
+    },
+    listParent: {},
+    status: {
+      marginLeft: theme.spacing(1),
+      color: theme.color.white
+    },
+    open: {
+      backgroundColor: theme.color.green
+    },
+    closed: {
+      backgroundColor: theme.color.red
     }
-  },
-  listParent: {},
-  status: {
-    marginLeft: theme.spacing(1),
-    color: theme.color.white
-  },
-  open: {
-    backgroundColor: theme.color.green
-  },
-  closed: {
-    backgroundColor: theme.color.red
-  }
-});
+  });
 
 type RouteProps = RouteComponentProps<{ ticketId?: string }>;
 

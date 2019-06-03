@@ -1,11 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import RenderGuard from 'src/components/RenderGuard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { MapState } from 'src/store/types';
@@ -24,24 +21,24 @@ type ClassNames = 'root' | 'creating' | 'table' | 'link';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    marginBottom: theme.spacing(3)
-  },
-  table: {
-    flexGrow: 1,
-    width: '100%',
-    backgroundColor: theme.color.white
-  },
-  creating: {
-    paddingTop: 0
-  },
-  link: {
-    display: 'block',
-    textAlign: 'right',
-    marginBottom: theme.spacing(2),
-    marginTop: theme.spacing(1)
-  }
-});
+    root: {
+      marginBottom: theme.spacing(3)
+    },
+    table: {
+      flexGrow: 1,
+      width: '100%',
+      backgroundColor: theme.color.white
+    },
+    creating: {
+      paddingTop: 0
+    },
+    link: {
+      display: 'block',
+      textAlign: 'right',
+      marginBottom: theme.spacing(2),
+      marginTop: theme.spacing(1)
+    }
+  });
 
 interface Props {
   error?: string;

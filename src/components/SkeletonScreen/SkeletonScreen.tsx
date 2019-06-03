@@ -1,8 +1,9 @@
 import * as React from 'react';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'tableCol1' | 'tableCol2';

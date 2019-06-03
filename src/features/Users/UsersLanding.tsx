@@ -8,9 +8,10 @@ import UserIcon from 'src/assets/icons/user.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  WithStyles,
+  Theme,
   withStyles
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';

@@ -1,12 +1,9 @@
+import { WithStyles } from '@material-ui/core/styles';
 import AttachFile from '@material-ui/icons/AttachFile';
 import { equals, remove } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 
 import Button from 'src/components/Button';
 
@@ -18,13 +15,13 @@ type ClassNames = 'root' | 'attachFileButton';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  attachFileButton: {
-    padding: '4px 8px 4px 4px',
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2)
-  }
-});
+    root: {},
+    attachFileButton: {
+      padding: '4px 8px 4px 4px',
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
+    }
+  });
 
 interface Props {
   files: FileAttachment[];

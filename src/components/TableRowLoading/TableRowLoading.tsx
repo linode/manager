@@ -1,10 +1,11 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';

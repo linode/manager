@@ -1,13 +1,10 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { compose, path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
@@ -20,17 +17,17 @@ type ClassNames = 'root' | 'title' | 'label';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    padding: theme.spacing(3),
-    marginTop: theme.spacing(2)
-  },
-  title: {
-    marginBottom: theme.spacing(2)
-  },
-  label: {
-    marginLeft: theme.spacing(1)
-  }
-});
+    root: {
+      padding: theme.spacing(3),
+      marginTop: theme.spacing(2)
+    },
+    title: {
+      marginBottom: theme.spacing(2)
+    },
+    label: {
+      marginLeft: theme.spacing(1)
+    }
+  });
 
 interface State {
   submitting: boolean;

@@ -1,9 +1,10 @@
 import Cached from '@material-ui/icons/Cached';
 import * as React from 'react';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 
 export interface Props {

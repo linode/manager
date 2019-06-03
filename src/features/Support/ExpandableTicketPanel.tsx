@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import * as moment from 'moment';
 import { pathOr } from 'ramda';
@@ -8,11 +9,7 @@ import 'showdown-highlightjs-extension';
 import UserIcon from 'src/assets/icons/user.svg';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  WithStyles,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
@@ -36,76 +33,76 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0
+    '@keyframes fadeIn': {
+      from: {
+        opacity: 0
+      },
+      to: {
+        opacity: 1
+      }
     },
-    to: {
-      opacity: 1
+    root: {
+      width: '100%',
+      padding: theme.spacing(2),
+      position: 'relative',
+      '& p': {
+        margin: 0,
+        padding: 0
+      }
+    },
+    userWrapper: {
+      marginTop: theme.spacing(1) / 2,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      borderRadius: '50%',
+      width: 40,
+      height: 40
+    },
+    leftIcon: {
+      width: '100%',
+      height: '100%',
+      borderRadius: '50%',
+      color: theme.palette.text.primary
+    },
+    userName: {
+      whiteSpace: 'nowrap',
+      fontFamily: 'LatoWebBold', // we keep this bold at all times
+      color: theme.color.headline
+    },
+    paper: {
+      padding: theme.spacing(3)
+    },
+    avatarCol: {
+      minWidth: 60
+    },
+    userCol: {
+      minWidth: 200,
+      paddingRight: `${theme.spacing(4)}px !important`
+    },
+    isCurrentUser: {
+      backgroundColor: theme.color.grey2
+    },
+    hivelyLink: {
+      textDecoration: 'none',
+      color: theme.color.black,
+      marginRight: theme.spacing(2)
+    },
+    hivelyImage: {
+      width: '25px',
+      margin: 3
+    },
+    hivelyContainer: {
+      display: 'flex',
+      flexFlow: 'row nowrap',
+      alignItems: 'center',
+      marginTop: theme.spacing(3)
+    },
+    hivelyLinkIcon: {
+      display: 'inline-block',
+      marginRight: theme.spacing(1)
     }
-  },
-  root: {
-    width: '100%',
-    padding: theme.spacing(2),
-    position: 'relative',
-    '& p': {
-      margin: 0,
-      padding: 0
-    }
-  },
-  userWrapper: {
-    marginTop: theme.spacing(1) / 2,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: '50%',
-    width: 40,
-    height: 40
-  },
-  leftIcon: {
-    width: '100%',
-    height: '100%',
-    borderRadius: '50%',
-    color: theme.palette.text.primary
-  },
-  userName: {
-    whiteSpace: 'nowrap',
-    fontFamily: 'LatoWebBold', // we keep this bold at all times
-    color: theme.color.headline
-  },
-  paper: {
-    padding: theme.spacing(3)
-  },
-  avatarCol: {
-    minWidth: 60
-  },
-  userCol: {
-    minWidth: 200,
-    paddingRight: `${theme.spacing(4)}px !important`
-  },
-  isCurrentUser: {
-    backgroundColor: theme.color.grey2
-  },
-  hivelyLink: {
-    textDecoration: 'none',
-    color: theme.color.black,
-    marginRight: theme.spacing(2)
-  },
-  hivelyImage: {
-    width: '25px',
-    margin: 3
-  },
-  hivelyContainer: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-    marginTop: theme.spacing(3)
-  },
-  hivelyLinkIcon: {
-    display: 'inline-block',
-    marginRight: theme.spacing(1)
-  }
-});
+  });
 
 interface Props {
   reply?: Linode.SupportReply;

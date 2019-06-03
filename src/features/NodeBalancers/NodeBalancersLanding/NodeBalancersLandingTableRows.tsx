@@ -1,10 +1,7 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
@@ -19,29 +16,29 @@ type ClassNames = 'tagWrapper' | 'ipsWrapper' | 'icon';
 
 const styles = (theme: Theme) =>
   createStyles({
-  tagWrapper: {
-    marginTop: theme.spacing(1) / 2,
-    '& [class*="MuiChip"]': {
-      cursor: 'pointer'
-    }
-  },
-  ipsWrapper: {
-    display: 'inline-flex',
-    flexDirection: 'column'
-  },
-  icon: {
-    position: 'relative',
-    top: 3,
-    width: 40,
-    height: 40,
-    '& .circle': {
-      fill: theme.bg.offWhiteDT
+    tagWrapper: {
+      marginTop: theme.spacing(1) / 2,
+      '& [class*="MuiChip"]': {
+        cursor: 'pointer'
+      }
     },
-    '& .outerCircle': {
-      stroke: theme.bg.main
+    ipsWrapper: {
+      display: 'inline-flex',
+      flexDirection: 'column'
+    },
+    icon: {
+      position: 'relative',
+      top: 3,
+      width: 40,
+      height: 40,
+      '& .circle': {
+        fill: theme.bg.offWhiteDT
+      },
+      '& .outerCircle': {
+        stroke: theme.bg.main
+      }
     }
-  }
-});
+  });
 
 interface Props {
   data: Linode.NodeBalancerWithConfigs[];

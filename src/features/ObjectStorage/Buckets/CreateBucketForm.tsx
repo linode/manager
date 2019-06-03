@@ -1,11 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { Form, Formik } from 'formik';
 import * as React from 'react';
 import { compose } from 'recompose';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import bucketContainer from 'src/containers/bucket.container';
@@ -25,11 +22,11 @@ import ClusterSelect from './ClusterSelect';
 type ClassNames = 'root' | 'textWrapper';
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  textWrapper: {
-    marginBottom: theme.spacing(1) + 2
-  }
-});
+    root: {},
+    textWrapper: {
+      marginBottom: theme.spacing(1) + 2
+    }
+  });
 
 interface Props {
   onClose: () => void;

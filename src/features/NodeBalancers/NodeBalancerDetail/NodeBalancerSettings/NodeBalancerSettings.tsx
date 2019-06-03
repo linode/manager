@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { clamp, compose, defaultTo } from 'ramda';
 import * as React from 'react';
 import { compose as composeC } from 'recompose';
@@ -6,11 +7,7 @@ import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
@@ -29,21 +26,21 @@ type ClassNames = 'root' | 'title' | 'inner' | 'expPanelButton';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    padding: theme.spacing(3)
-  },
-  title: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(2)
-  },
-  inner: {
-    paddingBottom: theme.spacing(3)
-  },
-  expPanelButton: {
-    padding: 0,
-    marginTop: theme.spacing(2)
-  }
-});
+    root: {
+      padding: theme.spacing(3)
+    },
+    title: {
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(2)
+    },
+    inner: {
+      paddingBottom: theme.spacing(3)
+    },
+    expPanelButton: {
+      padding: 0,
+      marginTop: theme.spacing(2)
+    }
+  });
 
 interface Props {
   nodeBalancerId: number;

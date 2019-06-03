@@ -1,11 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
-import {
-  createStyles,
-  WithStyles,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import { confirmTwoFactor } from 'src/services/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -18,12 +15,12 @@ type ClassNames = 'root' | 'divider';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  divider: {
-    margin: `${theme.spacing(3)}px 0`,
-    width: `calc(100% - ${theme.spacing(2)}px)`
-  }
-});
+    root: {},
+    divider: {
+      margin: `${theme.spacing(3)}px 0`,
+      width: `calc(100% - ${theme.spacing(2)}px)`
+    }
+  });
 
 interface Props {
   loading: boolean;

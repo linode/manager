@@ -1,10 +1,11 @@
 import Close from '@material-ui/icons/Close';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 import IconButton from 'src/components/IconButton';
 

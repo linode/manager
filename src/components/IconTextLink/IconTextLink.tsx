@@ -1,10 +1,11 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import Button from 'src/components/Button';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 import SvgIcon from 'src/components/core/SvgIcon';
 

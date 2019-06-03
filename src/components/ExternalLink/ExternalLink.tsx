@@ -1,10 +1,11 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   createStyles,
-  withStyles,
-  WithStyles
+  Theme,
+  withStyles
 } from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'icon' | 'absoluteIcon' | 'black';

@@ -1,14 +1,11 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as Bluebird from 'bluebird';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -48,31 +45,31 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  suffix: {
-    fontSize: '.9rem',
-    marginRight: theme.spacing(1)
-  },
-  actionPanel: {
-    marginTop: theme.spacing(2)
-  },
-  expPanelSummary: {
-    backgroundColor: theme.bg.offWhite,
-    borderTop: `1px solid ${theme.bg.main}`
-  },
-  innerReply: {
-    padding: 0
-  },
-  rootReply: {
-    padding: 0,
-    marginBottom: theme.spacing(2)
-  },
-  reference: {
-    '& > p': {
-      marginBottom: theme.spacing(1)
+    root: {},
+    suffix: {
+      fontSize: '.9rem',
+      marginRight: theme.spacing(1)
+    },
+    actionPanel: {
+      marginTop: theme.spacing(2)
+    },
+    expPanelSummary: {
+      backgroundColor: theme.bg.offWhite,
+      borderTop: `1px solid ${theme.bg.main}`
+    },
+    innerReply: {
+      padding: 0
+    },
+    rootReply: {
+      padding: 0,
+      marginBottom: theme.spacing(2)
+    },
+    reference: {
+      '& > p': {
+        marginBottom: theme.spacing(1)
+      }
     }
-  }
-});
+  });
 
 interface Accumulator {
   success: string[];
