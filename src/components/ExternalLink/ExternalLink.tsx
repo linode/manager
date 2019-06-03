@@ -1,50 +1,46 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'icon' | 'absoluteIcon' | 'black';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    display: 'inline-flex',
-    alignItems: 'baseline',
-    '&:hover': {
-      '& $icon': {
-        opacity: 1
+    root: {
+      display: 'inline-flex',
+      alignItems: 'baseline',
+      '&:hover': {
+        '& $icon': {
+          opacity: 1
+        }
       }
-    }
-  },
-  icon: {
-    color: theme.palette.primary.main,
-    position: 'relative',
-    left: theme.spacing(1),
-    opacity: 0,
-    width: 14,
-    height: 14
-  },
-  absoluteIcon: {
-    display: 'inline',
-    position: 'relative',
-    paddingRight: 26,
-    '& $icon': {
-      position: 'absolute',
-      right: 0,
-      bottom: 2,
+    },
+    icon: {
+      color: theme.palette.primary.main,
+      position: 'relative',
+      left: theme.spacing(1),
       opacity: 0,
-      left: 'initial'
+      width: 14,
+      height: 14
+    },
+    absoluteIcon: {
+      display: 'inline',
+      position: 'relative',
+      paddingRight: 26,
+      '& $icon': {
+        position: 'absolute',
+        right: 0,
+        bottom: 2,
+        opacity: 0,
+        left: 'initial'
+      }
+    },
+    black: {
+      color: theme.palette.text.primary
     }
-  },
-  black: {
-    color: theme.palette.text.primary
-  }
-});
+  });
 
 interface Props {
   link: string;

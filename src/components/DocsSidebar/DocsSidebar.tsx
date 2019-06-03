@@ -1,14 +1,10 @@
+import { WithStyles } from '@material-ui/core/styles';
 import HelpOutline from '@material-ui/icons/HelpOutline';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import DocComponent, { Doc } from './DocComponent';
@@ -22,42 +18,42 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing(3)
+    root: {
+      [theme.breakpoints.up('md')]: {
+        marginTop: theme.spacing(3)
+      },
+      [theme.breakpoints.down('sm')]: {
+        position: 'fixed !important',
+        right: 0,
+        width: '90%',
+        bottom: 24,
+        display: 'flex',
+        flexWrap: 'nowrap',
+        justifyContent: 'flex-end'
+      }
     },
-    [theme.breakpoints.down('sm')]: {
-      position: 'fixed !important',
-      right: 0,
-      width: '90%',
-      bottom: 24,
-      display: 'flex',
-      flexWrap: 'nowrap',
-      justifyContent: 'flex-end'
+    title: {
+      fontSize: '1.2rem'
+    },
+    gridItem: {
+      [theme.breakpoints.down('sm')]: {
+        position: 'relative',
+        right: 56,
+        backgroundColor: theme.bg.white,
+        boxShadow: `0 0 5px ${theme.color.boxShadow}`,
+        display: 'none',
+        width: '100%'
+      }
+    },
+    mobileActive: {
+      display: 'block'
+    },
+    toggleButton: {
+      position: 'absolute',
+      bottom: 0,
+      right: 10
     }
-  },
-  title: {
-    fontSize: '1.2rem'
-  },
-  gridItem: {
-    [theme.breakpoints.down('sm')]: {
-      position: 'relative',
-      right: 56,
-      backgroundColor: theme.bg.white,
-      boxShadow: `0 0 5px ${theme.color.boxShadow}`,
-      display: 'none',
-      width: '100%'
-    }
-  },
-  mobileActive: {
-    display: 'block'
-  },
-  toggleButton: {
-    position: 'absolute',
-    bottom: 0,
-    right: 10
-  }
-});
+  });
 
 interface Props {
   docs: Doc[];

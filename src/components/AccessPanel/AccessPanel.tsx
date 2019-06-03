@@ -1,14 +1,10 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { compose } from 'recompose';
 import CheckBox from 'src/components/CheckBox';
 import Paper from 'src/components/core/Paper';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -33,56 +29,56 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    flexGrow: 1,
-    width: '100%',
-    marginTop: theme.spacing(3),
-    backgroundColor: theme.color.white
-  },
-  inner: {
-    padding: theme.spacing(3)
-  },
-  panelBody: {
-    padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`
-  },
-  cellCheckbox: {
-    width: 50,
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1)
-  },
-  cellUser: {
-    width: '30%'
-  },
-  userWrapper: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    marginTop: theme.spacing(1) / 2
-  },
-  gravatar: {
-    borderRadius: '50%',
-    marginRight: theme.spacing(1)
-  },
-  small: {
-    '&$root': {
-      marginTop: 0
+    root: {
+      flexGrow: 1,
+      width: '100%',
+      marginTop: theme.spacing(3),
+      backgroundColor: theme.color.white
     },
-    '& $passwordInputOuter': {
-      marginTop: 0
+    inner: {
+      padding: theme.spacing(3)
     },
-    '& .input': {
-      minHeight: 32,
-      '& input': {
-        padding: 8
+    panelBody: {
+      padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`
+    },
+    cellCheckbox: {
+      width: 50,
+      paddingLeft: theme.spacing(1),
+      paddingRight: theme.spacing(1)
+    },
+    cellUser: {
+      width: '30%'
+    },
+    userWrapper: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      marginTop: theme.spacing(1) / 2
+    },
+    gravatar: {
+      borderRadius: '50%',
+      marginRight: theme.spacing(1)
+    },
+    small: {
+      '&$root': {
+        marginTop: 0
+      },
+      '& $passwordInputOuter': {
+        marginTop: 0
+      },
+      '& .input': {
+        minHeight: 32,
+        '& input': {
+          padding: 8
+        }
+      }
+    },
+    passwordInputOuter: {},
+    isOptional: {
+      '& $passwordInputOuter': {
+        marginTop: 0
       }
     }
-  },
-  passwordInputOuter: {},
-  isOptional: {
-    '& $passwordInputOuter': {
-      marginTop: 0
-    }
-  }
-});
+  });
 
 const styled = withStyles(styles);
 

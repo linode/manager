@@ -1,11 +1,7 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EventsLanding from 'src/features/Events/EventsLanding';
 import { getEventsForEntity } from 'src/utilities/getEventsForEntity';
@@ -15,11 +11,11 @@ type ClassNames = 'root' | 'title';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  title: {
-    marginBottom: theme.spacing(2)
-  }
-});
+    root: {},
+    title: {
+      marginBottom: theme.spacing(2)
+    }
+  });
 
 type CombinedProps = WithStyles<ClassNames> & StateProps;
 

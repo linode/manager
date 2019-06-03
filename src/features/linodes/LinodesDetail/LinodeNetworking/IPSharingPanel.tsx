@@ -1,15 +1,11 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { clone, flatten, pathOr, uniq } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ExpansionPanel from 'src/components/ExpansionPanel';
@@ -35,44 +31,44 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  addNewButton: {
-    marginTop: theme.spacing(3),
-    marginBottom: -theme.spacing(2)
-  },
-  containerDivider: {
-    marginTop: theme.spacing(1)
-  },
-  ipField: {
-    width: '100%',
-    marginTop: 0
-  },
-  ipFieldLabel: {
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: `calc(175px + ${theme.spacing(2)}px)`
+    addNewButton: {
+      marginTop: theme.spacing(3),
+      marginBottom: -theme.spacing(2)
+    },
+    containerDivider: {
+      marginTop: theme.spacing(1)
+    },
+    ipField: {
+      width: '100%',
+      marginTop: 0
+    },
+    ipFieldLabel: {
+      width: '100%',
+      [theme.breakpoints.up('sm')]: {
+        width: `calc(175px + ${theme.spacing(2)}px)`
+      }
+    },
+    noIPsMessage: {
+      marginTop: theme.spacing(2),
+      color: theme.color.grey1
+    },
+    networkActionText: {
+      marginBottom: theme.spacing(2)
+    },
+    removeCont: {
+      [theme.breakpoints.down('xs')]: {
+        width: '100%'
+      }
+    },
+    addNewIP: {
+      marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2)
+    },
+    remove: {
+      [theme.breakpoints.down('xs')]: {
+        margin: '-16px 0 0 -26px'
+      }
     }
-  },
-  noIPsMessage: {
-    marginTop: theme.spacing(2),
-    color: theme.color.grey1
-  },
-  networkActionText: {
-    marginBottom: theme.spacing(2)
-  },
-  removeCont: {
-    [theme.breakpoints.down('xs')]: {
-      width: '100%'
-    }
-  },
-  addNewIP: {
-    marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2)
-  },
-  remove: {
-    [theme.breakpoints.down('xs')]: {
-      margin: '-16px 0 0 -26px'
-    }
-  }
-});
+  });
 
 interface Props {
   linodeID: number;

@@ -1,13 +1,9 @@
+import { WithStyles } from '@material-ui/core/styles';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Collapse from 'src/components/core/Collapse';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 
 type CSSClasses = 'root' | 'caret';
 

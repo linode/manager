@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -6,12 +7,7 @@ import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import RootRef from 'src/components/core/RootRef';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableHead from 'src/components/core/TableHead';
@@ -37,22 +33,22 @@ type ClassNames = 'root' | 'headline' | 'addNewWrapper';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  headline: {
-    marginBottom: theme.spacing(2),
-    [theme.breakpoints.down('xs')]: {
-      marginBottom: 0,
-      marginTop: theme.spacing(2)
+    root: {},
+    headline: {
+      marginBottom: theme.spacing(2),
+      [theme.breakpoints.down('xs')]: {
+        marginBottom: 0,
+        marginTop: theme.spacing(2)
+      }
+    },
+    addNewWrapper: {
+      [theme.breakpoints.down('xs')]: {
+        width: '100%',
+        marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
+        marginTop: -theme.spacing(1)
+      }
     }
-  },
-  addNewWrapper: {
-    [theme.breakpoints.down('xs')]: {
-      width: '100%',
-      marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
-      marginTop: -theme.spacing(1)
-    }
-  }
-});
+  });
 
 type CombinedProps = LinodeContext & WithStyles<ClassNames> & WithSnackbarProps;
 

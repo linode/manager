@@ -1,20 +1,16 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import LinearProgress, {
   LinearProgressProps
 } from 'src/components/core/LinearProgress';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 
 type CSSClasses = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {}
-});
+    root: {}
+  });
 
 type CombinedProps = LinearProgressProps & WithStyles<CSSClasses>;
 

@@ -1,12 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import ErrorOutline from '@material-ui/icons/ErrorOutline';
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
@@ -20,25 +16,25 @@ type CSSClasses = 'root' | 'iconContainer' | 'icon' | 'compact' | 'cozy';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    padding: theme.spacing(10)
-  },
-  compact: {
-    padding: theme.spacing(5)
-  },
-  cozy: {
-    padding: theme.spacing(1)
-  },
-  iconContainer: {
-    textAlign: 'center'
-  },
-  icon: {
-    marginBottom: theme.spacing(2),
-    color: theme.color.red,
-    width: 50,
-    height: 50
-  }
-});
+    root: {
+      padding: theme.spacing(10)
+    },
+    compact: {
+      padding: theme.spacing(5)
+    },
+    cozy: {
+      padding: theme.spacing(1)
+    },
+    iconContainer: {
+      textAlign: 'center'
+    },
+    icon: {
+      marginBottom: theme.spacing(2),
+      color: theme.color.red,
+      width: 50,
+      height: 50
+    }
+  });
 
 const ErrorState = (props: Props & WithStyles<CSSClasses>) => {
   return (

@@ -1,55 +1,51 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import Chip, { ChipProps } from 'src/components/core/Chip';
 import Popover from 'src/components/core/Popover';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 
 type CSSClasses = 'chip' | 'label' | 'popover' | 'link';
 
 const styles = (theme: Theme) =>
   createStyles({
-  chip: {
-    position: 'relative',
-    marginLeft: theme.spacing(1) / 2,
-    paddingLeft: 2,
-    paddingRight: 2,
-    backgroundColor: theme.bg.lightBlue,
-    fontWeight: 500,
-    lineHeight: 1,
-    '&:hover, &.active': {
-      backgroundColor: theme.palette.primary.main,
-      color: 'white'
-    },
-    '&:focus': {
+    chip: {
+      position: 'relative',
+      marginLeft: theme.spacing(1) / 2,
+      paddingLeft: 2,
+      paddingRight: 2,
       backgroundColor: theme.bg.lightBlue,
-      outline: '1px dotted #999'
+      fontWeight: 500,
+      lineHeight: 1,
+      '&:hover, &.active': {
+        backgroundColor: theme.palette.primary.main,
+        color: 'white'
+      },
+      '&:focus': {
+        backgroundColor: theme.bg.lightBlue,
+        outline: '1px dotted #999'
+      }
+    },
+    label: {
+      paddingLeft: 6,
+      paddingRight: 6
+    },
+    link: {
+      color: `${theme.color.blueDTwhite} !important`,
+      '&:hover': {
+        textDecoration: 'underline'
+      }
+    },
+    popover: {
+      minWidth: 'auto',
+      maxWidth: 400,
+      overflow: 'visible',
+      padding: theme.spacing(1),
+      [theme.breakpoints.down('xs')]: {
+        maxWidth: 285
+      }
     }
-  },
-  label: {
-    paddingLeft: 6,
-    paddingRight: 6
-  },
-  link: {
-    color: `${theme.color.blueDTwhite} !important`,
-    '&:hover': {
-      textDecoration: 'underline'
-    }
-  },
-  popover: {
-    minWidth: 'auto',
-    maxWidth: 400,
-    overflow: 'visible',
-    padding: theme.spacing(1),
-    [theme.breakpoints.down('xs')]: {
-      maxWidth: 285
-    }
-  }
-});
+  });
 
 interface Props<T> {
   items: T[];

@@ -1,11 +1,7 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { SnackbarProvider, SnackbarProviderProps } from 'notistack';
 import * as React from 'react';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import { v4 } from 'uuid';
 import CloseSnackbar from './CloseSnackbar';
 
@@ -13,24 +9,24 @@ type ClassNames = 'root' | 'info' | 'success' | 'error' | 'warning';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  info: {
-    backgroundColor: theme.bg.white,
-    borderLeftColor: theme.palette.primary.main
-  },
-  success: {
-    backgroundColor: theme.bg.white,
-    borderLeftColor: theme.palette.primary.main
-  },
-  error: {
-    backgroundColor: theme.bg.white,
-    borderLeftColor: theme.palette.status.errorDark
-  },
-  warning: {
-    backgroundColor: theme.bg.white,
-    borderLeftColor: theme.palette.status.warningDark
-  }
-});
+    root: {},
+    info: {
+      backgroundColor: theme.bg.white,
+      borderLeftColor: theme.palette.primary.main
+    },
+    success: {
+      backgroundColor: theme.bg.white,
+      borderLeftColor: theme.palette.primary.main
+    },
+    error: {
+      backgroundColor: theme.bg.white,
+      borderLeftColor: theme.palette.status.errorDark
+    },
+    warning: {
+      backgroundColor: theme.bg.white,
+      borderLeftColor: theme.palette.status.warningDark
+    }
+  });
 
 type CombinedProps = SnackbarProviderProps & WithStyles<ClassNames>;
 

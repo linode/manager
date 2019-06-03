@@ -1,18 +1,13 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { Sticky, StickyProps } from 'react-sticky';
 import { compose } from 'recompose';
-
 import AccessPanel from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import DocsSidebar from 'src/components/DocsSidebar';
@@ -48,19 +43,19 @@ type ClassNames = 'sidebar' | 'emptyImagePanel' | 'emptyImagePanelText';
 
 const styles = (theme: Theme) =>
   createStyles({
-  sidebar: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: '-130px !important'
+    sidebar: {
+      [theme.breakpoints.up('md')]: {
+        marginTop: '-130px !important'
+      }
+    },
+    emptyImagePanel: {
+      padding: theme.spacing(3)
+    },
+    emptyImagePanelText: {
+      marginTop: theme.spacing(1),
+      padding: `${theme.spacing(1)}px 0`
     }
-  },
-  emptyImagePanel: {
-    padding: theme.spacing(3)
-  },
-  emptyImagePanelText: {
-    marginTop: theme.spacing(1),
-    padding: `${theme.spacing(1)}px 0`
-  }
-});
+  });
 
 const errorResources = {
   type: 'A plan selection',

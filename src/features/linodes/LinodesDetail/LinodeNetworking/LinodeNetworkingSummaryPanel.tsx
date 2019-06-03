@@ -1,14 +1,10 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Paper from 'src/components/core/Paper';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
@@ -26,27 +22,27 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    marginTop: theme.spacing(2),
-    padding: theme.spacing(3),
-    paddingBottom: theme.spacing(2) + theme.spacing(1) / 2
-  },
-  section: {
-    marginBottom: theme.spacing(1)
-  },
-  title: {
-    marginBottom: theme.spacing(1)
-  },
-  individualContainer: {
-    marginBottom: theme.spacing(1)
-  },
-  ips: {
-    padding: `0 ${theme.spacing(1)}px !important`
-  },
-  error: {
-    color: theme.palette.status.errorDark
-  }
-});
+    root: {
+      marginTop: theme.spacing(2),
+      padding: theme.spacing(3),
+      paddingBottom: theme.spacing(2) + theme.spacing(1) / 2
+    },
+    section: {
+      marginBottom: theme.spacing(1)
+    },
+    title: {
+      marginBottom: theme.spacing(1)
+    },
+    individualContainer: {
+      marginBottom: theme.spacing(1)
+    },
+    ips: {
+      padding: `0 ${theme.spacing(1)}px !important`
+    },
+    error: {
+      color: theme.palette.status.errorDark
+    }
+  });
 
 const styled = withStyles(styles);
 
