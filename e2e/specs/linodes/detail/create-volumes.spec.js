@@ -119,7 +119,7 @@ describe('Linode Detail - Volumes Suite', () => {
                 const volumePrice = price * 0.1;
 
                 /** this expect seems to run before the state is actually updated */
-                browser.pause(500);
+                browser.pause(1000);
                 expect(VolumeDetail.volumePrice.getText()).toEqual(`$${volumePrice.toFixed(2)}`);
                 expect(VolumeDetail.volumePriceBillingInterval.getText()).toContain('mo');
             });
