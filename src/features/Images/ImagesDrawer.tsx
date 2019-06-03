@@ -27,13 +27,13 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   suffix: {
     fontSize: '.9rem',
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing(1)
   },
   actionPanel: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing(2)
   },
   helperText: {
-    paddingTop: theme.spacing.unit / 2
+    paddingTop: theme.spacing(1) / 2
   }
 });
 

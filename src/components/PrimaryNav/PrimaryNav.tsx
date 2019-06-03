@@ -76,12 +76,12 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     flexDirection: 'column'
   },
   logoItem: {
-    padding: `${theme.spacing.unit + 2}px 0 ${theme.spacing.unit}px ${theme
+    padding: `${theme.spacing(1) + 2}px 0 ${theme.spacing(1)}px ${theme
       .spacing.unit +
-      theme.spacing.unit / 2}px`
+      theme.spacing(1) / 2}px`
   },
   logoItemCompact: {
-    padding: `${theme.spacing.unit + 2}px 0 ${theme.spacing.unit}px`
+    padding: `${theme.spacing(1) + 2}px 0 ${theme.spacing(1)}px`
   },
   listItem: {
     cursor: 'pointer',
@@ -90,8 +90,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       'background-color',
       'border-left-color'
     ]),
-    padding: `${theme.spacing.unit / 2 + 6}px ${theme.spacing.unit * 4 -
-      2}px ${theme.spacing.unit / 2 + 6}px ${theme.spacing.unit * 3}px`,
+    padding: `${theme.spacing(1) / 2 + 6}px ${theme.spacing(4) -
+      2}px ${theme.spacing(1) / 2 + 6}px ${theme.spacing(3)}px`,
     '&:hover': {
       backgroundColor: 'rgba(0, 0, 0, 0.1)',
       '& $linkItem': {
@@ -129,15 +129,15 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   sublinkPanel: {
-    paddingLeft: theme.spacing.unit * 6,
-    paddingRight: theme.spacing.unit * 2,
+    paddingLeft: theme.spacing(6),
+    paddingRight: theme.spacing(2),
     fontSize: '.9rem',
     flexShrink: 0,
     listStyleType: 'none'
   },
   sublink: {
-    padding: `${theme.spacing.unit / 2}px 0 ${theme.spacing.unit / 2}px ${
-      theme.spacing.unit
+    padding: `${theme.spacing(1) / 2}px 0 ${theme.spacing(1) / 2}px ${
+      theme.spacing(1)
     }px`,
     color: 'white',
     display: 'block',

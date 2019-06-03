@@ -67,7 +67,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     }
   },
   mini: {
-    padding: theme.spacing.unit * 1.3
+    padding: theme.spacing(1) * 1.3
   },
   tag: {
     width: '12px !important',

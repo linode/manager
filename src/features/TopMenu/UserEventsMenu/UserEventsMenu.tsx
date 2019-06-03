@@ -26,8 +26,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     boxShadow: `0 0 5px ${theme.color.boxShadow}`,
     outline: 0,
     position: 'absolute',
-    right: theme.spacing.unit * 2,
-    top: 40 + theme.spacing.unit * 4
+    right: theme.spacing(2),
+    top: 40 + theme.spacing(4)
   },
   dropDown: {
     outline: 0,

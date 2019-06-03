@@ -20,7 +20,7 @@ type ClassNames = 'root' | 'dropDown' | 'hidden';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    transform: `translate(-${theme.spacing.unit}px, ${theme.spacing.unit}px)`
+    transform: `translate(-${theme.spacing(1)}px, ${theme.spacing(1)}px)`
   },
   dropDown: {
     position: 'absolute',

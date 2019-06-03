@@ -22,7 +22,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   icon: {
     color: theme.palette.primary.main,
     position: 'relative',
-    left: theme.spacing.unit,
+    left: theme.spacing(1),
     opacity: 0,
     width: 14,
     height: 14

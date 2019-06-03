@@ -33,15 +33,15 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   },
   icon: {
     color: theme.color.blueDTwhite,
-    margin: theme.spacing.unit,
+    margin: theme.spacing(1),
     fontSize: 32
   },
   itemTitle: {
-    marginBottom: theme.spacing.unit,
+    marginBottom: theme.spacing(1),
     color: theme.palette.primary.main
   },
   section: {
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing(3),
     borderBottom: `1px solid ${theme.palette.divider}`
   },
   sectionLink: {
@@ -53,7 +53,7 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     flexFlow: 'row nowrap',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: `${theme.spacing.unit}px !important`
+    padding: `${theme.spacing(1)}px !important`
   },
   ctaLink: {
     display: 'block'

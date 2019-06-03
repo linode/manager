@@ -22,17 +22,17 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     flexGrow: 1,
     width: '100%',
     backgroundColor: theme.color.white,
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing(3)
   },
   inner: {
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing(3)
   },
   panelBody: {
     width: '100%',
-    padding: `${theme.spacing.unit * 2}px 0 0`
+    padding: `${theme.spacing(2)}px 0 0`
   },
   wrapper: {
-    padding: theme.spacing.unit,
+    padding: theme.spacing(1),
     minHeight: 120
   }
 });

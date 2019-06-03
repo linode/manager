@@ -21,22 +21,22 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    paddingTop: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit * 3,
+    paddingTop: theme.spacing(3),
+    paddingBottom: theme.spacing(3),
     border: `1px solid ${theme.color.grey2}`,
-    margin: `${theme.spacing.unit * 6}px 0`
+    margin: `${theme.spacing(6)}px 0`
   },
   postCard: {
     height: '100%',
-    paddingRight: theme.spacing.unit * 3,
-    paddingLeft: theme.spacing.unit * 3
+    paddingRight: theme.spacing(3),
+    paddingLeft: theme.spacing(3)
   },
   wrapper: {},
   postTitle: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   },
   post: {
-    marginBottom: theme.spacing.unit / 2,
+    marginBottom: theme.spacing(1) / 2,
     ...theme.typography.body1
   },
   postLink: {

@@ -16,11 +16,11 @@ export type ClassNames = 'root' | 'flatImagePanel' | 'flatImagePanelSelections';
 
 export const styles: StyleRulesCallback<ClassNames> = theme => ({
   flatImagePanel: {
-    padding: theme.spacing.unit * 3
+    padding: theme.spacing(3)
   },
   flatImagePanelSelections: {
-    marginTop: theme.spacing.unit * 2,
-    padding: `${theme.spacing.unit}px 0`
+    marginTop: theme.spacing(2),
+    padding: `${theme.spacing(1)}px 0`
   },
   root: {}
 });

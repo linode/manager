@@ -28,9 +28,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   ports: { width: '10%', minWidth: 50 },
   tagGroup: {
     flexDirection: 'row-reverse',
-    marginBottom: theme.spacing.unit - 2
+    marginBottom: theme.spacing(1) - 2
   },
-  title: { marginBottom: theme.spacing.unit * 2 },
+  title: { marginBottom: theme.spacing(2) },
   transferred: { width: '10%', minWidth: 100 }
 });
 

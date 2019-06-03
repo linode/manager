@@ -12,13 +12,13 @@ type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit,
+    paddingTop: theme.spacing(2),
+    paddingBottom: theme.spacing(1),
     '& > button': {
-      marginBottom: theme.spacing.unit
+      marginBottom: theme.spacing(1)
     },
     '& > :first-child': {
-      marginRight: theme.spacing.unit
+      marginRight: theme.spacing(1)
     }
   }
 });

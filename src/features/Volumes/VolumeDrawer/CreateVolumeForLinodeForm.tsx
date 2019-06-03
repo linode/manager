@@ -44,7 +44,7 @@ type ClassNames = 'root' | 'textWrapper';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   textWrapper: {
-    marginBottom: theme.spacing.unit + 2
+    marginBottom: theme.spacing(1) + 2
   }
 });
 

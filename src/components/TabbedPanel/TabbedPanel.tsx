@@ -22,20 +22,20 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     backgroundColor: theme.color.white
   },
   inner: {
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
     [theme.breakpoints.up('sm')]: {
-      padding: theme.spacing.unit * 3
+      padding: theme.spacing(3)
     }
   },
   copy: {
     fontSize: '0.875rem',
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing(1)
   },
   tabs: {
-    margin: `${theme.spacing.unit}px 0`
+    margin: `${theme.spacing(1)}px 0`
   },
   panelBody: {
-    padding: `${theme.spacing.unit * 2}px 0 0`
+    padding: `${theme.spacing(2)}px 0 0`
   }
 });
 

@@ -44,18 +44,18 @@ const styles: StyleRulesCallback = theme => {
       }
     },
     root: {
-      marginBottom: theme.spacing.unit * 2,
+      marginBottom: theme.spacing(2),
       padding: '4px 16px',
       maxWidth: '100%',
       display: 'flex',
       alignItems: 'center',
       '& + .notice': {
-        marginTop: `${theme.spacing.unit}px !important`
+        marginTop: `${theme.spacing(1)}px !important`
       }
     },
     important: {
       backgroundColor: theme.bg.white,
-      padding: theme.spacing.unit * 2,
+      padding: theme.spacing(2),
       '& $noticeText': {
         fontFamily: theme.font.normal
       }
@@ -108,15 +108,15 @@ const styles: StyleRulesCallback = theme => {
       borderLeft: `5px solid ${status.successDark}`
     },
     flag: {
-      marginRight: theme.spacing.unit * 2
+      marginRight: theme.spacing(2)
     },
     icon: {
       color: 'white',
-      marginLeft: -(theme.spacing.unit * 2 + 22),
+      marginLeft: -(theme.spacing(2) + 22),
       marginRight: 18
     },
     closeIcon: {
-      paddingLeft: theme.spacing.unit
+      paddingLeft: theme.spacing(1)
     }
   };
 };

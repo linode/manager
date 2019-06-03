@@ -20,14 +20,14 @@ type ClassNames = 'root' | 'title' | 'label';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    padding: theme.spacing.unit * 3,
-    marginTop: theme.spacing.unit * 2
+    padding: theme.spacing(3),
+    marginTop: theme.spacing(2)
   },
   title: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   },
   label: {
-    marginLeft: theme.spacing.unit
+    marginLeft: theme.spacing(1)
   }
 });
 

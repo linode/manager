@@ -24,7 +24,7 @@ type ClassNames = 'root' | 'creating' | 'table' | 'link';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    marginBottom: theme.spacing.unit * 3
+    marginBottom: theme.spacing(3)
   },
   table: {
     flexGrow: 1,
@@ -37,8 +37,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   link: {
     display: 'block',
     textAlign: 'right',
-    marginBottom: theme.spacing.unit * 2,
-    marginTop: theme.spacing.unit
+    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(1)
   }
 });
 

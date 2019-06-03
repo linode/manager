@@ -55,11 +55,11 @@ type ClassNames = 'section' | 'divider';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   section: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing(2)
   },
   divider: {
-    margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px 0 `,
-    width: `calc(100% - ${theme.spacing.unit * 2}px)`
+    margin: `${theme.spacing(2)}px ${theme.spacing(1)}px 0 `,
+    width: `calc(100% - ${theme.spacing(2)}px)`
   }
 });
 

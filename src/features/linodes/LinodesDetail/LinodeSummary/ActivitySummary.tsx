@@ -25,7 +25,7 @@ type ClassNames = 'root' | 'header' | 'viewMore';
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   header: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   },
   viewMore: {
     position: 'relative',

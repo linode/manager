@@ -55,8 +55,8 @@ type ClassNames =
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   title: {
-    marginTop: `${theme.spacing.unit}px`,
-    marginBottom: `${theme.spacing.unit * 2}px`
+    marginTop: `${theme.spacing(1)}px`,
+    marginBottom: `${theme.spacing(2)}px`
   },
   address: {
     width: '30%'
@@ -73,7 +73,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   action: {
     textAlign: 'right',
     '& a': {
-      marginRight: theme.spacing.unit
+      marginRight: theme.spacing(1)
     }
   },
   ipv4Container: {
@@ -85,8 +85,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   ipv4Title: {
-    marginBottom: theme.spacing.unit * 2,
-    marginTop: theme.spacing.unit * 4
+    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(4)
   },
   ipv4TitleContainer: {
     flex: 1,
@@ -95,8 +95,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   netActionsTitle: {
-    marginBottom: theme.spacing.unit * 2,
-    marginTop: theme.spacing.unit * 4
+    marginBottom: theme.spacing(2),
+    marginTop: theme.spacing(4)
   }
 });
 

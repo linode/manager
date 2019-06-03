@@ -15,11 +15,11 @@ type CombinedProps = WithStyles<ClassNames>;
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    padding: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 3
+    padding: theme.spacing(3),
+    marginBottom: theme.spacing(3)
   },
   button: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing(3)
   }
 });
 

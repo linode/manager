@@ -24,11 +24,11 @@ const req = Axios.create();
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    padding: theme.spacing.unit * 3,
+    padding: theme.spacing(3),
     borderBottom: `1px solid ${theme.palette.divider}`
   },
   itemTitle: {
-    marginBottom: theme.spacing.unit
+    marginBottom: theme.spacing(1)
   }
 });
 

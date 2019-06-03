@@ -72,7 +72,7 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   permsTable: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing(3)
   },
   selectCell: {
     fontFamily: 'LatoWebBold', // we keep this bold at all times

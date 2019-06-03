@@ -31,10 +31,10 @@ const styles: StyleRulesCallback<CSSClasses> = theme => {
     row: {},
     numberCell: {
       backgroundColor: theme.color.grey2,
-      paddingLeft: theme.spacing.unit / 2,
-      paddingRight: theme.spacing.unit / 2,
-      paddingTop: theme.spacing.unit / 4,
-      paddingBottom: theme.spacing.unit / 4,
+      paddingLeft: theme.spacing(1) / 2,
+      paddingRight: theme.spacing(1) / 2,
+      paddingTop: theme.spacing(1) / 4,
+      paddingBottom: theme.spacing(1) / 4,
       fontSize: 14,
       textAlign: 'center',
       color: theme.color.headline,
@@ -42,8 +42,8 @@ const styles: StyleRulesCallback<CSSClasses> = theme => {
       width: 35
     },
     codeCell: {
-      paddingLeft: theme.spacing.unit,
-      paddingRight: theme.spacing.unit
+      paddingLeft: theme.spacing(1),
+      paddingRight: theme.spacing(1)
     },
     code: {
       fontSize: '1em',

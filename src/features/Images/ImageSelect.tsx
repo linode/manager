@@ -18,11 +18,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     width: '100%'
   },
   icon: {
-    marginTop: theme.spacing.unit * 2 + 14,
-    marginLeft: -theme.spacing.unit
+    marginTop: theme.spacing(2) + 14,
+    marginLeft: -theme.spacing(1)
   },
   selectContainer: {
-    width: 415 + theme.spacing.unit * 2,
+    width: 415 + theme.spacing(2),
     [theme.breakpoints.down('xs')]: {
       width: '100%'
     }

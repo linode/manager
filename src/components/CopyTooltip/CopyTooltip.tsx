@@ -66,7 +66,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     animation: 'popUp 200ms ease-in-out forwards'
   },
   standAlone: {
-    marginLeft: theme.spacing.unit,
+    marginLeft: theme.spacing(1),
     '& svg': {
       width: 14
     }

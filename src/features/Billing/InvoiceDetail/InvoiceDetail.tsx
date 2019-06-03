@@ -28,14 +28,14 @@ type ClassNames = 'root' | 'backButton' | 'titleWrapper' | 'totals';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`
+    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`
   },
   totals: {
     display: 'flex',
     flexDirection: 'column',
     textAlign: 'right',
     '& h2': {
-      margin: theme.spacing.unit
+      margin: theme.spacing(1)
     }
   },
   titleWrapper: {

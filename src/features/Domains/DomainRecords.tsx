@@ -59,14 +59,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   titles: {
-    marginBottom: theme.spacing.unit,
+    marginBottom: theme.spacing(1),
     [theme.breakpoints.down('xs')]: {
-      marginTop: theme.spacing.unit * 2
+      marginTop: theme.spacing(2)
     }
   },
   linkContainer: {
     position: 'relative',
-    top: theme.spacing.unit + 2,
+    top: theme.spacing(1) + 2,
     [theme.breakpoints.down('xs')]: {
       top: -10,
       '& button': {

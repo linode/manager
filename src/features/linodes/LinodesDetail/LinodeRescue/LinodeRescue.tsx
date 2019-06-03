@@ -34,18 +34,18 @@ type ClassNames = 'root' | 'title' | 'intro';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    padding: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit,
+    padding: theme.spacing(3),
+    paddingBottom: theme.spacing(1),
     '& .iconTextLink': {
       display: 'inline-flex',
-      margin: `${theme.spacing.unit * 3}px 0 0 0`
+      margin: `${theme.spacing(3)}px 0 0 0`
     }
   },
   title: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   },
   intro: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   }
 });
 

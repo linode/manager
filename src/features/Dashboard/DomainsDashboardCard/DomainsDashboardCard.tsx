@@ -38,11 +38,11 @@ type ClassNames =
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   labelGridWrapper: {
-    paddingLeft: `${theme.spacing.unit / 2}px !important`,
-    paddingRight: `${theme.spacing.unit / 2}px !important`
+    paddingLeft: `${theme.spacing(1) / 2}px !important`,
+    paddingRight: `${theme.spacing(1) / 2}px !important`
   },
   description: {
-    paddingTop: theme.spacing.unit / 2
+    paddingTop: theme.spacing(1) / 2
   },
   labelStatusWrapper: {
     display: 'flex',

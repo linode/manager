@@ -34,7 +34,7 @@ type ClassNames = 'backButton';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   backButton: {
-    margin: `5px 0 0 -${theme.spacing.unit * 2}px`,
+    margin: `5px 0 0 -${theme.spacing(2)}px`,
     '& svg': {
       width: 34,
       height: 34

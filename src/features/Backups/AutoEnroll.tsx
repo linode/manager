@@ -23,10 +23,10 @@ type ClassNames =
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {
     backgroundColor: theme.bg.offWhite,
-    padding: theme.spacing.unit
+    padding: theme.spacing(1)
   },
   header: {
-    marginBottom: theme.spacing.unit,
+    marginBottom: theme.spacing(1),
     fontSize: 17
   },
   icon: {
@@ -37,10 +37,10 @@ const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
     display: 'flex',
     alignItems: 'flex-start',
     marginLeft: 0,
-    marginBottom: theme.spacing.unit
+    marginBottom: theme.spacing(1)
   },
   toggleLabelText: {
-    marginTop: theme.spacing.unit + theme.spacing.unit / 2
+    marginTop: theme.spacing(1) + theme.spacing(1) / 2
   }
 });
 

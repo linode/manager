@@ -35,10 +35,10 @@ type ClassNames = 'root' | 'error';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    paddingTop: theme.spacing.unit * 3
+    paddingTop: theme.spacing(3)
   },
   error: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing(2)
   }
 });
 

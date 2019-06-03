@@ -37,7 +37,7 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    padding: theme.spacing.unit * 2
+    padding: theme.spacing(2)
   },
   backButton: {
     margin: '5px 0 0 -16px',
@@ -50,7 +50,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     lineHeight: '2.25em'
   },
   divider: {
-    margin: `0 0 ${theme.spacing.unit * 2}px 0`,
+    margin: `0 0 ${theme.spacing(2)}px 0`,
     height: 0
   },
   labelField: {
@@ -70,25 +70,25 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   tips: {
-    marginLeft: theme.spacing.unit * 4,
-    marginTop: `${theme.spacing.unit * 4}px !important`,
-    padding: theme.spacing.unit * 4,
+    marginLeft: theme.spacing(4),
+    marginTop: `${theme.spacing(4)}px !important`,
+    padding: theme.spacing(4),
     backgroundColor: theme.palette.divider,
     [theme.breakpoints.down('lg')]: {
       marginLeft: 0
     },
     [theme.breakpoints.down('md')]: {
-      paddingLeft: theme.spacing.unit * 2
+      paddingLeft: theme.spacing(2)
     }
   },
   chipsContainer: {
     maxWidth: 415
   },
   warning: {
-    marginTop: theme.spacing.unit * 4
+    marginTop: theme.spacing(4)
   },
   targetTag: {
-    margin: `${theme.spacing.unit}px ${theme.spacing.unit}px 0 0`
+    margin: `${theme.spacing(1)}px ${theme.spacing(1)}px 0 0`
   },
   scriptTextarea: {
     maxWidth: '100%',

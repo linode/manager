@@ -27,18 +27,18 @@ type ClassNames = 'root' | 'title' | 'gridItem' | 'countInput';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2,
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
     '& .tabbedPanel': {
       marginTop: 0
     }
   },
   title: {
-    marginBottom: theme.spacing.unit
+    marginBottom: theme.spacing(1)
   },
   gridItem: {
-    paddingLeft: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 2
+    paddingLeft: theme.spacing(3),
+    marginBottom: theme.spacing(2)
   },
   countInput: {
     maxWidth: '5em'

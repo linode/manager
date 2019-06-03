@@ -13,13 +13,13 @@ type ClassNames = 'root' | 'container' | 'headerAction';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   container: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing(3)
   },
   headerAction: {
     position: 'relative',
     top: 6,
     left: -16,
-    marginLeft: theme.spacing.unit / 2
+    marginLeft: theme.spacing(1) / 2
   }
 });
 

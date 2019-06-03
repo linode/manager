@@ -29,15 +29,15 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   root: {
-    padding: `${theme.spacing.unit * 2}px 0`,
+    padding: `${theme.spacing(2)}px 0`,
     [theme.breakpoints.up('md')]: {
-      padding: `${theme.spacing.unit * 10}px 0`
+      padding: `${theme.spacing(10)}px 0`
     }
   },
   copy: {
     textAlign: 'center',
     maxWidth: '85%',
-    marginTop: -theme.spacing.unit * 3,
+    marginTop: -theme.spacing(3),
     [theme.breakpoints.up('md')]: {
       maxWidth: 800
     }
@@ -72,7 +72,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     textAlign: 'center'
   },
   button: {
-    marginBottom: theme.spacing.unit * 4
+    marginBottom: theme.spacing(4)
   }
 });
 

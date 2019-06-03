@@ -21,10 +21,10 @@ type ClassNames = 'root' | 'instructions' | 'qrcodeContainer';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   instructions: {
-    marginTop: theme.spacing.unit * 2
+    marginTop: theme.spacing(2)
   },
   qrcodeContainer: {
-    margin: `${theme.spacing.unit * 2}px 0`,
+    margin: `${theme.spacing(2)}px 0`,
     border: `5px solid #fff`,
     display: 'inline-block'
   }

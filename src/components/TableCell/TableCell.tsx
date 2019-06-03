@@ -40,7 +40,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   data: {
     [theme.breakpoints.down('sm')]: {
       textAlign: 'right',
-      marginLeft: theme.spacing.unit * 3
+      marginLeft: theme.spacing(3)
     },
     [theme.breakpoints.down('xs')]: {
       width: '100%'

@@ -25,11 +25,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
   return {
     root: {},
     headline: {
-      marginTop: theme.spacing.unit * 2,
-      marginBottom: theme.spacing.unit * 2
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
     },
     paper: {
-      marginBottom: theme.spacing.unit * 2
+      marginBottom: theme.spacing(2)
     },
     labelCell: {
       width: '40%'
@@ -40,7 +40,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
         width: 12,
         height: 12
       },
-      marginLeft: theme.spacing.unit
+      marginLeft: theme.spacing(1)
     }
   };
 };

@@ -67,13 +67,13 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   tagGroup: {
     flexDirection: 'row-reverse',
-    marginBottom: theme.spacing.unit
+    marginBottom: theme.spacing(1)
   },
   titleWrapper: {
     flex: 1
   },
   title: {
-    marginBottom: theme.spacing.unit + theme.spacing.unit / 2
+    marginBottom: theme.spacing(1) + theme.spacing(1) / 2
   },
   // styles for /volumes table
   volumesWrapper: {},

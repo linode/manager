@@ -73,7 +73,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
         display: 'inline-block',
         width: 20,
         height: 20,
-        marginRight: theme.spacing.unit
+        marginRight: theme.spacing(1)
       }
     }
   },

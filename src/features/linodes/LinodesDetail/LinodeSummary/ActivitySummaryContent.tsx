@@ -18,7 +18,7 @@ type ClassNames = 'root' | 'emptyState';
 const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
   root: {},
   emptyState: {
-    padding: theme.spacing.unit * 2
+    padding: theme.spacing(2)
   }
 });
 

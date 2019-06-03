@@ -45,16 +45,16 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   regionInner: {
     [theme.breakpoints.only('xs')]: {
-      padding: `0 ${theme.spacing.unit}px !important`
+      padding: `0 ${theme.spacing(1)}px !important`
     },
     [theme.breakpoints.up('lg')]: {
       '&:first-of-type': {
-        padding: `${theme.spacing.unit}px ${theme.spacing.unit}px 0 ${
-          theme.spacing.unit
+        padding: `${theme.spacing(1)}px ${theme.spacing(1)}px 0 ${
+          theme.spacing(1)
         }px !important`
       },
       '&:last-of-type': {
-        padding: `0 ${theme.spacing.unit}px !important`
+        padding: `0 ${theme.spacing(1)}px !important`
       }
     }
   },

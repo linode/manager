@@ -25,7 +25,7 @@ type ClassNames = 'root' | 'title' | 'titleWrapper';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   title: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   },
   titleWrapper: {
     display: 'flex',

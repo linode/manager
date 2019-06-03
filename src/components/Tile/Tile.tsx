@@ -24,7 +24,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     flexDirection: 'column',
     alignItems: 'center',
     backgroundColor: theme.color.white,
-    padding: theme.spacing.unit * 4,
+    padding: theme.spacing(4),
     border: `1px solid ${theme.color.grey2}`,
     height: '100%'
   },
@@ -51,8 +51,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   tileTitle: {
     fontSize: '1.2rem',
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit,
+    marginTop: theme.spacing(1),
+    marginBottom: theme.spacing(1),
     textAlign: 'center'
   },
   icon: {

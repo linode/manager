@@ -64,7 +64,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   error: {
-    marginTop: `${theme.spacing.unit * 3}px !important`,
+    marginTop: `${theme.spacing(3)}px !important`,
     marginBottom: `0 !important`
   },
   sidebar: {
@@ -74,7 +74,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   domainSidebar: {
     [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing.unit + 24
+      marginTop: theme.spacing(1) + 24
     }
   },
   titleWrapper: {

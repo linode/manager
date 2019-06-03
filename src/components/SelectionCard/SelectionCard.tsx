@@ -32,7 +32,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
   },
   root: {
     minWidth: 200,
-    padding: theme.spacing.unit * 2,
+    padding: theme.spacing(2),
     justifyContent: 'center',
     alignItems: 'center',
     display: 'flex',

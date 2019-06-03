@@ -32,10 +32,10 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     justifyContent: 'flex-end'
   },
   item: {
-    paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 2,
-    paddingTop: theme.spacing.unit * 1.5,
-    paddingBottom: theme.spacing.unit * 1.5,
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingTop: theme.spacing(1) * 1.5,
+    paddingBottom: theme.spacing(1) * 1.5,
     fontFamily: 'LatoWeb',
     fontSize: '.9rem',
     color: theme.color.blueDTwhite,
@@ -59,7 +59,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     }
   },
   actionSingleLink: {
-    marginRight: theme.spacing.unit,
+    marginRight: theme.spacing(1),
     whiteSpace: 'nowrap',
     float: 'right',
     fontFamily: theme.font.bold
@@ -69,7 +69,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => ({
     padding: 0
   },
   menu: {
-    maxWidth: theme.spacing.unit * 25
+    maxWidth: theme.spacing(25)
   }
 });
 

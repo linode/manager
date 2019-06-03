@@ -13,7 +13,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   guidance: {
     backgroundColor: theme.bg.offWhiteDT,
     borderTop: `1px solid ${theme.palette.divider}`,
-    padding: theme.spacing.unit * 2
+    padding: theme.spacing(2)
   },
   text: {
     fontSize: '.8rem'
@@ -23,7 +23,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     height: 16,
     position: 'relative',
     top: 3,
-    marginRight: theme.spacing.unit
+    marginRight: theme.spacing(1)
   }
 });
 

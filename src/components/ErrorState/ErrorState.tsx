@@ -19,19 +19,19 @@ type CSSClasses = 'root' | 'iconContainer' | 'icon' | 'compact' | 'cozy';
 
 const styles: StyleRulesCallback<CSSClasses> = theme => ({
   root: {
-    padding: theme.spacing.unit * 10
+    padding: theme.spacing(10)
   },
   compact: {
-    padding: theme.spacing.unit * 5
+    padding: theme.spacing(5)
   },
   cozy: {
-    padding: theme.spacing.unit
+    padding: theme.spacing(1)
   },
   iconContainer: {
     textAlign: 'center'
   },
   icon: {
-    marginBottom: theme.spacing.unit * 2,
+    marginBottom: theme.spacing(2),
     color: theme.color.red,
     width: 50,
     height: 50
