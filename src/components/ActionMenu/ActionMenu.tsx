@@ -105,7 +105,7 @@ export class ActionMenu extends React.Component<CombinedProps, State> {
     this.generateActions(createActions);
   }
 
-  handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+  handleClick = (event: React.MouseEvent<HTMLElement>) => {
     if (this.props.toggleOpenCallback) {
       this.props.toggleOpenCallback();
     }
