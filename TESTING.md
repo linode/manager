@@ -54,11 +54,11 @@ Prior to running the tests, you must set `MANAGER_USER=` and `MANAGER_PASS` env 
 
 ##### Dependencies
 
-* Java JDK 8
+* Java JDK 12
 ```bash
 brew cask uninstall java
 brew tap caskroom/versions
-brew cask install java8
+brew cask install java
 ```
 * Node.js 8 LTS (`brew install node@8`)
 * Google Chrome v60+ (`brew cask install google-chrome`)
@@ -87,7 +87,7 @@ Running an individual spec file:
 
 Running E2E suite in a non-default browser
 
-    yarn e2e -b [chrome,firefox,headlessChrome,safari]
+    yarn e2e --browser [chrome,firefox,headlessChrome,safari]
 
 #### Run Suite in Docker Local Dev Environment
 
