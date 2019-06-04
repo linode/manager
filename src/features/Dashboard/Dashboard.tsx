@@ -79,7 +79,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
           userTimezoneLoading={props.userTimezoneLoading}
         />
       )}
-      <Grid container spacing={24}>
+      <Grid container spacing={3}>
         <AbuseTicketBanner />
         <DocumentTitleSegment segment="Dashboard" />
         <Grid item xs={12}>

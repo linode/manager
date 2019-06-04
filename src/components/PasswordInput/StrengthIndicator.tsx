@@ -54,7 +54,7 @@ const StrengthIndicator: React.StatelessComponent<CombinedProps> = props => {
     <Grid
       container
       alignItems="flex-end"
-      spacing={8}
+      spacing={1}
       className={classes.root}
       data-qa-strength={strength}
     >
