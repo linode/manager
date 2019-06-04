@@ -56,6 +56,7 @@ import { MapState } from './store/types';
 import { isObjectStorageEnabled } from './utilities/accountCapabilities';
 
 import ErrorState from 'src/components/ErrorState';
+import { addNotificationsToLinodes } from 'src/store/linodes/linodes.actions';
 
 shim(); // allows for .finally() usage
 
@@ -210,27 +211,40 @@ export class App extends React.Component<CombinedProps, State> {
     hasError: false
   };
 
+  componentDidUpdate(prevProps: CombinedProps) {
+    /** run once when both notifications and linodes are loaded in Redux state */
+    if (
+      !!this.props.linodes.length &&
+      !!this.props.notifications &&
+      (!prevProps.notifications || !prevProps.linodes.length)
+    ) {
+      this.props.addNotificationsToLinodes(
+        this.props.notifications,
+        this.props.linodes
+      );
+    }
+  }
+
   componentDidCatch() {
     this.setState({ hasError: true });
   }
 
   async componentDidMount() {
     const {
-      actions,
       nodeBalancerActions: { getAllNodeBalancersWithConfigs }
     } = this.props;
 
     const dataFetchingPromises: Promise<any>[] = [
-      actions.requestAccount(),
-      actions.requestProfile(),
-      actions.requestDomains(),
-      actions.requestImages(),
-      actions.requestLinodes(),
-      actions.requestNotifications(),
-      actions.requestSettings(),
-      actions.requestTypes(),
-      actions.requestRegions(),
-      actions.requestVolumes(),
+      this.props.requestAccount(),
+      this.props.requestProfile(),
+      this.props.requestDomains(),
+      this.props.requestImages(),
+      this.props.requestLinodes(),
+      this.props.requestNotifications(),
+      this.props.requestSettings(),
+      this.props.requestTypes(),
+      this.props.requestRegions(),
+      this.props.requestVolumes(),
       getAllNodeBalancersWithConfigs()
     ];
 
@@ -471,40 +485,44 @@ const getObjectStorageRoute = (
 };
 
 interface DispatchProps {
-  actions: {
-    requestAccount: () => Promise<Linode.Account>;
-    requestDomains: () => Promise<Linode.Domain[]>;
-    requestImages: () => Promise<Linode.Image[]>;
-    requestLinodes: () => Promise<Linode.Linode[]>;
-    requestNotifications: () => Promise<Linode.Notification[]>;
-    requestProfile: () => Promise<Linode.Profile>;
-    requestSettings: () => Promise<Linode.AccountSettings>;
-    requestTypes: () => Promise<Linode.LinodeType[]>;
-    requestRegions: () => Promise<Linode.Region[]>;
-    requestVolumes: () => Promise<Linode.Volume[]>;
-    requestBuckets: () => Promise<Linode.Bucket[]>;
-    requestClusters: () => Promise<Linode.Cluster[]>;
-  };
+  requestAccount: () => Promise<Linode.Account>;
+  requestDomains: () => Promise<Linode.Domain[]>;
+  requestImages: () => Promise<Linode.Image[]>;
+  requestLinodes: () => Promise<Linode.Linode[]>;
+  requestNotifications: () => Promise<Linode.Notification[]>;
+  requestProfile: () => Promise<Linode.Profile>;
+  requestSettings: () => Promise<Linode.AccountSettings>;
+  requestTypes: () => Promise<Linode.LinodeType[]>;
+  requestRegions: () => Promise<Linode.Region[]>;
+  requestVolumes: () => Promise<Linode.Volume[]>;
+  requestBuckets: () => Promise<Linode.Bucket[]>;
+  requestClusters: () => Promise<Linode.Cluster[]>;
+  addNotificationsToLinodes: (
+    notifications: Linode.Notification[],
+    linodes: Linode.Linode[]
+  ) => void;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => {
   return {
-    actions: {
-      requestAccount: () => dispatch(requestAccount()),
-      requestDomains: () => dispatch(requestDomains()),
-      requestImages: () => dispatch(requestImages()),
-      requestLinodes: () => dispatch(requestLinodes()),
-      requestNotifications: () => dispatch(requestNotifications()),
-      requestProfile: () => dispatch(requestProfile()),
-      requestSettings: () => dispatch(requestAccountSettings()),
-      requestTypes: () => dispatch(requestTypes()),
-      requestRegions: () => dispatch(requestRegions()),
-      requestVolumes: () => dispatch(getAllVolumes()),
-      requestBuckets: () => dispatch(getAllBuckets()),
-      requestClusters: () => dispatch(requestClusters())
-    }
+    requestAccount: () => dispatch(requestAccount()),
+    requestDomains: () => dispatch(requestDomains()),
+    requestImages: () => dispatch(requestImages()),
+    requestLinodes: () => dispatch(requestLinodes()),
+    requestNotifications: () => dispatch(requestNotifications()),
+    requestProfile: () => dispatch(requestProfile()),
+    requestSettings: () => dispatch(requestAccountSettings()),
+    requestTypes: () => dispatch(requestTypes()),
+    requestRegions: () => dispatch(requestRegions()),
+    requestVolumes: () => dispatch(getAllVolumes()),
+    requestBuckets: () => dispatch(getAllBuckets()),
+    requestClusters: () => dispatch(requestClusters()),
+    addNotificationsToLinodes: (
+      _notifications: Linode.Notification[],
+      linodes: Linode.Linode[]
+    ) => dispatch(addNotificationsToLinodes(_notifications, linodes))
   };
 };
 
@@ -512,9 +530,11 @@ interface StateProps {
   /** Profile */
   profileLoading: boolean;
   profileError?: Error | Linode.ApiFieldError[];
+  linodes: Linode.Linode[];
   linodesError?: Linode.ApiFieldError[];
   domainsError?: Linode.ApiFieldError[];
   imagesError?: Linode.ApiFieldError[];
+  notifications?: Linode.Notification[];
   notificationsError?: Linode.ApiFieldError[] | Error;
   settingsError?: Linode.ApiFieldError[] | Error;
   typesError?: Linode.ApiFieldError[];
@@ -534,9 +554,11 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
   /** Profile */
   profileLoading: state.__resources.profile.loading,
   profileError: state.__resources.profile.error,
+  linodes: state.__resources.linodes.entities,
   linodesError: path(['read'], state.__resources.linodes.error),
   domainsError: state.__resources.domains.error,
   imagesError: state.__resources.images.error,
+  notifications: state.__resources.notifications.data,
   notificationsError: state.__resources.notifications.error,
   settingsError: state.__resources.accountSettings.error,
   typesError: state.__resources.types.error,
