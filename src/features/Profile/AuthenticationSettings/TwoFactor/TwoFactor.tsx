@@ -273,7 +273,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
                     <div className={classes.container}>
                       {showQRCode ? (
                         <Button
-                          type="secondary"
+                          buttonType="secondary"
                           className={classes.visibility}
                           onClick={this.toggleHidden}
                           destructive
@@ -286,7 +286,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
                         </Button>
                       ) : (
                         <Button
-                          type="secondary"
+                          buttonType="secondary"
                           className={classes.visibility}
                           onClick={this.toggleHidden}
                           data-qa-hide-show-code

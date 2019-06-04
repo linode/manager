@@ -178,7 +178,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
             />
             <ActionsPanel>
               <Button
-                type="primary"
+                buttonType="primary"
                 onClick={this.onSubmit}
                 loading={submitting}
                 data-qa-tz-submit

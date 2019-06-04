@@ -179,7 +179,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
           <ActionsPanel className={classes.expPanelButton}>
             <Button
               onClick={this.onSubmitUpdateNodeBalancer}
-              type="primary"
+              buttonType="primary"
               disabled={isSubmitting}
               data-qa-label-save
             >

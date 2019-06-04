@@ -1065,7 +1065,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     <ActionsPanel style={{ padding: 0 }}>
       <Button
         onClick={onClose}
-        type="secondary"
+        buttonType="secondary"
         className="cancel"
         data-qa-cancel-cancel
       >
@@ -1074,7 +1074,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       <Button
         data-qa-confirm-cancel
         onClick={this.deleteConfig}
-        type="secondary"
+        buttonType="secondary"
         destructive
         loading={this.state.deleteConfigConfirmDialog.submitting}
       >
@@ -1125,7 +1125,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         {!hasUnsavedConfig && (
           <Grid item style={{ marginTop: 16 }}>
             <Button
-              type="secondary"
+              buttonType="secondary"
               onClick={() => this.addNodeBalancerConfig()}
               data-qa-add-config
             >

@@ -249,7 +249,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
         </Grid>
         <Grid item className={classes.removeCont}>
           <Button
-            type="remove"
+           buttonType="remove"
             onClick={this.onIPDelete(idx)}
             className={classes.remove}
             data-qa-remove-shared-ip
@@ -332,7 +332,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
           loading={submitting}
           disabled={readOnly || loading || noChoices}
           onClick={this.onSubmit}
-          type="primary"
+          buttonType="primary"
           data-qa-submit
         >
           Save
@@ -340,7 +340,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
         <Button
           disabled={submitting || loading || noChoices}
           onClick={this.onCancel}
-          type="secondary"
+          buttonType="secondary"
           data-qa-cancel
         >
           Cancel

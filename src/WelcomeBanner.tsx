@@ -96,7 +96,7 @@ type CombinedProps = Props & RouteComponentProps<any> & WithStyles<ClassNames>;
 
 class WelcomeBanner extends React.Component<CombinedProps, {}> {
   actions = () => (
-    <Button onClick={this.props.onClose} type="primary" data-qa-welcome-button>
+    <Button onClick={this.props.onClose} buttonType="primary" data-qa-welcome-button>
       Let's go!
     </Button>
   );

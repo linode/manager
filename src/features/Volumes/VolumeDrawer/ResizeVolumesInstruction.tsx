@@ -81,7 +81,7 @@ const ResizeVolumeInstructions: React.StatelessComponent<
         />
       </div>
       <ActionsPanel>
-        <Button onClick={onClose} type="primary">
+        <Button onClick={onClose} buttonType="primary">
           Close
         </Button>
       </ActionsPanel>

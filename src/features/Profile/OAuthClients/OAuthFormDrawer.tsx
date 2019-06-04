@@ -91,7 +91,7 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = props => {
       </FormControl>
       <ActionsPanel>
         <Button
-          type="primary"
+          buttonType="primary"
           onClick={onSubmit}
           loading={loading}
           data-qa-submit
@@ -101,7 +101,7 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = props => {
         <Button
           onClick={onClose}
           data-qa-cancel
-          type="secondary"
+          buttonType="secondary"
           className="cancel"
         >
           Cancel

@@ -195,7 +195,7 @@ export const RebuildFromImage: React.StatelessComponent<
             />
             <ActionsPanel>
               <Button
-                type="secondary"
+                buttonType="secondary"
                 className="destructive"
                 onClick={handleRebuildButtonClick}
                 data-testid="rebuild-button"

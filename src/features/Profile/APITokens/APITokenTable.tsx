@@ -592,14 +592,14 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <ActionsPanel>
           <Button
-            type="cancel"
+           buttonType="cancel"
             onClick={this.closeRevokeDialog}
             data-qa-button-cancel
           >
             Cancel
           </Button>
           <Button
-            type="secondary"
+           buttonType="secondary"
             destructive
             onClick={this.revokeAction}
             data-qa-button-confirm
@@ -613,7 +613,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
   renderPersonalAccessTokenDisplayActions = () => (
     <Button
-      type="secondary"
+      buttonType="secondary"
       onClick={this.closeTokenDialog}
       data-qa-close-dialog
     >

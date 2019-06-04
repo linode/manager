@@ -160,9 +160,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       'none',
       'none'
     ],
-    spacing: {
-      unit: spacingUnit
-    },
+    spacing: spacingUnit,
     '@keyframes rotate': {
       from: {
         transform: 'rotate(0deg)'

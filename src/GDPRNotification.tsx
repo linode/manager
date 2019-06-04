@@ -21,7 +21,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class GDPRNotification extends React.PureComponent<CombinedProps, {}> {
   actions = () => (
-    <Button onClick={this.props.onClose} type="primary">
+    <Button onClick={this.props.onClose} buttonType="primary">
       Dismiss
     </Button>
   );

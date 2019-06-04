@@ -42,7 +42,7 @@ export const AccessKeyDisplayDialog: React.StatelessComponent<
     <ConfirmationDialog
       title="Access Keys"
       actions={
-        <Button type="secondary" onClick={close} data-qa-close-dialog>
+        <Button buttonType="secondary" onClick={close} data-qa-close-dialog>
           OK
         </Button>
       }

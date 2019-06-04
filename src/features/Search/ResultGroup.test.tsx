@@ -63,7 +63,7 @@ describe('ResultGroup component', () => {
     it('should have a Show All button', () => {
       expect(
         component.containsMatchingElement(
-          <Button type="primary">Show All</Button>
+          <Button buttonType="primary">Show All</Button>
         )
       );
     });
@@ -75,7 +75,7 @@ describe('ResultGroup component', () => {
       component.setProps({ showMore: true });
       expect(
         component.containsMatchingElement(
-          <Button type="primary">Show Less</Button>
+          <Button buttonType="primary">Show Less</Button>
         )
       ).toBeTruthy();
     });

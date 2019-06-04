@@ -261,7 +261,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
             <ActionsPanel>
               <Button
                 onClick={onSubmit}
-                type="primary"
+                buttonType="primary"
                 loading={submitting}
                 data-qa-disk-submit
               >
@@ -269,7 +269,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
               </Button>
               <Button
                 onClick={onClose}
-                type="secondary"
+                buttonType="secondary"
                 className="cancel"
                 data-qa-disk-cancel
               >

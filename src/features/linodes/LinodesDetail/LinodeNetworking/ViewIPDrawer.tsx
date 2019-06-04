@@ -90,7 +90,7 @@ const ViewIPDrawer: React.StatelessComponent<CombinedProps> = props => {
           </div>
 
           <ActionsPanel>
-            <Button type="secondary" onClick={props.onClose} data-qa-cancel>
+            <Button buttonType="secondary" onClick={props.onClose} data-qa-cancel>
               Close
             </Button>
           </ActionsPanel>

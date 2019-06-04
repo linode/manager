@@ -189,7 +189,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
               <Button
                 onClick={this.handleSubmit}
                 loading={loading || enabling || enrolling}
-                type="primary"
+                buttonType="primary"
                 data-qa-submit
                 data-testid={'submit'}
               >
@@ -197,7 +197,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
               </Button>
               <Button
                 onClick={close}
-                type="secondary"
+                buttonType="secondary"
                 className="cancel"
                 data-qa-cancel
                 data-testid={'cancel'}

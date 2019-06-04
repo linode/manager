@@ -444,7 +444,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           )}
         <ActionsPanel>
           <Button
-            type="primary"
+           buttonType="primary"
             onClick={this.submit}
             data-qa-submit
             loading={submitting}
@@ -452,7 +452,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           >
             {mode === EDITING ? 'Update' : 'Create'}
           </Button>
-          <Button onClick={this.closeDrawer} type="cancel" data-qa-cancel>
+          <Button onClick={this.closeDrawer} buttonType="cancel" data-qa-cancel>
             Cancel
           </Button>
         </ActionsPanel>

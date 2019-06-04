@@ -31,7 +31,7 @@ const VolumesActionsPanel: React.StatelessComponent<CombinedProps> = ({
       {onSubmit && (
         <Button
           onClick={onSubmit}
-          type="primary"
+          buttonType="primary"
           loading={isSubmitting}
           disabled={disabled}
           data-qa-submit
@@ -40,7 +40,7 @@ const VolumesActionsPanel: React.StatelessComponent<CombinedProps> = ({
         </Button>
       )}
       {onCancel && (
-        <Button onClick={onCancel} type="cancel" data-qa-cancel>
+        <Button onClick={onCancel} buttonType="cancel" data-qa-cancel>
           Cancel
         </Button>
       )}

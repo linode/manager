@@ -488,7 +488,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
         <Button
           loading={this.state.submitting}
           onClick={this.onSubmit}
-          type="primary"
+          buttonType="primary"
           disabled={readOnly || this.state.linodes.length === 0}
           data-qa-ip-transfer-save
         >
@@ -497,7 +497,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
         <Button
           disabled={this.state.submitting || this.state.linodes.length === 0}
           onClick={this.onReset}
-          type="secondary"
+          buttonType="secondary"
           data-qa-ip-transfer-cancel
         >
           Cancel
