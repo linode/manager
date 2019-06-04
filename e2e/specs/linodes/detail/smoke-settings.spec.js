@@ -115,8 +115,7 @@ describe('Linode Detail - Settings Suite', () =>{
 
     describe('Advanced Configurations Suite', () => {
         beforeAll(() => {
-            Settings.expandPanel('Advanced Configurations');
-            browser.pause(1000);
+            LinodeDetail.changeTab('Advanced');
         });
 
         xit('should add a configuration', () => {
@@ -131,6 +130,7 @@ describe('Linode Detail - Settings Suite', () =>{
 
     describe('Delete Suite', () => {
         beforeAll(() => {
+            LinodeDetail.changeTab('Settings');
             Settings.expandPanel('Delete Linode');
             browser.pause(1000);
         });
