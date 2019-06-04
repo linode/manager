@@ -9,12 +9,7 @@
  */
 
 // import NoSsr from '@material-ui/core/NoSsr'
-import {
-  createStyles,
-  withStyles,
-  WithStyles,
-  WithTheme
-} from '@material-ui/styles';
+import { WithStyles, WithTheme } from '@material-ui/core/styles';
 // import { jssPreset, StylesProvider } from '@material-ui/styles'
 // import { create } from 'jss';
 // import rtl from 'jss-rtl';
@@ -22,13 +17,14 @@ import {
 import * as React from 'react';
 // import Frame from 'react-frame-component';
 import { compose } from 'recompose';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 
 type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {}
-});
+    root: {}
+  });
 
 type CombinedProps = WithStyles<ClassNames> & WithTheme;
 

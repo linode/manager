@@ -11,8 +11,8 @@ type CSSClasses =
   | 'codeCell'
   | 'code';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => {
-  return {
+const styles = (theme: Theme) =>
+  createStyles({
     root: {},
     container: {
       maxWidth: '100%',
@@ -49,8 +49,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => {
       whiteSpace: 'pre-wrap',
       width: '100%'
     }
-  };
-};
+  });
 
 export interface Props {
   script: string;

@@ -1,8 +1,4 @@
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from '@material-ui/styles';
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import {
   compose,
@@ -10,10 +6,8 @@ import {
   StateHandlerMap,
   withStateHandlers
 } from 'recompose';
-
-import { getTrustedDevices } from 'src/services/profile';
-
 import Paper from 'src/components/core/Paper';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -23,7 +17,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import ToggleState from 'src/components/ToggleState';
-
+import { getTrustedDevices } from 'src/services/profile';
 import Dialog from './TrustedDevicesDialog';
 import TrustedDevicesTable from './TrustedDevicesTable';
 
@@ -37,23 +31,23 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    padding: theme.spacing(3),
-    paddingBottom: theme.spacing(3),
-    marginBottom: theme.spacing(3)
-  },
-  title: {
-    marginBottom: theme.spacing(2)
-  },
-  deviceCell: {},
-  ipCell: {},
-  usedCell: {
-    minWidth: 120
-  },
-  expireCell: {
-    minWidth: 100
-  }
-});
+    root: {
+      padding: theme.spacing(3),
+      paddingBottom: theme.spacing(3),
+      marginBottom: theme.spacing(3)
+    },
+    title: {
+      marginBottom: theme.spacing(2)
+    },
+    deviceCell: {},
+    ipCell: {},
+    usedCell: {
+      minWidth: 120
+    },
+    expireCell: {
+      minWidth: 100
+    }
+  });
 
 type CombinedProps = PaginationProps<Linode.Device> &
   WithStyles<ClassNames> &

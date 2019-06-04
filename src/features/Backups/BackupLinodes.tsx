@@ -1,11 +1,7 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { displayPrice as _displayPrice } from 'src/components/DisplayPrice/DisplayPrice';
 import TableCell from 'src/components/TableCell';
@@ -16,12 +12,12 @@ type ClassNames = 'root' | 'error';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  error: {
-    color: theme.color.red,
-    fontSize: 13
-  }
-});
+    root: {},
+    error: {
+      color: theme.color.red,
+      fontSize: 13
+    }
+  });
 
 interface Props {
   linodes: ExtendedLinode[];

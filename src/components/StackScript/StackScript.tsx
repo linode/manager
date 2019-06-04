@@ -22,8 +22,8 @@ type CSSClasses =
   | 'compatibleImages'
   | 'divider';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => {
-  return {
+const styles = (theme: Theme) =>
+  createStyles({
     root: {
       backgroundColor: theme.color.white,
       '.detailsWrapper &': {
@@ -63,8 +63,7 @@ const styles: StyleRulesCallback<CSSClasses> = theme => {
       marginTop: theme.spacing(2),
       marginBottom: theme.spacing(2)
     }
-  };
-};
+  });
 
 export interface Props {
   data: Linode.StackScript.Response;

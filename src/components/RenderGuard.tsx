@@ -1,6 +1,7 @@
+import { WithTheme } from '@material-ui/core/styles';
 import { equals } from 'ramda';
 import * as React from 'react';
-import { withTheme, WithTheme } from 'src/components/core/styles';
+import { withTheme } from 'src/components/core/styles';
 
 export interface RenderGuardProps {
   updateFor?: any[];
@@ -42,7 +43,7 @@ const renderGuard = <P extends {}>(
   >;
 };
 
-const themed = withTheme();
+const themed = withTheme;
 
 const getDisplayName = (Component: React.ComponentType) =>
   Component.displayName || Component.name || 'Component';

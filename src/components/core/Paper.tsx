@@ -1,24 +1,22 @@
 import Paper, { PaperProps as _PaperProps } from '@material-ui/core/Paper';
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from '@material-ui/styles';
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 import FormHelperText from './FormHelperText';
+
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 
 type ClassNames = 'error' | 'errorText';
 
 const styles = (theme: Theme) =>
   createStyles({
-  error: {
-    borderColor: `#ca0813 !important`
-  },
-  errorText: {
-    color: '#ca0813'
-  }
-});
+    error: {
+      borderColor: `#ca0813 !important`
+    },
+    errorText: {
+      color: '#ca0813'
+    }
+  });
 
 export interface PaperProps extends _PaperProps {
   error?: string;

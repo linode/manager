@@ -1,9 +1,6 @@
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from '@material-ui/styles';
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import DisplayPrice from 'src/components/DisplayPrice';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 
@@ -22,10 +19,10 @@ const getClampedPrice = (newSize: number, currentSize: number) =>
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    marginTop: theme.spacing(4)
-  }
-});
+    root: {
+      marginTop: theme.spacing(4)
+    }
+  });
 
 interface Props {
   value: number;

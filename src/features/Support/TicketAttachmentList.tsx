@@ -5,12 +5,7 @@ import { compose, withStateHandlers } from 'recompose';
 import InsertDriveFile from '@material-ui/icons/InsertDriveFile';
 import InsertPhoto from '@material-ui/icons/InsertPhoto';
 
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
 import Grid from 'src/components/Grid';
@@ -22,11 +17,11 @@ type ClassNames = 'root' | 'attachmentPaperWrapper';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  attachmentPaperWrapper: {
-    overflowX: 'auto'
-  }
-});
+    root: {},
+    attachmentPaperWrapper: {
+      overflowX: 'auto'
+    }
+  });
 
 interface ToggleProps {
   showMoreAttachments: boolean;

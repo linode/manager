@@ -1,16 +1,11 @@
+import { WithStyles } from '@material-ui/core/styles';
+import Close from '@material-ui/icons/Close';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { compose, onlyUpdateForKeys, withStateHandlers } from 'recompose';
-
-import Close from '@material-ui/icons/Close';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DashboardCard from '../DashboardCard';
 
@@ -18,42 +13,42 @@ type ClassNames = 'root' | 'section' | 'title' | 'button' | 'icon';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    width: '100%'
-  },
-  section: {
-    padding: theme.spacing(3),
-    borderBottom: `1px solid ${theme.palette.divider}`
-  },
-  title: {
-    background: theme.bg.tableHeader,
-    position: 'relative',
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-    padding: `${theme.spacing(1)}px ${theme.spacing(3)}px !important`,
-    [theme.breakpoints.down('md')]: {
-      justifyContent: 'space-between',
-      alignItems: 'flex-start'
-    }
-  },
-  button: {
-    marginTop: theme.spacing(3)
-  },
-  icon: {
-    position: 'absolute',
-    top: theme.spacing(1),
-    right: 0,
-    cursor: 'pointer',
-    border: 'none',
-    color: theme.palette.text.primary,
-    backgroundColor: 'transparent',
-    [theme.breakpoints.down('md')]: {
+    root: {
+      width: '100%'
+    },
+    section: {
+      padding: theme.spacing(3),
+      borderBottom: `1px solid ${theme.palette.divider}`
+    },
+    title: {
+      background: theme.bg.tableHeader,
       position: 'relative',
-      top: 3
+      display: 'flex',
+      flexFlow: 'row nowrap',
+      alignItems: 'center',
+      padding: `${theme.spacing(1)}px ${theme.spacing(3)}px !important`,
+      [theme.breakpoints.down('md')]: {
+        justifyContent: 'space-between',
+        alignItems: 'flex-start'
+      }
+    },
+    button: {
+      marginTop: theme.spacing(3)
+    },
+    icon: {
+      position: 'absolute',
+      top: theme.spacing(1),
+      right: 0,
+      cursor: 'pointer',
+      border: 'none',
+      color: theme.palette.text.primary,
+      backgroundColor: 'transparent',
+      [theme.breakpoints.down('md')]: {
+        position: 'relative',
+        top: 3
+      }
     }
-  }
-});
+  });
 
 interface Props {
   openImportDrawer: () => void;
