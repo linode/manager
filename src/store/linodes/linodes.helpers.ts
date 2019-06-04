@@ -1,14 +1,10 @@
 /**
- * _when_ is not guaranteed
+ * _when_ is not guaranteed to exist if this is a maintenance notification
  *
  * _when_ could be in the past
  */
 
-/**
- * this is what's coming back from the API, but we should absolutely not
- * be doing exact string matching on these
- */
-type Type = 'zombieload-reboot-scheduled' | 'zombieload-migration-scheduled';
+type Type = 'reboot-scheduled' | 'migration-scheduled';
 
 export interface LinodeWithMaintenance extends Linode.Linode {
   maintenance?: {
@@ -44,7 +40,7 @@ export const addNotificationsToLinodes = (
              */
             when: foundNotification.when,
             until: foundNotification.until,
-            type: foundNotification.type as Type
+            type: foundNotification.label as Type
           }
         }
       : eachLinode;

@@ -5,7 +5,7 @@ const maintenanceNotification: (
   linodeID: number
 ) => Linode.Notification[] = linodeID => [
   {
-    label: 'This Linode is in Danger! Ahhhhh',
+    label: 'reboot',
     message: 'This Linode is in Danger! Ahhhhh',
     type: 'maintenance',
     severity: 'critical',
@@ -31,7 +31,7 @@ describe('Linode Redux Helpers', () => {
         maintenance: {
           when: 'rightnow',
           until: 'later',
-          type: 'maintenance'
+          type: 'reboot'
         }
       }
     ]);

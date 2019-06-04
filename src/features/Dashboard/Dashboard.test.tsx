@@ -5,6 +5,8 @@ import { Dashboard } from './Dashboard';
 
 const props = {
   accountBackups: false,
+  userTimezone: 'GMT',
+  userTimezoneLoading: false,
   actions: {
     openBackupDrawer: jest.fn(),
     openImportDrawer: jest.fn()
