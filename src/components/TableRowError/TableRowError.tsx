@@ -1,10 +1,6 @@
-import * as React from 'react';
 import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import * as React from 'react';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 import ErrorState from 'src/components/ErrorState';
@@ -13,8 +9,8 @@ type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {}
-});
+    root: {}
+  });
 
 export interface Props {
   colSpan: number;

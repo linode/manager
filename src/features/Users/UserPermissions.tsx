@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -6,12 +7,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -46,61 +42,61 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  topGrid: {
-    marginTop: theme.spacing(1)
-  },
-  titleWrapper: {
-    marginTop: 0,
-    padding: 0,
-    display: 'flex',
-    alignItems: 'center'
-  },
-  toggle: {
-    marginRight: 3
-  },
-  permSelect: {
-    width: 'auto',
-    [theme.breakpoints.up('sm')]: {
-      justifyContent: 'flex-end'
+    topGrid: {
+      marginTop: theme.spacing(1)
+    },
+    titleWrapper: {
+      marginTop: 0,
+      padding: 0,
+      display: 'flex',
+      alignItems: 'center'
+    },
+    toggle: {
+      marginRight: 3
+    },
+    permSelect: {
+      width: 'auto',
+      [theme.breakpoints.up('sm')]: {
+        justifyContent: 'flex-end'
+      }
+    },
+    unrestrictedRoot: {
+      marginTop: theme.spacing(2),
+      padding: theme.spacing(3)
+    },
+    globalSection: {
+      marginTop: theme.spacing(2),
+      padding: theme.spacing(3)
+    },
+    globalRow: {
+      padding: `${theme.spacing(1)}px 0`
+    },
+    section: {
+      marginTop: theme.spacing(2),
+      paddingBottom: 0
+    },
+    grantTable: {
+      '& th': {
+        width: '25%',
+        minWidth: 150
+      }
+    },
+    tableSubheading: {
+      marginTop: theme.spacing(3),
+      marginBottom: theme.spacing(2)
+    },
+    selectAll: {
+      cursor: 'pointer'
+    },
+    setAll: {
+      width: 300,
+      marginTop: theme.spacing(1) / 2,
+      '& .react-select__menu': {
+        maxWidth: 153,
+        right: 0
+      }
     }
-  },
-  unrestrictedRoot: {
-    marginTop: theme.spacing(2),
-    padding: theme.spacing(3)
-  },
-  globalSection: {
-    marginTop: theme.spacing(2),
-    padding: theme.spacing(3)
-  },
-  globalRow: {
-    padding: `${theme.spacing(1)}px 0`
-  },
-  section: {
-    marginTop: theme.spacing(2),
-    paddingBottom: 0
-  },
-  grantTable: {
-    '& th': {
-      width: '25%',
-      minWidth: 150
-    }
-  },
-  tableSubheading: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(2)
-  },
-  selectAll: {
-    cursor: 'pointer'
-  },
-  setAll: {
-    width: 300,
-    marginTop: theme.spacing(1) / 2,
-    '& .react-select__menu': {
-      maxWidth: 153,
-      right: 0
-    }
-  }
-});
+  });
 
 interface Props {
   username?: string;

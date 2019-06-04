@@ -1,13 +1,7 @@
-import * as React from 'react';
-
 import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
-
+import * as React from 'react';
 import Paper from 'src/components/core/Paper';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 
@@ -15,11 +9,11 @@ type ClassNames = 'root' | 'flatImagePanel';
 
 const styles = (theme: Theme) =>
   createStyles({
-  flatImagePanel: {
-    padding: theme.spacing(3)
-  },
-  root: {}
-});
+    flatImagePanel: {
+      padding: theme.spacing(3)
+    },
+    root: {}
+  });
 
 interface Props {
   error?: string;

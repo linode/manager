@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { map as mapPromise } from 'bluebird';
 import * as memoize from 'memoizee';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
@@ -8,12 +9,7 @@ import UserIcon from 'src/assets/icons/user.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -40,48 +36,48 @@ type ClassNames = 'title' | 'avatar' | 'userButton' | 'emptyImage';
 
 const styles = (theme: Theme) =>
   createStyles({
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0
+    '@keyframes fadeIn': {
+      from: {
+        opacity: 0
+      },
+      to: {
+        opacity: 1
+      }
     },
-    to: {
-      opacity: 1
+    title: {
+      marginBottom: theme.spacing(2)
+    },
+    userButton: {
+      borderRadius: 30,
+      fontFamily: 'LatoWeb',
+      padding: 0,
+      color: theme.palette.text.primary,
+      '&:hover': {
+        color: theme.palette.primary.main
+      }
+    },
+    avatar: {
+      borderRadius: '50%',
+      width: 30,
+      height: 30,
+      marginRight: theme.spacing(2),
+      animation: 'fadeIn 150ms linear forwards',
+      [theme.breakpoints.up('md')]: {
+        width: 50,
+        height: 50
+      }
+    },
+    emptyImage: {
+      display: 'inline',
+      width: 30,
+      height: 30,
+      marginRight: theme.spacing(2),
+      [theme.breakpoints.up('md')]: {
+        width: 50,
+        height: 50
+      }
     }
-  },
-  title: {
-    marginBottom: theme.spacing(2)
-  },
-  userButton: {
-    borderRadius: 30,
-    fontFamily: 'LatoWeb',
-    padding: 0,
-    color: theme.palette.text.primary,
-    '&:hover': {
-      color: theme.palette.primary.main
-    }
-  },
-  avatar: {
-    borderRadius: '50%',
-    width: 30,
-    height: 30,
-    marginRight: theme.spacing(2),
-    animation: 'fadeIn 150ms linear forwards',
-    [theme.breakpoints.up('md')]: {
-      width: 50,
-      height: 50
-    }
-  },
-  emptyImage: {
-    display: 'inline',
-    width: 30,
-    height: 30,
-    marginRight: theme.spacing(2),
-    [theme.breakpoints.up('md')]: {
-      width: 50,
-      height: 50
-    }
-  }
-});
+  });
 
 interface State {
   createDrawerOpen: boolean;

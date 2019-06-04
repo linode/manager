@@ -1,20 +1,16 @@
+import { WithStyles } from '@material-ui/core/styles';
 import Close from '@material-ui/icons/Close';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Tag, { TagProps } from 'src/components/Tag';
 
 type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {}
-});
+    root: {}
+  });
 
 interface Props extends TagProps {
   tagLabel: string;

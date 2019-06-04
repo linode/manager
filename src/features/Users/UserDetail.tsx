@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { clone, compose, path as pathRamda } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -10,12 +11,7 @@ import {
 import UserIcon from 'src/assets/icons/user.svg';
 import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import ErrorState from 'src/components/ErrorState';
@@ -36,38 +32,38 @@ type ClassNames = 'titleWrapper' | 'avatar' | 'backButton' | 'emptyImage';
 
 const styles = (theme: Theme) =>
   createStyles({
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0
+    '@keyframes fadeIn': {
+      from: {
+        opacity: 0
+      },
+      to: {
+        opacity: 1
+      }
     },
-    to: {
-      opacity: 1
+    avatar: {
+      margin: '0 8px 0 -4px',
+      color: '#606469',
+      borderRadius: '50%',
+      width: '46px',
+      height: '46px',
+      animation: 'fadeIn 150ms linear forwards'
+    },
+    emptyImage: {
+      width: 42,
+      height: 49
+    },
+    titleWrapper: {
+      display: 'flex',
+      alignItems: 'center'
+    },
+    backButton: {
+      margin: '4px 0 0 -16px',
+      '& svg': {
+        width: 34,
+        height: 34
+      }
     }
-  },
-  avatar: {
-    margin: '0 8px 0 -4px',
-    color: '#606469',
-    borderRadius: '50%',
-    width: '46px',
-    height: '46px',
-    animation: 'fadeIn 150ms linear forwards'
-  },
-  emptyImage: {
-    width: 42,
-    height: 49
-  },
-  titleWrapper: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  backButton: {
-    margin: '4px 0 0 -16px',
-    '& svg': {
-      width: 34,
-      height: 34
-    }
-  }
-});
+  });
 
 interface MatchProps {
   username: string;

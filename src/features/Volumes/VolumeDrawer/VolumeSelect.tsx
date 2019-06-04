@@ -1,15 +1,11 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import { getVolumes } from 'src/services/volumes';
@@ -20,8 +16,8 @@ type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {}
-});
+    root: {}
+  });
 
 interface Props {
   error?: string;

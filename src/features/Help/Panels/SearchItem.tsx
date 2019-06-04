@@ -1,13 +1,9 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
 import ListItem from 'src/components/core/ListItem';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { Item } from 'src/components/EnhancedSelect';
 import RenderGuard from 'src/components/RenderGuard';
@@ -16,34 +12,34 @@ type ClassNames = 'root' | 'label' | 'source' | 'icon' | 'row';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    flexDirection: 'column',
-    alignItems: 'flex-start'
-  },
-  label: {
-    display: 'inline',
-    color: theme.palette.text.primary,
-    maxWidth: '95%'
-  },
-  icon: {
-    display: 'inline-block',
-    width: 12,
-    height: 12,
-    position: 'relative',
-    top: 5,
-    marginLeft: theme.spacing(1) / 2,
-    color: theme.palette.primary.main
-  },
-  source: {
-    marginTop: theme.spacing(1) / 2,
-    color: theme.color.headline
-  },
-  row: {
-    display: 'flex',
-    width: '100%',
-    justifyContent: 'space-between'
-  }
-});
+    root: {
+      flexDirection: 'column',
+      alignItems: 'flex-start'
+    },
+    label: {
+      display: 'inline',
+      color: theme.palette.text.primary,
+      maxWidth: '95%'
+    },
+    icon: {
+      display: 'inline-block',
+      width: 12,
+      height: 12,
+      position: 'relative',
+      top: 5,
+      marginLeft: theme.spacing(1) / 2,
+      color: theme.palette.primary.main
+    },
+    source: {
+      marginTop: theme.spacing(1) / 2,
+      color: theme.color.headline
+    },
+    row: {
+      display: 'flex',
+      width: '100%',
+      justifyContent: 'space-between'
+    }
+  });
 
 interface Props {
   item: Item;

@@ -1,12 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 
 type ClassNames = 'link' | 'noCount' | 'count' | 'countNumber';
 
@@ -22,21 +18,21 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const styles = (theme: Theme) =>
   createStyles({
-  link: {
-    '&:hover': {
-      textDecoration: 'underline'
+    link: {
+      '&:hover': {
+        textDecoration: 'underline'
+      }
+    },
+    noCount: {
+      marginLeft: theme.spacing(1)
+    },
+    count: {
+      marginRight: theme.spacing(1) / 2
+    },
+    countNumber: {
+      fontFamily: theme.font.bold
     }
-  },
-  noCount: {
-    marginLeft: theme.spacing(1)
-  },
-  count: {
-    marginRight: theme.spacing(1) / 2
-  },
-  countNumber: {
-    fontFamily: theme.font.bold
-  }
-});
+  });
 
 const ViewAllLink: React.StatelessComponent<CombinedProps> = props => {
   const { classes, count, text, link, external, className } = props;

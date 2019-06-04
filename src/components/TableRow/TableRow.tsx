@@ -1,12 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import _TableRow, {
   TableRowProps as _TableRowProps
 } from 'src/components/core/TableRow';
@@ -15,22 +11,22 @@ type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    transition: theme.transitions.create(['background-color']),
-    [theme.breakpoints.up('md')]: {
-      '&:before': {
-        content: "''",
-        display: 'table-cell',
-        width: '0.01%',
-        height: '100%',
-        backgroundColor: 'transparent',
-        borderBottom: `2px solid ${theme.palette.divider}`,
-        transition: theme.transitions.create(['background-color']),
-        paddingLeft: 5
+    root: {
+      transition: theme.transitions.create(['background-color']),
+      [theme.breakpoints.up('md')]: {
+        '&:before': {
+          content: "''",
+          display: 'table-cell',
+          width: '0.01%',
+          height: '100%',
+          backgroundColor: 'transparent',
+          borderBottom: `2px solid ${theme.palette.divider}`,
+          transition: theme.transitions.create(['background-color']),
+          paddingLeft: 5
+        }
       }
     }
-  }
-});
+  });
 
 type onClickFn = (e: React.ChangeEvent<HTMLTableRowElement>) => void;
 

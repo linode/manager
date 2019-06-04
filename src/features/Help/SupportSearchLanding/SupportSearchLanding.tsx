@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import Search from '@material-ui/icons/Search';
 import { compose } from 'ramda';
@@ -5,12 +6,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import IconButton from 'src/components/core/IconButton';
 import InputAdornment from 'src/components/core/InputAdornment';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -32,46 +28,46 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    maxWidth: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    position: 'relative'
-  },
-  backButton: {
-    margin: '2px 0 0 -16px',
-    '& svg': {
-      width: 34,
-      height: 34
-    }
-  },
-  searchBar: {
-    maxWidth: '100%'
-  },
-  searchBoxInner: {
-    padding: theme.spacing(3),
-    backgroundColor: theme.color.grey2,
-    marginTop: 0,
-    '& > div': {
+    root: {
+      maxWidth: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      position: 'relative'
+    },
+    backButton: {
+      margin: '2px 0 0 -16px',
+      '& svg': {
+        width: 34,
+        height: 34
+      }
+    },
+    searchBar: {
       maxWidth: '100%'
+    },
+    searchBoxInner: {
+      padding: theme.spacing(3),
+      backgroundColor: theme.color.grey2,
+      marginTop: 0,
+      '& > div': {
+        maxWidth: '100%'
+      }
+    },
+    searchHeading: {
+      color: theme.color.black,
+      marginBottom: theme.spacing(2),
+      fontSize: '175%'
+    },
+    searchField: {
+      padding: theme.spacing(3)
+    },
+    searchIcon: {
+      marginRight: 0,
+      '& svg': {
+        color: theme.palette.text.primary
+      }
     }
-  },
-  searchHeading: {
-    color: theme.color.black,
-    marginBottom: theme.spacing(2),
-    fontSize: '175%'
-  },
-  searchField: {
-    padding: theme.spacing(3)
-  },
-  searchIcon: {
-    marginRight: 0,
-    '& svg': {
-      color: theme.palette.text.primary
-    }
-  }
-});
+  });
 
 interface State {
   query: string;

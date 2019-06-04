@@ -1,11 +1,7 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -17,12 +13,12 @@ type ClassNames = 'root' | 'volumesWrapper' | 'linodeVolumesWrapper';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  // styles for /volumes table
-  volumesWrapper: {},
-  // styles for linodes/id/volumes table
-  linodeVolumesWrapper: {}
-});
+    root: {},
+    // styles for /volumes table
+    volumesWrapper: {},
+    // styles for linodes/id/volumes table
+    linodeVolumesWrapper: {}
+  });
 
 interface Props {
   data: Linode.Volume[];

@@ -1,10 +1,6 @@
-import * as React from 'react';
 import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import * as React from 'react';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableHead from 'src/components/core/TableHead';
 import { OrderByProps } from 'src/components/OrderBy';
 import TableCell from 'src/components/TableCell';
@@ -15,11 +11,11 @@ type ClassNames = 'root' | 'label';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  label: {
-    paddingLeft: 65
-  }
-});
+    root: {},
+    label: {
+      paddingLeft: 65
+    }
+  });
 
 type combinedProps = Omit<OrderByProps, 'data'> & WithStyles<ClassNames>;
 

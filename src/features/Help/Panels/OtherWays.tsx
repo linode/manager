@@ -1,14 +1,10 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import Chat from 'src/assets/icons/chat.svg';
 import Community from 'src/assets/icons/community.svg';
 import Documentation from 'src/assets/icons/document.svg';
 import Support from 'src/assets/icons/support.svg';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Tile from 'src/components/Tile';
@@ -17,15 +13,15 @@ type ClassNames = 'root' | 'wrapper' | 'heading';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  wrapper: {
-    marginTop: theme.spacing(2)
-  },
-  heading: {
-    textAlign: 'center',
-    marginBottom: theme.spacing(4)
-  }
-});
+    root: {},
+    wrapper: {
+      marginTop: theme.spacing(2)
+    },
+    heading: {
+      textAlign: 'center',
+      marginBottom: theme.spacing(4)
+    }
+  });
 
 interface State {
   error?: string;

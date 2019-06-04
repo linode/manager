@@ -1,13 +1,9 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -20,24 +16,24 @@ type ClassNames = 'root' | 'inner' | 'panelBody' | 'wrapper';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    flexGrow: 1,
-    width: '100%',
-    backgroundColor: theme.color.white,
-    marginTop: theme.spacing(3)
-  },
-  inner: {
-    padding: theme.spacing(3)
-  },
-  panelBody: {
-    width: '100%',
-    padding: `${theme.spacing(2)}px 0 0`
-  },
-  wrapper: {
-    padding: theme.spacing(1),
-    minHeight: 120
-  }
-});
+    root: {
+      flexGrow: 1,
+      width: '100%',
+      backgroundColor: theme.color.white,
+      marginTop: theme.spacing(3)
+    },
+    inner: {
+      padding: theme.spacing(3)
+    },
+    panelBody: {
+      width: '100%',
+      padding: `${theme.spacing(2)}px 0 0`
+    },
+    wrapper: {
+      padding: theme.spacing(1),
+      minHeight: 120
+    }
+  });
 
 interface BackupInfo {
   title: string;

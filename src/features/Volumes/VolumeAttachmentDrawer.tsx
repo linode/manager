@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -7,12 +8,7 @@ import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputLabel from 'src/components/core/InputLabel';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
@@ -33,8 +29,8 @@ type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {}
-});
+    root: {}
+  });
 
 interface Props {
   open: boolean;

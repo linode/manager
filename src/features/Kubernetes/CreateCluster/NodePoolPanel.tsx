@@ -1,16 +1,11 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
@@ -28,24 +23,24 @@ type ClassNames = 'root' | 'title' | 'gridItem' | 'countInput';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2),
-    '& .tabbedPanel': {
-      marginTop: 0
+    root: {
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2),
+      '& .tabbedPanel': {
+        marginTop: 0
+      }
+    },
+    title: {
+      marginBottom: theme.spacing(1)
+    },
+    gridItem: {
+      paddingLeft: theme.spacing(3),
+      marginBottom: theme.spacing(2)
+    },
+    countInput: {
+      maxWidth: '5em'
     }
-  },
-  title: {
-    marginBottom: theme.spacing(1)
-  },
-  gridItem: {
-    paddingLeft: theme.spacing(3),
-    marginBottom: theme.spacing(2)
-  },
-  countInput: {
-    maxWidth: '5em'
-  }
-});
+  });
 
 interface Props {
   pools: ExtendedPoolNode[];
