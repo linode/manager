@@ -52,6 +52,10 @@ class ConfigureLinode extends Page {
     return $('[data-qa-show-more-expanded]');
   }
 
+  get stackScriptSearch() {
+    return $('[data-qa-debounced-search] input');
+  }
+
   get selectStackScriptPanel() {
     return $('[data-qa-panel="Select a StackScript"]');
   }
@@ -229,11 +233,13 @@ class ConfigureLinode extends Page {
 
   stackScriptTableDisplay() {
     this.stackScriptTableHeader.waitForVisible(constants.wait.normal);
-    this.stackScriptDeploysHeader.waitForVisible(constants.wait.normal);
-    this.stackScriptRevisionsHeader.waitForVisible(constants.wait.normal);
-    this.stackScriptCompatibleImagesHeader.waitForVisible(
-      constants.wait.normal
-    );
+    if (browser.getUrl().includes('/stackscripts')) {
+      this.stackScriptDeploysHeader.waitForVisible(constants.wait.normal);
+      this.stackScriptRevisionsHeader.waitForVisible(constants.wait.normal);
+      this.stackScriptCompatibleImagesHeader.waitForVisible(
+        constants.wait.normal
+      );
+    }
   }
 
   stackScriptMetadataDisplay() {
