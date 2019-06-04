@@ -11,8 +11,6 @@ type ClassNames =
   | 'root'
   | 'loading'
   | 'destructive'
-  | 'cancel'
-  | 'remove'
   | 'compact'
   | 'hidden'
   | 'reg';

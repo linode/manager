@@ -12,7 +12,7 @@ interface Props extends DrawerProps {
 }
 
 type ClassNames =
-  | 'drawer'
+  | 'paper'
   | 'button'
   | 'drawerHeader'
   | 'drawerContent'
@@ -87,7 +87,7 @@ const DDrawer: React.StatelessComponent<CombinedProps> = props => {
         <Grid item>
           <Button
             buttonType="secondary"
-            onClick={props.onClose}
+            onClick={() => props.onClose}
             className={classes.button}
             data-qa-close-drawer
           >
