@@ -58,7 +58,7 @@ describe('Abuse ticket banner', () => {
   });
 
   it('should return null if there are no abuse tickets', () => {
-    expect(AbuseTicketBanner({ abuseTickets: [] })).toBeNull();
+    expect(new AbuseTicketBanner({ abuseTickets: [] })).toBeNull();
   });
 
   describe('integration tests', () => {
