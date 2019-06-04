@@ -278,14 +278,14 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
             label="Master"
             control={<Radio />}
             data-qa-domain-radio="Master"
-            disabled={mode === EDITING || disabled}
+            disabled={mode === EDITING || mode === CLONING || disabled}
           />
           <FormControlLabel
             value="slave"
             label="Slave"
             control={<Radio />}
             data-qa-domain-radio="Slave"
-            disabled={mode === EDITING || disabled}
+            disabled={mode === EDITING || mode === CLONING || disabled}
           />
         </RadioGroup>
         <TextField
