@@ -4,7 +4,6 @@ module.exports.readToken = () => {
     browser.call(() => {
         return browser.credStore.readToken(browser.options.testUser).then((t) => token = t);
     });
-    console.log(`token is ${token}`);
     return token;
 }
 
@@ -13,7 +12,6 @@ module.exports.getToken = (username) => {
     browser.call(() => {
         return browser.credStore.readToken(username).then((t) => token = t);
     });
-    console.log(`token is ${token}`);
     return token;
 }
 
