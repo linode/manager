@@ -148,8 +148,7 @@ export class ActionMenu extends React.Component<CombinedProps, State> {
           BackdropProps={{
             style: {
               backgroundColor: 'transparent'
-            },
-            'data-qa-backdrop': true
+            }
           }}
         >
           <MenuItem key="placeholder" aria-hidden className={classes.hidden} />
