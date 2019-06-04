@@ -57,7 +57,7 @@ const styles = (theme: Theme) =>
     }
   });
 
-export type Props = TextFieldProps & {
+export interface Props {
   errorText?: string;
   errorGroup?: string;
   affirmative?: Boolean;
@@ -73,9 +73,12 @@ export type Props = TextFieldProps & {
    */
   min?: number;
   max?: number;
-};
+}
 
-type CombinedProps = Props & WithTheme & WithStyles<ClassNames>;
+type CombinedProps = TextFieldProps &
+  Props &
+  WithTheme &
+  WithStyles<ClassNames>;
 
 interface State {
   value: string | number;

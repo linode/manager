@@ -43,7 +43,7 @@ const styles = (theme: Theme) =>
     }
   });
 
-const styled = withStyles<ClassNames>(styles);
+const styled = withStyles(styles);
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 

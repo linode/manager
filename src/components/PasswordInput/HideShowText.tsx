@@ -28,7 +28,7 @@ class HideShowText extends React.Component<Props, State> {
 
     return (
       <TextField
-        {...this.props}
+        {...this.props as any}
         data-qa-hide={hidden}
         type={hidden ? 'password' : 'text'}
         required={required}
