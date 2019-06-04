@@ -116,4 +116,4 @@ export class ShowMore<T> extends React.Component<
   }
 }
 
-export default withStyles<CSSClasses>(styles)(ShowMore);
+export default withStyles(styles)(ShowMore);
