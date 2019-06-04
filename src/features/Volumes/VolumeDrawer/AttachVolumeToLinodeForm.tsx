@@ -1,15 +1,14 @@
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
-
+import { WithStyles } from '@material-ui/core/styles';
 import { Form, Formik } from 'formik';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/events';
-
 import { attachVolume } from 'src/services/volumes';
 import { MapState } from 'src/store/types';
 import { openForCreating } from 'src/store/volumeDrawer';

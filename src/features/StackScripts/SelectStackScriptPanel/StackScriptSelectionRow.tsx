@@ -1,7 +1,7 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose as recompose } from 'recompose';
-
 import Button from 'src/components/Button';
 import { withStyles, WithStyles } from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
