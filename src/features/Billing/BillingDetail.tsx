@@ -1,11 +1,7 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { compose, lensPath, set, view } from 'ramda';
 import * as React from 'react';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -26,22 +22,22 @@ type ClassNames = 'root' | 'main' | 'sidebar' | 'heading';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  main: {
-    [theme.breakpoints.up('md')]: {
-      order: 1
+    root: {},
+    main: {
+      [theme.breakpoints.up('md')]: {
+        order: 1
+      }
+    },
+    sidebar: {
+      [theme.breakpoints.up('md')]: {
+        order: 2
+      }
+    },
+    heading: {
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(2)
     }
-  },
-  sidebar: {
-    [theme.breakpoints.up('md')]: {
-      order: 2
-    }
-  },
-  heading: {
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(2)
-  }
-});
+  });
 
 interface PreloadedProps {
   account: { response: Linode.Account };

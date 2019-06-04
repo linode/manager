@@ -1,10 +1,6 @@
-import * as React from 'react';
 import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import * as React from 'react';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableRow from 'src/components/core/TableRow';
 import RenderGuard from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell';
@@ -15,14 +11,14 @@ type ClassNames = 'root' | 'label';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  label: {
-    width: '30%',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%'
+    root: {},
+    label: {
+      width: '30%',
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      }
     }
-  }
-});
+  });
 
 interface Props {
   onEdit: (label: string, description: string, imageID: string) => void;

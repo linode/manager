@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { Lens, lensPath, over, path, pathOr, set, view } from 'ramda';
 import * as React from 'react';
@@ -11,12 +12,7 @@ import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
 import RadioGroup from 'src/components/core/RadioGroup';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
@@ -54,14 +50,14 @@ type ClassNames = 'root' | 'masterIPErrorNotice' | 'addIP';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  masterIPErrorNotice: {
-    marginTop: theme.spacing(2)
-  },
-  addIP: {
-    left: -theme.spacing(2) + 3
-  }
-});
+    root: {},
+    masterIPErrorNotice: {
+      marginTop: theme.spacing(2)
+    },
+    addIP: {
+      left: -theme.spacing(2) + 3
+    }
+  });
 
 type DefaultRecordsType = 'none' | 'linode' | 'nodebalancer';
 

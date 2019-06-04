@@ -1,12 +1,7 @@
-import * as React from 'react';
-
-import Paper from 'src/components/core/Paper';
 import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import * as React from 'react';
+import Paper from 'src/components/core/Paper';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
@@ -22,34 +17,34 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    paddingTop: theme.spacing(3),
-    paddingBottom: theme.spacing(3),
-    border: `1px solid ${theme.color.grey2}`,
-    margin: `${theme.spacing(6)}px 0`
-  },
-  postCard: {
-    height: '100%',
-    paddingRight: theme.spacing(3),
-    paddingLeft: theme.spacing(3)
-  },
-  wrapper: {},
-  postTitle: {
-    marginBottom: theme.spacing(2)
-  },
-  post: {
-    marginBottom: theme.spacing(1) / 2,
-    ...theme.typography.body1
-  },
-  postLink: {
-    '&:hover': {
-      textDecoration: 'underline'
+    root: {
+      paddingTop: theme.spacing(3),
+      paddingBottom: theme.spacing(3),
+      border: `1px solid ${theme.color.grey2}`,
+      margin: `${theme.spacing(6)}px 0`
+    },
+    postCard: {
+      height: '100%',
+      paddingRight: theme.spacing(3),
+      paddingLeft: theme.spacing(3)
+    },
+    wrapper: {},
+    postTitle: {
+      marginBottom: theme.spacing(2)
+    },
+    post: {
+      marginBottom: theme.spacing(1) / 2,
+      ...theme.typography.body1
+    },
+    postLink: {
+      '&:hover': {
+        textDecoration: 'underline'
+      }
+    },
+    withSeparator: {
+      borderRight: `1px solid ${theme.palette.divider}`
     }
-  },
-  withSeparator: {
-    borderRight: `1px solid ${theme.palette.divider}`
-  }
-});
+  });
 
 type CombinedProps = WithStyles<ClassNames>;
 

@@ -1,13 +1,9 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { compose, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import Paper from 'src/components/core/Paper';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Table from 'src/components/core/Table';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
@@ -38,30 +34,30 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  labelGridWrapper: {
-    paddingLeft: `${theme.spacing(1) / 2}px !important`,
-    paddingRight: `${theme.spacing(1) / 2}px !important`
-  },
-  description: {
-    paddingTop: theme.spacing(1) / 2
-  },
-  labelStatusWrapper: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-    wordBreak: 'break-all'
-  },
-  labelCol: {
-    width: '90%'
-  },
-  actionsCol: {
-    width: '10%'
-  },
-  wrapHeader: {
-    wordBreak: 'break-all'
-  }
-});
+    root: {},
+    labelGridWrapper: {
+      paddingLeft: `${theme.spacing(1) / 2}px !important`,
+      paddingRight: `${theme.spacing(1) / 2}px !important`
+    },
+    description: {
+      paddingTop: theme.spacing(1) / 2
+    },
+    labelStatusWrapper: {
+      display: 'flex',
+      flexFlow: 'row nowrap',
+      alignItems: 'center',
+      wordBreak: 'break-all'
+    },
+    labelCol: {
+      width: '90%'
+    },
+    actionsCol: {
+      width: '10%'
+    },
+    wrapHeader: {
+      wordBreak: 'break-all'
+    }
+  });
 
 interface State {
   loading: boolean;

@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -11,12 +12,7 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -58,32 +54,32 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  titleWrapper: {
-    flex: 1
-  },
-  title: {
-    marginBottom: theme.spacing(1) + theme.spacing(1) / 2
-  },
-  domain: {
-    width: '60%'
-  },
-  dnsWarning: {
-    '& h3:first-child': {
+    root: {},
+    titleWrapper: {
+      flex: 1
+    },
+    title: {
+      marginBottom: theme.spacing(1) + theme.spacing(1) / 2
+    },
+    domain: {
+      width: '60%'
+    },
+    dnsWarning: {
+      '& h3:first-child': {
+        marginBottom: theme.spacing(1)
+      }
+    },
+    tagWrapper: {
+      marginTop: theme.spacing(1) / 2,
+      '& [class*="MuiChip"]': {
+        cursor: 'pointer'
+      }
+    },
+    tagGroup: {
+      flexDirection: 'row-reverse',
       marginBottom: theme.spacing(1)
     }
-  },
-  tagWrapper: {
-    marginTop: theme.spacing(1) / 2,
-    '& [class*="MuiChip"]': {
-      cursor: 'pointer'
-    }
-  },
-  tagGroup: {
-    flexDirection: 'row-reverse',
-    marginBottom: theme.spacing(1)
-  }
-});
+  });
 
 interface State {
   importDrawer: {

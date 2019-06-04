@@ -1,10 +1,6 @@
-import * as React from 'react';
 import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import * as React from 'react';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import TableCell from 'src/components/TableCell';
 
@@ -16,23 +12,23 @@ type ClassNames = 'root' | 'tagLink' | 'wrapper';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    width: '8%',
-    height: '20px !important',
-    paddingTop: '0 !important',
-    paddingBottom: '0 !important',
-    textAlign: 'center',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%'
+    root: {
+      width: '8%',
+      height: '20px !important',
+      paddingTop: '0 !important',
+      paddingBottom: '0 !important',
+      textAlign: 'center',
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      }
+    },
+    tagLink: {
+      color: `${theme.color.blueDTwhite} !important`
+    },
+    wrapper: {
+      paddingRight: theme.spacing(2)
     }
-  },
-  tagLink: {
-    color: `${theme.color.blueDTwhite} !important`
-  },
-  wrapper: {
-    paddingRight: theme.spacing(2)
-  }
-});
+  });
 
 export interface Props {
   tags: string[];

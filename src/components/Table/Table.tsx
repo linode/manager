@@ -1,11 +1,7 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Table, { TableProps } from 'src/components/core/Table';
 
 type ClassNames =
@@ -17,86 +13,86 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    overflowX: 'auto',
-    overflowY: 'hidden',
-    '& tbody': {
-      transition: [theme.transitions.create('opacity')]
+    root: {
+      overflowX: 'auto',
+      overflowY: 'hidden',
+      '& tbody': {
+        transition: [theme.transitions.create('opacity')]
+      },
+      '& tbody.sorting': {
+        opacity: 0.5
+      }
     },
-    '& tbody.sorting': {
-      opacity: 0.5
-    }
-  },
-  responsive: {
-    [theme.breakpoints.down('sm')]: {
-      '& .emptyCell': {
-        display: 'none'
-      },
-      '& thead': {
-        display: 'none'
-      },
-      '& tbody > tr': {
-        marginBottom: 0,
-        '& > td:first-child': {
-          backgroundColor: theme.bg.tableHeader,
-          '& .data': {
-            textAlign: 'left'
-          }
-        }
-      },
-      '& tr': {
-        display: 'block',
-        marginBottom: 20,
-        height: 'auto'
-      },
-      '& td': {
-        display: 'flex',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        minHeight: 32
-      }
-    }
-  },
-  noMobileLabel: {
-    [theme.breakpoints.down('sm')]: {
-      '& tbody > tr > td:first-child': {
-        '& > span:first-child': {
+    responsive: {
+      [theme.breakpoints.down('sm')]: {
+        '& .emptyCell': {
           display: 'none'
+        },
+        '& thead': {
+          display: 'none'
+        },
+        '& tbody > tr': {
+          marginBottom: 0,
+          '& > td:first-child': {
+            backgroundColor: theme.bg.tableHeader,
+            '& .data': {
+              textAlign: 'left'
+            }
+          }
+        },
+        '& tr': {
+          display: 'block',
+          marginBottom: 20,
+          height: 'auto'
+        },
+        '& td': {
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          minHeight: 32
         }
-      },
-      '& .data': {
-        marginLeft: 0
       }
-    }
-  },
-  border: {
-    border: `1px solid ${theme.palette.divider}`,
-    borderBottom: 0
-  },
-  stickyHeader: {
-    borderTop: 0,
-    '& th': {
-      position: 'sticky',
-      backgroundColor: theme.bg.tableHeader,
-      paddingTop: 0,
-      paddingBottom: 0,
-      height: 48,
-      zIndex: 5,
-      borderTop: `1px solid ${theme.palette.divider}`,
-      '&:first-child::before': {
-        content: '""',
-        borderTop: `1px solid ${theme.palette.divider}`,
+    },
+    noMobileLabel: {
+      [theme.breakpoints.down('sm')]: {
+        '& tbody > tr > td:first-child': {
+          '& > span:first-child': {
+            display: 'none'
+          }
+        },
+        '& .data': {
+          marginLeft: 0
+        }
+      }
+    },
+    border: {
+      border: `1px solid ${theme.palette.divider}`,
+      borderBottom: 0
+    },
+    stickyHeader: {
+      borderTop: 0,
+      '& th': {
+        position: 'sticky',
         backgroundColor: theme.bg.tableHeader,
-        position: 'absolute',
-        width: 5,
-        top: -1,
-        borderBottom: `2px solid ${theme.palette.divider}`,
+        paddingTop: 0,
+        paddingBottom: 0,
         height: 48,
-        left: -5
+        zIndex: 5,
+        borderTop: `1px solid ${theme.palette.divider}`,
+        '&:first-child::before': {
+          content: '""',
+          borderTop: `1px solid ${theme.palette.divider}`,
+          backgroundColor: theme.bg.tableHeader,
+          position: 'absolute',
+          width: 5,
+          top: -1,
+          borderBottom: `2px solid ${theme.palette.divider}`,
+          height: 48,
+          left: -5
+        }
       }
     }
-  }
-});
+  });
 
 interface Props {
   className?: string;

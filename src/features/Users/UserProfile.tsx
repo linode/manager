@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path } from 'ramda';
 import * as React from 'react';
@@ -8,12 +9,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import HelpIcon from 'src/components/HelpIcon';
@@ -36,36 +32,36 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    flexGrow: 1,
-    width: '100%',
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(3),
-    backgroundColor: theme.color.white
-  },
-  deleteRoot: {
-    flexGrow: 1,
-    width: '100%',
-    marginTop: theme.spacing(3),
-    backgroundColor: theme.color.white
-  },
-  inner: {
-    padding: theme.spacing(3)
-  },
-  field: {
-    marginTop: theme.spacing(3)
-  },
-  topMargin: {
-    marginTop: theme.spacing(2)
-  },
-  emailField: {
-    marginTop: theme.spacing(3),
-    marginBottom: theme.spacing(2)
-  },
-  emailAddress: {
-    marginTop: theme.spacing(1)
-  }
-});
+    root: {
+      flexGrow: 1,
+      width: '100%',
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(3),
+      backgroundColor: theme.color.white
+    },
+    deleteRoot: {
+      flexGrow: 1,
+      width: '100%',
+      marginTop: theme.spacing(3),
+      backgroundColor: theme.color.white
+    },
+    inner: {
+      padding: theme.spacing(3)
+    },
+    field: {
+      marginTop: theme.spacing(3)
+    },
+    topMargin: {
+      marginTop: theme.spacing(2)
+    },
+    emailField: {
+      marginTop: theme.spacing(3),
+      marginBottom: theme.spacing(2)
+    },
+    emailAddress: {
+      marginTop: theme.spacing(1)
+    }
+  });
 
 interface Props {
   username: string;

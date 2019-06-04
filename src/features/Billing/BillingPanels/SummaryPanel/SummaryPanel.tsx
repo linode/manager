@@ -1,14 +1,10 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import { compose } from 'ramda';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
@@ -21,30 +17,30 @@ type ClassNames = 'expired' | 'balance' | 'positive' | 'negative' | 'wordWrap';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  title: {},
-  summarySection: {},
-  section: {},
-  main: {},
-  sidebar: {},
-  domainSidebar: {},
-  titleWrapper: {},
-  expired: {
-    color: theme.color.red
-  },
-  balance: {
-    display: 'flex'
-  },
-  positive: {
-    color: theme.color.green
-  },
-  negative: {
-    color: theme.color.red
-  },
-  wordWrap: {
-    wordBreak: 'break-all'
-  }
-});
+    root: {},
+    title: {},
+    summarySection: {},
+    section: {},
+    main: {},
+    sidebar: {},
+    domainSidebar: {},
+    titleWrapper: {},
+    expired: {
+      color: theme.color.red
+    },
+    balance: {
+      display: 'flex'
+    },
+    positive: {
+      color: theme.color.green
+    },
+    negative: {
+      color: theme.color.red
+    },
+    wordWrap: {
+      wordBreak: 'break-all'
+    }
+  });
 
 interface AccountContextProps {
   loading: boolean;

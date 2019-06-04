@@ -1,17 +1,12 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { compose as rCompose, concat, uniq } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import Waypoint from 'react-waypoint';
 import { compose } from 'recompose';
-
 import Paper from 'src/components/core/Paper';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -38,24 +33,24 @@ type ClassNames = 'root' | 'header' | 'labelCell' | 'timeCell' | 'noMoreEvents';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  header: {
-    marginBottom: theme.spacing(1)
-  },
-  noMoreEvents: {
-    padding: theme.spacing(4),
-    textAlign: 'center'
-  },
-  labelCell: {
-    width: '69%',
-    minWidth: 200,
-    paddingLeft: 10
-  },
-  timeCell: {
-    width: '30%',
-    paddingLeft: theme.spacing(1) / 2
-  }
-});
+    root: {},
+    header: {
+      marginBottom: theme.spacing(1)
+    },
+    noMoreEvents: {
+      padding: theme.spacing(4),
+      textAlign: 'center'
+    },
+    labelCell: {
+      width: '69%',
+      minWidth: 200,
+      paddingLeft: 10
+    },
+    timeCell: {
+      width: '30%',
+      paddingLeft: theme.spacing(1) / 2
+    }
+  });
 
 interface Props {
   getEventsRequest?: typeof getEvents;
