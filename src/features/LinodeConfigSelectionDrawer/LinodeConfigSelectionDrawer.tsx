@@ -48,10 +48,10 @@ const LinodeConfigSelectionDrawer: React.StatelessComponent<
         ))}
       </Grid>
       <ActionsPanel>
-        <Button type="primary" onClick={onSubmit}>
+        <Button buttonType="primary" onClick={onSubmit}>
           Submit
         </Button>
-        <Button onClick={onClose} type="secondary" className="cancel">
+        <Button onClick={onClose} buttonType="secondary" className="cancel">
           Cancel
         </Button>
       </ActionsPanel>

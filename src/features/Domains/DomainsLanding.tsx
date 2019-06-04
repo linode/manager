@@ -154,11 +154,11 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
   getActions = () => {
     return (
       <ActionsPanel>
-        <Button type="cancel" onClick={this.closeRemoveDialog} data-qa-cancel>
+        <Button buttonType="cancel" onClick={this.closeRemoveDialog} data-qa-cancel>
           Cancel
         </Button>
         <Button
-          type="secondary"
+          buttonType="secondary"
           destructive
           onClick={this.removeDomain}
           data-qa-submit

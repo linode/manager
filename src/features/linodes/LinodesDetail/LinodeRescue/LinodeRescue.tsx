@@ -236,7 +236,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
           <ActionsPanel>
             <Button
               onClick={this.onSubmit}
-              type="primary"
+              buttonType="primary"
               data-qa-submit
               disabled={disabled}
             >

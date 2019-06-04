@@ -69,12 +69,12 @@ class DeleteSSHKeyDialog extends React.PureComponent<CombinedProps, State> {
 
     return (
       <ActionsPanel>
-        <Button type="cancel" onClick={closeDialog} data-qa-cancel-delete>
+        <Button buttonType="cancel" onClick={closeDialog} data-qa-cancel-delete>
           Cancel
         </Button>
         <Button
           loading={submitting}
-          type="primary"
+          buttonType="primary"
           onClick={this.onSubmit}
           data-qa-confirm-delete
         >

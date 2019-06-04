@@ -125,14 +125,14 @@ export class EmailChangeForm extends React.Component<CombinedProps, State> {
           />
           <ActionsPanel>
             <Button
-              type="primary"
+              buttonType="primary"
               onClick={this.onSubmit}
               loading={submitting}
               data-qa-submit
             >
               Save
             </Button>
-            <Button type="cancel" onClick={this.onCancel} data-qa-cancel>
+            <Button buttonType="cancel" onClick={this.onCancel} data-qa-cancel>
               Cancel
             </Button>
           </ActionsPanel>

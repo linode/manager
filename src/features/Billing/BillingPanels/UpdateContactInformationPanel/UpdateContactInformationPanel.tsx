@@ -445,7 +445,7 @@ class UpdateContactInformationPanel extends React.Component<
     return (
       <ActionsPanel>
         <Button
-          type="primary"
+          buttonType="primary"
           onClick={this.submitForm}
           loading={this.state.submitting}
           data-qa-save-contact-info
@@ -453,7 +453,7 @@ class UpdateContactInformationPanel extends React.Component<
           Save
         </Button>
         <Button
-          type="secondary"
+          buttonType="secondary"
           onClick={this.resetForm}
           data-qa-reset-contact-info
         >

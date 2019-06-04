@@ -92,7 +92,7 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
   const actions = () => (
     <ActionsPanel>
       <Button
-        type="cancel"
+        buttonType="cancel"
         onClick={() => {
           removeBucketConfirmationDialog.close();
         }}
@@ -101,7 +101,7 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
         Cancel
       </Button>
       <Button
-        type="secondary"
+        buttonType="secondary"
         destructive
         onClick={removeBucket}
         data-qa-submit-rebuild

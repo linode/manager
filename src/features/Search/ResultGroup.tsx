@@ -115,7 +115,7 @@ export const ResultGroup: React.StatelessComponent<CombinedProps> = props => {
       </Paper>
       {!isEmpty(hidden) && (
         <Button
-          type="primary"
+          buttonType="primary"
           onClick={toggle}
           className={classes.button}
           data-qa-show-more-toggle

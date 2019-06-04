@@ -533,14 +533,14 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
             onClick={this.onSubmit}
             disabled={!requirementsMet}
             loading={submitting}
-            type="primary"
+            buttonType="primary"
             data-qa-submit
           >
             Open Ticket
           </Button>
           <Button
             onClick={this.close}
-            type="secondary"
+            buttonType="secondary"
             className="cancel"
             data-qa-cancel
           >

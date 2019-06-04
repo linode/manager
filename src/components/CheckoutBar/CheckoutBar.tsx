@@ -143,7 +143,7 @@ class CheckoutBar extends React.Component<CombinedProps> {
 
         <div className={`${classes.checkoutSection} ${classes.noBorder}`}>
           <Button
-            type="primary"
+            buttonType="primary"
             className={classes.createButton}
             disabled={disabled}
             onClick={onDeploy}

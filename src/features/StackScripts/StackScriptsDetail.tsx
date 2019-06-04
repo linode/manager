@@ -117,7 +117,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
           </Grid>
           <Grid item className={classes.cta}>
             <Button
-              type="primary"
+              buttonType="primary"
               className={classes.button}
               onClick={this.handleClick}
               data-qa-stack-deploy

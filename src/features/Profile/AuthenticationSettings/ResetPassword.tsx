@@ -29,7 +29,7 @@ const ResetPassword: React.StatelessComponent<CombinedProps> = props => {
         Account Password
       </Typography>
       <Button
-        type="primary"
+        buttonType="primary"
         href={`${LOGIN_ROOT}/forgot/password`}
         target="_blank"
         className={classes.button}

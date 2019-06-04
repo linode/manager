@@ -52,7 +52,7 @@ class DialogActions extends React.PureComponent<ActionsProps, {}> {
     return (
       <ActionsPanel>
         <Button
-          type="secondary"
+          buttonType="secondary"
           onClick={this.props.closeDialog}
           data-qa-submit
         >

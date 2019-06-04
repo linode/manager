@@ -39,7 +39,7 @@ export const ImportGroupsAsTags: React.StatelessComponent<
         <strong>Your existing tags will not be affected.</strong>
       </Typography>
       <Button
-        type="primary"
+        buttonType="primary"
         onClick={openDrawer}
         data-qa-open-import-drawer-button
       >

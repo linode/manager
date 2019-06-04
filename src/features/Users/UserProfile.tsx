@@ -164,7 +164,7 @@ class UserProfile extends React.Component<CombinedProps> {
             />
             <ActionsPanel>
               <Button
-                type="primary"
+                buttonType="primary"
                 loading={accountSaving}
                 onClick={saveAccount}
                 data-qa-submit
@@ -203,7 +203,7 @@ class UserProfile extends React.Component<CombinedProps> {
               <Button
                 // This should be disabled if this is NOT the current user.
                 disabled={profileUsername !== originalUsername}
-                type="primary"
+                buttonType="primary"
                 loading={profileSaving}
                 onClick={saveProfile}
                 data-qa-submit
@@ -272,7 +272,7 @@ class UserProfile extends React.Component<CombinedProps> {
           <Button
             disabled={profileUsername === toDeleteUsername}
             className={classes.topMargin}
-            type="secondary"
+            buttonType="secondary"
             destructive
             onClick={this.onDelete}
             data-qa-confirm-delete

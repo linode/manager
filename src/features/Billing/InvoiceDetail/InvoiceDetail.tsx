@@ -155,7 +155,7 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
               >
                 {data && invoice && items && (
                   <Button
-                    type="primary"
+                    buttonType="primary"
                     target="_blank"
                     onClick={() => this.printInvoice(data, invoice, items)}
                   >

@@ -237,7 +237,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
         <ActionsPanel>
           <Button
             disabled={disabled || readOnly}
-            type="primary"
+            buttonType="primary"
             onClick={this.attachToLinode}
             data-qa-submit
           >

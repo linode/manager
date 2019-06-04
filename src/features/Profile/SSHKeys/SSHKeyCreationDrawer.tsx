@@ -94,13 +94,13 @@ export class SSHKeyCreationDrawer extends React.PureComponent<
         <ActionsPanel>
           <Button
             data-qa-submit
-            type="primary"
+            buttonType="primary"
             loading={this.state.submitting}
             onClick={this.onSubmit}
           >
             Add Key
           </Button>
-          <Button data-qa-cancel type="cancel" onClick={this.props.onCancel}>
+          <Button data-qa-cancel buttonType="cancel" onClick={this.props.onCancel}>
             Cancel
           </Button>
         </ActionsPanel>

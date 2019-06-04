@@ -15,6 +15,7 @@ import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { isKubernetesEnabled } from 'src/constants';
 import { MapState } from 'src/store/types';
+import { NORMAL_SPACING_UNIT } from 'src/themeFactory';
 import { isObjectStorageEnabled } from 'src/utilities/accountCapabilities';
 import { sendSpacingToggleEvent, sendThemeToggleEvent } from 'src/utilities/ga';
 import AdditionalMenuItems from './AdditionalMenuItems';
@@ -368,9 +369,8 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
 
   handleSpacingToggle = () => {
     const { toggleSpacing, theme } = this.props;
-    const { spacing: spacingUnit } = theme;
     // Checking the previous spacingUnit value to determine which way to switch.
-    const eventLabel = spacingUnit.unit === 8 ? 'compact' : 'normal';
+    const eventLabel = NORMAL_SPACING_UNIT ? 'compact' : 'normal';
     toggleSpacing();
     sendSpacingToggleEvent(eventLabel);
   };
@@ -414,9 +414,8 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, theme } = this.props;
+    const { classes } = this.props;
     const { expandedMenus, anchorEl } = this.state;
-    const { spacing: spacingUnit } = theme;
 
     return (
       <React.Fragment>
@@ -432,7 +431,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           role="menu"
         >
           <Grid item>
-            {spacingUnit.unit === 8 ? (
+            {NORMAL_SPACING_UNIT ? (
               <div className={classes.logoItem}>
                 <Link to={`/dashboard`}>
                   <Logo width={115} height={43} />

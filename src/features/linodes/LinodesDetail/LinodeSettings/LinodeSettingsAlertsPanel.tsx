@@ -223,7 +223,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
     return (
       <ActionsPanel>
         <Button
-          type="primary"
+          buttonType="primary"
           onClick={this.setLinodeAlertThresholds}
           disabled={noError || permissions === 'read_only'}
           loading={noError}

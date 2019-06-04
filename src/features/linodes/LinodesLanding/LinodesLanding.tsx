@@ -471,14 +471,14 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     return (
       <ActionsPanel style={{ padding: 0 }}>
         <Button
-          type="cancel"
+          buttonType="cancel"
           onClick={this.closePowerAlert}
           data-qa-cancel-cancel
         >
           Cancel
         </Button>
         <Button
-          type="secondary"
+          buttonType="secondary"
           onClick={this.executeAction}
           data-qa-confirm-cancel
           loading={confirmationLoading}

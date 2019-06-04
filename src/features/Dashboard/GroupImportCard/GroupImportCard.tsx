@@ -107,7 +107,7 @@ export const GroupImportCard: React.StatelessComponent<
           <strong>Your existing tags will not be affected.</strong>
         </Typography>
         <Button
-          type="primary"
+          buttonType="primary"
           onClick={openImportDrawer}
           className={classes.button}
           data-qa-open-import-drawer-button

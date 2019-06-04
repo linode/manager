@@ -158,7 +158,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
         />
       </Grid>
       <Grid item className={classes.gridItem}>
-        <Button type="secondary" onClick={submitForm}>
+        <Button buttonType="secondary" onClick={submitForm}>
           Add Node Pool
         </Button>
       </Grid>

@@ -95,7 +95,7 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
           <ActionsPanel>
             <Button
               onClick={this.changeLabel}
-              type="primary"
+              buttonType="primary"
               disabled={disabled || (submitting && !labelError)}
               loading={submitting && !labelError}
               data-qa-label-save

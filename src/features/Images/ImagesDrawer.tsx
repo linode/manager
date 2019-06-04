@@ -359,14 +359,14 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           <Button
             onClick={this.onSubmit}
             disabled={requirementsMet}
-            type="primary"
+            buttonType="primary"
             data-qa-submit
           >
             {mode === modes.EDITING ? 'Update' : 'Create'}
           </Button>
           <Button
             onClick={this.close}
-            type="secondary"
+            buttonType="secondary"
             className="cancel"
             data-qa-cancel
           >

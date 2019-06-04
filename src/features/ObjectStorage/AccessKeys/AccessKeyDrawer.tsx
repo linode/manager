@@ -84,7 +84,7 @@ export const AccessKeyDrawer: React.StatelessComponent<
               />
               <ActionsPanel>
                 <Button
-                  type="primary"
+                  buttonType="primary"
                   onClick={() => handleSubmit()}
                   loading={isSubmitting}
                   data-qa-submit
@@ -94,7 +94,7 @@ export const AccessKeyDrawer: React.StatelessComponent<
                 <Button
                   onClick={onClose}
                   data-qa-cancel
-                  type="secondary"
+                  buttonType="secondary"
                   className="cancel"
                 >
                   Cancel

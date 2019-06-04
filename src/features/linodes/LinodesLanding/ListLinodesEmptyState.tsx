@@ -111,7 +111,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
         </Grid>
         <Grid item xs={12} lg={10} className={classes.copy}>
           <Button
-            type="primary"
+           buttonType="primary"
             onClick={() => this.props.history.push('/linodes/create')}
           >
             Create a Linode

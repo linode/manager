@@ -321,7 +321,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
             />
             <ActionsPanel>
               <Button
-                type="secondary"
+                buttonType="secondary"
                 className="destructive"
                 onClick={handleRebuildButtonClick}
                 data-qa-rebuild

@@ -156,7 +156,7 @@ export class SupportTicketsLanding extends React.PureComponent<
             <Grid container alignItems="flex-end">
               <Grid item>
                 <Button
-                  type="primary"
+                  buttonType="primary"
                   onClick={this.openDrawer}
                   data-qa-open-ticket-link
                 >

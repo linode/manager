@@ -258,7 +258,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
           <ActionsPanel style={{ paddingBottom: 0 }}>
             <Button
               onClick={onSubmit}
-              type="primary"
+              buttonType="primary"
               loading={isSubmitting}
               disabled={disabled}
               data-qa-save
@@ -267,7 +267,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
             </Button>
             <Button
               onClick={onCancel}
-              type="secondary"
+              buttonType="secondary"
               className="cancel"
               disabled={disabled}
               data-qa-cancel

@@ -187,7 +187,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
               </tbody>
             </Table>
             <div className={classes.link}>
-              <Button onClick={this.resetStackScript} type="secondary">
+              <Button onClick={this.resetStackScript} buttonType="secondary">
                 Choose another StackScript
               </Button>
             </div>

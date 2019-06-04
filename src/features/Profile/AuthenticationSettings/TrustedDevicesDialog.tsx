@@ -104,11 +104,11 @@ class DialogActions extends React.PureComponent<ActionsProps, {}> {
   render() {
     return (
       <ActionsPanel>
-        <Button type="cancel" onClick={this.props.closeDialog} data-qa-cancel>
+        <Button buttonType="cancel" onClick={this.props.closeDialog} data-qa-cancel>
           Cancel
         </Button>
         <Button
-          type="primary"
+          buttonType="primary"
           loading={this.props.loading}
           onClick={this.handleSubmit}
           data-qa-submit

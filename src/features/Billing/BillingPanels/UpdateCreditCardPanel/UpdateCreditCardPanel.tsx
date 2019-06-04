@@ -266,13 +266,13 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
     return (
       <ActionsPanel>
         <Button
-          type="primary"
+          buttonType="primary"
           onClick={this.submitForm}
           loading={this.state.submitting}
         >
           Save
         </Button>
-        <Button type="cancel" onClick={this.resetForm}>
+        <Button buttonType="cancel" onClick={this.resetForm}>
           Cancel
         </Button>
       </ActionsPanel>

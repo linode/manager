@@ -221,7 +221,7 @@ export class RestoreToLinodeDrawer extends React.Component<
         )}
         <ActionsPanel>
           <Button
-            type="primary"
+           buttonType="primary"
             onClick={this.restoreToLinode}
             data-qa-restore-submit
             disabled={readOnly}

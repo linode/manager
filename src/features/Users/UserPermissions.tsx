@@ -473,14 +473,14 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     return (
       <ActionsPanel className={classes.section}>
         <Button
-          type="primary"
+          buttonType="primary"
           loading={loading}
           onClick={onConfirm}
           data-qa-submit
         >
           Save
         </Button>
-        <Button type="cancel" onClick={onCancel} data-qa-cancel>
+        <Button buttonType="cancel" onClick={onCancel} data-qa-cancel>
           Cancel
         </Button>
       </ActionsPanel>

@@ -200,14 +200,14 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     return (
       <ActionsPanel>
         <Button
-          type="cancel"
+          buttonType="cancel"
           onClick={this.handleCloseDialog}
           data-qa-cancel-cancel
         >
           Cancel
         </Button>
         <Button
-          type="secondary"
+          buttonType="secondary"
           destructive
           onClick={this.resetAllFields}
           data-qa-confirm-cancel
