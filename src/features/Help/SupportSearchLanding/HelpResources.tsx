@@ -1,15 +1,11 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import Chat from 'src/assets/icons/chat.svg';
 import Community from 'src/assets/icons/community.svg';
 import Support from 'src/assets/icons/support.svg';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Tile from 'src/components/Tile';
@@ -27,43 +23,43 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  wrapper: {
-    marginTop: theme.spacing(4)
-  },
-  heading: {
-    textAlign: 'center',
-    marginBottom: theme.spacing(2)
-  },
-  card: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    backgroundColor: theme.color.white,
-    padding: theme.spacing(4),
-    border: `1px solid ${theme.color.grey2}`,
-    height: '100%'
-  },
-  tileTitle: {
-    fontSize: '1.2rem',
-    marginTop: theme.spacing(1),
-    marginBottom: theme.spacing(1)
-  },
-  icon: {
-    margin: '0 auto 16px',
-    display: 'block',
-    padding: 16,
-    borderRadius: '50%',
-    border: `2px solid ${theme.palette.divider}`,
-    width: 66,
-    height: 66,
-    color: theme.palette.primary.main
-  },
-  ada: {
-    color: '#3683DC',
-    cursor: 'pointer'
-  }
-});
+    root: {},
+    wrapper: {
+      marginTop: theme.spacing(4)
+    },
+    heading: {
+      textAlign: 'center',
+      marginBottom: theme.spacing(2)
+    },
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      backgroundColor: theme.color.white,
+      padding: theme.spacing(4),
+      border: `1px solid ${theme.color.grey2}`,
+      height: '100%'
+    },
+    tileTitle: {
+      fontSize: '1.2rem',
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(1)
+    },
+    icon: {
+      margin: '0 auto 16px',
+      display: 'block',
+      padding: 16,
+      borderRadius: '50%',
+      border: `2px solid ${theme.palette.divider}`,
+      width: 66,
+      height: 66,
+      color: theme.palette.primary.main
+    },
+    ada: {
+      color: '#3683DC',
+      cursor: 'pointer'
+    }
+  });
 
 interface State {
   error?: string;

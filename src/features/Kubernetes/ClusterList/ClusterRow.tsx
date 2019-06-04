@@ -1,10 +1,6 @@
-import * as React from 'react';
 import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import * as React from 'react';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
@@ -19,17 +15,17 @@ type ClassNames = 'root' | 'label' | 'clusterDescription';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  label: {
-    width: '30%',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%'
+    root: {},
+    label: {
+      width: '30%',
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      }
+    },
+    clusterDescription: {
+      paddingTop: theme.spacing(1) / 2
     }
-  },
-  clusterDescription: {
-    paddingTop: theme.spacing(1) / 2
-  }
-});
+  });
 
 interface Props {
   cluster: ExtendedCluster;

@@ -1,12 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import Hidden from 'src/components/core/Hidden';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableCell, { TableCellProps } from 'src/components/core/TableCell';
 
 type ClassNames =
@@ -19,42 +15,42 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  noWrap: {
-    whiteSpace: 'nowrap'
-  },
-  sortable: {
-    color: theme.color.headline,
-    fontWeight: 'normal',
-    cursor: 'pointer',
-    '& button, & button:focus': {
+    root: {},
+    noWrap: {
+      whiteSpace: 'nowrap'
+    },
+    sortable: {
       color: theme.color.headline,
       fontWeight: 'normal',
-      fontSize: '.9rem'
+      cursor: 'pointer',
+      '& button, & button:focus': {
+        color: theme.color.headline,
+        fontWeight: 'normal',
+        fontSize: '.9rem'
+      },
+      '& .sortIcon': {
+        position: 'relative',
+        top: 2,
+        left: 10,
+        color: theme.palette.primary.main
+      }
     },
-    '& .sortIcon': {
-      position: 'relative',
-      top: 2,
-      left: 10,
-      color: theme.palette.primary.main
-    }
-  },
-  data: {
-    [theme.breakpoints.down('sm')]: {
-      textAlign: 'right',
-      marginLeft: theme.spacing(3)
+    data: {
+      [theme.breakpoints.down('sm')]: {
+        textAlign: 'right',
+        marginLeft: theme.spacing(3)
+      },
+      [theme.breakpoints.down('xs')]: {
+        width: '100%'
+      }
     },
-    [theme.breakpoints.down('xs')]: {
+    parentColSpan: {
       width: '100%'
+    },
+    compact: {
+      padding: 6
     }
-  },
-  parentColSpan: {
-    width: '100%'
-  },
-  compact: {
-    padding: 6
-  }
-});
+  });
 
 export interface Props extends TableCellProps {
   noWrap?: boolean;

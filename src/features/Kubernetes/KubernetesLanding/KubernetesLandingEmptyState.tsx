@@ -1,14 +1,10 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'redux';
 import KubernetesSvg from 'src/assets/addnewmenu/kubernetes.svg';
 import Button from 'src/components/Button';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
@@ -16,54 +12,54 @@ type CSSClasses = 'root' | 'copy' | 'icon' | 'title';
 
 const styles = (theme: Theme) =>
   createStyles({
-  '@keyframes scaleIn': {
-    from: {
-      transform: 'translateX( -10px ) rotateY( -180deg )'
+    '@keyframes scaleIn': {
+      from: {
+        transform: 'translateX( -10px ) rotateY( -180deg )'
+      },
+      to: {
+        transformOrigin: 'center center'
+      }
     },
-    to: {
-      transformOrigin: 'center center'
-    }
-  },
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0
+    '@keyframes fadeIn': {
+      from: {
+        opacity: 0
+      },
+      to: {
+        opacity: 1
+      }
     },
-    to: {
-      opacity: 1
-    }
-  },
-  root: {
-    padding: `${theme.spacing(2)}px 0`,
-    [theme.breakpoints.up('md')]: {
-      padding: `${theme.spacing(10)}px 0`
-    }
-  },
-  copy: {
-    textAlign: 'center',
-    maxWidth: 800
-  },
-  icon: {
-    animation: 'scaleIn .5s ease-in-out',
-    width: 225,
-    height: 225,
-    '& use': {
-      fill: theme.bg.main
+    root: {
+      padding: `${theme.spacing(2)}px 0`,
+      [theme.breakpoints.up('md')]: {
+        padding: `${theme.spacing(10)}px 0`
+      }
     },
-    '& .outerCircle': {
-      fill: theme.color.absWhite,
-      stroke: theme.bg.offWhite
+    copy: {
+      textAlign: 'center',
+      maxWidth: 800
     },
-    '& .insidePath path': {
-      opacity: 0,
-      animation: 'fadeIn .2s ease-in-out forwards .3s',
-      stroke: theme.palette.primary.main
+    icon: {
+      animation: 'scaleIn .5s ease-in-out',
+      width: 225,
+      height: 225,
+      '& use': {
+        fill: theme.bg.main
+      },
+      '& .outerCircle': {
+        fill: theme.color.absWhite,
+        stroke: theme.bg.offWhite
+      },
+      '& .insidePath path': {
+        opacity: 0,
+        animation: 'fadeIn .2s ease-in-out forwards .3s',
+        stroke: theme.palette.primary.main
+      }
+    },
+    title: {
+      fontFamily: theme.font.bold,
+      textAlign: 'center'
     }
-  },
-  title: {
-    fontFamily: theme.font.bold,
-    textAlign: 'center'
-  }
-});
+  });
 
 type PropsWithStyles = WithStyles<CSSClasses> & RouteComponentProps<{}>;
 

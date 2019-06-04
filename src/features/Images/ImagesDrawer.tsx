@@ -1,14 +1,10 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { compose, equals } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
@@ -26,18 +22,18 @@ type ClassNames = 'root' | 'suffix' | 'actionPanel' | 'helperText';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  suffix: {
-    fontSize: '.9rem',
-    marginRight: theme.spacing(1)
-  },
-  actionPanel: {
-    marginTop: theme.spacing(2)
-  },
-  helperText: {
-    paddingTop: theme.spacing(1) / 2
-  }
-});
+    root: {},
+    suffix: {
+      fontSize: '.9rem',
+      marginRight: theme.spacing(1)
+    },
+    actionPanel: {
+      marginTop: theme.spacing(2)
+    },
+    helperText: {
+      paddingTop: theme.spacing(1) / 2
+    }
+  });
 
 export interface Props {
   mode: string;

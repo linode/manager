@@ -1,11 +1,7 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import PasswordInput from 'src/components/PasswordInput';
 import RenderGuard from 'src/components/RenderGuard';
@@ -14,19 +10,19 @@ type ClassNames = 'root' | 'inner' | 'panelBody';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    flexGrow: 1,
-    width: '100%',
-    marginTop: theme.spacing(3),
-    backgroundColor: theme.color.white
-  },
-  inner: {
-    padding: theme.spacing(3)
-  },
-  panelBody: {
-    padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`
-  }
-});
+    root: {
+      flexGrow: 1,
+      width: '100%',
+      marginTop: theme.spacing(3),
+      backgroundColor: theme.color.white
+    },
+    inner: {
+      padding: theme.spacing(3)
+    },
+    panelBody: {
+      padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`
+    }
+  });
 
 const styled = withStyles(styles);
 

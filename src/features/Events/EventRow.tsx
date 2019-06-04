@@ -1,15 +1,10 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-
 import Hidden from 'src/components/core/Hidden';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import EntityIcon from 'src/components/EntityIcon';
@@ -25,12 +20,12 @@ type ClassNames = 'root' | 'message';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  message: {
-    wordBreak: 'break-all',
-    paddingLeft: 4
-  }
-});
+    root: {},
+    message: {
+      wordBreak: 'break-all',
+      paddingLeft: 4
+    }
+  });
 
 interface ExtendedEvent extends Linode.Event {
   _deleted?: string;

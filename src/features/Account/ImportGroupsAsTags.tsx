@@ -1,11 +1,7 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import Button from 'src/components/Button';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 
@@ -13,11 +9,11 @@ type ClassNames = 'root' | 'helperText';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  helperText: {
-    marginBottom: theme.spacing(2)
-  }
-});
+    root: {},
+    helperText: {
+      marginBottom: theme.spacing(2)
+    }
+  });
 
 interface Props {
   openDrawer: () => void;

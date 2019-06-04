@@ -1,13 +1,9 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { parse } from 'querystring';
 import * as React from 'react';
 import AppBar from 'src/components/core/AppBar';
 import Paper from 'src/components/core/Paper';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import MUITab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import Typography from 'src/components/core/Typography';
@@ -21,19 +17,22 @@ type ClassNames = 'root' | 'inner';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    flexGrow: 1,
-    width: '100%',
-    backgroundColor: theme.color.white
-  },
-  inner: {
-    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px 0 ${theme
-      .spacing(2)}px`,
-    [theme.breakpoints.up('sm')]: {
-      padding: `${theme.spacing(3)}px ${theme.spacing(3)}px 0 ${theme.spacing(3)}px`
+    root: {
+      flexGrow: 1,
+      width: '100%',
+      backgroundColor: theme.color.white
+    },
+    inner: {
+      padding: `${theme.spacing(2)}px ${theme.spacing(2)}px 0 ${theme.spacing(
+        2
+      )}px`,
+      [theme.breakpoints.up('sm')]: {
+        padding: `${theme.spacing(3)}px ${theme.spacing(3)}px 0 ${theme.spacing(
+          3
+        )}px`
+      }
     }
-  }
-});
+  });
 
 export interface Tab {
   title: string | JSX.Element;

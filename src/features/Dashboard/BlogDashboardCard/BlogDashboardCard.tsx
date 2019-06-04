@@ -1,14 +1,10 @@
+import { WithStyles } from '@material-ui/core/styles';
 import Axios from 'axios';
 import { decode } from 'he';
 import { compose, map, pathOr, take } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ViewAllLink from 'src/components/ViewAllLink';
 import { parseString } from 'xml2js';
@@ -25,14 +21,14 @@ const req = Axios.create();
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    padding: theme.spacing(3),
-    borderBottom: `1px solid ${theme.palette.divider}`
-  },
-  itemTitle: {
-    marginBottom: theme.spacing(1)
-  }
-});
+    root: {
+      padding: theme.spacing(3),
+      borderBottom: `1px solid ${theme.palette.divider}`
+    },
+    itemTitle: {
+      marginBottom: theme.spacing(1)
+    }
+  });
 
 export interface BlogItem {
   description: string;

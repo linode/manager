@@ -1,13 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-
 import Hidden from 'src/components/core/Hidden';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import Typography from 'src/components/core/Typography';
 import EntityIcon from 'src/components/EntityIcon';
@@ -28,39 +23,39 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  icon: {
-    position: 'relative',
-    top: 3,
-    width: 40,
-    height: 40,
-    '& .circle': {
-      fill: theme.bg.offWhiteDT
+    root: {},
+    icon: {
+      position: 'relative',
+      top: 3,
+      width: 40,
+      height: 40,
+      '& .circle': {
+        fill: theme.bg.offWhiteDT
+      },
+      '& .outerCircle': {
+        stroke: theme.bg.main
+      }
     },
-    '& .outerCircle': {
-      stroke: theme.bg.main
+    labelGridWrapper: {
+      paddingLeft: `${theme.spacing(1) / 2}px !important`,
+      paddingRight: `${theme.spacing(1) / 2}px !important`
+    },
+    description: {
+      paddingTop: theme.spacing(1) / 2
+    },
+    labelCol: {
+      width: '50%'
+    },
+    moreCol: {
+      width: '25%'
+    },
+    actionsCol: {
+      width: '10%'
+    },
+    wrapHeader: {
+      wordBreak: 'break-all'
     }
-  },
-  labelGridWrapper: {
-    paddingLeft: `${theme.spacing(1) / 2}px !important`,
-    paddingRight: `${theme.spacing(1) / 2}px !important`
-  },
-  description: {
-    paddingTop: theme.spacing(1) / 2
-  },
-  labelCol: {
-    width: '50%'
-  },
-  moreCol: {
-    width: '25%'
-  },
-  actionsCol: {
-    width: '10%'
-  },
-  wrapHeader: {
-    wordBreak: 'break-all'
-  }
-});
+  });
 
 interface Props {
   volume: Linode.Volume;

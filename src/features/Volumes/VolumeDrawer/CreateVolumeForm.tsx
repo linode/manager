@@ -1,13 +1,9 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { Form, Formik } from 'formik';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import TagsInput, { Tag } from 'src/components/TagsInput';
@@ -42,10 +38,10 @@ type ClassNames = 'copy';
 
 const styles = (theme: Theme) =>
   createStyles({
-  copy: {
-    marginTop: theme.spacing(1)
-  }
-});
+    copy: {
+      marginTop: theme.spacing(1)
+    }
+  });
 
 interface Props {
   onClose: () => void;

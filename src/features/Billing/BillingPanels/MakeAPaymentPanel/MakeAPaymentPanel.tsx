@@ -20,6 +20,7 @@
  *
  */
 
+import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -30,12 +31,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import ErrorState from 'src/components/ErrorState';
 import ExpansionPanel from 'src/components/ExpansionPanel';
@@ -71,36 +67,36 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  positive: {
-    color: theme.color.green
-  },
-  negative: {
-    color: theme.color.red
-  },
-  actionPanel: {
-    display: 'flex',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    position: 'relative'
-  },
-  paypalMask: {
-    width: 175,
-    height: 45,
-    position: 'absolute',
-    zIndex: 10,
-    left: theme.spacing(2),
-    top: theme.spacing(2)
-  },
-  paypalButtonWrapper: {
-    position: 'relative',
-    zIndex: 1,
-    transition: theme.transitions.create(['opacity'])
-  },
-  PaypalHidden: {
-    opacity: 0.3
-  }
-});
+    root: {},
+    positive: {
+      color: theme.color.green
+    },
+    negative: {
+      color: theme.color.red
+    },
+    actionPanel: {
+      display: 'flex',
+      alignItems: 'center',
+      flexWrap: 'wrap',
+      position: 'relative'
+    },
+    paypalMask: {
+      width: 175,
+      height: 45,
+      position: 'absolute',
+      zIndex: 10,
+      left: theme.spacing(2),
+      top: theme.spacing(2)
+    },
+    paypalButtonWrapper: {
+      position: 'relative',
+      zIndex: 1,
+      transition: theme.transitions.create(['opacity'])
+    },
+    PaypalHidden: {
+      opacity: 0.3
+    }
+  });
 
 interface State {
   type: 'CREDIT_CARD' | 'PAYPAL';

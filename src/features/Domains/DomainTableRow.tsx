@@ -1,10 +1,6 @@
-import * as React from 'react';
 import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import * as React from 'react';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
@@ -23,30 +19,30 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  domain: {
-    width: '60%'
-  },
-  domainRow: {
-    backgroundColor: theme.bg.white
-  },
-  domainCellContainer: {
-    [theme.breakpoints.down('sm')]: {
-      textAlign: 'left'
+    domain: {
+      width: '60%'
+    },
+    domainRow: {
+      backgroundColor: theme.bg.white
+    },
+    domainCellContainer: {
+      [theme.breakpoints.down('sm')]: {
+        textAlign: 'left'
+      }
+    },
+    labelStatusWrapper: {
+      display: 'flex',
+      flexFlow: 'row nowrap',
+      alignItems: 'center',
+      wordBreak: 'break-all'
+    },
+    tagWrapper: {
+      marginTop: theme.spacing(1) / 2,
+      '& [class*="MuiChip"]': {
+        cursor: 'pointer'
+      }
     }
-  },
-  labelStatusWrapper: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-    wordBreak: 'break-all'
-  },
-  tagWrapper: {
-    marginTop: theme.spacing(1) / 2,
-    '& [class*="MuiChip"]': {
-      cursor: 'pointer'
-    }
-  }
-});
+  });
 
 interface Props {
   domain: string;

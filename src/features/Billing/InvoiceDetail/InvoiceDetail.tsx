@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -5,12 +6,7 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
@@ -29,29 +25,29 @@ type ClassNames = 'root' | 'backButton' | 'titleWrapper' | 'totals';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`
-  },
-  totals: {
-    display: 'flex',
-    flexDirection: 'column',
-    textAlign: 'right',
-    '& h2': {
-      margin: theme.spacing(1)
+    root: {
+      padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`
+    },
+    totals: {
+      display: 'flex',
+      flexDirection: 'column',
+      textAlign: 'right',
+      '& h2': {
+        margin: theme.spacing(1)
+      }
+    },
+    titleWrapper: {
+      display: 'flex',
+      alignItems: 'center'
+    },
+    backButton: {
+      margin: '5px 0 0 -16px',
+      '& svg': {
+        width: 34,
+        height: 34
+      }
     }
-  },
-  titleWrapper: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  backButton: {
-    margin: '5px 0 0 -16px',
-    '& svg': {
-      width: 34,
-      height: 34
-    }
-  }
-});
+  });
 
 interface State {
   invoice?: Linode.Invoice;

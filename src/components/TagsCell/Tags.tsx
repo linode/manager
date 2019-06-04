@@ -1,10 +1,6 @@
-import * as React from 'react';
 import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import * as React from 'react';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 
 import Paper from 'src/components/core/Paper';
 import Tag from 'src/components/Tag';
@@ -13,10 +9,10 @@ type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    backgroundColor: 'transparent'
-  }
-});
+    root: {
+      backgroundColor: 'transparent'
+    }
+  });
 
 interface Props {
   tags: string[];

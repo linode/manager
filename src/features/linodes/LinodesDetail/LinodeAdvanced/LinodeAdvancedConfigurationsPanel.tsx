@@ -1,12 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
@@ -18,23 +14,23 @@ type ClassNames = 'root' | 'title' | 'paper' | 'main' | 'sidebar';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  title: {
-    marginBottom: theme.spacing(2)
-  },
-  paper: {
-    padding: theme.spacing(3),
-    paddingTop: theme.spacing(1),
-    marginBottom: theme.spacing(3)
-  },
-  main: {},
-  sidebar: {
-    marginTop: -theme.spacing(2),
-    [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing(2) + 24
+    root: {},
+    title: {
+      marginBottom: theme.spacing(2)
+    },
+    paper: {
+      padding: theme.spacing(3),
+      paddingTop: theme.spacing(1),
+      marginBottom: theme.spacing(3)
+    },
+    main: {},
+    sidebar: {
+      marginTop: -theme.spacing(2),
+      [theme.breakpoints.up('md')]: {
+        marginTop: theme.spacing(2) + 24
+      }
     }
-  }
-});
+  });
 
 type CombinedProps = LinodeContextProps & WithStyles<ClassNames>;
 

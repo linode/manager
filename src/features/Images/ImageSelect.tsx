@@ -1,10 +1,6 @@
-import * as React from 'react';
 import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import * as React from 'react';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 
 import { always, cond, groupBy, propOr } from 'ramda';
 
@@ -16,20 +12,20 @@ type ClassNames = 'root' | 'selectContainer' | 'icon';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    width: '100%'
-  },
-  icon: {
-    marginTop: theme.spacing(2) + 14,
-    marginLeft: -theme.spacing(1)
-  },
-  selectContainer: {
-    width: 415 + theme.spacing(2),
-    [theme.breakpoints.down('xs')]: {
+    root: {
       width: '100%'
+    },
+    icon: {
+      marginTop: theme.spacing(2) + 14,
+      marginLeft: -theme.spacing(1)
+    },
+    selectContainer: {
+      width: 415 + theme.spacing(2),
+      [theme.breakpoints.down('xs')]: {
+        width: '100%'
+      }
     }
-  }
-});
+  });
 
 interface Props {
   images: Linode.Image[];

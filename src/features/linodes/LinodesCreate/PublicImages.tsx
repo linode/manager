@@ -1,11 +1,6 @@
-import * as React from 'react';
-
 import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import * as React from 'react';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import SelectionCard from 'src/components/SelectionCard';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
@@ -14,12 +9,12 @@ type ClassNames = 'root' | 'flatImagePanelSelections';
 
 const styles = (theme: Theme) =>
   createStyles({
-  flatImagePanelSelections: {
-    marginTop: theme.spacing(2),
-    padding: `${theme.spacing(1)}px 0`
-  },
-  root: {}
-});
+    flatImagePanelSelections: {
+      marginTop: theme.spacing(2),
+      padding: `${theme.spacing(1)}px 0`
+    },
+    root: {}
+  });
 interface Props {
   images: Linode.Image[];
   oldImages: Linode.Image[];

@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import {
   compose,
   equals,
@@ -17,12 +18,7 @@ import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -48,35 +44,35 @@ type ClassNames = 'root' | 'cells' | 'titles' | 'linkContainer';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    [theme.breakpoints.down('xs')]: {
-      flexDirection: 'column',
-      alignItems: 'flex-start'
-    }
-  },
-  cells: {
-    [theme.breakpoints.up('md')]: {
-      maxWidth: 300,
-      wordBreak: 'break-all'
-    }
-  },
-  titles: {
-    marginBottom: theme.spacing(1),
-    [theme.breakpoints.down('xs')]: {
-      marginTop: theme.spacing(2)
-    }
-  },
-  linkContainer: {
-    position: 'relative',
-    top: theme.spacing(1) + 2,
-    [theme.breakpoints.down('xs')]: {
-      top: -10,
-      '& button': {
-        padding: 0
+    root: {
+      [theme.breakpoints.down('xs')]: {
+        flexDirection: 'column',
+        alignItems: 'flex-start'
+      }
+    },
+    cells: {
+      [theme.breakpoints.up('md')]: {
+        maxWidth: 300,
+        wordBreak: 'break-all'
+      }
+    },
+    titles: {
+      marginBottom: theme.spacing(1),
+      [theme.breakpoints.down('xs')]: {
+        marginTop: theme.spacing(2)
+      }
+    },
+    linkContainer: {
+      position: 'relative',
+      top: theme.spacing(1) + 2,
+      [theme.breakpoints.down('xs')]: {
+        top: -10,
+        '& button': {
+          padding: 0
+        }
       }
     }
-  }
-});
+  });
 
 interface Props {
   domain: Linode.Domain;

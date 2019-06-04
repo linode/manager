@@ -1,13 +1,9 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { path } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import { EU_COUNTRIES } from 'src/constants';
 import AccountContainer, {
@@ -19,12 +15,12 @@ type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    paddingTop: theme.spacing(3),
-    paddingRight: theme.spacing(3),
-    paddingLeft: theme.spacing(3)
-  }
-});
+    root: {
+      paddingTop: theme.spacing(3),
+      paddingRight: theme.spacing(3),
+      paddingLeft: theme.spacing(3)
+    }
+  });
 
 interface AccountProps {
   country?: string;

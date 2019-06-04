@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import {
@@ -10,12 +11,7 @@ import {
 import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
 import Paper from 'src/components/core/Paper';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import Typography from 'src/components/core/Typography';
@@ -60,31 +56,31 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  main: {
-    [theme.breakpoints.up('md')]: {
-      order: 1
+    main: {
+      [theme.breakpoints.up('md')]: {
+        order: 1
+      }
+    },
+    error: {
+      marginTop: `${theme.spacing(3)}px !important`,
+      marginBottom: `0 !important`
+    },
+    sidebar: {
+      [theme.breakpoints.up('md')]: {
+        order: 2
+      }
+    },
+    domainSidebar: {
+      [theme.breakpoints.up('md')]: {
+        marginTop: theme.spacing(1) + 24
+      }
+    },
+    titleWrapper: {
+      display: 'flex',
+      alignItems: 'center',
+      wordBreak: 'break-all'
     }
-  },
-  error: {
-    marginTop: `${theme.spacing(3)}px !important`,
-    marginBottom: `0 !important`
-  },
-  sidebar: {
-    [theme.breakpoints.up('md')]: {
-      order: 2
-    }
-  },
-  domainSidebar: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing(1) + 24
-    }
-  },
-  titleWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    wordBreak: 'break-all'
-  }
-});
+  });
 
 type CombinedProps = DomainActionsProps &
   RouteProps &

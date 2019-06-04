@@ -1,12 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
 
@@ -14,16 +10,16 @@ type ClassNames = 'root' | 'tableCell' | 'transparent';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  tableCell: {
-    padding: 17,
-    textAlign: 'center'
-    // border: 0
-  },
-  transparent: {
-    backgroundColor: theme.bg.main
-  }
-});
+    root: {},
+    tableCell: {
+      padding: 17,
+      textAlign: 'center'
+      // border: 0
+    },
+    transparent: {
+      backgroundColor: theme.bg.main
+    }
+  });
 
 export interface Props {
   colSpan: number;

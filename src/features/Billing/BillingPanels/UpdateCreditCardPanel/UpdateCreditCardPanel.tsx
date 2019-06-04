@@ -1,15 +1,11 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { compose, range, take, takeLast } from 'ramda';
 import * as React from 'react';
 import NumberFormat from 'react-number-format';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
-import { WithStyles } from '@material-ui/core/styles';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ExpansionPanel from 'src/components/ExpansionPanel';
@@ -33,28 +29,28 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  expired: {
-    color: theme.color.red
-  },
-  currentccContainer: {
-    padding: `${theme.spacing(2)}px 0 ${theme.spacing(4)}px`
-  },
-  newccContainer: {
-    padding: `${theme.spacing(1)}px 0 0`
-  },
-  currentCCTitle: {
-    marginBottom: theme.spacing(1)
-  },
-  cardNumber: {
-    minWidth: 225
-  },
-  fullWidthMobile: {
-    [theme.breakpoints.down('xs')]: {
-      width: '100%'
+    root: {},
+    expired: {
+      color: theme.color.red
+    },
+    currentccContainer: {
+      padding: `${theme.spacing(2)}px 0 ${theme.spacing(4)}px`
+    },
+    newccContainer: {
+      padding: `${theme.spacing(1)}px 0 0`
+    },
+    currentCCTitle: {
+      marginBottom: theme.spacing(1)
+    },
+    cardNumber: {
+      minWidth: 225
+    },
+    fullWidthMobile: {
+      [theme.breakpoints.down('xs')]: {
+        width: '100%'
+      }
     }
-  }
-});
+  });
 
 interface AccountContextProps {
   accountLoading: boolean;
