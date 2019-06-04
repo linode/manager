@@ -271,7 +271,7 @@ export class EditableText extends React.Component<FinalProps, State> {
             onKeyDown={this.handleKeyPress}
             value={text}
             errorText={this.props.errorText}
-            {...rest}
+            {...rest as any}
             InputProps={{ className: classes.inputRoot }}
             inputProps={{
               className: classnames({
