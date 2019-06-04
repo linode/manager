@@ -1,7 +1,7 @@
 /**
- * when is not guarenteed
+ * _when_ is not guaranteed
  *
- * when could be in the past
+ * _when_ could be in the past
  */
 
 /**
@@ -10,7 +10,7 @@
  */
 type Type = 'zombieload-reboot-scheduled' | 'zombieload-migration-scheduled';
 
-export interface LinodesWithMaintenance extends Linode.Linode {
+export interface LinodeWithMaintenance extends Linode.Linode {
   maintenance?: {
     type: Type;
     when: string | null;
@@ -21,7 +21,7 @@ export interface LinodesWithMaintenance extends Linode.Linode {
 export const addNotificationsToLinodes = (
   notifications: Linode.Notification[],
   linodes: Linode.Linode[]
-): LinodesWithMaintenance[] => {
+): LinodeWithMaintenance[] => {
   const maintenanceNotifications = notifications.filter(eachNotification => {
     return eachNotification.type === 'maintenance';
   });

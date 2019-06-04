@@ -15,6 +15,8 @@ it('renders without crashing', () => {
       <Provider store={store}>
         <StaticRouter location="/" context={{}}>
           <App
+            linodes={[]}
+            notifications={[]}
             {...mockNodeBalancerActions}
             username=""
             isLoggedInAsCustomer={false}
@@ -35,20 +37,19 @@ it('renders without crashing', () => {
             }}
             userId={123456}
             profileLoading={false}
-            actions={{
-              requestAccount: jest.fn(),
-              requestDomains: jest.fn(),
-              requestImages: jest.fn(),
-              requestLinodes: jest.fn(),
-              requestNotifications: jest.fn(),
-              requestProfile: jest.fn(),
-              requestSettings: jest.fn(),
-              requestTypes: jest.fn(),
-              requestRegions: jest.fn(),
-              requestVolumes: jest.fn(),
-              requestBuckets: jest.fn(),
-              requestClusters: jest.fn()
-            }}
+            requestAccount={jest.fn()}
+            addNotificationsToLinodes={jest.fn()}
+            requestDomains={jest.fn()}
+            requestImages={jest.fn()}
+            requestLinodes={jest.fn()}
+            requestNotifications={jest.fn()}
+            requestProfile={jest.fn()}
+            requestSettings={jest.fn()}
+            requestTypes={jest.fn()}
+            requestRegions={jest.fn()}
+            requestVolumes={jest.fn()}
+            requestBuckets={jest.fn()}
+            requestClusters={jest.fn()}
             documentation={[]}
             toggleTheme={jest.fn()}
             toggleSpacing={jest.fn()}

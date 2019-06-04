@@ -15,14 +15,17 @@ import {
   upsertLinode
 } from './linodes.actions';
 
-import { addNotificationsToLinodes as _addNotificationsToLinodes } from './linodes.helpers';
+import {
+  addNotificationsToLinodes as _addNotificationsToLinodes,
+  LinodeWithMaintenance
+} from './linodes.helpers';
 
 const getId = <E extends HasNumericID>({ id }: E) => id;
 
 /**
  * State
  */
-export type State = EntityState<Linode.Linode, EntityError>;
+export type State = EntityState<LinodeWithMaintenance, EntityError>;
 
 export const defaultState: State = {
   results: [],
