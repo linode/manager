@@ -139,8 +139,10 @@ describe('Profile - OAuth Clients Suite', () => {
 
             profile.waitForNotice(/\w\d/, constants.wait.normal);
 
-            const content = $(dialogContent).getText();
-            expect(content).toContain('Here is your client secret! Store it securely, as it won\'t be shown again.');
+            browser.waitUntil(function() {
+                const successMsg = /here is your client secret/ig;
+                return !!$(dialogContent).getText().match(successMsg);
+            }, constants.wait.short);
         });
     });
 
@@ -155,11 +157,11 @@ describe('Profile - OAuth Clients Suite', () => {
         it('should display delete dialog', () => {
             profile.selectActionMenu(editedClient.label, "Delete");
             browser.waitForVisible(dialogTitle);
-            
+
             const dialogMsg = $(dialogContent).getText();
             deleteButton = $(dialogConfirm);
             cancelButton = $(dialogCancel);
-            
+
             expect(dialogMsg).toMatch(/delete/i);
             expect(deleteButton.isVisible()).toBe(true);
             expect(cancelButton.isVisible()).toBe(true);
