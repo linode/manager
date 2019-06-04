@@ -1,17 +1,15 @@
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
-
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-
 import Button from 'src/components/Button';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Notice from 'src/components/Notice';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import createMailto from 'src/features/Footer/createMailto';
-
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
+import createMailto from 'src/features/Footer/createMailto';
 import { getInvoiceItems } from 'src/services/account';
 import { getAll } from 'src/utilities/getAll';
 
@@ -19,11 +17,11 @@ type ClassNames = 'root' | 'button';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  button: {
-    padding: 0
-  }
-});
+    root: {},
+    button: {
+      padding: 0
+    }
+  });
 
 interface Props {
   invoice: Linode.Invoice;

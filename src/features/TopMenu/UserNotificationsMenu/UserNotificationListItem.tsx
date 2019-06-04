@@ -2,11 +2,7 @@ import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import ListItem from 'src/components/core/ListItem';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
 type ClassNames =
@@ -21,12 +17,12 @@ type ClassNames =
   | 'pointer'
   | 'root';
 
-const styles: StyleRulesCallback = theme => {
+const styles = (theme: Theme) => {
   const {
     palette: { status }
   } = theme;
 
-  return {
+  return createStyles({
     pointer: {
       cursor: 'pointer'
     },
@@ -81,7 +77,7 @@ const styles: StyleRulesCallback = theme => {
     flag: {
       marginRight: theme.spacing(2)
     }
-  };
+  });
 };
 
 interface Props {

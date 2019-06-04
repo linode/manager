@@ -71,11 +71,11 @@ class LinodeThemeWrapper extends React.Component<Props, State> {
     const theme = themes[themeChoice];
 
     return (
-      <MuiThemeProvider theme={theme()}>
+      <ThemeProvider theme={theme()}>
         {isRenderChildren(children)
           ? children(this.toggleTheme, this.toggleSpacing)
           : children}
-      </MuiThemeProvider>
+      </ThemeProvider>
     );
   }
 }
