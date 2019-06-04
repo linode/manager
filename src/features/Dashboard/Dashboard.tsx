@@ -75,7 +75,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      {props.someLinodesHaveMaintenance && (
+      {props.someLinodesHaveScheduledMaintenance && (
         <MaintenanceBanner
           userTimezone={props.userTimezone}
           userTimezoneError={props.userTimezoneError}
