@@ -126,8 +126,8 @@ storiesOf('ExpansionPanel', module)
 const renderActions = () => {
   return (
     <ActionsPanel>
-      <Button type="primary">Save</Button>
-      <Button type="secondary" className="cancel">
+      <Button buttonType="primary">Save</Button>
+      <Button buttonType="secondary" className="cancel">
         Cancel
       </Button>
     </ActionsPanel>

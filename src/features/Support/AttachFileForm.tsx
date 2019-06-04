@@ -89,7 +89,7 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
         <Button
           component="span"
           className={classes.attachFileButton}
-          type="secondary"
+          buttonType="secondary"
           onClick={this.clickAttachButton}
         >
           <AttachFile />

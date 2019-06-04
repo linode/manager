@@ -58,14 +58,14 @@ const ConfirmToken: React.StatelessComponent<CombinedProps> = props => {
       />
       <ActionsPanel>
         <Button
-          type="primary"
+          buttonType="primary"
           onClick={onSubmit}
           loading={submitting}
           data-qa-submit
         >
           Confirm Token
         </Button>
-        <Button type="cancel" onClick={onCancel} data-qa-cancel>
+        <Button buttonType="cancel" onClick={onCancel} data-qa-cancel>
           Cancel
         </Button>
         {twoFactorConfirmed && (

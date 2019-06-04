@@ -171,7 +171,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
     return (
       <div className={classes.wrapper}>
         <Button
-          type="primary"
+          buttonType="primary"
           onClick={this.handleClick}
           className={classes.button}
           data-qa-add-new-menu-button

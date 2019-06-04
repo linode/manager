@@ -33,7 +33,7 @@ const ReplyActions: React.FC<CombinedProps> = props => {
     <React.Fragment>
       <ActionsPanel style={{ marginTop: 16 }}>
         <Button
-          type="primary"
+          buttonType="primary"
           loading={isSubmitting}
           onClick={handleSubmitForm}
         >

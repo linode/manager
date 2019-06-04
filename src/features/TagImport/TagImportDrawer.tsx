@@ -131,14 +131,14 @@ export const TagImportDrawer: React.StatelessComponent<
             <Button
               onClick={handleSubmit}
               loading={loading}
-              type="primary"
+              buttonType="primary"
               data-qa-submit
             >
               Import Display Groups Now
             </Button>
             <Button
               onClick={close}
-              type="secondary"
+              buttonType="secondary"
               className="cancel"
               data-qa-cancel
             >

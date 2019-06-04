@@ -104,11 +104,11 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
             </div>
           )}
           <ActionsPanel style={{ marginTop: 16 }}>
-            <Button type="primary" onClick={this.create} data-qa-submit>
+            <Button buttonType="primary" onClick={this.create} data-qa-submit>
               Allocate
             </Button>
             <Button
-              type="secondary"
+              buttonType="secondary"
               className="cancel"
               onClick={onClose}
               data-qa-cancel

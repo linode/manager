@@ -431,14 +431,18 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
         )}
         <ActionsPanel>
           {mode === 'view' && (
-            <Button type="primary" onClick={closeDrawer} data-qa-close-drawer>
+            <Button
+              buttonType="primary"
+              onClick={closeDrawer}
+              data-qa-close-drawer
+            >
               Done
             </Button>
           )}
           {(mode === 'create' || mode === 'edit') && [
             <Button
               key="create"
-              type="primary"
+              buttonType="primary"
               onClick={
                 (mode as string) === 'create'
                   ? () => onCreate(permTuplesToScopeString(this.state.scopes))
@@ -449,7 +453,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
               {(mode as string) === 'create' ? 'Submit' : 'Save'}
             </Button>,
             <Button
-              type="secondary"
+              buttonType="secondary"
               className="cancel"
               key="cancel"
               onClick={closeDrawer}

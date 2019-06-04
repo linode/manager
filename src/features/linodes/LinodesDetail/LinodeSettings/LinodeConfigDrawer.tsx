@@ -626,10 +626,10 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         </Grid>
         <Grid item>
           <ActionsPanel>
-            <Button onClick={this.onSubmit} type="primary" disabled={readOnly}>
+            <Button onClick={this.onSubmit} buttonType="primary" disabled={readOnly}>
               Submit
             </Button>
-            <Button type="secondary" className="cancel" onClick={onClose}>
+            <Button buttonType="secondary" className="cancel" onClick={onClose}>
               Cancel
             </Button>
           </ActionsPanel>

@@ -95,7 +95,7 @@ const Placeholder: React.StatelessComponent<CombinedProps> = props => {
   return (
     <Grid
       container
-      spacing={24}
+      spacing={3}
       alignItems="center"
       direction="column"
       justify="center"
@@ -123,7 +123,7 @@ const Placeholder: React.StatelessComponent<CombinedProps> = props => {
       {buttonProps && (
         <Grid item xs={12} lg={10}>
           <Button
-            type="primary"
+            buttonType="primary"
             className={classes.button}
             {...buttonProps}
             data-qa-placeholder-button

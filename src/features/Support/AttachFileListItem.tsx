@@ -104,7 +104,7 @@ export const AttachFileListItem: React.StatelessComponent<
         </Grid>
         {!inlineDisplay && (
           <Grid item>
-            <Button type="remove" data-qa-delete-button onClick={onClick} />
+            <Button buttonType="remove" data-qa-delete-button onClick={onClick} />
           </Grid>
         )}
         {file.uploading && (

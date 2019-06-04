@@ -245,14 +245,14 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
     return (
       <ActionsPanel>
         <Button
-          type="cancel"
+          buttonType="cancel"
           onClick={this.handleCloseDialog}
           data-qa-cancel-cancel
         >
           No
         </Button>
         <Button
-          type="secondary"
+          buttonType="secondary"
           destructive
           onClick={this.resetAllFields}
           data-qa-confirm-cancel

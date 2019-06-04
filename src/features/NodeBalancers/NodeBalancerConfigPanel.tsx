@@ -1189,7 +1189,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               <ActionsPanel className={classes.backendIPAction}>
                                 {(forEdit || idx !== 0) && (
                                   <Button
-                                    type="remove"
+                                    buttonType="remove"
                                     data-node-idx={idx}
                                     onClick={this.removeNode}
                                     data-qa-remove-node
@@ -1239,7 +1239,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     <ActionsPanel style={{ paddingLeft: 0 }}>
                       {forEdit && (
                         <Button
-                          type="primary"
+                          buttonType="primary"
                           onClick={this.onSave}
                           loading={submitting}
                           data-qa-save-config
@@ -1251,7 +1251,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       {(forEdit || configIdx !== 0) && (
                         <Button
                           onClick={this.props.onDelete}
-                          type="secondary"
+                          buttonType="secondary"
                           destructive
                           data-qa-delete-config
                           disabled={disabled}

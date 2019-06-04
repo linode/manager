@@ -408,7 +408,7 @@ class TagsPanel extends React.Component<CombinedProps, State> {
             <Button
               onClick={this.toggleTagInput}
               className={classes.addButton}
-              type="primary"
+              buttonType="primary"
               disabled={loading || disabled}
             >
               <AddCircle data-qa-add-tag />

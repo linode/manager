@@ -639,10 +639,10 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   renderDialogActions = () => {
     return (
       <ActionsPanel>
-        <Button type="cancel" onClick={this.handleCloseDialog}>
+        <Button buttonType="cancel" onClick={this.handleCloseDialog}>
           Cancel
         </Button>
-        <Button type="secondary" destructive onClick={this.deleteDomainRecord}>
+        <Button buttonType="secondary" destructive onClick={this.deleteDomainRecord}>
           Delete
         </Button>
       </ActionsPanel>

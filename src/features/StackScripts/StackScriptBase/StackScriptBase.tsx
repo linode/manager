@@ -523,7 +523,7 @@ const withStackScriptBase = (isSelecting: boolean) => (
                   title="Show More StackScripts"
                   onClick={this.getNext}
                   value="Show More"
-                  type="secondary"
+                  buttonType="secondary"
                   disabled={this.state.gettingMoreStackScripts}
                   style={{ margin: '32px 0 32px 0' }}
                 >

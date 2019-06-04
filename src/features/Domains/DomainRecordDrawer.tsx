@@ -729,7 +729,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         <ActionsPanel>
           <Button {...buttonProps} data-qa-record-save />
           <Button
-            type="secondary"
+           buttonType="secondary"
             className="cancel"
             onClick={this.onClose}
             data-qa-record-cancel

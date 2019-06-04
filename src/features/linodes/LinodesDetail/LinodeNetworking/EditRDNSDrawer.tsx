@@ -102,11 +102,11 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
           )}
 
           <ActionsPanel style={{ marginTop: 16 }}>
-            <Button type="primary" onClick={this.save} data-qa-submit>
+            <Button buttonType="primary" onClick={this.save} data-qa-submit>
               Save
             </Button>
             <Button
-              type="secondary"
+              buttonType="secondary"
               className="cancel"
               onClick={onClose}
               data-qa-cancel

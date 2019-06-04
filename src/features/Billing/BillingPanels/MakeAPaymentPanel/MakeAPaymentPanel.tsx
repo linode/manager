@@ -568,11 +568,11 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
             </div>
           </React.Fragment>
         ) : (
-          <Button type="primary" onClick={this.openCreditCardDialog}>
+          <Button buttonType="primary" onClick={this.openCreditCardDialog}>
             Submit Payment
           </Button>
         )}
-        <Button type="cancel" onClick={this.resetForm}>
+        <Button buttonType="cancel" onClick={this.resetForm}>
           Cancel
         </Button>
       </ActionsPanel>

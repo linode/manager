@@ -21,7 +21,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class UserAgentNotification extends React.Component<CombinedProps, {}> {
   actions = () => (
-    <Button onClick={this.props.onClose} type="primary">
+    <Button onClick={this.props.onClose} buttonType="primary">
       Dismiss
     </Button>
   );

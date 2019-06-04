@@ -20,7 +20,7 @@ type ClassNames =
 export interface Props extends ButtonProps {
   loading?: boolean;
   destructive?: boolean;
-  type?: 'primary' | 'secondary' | 'cancel' | 'remove';
+  buttonType?: 'primary' | 'secondary' | 'cancel' | 'remove';
   className?: string;
   tooltipText?: string;
   compact?: boolean;
@@ -28,15 +28,15 @@ export interface Props extends ButtonProps {
 
 const styles = (theme: Theme) =>
   createStyles({
-    '@keyframes rotate': {
-      from: {
-        transform: 'rotate(0deg)'
-      },
-      to: {
-        transform: 'rotate(360deg)'
-      }
-    },
     root: {
+      '@keyframes rotate': {
+        from: {
+          transform: 'rotate(0deg)'
+        },
+        to: {
+          transform: 'rotate(360deg)'
+        }
+      },
       '&.cancel': {
         border: `1px solid transparent`,
         transition: theme.transitions.create(['color', 'border-color']),
@@ -138,7 +138,7 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = props => {
     loading,
     destructive,
     tooltipText,
-    type,
+    buttonType,
     compact,
     className,
     ...rest
@@ -152,7 +152,7 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = props => {
         disabled={props.disabled || loading}
         color={getColor(props)}
         className={classNames(
-          type,
+          buttonType,
           {
             [classes.root]: true,
             [classes.loading]: loading,
@@ -173,7 +173,7 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = props => {
         >
           {props.children}
         </span>
-        {type === 'remove' && 'Remove'}
+        {buttonType === 'remove' && 'Remove'}
       </Button>
       {tooltipText && <HelpIcon text={tooltipText} />}
     </React.Fragment>
