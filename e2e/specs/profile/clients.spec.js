@@ -140,8 +140,8 @@ describe('Profile - OAuth Clients Suite', () => {
             profile.waitForNotice(/\w\d/, constants.wait.normal);
 
             browser.waitUntil(function() {
-                const successMsg = 'Here is your client secret! Store it securely, as it won\'t be shown again.';
-                return $(dialogContent).getText().includes(successMsg);
+                const successMsg = /here is your client secret/ig;
+                return !!$(dialogContent).getText().match(successMsg);
             }, constants.wait.short);
         });
     });
