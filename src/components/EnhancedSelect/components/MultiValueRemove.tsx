@@ -1,19 +1,16 @@
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from '@material-ui/styles';
+import { WithStyles } from '@material-ui/core/styles';
 import Close from '@material-ui/icons/Close';
 import * as React from 'react';
 import { components as reactSelectComponents } from 'react-select';
 import { MultiValueGenericProps } from 'react-select/lib/components/MultiValue';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 
 type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {}
-});
+    root: {}
+  });
 
 interface Props extends MultiValueGenericProps<any> {}
 

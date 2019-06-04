@@ -1,28 +1,23 @@
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from '@material-ui/styles';
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-
-import { disableTwoFactor } from 'src/services/profile';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import withLoadingAndError, {
   Props as LoadingAndErrorProps
 } from 'src/components/withLoadingAndError';
+import { disableTwoFactor } from 'src/services/profile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {}
-});
+    root: {}
+  });
 
 interface Props {
   open: boolean;

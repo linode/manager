@@ -26,89 +26,90 @@ export interface Props extends ButtonProps {
   compact?: boolean;
 }
 
-const styles: StyleRulesCallback = theme => ({
-  '@keyframes rotate': {
-    from: {
-      transform: 'rotate(0deg)'
-    },
-    to: {
-      transform: 'rotate(360deg)'
-    }
-  },
-  root: {
-    '&.cancel': {
-      border: `1px solid transparent`,
-      transition: theme.transitions.create(['color', 'border-color']),
-      '&:hover, &:focus': {
-        color: theme.palette.primary.light,
-        borderColor: theme.palette.primary.light
+const styles = (theme: Theme) =>
+  createStyles({
+    '@keyframes rotate': {
+      from: {
+        transform: 'rotate(0deg)'
+      },
+      to: {
+        transform: 'rotate(360deg)'
       }
     },
-    '&.remove': {
-      fontSize: '.9rem',
-      border: 0,
+    root: {
+      '&.cancel': {
+        border: `1px solid transparent`,
+        transition: theme.transitions.create(['color', 'border-color']),
+        '&:hover, &:focus': {
+          color: theme.palette.primary.light,
+          borderColor: theme.palette.primary.light
+        }
+      },
+      '&.remove': {
+        fontSize: '.9rem',
+        border: 0,
+        color: '#C44742',
+        padding: `${theme.spacing(2) + 2}px  ${theme.spacing(2) +
+          2}px ${theme.spacing(3) + 2}px ${theme.spacing(2) + 2}px`,
+        transition: theme.transitions.create(['color', 'border-color']),
+        '&:hover, &:focus': {
+          color: '#DF6560'
+        }
+      }
+    },
+    loading: {
+      '& svg': {
+        position: 'absolute',
+        left: 0,
+        top: 0,
+        right: 0,
+        bottom: 0,
+        margin: '0 auto',
+        width: theme.spacing(1) + 14,
+        height: theme.spacing(1) + 14,
+        animation: 'rotate 2s linear infinite'
+      }
+    },
+    destructive: {
+      borderColor: '#C44742',
       color: '#C44742',
-      padding: `${theme.spacing(2) + 2}px  ${theme.spacing(2) +
-        2}px ${theme.spacing(3) + 2}px ${theme.spacing(2) + 2}px`,
-      transition: theme.transitions.create(['color', 'border-color']),
-      '&:hover, &:focus': {
-        color: '#DF6560'
-      }
-    }
-  },
-  loading: {
-    '& svg': {
-      position: 'absolute',
-      left: 0,
-      top: 0,
-      right: 0,
-      bottom: 0,
-      margin: '0 auto',
-      width: theme.spacing(1) + 14,
-      height: theme.spacing(1) + 14,
-      animation: 'rotate 2s linear infinite'
-    }
-  },
-  destructive: {
-    borderColor: '#C44742',
-    color: '#C44742',
-    background: theme.color.white,
-    '&.primary:not(.disabled)': {
-      backgroundColor: '#C44742',
-      color: theme.color.white,
-      '&:hover, &:focus': {
-        backgroundColor: '#DF6560',
-        color: theme.color.white
-      }
-    },
-    '&:hover, &:focus': {
       background: theme.color.white,
-      color: '#DF6560',
-      borderColor: '#DF6560'
-    },
-    '&:active': {
-      color: '#963530',
-      borderColor: '#963530'
-    },
-    '&$loading': {
-      color: '#C44742 !important',
-      '&.primary': {
-        background: 'rgba(0, 0, 0, 0.12) !important'
+      '&.primary:not(.disabled)': {
+        backgroundColor: '#C44742',
+        color: theme.color.white,
+        '&:hover, &:focus': {
+          backgroundColor: '#DF6560',
+          color: theme.color.white
+        }
+      },
+      '&:hover, &:focus': {
+        background: theme.color.white,
+        color: '#DF6560',
+        borderColor: '#DF6560'
+      },
+      '&:active': {
+        color: '#963530',
+        borderColor: '#963530'
+      },
+      '&$loading': {
+        color: '#C44742 !important',
+        '&.primary': {
+          background: 'rgba(0, 0, 0, 0.12) !important'
+        }
       }
+    },
+    compact: {
+      paddingLeft: theme.spacing(2) - 2,
+      paddingRight: theme.spacing(2) - 2
+    },
+    hidden: {
+      visibility: 'hidden'
+    },
+    reg: {
+      display: 'flex',
+      alignItems: 'center'
     }
-  },
-  compact: {
-    paddingLeft: theme.spacing(2) - 2,
-    paddingRight: theme.spacing(2) - 2
-  },
-  hidden: {
-    visibility: 'hidden'
-  },
-  reg: {
-    display: 'flex',
-    alignItems: 'center'
-  }
-});
+  });
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 

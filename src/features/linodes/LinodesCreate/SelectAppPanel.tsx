@@ -1,11 +1,7 @@
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from '@material-ui/styles';
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
@@ -19,18 +15,18 @@ type ClassNames = 'flatImagePanelSelections' | 'panel' | 'loading';
 
 const styles = (theme: Theme) =>
   createStyles({
-  flatImagePanelSelections: {
-    marginTop: theme.spacing(2),
-    padding: `${theme.spacing(1)}px 0`
-  },
-  panel: {
-    marginBottom: theme.spacing(3)
-  },
-  loading: {
-    marginTop: theme.spacing(2),
-    marginBottom: theme.spacing(2)
-  }
-});
+    flatImagePanelSelections: {
+      marginTop: theme.spacing(2),
+      padding: `${theme.spacing(1)}px 0`
+    },
+    panel: {
+      marginBottom: theme.spacing(3)
+    },
+    loading: {
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
+    }
+  });
 
 interface Props extends AppsData {
   handleClick: (

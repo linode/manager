@@ -1,8 +1,5 @@
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from '@material-ui/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -19,30 +16,30 @@ type ClassNames = 'root' | 'formattedText' | 'expCol' | 'expButton' | 'toggle';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  expCol: {
-    display: 'flex',
-    justifyContent: 'flex-end'
-  },
-  expButton: {
-    position: 'relative',
-    top: -theme.spacing(1),
-    left: theme.spacing(1),
-    [theme.breakpoints.down('sm')]: {
-      position: 'absolute',
-      top: 16,
-      right: 16,
-      left: 'auto'
+    root: {},
+    expCol: {
+      display: 'flex',
+      justifyContent: 'flex-end'
+    },
+    expButton: {
+      position: 'relative',
+      top: -theme.spacing(1),
+      left: theme.spacing(1),
+      [theme.breakpoints.down('sm')]: {
+        position: 'absolute',
+        top: 16,
+        right: 16,
+        left: 'auto'
+      }
+    },
+    toggle: {
+      height: 24,
+      width: 24
+    },
+    formattedText: {
+      whiteSpace: 'pre-line'
     }
-  },
-  toggle: {
-    height: 24,
-    width: 24
-  },
-  formattedText: {
-    whiteSpace: 'pre-line'
-  }
-});
+  });
 
 interface Props {
   text?: string;

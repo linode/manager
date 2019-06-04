@@ -1,10 +1,7 @@
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from '@material-ui/styles';
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
 import Table from 'src/components/Table';
@@ -14,11 +11,11 @@ type ClassNames = 'root' | 'paperWrapper';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  paperWrapper: {
-    backgroundColor: 'transparent'
-  }
-});
+    root: {},
+    paperWrapper: {
+      backgroundColor: 'transparent'
+    }
+  });
 
 interface VolumeTableWrapperProps {
   isVolumesLanding: boolean;

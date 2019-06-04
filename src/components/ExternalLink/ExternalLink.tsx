@@ -77,6 +77,6 @@ class ExternalLink extends React.Component<CombinedProps> {
   }
 }
 
-const styled = withStyles<ClassNames>(styles);
+const styled = withStyles(styles);
 
 export default styled(ExternalLink);

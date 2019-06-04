@@ -1,8 +1,5 @@
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from '@material-ui/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+
 import * as React from 'react';
 
 import BarPercent from 'src/components/BarPercent';
@@ -20,29 +17,29 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  header: {
-    marginTop: theme.spacing(1) + 6,
-    marginBottom: theme.spacing(1)
-  },
-  bar: {
-    marginBottom: theme.spacing(1)
-  },
-  text: {
-    margin: `${theme.spacing(1) + 2}px 0`,
-    paddingRight: 40
-  },
-  divider: {
-    backgroundColor: theme.color.grey2
-  },
-  textOuter: {
-    margin: `${theme.spacing(1) + 2}px 0`
-  },
-  code: {
-    color: theme.color.black,
-    margin: `0 0 ${theme.spacing(1) + 2}px`
-  }
-});
+    root: {},
+    header: {
+      marginTop: theme.spacing(1) + 6,
+      marginBottom: theme.spacing(1)
+    },
+    bar: {
+      marginBottom: theme.spacing(1)
+    },
+    text: {
+      margin: `${theme.spacing(1) + 2}px 0`,
+      paddingRight: 40
+    },
+    divider: {
+      backgroundColor: theme.color.grey2
+    },
+    textOuter: {
+      margin: `${theme.spacing(1) + 2}px 0`
+    },
+    code: {
+      color: theme.color.black,
+      margin: `0 0 ${theme.spacing(1) + 2}px`
+    }
+  });
 
 interface Props {
   disks: Linode.Disk[];

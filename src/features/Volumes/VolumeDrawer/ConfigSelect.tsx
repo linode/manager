@@ -1,8 +1,5 @@
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from '@material-ui/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -12,8 +9,8 @@ type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {}
-});
+    root: {}
+  });
 
 interface Props {
   error?: string;

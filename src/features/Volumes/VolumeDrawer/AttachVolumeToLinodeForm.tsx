@@ -1,8 +1,5 @@
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from '@material-ui/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+
 import { Form, Formik } from 'formik';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -29,8 +26,8 @@ type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {}
-});
+    root: {}
+  });
 
 interface Props {
   onClose: () => void;

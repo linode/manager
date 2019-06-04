@@ -12,31 +12,32 @@ import './EnhancedSelect.css';
 
 type ClassNames = 'root' | 'searchSuggestions' | 'searchIcon';
 
-const styles: StyleRulesCallback = theme => ({
-  root: {
-    position: 'relative',
-    width: '100%'
-  },
-  searchIcon: {
-    color: `${theme.color.grey1} !important`
-  },
-  searchSuggestions: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: '100%',
-    padding: 0,
-    borderRadius: 0,
-    border: '1px solid #999',
-    overflowY: 'auto',
-    maxWidth: '100%',
-    zIndex: 2,
-    marginTop: -2,
-    '& .enhancedSelect-menu-item': {
-      color: theme.palette.text.primary
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      position: 'relative',
+      width: '100%'
+    },
+    searchIcon: {
+      color: `${theme.color.grey1} !important`
+    },
+    searchSuggestions: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: '100%',
+      padding: 0,
+      borderRadius: 0,
+      border: '1px solid #999',
+      overflowY: 'auto',
+      maxWidth: '100%',
+      zIndex: 2,
+      marginTop: -2,
+      '& .enhancedSelect-menu-item': {
+        color: theme.palette.text.primary
+      }
     }
-  }
-});
+  });
 
 interface Props {
   options: Item[];

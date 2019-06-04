@@ -26,12 +26,12 @@ type ClassNames =
   | 'icon'
   | 'closeIcon';
 
-const styles: StyleRulesCallback = theme => {
+const styles = (theme: Theme) => {
   const {
     palette: { status }
   } = theme;
 
-  return {
+  return createStyles({
     '@keyframes fadeIn': {
       from: {
         opacity: 0
@@ -115,7 +115,7 @@ const styles: StyleRulesCallback = theme => {
     closeIcon: {
       paddingLeft: theme.spacing(1)
     }
-  };
+  });
 };
 
 interface Props extends GridProps {

@@ -1,14 +1,10 @@
+import { WithStyles, WithTheme } from '@material-ui/core/styles';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import * as classNames from 'classnames';
 import { clamp, equals } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import {
-  createStyles,
-  withStyles,
-  WithStyles,
-  WithTheme
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TextField, { TextFieldProps } from 'src/components/core/TextField';
 import HelpIcon from 'src/components/HelpIcon';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
@@ -24,42 +20,42 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  helpWrapper: {
-    display: 'flex',
-    alignItems: 'flex-end'
-  },
-  helpWrapperTextField: {
-    width: 415,
-    [theme.breakpoints.down('xs')]: {
-      width: '100%'
-    }
-  },
-  expand: {
-    maxWidth: '100%'
-  },
-  small: {
-    minHeight: 32,
-    marginTop: 0,
-    '& input': {
+    root: {},
+    helpWrapper: {
+      display: 'flex',
+      alignItems: 'flex-end'
+    },
+    helpWrapperTextField: {
+      width: 415,
+      [theme.breakpoints.down('xs')]: {
+        width: '100%'
+      }
+    },
+    expand: {
+      maxWidth: '100%'
+    },
+    small: {
       minHeight: 32,
-      padding: theme.spacing(1)
-    }
-  },
-  selectSmall: {
-    padding: '8px 32px 0 8px',
-    minHeight: 32,
-    minWidth: 132,
-    '& svg': {
       marginTop: 0,
-      width: 24,
-      height: 24
+      '& input': {
+        minHeight: 32,
+        padding: theme.spacing(1)
+      }
+    },
+    selectSmall: {
+      padding: '8px 32px 0 8px',
+      minHeight: 32,
+      minWidth: 132,
+      '& svg': {
+        marginTop: 0,
+        width: 24,
+        height: 24
+      }
+    },
+    tiny: {
+      width: '3em'
     }
-  },
-  tiny: {
-    width: '3em'
-  }
-});
+  });
 
 export type Props = TextFieldProps & {
   errorText?: string;

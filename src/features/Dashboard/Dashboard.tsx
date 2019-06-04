@@ -1,14 +1,10 @@
+import { WithStyles, WithTheme } from '@material-ui/core/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
-import {
-  createStyles,
-  withStyles,
-  WithStyles,
-  WithTheme
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
@@ -37,8 +33,8 @@ type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {}
-});
+    root: {}
+  });
 
 interface StateProps {
   accountBackups: boolean;

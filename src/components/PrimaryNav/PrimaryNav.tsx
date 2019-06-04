@@ -1,3 +1,4 @@
+import { WithStyles, WithTheme } from '@material-ui/core/styles';
 import Settings from '@material-ui/icons/Settings';
 import * as classNames from 'classnames';
 import { pathOr } from 'ramda';
@@ -10,12 +11,7 @@ import Hidden from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
 import ListItemText from 'src/components/core/ListItemText';
 import Menu from 'src/components/core/Menu';
-import {
-  createStyles,
-  withStyles,
-  WithStyles,
-  WithTheme
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { isKubernetesEnabled } from 'src/constants';
 import { MapState } from 'src/store/types';
@@ -57,154 +53,141 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  menuGrid: {
-    minHeight: 64,
-    width: '100%',
-    height: '100%',
-    margin: 0,
-    padding: 0,
-    [theme.breakpoints.up('sm')]: {
-      minHeight: 72
-    },
-    [theme.breakpoints.up('md')]: {
-      minHeight: 80
-    }
-  },
-  fadeContainer: {
-    width: '100%',
-    height: 'calc(100% - 90px)',
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  logoItem: {
-    padding: `${theme.spacing(1) + 2}px 0 ${theme.spacing(1)}px ${theme
-      .spacing.unit +
-      theme.spacing(1) / 2}px`
-  },
-  logoItemCompact: {
-    padding: `${theme.spacing(1) + 2}px 0 ${theme.spacing(1)}px`
-  },
-  listItem: {
-    cursor: 'pointer',
-    borderLeft: '6px solid transparent',
-    transition: theme.transitions.create([
-      'background-color',
-      'border-left-color'
-    ]),
-    padding: `${theme.spacing(1) / 2 + 6}px ${theme.spacing(4) -
-      2}px ${theme.spacing(1) / 2 + 6}px ${theme.spacing(3)}px`,
-    '&:hover': {
-      backgroundColor: 'rgba(0, 0, 0, 0.1)',
-      '& $linkItem': {
-        color: 'white'
+    menuGrid: {
+      minHeight: 64,
+      width: '100%',
+      height: '100%',
+      margin: 0,
+      padding: 0,
+      [theme.breakpoints.up('sm')]: {
+        minHeight: 72
+      },
+      [theme.breakpoints.up('md')]: {
+        minHeight: 80
       }
     },
-    '&:focus, &:active': {
-      backgroundColor: 'rgba(0, 0, 0, 0.1)',
-      outline: 0,
-      '& $linkItem': {
-        color: 'white',
-        zIndex: 2
+
+    fadeContainer: {
+      width: '100%',
+      height: 'calc(100% - 90px)',
+      display: 'flex',
+      flexDirection: 'column'
+    },
+    logoItem: {
+      padding: `${theme.spacing(1) + 2}px 0 ${theme.spacing(
+        1
+      )}px ${theme.spacing(1) + theme.spacing(1) / 2}px`
+    },
+    logoItemCompact: {
+      padding: `${theme.spacing(1) + 2}px 0 ${theme.spacing(1)}px`
+    },
+    listItem: {
+      cursor: 'pointer',
+      borderLeft: '6px solid transparent',
+      transition: theme.transitions.create([
+        'background-color',
+        'border-left-color'
+      ]),
+      padding: `${theme.spacing(1) / 2 + 6}px ${theme.spacing(4) -
+        2}px ${theme.spacing(1) / 2 + 6}px ${theme.spacing(3)}px`,
+      '&:hover': {
+        backgroundColor: 'rgba(0, 0, 0, 0.1)',
+        '& $linkItem': {
+          color: 'white'
+        }
       }
-    }
-  },
-  listItemAccount: {
-    '&:hover': {
-      borderLeftColor: 'transparent'
-    }
-  },
-  collapsible: {
-    fontSize: '.9rem'
-  },
-  linkItem: {
-    transition: theme.transitions.create(['color']),
-    color: '#C9CACB',
-    fontFamily: 'LatoWebBold' // we keep this bold at all times
-  },
-  active: {
-    transition: 'border-color .7s ease-in-out',
-    backgroundColor: 'rgba(0, 0, 0, 0.1)',
-    borderLeftColor: theme.color.green,
-    '&:hover': {
-      borderLeftColor: theme.color.green
-    }
-  },
-  sublinkPanel: {
-    paddingLeft: theme.spacing(6),
-    paddingRight: theme.spacing(2),
-    fontSize: '.9rem',
-    flexShrink: 0,
-    listStyleType: 'none'
-  },
-  sublink: {
-    padding: `${theme.spacing(1) / 2}px 0 ${theme.spacing(1) / 2}px ${
-      theme.spacing(1)
-    }px`,
-    color: 'white',
-    display: 'block',
-    fontSize: '.8rem',
-    '&:hover, &:focus': {
-      textDecoration: 'underline',
-      outline: 0
-    }
-  },
-  activeLink: {
-    color: 'white',
-    '& $arrow': {
-      transform: 'rotate(90deg)'
-    }
-  },
-  sublinkActive: {
-    textDecoration: 'underline'
-  },
-  arrow: {
-    position: 'relative',
-    top: 4,
-    fontSize: '1.2rem',
-    margin: '0 4px 0 -7px',
-    transition: theme.transitions.create(['transform'])
-  },
-  spacer: {
-    padding: 25
-  },
-  divider: {
-    backgroundColor: 'rgba(0, 0, 0, 0.12)'
-  },
-  settings: {
-    width: 30,
-    margin: '24px auto 16px',
-    alignItems: 'center',
-    marginTop: 'auto',
-    justifyContent: 'center',
-    display: 'flex',
-    color: '#e7e7e7',
-    transition: theme.transitions.create(['color']),
-    '& svg': {
+    },
+    collapsible: {
+      fontSize: '.9rem'
+    },
+    linkItem: {
+      transition: theme.transitions.create(['color']),
+      color: '#C9CACB',
+      fontFamily: 'LatoWebBold' // we keep this bold at all times
+    },
+    active: {
+      transition: 'border-color .7s ease-in-out',
+      backgroundColor: 'rgba(0, 0, 0, 0.1)',
+      borderLeftColor: theme.color.green,
+      '&:hover': {
+        borderLeftColor: theme.color.green
+      }
+    },
+    sublinkPanel: {
+      paddingLeft: theme.spacing(6),
+      paddingRight: theme.spacing(2),
+      fontSize: '.9rem',
+      flexShrink: 0,
+      listStyleType: 'none'
+    },
+    sublink: {
+      padding: `${theme.spacing(1) / 2}px 0 ${theme.spacing(1) /
+        2}px ${theme.spacing(1)}px`,
+      color: 'white',
+      display: 'block',
+      fontSize: '.8rem',
+      '&:hover, &:focus': {
+        textDecoration: 'underline',
+        outline: 0
+      }
+    },
+    activeLink: {
+      color: 'white',
+      '& $arrow': {
+        transform: 'rotate(90deg)'
+      }
+    },
+    sublinkActive: {
+      textDecoration: 'underline'
+    },
+    arrow: {
+      position: 'relative',
+      top: 4,
+      fontSize: '1.2rem',
+      margin: '0 4px 0 -7px',
       transition: theme.transitions.create(['transform'])
     },
-    '&:hover': {
-      color: theme.color.green
+    spacer: {
+      padding: 25
+    },
+    divider: {
+      backgroundColor: 'rgba(0, 0, 0, 0.12)'
+    },
+    settings: {
+      width: 30,
+      margin: '24px auto 16px',
+      alignItems: 'center',
+      marginTop: 'auto',
+      justifyContent: 'center',
+      display: 'flex',
+      color: '#e7e7e7',
+      transition: theme.transitions.create(['color']),
+      '& svg': {
+        transition: theme.transitions.create(['transform'])
+      },
+      '&:hover': {
+        color: theme.color.green
+      }
+    },
+    activeSettings: {
+      color: theme.color.green,
+      '& svg': {
+        transform: 'rotate(90deg)'
+      }
+    },
+    menu: {},
+    paper: {
+      maxWidth: 350,
+      padding: 8,
+      position: 'absolute',
+      backgroundColor: theme.bg.navy,
+      border: '1px solid #999',
+      outline: 0
+    },
+    settingsBackdrop: {
+      backgroundColor: 'rgba(0,0,0,.3)'
     }
-  },
-  activeSettings: {
-    color: theme.color.green,
-    '& svg': {
-      transform: 'rotate(90deg)'
-    }
-  },
-  menu: {},
-  paper: {
-    maxWidth: 350,
-    padding: 8,
-    position: 'absolute',
-    backgroundColor: theme.bg.navy,
-    border: '1px solid #999',
-    outline: 0
-  },
-  settingsBackdrop: {
-    backgroundColor: 'rgba(0,0,0,.3)'
-  }
-});
+  });
 
 interface Props extends WithStyles<ClassNames>, RouteComponentProps<{}> {
   closeMenu: () => void;

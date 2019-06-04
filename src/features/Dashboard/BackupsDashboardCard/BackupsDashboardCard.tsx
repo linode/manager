@@ -4,12 +4,7 @@ import { compose } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DashboardCard from '../DashboardCard';
 
@@ -25,41 +20,41 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    width: '100%'
-  },
-  header: {
-    textAlign: 'center',
-    fontSize: 18
-  },
-  icon: {
-    color: theme.color.blueDTwhite,
-    margin: theme.spacing(1),
-    fontSize: 32
-  },
-  itemTitle: {
-    marginBottom: theme.spacing(1),
-    color: theme.palette.primary.main
-  },
-  section: {
-    padding: theme.spacing(3),
-    borderBottom: `1px solid ${theme.palette.divider}`
-  },
-  sectionLink: {
-    cursor: 'pointer'
-  },
-  title: {
-    background: theme.bg.tableHeader,
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: `${theme.spacing(1)}px !important`
-  },
-  ctaLink: {
-    display: 'block'
-  }
-});
+    root: {
+      width: '100%'
+    },
+    header: {
+      textAlign: 'center',
+      fontSize: 18
+    },
+    icon: {
+      color: theme.color.blueDTwhite,
+      margin: theme.spacing(1),
+      fontSize: 32
+    },
+    itemTitle: {
+      marginBottom: theme.spacing(1),
+      color: theme.palette.primary.main
+    },
+    section: {
+      padding: theme.spacing(3),
+      borderBottom: `1px solid ${theme.palette.divider}`
+    },
+    sectionLink: {
+      cursor: 'pointer'
+    },
+    title: {
+      background: theme.bg.tableHeader,
+      display: 'flex',
+      flexFlow: 'row nowrap',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: `${theme.spacing(1)}px !important`
+    },
+    ctaLink: {
+      display: 'block'
+    }
+  });
 
 interface Props {
   accountBackups: boolean;

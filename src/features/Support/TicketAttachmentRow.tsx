@@ -1,12 +1,7 @@
 import * as React from 'react';
 
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
 import Grid from 'src/components/Grid';
@@ -19,29 +14,29 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  attachmentPaper: {
-    padding: `
+    root: {},
+    attachmentPaper: {
+      padding: `
       ${theme.spacing(1) + theme.spacing(1) / 2}px
       ${theme.spacing(3)}px
       0
     `,
-    overflowX: 'auto',
-    width: 500
-  },
-  attachmentRow: {
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    marginBottom: 12,
-    '&:last-child': {
-      marginBottom: 0,
-      border: 0
+      overflowX: 'auto',
+      width: 500
+    },
+    attachmentRow: {
+      borderBottom: `1px solid ${theme.palette.divider}`,
+      marginBottom: 12,
+      '&:last-child': {
+        marginBottom: 0,
+        border: 0
+      }
+    },
+    attachmentIcon: {
+      paddingLeft: `0 !important`,
+      color: theme.palette.text.primary
     }
-  },
-  attachmentIcon: {
-    paddingLeft: `0 !important`,
-    color: theme.palette.text.primary
-  }
-});
+  });
 
 interface Props {
   attachments: string[];

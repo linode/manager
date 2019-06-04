@@ -1,14 +1,8 @@
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from '@material-ui/styles';
-import * as React from 'react';
-
+import { WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
-
+import * as React from 'react';
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
-
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import truncateText from 'src/utilities/truncateText';
 
 type ClassNames =
@@ -21,31 +15,31 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    display: 'block',
-    '&:hover $label': {
-      color: theme.palette.primary.main
+    root: {
+      display: 'block',
+      '&:hover $label': {
+        color: theme.palette.primary.main
+      }
+    },
+    label: {
+      cursor: 'pointer'
+    },
+    stackScriptUsername: {
+      color: theme.color.grey1
+    },
+    labelWrapper: {
+      display: 'flex'
+    },
+    linkIcon: {
+      marginLeft: theme.spacing(1),
+      color: theme.palette.primary.main,
+      width: 14,
+      height: 14
+    },
+    title: {
+      flexGrow: 1
     }
-  },
-  label: {
-    cursor: 'pointer'
-  },
-  stackScriptUsername: {
-    color: theme.color.grey1
-  },
-  labelWrapper: {
-    display: 'flex'
-  },
-  linkIcon: {
-    marginLeft: theme.spacing(1),
-    color: theme.palette.primary.main,
-    width: 14,
-    height: 14
-  },
-  title: {
-    flexGrow: 1
-  }
-});
+  });
 
 interface Props {
   label: string;

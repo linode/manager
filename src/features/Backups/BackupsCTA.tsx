@@ -1,14 +1,10 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { compose, isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { handleOpen } from 'src/store/backupDrawer';
@@ -22,28 +18,28 @@ interface Props {
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    padding: theme.spacing(2),
-    margin: `${theme.spacing(1)}px 0 ${theme.spacing(3)}px 0`,
-    [theme.breakpoints.down('md')]: {
-      marginTop: -theme.spacing(1),
-      width: '100%'
+    root: {
+      padding: theme.spacing(2),
+      margin: `${theme.spacing(1)}px 0 ${theme.spacing(3)}px 0`,
+      [theme.breakpoints.down('md')]: {
+        marginTop: -theme.spacing(1),
+        width: '100%'
+      }
+    },
+    container: {
+      [theme.breakpoints.down('md')]: {
+        alignItems: 'center'
+      }
+    },
+    buttonsContainer: {
+      marginTop: theme.spacing(1)
+    },
+    dismiss: {
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+      minWidth: 'auto'
     }
-  },
-  container: {
-    [theme.breakpoints.down('md')]: {
-      alignItems: 'center'
-    }
-  },
-  buttonsContainer: {
-    marginTop: theme.spacing(1)
-  },
-  dismiss: {
-    paddingLeft: theme.spacing(2),
-    paddingRight: theme.spacing(2),
-    minWidth: 'auto'
-  }
-});
+  });
 
 type CombinedProps = StateProps &
   Props &

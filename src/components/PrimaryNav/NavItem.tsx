@@ -1,23 +1,19 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
-
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from '@material-ui/styles';
 import Divider from 'src/components/core/Divider';
 import ListItem from 'src/components/core/ListItem';
 import ListItemText from 'src/components/core/ListItemText';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 
 type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {}
-});
+    root: {}
+  });
 
 interface Props extends PrimaryLink {
   closeMenu: () => void;

@@ -1,11 +1,8 @@
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from '@material-ui/styles';
+import { WithStyles } from '@material-ui/core/styles';
 import { Form, Formik } from 'formik';
 import * as React from 'react';
 import { compose } from 'recompose';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import withVolumesRequests, {
   VolumesRequests
@@ -22,8 +19,8 @@ type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {}
-});
+    root: {}
+  });
 
 interface Props {
   onClose: () => void;

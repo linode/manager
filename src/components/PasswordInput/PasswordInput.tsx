@@ -23,25 +23,26 @@ interface State {
 
 type ClassNames = 'container' | 'strengthIndicator' | 'infoText';
 
-const styles: StyleRulesCallback = theme => ({
-  container: {
-    position: 'relative',
-    marginBottom: theme.spacing(1),
-    paddingBottom: theme.spacing(1) / 2
-  },
-  strengthIndicator: {
-    position: 'absolute',
-    width: '100%',
-    bottom: 0,
-    [theme.breakpoints.down('xs')]: {
-      maxWidth: '100%'
+const styles = (theme: Theme) =>
+  createStyles({
+    container: {
+      position: 'relative',
+      marginBottom: theme.spacing(1),
+      paddingBottom: theme.spacing(1) / 2
+    },
+    strengthIndicator: {
+      position: 'absolute',
+      width: '100%',
+      bottom: 0,
+      [theme.breakpoints.down('xs')]: {
+        maxWidth: '100%'
+      }
+    },
+    infoText: {
+      fontSize: '0.85rem',
+      marginTop: 12
     }
-  },
-  infoText: {
-    fontSize: '0.85rem',
-    marginTop: 12
-  }
-});
+  });
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 

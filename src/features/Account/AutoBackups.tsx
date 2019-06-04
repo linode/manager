@@ -1,12 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import OpenInNew from '@material-ui/icons/OpenInNew';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
@@ -16,20 +12,20 @@ type ClassNames = 'root' | 'footnote' | 'link' | 'icon';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  footnote: {
-    fontSize: 14,
-    cursor: 'pointer'
-  },
-  link: {
-    textDecoration: 'underline'
-  },
-  icon: {
-    display: 'inline-block',
-    fontSize: '0.8em',
-    marginLeft: theme.spacing(1) / 3
-  }
-});
+    root: {},
+    footnote: {
+      fontSize: 14,
+      cursor: 'pointer'
+    },
+    link: {
+      textDecoration: 'underline'
+    },
+    icon: {
+      display: 'inline-block',
+      fontSize: '0.8em',
+      marginLeft: theme.spacing(1) / 3
+    }
+  });
 
 interface Props {
   backups_enabled: boolean;
