@@ -332,11 +332,13 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <MaintenanceBanner
-          userTimezone={this.props.userTimezone}
-          userTimezoneError={this.props.userTimezoneError}
-          userTimezoneLoading={this.props.userTimezoneLoading}
-        />
+        {this.props.someLinodesHaveScheduledMaintenance && (
+          <MaintenanceBanner
+            userTimezone={this.props.userTimezone}
+            userTimezoneError={this.props.userTimezoneError}
+            userTimezoneLoading={this.props.userTimezoneLoading}
+          />
+        )}
         <Grid container>
           <Grid
             item
@@ -521,9 +523,12 @@ interface StateProps {
   userTimezone: string;
   userTimezoneLoading: boolean;
   userTimezoneError?: Linode.ApiFieldError[];
+  someLinodesHaveScheduledMaintenance: boolean;
 }
 
 const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
+  const linodesData = state.__resources.linodes.entities;
+
   return {
     managed: pathOr(
       false,
@@ -531,7 +536,10 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
       state
     ),
     linodesCount: state.__resources.linodes.results.length,
-    linodesData: state.__resources.linodes.entities,
+    linodesData,
+    someLinodesHaveScheduledMaintenance: linodesData
+      ? linodesData.some(eachLinode => !!eachLinode.maintenance)
+      : false,
     linodesRequestLoading: state.__resources.linodes.loading,
     linodesRequestError: path(['error', 'read'], state.__resources.linodes),
     userTimezone: pathOr('', ['data', 'timezone'], state.__resources.profile),

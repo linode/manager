@@ -3,7 +3,7 @@ import { isType } from 'typescript-fsa';
 import { RequestableData } from '../types';
 import { getProfileActions, handleUpdate } from './profile.actions';
 
-export type State = RequestableData<Linode.Profile, Linode.ApiFieldError[]>;
+export type State = RequestableData<Linode.Profile>;
 
 interface Action<T> {
   type: string;
