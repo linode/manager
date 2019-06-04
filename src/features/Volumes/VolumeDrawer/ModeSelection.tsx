@@ -1,24 +1,21 @@
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from '@material-ui/styles';
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Radio from 'src/components/core/Radio';
 import RadioGroup from 'src/components/core/RadioGroup';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'label';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  label: {
-    '& span': {
-      fontSize: '1rem'
+    root: {},
+    label: {
+      '& span': {
+        fontSize: '1rem'
+      }
     }
-  }
-});
+  });
 
 interface Props {
   mode: string;

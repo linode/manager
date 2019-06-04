@@ -18,42 +18,43 @@ type ClassNames =
   | 'drawerContent'
   | 'backDrop';
 
-const styles: StyleRulesCallback = theme => ({
-  paper: {
-    width: 300,
-    padding: theme.spacing(2),
-    [theme.breakpoints.up('sm')]: {
-      width: 480,
-      padding: theme.spacing(4)
+const styles = (theme: Theme) =>
+  createStyles({
+    paper: {
+      width: 300,
+      padding: theme.spacing(2),
+      [theme.breakpoints.up('sm')]: {
+        width: 480,
+        padding: theme.spacing(4)
+      },
+      '& .actionPanel': {
+        marginTop: theme.spacing(2)
+      },
+      '& .selectionCard': {
+        maxWidth: '100%',
+        flexBasis: '100%'
+      }
     },
-    '& .actionPanel': {
-      marginTop: theme.spacing(2)
+    drawerHeader: {
+      marginBottom: theme.spacing(2)
     },
-    '& .selectionCard': {
-      maxWidth: '100%',
-      flexBasis: '100%'
+    drawerContent: {},
+    button: {
+      minWidth: 'auto',
+      minHeight: 'auto',
+      padding: 0,
+      '& > span': {
+        padding: 2
+      },
+      '& :hover, & :focus': {
+        color: 'white',
+        backgroundColor: theme.palette.primary.main
+      }
+    },
+    backDrop: {
+      backgroundColor: theme.color.drawerBackdrop
     }
-  },
-  drawerHeader: {
-    marginBottom: theme.spacing(2)
-  },
-  drawerContent: {},
-  button: {
-    minWidth: 'auto',
-    minHeight: 'auto',
-    padding: 0,
-    '& > span': {
-      padding: 2
-    },
-    '& :hover, & :focus': {
-      color: 'white',
-      backgroundColor: theme.palette.primary.main
-    }
-  },
-  backDrop: {
-    backgroundColor: theme.color.drawerBackdrop
-  }
-});
+  });
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 

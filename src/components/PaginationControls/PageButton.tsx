@@ -46,7 +46,7 @@ const styles = (theme: Theme) =>
     }
   });
 
-const styled = withStyles<CSSClasses>(styles);
+const styled = withStyles(styles);
 
 /* tslint:disable-next-line */
 export interface Props extends ButtonProps {}

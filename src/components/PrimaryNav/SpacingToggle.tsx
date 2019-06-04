@@ -1,42 +1,38 @@
+import { WithStyles, WithTheme } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import * as React from 'react';
-import {
-  createStyles,
-  withStyles,
-  WithStyles,
-  WithTheme
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Toggle from 'src/components/Toggle';
 
 type ClassNames = 'switchWrapper' | 'switchText' | 'toggle';
 
 export const styles = (theme: Theme) =>
   createStyles({
-  switchText: {
-    color: '#777',
-    fontSize: '.8rem',
-    transition: theme.transitions.create(['color']),
-    '&.active': {
+    switchText: {
+      color: '#777',
+      fontSize: '.8rem',
       transition: theme.transitions.create(['color']),
-      color: '#C9CACB'
-    }
-  },
-  switchWrapper: {
-    alignItems: 'center',
-    marginTop: 'auto',
-    justifyContent: 'center',
-    display: 'flex'
-  },
-  toggle: {
-    '& > span:last-child': {
-      backgroundColor: '#f4f4f4 !important',
-      opacity: `0.38 !important`
+      '&.active': {
+        transition: theme.transitions.create(['color']),
+        color: '#C9CACB'
+      }
     },
-    '&.dt .square': {
-      fill: '#444 !important'
+    switchWrapper: {
+      alignItems: 'center',
+      marginTop: 'auto',
+      justifyContent: 'center',
+      display: 'flex'
+    },
+    toggle: {
+      '& > span:last-child': {
+        backgroundColor: '#f4f4f4 !important',
+        opacity: `0.38 !important`
+      },
+      '&.dt .square': {
+        fill: '#444 !important'
+      }
     }
-  }
-});
+  });
 
 interface Props {
   toggleSpacing: () => void;

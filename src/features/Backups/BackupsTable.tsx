@@ -1,11 +1,7 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Table from 'src/components/Table';
@@ -19,16 +15,16 @@ type ClassNames = 'root' | 'container';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    width: '100%'
-  },
-  container: {
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-});
+    root: {
+      width: '100%'
+    },
+    container: {
+      width: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }
+  });
 
 interface Props {
   linodes: ExtendedLinode[];

@@ -1,17 +1,14 @@
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from '@material-ui/styles';
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TextField from 'src/components/TextField';
 
 type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {}
-});
+    root: {}
+  });
 
 interface Props {
   onBlur: (e: any) => void;

@@ -1,10 +1,6 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 
@@ -12,18 +8,18 @@ type ClassNames = 'root' | 'price' | 'per';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  price: {
-    fontSize: '1.5rem',
-    color: theme.color.green,
-    display: 'inline-block'
-  },
-  per: {
-    color: theme.color.green,
-    display: 'inline-block',
-    fontWeight: 400
-  }
-});
+    root: {},
+    price: {
+      fontSize: '1.5rem',
+      color: theme.color.green,
+      display: 'inline-block'
+    },
+    per: {
+      color: theme.color.green,
+      display: 'inline-block',
+      fontWeight: 400
+    }
+  });
 
 interface Props {
   price: number;

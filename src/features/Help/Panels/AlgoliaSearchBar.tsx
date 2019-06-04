@@ -1,12 +1,8 @@
+import { WithStyles, WithTheme } from '@material-ui/core/styles';
 import { compose, concat, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import {
-  createStyles,
-  withStyles,
-  WithStyles,
-  WithTheme
-} from 'src/components/core/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
 import Notice from 'src/components/Notice';
 import windowIsNarrowerThan from 'src/utilities/breakpoints';
@@ -22,41 +18,41 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  searchItem: {
-    '& em': {
-      fontStyle: 'normal',
-      color: theme.palette.primary.main
-    }
-  },
-  searchItemHighlighted: {
-    backgroundColor: theme.color.grey2,
-    cursor: 'pointer'
-  },
-  textfield: {
-    backgroundColor: theme.color.white,
-    margin: 0,
-    flex: 1,
-    minHeight: 'initial',
-    '& input:focus': {
-      outline: '1px dotted #606469'
-    }
-  },
-  enhancedSelectWrapper: {
-    margin: '0 auto',
-    width: '100%s',
-    maxHeight: 500,
-    '& .input': {
-      maxWidth: '100%',
-      '& > div': {
-        marginRight: 0
+    root: {},
+    searchItem: {
+      '& em': {
+        fontStyle: 'normal',
+        color: theme.palette.primary.main
       }
     },
-    [theme.breakpoints.up('md')]: {
-      width: 500
+    searchItemHighlighted: {
+      backgroundColor: theme.color.grey2,
+      cursor: 'pointer'
+    },
+    textfield: {
+      backgroundColor: theme.color.white,
+      margin: 0,
+      flex: 1,
+      minHeight: 'initial',
+      '& input:focus': {
+        outline: '1px dotted #606469'
+      }
+    },
+    enhancedSelectWrapper: {
+      margin: '0 auto',
+      width: '100%s',
+      maxHeight: 500,
+      '& .input': {
+        maxWidth: '100%',
+        '& > div': {
+          marginRight: 0
+        }
+      },
+      [theme.breakpoints.up('md')]: {
+        width: 500
+      }
     }
-  }
-});
+  });
 
 interface State {
   value: string;

@@ -1,8 +1,4 @@
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from '@material-ui/styles';
+import { WithStyles } from '@material-ui/core/styles';
 import {
   compose as ramdaCompose,
   isEmpty,
@@ -16,6 +12,7 @@ import {
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import ShowMore from 'src/components/ShowMore';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -36,8 +33,8 @@ type ClassNames = 'root';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {}
-});
+    root: {}
+  });
 
 interface StackScriptData {
   stackScripts?: Linode.StackScript.Response[];

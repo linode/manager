@@ -1,8 +1,5 @@
-import {
-  createStyles,
-  withStyles,
-  WithStyles
-} from '@material-ui/styles';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+
 import * as React from 'react';
 import { compose } from 'recompose';
 import { Converter } from 'showdown';

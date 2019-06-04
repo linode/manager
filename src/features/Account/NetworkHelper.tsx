@@ -1,13 +1,8 @@
-import * as React from 'react';
-
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from '@material-ui/styles';
+import { WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
+import * as React from 'react';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
@@ -16,20 +11,20 @@ type ClassNames = 'root' | 'footnote' | 'link' | 'icon';
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {},
-  footnote: {
-    fontSize: 14,
-    cursor: 'pointer'
-  },
-  link: {
-    textDecoration: 'underline'
-  },
-  icon: {
-    display: 'inline-block',
-    fontSize: '0.8em',
-    marginLeft: theme.spacing(1) / 3
-  }
-});
+    root: {},
+    footnote: {
+      fontSize: 14,
+      cursor: 'pointer'
+    },
+    link: {
+      textDecoration: 'underline'
+    },
+    icon: {
+      display: 'inline-block',
+      fontSize: '0.8em',
+      marginLeft: theme.spacing(1) / 3
+    }
+  });
 
 interface Props {
   onChange: () => void;
