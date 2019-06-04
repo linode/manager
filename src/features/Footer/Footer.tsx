@@ -87,7 +87,7 @@ export class Footer extends React.PureComponent<CombinedProps> {
     return (
       <Grid
         container
-        spacing={32}
+        spacing={4}
         alignItems="center"
         className={classes.container}
       >

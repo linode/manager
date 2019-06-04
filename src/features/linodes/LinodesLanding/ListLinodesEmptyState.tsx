@@ -70,7 +70,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
     return (
       <Grid
         container
-        spacing={24}
+        spacing={3}
         alignItems="center"
         direction="column"
         justify="center"
@@ -111,7 +111,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
         </Grid>
         <Grid item xs={12} lg={10} className={classes.copy}>
           <Button
-           buttonType="primary"
+            buttonType="primary"
             onClick={() => this.props.history.push('/linodes/create')}
           >
             Create a Linode

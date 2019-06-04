@@ -73,7 +73,7 @@ const PublicImages: React.StatelessComponent<CombinedProps> = props => {
       </Grid>
       {oldImages.length > 0 && (
         <ShowMoreExpansion name="Show Older Images" defaultExpanded={false}>
-          <Grid container spacing={16} style={{ marginTop: 16 }}>
+          <Grid container spacing={2} style={{ marginTop: 16 }}>
             {renderImages(oldImages)}
           </Grid>
         </ShowMoreExpansion>

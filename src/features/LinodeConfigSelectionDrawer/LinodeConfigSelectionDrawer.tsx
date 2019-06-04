@@ -36,7 +36,7 @@ const LinodeConfigSelectionDrawer: React.StatelessComponent<
 
   return (
     <Drawer open={open} onClose={onClose} title="Select a Linode Configuration">
-      <Grid container spacing={8} style={{ marginTop: 16 }}>
+      <Grid container spacing={1} style={{ marginTop: 16 }}>
         {configs.map(config => (
           <SelectionCard
             key={config.id}

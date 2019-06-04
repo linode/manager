@@ -111,7 +111,7 @@ export class SelectPlanPanel extends React.Component<
                 Nanode instances are good for low-duty workloads, where
                 performance isn't critical.
               </Typography>
-              <Grid container spacing={16}>
+              <Grid container spacing={2}>
                 {nanodes.map(this.renderCard)}
               </Grid>
             </>
@@ -131,7 +131,7 @@ export class SelectPlanPanel extends React.Component<
                 Standard instances are good for medium-duty workloads and are a
                 good mix of performance, resources, and price.
               </Typography>
-              <Grid container spacing={16}>
+              <Grid container spacing={2}>
                 {standards.map(this.renderCard)}
               </Grid>
             </>
@@ -151,7 +151,7 @@ export class SelectPlanPanel extends React.Component<
                 Dedicated CPU instances are good for full-duty workloads where
                 consistent performance is important.
               </Typography>
-              <Grid container spacing={16}>
+              <Grid container spacing={2}>
                 {dedicated.map(this.renderCard)}
               </Grid>
             </>
@@ -172,7 +172,7 @@ export class SelectPlanPanel extends React.Component<
                 good for memory hungry use cases like caching and in-memory
                 databases.
               </Typography>
-              <Grid container spacing={16}>
+              <Grid container spacing={2}>
                 {highmem.map(this.renderCard)}
               </Grid>
             </>

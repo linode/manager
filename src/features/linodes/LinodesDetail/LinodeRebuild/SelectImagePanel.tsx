@@ -49,7 +49,7 @@ const SelectImagePanel: React.StatelessComponent<CombinedProps> = props => {
     {
       title: '64-bit Distributions (Recommended)',
       render: () => (
-        <Grid container spacing={16}>
+        <Grid container spacing={2}>
           {createImagePanels(recommended)}
         </Grid>
       )
@@ -57,7 +57,7 @@ const SelectImagePanel: React.StatelessComponent<CombinedProps> = props => {
     {
       title: 'Older Distributions',
       render: () => (
-        <Grid container spacing={16}>
+        <Grid container spacing={2}>
           {createImagePanels(older)}
         </Grid>
       )
