@@ -214,12 +214,9 @@ export class App extends React.Component<CombinedProps, State> {
   componentDidUpdate(prevProps: CombinedProps) {
     /** run once when both notifications and linodes are loaded in Redux state */
     if (
-      (!!this.props.linodes.length &&
-        !prevProps.notifications &&
-        !!this.props.notifications) ||
-      (!!this.props.notifications &&
-        !prevProps.linodes.length &&
-        !!this.props.linodes.length)
+      !!this.props.linodes.length &&
+      !!this.props.notifications &&
+      (!prevProps.notifications || !prevProps.linodes.length)
     ) {
       this.props.addNotificationsToLinodes(
         this.props.notifications,
