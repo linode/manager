@@ -1,5 +1,6 @@
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import {
   StyleRulesCallback,
@@ -8,6 +9,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
 import TabbedPanel from 'src/components/TabbedPanel';
@@ -54,6 +56,9 @@ const getHighMem = (types: ExtendedType[]) =>
 const getDedicated = (types: ExtendedType[]) =>
   types.filter(t => /dedicated/.test(t.class));
 
+const getGPU = (types: ExtendedType[]) =>
+  types.filter(t => /gpu/.test(t.class));
+
 export class SelectPlanPanel extends React.Component<
   Props & WithStyles<ClassNames>
 > {
@@ -96,6 +101,7 @@ export class SelectPlanPanel extends React.Component<
     const standards = getStandard(types);
     const highmem = getHighMem(types);
     const dedicated = getDedicated(types);
+    const gpu = getGPU(types);
 
     const tabOrder: Linode.LinodeTypeClass[] = [];
 
@@ -178,6 +184,38 @@ export class SelectPlanPanel extends React.Component<
         title: 'High Memory'
       });
       tabOrder.push('highmem');
+    }
+
+
+    if (!isEmpty(gpu)) {
+      const programInfo = (
+        <Typography>
+          This is a pilot program for Linode GPU Instances. Here are some guides
+          with more information. This program has limited availability but if
+          you are interested in the service please{' '}
+          <Link to="/support/tickets">open a support ticket</Link> to let us
+          know.
+        </Typography>
+      );
+      tabs.push({
+        render: () => {
+          return (
+            <>
+              <Notice warning text={programInfo} />
+              <Typography className={classes.copy}>
+                Linodes with dedicated GPUs accelerate highly specialized
+                applications such as machine learning, AI, and video
+                transcoding.
+              </Typography>
+              <Grid container spacing={16}>
+                {gpu.map(this.renderCard)}
+              </Grid>
+            </>
+          );
+        },
+        title: 'GPU'
+      });
+      tabOrder.push('gpu');
     }
 
     return [tabs, tabOrder];
