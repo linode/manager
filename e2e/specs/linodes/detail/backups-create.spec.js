@@ -21,17 +21,19 @@ describe('Linode - Details - Backup - Snapshot Suite', () => {
       const backupRow = Backups.firstBackupRow;
       Backups.selectActionMenuItem(backupRow,'Restore to Existing Linode');
       Backups.restoreToExistingDrawerDisplays();
-      $(`${Backups.restoreToLinodeSelect.selector} div div`).click();
-      Backups.restoreToLinodesOptions[0].waitForVisible(constants.wait.normal);
-      return Backups.restoreToLinodesOptions.map( linode => linode.getText());
+
+      // Arrow down on the select element to keep the select options in the View
+      $(`${Backups.restoreToLinodeSelect.selector} input`).setValue('\uE015');
+      browser.waitForVisible('[data-qa-option]', constants.wait.normal);
+      return Backups.restoreToLinodesOptions.map(linode => linode.getText());
     }
 
     const closeLinodesSelect = () => {
         $('body').click();
-        Backups.restoreToLinodesOptions[0].waitForVisible(constants.wait.normal,true);
+        browser.waitForVisible('[data-qa-option]', constants.wait.normal, true);
     }
 
-    beforeAll(() => {
+    it('should setup the scenario', () => {
         checkEnvironment();
         updateGlobalSettings(disableAutoEnrollment);
         const linode1 = {
@@ -98,7 +100,7 @@ describe('Linode - Details - Backup - Snapshot Suite', () => {
           Backups.restoreSubmit.click();
           const errorMessage = $(`${Backups.drawerBase.selector} p`);
           errorMessage.waitForVisible(constants.wait.normal);
-          expect(errorMessage.getText()).toEqual('You must select a Linode');
+          expect(errorMessage.getText()).toMatch(/select a linode/ig);
       });
     });
 });
