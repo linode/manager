@@ -15,6 +15,7 @@ describe('Profile - Lish SSH Key Suite', () => {
     });
 
     it('should disable lish', () => {
+        browser.debug();
         Lish.disable(successMsg);
     });
 
@@ -35,7 +36,7 @@ describe('Profile - Lish SSH Key Suite', () => {
 
     it('should remove the additional ssh key field', () => {
         $$(Lish.removeButton.selector)[1].click();
-        
+
         browser.waitUntil(function() {
             return $$(Lish.sshKey.selector).length === 1;
         }, constants.wait.normal);
