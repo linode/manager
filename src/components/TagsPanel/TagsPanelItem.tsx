@@ -48,7 +48,7 @@ class TagsPanelItem extends React.Component<CombinedProps, {}> {
     const { tagLabel, loading, onDelete, ...restOfProps } = this.props;
     return (
       <Tag
-        {...restOfProps}
+        {...restOfProps as any}
         deleteIcon={this.renderIcon()}
         onDelete={onDelete ? this.handleDelete : undefined}
         component={'button' as 'div'}

@@ -98,6 +98,7 @@ export interface Props extends ChipProps {
   colorVariant?: Variants;
   asSuggestion?: boolean;
   closeMenu?: any;
+  component?: string;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<CSSClasses>;
