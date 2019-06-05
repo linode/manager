@@ -24,6 +24,7 @@ import SideMenu from 'src/components/SideMenu';
 import VATBanner from 'src/components/VATBanner';
 import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
+import CloneLanding from 'src/features/linodes/CloneLanding';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
 import Footer from 'src/features/Footer';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
@@ -388,6 +389,11 @@ export class App extends React.Component<CombinedProps, State> {
                     <Grid container spacing={0} className={classes.grid}>
                       <Grid item className={classes.switchWrapper}>
                         <Switch>
+                          {/* Note: The `clone` route needs to be placed BEFORE the `linodes` route. */}
+                          <Route
+                            path={`/linodes/:linodeId/clone`}
+                            component={CloneLanding}
+                          />
                           <Route path="/linodes" component={LinodesRoutes} />
                           <Route path="/volumes" component={Volumes} />
                           <Route
