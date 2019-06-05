@@ -61,7 +61,7 @@ const styles = (theme: Theme) =>
       width: 30,
       height: 30,
       marginRight: theme.spacing(2),
-      animation: 'fadeIn 150ms linear forwards',
+      animation: '$fadeIn 150ms linear forwards',
       [theme.breakpoints.up('md')]: {
         width: 50,
         height: 50

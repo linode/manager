@@ -32,7 +32,7 @@ const styles = (theme: Theme) =>
           ${theme.color.grey2} 70%
         )`,
         backgroundSize: 600,
-        animation: 'shine 2s infinite linear'
+        animation: '$shine 2s infinite linear'
       }
     },
     tableCol1: {

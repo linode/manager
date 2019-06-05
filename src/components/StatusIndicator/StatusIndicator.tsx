@@ -30,7 +30,7 @@ const styles = (theme: Theme) =>
       top: 1,
       left: -1,
       '& svg': {
-        animation: 'rotate 2s linear infinite',
+        animation: '$rotate 2s linear infinite',
         fill: theme.color.offBlack
       }
     },

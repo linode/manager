@@ -67,7 +67,7 @@ const styles = (theme: Theme) =>
     },
     checked: {
       display: 'flex',
-      animation: 'fadeIn 225ms ease-in-out forwards 10ms',
+      animation: '$fadeIn 225ms ease-in-out forwards 10ms',
       '& svg': {
         borderRadius: '16px',
         border: '1px solid',

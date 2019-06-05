@@ -114,7 +114,7 @@ storiesOf('Breadcrumb', module)
                   borderRadius: '50%',
                   width: '46px',
                   height: '46px',
-                  animation: 'fadeIn 150ms linear forwards'
+                  animation: '$fadeIn 150ms linear forwards'
                 }}
               />
             )

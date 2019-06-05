@@ -65,7 +65,7 @@ const styles = (theme: Theme) =>
         margin: '0 auto',
         width: theme.spacing(1) + 14,
         height: theme.spacing(1) + 14,
-        animation: 'rotate 2s linear infinite'
+        animation: '$rotate 2s linear infinite'
       }
     },
     destructive: {
