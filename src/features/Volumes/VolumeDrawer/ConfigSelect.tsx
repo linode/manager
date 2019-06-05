@@ -1,7 +1,7 @@
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
-
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { getLinodeConfigs } from 'src/services/linodes';
 

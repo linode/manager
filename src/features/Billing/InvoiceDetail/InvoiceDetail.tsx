@@ -156,7 +156,7 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
                 {data && invoice && items && (
                   <Button
                     buttonType="primary"
-                    target="_blank"
+                    // target="_blank" M3-2869 - needed?
                     onClick={() => this.printInvoice(data, invoice, items)}
                   >
                     Download PDF

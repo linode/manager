@@ -153,7 +153,9 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           tiny
           type="number"
           value={nodeCount}
-          onChange={e => updateNodeCount(+e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            updateNodeCount(+e.target.value)
+          }
           errorText={countError}
         />
       </Grid>

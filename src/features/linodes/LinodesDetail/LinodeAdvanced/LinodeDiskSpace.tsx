@@ -1,9 +1,8 @@
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
-
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-
 import BarPercent from 'src/components/BarPercent';
 import Divider from 'src/components/core/Divider';
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
 type ClassNames =

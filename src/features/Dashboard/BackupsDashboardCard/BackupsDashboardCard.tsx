@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import Backup from '@material-ui/icons/Backup';
 import * as classNames from 'classnames';
 import { compose } from 'ramda';
