@@ -76,7 +76,7 @@ const styles = (theme: Theme) =>
     },
     textField: {
       opacity: 0,
-      animation: 'fadeIn .3s ease-in-out forwards',
+      animation: '$fadeIn .3s ease-in-out forwards',
       margin: 0
     },
     inputRoot: {

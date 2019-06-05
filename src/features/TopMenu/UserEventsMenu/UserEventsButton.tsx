@@ -44,7 +44,7 @@ const styles = (theme: Theme) =>
       fill: '#999'
     },
     new: {
-      animation: 'fadeIn 225ms ease-in-out',
+      animation: '$fadeIn 225ms ease-in-out',
       padding: '0 5px',
       height: 17,
       backgroundColor: theme.color.red,
