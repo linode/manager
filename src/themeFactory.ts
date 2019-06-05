@@ -73,8 +73,6 @@ interface ThemeArguments {
 
 const breakpoints = createBreakpoints({});
 
-console.log(breakpoints);
-
 export const COMPACT_SPACING_UNIT = 4;
 export const NORMAL_SPACING_UNIT = 8;
 
