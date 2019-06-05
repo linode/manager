@@ -89,13 +89,15 @@ export class SelectPlanPanel extends React.Component<
     );
   };
 
-  createTabs = () => {
+  createTabs = (): [Tab[], Linode.LinodeTypeClass[]] => {
     const { classes, types } = this.props;
     const tabs: Tab[] = [];
     const nanodes = getNanodes(types);
     const standards = getStandard(types);
     const highmem = getHighMem(types);
     const dedicated = getDedicated(types);
+
+    const tabOrder: Linode.LinodeTypeClass[] = [];
 
     if (!isEmpty(nanodes)) {
       tabs.push({
@@ -114,6 +116,7 @@ export class SelectPlanPanel extends React.Component<
         },
         title: 'Nanode'
       });
+      tabOrder.push('nanode');
     }
 
     if (!isEmpty(standards)) {
@@ -133,6 +136,7 @@ export class SelectPlanPanel extends React.Component<
         },
         title: 'Standard'
       });
+      tabOrder.push('standard');
     }
 
     if (!isEmpty(dedicated)) {
@@ -152,6 +156,7 @@ export class SelectPlanPanel extends React.Component<
         },
         title: 'Dedicated CPU'
       });
+      tabOrder.push('dedicated');
     }
 
     if (!isEmpty(highmem)) {
@@ -172,14 +177,16 @@ export class SelectPlanPanel extends React.Component<
         },
         title: 'High Memory'
       });
+      tabOrder.push('highmem');
     }
 
-    return tabs;
+    return [tabs, tabOrder];
   };
 
   render() {
     const { classes, copy, error, header, types, selectedID } = this.props;
 
+    const [tabs, tabOrder] = this.createTabs();
     // Determine initial plan category tab based on selectedTypeID
     // (if there is one).
     const selectedTypeClass: Linode.LinodeTypeClass = pathOr(
@@ -195,7 +202,7 @@ export class SelectPlanPanel extends React.Component<
         error={error}
         header={header || 'Linode Plan'}
         copy={copy}
-        tabs={this.createTabs()}
+        tabs={tabs}
         initTab={initialTab}
       />
     );
@@ -211,10 +218,3 @@ export default compose<
   RenderGuard,
   styled
 )(SelectPlanPanel);
-
-const tabOrder: Linode.LinodeTypeClass[] = [
-  'nanode',
-  'standard',
-  'dedicated',
-  'highmem'
-];
