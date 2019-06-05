@@ -477,15 +477,16 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
      *
      * Currently, the API does not check that the soaEmail
      * is not associated with the target hostname. If you're creating
-     * example.com, you shouldn't be able to use `marty@example.com` as your soaEmail.
-     * Checking for this here to prevent broken domains.
+     * example.com, using `marty@example.com` as your soaEmail is unwise
+     * (though technically won't break anything.).
      */
 
     if (type === 'master' && !isValidSOAEmail(email, domain)) {
       const err = [
         {
           field: 'soa_email',
-          reason: 'SOA Email address must not belong to the target Domain.'
+          reason:
+            'Please choose an SOA Email address that does not belong to the target Domain.'
         }
       ];
       this.setState(

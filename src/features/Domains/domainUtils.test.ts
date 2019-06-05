@@ -17,7 +17,6 @@ describe('Domain-related utilities', () => {
     });
 
     it('should handle subdomains', () => {
-      // @todo Is this actually the correct behavior?
       expect(isValidSOAEmail('admin@example.com', 'www.example.com')).toBe(
         false
       );
@@ -26,8 +25,12 @@ describe('Domain-related utilities', () => {
   });
 
   describe('Validating domain records', () => {
-    it('should not allow duplicate hostnames for a Domain record', () => {
+    it('should not allow hostnames that conflict with an existing CNAME record.', () => {
       expect(isValidDomainRecord('www', records)).toBe(false);
+    });
+
+    it('should not care about conflicts between non-CNAME records', () => {
+      expect(isValidDomainRecord('host', records)).toBe(true);
     });
 
     it('should allow valid records', () => {

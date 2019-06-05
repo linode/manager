@@ -481,7 +481,10 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
      */
 
     if (!isValidDomainRecord(pathOr('', ['name'], data), records)) {
-      const error = { field: 'name', reason: 'Must be unique.' };
+      const error = {
+        field: 'name',
+        reason: 'Record conflict - CNAMES must be unique'
+      };
       this.handleSubmissionErrors([error]);
       return;
     }

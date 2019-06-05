@@ -19,5 +19,7 @@ export const isUniqueHostname = (
   hostname: string,
   records: Linode.DomainRecord[]
 ) => {
-  return !records.some(record => record.name === hostname);
+  return !records.some(
+    record => record.type === 'CNAME' && record.name === hostname
+  );
 };

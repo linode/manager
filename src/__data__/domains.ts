@@ -92,7 +92,7 @@ export const domainRecord3: Linode.DomainRecord = {
   tag: null,
   target: 'www.example.com',
   ttl_sec: 0,
-  type: 'TXT',
+  type: 'AAAA',
   weight: 0
 };
 
