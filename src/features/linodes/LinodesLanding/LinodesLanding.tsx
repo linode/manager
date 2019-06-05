@@ -51,6 +51,8 @@ import ListView from './ListView';
 import { powerOffLinode, rebootLinode } from './powerActions';
 import ToggleBox from './ToggleBox';
 
+import MaintenanceBanner from 'src/components/MaintenanceBanner';
+
 interface ConfigDrawerState {
   open: boolean;
   configs: Linode.Config[];
@@ -329,116 +331,125 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     ];
 
     return (
-      <Grid container>
-        <Grid
-          item
-          className={`${
-            backupsCTA && !storage.BackupsCtaDismissed.get() ? 'mlMain' : ''
-          }`}
-          xs={
-            !backupsCTA ||
-            (backupsCTA && storage.BackupsCtaDismissed.get() && 12)
-          }
-        >
-          <Grid container>
-            <DocumentTitleSegment segment="Linodes" />
-            <Grid
-              container
-              justify="space-between"
-              item
-              xs={12}
-              style={{ paddingBottom: 0 }}
-            >
-              <Grid item className={classes.title}>
-                <Typography
-                  variant="h1"
-                  className={this.props.classes.title}
-                  data-qa-title
-                >
-                  Linodes
-                </Typography>
-              </Grid>
-              <Hidden xsDown>
-                <FormControlLabel
-                  className={classes.tagGroup}
-                  control={
-                    <Toggle
-                      className={
-                        this.props.groupByTags ? ' checked' : ' unchecked'
-                      }
-                      onChange={this.props.toggleGroupByTag}
-                      checked={this.props.groupByTags}
-                      data-qa-tags-toggle={this.props.groupByTags}
-                    />
-                  }
-                  label="Group by Tag:"
-                />
-                <ToggleBox handleClick={this.changeView} status={display} />
-              </Hidden>
-            </Grid>
-            <Grid item xs={12}>
-              <OrderBy data={linodesData} order={'asc'} orderBy={'label'}>
-                {({ data, handleOrderChange, order, orderBy }) => {
-                  const finalProps = {
-                    ...componentProps,
-                    data,
-                    handleOrderChange,
-                    order,
-                    orderBy
-                  };
-
-                  return groupByTags ? (
-                    <DisplayGroupedLinodes {...finalProps} />
-                  ) : (
-                    <DisplayLinodes {...finalProps} />
-                  );
-                }}
-              </OrderBy>
-              <Grid container justify="flex-end">
-                <Grid item className={classes.CSVlinkContainer}>
-                  <CSVLink
-                    data={linodesData}
-                    headers={headers}
-                    filename={`linodes-${formatDate(moment().format())}.csv`}
-                    className={classes.CSVlink}
+      <React.Fragment>
+        {this.props.someLinodesHaveScheduledMaintenance && (
+          <MaintenanceBanner
+            userTimezone={this.props.userTimezone}
+            userTimezoneError={this.props.userTimezoneError}
+            userTimezoneLoading={this.props.userTimezoneLoading}
+          />
+        )}
+        <Grid container>
+          <Grid
+            item
+            className={`${
+              backupsCTA && !storage.BackupsCtaDismissed.get() ? 'mlMain' : ''
+            }`}
+            xs={
+              !backupsCTA ||
+              (backupsCTA && storage.BackupsCtaDismissed.get() && 12)
+            }
+          >
+            <Grid container>
+              <DocumentTitleSegment segment="Linodes" />
+              <Grid
+                container
+                justify="space-between"
+                item
+                xs={12}
+                style={{ paddingBottom: 0 }}
+              >
+                <Grid item className={classes.title}>
+                  <Typography
+                    variant="h1"
+                    className={this.props.classes.title}
+                    data-qa-title
                   >
-                    Download CSV
-                  </CSVLink>
+                    Linodes
+                  </Typography>
+                </Grid>
+                <Hidden xsDown>
+                  <FormControlLabel
+                    className={classes.tagGroup}
+                    control={
+                      <Toggle
+                        className={
+                          this.props.groupByTags ? ' checked' : ' unchecked'
+                        }
+                        onChange={this.props.toggleGroupByTag}
+                        checked={this.props.groupByTags}
+                        data-qa-tags-toggle={this.props.groupByTags}
+                      />
+                    }
+                    label="Group by Tag:"
+                  />
+                  <ToggleBox handleClick={this.changeView} status={display} />
+                </Hidden>
+              </Grid>
+              <Grid item xs={12}>
+                <OrderBy data={linodesData} order={'asc'} orderBy={'label'}>
+                  {({ data, handleOrderChange, order, orderBy }) => {
+                    const finalProps = {
+                      ...componentProps,
+                      data,
+                      handleOrderChange,
+                      order,
+                      orderBy
+                    };
+
+                    return groupByTags ? (
+                      <DisplayGroupedLinodes {...finalProps} />
+                    ) : (
+                      <DisplayLinodes {...finalProps} />
+                    );
+                  }}
+                </OrderBy>
+                <Grid container justify="flex-end">
+                  <Grid item className={classes.CSVlinkContainer}>
+                    <CSVLink
+                      data={linodesData}
+                      headers={headers}
+                      filename={`linodes-${formatDate(moment().format())}.csv`}
+                      className={classes.CSVlink}
+                    >
+                      Download CSV
+                    </CSVLink>
+                  </Grid>
                 </Grid>
               </Grid>
+              <LinodeConfigSelectionDrawer
+                configs={configDrawer.configs}
+                onClose={this.closeConfigDrawer}
+                onSubmit={this.submitConfigChoice}
+                onChange={this.selectConfig}
+                open={configDrawer.open}
+                selected={String(configDrawer.selected)}
+                error={configDrawer.error}
+              />
+              <ConfirmationDialog
+                title={
+                  actionOption === 'reboot'
+                    ? `Reboot ${this.state.selectedLinodeLabel}?`
+                    : actionOption === 'power_down'
+                    ? `Power Off ${this.state.selectedLinodeLabel}?`
+                    : `Delete ${this.state.selectedLinodeLabel}?`
+                }
+                actions={this.renderConfirmationActions}
+                open={confirmationOpen}
+                onClose={this.closePowerAlert}
+                error={confirmationError}
+              >
+                <Typography>{getConfirmationMessage(actionOption)}</Typography>
+              </ConfirmationDialog>
             </Grid>
-            <LinodeConfigSelectionDrawer
-              configs={configDrawer.configs}
-              onClose={this.closeConfigDrawer}
-              onSubmit={this.submitConfigChoice}
-              onChange={this.selectConfig}
-              open={configDrawer.open}
-              selected={String(configDrawer.selected)}
-              error={configDrawer.error}
-            />
-            <ConfirmationDialog
-              title={
-                actionOption === 'reboot'
-                  ? `Reboot ${this.state.selectedLinodeLabel}?`
-                  : actionOption === 'power_down'
-                  ? `Power Off ${this.state.selectedLinodeLabel}?`
-                  : `Delete ${this.state.selectedLinodeLabel}?`
-              }
-              actions={this.renderConfirmationActions}
-              open={confirmationOpen}
-              onClose={this.closePowerAlert}
-              error={confirmationError}
-            >
-              <Typography>{getConfirmationMessage(actionOption)}</Typography>
-            </ConfirmationDialog>
           </Grid>
+          {backupsCTA && !storage.BackupsCtaDismissed.get() && (
+            <Grid item className="mlSidebar py0">
+              <BackupsCTA dismissed={this.dismissCTA} />
+            </Grid>
+          )}
         </Grid>
-        {backupsCTA && !storage.BackupsCtaDismissed.get() && (
-          <Grid item className="mlSidebar py0">
-            <BackupsCTA dismissed={this.dismissCTA} />
-          </Grid>
-        )}
-      </Grid>
+      </React.Fragment>
     );
   }
 
@@ -509,9 +520,15 @@ interface StateProps {
   linodesData: Linode.Linode[];
   linodesRequestError?: Linode.ApiFieldError[];
   linodesRequestLoading: boolean;
+  userTimezone: string;
+  userTimezoneLoading: boolean;
+  userTimezoneError?: Linode.ApiFieldError[];
+  someLinodesHaveScheduledMaintenance: boolean;
 }
 
 const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
+  const linodesData = state.__resources.linodes.entities;
+
   return {
     managed: pathOr(
       false,
@@ -519,9 +536,15 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
       state
     ),
     linodesCount: state.__resources.linodes.results.length,
-    linodesData: state.__resources.linodes.entities,
+    linodesData,
+    someLinodesHaveScheduledMaintenance: linodesData
+      ? linodesData.some(eachLinode => !!eachLinode.maintenance)
+      : false,
     linodesRequestLoading: state.__resources.linodes.loading,
-    linodesRequestError: path(['error', 'read'], state.__resources.linodes)
+    linodesRequestError: path(['error', 'read'], state.__resources.linodes),
+    userTimezone: pathOr('', ['data', 'timezone'], state.__resources.profile),
+    userTimezoneLoading: state.__resources.profile.loading,
+    userTimezoneError: state.__resources.profile.error
   };
 };
 
