@@ -106,7 +106,7 @@ const userNotificationListItem: React.StatelessComponent<
       component="li"
       tabIndex={1}
       onClick={onClick}
-      button={Boolean(onClick)}
+      button={onClick === undefined && false}
     >
       <div
         className={classNames({

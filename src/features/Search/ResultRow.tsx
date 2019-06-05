@@ -33,12 +33,12 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    transition: theme.transitions.create(['background-color']),
     root: {
       paddingTop: '0 !important',
       paddingBottom: '0 !important',
       width: '100%',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      transition: theme.transitions.create(['background-color'])
     },
     description: {},
     label: {

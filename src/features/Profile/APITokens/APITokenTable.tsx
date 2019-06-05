@@ -592,14 +592,14 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <ActionsPanel>
           <Button
-           buttonType="cancel"
+            buttonType="cancel"
             onClick={this.closeRevokeDialog}
             data-qa-button-cancel
           >
             Cancel
           </Button>
           <Button
-           buttonType="secondary"
+            buttonType="secondary"
             destructive
             onClick={this.revokeAction}
             data-qa-button-confirm
