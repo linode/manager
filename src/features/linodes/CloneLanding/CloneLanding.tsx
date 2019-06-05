@@ -7,6 +7,7 @@ import {
   withRouter
 } from 'react-router-dom';
 import AppBar from 'src/components/core/AppBar';
+import Paper from 'src/components/core/Paper';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import Typography from 'src/components/core/Typography';
@@ -49,29 +50,32 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
       <Typography variant="h1" data-qa-clone-header>
         Clone
       </Typography>
-      <AppBar position="static" color="default">
-        <Tabs
-          value={tabs.findIndex(tab => matches(tab.routeName))}
-          onChange={handleTabChange}
-          indicatorColor="primary"
-          textColor="primary"
-          variant="scrollable"
-          scrollButtons="on"
-        >
-          {tabs.map(tab => (
-            <Tab
-              key={tab.title}
-              data-qa-tab={tab.title}
-              component={() => <TabLink to={tab.routeName} title={tab.title} />}
-            />
-          ))}
-        </Tabs>
-      </AppBar>
-      <Switch>
+      <Paper>
+        <AppBar position="static" color="default">
+          <Tabs
+            value={tabs.findIndex(tab => matches(tab.routeName))}
+            onChange={handleTabChange}
+            indicatorColor="primary"
+            textColor="primary"
+            variant="scrollable"
+            scrollButtons="on"
+          >
+            {tabs.map(tab => (
+              <Tab
+                key={tab.title}
+                data-qa-tab={tab.title}
+                component={() => (
+                  <TabLink to={tab.routeName} title={tab.title} />
+                )}
+              />
+            ))}
+          </Tabs>
+        </AppBar>
         <Route exact path={`${url}/configs`} component={Configs} />
         <Route exact path={`${url}/disks`} component={Disks} />
         <Route exact path={`${url}`} component={Configs} />
-      </Switch>
+      </Paper>
+      <Switch />
     </React.Fragment>
   );
 };
