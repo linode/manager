@@ -34,6 +34,11 @@ const Notifications: React.StatelessComponent<CombinedProps> = props => {
             userTimezone={userTimezone}
             userTimezoneLoading={userTimezoneLoading}
             userTimezoneError={userTimezoneError}
+            maintenanceStart={notification.when}
+            maintenanceEnd={notification.until}
+            type={
+              notification.label.includes('reboot') ? 'reboot' : 'migration'
+            }
           />
         );
       case 'migration_pending':

@@ -4,7 +4,7 @@
  * _when_ could be in the past
  */
 
-type Type = 'reboot-scheduled' | 'migration-scheduled';
+type Type = 'reboot-scheduled' | 'migration-pending';
 
 export interface Maintenance {
   type: Type;
