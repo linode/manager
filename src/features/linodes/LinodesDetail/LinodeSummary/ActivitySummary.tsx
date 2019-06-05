@@ -18,6 +18,7 @@ import {
   shouldUpdateEvents
 } from 'src/features/Events/Event.helpers';
 import { ExtendedEvent } from 'src/store/events/event.helpers';
+import { removeBlacklistedEvents } from 'src/utilities/eventUtils';
 
 type ClassNames = 'root' | 'header' | 'viewMore';
 
@@ -81,7 +82,7 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
     ) {
       this.setState({
         events: filterUniqueEvents([
-          /* 
+          /*
             make sure that we're popping new related events to the top
             of the activity stream. Make sure they're events after the ones
             we got from page load and ones that match the Linode ID
@@ -95,10 +96,10 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
                 eachEvent.entity.type === 'linode')
             );
           }),
-          /* 
-            at this point, the state is populated with events from the cDM 
+          /*
+            at this point, the state is populated with events from the cDM
             request (which don't include the "_initial flag"), but it might also
-            contain events from Redux as well. We only want the ones where the "_initial" 
+            contain events from Redux as well. We only want the ones where the "_initial"
             flag doesn't exist
           */
           ...this.state.events.filter(
@@ -130,6 +131,9 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
   render() {
     const { classes, linodeId } = this.props;
     const { events, error, loading } = this.state;
+
+    const filteredEvents = removeBlacklistedEvents(events);
+
     return (
       <>
         <Grid container alignItems={'center'} className={classes.header}>
@@ -148,7 +152,7 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
         </Grid>
         <Paper className={classes.root}>
           <ActivitySummaryContent
-            events={events.slice(0, 5)}
+            events={filteredEvents.slice(0, 5)}
             error={error}
             loading={loading}
           />
@@ -161,3 +165,4 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles);
 
 export default styled(ActivitySummary);
+

@@ -24,6 +24,7 @@ import { getEvents } from 'src/services/account';
 import { ApplicationState } from 'src/store';
 import { setDeletedEvents } from 'src/store/events/event.helpers';
 import areEntitiesLoading from 'src/store/selectors/entitiesLoading';
+import { removeBlacklistedEvents } from 'src/utilities/eventUtils';
 
 import { ExtendedEvent } from 'src/store/events/event.helpers';
 import { filterUniqueEvents, shouldUpdateEvents } from './Event.helpers';
@@ -123,7 +124,7 @@ export const reducer: React.Reducer<ReducerState, ReducerActions> = (
           inProgressEvents: nextInProgressEvents,
           mostRecentEventTime: nextMostRecentEventTime,
           reactStateEvents: filterUniqueEvents([
-            /* 
+            /*
               Pop new events from Redux on the top of the event stream, with some conditions
             */
             ...nextReduxEvents.filter(eachEvent => {
@@ -140,10 +141,10 @@ export const reducer: React.Reducer<ReducerState, ReducerActions> = (
                   (eachEvent.entity && eachEvent.entity.id === entityId))
               );
             }),
-            /* 
-            at this point, the state is populated with events from the cDM 
+            /*
+            at this point, the state is populated with events from the cDM
             request (which don't include the "_initial flag"), but it might also
-            contain events from Redux as well. We only want the ones where the "_initial" 
+            contain events from Redux as well. We only want the ones where the "_initial"
             flag doesn't exist
             */
             ...nextReactEvents.filter(
@@ -335,6 +336,8 @@ export const renderTableBody = (
   error?: string,
   events?: Linode.Event[]
 ) => {
+  const filteredEvents = removeBlacklistedEvents(events);
+
   if (loading) {
     return <TableRowLoading colSpan={12} data-qa-events-table-loading />;
   } else if (error) {
@@ -345,7 +348,7 @@ export const renderTableBody = (
         data-qa-events-table-error
       />
     );
-  } else if (!events || events.length === 0) {
+  } else if (filteredEvents.length === 0) {
     return (
       <TableRowEmptyState
         colSpan={12}
@@ -356,7 +359,7 @@ export const renderTableBody = (
   } else {
     return (
       <>
-        {events.map((thisEvent, idx) => (
+        {filteredEvents.map((thisEvent, idx) => (
           <EventRow
             entityId={entityId}
             key={`event-list-item-${idx}`}

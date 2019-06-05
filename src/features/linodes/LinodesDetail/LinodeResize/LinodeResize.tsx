@@ -1,8 +1,10 @@
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { compose } from 'recompose';
+import { Action } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
@@ -23,7 +25,7 @@ import { typeLabelDetails } from 'src/features/linodes/presentation';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import { resizeLinode } from 'src/services/linodes';
 import { ApplicationState } from 'src/store';
-import { withNotifications } from 'src/store/notification/notification.containers';
+import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import LinodePermissionsError from '../LinodePermissionsError';
 
@@ -84,15 +86,11 @@ interface State {
   autoDiskResize: boolean;
 }
 
-interface NotificationProps {
-  requestNotifications: () => void;
-}
-
 type CombinedProps = WithTypesProps &
   RouteComponentProps &
   LinodeContextProps &
-  NotificationProps &
   WithStyles<ClassNames> &
+  DispatchProps &
   WithSnackbarProps;
 
 export class LinodeResize extends React.Component<CombinedProps, State> {
@@ -122,12 +120,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
   };
 
   onSubmit = () => {
-    const {
-      linodeId,
-      enqueueSnackbar,
-      requestNotifications,
-      history
-    } = this.props;
+    const { linodeId, enqueueSnackbar, history, updateLinode } = this.props;
     const { selectedId } = this.state;
 
     if (!linodeId) {
@@ -143,7 +136,13 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         enqueueSnackbar('Linode queued for resize.', {
           variant: 'info'
         });
-        requestNotifications();
+
+        // Update the Linode so we display the new plan information.
+        // This is important if resizing from a legacy plan. We need
+        // to do this in order for the "Upgrade available" banner to
+        // go away.
+        updateLinode(linodeId);
+
         history.push(`/linodes/${linodeId}/summary`);
       })
       .catch(errorResponse => {
@@ -320,6 +319,23 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
     .map(LinodeResize.extendType)
 }));
 
+interface DispatchProps {
+  updateLinode: (id: number) => void;
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
+) => {
+  return {
+    updateLinode: (id: number) => dispatch(requestLinodeForStore(id))
+  };
+};
+
+const connected = connect(
+  undefined,
+  mapDispatchToProps
+);
+
 const linodeContext = withLinodeDetailContext(state => {
   const { linode } = state;
   return {
@@ -373,7 +389,5 @@ export default compose<CombinedProps, {}>(
   styled,
   withSnackbar,
   withRouter,
-  withNotifications(undefined, ({ requestNotifications }) => ({
-    requestNotifications
-  }))
+  connected
 )(LinodeResize);
