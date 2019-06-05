@@ -33,6 +33,7 @@ import defaultNumeric from 'src/utilities/defaultNumeric';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+import { isValidDomainRecord } from './domainUtils';
 
 const TextField: React.StatelessComponent<TextFieldProps> = props => (
   <_TextField {...props} />
@@ -49,6 +50,7 @@ interface Props extends EditableRecordFields, EditableDomainFields {
   onClose: () => void;
   domainId: number;
   mode: 'create' | 'edit';
+  records: Linode.DomainRecord[];
   updateRecords: () => void;
   updateDomain: () => void;
 
@@ -458,7 +460,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   };
 
   onRecordCreate = () => {
-    const { type } = this.props;
+    const { records, type } = this.props;
 
     /** Appease TS ensuring we won't use it during Record create. */
     if (type === 'master' || type === 'slave') {
@@ -470,6 +472,19 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       type,
       ...this.filterDataByType(this.state.fields, type)
     };
+
+    /**
+     * Validation
+     *
+     * This should be done on the API side, but several breaking
+     * configurations will currently succeed on their end.
+     */
+
+    if (!isValidDomainRecord(pathOr('', ['name'], data), records)) {
+      const error = { field: 'name', reason: 'Must be unique.' };
+      this.handleSubmissionErrors([error]);
+      return;
+    }
 
     createDomainRecord(this.props.domainId, data)
       .then(this.handleRecordSubmissionSuccess)

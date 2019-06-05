@@ -652,7 +652,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { domain, classes } = this.props;
+    const { domain, domainRecords, classes } = this.props;
     const { drawer, confirmDialog } = this.state;
 
     return (
@@ -795,6 +795,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           domainId={this.props.domain.id}
           onClose={this.resetDrawer}
           mode={drawer.mode}
+          records={domainRecords}
           type={drawer.type}
           updateRecords={this.props.updateRecords}
           updateDomain={this.props.updateDomain}

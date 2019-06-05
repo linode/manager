@@ -53,3 +53,47 @@ export const domain3: Linode.Domain = {
 };
 
 export const domains = [domain1, domain2, domain3];
+
+export const domainRecord1: Linode.DomainRecord = {
+  id: 12938697,
+  name: 'www',
+  port: 0,
+  priority: 0,
+  protocol: null,
+  service: null,
+  tag: null,
+  target: 'www.example.com',
+  ttl_sec: 0,
+  type: 'CNAME',
+  weight: 0
+};
+
+export const domainRecord2: Linode.DomainRecord = {
+  id: 12938693,
+  name: 'kibana',
+  port: 0,
+  priority: 0,
+  protocol: null,
+  service: null,
+  tag: null,
+  target: 'www.example.com',
+  ttl_sec: 0,
+  type: 'CNAME',
+  weight: 0
+};
+
+export const domainRecord3: Linode.DomainRecord = {
+  id: 22938693,
+  name: 'host',
+  port: 0,
+  priority: 0,
+  protocol: null,
+  service: null,
+  tag: null,
+  target: 'www.example.com',
+  ttl_sec: 0,
+  type: 'TXT',
+  weight: 0
+};
+
+export const domainRecords = [domainRecord1, domainRecord2, domainRecord3];
