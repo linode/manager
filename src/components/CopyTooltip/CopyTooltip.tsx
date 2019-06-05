@@ -61,7 +61,7 @@ const styles = (theme: Theme) =>
       position: 'absolute',
       boxShadow: `0 0 5px ${theme.color.boxShadow}`,
       transition: 'opacity .5s ease-in-out',
-      animation: 'popUp 200ms ease-in-out forwards'
+      animation: '$popUp 200ms ease-in-out forwards'
     },
     standAlone: {
       marginLeft: theme.spacing(1),

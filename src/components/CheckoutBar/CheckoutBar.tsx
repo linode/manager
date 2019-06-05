@@ -40,7 +40,7 @@ const styles = (theme: Theme) =>
       opacity: 0,
       padding: `${theme.spacing(2)}px 0`,
       borderTop: `1px solid ${theme.color.border2}`,
-      animation: 'fadeIn 225ms linear forwards'
+      animation: '$fadeIn 225ms linear forwards'
     },
     noBorder: {
       border: 0

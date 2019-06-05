@@ -83,7 +83,7 @@ const styles = (theme: Theme) =>
       width: '100%',
       position: 'relative',
       zIndex: 3,
-      animation: 'fadeIn .3s ease-in-out forwards',
+      animation: '$fadeIn .3s ease-in-out forwards',
       maxWidth: 275,
       '& > div > div': {
         marginTop: 0

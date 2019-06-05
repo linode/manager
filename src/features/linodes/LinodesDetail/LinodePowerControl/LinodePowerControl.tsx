@@ -99,7 +99,7 @@ const styles = (theme: Theme) =>
     },
     buttonInner: {
       display: 'flex',
-      animation: 'fadeIn .2s ease-in-out',
+      animation: '$fadeIn .2s ease-in-out',
       alignItems: 'center'
     },
     hidden: {

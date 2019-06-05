@@ -58,7 +58,7 @@ const styles = (theme: Theme) =>
       }
     },
     usage: {
-      animation: 'fadeIn .3s ease-in-out forwards',
+      animation: '$fadeIn .3s ease-in-out forwards',
       marginTop: 0,
       maxWidth: 150
     }

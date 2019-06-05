@@ -28,7 +28,7 @@ const iconCircleAnimation = {
     stroke: primaryColors.dark,
     strokeDasharray: 1000,
     strokeDashoffset: 1000,
-    animation: 'dash 2s linear forwards'
+    animation: '$dash 2s linear forwards'
   },
   '& .insidePath *': {
     transition: 'fill .2s ease-in-out .2s, stroke .2s ease-in-out .2s',
@@ -220,7 +220,7 @@ export const dark = () =>
             '& svg': {
               width: 22,
               height: 22,
-              animation: 'rotate 2s linear infinite'
+              animation: '$rotate 2s linear infinite'
             }
           }
         }
@@ -513,10 +513,10 @@ export const dark = () =>
         checked: {},
         switchBase: {
           color: '#abadaf !important'
-        },
-        bar: {
-          border: '1px solid #222'
         }
+        // bar: {
+        //   border: '1px solid #222'
+        // }
       },
       MuiTab: {
         root: {

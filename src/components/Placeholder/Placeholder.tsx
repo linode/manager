@@ -42,7 +42,7 @@ const styles = (theme: Theme) =>
     },
     icon: {
       '&.animate': {
-        animation: 'scaleIn .5s ease-in-out'
+        animation: '$scaleIn .5s ease-in-out'
       },
       width: '120px',
       height: '120px',
@@ -59,7 +59,7 @@ const styles = (theme: Theme) =>
       },
       '& .insidePath path': {
         opacity: 0,
-        animation: 'fadeIn .2s ease-in-out forwards .3s',
+        animation: '$fadeIn .2s ease-in-out forwards .3s',
         stroke: theme.palette.primary.main
       }
     },
