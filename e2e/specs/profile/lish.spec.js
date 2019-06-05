@@ -15,7 +15,6 @@ describe('Profile - Lish SSH Key Suite', () => {
     });
 
     it('should disable lish', () => {
-        browser.debug();
         Lish.disable(successMsg);
     });
 
