@@ -26,15 +26,15 @@ export interface Props extends ButtonProps {
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {
-      '@keyframes rotate': {
-        from: {
-          transform: 'rotate(0deg)'
-        },
-        to: {
-          transform: 'rotate(360deg)'
-        }
+    '@keyframes rotate': {
+      from: {
+        transform: 'rotate(0deg)'
       },
+      to: {
+        transform: 'rotate(360deg)'
+      }
+    },
+    root: {
       '&.cancel': {
         border: `1px solid transparent`,
         transition: theme.transitions.create(['color', 'border-color']),
