@@ -1,22 +1,19 @@
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
-
+import { WithStyles } from '@material-ui/core/styles';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-
+import { createReply, uploadAttachment } from 'src/services/support';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { getErrorMap } from 'src/utilities/errorUtils';
 import AttachFileForm from '../../AttachFileForm';
 import { FileAttachment } from '../../index';
 import Reference from './MarkdownReference';
 import ReplyActions from './ReplyActions';
 import TabbedReply from './TabbedReply';
-
-import { createReply, uploadAttachment } from 'src/services/support';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { getErrorMap } from 'src/utilities/errorUtils';
 
 type ClassNames =
   | 'root'
@@ -28,38 +25,38 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    paddingLeft: theme.spacing(1),
-    paddingRight: theme.spacing(1)
-  },
-  inner: {
-    padding: 0
-  },
-  replyContainer: {
-    maxWidth: 600
-  },
-  expPanelSummary: {
-    backgroundColor: theme.bg.offWhite,
-    borderTop: `1px solid ${theme.bg.main}`
-  },
-  referenceRoot: {
-    '& > p': {
-      marginBottom: theme.spacing(1)
-    }
-  },
-  reference: {
-    // backgroundColor: theme.palette.divider,
-    [theme.breakpoints.up('sm')]: {
-      marginTop: theme.spacing(7),
-      marginRight: theme.spacing(1) / 2,
-      marginLeft: theme.spacing(1) / 2,
-      padding: `0 !important`
+    root: {
+      paddingLeft: theme.spacing(1),
+      paddingRight: theme.spacing(1)
     },
-    [theme.breakpoints.down('xs')]: {
-      padding: `${theme.spacing(2)}px !important`
+    inner: {
+      padding: 0
+    },
+    replyContainer: {
+      maxWidth: 600
+    },
+    expPanelSummary: {
+      backgroundColor: theme.bg.offWhite,
+      borderTop: `1px solid ${theme.bg.main}`
+    },
+    referenceRoot: {
+      '& > p': {
+        marginBottom: theme.spacing(1)
+      }
+    },
+    reference: {
+      // backgroundColor: theme.palette.divider,
+      [theme.breakpoints.up('sm')]: {
+        marginTop: theme.spacing(7),
+        marginRight: theme.spacing(1) / 2,
+        marginLeft: theme.spacing(1) / 2,
+        padding: `0 !important`
+      },
+      [theme.breakpoints.down('xs')]: {
+        padding: `${theme.spacing(2)}px !important`
+      }
     }
-  }
-});
+  });
 
 interface Props {
   closable: boolean;

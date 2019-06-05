@@ -263,9 +263,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
     this.setState(set(lensPath(['authorizedKeys', idx]), e.target.value));
   };
 
-  onPublicKeyRemove = (idx: number) => (
-    e: React.MouseEvent<HTMLDivElement>
-  ) => {
+  onPublicKeyRemove = (idx: number) => (e: React.MouseEvent<HTMLElement>) => {
     this.setState({
       authorizedKeys: remove(idx, 1, this.state.authorizedKeys),
       authorizedKeysCount: dec(this.state.authorizedKeysCount)

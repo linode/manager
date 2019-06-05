@@ -38,7 +38,9 @@ class TicketReply extends React.Component<CombinedProps> {
           value={value}
           placeholder={placeholder || 'Enter your reply'}
           data-qa-ticket-description
-          onChange={e => handleChange(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            handleChange(e.target.value)
+          }
           errorText={error}
         />
       </React.Fragment>
