@@ -1,7 +1,8 @@
+import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
-import { withStyles, WithStyles } from 'src/components/core/styles';
+import { withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell';

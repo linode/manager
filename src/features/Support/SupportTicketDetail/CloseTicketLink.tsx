@@ -54,7 +54,7 @@ class CloseTicketLink extends React.Component<CombinedProps, State> {
     this.setState({ dialogOpen: false });
   };
 
-  onClose = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  onClose = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     this.closeTicket();
   };

@@ -234,7 +234,9 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
           >
             {deleteBucketConfirmationMessage}
             <TextField
-              onChange={e => setConfirmBucketName(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setConfirmBucketName(e.target.value)
+              }
               expand
             />
           </ConfirmationDialog>

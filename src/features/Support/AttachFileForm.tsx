@@ -87,7 +87,6 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
           onChange={this.selectFile}
         />
         <Button
-          component="span"
           className={classes.attachFileButton}
           buttonType="secondary"
           onClick={this.clickAttachButton}

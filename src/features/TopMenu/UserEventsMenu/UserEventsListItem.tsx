@@ -99,7 +99,7 @@ const userEventsListItem: React.StatelessComponent<CombinedProps> = props => {
       component="li"
       tabIndex={1}
       onClick={onClick}
-      button={Boolean(onClick)}
+      button={onClick === undefined && false}
       role="menuitem"
     >
       <Typography variant="h3" className={classes.title}>
