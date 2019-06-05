@@ -158,7 +158,11 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
       return;
     }
     this.setState({
-      removeDialog: { ...removeDialog, submitting: true, errors: undefined }
+      removeDialog: {
+        ...(removeDialog as any),
+        submitting: true,
+        errors: undefined
+      }
     });
     deleteImage(this.state.removeDialog.imageID)
       .then(() => {
@@ -228,7 +232,11 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
   getActions = () => {
     return (
       <ActionsPanel>
-        <Button buttonType="cancel" onClick={this.closeRemoveDialog} data-qa-cancel>
+        <Button
+          buttonType="cancel"
+          onClick={this.closeRemoveDialog}
+          data-qa-cancel
+        >
           Cancel
         </Button>
         <Button

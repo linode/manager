@@ -73,7 +73,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   disks: linode._disks
 }));
 
-const styled = withStyles<ClassNames>(styles);
+const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, {}>(
   styled,
