@@ -59,7 +59,7 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
 
   getSecretLink = () => {
     const { secret, username } = this.props;
-    return `otpauth://totp/LinodeManager%3A${username}?secret=${secret}`;
+    return `otpauth://totp/LinodeManager%3A${username}?secret=${secret}&issuer=LinodeManager`;
   };
 
   handleTokenInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
