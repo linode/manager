@@ -47,6 +47,8 @@ import NodeBalancerSelect from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { createDomainRecord } from 'src/services/domains/records';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
+import { isValidSOAEmail } from './domainUtils';
+
 type ClassNames = 'root' | 'masterIPErrorNotice' | 'addIP';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
@@ -469,6 +471,37 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     this.closeDrawer();
   };
 
+  validateEmail = (type: string, domain: string, email: string) => {
+    /**
+     * Validation
+     *
+     * Currently, the API does not check that the soaEmail
+     * is not associated with the target hostname. If you're creating
+     * example.com, you shouldn't be able to use `marty@example.com` as your soaEmail.
+     * Checking for this here to prevent broken domains.
+     */
+
+    if (type === 'master' && !isValidSOAEmail(email, domain)) {
+      const err = [
+        {
+          field: 'soa_email',
+          reason: 'SOA Email address must not belong to the target Domain.'
+        }
+      ];
+      this.setState(
+        {
+          submitting: false,
+          errors: getAPIErrorOrDefault(err)
+        },
+        () => {
+          scrollErrorIntoView();
+        }
+      );
+      return false;
+    }
+    return true;
+  };
+
   create = () => {
     const {
       domain,
@@ -532,6 +565,10 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
       type === 'master'
         ? { domain, type, tags, soa_email: soaEmail }
         : { domain, type, tags, master_ips: finalMasterIPs };
+
+    if (!this.validateEmail(type, domain, data.soa_email || '')) {
+      return;
+    }
 
     this.setState({ submitting: true });
     domainActions
@@ -692,6 +729,10 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         ? // not sending type for master. There is a bug on server and it returns an error that `master_ips` is required
           { domain, tags, soa_email: soaEmail, domainId: id }
         : { domain, type, tags, master_ips: finalMasterIPs, domainId: id };
+
+    if (!this.validateEmail(type, domain, data.soa_email || '')) {
+      return;
+    }
 
     this.setState({ submitting: true });
     domainActions
