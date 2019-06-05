@@ -486,7 +486,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         {
           field: 'soa_email',
           reason:
-            'Please choose an SOA Email address that does not belong to the target Domain.'
+            'Please choose an SOA email address that does not belong to the target Domain.'
         }
       ];
       this.setState(
