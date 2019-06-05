@@ -14,7 +14,6 @@ import TableRow from 'src/components/TableRow';
 import TextField from 'src/components/TextField';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { displayTypeForKubePoolNode } from 'src/features/linodes/presentation';
-
 import { ExtendedPoolNode } from '.././types';
 
 type ClassNames = 'root' | 'link';
@@ -57,7 +56,9 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
         />
       </TableCell>
       <TableCell parentColumn="Pricing">
-        <Typography>{`${displayPrice(pool.totalMonthlyPrice)}/mo`}</Typography>
+        <Typography>{`${displayPrice(
+          pool.totalMonthlyPrice * pool.count
+        )}/mo`}</Typography>
       </TableCell>
       <TableCell>
         <Button
