@@ -6,12 +6,14 @@
 
 type Type = 'reboot-scheduled' | 'migration-scheduled';
 
+export interface Maintenance {
+  type: Type;
+  when: string | null;
+  until: string | null;
+}
+
 export interface LinodeWithMaintenance extends Linode.Linode {
-  maintenance?: {
-    type: Type;
-    when: string | null;
-    until: string | null;
-  };
+  maintenance?: Maintenance;
 }
 
 export const addNotificationsToLinodes = (

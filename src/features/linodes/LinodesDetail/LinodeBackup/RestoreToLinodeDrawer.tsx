@@ -15,7 +15,7 @@ import {
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
-import withProfile, { ProfileProps } from 'src/containers/profile.container';
+import withProfile from 'src/containers/profile.container';
 import { getLinodes, restoreBackup } from 'src/services/linodes';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector.ts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -45,7 +45,10 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & ProfileProps & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  WithStyles<ClassNames> & {
+    profile?: Linode.Profile;
+  };
 
 const canEditLinode = (
   profile: Linode.Profile | null,
@@ -240,7 +243,7 @@ const enhanced = compose<CombinedProps, Props>(
   withProfile((ownProps, profile) => {
     return {
       ...ownProps,
-      profile
+      profile: profile.data
     };
   })
 );

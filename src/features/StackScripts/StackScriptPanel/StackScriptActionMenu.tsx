@@ -118,7 +118,7 @@ const enhanced = compose<CombinedProps, Props>(
   withProfile((ownProps, profile) => {
     return {
       ...ownProps,
-      username: path(['username'], profile)
+      username: path(['data', 'username'], profile)
     };
   })
 );

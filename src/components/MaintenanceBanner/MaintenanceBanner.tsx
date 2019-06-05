@@ -27,7 +27,7 @@ interface Props {
   /** please keep in mind here that it's possible the start time can be in the past */
   maintenanceStart?: string;
   maintainanceEnd?: string;
-  userTimezone: string;
+  userTimezone?: string;
   userTimezoneLoading: boolean;
   userTimezoneError?: Linode.ApiFieldError[];
   type?: 'migration' | 'reboot';
@@ -45,6 +45,10 @@ const MaintenanceBanner: React.FC<CombinedProps> = props => {
 
     if (userTimezoneError) {
       return 'Error retrieving timezone.';
+    }
+
+    if (!userTimezone) {
+      return null;
     }
 
     return userTimezone;
