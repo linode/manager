@@ -349,11 +349,11 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
             color: primaryColors.light
           }
         },
-        flat: {
-          '&.cancel:hover': {
-            backgroundColor: 'transparent'
-          }
-        },
+        // flat: {
+        //   '&.cancel:hover': {
+        //     backgroundColor: 'transparent'
+        //   }
+        // },
         containedPrimary: {
           '&:hover, &:focus': {
             backgroundColor: primaryColors.light
