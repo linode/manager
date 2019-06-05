@@ -389,11 +389,6 @@ export class App extends React.Component<CombinedProps, State> {
                     <Grid container spacing={0} className={classes.grid}>
                       <Grid item className={classes.switchWrapper}>
                         <Switch>
-                          {/* Note: The `clone` route needs to be placed BEFORE the `linodes` route. */}
-                          <Route
-                            path={`/linodes/:linodeId/clone`}
-                            component={CloneLanding}
-                          />
                           <Route path="/linodes" component={LinodesRoutes} />
                           <Route path="/volumes" component={Volumes} />
                           <Route
