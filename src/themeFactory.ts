@@ -73,6 +73,8 @@ interface ThemeArguments {
 
 const breakpoints = createBreakpoints({});
 
+console.log(breakpoints);
+
 export const COMPACT_SPACING_UNIT = 4;
 export const NORMAL_SPACING_UNIT = 8;
 
@@ -1155,12 +1157,12 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
             color: primaryColors.main
           }
         },
-        label: {
-          [breakpoints.up('md')]: {
-            fontSize: '1rem'
-          }
-        },
-        labelContainer: {
+        // label: {
+        //   [breakpoints.up('md')]: {
+        //     fontSize: '1rem'
+        //   }
+        // },
+        wrapper: {
           padding: `${spacingUnit - 2}px 0`,
           [breakpoints.up('md')]: {
             padding: `${spacingUnit - 2}px 0`
