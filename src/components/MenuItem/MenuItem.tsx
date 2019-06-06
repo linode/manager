@@ -19,6 +19,7 @@ interface Props {
   tooltip?: string;
   className?: string;
   isLoading?: boolean;
+  ref?: any;
 }
 
 const styles = (theme: Theme) =>
@@ -84,41 +85,43 @@ const handleClick = (e: any) => {
 };
 type CombinedProps = MenuItemProps & Props & WithStyles<CSSClasses>;
 
-const WrapperMenuItem: React.StatelessComponent<CombinedProps> = props => {
-  const { tooltip, classes, className, isLoading, ...rest } = props;
+class WrapperMenuItem extends React.Component<CombinedProps> {
+  render() {
+    const { tooltip, classes, className, isLoading, ...rest } = this.props;
 
-  const shouldWrapLabel = isLoading || tooltip;
+    const shouldWrapLabel = isLoading || tooltip;
 
-  return (
-    <MenuItem
-      {...rest}
-      className={`${classes.root} ${className} ${tooltip && 'hasTooltip'}`}
-    >
-      {isLoading && (
-        <CircularProgress size={20} className={classes.circleProgress} />
-      )}
-      <span className={shouldWrapLabel && classes.labelWrapper}>
-        <span className={shouldWrapLabel && classes.label}>
-          {props.children}
-        </span>
-        {tooltip && !isLoading && (
-          <IconButton
-            className={classes.helpButton}
-            onClick={handleClick}
-            data-qa-tooltip-icon
-          >
-            <HelpOutline className={classes.helpIcon} />
-          </IconButton>
+    return (
+      <MenuItem
+        {...rest}
+        className={`${classes.root} ${className} ${tooltip && 'hasTooltip'}`}
+      >
+        {isLoading && (
+          <CircularProgress size={20} className={classes.circleProgress} />
         )}
-      </span>
-      {tooltip && (
-        <span className={classes.toolTip} data-qa-tooltip>
-          {tooltip}
+        <span className={shouldWrapLabel && classes.labelWrapper}>
+          <span className={shouldWrapLabel && classes.label}>
+            {this.props.children}
+          </span>
+          {tooltip && !isLoading && (
+            <IconButton
+              className={classes.helpButton}
+              onClick={handleClick}
+              data-qa-tooltip-icon
+            >
+              <HelpOutline className={classes.helpIcon} />
+            </IconButton>
+          )}
         </span>
-      )}
-    </MenuItem>
-  );
-};
+        {tooltip && (
+          <span className={classes.toolTip} data-qa-tooltip>
+            {tooltip}
+          </span>
+        )}
+      </MenuItem>
+    );
+  }
+}
 
 const styled = withStyles(styles);
 

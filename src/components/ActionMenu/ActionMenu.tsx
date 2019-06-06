@@ -14,13 +14,7 @@ export interface Action {
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
-type CSSClasses =
-  | 'root'
-  | 'item'
-  | 'button'
-  | 'actionSingleLink'
-  | 'hidden'
-  | 'menu';
+type CSSClasses = 'root' | 'item' | 'button' | 'actionSingleLink' | 'menu';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -61,9 +55,6 @@ const styles = (theme: Theme) =>
       whiteSpace: 'nowrap',
       float: 'right',
       fontFamily: theme.font.bold
-    },
-    hidden: {
-      ...theme.visually.hidden
     },
     menu: {
       maxWidth: theme.spacing(25)
@@ -150,7 +141,6 @@ export class ActionMenu extends React.Component<CombinedProps, State> {
             }
           }}
         >
-          <MenuItem key="placeholder" aria-hidden className={classes.hidden} />
           {(actions as Action[]).map((a, idx) => (
             <MenuItem
               key={idx}
