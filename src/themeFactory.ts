@@ -696,6 +696,9 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
             color: primaryColors.light,
             backgroundColor: 'transparent'
           }
+        },
+        edgeEnd: {
+          marginRight: 0
         }
       },
       MuiRadio: {
