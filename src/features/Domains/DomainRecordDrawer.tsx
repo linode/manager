@@ -33,7 +33,7 @@ import defaultNumeric from 'src/utilities/defaultNumeric';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { isValidDomainRecord } from './domainUtils';
+import { isValidDomainRecord, isValidSOAEmail } from './domainUtils';
 
 const TextField: React.StatelessComponent<TextFieldProps> = props => (
   <_TextField {...props} />
@@ -432,18 +432,34 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   };
 
   onDomainEdit = () => {
-    const { domainId, type, domainActions } = this.props;
+    const { domain, domainId, type, domainActions } = this.props;
     this.setState({ submitting: true, errors: undefined });
 
     const data = {
       ...this.filterDataByType(this.state.fields, type)
     } as Partial<EditableDomainFields>;
 
+    /**
+     * Prevent changing the soa_email to an
+     * email within this Domain. This isn't breaking,
+     * but is bad practice.
+     */
+
+    if (!isValidSOAEmail(data.soa_email || '', domain || '')) {
+      const error = {
+        field: 'soa_email',
+        reason:
+          'Please choose an SOA email address that does not belong to this Domain.'
+      };
+      this.handleSubmissionErrors([error]);
+      return;
+    }
+
     if (data.axfr_ips) {
       /**
        * Don't submit blank strings to the API.
        * Also trim the resulting array, since '192.0.2.0, 192.0.2.1'
-       * will submit ' 192.0.2.1', which is also an invalid value.
+       * will submit ' 192.0.2.1', which is an invalid value.
        */
       data.axfr_ips = data.axfr_ips
         .filter(ip => ip !== '')
