@@ -836,6 +836,10 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
         selected: {}
       },
       MuiListItemText: {
+        root: {
+          marginTop: 0,
+          marginBottom: 0
+        },
         secondary: {
           marginTop: spacingUnit / 2,
           lineHeight: '1.2em'
@@ -1042,6 +1046,11 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
           [breakpoints.up('md')]: {
             borderRadius: 0
           }
+        }
+      },
+      MuiSvgIcon: {
+        root: {
+          fontSize: 24
         }
       },
       MuiSwitch: {

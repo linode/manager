@@ -5,6 +5,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import Logo from 'src/assets/logo/logo-text.svg';
 import Divider from 'src/components/core/Divider';
 import Hidden from 'src/components/core/Hidden';
@@ -601,6 +602,10 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
 
 const connected = connect(mapStateToProps);
 
-export default withStyles(styles, { withTheme: true })(
-  withRouter(connected(PrimaryNav))
-);
+const styled = withStyles(styles, { withTheme: true });
+
+export default compose(
+  withRouter,
+  connected,
+  styled
+)(PrimaryNav);
