@@ -103,8 +103,7 @@ const styles = (theme: Theme) =>
       alignItems: 'center'
     },
     hidden: {
-      height: 0,
-      padding: 0
+      ...theme.visually.hidden
     }
   });
 
