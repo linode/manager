@@ -74,7 +74,7 @@ export interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class userEventsListItem extends React.Component<CombinedProps> {
+class UserEventsListItem extends React.Component<CombinedProps> {
   render() {
     const {
       classes,
@@ -118,4 +118,4 @@ class userEventsListItem extends React.Component<CombinedProps> {
 
 const styled = withStyles(styles);
 
-export default styled(userEventsListItem);
+export default styled(UserEventsListItem);
