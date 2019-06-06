@@ -422,7 +422,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
             '& svg': {
               width: 22,
               height: 22,
-              animation: '$rotate 2s linear infinite'
+              animation: 'rotate 2s linear infinite'
             }
           }
         }

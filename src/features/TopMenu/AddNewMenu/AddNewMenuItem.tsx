@@ -31,7 +31,8 @@ const styles = (theme: Theme) =>
       },
       '&:hover, &:focus': {
         ...theme.animateCircleIcon,
-        backgroundColor: theme.bg.offWhiteDT
+        backgroundColor: theme.bg.offWhiteDT,
+        color: theme.palette.text.primary
       }
     },
     iconWrapper: {
