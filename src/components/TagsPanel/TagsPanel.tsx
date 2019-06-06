@@ -67,9 +67,6 @@ const styles = (theme: Theme) =>
       padding: 0,
       position: 'relative',
       top: 2,
-      '& p': {
-        color: theme.palette.text.primary
-      },
       '& svg': {
         marginRight: theme.spacing(1)
       },

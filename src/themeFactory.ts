@@ -271,7 +271,8 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       },
       body1: {
         fontSize: '0.875rem',
-        lineHeight: '1rem'
+        lineHeight: '1rem',
+        color: primaryColors.text
       },
       body2: {
         fontSize: '0.875rem',
@@ -686,6 +687,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       },
       MuiFormHelperText: {
         root: {
+          fontSize: '0.875rem',
           '&$error': {
             color: '#ca0813'
           }
