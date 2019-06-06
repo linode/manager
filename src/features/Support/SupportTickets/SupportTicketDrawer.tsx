@@ -27,6 +27,7 @@ import {
   getErrorMap,
   getErrorStringOrDefault
 } from 'src/utilities/errorUtils';
+import { getAll } from 'src/utilities/getAll';
 import { getVersionString } from 'src/utilities/getVersionString';
 import AttachFileForm from '../AttachFileForm';
 import { FileAttachment } from '../index';
@@ -195,25 +196,25 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
     // that have different signatures.
     switch (entity) {
       case 'linode_id': {
-        getLinodes()
+        getAll(getLinodes)()
           .then(this.handleThen)
           .catch(this.handleCatch);
         return;
       }
       case 'volume_id': {
-        getVolumes()
+        getAll(getVolumes)()
           .then(this.handleThen)
           .catch(this.handleCatch);
         return;
       }
       case 'domain_id': {
-        getDomains()
+        getAll(getDomains)()
           .then(this.handleThen)
           .catch(this.handleCatch);
         return;
       }
       case 'nodebalancer_id': {
-        getNodeBalancers()
+        getAll(getNodeBalancers)()
           .then(this.handleThen)
           .catch(this.handleCatch);
         return;
@@ -490,6 +491,7 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
               onChange={this.handleEntityIDChange}
               onInputChange={this.onInputValueChange}
               data-qa-ticket-entity-id
+              isLoading={this.state.loading}
               isClearable={false}
             />
             {hasNoEntitiesMessage && (
