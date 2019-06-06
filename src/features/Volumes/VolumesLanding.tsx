@@ -40,6 +40,7 @@ import {
   openForEdit,
   openForResize
 } from 'src/store/volumeDrawer';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';
 import ListGroupedVolumes from './ListGroupedVolumes';
@@ -184,6 +185,7 @@ interface State {
     volumeLabel: string;
     volumeId?: number;
     linodeLabel: string;
+    error?: string;
   };
 }
 
@@ -262,7 +264,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         mode: 'detach',
         volumeId,
         volumeLabel,
-        linodeLabel
+        linodeLabel,
+        error: undefined
       }
     });
   };
@@ -274,7 +277,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         mode: 'delete',
         volumeId,
         volumeLabel,
-        linodeLabel: ''
+        linodeLabel: '',
+        error: undefined
       }
     });
   };
@@ -361,6 +365,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         />
         <DestructiveVolumeDialog
           open={this.state.destructiveDialog.open}
+          error={this.state.destructiveDialog.error}
           volumeLabel={this.state.destructiveDialog.volumeLabel}
           linodeLabel={this.state.destructiveDialog.linodeLabel}
           mode={this.state.destructiveDialog.mode}
@@ -372,7 +377,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     );
   }
 
-  gotToSettings = () => {
+  goToSettings = () => {
     const { history, linodeId } = this.props;
     history.push(`/linodes/${linodeId}/settings`);
   };
@@ -402,7 +407,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
             copy="This Linode has no configurations. Click below to create a configuration."
             icon={VolumesIcon}
             buttonProps={{
-              onClick: this.gotToSettings,
+              onClick: this.goToSettings,
               children: 'View Linode Configurations'
             }}
           />
@@ -499,7 +504,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     }
 
     detachVolume({ volumeId })
-      .then(response => {
+      .then(_ => {
         /* @todo: show a progress bar for volume detachment */
         this.props.enqueueSnackbar('Volume detachment started', {
           variant: 'info'
@@ -507,8 +512,14 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         this.closeDestructiveDialog();
         resetEventsPolling();
       })
-      .catch(response => {
-        /** @todo Error handling. */
+      .catch(error => {
+        this.setState({
+          destructiveDialog: {
+            ...this.state.destructiveDialog,
+            error: getAPIErrorOrDefault(error, 'Unable to detach Volume.')[0]
+              .reason
+          }
+        });
       });
   };
 
@@ -527,8 +538,14 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         this.closeDestructiveDialog();
         resetEventsPolling();
       })
-      .catch(() => {
-        /** @todo Error handling. */
+      .catch(error => {
+        this.setState({
+          destructiveDialog: {
+            ...this.state.destructiveDialog,
+            error: getAPIErrorOrDefault(error, 'Unable to delete Volume.')[0]
+              .reason
+          }
+        });
       });
   };
 }
