@@ -3,7 +3,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Toggle from 'src/components/Toggle';
-import { COMPACT_SPACING_UNIT, NORMAL_SPACING_UNIT } from 'src/themeFactory';
+import { spacing as spacingStorage } from 'src/utilities/storage';
 
 type ClassNames = 'switchWrapper' | 'switchText' | 'toggle';
 
@@ -43,30 +43,31 @@ type CombinedProps = Props & WithStyles<ClassNames> & WithTheme;
 
 export const SpacingToggle: React.StatelessComponent<CombinedProps> = props => {
   const { classes, toggleSpacing } = props;
+  const spacingMode = spacingStorage.get();
 
   return (
     <div className={classes.switchWrapper}>
       <span
         className={classNames({
           [classes.switchText]: true,
-          active: NORMAL_SPACING_UNIT
+          active: spacingMode === 'normal'
         })}
       >
         Normal
       </span>
       <Toggle
         onChange={toggleSpacing}
-        checked={!NORMAL_SPACING_UNIT}
+        checked={spacingMode === 'compact'}
         className={classNames({
           [classes.toggle]: true,
-          dt: COMPACT_SPACING_UNIT
+          dt: spacingMode === 'compact'
         })}
         aria-label="Switch Spacing"
       />
       <span
         className={classNames({
           [classes.switchText]: true,
-          active: COMPACT_SPACING_UNIT
+          active: spacingMode === 'compact'
         })}
         style={{ marginLeft: 4 }}
       >

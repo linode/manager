@@ -41,41 +41,43 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames> & WithTheme;
 
-export const ThemeToggle: React.StatelessComponent<CombinedProps> = props => {
-  const { classes, toggleTheme, theme } = props;
-  const { name: themeName } = theme;
+export class ThemeToggle extends React.Component<CombinedProps> {
+  render() {
+    const { classes, toggleTheme, theme } = this.props;
+    const { name: themeName } = theme;
 
-  return (
-    <div className={classes.switchWrapper}>
-      <span
-        className={classNames({
-          [classes.switchText]: true,
-          active: themeName === 'lightTheme'
-        })}
-      >
-        Light
-      </span>
-      <Toggle
-        onChange={toggleTheme}
-        checked={themeName !== 'lightTheme'}
-        className={classNames({
-          [classes.toggle]: true,
-          [themeName]: true
-        })}
-        aria-label="Switch Theme"
-      />
-      <span
-        className={classNames({
-          [classes.switchText]: true,
-          active: themeName === 'darkTheme'
-        })}
-        style={{ marginLeft: 4 }}
-      >
-        Dark
-      </span>
-    </div>
-  );
-};
+    return (
+      <div className={classes.switchWrapper}>
+        <span
+          className={classNames({
+            [classes.switchText]: true,
+            active: themeName === 'lightTheme'
+          })}
+        >
+          Light
+        </span>
+        <Toggle
+          onChange={toggleTheme}
+          checked={themeName !== 'lightTheme'}
+          className={classNames({
+            [classes.toggle]: true,
+            [themeName]: true
+          })}
+          aria-label="Switch Theme"
+        />
+        <span
+          className={classNames({
+            [classes.switchText]: true,
+            active: themeName === 'darkTheme'
+          })}
+          style={{ marginLeft: 4 }}
+        >
+          Dark
+        </span>
+      </div>
+    );
+  }
+}
 
 const styled = withStyles(styles, { withTheme: true });
 
