@@ -10,18 +10,24 @@ import { compose } from 'recompose';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 
+import { formatDate } from 'src/utilities/formatDate';
 import isPast from 'src/utilities/isPast';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'dateTime';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     '& p': {
-      marginBottom: theme.spacing.unit * 2
+      marginBottom: theme.spacing.unit * 2,
+      lineHeight: `${theme.spacing.unit * 2.5}px`
     },
     '& p:last-child': {
       marginBottom: 0
     }
+  },
+  dateTime: {
+    fontSize: theme.spacing.unit * 2,
+    lineHeight: `${theme.spacing.unit * 2.5}px`
   }
 });
 
@@ -96,14 +102,52 @@ const generateIntroText = (
   end?: string | null
 ) => {
   const maintenanceInProgress = !!start
-    ? isPast(new Date().toISOString())(start)
+    ? isPast(start)(new Date().toISOString())
     : false;
-
-  console.log(maintenanceInProgress);
 
   /** we're on the Linode Detail Screen */
   if (!!type) {
-    return <React.Fragment>You are dumb.</React.Fragment>;
+    if (maintenanceInProgress) {
+      return (
+        <React.Fragment>
+          This Linode is currently undergoing maintenance. During this time,
+          this Linode will be {type === 'migration' && 'migrated and'} rebooted.
+          Please refer to
+          <Link to="/support/tickets"> your Support Tickets </Link> for more
+          information on the full scope of your Linodes and their maintenance.
+        </React.Fragment>
+      );
+    }
+
+    /** migration or reboot happening at a later date */
+    if (!!start) {
+      /**
+       * we're going to display both the raw and humanized versions of the date
+       * to the user here.
+       */
+      const rawDate = formatDate(start);
+      const humanizedDate = formatDate(start, { humanizeCutoff: 'month' });
+
+      return (
+        <React.Fragment>
+          This Linode will be undergoing maintenance on {rawDate}
+          {rawDate !== humanizedDate && ` (${humanizedDate})`}
+          {'. '}
+          During this time, your Linode will be{' '}
+          {type === 'migration' && 'migrated and'} rebooted.
+        </React.Fragment>
+      );
+    } else {
+      /**
+       * for some reason, we don't have a _when_ property from the notification.
+       * In other words, we have no idea when their maintenance time starts. This can happen
+       * when the user has a manual migration pending - only a small amount of users are going
+       * to see this.
+       *
+       * @todo not sure what the messaging will be yet in this case.
+       */
+      return <React.Fragment>hello world</React.Fragment>;
+    }
   }
 
   /** We are on the Dashboard on Linode Landing page. */
