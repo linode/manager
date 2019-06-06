@@ -18,6 +18,7 @@ interface Props {
   to: string;
   title: string;
   selected?: boolean;
+  ref: any;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
