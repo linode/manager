@@ -599,7 +599,8 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
             zIndex: 2
           },
           '&$expanded': {
-            minHeight: spacingUnit * 6
+            minHeight: spacingUnit * 6,
+            margin: 0
           }
         },
         content: {
@@ -610,9 +611,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
             margin: `${spacingUnit + spacingUnit / 2}px 0`
           }
         },
-        expanded: {
-          margin: 0
-        },
+        expanded: {},
         expandIcon: {
           display: 'flex',
           order: 1,
@@ -725,6 +724,9 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
             borderColor: primaryColors.main,
             boxShadow: '0 0 2px 1px #e1edfa'
           },
+          '&$error': {
+            borderColor: '#ca0813'
+          },
           maxWidth: 415,
           border: '1px solid #ccc',
           alignItems: 'center',
@@ -756,9 +758,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
           lineHeight: 1.4
         },
         focused: {},
-        error: {
-          borderColor: '#ca0813'
-        },
+        error: {},
         disabled: {},
         input: {
           padding: `${spacingUnit * 2 - spacingUnit / 2}px ${spacingUnit * 2 -
