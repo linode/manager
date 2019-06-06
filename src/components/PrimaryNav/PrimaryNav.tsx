@@ -185,7 +185,8 @@ const styles = (theme: Theme) =>
       backgroundColor: theme.bg.navy,
       border: '1px solid #999',
       outline: 0,
-      boxShadow: 'none'
+      boxShadow: 'none',
+      minWidth: 185
     },
     settingsBackdrop: {
       backgroundColor: 'rgba(0,0,0,.3)'

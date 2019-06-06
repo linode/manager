@@ -75,10 +75,14 @@ class AccountLanding extends React.Component<Props> {
           </Tabs>
         </AppBar>
         <Switch>
-          <Route exact path={`${url}/billing`} component={Billing} />
-          <Route exact path={`${url}/users`} component={Users} />
-          <Route exact path={`${url}/settings`} component={GlobalSettings} />
-          <Route exact path={`${url}`} component={Billing} />
+          <Route exact path={`${url}/billing`} render={() => <Billing />} />
+          <Route exact path={`${url}/users`} render={() => <Users />} />
+          <Route
+            exact
+            path={`${url}/settings`}
+            render={() => <GlobalSettings />}
+          />
+          <Route exact path={`${url}`} render={() => <Billing />} />
         </Switch>
       </React.Fragment>
     );

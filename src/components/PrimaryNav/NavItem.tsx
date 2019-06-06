@@ -100,6 +100,6 @@ const NavItem: React.SFC<CombinedProps> = props => {
 const styled = withStyles(styles);
 
 export default compose<CombinedProps, Props>(
-  styled,
-  React.memo
+  React.memo,
+  styled
 )(NavItem);
