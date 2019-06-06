@@ -24,20 +24,22 @@ export interface PaperProps extends _PaperProps {
 
 type CombinedProps = PaperProps & WithStyles<ClassNames>;
 
-const _Paper: React.FC<CombinedProps> = props => {
-  const { classes, error, className, ...rest } = props;
-  return (
-    <React.Fragment>
-      <Paper
-        className={error ? `${className} ${classes.error}` : className}
-        {...rest}
-      />
-      {error && (
-        <FormHelperText className={classes.errorText}>{error}</FormHelperText>
-      )}
-    </React.Fragment>
-  );
-};
+class _Paper extends React.Component<CombinedProps> {
+  render() {
+    const { classes, error, className, ...rest } = this.props;
+    return (
+      <React.Fragment>
+        <Paper
+          className={error ? `${className} ${classes.error}` : className}
+          {...rest}
+        />
+        {error && (
+          <FormHelperText className={classes.errorText}>{error}</FormHelperText>
+        )}
+      </React.Fragment>
+    );
+  }
+}
 
 const styled = withStyles(styles);
 
