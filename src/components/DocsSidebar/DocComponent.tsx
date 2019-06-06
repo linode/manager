@@ -48,7 +48,7 @@ class DocComponent extends React.PureComponent<PropsWithStyles> {
           <Typography variant="h3" className={classes.title}>
             <ExternalLink text={title} link={src} absoluteIcon black />
           </Typography>
-          <Typography variant="body2" className={classes.body}>
+          <Typography variant="body1" className={classes.body}>
             {this.body()}
           </Typography>
         </div>

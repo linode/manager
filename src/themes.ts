@@ -123,6 +123,9 @@ export const dark = () =>
       },
       h4: {
         color: primaryColors.text
+      },
+      body1: {
+        color: primaryColors.text
       }
     },
     overrides: {
