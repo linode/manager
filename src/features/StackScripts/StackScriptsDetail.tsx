@@ -143,7 +143,7 @@ export default compose(
   withProfile((ownProps, profile) => {
     return {
       ...ownProps,
-      username: path(['username'], profile)
+      username: path(['data', 'username'], profile)
     };
   })
 )(StackScriptsDetail);

@@ -7,6 +7,7 @@ export interface Props {
   format?: string;
   humanizeCutoff?: TimeInterval;
   className?: string;
+  styles?: React.CSSProperties;
 }
 
 type CombinedProps = Props;
@@ -17,7 +18,7 @@ export const DateTimeDisplay: React.StatelessComponent<
   const { format, humanizeCutoff, value, className } = props;
   return (
     <React.Fragment>
-      <Typography component="span" className={className}>
+      <Typography style={props.styles} component="span" className={className}>
         {formatDate(value, { format, humanizeCutoff })}
       </Typography>
     </React.Fragment>
