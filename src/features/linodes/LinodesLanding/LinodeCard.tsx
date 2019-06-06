@@ -34,7 +34,7 @@ import withDisplayType, { WithDisplayType } from './withDisplayType';
 import withNotifications, { WithNotifications } from './withNotifications';
 import withRecentEvent, { WithRecentEvent } from './withRecentEvent';
 
-import { formatDate } from 'src/utilities/formatDate';
+import { parseMaintenanceStartTime } from './utils';
 
 interface Props {
   backups: Linode.LinodeBackups;
@@ -52,6 +52,7 @@ interface Props {
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;
+  someLinodesHaveMaintenance: boolean;
 
   imageLabel: string;
   openConfigDrawer: (
@@ -165,12 +166,13 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
                 }}
               />
             )}
-            {!!this.props.maintenanceStartTime && (
-              <div className={classes.cardSection}>
-                Maintenance Window Start:{' '}
-                {formatDate(this.props.maintenanceStartTime)}
-              </div>
-            )}
+            {!!this.props.someLinodesHaveMaintenance &&
+              !!this.props.maintenanceStartTime && (
+                <div className={classes.cardSection}>
+                  Maintenance Window Start:{' '}
+                  {parseMaintenanceStartTime(this.props.maintenanceStartTime)}
+                </div>
+              )}
             <div className={classes.cardSection} data-qa-linode-summary>
               {`${displayType}: ${typeLabelDetails(memory, disk, vcpus)}`}
             </div>

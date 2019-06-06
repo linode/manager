@@ -21,6 +21,7 @@ interface Props {
     linodeId: number,
     linodeLabel: string
   ) => void;
+  someLinodesHaveMaintenance: boolean;
 }
 
 type CombinedProps = WithImagesProps & PaginationProps & Props;
@@ -33,6 +34,7 @@ const CardView: React.StatelessComponent<CombinedProps> = props => {
       {data.map((linode, idx: number) => (
         <LinodeCard
           key={`linode-card-${idx}`}
+          someLinodesHaveMaintenance={props.someLinodesHaveMaintenance}
           backups={linode.backups}
           id={linode.id}
           ipv4={linode.ipv4}
