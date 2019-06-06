@@ -184,7 +184,8 @@ const styles = (theme: Theme) =>
       position: 'absolute',
       backgroundColor: theme.bg.navy,
       border: '1px solid #999',
-      outline: 0
+      outline: 0,
+      boxShadow: 'none'
     },
     settingsBackdrop: {
       backgroundColor: 'rgba(0,0,0,.3)'
