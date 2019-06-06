@@ -175,10 +175,10 @@ const generateIntroText = (
     }
   }
 
-  /** We are on the Dashboard on Linode Landing page. */
+  /** We are on the Dashboard or Linode Landing page. */
   return (
     <React.Fragment>
-      Maintenance is required for one or more of your Linode's physical hosts.
+      Maintenance is required for one or more of your Linodes' physical hosts.
       Your maintenance times will be listed under the "Maintenance Status"
       column
       {!location.pathname.includes('/linodes') && (
