@@ -112,18 +112,18 @@ const styles = (theme: Theme) =>
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const getVariant = cond([
-  [propEq('type', 'primary'), always('contained')],
-  [propEq('type', 'secondary'), always('contained')],
-  [propEq('type', 'remove'), always('contained')],
-  [propEq('type', 'cancel'), always('contained')],
+  [propEq('buttonType', 'primary'), always('contained')],
+  [propEq('buttonType', 'secondary'), always('contained')],
+  [propEq('buttonType', 'remove'), always('contained')],
+  [propEq('buttonType', 'cancel'), always('contained')],
   [() => true, always(undefined)]
 ]);
 
 const getColor = cond([
-  [propEq('type', 'primary'), always('primary')],
-  [propEq('type', 'secondary'), always('secondary')],
-  [propEq('type', 'remove'), always('secondary')],
-  [propEq('type', 'cancel'), always('secondary')],
+  [propEq('buttonType', 'primary'), always('primary')],
+  [propEq('buttonType', 'secondary'), always('secondary')],
+  [propEq('buttonType', 'remove'), always('secondary')],
+  [propEq('buttonType', 'cancel'), always('secondary')],
   [() => true, always(undefined)]
 ]);
 
