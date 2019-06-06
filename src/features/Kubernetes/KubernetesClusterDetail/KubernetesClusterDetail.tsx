@@ -86,6 +86,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<
           <Grid item>
             <NodePoolsDisplay 
               editing={editing}
+              pools={[]}
+              types={[]}
             />
           </Grid>
           <Grid item>
@@ -93,11 +95,12 @@ export const KubernetesClusterDetail: React.FunctionComponent<
               hideTable
               pools={[]}
               types={typesData || []}
+              nodeCount={0}
               addNodePool={() => null}
               deleteNodePool={() => null}
               handleTypeSelect={() => null}
               updateNodeCount={() => null}
-              nodeCount={0}
+              updatePool={() => null}
               typesLoading={typesLoading}
               typesError={
                 typesError
