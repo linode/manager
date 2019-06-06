@@ -127,11 +127,15 @@ const generateIntroText = (
     if (maintenanceInProgress) {
       return (
         <React.Fragment>
-          This Linode is currently undergoing maintenance. During this time,
-          this Linode will be {type === 'migration' && 'migrated and'} rebooted.
-          Please refer to
-          <Link to="/support/tickets"> your Support Tickets </Link> for more
-          information on the full scope of your Linodes and their maintenance.
+          This Linode's physical host is currently undergoing maintenance.
+          During the maintenance, your Linode will be shut down
+          {type === 'migration'
+            ? ', cold migrated to a new host, '
+            : ' and remain offline, '}
+          then returned to its last state (running or powered off). Please refer
+          to
+          <Link to="/support/tickets"> your Support tickets </Link> for more
+          information.
         </React.Fragment>
       );
     }
@@ -147,11 +151,15 @@ const generateIntroText = (
 
       return (
         <React.Fragment>
-          This Linode will be undergoing maintenance on {rawDate}
+          This Linode's physical host will be undergoing maintenance on{' '}
+          {rawDate}
           {rawDate !== humanizedDate && ` (${humanizedDate})`}
           {'. '}
-          During this time, your Linode will be{' '}
-          {type === 'migration' && 'migrated and'} rebooted.
+          During this time, your Linode will be shut down
+          {type === 'migration'
+            ? ', cold migrated to a new host, '
+            : ' and remain offline, '}{' '}
+          then returned to its last state (running or powered off).
         </React.Fragment>
       );
     } else {
@@ -170,8 +178,9 @@ const generateIntroText = (
   /** We are on the Dashboard on Linode Landing page. */
   return (
     <React.Fragment>
-      Maintenance is required for one or more of your Linodes. Your maintenance
-      times will be listed under the "Maintenance Status" column
+      Maintenance is required for one or more of your Linode's physical hosts.
+      Your maintenance times will be listed under the "Maintenance Status"
+      column
       {!location.pathname.includes('/linodes') && (
         <Link to="/linodes?view=list"> here</Link>
       )}

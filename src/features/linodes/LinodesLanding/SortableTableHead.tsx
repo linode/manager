@@ -68,7 +68,7 @@ const SortableTableHead: React.StatelessComponent<combinedProps> = props => {
         </TableSortCell>
         {props.someLinodesHaveMaintenance && (
           <TableSortCell
-            label="maintenance:when" // we want to sort by the first ipv4
+            label="maintenance:when"
             active={isActive('maintenance:when')}
             handleClick={handleOrderChange}
             direction={order}
