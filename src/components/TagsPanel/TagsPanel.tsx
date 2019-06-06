@@ -67,6 +67,9 @@ const styles = (theme: Theme) =>
       padding: 0,
       position: 'relative',
       top: 2,
+      '& p': {
+        color: theme.palette.text.primary
+      },
       '& svg': {
         marginRight: theme.spacing(1)
       },
@@ -408,7 +411,8 @@ class TagsPanel extends React.Component<CombinedProps, State> {
             <Button
               onClick={this.toggleTagInput}
               className={classes.addButton}
-              buttonType="primary"
+              disableFocusRipple
+              disableRipple
               disabled={loading || disabled}
             >
               <AddCircle data-qa-add-tag />
