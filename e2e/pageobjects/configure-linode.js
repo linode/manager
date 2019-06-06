@@ -38,7 +38,7 @@ class ConfigureLinode extends Page {
     return $('[data-qa-create-from="Clone Linode"]');
   }
   get createFromMyStackScript() {
-    return $('[data-qa-create-from="My StackScripts"]');
+    return $('[data-qa-create-from="Account StackScripts"]');
   }
 
   get selectLinodeHeader() {
@@ -60,7 +60,7 @@ class ConfigureLinode extends Page {
     return $('[data-qa-panel="Select a StackScript"]');
   }
   get myStackScriptTab() {
-    return $('[data-qa-tab="My StackScripts"]');
+    return $('[data-qa-tab="Account StackScripts"]');
   }
   get linodeStackScriptTab() {
     return $('[data-qa-tab="Linode StackScripts"]');

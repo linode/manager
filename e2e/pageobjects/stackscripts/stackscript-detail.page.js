@@ -46,7 +46,7 @@ class StackScriptDetail extends Page {
         this.compatibleDistributions.waitForVisible(constants.wait.normal);
         const distroListText = this.compatibleDistributions.getText();
         const cleanText = distroListText.replace('Compatible with: ','');
-        return cleanText.split(',').map(distro=> distro.trim());
+        return cleanText.split(',').map(distro => distro.trim());
     }
 
     getStackScriptCode(){
