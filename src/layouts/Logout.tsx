@@ -9,7 +9,8 @@ import { handleLogout } from 'src/store/authentication/authentication.requests';
 
 export class Logout extends Component<DispatchProps & StateProps> {
   componentDidMount() {
-    this.props.dispatchLogout(CLIENT_ID || '', this.props.token);
+    // Split the token so we can get the token portion of the "<prefix> <token>" pair
+    this.props.dispatchLogout(CLIENT_ID || '', this.props.token.split(' ')[1]);
   }
 
   render() {
