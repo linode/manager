@@ -20,6 +20,7 @@ interface Props {
   display: 'grid' | 'list';
   component: any;
   data: Linode.Linode[];
+  someLinodesHaveMaintenance: boolean;
 }
 
 type CombinedProps = Props & OrderByProps;
@@ -55,7 +56,8 @@ const DisplayLinodes: React.StatelessComponent<CombinedProps> = props => {
         const tableWrapperProps = {
           handleOrderChange,
           order,
-          orderBy
+          orderBy,
+          someLinodesHaveMaintenance: props.someLinodesHaveMaintenance
         };
         return (
           <React.Fragment>

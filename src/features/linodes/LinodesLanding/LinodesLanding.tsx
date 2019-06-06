@@ -284,7 +284,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       toggleConfirmation: this.toggleDialog,
       display,
       component,
-      count: linodesCount
+      count: linodesCount,
+      someLinodesHaveMaintenance: this.props.someLinodesHaveScheduledMaintenance
     };
 
     if (imagesError || linodesRequestError) {
@@ -538,7 +539,10 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
     linodesCount: state.__resources.linodes.results.length,
     linodesData,
     someLinodesHaveScheduledMaintenance: linodesData
-      ? linodesData.some(eachLinode => !!eachLinode.maintenance)
+      ? linodesData.some(
+          eachLinode =>
+            !!eachLinode.maintenance && !!eachLinode.maintenance.when
+        )
       : false,
     linodesRequestLoading: state.__resources.linodes.loading,
     linodesRequestError: path(['error', 'read'], state.__resources.linodes),
