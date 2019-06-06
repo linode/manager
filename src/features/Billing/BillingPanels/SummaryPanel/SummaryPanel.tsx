@@ -25,6 +25,9 @@ const styles = (theme: Theme) =>
     sidebar: {},
     domainSidebar: {},
     titleWrapper: {},
+    region: {},
+    regionInner: {},
+    volumeLink: {},
     expired: {
       color: theme.color.red
     },

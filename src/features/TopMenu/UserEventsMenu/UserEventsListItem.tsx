@@ -74,45 +74,47 @@ export interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const userEventsListItem: React.StatelessComponent<CombinedProps> = props => {
-  const {
-    classes,
-    title,
-    content,
-    warning,
-    success,
-    error,
-    onClick,
-    className
-  } = props;
+class userEventsListItem extends React.Component<CombinedProps> {
+  render() {
+    const {
+      classes,
+      title,
+      content,
+      warning,
+      success,
+      error,
+      onClick,
+      className
+    } = this.props;
 
-  const listItem = (
-    <ListItem
-      className={classNames(
-        {
-          [classes.root]: true,
-          [classes.unread]: error || warning || success,
-          [classes.pointer]: Boolean(onClick),
-          [classes.noLink]: Boolean(!onClick)
-        },
-        className
-      )}
-      component="li"
-      tabIndex={1}
-      onClick={onClick}
-      role="menuitem"
-    >
-      <Typography variant="h3" className={classes.title}>
-        {title}
-      </Typography>
-      {content && <div className={classes.content}>{content}</div>}
-    </ListItem>
-  );
+    const listItem = (
+      <ListItem
+        className={classNames(
+          {
+            [classes.root]: true,
+            [classes.unread]: error || warning || success,
+            [classes.pointer]: Boolean(onClick),
+            [classes.noLink]: Boolean(!onClick)
+          },
+          className
+        )}
+        component="li"
+        tabIndex={1}
+        onClick={onClick}
+        role="menuitem"
+      >
+        <Typography variant="h3" className={classes.title}>
+          {title}
+        </Typography>
+        {content && <div className={classes.content}>{content}</div>}
+      </ListItem>
+    );
 
-  return !Boolean(onClick)
-    ? listItem
-    : React.cloneElement(listItem, { button: true });
-};
+    return !Boolean(onClick)
+      ? listItem
+      : React.cloneElement(listItem, { button: true });
+  }
+}
 
 const styled = withStyles(styles);
 

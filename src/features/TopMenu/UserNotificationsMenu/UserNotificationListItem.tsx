@@ -89,43 +89,43 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const userNotificationListItem: React.StatelessComponent<
-  CombinedProps
-> = props => {
-  const { classes, label, message, severity, onClick } = props;
+class UserNotificationListItem extends React.Component<CombinedProps> {
+  render() {
+    const { classes, label, message, severity, onClick } = this.props;
 
-  const listItem = (
-    <ListItem
-      className={classNames({
-        [classes.root]: true,
-        [classes[severity]]: true,
-        [classes.pointer]: Boolean(onClick),
-        notice: true
-      })}
-      data-qa-notice
-      component="li"
-      tabIndex={1}
-      onClick={onClick}
-    >
-      <div
+    const listItem = (
+      <ListItem
         className={classNames({
-          [classes.inner]: true,
-          [classes.innerLink]: Boolean(onClick)
+          [classes.root]: true,
+          [classes[severity]]: true,
+          [classes.pointer]: Boolean(onClick),
+          notice: true
         })}
+        data-qa-notice
+        component="li"
+        tabIndex={1}
+        onClick={onClick}
       >
-        <Typography variant="h3" className={classes.innerTitle}>
-          {label}
-        </Typography>
-        <Typography variant="body1">{message}</Typography>
-      </div>
-    </ListItem>
-  );
+        <div
+          className={classNames({
+            [classes.inner]: true,
+            [classes.innerLink]: Boolean(onClick)
+          })}
+        >
+          <Typography variant="h3" className={classes.innerTitle}>
+            {label}
+          </Typography>
+          <Typography variant="body1">{message}</Typography>
+        </div>
+      </ListItem>
+    );
 
-  return !Boolean(onClick)
-    ? listItem
-    : React.cloneElement(listItem, { button: true });
-};
+    return !Boolean(onClick)
+      ? listItem
+      : React.cloneElement(listItem, { button: true });
+  }
+}
 
 const styled = withStyles(styles);
 
-export default styled(userNotificationListItem);
+export default styled(UserNotificationListItem);
