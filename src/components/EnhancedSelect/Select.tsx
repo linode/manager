@@ -67,6 +67,7 @@ const styles = (theme: Theme) =>
       },
       '& .react-select__value-container': {
         width: '100%',
+        position: 'initial',
         '& > div': {
           width: '100%'
         },
