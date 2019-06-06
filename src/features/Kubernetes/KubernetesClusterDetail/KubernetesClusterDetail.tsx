@@ -2,27 +2,22 @@ import * as React from 'react';
 import { compose } from 'recompose';
 
 import Breadcrumb from 'src/components/Breadcrumb';
+import Button from 'src/components/Button';
 import Grid from 'src/components/core/Grid';
+import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import TagsPanel from 'src/components/TagsPanel';
 import { ExtendedPoolNode } from '.././types';
+import NodePoolPanel from '../CreateCluster/NodePoolPanel';
+import KubeSummaryPanel from './KubeSummaryPanel';
 
-type ClassNames =
-  | 'root'
-  | 'title'
-  | 'titleWrapper'
-  | 'backButton'
-  | 'listParent'
-  | 'label'
-  | 'labelIcon'
-  | 'status'
-  | 'open'
-  | 'ticketLabel'
-  | 'closed';
+type ClassNames = 'root' | 'title' | 'titleWrapper' | 'backButton' | 'section';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
@@ -42,33 +37,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     },
     padding: 0
   },
-  label: {
-    marginBottom: theme.spacing.unit
-  },
-  ticketLabel: {
-    position: 'relative',
-    top: -3
-  },
-  labelIcon: {
-    paddingRight: 0,
-    '& .outerCircle': {
-      fill: theme.bg.offWhiteDT,
-      stroke: theme.bg.main
-    },
-    '& .circle': {
-      stroke: theme.bg.main
-    }
-  },
-  listParent: {},
-  status: {
-    marginLeft: theme.spacing.unit,
-    color: theme.color.white
-  },
-  open: {
-    backgroundColor: theme.color.green
-  },
-  closed: {
-    backgroundColor: theme.color.red
+  section: {
+    margin: theme.spacing.unit * 2
   }
 });
 
@@ -108,8 +78,41 @@ export const KubernetesClusterDetail: React.FunctionComponent<
         </Grid>
       </Grid>
 
-      <Grid container className={classes.listParent}>
-        Hello
+      <Grid container direction="row" className={classes.section}>
+        <Grid container item direction="column" xs={10}>
+          <Grid item>Node Pool table</Grid>
+          <Grid item>
+            <NodePoolPanel
+              pools={[]}
+              types={[]}
+              addNodePool={() => null}
+              deleteNodePool={() => null}
+              handleTypeSelect={() => null}
+              updateNodeCount={() => null}
+              nodeCount={0}
+              typesLoading={false}
+            />
+          </Grid>
+        </Grid>
+        <Grid container item direction="column" xs={2}>
+          <Grid item className={classes.section}>
+            <Button type="primary">Download kubeconfig</Button>
+          </Grid>
+          <Grid item className={classes.section}>
+            <KubeSummaryPanel />
+          </Grid>
+          <Grid item className={classes.section}>
+            <Paper>
+              <Typography variant="h3" className={classes.title} data-qa-title>
+                Tags
+              </Typography>
+              <TagsPanel
+                tags={['tag1', 'tag2']}
+                updateTags={() => Promise.resolve()}
+              />
+            </Paper>
+          </Grid>
+        </Grid>
       </Grid>
     </React.Fragment>
   );
