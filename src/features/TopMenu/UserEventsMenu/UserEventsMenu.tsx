@@ -15,7 +15,7 @@ import { removeBlacklistedEvents } from 'src/utilities/eventUtils';
 import UserEventsButton from './UserEventsButton';
 import UserEventsList from './UserEventsList';
 
-type ClassNames = 'root' | 'dropDown' | 'hidden' | 'viewAll';
+type ClassNames = 'root' | 'dropDown' | 'viewAll';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -36,10 +36,6 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.up('sm')]: {
         maxWidth: 450
       }
-    },
-    hidden: {
-      height: 0,
-      padding: 0
     },
     viewAll: {
       backgroundColor: theme.bg.offWhiteDT,

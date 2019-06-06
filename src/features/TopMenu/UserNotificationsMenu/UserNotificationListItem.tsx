@@ -94,7 +94,7 @@ const userNotificationListItem: React.StatelessComponent<
 > = props => {
   const { classes, label, message, severity, onClick } = props;
 
-  return (
+  const listItem = (
     <ListItem
       className={classNames({
         [classes.root]: true,
@@ -106,7 +106,6 @@ const userNotificationListItem: React.StatelessComponent<
       component="li"
       tabIndex={1}
       onClick={onClick}
-      button={onClick === undefined && false}
     >
       <div
         className={classNames({
@@ -121,6 +120,10 @@ const userNotificationListItem: React.StatelessComponent<
       </div>
     </ListItem>
   );
+
+  return !Boolean(onClick)
+    ? listItem
+    : React.cloneElement(listItem, { button: true });
 };
 
 const styled = withStyles(styles);

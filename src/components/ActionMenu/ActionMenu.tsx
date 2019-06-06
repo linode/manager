@@ -63,8 +63,7 @@ const styles = (theme: Theme) =>
       fontFamily: theme.font.bold
     },
     hidden: {
-      height: 0,
-      padding: 0
+      ...theme.visually.hidden
     },
     menu: {
       maxWidth: theme.spacing(25)

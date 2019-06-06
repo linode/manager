@@ -85,7 +85,8 @@ const userEventsListItem: React.StatelessComponent<CombinedProps> = props => {
     onClick,
     className
   } = props;
-  return (
+
+  const listItem = (
     <ListItem
       className={classNames(
         {
@@ -99,7 +100,6 @@ const userEventsListItem: React.StatelessComponent<CombinedProps> = props => {
       component="li"
       tabIndex={1}
       onClick={onClick}
-      button={onClick === undefined && false}
       role="menuitem"
     >
       <Typography variant="h3" className={classes.title}>
@@ -108,6 +108,10 @@ const userEventsListItem: React.StatelessComponent<CombinedProps> = props => {
       {content && <div className={classes.content}>{content}</div>}
     </ListItem>
   );
+
+  return !Boolean(onClick)
+    ? listItem
+    : React.cloneElement(listItem, { button: true });
 };
 
 const styled = withStyles(styles);
