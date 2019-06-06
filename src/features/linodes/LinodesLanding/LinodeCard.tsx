@@ -34,6 +34,8 @@ import withDisplayType, { WithDisplayType } from './withDisplayType';
 import withNotifications, { WithNotifications } from './withNotifications';
 import withRecentEvent, { WithRecentEvent } from './withRecentEvent';
 
+import { formatDate } from 'src/utilities/formatDate';
+
 interface Props {
   backups: Linode.LinodeBackups;
   id: number;
@@ -43,6 +45,7 @@ interface Props {
   label: string;
   region: string;
   disk: number;
+  maintenanceStartTime?: string | null;
   memory: number;
   vcpus: number;
   status: Linode.LinodeStatus;
@@ -161,6 +164,12 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
                   cardSection: classes.cardSection
                 }}
               />
+            )}
+            {!!this.props.maintenanceStartTime && (
+              <div className={classes.cardSection}>
+                Maintenance Window Start:{' '}
+                {formatDate(this.props.maintenanceStartTime)}
+              </div>
             )}
             <div className={classes.cardSection} data-qa-linode-summary>
               {`${displayType}: ${typeLabelDetails(memory, disk, vcpus)}`}

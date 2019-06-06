@@ -3,8 +3,10 @@ import { PaginationProps } from 'src/components/Paginate';
 import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import LinodeRow from './LinodeRow/LinodeRow';
 
+import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
+
 interface Props {
-  data: Linode.Linode[];
+  data: LinodeWithMaintenance[];
   images: Linode.Image[];
   showHead?: boolean;
   openConfigDrawer: (
@@ -29,6 +31,9 @@ export const ListView: React.StatelessComponent<CombinedProps> = props => {
           backups={linode.backups}
           id={linode.id}
           ipv4={linode.ipv4}
+          maintenanceStartTime={
+            linode.maintenance ? linode.maintenance.when : ''
+          }
           ipv6={linode.ipv6}
           label={linode.label}
           region={linode.region}

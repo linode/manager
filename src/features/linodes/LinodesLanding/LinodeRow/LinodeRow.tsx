@@ -19,6 +19,8 @@ import LinodeRowBackupCell from './LinodeRowBackupCell';
 import LinodeRowHeadCell from './LinodeRowHeadCell';
 import LinodeRowLoading from './LinodeRowLoading';
 
+import { formatDate } from 'src/utilities/formatDate';
+
 interface Props {
   backups: Linode.LinodeBackups;
   id: number;
@@ -26,6 +28,7 @@ interface Props {
   ipv4: string[];
   ipv6: string;
   label: string;
+  maintenanceStartTime?: string | null;
   region: string;
   disk: number;
   memory: number;
@@ -59,6 +62,7 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
     id,
     ipv4,
     ipv6,
+    maintenanceStartTime,
     label,
     region,
     status,
@@ -135,6 +139,15 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
           <div className={classes.ipCellWrapper}>
             <IPAddress ips={ipv4} copyRight showCopyOnHover />
           </div>
+        </TableCell>
+        <TableCell
+          parentColumn="Maintenance Status"
+          className={classes.regionCell}
+          data-qa-maintenance-status
+        >
+          {maintenanceStartTime
+            ? formatDate(maintenanceStartTime)
+            : 'No Maintenance Needed'}
         </TableCell>
         <TableCell
           parentColumn="Region"
