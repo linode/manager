@@ -77,8 +77,12 @@ const MaintenanceBanner: React.FC<CombinedProps> = props => {
    *
    * In other words, it's an edge case, and we don't need to worry about
    * informing the user of anything in this case.
+   *
+   * IMPORTANT NOTE: if maintenanceStart is "undefined", it means we're on
+   * either the dashboard or Linodes Landing, so in this case, we don't want to
+   * return null
    */
-  if (!maintenanceStart) {
+  if (maintenanceStart === null) {
     return null;
   }
 
@@ -169,7 +173,7 @@ const generateIntroText = (
       Maintenance is required for one or more of your Linodes. Your maintenance
       times will be listed under the "Maintenance Status" column
       {!location.pathname.includes('/linodes') && (
-        <Link to="/linodes"> here</Link>
+        <Link to="/linodes?view=list"> here</Link>
       )}
       .
     </React.Fragment>

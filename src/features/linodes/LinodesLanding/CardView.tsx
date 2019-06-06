@@ -6,8 +6,10 @@ import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSe
 import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import LinodeCard from './LinodeCard';
 
+import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
+
 interface Props {
-  data: Linode.Linode[];
+  data: LinodeWithMaintenance[];
   images: Linode.Image[];
   showHead?: boolean;
   openConfigDrawer: (
@@ -35,6 +37,9 @@ const CardView: React.StatelessComponent<CombinedProps> = props => {
           id={linode.id}
           ipv4={linode.ipv4}
           ipv6={linode.ipv6}
+          maintenanceStartTime={
+            linode.maintenance ? linode.maintenance.when : ''
+          }
           label={linode.label}
           region={linode.region}
           status={linode.status}

@@ -61,6 +61,14 @@ const SortableTableHead: React.StatelessComponent<combinedProps> = props => {
           IP Address
         </TableSortCell>
         <TableSortCell
+          label="maintenance:when" // we want to sort by the first ipv4
+          active={isActive('maintenance:when')}
+          handleClick={handleOrderChange}
+          direction={order}
+        >
+          Maintenance Status
+        </TableSortCell>
+        <TableSortCell
           label="region"
           direction={order}
           active={isActive('region')}
