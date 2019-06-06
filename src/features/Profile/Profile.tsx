@@ -76,9 +76,14 @@ class Profile extends React.Component<Props> {
               <Tab
                 key={tab.title}
                 data-qa-tab={tab.title}
-                component={() => (
-                  <TabLink to={tab.routeName} title={tab.title} />
-                )}
+                component={React.forwardRef((props, ref) => (
+                  <TabLink
+                    to={tab.routeName}
+                    title={tab.title}
+                    {...props}
+                    ref={ref}
+                  />
+                ))}
               />
             ))}
           </Tabs>

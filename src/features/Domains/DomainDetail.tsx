@@ -295,9 +295,14 @@ class DomainDetail extends React.Component<CombinedProps, State> {
               <Tab
                 key={tab.title}
                 disabled={tab.disabled}
-                component={() => (
-                  <TabLink to={tab.routeName} title={tab.title} />
-                )}
+                component={React.forwardRef((props, ref) => (
+                  <TabLink
+                    to={tab.routeName}
+                    title={tab.title}
+                    {...props}
+                    ref={ref}
+                  />
+                ))}
               />
             ))}
           </Tabs>
