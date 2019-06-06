@@ -652,6 +652,9 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       MuiFormControlLabel: {
         root: {
           marginLeft: -(spacingUnit + 3)
+        },
+        label: {
+          color: primaryColors.text
         }
       },
       MuiFormGroup: {
