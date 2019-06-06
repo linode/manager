@@ -21,7 +21,7 @@ export const getMonthlyPrice = (
 
 export const getTotalClusterPrice = (pools: ExtendedPoolNode[]) =>
   pools.reduce((accumulator, node) => {
-    return accumulator + node.totalMonthlyPrice;
+    return accumulator + node.totalMonthlyPrice * node.count;
   }, 0);
 
 interface ClusterData {
