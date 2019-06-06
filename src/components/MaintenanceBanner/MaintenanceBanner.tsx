@@ -69,6 +69,19 @@ const MaintenanceBanner: React.FC<CombinedProps> = props => {
     return userTimezone;
   };
 
+  /**
+   * don't display a banner if there is no start time.
+   *
+   * This case will happen when there's a Linode with no MQueue record
+   * but has a pending manual migration.
+   *
+   * In other words, it's an edge case, and we don't need to worry about
+   * informing the user of anything in this case.
+   */
+  if (!maintenanceStart) {
+    return null;
+  }
+
   return (
     <Notice warning important className={props.classes.root}>
       <Typography>
@@ -144,9 +157,9 @@ const generateIntroText = (
        * when the user has a manual migration pending - only a small amount of users are going
        * to see this.
        *
-       * @todo not sure what the messaging will be yet in this case.
+       * do not show any text in this case
        */
-      return <React.Fragment>hello world</React.Fragment>;
+      return null;
     }
   }
 
