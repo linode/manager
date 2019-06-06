@@ -318,6 +318,9 @@ export const dark = () =>
             color: '#aaa !important'
           }
         },
+        label: {
+          color: primaryColors.text
+        },
         disabled: {}
       },
       MuiFormLabel: {
@@ -513,10 +516,10 @@ export const dark = () =>
         checked: {},
         switchBase: {
           color: '#abadaf !important'
+        },
+        track: {
+          border: '1px solid #222'
         }
-        // bar: {
-        //   border: '1px solid #222'
-        // }
       },
       MuiTab: {
         root: {
