@@ -170,7 +170,6 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
       {!hideTable && 
         <Grid item className={classes.gridItem}>
           <NodePoolDisplayTable
-            small
             pools={pools}
             types={types}
             handleDelete={(poolIdx: number) => deleteNodePool(poolIdx)}

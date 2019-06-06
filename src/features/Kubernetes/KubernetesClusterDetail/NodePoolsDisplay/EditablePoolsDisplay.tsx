@@ -1,13 +1,13 @@
 import * as React from 'react';
 import { compose } from 'recompose';
 
+import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-
-import { ExtendedPoolNode } from '../../types';
+import Typography from 'src/components/core/Typography';
 
 type ClassNames = 'root' | 'item';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
@@ -18,8 +18,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 interface Props {
-  pools: ExtendedPoolNode[];
-  types: Linode.LinodeType[];
+  editing: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -27,13 +26,17 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const EditablePoolsDisplay: React.FunctionComponent<
   CombinedProps
 > = props => {
-  const { classes } = props;
-  return <div className={classes.root}>Pools display</div>;
-};
+  const { editing } = props;
+  return (
+    <React.Fragment>Yo</React.Fragment>
+
+  )
+}
+
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
+const enhanced = compose<CombinedProps, {}>(
   React.memo,
   styled
 );

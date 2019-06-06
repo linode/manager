@@ -13,9 +13,12 @@ import {
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import TagsPanel from 'src/components/TagsPanel';
+import withTypes, { WithTypesProps } from 'src/containers/types.container';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedPoolNode } from '.././types';
 import NodePoolPanel from '../CreateCluster/NodePoolPanel';
 import KubeSummaryPanel from './KubeSummaryPanel';
+import NodePoolsDisplay from './NodePoolsDisplay';
 
 type ClassNames = 'root' | 'title' | 'titleWrapper' | 'backButton' | 'section';
 
@@ -46,7 +49,7 @@ interface ClusterEditingState {
   nodePools: ExtendedPoolNode[];
 }
 
-type CombinedProps = {} & WithStyles<ClassNames>;
+type CombinedProps = WithTypesProps & WithStyles<ClassNames>;
 
 export const KubernetesClusterDetail: React.FunctionComponent<
   CombinedProps
@@ -55,7 +58,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   const [fields, updateFields] = React.useState<ClusterEditingState>({
     nodePools: []
   });
-  const { classes } = props;
+  const { classes, typesData, typesError, typesLoading } = props;
 
   return (
     <React.Fragment>
@@ -80,18 +83,36 @@ export const KubernetesClusterDetail: React.FunctionComponent<
 
       <Grid container direction="row" className={classes.section}>
         <Grid container item direction="column" xs={10}>
-          <Grid item>Node Pool table</Grid>
+          <Grid item>
+            <NodePoolsDisplay 
+              editing={editing}
+            />
+          </Grid>
           <Grid item>
             <NodePoolPanel
+              hideTable
               pools={[]}
-              types={[]}
+              types={typesData || []}
               addNodePool={() => null}
               deleteNodePool={() => null}
               handleTypeSelect={() => null}
               updateNodeCount={() => null}
               nodeCount={0}
-              typesLoading={false}
+              typesLoading={typesLoading}
+              typesError={
+                typesError
+                  ? getAPIErrorOrDefault(
+                      typesError,
+                      'Error loading Linode type information.'
+                    )[0].reason
+                  : undefined
+              }
             />
+          </Grid>
+          <Grid item className={classes.section}>
+            <Button destructive type="secondary" onClick={() => null}>
+              Delete Cluster
+            </Button>
           </Grid>
         </Grid>
         <Grid container item direction="column" xs={2}>
@@ -120,6 +141,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(styled);
+const enhanced = compose<CombinedProps, {}>(styled, withTypes);
 
 export default enhanced(KubernetesClusterDetail);

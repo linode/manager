@@ -1,16 +1,13 @@
 import * as React from 'react';
 import { compose } from 'recompose';
 
+import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-
-import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-
-import NodePoolDisplayTable from '../../CreateCluster/NodePoolDisplayTable';
-import { ExtendedPoolNode } from '../../types';
+import Typography from 'src/components/core/Typography';
 
 type ClassNames = 'root' | 'item';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
@@ -21,8 +18,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 interface Props {
-  pools: ExtendedPoolNode[];
-  types: ExtendedType[];
+  editing: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -30,22 +26,17 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const StaticPoolsDisplay: React.FunctionComponent<
   CombinedProps
 > = props => {
-  const { pools, types } = props;
+  const { editing } = props;
   return (
-    <React.Fragment>
-      <NodePoolDisplayTable
-        pools={pools}
-        types={types}
-        handleDelete={() => null}
-        updatePool={() => null}
-      />
-    </React.Fragment>
-  );
-};
+    <React.Fragment>Yo</React.Fragment>
+
+  )
+}
+
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
+const enhanced = compose<CombinedProps, {}>(
   React.memo,
   styled
 );
