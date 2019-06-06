@@ -774,9 +774,6 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
           fontSize: '.9rem',
           boxSizing: 'border-box'
         },
-        inputType: {
-          height: 'auto'
-        },
         formControl: {
           'label + &': {
             marginTop: 0
