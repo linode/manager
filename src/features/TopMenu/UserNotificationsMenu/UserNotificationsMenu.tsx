@@ -42,8 +42,7 @@ const styles = (theme: Theme) =>
       }
     },
     hidden: {
-      height: 0,
-      padding: 0
+      ...theme.visually.hidden
     }
   });
 

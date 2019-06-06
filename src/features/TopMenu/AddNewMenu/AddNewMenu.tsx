@@ -26,8 +26,7 @@ type CSSClasses =
   | 'button'
   | 'caret'
   | 'mobileCreate'
-  | 'mobileButton'
-  | 'hidden';
+  | 'mobileButton';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -66,10 +65,6 @@ const styles = (theme: Theme) =>
     mobileCreate: {
       width: 32,
       height: 32
-    },
-    hidden: {
-      height: 0,
-      padding: 0
     }
   });
 
