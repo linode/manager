@@ -9,7 +9,7 @@ export const isValidDomainRecord = (
 
 export const isValidSOAEmail = (email: string, hostname: string) => {
   // admin@example.com --> example.com
-  const emailDomain = email.split('@')[1];
+  const emailDomain = email.substr(email.indexOf('@') + 1);
   // mail.example.com --> example.com
   const strippedHostname = takeLast(2, hostname.split('.')).join('.');
   return strippedHostname !== emailDomain;
