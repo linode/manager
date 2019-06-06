@@ -96,7 +96,7 @@ const LinodesDetailNavigation: React.StatelessComponent<
         <Route
           exact
           path={`/linodes/:linodeId/summary`}
-          component={withRouter(LinodeSummary as any)}
+          render={() => <LinodeSummary />}
         />
         <Route
           exact
@@ -115,42 +115,42 @@ const LinodesDetailNavigation: React.StatelessComponent<
         <Route
           exact
           path={`/linodes/:linodeId/networking`}
-          component={withRouter(LinodeNetworking as any)}
+          render={() => <LinodeNetworking />}
         />
         <Route
           exact
           path={`/linodes/:linodeId/resize`}
-          component={withRouter(LinodeResize as any)}
+          render={() => <LinodeResize />}
         />
         <Route
           exact
           path={`/linodes/:linodeId/rescue`}
-          component={withRouter(LinodeRescue)}
+          render={() => <LinodeRescue />}
         />
         <Route
           exact
           path={`/linodes/:linodeId/rebuild`}
-          component={withRouter(LinodeRebuild as any)}
+          render={() => <LinodeRebuild />}
         />
         <Route
           exact
           path={`/linodes/:linodeId/backup`}
-          component={withRouter(LinodeBackup as any)}
+          render={() => <LinodeBackup />}
         />
         <Route
           exact
           path={`/linodes/:linodeId/activity`}
-          component={withRouter(LinodeActivity as any)}
+          render={() => <LinodeActivity />}
         />
         <Route
           exact
           path={`/linodes/:linodeId/settings`}
-          component={withRouter(LinodeSettings as any)}
+          render={() => <LinodeSettings />}
         />
         <Route
           exact
           path={`/linodes/:linodeId/advanced`}
-          component={withRouter(LinodeAdvanced as any)}
+          render={() => <LinodeAdvanced />}
         />
         {/* 404 */}
         <Redirect to={`${url}/summary`} />
