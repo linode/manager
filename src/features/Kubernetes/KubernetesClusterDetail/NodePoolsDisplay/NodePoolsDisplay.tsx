@@ -11,6 +11,9 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
+import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+
+import { ExtendedPoolNode } from '../../types';
 import EditablePoolsDisplay from './EditablePoolsDisplay';
 import StaticPoolsDisplay from './StaticPoolsDisplay';
 
@@ -31,6 +34,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 interface Props {
   editing: boolean;
+  pools: ExtendedPoolNode[];
+  types: ExtendedType[];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -38,7 +43,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const NodePoolsDisplay: React.FunctionComponent<
   CombinedProps
 > = props => {
-  const { classes, editing } = props;
+  const { classes, editing, pools, types } = props;
   return (
     <Paper className={classes.root}>
       <Grid container direction="column">
@@ -53,8 +58,8 @@ export const NodePoolsDisplay: React.FunctionComponent<
         <Grid item>
           {
             editing
-            ? <StaticPoolsDisplay />
-            : <EditablePoolsDisplay />
+            ? <EditablePoolsDisplay pools={pools} types={types} />
+            : <StaticPoolsDisplay pools={pools} types={types} />
           }
         </Grid>
         <Grid item>
