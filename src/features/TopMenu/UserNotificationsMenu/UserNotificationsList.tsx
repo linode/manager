@@ -110,13 +110,13 @@ const interceptNotification = (
         .toLowerCase()
         .replace(
           'this linode',
-          pathOr('this Linode', ['label'], notification.entity)
+          `Linode ${pathOr('this Linode', ['label'], notification.entity)}`
         ),
       message: notification.message
         .toLowerCase()
         .replace(
           'this linode',
-          pathOr('this Linode', ['label'], notification.entity)
+          `Linode ${pathOr('this Linode', ['label'], notification.entity)}`
         )
     };
   }
