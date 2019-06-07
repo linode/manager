@@ -62,8 +62,7 @@ export const BucketTableRow: React.StatelessComponent<
         {/* <Link to={`/buckets/${label}`}> */}
         <Grid container alignItems="center">
           <Grid item>
-            {/* @todo: replace with bucket icon */}
-            <EntityIcon variant="volume" />
+            <EntityIcon variant="bucket" />
           </Grid>
           <Grid item>
             <div className={classes.labelStatusWrapper}>
