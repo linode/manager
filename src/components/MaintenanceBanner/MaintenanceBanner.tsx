@@ -96,7 +96,10 @@ const MaintenanceBanner: React.FC<CombinedProps> = props => {
       </Typography>
       <Typography>
         Please see
-        <a target="_blank" href="https://status.linode.com">
+        <a
+          target="_blank"
+          href="https://status.linode.com/incidents/d04kfh52spfn"
+        >
           {' '}
           the Linode status page{' '}
         </a>
