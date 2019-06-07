@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { connect } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose, withProps } from 'recompose';
 import {
@@ -76,7 +75,6 @@ const enhanced = compose<CombinedProps, {}>(
     linodeId: Number(ownProps.match.params.linodeId)
   })),
   styled,
-  connect(),
   linodesDetailContainer,
   LinodeDetailErrorBoundary
 );

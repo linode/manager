@@ -52,6 +52,7 @@ namespace Linode {
     | 'migration_pending'
     | 'reboot_scheduled'
     | 'outage'
+    | 'maintenance'
     | 'payment_due'
     | 'ticket_important'
     | 'ticket_abuse'

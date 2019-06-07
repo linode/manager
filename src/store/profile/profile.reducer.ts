@@ -7,7 +7,7 @@ export type State = RequestableData<Linode.Profile>;
 
 interface Action<T> {
   type: string;
-  error?: Error;
+  error?: Linode.ApiFieldError[];
   payload?: T;
 }
 

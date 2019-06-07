@@ -51,9 +51,24 @@ export const sortData = (orderBy: string, order: Order) =>
             : eachValue
         );
     }
+
+    /**
+     * @todo document this in a README
+     *
+     * this allows us to pass a value such as 'maintenance:when' to the handleOrderChagne
+     * callback and it will turn it into a pathOr-friendly format
+     *
+     * so "maintenance:when" turns into ['maintenance', 'when']
+     *
+     * useful for when you want to sort by a nested property
+     */
+    if (orderBy.includes(':')) {
+      orderByProp = orderBy.split(':');
+    }
+
     /** basically, if orderByProp exists, do a pathOr with that instead */
-    const aValue = pathOr(0, !!orderByProp ? orderByProp : [orderBy], a);
-    const bValue = pathOr(0, !!orderByProp ? orderByProp : [orderBy], b);
+    const aValue = pathOr('', !!orderByProp ? orderByProp : [orderBy], a);
+    const bValue = pathOr('', !!orderByProp ? orderByProp : [orderBy], b);
 
     if (isArray(aValue) && isArray(bValue)) {
       return sortByArrayLength(aValue, bValue, order);

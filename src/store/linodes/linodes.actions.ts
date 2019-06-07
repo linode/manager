@@ -11,6 +11,9 @@ that comes down the stream
 export const updateMultipleLinodes = actionCreator<Linode.Linode[]>(
   'update_multiple'
 );
+export const addNotificationsToLinodes = actionCreator<Linode.Notification[]>(
+  'add_notifications_to_all_linodes'
+);
 export const upsertLinode = actionCreator<Linode.Linode>(`upsert`);
 export const deleteLinode = actionCreator<number>('delete');
 export const updateLinode = actionCreator<{

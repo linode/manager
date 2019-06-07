@@ -74,6 +74,7 @@ interface Props {
   display: 'grid' | 'list';
   component: any;
   data: Linode.Linode[];
+  someLinodesHaveMaintenance: boolean;
 }
 
 type CombinedProps = Props & OrderByProps & WithStyles<ClassNames>;
@@ -96,7 +97,12 @@ const DisplayGroupedLinodes: React.StatelessComponent<
     sortGroups,
     groupByTags
   )(data);
-  const tableWrapperProps = { handleOrderChange, order, orderBy };
+  const tableWrapperProps = {
+    handleOrderChange,
+    order,
+    orderBy,
+    someLinodesHaveMaintenance: props.someLinodesHaveMaintenance
+  };
 
   if (display === 'grid') {
     return (
