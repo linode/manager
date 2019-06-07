@@ -22,7 +22,13 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type combinedProps = Omit<OrderByProps, 'data'> & WithStyles<ClassNames>;
+interface Props {
+  someLinodesHaveMaintenance: boolean;
+}
+
+type combinedProps = Omit<OrderByProps, 'data'> &
+  WithStyles<ClassNames> &
+  Props;
 
 const SortableTableHead: React.StatelessComponent<combinedProps> = props => {
   const { order, orderBy, handleOrderChange, classes } = props;
@@ -60,6 +66,16 @@ const SortableTableHead: React.StatelessComponent<combinedProps> = props => {
         >
           IP Address
         </TableSortCell>
+        {props.someLinodesHaveMaintenance && (
+          <TableSortCell
+            label="maintenance:when"
+            active={isActive('maintenance:when')}
+            handleClick={handleOrderChange}
+            direction={order}
+          >
+            Maintenance Status
+          </TableSortCell>
+        )}
         <TableSortCell
           label="region"
           direction={order}

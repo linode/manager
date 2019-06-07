@@ -1,4 +1,6 @@
-export interface ExtendedLinode extends Linode.Linode {
+import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
+
+export interface ExtendedLinode extends LinodeWithMaintenance {
   _configs: Linode.Config[];
   _disks: Linode.Disk[];
   _events: Linode.Event[];

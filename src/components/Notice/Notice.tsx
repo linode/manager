@@ -70,9 +70,12 @@ const styles: StyleRulesCallback = theme => {
     },
     noticeText: {
       color: theme.palette.text.primary,
-      fontSize: '1rem',
-      lineHeight: 1.2,
-      fontFamily: 'LatoWebBold' // we keep this bold at all times
+      fontSize: theme.spacing.unit * 2,
+      lineHeight: `${theme.spacing.unit * 2.5}px`,
+      fontFamily: 'LatoWebBold', // we keep this bold at all times
+      '& p': {
+        fontSize: '1rem'
+      }
     },
     error: {
       borderLeft: `5px solid ${status.errorDark}`,
