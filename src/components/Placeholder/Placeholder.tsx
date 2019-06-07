@@ -63,6 +63,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       opacity: 0,
       animation: 'fadeIn .2s ease-in-out forwards .3s',
       stroke: theme.palette.primary.main
+    },
+    '& .bucket.insidePath path': {
+      fill: theme.palette.primary.main
     }
   },
   title: {
