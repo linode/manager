@@ -4,6 +4,26 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.60.0] - 2019-06-07
+
+### Added:
+- Support for critical maintenance banners, times, and tickets
+- Clone Linode from Linode Action Menu
+
+### Changed:
+- LKE: Creation Table UI for editable node count and remove actions
+- Remove Tags input field when cloning a Domain
+- Default Linode config memory limit to 0 if a limit is not already set
+
+### Fixed:
+- Show progress for Linode upgrades
+- Select Plan Panel default tab select logic
+- Primary Nav was showing a scrollbar
+- Support Ticket Drawer should retrieve all entities for selection
+- Nodebalancer config select values
+- Split token on logout before revoking it
+- Re-add Kubernetes button in Create menu
+
 ## [v0.59.0] - 2019-05-31
 
 ### Changed:
