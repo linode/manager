@@ -35,7 +35,7 @@ Here are a list of all the required and optional environment variables the Manag
 `REACT_APP_API_ROOT`: The root location where API requests will be made
 * e.g. `https://api.linode.com/v4`
 
-`REACT_APP_LIST_ROOT`: The root location of LISH, Linode's web-based console
+`REACT_APP_LISH_ROOT`: The root location of LISH, Linode's web-based console
 * e.g. `webconsole.linode.com`
 
 `REACT_APP_CLIENT_ID`: The Client ID you created above in the first step
