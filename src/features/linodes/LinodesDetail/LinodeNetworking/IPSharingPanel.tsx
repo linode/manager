@@ -241,7 +241,9 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
             options={ipList}
             onChange={this.onIPSelect(idx)}
             className={classes.ipField}
-            data-qa-share-ip
+            textFieldProps={{
+              'data-qa-share-ip': true
+            }}
             disabled={readOnly}
             isClearable={false}
             placeholder="Select an IP"

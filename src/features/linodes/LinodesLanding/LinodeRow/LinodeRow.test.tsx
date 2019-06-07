@@ -22,6 +22,8 @@ describe('LinodeRow', () => {
     classes: mockClasses,
     toggleConfirmation: jest.fn(),
     theme: light(),
+    maintenanceStartTime: '',
+    someLinodesHaveMaintenance: false,
     recentEvent: undefined,
     openConfigDrawer: jest.fn(),
     mutationAvailable: false,

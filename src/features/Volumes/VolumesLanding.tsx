@@ -47,6 +47,7 @@ import ListVolumes from './ListVolumes';
 import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 
 import ErrorState from 'src/components/ErrorState';
+import Loading from 'src/components/LandingLoading';
 
 type ClassNames =
   | 'root'
@@ -282,9 +283,14 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     const {
       classes,
       volumesError,
+      volumesLoading,
       mappedVolumesDataWithLinodes,
       readOnly
     } = this.props;
+
+    if (volumesLoading) {
+      return <Loading shouldDelay />;
+    }
 
     if (volumesError && volumesError.read) {
       return <RenderError />;

@@ -18,7 +18,8 @@ export const transitionAction = [
   'linode_snapshot',
   'disk_resize',
   'backups_restore',
-  'disk_imagize'
+  'disk_imagize',
+  'linode_mutate'
 ];
 
 export const linodeInTransition = (
@@ -38,6 +39,12 @@ export const transitionText = (
   status: string,
   recentEvent?: Linode.Event
 ): string => {
+  // `linode_mutate` is a special case, because we want to display
+  // "Upgrading" instead of "Mutate".
+  if (recentEvent && recentEvent.action === 'linode_mutate') {
+    return 'Upgrading';
+  }
+
   let event;
   if (recentEvent && transitionAction.includes(recentEvent.action)) {
     event = recentEvent.action.replace('linode_', '').replace('_', ' ');

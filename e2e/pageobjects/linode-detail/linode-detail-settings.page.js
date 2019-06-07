@@ -120,8 +120,8 @@ class Settings extends Page {
     remove() {
         /** linode label sourced from the editable text H1 in the header */
         const linodeLabel = browser.getText('[data-qa-editable-text]');
-        const confirmTitle = `Confirm Deletion of ${linodeLabel}`;
-        const confirmContent = 'Deleting a Linode will result in permanent data loss. Are you sure?';
+        const confirmTitle = `Delete ${linodeLabel}?`;
+        const confirmContent = /delete/ig;
         this.delete.click();
         this.deleteDialogTitle.waitForText();
         this.deleteDialogContent.waitForText();
@@ -129,7 +129,7 @@ class Settings extends Page {
         this.cancel.waitForVisible();
 
         expect(this.deleteDialogTitle.getText()).toBe(confirmTitle);
-        expect(this.deleteDialogContent.getText()).toBe(confirmContent);
+        expect(this.deleteDialogContent.getText()).toMatch(confirmContent);
 
         this.confirm.click();
         browser.waitForVisible('[data-qa-circle-progress]', constants.wait.normal, true);

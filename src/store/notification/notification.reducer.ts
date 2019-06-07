@@ -7,7 +7,7 @@ export type State = RequestableData<Linode.Notification[]>;
 export const defaultState: State = {
   lastUpdated: 0,
   loading: false,
-  data: [],
+  data: undefined,
   error: undefined
 };
 

@@ -28,7 +28,7 @@ describe('StackScript - detail page and drawer suite', () => {
       ListStackScripts.stackScriptCompatibleDistributions.selector
     )[0]
       .$$('div')
-      .map(distro => distro.getText());
+      .map(distro => distro.getText()).filter(d => !d.includes(`\n+`));
     const getTitleAndAuthor = titleAndAuthor.split('/');
     const stackScriptDetails = {
       title: getTitleAndAuthor[1].trim(),
@@ -198,18 +198,19 @@ describe('StackScript - detail page and drawer suite', () => {
       chooseFromOthers.click();
       browser.pause(5000);
       ConfigureLinode.stackScriptsBaseElemsDisplay(
-        $('[data-qa-create-from="My StackScripts"]')
+        $('[data-qa-create-from="Account StackScripts"]')
       );
     });
   });
 
-  describe('Community StackScript detail drawer', () => {
+  xdescribe('Community StackScript detail drawer', () => {
     beforeAll(() => {
+      browser.url(constants.routes.stackscripts);
       ConfigureLinode.changeTab('Community StackScripts');
       browser.pause(500);
     });
 
-    it('StackScript detail drawer displays', () => {
+    it('StackScript detail page displays', () => {
       selectedStackScript = getStackScriptDetailsFromRow();
       ConfigureLinode.stackScripShowDetails();
       StackScriptDetail.stackScriptDetailDrawerDisplays();

@@ -32,7 +32,6 @@ export class ListLinodes extends Page {
     get powerOnMenu() { return $('[data-qa-action-menu-item="Power On"]'); }
     get launchConsoleMenu() { return $('[data-qa-action-menu-item="Launch Console"]'); }
     get rebootMenu() { return $('[data-qa-action-menu-item="Reboot"]'); }
-    get viewGraphsMenu() { return $('[data-qa-action-menu-item="View Graphs"]'); }
     get resizeMenu() { return $('[data-qa-action-menu-item="Resize"]'); }
     get viewBackupsMenu() { return $('[data-qa-action-menu-item="View Backups"]'); }
     get enableBackupsMenu() { return $('[data-qa-action-menu-item="Enable Backups"]'); }

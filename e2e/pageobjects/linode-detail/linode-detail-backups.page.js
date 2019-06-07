@@ -30,8 +30,8 @@ class Backups extends Page {
     get disks() { return $('[data-qa-backup-disks]'); }
     get spaceRequired() { return $('[data-qa-space-required]'); }
 
-    get restoreToLinodeSelect() { return $(`${this.drawerBase.selector} ${this.basicSelect}`); }
-    get restoreToLinodesOptions() { return $$('[data-qa-restore-options]'); }
+    get restoreToLinodeSelect() { return $('[data-qa-select-linode]'); }
+    get restoreToLinodesOptions() { return $$('[data-qa-option]'); }
     get overwriteLinodeCheckbox() { return $(`${this.drawerBase.selector} [data-qa-checked]`); }
     get restoreSubmit() { return $('[data-qa-restore-submit]'); }
     get restoreCancel() { return $('[data-qa-restore-cancel]'); }

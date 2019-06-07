@@ -1,51 +1,62 @@
 import * as React from 'react';
-
+import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
-import { getKubernetesClusters } from 'src/services/kubernetes';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import KubernetesContainer, {
+  DispatchProps,
+  KubernetesProps
+} from 'src/containers/kubernetes.container';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 import ClusterList from '../ClusterList';
 import KubernetesLandingEmptyState from './KubernetesLandingEmptyState';
 
-export const KubernetesLanding: React.FunctionComponent = () => {
-  const [clusters, setClusters] = React.useState<Linode.KubernetesCluster[]>(
-    []
-  );
-  const [loading, setLoading] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<string | undefined>(undefined);
+type CombinedProps = DispatchProps & KubernetesProps;
 
+export const KubernetesLanding: React.FunctionComponent<
+  CombinedProps
+> = props => {
+  const {
+    clusters,
+    clustersError,
+    clustersLoading,
+    requestKubernetesClusters
+  } = props;
   React.useEffect(() => {
-    setLoading(true);
-    getKubernetesClusters()
-      .then(response => {
-        setClusters(response.data);
-        setLoading(false);
-      })
-      .catch(err => {
-        setLoading(false);
-        setError(
-          getAPIErrorOrDefault(
-            err,
-            'There was an error loading your Kubernetes Clusters.'
-          )[0].reason
-        );
-      });
+    requestKubernetesClusters();
   }, []);
 
-  if (error) {
-    return <ErrorState errorText={error} />;
+  if (clustersError.read) {
+    return (
+      <ErrorState
+        errorText={getErrorStringOrDefault(
+          clustersError.read,
+          'There was an error loading your Kubernetes clusters.'
+        )}
+      />
+    );
   }
 
-  if (loading) {
+  if (clustersLoading) {
     return <CircleProgress />;
   }
 
-  if (clusters.length === 0) {
+  if (clusters && clusters.length === 0) {
     return <KubernetesLandingEmptyState />;
   }
 
-  return <ClusterList clusters={clusters} />;
+  return <ClusterList clusters={clusters || []} />;
 };
 
-export default KubernetesLanding;
+const withKubernetes = KubernetesContainer(
+  (ownProps, clustersLoading, lastUpdated, clustersError, clusters) => ({
+    ...ownProps,
+    clusters,
+    clustersError,
+    clustersLoading
+  })
+);
+
+const enhanced = compose(withKubernetes);
+
+export default enhanced(KubernetesLanding);

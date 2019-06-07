@@ -31,14 +31,14 @@ exports.config = merge(wdioMaster.config, {
     services: servicesToStart,
     seleniumInstallArgs: seleniumSettings,
     seleniumArgs: seleniumSettings,
+    onPrepare: function(config, capabilities, user) {
+    },
     before: function (capabilities, specs) {
         browserCommands();
     },
     beforeSuite: function(suite) {
-        // Do nothing before suites
     },
     after: function (result, capabilities, specs) {
-
     },
     onComplete: function(exitCode, config, capabilities) {
     }

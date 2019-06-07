@@ -120,7 +120,7 @@ const connected = connect(
   (state: ApplicationState): ReduxState => ({
     account: state.__resources.account.data,
     accountLoading: pathOr(false, ['__resources', 'account', 'loading'], state),
-    accountError: state.__resources.account.error
+    accountError: state.__resources.account.error.read
   }),
   (dispatch: ThunkDispatch): { requestAccount: () => void } => ({
     requestAccount: () => dispatch(requestAccount())

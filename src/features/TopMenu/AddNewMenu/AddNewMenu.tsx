@@ -17,6 +17,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import { isKubernetesEnabled } from 'src/constants';
 import { openForCreating as openDomainDrawerForCreating } from 'src/store/domainDrawer';
 import { openForCreating as openVolumeDrawerForCreating } from 'src/store/volumeDrawer';
 import AddNewMenuItem, { MenuItems } from './AddNewMenuItem';
@@ -94,58 +95,65 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
     anchorEl: undefined
   };
 
-  items: MenuItems[] = [
-    {
-      title: 'Linode',
-      onClick: e => {
-        this.props.history.push('/linodes/create');
-        this.handleClose();
-        e.preventDefault();
+  getItems = () => {
+    const items: MenuItems[] = [
+      {
+        title: 'Linode',
+        onClick: e => {
+          this.props.history.push('/linodes/create');
+          this.handleClose();
+          e.preventDefault();
+        },
+        body: `High performance SSD Linux servers for all of your infrastructure needs`,
+        ItemIcon: LinodeIcon
       },
-      body: `High performance SSD Linux servers for all of your infrastructure needs`,
-      ItemIcon: LinodeIcon
-    },
-    {
-      title: 'Volume',
-      onClick: e => {
-        this.props.openVolumeDrawerForCreating();
-        this.handleClose();
-        e.preventDefault();
+      {
+        title: 'Volume',
+        onClick: e => {
+          this.props.openVolumeDrawerForCreating();
+          this.handleClose();
+          e.preventDefault();
+        },
+        body: `Block Storage service allows you to attach additional storage to your Linode`,
+        ItemIcon: VolumeIcon
       },
-      body: `Block Storage service allows you to attach additional storage to your Linode`,
-      ItemIcon: VolumeIcon
-    },
-    {
-      title: 'NodeBalancer',
-      onClick: e => {
-        this.props.history.push('/nodebalancers/create');
-        this.handleClose();
-        e.preventDefault();
+      {
+        title: 'NodeBalancer',
+        onClick: e => {
+          this.props.history.push('/nodebalancers/create');
+          this.handleClose();
+          e.preventDefault();
+        },
+        body: `Ensure your valuable applications and services are highly-available`,
+        ItemIcon: NodebalancerIcon
       },
-      body: `Ensure your valuable applications and services are highly-available`,
-      ItemIcon: NodebalancerIcon
-    },
-    {
-      title: 'Domain',
-      onClick: e => {
-        this.props.openDomainDrawerForCreating();
-        this.handleClose();
-        e.preventDefault();
-      },
-      body: `Manage your DNS records using Linode’s high-availability name servers`,
-      ItemIcon: DomainIcon
-    },
-    {
-      title: 'Kubernetes',
-      onClick: e => {
-        this.props.history.push('/kubernetes/create');
-        this.handleClose();
-        e.preventDefault();
-      },
-      body: `Create and manage Kubernetes Clusters for highly available container workloads`,
-      ItemIcon: KubernetesIcon
+      {
+        title: 'Domain',
+        onClick: e => {
+          this.props.openDomainDrawerForCreating();
+          this.handleClose();
+          e.preventDefault();
+        },
+        body: `Manage your DNS records using Linode’s high-availability name servers`,
+        ItemIcon: DomainIcon
+      }
+    ];
+
+    if (isKubernetesEnabled) {
+      items.push({
+        title: 'Kubernetes',
+        onClick: e => {
+          this.props.history.push('/kubernetes/create');
+          this.handleClose();
+          e.preventDefault();
+        },
+        body: `Create and manage Kubernetes Clusters for highly available container workloads`,
+        ItemIcon: KubernetesIcon
+      });
     }
-  ];
+
+    return items;
+  };
 
   handleClick = (event: React.MouseEvent<HTMLElement>) => {
     this.setState({ anchorEl: event.currentTarget });
@@ -158,7 +166,9 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
   render() {
     const { anchorEl } = this.state;
     const { classes } = this.props;
-    const itemsLen = this.items.length;
+
+    const items = this.getItems();
+    const itemsLen = items.length;
 
     return (
       <div className={classes.wrapper}>
@@ -188,7 +198,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
           className={classes.menu}
         >
           <MenuItem key="placeholder" aria-hidden className={classes.hidden} />
-          {this.items.map((i, idx) => (
+          {items.map((i, idx) => (
             <AddNewMenuItem key={idx} index={idx} count={itemsLen} {...i} />
           ))}
         </Menu>

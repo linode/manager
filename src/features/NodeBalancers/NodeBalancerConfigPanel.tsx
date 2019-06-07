@@ -457,7 +457,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               <Select
                 options={typeOptions}
                 label="Type"
-                defaultValue={defaultType || typeOptions[0]}
+                value={defaultType || typeOptions[0]}
                 onChange={this.onHealthCheckTypeChange}
                 errorText={hasErrorFor('check')}
                 errorGroup={forEdit ? `${configIdx}` : undefined}
@@ -773,7 +773,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   type="number"
                   label="Port"
                   required
-                  defaultValue={port || ''}
+                  value={port || ''}
                   onChange={this.onPortChange}
                   errorText={hasErrorFor('port') || hasErrorFor('configs')}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
@@ -787,7 +787,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 <Select
                   options={protocolOptions}
                   label="Protocol"
-                  defaultValue={defaultProtocol || protocolOptions[0]}
+                  value={defaultProtocol || protocolOptions[0]}
                   onChange={this.onProtocolChange}
                   errorText={hasErrorFor('protocol')}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
@@ -853,7 +853,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 <Select
                   options={algOptions}
                   label="Algorithm"
-                  defaultValue={defaultAlg || algOptions[0]}
+                  value={defaultAlg || algOptions[0]}
                   onChange={this.onAlgorithmChange}
                   errorText={hasErrorFor('algorithm')}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
@@ -876,7 +876,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 <Select
                   options={sessionOptions}
                   label="Session Stickiness"
-                  defaultValue={defaultSession || sessionOptions[1]}
+                  value={defaultSession || sessionOptions[1]}
                   onChange={this.onSessionStickinessChange}
                   errorText={hasErrorFor('stickiness')}
                   errorGroup={forEdit ? `${configIdx}` : undefined}

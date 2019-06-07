@@ -4,8 +4,6 @@ import { Entity } from './disk.types';
 
 const actionCreator = actionCreatorFactory(`@@manager/linodeDisks`);
 
-type Error = Linode.ApiFieldError[];
-
 interface LinodeIdParam {
   linodeId: number;
 }
@@ -32,7 +30,7 @@ export type GetLinodeDisksRequest = (
 export const getLinodeDisksActions = actionCreator.async<
   GetLinodeDisksParams,
   Entity[],
-  Error
+  Linode.ApiFieldError[]
 >(`get-page`);
 
 /** Get Linode Disks (all) */
@@ -47,7 +45,7 @@ export type GetAllLinodeDisksRequest = (
 export const getAllLinodeDisksActions = actionCreator.async<
   GetAllLinodeDisksParams,
   Entity[],
-  Error
+  Linode.ApiFieldError[]
 >(`get-all`);
 
 /** Get Linode Disk */
@@ -62,7 +60,7 @@ export type GetLinodeDiskRequest = (
 export const getLinodeDiskActions = actionCreator.async<
   GetLinodeDiskParams,
   Entity,
-  Error
+  Linode.ApiFieldError[]
 >(`get`);
 
 /** Create Linode Disk */
@@ -77,7 +75,7 @@ export type CreateLinodeDiskRequest = (
 export const createLinodeDiskActions = actionCreator.async<
   CreateLinodeDiskParams,
   Entity,
-  Error
+  Linode.ApiFieldError[]
 >(`create`);
 
 /** Update Linode Disk */
@@ -93,7 +91,7 @@ export type UpdateLinodeDiskRequest = (
 export const updateLinodeDiskActions = actionCreator.async<
   UpdateLinodeDiskParams,
   Entity,
-  Error
+  Linode.ApiFieldError[]
 >(`update`);
 
 /** Delete Linode Disk */
@@ -108,7 +106,7 @@ export type DeleteLinodeDiskRequest = (
 export const deleteLinodeDiskActions = actionCreator.async<
   DeleteLinodeDiskParams,
   {},
-  Error
+  Linode.ApiFieldError[]
 >(`delete`);
 
 /** Resize Linode Disk */
@@ -123,5 +121,5 @@ export type ResizeLinodeDiskRequest = (
 export const resizeLinodeDiskActions = actionCreator.async<
   ResizeLinodeDiskParams,
   Entity,
-  Error
+  Linode.ApiFieldError[]
 >(`resize`);

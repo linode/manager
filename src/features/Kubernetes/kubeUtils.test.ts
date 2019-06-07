@@ -36,7 +36,7 @@ describe('helper functions', () => {
   });
 
   describe('getTotalClusterPrice', () => {
-    expect(getTotalClusterPrice([mockNodePool, mockNodePool])).toBe(20);
+    expect(getTotalClusterPrice([mockNodePool, mockNodePool])).toBe(80);
   });
 
   describe('Get total cluster memory/CPUs', () => {

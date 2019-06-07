@@ -34,6 +34,8 @@ import withDisplayType, { WithDisplayType } from './withDisplayType';
 import withNotifications, { WithNotifications } from './withNotifications';
 import withRecentEvent, { WithRecentEvent } from './withRecentEvent';
 
+import { parseMaintenanceStartTime } from './utils';
+
 interface Props {
   backups: Linode.LinodeBackups;
   id: number;
@@ -43,12 +45,14 @@ interface Props {
   label: string;
   region: string;
   disk: number;
+  maintenanceStartTime?: string | null;
   memory: number;
   vcpus: number;
   status: Linode.LinodeStatus;
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;
+  someLinodesHaveMaintenance: boolean;
 
   imageLabel: string;
   openConfigDrawer: (
@@ -92,6 +96,7 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
       disk,
       vcpus,
       region,
+      type,
       ipv4,
       ipv6,
       tags,
@@ -134,6 +139,8 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
                 <LinodeActionMenu
                   linodeId={id}
                   linodeLabel={label}
+                  linodeRegion={region}
+                  linodeType={type}
                   linodeStatus={status}
                   linodeBackups={backups}
                   openConfigDrawer={openConfigDrawer}
@@ -159,6 +166,13 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
                 }}
               />
             )}
+            {!!this.props.someLinodesHaveMaintenance &&
+              !!this.props.maintenanceStartTime && (
+                <div className={classes.cardSection}>
+                  Maintenance Window Start:{' '}
+                  {parseMaintenanceStartTime(this.props.maintenanceStartTime)}
+                </div>
+              )}
             <div className={classes.cardSection} data-qa-linode-summary>
               {`${displayType}: ${typeLabelDetails(memory, disk, vcpus)}`}
             </div>

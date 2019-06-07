@@ -14,7 +14,6 @@ describe('LinodeResize', () => {
       closeSnackbar={jest.fn()}
       linodeDisks={[]}
       enqueueSnackbar={jest.fn()}
-      requestNotifications={jest.fn()}
       {...reactRouterProps}
       classes={{
         root: '',
@@ -37,7 +36,6 @@ describe('LinodeResize', () => {
           linodeDisks={[]}
           closeSnackbar={jest.fn()}
           enqueueSnackbar={jest.fn()}
-          requestNotifications={jest.fn()}
           {...reactRouterProps}
           classes={{
             root: '',
@@ -107,7 +105,6 @@ describe('LinodeResize', () => {
               closeSnackbar={jest.fn()}
               linodeDisks={[]}
               enqueueSnackbar={jest.fn()}
-              requestNotifications={jest.fn()}
               {...reactRouterProps}
               classes={{
                 root: '',

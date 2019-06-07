@@ -15,6 +15,7 @@ export type ClassNames =
   | 'libTitleLink'
   | 'libDescription'
   | 'colImages'
+  | 'selectionGrid'
   | 'stackScriptCell'
   | 'stackScriptUsername'
   | 'deployButton'
@@ -51,13 +52,8 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
     cursor: 'pointer'
   },
   libTitle: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    maxWidth: '100%',
-    justifyContent: 'space-between',
-    paddingBottom: '0 !important',
-    '& h3': {
-      marginRight: 10
+    [theme.breakpoints.down('sm')]: {
+      wordBreak: 'break-all'
     }
   },
   libTitleLink: {
@@ -66,9 +62,12 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
     fontSize: '.9rem'
   },
   libDescription: {
-    paddingTop: '0 !important',
-    [theme.breakpoints.up('md')]: {
-      paddingRight: '100px !important'
+    marginTop: theme.spacing.unit / 2,
+    [theme.breakpoints.down('sm')]: {
+      fontSize: 12
+    },
+    [theme.breakpoints.between('sm', 'lg')]: {
+      wordBreak: 'break-word'
     }
   },
   images: {
@@ -76,22 +75,38 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginRight: theme.spacing.unit,
     marginBottom: theme.spacing.unit
   },
+  selectionGrid: {
+    flexDirection: 'column',
+    alignItems: 'flex-start',
+    [theme.breakpoints.up('sm')]: {
+      flexWrap: 'nowrap',
+      flexDirection: 'row',
+      justifyContent: 'space-between',
+      alignItems: 'center'
+    }
+  },
   stackScriptCell: {
-    maxWidth: '200px'
+    width: '100%'
   },
   stackScriptUsername: {
     color: theme.color.grey1
   },
   deployButton: {
-    // marginLeft: -26,
-    // width: '100%',
-    // justifyContent: 'flex-start',
     whiteSpace: 'nowrap',
     border: 0
   },
   detailsButton: {
-    textAlign: 'left',
-    padding: 0
+    padding: 0,
+    fontSize: '0.875rem',
+    marginTop: -theme.spacing.unit,
+    [theme.breakpoints.up('sm')]: {
+      padding: theme.spacing.unit,
+      marginTop: 0,
+      width: 100
+    },
+    '&:hover, &:focus': {
+      backgroundColor: 'transparent'
+    }
   }
 });
 
@@ -121,5 +136,5 @@ export const displayTagsAndShowMore: (s: string[]) => JSX.Element[][] = compose<
 >(
   over(lensIndex(1), unless(isEmpty, createShowMore)),
   over(lensIndex(0), createTags),
-  splitAt(3)
+  splitAt(1)
 );

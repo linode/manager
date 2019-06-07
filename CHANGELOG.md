@@ -4,6 +4,42 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.59.0] - 2019-05-31
+
+### Changed:
+- Add name of data center in outage notifications
+- Update table cell styles
+
+### Fixed:
+- Main search bar styles
+
+
+## [v0.58.0] - 2019-05-29
+
+### Added:
+- Ability to optionally resize disks after Linode resize
+- Option to automatically create domain records
+- VAT banner
+
+### Changed:
+- Replace circle progress on Linode summary
+- Replace circle progress on dashboard
+- IP component placement
+- Adjustments for tablet Linode list view styles
+- Update NB empty state copy
+- Update empty copy for Images and StackScripts
+- Include app name in reset and delete oAuth app modal
+- Use account.capabilities to determine if OBJ is enabled.
+
+### Fixed:
+- Show all line items on invoice PDF and detail screen
+- Error and loading states for OAuth view
+- Error handling re: Linode settings panels
+- Uncaught error in disks and configs requests
+- Domain SPA record editing error
+- StackScripts sorting issue
+
+
 ## [v0.57.0] - 2019-05-21
 
 ### Added:

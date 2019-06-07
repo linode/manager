@@ -55,9 +55,11 @@ export const UserEventsList: React.StatelessComponent<
             reportUnfoundEvent as any,
             reportEventError
           );
-          const content = `${moment(`${event.created}Z`).fromNow()} by ${
-            event.username
-          }`;
+          let content = `${moment(`${event.created}Z`).fromNow()}`;
+
+          if (event.username) {
+            content += ` by ${event.username}`;
+          }
 
           const success = event.status !== 'failed' && !event.seen;
           const error = event.status === 'failed';

@@ -1,7 +1,7 @@
 // TYPES
 export interface Action {
   type: string;
-  error?: Error;
+  error?: Linode.ApiFieldError[];
   data?: any;
 }
 
@@ -17,7 +17,7 @@ export const UPDATE_ERROR = '@manager/account/UPDATE_ERROR';
 // ACTION CREATORS
 export const startRequest: ActionCreator = () => ({ type: LOAD });
 
-export const handleError: ActionCreator = (error: Error) => ({
+export const handleError: ActionCreator = (error: Linode.ApiFieldError[]) => ({
   type: ERROR,
   error
 });
@@ -32,7 +32,9 @@ export const handleUpdate: ActionCreator = (data: Linode.AccountSettings) => ({
   data
 });
 
-export const handleUpdateError: ActionCreator = (error: Error) => ({
+export const handleUpdateError: ActionCreator = (
+  error: Linode.ApiFieldError[]
+) => ({
   type: UPDATE_ERROR,
   error
 });

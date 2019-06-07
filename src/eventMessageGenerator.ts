@@ -133,21 +133,41 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     finished: e => `Linode ${e.entity!.label} has booted.`
   },
   lassie_reboot: {
-    scheduled: e => `Linode ${e.entity!.label} is scheduled to be rebooted by the Lassie watchdog service.`,
-    started: e => `Linode ${e.entity!.label} is being booted by the Lassie watchdog service.`,
-    failed: e => `Linode ${e.entity!.label} could not be booted by the Lassie watchdog service.`,
-    finished: e => `Linode ${e.entity!.label} has been booted by the Lassie watchdog service.`
+    scheduled: e =>
+      `Linode ${
+        e.entity!.label
+      } is scheduled to be rebooted by the Lassie watchdog service.`,
+    started: e =>
+      `Linode ${
+        e.entity!.label
+      } is being booted by the Lassie watchdog service.`,
+    failed: e =>
+      `Linode ${
+        e.entity!.label
+      } could not be booted by the Lassie watchdog service.`,
+    finished: e =>
+      `Linode ${
+        e.entity!.label
+      } has been booted by the Lassie watchdog service.`
   },
   host_reboot: {
-    scheduled: e => `Linode ${e.entity!.label} is scheduled to reboot (Host initiated restart).`,
-    started: e => `Linode ${e.entity!.label} is booting (Host initiated restart).`,
-    failed: e => `Linode ${e.entity!.label} could not be booted (Host initiated restart).`,
-    finished: e => `Linode ${e.entity!.label} has booted (Host initiated restart).`
+    scheduled: e =>
+      `Linode ${
+        e.entity!.label
+      } is scheduled to reboot (Host initiated restart).`,
+    started: e =>
+      `Linode ${e.entity!.label} is booting (Host initiated restart).`,
+    failed: e =>
+      `Linode ${e.entity!.label} could not be booted (Host initiated restart).`,
+    finished: e =>
+      `Linode ${e.entity!.label} has booted (Host initiated restart).`
   },
   lish_boot: {
-    scheduled: e => `Linode ${e.entity!.label} is scheduled to boot (Lish initiated boot).`,
+    scheduled: e =>
+      `Linode ${e.entity!.label} is scheduled to boot (Lish initiated boot).`,
     started: e => `Linode ${e.entity!.label} is booting (Lish initiated boot).`,
-    failed: e => `Linode ${e.entity!.label} could not be booted (Lish initiated boot).`,
+    failed: e =>
+      `Linode ${e.entity!.label} could not be booted (Lish initiated boot).`,
     finished: e => `Linode ${e.entity!.label} has booted (Lish initiated boot).`
   },
   linode_clone: {
@@ -180,13 +200,17 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     failed: e => `Migration failed for Linode ${e.entity!.label}.`,
     finished: e => `Linode ${e.entity!.label} has been migrated.`
   },
-  // linode_mutate: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  // This event type isn't currently being displayed, but I added a message here just in case.
+  linode_mutate_create: {
+    notification: e =>
+      `Upgrade for Linode ${e.entity!.label} has been initiated.`
+  },
+  linode_mutate: {
+    scheduled: e => `Linode ${e.entity!.label} is scheduled for an upgrade.`,
+    started: e => `Linode ${e.entity!.label} is being upgraded.`,
+    failed: e => `Linode ${e.entity!.label} could not be upgraded.`,
+    finished: e => `Linode ${e.entity!.label} has been upgraded.`
+  },
   linode_reboot: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for a reboot.`,
     started: e => `Linode ${e.entity!.label} is rebooting.`,
@@ -198,6 +222,11 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     started: e => `Linode ${e.entity!.label} is being rebuilt.`,
     failed: e => `Linode ${e.entity!.label} could not be rebuilt.`,
     finished: e => `Linode ${e.entity!.label} was rebuilt.`
+  },
+  // This event type isn't currently being displayed, but I added a message here just in case.
+  linode_resize_create: {
+    notification: e =>
+      `Resize for Linode ${e.entity!.label} has been initiated.`
   },
   linode_resize: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for resizing.`,

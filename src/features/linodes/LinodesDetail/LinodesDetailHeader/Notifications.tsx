@@ -1,117 +1,110 @@
-import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { path } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
-import Notice from 'src/components/Notice';
 import ProductNotification from 'src/components/ProductNotification';
-import { scheduleOrQueueMigration } from 'src/services/linodes';
 import { withNotifications } from 'src/store/notification/notification.containers';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 
-type ClassNames = 'migrationLink';
+import MaintenanceBanner from 'src/components/MaintenanceBanner';
+import withProfile from 'src/containers/profile.container';
+import { Maintenance } from 'src/store/linodes/linodes.helpers';
+import MigrationNotification from './MigrationNotification';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  migrationLink: {
-    color: theme.palette.primary.main,
-    cursor: 'pointer',
-    '&:hover': {
-      textDecoration: 'underline'
-    }
-  }
-});
-
-type CombinedProps = ContextProps &
-  WithSnackbarProps & {
+type CombinedProps = ProfileProps &
+  ContextProps & {
     requestNotifications: () => void;
-  } & WithStyles<ClassNames>;
+  };
 
 const Notifications: React.StatelessComponent<CombinedProps> = props => {
   const {
-    classes,
     requestNotifications,
-    enqueueSnackbar,
     linodeNotifications,
+    userTimezone,
+    userTimezoneError,
+    userTimezoneLoading,
     linodeId,
     linodeStatus
   } = props;
 
-  /** Migrate */
-  const migrate = (type: string) => {
-    scheduleOrQueueMigration(linodeId)
-      .then(_ => {
-        // A 200 response indicates that the operation was successful.
-        const successMessage =
-          type === 'migration_scheduled'
-            ? 'Your Linode has been entered into the migration queue.'
-            : 'Your migration has been scheduled.';
-        enqueueSnackbar(successMessage, { variant: 'success' });
-        requestNotifications();
-      })
-      .catch(_ => {
-        const errorMessage =
-          type === 'migration_scheduled'
-            ? 'An error occurred entering the migration queue.'
-            : 'An error occurred scheduling your migration.';
-
-        enqueueSnackbar(errorMessage, {
-          variant: 'error'
-        });
-      });
+  const generateNotificationBody = (notification: Linode.Notification) => {
+    switch (notification.type) {
+      case 'maintenance':
+        return (
+          <MaintenanceBanner
+            userTimezone={userTimezone}
+            userTimezoneLoading={userTimezoneLoading}
+            userTimezoneError={userTimezoneError}
+            maintenanceStart={notification.when}
+            maintenanceEnd={notification.until}
+            type={
+              notification.label.includes('reboot') ? 'reboot' : 'migration'
+            }
+          />
+        );
+      case 'migration_pending':
+      case 'migration_scheduled':
+        /** don't show any banner if the migration is in progress */
+        if (linodeStatus === 'migrating') {
+          return null;
+        }
+        return (
+          <MigrationNotification
+            linodeID={linodeId}
+            requestNotifications={requestNotifications}
+            notificationMessage={notification.message}
+            notificationType={notification.type}
+          />
+        );
+      default:
+        return (
+          <ProductNotification
+            severity={notification.severity}
+            text={notification.message}
+          />
+        );
+    }
   };
 
   return (
     <>
-      {linodeNotifications.map((n, idx) =>
-        ['migration_scheduled', 'migration_pending'].includes(n.type) ? (
-          linodeStatus !== 'migrating' && (
-            <Notice key={idx} important warning>
-              {n.message}
-              {n.type === 'migration_scheduled'
-                ? ' To enter the migration queue right now, please '
-                : ' To schedule your migration, please '}
-              <span
-                className={classes.migrationLink}
-                onClick={() => migrate(n.type)}
-              >
-                click here
-              </span>
-              .
-            </Notice>
-          )
-        ) : (
-          <ProductNotification
-            key={idx}
-            severity={n.severity}
-            text={n.message}
-          />
-        )
-      )}
+      {linodeNotifications.map((n, idx) => {
+        return (
+          <React.Fragment key={idx}>
+            {generateNotificationBody(n)}
+          </React.Fragment>
+        );
+      })}
     </>
   );
 };
-
-const styled = withStyles(styles);
 
 interface ContextProps {
   linodeNotifications: Linode.Notification[];
   linodeId: number;
   linodeStatus: Linode.LinodeStatus;
+  maintenance: Maintenance;
+}
+
+interface ProfileProps {
+  userTimezoneLoading: boolean;
+  userTimezoneError?: Linode.ApiFieldError[];
+  userTimezone?: string;
 }
 
 const enhanced = compose<CombinedProps, {}>(
-  styled,
-  withSnackbar,
   withLinodeDetailContext<ContextProps>(({ linode }) => ({
     linodeNotifications: linode._notifications,
     linodeId: linode.id,
-    linodeStatus: linode.status
+    linodeStatus: linode.status,
+    maintenance: linode.maintenance
   })),
   withNotifications(undefined, ({ requestNotifications }) => ({
     requestNotifications
+  })),
+  withProfile<ProfileProps, {}>((undefined, profile) => ({
+    userTimezone: path(['data', 'timezone'], profile),
+    userTimezoneError: profile.error,
+    userTimezoneLoading: profile.loading
   }))
 );
 

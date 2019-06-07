@@ -47,8 +47,12 @@ import events, {
 } from 'src/store/events/event.reducer';
 import images, {
   defaultState as defaultImagesState,
-  State as ImagesStata
+  State as ImagesState
 } from 'src/store/image/image.reducer';
+import kubernetes, {
+  defaultState as defaultKubernetesState,
+  State as KubernetesState
+} from 'src/store/kubernetes/kubernetes.reducer';
 import linodeCreateReducer, {
   defaultState as linodeCreateDefaultState,
   State as LinodeCreateState
@@ -125,6 +129,7 @@ const __resourcesDefaultState = {
   accountSettings: defaultAccountSettingsState,
   domains: defaultDomainsState,
   images: defaultImagesState,
+  kubernetes: defaultKubernetesState,
   linodes: defaultLinodesState,
   linodeConfigs: defaultLinodeConfigsState,
   linodeDisks: defaultLinodeDisksState,
@@ -143,7 +148,8 @@ export interface ResourcesState {
   account: AccountState;
   accountSettings: AccountSettingsState;
   domains: DomainsState;
-  images: ImagesStata;
+  images: ImagesState;
+  kubernetes: KubernetesState;
   linodes: LinodesState;
   linodeConfigs: LinodeConfigsState;
   linodeDisks: LinodeDisksState;
@@ -194,6 +200,7 @@ const __resources = combineReducers({
   accountSettings,
   domains,
   images,
+  kubernetes,
   linodes,
   linodeConfigs,
   linodeDisks,

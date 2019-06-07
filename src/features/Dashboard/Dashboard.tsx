@@ -31,6 +31,8 @@ import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
 import TransferDashboardCard from './TransferDashboardCard';
 import VolumesDashboardCard from './VolumesDashboardCard';
 
+import MaintenanceBanner from 'src/components/MaintenanceBanner';
+
 type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
@@ -43,6 +45,10 @@ interface StateProps {
   managed: boolean;
   backupError?: Error;
   entitiesWithGroupsToImport: GroupedEntitiesForImport;
+  userTimezone: string;
+  userTimezoneLoading: boolean;
+  userTimezoneError?: Linode.ApiFieldError[];
+  someLinodesHaveScheduledMaintenance: boolean;
 }
 
 interface DispatchProps {
@@ -69,6 +75,13 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
 
   return (
     <React.Fragment>
+      {props.someLinodesHaveScheduledMaintenance && (
+        <MaintenanceBanner
+          userTimezone={props.userTimezone}
+          userTimezoneError={props.userTimezoneError}
+          userTimezoneLoading={props.userTimezoneLoading}
+        />
+      )}
       <Grid container spacing={24}>
         <AbuseTicketBanner />
         <DocumentTitleSegment segment="Dashboard" />
@@ -108,26 +121,34 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
   );
 };
 
-const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => ({
-  accountBackups: pathOr(
-    false,
-    ['__resources', 'accountSettings', 'data', 'backups_enabled'],
-    state
-  ),
-  linodesWithoutBackups: state.__resources.linodes.entities.filter(
-    l => !l.backups.enabled
-  ),
-  managed: pathOr(
-    false,
-    ['__resources', 'accountSettings', 'data', 'managed'],
-    state
-  ),
-  backupError: pathOr(false, ['backups', 'error'], state),
-  entitiesWithGroupsToImport:
-    !storage.hideGroupImportCTA.get() && !storage.hasImportedGroups.get()
-      ? getEntitiesWithGroupsToImport(state)
-      : emptyGroupedEntities
-});
+const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
+  const linodesData = state.__resources.linodes.entities;
+
+  return {
+    accountBackups: pathOr(
+      false,
+      ['__resources', 'accountSettings', 'data', 'backups_enabled'],
+      state
+    ),
+    userTimezone: pathOr('', ['data', 'timezone'], state.__resources.profile),
+    userTimezoneLoading: state.__resources.profile.loading,
+    userTimezoneError: state.__resources.profile.error,
+    someLinodesHaveScheduledMaintenance: linodesData
+      ? linodesData.some(eachLinode => !!eachLinode.maintenance)
+      : false,
+    linodesWithoutBackups: linodesData.filter(l => !l.backups.enabled),
+    managed: pathOr(
+      false,
+      ['__resources', 'accountSettings', 'data', 'managed'],
+      state
+    ),
+    backupError: pathOr(false, ['backups', 'error'], state),
+    entitiesWithGroupsToImport:
+      !storage.hideGroupImportCTA.get() && !storage.hasImportedGroups.get()
+        ? getEntitiesWithGroupsToImport(state)
+        : emptyGroupedEntities
+  };
+};
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch,

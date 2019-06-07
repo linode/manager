@@ -32,11 +32,11 @@ const collectErrors: MapState<InnerProps, OuterProps> = (
     error:
       configsError ||
       typesError ||
-      path(['error', 'read'], linodes.error) ||
+      path(['error', 'read'], linodes) ||
       types.error ||
       notifications.error ||
-      linodeConfigs.error ||
-      linodeDisks.error
+      path(['error', 'read'], linodeConfigs) ||
+      path(['error', 'read'], linodeDisks)
   };
 };
 

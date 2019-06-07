@@ -71,7 +71,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   fadeContainer: {
     width: '100%',
-    height: 'calc(100% - 80px)',
+    height: 'calc(100% - 90px)',
     display: 'flex',
     flexDirection: 'column'
   },

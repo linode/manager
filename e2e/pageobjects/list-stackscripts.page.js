@@ -58,7 +58,7 @@ class ListStackScripts extends Page {
     return $('[data-qa-stackscript-title]');
   }
   get stackScriptDescription() {
-    return $('[data-qa-stackscript-title] > p');
+    return $('[data-qa-stackscript-title]');
   }
   get stackScriptDeploys() {
     return $('[data-qa-stackscript-deploys]');

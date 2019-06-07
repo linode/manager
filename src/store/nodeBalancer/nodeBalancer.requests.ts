@@ -130,6 +130,6 @@ export const getNodeBalancerWithConfigs: ThunkActionCreator<
     return nodeBalancer;
   } catch (error) {
     dispatch(failed({ params, error }));
-    throw error;
+    return error;
   }
 };
