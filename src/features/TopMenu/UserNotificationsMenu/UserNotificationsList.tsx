@@ -1,4 +1,4 @@
-import { compose, path } from 'ramda';
+import { compose, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import {
@@ -88,14 +88,36 @@ const interceptNotification = (
     /** replace "this facility" with the name of the datacenter */
     return {
       ...notification,
-      label: notification.label.replace(
-        'this facility',
-        convertedRegion || 'one of our facilities'
-      ),
-      message: notification.message.replace(
-        'this facility',
-        convertedRegion || 'one of our facilities'
-      )
+      label: notification.label
+        .toLowerCase()
+        .replace('this facility', convertedRegion || 'one of our facilities'),
+      message: notification.message
+        .toLowerCase()
+        .replace('this facility', convertedRegion || 'one of our facilities')
+    };
+  }
+
+  /** there is maintenance on this Linode */
+  if (
+    notification.type === 'maintenance' &&
+    notification.entity &&
+    notification.entity.type === 'linode'
+  ) {
+    /** replace "this Linode" with the name of the Linode */
+    return {
+      ...notification,
+      label: notification.label
+        .toLowerCase()
+        .replace(
+          'this linode',
+          pathOr('this Linode', ['label'], notification.entity)
+        ),
+      message: notification.message
+        .toLowerCase()
+        .replace(
+          'this linode',
+          pathOr('this Linode', ['label'], notification.entity)
+        )
     };
   }
 
