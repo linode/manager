@@ -39,6 +39,7 @@ it('renders without crashing', () => {
             profileLoading={false}
             requestAccount={jest.fn()}
             addNotificationsToLinodes={jest.fn()}
+            initialRequestLinodes={jest.fn()}
             requestDomains={jest.fn()}
             requestImages={jest.fn()}
             requestLinodes={jest.fn()}
