@@ -8,7 +8,9 @@ import {
   createLinodeActions,
   deleteLinode,
   deleteLinodeActions,
+  getInitialLinodesActions,
   getLinodesActions,
+  setLinodeMetadata,
   updateLinode,
   updateLinodeActions,
   updateMultipleLinodes,
@@ -25,13 +27,18 @@ const getId = <E extends HasNumericID>({ id }: E) => id;
 /**
  * State
  */
-export type State = EntityState<LinodeWithMaintenance, EntityError>;
+export interface State extends EntityState<LinodeWithMaintenance, EntityError> {
+  initialLoad: boolean;
+  linodeCount: number;
+}
 
 export const defaultState: State = {
   results: [],
   entities: [],
   loading: true,
   lastUpdated: 0,
+  initialLoad: false,
+  linodeCount: 0,
   error: undefined
 };
 
@@ -39,8 +46,46 @@ export const defaultState: State = {
  * Reducer
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
+  /** Initial request (get the first page) */
+  if (isType(action, getInitialLinodesActions.started)) {
+    return {
+      ...state,
+      loading: true
+    };
+  }
+
+  if (isType(action, getInitialLinodesActions.done)) {
+    const {
+      payload: { result }
+    } = action;
+    return {
+      ...state,
+      entities: result,
+      results: result.map(getId),
+      lastUpdated: Date.now(),
+      initialLoad: true,
+      loading: false
+    };
+  }
+
+  if (isType(action, getInitialLinodesActions.failed)) {
+    const { error } = action.payload;
+
+    return {
+      ...state,
+      error: {
+        read: error
+      },
+      loading: false
+    };
+  }
+
   /** Get ALL */
   if (isType(action, getLinodesActions.started)) {
+    if (state.initialLoad) {
+      // Don't set loading; we want this to run in the background.
+      return state;
+    }
     return {
       ...state,
       loading: true
@@ -51,12 +96,35 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     const {
       payload: { result }
     } = action;
+
+    if (state.initialLoad) {
+      // We want to append here
+      return {
+        ...state,
+        entities: [...state.entities, ...result],
+        results: result.map(getId),
+        lastUpdated: Date.now(),
+        loading: false,
+        /**
+         * If this action gets called again, we
+         * want to get everything rather than
+         * have a stale first page.
+         */
+        initialLoad: false
+      };
+    }
     return {
       ...state,
       entities: result,
       results: result.map(getId),
       lastUpdated: Date.now(),
-      loading: false
+      loading: false,
+      /**
+       * If this action gets called again, we
+       * want to get everything rather than
+       * have a stale first page.
+       */
+      initialLoad: false
     };
   }
 
@@ -167,6 +235,15 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       ...state,
       entities,
       results: entities.map(getId)
+    };
+  }
+
+  if (isType(action, setLinodeMetadata)) {
+    const { linodeCount } = action.payload;
+
+    return {
+      ...state,
+      linodeCount
     };
   }
 

@@ -38,6 +38,12 @@ export const getLinodesActions = actionCreator.async<
   Linode.ApiFieldError[]
 >('get-all');
 
+export const getInitialLinodesActions = actionCreator.async<
+  void,
+  Linode.Linode[],
+  Linode.ApiFieldError[]
+>('get-initial');
+
 export const getLinodeActions = actionCreator.async<
   LinodeID,
   Linode.Linode,
@@ -71,3 +77,8 @@ export const rebootLinodeActions = actionCreator.async<
   {},
   Linode.ApiFieldError[]
 >('reboot');
+
+export interface Metadata {
+  linodeCount: number;
+}
+export const setLinodeMetadata = actionCreator<Metadata>('set-data');

@@ -15,9 +15,11 @@ import { ThunkActionCreator } from '../types';
 import {
   createLinodeActions,
   deleteLinodeActions,
+  getInitialLinodesActions,
   getLinodeActions,
   getLinodesActions,
   rebootLinodeActions,
+  setLinodeMetadata,
   updateLinodeActions,
   upsertLinode
 } from './linodes.actions';
@@ -47,10 +49,15 @@ export const rebootLinode = createRequestThunk(
 
 export const requestLinodes: ThunkActionCreator<
   Promise<Linode.Linode[]>
-> = () => dispatch => {
+> = () => (dispatch, getState) => {
   dispatch(getLinodesActions.started);
 
-  return getAll<Linode.Linode>(getLinodes)()
+  const store = getState();
+  /** If we've already fetched the first page, don't do it again */
+  /** @todo do we need to check cache busting here, maybe with a time delta? */
+  const nextPage = store.__resources.linodes.initialLoad ? 2 : 1;
+
+  return getAll<Linode.Linode>(getLinodes)({ page: nextPage })
     .then(getBackupsForLinodes)
     .then(result => {
       dispatch(getLinodesActions.done({ result }));
@@ -59,6 +66,34 @@ export const requestLinodes: ThunkActionCreator<
     .catch(err => {
       dispatch(
         getLinodesActions.failed({
+          error: getAPIErrorOrDefault(
+            err,
+            'There was an error retrieving your Linodes. Please try again later.'
+          )
+        })
+      );
+      return err;
+    });
+};
+
+export const initialRequest: ThunkActionCreator<
+  Promise<Linode.Linode[]>
+> = () => dispatch => {
+  dispatch(getInitialLinodesActions.started);
+
+  return getLinodes() // This will get just the first page
+    .then(response => {
+      dispatch(setLinodeMetadata({ linodeCount: response.results }));
+      return response;
+    })
+    .then(getBackupsForLinodes)
+    .then(result => {
+      dispatch(getInitialLinodesActions.done({ result }));
+      return result;
+    })
+    .catch(err => {
+      dispatch(
+        getInitialLinodesActions.failed({
           error: getAPIErrorOrDefault(
             err,
             'There was an error retrieving your Linodes. Please try again later.'
