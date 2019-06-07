@@ -58,6 +58,10 @@ export const requestLinodes: ThunkActionCreator<
   const nextPage = store.__resources.linodes.initialLoad ? 2 : 1;
 
   return getAll<Linode.Linode>(getLinodes)({ page: nextPage })
+    .then(response => {
+      dispatch(setLinodeMetadata({ linodeCount: response.results }));
+      return response;
+    })
     .then(getBackupsForLinodes)
     .then(result => {
       dispatch(getLinodesActions.done({ result }));
