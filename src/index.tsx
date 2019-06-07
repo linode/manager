@@ -24,6 +24,7 @@ import { sendCurrentThemeSettingsEvent } from 'src/utilities/ga';
 import 'src/utilities/request';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 import { spacing as spacingChoice, theme } from 'src/utilities/storage';
+import { saveState } from 'src/utilities/subscribeStore';
 import App from './App';
 import './events';
 import './index.css';
@@ -31,6 +32,15 @@ import LinodeThemeWrapper from './LinodeThemeWrapper';
 
 const Lish = DefaultLoader({
   loader: () => import('src/features/Lish')
+});
+
+/**
+ * Write the Redux store to localStorage after every action.
+ * This method is throttled, so there will be at most 1 write/second.
+ */
+
+store.subscribe(() => {
+  saveState(store.getState());
 });
 
 /*

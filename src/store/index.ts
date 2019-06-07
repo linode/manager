@@ -107,6 +107,7 @@ import volumeDrawer, {
   defaultState as volumeDrawerDefaultState,
   State as VolumeDrawerState
 } from 'src/store/volumeDrawer';
+import { loadState } from 'src/utilities/subscribeStore';
 import diskEvents from './linodes/disk/disk.events';
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
 import imageEvents from './middleware/imageEvents';
@@ -178,7 +179,9 @@ export interface ApplicationState {
   createLinode: LinodeCreateState;
 }
 
-const defaultState: ApplicationState = {
+const defaultStateFromLocalStorage = loadState();
+
+const defaultState: ApplicationState = defaultStateFromLocalStorage || {
   __resources: __resourcesDefaultState,
   authentication: authenticationDefaultState,
   backups: backupsDefaultState,
