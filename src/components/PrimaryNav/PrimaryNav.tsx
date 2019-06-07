@@ -57,6 +57,7 @@ type ClassNames =
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   menuGrid: {
+    overflow: 'hidden',
     minHeight: 64,
     width: '100%',
     height: '100%',
