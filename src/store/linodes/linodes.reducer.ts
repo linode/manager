@@ -1,3 +1,4 @@
+import { uniq } from 'ramda';
 import { Reducer } from 'redux';
 import { EntityError, EntityState, HasNumericID } from 'src/store/types';
 import updateById from 'src/utilities/updateById';
@@ -98,10 +99,15 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     } = action;
 
     if (state.initialLoad) {
-      // We want to append here
+      /**
+       * We already got the first page, so we want to append here.
+       * Also use uniq to make sure that we're not appending
+       * the same data in edge cases (e.g. reading from localStorage)
+       */
+
       return {
         ...state,
-        entities: [...state.entities, ...result],
+        entities: uniq([...state.entities, ...result]),
         results: result.map(getId),
         lastUpdated: Date.now(),
         loading: false,
