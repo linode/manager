@@ -9,7 +9,7 @@ import {
 } from 'src/components/core/styles';
 import { WithTypes } from 'src/store/linodeType/linodeType.containers';
 import { ThunkDispatch } from 'src/store/types';
-import CloneLanding from '../CloneLanding/CloneLanding';
+import CloneLanding from '../CloneLanding';
 import {
   LinodeDetailContext,
   linodeDetailContextFactory as createLinodeDetailContext,
