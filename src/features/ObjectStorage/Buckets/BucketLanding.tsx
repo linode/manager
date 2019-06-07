@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
+import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import CircleProgress from 'src/components/CircleProgress';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -75,8 +75,7 @@ const RenderEmpty: React.StatelessComponent<{
       <Placeholder
         title="Add a Bucket"
         copy="Click below to add a Bucket and start using Object Storage today."
-        // @todo: replace with bucket icon
-        icon={VolumeIcon}
+        icon={BucketIcon}
         buttonProps={{
           onClick: props.onClick,
           children: 'Add a Bucket'
