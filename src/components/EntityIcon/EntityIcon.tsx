@@ -2,6 +2,7 @@ import * as classNames from 'classnames';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import KubeIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
@@ -71,7 +72,8 @@ export type Variant =
   | 'volume'
   | 'domain'
   | 'stackscript'
-  | 'kube';
+  | 'kube'
+  | 'bucket';
 
 interface Props {
   variant: Variant;
@@ -91,7 +93,8 @@ const iconMap = {
   volume: VolumeIcon,
   domain: DomainIcon,
   stackscript: StackScriptIcon,
-  kube: KubeIcon
+  kube: KubeIcon,
+  bucket: BucketIcon
 };
 
 const getIcon = (variant: Variant) => {
