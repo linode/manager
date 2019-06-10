@@ -32,9 +32,13 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 interface Props {
   editing: boolean;
-  toggleEditing: () => void;
   pools: ExtendedPoolNode[];
+  poolsForEdit: ExtendedPoolNode[];
   types: ExtendedType[];
+  toggleEditing: () => void;
+  updatePool: (poolIdx: number, updatedPool: ExtendedPoolNode) => void;
+  deletePool: (poolID: number) => void;
+  resetForm: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -42,7 +46,8 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const NodePoolsDisplay: React.FunctionComponent<
   CombinedProps
 > = props => {
-  const { classes, editing, pools, toggleEditing, types } = props;
+  const { classes, deletePool, editing, pools, poolsForEdit, resetForm, toggleEditing, types, updatePool } = props;
+
   return (
     <Paper className={classes.root}>
       <Grid container direction="column">
@@ -52,7 +57,7 @@ export const NodePoolsDisplay: React.FunctionComponent<
           </Grid>
           <Grid item>
             <Button type="secondary" onClick={toggleEditing}>
-              {editing ? 'Cancel' : 'Resize'}
+              {editing ? 'Cancel' : 'Edit'}
             </Button>
           </Grid>
         </Grid>
@@ -60,10 +65,10 @@ export const NodePoolsDisplay: React.FunctionComponent<
           {editing ? (
             <NodePoolDisplayTable
               editable
-              pools={pools}
+              pools={poolsForEdit}
               types={types}
-              handleDelete={() => null}
-              updatePool={() => null}
+              handleDelete={deletePool}
+              updatePool={updatePool}
             />
           ) : (
             <NodePoolDisplayTable
@@ -90,6 +95,7 @@ export const NodePoolsDisplay: React.FunctionComponent<
               className={classes.button}
               type="secondary"
               disabled={!editing}
+              onClick={resetForm}
             >
               Clear Changes
             </Button>

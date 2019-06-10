@@ -1,3 +1,4 @@
+import { update } from 'ramda';
 import * as React from 'react';
 import {
   RouteComponentProps,
@@ -20,8 +21,8 @@ import TagsPanel from 'src/components/TagsPanel';
 import KubeContainer from 'src/containers/kubernetes.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { ExtendedCluster, ExtendedPoolNode } from '.././types';
 import { extendCluster } from '.././kubeUtils';
+import { ExtendedCluster, ExtendedPoolNode } from '.././types';
 import NodePoolPanel from '../CreateCluster/NodePoolPanel';
 import KubeSummaryPanel from './KubeSummaryPanel';
 import NodePoolsDisplay from './NodePoolsDisplay';
@@ -64,13 +65,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginLeft: theme.spacing.unit * 2
   }
 });
-
-interface ClusterEditingState {
-  nodePools: ExtendedPoolNode[];
-}
-
 interface KubernetesContainerProps {
-  cluster?: ExtendedCluster;
+  cluster: ExtendedCluster | null;
   clustersLoading: boolean;
   lastUpdated: number;
   requestKubernetesClusters: () => void;
@@ -82,10 +78,13 @@ type CombinedProps = WithTypesProps & RouteComponentProps<{clusterID: string}> &
 export const KubernetesClusterDetail: React.FunctionComponent<
   CombinedProps
 > = props => {
+  const { classes, cluster, clustersLoading, lastUpdated, typesData, typesError, typesLoading } = props;
+
   const [editing, setEditing] = React.useState<boolean>(false);
-  const [fields, updateFields] = React.useState<ClusterEditingState>({
-    nodePools: []
-  });
+  /** Holds the local state of the cluster's node pools when editing */
+  const [pools, updatePools] = React.useState<ExtendedPoolNode[]>([]);
+  /** When adding new pools in the NodePoolPanel component, use this variable. */
+  const [newPools, updateNewPools] = React.useState<ExtendedPoolNode[]>([]);
 
   React.useEffect(() => {
     /**
@@ -100,13 +99,24 @@ export const KubernetesClusterDetail: React.FunctionComponent<
       const clusterID = props.match.params.clusterID;
       props.requestClusterForStore(clusterID);
     }
-  }, [])
-  const { classes, cluster, clustersLoading, lastUpdated, typesData, typesError, typesLoading } = props;
+  }, []);
 
   if (clustersLoading && lastUpdated !== 0) { return <div>'loading...'</div>; }
-  if (!cluster) { return null; }
+  if (cluster === null) { return null; }
 
-  const extendedCluster = extendCluster(cluster, typesData || []);
+  const updatePool = (poolIdx: number, updatedPool: ExtendedPoolNode) => {
+    const updatedPools = update(poolIdx, updatedPool, pools);
+    updatePools(updatedPools);
+  }
+
+  const resetFormState = () => {
+    updatePools(cluster.node_pools);
+  }
+
+  const toggleEditing = () => {
+    updatePools(cluster.node_pools);
+    setEditing(!editing);
+  }
 
   return (
     <React.Fragment>
@@ -134,15 +144,19 @@ export const KubernetesClusterDetail: React.FunctionComponent<
           <Grid item>
             <NodePoolsDisplay
               editing={editing}
-              toggleEditing={() => setEditing(!editing)}
-              pools={extendedCluster.node_pools}
-              types={[]}
+              toggleEditing={toggleEditing}
+              updatePool={updatePool}
+              deletePool={() => null}
+              resetForm={resetFormState}
+              pools={cluster.node_pools}
+              poolsForEdit={pools}
+              types={typesData || []}
             />
           </Grid>
           <Grid item>
             <NodePoolPanel
               hideTable
-              pools={extendedCluster.node_pools}
+              pools={newPools}
               types={typesData || []}
               nodeCount={0}
               addNodePool={() => null}
@@ -172,7 +186,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
             <Button type="primary">Download kubeconfig</Button>
           </Grid>
           <Grid item className={classes.section}>
-            <KubeSummaryPanel cluster={extendedCluster} />
+            <KubeSummaryPanel cluster={cluster} />
           </Grid>
           <Grid item className={classes.section}>
             <Paper>
@@ -195,18 +209,21 @@ export const KubernetesClusterDetail: React.FunctionComponent<
 
 const styled = withStyles(styles);
 
-const withCluster = KubeContainer<{}, RouteComponentProps<{clusterID: string}>>((
+const withCluster = KubeContainer<{}, WithTypesProps & RouteComponentProps<{clusterID: string}>>((
   ownProps,
   clustersLoading,
   lastUpdated,
   clustersError,
-  clusters,
-) => ({
+  clustersData,
+) => {
+  const thisCluster = clustersData.find(c => c.id === ownProps.match.params.clusterID);
+  const cluster = thisCluster ? extendCluster(thisCluster, ownProps.typesData || []): null;
+  return {
   ...ownProps,
-  cluster: clusters.find(cluster => cluster.id === ownProps.match.params.clusterID),
+  cluster,
   lastUpdated,
   clustersLoading
-}))
+}})
 
 const enhanced = compose<CombinedProps, {}>(
   styled,
