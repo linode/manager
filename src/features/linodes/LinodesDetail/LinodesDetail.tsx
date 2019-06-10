@@ -6,9 +6,6 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import withPerfMetrics, {
-  Props as WithPerfMetricsProps
-} from 'src/components/withPerfMetrics';
 import { WithTypes } from 'src/store/linodeType/linodeType.containers';
 import { ThunkDispatch } from 'src/store/types';
 import {
@@ -31,7 +28,7 @@ type RouteProps = RouteComponentProps<MatchProps>;
 type CombinedProps = { dispatch: ThunkDispatch } & WithTypes &
   InnerProps &
   RouteProps &
-  WithStyles<ClassNames> & { linodeId: number } & WithPerfMetricsProps;
+  WithStyles<ClassNames> & { linodeId: number };
 
 type ClassNames = 'backButton';
 
@@ -51,10 +48,6 @@ const LinodeDetail: React.StatelessComponent<CombinedProps> = props => {
   const { dispatch } = props;
 
   const ctx: LinodeDetailContext = createLinodeDetailContext(linode, dispatch);
-
-  React.useEffect(() => {
-    props.endPerfMeasurement();
-  }, []);
 
   return (
     <LinodeDetailContextProvider value={ctx}>
@@ -77,7 +70,6 @@ const reloadable = reloadableWithRouter<CombinedProps, MatchProps>(
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, {}>(
-  withPerfMetrics('LinodeDetailLoaded'),
   reloadable,
   withProps((ownProps: RouteProps) => ({
     linodeId: Number(ownProps.match.params.linodeId)
