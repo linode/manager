@@ -15,7 +15,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import TagsPanel from 'src/components/TagsPanel';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { ExtendedPoolNode } from '.././types';
 import NodePoolPanel from '../CreateCluster/NodePoolPanel';
 import KubeSummaryPanel from './KubeSummaryPanel';
 import NodePoolsDisplay from './NodePoolsDisplay';
@@ -59,19 +58,13 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-interface ClusterEditingState {
-  nodePools: ExtendedPoolNode[];
-}
-
 type CombinedProps = WithTypesProps & WithStyles<ClassNames>;
 
 export const KubernetesClusterDetail: React.FunctionComponent<
   CombinedProps
 > = props => {
   const [editing, setEditing] = React.useState<boolean>(false);
-  const [fields, updateFields] = React.useState<ClusterEditingState>({
-    nodePools: []
-  });
+
   const { classes, typesData, typesError, typesLoading } = props;
 
   return (

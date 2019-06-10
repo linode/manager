@@ -1,19 +1,16 @@
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import Paper from 'src/components/core/Paper';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 
 import NodePoolDisplayTable from '../../CreateCluster/NodePoolDisplayTable';
 import { ExtendedPoolNode } from '../../types';
-
 
 type ClassNames = 'root' | 'item';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
@@ -43,10 +40,8 @@ export const StaticPoolsDisplay: React.FunctionComponent<
         updatePool={() => null}
       />
     </React.Fragment>
-
-  )
-}
-
+  );
+};
 
 const styled = withStyles(styles);
 
