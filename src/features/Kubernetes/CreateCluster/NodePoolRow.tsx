@@ -16,12 +16,18 @@ import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel
 import { displayTypeForKubePoolNode } from 'src/features/linodes/presentation';
 import { ExtendedPoolNode } from '.././types';
 
-type ClassNames = 'root' | 'link';
+type ClassNames = 'root' | 'link' | 'toDelete' | 'toAdd';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   link: {
     color: `${theme.palette.primary.main} !important`
+  },
+  toDelete: {
+    backgroundColor: 'rgba(210, 28, 28, 0.4)',
+  },
+  toAdd: {
+
   }
 });
 
@@ -51,7 +57,7 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
     : 'Unknown type'; // This should never happen, but better not to crash if it does.
 
   return (
-    <TableRow data-testid={'node-pool-table-row'}>
+    <TableRow data-testid={'node-pool-table-row'} className={pool.queuedForDeletion ? classes.toDelete : ''}>
       <TableCell parentColumn="Plan">
         <Typography>{typeLabel}</Typography>
       </TableCell>
@@ -76,6 +82,7 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
       <TableCell>
         <Button
           type="remove"
+          deleteText={pool.queuedForDeletion ? "Undo Remove" : "Remove"}
           data-testid={`delete-node-row-${idx}`}
           onClick={() => handleDelete(idx)}
           className={classes.link}

@@ -5,6 +5,8 @@ export interface PoolNode {
 
 export interface ExtendedPoolNode extends PoolNode {
   totalMonthlyPrice: number;
+  queuedForDeletion?: boolean;
+  queuedForAddition?: boolean;
 }
 
 /** @todo DRY; this is duplicated from Kubernetes.ts. Unable to override node_pools,

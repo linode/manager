@@ -1,4 +1,4 @@
-import { update } from 'ramda';
+import { update, path } from 'ramda';
 import * as React from 'react';
 import {
   RouteComponentProps,
@@ -119,6 +119,21 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     setEditing(!editing);
   }
 
+  const handleDeletePool = (poolIdx: number) => {
+    updatePools((prevPools) => {
+      const poolToDelete = path<ExtendedPoolNode>([poolIdx], prevPools);
+      if (poolToDelete) {
+        const withMarker = {
+          ...poolToDelete,
+          queuedForDeletion: !Boolean(poolToDelete.queuedForDeletion)
+        }
+        return update(poolIdx, withMarker, prevPools)
+      } else {
+        return prevPools;
+      }
+    });
+  }
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={`Kubernetes Cluster ${'label'}`} />
@@ -147,7 +162,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
               editing={editing}
               toggleEditing={toggleEditing}
               updatePool={updatePool}
-              deletePool={() => null}
+              deletePool={handleDeletePool}
               resetForm={resetFormState}
               pools={cluster.node_pools}
               poolsForEdit={pools}
