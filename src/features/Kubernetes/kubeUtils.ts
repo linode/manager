@@ -21,7 +21,9 @@ export const getMonthlyPrice = (
 
 export const getTotalClusterPrice = (pools: ExtendedPoolNode[]) =>
   pools.reduce((accumulator, node) => {
-    return accumulator + node.totalMonthlyPrice * node.count;
+    return node.queuedForDeletion
+      ? accumulator // If we're going to delete it, don't include it in the cost
+      : accumulator + node.totalMonthlyPrice * node.count;
   }, 0);
 
 /**

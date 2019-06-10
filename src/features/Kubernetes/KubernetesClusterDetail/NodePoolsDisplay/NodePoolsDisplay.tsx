@@ -14,6 +14,7 @@ import Typography from 'src/components/core/Typography';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 
 import NodePoolDisplayTable from '../../CreateCluster/NodePoolDisplayTable';
+import { getTotalClusterPrice } from '../../kubeUtils';
 import { ExtendedPoolNode } from '../../types';
 
 type ClassNames = 'root' | 'button' | 'pricing';
@@ -26,7 +27,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginRight: theme.spacing.unit
   },
   pricing: {
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing.unit * 2,
+    fontSize: '1.em',
+    fontWeight: 'bold'
   }
 });
 
@@ -80,9 +83,11 @@ export const NodePoolsDisplay: React.FunctionComponent<
           )}
         </Grid>
         <Grid item>
-          <Typography className={classes.pricing}>
-            *Updated Monthly Estimate: $1820
-          </Typography>
+          {editing && 
+            <Typography className={classes.pricing}>
+              *Updated Monthly Estimate: {`$${getTotalClusterPrice(poolsForEdit)}/month`}
+            </Typography>
+          }
           <Grid item container>
             <Button
               className={classes.button}
