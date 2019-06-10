@@ -1,3 +1,4 @@
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path, remove, update } from 'ramda';
 import * as React from 'react';
 import {
@@ -20,12 +21,17 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import TagsPanel from 'src/components/TagsPanel';
 import KubeContainer from 'src/containers/kubernetes.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
+import { reportException } from 'src/exceptionReporting';
+import { getKubeConfig } from 'src/services/kubernetes';
+import { downloadFile } from 'src/utilities/downloadFile';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { extendCluster } from '.././kubeUtils';
 import { ExtendedCluster, ExtendedPoolNode } from '.././types';
 import NodePoolPanel from '../CreateCluster/NodePoolPanel';
 import KubeSummaryPanel from './KubeSummaryPanel';
 import NodePoolsDisplay from './NodePoolsDisplay';
+
 
 type ClassNames =
   | 'root'
@@ -73,12 +79,13 @@ interface KubernetesContainerProps {
   requestClusterForStore: (clusterID: string) => void;
 }
 
-type CombinedProps = WithTypesProps & RouteComponentProps<{clusterID: string}> & KubernetesContainerProps & WithStyles<ClassNames>;
+type CombinedProps = WithTypesProps & RouteComponentProps<{clusterID: string}> & KubernetesContainerProps 
+& WithSnackbarProps & WithStyles<ClassNames>;
 
 export const KubernetesClusterDetail: React.FunctionComponent<
   CombinedProps
 > = props => {
-  const { classes, cluster, clustersLoading, lastUpdated, typesData, typesError, typesLoading } = props;
+  const { classes, cluster, clustersLoading, enqueueSnackbar, lastUpdated, typesData, typesError, typesLoading } = props;
 
   const [editing, setEditing] = React.useState<boolean>(false);
   /** Holds the local state of the cluster's node pools when editing */
@@ -175,6 +182,37 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     });
   }
 
+  const downloadKubeConfig = () => {
+    /**
+     * This is reused from ClusterActionMenu, but there wasn't an easy way
+     * to share logic (more than is already abstracted in the downloadFile utility).
+     * @todo figure out a better way to keep it DRY
+     */
+    getKubeConfig(cluster.id)
+      .then(response => {
+        // Convert to utf-8 from base64
+        try {
+          const decodedFile = window.atob(response.kubeconfig);
+          downloadFile('kubeconfig.yaml', decodedFile);
+        } catch (e) {
+          reportException(e, {
+            'Encoded response': response.kubeconfig
+          });
+          enqueueSnackbar('Error parsing your kubeconfig file', {
+            variant: 'error'
+          });
+          return;
+        }
+      })
+      .catch(errorResponse => {
+        const error = getAPIErrorOrDefault(
+          errorResponse,
+          'Unable to download your kubeconfig'
+        )[0].reason;
+        enqueueSnackbar(error, { variant: 'error' });
+      });
+    }
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={`Kubernetes Cluster ${'label'}`} />
@@ -241,7 +279,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
         </Grid>
         <Grid container item direction="column" xs={3}>
           <Grid item className={classes.button}>
-            <Button type="primary">Download kubeconfig</Button>
+            <Button type="primary" onClick={downloadKubeConfig}>Download kubeconfig</Button>
           </Grid>
           <Grid item className={classes.section}>
             <KubeSummaryPanel cluster={cluster} />
@@ -288,6 +326,7 @@ const enhanced = compose<CombinedProps, {}>(
   withTypes,
   withCluster,
   withRouter,
+  withSnackbar
 );
 
 export default enhanced(KubernetesClusterDetail);
