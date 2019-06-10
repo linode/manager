@@ -20,7 +20,8 @@ import TagsPanel from 'src/components/TagsPanel';
 import KubeContainer from 'src/containers/kubernetes.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { ExtendedPoolNode } from '.././types';
+import { ExtendedCluster, ExtendedPoolNode } from '.././types';
+import { extendCluster } from '.././kubeUtils';
 import NodePoolPanel from '../CreateCluster/NodePoolPanel';
 import KubeSummaryPanel from './KubeSummaryPanel';
 import NodePoolsDisplay from './NodePoolsDisplay';
@@ -69,7 +70,7 @@ interface ClusterEditingState {
 }
 
 interface KubernetesContainerProps {
-  cluster?: Linode.KubernetesCluster;
+  cluster?: ExtendedCluster;
   clustersLoading: boolean;
   lastUpdated: number;
   requestKubernetesClusters: () => void;
@@ -85,6 +86,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   const [fields, updateFields] = React.useState<ClusterEditingState>({
     nodePools: []
   });
+
   React.useEffect(() => {
     /**
      * Eventually the clusters request will probably be made from App.tsx
@@ -103,6 +105,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<
 
   if (clustersLoading && lastUpdated !== 0) { return <div>'loading...'</div>; }
   if (!cluster) { return null; }
+
+  const extendedCluster = extendCluster(cluster, typesData || []);
 
   return (
     <React.Fragment>
@@ -131,14 +135,14 @@ export const KubernetesClusterDetail: React.FunctionComponent<
             <NodePoolsDisplay
               editing={editing}
               toggleEditing={() => setEditing(!editing)}
-              pools={[]}
+              pools={extendedCluster.node_pools}
               types={[]}
             />
           </Grid>
           <Grid item>
             <NodePoolPanel
               hideTable
-              pools={[]}
+              pools={extendedCluster.node_pools}
               types={typesData || []}
               nodeCount={0}
               addNodePool={() => null}
@@ -168,7 +172,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
             <Button type="primary">Download kubeconfig</Button>
           </Grid>
           <Grid item className={classes.section}>
-            <KubeSummaryPanel cluster={cluster} types={typesData || []} />
+            <KubeSummaryPanel cluster={extendedCluster} />
           </Grid>
           <Grid item className={classes.section}>
             <Paper>

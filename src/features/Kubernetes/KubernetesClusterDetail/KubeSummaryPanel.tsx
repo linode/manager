@@ -9,9 +9,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { dcDisplayNames } from 'src/constants';
-import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-
-import { getClusterPrice, getTotalClusterMemoryAndCPU } from '../kubeUtils';
+import { ExtendedCluster } from 'src/features/Kubernetes/types';
 
 type ClassNames = 'root' | 'item';
 
@@ -23,8 +21,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 interface Props {
-  cluster: Linode.KubernetesCluster;
-  types: ExtendedType[];
+  cluster: ExtendedCluster;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -32,10 +29,8 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const KubeSummaryPanel: React.FunctionComponent<
   CombinedProps
 > = props => {
-  const { classes, cluster, types } = props;
+  const { classes, cluster } = props;
   const region = dcDisplayNames[cluster.region] || 'Unknown region';
-  const price = getClusterPrice(cluster.node_pools, types);
-  const { CPU, RAM } = getTotalClusterMemoryAndCPU(cluster.node_pools, types);
   return (
     <Paper className={classes.root}>
       <Paper className={classes.item}>
@@ -47,11 +42,11 @@ export const KubeSummaryPanel: React.FunctionComponent<
       </Paper>
       <Paper className={classes.item}>
         <Typography>Total RAM</Typography>
-        <Typography>{RAM / 1024}GB</Typography>
+        <Typography>{cluster.totalMemory / 1024}GB</Typography>
       </Paper>
       <Paper className={classes.item}>
         <Typography>Total CPU Cores</Typography>
-        <Typography>{CPU}</Typography>
+        <Typography>{cluster.totalCPU}</Typography>
       </Paper>
       <Paper className={classes.item}>
         <Typography>Kubernetes API Endpoint</Typography>
@@ -63,7 +58,7 @@ export const KubeSummaryPanel: React.FunctionComponent<
       </Paper>
       <Paper className={classes.item}>
         <Typography>Monthly Pricing</Typography>
-        <Typography>{`$${price}/month`}</Typography>
+        <Typography>{`$${cluster.price}/month`}</Typography>
       </Paper>
     </Paper>
   );
