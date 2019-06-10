@@ -82,6 +82,7 @@ interface EditableFields {
   virt_mode?: 'fullvirt' | 'paravirt';
   helpers: Helpers;
   root_device: string;
+  setMemoryLimit: 'no_limit' | 'set_limit';
 }
 
 interface Props {
@@ -134,7 +135,8 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     root_device: '/dev/sda',
     run_level: 'default',
     useCustomRoot: false,
-    virt_mode: 'paravirt'
+    virt_mode: 'paravirt',
+    setMemoryLimit: 'no_limit'
   });
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
@@ -178,7 +180,9 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
                 run_level: config.run_level,
                 virt_mode: config.virt_mode,
                 helpers: config.helpers,
-                root_device: config.root_device
+                root_device: config.root_device,
+                setMemoryLimit:
+                  config.memory_limit !== 0 ? 'set_limit' : 'no_limit'
               }
             });
           })
@@ -375,6 +379,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
           className={classes.section}
           updateFor={[
             kernel,
+            this.state.fields.setMemoryLimit,
             kernels,
             errorFor('kernel'),
             run_level,
@@ -435,15 +440,60 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             </RadioGroup>
           </FormControl>
 
-          <TextField
-            type="number"
-            label="Memory Limit"
-            value={memory_limit}
-            onChange={this.handleMemoryLimitChange}
-            helperText={`Max: ${maxMemory}`}
-            errorText={errorFor('memory_limit')}
-            disabled={readOnly}
-          />
+          {/*
+            it's important to note here that if the memory limit
+            is set to 0, this config is going to use 100% of the
+            Linode's RAM. Otherwise, it only uses the limit
+            explicitly set by the user.
+
+            So to make this more clear to the user, we're going to
+            hide the option to change the RAM limit unless the
+            user explicity selects the option to change the
+            memory limit.
+          */}
+          <FormControl
+            updateFor={[this.state.fields.setMemoryLimit, classes]}
+            component={'fieldset' as 'div'}
+          >
+            <FormLabel
+              htmlFor="memory_limit"
+              component="label"
+              disabled={readOnly}
+            >
+              Memory Limit
+            </FormLabel>
+            <RadioGroup
+              aria-label="memory_limit"
+              name="memory_limit"
+              value={this.state.fields.setMemoryLimit}
+              onChange={this.handleToggleMemoryLimit}
+            >
+              <FormControlLabel
+                value="no_limit"
+                label="Do not set any limits on memory usage"
+                disabled={readOnly}
+                control={<Radio />}
+              />
+              <FormControlLabel
+                value="set_limit"
+                label="Limit the amount of RAM this config uses"
+                disabled={readOnly}
+                control={<Radio />}
+              />
+            </RadioGroup>
+          </FormControl>
+
+          {this.state.fields.setMemoryLimit === 'set_limit' && (
+            <TextField
+              type="number"
+              label="Memory Limit Allotment (in MB)"
+              value={memory_limit}
+              onChange={this.handleMemoryLimitChange}
+              helperText={`Max: ${maxMemory} MB`}
+              errorText={errorFor('memory_limit')}
+              disabled={readOnly}
+            />
+          )}
         </Grid>
 
         <Divider className={classes.divider} />
@@ -663,6 +713,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       memory_limit,
       run_level,
       virt_mode,
+      setMemoryLimit,
       helpers,
       root_device
     } = state;
@@ -672,12 +723,23 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
       devices: createDevicesFromStrings(devices),
       kernel,
       comments,
-      memory_limit,
+      /** if the user did not toggle the limit radio button, send a value of 0 */
+      memory_limit: setMemoryLimit === 'no_limit' ? 0 : memory_limit,
       run_level,
       virt_mode,
       helpers,
       root_device
     };
+  };
+
+  /**
+   * this is not responsible for setting the memory limits.
+   * This is instead only responsible for indicating that "yes I would
+   * like the option to set a memory limit to be visible."
+   */
+  handleToggleMemoryLimit = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const limit = e.target.value as 'no_limit' | 'set_limit';
+    this.setState({ fields: { ...this.state.fields, setMemoryLimit: limit } });
   };
 
   /** Helper to update a slice of state.  */
