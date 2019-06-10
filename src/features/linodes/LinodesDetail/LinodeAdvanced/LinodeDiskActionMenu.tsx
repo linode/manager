@@ -1,9 +1,11 @@
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   linodeStatus: string;
+  linodeId?: number;
   readOnly?: boolean;
   onRename: () => void;
   onResize: () => void;
@@ -11,11 +13,11 @@ interface Props {
   onDelete: () => void;
 }
 
-type CombinedProps = Props;
+type CombinedProps = Props & RouteComponentProps;
 
 class DiskActionMenu extends React.Component<CombinedProps> {
   createActions = () => (closeMenu: Function): Action[] => {
-    const { linodeStatus, readOnly } = this.props;
+    const { linodeStatus, linodeId, readOnly, history } = this.props;
     let tooltip;
     tooltip =
       linodeStatus === 'offline'
@@ -66,6 +68,16 @@ class DiskActionMenu extends React.Component<CombinedProps> {
           closeMenu();
         },
         ...disabledProps
+      },
+      {
+        title: 'Clone',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          e.preventDefault();
+          closeMenu();
+          history.push(`/linodes/${linodeId}/clone/disks`);
+        },
+        disabled: readOnly,
+        tooltip
       }
     ];
 
@@ -77,4 +89,4 @@ class DiskActionMenu extends React.Component<CombinedProps> {
   }
 }
 
-export default DiskActionMenu;
+export default withRouter(DiskActionMenu);
