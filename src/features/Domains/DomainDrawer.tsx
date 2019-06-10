@@ -47,6 +47,8 @@ import NodeBalancerSelect from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { createDomainRecord } from 'src/services/domains/records';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
+import { isValidSOAEmail } from './domainUtils';
+
 type ClassNames = 'root' | 'masterIPErrorNotice' | 'addIP';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
@@ -151,6 +153,19 @@ const setMasterIP = (idx: number, value: string) =>
 const masterIPsCountLens = lensPath(['masterIPsCount']);
 const updateMasterIPsCount = (fn: (s: any) => any) => (obj: any) =>
   over(masterIPsCountLens, fn, obj);
+
+const validateEmail = (type: string, domain: string, email: string) => {
+  /**
+   * Validation
+   *
+   * Currently, the API does not check that the soaEmail
+   * is not associated with the target hostname. If you're creating
+   * example.com, using `marty@example.com` as your soaEmail is unwise
+   * (though technically won't break anything).
+   */
+
+  return type === 'master' && isValidSOAEmail(email, domain);
+};
 
 class DomainDrawer extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
@@ -471,6 +486,25 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     this.closeDrawer();
   };
 
+  handleEmailValidationErrors = () => {
+    const err = [
+      {
+        field: 'soa_email',
+        reason:
+          'Please choose an SOA email address that does not belong to the target Domain.'
+      }
+    ];
+    this.setState(
+      {
+        submitting: false,
+        errors: getAPIErrorOrDefault(err)
+      },
+      () => {
+        scrollErrorIntoView();
+      }
+    );
+  };
+
   create = () => {
     const {
       domain,
@@ -534,6 +568,11 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
       type === 'master'
         ? { domain, type, tags, soa_email: soaEmail }
         : { domain, type, tags, master_ips: finalMasterIPs };
+
+    if (!validateEmail(type, domain, data.soa_email || '')) {
+      this.handleEmailValidationErrors();
+      return;
+    }
 
     this.setState({ submitting: true });
     domainActions
@@ -694,6 +733,11 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         ? // not sending type for master. There is a bug on server and it returns an error that `master_ips` is required
           { domain, tags, soa_email: soaEmail, domainId: id }
         : { domain, type, tags, master_ips: finalMasterIPs, domainId: id };
+
+    if (!validateEmail(type, domain, data.soa_email || '')) {
+      this.handleEmailValidationErrors();
+      return;
+    }
 
     this.setState({ submitting: true });
     domainActions
