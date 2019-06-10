@@ -15,7 +15,8 @@ type ClassNames =
   | 'content'
   | 'unread'
   | 'pointer'
-  | 'noLink';
+  | 'noLink'
+  | 'linkItem';
 
 const styles: StyleRulesCallback<ClassNames> = theme => {
   const {
@@ -25,7 +26,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
   return {
     root: {
       ...theme.notificationList,
-      padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`,
+      padding: 0,
       borderBottom: `1px solid ${theme.palette.divider}`,
       display: 'block',
       transition: theme.transitions.create(['border-color', 'opacity']),
@@ -33,6 +34,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
       '&:hover, &:focus': {
         backgroundColor: 'transparent'
       }
+    },
+    linkItem: {
+      display: 'block',
+      padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`
     },
     title: {
       marginBottom: theme.spacing.unit / 2
@@ -113,6 +118,7 @@ const userEventsListItem: React.StatelessComponent<CombinedProps> = props => {
         to={linkPath ? linkPath : '/'}
         href="javascript:void(0)"
         onClick={onClick}
+        className={classes.linkItem}
       >
         <Typography variant="h3" className={classes.title}>
           {title}
