@@ -38,7 +38,7 @@ class ConfigActionMenu extends React.Component<CombinedProps> {
   };
 
   createConfigActions = () => (closeMenu: Function): Action[] => {
-    const { readOnly } = this.props;
+    const { readOnly, history, linodeId } = this.props;
     const tooltip = readOnly
       ? "You don't have permission to perform this action"
       : undefined;
@@ -69,6 +69,16 @@ class ConfigActionMenu extends React.Component<CombinedProps> {
           e.preventDefault();
           this.handleDelete();
           closeMenu();
+        },
+        disabled: readOnly,
+        tooltip
+      },
+      {
+        title: 'Clone',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          e.preventDefault();
+          closeMenu();
+          history.push(`/linodes/${linodeId}/clone/configs`);
         },
         disabled: readOnly,
         tooltip
