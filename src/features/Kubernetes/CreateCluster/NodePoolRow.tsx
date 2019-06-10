@@ -27,7 +27,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     backgroundColor: 'rgba(210, 28, 28, 0.4)',
   },
   toAdd: {
-
+    backgroundColor: theme.bg.offWhite
   }
 });
 
@@ -56,8 +56,14 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
     ? displayTypeForKubePoolNode(type.class, type.memory, type.vcpus)
     : 'Unknown type'; // This should never happen, but better not to crash if it does.
 
+  const statusClass = pool.queuedForAddition
+    ? classes.toAdd
+    : pool.queuedForDeletion
+      ? classes.toDelete
+      : '' // Normal node 
+
   return (
-    <TableRow data-testid={'node-pool-table-row'} className={pool.queuedForDeletion ? classes.toDelete : ''}>
+    <TableRow data-testid={'node-pool-table-row'} className={statusClass}>
       <TableCell parentColumn="Plan">
         <Typography>{typeLabel}</Typography>
       </TableCell>

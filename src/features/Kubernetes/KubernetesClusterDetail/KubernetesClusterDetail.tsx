@@ -1,4 +1,4 @@
-import { update, path } from 'ramda';
+import { path, remove, update } from 'ramda';
 import * as React from 'react';
 import {
   RouteComponentProps,
@@ -83,8 +83,9 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   const [editing, setEditing] = React.useState<boolean>(false);
   /** Holds the local state of the cluster's node pools when editing */
   const [pools, updatePools] = React.useState<ExtendedPoolNode[]>([]);
-  /** When adding new pools in the NodePoolPanel component, use this variable. */
-  const [newPools, updateNewPools] = React.useState<ExtendedPoolNode[]>([]);
+  /** When adding new pools in the NodePoolPanel component, use these variables. */
+  const [selectedType, setSelectedType] = React.useState<string|undefined>(undefined);
+  const [count, setCount] = React.useState<number>(1);
 
   React.useEffect(() => {
     /**
@@ -119,15 +120,55 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     setEditing(!editing);
   }
 
+  const handleAddNodePool = (pool: ExtendedPoolNode) => {
+    if (editing) {
+      /** We're already in editing mode, so the list of pool nodes should be accurate */
+      updatePools(prevPools => {
+        const newPools = [
+          ...prevPools,
+          {
+            ...pool,
+            queuedForAddition: true
+          }
+        ]
+        return newPools;
+      })
+    } else {
+      /** From a static state, adding a node pool should trigger editing state */
+      setEditing(true);
+      /** Make sure the list of node pools is correct */
+      updatePools([
+          ...cluster.node_pools,
+          {
+            ...pool,
+            queuedForAddition: true
+          }
+        ])
+      }
+  }
+
   const handleDeletePool = (poolIdx: number) => {
     updatePools((prevPools) => {
       const poolToDelete = path<ExtendedPoolNode>([poolIdx], prevPools);
       if (poolToDelete) {
-        const withMarker = {
-          ...poolToDelete,
-          queuedForDeletion: !Boolean(poolToDelete.queuedForDeletion)
+        if (poolToDelete.queuedForAddition) {
+          /**
+           * This is a new pool in local state that doesn't exist as far as the API is concerned. 
+           * It can be directly removed.
+           */
+          return remove(poolIdx, 1, prevPools);
+        } else {
+          /** 
+           * This is a "real" node that we don't want users to accidentally delete. Mark it for deletion
+           * (it will be handled on form submission).
+           */
+          const withMarker = {
+            ...poolToDelete,
+            queuedForDeletion: !Boolean(poolToDelete.queuedForDeletion)
+          }
+          return update(poolIdx, withMarker, prevPools)
         }
-        return update(poolIdx, withMarker, prevPools)
+        
       } else {
         return prevPools;
       }
@@ -172,14 +213,15 @@ export const KubernetesClusterDetail: React.FunctionComponent<
           <Grid item>
             <NodePoolPanel
               hideTable
-              pools={newPools}
+              pools={[]} // Not needed
+              selectedType={selectedType}
               types={typesData || []}
-              nodeCount={0}
-              addNodePool={() => null}
-              deleteNodePool={() => null}
-              handleTypeSelect={() => null}
-              updateNodeCount={() => null}
-              updatePool={() => null}
+              nodeCount={count}
+              addNodePool={handleAddNodePool}
+              deleteNodePool={() => null} // Not needed since we're not displaying the table from inside this component
+              handleTypeSelect={(newType) => setSelectedType(newType)}
+              updateNodeCount={(newCount) => setCount(newCount)}
+              updatePool={() => null} // Not needed
               typesLoading={typesLoading}
               typesError={
                 typesError
