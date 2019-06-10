@@ -1,10 +1,7 @@
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path, remove, update } from 'ramda';
 import * as React from 'react';
-import {
-  RouteComponentProps,
-  withRouter
-} from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import Breadcrumb from 'src/components/Breadcrumb';
@@ -24,14 +21,12 @@ import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { reportException } from 'src/exceptionReporting';
 import { getKubeConfig } from 'src/services/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { extendCluster } from '.././kubeUtils';
 import { ExtendedCluster, ExtendedPoolNode } from '.././types';
 import NodePoolPanel from '../CreateCluster/NodePoolPanel';
 import KubeSummaryPanel from './KubeSummaryPanel';
 import NodePoolsDisplay from './NodePoolsDisplay';
-
 
 type ClassNames =
   | 'root'
@@ -79,19 +74,33 @@ interface KubernetesContainerProps {
   requestClusterForStore: (clusterID: string) => void;
 }
 
-type CombinedProps = WithTypesProps & RouteComponentProps<{clusterID: string}> & KubernetesContainerProps 
-& WithSnackbarProps & WithStyles<ClassNames>;
+type CombinedProps = WithTypesProps &
+  RouteComponentProps<{ clusterID: string }> &
+  KubernetesContainerProps &
+  WithSnackbarProps &
+  WithStyles<ClassNames>;
 
 export const KubernetesClusterDetail: React.FunctionComponent<
   CombinedProps
 > = props => {
-  const { classes, cluster, clustersLoading, enqueueSnackbar, lastUpdated, typesData, typesError, typesLoading } = props;
+  const {
+    classes,
+    cluster,
+    clustersLoading,
+    enqueueSnackbar,
+    lastUpdated,
+    typesData,
+    typesError,
+    typesLoading
+  } = props;
 
   const [editing, setEditing] = React.useState<boolean>(false);
   /** Holds the local state of the cluster's node pools when editing */
   const [pools, updatePools] = React.useState<ExtendedPoolNode[]>([]);
   /** When adding new pools in the NodePoolPanel component, use these variables. */
-  const [selectedType, setSelectedType] = React.useState<string|undefined>(undefined);
+  const [selectedType, setSelectedType] = React.useState<string | undefined>(
+    undefined
+  );
   const [count, setCount] = React.useState<number>(1);
 
   React.useEffect(() => {
@@ -109,23 +118,25 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     }
   }, []);
 
-  if (clustersLoading && lastUpdated !== 0) { return <div>'loading...'</div>; }
-  if (cluster === null) { return null; }
+  if (clustersLoading && lastUpdated !== 0) {
+    return <div>'loading...'</div>;
+  }
+  if (cluster === null) {
+    return null;
+  }
 
   const updatePool = (poolIdx: number, updatedPool: ExtendedPoolNode) => {
-    updatePools((prevPools) =>
-       update(poolIdx, updatedPool, prevPools)
-    );
-  }
+    updatePools(prevPools => update(poolIdx, updatedPool, prevPools));
+  };
 
   const resetFormState = () => {
     updatePools(cluster.node_pools);
-  }
+  };
 
   const toggleEditing = () => {
     updatePools(cluster.node_pools);
     setEditing(!editing);
-  }
+  };
 
   const handleAddNodePool = (pool: ExtendedPoolNode) => {
     if (editing) {
@@ -137,50 +148,49 @@ export const KubernetesClusterDetail: React.FunctionComponent<
             ...pool,
             queuedForAddition: true
           }
-        ]
+        ];
         return newPools;
-      })
+      });
     } else {
       /** From a static state, adding a node pool should trigger editing state */
       setEditing(true);
       /** Make sure the list of node pools is correct */
       updatePools([
-          ...cluster.node_pools,
-          {
-            ...pool,
-            queuedForAddition: true
-          }
-        ])
-      }
-  }
+        ...cluster.node_pools,
+        {
+          ...pool,
+          queuedForAddition: true
+        }
+      ]);
+    }
+  };
 
   const handleDeletePool = (poolIdx: number) => {
-    updatePools((prevPools) => {
+    updatePools(prevPools => {
       const poolToDelete = path<ExtendedPoolNode>([poolIdx], prevPools);
       if (poolToDelete) {
         if (poolToDelete.queuedForAddition) {
           /**
-           * This is a new pool in local state that doesn't exist as far as the API is concerned. 
+           * This is a new pool in local state that doesn't exist as far as the API is concerned.
            * It can be directly removed.
            */
           return remove(poolIdx, 1, prevPools);
         } else {
-          /** 
+          /**
            * This is a "real" node that we don't want users to accidentally delete. Mark it for deletion
            * (it will be handled on form submission).
            */
           const withMarker = {
             ...poolToDelete,
             queuedForDeletion: !Boolean(poolToDelete.queuedForDeletion)
-          }
-          return update(poolIdx, withMarker, prevPools)
+          };
+          return update(poolIdx, withMarker, prevPools);
         }
-        
       } else {
         return prevPools;
       }
     });
-  }
+  };
 
   const downloadKubeConfig = () => {
     /**
@@ -211,7 +221,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
         )[0].reason;
         enqueueSnackbar(error, { variant: 'error' });
       });
-    }
+  };
 
   return (
     <React.Fragment>
@@ -257,8 +267,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<
               nodeCount={count}
               addNodePool={handleAddNodePool}
               deleteNodePool={() => null} // Not needed since we're not displaying the table from inside this component
-              handleTypeSelect={(newType) => setSelectedType(newType)}
-              updateNodeCount={(newCount) => setCount(newCount)}
+              handleTypeSelect={newType => setSelectedType(newType)}
+              updateNodeCount={newCount => setCount(newCount)}
               updatePool={() => null} // Not needed
               typesLoading={typesLoading}
               typesError={
@@ -279,7 +289,9 @@ export const KubernetesClusterDetail: React.FunctionComponent<
         </Grid>
         <Grid container item direction="column" xs={3}>
           <Grid item className={classes.button}>
-            <Button type="primary" onClick={downloadKubeConfig}>Download kubeconfig</Button>
+            <Button type="primary" onClick={downloadKubeConfig}>
+              Download kubeconfig
+            </Button>
           </Grid>
           <Grid item className={classes.section}>
             <KubeSummaryPanel cluster={cluster} />
@@ -305,21 +317,23 @@ export const KubernetesClusterDetail: React.FunctionComponent<
 
 const styled = withStyles(styles);
 
-const withCluster = KubeContainer<{}, WithTypesProps & RouteComponentProps<{clusterID: string}>>((
-  ownProps,
-  clustersLoading,
-  lastUpdated,
-  clustersError,
-  clustersData,
-) => {
-  const thisCluster = clustersData.find(c => c.id === ownProps.match.params.clusterID);
-  const cluster = thisCluster ? extendCluster(thisCluster, ownProps.typesData || []): null;
+const withCluster = KubeContainer<
+  {},
+  WithTypesProps & RouteComponentProps<{ clusterID: string }>
+>((ownProps, clustersLoading, lastUpdated, clustersError, clustersData) => {
+  const thisCluster = clustersData.find(
+    c => c.id === ownProps.match.params.clusterID
+  );
+  const cluster = thisCluster
+    ? extendCluster(thisCluster, ownProps.typesData || [])
+    : null;
   return {
-  ...ownProps,
-  cluster,
-  lastUpdated,
-  clustersLoading
-}})
+    ...ownProps,
+    cluster,
+    lastUpdated,
+    clustersLoading
+  };
+});
 
 const enhanced = compose<CombinedProps, {}>(
   styled,
