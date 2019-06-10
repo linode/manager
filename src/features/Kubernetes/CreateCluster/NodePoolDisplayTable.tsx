@@ -88,7 +88,7 @@ export const NodePoolDisplayTable: React.FunctionComponent<
                 type={thisPoolType}
                 handleDelete={() => handleDelete(idx)}
                 updatePool={updatePool}
-                updateFor={[thisPool, thisPoolType, editable, classes]}
+                updateFor={[thisPool, thisPoolType, editable, classes, updatePool]}
               />
             );
           })

@@ -105,8 +105,9 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   if (cluster === null) { return null; }
 
   const updatePool = (poolIdx: number, updatedPool: ExtendedPoolNode) => {
-    const updatedPools = update(poolIdx, updatedPool, pools);
-    updatePools(updatedPools);
+    updatePools((prevPools) =>
+       update(poolIdx, updatedPool, prevPools)
+    );
   }
 
   const resetFormState = () => {
@@ -227,8 +228,8 @@ const withCluster = KubeContainer<{}, WithTypesProps & RouteComponentProps<{clus
 
 const enhanced = compose<CombinedProps, {}>(
   styled,
-  withCluster,
   withTypes,
+  withCluster,
   withRouter,
 );
 
