@@ -9,5 +9,6 @@ namespace Linode {
     | 'singapore'
     | 'frankfurt'
     | 'shinagawa1'
-    | 'toronto1';
+    | 'toronto1'
+    | 'mumbai1';
 }
