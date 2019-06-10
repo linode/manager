@@ -24,7 +24,6 @@ import SideMenu from 'src/components/SideMenu';
 import VATBanner from 'src/components/VATBanner';
 import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
-import CloneLanding from 'src/features/linodes/CloneLanding';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
 import Footer from 'src/features/Footer';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
