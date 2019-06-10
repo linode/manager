@@ -254,6 +254,7 @@ export class App extends React.Component<CombinedProps, State> {
       await Promise.all(dataFetchingPromises);
       perfume.end('InitialRequests');
     } catch (error) {
+      perfume.end('InitialRequests', { didFail: true });
       /** We choose to do nothing, relying on the Redux error state. */
     }
 

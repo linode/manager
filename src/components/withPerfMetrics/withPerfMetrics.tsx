@@ -2,7 +2,12 @@ import * as React from 'react';
 import { perfume } from 'src/perfMetrics';
 
 export interface Props {
-  endPerfMeasurement: () => void;
+  endPerfMeasurement: (options?: EndPerfMeasurementOptions) => void;
+}
+
+interface EndPerfMeasurementOptions {
+  didCancel?: boolean;
+  didFail?: boolean;
 }
 
 /**
@@ -41,10 +46,19 @@ export default (signature: string) => (
       perfume.start(signature);
     }
 
+    componentWillUnmount() {
+      // End the performance measurement on unmount. In most cases,
+      // it will have already been ended, in which case nothing will happen.
+      // But in the case the user navigates away from the component, we
+      // need to end the event to avoid false reporting.
+      perfume.end(signature, { didCancel: true });
+    }
+
     render() {
       return React.createElement(Component, {
         ...this.props,
-        endPerfMeasurement: () => perfume.end(signature)
+        endPerfMeasurement: (options?: EndPerfMeasurementOptions) =>
+          perfume.end(signature, options)
       });
     }
   }

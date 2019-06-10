@@ -250,6 +250,7 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
       .then(() => setInitialLoaded(true))
       .then(() => props.endPerfMeasurement())
       .catch(() => {
+        props.endPerfMeasurement({ didFail: true });
         setLoading(false);
         setError('Error');
       });
