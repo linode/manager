@@ -52,6 +52,7 @@ import { powerOffLinode, rebootLinode } from './powerActions';
 import ToggleBox from './ToggleBox';
 
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
+import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 
 interface ConfigDrawerState {
   open: boolean;
@@ -409,7 +410,18 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                   <Grid item className={classes.CSVlinkContainer}>
                     <CSVLink
                       data={linodesData}
-                      headers={headers}
+                      headers={
+                        this.props.someLinodesHaveScheduledMaintenance
+                          ? [
+                              ...headers,
+                              /** only add maintenance window to CSV if one Linode has a window */
+                              {
+                                label: 'Maintenance Status',
+                                key: 'maintenance.when'
+                              }
+                            ]
+                          : headers
+                      }
                       filename={`linodes-${formatDate(moment().format())}.csv`}
                       className={classes.CSVlink}
                     >
@@ -518,7 +530,7 @@ const getUserSelectedDisplay = (
 interface StateProps {
   managed: boolean;
   linodesCount: number;
-  linodesData: Linode.Linode[];
+  linodesData: LinodeWithMaintenance[];
   linodesRequestError?: Linode.ApiFieldError[];
   linodesRequestLoading: boolean;
   userTimezone: string;
