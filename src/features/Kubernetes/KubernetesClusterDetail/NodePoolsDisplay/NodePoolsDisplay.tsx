@@ -13,9 +13,8 @@ import Typography from 'src/components/core/Typography';
 
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 
+import NodePoolDisplayTable from '../../CreateCluster/NodePoolDisplayTable';
 import { ExtendedPoolNode } from '../../types';
-import EditablePoolsDisplay from './EditablePoolsDisplay';
-import StaticPoolsDisplay from './StaticPoolsDisplay';
 
 type ClassNames = 'root' | 'button' | 'pricing';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
@@ -59,9 +58,20 @@ export const NodePoolsDisplay: React.FunctionComponent<
         </Grid>
         <Grid item>
           {editing ? (
-            <EditablePoolsDisplay pools={pools} types={types} />
+            <NodePoolDisplayTable
+              editable
+              pools={pools}
+              types={types}
+              handleDelete={() => null}
+              updatePool={() => null}
+            />
           ) : (
-            <StaticPoolsDisplay pools={pools} types={types} />
+            <NodePoolDisplayTable
+              pools={pools}
+              types={types}
+              handleDelete={() => null}
+              updatePool={() => null}
+            />
           )}
         </Grid>
         <Grid item>

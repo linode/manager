@@ -167,17 +167,18 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           Add Node Pool
         </Button>
       </Grid>
-      {!hideTable && 
+      {!hideTable && (
         <Grid item className={classes.gridItem}>
           <NodePoolDisplayTable
             small
+            editable
             pools={pools}
             types={types}
             handleDelete={(poolIdx: number) => deleteNodePool(poolIdx)}
             updatePool={updatePool}
           />
         </Grid>
-      }
+      )}
     </Grid>
   );
 };

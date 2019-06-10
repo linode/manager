@@ -28,6 +28,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface Props {
   pool: ExtendedPoolNode;
   type?: ExtendedType;
+  editable: boolean;
   idx: number;
   handleDelete: (poolIdx: number) => void;
   updatePool: (poolIdx: number, updatedPool: ExtendedPoolNode) => void;
@@ -36,7 +37,15 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
-  const { classes, pool, idx, handleDelete, type, updatePool } = props;
+  const {
+    classes,
+    editable,
+    pool,
+    idx,
+    handleDelete,
+    type,
+    updatePool
+  } = props;
   const typeLabel = type
     ? displayTypeForKubePoolNode(type.class, type.memory, type.vcpus)
     : 'Unknown type'; // This should never happen, but better not to crash if it does.
@@ -47,13 +56,17 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
         <Typography>{typeLabel}</Typography>
       </TableCell>
       <TableCell parentColumn="Node Count">
-        <TextField
-          small
-          tiny
-          type="number"
-          value={pool.count}
-          onChange={e => updatePool(idx, { ...pool, count: +e.target.value })}
-        />
+        {editable ? (
+          <TextField
+            small
+            tiny
+            type="number"
+            value={pool.count}
+            onChange={e => updatePool(idx, { ...pool, count: +e.target.value })}
+          />
+        ) : (
+          <Typography>{pool.count}</Typography>
+        )}
       </TableCell>
       <TableCell parentColumn="Pricing">
         <Typography>{`${displayPrice(
