@@ -30,6 +30,7 @@ import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
+import { perfume } from 'src/perfMetrics';
 import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
@@ -234,6 +235,7 @@ export class App extends React.Component<CombinedProps, State> {
       nodeBalancerActions: { getAllNodeBalancersWithConfigs }
     } = this.props;
 
+    perfume.start('InitialRequests');
     const dataFetchingPromises: Promise<any>[] = [
       this.props.requestAccount(),
       this.props.requestProfile(),
@@ -250,7 +252,9 @@ export class App extends React.Component<CombinedProps, State> {
 
     try {
       await Promise.all(dataFetchingPromises);
+      perfume.end('InitialRequests');
     } catch (error) {
+      perfume.end('InitialRequests', { didFail: true });
       /** We choose to do nothing, relying on the Redux error state. */
     }
 

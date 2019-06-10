@@ -20,6 +20,9 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import withPerfMetrics, {
+  Props as WithPerfMetricsProps
+} from 'src/components/withPerfMetrics';
 import { getEvents } from 'src/services/account';
 import { ApplicationState } from 'src/store';
 import { setDeletedEvents } from 'src/store/events/event.helpers';
@@ -62,7 +65,8 @@ interface Props {
 type CombinedProps = Props &
   StateProps &
   WithSnackbarProps &
-  WithStyles<ClassNames>;
+  WithStyles<ClassNames> &
+  WithPerfMetricsProps;
 
 const appendToEvents = (oldEvents: Linode.Event[], newEvents: Linode.Event[]) =>
   rCompose<Linode.Event[], Linode.Event[], Linode.Event[], Linode.Event[]>(
@@ -244,7 +248,9 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
     getEventsRequest()
       .then(handleEventsRequestSuccess)
       .then(() => setInitialLoaded(true))
+      .then(() => props.endPerfMeasurement())
       .catch(() => {
+        props.endPerfMeasurement({ didFail: true });
         setLoading(false);
         setError('Error');
       });
@@ -391,6 +397,7 @@ const mapStateToProps = (state: ApplicationState) => ({
 const connected = connect(mapStateToProps);
 
 const enhanced = compose<CombinedProps, Props>(
+  withPerfMetrics('EventsLanding'),
   styled,
   connected,
   withSnackbar
