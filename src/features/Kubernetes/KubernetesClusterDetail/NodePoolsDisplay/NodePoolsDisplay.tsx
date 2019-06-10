@@ -27,13 +27,13 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginRight: theme.spacing.unit
   },
   pricing: {
-    marginTop: theme.spacing.unit,
-
+    marginTop: theme.spacing.unit
   }
 });
 
 interface Props {
   editing: boolean;
+  toggleEditing: () => void;
   pools: ExtendedPoolNode[];
   types: ExtendedType[];
 }
@@ -43,7 +43,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const NodePoolsDisplay: React.FunctionComponent<
   CombinedProps
 > = props => {
-  const { classes, editing, pools, types } = props;
+  const { classes, editing, pools, toggleEditing, types } = props;
   return (
     <Paper className={classes.root}>
       <Grid container direction="column">
@@ -52,29 +52,43 @@ export const NodePoolsDisplay: React.FunctionComponent<
             <Typography variant="h2">Node Pools</Typography>
           </Grid>
           <Grid item>
-            <Button type="secondary" onClick={() => null}>{editing ? 'Cancel' : 'Resize'}</Button>
+            <Button type="secondary" onClick={toggleEditing}>
+              {editing ? 'Cancel' : 'Resize'}
+            </Button>
           </Grid>
         </Grid>
         <Grid item>
-          {
-            editing
-            ? <EditablePoolsDisplay pools={pools} types={types} />
-            : <StaticPoolsDisplay pools={pools} types={types} />
-          }
+          {editing ? (
+            <EditablePoolsDisplay pools={pools} types={types} />
+          ) : (
+            <StaticPoolsDisplay pools={pools} types={types} />
+          )}
         </Grid>
         <Grid item>
-          <Typography className={classes.pricing}>*Updated Monthly Estimate: $1820</Typography>
+          <Typography className={classes.pricing}>
+            *Updated Monthly Estimate: $1820
+          </Typography>
           <Grid item container>
-            <Button className={classes.button} type="primary" disabled={!editing}>Save</Button>
-            <Button className={classes.button} type="secondary" disabled={!editing}>Clear Changes</Button>
+            <Button
+              className={classes.button}
+              type="primary"
+              disabled={!editing}
+            >
+              Save
+            </Button>
+            <Button
+              className={classes.button}
+              type="secondary"
+              disabled={!editing}
+            >
+              Clear Changes
+            </Button>
           </Grid>
         </Grid>
       </Grid>
     </Paper>
-
-  )
-}
-
+  );
+};
 
 const styled = withStyles(styles);
 

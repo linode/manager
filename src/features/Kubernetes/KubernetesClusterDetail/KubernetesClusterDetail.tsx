@@ -20,13 +20,21 @@ import NodePoolPanel from '../CreateCluster/NodePoolPanel';
 import KubeSummaryPanel from './KubeSummaryPanel';
 import NodePoolsDisplay from './NodePoolsDisplay';
 
-type ClassNames = 'root' | 'title' | 'titleWrapper' | 'backButton' | 'section';
+type ClassNames =
+  | 'root'
+  | 'title'
+  | 'titleWrapper'
+  | 'backButton'
+  | 'section'
+  | 'panelItem'
+  | 'button';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   title: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    padding: theme.spacing.unit
   },
   titleWrapper: {
     display: 'flex',
@@ -42,6 +50,12 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   section: {
     margin: theme.spacing.unit * 2
+  },
+  panelItem: {
+    padding: theme.spacing.unit
+  },
+  button: {
+    marginLeft: theme.spacing.unit * 2
   }
 });
 
@@ -82,10 +96,11 @@ export const KubernetesClusterDetail: React.FunctionComponent<
       </Grid>
 
       <Grid container direction="row" className={classes.section}>
-        <Grid container item direction="column" xs={10}>
+        <Grid container item direction="column" xs={9}>
           <Grid item>
-            <NodePoolsDisplay 
+            <NodePoolsDisplay
               editing={editing}
+              toggleEditing={() => setEditing(!editing)}
               pools={[]}
               types={[]}
             />
@@ -118,8 +133,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<
             </Button>
           </Grid>
         </Grid>
-        <Grid container item direction="column" xs={2}>
-          <Grid item className={classes.section}>
+        <Grid container item direction="column" xs={3}>
+          <Grid item className={classes.button}>
             <Button type="primary">Download kubeconfig</Button>
           </Grid>
           <Grid item className={classes.section}>
@@ -128,12 +143,14 @@ export const KubernetesClusterDetail: React.FunctionComponent<
           <Grid item className={classes.section}>
             <Paper>
               <Typography variant="h3" className={classes.title} data-qa-title>
-                Tags
+                Cluster Tags
               </Typography>
-              <TagsPanel
-                tags={['tag1', 'tag2']}
-                updateTags={() => Promise.resolve()}
-              />
+              <div className={classes.panelItem}>
+                <TagsPanel
+                  tags={['tag1', 'tag2']}
+                  updateTags={() => Promise.resolve()}
+                />
+              </div>
             </Paper>
           </Grid>
         </Grid>
@@ -144,6 +161,9 @@ export const KubernetesClusterDetail: React.FunctionComponent<
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(styled, withTypes);
+const enhanced = compose<CombinedProps, {}>(
+  styled,
+  withTypes
+);
 
 export default enhanced(KubernetesClusterDetail);
