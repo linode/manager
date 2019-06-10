@@ -6,6 +6,7 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 interface Props {
   linodeStatus: string;
   linodeId?: number;
+  diskId?: number;
   readOnly?: boolean;
   onRename: () => void;
   onResize: () => void;
@@ -17,7 +18,7 @@ type CombinedProps = Props & RouteComponentProps;
 
 class DiskActionMenu extends React.Component<CombinedProps> {
   createActions = () => (closeMenu: Function): Action[] => {
-    const { linodeStatus, linodeId, readOnly, history } = this.props;
+    const { linodeStatus, linodeId, readOnly, history, diskId } = this.props;
     let tooltip;
     tooltip =
       linodeStatus === 'offline'
@@ -74,7 +75,7 @@ class DiskActionMenu extends React.Component<CombinedProps> {
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
           closeMenu();
-          history.push(`/linodes/${linodeId}/clone/disks`);
+          history.push(`/linodes/${linodeId}/clone/disks?selectedDisk=${diskId}`);
         },
         disabled: readOnly,
         tooltip

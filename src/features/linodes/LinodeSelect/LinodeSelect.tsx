@@ -31,6 +31,7 @@ interface Props {
   region?: string;
   handleChange: (linode: Linode.Linode) => void;
   textFieldProps?: TextFieldProps;
+  label?: string;
 }
 
 type CombinedProps = Props & WithLinodesProps & WithStyles<ClassNames>;
@@ -59,7 +60,8 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
     linodesLoading,
     linodesData,
     region,
-    selectedLinode
+    selectedLinode,
+    label
   } = props;
 
   const linodes = region
@@ -74,7 +76,7 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
 
   return (
     <EnhancedSelect
-      label="Linode"
+      label={label ? label : "Linode"}
       placeholder="Select a Linode"
       value={linodeFromItems(options, selectedLinode)}
       options={options}

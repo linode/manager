@@ -15,13 +15,30 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import TabLink from 'src/components/TabLink';
+import withLinodes from 'src/containers/withLinodes.container';
 import { HasNumericID } from 'src/store/types';
+import { formatRegion } from 'src/utilities';
+import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { withLinodeDetailContext } from '../LinodesDetail/linodeDetailContext';
 import Configs from './Configs';
 import Details from './Details';
 import Disks from './Disks';
 
-type CombinedProps = RouteComponentProps<{}> & StateProps;
+interface WithLinodesProps {
+  linodesData: Linode.Linode[];
+  linodesLoading: boolean;
+  linodesError?: Linode.ApiFieldError[];
+}
+
+interface Props {
+  defaultSelectedConfigId?: number;
+  defaultSelectedDiskId?: number;
+}
+
+type CombinedProps = Props &
+  RouteComponentProps<{}> &
+  StateProps &
+  WithLinodesProps;
 
 export const CloneLanding: React.FC<CombinedProps> = props => {
   const tabs = [
@@ -45,20 +62,27 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
   const {
     configs,
     disks,
-    match: { url }
+    match: { url },
+    region
   } = props;
 
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
 
+  const queryParams = getParamsFromUrl(location.search);
+
   const [selectedConfigs, setSelectedConfigs] = React.useState<
     Record<number, boolean>
-  >(initSelected(props.configs));
+  >(initSelected(props.configs, Number(queryParams.selectedConfig)));
 
   const [selectedDisks, setSelectedDisks] = React.useState<
     Record<number, boolean>
-  >(initSelected(props.disks));
+  >(initSelected(props.disks, Number(queryParams.selectedDisk)));
+
+  const [selectedLinodeId, setSelectedLinodeId] = React.useState<number | null>(
+    null
+  );
 
   const handleSelectConfig = (configId: number) => {
     setSelectedConfigs({
@@ -156,6 +180,12 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
               config => selectedConfigs[config.id]
             )}
             selectedDisks={disks.filter(disk => selectedDisks[disk.id])}
+            selectedLinode={selectedLinodeId}
+            allDisks={disks}
+            formattedRegion={formatRegion(region)}
+            handleSelectLinode={(linodeId: number) =>
+              setSelectedLinodeId(linodeId)
+            }
             handleSelectConfig={handleSelectConfig}
             handleSelectDisk={handleSelectDisk}
             clearAll={clearAll}
@@ -171,26 +201,41 @@ interface StateProps {
   linodeId: number;
   configs: Linode.Config[];
   disks: Linode.Disk[];
+  region: string;
   readOnly: boolean;
 }
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id,
   configs: linode._configs,
   disks: linode._disks,
+  region: linode.region,
   readOnly: linode._permissions === 'read_only'
 }));
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, Props>(
   linodeContext,
+  withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
+    ...ownProps,
+    linodesData,
+    linodesLoading,
+    linodesError
+  })),
   withRouter
 );
 
 export default enhanced(CloneLanding);
 
-const initSelected = <T extends HasNumericID[]>(itemsWithId: T) => {
+const initSelected = <T extends HasNumericID[]>(
+  itemsWithId: T,
+  preSelected?: number
+) => {
   const selected: Record<number, boolean> = {};
   itemsWithId.forEach(eachItem => {
-    selected[eachItem.id] = false;
+    if (eachItem.id === preSelected) {
+      selected[eachItem.id] = true;
+    } else {
+      selected[eachItem.id] = false;
+    }
   });
   return selected;
 };
