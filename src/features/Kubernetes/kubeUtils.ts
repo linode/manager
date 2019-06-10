@@ -24,6 +24,13 @@ export const getTotalClusterPrice = (pools: ExtendedPoolNode[]) =>
     return accumulator + node.totalMonthlyPrice * node.count;
   }, 0);
 
+export const getClusterPrice = (pools: Linode.KubeNodePoolResponse[], types: ExtendedType[]) => {
+  return getTotalClusterPrice(pools.map(pool => ({
+    ...pool,
+    totalMonthlyPrice: getMonthlyPrice(pool.type, pool.count, types)
+  })));
+}
+
 interface ClusterData {
   CPU: number;
   RAM: number;

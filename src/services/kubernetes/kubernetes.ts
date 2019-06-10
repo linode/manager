@@ -34,6 +34,17 @@ export const getKubernetesClusters = (params?: any, filters?: any) =>
   ).then(response => response.data);
 
 /**
+ * getKubernetesCluster
+ *
+ * Return details about a single Kubernetes cluster
+ */
+export const getKubernetesCluster = (clusterID: string) =>
+  Request<Linode.KubernetesCluster>(
+    setMethod('GET'),
+    setURL(`${API_ROOT}/lke/clusters/${clusterID}`)
+  ).then(response => response.data);
+
+/**
  * createKubernetesClusters
  *
  * Create a new Cluster.

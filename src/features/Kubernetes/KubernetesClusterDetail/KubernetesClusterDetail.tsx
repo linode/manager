@@ -1,4 +1,8 @@
 import * as React from 'react';
+import {
+  RouteComponentProps,
+  withRouter
+} from 'react-router-dom';
 import { compose } from 'recompose';
 
 import Breadcrumb from 'src/components/Breadcrumb';
@@ -13,6 +17,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import TagsPanel from 'src/components/TagsPanel';
+import KubeContainer from 'src/containers/kubernetes.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ExtendedPoolNode } from '.././types';
@@ -63,7 +68,15 @@ interface ClusterEditingState {
   nodePools: ExtendedPoolNode[];
 }
 
-type CombinedProps = WithTypesProps & WithStyles<ClassNames>;
+interface KubernetesContainerProps {
+  cluster?: Linode.KubernetesCluster;
+  clustersLoading: boolean;
+  lastUpdated: number;
+  requestKubernetesClusters: () => void;
+  requestClusterForStore: (clusterID: string) => void;
+}
+
+type CombinedProps = WithTypesProps & RouteComponentProps<{clusterID: string}> & KubernetesContainerProps & WithStyles<ClassNames>;
 
 export const KubernetesClusterDetail: React.FunctionComponent<
   CombinedProps
@@ -72,7 +85,24 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   const [fields, updateFields] = React.useState<ClusterEditingState>({
     nodePools: []
   });
-  const { classes, typesData, typesError, typesLoading } = props;
+  React.useEffect(() => {
+    /**
+     * Eventually the clusters request will probably be made from App.tsx
+     * (to facilitate searching), but for now if a user navigates directly
+     * to this url without going through KubernetesLanding the clusters won't have
+     * been requested yet.
+     */
+    if (props.lastUpdated === 0) {
+      props.requestKubernetesClusters();
+    } else {
+      const clusterID = props.match.params.clusterID;
+      props.requestClusterForStore(clusterID);
+    }
+  }, [])
+  const { classes, cluster, clustersLoading, lastUpdated, typesData, typesError, typesLoading } = props;
+
+  if (clustersLoading && lastUpdated !== 0) { return <div>'loading...'</div>; }
+  if (!cluster) { return null; }
 
   return (
     <React.Fragment>
@@ -89,7 +119,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
               pathname: `/kubernetes`
             }}
             linkText="Clusters"
-            labelTitle={`${'Cluster-label'}`}
+            labelTitle={cluster.label}
             data-qa-breadcrumb
           />
         </Grid>
@@ -138,7 +168,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
             <Button type="primary">Download kubeconfig</Button>
           </Grid>
           <Grid item className={classes.section}>
-            <KubeSummaryPanel />
+            <KubeSummaryPanel cluster={cluster} types={typesData || []} />
           </Grid>
           <Grid item className={classes.section}>
             <Paper>
@@ -161,9 +191,24 @@ export const KubernetesClusterDetail: React.FunctionComponent<
 
 const styled = withStyles(styles);
 
+const withCluster = KubeContainer<{}, RouteComponentProps<{clusterID: string}>>((
+  ownProps,
+  clustersLoading,
+  lastUpdated,
+  clustersError,
+  clusters,
+) => ({
+  ...ownProps,
+  cluster: clusters.find(cluster => cluster.id === ownProps.match.params.clusterID),
+  lastUpdated,
+  clustersLoading
+}))
+
 const enhanced = compose<CombinedProps, {}>(
   styled,
-  withTypes
+  withCluster,
+  withTypes,
+  withRouter,
 );
 
 export default enhanced(KubernetesClusterDetail);

@@ -1,7 +1,7 @@
-import { getKubernetesClusters } from 'src/services/kubernetes';
+import { getKubernetesCluster, getKubernetesClusters } from 'src/services/kubernetes';
 import { getAll } from 'src/utilities/getAll';
 import { ThunkActionCreator } from '../types';
-import { requestClustersActions } from './kubernetes.actions';
+import { requestClustersActions, upsertCluster } from './kubernetes.actions';
 
 const getAllClusters = getAll<Linode.KubernetesCluster>(getKubernetesClusters);
 
@@ -22,5 +22,13 @@ export const requestKubernetesClusters: ThunkActionCreator<
     .catch(error => {
       dispatch(requestClustersActions.failed({ error }));
       return error;
+    });
+};
+
+type RequestClusterForStoreThunk = ThunkActionCreator<void>;
+export const requestClusterForStore: RequestClusterForStoreThunk = clusterID => dispatch => {
+  getKubernetesCluster(clusterID)
+    .then(cluster => {
+      return dispatch(upsertCluster(cluster));
     });
 };

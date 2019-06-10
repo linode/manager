@@ -11,3 +11,5 @@ export const requestClustersActions = actionCreator.async<
 export const addOrUpdateCluster = actionCreator<Linode.KubernetesCluster>(
   'add_or_update'
 );
+
+export const upsertCluster = actionCreator<Linode.KubernetesCluster>(`upsert`);

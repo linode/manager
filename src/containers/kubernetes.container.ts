@@ -2,11 +2,11 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { ApplicationState } from 'src/store';
-import { requestKubernetesClusters as _requestKubernetesClusters } from 'src/store/kubernetes/kubernetes.requests';
+import { requestClusterForStore as _requestClusterForStore, requestKubernetesClusters as _requestKubernetesClusters  } from 'src/store/kubernetes/kubernetes.requests';
 import { EntityError } from 'src/store/types';
 
 export interface KubernetesProps {
-  clusters?: Linode.KubernetesCluster[];
+  clusters: Linode.KubernetesCluster[];
   clustersLoading: boolean;
   clustersError: EntityError;
   lastUpdated?: number;
@@ -19,7 +19,8 @@ export interface DispatchProps {
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => ({
-  requestKubernetesClusters: () => dispatch(_requestKubernetesClusters())
+  requestKubernetesClusters: () => dispatch(_requestKubernetesClusters()),
+  requestClusterForStore: (clusterID: string) => dispatch(_requestClusterForStore(clusterID))
 });
 
 export default <TInner extends {}, TOuter extends {}>(
@@ -28,7 +29,7 @@ export default <TInner extends {}, TOuter extends {}>(
     clustersLoading: boolean,
     lastUpdated: number,
     clustersError: EntityError,
-    clusters?: Linode.KubernetesCluster[]
+    clusters: Linode.KubernetesCluster[]
   ) => TInner
 ) =>
   connect(
