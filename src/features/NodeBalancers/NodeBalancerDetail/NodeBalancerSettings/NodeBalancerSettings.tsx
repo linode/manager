@@ -194,7 +194,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
 
 const controlClientConnectionThrottle = compose(
   clamp(0, 20),
-  defaultNumeric(0)
+  (value: string) => defaultNumeric(0, value)
 );
 
 const styled = withStyles(styles);

@@ -2397,10 +2397,10 @@
   resolved "https://registry.yarnpkg.com/@types/qs/-/qs-6.5.3.tgz#1c3b71b091eaeaf5924538006b7f70603ce63d38"
   integrity sha512-Jugo5V/1bS0fRhy2z8+cUAHEyWOATaz4rbyLVvcFs7+dXp5HfwpEwzF1Q11bB10ApUqHf+yTauxI0UXQDwGrbA==
 
-"@types/ramda@^0.25.18":
-  version "0.25.51"
-  resolved "https://registry.yarnpkg.com/@types/ramda/-/ramda-0.25.51.tgz#d5421d0e190c56c64c112a761a85782fc971409d"
-  integrity sha512-xcmtfHIgF9SYjhGdsZR1nQslxG4hu0cIpFfLQ4CWdw3KzHvl7ki1AzFLQUkbDTG42ZN3ZsQfdRzXRlkAvbIy5Q==
+"@types/ramda@^0.26.9":
+  version "0.26.9"
+  resolved "https://registry.yarnpkg.com/@types/ramda/-/ramda-0.26.9.tgz#f0bbba59c04de9d29aaa1d1c0daedefc7244bb68"
+  integrity sha512-yozsk6sXE29kP/mzLCgZ6RFSwx2pD41ZgW1m4rk3meKyj4mw77ISxnu5Knc1tLaKQd2ocdd7Y0daCG678olPfw==
 
 "@types/react-currency-formatter@^1.1.1":
   version "1.1.1"
@@ -12306,10 +12306,10 @@ ramda@^0.21.0:
   resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.21.0.tgz#a001abedb3ff61077d4ff1d577d44de77e8d0a35"
   integrity sha1-oAGr7bP/YQd9T/HVd9RN536NCjU=
 
-ramda@^0.25.0:
-  version "0.25.0"
-  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.25.0.tgz#8fdf68231cffa90bc2f9460390a0cb74a29b29a9"
-  integrity sha512-GXpfrYVPwx3K7RQ6aYT8KPS8XViSXUVJT1ONhoKPE9VAleW42YE+U+8VEyGWt41EnEQW7gwecYJriTI0pKoecQ==
+ramda@^0.26.1:
+  version "0.26.1"
+  resolved "https://registry.yarnpkg.com/ramda/-/ramda-0.26.1.tgz#8d41351eb8111c55353617fc3bbffad8e4d35d06"
+  integrity sha512-hLWjpy7EnsDBb0p+Z3B7rPi3GDeRG5ZtiI33kJhTt+ORCd38AbAIjB/9zRIUoeTbE/AVX5ZkU7m6bznsvrf8eQ==
 
 randexp@0.4.6:
   version "0.4.6"

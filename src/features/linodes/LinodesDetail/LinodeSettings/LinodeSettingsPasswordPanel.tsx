@@ -1,6 +1,7 @@
 import { WithStyles } from '@material-ui/core/styles';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
+import { compose as recompose } from 'recompose'
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { createStyles, Theme, withStyles } from 'src/components/core/styles';
@@ -69,7 +70,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
       compose(
         set(lensPath(['submitting']), true),
         set(lensPath(['success']), undefined),
-        set(lensPath(['errors']), undefined)
+        set(lensPath(['errors']), undefined) as () => Linode.ApiFieldError[]
       )
     );
 
@@ -79,7 +80,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
           compose(
             set(lensPath(['success']), `Linode password changed successfully.`),
             set(lensPath(['submitting']), false),
-            set(lensPath(['value']), '')
+            set(lensPath(['value']), '') as () => string
           )
         );
       })
@@ -255,7 +256,7 @@ const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Reset Root Password' });
 
-export default compose(
+export default recompose<CombinedProps, Props>(
   errorBoundary,
   linodeContext,
   styled

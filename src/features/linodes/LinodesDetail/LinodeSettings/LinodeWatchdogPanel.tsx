@@ -2,6 +2,7 @@ import { WithStyles } from '@material-ui/core/styles';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose as recompose } from 'recompose'
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -70,7 +71,7 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
             setSuccess(
               `Watchdog succesfully ${value ? 'enabled' : 'disabled.'}`
             ),
-            setCurrentStatus(response.watchdog_enabled)
+            setCurrentStatus(response.watchdog_enabled) as any
           )
         );
       })
@@ -164,7 +165,7 @@ const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
   permissions: linode._permissions
 }));
 
-export default compose(
+export default recompose<CombinedProps, Props>(
   errorBoundary,
   withRouter,
   styled,
