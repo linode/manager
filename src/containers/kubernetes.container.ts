@@ -2,11 +2,17 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { ApplicationState } from 'src/store';
-import { UpdateClusterParams } from 'src/store/kubernetes/kubernetes.actions';
 import {
+  CreateNodePoolParams,
+  UpdateClusterParams,
+  UpdateNodePoolParams
+} from 'src/store/kubernetes/kubernetes.actions';
+import {
+  createNodePool as _createNodePool,
   requestClusterForStore as _requestClusterForStore,
   requestKubernetesClusters as _requestKubernetesClusters,
-  updateCluster as _updateCluster
+  updateCluster as _updateCluster,
+  updateNodePool as _updateNodePool
 } from 'src/store/kubernetes/kubernetes.requests';
 import { EntityError } from 'src/store/types';
 
@@ -21,6 +27,8 @@ export interface DispatchProps {
   requestKubernetesClusters: () => void;
   requestClusterForStore: (clusterID: string) => void;
   updateCluster: (params: UpdateClusterParams) => void;
+  createNodePool: (params: CreateNodePoolParams) => void;
+  updateNodePool: (params: UpdateNodePoolParams) => void;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
@@ -30,7 +38,11 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   requestClusterForStore: (clusterID: string) =>
     dispatch(_requestClusterForStore(clusterID)),
   updateCluster: (params: UpdateClusterParams) =>
-    dispatch(_updateCluster(params))
+    dispatch(_updateCluster(params)),
+  createNodePool: (params: CreateNodePoolParams) =>
+    dispatch(_createNodePool(params)),
+  updateNodePool: (params: UpdateNodePoolParams) =>
+    dispatch(_updateNodePool(params))
 });
 
 export default <TInner extends {}, TOuter extends {}>(

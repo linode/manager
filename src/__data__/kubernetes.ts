@@ -18,7 +18,7 @@ export const clusters: Linode.KubernetesCluster[] = [
             status: 'ready'
           }
         ],
-        lkeid: 35
+        lke_id: 35
       },
       {
         type: 'g6-standard-8',
@@ -30,7 +30,7 @@ export const clusters: Linode.KubernetesCluster[] = [
             status: 'ready'
           }
         ],
-        lkeid: 35
+        lke_id: 35
       }
     ],
     created: '2019-04-29 18:02:17',
@@ -57,7 +57,7 @@ export const clusters: Linode.KubernetesCluster[] = [
             status: 'ready'
           }
         ],
-        lkeid: 35
+        lke_id: 35
       },
       {
         type: 'g6-standard-8',
@@ -69,7 +69,7 @@ export const clusters: Linode.KubernetesCluster[] = [
             status: 'ready'
           }
         ],
-        lkeid: 35
+        lke_id: 35
       }
     ],
     created: '2019-04-29 18:02:17',

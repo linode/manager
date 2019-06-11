@@ -3,8 +3,10 @@ import { EntityError, EntityState } from 'src/store/types';
 import updateOrAdd from 'src/utilities/updateOrAdd';
 import { isType } from 'typescript-fsa';
 import {
+  createNodePoolActions,
   requestClustersActions,
   updateClusterActions,
+  updateNodePoolActions,
   upsertCluster
 } from './kubernetes.actions';
 
@@ -72,6 +74,50 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       ...state,
       entities: update,
       results: update.map(cluster => cluster.id)
+    };
+  }
+
+  if (isType(action, createNodePoolActions.done)) {
+    const { result } = action.payload;
+    const cluster = state.entities.find(
+      thisCluster => +thisCluster.id === result[0].lke_id
+    );
+    if (!cluster) {
+      return state;
+    }
+    const updatedCluster = {
+      ...cluster,
+      node_pools: result
+    };
+
+    const update = updateOrAdd(updatedCluster, state.entities);
+
+    return {
+      ...state,
+      entities: update,
+      results: update.map(c => c.id)
+    };
+  }
+
+  if (isType(action, updateNodePoolActions.done)) {
+    const { result } = action.payload;
+    const cluster = state.entities.find(
+      thisCluster => +thisCluster.id === result[0].lke_id
+    );
+    if (!cluster) {
+      return state;
+    }
+    const updatedCluster = {
+      ...cluster,
+      node_pools: result
+    };
+
+    const update = updateOrAdd(updatedCluster, state.entities);
+
+    return {
+      ...state,
+      entities: update,
+      results: update.map(c => c.id)
     };
   }
   return state;
