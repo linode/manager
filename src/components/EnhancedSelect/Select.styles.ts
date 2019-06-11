@@ -22,7 +22,8 @@ export type ClassNames =
   | 'label'
   | 'source'
   | 'icon'
-  | 'row';
+  | 'row'
+  | 'finalLink';
 
 export const styles: StyleRulesCallback<ClassNames> = theme => ({
   '@keyframes dash': {
@@ -261,8 +262,11 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
     '& label': { ...theme.visually.hidden }
   },
   algoliaRoot: {
+    width: '100%s',
+    minHeight: 40,
     flexDirection: 'column',
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    justifyContent: 'center',
     '& em': {
       fontStyle: 'normal',
       color: theme.color.blueDTwhite
@@ -284,11 +288,20 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   source: {
     marginTop: theme.spacing.unit / 2,
-    color: theme.color.headline
+    color: theme.color.headline,
+    paddingLeft: theme.spacing.unit
   },
   row: {
     display: 'flex',
     width: '100%',
-    justifyContent: 'space-between'
+    alignItems: 'center',
+    paddingLeft: theme.spacing.unit
+  },
+  finalLink: {
+    display: 'flex',
+    alignItems: 'center',
+    fontSize: '1.2em',
+    minHeight: 40,
+    paddingLeft: theme.spacing.unit
   }
 });

@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 import { OptionProps } from 'react-select/lib/components/Option';
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
@@ -23,6 +24,7 @@ const SearchItem: React.StatelessComponent<Props> = props => {
   const {
     data,
     innerProps,
+    isFocused,
     selectProps: { classes }
   } = props;
   const source = data.data ? data.data.source : '';
@@ -32,18 +34,29 @@ const SearchItem: React.StatelessComponent<Props> = props => {
 
   return (
     <div
-      className={classes.algoliaRoot}
+      className={classNames({
+        [classes.algoliaRoot]: true,
+        [classes.selectedMenuItem]: isFocused
+      })}
       data-qa-search-result={source}
       {...innerProps}
     >
-      <div className={classes.row}>
-        <div
-          className={classes.label}
-          dangerouslySetInnerHTML={{ __html: getLabel() }}
-        />
-        {!isFinal && <Arrow className={classes.icon} />}
-      </div>
-      {!isFinal && <Typography className={classes.source}>{source}</Typography>}
+      {isFinal ? (
+        <div className={classes.finalLink}>
+          <Typography>{getLabel()}</Typography>
+        </div>
+      ) : (
+        <>
+          <div className={classes.row}>
+            <div
+              className={classes.label}
+              dangerouslySetInnerHTML={{ __html: getLabel() }}
+            />
+            <Arrow className={classes.icon} />
+          </div>
+          <Typography className={classes.source}>{source}</Typography>
+        </>
+      )}
     </div>
   );
 };

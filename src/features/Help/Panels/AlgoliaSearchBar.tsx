@@ -1,5 +1,5 @@
 import Search from '@material-ui/icons/Search';
-import { concat, pathOr } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -23,7 +23,33 @@ type ClassNames =
   | 'textfield';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
+  root: {
+    // position: 'relative' /* for search results */,
+    // maxHeight: 50,
+    // flex: 1,
+    // display: 'flex',
+    // alignItems: 'center',
+    // backgroundColor: theme.bg.main,
+    // padding: theme.spacing.unit,
+    // marginLeft: theme.spacing.unit * 2,
+    // marginRight: theme.spacing.unit * 2,
+    // transition: theme.transitions.create(['opacity']),
+    // [theme.breakpoints.down('sm')]: {
+    //   backgroundColor: theme.bg.white,
+    //   position: 'absolute',
+    //   width: 'calc(100% - 118px)',
+    //   zIndex: -1,
+    //   left: 0,
+    //   visibility: 'hidden',
+    //   opacity: 0,
+    //   margin: 0,
+    //   '&.active': {
+    //     visibility: 'visible',
+    //     opacity: 1,
+    //     zIndex: 3
+    //   }
+    // }
+  },
   searchItem: {
     '& em': {
       fontStyle: 'normal',
@@ -59,6 +85,33 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
+/* Need to override the default RS filtering; otherwise entities whose label
+ * doesn't match the search term will be automatically filtered, meaning that
+ * searching by tag won't work. */
+const filterResults = (option: Item, inputValue: string) => {
+  return true;
+};
+
+const selectStyles = {
+  control: (base: any) => ({
+    ...base,
+    backgroundColor: '#f4f4f4',
+    margin: 0,
+    width: '100%',
+    border: 0
+  }),
+  input: (base: any) => ({ ...base, margin: 0, width: '100%', border: 0 }),
+  selectContainer: (base: any) => ({
+    ...base,
+    width: '100%',
+    margin: 0,
+    border: 0
+  }),
+  dropdownIndicator: (base: any) => ({ ...base, display: 'none' }),
+  placeholder: (base: any) => ({ ...base, color: 'blue' }),
+  menu: (base: any) => ({ ...base, maxWidth: '100% !important' })
+};
+
 interface State {
   inputValue: string;
 }
@@ -87,13 +140,14 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  getDataFromOptions = () => {
+  getOptionsFromResults = () => {
     const [docs, community] = this.props.searchResults;
     const { inputValue } = this.state;
     const options = [...docs, ...community];
-    return concat(options, [
+    return [
+      ...options,
       { value: 'search', label: inputValue, data: { source: 'finalLink' } }
-    ]);
+    ];
   };
 
   onInputValueChange = (inputValue: string) => {
@@ -134,7 +188,8 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, searchEnabled, searchError } = this.props;
-    const data = this.getDataFromOptions();
+    const { inputValue } = this.state;
+    const options = this.getOptionsFromResults();
 
     return (
       <React.Fragment>
@@ -143,18 +198,24 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
             {searchError}
           </Notice>
         )}
-        <Search className={''} data-qa-search-icon />
-        <EnhancedSelect
-          disabled={!searchEnabled}
-          isMulti={false}
-          isClearable={false}
-          options={data}
-          components={{ Option: SearchItem }}
-          onChange={this.handleSelect}
-          onInputChange={this.props.searchAlgolia}
-          placeholder="Search for answers..."
-          className={classes.enhancedSelectWrapper}
-        />
+        <div className={classes.root}>
+          <Search className={''} data-qa-search-icon />
+          <EnhancedSelect
+            disabled={!searchEnabled}
+            isMulti={false}
+            isClearable={false}
+            inputValue={inputValue}
+            options={options}
+            components={{ Option: SearchItem }}
+            onChange={this.handleSelect}
+            onInputChange={this.onInputValueChange}
+            placeholder="Search for answers..."
+            className={classes.enhancedSelectWrapper}
+            styleOverrides={selectStyles}
+            filterOption={filterResults}
+            value={false}
+          />
+        </div>
       </React.Fragment>
     );
   }
