@@ -173,8 +173,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
         ticket: {
           ...this.state.ticket!,
           attachments: ticket.attachments,
-          ticketCloseSuccess: false
-        }
+        },
+        ticketCloseSuccess: false
       });
     });
   };

@@ -308,7 +308,7 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
             /* null out an uploaded file after upload */
             set(lensPath(['files', idx, 'file']), null),
             set(lensPath(['files', idx, 'uploading']), false),
-            set(lensPath(['files', idx, 'uploaded']), true)
+            set(lensPath(['files', idx, 'uploaded']), true) as () => boolean
           )
         );
         return accumulator;
