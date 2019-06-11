@@ -37,15 +37,21 @@ export const createNodeBalancerConfigSchema = object({
   algorithm: mixed().oneOf(['roundrobin', 'leastconn', 'source']),
   check_attempts: number(),
   check_body: string().when('check', {
-    is: 'http_body',
+    is: check => check === 'http_body',
     then: string().required()
   }),
   check_interval: number().typeError('Check interval must be a number.'),
   check_passive: boolean(),
   check_path: string()
     .matches(/\/.*/)
-    .when('check', { is: 'http', then: string().required() })
-    .when('check', { is: 'http_body', then: string().required() }),
+    .when('check', {
+      is: check => check === 'http',
+      then: string().required()
+    })
+    .when('check', {
+      is: check => check === 'http_body',
+      then: string().required()
+    }),
   check_timeout: number()
     .typeError('Timeout must be a number.')
     .integer(),
@@ -58,11 +64,11 @@ export const createNodeBalancerConfigSchema = object({
     .max(65535, 'Port must be between 1 and 65535.'),
   protocol: mixed().oneOf(['http', 'https', 'tcp']),
   ssl_key: string().when('protocol', {
-    is: 'https',
+    is: protocol => protocol === 'https',
     then: string().required('SSL key is required when using HTTPS.')
   }),
   ssl_cert: string().when('protocol', {
-    is: 'https',
+    is: protocol => protocol === 'https',
     then: string().required('SSL certificate is required when using HTTPS.')
   }),
   stickiness: mixed().oneOf(['none', 'table', 'http_cookie']),
@@ -76,15 +82,21 @@ export const UpdateNodeBalancerConfigSchema = object({
   algorithm: mixed().oneOf(['roundrobin', 'leastconn', 'source']),
   check_attempts: number(),
   check_body: string().when('check', {
-    is: 'http_body',
+    is: check => check === 'http_body',
     then: string().required()
   }),
   check_interval: number().typeError('Check interval must be a number.'),
   check_passive: boolean(),
   check_path: string()
     .matches(/\/.*/)
-    .when('check', { is: 'http', then: string().required() })
-    .when('check', { is: 'http_body', then: string().required() }),
+    .when('check', {
+      is: check => check === 'http',
+      then: string().required()
+    })
+    .when('check', {
+      is: check => check === 'http_body',
+      then: string().required()
+    }),
   check_timeout: number()
     .typeError('Timeout must be a number.')
     .integer(),
@@ -97,11 +109,11 @@ export const UpdateNodeBalancerConfigSchema = object({
     .max(65535, 'Port must be between 1 and 65535.'),
   protocol: mixed().oneOf(['http', 'https', 'tcp']),
   ssl_key: string().when('protocol', {
-    is: 'https',
+    is: protocol => protocol === 'https',
     then: string().required()
   }),
   ssl_cert: string().when('protocol', {
-    is: 'https',
+    is: protocol => protocol === 'https',
     then: string().required()
   }),
   stickiness: mixed().oneOf(['none', 'table', 'http_cookie']),
