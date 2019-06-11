@@ -269,7 +269,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           lensPath(['configs', configIdx, 'nodes', ...nodePathError.path]),
           append(nodePathError.error)
         ),
-        defaultTo([])
+        defaultTo([]) as () => Array<{}>
       );
     });
 
@@ -879,7 +879,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           L.healthCheckIntervalLens,
           NodeBalancerConfigurations.defaultFieldsStates.configs[0]
             .check_interval
-        ),
+        ) as () => string,
         set(
           L.healthCheckTimeoutLens,
           NodeBalancerConfigurations.defaultFieldsStates.configs[0]

@@ -1,6 +1,6 @@
 import { WithStyles } from '@material-ui/core/styles';
-import { compose } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose'
 import ManagedIcon from 'src/assets/icons/managed.svg';
 import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 
@@ -50,7 +50,7 @@ export class ManagedLanding extends React.Component<CombinedProps, {}> {
 
 const styled = withStyles(styles);
 
-export default compose(
+export default compose<CombinedProps, {}>(
   setDocs(ManagedLanding.docs),
   styled
 )(ManagedLanding);

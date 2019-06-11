@@ -267,7 +267,7 @@ const updatedRequest = (_: Props, params: any, filters: any) =>
 
 const paginated = Pagey(updatedRequest);
 
-const enhanced = compose(
+const enhanced = compose<Props, {}>(
   styled,
   paginated
 );

@@ -1,6 +1,6 @@
 import { WithStyles } from '@material-ui/core/styles';
-import { compose } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -46,7 +46,7 @@ export class LongviewLanding extends React.Component<CombinedProps, {}> {
 
 const styled = withStyles(styles);
 
-export default compose(
+export default compose<CombinedProps, {}>(
   setDocs(LongviewLanding.docs),
   styled
 )(LongviewLanding);

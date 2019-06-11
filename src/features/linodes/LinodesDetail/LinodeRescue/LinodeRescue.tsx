@@ -1,8 +1,9 @@
 import { WithStyles } from '@material-ui/core/styles';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { assoc, clamp, compose, pathOr } from 'ramda';
+import { assoc, clamp, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'recompose'
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
@@ -269,7 +270,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
 
 const connected = connect(mapStateToProps);
 
-export default compose(
+export default compose<CombinedProps, {}>(
   linodeContext,
   SectionErrorBoundary,
   styled,
