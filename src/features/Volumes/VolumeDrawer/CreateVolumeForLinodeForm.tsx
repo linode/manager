@@ -211,7 +211,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
                 touched.tags
                   ? errors.tags
                     ? getErrorStringOrDefault(
-                        errors.tags,
+                        errors.tags as Linode.ApiFieldError[],
                         'Unable to tag volume.'
                       )
                     : undefined

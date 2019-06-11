@@ -1,8 +1,9 @@
 import Close from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
-import { compose, take } from 'ramda';
+import { take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'recompose'
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import _Control from 'react-select/lib/components/Control';
 import _Option from 'react-select/lib/components/Option';
@@ -233,7 +234,7 @@ interface WithImagesProps {
   imagesLoading: boolean;
 }
 
-export default compose(
+export default compose<CombinedProps, {}>(
   styled,
   withTypes,
   withRouter,
