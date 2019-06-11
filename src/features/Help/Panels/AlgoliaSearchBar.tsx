@@ -11,6 +11,7 @@ import {
 } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
+import { selectStyles } from 'src/features/TopMenu/SearchBar';
 import windowIsNarrowerThan from 'src/utilities/breakpoints';
 import withSearch, { AlgoliaState as AlgoliaProps } from '../SearchHOC';
 import SearchItem from './SearchItem';
@@ -23,33 +24,7 @@ type ClassNames =
   | 'textfield';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    // position: 'relative' /* for search results */,
-    // maxHeight: 50,
-    // flex: 1,
-    // display: 'flex',
-    // alignItems: 'center',
-    // backgroundColor: theme.bg.main,
-    // padding: theme.spacing.unit,
-    // marginLeft: theme.spacing.unit * 2,
-    // marginRight: theme.spacing.unit * 2,
-    // transition: theme.transitions.create(['opacity']),
-    // [theme.breakpoints.down('sm')]: {
-    //   backgroundColor: theme.bg.white,
-    //   position: 'absolute',
-    //   width: 'calc(100% - 118px)',
-    //   zIndex: -1,
-    //   left: 0,
-    //   visibility: 'hidden',
-    //   opacity: 0,
-    //   margin: 0,
-    //   '&.active': {
-    //     visibility: 'visible',
-    //     opacity: 1,
-    //     zIndex: 3
-    //   }
-    // }
-  },
+  root: {},
   searchItem: {
     '& em': {
       fontStyle: 'normal',
@@ -90,26 +65,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
  * searching by tag won't work. */
 const filterResults = (option: Item, inputValue: string) => {
   return true;
-};
-
-const selectStyles = {
-  control: (base: any) => ({
-    ...base,
-    backgroundColor: '#f4f4f4',
-    margin: 0,
-    width: '100%',
-    border: 0
-  }),
-  input: (base: any) => ({ ...base, margin: 0, width: '100%', border: 0 }),
-  selectContainer: (base: any) => ({
-    ...base,
-    width: '100%',
-    margin: 0,
-    border: 0
-  }),
-  dropdownIndicator: (base: any) => ({ ...base, display: 'none' }),
-  placeholder: (base: any) => ({ ...base, color: 'blue' }),
-  menu: (base: any) => ({ ...base, maxWidth: '100% !important' })
 };
 
 interface State {
@@ -206,7 +161,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
             isClearable={false}
             inputValue={inputValue}
             options={options}
-            components={{ Option: SearchItem }}
+            components={{ Option: SearchItem, DropdownIndicator: () => null }}
             onChange={this.handleSelect}
             onInputChange={this.onInputValueChange}
             placeholder="Search for answers..."
