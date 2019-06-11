@@ -21,8 +21,8 @@ type ClassNames = 'root' | 'tableCell' | 'labelCol' | 'sizeCol';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   tableCell: {
-    borderBottom: 'none',
-    padding: 0
+    paddingTop: 0,
+    paddingBottom: 0
   },
   labelCol: {
     width: '65%'
@@ -82,7 +82,7 @@ export const Configs: React.FC<CombinedProps> = props => {
 
                       return (
                         <TableRow key={disk.id} data-qa-disk={disk.label}>
-                          <TableCell>
+                          <TableCell className={classes.tableCell}>
                             <CheckBox
                               text={disk.label}
                               checked={isDiskSelected || isConfigSelected}

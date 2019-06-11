@@ -75,7 +75,9 @@ class DiskActionMenu extends React.Component<CombinedProps> {
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
           closeMenu();
-          history.push(`/linodes/${linodeId}/clone/disks?selectedDisk=${diskId}`);
+          history.push(
+            `/linodes/${linodeId}/clone/disks?selectedDisk=${diskId}`
+          );
         },
         disabled: readOnly,
         tooltip

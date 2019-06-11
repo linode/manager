@@ -19,6 +19,7 @@ import { ExtendedConfig } from './utilities';
 type ClassNames =
   | 'root'
   | 'header'
+  | 'clearButton'
   | 'list'
   | 'nestedList'
   | 'closeIcon'
@@ -33,7 +34,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: theme.spacing.unit * 4
+    marginBottom: theme.spacing.unit * 2
+  },
+  clearButton: {
+    top: -(theme.spacing.unit / 2)
   },
   list: {
     flexWrap: 'wrap',
@@ -86,7 +90,12 @@ export const Configs: React.FC<CombinedProps> = props => {
     <Paper className={classes.root}>
       <header className={classes.header}>
         <Typography variant="h2">Selected</Typography>
-        <Button type="secondary" superCompact onClick={clearAll}>
+        <Button
+          className={classes.clearButton}
+          type="secondary"
+          onClick={clearAll}
+          superCompact
+        >
           Clear
         </Button>
       </header>
@@ -148,6 +157,7 @@ export const Configs: React.FC<CombinedProps> = props => {
 
       <Typography>Current Datacenter: {formatRegion(region)}</Typography>
 
+      {/* @todo: This LinodeSelect needs to be subdivided by region */}
       <LinodeSelect
         label="Destination"
         selectedLinode={selectedLinode}

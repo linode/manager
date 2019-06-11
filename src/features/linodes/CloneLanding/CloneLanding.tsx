@@ -31,21 +31,18 @@ import {
   createInitialCloneLandingState
 } from './utilities';
 
-type ClassNames = 'root' | 'configContainer' | 'diskOuter' | 'diskInner';
+type ClassNames = 'root' | 'outerContainer' | 'diskContainer';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     marginTop: theme.spacing.unit
   },
-  configContainer: {
+  outerContainer: {
     paddingLeft: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit
+    paddingRight: theme.spacing.unit * 2,
+    paddingBottom: theme.spacing.unit * 2
   },
-  diskOuter: {
-    paddingLeft: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit
-  },
-  diskInner: {
+  diskContainer: {
     marginTop: theme.spacing.unit * 4
   }
 });
@@ -98,7 +95,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     configs,
     disks,
     Number(queryParams.selectedConfig),
-    Number(queryParams.defaultSelectedDiskId)
+    Number(queryParams.selectedDisk)
   );
 
   const [state, dispatch] = React.useReducer(cloneLandingReducer, initialState);
@@ -141,7 +138,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
               exact
               path={`${url}/configs`}
               render={() => (
-                <div className={classes.configContainer}>
+                <div className={classes.outerContainer}>
                   <Configs
                     configs={configs}
                     selectedConfigs={state.configSelection}
@@ -154,12 +151,12 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
               exact
               path={`${url}/disks`}
               render={() => (
-                <div className={classes.diskOuter}>
+                <div className={classes.outerContainer}>
                   <Typography>
                     You can make a copy of a disk to the same or different
                     Linode. We recommend you power off your Linode first.
                   </Typography>
-                  <div className={classes.diskInner}>
+                  <div className={classes.diskContainer}>
                     <Disks
                       disks={disks}
                       selectedDisks={state.diskSelection}

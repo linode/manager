@@ -20,7 +20,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   tableCell: {
     borderBottom: 'none',
-    padding: 0
+    paddingTop: 0,
+    paddingBottom: 0
   }
 });
 interface Props {

@@ -54,6 +54,7 @@ const LinodeDetail: React.StatelessComponent<CombinedProps> = props => {
 
   return (
     <LinodeDetailContextProvider value={ctx}>
+      {/* <pre>{JSON.stringify(linode, null, 2)}</pre> */}
       <Switch>
         {/*
         Currently, the "Clone Configs and Disks" feature exists OUTSIDE of LinodeDetail.
