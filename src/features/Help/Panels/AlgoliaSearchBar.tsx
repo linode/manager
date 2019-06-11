@@ -1,13 +1,15 @@
-import { compose, concat, pathOr } from 'ramda';
+import Search from '@material-ui/icons/Search';
+import { concat, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles,
   WithTheme
 } from 'src/components/core/styles';
-import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
+import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import windowIsNarrowerThan from 'src/utilities/breakpoints';
 import withSearch, { AlgoliaState as AlgoliaProps } from '../SearchHOC';
@@ -58,7 +60,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 interface State {
-  value: string;
   inputValue: string;
 }
 
@@ -71,7 +72,6 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   isMobile: boolean = false;
   state: State = {
-    value: '',
     inputValue: ''
   };
 
@@ -88,8 +88,8 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
   }
 
   getDataFromOptions = () => {
-    const { inputValue } = this.state;
     const [docs, community] = this.props.searchResults;
+    const { inputValue } = this.state;
     const options = [...docs, ...community];
     return concat(options, [
       { value: 'search', label: inputValue, data: { source: 'finalLink' } }
@@ -102,25 +102,6 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     }
     this.setState({ inputValue });
     this.props.searchAlgolia(inputValue);
-  };
-
-  renderOptionsHelper = (
-    item: Item,
-    currentIndex: number,
-    highlighted: boolean,
-    itemProps: any
-  ) => {
-    const { classes } = this.props;
-    return (
-      <div
-        key={currentIndex}
-        {...itemProps}
-        className={`${classes.searchItem} ${highlighted &&
-          classes.searchItemHighlighted}`}
-      >
-        <SearchItem item={item} highlighted={highlighted} />
-      </div>
-    );
   };
 
   getLinkTarget = (inputValue: string) => {
@@ -153,7 +134,6 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, searchEnabled, searchError } = this.props;
-    const { inputValue, value } = this.state;
     const data = this.getDataFromOptions();
 
     return (
@@ -163,20 +143,17 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
             {searchError}
           </Notice>
         )}
+        <Search className={''} data-qa-search-icon />
         <EnhancedSelect
           disabled={!searchEnabled}
+          isMulti={false}
+          isClearable={false}
           options={data}
-          value={value}
-          inputValue={inputValue}
-          renderItems={this.renderOptionsHelper}
-          onInputValueChange={this.onInputValueChange}
-          onSubmit={this.handleSubmit}
-          handleSelect={this.handleSelect}
+          components={{ Option: SearchItem }}
+          onChange={this.handleSelect}
+          onInputChange={this.props.searchAlgolia}
           placeholder="Search for answers..."
-          noFilter
-          search
           className={classes.enhancedSelectWrapper}
-          maxHeight={500}
         />
       </React.Fragment>
     );
@@ -186,7 +163,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles, { withTheme: true });
 const search = withSearch({ hitsPerPage: 10, highlight: true });
 
-export default compose<any, any, any, any>(
+export default compose<CombinedProps, {}>(
   styled,
   search,
   withRouter

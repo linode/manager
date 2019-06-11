@@ -1,93 +1,51 @@
 import * as React from 'react';
-import { compose } from 'recompose';
+import { OptionProps } from 'react-select/lib/components/Option';
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
-import ListItem from 'src/components/core/ListItem';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { Item } from 'src/components/EnhancedSelect';
-import RenderGuard from 'src/components/RenderGuard';
 
-type ClassNames = 'root' | 'label' | 'source' | 'icon' | 'row';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    flexDirection: 'column',
-    alignItems: 'flex-start'
-  },
-  label: {
-    display: 'inline',
-    color: theme.palette.text.primary,
-    maxWidth: '95%'
-  },
-  icon: {
-    display: 'inline-block',
-    width: 12,
-    height: 12,
-    position: 'relative',
-    top: 5,
-    marginLeft: theme.spacing.unit / 2,
-    color: theme.palette.primary.main
-  },
-  source: {
-    marginTop: theme.spacing.unit / 2,
-    color: theme.color.headline
-  },
-  row: {
-    display: 'flex',
-    width: '100%',
-    justifyContent: 'space-between'
-  }
-});
-
-interface Props {
-  item: Item;
-  highlighted: boolean;
+interface Props extends OptionProps<any> {
+  data: {
+    label: string;
+    data: any;
+  };
+  searchText: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-const searchItem: React.StatelessComponent<CombinedProps> = props => {
+const SearchItem: React.StatelessComponent<Props> = props => {
   const getLabel = () => {
     if (isFinal) {
-      return item.label ? `Search for "${item.label}"` : 'Search';
+      return props.label ? `Search for "${props.label}"` : 'Search';
     } else {
-      return item.label;
+      return props.label;
     }
   };
 
-  const { classes, item } = props;
-  const source = item.data ? item.data.source : '';
+  const {
+    data,
+    innerProps,
+    selectProps: { classes }
+  } = props;
+  const source = data.data ? data.data.source : '';
   const isFinal = source === 'finalLink';
 
+  console.log(data);
+
   return (
-    <React.Fragment>
-      <ListItem
-        className={classes.root}
-        component="div"
-        data-qa-search-result={source}
-      >
-        <div className={classes.row}>
-          <div
-            className={classes.label}
-            dangerouslySetInnerHTML={{ __html: getLabel() }}
-          />
-          {!isFinal && <Arrow className={classes.icon} />}
-        </div>
-        {!isFinal && (
-          <Typography className={classes.source}>{source}</Typography>
-        )}
-      </ListItem>
-    </React.Fragment>
+    <div
+      className={classes.algoliaRoot}
+      data-qa-search-result={source}
+      {...innerProps}
+    >
+      <div className={classes.row}>
+        <div
+          className={classes.label}
+          dangerouslySetInnerHTML={{ __html: getLabel() }}
+        />
+        {!isFinal && <Arrow className={classes.icon} />}
+      </div>
+      {!isFinal && <Typography className={classes.source}>{source}</Typography>}
+    </div>
   );
 };
 
-const styled = withStyles(styles);
-
-export default compose<CombinedProps, Props>(
-  styled,
-  RenderGuard
-)(searchItem);
+export default SearchItem;
