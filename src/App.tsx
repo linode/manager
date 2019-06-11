@@ -58,6 +58,7 @@ import { isObjectStorageEnabled } from './utilities/accountCapabilities';
 
 import ErrorState from 'src/components/ErrorState';
 import { addNotificationsToLinodes } from 'src/store/linodes/linodes.actions';
+import { formatDate } from 'src/utilities/formatDate';
 
 shim(); // allows for .finally() usage
 
@@ -220,7 +221,18 @@ export class App extends React.Component<CombinedProps, State> {
       (!prevProps.notifications || !prevProps.linodes.length)
     ) {
       this.props.addNotificationsToLinodes(
-        this.props.notifications,
+        this.props.notifications.map(eachNotification => ({
+          ...eachNotification,
+          /** alter when and until to respect the user's timezone */
+          when:
+            typeof eachNotification.when === 'string'
+              ? formatDate(eachNotification.when)
+              : eachNotification.when,
+          until:
+            typeof eachNotification.until === 'string'
+              ? formatDate(eachNotification.until)
+              : eachNotification.until
+        })),
         this.props.linodes
       );
     }

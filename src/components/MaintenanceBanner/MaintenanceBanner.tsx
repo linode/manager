@@ -91,9 +91,12 @@ const MaintenanceBanner: React.FC<CombinedProps> = props => {
       <Typography>
         {generateIntroText(type, maintenanceStart, maintenanceEnd)}
       </Typography>
-      <Typography>
-        Timezone: <Link to="/profile/display">{timezoneMsg()} </Link>
-      </Typography>
+      {/** only display timezone on the Linode detail */
+      maintenanceStart && (
+        <Typography>
+          Timezone: <Link to="/profile/display">{timezoneMsg()} </Link>
+        </Typography>
+      )}
       <Typography>
         Please see
         <a
