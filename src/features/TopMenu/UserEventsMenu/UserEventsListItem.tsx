@@ -56,7 +56,7 @@ const styles = (theme: Theme) => {
     },
     noLink: {
       '& $title': {
-        opacity: '.5'
+        opacity: .5
       }
     }
   });
