@@ -1,7 +1,8 @@
 import { WithStyles } from '@material-ui/core/styles';
-import { compose, lensPath, path, set } from 'ramda';
+import { lensPath, path, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
+import { compose } from 'recompose'
 import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -37,7 +38,7 @@ type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
 export class AuthenticationSettings extends React.Component<
   CombinedProps,
   State
-> {
+  > {
   /*
    * @todo This logic can be removed when IP Whitelisting (legacy)
    * has been fully deprecated.
@@ -139,7 +140,7 @@ const connected = connect(
   mapDispatchToProps
 );
 
-const enhanced = compose(
+const enhanced = compose<CombinedProps, {}>(
   styled,
   connected,
   setDocs(AuthenticationSettings.docs)

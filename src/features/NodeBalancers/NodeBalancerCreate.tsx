@@ -15,6 +15,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
+import { compose as recompose } from 'recompose'
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CheckoutBar from 'src/components/CheckoutBar';
@@ -203,7 +204,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         set(
           L.healthCheckAttemptsLens,
           NodeBalancerCreate.defaultFieldsStates.configs[0].check_attempts
-        ),
+        ) as () => any,
         set(
           L.healthCheckIntervalLens,
           NodeBalancerCreate.defaultFieldsStates.configs[0].check_interval
@@ -211,7 +212,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         set(
           L.healthCheckTimeoutLens,
           NodeBalancerCreate.defaultFieldsStates.configs[0].check_timeout
-        )
+        ) as () => any
       )
     );
   };
@@ -275,7 +276,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
           lensPath(['nodeBalancerFields', ...nodePathError.path]),
           append(nodePathError.error)
         ),
-        defaultTo([])
+        defaultTo([]) as () => Array<{}>
       );
     });
 
@@ -802,7 +803,7 @@ const withRegions = regionsContainer(({ data, loading, error }) => ({
   regionsError: error
 }));
 
-export default compose(
+export default recompose<CombinedProps, {}>(
   connected,
   withRegions,
   withNodeBalancerActions,
