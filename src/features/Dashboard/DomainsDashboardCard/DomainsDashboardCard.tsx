@@ -108,7 +108,7 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
 
   renderContent = () => {
     const { loading, domains, error } = this.props;
-    if (loading) {
+    if (loading && domains.length === 0) {
       return this.renderLoading();
     }
 
