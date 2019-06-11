@@ -1,9 +1,9 @@
 import { WithStyles } from '@material-ui/core/styles';
 import Backup from '@material-ui/icons/Backup';
 import * as classNames from 'classnames';
-import { compose } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -149,7 +149,7 @@ BackupsDashboardCard.displayName = 'BackupsDashboardCard';
 
 const styled = withStyles(styles);
 
-const enhanced: any = compose(
+const enhanced = compose<CombinedProps, Props>(
   styled,
   withRouter
 )(BackupsDashboardCard);
