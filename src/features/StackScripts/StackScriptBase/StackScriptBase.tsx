@@ -30,6 +30,8 @@ import {
 } from '../stackScriptUtils';
 import withStyles, { StyleProps } from './StackScriptBase.styles';
 
+import { getDisplayName } from 'src/utilities/getDisplayName'
+
 type CurrentFilter = 'label' | 'deploys' | 'revision';
 
 type SortOrder = 'asc' | 'desc';
@@ -577,8 +579,5 @@ const withStackScriptBase = (isSelecting: boolean) => (
     connected
   )(EnhancedComponent);
 };
-
-const getDisplayName = (Component: React.ComponentType) =>
-  Component.displayName || Component.name || 'Component';
 
 export default withStackScriptBase;

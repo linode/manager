@@ -1,7 +1,8 @@
 import { WithStyles } from '@material-ui/core/styles';
-import { compose, path } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
+import { compose } from 'recompose';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
 import { createStyles, Theme, withStyles } from 'src/components/core/styles';
@@ -56,7 +57,7 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
               control={<Toggle onChange={this.toggle} checked={status} />}
               label={`
                 Email alerts for account activity are ${
-                  status === true ? 'enabled' : 'disabled'
+                status === true ? 'enabled' : 'disabled'
                 }
               `}
               disabled={this.state.submitting}
@@ -108,7 +109,7 @@ const connected = connect(
   mapDispatchToProps
 );
 
-const enhanced = compose(
+const enhanced = compose<CombinedProps, {}>(
   styled,
   connected
 );

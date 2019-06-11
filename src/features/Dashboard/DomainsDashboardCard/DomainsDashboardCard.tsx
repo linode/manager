@@ -2,6 +2,7 @@ import { WithStyles } from '@material-ui/core/styles';
 import { compose, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { compose as recompose } from 'recompose'
 import Paper from 'src/components/core/Paper';
 import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Table from 'src/components/core/Table';
@@ -221,7 +222,7 @@ const connected = connect(
   { openForEditing }
 );
 
-const enhanced = compose(
+const enhanced = recompose<CombinedProps, {}>(
   connected,
   styled,
   withUpdatingDomains

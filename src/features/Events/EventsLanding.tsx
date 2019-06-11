@@ -92,7 +92,9 @@ export interface ReducerActions {
   payload: Payload;
 }
 
-export const reducer: React.Reducer<ReducerState, ReducerActions> = (
+type EventsReducer = React.Reducer<ReducerState, ReducerActions>
+
+export const reducer: EventsReducer = (
   state,
   action
 ) => {
@@ -182,7 +184,7 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
   const [isRequesting, setRequesting] = React.useState<boolean>(false);
   const [initialLoaded, setInitialLoaded] = React.useState<boolean>(false);
 
-  const [events, dispatch] = React.useReducer<ReducerState, ReducerActions>(
+  const [events, dispatch] = React.useReducer<EventsReducer>(
     reducer,
     {
       inProgressEvents: props.inProgressEvents,

@@ -253,7 +253,6 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       dialog: {
         ...this.state.dialog,
         open: true,
-        submitting: false,
         errors: apiError
       }
     });

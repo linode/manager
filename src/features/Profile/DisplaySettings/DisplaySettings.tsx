@@ -2,6 +2,7 @@ import { WithStyles } from '@material-ui/core/styles';
 import { compose, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
+import { compose as recompose } from 'recompose'
 import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -10,6 +11,8 @@ import { handleUpdate } from 'src/store/profile/profile.actions';
 import { MapState } from 'src/store/types';
 import EmailChangeForm from './EmailChangeForm';
 import TimezoneForm from './TimezoneForm';
+
+import { RequestableData } from 'src/store/types'
 
 type ClassNames = 'root' | 'title';
 
@@ -120,14 +123,14 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
 const defaultTimezone = compose(
   tz => (tz === '' ? 'GMT' : tz),
   pathOr('GMT', ['data', 'timezone'])
-);
+) as (profile: RequestableData<Linode.Profile>) => string;
 
 const connected = connect(
   mapStateToProps,
   mapDispatchToProps
 );
 
-const enhanced = compose(
+const enhanced = recompose<CombinedProps, {}>(
   styled,
   connected,
   setDocs(DisplaySettings.docs)

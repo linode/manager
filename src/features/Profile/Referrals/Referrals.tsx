@@ -1,7 +1,8 @@
 import { WithStyles } from '@material-ui/core/styles';
-import { compose, path } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'recompose'
 import Paper from 'src/components/core/Paper';
 import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -61,29 +62,29 @@ class Referrals extends React.Component<CombinedProps, {}> {
           {profileLoading ? (
             <div />
           ) : (
-            <React.Fragment>
-              <Grid item>
-                <Typography variant="h3" className={classes.results}>
-                  You have {total} total referrals: {completed} completed ($
+              <React.Fragment>
+                <Grid item>
+                  <Typography variant="h3" className={classes.results}>
+                    You have {total} total referrals: {completed} completed ($
                   {credit} ) and {pending} pending.
                 </Typography>
-              </Grid>
-              <Grid item xs={12}>
-                <CopyableTextField
-                  value={code}
-                  label="Referral Code"
-                  className={classes.copyField}
-                  expand
-                />
-                <CopyableTextField
-                  value={url}
-                  label="Referral URL"
-                  className={classes.copyField}
-                  expand
-                />
-              </Grid>
-            </React.Fragment>
-          )}
+                </Grid>
+                <Grid item xs={12}>
+                  <CopyableTextField
+                    value={code}
+                    label="Referral Code"
+                    className={classes.copyField}
+                    expand
+                  />
+                  <CopyableTextField
+                    value={url}
+                    label="Referral URL"
+                    className={classes.copyField}
+                    expand
+                  />
+                </Grid>
+              </React.Fragment>
+            )}
         </Grid>
       </Paper>
     );
@@ -118,7 +119,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose(
+const enhanced = compose<CombinedProps, {}>(
   styled,
   connected
 );

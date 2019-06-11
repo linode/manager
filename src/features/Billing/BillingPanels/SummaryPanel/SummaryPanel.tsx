@@ -1,7 +1,7 @@
 import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
-import { compose } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import { createStyles, Theme, withStyles } from 'src/components/core/styles';
@@ -66,10 +66,10 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
         {loading && lastUpdated === 0
           ? this.loading()
           : errors
-          ? this.error()
-          : data
-          ? this.info()
-          : null}
+            ? this.error()
+            : data
+              ? this.info()
+              : null}
       </div>
     );
   }
@@ -212,7 +212,7 @@ const accountContext = withAccount(
   })
 );
 
-const enhanced = compose(
+const enhanced = compose<CombinedProps, {}>(
   styled,
   localStyles,
   accountContext
