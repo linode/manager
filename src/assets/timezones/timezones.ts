@@ -786,6 +786,11 @@ export default [
     offset: 0
   },
   {
+    label: 'Troll Time',
+    name: 'Antarctica/Troll',
+    offset: 0
+  },
+  {
     label: 'United Kingdom Time',
     name: 'Europe/London',
     offset: 0
@@ -1078,11 +1083,6 @@ export default [
   {
     label: 'South Africa Standard Time',
     name: 'Africa/Johannesburg',
-    offset: 2
-  },
-  {
-    label: 'Troll Time',
-    name: 'Antarctica/Troll',
     offset: 2
   },
   {
