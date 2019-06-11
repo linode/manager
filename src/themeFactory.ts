@@ -1063,7 +1063,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
           width: 68,
           height: 48,
           '& $checked': {
-            //color: `${primaryColors.main} !important`,
+            // color: `${primaryColors.main} !important`,
             '& input': {
               left: -20
             },

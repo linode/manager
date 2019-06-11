@@ -14,5 +14,5 @@ export default <T extends { id: string | number }>(
     return list;
   }
 
-  return adjust(updater, foundIndex, list);
+  return adjust(foundIndex, updater, list);
 };
