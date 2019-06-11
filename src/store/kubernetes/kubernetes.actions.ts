@@ -14,11 +14,11 @@ export const addOrUpdateCluster = actionCreator<Linode.KubernetesCluster>(
 
 export const upsertCluster = actionCreator<Linode.KubernetesCluster>(`upsert`);
 
-interface ClusterID {
+export interface ClusterID {
   clusterID: string;
 }
 
-interface NodePoolID {
+export interface NodePoolID {
   nodePoolID: string;
 }
 
@@ -44,3 +44,15 @@ export const updateNodePoolActions = actionCreator.async<
   Linode.KubeNodePoolResponse[],
   Linode.ApiFieldError[]
 >(`update-node-pool`);
+
+export const deleteClusterActions = actionCreator.async<
+  ClusterID,
+  {},
+  Linode.ApiFieldError[]
+>(`delete-cluster`);
+
+export const deleteNodePoolActions = actionCreator.async<
+  ClusterID & NodePoolID,
+  {},
+  Linode.ApiFieldError[]
+>(`delete-node-pool`);
