@@ -1,7 +1,8 @@
 import { WithStyles } from '@material-ui/core/styles';
-import { compose, path } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import { compose } from 'recompose'
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
@@ -134,7 +135,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
   }
 }
 
-export default compose(
+export default compose<CombinedProps, {}>(
   withStyles(styles),
   setDocs([StackScriptsDocs]),
   withProfile((ownProps, profile) => {
