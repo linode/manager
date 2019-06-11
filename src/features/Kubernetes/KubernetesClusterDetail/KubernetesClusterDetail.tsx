@@ -20,6 +20,7 @@ import KubeContainer from 'src/containers/kubernetes.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { reportException } from 'src/exceptionReporting';
 import { getKubeConfig } from 'src/services/kubernetes';
+import { UpdateClusterParams } from 'src/store/kubernetes/kubernetes.actions';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { extendCluster } from '.././kubeUtils';
@@ -72,6 +73,7 @@ interface KubernetesContainerProps {
   lastUpdated: number;
   requestKubernetesClusters: () => void;
   requestClusterForStore: (clusterID: string) => void;
+  updateCluster: (params: UpdateClusterParams) => void;
 }
 
 type CombinedProps = WithTypesProps &
@@ -102,6 +104,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     undefined
   );
   const [count, setCount] = React.useState<number>(1);
+  /** For adding tags */
+  const [tags, updateTags] = React.useState<string[]>([]);
 
   React.useEffect(() => {
     /**
@@ -223,6 +227,11 @@ export const KubernetesClusterDetail: React.FunctionComponent<
       });
   };
 
+  const handleUpdateTags = async (newTags: string[]) => {
+    props.updateCluster({ clusterID: cluster.id, tags: newTags });
+    updateTags(newTags);
+  };
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={`Kubernetes Cluster ${'label'}`} />
@@ -302,10 +311,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
                 Cluster Tags
               </Typography>
               <div className={classes.panelItem}>
-                <TagsPanel
-                  tags={['tag1', 'tag2']}
-                  updateTags={() => Promise.resolve()}
-                />
+                <TagsPanel tags={tags} updateTags={handleUpdateTags} />
               </div>
             </Paper>
           </Grid>
