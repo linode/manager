@@ -1,8 +1,8 @@
 import { WithStyles } from '@material-ui/core/styles';
 import browser from 'browser-detect';
-import { compose } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'recompose';
 import Menu from 'src/components/core/Menu';
 import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -253,9 +253,9 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose(
+const enhanced = compose<CombinedProps, {}>(
   styled,
   connected
 );
 
-export default enhanced(UserNotificationsMenu) as React.ComponentType<{}>;
+export default enhanced(UserNotificationsMenu);

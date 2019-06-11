@@ -1,7 +1,7 @@
 import { WithStyles } from '@material-ui/core/styles';
-import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import CircleProgress from 'src/components/CircleProgress';
 import { createStyles, Theme, withStyles } from 'src/components/core/styles';
@@ -69,10 +69,10 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
           {imagesLoading ? (
             <CircleProgress />
           ) : (
-            <Grid item xs={12}>
-              <StackScriptPanel publicImages={imagesData} noHeader={true} />
-            </Grid>
-          )}
+              <Grid item xs={12}>
+                <StackScriptPanel publicImages={imagesData} noHeader={true} />
+              </Grid>
+            )}
         </Grid>
       </React.Fragment>
     );
@@ -87,7 +87,7 @@ interface WithImagesProps {
   imagesError?: Linode.ApiFieldError[];
 }
 
-export default compose(
+export default compose<CombinedProps, {}>(
   withImagesContainer((ownProps, imagesData, imagesLoading, imagesError) => ({
     ...ownProps,
     imagesData: imagesData.filter(i => i.is_public === true),
