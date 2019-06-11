@@ -1,14 +1,18 @@
 import {
+  createNodePool as _createNodePool,
   getKubernetesCluster,
   getKubernetesClusters,
-  updateKubernetesCluster as _updateCluster
+  updateKubernetesCluster as _updateCluster,
+  updateNodePool as _updateNodePool
 } from 'src/services/kubernetes';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
 import {
+  createNodePoolActions,
   requestClustersActions,
   updateClusterActions,
+  updateNodePoolActions,
   upsertCluster
 } from './kubernetes.actions';
 
@@ -44,4 +48,16 @@ export const requestClusterForStore: RequestClusterForStoreThunk = clusterID => 
 export const updateCluster = createRequestThunk(
   updateClusterActions,
   ({ clusterID, ...data }) => _updateCluster(clusterID, data)
+);
+
+export const createNodePool = createRequestThunk(
+  createNodePoolActions,
+  ({ clusterID, ...data }) =>
+    _createNodePool(clusterID, data).then(response => response.data)
+);
+
+export const updateNodePool = createRequestThunk(
+  updateNodePoolActions,
+  ({ clusterID, nodePoolID, ...data }) =>
+    _updateNodePool(clusterID, nodePoolID, data).then(response => response.data)
 );
