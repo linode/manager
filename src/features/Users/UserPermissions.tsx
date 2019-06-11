@@ -104,6 +104,11 @@ interface Props {
   clearNewUser: () => void;
 }
 
+interface Success {
+  global: string;
+  specific: string;
+}
+
 interface State {
   loading: boolean;
   /* need this separated so we can show just the restricted toggle when it's in use */
@@ -115,10 +120,7 @@ interface State {
   originalGrants?: Linode.Grants /* used to implement cancel functionality */;
   restricted?: boolean;
   errors?: Linode.ApiFieldError[];
-  success?: {
-    global: string;
-    specific: string;
-  };
+  success?: Success;
   /* null needs to be a string here because it's a Select value */
   setAllPerm: 'null' | 'read_only' | 'read_write';
 }
@@ -240,7 +242,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
               set(
                 lensPath(['success', 'global']),
                 'Successfully updated global permissions'
-              ),
+              ) as () => Success,
               set(lensPath(['saving', 'global']), false)
             )
           );
