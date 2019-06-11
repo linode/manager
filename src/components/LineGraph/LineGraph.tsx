@@ -1,19 +1,10 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as moment from 'moment-timezone';
 import { clone, curry } from 'ramda';
 import * as React from 'react';
 import { ChartData, Line } from 'react-chartjs-2';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import { setUpCharts } from 'src/utilities/charts';
 
 setUpCharts();
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 interface DataSet {
   label: string;
@@ -33,7 +24,7 @@ interface Props {
   timezone: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const chartOptions: any = {
   maintainAspectRatio: false,
@@ -169,6 +160,4 @@ class LineGraph extends React.Component<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles);
-
-export default styled(LineGraph);
+export default LineGraph;
