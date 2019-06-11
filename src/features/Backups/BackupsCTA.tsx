@@ -1,7 +1,8 @@
 import { WithStyles } from '@material-ui/core/styles';
-import { compose, isEmpty, pathOr } from 'ramda';
+import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
+import { compose } from 'recompose'
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { createStyles, Theme, withStyles } from 'src/components/core/styles';
@@ -142,7 +143,7 @@ const connected = connect(
   mapDispatchToProps
 );
 
-const enhanced: any = compose(
+const enhanced = compose<CombinedProps, Props>(
   styled,
   connected
 )(BackupsCTA);

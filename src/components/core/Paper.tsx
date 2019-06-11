@@ -1,4 +1,4 @@
-import Paper, { PaperProps as _PaperProps } from '@material-ui/core/Paper';
+import _Paper, { PaperProps as _PaperProps } from '@material-ui/core/Paper';
 import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -24,12 +24,12 @@ export interface PaperProps extends _PaperProps {
 
 type CombinedProps = PaperProps & WithStyles<ClassNames>;
 
-class _Paper extends React.Component<CombinedProps> {
+class Paper extends React.Component<CombinedProps> {
   render() {
     const { classes, error, className, ...rest } = this.props;
     return (
       <React.Fragment>
-        <Paper
+        <_Paper
           className={error ? `${className} ${classes.error}` : className}
           {...rest}
         />
@@ -43,4 +43,4 @@ class _Paper extends React.Component<CombinedProps> {
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, PaperProps>(styled)(_Paper);
+export default compose<CombinedProps, PaperProps>(styled)(Paper);

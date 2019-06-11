@@ -80,11 +80,11 @@ const LinodesDetailNavigation: React.StatelessComponent<
               key={tab.title}
               label={tab.title}
               data-qa-tab={tab.title}
-              component={React.forwardRef((props, ref) => (
+              component={React.forwardRef((tabProps, ref) => (
                 <TabLink
                   to={tab.routeName}
                   title={tab.title}
-                  {...props}
+                  {...tabProps}
                   ref={ref}
                 />
               ))}

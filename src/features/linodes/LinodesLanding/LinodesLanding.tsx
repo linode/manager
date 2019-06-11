@@ -640,7 +640,7 @@ interface WithImagesProps {
   imagesError?: Linode.ApiFieldError[];
 }
 
-export const enhanced = compose(
+export const enhanced = compose<CombinedProps, {}>(
   withRouter,
   toggleGroupState,
   styled,
