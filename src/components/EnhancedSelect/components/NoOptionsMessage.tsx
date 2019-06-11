@@ -1,19 +1,10 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { NoticeProps } from 'react-select/lib/components/Menu';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
-type ClassNames = 'root';
+interface Props extends NoticeProps<any> { }
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
-
-interface Props extends NoticeProps<any> {}
-
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const NoOptionsMessage: React.StatelessComponent<CombinedProps> = props => {
   const { selectProps, innerProps, children } = props;
@@ -29,6 +20,4 @@ const NoOptionsMessage: React.StatelessComponent<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(NoOptionsMessage);
+export default NoOptionsMessage;
