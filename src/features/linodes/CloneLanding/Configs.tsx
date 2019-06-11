@@ -12,16 +12,18 @@ import TableRow from 'src/components/core/TableRow';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { ConfigSelection } from './utilities';
 
-type ClassNames = 'root' | 'tableCell';
+type ClassNames = 'root';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  tableCell: {
-    borderBottom: 'none',
-    paddingTop: 0,
-    paddingBottom: 0
+  root: {
+    '& td': {
+      borderBottom: 'none',
+      paddingTop: 0,
+      paddingBottom: 0
+    }
   }
 });
 interface Props {
@@ -35,7 +37,6 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const Configs: React.FC<CombinedProps> = props => {
   const { classes, configs, handleSelect, selectedConfigs } = props;
 
-  // @todo: Empty State?
   return (
     <Paginate data={configs}>
       {({
@@ -52,19 +53,24 @@ export const Configs: React.FC<CombinedProps> = props => {
               isResponsive={false}
               aria-label="List of Configurations"
               border={false}
+              className={classes.root}
             >
               <TableBody>
-                {paginatedData.map((config: Linode.Config) => (
-                  <TableRow key={config.id} data-qa-config={config.label}>
-                    <TableCell className={classes.tableCell}>
-                      <CheckBox
-                        checked={selectedConfigs[config.id].isSelected}
-                        onChange={() => handleSelect(config.id)}
-                        text={config.label}
-                      />
-                    </TableCell>
-                  </TableRow>
-                ))}
+                {paginatedData.length === 0 ? (
+                  <TableRowEmptyState colSpan={1} />
+                ) : (
+                  paginatedData.map((config: Linode.Config) => (
+                    <TableRow key={config.id} data-qa-config={config.label}>
+                      <TableCell>
+                        <CheckBox
+                          checked={selectedConfigs[config.id].isSelected}
+                          onChange={() => handleSelect(config.id)}
+                          text={config.label}
+                        />
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
               </TableBody>
             </Table>
             <PaginationFooter

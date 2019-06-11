@@ -14,6 +14,7 @@ import Grid from 'src/components/Grid';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
+import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { ConfigSelection, DiskSelection, ExtendedDisk } from './utilities';
 
 type ClassNames = 'root' | 'tableCell' | 'labelCol' | 'sizeCol';
@@ -72,28 +73,33 @@ export const Configs: React.FC<CombinedProps> = props => {
                     </TableRow>
                   </TableHead>
                   <TableBody>
-                    {paginatedData.map((disk: ExtendedDisk) => {
-                      const configId = selectedDisks[disk.id].configId;
+                    {paginatedData.length === 0 ? (
+                      <TableRowEmptyState colSpan={2} />
+                    ) : (
+                      paginatedData.map((disk: ExtendedDisk) => {
+                        const configId = selectedDisks[disk.id].configId;
 
-                      const isDiskSelected = selectedDisks[disk.id].isSelected;
-                      const isConfigSelected = !!(
-                        configId && selectedConfigs[configId].isSelected
-                      );
+                        const isDiskSelected =
+                          selectedDisks[disk.id].isSelected;
+                        const isConfigSelected = !!(
+                          configId && selectedConfigs[configId].isSelected
+                        );
 
-                      return (
-                        <TableRow key={disk.id} data-qa-disk={disk.label}>
-                          <TableCell className={classes.tableCell}>
-                            <CheckBox
-                              text={disk.label}
-                              checked={isDiskSelected || isConfigSelected}
-                              disabled={isConfigSelected}
-                              onChange={() => handleSelect(disk.id)}
-                            />
-                          </TableCell>
-                          <TableCell>{disk.size} MB</TableCell>
-                        </TableRow>
-                      );
-                    })}
+                        return (
+                          <TableRow key={disk.id} data-qa-disk={disk.label}>
+                            <TableCell className={classes.tableCell}>
+                              <CheckBox
+                                text={disk.label}
+                                checked={isDiskSelected || isConfigSelected}
+                                disabled={isConfigSelected}
+                                onChange={() => handleSelect(disk.id)}
+                              />
+                            </TableCell>
+                            <TableCell>{disk.size} MB</TableCell>
+                          </TableRow>
+                        );
+                      })
+                    )}
                   </TableBody>
                 </Table>
               </Grid>
