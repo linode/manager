@@ -12,6 +12,7 @@ import TableRow from 'src/components/core/TableRow';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
+import { ConfigSelection } from './utilities';
 
 type ClassNames = 'root' | 'tableCell';
 
@@ -22,10 +23,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     padding: 0
   }
 });
-
 interface Props {
   configs: Linode.Config[];
-  selectedConfigs: Record<number, boolean>;
+  selectedConfigs: ConfigSelection;
   handleSelect: (id: number) => void;
 }
 
@@ -34,6 +34,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const Configs: React.FC<CombinedProps> = props => {
   const { classes, configs, handleSelect, selectedConfigs } = props;
 
+  // @todo: Empty State?
   return (
     <Paginate data={configs}>
       {({
@@ -52,11 +53,11 @@ export const Configs: React.FC<CombinedProps> = props => {
               border={false}
             >
               <TableBody>
-                {paginatedData.map(config => (
+                {paginatedData.map((config: Linode.Config) => (
                   <TableRow key={config.id} data-qa-config={config.label}>
                     <TableCell className={classes.tableCell}>
                       <CheckBox
-                        checked={selectedConfigs[config.id]}
+                        checked={selectedConfigs[config.id].isSelected}
                         onChange={() => handleSelect(config.id)}
                         text={config.label}
                       />
