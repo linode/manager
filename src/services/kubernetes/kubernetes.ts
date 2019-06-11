@@ -72,6 +72,17 @@ export const updateKubernetesCluster = (
   ).then(response => response.data);
 
 /**
+ * deleteKubernetesCluster
+ *
+ * Delete the specified Cluster.
+ */
+export const deleteKubernetesCluster = (clusterID: string) =>
+  Request<{}>(
+    setMethod('DELETE'),
+    setURL(`${API_ROOT}/lke/clusters/${clusterID}`)
+  ).then(response => response.data);
+
+/**
  * createNodePool
  *
  * Adds a node pool to the specified cluster.
@@ -100,6 +111,17 @@ export const updateNodePool = (
     setMethod('POST'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`),
     setData(data, nodePoolSchema)
+  ).then(response => response.data);
+
+/**
+ * deleteNodePool
+ *
+ * Delete a single node pool from the specified Cluster.
+ */
+export const deleteNodePool = (clusterID: string, nodePoolID: string) =>
+  Request<{}>(
+    setMethod('DELETE'),
+    setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`)
   ).then(response => response.data);
 
 /** getKubeConfig

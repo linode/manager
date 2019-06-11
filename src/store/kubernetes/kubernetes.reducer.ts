@@ -4,6 +4,8 @@ import updateOrAdd from 'src/utilities/updateOrAdd';
 import { isType } from 'typescript-fsa';
 import {
   createNodePoolActions,
+  deleteClusterActions,
+  deleteNodePoolActions,
   requestClustersActions,
   updateClusterActions,
   updateNodePoolActions,
@@ -112,6 +114,42 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       node_pools: result
     };
 
+    const update = updateOrAdd(updatedCluster, state.entities);
+
+    return {
+      ...state,
+      entities: update,
+      results: update.map(c => c.id)
+    };
+  }
+
+  if (isType(action, deleteClusterActions.done)) {
+    const {
+      params: { clusterID }
+    } = action.payload;
+    const entities = state.entities.filter(({ id }) => id !== clusterID);
+
+    return {
+      ...state,
+      entities,
+      results: entities.map(c => c.id)
+    };
+  }
+
+  if (isType(action, deleteNodePoolActions.done)) {
+    const {
+      params: { clusterID, nodePoolID }
+    } = action.payload;
+    const cluster = state.entities.find(
+      thisCluster => thisCluster.id === clusterID
+    );
+    if (!cluster) {
+      return state;
+    }
+    const nodePools = cluster.node_pools.filter(
+      thisPool => +thisPool.id === +nodePoolID
+    );
+    const updatedCluster = { ...cluster, node_pools: nodePools };
     const update = updateOrAdd(updatedCluster, state.entities);
 
     return {

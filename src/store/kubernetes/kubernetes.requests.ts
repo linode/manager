@@ -1,5 +1,7 @@
 import {
   createNodePool as _createNodePool,
+  deleteKubernetesCluster as _deleteCluster,
+  deleteNodePool as _deleteNodePool,
   getKubernetesCluster,
   getKubernetesClusters,
   updateKubernetesCluster as _updateCluster,
@@ -10,6 +12,8 @@ import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
 import {
   createNodePoolActions,
+  deleteClusterActions,
+  deleteNodePoolActions,
   requestClustersActions,
   updateClusterActions,
   updateNodePoolActions,
@@ -48,6 +52,16 @@ export const requestClusterForStore: RequestClusterForStoreThunk = clusterID => 
 export const updateCluster = createRequestThunk(
   updateClusterActions,
   ({ clusterID, ...data }) => _updateCluster(clusterID, data)
+);
+
+export const deleteCluster = createRequestThunk(
+  deleteClusterActions,
+  ({ clusterID }) => _deleteCluster(clusterID)
+);
+
+export const deleteNodePool = createRequestThunk(
+  deleteNodePoolActions,
+  ({ clusterID, nodePoolID }) => _deleteNodePool(clusterID, nodePoolID)
 );
 
 export const createNodePool = createRequestThunk(
