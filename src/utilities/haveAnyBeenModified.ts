@@ -2,7 +2,6 @@ import { equals } from 'ramda';
 
 let haveAnyBeenModified: <T>(objA: T, objB: T, keys: (keyof T)[]) => boolean;
 
-/** test */
 haveAnyBeenModified = (state, nextState, keys) => {
   let idx = 0;
   const len = keys.length;

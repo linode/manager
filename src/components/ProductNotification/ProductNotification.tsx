@@ -1,15 +1,6 @@
-import { WithStyles } from '@material-ui/core/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 interface Props {
   text: string;
@@ -17,7 +8,7 @@ interface Props {
   onClick?: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const ProductNotifications: React.StatelessComponent<CombinedProps> = props => {
   const { text, severity } = props;
@@ -25,12 +16,10 @@ const ProductNotifications: React.StatelessComponent<CombinedProps> = props => {
   return React.createElement(Notice, { flag: true, [level]: true }, text);
 };
 
-const styled = withStyles(styles);
-
 const severityLevelMap = {
   minor: 'warning',
   major: 'warning',
   critical: 'error'
 };
 
-export default styled(ProductNotifications);
+export default ProductNotifications;
