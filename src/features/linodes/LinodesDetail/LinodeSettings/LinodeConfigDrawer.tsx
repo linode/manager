@@ -112,7 +112,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   state: State = {
     loading: {
       kernels: false,
-      config: false,
+      config: false
     },
     kernels: [],
     fields: LinodeConfigDrawer.defaultFieldsValues()
@@ -449,10 +449,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             user explicity selects the option to change the
             memory limit.
           */}
-          <FormControl
-            updateFor={[this.state.fields.setMemoryLimit, classes]}
-            component={'fieldset' as 'div'}
-          >
+          <FormControl updateFor={[this.state.fields.setMemoryLimit, classes]}>
             <FormLabel
               htmlFor="memory_limit"
               component="label"
