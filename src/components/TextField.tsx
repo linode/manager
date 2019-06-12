@@ -147,7 +147,6 @@ class LinodeTextField extends React.Component<CombinedProps> {
       tooltipText,
       theme,
       className,
-      onChange,
       expand,
       small,
       tiny,
@@ -239,4 +238,6 @@ class LinodeTextField extends React.Component<CombinedProps> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default compose<CombinedProps, Props>(styled)(LinodeTextField);
+export default compose<CombinedProps, Props>(styled)(
+  LinodeTextField
+) as React.ComponentType<Props>;
