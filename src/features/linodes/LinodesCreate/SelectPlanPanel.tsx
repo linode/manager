@@ -1,6 +1,6 @@
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import {
   StyleRulesCallback,
@@ -190,11 +190,17 @@ export class SelectPlanPanel extends React.Component<
     if (!isEmpty(gpu)) {
       const programInfo = (
         <Typography>
-          This is a pilot program for Linode GPU Instances. Here are some guides
-          with more information. This program has limited availability but if
-          you are interested in the service please{' '}
-          <Link to="/support/tickets">open a support ticket</Link> to let us
-          know.
+          This is a pilot program for Linode GPU Instances.
+          <a
+            href="https://www.linode.com/docs/platform/linode-gpu/getting-started-with-gpu/"
+            target="_blank"
+          >
+            {` `}Here is a guide
+          </a>{' '}
+          with more information. This program has finite resources and may not
+          be available at the time of your request. Some additional verification
+          may be required to access these services.
+          {/* Please <Link to="/support/tickets">open a support ticket</Link> to request verification. */}
         </Typography>
       );
       tabs.push({
