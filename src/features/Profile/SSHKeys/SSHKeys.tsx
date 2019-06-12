@@ -1,10 +1,8 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as moment from 'moment-timezone';
-import { compose } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import Paper from 'src/components/core/Paper';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -23,13 +21,6 @@ import SSHKeyActionMenu from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
 import { getSSHKeys } from 'src/services/profile';
 import fingerprint from 'src/utilities/ssh-fingerprint';
 import SSHKeyCreationDrawer from './SSHKeyCreationDrawer';
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 interface SSHKey {
   id: number;
@@ -57,7 +48,7 @@ interface State {
   };
 }
 
-type CombinedProps = Props & ConnectedProps & WithStyles<ClassNames>;
+type CombinedProps = Props & ConnectedProps;
 
 export class SSHKeys extends React.Component<CombinedProps, State> {
   state: State = {
@@ -87,12 +78,10 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes } = this.props;
-
     return (
       <React.Fragment>
         <TableHeader title="SSH Keys" action={this.headerAction} />
-        <Paper className={classes.root}>
+        <Paper>
           <Table>
             <TableHead>
               <TableRow>
@@ -234,8 +223,6 @@ const updateResponseData = (keys: Linode.SSHKey[]) =>
     created: moment.utc(key.created).fromNow()
   }));
 
-const styled = withStyles(styles);
-
 const documented = setDocs(SSHKeys.docs);
 
 const updatedRequest = (ownProps: any, params: any, filters: any) =>
@@ -246,9 +233,8 @@ const updatedRequest = (ownProps: any, params: any, filters: any) =>
 
 const paginated = paginate(updatedRequest);
 
-const enhanced = compose<any, any, any, any>(
+const enhanced = compose<CombinedProps, {}>(
   paginated,
-  styled,
   documented
 );
 

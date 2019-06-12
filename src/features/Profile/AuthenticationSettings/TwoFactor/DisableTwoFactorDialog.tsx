@@ -1,10 +1,8 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import withLoadingAndError, {
   Props as LoadingAndErrorProps
@@ -12,20 +10,13 @@ import withLoadingAndError, {
 import { disableTwoFactor } from 'src/services/profile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
-
 interface Props {
   open: boolean;
   closeDialog: () => void;
   onSuccess: () => void;
 }
 
-type CombinedProps = Props & LoadingAndErrorProps & WithStyles<ClassNames>;
+type CombinedProps = Props & LoadingAndErrorProps;
 
 class DisableTwoFactorDialog extends React.PureComponent<CombinedProps, {}> {
   handleCloseDialog = () => {
@@ -80,10 +71,7 @@ class DisableTwoFactorDialog extends React.PureComponent<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles);
-
 export default compose<CombinedProps, Props>(
-  styled,
   withLoadingAndError
 )(DisableTwoFactorDialog);
 

@@ -1,21 +1,12 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { createSSHKey } from 'src/services/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 interface Props {
   open: boolean;
@@ -30,7 +21,7 @@ interface State {
   sshKey: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 export class SSHKeyCreationDrawer extends React.PureComponent<
   CombinedProps,
@@ -152,6 +143,4 @@ export class SSHKeyCreationDrawer extends React.PureComponent<
   };
 }
 
-const styled = withStyles(styles);
-
-export default styled(SSHKeyCreationDrawer);
+export default SSHKeyCreationDrawer;
