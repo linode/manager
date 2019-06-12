@@ -1,11 +1,13 @@
+import * as Bluebird from 'bluebird';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { path, remove, update } from 'ramda';
+import { contains, path, remove, update } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
@@ -15,17 +17,20 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import ErrorState from 'src/components/ErrorState';
 import TagsPanel from 'src/components/TagsPanel';
-import KubeContainer from 'src/containers/kubernetes.container';
+import KubeContainer, {
+  DispatchProps
+} from 'src/containers/kubernetes.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { reportException } from 'src/exceptionReporting';
 import { getKubeConfig } from 'src/services/kubernetes';
-import { UpdateClusterParams } from 'src/store/kubernetes/kubernetes.actions';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { extendCluster } from '.././kubeUtils';
 import { ExtendedCluster, ExtendedPoolNode } from '.././types';
 import NodePoolPanel from '../CreateCluster/NodePoolPanel';
+import KubernetesDialog from './KubernetesDialog';
 import KubeSummaryPanel from './KubeSummaryPanel';
 import NodePoolsDisplay from './NodePoolsDisplay';
 
@@ -70,16 +75,16 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface KubernetesContainerProps {
   cluster: ExtendedCluster | null;
   clustersLoading: boolean;
+  clustersLoadError?: Linode.ApiFieldError[];
+  clusterDeleteError?: Linode.ApiFieldError[];
   lastUpdated: number;
-  requestKubernetesClusters: () => void;
-  requestClusterForStore: (clusterID: string) => void;
-  updateCluster: (params: UpdateClusterParams) => void;
 }
 
 type CombinedProps = WithTypesProps &
   RouteComponentProps<{ clusterID: string }> &
   KubernetesContainerProps &
   WithSnackbarProps &
+  DispatchProps &
   WithStyles<ClassNames>;
 
 export const KubernetesClusterDetail: React.FunctionComponent<
@@ -88,6 +93,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   const {
     classes,
     cluster,
+    clusterDeleteError,
+    clustersLoadError,
     clustersLoading,
     enqueueSnackbar,
     lastUpdated,
@@ -106,6 +113,14 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   const [count, setCount] = React.useState<number>(1);
   /** For adding tags */
   const [tags, updateTags] = React.useState<string[]>([]);
+  /** Form submission */
+  const [submitting, setSubmitting] = React.useState<boolean>(false);
+  const [generalError, setErrors] = React.useState<
+    Linode.ApiFieldError[] | undefined
+  >(undefined);
+  const [success, setSuccess] = React.useState<boolean>(false);
+  /** Deletion confirmation modal */
+  const [confirmationOpen, setConfirmation] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     /**
@@ -118,16 +133,67 @@ export const KubernetesClusterDetail: React.FunctionComponent<
       props.requestKubernetesClusters();
     } else {
       const clusterID = props.match.params.clusterID;
-      props.requestClusterForStore(clusterID);
+      props.requestClusterForStore(+clusterID);
     }
   }, []);
 
-  if (clustersLoading && lastUpdated !== 0) {
-    return <div>'loading...'</div>;
+  if (clustersLoadError) {
+    return <ErrorState errorText="Unable to load cluster data." />;
+  }
+
+  if ((clustersLoading && lastUpdated !== 0) || typesLoading) {
+    return <CircleProgress />;
   }
   if (cluster === null) {
     return null;
   }
+
+  const submitForm = () => {
+    /** Fasten your seat belts... */
+    setSubmitting(true);
+    setErrors(undefined);
+    setSuccess(false);
+    Bluebird.map(pools, thisPool => {
+      if (thisPool.queuedForAddition) {
+        // This pool doesn't exist and needs to be added.
+        return props.createNodePool({ clusterID: cluster.id, ...thisPool });
+      } else if (thisPool.queuedForDeletion) {
+        // Marked for deletion
+        return props.deleteNodePool({
+          clusterID: cluster.id,
+          nodePoolID: thisPool.id
+        });
+      } else if (!contains(thisPool, cluster.node_pools)) {
+        /** @todo contains() is deprecated in the next version of Ramda (0.26+). Replace with includes() if we ever upgrade. */
+
+        // User has adjusted the count for this pool. Needs to be pushed through to the API.
+        return props.updateNodePool({
+          clusterID: cluster.id,
+          nodePoolID: thisPool.id,
+          count: thisPool.count,
+          type: thisPool.type
+        });
+      } else {
+        // Nothing has changed about this node, so don't make any requests.
+        return;
+      }
+    })
+      .then(() => {
+        setSuccess(true);
+        setSubmitting(false);
+        setEditing(false);
+      })
+      .catch(err => {
+        setErrors(
+          getAPIErrorOrDefault(
+            err,
+            'Some actions could not be completed. Please try again.'
+          )
+        );
+        setSubmitting(false);
+        setEditing(false);
+      });
+  };
 
   const updatePool = (poolIdx: number, updatedPool: ExtendedPoolNode) => {
     updatePools(prevPools => update(poolIdx, updatedPool, prevPools));
@@ -138,8 +204,15 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   };
 
   const toggleEditing = () => {
+    /**
+     * Regardless of whether we're going into or out of editing mode,
+     * reset everything.
+     */
+
     updatePools(cluster.node_pools);
     setEditing(!editing);
+    setSuccess(false);
+    setErrors(undefined);
   };
 
   const handleAddNodePool = (pool: ExtendedPoolNode) => {
@@ -194,6 +267,18 @@ export const KubernetesClusterDetail: React.FunctionComponent<
         return prevPools;
       }
     });
+  };
+
+  const handleDeleteCluster = () => {
+    props
+      .deleteCluster({ clusterID: cluster.id })
+      .then(() => props.history.push('/kubernetes'))
+      .catch(_ => null); // Handle errors through Redux
+  };
+
+  const openDeleteConfirmation = () => {
+    props.setKubernetesErrors({ delete: undefined });
+    setConfirmation(true);
   };
 
   const downloadKubeConfig = () => {
@@ -257,6 +342,10 @@ export const KubernetesClusterDetail: React.FunctionComponent<
         <Grid container item direction="column" xs={9}>
           <Grid item>
             <NodePoolsDisplay
+              submittingForm={submitting}
+              submitForm={submitForm}
+              submissionSuccess={success}
+              submissionError={generalError}
               editing={editing}
               toggleEditing={toggleEditing}
               updatePool={updatePool}
@@ -270,15 +359,12 @@ export const KubernetesClusterDetail: React.FunctionComponent<
           <Grid item>
             <NodePoolPanel
               hideTable
-              pools={[]} // Not needed
               selectedType={selectedType}
               types={typesData || []}
               nodeCount={count}
               addNodePool={handleAddNodePool}
-              deleteNodePool={() => null} // Not needed since we're not displaying the table from inside this component
               handleTypeSelect={newType => setSelectedType(newType)}
               updateNodeCount={newCount => setCount(newCount)}
-              updatePool={() => null} // Not needed
               typesLoading={typesLoading}
               typesError={
                 typesError
@@ -291,7 +377,11 @@ export const KubernetesClusterDetail: React.FunctionComponent<
             />
           </Grid>
           <Grid item className={classes.section}>
-            <Button destructive type="secondary" onClick={() => null}>
+            <Button
+              destructive
+              type="secondary"
+              onClick={openDeleteConfirmation}
+            >
               Delete Cluster
             </Button>
           </Grid>
@@ -317,6 +407,13 @@ export const KubernetesClusterDetail: React.FunctionComponent<
           </Grid>
         </Grid>
       </Grid>
+      <KubernetesDialog
+        open={confirmationOpen}
+        error={path([0, 'reason'], clusterDeleteError)}
+        clusterLabel={cluster.label}
+        onClose={() => setConfirmation(false)}
+        onDelete={handleDeleteCluster}
+      />
     </React.Fragment>
   );
 };
@@ -328,7 +425,7 @@ const withCluster = KubeContainer<
   WithTypesProps & RouteComponentProps<{ clusterID: string }>
 >((ownProps, clustersLoading, lastUpdated, clustersError, clustersData) => {
   const thisCluster = clustersData.find(
-    c => c.id === ownProps.match.params.clusterID
+    c => c.id == +ownProps.match.params.clusterID
   );
   const cluster = thisCluster
     ? extendCluster(thisCluster, ownProps.typesData || [])
@@ -337,7 +434,9 @@ const withCluster = KubeContainer<
     ...ownProps,
     cluster,
     lastUpdated,
-    clustersLoading
+    clustersLoading,
+    clustersLoadError: clustersError.read,
+    clusterDeleteError: clustersError.delete
   };
 });
 

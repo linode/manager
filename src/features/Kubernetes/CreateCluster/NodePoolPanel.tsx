@@ -46,7 +46,6 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 
 interface Props {
-  pools: ExtendedPoolNode[];
   types: ExtendedType[];
   typesLoading: boolean;
   typesError?: string;
@@ -55,10 +54,12 @@ interface Props {
   nodeCount: number;
   hideTable?: boolean;
   addNodePool: (pool: ExtendedPoolNode) => void;
-  deleteNodePool: (poolIdx: number) => void;
   handleTypeSelect: (newType?: string) => void;
   updateNodeCount: (newCount: number) => void;
-  updatePool: (poolIdx: number, updatedPool: ExtendedPoolNode) => void;
+  // Props only needed if hideTable is false
+  pools?: ExtendedPoolNode[];
+  deleteNodePool?: (poolIdx: number) => void;
+  updatePool?: (poolIdx: number, updatedPool: ExtendedPoolNode) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -110,6 +111,13 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     types
   } = props;
 
+  if (!hideTable && !(pools && updatePool && deleteNodePool)) {
+    /** These props are required when showing the table. */
+    throw new Error(
+      'You must provide pools, update and delete functions when displaying the table in NodePoolPanel.'
+    );
+  }
+
   const submitForm = () => {
     /** Do simple client validation for the two input fields */
     setTypeError(undefined);
@@ -127,6 +135,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
      * Add pool and reset form state.
      */
     addNodePool({
+      id: 0,
       type: selectedType,
       count: nodeCount,
       totalMonthlyPrice: getMonthlyPrice(selectedType, nodeCount, types)
@@ -168,14 +177,15 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
         </Button>
       </Grid>
       {!hideTable && (
+        /* We checked for these props above so it's safe to assume they're defined. */
         <Grid item className={classes.gridItem}>
           <NodePoolDisplayTable
             small
             editable
-            pools={pools}
+            pools={pools || []}
             types={types}
-            handleDelete={(poolIdx: number) => deleteNodePool(poolIdx)}
-            updatePool={updatePool}
+            handleDelete={(poolIdx: number) => deleteNodePool!(poolIdx)}
+            updatePool={updatePool!}
           />
         </Grid>
       )}

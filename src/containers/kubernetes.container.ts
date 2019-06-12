@@ -4,11 +4,16 @@ import { ThunkDispatch } from 'redux-thunk';
 import { ApplicationState } from 'src/store';
 import {
   CreateNodePoolParams,
+  DeleteClusterParams,
+  DeleteNodePoolParams,
+  setErrors as _setErrors,
   UpdateClusterParams,
   UpdateNodePoolParams
 } from 'src/store/kubernetes/kubernetes.actions';
 import {
   createNodePool as _createNodePool,
+  deleteCluster as _deleteCluster,
+  deleteNodePool as _deleteNodePool,
   requestClusterForStore as _requestClusterForStore,
   requestKubernetesClusters as _requestKubernetesClusters,
   updateCluster as _updateCluster,
@@ -25,24 +30,33 @@ export interface KubernetesProps {
 
 export interface DispatchProps {
   requestKubernetesClusters: () => void;
-  requestClusterForStore: (clusterID: string) => void;
+  requestClusterForStore: (clusterID: number) => void;
   updateCluster: (params: UpdateClusterParams) => void;
   createNodePool: (params: CreateNodePoolParams) => void;
   updateNodePool: (params: UpdateNodePoolParams) => void;
+  deleteNodePool: (params: DeleteNodePoolParams) => void;
+  deleteCluster: (params: DeleteClusterParams) => Promise<any>;
+  setKubernetesErrors: (newErrors: EntityError) => void;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => ({
   requestKubernetesClusters: () => dispatch(_requestKubernetesClusters()),
-  requestClusterForStore: (clusterID: string) =>
+  requestClusterForStore: (clusterID: number) =>
     dispatch(_requestClusterForStore(clusterID)),
   updateCluster: (params: UpdateClusterParams) =>
     dispatch(_updateCluster(params)),
   createNodePool: (params: CreateNodePoolParams) =>
     dispatch(_createNodePool(params)),
   updateNodePool: (params: UpdateNodePoolParams) =>
-    dispatch(_updateNodePool(params))
+    dispatch(_updateNodePool(params)),
+  deleteNodePool: (params: DeleteNodePoolParams) =>
+    dispatch(_deleteNodePool(params)),
+  deleteCluster: (params: DeleteClusterParams) =>
+    dispatch(_deleteCluster(params)),
+  setKubernetesErrors: (newErrors: EntityError) =>
+    dispatch(_setErrors(newErrors))
 });
 
 export default <TInner extends {}, TOuter extends {}>(

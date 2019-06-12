@@ -1,3 +1,5 @@
+import { contains, groupBy } from 'ramda';
+
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { ExtendedCluster, ExtendedPoolNode, PoolNode } from './types';
 
@@ -28,11 +30,14 @@ export const getTotalClusterPrice = (pools: ExtendedPoolNode[]) =>
 
 /**
  * Usually when displaying or editing clusters, we need access
- * to pricing information as well as statistics, which aren't 
+ * to pricing information as well as statistics, which aren't
  * returned from the API and must be computed.
  */
-export const extendCluster = (cluster: Linode.KubernetesCluster, types: ExtendedType[]): ExtendedCluster => {
-  const pools = cluster.node_pools;
+export const extendCluster = (
+  cluster: Linode.KubernetesCluster,
+  types: ExtendedType[]
+): ExtendedCluster => {
+  const pools = responseToExtendedNodePool(cluster.node_pools);
   const { CPU, RAM } = getTotalClusterMemoryAndCPU(pools, types);
   const extendedPools: ExtendedPoolNode[] = pools.map(thisPool => ({
     ...thisPool,
@@ -45,8 +50,8 @@ export const extendCluster = (cluster: Linode.KubernetesCluster, types: Extended
     price,
     totalMemory: RAM,
     totalCPU: CPU
-  }
-}
+  };
+};
 
 interface ClusterData {
   CPU: number;
@@ -76,3 +81,53 @@ export const getTotalClusterMemoryAndCPU = (
     { RAM: 0, CPU: 0 }
   );
 };
+
+export const responseToExtendedNodePool = (pools: Linode.KubeNodePoolResponse[]): ExtendedPoolNode[] => {
+  return pools.map(thisPool => ({
+    id: thisPool.id,
+    count: thisPool.count,
+    type: thisPool.type,
+    totalMonthlyPrice: 0
+  }))
+}
+
+/** getPoolUpdateGroups
+ *
+ * Separates a set of node pools into categories.
+ *
+ * @param pools: The list of pools in local state. These may be in any of the following categories:
+ *  - Unchanged: user hasn't typed any input.
+ *  - To be deleted: existing node pools that need to be deleted through the API
+ *  - Updated: User has changed the node_count value through the form.
+ *  - To be added: new node in local state to be created through the API.
+ *
+ * @param propsPools: this reflects the current state of the cluster, as reported by the API.
+ *  This prop is used for determining if a node pool has been updated. Doing a deep comparison
+ *  check in this helper is simpler and more efficient than comparing on every user input to
+ *  see if a value differs from the static state.
+ *
+ * Returns an object with the following shape:
+ *
+ * {
+ *  'add': [list, of, pools, to, add],
+ *  'update': [same, here],
+ *  'delete': [same, here],
+ *  'unchanged': [same, here]
+ * }
+ * 
+ * NOTE: If a particular group is empty, that property will _not_ exist in the resulting object.
+ * Use safe object access.
+ */
+export const getPoolUpdateGroups = (
+  pools: ExtendedPoolNode[],
+  propsPools: ExtendedPoolNode[]
+) =>
+  groupBy((thisPool: ExtendedPoolNode) => {
+    return thisPool.queuedForAddition
+      ? 'add'
+      : thisPool.queuedForDeletion
+      ? 'delete'
+      : contains(thisPool, propsPools)
+      ? 'unchanged'
+      : 'update';
+  }, pools);

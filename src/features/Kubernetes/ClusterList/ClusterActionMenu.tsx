@@ -9,7 +9,7 @@ import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
-  clusterId: string;
+  clusterId: number;
 }
 
 type CombinedProps = Props & WithSnackbarProps;

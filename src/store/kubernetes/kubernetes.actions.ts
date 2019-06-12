@@ -1,5 +1,7 @@
 import actionCreatorFactory from 'typescript-fsa';
 
+import { EntityError } from 'src/store/types';
+
 export const actionCreator = actionCreatorFactory(`@@manager/kubernetes`);
 
 export const requestClustersActions = actionCreator.async<
@@ -14,12 +16,14 @@ export const addOrUpdateCluster = actionCreator<Linode.KubernetesCluster>(
 
 export const upsertCluster = actionCreator<Linode.KubernetesCluster>(`upsert`);
 
+export const setErrors = actionCreator<EntityError>('set-errors');
+
 export interface ClusterID {
-  clusterID: string;
+  clusterID: number;
 }
 
 export interface NodePoolID {
-  nodePoolID: string;
+  nodePoolID: number;
 }
 
 export type UpdateClusterParams = ClusterID & Partial<Linode.KubernetesCluster>;
@@ -32,7 +36,7 @@ export const updateClusterActions = actionCreator.async<
 export type CreateNodePoolParams = ClusterID & Linode.PoolNodeRequest;
 export const createNodePoolActions = actionCreator.async<
   CreateNodePoolParams,
-  Linode.KubeNodePoolResponse[],
+  Linode.KubeNodePoolResponse,
   Linode.ApiFieldError[]
 >(`create-node-pool`);
 
@@ -41,18 +45,20 @@ export type UpdateNodePoolParams = ClusterID &
   Linode.PoolNodeRequest;
 export const updateNodePoolActions = actionCreator.async<
   UpdateNodePoolParams,
-  Linode.KubeNodePoolResponse[],
+  Linode.KubeNodePoolResponse,
   Linode.ApiFieldError[]
 >(`update-node-pool`);
 
+export type DeleteClusterParams = ClusterID;
 export const deleteClusterActions = actionCreator.async<
-  ClusterID,
+  DeleteClusterParams,
   {},
   Linode.ApiFieldError[]
 >(`delete-cluster`);
 
+export type DeleteNodePoolParams = ClusterID & NodePoolID;
 export const deleteNodePoolActions = actionCreator.async<
-  ClusterID & NodePoolID,
+  DeleteNodePoolParams,
   {},
   Linode.ApiFieldError[]
 >(`delete-node-pool`);
