@@ -193,13 +193,13 @@ const isPrivacyPolicityNotification = (n: Linode.Notification) =>
 
 const reduceSeverity = (
   result: Linode.NotificationSeverity | null,
-  { severity }: Linode.Notification
+  { severity, type }: Linode.Notification
 ) => {
+  if (result === 'major' || severity === 'major' || type === 'maintenance') {
+    return 'major';
+  }
   if (result === 'critical' || severity === 'critical') {
     return 'critical';
-  }
-  if (result === 'major' || severity === 'major') {
-    return 'major';
   }
   if (result === 'minor' || severity === 'minor') {
     return 'minor';
