@@ -35,6 +35,4 @@ const LabelField: React.StatelessComponent<CombinedProps> = ({
   );
 };
 
-const styled = styles;
-
 export default LabelField;

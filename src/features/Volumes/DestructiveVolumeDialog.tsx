@@ -1,18 +1,9 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 interface Props {
   open: boolean;
@@ -25,7 +16,7 @@ interface Props {
   linodeLabel: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
   renderActions = () => {
@@ -75,6 +66,4 @@ class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles);
-
-export default styled(DestructiveVolumeDialog);
+export default DestructiveVolumeDialog;

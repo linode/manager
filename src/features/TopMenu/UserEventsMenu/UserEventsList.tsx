@@ -1,9 +1,7 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as moment from 'moment';
 import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import eventMessageGenerator from 'src/eventMessageGenerator';
 import { reportException } from 'src/exceptionReporting';
 import { ExtendedEvent } from 'src/store/events/event.helpers';
@@ -25,19 +23,12 @@ const reportEventError = (e: Linode.Event, err: Error) =>
     ? reportException(err)
     : console.log('Event Error', err); /* tslint:disable-line */
 
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
-
 interface Props {
   events?: Linode.Event[];
   closeMenu: () => void;
 }
 
-type CombinedProps = Props & RouteComponentProps<void> & WithStyles<ClassNames>;
+type CombinedProps = Props & RouteComponentProps<void>;
 
 export const UserEventsList: React.StatelessComponent<
   CombinedProps
@@ -86,14 +77,11 @@ export const UserEventsList: React.StatelessComponent<
   );
 };
 
-const styled = withStyles(styles);
-
 UserEventsList.defaultProps = {
   events: []
 };
 
 const enhanced = compose<any, any, any>(
-  styled,
   withRouter
 );
 
