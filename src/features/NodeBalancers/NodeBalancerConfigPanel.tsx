@@ -460,7 +460,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 errorText={hasErrorFor('check')}
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 textFieldProps={{
-                  'data-qa-active-check-select': true
+                  dataAttrs: {
+                    'data-qa-active-check-select': true
+                  }
                 }}
                 small
                 disabled={disabled}
@@ -790,7 +792,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorText={hasErrorFor('protocol')}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   textFieldProps={{
-                    'data-qa-protocol-select': true
+                    dataAttrs: {
+                      'data-qa-protocol-select': true
+                    }
                   }}
                   disabled={disabled}
                   noMarginTop
@@ -856,7 +860,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorText={hasErrorFor('algorithm')}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   textFieldProps={{
-                    'data-qa-algorithm-select': true
+                    dataAttrs: {
+                      'data-qa-algorithm-select': true
+                    }
                   }}
                   small
                   disabled={disabled}
@@ -879,7 +885,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorText={hasErrorFor('stickiness')}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   textFieldProps={{
-                    'data-qa-session-stickiness-select': true
+                    dataAttrs: {
+                      'data-qa-session-stickiness-select': true
+                    }
                   }}
                   small
                   disabled={disabled}

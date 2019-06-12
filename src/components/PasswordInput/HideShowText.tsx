@@ -24,14 +24,12 @@ class HideShowText extends React.Component<Props, State> {
 
   render() {
     const { hidden } = this.state;
-    const { required } = this.props;
-
+    
     return (
       <TextField
-        {...this.props as any}
+        {...this.props}
         data-qa-hide={hidden}
         type={hidden ? 'password' : 'text'}
-        required={required}
         InputProps={{
           startAdornment: hidden ? (
             <Visibility
