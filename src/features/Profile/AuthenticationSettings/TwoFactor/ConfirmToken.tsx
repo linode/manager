@@ -1,6 +1,6 @@
 import { WithStyles } from '@material-ui/core/styles';
-import { compose } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { createStyles, Theme, withStyles } from 'src/components/core/styles';
@@ -85,7 +85,7 @@ const ConfirmToken: React.StatelessComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-export default compose<any, any, any>(
+export default compose<CombinedProps, Props>(
   styled,
   RenderGuard
 )(ConfirmToken);

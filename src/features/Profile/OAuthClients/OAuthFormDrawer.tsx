@@ -1,22 +1,13 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 interface Props {
   open: boolean;
@@ -33,7 +24,7 @@ interface Props {
   onChangePublic: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = props => {
   const {
@@ -117,6 +108,4 @@ OAuthCreationDrawer.defaultProps = {
   errors: []
 };
 
-const styled = withStyles(styles);
-
-export default styled(OAuthCreationDrawer);
+export default OAuthCreationDrawer;

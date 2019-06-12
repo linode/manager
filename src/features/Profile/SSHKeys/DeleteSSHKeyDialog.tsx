@@ -1,19 +1,10 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { deleteSSHKey } from 'src/services/profile';
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 interface Props {
   open: boolean;
@@ -28,7 +19,7 @@ interface State {
   error?: Error;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 class DeleteSSHKeyDialog extends React.PureComponent<CombinedProps, State> {
   state: State = {
@@ -101,6 +92,4 @@ class DeleteSSHKeyDialog extends React.PureComponent<CombinedProps, State> {
   };
 }
 
-const styled = withStyles(styles);
-
-export default styled(DeleteSSHKeyDialog);
+export default DeleteSSHKeyDialog;

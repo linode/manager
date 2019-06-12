@@ -1,23 +1,14 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import withLoadingAndError, {
   Props as LoadingAndErrorProps
 } from 'src/components/withLoadingAndError';
 import { deleteTrustedDevice } from 'src/services/profile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 interface Props {
   open: boolean;
@@ -26,7 +17,7 @@ interface Props {
   refreshListOfDevices: () => void;
 }
 
-type CombinedProps = Props & LoadingAndErrorProps & WithStyles<ClassNames>;
+type CombinedProps = Props & LoadingAndErrorProps;
 
 class TrustedDevicesDialog extends React.PureComponent<CombinedProps, {}> {
   handleCloseDialog = () => {
@@ -82,10 +73,7 @@ class TrustedDevicesDialog extends React.PureComponent<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles);
-
 export default compose<CombinedProps, Props>(
-  styled,
   withLoadingAndError
 )(TrustedDevicesDialog);
 
