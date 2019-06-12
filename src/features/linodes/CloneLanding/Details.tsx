@@ -157,7 +157,7 @@ export const Configs: React.FC<CombinedProps> = props => {
 
       <Typography>Current Datacenter: {formatRegion(region)}</Typography>
 
-      {/* @todo: This LinodeSelect needs to be subdivided by region */}
+      {/* @todo: This LinodeSelect needs to be grouped by region */}
       <LinodeSelect
         label="Destination"
         selectedLinode={selectedLinode}
