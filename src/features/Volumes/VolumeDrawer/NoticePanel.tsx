@@ -1,7 +1,6 @@
 import * as React from 'react';
 import Notice from 'src/components/Notice';
 
-type ClassNames = 'root';
 interface Props {
   success?: string;
   error?: string;

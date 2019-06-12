@@ -32,7 +32,6 @@ const linodes: Item[] = [
 describe('Linode Select', () => {
   const wrapper = shallow(
     <LinodeSelect
-      classes={{ root: '' }}
       onChange={jest.fn()}
       name=""
       onBlur={jest.fn()}

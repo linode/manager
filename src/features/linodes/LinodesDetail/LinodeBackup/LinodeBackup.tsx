@@ -859,7 +859,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 export default compose<CombinedProps, {}>(
   linodeContext,
   preloaded,
-  styled as any,
+  styled,
   withRouter,
   connected,
   withSnackbar,

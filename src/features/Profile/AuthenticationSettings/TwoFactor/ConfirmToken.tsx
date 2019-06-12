@@ -6,7 +6,7 @@ import Button from 'src/components/Button';
 import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-import RenderGuard from 'src/components/RenderGuard';
+import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 
 type ClassNames = 'root' | 'warning';
@@ -30,7 +30,7 @@ interface Props {
   onSubmit: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames> & RenderGuardProps;
 
 const ConfirmToken: React.StatelessComponent<CombinedProps> = props => {
   const {
@@ -85,7 +85,7 @@ const ConfirmToken: React.StatelessComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-export default compose<CombinedProps, Props>(
+export default compose<CombinedProps, Props & RenderGuardProps>(
   styled,
   RenderGuard
 )(ConfirmToken);

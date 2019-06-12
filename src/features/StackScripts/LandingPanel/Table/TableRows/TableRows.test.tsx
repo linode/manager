@@ -10,9 +10,6 @@ let component: ShallowWrapper<any, any>;
 beforeAll(() => {
   component = shallow(
     <StackScriptTableRows
-      classes={{
-        root: ''
-      }}
       currentUser="mmckenna"
       triggerDelete={jest.fn()}
       triggerMakePublic={jest.fn()}
