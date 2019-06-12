@@ -192,7 +192,9 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
           onChange={this.setSelectedLinode}
           onInputChange={this.onInputChange}
           textFieldProps={{
-            'data-qa-select-linode': true
+            dataAttrs: {
+              'data-qa-select-linode': true
+            }
           }}
           {...rest}
         />
