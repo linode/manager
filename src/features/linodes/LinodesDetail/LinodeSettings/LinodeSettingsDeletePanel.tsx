@@ -1,4 +1,3 @@
-import { WithStyles } from '@material-ui/core/styles';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -6,7 +5,6 @@ import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
@@ -17,13 +15,6 @@ import {
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 interface Props {
   linodeId: number;
@@ -38,8 +29,7 @@ interface State {
 type CombinedProps = Props &
   ContextProps &
   LinodeActionsProps &
-  RouteComponentProps<{}> &
-  WithStyles<ClassNames>;
+  RouteComponentProps<{}>;
 
 class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -130,8 +120,6 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
   );
 }
 
-const styled = withStyles(styles);
-
 const errorBoundary = PanelErrorBoundary({ heading: 'Delete Linode' });
 
 interface ContextProps {
@@ -146,7 +134,6 @@ const enhanced = compose<CombinedProps, Props>(
   errorBoundary,
   linodeContext,
   withRouter,
-  styled,
   withLinodeActions
 );
 
