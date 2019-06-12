@@ -1,23 +1,14 @@
-import { WithStyles } from '@material-ui/core/styles';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import { getVolumes } from 'src/services/volumes';
 import { MapState } from 'src/store/types';
 import { debounce } from 'throttle-debounce';
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 interface Props {
   error?: string;
@@ -35,7 +26,7 @@ interface State {
   selectedVolumeId?: number;
 }
 
-type CombinedProps = Props & StateProps & WithStyles<ClassNames>;
+type CombinedProps = Props & StateProps;
 
 class VolumeSelect extends React.Component<CombinedProps, State> {
   state: State = {
@@ -210,9 +201,6 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
 
 const connected = connect(mapStateToProps);
 
-const styled = withStyles(styles);
-
 export default compose<CombinedProps, Props>(
-  styled,
   connected
 )(VolumeSelect);

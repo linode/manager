@@ -1,14 +1,5 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TextField from 'src/components/TextField';
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 interface Props {
   onBlur: (e: any) => void;
@@ -19,7 +10,7 @@ interface Props {
   disabled?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const LabelField: React.StatelessComponent<CombinedProps> = ({
   error,
@@ -44,6 +35,6 @@ const LabelField: React.StatelessComponent<CombinedProps> = ({
   );
 };
 
-const styled = withStyles(styles);
+const styled = styles;
 
-export default styled(LabelField);
+export default LabelField;

@@ -1,19 +1,10 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import withLinodes from 'src/containers/withLinodes.container';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 interface WithLinodesProps {
   linodesData: Linode.Linode[];
@@ -31,7 +22,7 @@ interface Props {
   textFieldProps?: TextFieldProps;
 }
 
-type CombinedProps = Props & WithLinodesProps & WithStyles<ClassNames>;
+type CombinedProps = Props & WithLinodesProps;
 
 const linodesToItems = (linodes: Linode.Linode[]): Item<number>[] =>
   linodes.map(thisLinode => ({
@@ -91,10 +82,7 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
 export default compose<CombinedProps, Props & RenderGuardProps>(
-  styled,
   RenderGuard,
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
     ...ownProps,
