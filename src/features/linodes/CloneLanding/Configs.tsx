@@ -28,14 +28,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 });
 interface Props {
   configs: Linode.Config[];
-  selectedConfigs: ConfigSelection;
+  configSelection: ConfigSelection;
   handleSelect: (id: number) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const Configs: React.FC<CombinedProps> = props => {
-  const { classes, configs, handleSelect, selectedConfigs } = props;
+  const { classes, configs, handleSelect, configSelection } = props;
 
   return (
     <Paginate data={configs}>
@@ -63,7 +63,7 @@ export const Configs: React.FC<CombinedProps> = props => {
                     <TableRow key={config.id} data-qa-config={config.label}>
                       <TableCell>
                         <CheckBox
-                          checked={selectedConfigs[config.id].isSelected}
+                          checked={configSelection[config.id].isSelected}
                           onChange={() => handleSelect(config.id)}
                           text={config.label}
                         />

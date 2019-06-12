@@ -65,8 +65,8 @@ interface Props {
   selectedDisks: Linode.Disk[];
   selectedLinode: number | null;
   region: string;
-  handleSelectConfig: (id: number) => void;
-  handleSelectDisk: (id: number) => void;
+  handleToggleConfig: (id: number) => void;
+  handleToggleDisk: (id: number) => void;
   handleSelectLinode: (linodeId: number) => void;
   clearAll: () => void;
 }
@@ -80,8 +80,8 @@ export const Configs: React.FC<CombinedProps> = props => {
     selectedDisks,
     selectedLinode,
     region,
-    handleSelectConfig,
-    handleSelectDisk,
+    handleToggleConfig,
+    handleToggleDisk,
     handleSelectLinode,
     clearAll
   } = props;
@@ -110,7 +110,7 @@ export const Configs: React.FC<CombinedProps> = props => {
             >
               <Typography variant="h3">{eachConfig.label}</Typography>
               <a
-                onClick={() => handleSelectConfig(eachConfig.id)}
+                onClick={() => handleToggleConfig(eachConfig.id)}
                 className={classes.closeIcon}
                 data-qa-inline-delete
               >
@@ -140,7 +140,7 @@ export const Configs: React.FC<CombinedProps> = props => {
             >
               <Typography variant="h3">{eachDisk.label}</Typography>
               <a
-                onClick={() => handleSelectDisk(eachDisk.id)}
+                onClick={() => handleToggleDisk(eachDisk.id)}
                 className={classes.closeIcon}
                 data-qa-inline-delete
               >

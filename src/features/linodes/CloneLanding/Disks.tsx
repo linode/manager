@@ -1,3 +1,4 @@
+import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import CheckBox from 'src/components/CheckBox';
@@ -15,7 +16,7 @@ import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import { ConfigSelection, DiskSelection, ExtendedDisk } from './utilities';
+import { DiskSelection } from './utilities';
 
 type ClassNames = 'root' | 'tableCell' | 'labelCol' | 'sizeCol';
 
@@ -35,8 +36,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 interface Props {
   disks: Linode.Disk[];
-  selectedDisks: DiskSelection;
-  selectedConfigs: ConfigSelection;
+  diskSelection: DiskSelection;
+  selectedConfigIds: number[];
   handleSelect: (id: number) => void;
 }
 
@@ -46,8 +47,8 @@ export const Configs: React.FC<CombinedProps> = props => {
   const {
     classes,
     disks,
-    selectedDisks,
-    selectedConfigs,
+    diskSelection,
+    selectedConfigIds,
     handleSelect
   } = props;
 
@@ -76,14 +77,21 @@ export const Configs: React.FC<CombinedProps> = props => {
                     {paginatedData.length === 0 ? (
                       <TableRowEmptyState colSpan={2} />
                     ) : (
-                      paginatedData.map((disk: ExtendedDisk) => {
-                        const configId = selectedDisks[disk.id].configId;
-
+                      paginatedData.map((disk: Linode.Disk) => {
                         const isDiskSelected =
-                          selectedDisks[disk.id].isSelected;
-                        const isConfigSelected = !!(
-                          configId && selectedConfigs[configId].isSelected
-                        );
+                          diskSelection[disk.id].isSelected;
+
+                        const isConfigSelected =
+                          // Is there anything in common between this disk's
+                          // associatedConfigIds and the selectedConfigsIds?
+                          intersection(
+                            pathOr(
+                              [],
+                              [disk.id, 'associatedConfigIds'],
+                              diskSelection
+                            ),
+                            selectedConfigIds
+                          ).length > 0;
 
                         return (
                           <TableRow key={disk.id} data-qa-disk={disk.label}>

@@ -1,50 +1,76 @@
 import { map } from 'ramda';
 
 /**
- * Returns an array of Disks that are associated with a given config.
- * `config.devices` looks something like this:
- * { "sda": { "disk_id": 1234, "volume_id": 5678 }, ...etc }
- * This function returns an array of disks that match a `disk_id` in the config.
+ * TYPES
  */
-export const getAssociatedDisks = (
-  config: Linode.Config,
-  disks: Linode.Disk[]
-): Linode.Disk[] => {
-  const disksOnConfig: number[] = [];
-  Object.keys(config.devices).forEach(key => {
-    if (config.devices[key] && config.devices[key].disk_id) {
-      disksOnConfig.push(config.devices[key].disk_id);
-    }
-  });
-  return disks.filter(eachDisk => disksOnConfig.includes(eachDisk.id));
-};
 
-export type ConfigSelection = Record<
-  number,
-  { isSelected: boolean; associatedDisks: Linode.Disk[] }
->;
-
-export type DiskSelection = Record<
-  number,
-  { isSelected: boolean; configId?: number }
->;
-
-export type ExtendedConfig = Linode.Config & { associatedDisks: Linode.Disk[] };
-export type ExtendedDisk = Linode.Disk & { configId?: number };
-
-interface State {
+interface CloneLandingState {
   configSelection: ConfigSelection;
   diskSelection: DiskSelection;
   selectedLinodeId: number | null;
 }
 
-export type Action =
+// Allows for easy toggling of a selected config
+export type ConfigSelection = Record<
+  number,
+  { isSelected: boolean; associatedDiskIds: number[] }
+>;
+
+// Allows for easy toggling of a selected disk
+export type DiskSelection = Record<
+  number,
+  { isSelected: boolean; associatedConfigIds: number[] }
+>;
+
+export type CloneLandingAction =
   | { type: 'toggleConfig'; id: number }
   | { type: 'toggleDisk'; id: number }
   | { type: 'setSelectedLinodeId'; id: number }
   | { type: 'clearAll' };
 
-export const cloneLandingReducer = (state: State, action: Action): State => {
+export type ExtendedConfig = Linode.Config & { associatedDisks: Linode.Disk[] };
+/**
+ * REDUCER
+ *
+ * We've got two basic options here:
+ *
+ * 1. Clone config profile
+ * 2. Clone disk
+ *
+ * (and any combination of the above)
+ *
+ * Cloning a config profile will ALSO clone all associated disks.
+ * So from the perspective of the UI, when you select a config profile,
+ * we need to "select" the associated disks as well. This is not the same
+ * as selecting those disks on their own though ... when disks are "selected"
+ * via config profile, we want to disable them in the <Disks /> component,
+ * and we display things differently in the <Details /> component.
+ *
+ * So we need a way to associate config profiles with their disks. Here's an
+ * example of what this state shape looks like:
+ *
+ * ```typescript
+ * const state = {
+ *   configSelection: {
+ *     555: {
+ *       isSelected: true,
+ *       associatedDisks: [777]
+ *     }
+ *   },
+ *   diskSelection: {
+ *     777: {
+ *       isSelected: false,
+ *       associatedConfigs: [555]
+ *     }
+ *   }
+ * }
+ * };
+ * ```
+ */
+export const cloneLandingReducer = (
+  state: CloneLandingState,
+  action: CloneLandingAction
+): CloneLandingState => {
   let id;
   switch (action.type) {
     case 'toggleConfig':
@@ -55,6 +81,7 @@ export const cloneLandingReducer = (state: State, action: Action): State => {
           ...state.configSelection,
           [id]: {
             ...state.configSelection[id],
+            // This is the actual toggle:
             isSelected: !state.configSelection[id].isSelected
           }
         }
@@ -65,6 +92,7 @@ export const cloneLandingReducer = (state: State, action: Action): State => {
         ...state,
         diskSelection: {
           ...state.diskSelection,
+          // This is the actual toggle:
           [id]: {
             ...state.diskSelection[id],
             isSelected: !state.diskSelection[id].isSelected
@@ -78,6 +106,7 @@ export const cloneLandingReducer = (state: State, action: Action): State => {
         selectedLinodeId: id
       };
     case 'clearAll':
+      // Set all `isSelected`s to `false, and set selectedLinodeId to null
       return {
         configSelection: map(
           config => ({ ...config, isSelected: false }),
@@ -99,48 +128,84 @@ export const createInitialCloneLandingState = (
   disks: Linode.Disk[],
   preSelectedConfigId?: number,
   preSelectedDiskId?: number
-): State => {
-  const state: State = {
+): CloneLandingState => {
+  const state: CloneLandingState = {
     configSelection: {},
     diskSelection: {},
     selectedLinodeId: null
   };
 
-  const diskConfigMap = {};
+  // Mapping of diskIds to an array of associated configIds
+  const diskConfigMap: Record<number, number[]> = [];
 
   configs.forEach(eachConfig => {
+    // We default `isSelected` to `false`, unless this config was
+    // pre-selected (probably via query param).
     const isSelected = eachConfig.id === preSelectedConfigId;
+
     const associatedDisks = getAssociatedDisks(eachConfig, disks);
+    const associatedDiskIds = associatedDisks.map(eachDisk => eachDisk.id);
 
-    associatedDisks.forEach(eachDisk => {
-      diskConfigMap[eachDisk.id] = eachConfig.id;
+    associatedDiskIds.forEach(id => {
+      if (!diskConfigMap[id]) {
+        diskConfigMap[id] = [];
+      }
+      diskConfigMap[id].push(eachConfig.id);
     });
 
-    return (state.configSelection[eachConfig.id] = {
+    state.configSelection[eachConfig.id] = {
       isSelected,
-      associatedDisks
-    });
+      associatedDiskIds
+    };
   });
 
   disks.forEach(eachDisk => {
+    // We default `isSelected` to `false`, unless this config was
+    // pre-selected (probably via query param).
     const isSelected = eachDisk.id === preSelectedDiskId;
 
-    const configId = diskConfigMap[eachDisk.id];
+    // Since we built the mapping earlier, we can just grab them here
+    const associatedConfigIds = diskConfigMap[eachDisk.id];
 
-    return (state.diskSelection[eachDisk.id] = {
+    state.diskSelection[eachDisk.id] = {
       isSelected,
-      configId
-    });
+      associatedConfigIds
+    };
   });
 
   return state;
 };
 
-export const addConfigIdToDisks = (
-  disks: Linode.Disk[],
-  diskSelection: DiskSelection
-): ExtendedDisk[] =>
-  disks.map(eachDisk => ({
-    ...eachDisk,
-    configId: diskSelection[eachDisk.id].configId
-  }));
+/**
+ * Returns an array of Disks that are associated with a given config.
+ * `config.devices` looks something like this:
+ * { "sda": { "disk_id": 1234, "volume_id": 5678 }, ...etc }
+ * This function returns an array of disks that match a `disk_id` in the config.
+ */
+export const getAssociatedDisks = (
+  config: Linode.Config,
+  allDisks: Linode.Disk[]
+): Linode.Disk[] => {
+  const disksOnConfig: number[] = [];
+
+  // Go through the devices and grab all the disks
+  Object.keys(config.devices).forEach(key => {
+    if (config.devices[key] && config.devices[key].disk_id) {
+      disksOnConfig.push(config.devices[key].disk_id);
+    }
+  });
+
+  // Only keep the disks that were found on the config
+  return allDisks.filter(eachDisk => disksOnConfig.includes(eachDisk.id));
+};
+
+// Grabs the associated disks and attaches them to each config
+export const attachAssociatedDisksToConfigs = (
+  configs: Linode.Config[],
+  disks: Linode.Disk[]
+): ExtendedConfig[] => {
+  return configs.map(eachConfig => {
+    const associatedDisks = getAssociatedDisks(eachConfig, disks);
+    return { ...eachConfig, associatedDisks };
+  });
+};

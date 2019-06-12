@@ -1,3 +1,4 @@
+import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
 import {
   matchPath,
@@ -27,6 +28,7 @@ import Configs from './Configs';
 import Details from './Details';
 import Disks from './Disks';
 import {
+  attachAssociatedDisksToConfigs,
   cloneLandingReducer,
   createInitialCloneLandingState
 } from './utilities';
@@ -67,8 +69,11 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     region
   } = props;
 
+  /**
+   * ROUTING
+   */
   const tabs = [
-    /* NB: These must correspond to the routes inside the Switch */
+    // These must correspond to the routes inside the Switch
     {
       title: 'Configuration Profiles',
       routeName: `${props.match.url}/configs`
@@ -76,6 +81,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     { title: 'Disks', routeName: `${props.match.url}/disks` }
   ];
 
+  // Update browser URL with tab change
   const handleTabChange = (
     event: React.ChangeEvent<HTMLDivElement>,
     value: number
@@ -85,10 +91,16 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     history.push(`${routeName}`);
   };
 
+  // Helper function for the <Tabs /> component
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
 
+  /**
+   * STATE MANAGEMENT
+   */
+
+  // We grab the query params to (potentially) use in the initial state.
   const queryParams = getParamsFromUrl(location.search);
 
   const initialState = createInitialCloneLandingState(
@@ -100,10 +112,26 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
 
   const [state, dispatch] = React.useReducer(cloneLandingReducer, initialState);
 
-  const handleSelectConfig = (id: number) =>
-    dispatch({ type: 'toggleConfig', id });
+  // Helper functions for updating the state.
+  const toggleConfig = (id: number) => {
+    return dispatch({ type: 'toggleConfig', id });
+  };
 
-  const handleSelectDisk = (id: number) => dispatch({ type: 'toggleDisk', id });
+  const toggleDisk = (id: number) => {
+    return dispatch({ type: 'toggleDisk', id });
+  };
+
+  const setSelectedLinodeId = (id: number) => {
+    return dispatch({ type: 'toggleDisk', id });
+  };
+
+  const clearAll = () => dispatch({ type: 'clearAll' });
+
+  const selectedConfigs = configs.filter(
+    eachConfig => state.configSelection[eachConfig.id].isSelected
+  );
+
+  const selectedConfigIds = selectedConfigs.map(eachConfig => eachConfig.id);
 
   return (
     <React.Fragment>
@@ -141,8 +169,8 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
                 <div className={classes.outerContainer}>
                   <Configs
                     configs={configs}
-                    selectedConfigs={state.configSelection}
-                    handleSelect={handleSelectConfig}
+                    configSelection={state.configSelection}
+                    handleSelect={toggleConfig}
                   />
                 </div>
               )}
@@ -159,9 +187,9 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
                   <div className={classes.diskContainer}>
                     <Disks
                       disks={disks}
-                      selectedDisks={state.diskSelection}
-                      selectedConfigs={state.configSelection}
-                      handleSelect={handleSelectDisk}
+                      diskSelection={state.diskSelection}
+                      selectedConfigIds={selectedConfigIds}
+                      handleSelect={toggleDisk}
                     />
                   </div>
                 </div>
@@ -172,26 +200,34 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
         </Grid>
         <Grid item xs={12} md={3}>
           <Details
-            selectedConfigs={configs
-              // Filter out configs that aren't selected
-              .filter(config => state.configSelection[config.id].isSelected)
-              // Add associatedDisks to each config
-              .map(eachConfig => ({
-                ...eachConfig,
-                associatedDisks:
-                  state.configSelection[eachConfig.id].associatedDisks
-              }))}
+            selectedConfigs={attachAssociatedDisksToConfigs(
+              selectedConfigs,
+              disks
+            )}
             selectedDisks={disks
-              // Filter out disks that aren't selected
-              .filter(disk => state.diskSelection[disk.id].isSelected)}
+              // Filter out disks that aren't selected are that are associated with
+              // a config that IS selected
+              .filter(disk => {
+                return (
+                  // This disk has been individually selected ...
+                  state.diskSelection[disk.id].isSelected &&
+                  // ... AND it's associated configs are NOT selected
+                  intersection(
+                    pathOr(
+                      [],
+                      [disk.id, 'associatedConfigIds'],
+                      state.diskSelection
+                    ),
+                    selectedConfigIds
+                  ).length === 0
+                );
+              })}
             selectedLinode={state.selectedLinodeId}
             region={region}
-            handleSelectLinode={(id: number) =>
-              dispatch({ type: 'setSelectedLinodeId', id })
-            }
-            handleSelectConfig={handleSelectConfig}
-            handleSelectDisk={handleSelectDisk}
-            clearAll={() => dispatch({ type: 'clearAll' })}
+            handleSelectLinode={setSelectedLinodeId}
+            handleToggleConfig={toggleConfig}
+            handleToggleDisk={toggleDisk}
+            clearAll={clearAll}
           />
         </Grid>
       </Grid>
@@ -216,6 +252,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, {}>(
+  React.memo,
   linodeContext,
   styled,
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
