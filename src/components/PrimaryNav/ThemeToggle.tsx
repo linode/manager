@@ -26,8 +26,8 @@ export const styles = (theme: Theme) =>
     },
     toggle: {
       '& > span:last-child': {
-        backgroundColor: '#f4f4f4 !important',
-        opacity: `0.38 !important`
+        backgroundColor: '#f4f4f4 !important' as '#f4f4f4',
+        opacity: '0.38 !important' as any
       },
       '&.darkTheme .square': {
         fill: '#444 !important'

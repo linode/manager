@@ -23,7 +23,7 @@ const styles = (theme: Theme) =>
         marginTop: theme.spacing(3)
       },
       [theme.breakpoints.down('sm')]: {
-        position: 'fixed !important',
+        position: 'fixed !important' as 'fixed',
         right: 0,
         width: '90%',
         bottom: 24,

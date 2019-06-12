@@ -1,28 +1,25 @@
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from '@material-ui/core/styles';
+import { WithStyles } from '@material-ui/core/styles';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
-
+import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { scheduleOrQueueMigration } from 'src/services/linodes';
 
 type ClassNames = 'migrationLink';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  migrationLink: {
-    color: theme.palette.primary.main,
-    cursor: 'pointer',
-    display: 'inline',
-    '&:hover': {
-      textDecoration: 'underline'
+const styles = (theme: Theme) =>
+  createStyles({
+    migrationLink: {
+      color: theme.palette.primary.main,
+      cursor: 'pointer',
+      display: 'inline',
+      '&:hover': {
+        textDecoration: 'underline'
+      }
     }
-  }
-});
+  });
 
 interface Props {
   linodeID: number;
