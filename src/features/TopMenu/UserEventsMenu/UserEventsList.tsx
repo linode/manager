@@ -1,7 +1,7 @@
 import * as moment from 'moment';
-import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
+import { compose } from 'recompose';
 import eventMessageGenerator from 'src/eventMessageGenerator';
 import { reportException } from 'src/exceptionReporting';
 import { ExtendedEvent } from 'src/store/events/event.helpers';
@@ -81,7 +81,7 @@ UserEventsList.defaultProps = {
   events: []
 };
 
-const enhanced = compose<any, any, any>(
+const enhanced = compose<CombinedProps, Props>(
   withRouter
 );
 

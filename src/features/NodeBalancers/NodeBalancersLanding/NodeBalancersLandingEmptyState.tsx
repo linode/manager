@@ -50,4 +50,4 @@ const enhanced = compose<CombinedProps, {}>(
   withRouter
 );
 
-export default NodeBalancerLandingEmptyState;
+export default enhanced(NodeBalancerLandingEmptyState);

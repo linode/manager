@@ -48,8 +48,8 @@ describe('ObjectStorageKeyTable', () => {
 
   it('returns an error state when there is an error', () => {
     wrapper.setProps({ error: new Error() });
-    expect(wrapper.find('WithStyles(TableRowError)')).toHaveLength(1);
-    expect(wrapper.find('WithStyles(TableRowError)').prop('message')).toBe(
+    expect(wrapper.find('TableRowError')).toHaveLength(1);
+    expect(wrapper.find('TableRowError').prop('message')).toBe(
       'We were unable to load your Access Keys.'
     );
   });

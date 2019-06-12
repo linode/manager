@@ -112,9 +112,9 @@ export class UserEventsMenu extends React.Component<CombinedProps, State> {
                 <Button
                   data-qa-view-all-events
                   className={classes.viewAll}
-                  onClick={(e: any) => {
+                  onClick={() => {
                     push('/events');
-                    this.closeMenu(e);
+                    this.closeMenu();
                   }}
                 >
                   View All Events
@@ -131,7 +131,7 @@ export class UserEventsMenu extends React.Component<CombinedProps, State> {
     this.setState({ anchorEl: e.currentTarget });
   };
 
-  closeMenu = (e: React.MouseEvent<HTMLElement>) => {
+  closeMenu = () => {
     const { actions } = this.props;
     actions.markAllSeen();
     this.setState({ anchorEl: undefined });

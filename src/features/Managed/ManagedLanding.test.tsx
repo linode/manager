@@ -6,9 +6,6 @@ import { ManagedLanding } from './ManagedLanding';
 describe('Managed Landing', () => {
   const component = shallow(
     <ManagedLanding
-      classes={{
-        root: ''
-      }}
     />
   );
   it('should render a placeholder', () => {
