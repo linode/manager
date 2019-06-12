@@ -57,13 +57,12 @@ const styles = (theme: Theme) =>
     }
   });
 
-export interface Props {
+interface BaseProps {
   errorText?: string;
   errorGroup?: string;
   affirmative?: Boolean;
   tooltipText?: string;
   className?: any;
-  [index: string]: any;
   expand?: boolean;
   small?: boolean;
   tiny?: boolean;
@@ -73,12 +72,12 @@ export interface Props {
    */
   min?: number;
   max?: number;
+  dataAttrs?: Record<string, any>;
 }
 
-type CombinedProps = TextFieldProps &
-  Props &
-  WithTheme &
-  WithStyles<ClassNames>;
+export type Props = BaseProps & TextFieldProps;
+
+type CombinedProps = Props & WithTheme & WithStyles<ClassNames>;
 
 interface State {
   value: string | number;
@@ -88,7 +87,6 @@ class LinodeTextField extends React.Component<CombinedProps> {
   state: State = {
     value: ''
   };
-
   shouldComponentUpdate(nextProps: CombinedProps, nextState: State) {
     return (
       nextProps.value !== this.props.value ||
@@ -144,6 +142,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
       affirmative,
       classes,
       fullWidth,
+      onChange,
       children,
       tooltipText,
       theme,
@@ -152,28 +151,22 @@ class LinodeTextField extends React.Component<CombinedProps> {
       expand,
       small,
       tiny,
+      InputProps,
+      InputLabelProps,
+      SelectProps,
+      dataAttrs,
       ...textFieldProps
     } = this.props;
-
-    const finalProps: TextFieldProps = { ...textFieldProps };
 
     let errorScrollClassName = '';
 
     if (errorText) {
-      finalProps.error = true;
-      finalProps.helperText = errorText;
+      textFieldProps.error = true;
+      textFieldProps.helperText = errorText;
       errorScrollClassName = errorGroup
         ? `error-for-scroll-${errorGroup}`
         : `error-for-scroll`;
     }
-
-    if (affirmative) {
-      finalProps.InputProps = {
-        className: 'affirmative'
-      };
-    }
-
-    finalProps.fullWidth = fullWidth === false ? false : true;
 
     return (
       <div
@@ -183,12 +176,13 @@ class LinodeTextField extends React.Component<CombinedProps> {
         })}
       >
         <TextField
-          {...finalProps}
-          /* props value should always override state */
+          {...textFieldProps}
+          {...dataAttrs}
+          fullWidth
           value={this.props.value || this.state.value}
           onChange={this.handleChange}
           InputLabelProps={{
-            ...finalProps.InputLabelProps,
+            ...InputLabelProps,
             shrink: true
           }}
           InputProps={{
@@ -198,13 +192,15 @@ class LinodeTextField extends React.Component<CombinedProps> {
               {
                 [classes.expand]: expand,
                 [classes.small]: small,
-                [classes.tiny]: tiny
+                [classes.tiny]: tiny,
+                affirmative: !!affirmative
               },
               className
             ),
-            ...finalProps.InputProps
+            ...InputProps
           }}
           SelectProps={{
+            disableUnderline: true,
             IconComponent: KeyboardArrowDown,
             MenuProps: {
               getContentAnchorEl: undefined,
@@ -217,7 +213,8 @@ class LinodeTextField extends React.Component<CombinedProps> {
               className: classNames({
                 [classes.selectSmall]: small
               })
-            }
+            },
+            ...SelectProps
           }}
           className={classNames(
             {

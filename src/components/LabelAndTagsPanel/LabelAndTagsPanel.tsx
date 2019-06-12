@@ -37,13 +37,6 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export class InfoPanel extends React.Component<CombinedProps> {
-  static defaultProps: Partial<Props> = {
-    labelFieldProps: {
-      label: 'Label',
-      placeholder: 'Enter a Label'
-    }
-  };
-
   render() {
     const { classes, error, labelFieldProps, tagsInputProps } = this.props;
 
@@ -52,7 +45,13 @@ export class InfoPanel extends React.Component<CombinedProps> {
         <Paper className={classes.root} data-qa-label-header>
           <div className={classes.inner}>
             {error && <Notice text={error} error />}
-            <TextField {...labelFieldProps} data-qa-label-input />
+            <TextField
+              {...labelFieldProps || {
+                label: 'Label',
+                placeholder: 'Enter a label'
+              }}
+              data-qa-label-input
+            />
             {tagsInputProps && <TagsInput {...tagsInputProps} />}
           </div>
         </Paper>

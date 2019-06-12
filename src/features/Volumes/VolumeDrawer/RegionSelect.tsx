@@ -57,7 +57,9 @@ export const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
         onChange={(item: Item<string>) => onChange(item.value)}
         onBlur={onBlur}
         textFieldProps={{
-          'data-qa-select-region': true
+          dataAttrs: {
+            'data-qa-select-region': true
+          }
         }}
         disabled={disabled}
         label="Region"

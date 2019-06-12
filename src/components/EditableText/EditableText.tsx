@@ -5,11 +5,12 @@ import Edit from '@material-ui/icons/Edit';
 import * as classnames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { compose } from 'recompose'
 import Button from 'src/components/Button';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import { TextFieldProps } from 'src/components/core/TextField';
-import Typography, { TypographyProps } from 'src/components/core/Typography';
+import Typography from 'src/components/core/Typography';
 import TextField from '../TextField';
 
 type ClassNames =
@@ -148,7 +149,7 @@ interface State {
   isEditing: Boolean;
 }
 
-type PassThroughProps = Props & TextFieldProps & TypographyProps;
+type PassThroughProps = Props & TextFieldProps;
 
 type FinalProps = PassThroughProps & WithStyles<ClassNames>;
 
@@ -216,8 +217,10 @@ export class EditableText extends React.Component<FinalProps, State> {
     const {
       classes,
       labelLink,
-      onEdit,
       errorText,
+      onEdit,
+      onCancel,
+      text: propText,
       typeVariant,
       ...rest
     } = this.props;
@@ -226,7 +229,6 @@ export class EditableText extends React.Component<FinalProps, State> {
     const labelText = (
       <Typography
         className={classes.root}
-        {...rest}
         variant="h1"
         data-qa-editable-text
       >
@@ -242,8 +244,8 @@ export class EditableText extends React.Component<FinalProps, State> {
               {labelText}
             </Link>
           ) : (
-            labelText
-          )}
+              labelText
+            )}
           {/** pencil icon */}
           <Button
             className={`${classes.button} ${classes.editIcon}`}
@@ -256,52 +258,54 @@ export class EditableText extends React.Component<FinalProps, State> {
         </React.Fragment>
       </div>
     ) : (
-      <ClickAwayListener
-        onClickAway={this.cancelEditing}
-        mouseEvent="onMouseDown"
-      >
-        <div
-          className={`${classes.container} ${classes.edit}`}
-          data-qa-edit-field
+        <ClickAwayListener
+          onClickAway={this.cancelEditing}
+          mouseEvent="onMouseDown"
         >
-          <TextField
-            className={classes.textField}
-            type="text"
-            onChange={this.onChange}
-            onKeyDown={this.handleKeyPress}
-            value={text}
-            errorText={this.props.errorText}
-            {...rest as any}
-            InputProps={{ className: classes.inputRoot }}
-            inputProps={{
-              className: classnames({
-                [classes.headline]: this.props.typeVariant === 'h1',
-                [classes.title]: this.props.typeVariant === 'h2',
-                [classes.input]: true
-              })
-            }}
-            autoFocus={true}
-          />
-          <Button
-            className={classes.button}
-            onClick={this.finishEditing}
-            data-qa-save-edit
+          <div
+            className={`${classes.container} ${classes.edit}`}
+            data-qa-edit-field
           >
-            <Check className={`${classes.icon} ${classes.save}`} />
-          </Button>
-          <Button
-            className={classes.button}
-            onClick={this.cancelEditing}
-            data-qa-cancel-edit
-          >
-            <Close className={`${classes.icon} ${classes.close}`} />
-          </Button>
-        </div>
-      </ClickAwayListener>
-    );
+            <TextField
+              {...rest}
+              className={classes.textField}
+              type="text"
+              onChange={this.onChange}
+              onKeyDown={this.handleKeyPress}
+              value={text}
+              errorText={this.props.errorText}
+              InputProps={{ className: classes.inputRoot }}
+              inputProps={{
+                className: classnames({
+                  [classes.headline]: typeVariant === 'h1',
+                  [classes.title]: typeVariant === 'h2',
+                  [classes.input]: true
+                })
+              }}
+              autoFocus={true}
+            />
+            <Button
+              className={classes.button}
+              onClick={this.finishEditing}
+              data-qa-save-edit
+            >
+              <Check className={`${classes.icon} ${classes.save}`} />
+            </Button>
+            <Button
+              className={classes.button}
+              onClick={this.cancelEditing}
+              data-qa-cancel-edit
+            >
+              <Close className={`${classes.icon} ${classes.close}`} />
+            </Button>
+          </div>
+        </ClickAwayListener>
+      );
   }
 }
 
 const styled = withStyles(styles);
 
-export default styled(EditableText);
+export default compose<FinalProps, PassThroughProps>(
+  styled
+)(EditableText);
