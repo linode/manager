@@ -53,6 +53,7 @@ interface Props {
   apiError?: string;
   selectedType?: string;
   nodeCount: number;
+  hideTable?: boolean;
   addNodePool: (pool: ExtendedPoolNode) => void;
   deleteNodePool: (poolIdx: number) => void;
   handleTypeSelect: (newType?: string) => void;
@@ -100,6 +101,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     apiError,
     deleteNodePool,
     handleTypeSelect,
+    hideTable,
     pools,
     selectedType,
     nodeCount,
@@ -165,14 +167,17 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           Add Node Pool
         </Button>
       </Grid>
-      <Grid item className={classes.gridItem}>
-        <NodePoolDisplayTable
-          pools={pools}
-          types={types}
-          handleDelete={(poolIdx: number) => deleteNodePool(poolIdx)}
-          updatePool={updatePool}
-        />
-      </Grid>
+      {!hideTable && 
+        <Grid item className={classes.gridItem}>
+          <NodePoolDisplayTable
+            small
+            pools={pools}
+            types={types}
+            handleDelete={(poolIdx: number) => deleteNodePool(poolIdx)}
+            updatePool={updatePool}
+          />
+        </Grid>
+      }
     </Grid>
   );
 };

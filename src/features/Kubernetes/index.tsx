@@ -16,6 +16,10 @@ const ClusterCreate = DefaultLoader({
   loader: () => import('./CreateCluster')
 });
 
+const ClusterDetail = DefaultLoader({
+  loader: () => import('./KubernetesClusterDetail')
+});
+
 type Props = RouteComponentProps<{}>;
 
 class Kubernetes extends React.Component<Props> {
@@ -27,6 +31,7 @@ class Kubernetes extends React.Component<Props> {
     return (
       <Switch>
         <Route component={ClusterCreate} path={`${path}/create`} />
+        <Route component={ClusterDetail} path={`${path}/clusters/:clusterID`} />
         <Route component={KubernetesLanding} path={path} exact />
       </Switch>
     );

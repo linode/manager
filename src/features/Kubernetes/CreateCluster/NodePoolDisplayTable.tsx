@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -16,13 +17,15 @@ import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel
 import { ExtendedPoolNode } from '.././types';
 import NodePoolRow from './NodePoolRow';
 
-type ClassNames = 'root';
+type ClassNames = 'root' | 'small';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
-    maxWidth: '50%',
     border: `1px solid ${theme.palette.divider}`,
     borderBottom: 0
+  },
+  small: {
+    maxWidth: '50%'
   }
 });
 
@@ -31,6 +34,7 @@ interface Props {
   types: ExtendedType[];
   handleDelete: (poolIdx: number) => void;
   updatePool: (poolIdx: number, updatedPool: ExtendedPoolNode) => void;
+  small?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -38,9 +42,12 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const NodePoolDisplayTable: React.FunctionComponent<
   CombinedProps
 > = props => {
-  const { classes, handleDelete, pools, types, updatePool } = props;
+  const { classes, handleDelete, pools, small, types, updatePool } = props;
   return (
-    <Table tableClass={classes.root} spacingTop={16}>
+    <Table tableClass={classNames(({
+      [classes.root]: true,
+      [classes.small]: small
+    }))} spacingTop={16}>
       <TableHead>
         <TableRow>
           <TableCell data-qa-table-header="Plan">Plan</TableCell>

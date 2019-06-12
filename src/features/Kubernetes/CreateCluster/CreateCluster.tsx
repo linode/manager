@@ -26,8 +26,7 @@ import { WithRegionsProps } from 'src/features/linodes/LinodesCreate/types';
 import { createKubernetesCluster } from 'src/services/kubernetes';
 import {
   getAPIErrorOrDefault,
-  getErrorMap,
-  getErrorStringOrDefault
+  getErrorMap
 } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { getTagsAsStrings } from 'src/utilities/tagUtils';
@@ -225,10 +224,10 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
               typesLoading={typesLoading}
               typesError={
                 typesError
-                  ? getErrorStringOrDefault(
+                  ? getAPIErrorOrDefault(
                       typesError,
                       'Error loading Linode type information.'
-                    )
+                    )[0].reason
                   : undefined
               }
               nodeCount={numberOfLinodes}
