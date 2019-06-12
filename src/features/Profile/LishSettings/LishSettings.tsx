@@ -155,7 +155,9 @@ class LishSettings extends React.Component<CombinedProps, State> {
               <FormControl className={classes.modeControl}>
                 <Select
                   textFieldProps={{
-                    'data-qa-mode-select': true
+                    dataAttrs: {
+                      'data-qa-mode-select': true
+                    }
                   }}
                   options={modeOptions}
                   name="mode-select"

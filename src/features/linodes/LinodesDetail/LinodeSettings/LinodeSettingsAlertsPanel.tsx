@@ -1,3 +1,4 @@
+import { WithStyles } from '@material-ui/core/styles';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import { compose as rCompose } from 'recompose';
@@ -52,9 +53,7 @@ interface Section {
   endAdornment: string;
 }
 
-type CombinedProps = Props &
-  ContextProps &
-  LinodeActionsProps;
+type CombinedProps = Props & ContextProps & LinodeActionsProps & WithStyles;
 
 const maybeNumber = (v: string) => (v === '' ? '' : Number(v));
 

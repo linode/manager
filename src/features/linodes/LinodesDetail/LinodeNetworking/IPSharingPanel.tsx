@@ -240,7 +240,9 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
             onChange={this.onIPSelect(idx)}
             className={classes.ipField}
             textFieldProps={{
-              'data-qa-share-ip': true
+              dataAttrs: {
+                'data-qa-share-ip': true
+              }
             }}
             disabled={readOnly}
             isClearable={false}
@@ -249,7 +251,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
         </Grid>
         <Grid item className={classes.removeCont}>
           <Button
-           buttonType="remove"
+            buttonType="remove"
             onClick={this.onIPDelete(idx)}
             className={classes.remove}
             data-qa-remove-shared-ip
