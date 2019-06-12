@@ -1,8 +1,6 @@
-import { WithStyles } from '@material-ui/core/styles';
 import { Form, Formik } from 'formik';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import TagsInput, { Tag } from 'src/components/TagsInput';
 import withVolumesRequest, {
@@ -15,13 +13,6 @@ import NoticePanel from './NoticePanel';
 import { handleFieldErrors, handleGeneralErrors } from './utils';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
-
 interface Props {
   onClose: () => void;
   volumeLabel: string;
@@ -30,7 +21,7 @@ interface Props {
   readOnly?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & VolumesRequests;
+type CombinedProps = Props & VolumesRequests;
 
 /** Single field posts like rename/resize dont have validation schemas in services */
 const validationSchema = UpdateVolumeSchema;
@@ -155,10 +146,7 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
 const enhanced = compose<CombinedProps, Props>(
-  styled,
   withVolumesRequest
 )(RenameVolumeForm);
 

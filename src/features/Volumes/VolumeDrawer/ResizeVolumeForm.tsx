@@ -1,8 +1,6 @@
-import { WithStyles } from '@material-ui/core/styles';
 import { Form, Formik } from 'formik';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import withVolumesRequests, {
   VolumesRequests
@@ -15,13 +13,6 @@ import SizeField from './SizeField';
 import { handleFieldErrors, handleGeneralErrors } from './utils';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
-
 interface Props {
   onClose: () => void;
   volumeSize: number;
@@ -31,7 +22,7 @@ interface Props {
   onSuccess: (volumeLabel: string, message?: string) => void;
 }
 
-type CombinedProps = Props & VolumesRequests & WithStyles<ClassNames>;
+type CombinedProps = Props & VolumesRequests;
 
 const ResizeVolumeForm: React.StatelessComponent<CombinedProps> = props => {
   const {
@@ -132,10 +123,7 @@ const ResizeVolumeForm: React.StatelessComponent<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
 const enhanced = compose<CombinedProps, Props>(
-  styled,
   withVolumesRequests
 );
 
