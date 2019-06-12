@@ -18,18 +18,28 @@ import SearchItem from './SearchItem';
 
 type ClassNames =
   | 'root'
+  | 'searchIcon'
   | 'searchItem'
   | 'searchItemHighlighted'
   | 'enhancedSelectWrapper'
   | 'textfield';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
+  root: {
+    position: 'relative'
+  },
   searchItem: {
     '& em': {
       fontStyle: 'normal',
       color: theme.palette.primary.main
     }
+  },
+  searchIcon: {
+    position: 'absolute',
+    color: theme.color.grey1,
+    zIndex: 3,
+    bottom: 12,
+    left: 5
   },
   searchItemHighlighted: {
     backgroundColor: theme.color.grey2,
@@ -46,8 +56,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   enhancedSelectWrapper: {
     margin: '0 auto',
-    width: '100%s',
+    width: 300,
     maxHeight: 500,
+    '& p': {
+      paddingLeft: theme.spacing.unit * 3
+    },
+    '& .react-select__value-container': {
+      paddingLeft: theme.spacing.unit * 4
+    },
     '& .input': {
       maxWidth: '100%',
       '& > div': {
@@ -154,7 +170,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
           </Notice>
         )}
         <div className={classes.root}>
-          <Search className={''} data-qa-search-icon />
+          <Search className={classes.searchIcon} data-qa-search-icon />
           <EnhancedSelect
             disabled={!searchEnabled}
             isMulti={false}
