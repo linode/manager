@@ -661,7 +661,9 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           <FormControl className={classes.chooseTime}>
             <Select
               textFieldProps={{
-                'data-qa-time-select': true
+                dataAttrs: {
+                  'data-qa-time-select': true
+                }
               }}
               options={timeSelection}
               onChange={this.handleSelectBackupWindow}
@@ -680,7 +682,9 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           <FormControl className={classes.chooseDay}>
             <Select
               textFieldProps={{
-                'data-qa-weekday-select': true
+                dataAttrs: {
+                  'data-qa-weekday-select': true
+                }
               }}
               options={daySelection}
               defaultValue={defaultDaySelection}

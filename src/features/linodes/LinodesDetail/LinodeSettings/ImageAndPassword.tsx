@@ -68,8 +68,6 @@ export const ImageAndPassword: React.StatelessComponent<
   );
 };
 
-const styled = withStyles(styles);
-
 const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
   permissions: linode._permissions
 }));

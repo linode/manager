@@ -183,7 +183,9 @@ export class RestoreToLinodeDrawer extends React.Component<
           </InputLabel>
           <Select
             textFieldProps={{
-              'data-qa-select-linode': true
+              dataAttrs: {
+                'data-qa-select-linode': true
+              }
             }}
             defaultValue={selectedLinode || ''}
             options={linodeList}
@@ -221,7 +223,7 @@ export class RestoreToLinodeDrawer extends React.Component<
         )}
         <ActionsPanel>
           <Button
-           buttonType="primary"
+            buttonType="primary"
             onClick={this.restoreToLinode}
             data-qa-restore-submit
             disabled={readOnly}
