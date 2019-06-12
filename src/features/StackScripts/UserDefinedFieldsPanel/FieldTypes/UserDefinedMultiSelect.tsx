@@ -1,16 +1,7 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 interface Props {
   updateFormState: (key: string, value: any) => void;
@@ -24,7 +15,7 @@ interface State {
   manyof: string[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
   state: State = {
@@ -43,7 +34,7 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
 
   render() {
     const { manyof } = this.state;
-    const { error, field, classes, isOptional } = this.props;
+    const { error, field, isOptional } = this.props;
 
     const manyOfOptions = manyof.map((choice: string) => {
       return {
@@ -53,7 +44,7 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
     });
 
     return (
-      <div className={classes.root}>
+      <div>
         {error && <Notice error text={error} spacingTop={8} />}
         <Select
           label={field.label}
@@ -68,6 +59,4 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles);
-
-export default styled(RenderGuard<CombinedProps>(UserDefinedMultiSelect));
+export default RenderGuard<CombinedProps>(UserDefinedMultiSelect);

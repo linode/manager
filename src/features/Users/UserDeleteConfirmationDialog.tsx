@@ -1,20 +1,7 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import {
-  createStyles,
-  Theme,
-  withStyles
-} from 'src/components/core/styles';
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-  root: {}
-});
 
 interface Props {
   username: string;
@@ -23,7 +10,7 @@ interface Props {
   onCancel: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 class UserDeleteConfirmationDialog extends React.PureComponent<
   CombinedProps,
@@ -69,6 +56,4 @@ class UserDeleteConfirmationDialog extends React.PureComponent<
   };
 }
 
-const styled = withStyles(styles);
-
-export default styled(UserDeleteConfirmationDialog);
+export default UserDeleteConfirmationDialog;
