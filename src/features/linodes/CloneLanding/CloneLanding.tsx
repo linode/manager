@@ -122,7 +122,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
   };
 
   const setSelectedLinodeId = (id: number) => {
-    return dispatch({ type: 'toggleDisk', id });
+    return dispatch({ type: 'setSelectedLinodeId', id });
   };
 
   const clearAll = () => dispatch({ type: 'clearAll' });
@@ -164,7 +164,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
             </AppBar>
             <Route
               exact
-              path={`${url}/configs`}
+              path={`${url}(/configs)?`}
               render={() => (
                 <div className={classes.outerContainer}>
                   <Configs
@@ -195,7 +195,6 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
                 </div>
               )}
             />
-            <Route exact path={`${url}`} component={Configs} />
           </Paper>
         </Grid>
         <Grid item xs={12} md={3}>
@@ -204,24 +203,24 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
               selectedConfigs,
               disks
             )}
-            selectedDisks={disks
-              // Filter out disks that aren't selected are that are associated with
-              // a config that IS selected
-              .filter(disk => {
-                return (
-                  // This disk has been individually selected ...
-                  state.diskSelection[disk.id].isSelected &&
-                  // ... AND it's associated configs are NOT selected
-                  intersection(
-                    pathOr(
-                      [],
-                      [disk.id, 'associatedConfigIds'],
-                      state.diskSelection
-                    ),
-                    selectedConfigIds
-                  ).length === 0
-                );
-              })}
+            // If a selected disk is associated with a selected config, we
+            // don't want it to appear in the Details component, since
+            // cloning the config takes precedence.
+            selectedDisks={disks.filter(disk => {
+              return (
+                // This disk has been individually selected ...
+                state.diskSelection[disk.id].isSelected &&
+                // ... AND it's associated configs are NOT selected
+                intersection(
+                  pathOr(
+                    [],
+                    [disk.id, 'associatedConfigIds'],
+                    state.diskSelection
+                  ),
+                  selectedConfigIds
+                ).length === 0
+              );
+            })}
             selectedLinode={state.selectedLinodeId}
             region={region}
             handleSelectLinode={setSelectedLinodeId}
@@ -252,7 +251,6 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, {}>(
-  React.memo,
   linodeContext,
   styled,
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
