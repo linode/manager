@@ -189,7 +189,6 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
           className={classes.menu}
         >
-          <MenuItem key="placeholder" aria-hidden className={classes.hidden} />
           {items.map((i, idx) => (
             <AddNewMenuItem key={idx} index={idx} count={itemsLen} {...i} />
           ))}
