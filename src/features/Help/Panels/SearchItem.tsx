@@ -30,8 +30,6 @@ const SearchItem: React.StatelessComponent<Props> = props => {
   const source = data.data ? data.data.source : '';
   const isFinal = source === 'finalLink';
 
-  console.log(data);
-
   return (
     <div
       className={classNames({
