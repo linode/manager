@@ -58,14 +58,15 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     margin: '0 auto',
     width: 300,
     maxHeight: 500,
-    '& p': {
-      paddingLeft: theme.spacing.unit * 3
-    },
     '& .react-select__value-container': {
       paddingLeft: theme.spacing.unit * 4
     },
     '& .input': {
       maxWidth: '100%',
+      '& p': {
+        paddingLeft: theme.spacing.unit * 3,
+        color: theme.color.grey1
+      },
       '& > div': {
         marginRight: 0
       }

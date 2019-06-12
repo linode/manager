@@ -262,11 +262,9 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
     '& label': { ...theme.visually.hidden }
   },
   algoliaRoot: {
-    width: '100%s',
-    minHeight: 40,
-    flexDirection: 'column',
-    alignItems: 'center',
-    justifyContent: 'center',
+    width: '100%',
+    cursor: 'pointer',
+    padding: theme.spacing.unit / 2 + 2,
     '& em': {
       fontStyle: 'normal',
       color: theme.color.blueDTwhite
@@ -284,24 +282,26 @@ export const styles: StyleRulesCallback<ClassNames> = theme => ({
     position: 'relative',
     top: 5,
     marginLeft: theme.spacing.unit / 2,
+    marginRight: theme.spacing.unit / 2,
     color: theme.palette.primary.main
   },
   source: {
-    marginTop: theme.spacing.unit / 2,
+    marginTop: theme.spacing.unit / 4,
     color: theme.color.headline,
-    paddingLeft: theme.spacing.unit
+    paddingLeft: theme.spacing.unit,
+    margin: 0
   },
   row: {
     display: 'flex',
     width: '100%',
     alignItems: 'center',
+    justifyContent: 'space-between',
     paddingLeft: theme.spacing.unit
   },
   finalLink: {
     display: 'flex',
     alignItems: 'center',
     fontSize: '1.2em',
-    minHeight: 40,
     paddingLeft: theme.spacing.unit
   }
 });
