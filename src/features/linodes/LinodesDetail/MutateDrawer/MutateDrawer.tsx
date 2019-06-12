@@ -1,19 +1,10 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ListItem from 'src/components/core/ListItem';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 interface MutateInfo {
   vcpus: number | null;
@@ -52,7 +43,7 @@ interface State {
   extendedUpgradeInfo: ExtendedUpgradeInfo;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 class MutateDrawer extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
@@ -181,6 +172,4 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles);
-
-export default styled(MutateDrawer);
+export default MutateDrawer;

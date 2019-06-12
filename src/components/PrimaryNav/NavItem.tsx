@@ -1,19 +1,10 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import Divider from 'src/components/core/Divider';
 import ListItem from 'src/components/core/ListItem';
 import ListItemText from 'src/components/core/ListItemText';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 interface Props extends PrimaryLink {
   closeMenu: () => void;
@@ -31,7 +22,7 @@ export interface PrimaryLink {
   isDisabled?: () => string | undefined;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const NavItem: React.SFC<CombinedProps> = props => {
   const {
@@ -97,9 +88,4 @@ const NavItem: React.SFC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default compose<CombinedProps, Props>(
-  React.memo,
-  styled
-)(NavItem);
+export default compose<CombinedProps, Props>(React.memo)(NavItem);
