@@ -1,10 +1,8 @@
-import { WithStyles } from '@material-ui/core/styles';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import { compose as rCompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
@@ -17,13 +15,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AlertSection from './AlertSection';
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 interface Props {
   linodeId: number;
@@ -63,8 +54,7 @@ interface Section {
 
 type CombinedProps = Props &
   ContextProps &
-  LinodeActionsProps &
-  WithStyles<ClassNames>;
+  LinodeActionsProps;
 
 const maybeNumber = (v: string) => (v === '' ? '' : Number(v));
 
@@ -307,8 +297,6 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
 const valueUnlessOff = ({ state, value }: { state: boolean; value: number }) =>
   state ? value : 0;
 
-const styled = withStyles(styles);
-
 const errorBoundary = PanelErrorBoundary({
   heading: 'Notification Thresholds'
 });
@@ -324,6 +312,5 @@ const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
 export default rCompose<CombinedProps, Props>(
   errorBoundary,
   linodeContext,
-  styled,
   withLinodeActions
 )(LinodeSettingsAlertsPanel) as React.ComponentType<Props>;

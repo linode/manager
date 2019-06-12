@@ -1,20 +1,11 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 import AccessPanel, { UserSSHKeyObject } from 'src/components/AccessPanel';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { ImageSelect } from 'src/features/Images';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 interface ContextProps {
   permissions: Linode.GrantLevel;
@@ -31,7 +22,7 @@ interface Props {
   userSSHKeys: UserSSHKeyObject[];
 }
 
-type CombinedProps = Props & ContextProps & WithImages & WithStyles<ClassNames>;
+type CombinedProps = Props & ContextProps & WithImages;
 
 export const ImageAndPassword: React.StatelessComponent<
   CombinedProps
@@ -84,7 +75,6 @@ const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
 }));
 
 const enhanced = compose<CombinedProps, Props>(
-  styled,
   withImages((ownProps, images, imagesLoading, imageError) => ({
     ...ownProps,
     linodeContext,

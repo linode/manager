@@ -1,9 +1,7 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import TextField from 'src/components/TextField';
@@ -11,13 +9,6 @@ import { updateIP } from 'src/services/networking';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 interface Props {
   open: boolean;
@@ -32,7 +23,7 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 class ViewRangeDrawer extends React.Component<CombinedProps, State> {
   state: State = {
@@ -120,6 +111,4 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles);
-
-export default styled(ViewRangeDrawer);
+export default ViewRangeDrawer;
