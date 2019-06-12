@@ -29,9 +29,9 @@ const styles = (theme: Theme) =>
       minHeight: '24px',
       minWidth: '24px',
       [theme.breakpoints.down('sm')]: {
-        position: 'relative !important',
-        left: '0 !important',
-        bottom: '0 !important',
+        position: 'relative !important' as 'relative',
+        left: '0 !important' as '0',
+        bottom: '0 !important' as '0',
         background: theme.color.white,
         padding: theme.spacing(2)
       }

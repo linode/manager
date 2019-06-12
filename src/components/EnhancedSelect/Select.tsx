@@ -118,7 +118,7 @@ const styles = (theme: Theme) =>
         color: theme.palette.text.primary,
         backgroundColor: theme.bg.white,
         cursor: 'pointer',
-        padding: '10px',
+        padding: 10,
         fontSize: '0.9rem'
       },
       '& .react-select__option--is-focused': {
@@ -132,7 +132,7 @@ const styles = (theme: Theme) =>
         }
       },
       '& .react-select__option--is-disabled': {
-        opacity: '.5',
+        opacity: 0.5,
         cursor: 'initial'
       },
       '& .react-select__single-value': {
@@ -180,10 +180,6 @@ const styles = (theme: Theme) =>
             color: 'white'
           }
         }
-      },
-      '& .react-select__dropdown-indicator': {},
-      '& [class*="MuiFormHelperText-error"]': {
-        paddingBottom: theme.spacing(1)
       }
     },
     input: {
@@ -202,7 +198,6 @@ const styles = (theme: Theme) =>
     suggestionRoot: {
       cursor: 'pointer',
       width: 'calc(100% + 2px)',
-      alignItems: 'space-between',
       justifyContent: 'space-between',
       borderBottom: `1px solid ${theme.palette.divider}`,
       [theme.breakpoints.up('md')]: {
@@ -244,7 +239,7 @@ const styles = (theme: Theme) =>
       }
     },
     selectedMenuItem: {
-      backgroundColor: `${theme.bg.main} !important`,
+      backgroundColor: `${theme.bg.main} !important` as any,
       '& .tag': {
         backgroundColor: theme.bg.lightBlue,
         color: theme.palette.text.primary,
