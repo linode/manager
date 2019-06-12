@@ -976,7 +976,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
             overflowX: 'auto',
             background: '#efecf4',
             color: `#585260`,
-            padding: '0.5em'
+            padding: 0.5
           },
           '& span.hljs-emphasis': {
             fontStyle: 'italic'
@@ -1003,7 +1003,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
         selectMenu: {
           '&$disabled': {
             '&+ input + $icon': {
-              opacity: '.5'
+              opacity: 0.5
             }
           },
           padding: `${spacingUnit * 2}px ${spacingUnit * 4}px ${spacingUnit *

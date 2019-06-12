@@ -17,7 +17,7 @@ const styles = (theme: Theme) =>
       overflowX: 'auto',
       overflowY: 'hidden',
       '& tbody': {
-        transition: [theme.transitions.create('opacity')]
+        transition: theme.transitions.create(['opacity'])
       },
       '& tbody.sorting': {
         opacity: 0.5

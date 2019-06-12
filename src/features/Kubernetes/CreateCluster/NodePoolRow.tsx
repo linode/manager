@@ -19,7 +19,7 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     link: {
-      color: `${theme.palette.primary.main} !important`
+      color: `${theme.palette.primary.main} !important` as any
     }
   });
 
@@ -50,7 +50,9 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
           tiny
           type="number"
           value={pool.count}
-          onChange={e => updatePool(idx, { ...pool, count: +e.target.value })}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            updatePool(idx, { ...pool, count: +e.target.value })
+          }
         />
       </TableCell>
       <TableCell parentColumn="Pricing">
@@ -60,7 +62,7 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
       </TableCell>
       <TableCell>
         <Button
-          type="remove"
+          buttonType="remove"
           data-testid={`delete-node-row-${idx}`}
           onClick={() => handleDelete(idx)}
           className={classes.link}
