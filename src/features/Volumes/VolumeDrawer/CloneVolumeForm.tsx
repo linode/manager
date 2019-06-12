@@ -1,8 +1,6 @@
-import { WithStyles } from '@material-ui/core/styles';
 import { Form, Formik } from 'formik';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import withVolumesRequests, {
   VolumesRequests
@@ -15,13 +13,6 @@ import PricePanel from './PricePanel';
 import { handleFieldErrors, handleGeneralErrors } from './utils';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
-
 interface Props {
   onClose: () => void;
   volumeId: number;
@@ -30,7 +21,7 @@ interface Props {
   volumeRegion: string;
 }
 
-type CombinedProps = Props & VolumesRequests & WithStyles<ClassNames>;
+type CombinedProps = Props & VolumesRequests;
 
 const validationScheme = CloneVolumeSchema;
 
@@ -114,10 +105,7 @@ const CloneVolumeForm: React.StatelessComponent<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
 const enhanced = compose<CombinedProps, Props>(
-  styled,
   withVolumesRequests
 );
 

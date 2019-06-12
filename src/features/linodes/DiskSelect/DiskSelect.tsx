@@ -1,16 +1,7 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 interface Props {
   generalError?: string;
@@ -21,7 +12,7 @@ interface Props {
   handleChange: (disk: string | null) => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const disksToOptions = (disks: Linode.Disk[]): Item<string>[] => {
   return disks.map(disk => ({ label: disk.label, value: String(disk.id) }));
@@ -63,9 +54,6 @@ const DiskSelect: React.StatelessComponent<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
 export default compose<CombinedProps, Props & RenderGuardProps>(
-  styled,
   RenderGuard
 )(DiskSelect);
