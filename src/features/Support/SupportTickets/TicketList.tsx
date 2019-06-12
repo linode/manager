@@ -1,8 +1,6 @@
-import { WithStyles } from '@material-ui/core/styles';
 import { compose } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
@@ -21,14 +19,7 @@ interface Props extends PaginationProps<Linode.SupportTicket> {
   newTicket?: Linode.SupportTicket;
 }
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
-
-type ClassNames = 'root';
-
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 export class TicketList extends React.Component<CombinedProps, {}> {
   mounted: boolean = false;
@@ -135,9 +126,6 @@ const updatedRequest = (ownProps: Props, params: any, filters: any) => {
 
 const paginated = Pagey(updatedRequest);
 
-const styled = withStyles(styles);
-
 export default compose(
   paginated,
-  styled
 )(TicketList);

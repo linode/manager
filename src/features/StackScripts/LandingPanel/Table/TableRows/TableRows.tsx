@@ -1,4 +1,3 @@
-import { WithStyles } from '@material-ui/core/styles';
 import {
   compose as ramdaCompose,
   isEmpty,
@@ -12,7 +11,6 @@ import {
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import ShowMore from 'src/components/ShowMore';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -29,13 +27,6 @@ import { canUserModifyAccountStackScript } from 'src/features/StackScripts/stack
 import { MapState } from 'src/store/types';
 import LabelCell from '../LabelCell';
 
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
-
 interface StackScriptData {
   stackScripts?: Linode.StackScript.Response[];
   loading: boolean;
@@ -50,7 +41,7 @@ interface Props {
   category: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & StateProps;
+type CombinedProps = Props & StateProps;
 
 export const StackScriptTableRows: React.StatelessComponent<
   CombinedProps
@@ -172,8 +163,6 @@ export const stripImageName = (image: string) => {
   return image.replace('linode/', '');
 };
 
-const styled = withStyles(styles);
-
 interface StateProps {
   isRestrictedUser: boolean;
   stackScriptGrants: Linode.Grant[];
@@ -195,7 +184,6 @@ const connected = connect(mapStateToProps);
 
 const enhanced = compose<CombinedProps, Props>(
   connected,
-  styled
 );
 
 export default enhanced(StackScriptTableRows);
