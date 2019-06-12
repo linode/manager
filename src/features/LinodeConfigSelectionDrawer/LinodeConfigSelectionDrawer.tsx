@@ -1,19 +1,9 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
 import SelectionCard from 'src/components/SelectionCard';
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 export type LinodeConfigSelectionDrawerCallback = (id: number) => void;
 
@@ -27,7 +17,7 @@ interface Props {
   error?: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const LinodeConfigSelectionDrawer: React.StatelessComponent<
   CombinedProps
@@ -65,8 +55,4 @@ LinodeConfigSelectionDrawer.defaultProps = {
   configs: []
 };
 
-const styled = withStyles(styles);
-
-const enhanced = compose<CombinedProps, Props>(styled);
-
-export default enhanced(LinodeConfigSelectionDrawer);
+export default LinodeConfigSelectionDrawer;
