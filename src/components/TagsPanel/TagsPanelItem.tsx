@@ -1,16 +1,7 @@
-import { WithStyles } from '@material-ui/core/styles';
 import Close from '@material-ui/icons/Close';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Tag, { TagProps } from 'src/components/Tag';
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 interface Props extends TagProps {
   tagLabel: string;
@@ -18,7 +9,7 @@ interface Props extends TagProps {
   onDelete?: (tag: string) => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 /*
  * Abstraction of the Tag component for the purposes of passing the
@@ -58,6 +49,4 @@ class TagsPanelItem extends React.Component<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles);
-
-export default styled(TagsPanelItem);
+export default TagsPanelItem;

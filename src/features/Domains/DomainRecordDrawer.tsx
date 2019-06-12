@@ -1,4 +1,3 @@
-import { WithStyles } from '@material-ui/core/styles';
 import {
   cond,
   defaultTo,
@@ -13,7 +12,6 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button, { ButtonProps } from 'src/components/Button';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
@@ -35,13 +33,6 @@ import { isValidDomainRecord, isValidSOAEmail } from './domainUtils';
 const TextField: React.StatelessComponent<TextFieldProps> = props => (
   <_TextField {...props} />
 );
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 interface Props extends EditableRecordFields, EditableDomainFields {
   open: boolean;
@@ -94,7 +85,7 @@ interface State {
   fields: EditableRecordFields | EditableDomainFields;
 }
 
-type CombinedProps = Props & DomainActionsProps & WithStyles<ClassNames>;
+type CombinedProps = Props & DomainActionsProps;
 
 /* tslint:disable-next-line */
 interface _TextFieldProps {
@@ -772,10 +763,7 @@ const typeMap = {
   TXT: 'TXT'
 };
 
-const styled = withStyles(styles);
-
 const enhanced = compose<CombinedProps, Props>(
-  styled,
   withDomainActions
 );
 

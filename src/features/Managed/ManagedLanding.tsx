@@ -1,23 +1,12 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose'
 import ManagedIcon from 'src/assets/icons/managed.svg';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Placeholder from 'src/components/Placeholder';
 
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
-
-type CombinedProps = WithStyles<ClassNames>;
-
-export class ManagedLanding extends React.Component<CombinedProps, {}> {
+export class ManagedLanding extends React.Component<{}, {}> {
   static docs: Linode.Doc[] = [
     {
       title: 'Linode Managed',
@@ -48,9 +37,6 @@ export class ManagedLanding extends React.Component<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles);
-
-export default compose<CombinedProps, {}>(
+export default compose<{}, {}>(
   setDocs(ManagedLanding.docs),
-  styled
 )(ManagedLanding);
