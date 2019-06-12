@@ -1,23 +1,14 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-
-type ClassNames = 'root';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {}
-  });
 
 interface Props {
   open: boolean;
   onClose: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 class GDPRNotification extends React.PureComponent<CombinedProps, {}> {
   actions = () => (
@@ -49,6 +40,4 @@ class GDPRNotification extends React.PureComponent<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles);
-
-export default styled(GDPRNotification);
+export default GDPRNotification;

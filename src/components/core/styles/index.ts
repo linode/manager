@@ -1,18 +1,16 @@
+import { WithStyles as _WithStyles } from '@material-ui/core/styles';
+
+/* tslint:disable-next-line:no-empty-interface */
+export interface WithStyles extends _WithStyles {}
+
 export {
   createGenerateClassName,
-  // createMuiTheme,
   createStyles,
-  // Direction,
   jssPreset,
   ThemeProvider,
-  // styledComponentProps,
-  // styleRules,
-  // styleRulesCallback,
-  // Theme,
   makeStyles,
   withStyles,
   withTheme,
-  // WithStyles,
   useTheme
 } from '@material-ui/styles';
 
