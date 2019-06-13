@@ -6,7 +6,8 @@ export type EntityType =
   | 'nodebalancer'
   | 'domain'
   | 'image'
-  | 'volume';
+  | 'volume'
+  | 'kubeCluster';
 
 /**
  * The store uses different structures for storing entity data. Ideally we would use the
@@ -36,6 +37,7 @@ const _getEntityByIDFromStore = (
   const {
     linodes,
     domains,
+    kubernetes,
     nodeBalancers,
     images,
     volumes
@@ -51,6 +53,8 @@ const _getEntityByIDFromStore = (
       return domains.entities.find(domain => entityID === domain.id);
     case 'volume':
       return volumes.itemsById[entityID];
+    case 'kubeCluster':
+      return kubernetes.entities.find(cluster => cluster.id === entityID);
     default:
       return;
   }

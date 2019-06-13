@@ -27,6 +27,7 @@ export interface Props extends ButtonProps {
   className?: string;
   tooltipText?: string;
   compact?: boolean;
+  deleteText?: string;
 }
 
 const styles: StyleRulesCallback = theme => ({
@@ -139,6 +140,7 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = props => {
     classes,
     loading,
     destructive,
+    deleteText,
     tooltipText,
     type,
     compact,
@@ -175,7 +177,7 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = props => {
         >
           {props.children}
         </span>
-        {type === 'remove' && 'Remove'}
+        {type === 'remove' && (deleteText ? deleteText : 'Remove')}
       </Button>
       {tooltipText && <HelpIcon text={tooltipText} />}
     </React.Fragment>

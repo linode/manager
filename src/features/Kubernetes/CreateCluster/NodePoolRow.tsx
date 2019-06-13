@@ -16,18 +16,25 @@ import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel
 import { displayTypeForKubePoolNode } from 'src/features/linodes/presentation';
 import { ExtendedPoolNode } from '.././types';
 
-type ClassNames = 'root' | 'link';
+type ClassNames = 'root' | 'link' | 'toDelete' | 'toAdd';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
   link: {
     color: `${theme.palette.primary.main} !important`
+  },
+  toDelete: {
+    backgroundColor: 'rgba(210, 28, 28, 0.4)',
+  },
+  toAdd: {
+    backgroundColor: theme.bg.offWhite
   }
 });
 
 interface Props {
   pool: ExtendedPoolNode;
   type?: ExtendedType;
+  editable: boolean;
   idx: number;
   handleDelete: (poolIdx: number) => void;
   updatePool: (poolIdx: number, updatedPool: ExtendedPoolNode) => void;
@@ -36,24 +43,42 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
-  const { classes, pool, idx, handleDelete, type, updatePool } = props;
+  const {
+    classes,
+    editable,
+    pool,
+    idx,
+    handleDelete,
+    type,
+    updatePool
+  } = props;
   const typeLabel = type
     ? displayTypeForKubePoolNode(type.class, type.memory, type.vcpus)
     : 'Unknown type'; // This should never happen, but better not to crash if it does.
 
+  const statusClass = pool.queuedForAddition
+    ? classes.toAdd
+    : pool.queuedForDeletion
+      ? classes.toDelete
+      : '' // Normal node 
+
   return (
-    <TableRow data-testid={'node-pool-table-row'}>
+    <TableRow data-testid={'node-pool-table-row'} className={statusClass}>
       <TableCell parentColumn="Plan">
         <Typography>{typeLabel}</Typography>
       </TableCell>
       <TableCell parentColumn="Node Count">
-        <TextField
-          small
-          tiny
-          type="number"
-          value={pool.count}
-          onChange={e => updatePool(idx, { ...pool, count: +e.target.value })}
-        />
+        {editable ? (
+          <TextField
+            small
+            tiny
+            type="number"
+            value={pool.count}
+            onChange={e => updatePool(idx, { ...pool, count: +e.target.value })}
+          />
+        ) : (
+          <Typography>{pool.count}</Typography>
+        )}
       </TableCell>
       <TableCell parentColumn="Pricing">
         <Typography>{`${displayPrice(
@@ -63,6 +88,7 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
       <TableCell>
         <Button
           type="remove"
+          deleteText={pool.queuedForDeletion ? "Undo Remove" : "Remove"}
           data-testid={`delete-node-row-${idx}`}
           onClick={() => handleDelete(idx)}
           className={classes.link}
