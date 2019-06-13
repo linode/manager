@@ -1,9 +1,13 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as copy from 'copy-to-clipboard';
 import { tail } from 'ramda';
 import * as React from 'react';
 import CopyTooltip from 'src/components/CopyTooltip';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import ShowMore from 'src/components/ShowMore';
 
 type CSSClasses =

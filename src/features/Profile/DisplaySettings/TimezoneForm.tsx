@@ -1,11 +1,15 @@
-import { WithStyles } from '@material-ui/core/styles';
 import { lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import timezones from 'src/assets/timezones/timezones';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';

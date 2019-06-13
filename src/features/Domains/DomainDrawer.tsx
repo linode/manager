@@ -1,4 +1,3 @@
-import { WithStyles } from '@material-ui/core/styles';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { Lens, lensPath, over, path, pathOr, set, view } from 'ramda';
 import * as React from 'react';
@@ -12,7 +11,12 @@ import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
 import RadioGroup from 'src/components/core/RadioGroup';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
@@ -431,7 +435,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           )}
         <ActionsPanel>
           <Button
-           buttonType="primary"
+            buttonType="primary"
             onClick={this.submit}
             data-qa-submit
             loading={submitting}

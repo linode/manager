@@ -1,4 +1,3 @@
-import { WithStyles } from '@material-ui/core/styles';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -6,7 +5,12 @@ import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import AppBar from 'src/components/core/AppBar';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';

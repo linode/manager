@@ -1,9 +1,13 @@
-import { WithStyles } from '@material-ui/core/styles';
 import { compose, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { compose as recompose } from 'recompose'
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import { compose as recompose } from 'recompose';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { AccountsAndPasswords } from 'src/documentation';
@@ -12,7 +16,7 @@ import { MapState } from 'src/store/types';
 import EmailChangeForm from './EmailChangeForm';
 import TimezoneForm from './TimezoneForm';
 
-import { RequestableData } from 'src/store/types'
+import { RequestableData } from 'src/store/types';
 
 type ClassNames = 'root' | 'title';
 

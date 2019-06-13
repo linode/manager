@@ -1,7 +1,11 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TabbedPanel, { Tab } from 'src/components/TabbedPanel';
 import Preview from './PreviewReply';
 import Reply, { Props as ReplyProps } from './TicketReply';

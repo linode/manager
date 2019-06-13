@@ -1,11 +1,15 @@
-import { WithStyles } from '@material-ui/core/styles';
 import Search from '@material-ui/icons/Search';
 import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import InputAdornment from 'src/components/core/InputAdornment';
 import Paper from 'src/components/core/Paper';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 import './EnhancedSelect.css';

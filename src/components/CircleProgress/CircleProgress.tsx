@@ -1,10 +1,14 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import CircularProgress, {
   CircularProgressProps
 } from 'src/components/core/CircularProgress';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
 type CSSClasses =
   | 'root'

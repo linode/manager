@@ -1,4 +1,3 @@
-import { WithStyles } from '@material-ui/core/styles';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import {
@@ -11,7 +10,12 @@ import {
 import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
 import Paper from 'src/components/core/Paper';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import Typography from 'src/components/core/Typography';

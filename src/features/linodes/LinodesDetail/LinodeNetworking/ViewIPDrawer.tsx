@@ -1,8 +1,12 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { formatRegion } from 'src/utilities';
@@ -90,7 +94,11 @@ const ViewIPDrawer: React.StatelessComponent<CombinedProps> = props => {
           </div>
 
           <ActionsPanel>
-            <Button buttonType="secondary" onClick={props.onClose} data-qa-cancel>
+            <Button
+              buttonType="secondary"
+              onClick={props.onClose}
+              data-qa-cancel
+            >
               Close
             </Button>
           </ActionsPanel>

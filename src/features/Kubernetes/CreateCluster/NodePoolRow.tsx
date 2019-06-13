@@ -1,8 +1,12 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { displayPrice } from 'src/components/DisplayPrice';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';

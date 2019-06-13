@@ -1,5 +1,10 @@
-import { WithStyles, WithTheme } from '@material-ui/core/styles';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles,
+  WithTheme
+} from 'src/components/core/styles';
 
 export type StyleProps = WithStyles<ClassNames> & WithTheme;
 

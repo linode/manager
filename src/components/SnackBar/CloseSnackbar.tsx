@@ -1,8 +1,12 @@
-import { WithStyles } from '@material-ui/core/styles';
 import Close from '@material-ui/icons/Close';
 import { useSnackbar } from 'notistack';
 import * as React from 'react';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import IconButton from 'src/components/IconButton';
 
 type ClassNames = 'icon';

@@ -1,5 +1,4 @@
 import Hidden from '@material-ui/core/Hidden';
-import { WithStyles } from '@material-ui/core/styles';
 import Close from '@material-ui/icons/Close';
 import { compose } from 'ramda';
 import * as React from 'react';
@@ -9,7 +8,12 @@ import Resource from 'src/assets/icons/resource.svg';
 import Streamline from 'src/assets/icons/streamline.svg';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import { storage } from 'src/utilities/storage';
@@ -96,7 +100,11 @@ type CombinedProps = Props & RouteComponentProps<any> & WithStyles<ClassNames>;
 
 class WelcomeBanner extends React.Component<CombinedProps, {}> {
   actions = () => (
-    <Button onClick={this.props.onClose} buttonType="primary" data-qa-welcome-button>
+    <Button
+      onClick={this.props.onClose}
+      buttonType="primary"
+      data-qa-welcome-button
+    >
       Let's go!
     </Button>
   );

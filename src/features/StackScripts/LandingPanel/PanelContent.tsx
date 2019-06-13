@@ -1,8 +1,12 @@
-import { WithStyles } from '@material-ui/core/styles';
 import { compose, pathOr, split } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import DebouncedSearch from 'src/components/DebouncedSearchTextField';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import {

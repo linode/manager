@@ -1,4 +1,3 @@
-import { WithStyles } from '@material-ui/core/styles';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { compose as rCompose, concat, uniq } from 'ramda';
 import * as React from 'react';
@@ -6,7 +5,12 @@ import { connect } from 'react-redux';
 import Waypoint from 'react-waypoint';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -92,12 +96,9 @@ export interface ReducerActions {
   payload: Payload;
 }
 
-type EventsReducer = React.Reducer<ReducerState, ReducerActions>
+type EventsReducer = React.Reducer<ReducerState, ReducerActions>;
 
-export const reducer: EventsReducer = (
-  state,
-  action
-) => {
+export const reducer: EventsReducer = (state, action) => {
   const {
     payload: {
       eventsFromRedux: nextReduxEvents,
@@ -184,15 +185,12 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
   const [isRequesting, setRequesting] = React.useState<boolean>(false);
   const [initialLoaded, setInitialLoaded] = React.useState<boolean>(false);
 
-  const [events, dispatch] = React.useReducer<EventsReducer>(
-    reducer,
-    {
-      inProgressEvents: props.inProgressEvents,
-      eventsFromRedux: props.eventsFromRedux,
-      reactStateEvents: [],
-      mostRecentEventTime: props.mostRecentEventTime
-    }
-  );
+  const [events, dispatch] = React.useReducer<EventsReducer>(reducer, {
+    inProgressEvents: props.inProgressEvents,
+    eventsFromRedux: props.eventsFromRedux,
+    reactStateEvents: [],
+    mostRecentEventTime: props.mostRecentEventTime
+  });
 
   const getNext = () => {
     if (isRequesting) {

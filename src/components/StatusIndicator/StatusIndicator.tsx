@@ -1,7 +1,11 @@
-import { WithStyles } from '@material-ui/core/styles';
 import Cached from '@material-ui/icons/Cached';
 import * as React from 'react';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
 export interface Props {
   status: 'loading' | 'active' | 'inactive' | 'error';

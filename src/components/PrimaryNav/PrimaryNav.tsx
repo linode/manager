@@ -1,4 +1,3 @@
-import { WithStyles, WithTheme } from '@material-ui/core/styles';
 import Settings from '@material-ui/icons/Settings';
 import * as classNames from 'classnames';
 import { pathOr } from 'ramda';
@@ -12,7 +11,13 @@ import Hidden from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
 import ListItemText from 'src/components/core/ListItemText';
 import Menu from 'src/components/core/Menu';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles,
+  WithTheme
+} from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import { isKubernetesEnabled } from 'src/constants';
 import { MapState } from 'src/store/types';

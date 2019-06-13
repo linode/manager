@@ -9,7 +9,7 @@ import {
   WithStyles,
   WithTheme
 } from 'src/components/core/styles';
-import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
+import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
 import Notice from 'src/components/Notice';
 import { selectStyles } from 'src/features/TopMenu/SearchBar';
 import windowIsNarrowerThan from 'src/utilities/breakpoints';

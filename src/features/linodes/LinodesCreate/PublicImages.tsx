@@ -1,6 +1,10 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import SelectionCard from 'src/components/SelectionCard';
 import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
