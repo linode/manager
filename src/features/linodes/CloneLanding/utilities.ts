@@ -8,6 +8,8 @@ interface CloneLandingState {
   configSelection: ConfigSelection;
   diskSelection: DiskSelection;
   selectedLinodeId: number | null;
+  isSubmitting: boolean;
+  errors?: Linode.ApiFieldError[];
 }
 
 // Allows for easy toggling of a selected config
@@ -26,6 +28,8 @@ export type CloneLandingAction =
   | { type: 'toggleConfig'; id: number }
   | { type: 'toggleDisk'; id: number }
   | { type: 'setSelectedLinodeId'; id: number }
+  | { type: 'setSubmitting'; value: boolean }
+  | { type: 'setErrors'; errors?: Linode.ApiFieldError[] }
   | { type: 'clearAll' };
 
 export type ExtendedConfig = Linode.Config & { associatedDisks: Linode.Disk[] };
@@ -84,7 +88,9 @@ export const cloneLandingReducer = (
             // This is the actual toggle:
             isSelected: !state.configSelection[id].isSelected
           }
-        }
+        },
+        // Clear errors on input change.
+        errors: undefined
       };
     case 'toggleDisk':
       id = action.id;
@@ -97,17 +103,32 @@ export const cloneLandingReducer = (
             ...state.diskSelection[id],
             isSelected: !state.diskSelection[id].isSelected
           }
-        }
+        },
+        // Clear errors on input change.
+        errors: undefined
       };
     case 'setSelectedLinodeId':
       id = action.id;
       return {
         ...state,
-        selectedLinodeId: id
+        selectedLinodeId: id,
+        // Clear errors on input change.
+        errors: undefined
+      };
+    case 'setSubmitting':
+      return {
+        ...state,
+        isSubmitting: action.value
+      };
+    case 'setErrors':
+      return {
+        ...state,
+        errors: action.errors
       };
     case 'clearAll':
       // Set all `isSelected`s to `false, and set selectedLinodeId to null
       return {
+        ...state,
         configSelection: map(
           config => ({ ...config, isSelected: false }),
           state.configSelection
@@ -116,7 +137,8 @@ export const cloneLandingReducer = (
           disk => ({ ...disk, isSelected: false }),
           state.diskSelection
         ),
-        selectedLinodeId: null
+        selectedLinodeId: null,
+        errors: undefined
       };
     default:
       return state;
@@ -132,7 +154,8 @@ export const createInitialCloneLandingState = (
   const state: CloneLandingState = {
     configSelection: {},
     diskSelection: {},
-    selectedLinodeId: null
+    selectedLinodeId: null,
+    isSubmitting: false
   };
 
   // Mapping of diskIds to an array of associated configIds

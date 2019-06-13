@@ -1,5 +1,6 @@
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
+import { connect, MapDispatchToProps } from 'react-redux';
 import {
   matchPath,
   Route,
@@ -8,6 +9,8 @@ import {
   withRouter
 } from 'react-router-dom';
 import { compose } from 'recompose';
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 import AppBar from 'src/components/core/AppBar';
 import Paper from 'src/components/core/Paper';
 import {
@@ -22,6 +25,11 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import TabLink from 'src/components/TabLink';
 import withLinodes from 'src/containers/withLinodes.container';
+import { resetEventsPolling } from 'src/events';
+import { cloneLinode, cloneLinodeDisk } from 'src/services/linodes';
+import { ApplicationState } from 'src/store';
+import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
+import { getErrorMap } from 'src/utilities/errorUtils';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { withLinodeDetailContext } from '../LinodesDetail/linodeDetailContext';
 import Configs from './Configs';
@@ -58,6 +66,7 @@ interface WithLinodesProps {
 type CombinedProps = RouteComponentProps<{}> &
   LinodeContextProps &
   WithLinodesProps &
+  DispatchProps &
   WithStyles<ClassNames>;
 
 export const CloneLanding: React.FC<CombinedProps> = props => {
@@ -65,8 +74,11 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     classes,
     configs,
     disks,
+    history,
     match: { url },
-    region
+    region,
+    linodeId,
+    requestDisks
   } = props;
 
   /**
@@ -86,7 +98,6 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     event: React.ChangeEvent<HTMLDivElement>,
     value: number
   ) => {
-    const { history } = props;
     const routeName = tabs[value].routeName;
     history.push(`${routeName}`);
   };
@@ -125,6 +136,14 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     return dispatch({ type: 'setSelectedLinodeId', id });
   };
 
+  const setSubmitting = (value: boolean) => {
+    return dispatch({ type: 'setSubmitting', value });
+  };
+
+  const setErrors = (errors?: Linode.ApiFieldError[]) => {
+    return dispatch({ type: 'setErrors', errors });
+  };
+
   const clearAll = () => dispatch({ type: 'clearAll' });
 
   const selectedConfigs = configs.filter(
@@ -132,6 +151,75 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
   );
 
   const selectedConfigIds = selectedConfigs.map(eachConfig => eachConfig.id);
+
+  const selectedDisks = disks.filter(
+    eachDisk => state.diskSelection[eachDisk.id].isSelected
+  );
+
+  const selectedDiskIds = selectedDisks.map(eachDisk => eachDisk.id);
+
+  const handleClone = () => {
+    // The "Clone" button should be disabled if there's no Linode selected,
+    // but we'll include this early return just in case (and to make TS happy).
+    if (!state.selectedLinodeId) {
+      return;
+    }
+
+    /**
+     * There are two distinct actions we can take here, depending on the selected Linode.
+     *
+     * 1) Duplicate a single disk on the current Linode.
+     * 2) Clone configs/disks to a different Linode.
+     */
+    let request: () => Promise<Linode.Linode | Linode.Disk>;
+
+    // The selected Linode is the same as the current Linode -- duplicate the disk
+    if (state.selectedLinodeId === linodeId) {
+      // In this mode, the "Clone" button will be disabled unless exactly one Disk is selected,
+      // but we'll include this early return just in case (and to make TS happy).
+      if (selectedDiskIds.length !== 1) {
+        return;
+      }
+
+      request = () => cloneLinodeDisk(linodeId, selectedDiskIds[0]);
+    } else {
+      const sourceLinodeId = linodeId;
+      const destinationLinodeId = state.selectedLinodeId;
+
+      /** @todo: We should be able to let the user know if there isn't enough
+       * space on the destination Linode.
+       */
+
+      /** NOTE:
+       * We need to supply `configs` AND `disks` here, even if one is an empty array.
+       * This is because the `cloneLinode` API method will clone ALL configs or disks
+       * if they are not specified.
+       */
+      request = () =>
+        cloneLinode(sourceLinodeId, {
+          linode_id: destinationLinodeId,
+          configs: selectedConfigIds,
+          disks: selectedDiskIds
+        });
+    }
+
+    setSubmitting(true);
+    setErrors(undefined);
+
+    request()
+      .then(() => {
+        setSubmitting(false);
+        resetEventsPolling();
+        requestDisks(linodeId);
+        history.push(`/linodes/${linodeId}/advanced`);
+      })
+      .catch(errors => {
+        setSubmitting(false);
+        setErrors(errors);
+      });
+  };
+
+  const errorMap = getErrorMap(['disk_size'], state.errors);
 
   return (
     <React.Fragment>
@@ -199,6 +287,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
         </Grid>
         <Grid item xs={12} md={3}>
           <Details
+            currentLinodeId={linodeId}
             selectedConfigs={attachAssociatedDisksToConfigs(
               selectedConfigs,
               disks
@@ -226,6 +315,9 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
             handleSelectLinode={setSelectedLinodeId}
             handleToggleConfig={toggleConfig}
             handleToggleDisk={toggleDisk}
+            handleClone={handleClone}
+            isSubmitting={state.isSubmitting}
+            errorMap={errorMap}
             clearAll={clearAll}
           />
         </Grid>
@@ -248,9 +340,28 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   region: linode.region
 }));
 
+interface DispatchProps {
+  requestDisks: (linodeId: number) => void;
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
+) => {
+  return {
+    requestDisks: (linodeId: number) =>
+      dispatch(getAllLinodeDisks({ linodeId }))
+  };
+};
+
+const connected = connect(
+  undefined,
+  mapDispatchToProps
+);
+
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, {}>(
+  connected,
   linodeContext,
   styled,
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
