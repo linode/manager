@@ -12,6 +12,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Notice from 'src/components/Notice';
 import { formatRegion } from 'src/utilities';
 import LinodeSelect from '../LinodeSelect';
 import { ExtendedConfig } from './utilities';
@@ -73,9 +74,13 @@ interface Props {
   selectedDisks: Linode.Disk[];
   selectedLinode: number | null;
   region: string;
+  isSubmitting: boolean;
+  currentLinodeId: number;
+  errorMap?: Record<string, string | undefined>;
   handleToggleConfig: (id: number) => void;
   handleToggleDisk: (id: number) => void;
   handleSelectLinode: (linodeId: number) => void;
+  handleClone: () => void;
   clearAll: () => void;
 }
 
@@ -84,15 +89,38 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const Configs: React.FC<CombinedProps> = props => {
   const {
     classes,
+    currentLinodeId,
     selectedConfigs,
     selectedDisks,
     selectedLinode,
     region,
+    isSubmitting,
+    errorMap,
     handleToggleConfig,
     handleToggleDisk,
     handleSelectLinode,
+    handleClone,
     clearAll
   } = props;
+
+  // These errors come back from from the API under the "disk_size" field
+  // when duplicating a disk on the same Linode.
+  const linodeError = errorMap && errorMap.disk_size;
+
+  /**
+   * Don't include the current Linode in the LinodeSelect component if:
+   * 1) There is a selected config (because you can't duplicate configs on the same Linode).
+   * 2) There's more than one disk selected (because you can't duplicate multiple configs at once on the same Linode).
+   */
+  const shouldExcludeCurrentLinode =
+    selectedConfigs.length > 0 || selectedDisks.length > 1;
+
+  // Disable the "Clone" button if there is no selected Linode,
+  // or if there are no selected configs or disks, or if the selected Linode should be excluded.
+  const isCloneButtonDisabled =
+    (selectedConfigs.length === 0 && selectedDisks.length === 0) ||
+    !selectedLinode ||
+    (shouldExcludeCurrentLinode && selectedLinode === currentLinodeId);
 
   return (
     <Paper className={classes.root}>
@@ -107,6 +135,9 @@ export const Configs: React.FC<CombinedProps> = props => {
           Clear
         </Button>
       </header>
+
+      {errorMap && errorMap.none && <Notice error text={errorMap.none} />}
+
       <List>
         {selectedConfigs.map(eachConfig => {
           return (
@@ -170,15 +201,26 @@ export const Configs: React.FC<CombinedProps> = props => {
       {/* @todo: This LinodeSelect needs to be grouped by region */}
       <LinodeSelect
         label="Destination"
+        generalError={linodeError}
         selectedLinode={selectedLinode}
         handleChange={linode => handleSelectLinode(linode.id)}
-        updateFor={[selectedLinode, classes]}
+        excludedLinodes={
+          shouldExcludeCurrentLinode ? [currentLinodeId] : undefined
+        }
+        updateFor={[
+          selectedLinode,
+          shouldExcludeCurrentLinode,
+          errorMap,
+          classes
+        ]}
       />
 
       <Button
         className={classes.submitButton}
+        disabled={isCloneButtonDisabled}
         type="primary"
-        onClick={() => alert(`Clone`)}
+        onClick={handleClone}
+        loading={isSubmitting}
       >
         Clone
       </Button>

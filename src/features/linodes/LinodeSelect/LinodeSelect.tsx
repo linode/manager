@@ -21,6 +21,7 @@ interface Props {
   handleChange: (linode: Linode.Linode) => void;
   textFieldProps?: TextFieldProps;
   label?: string;
+  excludedLinodes?: number[];
 }
 
 type CombinedProps = Props & WithLinodesProps;
@@ -53,12 +54,18 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
     linodesData,
     region,
     selectedLinode,
+    excludedLinodes,
     label
   } = props;
 
-  const linodes = region
+  let linodes = region
     ? linodesData.filter(thisLinode => thisLinode.region === region)
     : linodesData;
+
+  linodes = excludedLinodes
+    ? linodes.filter(thisLinode => !excludedLinodes.includes(thisLinode.id))
+    : linodes;
+
   const options = linodesToItems(linodes);
 
   const noOptionsMessage =
