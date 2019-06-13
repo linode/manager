@@ -86,7 +86,7 @@ const LinodeRadioControl: React.StatelessComponent<FinalProps> = props => {
       {...rest}
       icon={<RadioIcon />}
       checkedIcon={<RadioIconRadioed />}
-      data-qa-radio={props.checked}
+      data-qa-radio={props.checked || false}
       inputProps={{
         'aria-label': props.name,
         ...props.inputProps
