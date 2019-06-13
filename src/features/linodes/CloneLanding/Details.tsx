@@ -24,7 +24,8 @@ type ClassNames =
   | 'nestedList'
   | 'closeIcon'
   | 'divider'
-  | 'submitButton';
+  | 'submitButton'
+  | 'labelOuter';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
@@ -48,7 +49,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     flexBasis: '100%'
   },
   closeIcon: {
-    cursor: 'pointer'
+    cursor: 'pointer',
+    position: 'relative',
+    top: -4
   },
   divider: {
     marginTop: theme.spacing.unit * 2,
@@ -57,6 +60,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   submitButton: {
     marginTop: theme.spacing.unit * 3
+  },
+  labelOuter: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    width: '100%'
   }
 });
 
@@ -108,14 +116,16 @@ export const Configs: React.FC<CombinedProps> = props => {
               disableGutters
               dense
             >
-              <Typography variant="h3">{eachConfig.label}</Typography>
-              <a
-                onClick={() => handleToggleConfig(eachConfig.id)}
-                className={classes.closeIcon}
-                data-qa-inline-delete
-              >
-                <Close />
-              </a>
+              <div className={classes.labelOuter}>
+                <Typography variant="h3">{eachConfig.label}</Typography>
+                <a
+                  onClick={() => handleToggleConfig(eachConfig.id)}
+                  className={classes.closeIcon}
+                  data-qa-inline-delete
+                >
+                  <Close />
+                </a>
+              </div>
               <List className={classes.nestedList}>
                 {eachConfig.associatedDisks.map(eachDisk => {
                   return (
