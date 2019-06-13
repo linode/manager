@@ -108,12 +108,11 @@ const interceptNotification = (
       ...notification,
       label: `Maintenance Scheduled`,
       severity: 'major',
-      message: notification.message
-        .toLowerCase()
-        .replace(
-          'this linode',
-          `Linode ${pathOr('this Linode', ['label'], notification.entity)}`
-        )
+      message: `Linode ${pathOr(
+        'this Linode',
+        ['label'],
+        notification.entity
+      )}has scheduled maintenance`
     };
   }
 
