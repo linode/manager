@@ -112,7 +112,7 @@ const interceptNotification = (
         'this Linode',
         ['label'],
         notification.entity
-      )}has scheduled maintenance.`
+      )} has scheduled maintenance.`
     };
   }
 
