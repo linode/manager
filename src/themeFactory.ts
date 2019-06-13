@@ -529,9 +529,6 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
           '& .actionPanel': {
             padding: 0
           }
-        },
-        action: {
-          margin: 0
         }
       },
       MuiDialogTitle: {
