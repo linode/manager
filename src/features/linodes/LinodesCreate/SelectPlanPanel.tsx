@@ -1,6 +1,5 @@
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
-// import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import {
   StyleRulesCallback,
@@ -200,7 +199,6 @@ export class SelectPlanPanel extends React.Component<
           with more information. This program has finite resources and may not
           be available at the time of your request. Some additional verification
           may be required to access these services.
-          {/* Please <Link to="/support/tickets">open a support ticket</Link> to request verification. */}
         </Typography>
       );
       tabs.push({
