@@ -69,6 +69,12 @@ export class LinodeCreate extends React.PureComponent<
       return eachTab.title === queryParams.type;
     });
 
+    // If there is no specified "type" in the query params, update the Redux state
+    // so that the correct request is made when the form is submitted.
+    if (!queryParams.type) {
+      this.props.setTab(this.tabs[0].type);
+    }
+
     this.state = {
       selectedTab: preSelectedTab !== -1 ? preSelectedTab : 0
     };
