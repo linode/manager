@@ -10,7 +10,7 @@ import {
 import eventMessageGenerator from 'src/eventMessageGenerator';
 import { reportException } from 'src/exceptionReporting';
 import { ExtendedEvent } from 'src/store/events/event.helpers';
-import createClickHandlerForNotification from 'src/utilities/getEventsActionLink';
+import createLinkHandlerForNotification from 'src/utilities/getEventsActionLinkStrings';
 import UserEventsListItem, {
   Props as UserEventsListItemProps
 } from './UserEventsListItem';
@@ -44,11 +44,7 @@ type CombinedProps = Props & RouteComponentProps<void> & WithStyles<ClassNames>;
 export const UserEventsList: React.StatelessComponent<
   CombinedProps
 > = props => {
-  const {
-    events,
-    closeMenu,
-    history: { push }
-  } = props;
+  const { events, closeMenu } = props;
 
   return (
     <React.Fragment>
@@ -67,18 +63,19 @@ export const UserEventsList: React.StatelessComponent<
 
           const success = event.status !== 'failed' && !event.seen;
           const error = event.status === 'failed';
-          const onClick = createClickHandlerForNotification(
+
+          const onClick = () => {
+            closeMenu();
+          };
+
+          const linkPath = createLinkHandlerForNotification(
             event.action,
             event.entity,
-            event._deleted,
-            (s: string) => {
-              closeMenu();
-              push(s);
-            }
+            event._deleted
           );
 
           return title
-            ? [...result, { title, content, success, error, onClick }]
+            ? [...result, { title, content, success, error, onClick, linkPath }]
             : result;
         }, [])
         .map((reducedProps: UserEventsListItemProps, key: number) => (
