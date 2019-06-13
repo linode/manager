@@ -88,7 +88,9 @@ export const cloneLandingReducer = (
             // This is the actual toggle:
             isSelected: !state.configSelection[id].isSelected
           }
-        }
+        },
+        // Clear errors on input change.
+        errors: undefined
       };
     case 'toggleDisk':
       id = action.id;
@@ -101,13 +103,17 @@ export const cloneLandingReducer = (
             ...state.diskSelection[id],
             isSelected: !state.diskSelection[id].isSelected
           }
-        }
+        },
+        // Clear errors on input change.
+        errors: undefined
       };
     case 'setSelectedLinodeId':
       id = action.id;
       return {
         ...state,
-        selectedLinodeId: id
+        selectedLinodeId: id,
+        // Clear errors on input change.
+        errors: undefined
       };
     case 'setSubmitting':
       return {
@@ -131,7 +137,8 @@ export const cloneLandingReducer = (
           disk => ({ ...disk, isSelected: false }),
           state.diskSelection
         ),
-        selectedLinodeId: null
+        selectedLinodeId: null,
+        errors: undefined
       };
     default:
       return state;
