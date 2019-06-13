@@ -104,7 +104,7 @@ export const Configs: React.FC<CombinedProps> = props => {
   } = props;
 
   // These errors come back from from the API under the "disk_size" field
-  // when duplicated a disk on the same Linode.
+  // when duplicating a disk on the same Linode.
   const linodeError = errorMap && errorMap.disk_size;
 
   /**
@@ -115,8 +115,8 @@ export const Configs: React.FC<CombinedProps> = props => {
   const shouldExcludeCurrentLinode =
     selectedConfigs.length > 0 || selectedDisks.length > 1;
 
-  // Disable the Clone if there is no selected Linode, or if
-  // there are no selected configs or disks
+  // Disable the "Clone" button if there is no selected Linode,
+  // or if there are no selected configs or disks, or if the selected Linode should be excluded.
   const isCloneButtonDisabled =
     (selectedConfigs.length === 0 && selectedDisks.length === 0) ||
     !selectedLinode ||
