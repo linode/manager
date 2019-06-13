@@ -19,7 +19,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     '& p': {
       marginBottom: theme.spacing.unit * 2,
-      lineHeight: `${theme.spacing.unit * 2.5}px`
+      lineHeight: `20px`
     },
     '& p:last-child': {
       marginBottom: 0
