@@ -19,6 +19,7 @@ export const transitionAction = [
   'disk_resize',
   'backups_restore',
   'disk_imagize',
+  'disk_duplicate',
   'linode_mutate'
 ];
 
