@@ -1,9 +1,13 @@
-import { WithStyles } from '@material-ui/core/styles';
 import OpenInNew from '@material-ui/icons/OpenInNew';
 import * as React from 'react';
 import ListItem from 'src/components/core/ListItem';
 import Paper from 'src/components/core/Paper';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
 type ClassNames =

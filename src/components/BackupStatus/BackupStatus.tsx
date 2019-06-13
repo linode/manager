@@ -1,8 +1,12 @@
-import { WithStyles } from '@material-ui/core/styles';
 import Backup from '@material-ui/icons/Backup';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';

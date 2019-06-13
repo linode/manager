@@ -1,6 +1,9 @@
-import { WithStyles } from '@material-ui/core/styles';
-
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
 type ClassNames = 'ellipses' | 'ellipsesInner';
 

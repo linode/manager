@@ -1,7 +1,11 @@
-import { WithStyles } from '@material-ui/core/styles';
 import TableHead from '@material-ui/core/TableHead';
 import * as React from 'react';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';

@@ -1,7 +1,11 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import LinearProgress from 'src/components/core/LinearProgress';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
 type ClassNames = 'root' | 'primaryColor' | 'loadingText';

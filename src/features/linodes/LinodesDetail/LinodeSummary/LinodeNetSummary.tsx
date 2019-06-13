@@ -1,4 +1,3 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as moment from 'moment';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -6,6 +5,7 @@ import { compose } from 'recompose';
 import BarPercent from 'src/components/BarPercent';
 import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
+import { WithStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';

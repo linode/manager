@@ -1,8 +1,12 @@
-import { WithStyles } from '@material-ui/core/styles';
 import Typography from '@material-ui/core/Typography';
 import * as React from 'react';
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import truncateText from 'src/utilities/truncateText';
 
 type ClassNames =

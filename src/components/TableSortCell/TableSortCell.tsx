@@ -1,7 +1,11 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableCell, { TableCellProps } from 'src/components/core/TableCell';
 import TableSortLabel from 'src/components/core/TableSortLabel';
 

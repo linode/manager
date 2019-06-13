@@ -1,4 +1,3 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import {
   matchPath,
@@ -8,7 +7,12 @@ import {
   withRouter
 } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import NotFound from 'src/components/NotFound';

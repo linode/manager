@@ -1,4 +1,3 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import * as moment from 'moment';
 import { pathOr } from 'ramda';
@@ -9,7 +8,12 @@ import 'showdown-highlightjs-extension';
 import UserIcon from 'src/assets/icons/user.svg';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';

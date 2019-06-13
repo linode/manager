@@ -1,7 +1,11 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import BackupStatus from 'src/components/BackupStatus';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell';
 
 type ClassNames = 'root';

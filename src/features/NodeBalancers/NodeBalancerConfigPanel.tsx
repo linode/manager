@@ -1,4 +1,3 @@
-import { WithStyles } from '@material-ui/core/styles';
 import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -11,7 +10,12 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import MenuItem from 'src/components/core/MenuItem';
 import Paper from 'src/components/core/Paper';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';

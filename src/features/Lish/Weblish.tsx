@@ -1,8 +1,12 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import { Terminal } from 'xterm';
 import { getLishSchemeAndHostname, resizeViewPort } from '.';

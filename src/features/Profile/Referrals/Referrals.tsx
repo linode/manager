@@ -1,10 +1,14 @@
-import { WithStyles } from '@material-ui/core/styles';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'recompose'
+import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
@@ -62,29 +66,29 @@ class Referrals extends React.Component<CombinedProps, {}> {
           {profileLoading ? (
             <div />
           ) : (
-              <React.Fragment>
-                <Grid item>
-                  <Typography variant="h3" className={classes.results}>
-                    You have {total} total referrals: {completed} completed ($
+            <React.Fragment>
+              <Grid item>
+                <Typography variant="h3" className={classes.results}>
+                  You have {total} total referrals: {completed} completed ($
                   {credit} ) and {pending} pending.
                 </Typography>
-                </Grid>
-                <Grid item xs={12}>
-                  <CopyableTextField
-                    value={code}
-                    label="Referral Code"
-                    className={classes.copyField}
-                    expand
-                  />
-                  <CopyableTextField
-                    value={url}
-                    label="Referral URL"
-                    className={classes.copyField}
-                    expand
-                  />
-                </Grid>
-              </React.Fragment>
-            )}
+              </Grid>
+              <Grid item xs={12}>
+                <CopyableTextField
+                  value={code}
+                  label="Referral Code"
+                  className={classes.copyField}
+                  expand
+                />
+                <CopyableTextField
+                  value={url}
+                  label="Referral URL"
+                  className={classes.copyField}
+                  expand
+                />
+              </Grid>
+            </React.Fragment>
+          )}
         </Grid>
       </Paper>
     );

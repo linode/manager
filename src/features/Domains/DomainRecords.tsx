@@ -1,4 +1,3 @@
-import { WithStyles } from '@material-ui/core/styles';
 import {
   compose,
   equals,
@@ -18,7 +17,12 @@ import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -642,7 +646,11 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         <Button buttonType="cancel" onClick={this.handleCloseDialog}>
           Cancel
         </Button>
-        <Button buttonType="secondary" destructive onClick={this.deleteDomainRecord}>
+        <Button
+          buttonType="secondary"
+          destructive
+          onClick={this.deleteDomainRecord}
+        >
           Delete
         </Button>
       </ActionsPanel>

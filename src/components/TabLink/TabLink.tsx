@@ -1,8 +1,11 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { createStyles, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'selected';
 

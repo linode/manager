@@ -1,10 +1,14 @@
-import { WithStyles } from '@material-ui/core/styles';
 import { last } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import { lishLaunch } from 'src/features/Lish';

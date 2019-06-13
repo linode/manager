@@ -1,4 +1,3 @@
-import { WithStyles } from '@material-ui/core/styles';
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import * as classNames from 'classnames';
 import * as React from 'react';
@@ -7,7 +6,12 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import Input, { InputProps } from 'src/components/core/Input';
 import { MenuProps } from 'src/components/core/Menu';
 import Select, { SelectProps } from 'src/components/core/Select';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import HelpIcon from 'src/components/HelpIcon';
 
 type ClassNames =

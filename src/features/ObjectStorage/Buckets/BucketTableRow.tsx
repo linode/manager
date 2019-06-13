@@ -1,8 +1,12 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 // @todo: uncomment this Link import when a bucket landing page exists
 // import { Link } from 'react-router-dom';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import EntityIcon from 'src/components/EntityIcon';

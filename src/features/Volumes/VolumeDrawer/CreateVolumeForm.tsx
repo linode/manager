@@ -1,9 +1,13 @@
-import { WithStyles } from '@material-ui/core/styles';
 import { Form, Formik } from 'formik';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import TagsInput, { Tag } from 'src/components/TagsInput';
@@ -208,9 +212,9 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
                 touched.tags
                   ? errors.tags
                     ? getErrorStringOrDefault(
-                      errors.tags as Linode.ApiFieldError[],
-                      'Unable to tag Volume.'
-                    )
+                        errors.tags as Linode.ApiFieldError[],
+                        'Unable to tag Volume.'
+                      )
                     : undefined
                   : undefined
               }

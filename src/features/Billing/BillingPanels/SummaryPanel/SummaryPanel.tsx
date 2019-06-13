@@ -1,10 +1,14 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
@@ -66,10 +70,10 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
         {loading && lastUpdated === 0
           ? this.loading()
           : errors
-            ? this.error()
-            : data
-              ? this.info()
-              : null}
+          ? this.error()
+          : data
+          ? this.info()
+          : null}
       </div>
     );
   }

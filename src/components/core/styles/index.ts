@@ -1,7 +1,11 @@
 import { WithStyles as _WithStyles } from '@material-ui/core/styles';
+import { WithTheme as _WithTheme } from '@material-ui/core/styles';
 
 /* tslint:disable-next-line:no-empty-interface */
-export interface WithStyles extends _WithStyles {}
+export interface WithStyles<P extends string> extends _WithStyles<P> {}
+
+/* tslint:disable-next-line:no-empty-interface */
+export interface WithTheme extends _WithTheme {}
 
 export {
   createGenerateClassName,

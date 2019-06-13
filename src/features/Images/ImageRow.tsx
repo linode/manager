@@ -1,6 +1,10 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableRow from 'src/components/core/TableRow';
 import RenderGuard from 'src/components/RenderGuard';
 import TableCell from 'src/components/TableCell';

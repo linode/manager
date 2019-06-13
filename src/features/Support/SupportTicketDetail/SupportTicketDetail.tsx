@@ -1,4 +1,3 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as Bluebird from 'bluebird';
 import * as classNames from 'classnames';
 import { compose, isEmpty, path, pathOr } from 'ramda';
@@ -12,7 +11,12 @@ import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import Chip from 'src/components/core/Chip';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -172,7 +176,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
       this.setState({
         ticket: {
           ...this.state.ticket!,
-          attachments: ticket.attachments,
+          attachments: ticket.attachments
         },
         ticketCloseSuccess: false
       });

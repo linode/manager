@@ -1,10 +1,14 @@
-import { WithStyles } from '@material-ui/core/styles';
 import HelpOutline from '@material-ui/icons/HelpOutline';
 import * as React from 'react';
 import CircularProgress from 'src/components/core/CircularProgress';
 import IconButton from 'src/components/core/IconButton';
 import MenuItem, { MenuItemProps } from 'src/components/core/MenuItem';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
 type CSSClasses =
   | 'root'

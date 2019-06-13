@@ -1,9 +1,13 @@
-import { WithStyles } from '@material-ui/core/styles';
 import FileCopy from '@material-ui/icons/FileCopy';
 import * as classNames from 'classnames';
 import * as copy from 'copy-to-clipboard';
 import * as React from 'react';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
 interface Props {
   text: string;

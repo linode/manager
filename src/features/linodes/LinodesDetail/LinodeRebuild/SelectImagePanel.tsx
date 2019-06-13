@@ -1,7 +1,11 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
@@ -68,11 +72,11 @@ const SelectImagePanel: React.StatelessComponent<CombinedProps> = props => {
         myImages.length > 0 ? (
           <Grid container>{createImagePanels(myImages)}</Grid>
         ) : (
-            <Typography>
-              You don't have any images!{' '}
-              <Link to={'/images'}>Click here to add one.</Link>
-            </Typography>
-          )
+          <Typography>
+            You don't have any images!{' '}
+            <Link to={'/images'}>Click here to add one.</Link>
+          </Typography>
+        )
     }
   ];
 
@@ -85,7 +89,9 @@ const SelectImagePanel: React.StatelessComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-export default styled(RenderGuard<Props & WithStyles<ClassNames>>(SelectImagePanel));
+export default styled(
+  RenderGuard<Props & WithStyles<ClassNames>>(SelectImagePanel)
+);
 
 // Maps over images and creates a SelectionCard for each. Wrapped in a closure
 // so that it doesn't have to been called with the same arguments over and over
@@ -95,20 +101,20 @@ const imagePanelFactory = (
   handleSelection: (id: string) => void,
   disabled?: boolean
 ) => (images: Linode.Image[] = []) =>
-    images.map((image, idx) => (
-      <SelectionCard
-        key={idx}
-        checked={image.id === String(selectedImageID)}
-        onClick={() => handleSelection(image.id)}
-        disabled={disabled}
-        renderIcon={() => {
-          const className = image.vendor
-            ? `fl-${distroIcons[image.vendor as string]}`
-            : 'fl-tux';
-          return <span className={className} />;
-        }}
-        heading={image.vendor as string}
-        subheadings={[image.label]}
-        data-qa-selection-card
-      />
-    ));
+  images.map((image, idx) => (
+    <SelectionCard
+      key={idx}
+      checked={image.id === String(selectedImageID)}
+      onClick={() => handleSelection(image.id)}
+      disabled={disabled}
+      renderIcon={() => {
+        const className = image.vendor
+          ? `fl-${distroIcons[image.vendor as string]}`
+          : 'fl-tux';
+        return <span className={className} />;
+      }}
+      heading={image.vendor as string}
+      subheadings={[image.label]}
+      data-qa-selection-card
+    />
+  ));

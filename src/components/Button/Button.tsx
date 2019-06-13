@@ -1,10 +1,14 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import { always, cond, propEq } from 'ramda';
 import * as React from 'react';
 import Reload from 'src/assets/icons/reload.svg';
 import Button, { ButtonProps } from 'src/components/core/Button';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import HelpIcon from 'src/components/HelpIcon';
 
 type ClassNames =

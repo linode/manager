@@ -1,11 +1,11 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import IconButton from 'src/components/core/IconButton';
 import {
   createStyles,
   Theme,
-  withStyles
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 
 type ClassNames =
@@ -19,49 +19,49 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-  root: {
-    marginRight: -theme.spacing(1),
-    position: 'relative',
-    [theme.breakpoints.up('lg')]: {
-      marginLeft: theme.spacing(1)
+    root: {
+      marginRight: -theme.spacing(1),
+      position: 'relative',
+      [theme.breakpoints.up('lg')]: {
+        marginLeft: theme.spacing(1)
+      },
+      '&.active $icon': {
+        backgroundColor: theme.palette.text.primary
+      }
     },
-    '&.active $icon': {
-      backgroundColor: theme.palette.text.primary
-    }
-  },
-  icon: {
-    position: 'relative',
-    top: 0,
-    width: 28,
-    height: 28,
-    transition: theme.transitions.create(['background-color']),
-    color: theme.color.white,
-    borderRadius: '50%',
-    backgroundColor: theme.color.grey3,
-    fontSize: 17,
-    fontFamily: 'LatoWebBold',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    lineHeight: 1.1,
-    '&:hover': {
-      backgroundColor: theme.palette.text.primary
-    }
-  },
-  isCritical: {
-    backgroundColor: theme.palette.status.errorDark
-  },
-  isMajor: {
-    backgroundColor: theme.palette.status.warningDark
-  },
-  isMinor: {
-    backgroundColor: theme.palette.primary.main
-  },
-  smaller: {
-    fontSize: 15
-  },
-  hasNoNotifications: {}
-});
+    icon: {
+      position: 'relative',
+      top: 0,
+      width: 28,
+      height: 28,
+      transition: theme.transitions.create(['background-color']),
+      color: theme.color.white,
+      borderRadius: '50%',
+      backgroundColor: theme.color.grey3,
+      fontSize: 17,
+      fontFamily: 'LatoWebBold',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      lineHeight: 1.1,
+      '&:hover': {
+        backgroundColor: theme.palette.text.primary
+      }
+    },
+    isCritical: {
+      backgroundColor: theme.palette.status.errorDark
+    },
+    isMajor: {
+      backgroundColor: theme.palette.status.warningDark
+    },
+    isMinor: {
+      backgroundColor: theme.palette.primary.main
+    },
+    smaller: {
+      fontSize: 15
+    },
+    hasNoNotifications: {}
+  });
 
 interface Props {
   onClick: (e: React.MouseEvent<HTMLElement>) => void;

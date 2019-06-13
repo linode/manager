@@ -1,8 +1,12 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import NotificationIcon from 'src/assets/icons/bell.svg';
 import IconButton from 'src/components/core/IconButton';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'icon' | 'new' | 'count';
 

@@ -1,9 +1,13 @@
-import { WithStyles } from '@material-ui/core/styles';
 import { path } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import { EU_COUNTRIES } from 'src/constants';
 import AccountContainer, {

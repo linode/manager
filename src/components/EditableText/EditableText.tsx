@@ -1,14 +1,18 @@
-import { WithStyles } from '@material-ui/core/styles';
 import Check from '@material-ui/icons/Check';
 import Close from '@material-ui/icons/Close';
 import Edit from '@material-ui/icons/Edit';
 import * as classnames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose'
+import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import { TextFieldProps } from 'src/components/core/TextField';
 import Typography from 'src/components/core/Typography';
 import TextField from '../TextField';
@@ -227,11 +231,7 @@ export class EditableText extends React.Component<FinalProps, State> {
     const { isEditing, text } = this.state;
 
     const labelText = (
-      <Typography
-        className={classes.root}
-        variant="h1"
-        data-qa-editable-text
-      >
+      <Typography className={classes.root} variant="h1" data-qa-editable-text>
         {this.state.text}
       </Typography>
     );
@@ -244,8 +244,8 @@ export class EditableText extends React.Component<FinalProps, State> {
               {labelText}
             </Link>
           ) : (
-              labelText
-            )}
+            labelText
+          )}
           {/** pencil icon */}
           <Button
             className={`${classes.button} ${classes.editIcon}`}
@@ -258,54 +258,52 @@ export class EditableText extends React.Component<FinalProps, State> {
         </React.Fragment>
       </div>
     ) : (
-        <ClickAwayListener
-          onClickAway={this.cancelEditing}
-          mouseEvent="onMouseDown"
+      <ClickAwayListener
+        onClickAway={this.cancelEditing}
+        mouseEvent="onMouseDown"
+      >
+        <div
+          className={`${classes.container} ${classes.edit}`}
+          data-qa-edit-field
         >
-          <div
-            className={`${classes.container} ${classes.edit}`}
-            data-qa-edit-field
+          <TextField
+            {...rest}
+            className={classes.textField}
+            type="text"
+            onChange={this.onChange}
+            onKeyDown={this.handleKeyPress}
+            value={text}
+            errorText={this.props.errorText}
+            InputProps={{ className: classes.inputRoot }}
+            inputProps={{
+              className: classnames({
+                [classes.headline]: typeVariant === 'h1',
+                [classes.title]: typeVariant === 'h2',
+                [classes.input]: true
+              })
+            }}
+            autoFocus={true}
+          />
+          <Button
+            className={classes.button}
+            onClick={this.finishEditing}
+            data-qa-save-edit
           >
-            <TextField
-              {...rest}
-              className={classes.textField}
-              type="text"
-              onChange={this.onChange}
-              onKeyDown={this.handleKeyPress}
-              value={text}
-              errorText={this.props.errorText}
-              InputProps={{ className: classes.inputRoot }}
-              inputProps={{
-                className: classnames({
-                  [classes.headline]: typeVariant === 'h1',
-                  [classes.title]: typeVariant === 'h2',
-                  [classes.input]: true
-                })
-              }}
-              autoFocus={true}
-            />
-            <Button
-              className={classes.button}
-              onClick={this.finishEditing}
-              data-qa-save-edit
-            >
-              <Check className={`${classes.icon} ${classes.save}`} />
-            </Button>
-            <Button
-              className={classes.button}
-              onClick={this.cancelEditing}
-              data-qa-cancel-edit
-            >
-              <Close className={`${classes.icon} ${classes.close}`} />
-            </Button>
-          </div>
-        </ClickAwayListener>
-      );
+            <Check className={`${classes.icon} ${classes.save}`} />
+          </Button>
+          <Button
+            className={classes.button}
+            onClick={this.cancelEditing}
+            data-qa-cancel-edit
+          >
+            <Close className={`${classes.icon} ${classes.close}`} />
+          </Button>
+        </div>
+      </ClickAwayListener>
+    );
   }
 }
 
 const styled = withStyles(styles);
 
-export default compose<FinalProps, PassThroughProps>(
-  styled
-)(EditableText);
+export default compose<FinalProps, PassThroughProps>(styled)(EditableText);

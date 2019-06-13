@@ -1,5 +1,4 @@
 import Modal from '@material-ui/core/Modal';
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -8,7 +7,12 @@ import Button from 'src/components/Button';
 import MenuList from 'src/components/core/MenuList';
 import Paper from 'src/components/core/Paper';
 import Popper from 'src/components/core/Popper';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import { getNumUnseenEvents } from 'src/store/events/event.helpers';
 import { markAllSeen } from 'src/store/events/event.request';
 import { MapState, ThunkDispatch } from 'src/store/types';

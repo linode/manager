@@ -1,8 +1,12 @@
-import { WithStyles } from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 import FormHelperText from 'src/components/core/FormHelperText';
-import { createStyles, Theme, withStyles } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import regionsContainer, {
   DefaultProps as WithRegions

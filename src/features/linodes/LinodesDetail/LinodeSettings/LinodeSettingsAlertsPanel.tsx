@@ -1,4 +1,3 @@
-import { WithStyles } from '@material-ui/core/styles';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import { compose as rCompose } from 'recompose';
@@ -53,7 +52,7 @@ interface Section {
   endAdornment: string;
 }
 
-type CombinedProps = Props & ContextProps & LinodeActionsProps & WithStyles;
+type CombinedProps = Props & ContextProps & LinodeActionsProps;
 
 const maybeNumber = (v: string) => (v === '' ? '' : Number(v));
 
@@ -268,7 +267,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
   };
 
   public render() {
-    const { classes, permissions } = this.props;
+    const { permissions } = this.props;
     const alertSections: Section[] = this.renderAlertSections();
     const hasErrorFor = getAPIErrorFor({}, this.state.errors);
     const generalError = hasErrorFor('none');
@@ -282,7 +281,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         {generalError && <Notice error>{generalError}</Notice>}
         {alertSections.map((p, idx) => (
           <AlertSection
-            updateFor={[p.state, p.value, this.state.errors, classes]}
+            updateFor={[p.state, p.value, this.state.errors]}
             key={idx}
             {...p}
             readOnly={permissions === 'read_only'}
