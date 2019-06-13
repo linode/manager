@@ -12,11 +12,22 @@ import Tabs from 'src/components/core/Tabs';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import TabLink from 'src/components/TabLink';
-import Billing from 'src/features/Billing';
-import Users from 'src/features/Users';
-import GlobalSettings from './GlobalSettings';
+
+import DefaultLoader from 'src/components/DefaultLoader';
 
 type Props = RouteComponentProps<{}>;
+
+const GlobalSettings = DefaultLoader({
+  loader: () => import('./GlobalSettings')
+});
+
+const Users = DefaultLoader({
+  loader: () => import('src/features/Users')
+});
+
+const Billing = DefaultLoader({
+  loader: () => import('src/features/Billing')
+});
 
 class AccountLanding extends React.Component<Props> {
   handleTabChange = (
@@ -75,14 +86,10 @@ class AccountLanding extends React.Component<Props> {
           </Tabs>
         </AppBar>
         <Switch>
-          <Route exact path={`${url}/billing`} render={() => <Billing />} />
-          <Route exact path={`${url}/users`} render={() => <Users />} />
-          <Route
-            exact
-            path={`${url}/settings`}
-            render={() => <GlobalSettings />}
-          />
-          <Route exact path={`${url}`} render={() => <Billing />} />
+          <Route exact path={`${url}/billing`} component={Billing} />
+          <Route exact path={`${url}/users`} component={Users} />
+          <Route exact path={`${url}/settings`} component={GlobalSettings} />
+          <Route exact path={`${url}`} component={Billing} />
         </Switch>
       </React.Fragment>
     );
