@@ -20,6 +20,7 @@ interface Props {
   region?: string;
   handleChange: (linode: Linode.Linode) => void;
   textFieldProps?: TextFieldProps;
+  label?: string;
 }
 
 type CombinedProps = Props & WithLinodesProps;
@@ -31,11 +32,14 @@ const linodesToItems = (linodes: Linode.Linode[]): Item<number>[] =>
     data: thisLinode
   }));
 
-const linodeFromItems = (linodes: Item<number>[], linodeId: number | null) => {
+const linodeFromItems = (
+  linodes: Item<number>[],
+  linodeId: number | null
+): Item<number> | null => {
   if (!linodeId) {
-    return;
+    return null;
   }
-  return linodes.find(thisLinode => thisLinode.value === linodeId);
+  return linodes.find(thisLinode => thisLinode.value === linodeId) || null;
 };
 
 const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
@@ -48,7 +52,8 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
     linodesLoading,
     linodesData,
     region,
-    selectedLinode
+    selectedLinode,
+    label
   } = props;
 
   const linodes = region
@@ -63,7 +68,7 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
 
   return (
     <EnhancedSelect
-      label="Linode"
+      label={label ? label : 'Linode'}
       placeholder="Select a Linode"
       value={linodeFromItems(options, selectedLinode)}
       options={options}
