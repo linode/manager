@@ -58,7 +58,11 @@ describe('Abuse ticket banner', () => {
   });
 
   it('should return null if there are no abuse tickets', () => {
-    expect(new AbuseTicketBanner({ abuseTickets: [] })).toBeNull();
+    const { queryByTestId } = render(
+      wrapWithTheme(<AbuseTicketBanner abuseTickets={[]} />)
+    );
+
+    expect(queryByTestId('abuse-ticket-link')).toBeNull();
   });
 
   describe('integration tests', () => {
