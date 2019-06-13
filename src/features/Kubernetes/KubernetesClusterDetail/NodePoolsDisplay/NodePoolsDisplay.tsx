@@ -13,9 +13,9 @@ import Typography from 'src/components/core/Typography';
 
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 
+import NodePoolDisplayTable from '../../CreateCluster/NodePoolDisplayTable';
+import { getTotalClusterPrice } from '../../kubeUtils';
 import { ExtendedPoolNode } from '../../types';
-import EditablePoolsDisplay from './EditablePoolsDisplay';
-import StaticPoolsDisplay from './StaticPoolsDisplay';
 
 type ClassNames = 'root' | 'button' | 'pricing';
 const styles: StyleRulesCallback<ClassNames> = theme => ({
@@ -27,15 +27,21 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     marginRight: theme.spacing.unit
   },
   pricing: {
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing.unit * 2,
+    fontSize: '1.em',
+    fontWeight: 'bold'
   }
 });
 
 interface Props {
   editing: boolean;
-  toggleEditing: () => void;
   pools: ExtendedPoolNode[];
+  poolsForEdit: ExtendedPoolNode[];
   types: ExtendedType[];
+  toggleEditing: () => void;
+  updatePool: (poolIdx: number, updatedPool: ExtendedPoolNode) => void;
+  deletePool: (poolID: number) => void;
+  resetForm: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -43,7 +49,8 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const NodePoolsDisplay: React.FunctionComponent<
   CombinedProps
 > = props => {
-  const { classes, editing, pools, toggleEditing, types } = props;
+  const { classes, deletePool, editing, pools, poolsForEdit, resetForm, toggleEditing, types, updatePool } = props;
+
   return (
     <Paper className={classes.root}>
       <Grid container direction="column">
@@ -53,21 +60,34 @@ export const NodePoolsDisplay: React.FunctionComponent<
           </Grid>
           <Grid item>
             <Button type="secondary" onClick={toggleEditing}>
-              {editing ? 'Cancel' : 'Resize'}
+              {editing ? 'Cancel' : 'Edit'}
             </Button>
           </Grid>
         </Grid>
         <Grid item>
           {editing ? (
-            <EditablePoolsDisplay pools={pools} types={types} />
+            <NodePoolDisplayTable
+              editable
+              pools={poolsForEdit}
+              types={types}
+              handleDelete={deletePool}
+              updatePool={updatePool}
+            />
           ) : (
-            <StaticPoolsDisplay pools={pools} types={types} />
+            <NodePoolDisplayTable
+              pools={pools}
+              types={types}
+              handleDelete={() => null}
+              updatePool={() => null}
+            />
           )}
         </Grid>
         <Grid item>
-          <Typography className={classes.pricing}>
-            *Updated Monthly Estimate: $1820
-          </Typography>
+          {editing && 
+            <Typography className={classes.pricing}>
+              *Updated Monthly Estimate: {`$${getTotalClusterPrice(poolsForEdit)}/month`}
+            </Typography>
+          }
           <Grid item container>
             <Button
               className={classes.button}
@@ -80,6 +100,7 @@ export const NodePoolsDisplay: React.FunctionComponent<
               className={classes.button}
               type="secondary"
               disabled={!editing}
+              onClick={resetForm}
             >
               Clear Changes
             </Button>

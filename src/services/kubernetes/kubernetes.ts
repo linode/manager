@@ -34,6 +34,17 @@ export const getKubernetesClusters = (params?: any, filters?: any) =>
   ).then(response => response.data);
 
 /**
+ * getKubernetesCluster
+ *
+ * Return details about a single Kubernetes cluster
+ */
+export const getKubernetesCluster = (clusterID: string) =>
+  Request<Linode.KubernetesCluster>(
+    setMethod('GET'),
+    setURL(`${API_ROOT}/lke/clusters/${clusterID}`)
+  ).then(response => response.data);
+
+/**
  * createKubernetesClusters
  *
  * Create a new Cluster.
@@ -43,8 +54,23 @@ export const createKubernetesCluster = (data: CreateKubeClusterPayload) =>
     setMethod('POST'),
     setURL(`${API_ROOT}/lke/clusters`),
     setData(data, createKubeClusterSchema)
-  ).then(response => response.data)
- 
+  ).then(response => response.data);
+
+/**
+ * updateKubernetesCluster
+ *
+ * Create a new Cluster.
+ */
+export const updateKubernetesCluster = (
+  clusterID: string,
+  data: Partial<Linode.KubernetesCluster>
+) =>
+  Request<Linode.KubernetesCluster>(
+    setMethod('PUT'),
+    setURL(`${API_ROOT}/lke/clusters/${clusterID}`),
+    setData(data)
+  ).then(response => response.data);
+
 /** getKubeConfig
  *
  * Returns a base64 encoded string of a cluster's kubeconfig.yaml

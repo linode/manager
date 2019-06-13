@@ -35,6 +35,7 @@ interface Props {
   handleDelete: (poolIdx: number) => void;
   updatePool: (poolIdx: number, updatedPool: ExtendedPoolNode) => void;
   small?: boolean;
+  editable?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -42,12 +43,23 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const NodePoolDisplayTable: React.FunctionComponent<
   CombinedProps
 > = props => {
-  const { classes, handleDelete, pools, small, types, updatePool } = props;
+  const {
+    classes,
+    editable,
+    handleDelete,
+    pools,
+    small,
+    types,
+    updatePool
+  } = props;
   return (
-    <Table tableClass={classNames(({
-      [classes.root]: true,
-      [classes.small]: small
-    }))} spacingTop={16}>
+    <Table
+      tableClass={classNames({
+        [classes.root]: true,
+        [classes.small]: small
+      })}
+      spacingTop={16}
+    >
       <TableHead>
         <TableRow>
           <TableCell data-qa-table-header="Plan">Plan</TableCell>
@@ -70,12 +82,13 @@ export const NodePoolDisplayTable: React.FunctionComponent<
             return (
               <NodePoolRow
                 key={`node-pool-row-${idx}`}
+                editable={Boolean(editable)}
                 idx={idx}
                 pool={thisPool}
                 type={thisPoolType}
                 handleDelete={() => handleDelete(idx)}
                 updatePool={updatePool}
-                updateFor={[thisPool, thisPoolType, classes]}
+                updateFor={[thisPool, thisPoolType, editable, classes, updatePool]}
               />
             );
           })
@@ -88,8 +101,8 @@ export const NodePoolDisplayTable: React.FunctionComponent<
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
-  styled,
-  React.memo
+  React.memo,
+  styled
 );
 
 export default enhanced(NodePoolDisplayTable);

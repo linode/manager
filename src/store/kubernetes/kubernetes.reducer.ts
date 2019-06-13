@@ -1,8 +1,12 @@
 import { Reducer } from 'redux';
 import { EntityError, EntityState } from 'src/store/types';
-// import updateOrAdd from 'src/utilities/updateOrAdd';
+import updateOrAdd from 'src/utilities/updateOrAdd';
 import { isType } from 'typescript-fsa';
-import { requestClustersActions } from './kubernetes.actions';
+import {
+  requestClustersActions,
+  updateClusterActions,
+  upsertCluster
+} from './kubernetes.actions';
 
 /**
  * State
@@ -46,6 +50,28 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       ...state,
       error: { ...state.error, read: error },
       loading: false
+    };
+  }
+
+  if (isType(action, upsertCluster)) {
+    const { payload } = action;
+    const entities = updateOrAdd(payload, state.entities);
+
+    return {
+      ...state,
+      entities,
+      results: entities.map(cluster => cluster.id)
+    };
+  }
+
+  if (isType(action, updateClusterActions.done)) {
+    const { result } = action.payload;
+    const update = updateOrAdd(result, state.entities);
+
+    return {
+      ...state,
+      entities: update,
+      results: update.map(cluster => cluster.id)
     };
   }
   return state;

@@ -22,7 +22,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
-import { getTotalClusterMemoryAndCPU } from './../kubeUtils';
+import { extendCluster } from './../kubeUtils';
 import { ExtendedCluster } from './../types';
 import ClusterRow from './ClusterRow';
 
@@ -53,17 +53,9 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
    * Not ideal having this run on render, but interactions on this view
    * don't generally trigger re-renders.
    */
-  const extendedClusters: ExtendedCluster[] = clusters.map(cluster => {
-    const { CPU: totalCPU, RAM: totalMemory } = getTotalClusterMemoryAndCPU(
-      cluster.node_pools,
-      typesData || []
-    );
-    return {
-      ...cluster,
-      totalMemory,
-      totalCPU
-    };
-  });
+  const extendedClusters: ExtendedCluster[] = clusters.map(cluster =>
+    extendCluster(cluster, typesData || [])
+  );
 
   return (
     <React.Fragment>

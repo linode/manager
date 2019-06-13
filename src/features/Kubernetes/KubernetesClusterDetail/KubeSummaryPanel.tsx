@@ -8,6 +8,8 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import { dcDisplayNames } from 'src/constants';
+import { ExtendedCluster } from 'src/features/Kubernetes/types';
 
 type ClassNames = 'root' | 'item';
 
@@ -18,12 +20,17 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = WithStyles<ClassNames>;
+interface Props {
+  cluster: ExtendedCluster;
+}
+
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const KubeSummaryPanel: React.FunctionComponent<
   CombinedProps
 > = props => {
-  const { classes } = props;
+  const { classes, cluster } = props;
+  const region = dcDisplayNames[cluster.region] || 'Unknown region';
   return (
     <Paper className={classes.root}>
       <Paper className={classes.item}>
@@ -31,15 +38,15 @@ export const KubeSummaryPanel: React.FunctionComponent<
       </Paper>
       <Paper className={classes.item}>
         <Typography>Version</Typography>
-        <Typography>1.13</Typography>
+        <Typography>{cluster.version}</Typography>
       </Paper>
       <Paper className={classes.item}>
         <Typography>Total RAM</Typography>
-        <Typography>190GB</Typography>
+        <Typography>{cluster.totalMemory / 1024}GB</Typography>
       </Paper>
       <Paper className={classes.item}>
         <Typography>Total CPU Cores</Typography>
-        <Typography>54</Typography>
+        <Typography>{cluster.totalCPU}</Typography>
       </Paper>
       <Paper className={classes.item}>
         <Typography>Kubernetes API Endpoint</Typography>
@@ -47,11 +54,11 @@ export const KubeSummaryPanel: React.FunctionComponent<
       </Paper>
       <Paper className={classes.item}>
         <Typography>Region</Typography>
-        <Typography>Dallas, TX</Typography>
+        <Typography>{region}</Typography>
       </Paper>
       <Paper className={classes.item}>
         <Typography>Monthly Pricing</Typography>
-        <Typography>$980/month</Typography>
+        <Typography>{`$${cluster.price}/month`}</Typography>
       </Paper>
     </Paper>
   );
@@ -59,7 +66,7 @@ export const KubeSummaryPanel: React.FunctionComponent<
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, Props>(
   React.memo,
   styled
 );
