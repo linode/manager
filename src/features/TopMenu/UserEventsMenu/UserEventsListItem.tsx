@@ -1,5 +1,6 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import ListItem from 'src/components/core/ListItem';
 import {
   StyleRulesCallback,
@@ -14,7 +15,8 @@ type ClassNames =
   | 'content'
   | 'unread'
   | 'pointer'
-  | 'noLink';
+  | 'noLink'
+  | 'linkItem';
 
 const styles: StyleRulesCallback<ClassNames> = theme => {
   const {
@@ -24,7 +26,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
   return {
     root: {
       ...theme.notificationList,
-      padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`,
+      padding: 0,
       borderBottom: `1px solid ${theme.palette.divider}`,
       display: 'block',
       transition: theme.transitions.create(['border-color', 'opacity']),
@@ -32,6 +34,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
       '&:hover, &:focus': {
         backgroundColor: 'transparent'
       }
+    },
+    linkItem: {
+      display: 'block',
+      padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`
     },
     title: {
       marginBottom: theme.spacing.unit / 2
@@ -71,8 +77,9 @@ export interface Props {
   success?: boolean;
   warning?: boolean;
   error?: boolean;
-  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   className?: any;
+  linkPath: string | undefined;
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -85,9 +92,11 @@ const userEventsListItem: React.StatelessComponent<CombinedProps> = props => {
     warning,
     success,
     error,
-    onClick,
-    className
+    className,
+    linkPath,
+    onClick
   } = props;
+
   return (
     <ListItem
       className={classNames(
@@ -105,10 +114,17 @@ const userEventsListItem: React.StatelessComponent<CombinedProps> = props => {
       button={Boolean(onClick)}
       role="menuitem"
     >
-      <Typography variant="h3" className={classes.title}>
-        {title}
-      </Typography>
-      {content && <div className={classes.content}>{content}</div>}
+      <Link
+        to={linkPath ? linkPath : '/'}
+        href="javascript:void(0)"
+        onClick={onClick}
+        className={classes.linkItem}
+      >
+        <Typography variant="h3" className={classes.title}>
+          {title}
+        </Typography>
+        {content && <div className={classes.content}>{content}</div>}
+      </Link>
     </ListItem>
   );
 };
