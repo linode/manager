@@ -62,15 +62,6 @@ class DiskActionMenu extends React.Component<CombinedProps> {
         ...(readOnly ? disabledProps : {})
       },
       {
-        title: 'Delete',
-        onClick: (e: React.MouseEvent<HTMLElement>) => {
-          e.preventDefault();
-          this.props.onDelete();
-          closeMenu();
-        },
-        ...disabledProps
-      },
-      {
         title: 'Clone',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           e.preventDefault();
@@ -79,8 +70,16 @@ class DiskActionMenu extends React.Component<CombinedProps> {
             `/linodes/${linodeId}/clone/disks?selectedDisk=${diskId}`
           );
         },
-        disabled: readOnly,
-        tooltip
+        disabled: readOnly
+      },
+      {
+        title: 'Delete',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          e.preventDefault();
+          this.props.onDelete();
+          closeMenu();
+        },
+        ...disabledProps
       }
     ];
 
