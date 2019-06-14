@@ -111,7 +111,7 @@ export class UserEventsMenu extends React.Component<CombinedProps, State> {
                 <MenuList className={classes.dropDown}>
                   <UserEventsList
                     events={filteredEvents}
-                    closeMenu={this.closeMenu}
+                    closeMenu={(e: any) => this.closeMenu(e)}
                   />
                 </MenuList>
                 <Link
@@ -147,7 +147,7 @@ export class UserEventsMenu extends React.Component<CombinedProps, State> {
     this.setState({ anchorEl: e.currentTarget });
   };
 
-  closeMenu = () => {
+  closeMenu = (e: React.MouseEvent<HTMLElement>) => {
     const { actions } = this.props;
     actions.markAllSeen();
     this.setState({ anchorEl: undefined });

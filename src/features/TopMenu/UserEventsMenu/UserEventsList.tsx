@@ -25,7 +25,7 @@ const reportEventError = (e: Linode.Event, err: Error) =>
 
 interface Props {
   events?: Linode.Event[];
-  closeMenu: () => void;
+  closeMenu: (e: any) => void;
 }
 
 type CombinedProps = Props & RouteComponentProps<void>;
@@ -53,8 +53,8 @@ export const UserEventsList: React.StatelessComponent<
           const success = event.status !== 'failed' && !event.seen;
           const error = event.status === 'failed';
 
-          const onClick = () => {
-            closeMenu();
+          const onClick = (e: any) => {
+            closeMenu(e);
           };
 
           const linkPath = createLinkHandlerForNotification(
@@ -78,8 +78,6 @@ UserEventsList.defaultProps = {
   events: []
 };
 
-const enhanced = compose<CombinedProps, Props>(
-  withRouter
-);
+const enhanced = compose<CombinedProps, Props>(withRouter);
 
 export default enhanced(UserEventsList);

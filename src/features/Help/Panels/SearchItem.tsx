@@ -1,20 +1,7 @@
-<<<<<<< HEAD
 import * as classNames from 'classnames';
-=======
->>>>>>> fix WithStyles imports & cleanup
 import * as React from 'react';
 import { OptionProps } from 'react-select/lib/components/Option';
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
-<<<<<<< HEAD
-=======
-import ListItem from 'src/components/core/ListItem';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
->>>>>>> fix WithStyles imports & cleanup
 import Typography from 'src/components/core/Typography';
 
 interface Props extends OptionProps<any> {
