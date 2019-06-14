@@ -5,6 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import {
   createStyles,
+  Theme,
   withStyles,
   WithStyles,
   WithTheme
@@ -58,12 +59,12 @@ const styles = (theme: Theme) =>
       width: 300,
       maxHeight: 500,
       '& .react-select__value-container': {
-        paddingLeft: theme.spacing.unit * 4
+        paddingLeft: theme.spacing(4)
       },
       '& .input': {
         maxWidth: '100%',
         '& p': {
-          paddingLeft: theme.spacing.unit * 3,
+          paddingLeft: theme.spacing(3),
           color: theme.color.grey1
         },
         '& > div': {

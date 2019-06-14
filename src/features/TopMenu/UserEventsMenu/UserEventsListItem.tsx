@@ -15,6 +15,7 @@ type ClassNames =
   | 'title'
   | 'content'
   | 'unread'
+  | 'linkItem'
   | 'pointer'
   | 'noLink';
 
@@ -34,6 +35,10 @@ const styles = (theme: Theme) => {
       '&:hover, &:focus': {
         backgroundColor: 'transparent'
       }
+    },
+    linkItem: {
+      display: 'block',
+      padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`
     },
     title: {
       marginBottom: theme.spacing(1) / 2
