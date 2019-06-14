@@ -288,7 +288,7 @@ export interface Item<T = string | number> {
   data?: any;
 }
 
-export interface GroupType<T> {
+export interface GroupType<T = string | number> {
   label: string;
   options: Item<T>[];
 }
@@ -313,7 +313,7 @@ export interface NoOptionsMessageProps {
 }
 
 export interface EnhancedSelectProps {
-  options?: Item[];
+  options?: Item[] | GroupType[];
   className?: string;
   components?: any;
   disabled?: boolean;
@@ -362,8 +362,8 @@ type CombinedProps = EnhancedSelectProps &
 
 interface BaseSelectProps extends SelectProps<any> {
   classes: any;
-  /* 
-   textFieldProps isn't native to react-select 
+  /*
+   textFieldProps isn't native to react-select
    but we're using the MUI select element so any props that
    can be passed to the MUI TextField element can be passed here
   */
@@ -445,8 +445,8 @@ class Select extends React.PureComponent<CombinedProps, {}> {
         })}
         classNamePrefix="react-select"
         styles={styleOverrides}
-        /* 
-          textFieldProps isn't native to react-select 
+        /*
+          textFieldProps isn't native to react-select
           but we're using the MUI select element so any props that
           can be passed to the MUI TextField element can be passed here
          */

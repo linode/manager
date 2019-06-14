@@ -1,3 +1,4 @@
+import { groupBy } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import {
@@ -5,10 +6,14 @@ import {
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
-import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
+import EnhancedSelect, {
+  GroupType,
+  Item
+} from 'src/components/EnhancedSelect/Select';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import withLinodes from 'src/containers/withLinodes.container';
+import { formatRegion } from 'src/utilities';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 type ClassNames = 'root';
@@ -33,26 +38,10 @@ interface Props {
   textFieldProps?: TextFieldProps;
   label?: string;
   excludedLinodes?: number[];
+  groupByRegion?: boolean;
 }
 
 type CombinedProps = Props & WithLinodesProps & WithStyles<ClassNames>;
-
-const linodesToItems = (linodes: Linode.Linode[]): Item<number>[] =>
-  linodes.map(thisLinode => ({
-    value: thisLinode.id,
-    label: thisLinode.label,
-    data: thisLinode
-  }));
-
-const linodeFromItems = (
-  linodes: Item<number>[],
-  linodeId: number | null
-): Item<number> | null => {
-  if (!linodeId) {
-    return null;
-  }
-  return linodes.find(thisLinode => thisLinode.value === linodeId) || null;
-};
 
 const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
   const {
@@ -66,7 +55,8 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
     region,
     selectedLinode,
     excludedLinodes,
-    label
+    label,
+    groupByRegion
   } = props;
 
   let linodes = region
@@ -77,7 +67,9 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
     ? linodes.filter(thisLinode => !excludedLinodes.includes(thisLinode.id))
     : linodes;
 
-  const options = linodesToItems(linodes);
+  const options = groupByRegion
+    ? linodesToGroupedItems(linodes)
+    : linodesToItems(linodes);
 
   const noOptionsMessage =
     !linodeError && !linodesLoading && options.length === 0
@@ -88,7 +80,14 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
     <EnhancedSelect
       label={label ? label : 'Linode'}
       placeholder="Select a Linode"
-      value={linodeFromItems(options, selectedLinode)}
+      value={
+        groupByRegion
+          ? linodeFromGroupedItems(
+              options as GroupType<number>[],
+              selectedLinode
+            )
+          : linodeFromItems(options as Item<number>[], selectedLinode)
+      }
       options={options}
       disabled={disabled}
       isLoading={linodesLoading}
@@ -117,3 +116,52 @@ export default compose<CombinedProps, Props & RenderGuardProps>(
     linodesError
   }))
 )(LinodeSelect);
+
+/**
+ * UTILITIES
+ */
+
+export const linodesToItems = (linodes: Linode.Linode[]): Item<number>[] =>
+  linodes.map(thisLinode => ({
+    value: thisLinode.id,
+    label: thisLinode.label,
+    data: thisLinode
+  }));
+
+export const linodeFromItems = (
+  linodes: Item<number>[],
+  linodeId: number | null
+): Item<number> | null => {
+  if (!linodeId) {
+    return null;
+  }
+  return linodes.find(thisLinode => thisLinode.value === linodeId) || null;
+};
+
+// Grouped by Region
+export const linodesToGroupedItems = (linodes: Linode.Linode[]) => {
+  const groupedByRegion = groupBy((linode: Linode.Linode) => linode.region)(
+    linodes
+  );
+
+  const groupedItems = Object.keys(groupedByRegion).map(region => {
+    return {
+      label: formatRegion(region),
+      options: linodesToItems(groupedByRegion[region])
+    };
+  });
+
+  return groupedItems;
+};
+
+export const linodeFromGroupedItems = (
+  groupedOptions: GroupType<number>[],
+  linodeId: number | null
+) => {
+  // I wanted to use Ramda's `flatten()` but the typing is not good.
+  const flattenedOptions: Item<number>[] = [];
+  groupedOptions.forEach(eachGroup => {
+    flattenedOptions.push(...eachGroup.options);
+  });
+  return linodeFromItems(flattenedOptions, linodeId);
+};
