@@ -1,3 +1,4 @@
+import { withLDProvider } from 'launchdarkly-react-client-sdk';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { shim } from 'promise.prototype.finally';
 import { path, pathOr } from 'ramda';
@@ -47,7 +48,7 @@ import { getAllVolumes } from 'src/store/volume/volume.requests';
 import composeState from 'src/utilities/composeState';
 import { notifications } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
-import { isKubernetesEnabled } from './constants';
+import { isKubernetesEnabled, LAUNCH_DARKLY_API_KEY } from './constants';
 import BucketDrawer from './features/ObjectStorage/Buckets/BucketDrawer';
 import { requestClusters } from './store/clusters/clusters.actions';
 import {
@@ -614,7 +615,10 @@ export default compose(
   styled,
   withDocumentTitleProvider,
   withSnackbar,
-  withNodeBalancerActions
+  withNodeBalancerActions,
+  withLDProvider({
+    clientSideID: LAUNCH_DARKLY_API_KEY,
+  })
 )(App);
 
 export const hasOauthError = (
