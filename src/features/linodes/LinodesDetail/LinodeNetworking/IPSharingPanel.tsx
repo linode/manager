@@ -127,9 +127,11 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
               });
               return linode.ipv4;
             })
-        ).filter((ip: string) => {
-          return !ip.startsWith('192.168.');
-        });
+        );
+        /**
+         * NB: We were previously filtering private IP addresses out at this point,
+         * but it seems that the API (or our infra) doesn't care about this.
+         */
         ipChoices.unshift(IPSharingPanel.selectIPText);
         if (!this.mounted) {
           return;
