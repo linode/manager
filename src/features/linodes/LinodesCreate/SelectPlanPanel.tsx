@@ -185,7 +185,6 @@ export class SelectPlanPanel extends React.Component<
       tabOrder.push('highmem');
     }
 
-
     if (!isEmpty(gpu)) {
       const programInfo = (
         <Typography>
