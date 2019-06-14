@@ -4,6 +4,36 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.61.0] - 2019-06-14
+
+### Added:
+- Add support for GPU instances
+- Validate no whitespace in bucket name
+- Implement ctrl+click on the events drop down options
+- Radio Toggle For Config Memory Limit
+- Maintenance window to CSV
+- Add support for Mumbai datacenter
+- New Bucket icon for Object Storage
+- Check SOA email when updating domain
+- Add normal error handling for delete/detach Volume confirmation modals
+- Add validation to prevent email addresses in the target domain
+- Add client validation for duplicate domain records
+- Added tooling to capture performance metrics
+
+### Changed:
+- Always update profile with authorized_keys (LISH)
+- Source Dashboard cards from Redux
+- Replace Algolia search bar with React-Select
+- Makes the maintenance notification badge a warning instead of error
+
+### Fixed:
+- Conditional Logic When Validating SOA Record for Slave Domains
+- Fix Linode Clone kebab
+- REACT_APP_LISH_ROOT typo
+- Maintenance Banner Styles
+- Added missing issuer to TFA URI
+- Adds Linode Label to Notification Drawer List Item
+
 ## [v0.60.0] - 2019-06-07
 
 ### Added:
