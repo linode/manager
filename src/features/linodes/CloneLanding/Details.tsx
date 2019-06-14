@@ -207,6 +207,7 @@ export const Configs: React.FC<CombinedProps> = props => {
         excludedLinodes={
           shouldExcludeCurrentLinode ? [currentLinodeId] : undefined
         }
+        groupByRegion
         updateFor={[
           selectedLinode,
           shouldExcludeCurrentLinode,
