@@ -363,7 +363,6 @@ class UpdateContactInformationPanel extends React.Component<
                 label="State / Province"
                 errorText={errorMap.state}
                 onChange={this.updateState}
-                data-qa-contact-province
                 placeholder="Select a State"
                 options={regionResults}
                 isClearable={false}
@@ -374,6 +373,9 @@ class UpdateContactInformationPanel extends React.Component<
                     ? null
                     : { value: account.state, label: account.state }
                 }
+                textFieldProps={{
+                  'data-qa-contact-province': true
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={5}>
@@ -403,7 +405,6 @@ class UpdateContactInformationPanel extends React.Component<
             label="Country"
             errorText={errorMap.country}
             onChange={this.updateCountry}
-            data-qa-contact-country
             placeholder="Select a Country"
             options={countryResults}
             isClearable={false}
@@ -412,6 +413,9 @@ class UpdateContactInformationPanel extends React.Component<
                 ? value === fields.country
                 : value === account.country
             )}
+            textFieldProps={{
+              'data-qa-contact-country': true
+            }}
           />
         </Grid>
 

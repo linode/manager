@@ -18,12 +18,15 @@ describe('Billing - View & Update Contact Info Suite', () => {
 
     it('should update contact first name', () => {
         const newName = `Jimmy${timestamp()}`;
-        const successMsg = 'Contact information successfully updated.';
+        const successMsg = 'updated';
 
-        Billing.updateFirstName.$('input').setValue(newName);
+        // Clear the first name field, then update the value
+        browser.trySetValue(`${Billing.updateFirstName.selector} input`, newName, constants.wait.normal);
         Billing.updateButton.click();
 
         Billing.waitForNotice(successMsg, constants.wait.normal);
+        browser.refresh();
+        Billing.expandUpdateContact();
         expect(Billing.currentName.getText()).toContain(newName);
     });
 
@@ -41,9 +44,5 @@ describe('Billing - View & Update Contact Info Suite', () => {
     it('should display recent invoices', () => {
         Billing.expandInvoices();
         Billing.invoicesDisplay();
-    });
-
-    xit('should update contact country', () => {
-        // UPDATE WHEN COUNTRY SELECT IS UPDATED TO USE REACT-SELECT    
     });
 });
