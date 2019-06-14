@@ -7,7 +7,7 @@ export interface State {
   type: CreateTypes;
 }
 
-const getInitialType = (): CreateTypes => {
+export const getInitialType = (): CreateTypes => {
   const queryParams = parse(location.search.replace('?', '').toLowerCase());
 
   if (queryParams.type) {

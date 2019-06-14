@@ -11,6 +11,11 @@ import {
   getCommunityStackscripts,
   getMineAndAccountStackScripts
 } from 'src/features/StackScripts/stackScriptUtils';
+import {
+  CreateTypes,
+  handleChangeCreateType
+} from 'src/store/linodeCreate/linodeCreate.actions';
+import { getInitialType } from 'src/store/linodeCreate/linodeCreate.reducer';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { safeGetTabRender } from 'src/utilities/safeGetTabRender';
 import SubTabs, { Tab } from './LinodeCreateSubTabs';
@@ -19,12 +24,6 @@ import FromBackupsContent from './TabbedContent/FromBackupsContent';
 import FromImageContent from './TabbedContent/FromImageContent';
 import FromLinodeContent from './TabbedContent/FromLinodeContent';
 import FromStackScriptContent from './TabbedContent/FromStackScriptContent';
-
-import {
-  CreateTypes,
-  handleChangeCreateType
-} from 'src/store/linodeCreate/linodeCreate.actions';
-
 import {
   AllFormStateAndHandlers,
   AppsData,
@@ -84,6 +83,7 @@ export class LinodeCreate extends React.PureComponent<
 
   componentDidMount() {
     this.mounted = true;
+    this.props.setTab(getInitialType());
   }
 
   handleTabChange = (
