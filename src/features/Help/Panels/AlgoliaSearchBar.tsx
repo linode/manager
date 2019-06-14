@@ -27,7 +27,9 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
+    root: {
+      position: 'relative'
+    },
     searchItem: {
       '& em': {
         fontStyle: 'normal',

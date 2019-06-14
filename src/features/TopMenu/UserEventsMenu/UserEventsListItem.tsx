@@ -27,7 +27,7 @@ const styles = (theme: Theme) => {
   return createStyles({
     root: {
       ...theme.notificationList,
-      padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
+      padding: 0,
       borderBottom: `1px solid ${theme.palette.divider}`,
       display: 'block',
       transition: theme.transitions.create(['border-color', 'opacity']),
