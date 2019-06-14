@@ -24,12 +24,12 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface Props {
   open: boolean;
   onClose: () => void;
-  rdns?: string;
+  rdns?: string | null;
   address?: string;
 }
 
 interface State {
-  rdns?: string;
+  rdns?: string | null;
   address?: string;
   errors?: Linode.ApiFieldError[];
 }

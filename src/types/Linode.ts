@@ -116,12 +116,12 @@ namespace Linode {
 
   export interface IPAddress {
     address: string;
-    gateway: string;
+    gateway: string | null;
     subnet_mask: string;
     prefix: number;
     type: string;
     public: boolean;
-    rdns: string;
+    rdns: string | null;
     linode_id: number;
     region: string;
   }

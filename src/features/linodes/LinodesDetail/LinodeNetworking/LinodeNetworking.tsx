@@ -1,4 +1,4 @@
-import { compose, head, isEmpty, path, pathOr, uniqBy } from 'ramda';
+import { compose, head, isEmpty, path, pathOr, uniq, uniqBy } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose as recompose } from 'recompose';
@@ -118,7 +118,7 @@ interface State {
 type CombinedProps = ContextProps & WithStyles<ClassNames> & DispatchProps;
 
 // Save some typing below
-const uniqByIP = uniqBy((thisIP: Linode.IPAddress) => thisIP.address);
+export const uniqByIP = uniqBy((thisIP: Linode.IPAddress) => thisIP.address);
 
 class LinodeNetworking extends React.Component<CombinedProps, State> {
   state: State = {
@@ -579,14 +579,20 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     } = this.props;
     const { linodeIPs } = this.state;
 
-    const publicIPs = pathOr([], ['ipv4', 'public'], linodeIPs).map(
-      (i: Linode.IPAddress) => i.address
+    const publicIPs = uniq<string>(
+      pathOr([], ['ipv4', 'public'], linodeIPs).map(
+        (i: Linode.IPAddress) => i.address
+      )
     );
-    const privateIPs = pathOr([], ['ipv4', 'private'], linodeIPs).map(
-      (i: Linode.IPAddress) => i.address
+    const privateIPs = uniq<string>(
+      pathOr([], ['ipv4', 'private'], linodeIPs).map(
+        (i: Linode.IPAddress) => i.address
+      )
     );
-    const sharedIPs = pathOr([], ['ipv4', 'shared'], linodeIPs).map(
-      (i: Linode.IPAddress) => i.address
+    const sharedIPs = uniq<string>(
+      pathOr([], ['ipv4', 'shared'], linodeIPs).map(
+        (i: Linode.IPAddress) => i.address
+      )
     );
 
     return (
