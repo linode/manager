@@ -20,6 +20,9 @@ const styles = (theme: Theme) =>
       '& p': {
         marginBottom: theme.spacing(2),
         lineHeight: `20px`
+      },
+      '& p:last-child': {
+        marginBottom: 0
       }
     },
     dateTime: {

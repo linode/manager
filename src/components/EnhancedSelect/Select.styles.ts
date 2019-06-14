@@ -51,6 +51,7 @@ export const styles = (theme: Theme) =>
       },
       '& .react-select__value-container': {
         width: '100%',
+        overflow: 'initial',
         '& > div': {
           width: '100%'
         },
@@ -62,7 +63,9 @@ export const styles = (theme: Theme) =>
       },
       '& .react-select__input': {
         width: '100%',
-        color: theme.palette.text.primary
+        color: theme.palette.text.primary,
+        position: 'relative',
+        top: -(theme.spacing(1) / 2) - 2
       },
       '& .react-select__menu': {
         margin: '-1px 0 0 0',
