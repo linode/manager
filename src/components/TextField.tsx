@@ -1,6 +1,6 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import * as classNames from 'classnames';
-import { equals } from 'ramda';
+import { clamp, equals } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import {
@@ -70,14 +70,29 @@ export type Props = TextFieldProps & {
   expand?: boolean;
   small?: boolean;
   tiny?: boolean;
+  /**
+   * number amounts allowed in textfield
+   * "type" prop must also be set to "number"
+   */
+  min?: number;
+  max?: number;
 };
 
 type CombinedProps = Props & WithTheme & WithStyles<ClassNames>;
 
+interface State {
+  value: string | number;
+}
+
 class LinodeTextField extends React.Component<CombinedProps> {
-  shouldComponentUpdate(nextProps: CombinedProps) {
+  state: State = {
+    value: ''
+  };
+
+  shouldComponentUpdate(nextProps: CombinedProps, nextState: State) {
     return (
       nextProps.value !== this.props.value ||
+      nextState.value !== this.state.value ||
       nextProps.error !== this.props.error ||
       nextProps.errorText !== this.props.errorText ||
       nextProps.affirmative !== this.props.affirmative ||
@@ -94,6 +109,34 @@ class LinodeTextField extends React.Component<CombinedProps> {
     );
   }
 
+  handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { type, min, max, onChange } = this.props;
+
+    const numberTypes = ['tel', 'number'];
+
+    /** because !!0 is falsy :( */
+    const minAndMaxExist = typeof min === 'number' && typeof max === 'number';
+
+    /**
+     * if we've provided a mix and max value, make sure the user
+     * input doesn't go outside of those bounds ONLY if the input
+     * type matches a number type
+     */
+    const cleanedValue =
+      minAndMaxExist && numberTypes.some(eachType => eachType === type)
+        ? clamp(min, max, +e.target.value)
+        : e.target.value;
+
+    this.setState({
+      value: cleanedValue
+    });
+
+    /** invoke the onChange prop if one is provided */
+    if (onChange) {
+      onChange(e);
+    }
+  };
+
   render() {
     const {
       errorText,
@@ -105,6 +148,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
       tooltipText,
       theme,
       className,
+      onChange,
       expand,
       small,
       tiny,
@@ -140,6 +184,9 @@ class LinodeTextField extends React.Component<CombinedProps> {
       >
         <TextField
           {...finalProps}
+          /* props value should always override state */
+          value={this.props.value || this.state.value}
+          onChange={this.handleChange}
           InputLabelProps={{
             ...finalProps.InputLabelProps,
             shrink: true

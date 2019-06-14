@@ -8,6 +8,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Notice from 'src/components/Notice';
 
 type ClassNames = 'root';
 
@@ -18,6 +19,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface Props {
   open: boolean;
   mode: 'detach' | 'delete';
+  error?: string;
   onClose: () => void;
   onDetach: () => void;
   onDelete: () => void;
@@ -52,7 +54,7 @@ class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
   };
 
   render() {
-    const { volumeLabel: label, linodeLabel } = this.props;
+    const { error, volumeLabel: label, linodeLabel } = this.props;
     const title = {
       detach: `Detach ${label ? label : 'Volume'}?`,
       delete: `Delete ${label ? label : 'Volume'}?`
@@ -65,8 +67,9 @@ class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
         onClose={this.props.onClose}
         actions={this.renderActions}
       >
+        {error && <Notice error text={error} />}
         <Typography>
-          Are you sure you want to {this.props.mode} this volume
+          Are you sure you want to {this.props.mode} this Volume
           {`${linodeLabel ? ` from ${linodeLabel}?` : '?'}`}
         </Typography>
       </ConfirmationDialog>
