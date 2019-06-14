@@ -187,7 +187,6 @@ export class SelectPlanPanel extends React.Component<
       tabOrder.push('highmem');
     }
 
-
     if (!isEmpty(gpu)) {
       const programInfo = (
         <Typography>
@@ -213,7 +212,7 @@ export class SelectPlanPanel extends React.Component<
                 applications such as machine learning, AI, and video
                 transcoding.
               </Typography>
-              <Grid container spacing={16}>
+              <Grid container spacing={2}>
                 {gpu.map(this.renderCard)}
               </Grid>
             </>

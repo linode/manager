@@ -376,7 +376,9 @@ class UpdateContactInformationPanel extends React.Component<
                     : { value: account.state, label: account.state }
                 }
                 textFieldProps={{
-                  'data-qa-contact-province': true
+                  dataAttrs: {
+                    'data-qa-contact-province': true
+                  }
                 }}
               />
             </Grid>
@@ -416,7 +418,9 @@ class UpdateContactInformationPanel extends React.Component<
                 : value === account.country
             )}
             textFieldProps={{
-              'data-qa-contact-country': true
+              dataAttrs: {
+                'data-qa-contact-country': true
+              }
             }}
           />
         </Grid>
