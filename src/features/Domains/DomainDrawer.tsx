@@ -154,19 +154,6 @@ const masterIPsCountLens = lensPath(['masterIPsCount']);
 const updateMasterIPsCount = (fn: (s: any) => any) => (obj: any) =>
   over(masterIPsCountLens, fn, obj);
 
-const validateEmail = (domain: string, email: string) => {
-  /**
-   * Validation
-   *
-   * Currently, the API does not check that the soaEmail
-   * is not associated with the target hostname. If you're creating
-   * example.com, using `marty@example.com` as your soaEmail is unwise
-   * (though technically won't break anything).
-   */
-
-  return isValidSOAEmail(email, domain);
-};
-
 class DomainDrawer extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   defaultState: State = {
@@ -569,7 +556,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         ? { domain, type, tags, soa_email: soaEmail }
         : { domain, type, tags, master_ips: finalMasterIPs };
 
-    if (type === 'master' && !validateEmail(domain, data.soa_email || '')) {
+    if (type === 'master' && !isValidSOAEmail(data.soa_email || '', domain)) {
       this.handleEmailValidationErrors();
       return;
     }
@@ -734,7 +721,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           { domain, tags, soa_email: soaEmail, domainId: id }
         : { domain, type, tags, master_ips: finalMasterIPs, domainId: id };
 
-    if (type === 'master' && !validateEmail(domain, data.soa_email || '')) {
+    if (type === 'master' && !isValidSOAEmail(data.soa_email || '', domain)) {
       this.handleEmailValidationErrors();
       return;
     }
