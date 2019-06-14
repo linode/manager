@@ -1,32 +1,45 @@
-import { compose, concat, pathOr } from 'ramda';
+import Search from '@material-ui/icons/Search';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import {
   StyleRulesCallback,
   withStyles,
   WithStyles,
   WithTheme
 } from 'src/components/core/styles';
-import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
+import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
+import { selectStyles } from 'src/features/TopMenu/SearchBar';
 import windowIsNarrowerThan from 'src/utilities/breakpoints';
 import withSearch, { AlgoliaState as AlgoliaProps } from '../SearchHOC';
 import SearchItem from './SearchItem';
 
 type ClassNames =
   | 'root'
+  | 'searchIcon'
   | 'searchItem'
   | 'searchItemHighlighted'
   | 'enhancedSelectWrapper'
   | 'textfield';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
+  root: {
+    position: 'relative'
+  },
   searchItem: {
     '& em': {
       fontStyle: 'normal',
       color: theme.palette.primary.main
     }
+  },
+  searchIcon: {
+    position: 'absolute',
+    color: theme.color.grey1,
+    zIndex: 3,
+    bottom: 12,
+    left: 5
   },
   searchItemHighlighted: {
     backgroundColor: theme.color.grey2,
@@ -43,10 +56,17 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   enhancedSelectWrapper: {
     margin: '0 auto',
-    width: '100%s',
+    width: 300,
     maxHeight: 500,
+    '& .react-select__value-container': {
+      paddingLeft: theme.spacing.unit * 4
+    },
     '& .input': {
       maxWidth: '100%',
+      '& p': {
+        paddingLeft: theme.spacing.unit * 3,
+        color: theme.color.grey1
+      },
       '& > div': {
         marginRight: 0
       }
@@ -57,8 +77,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
+/* Need to override the default RS filtering; otherwise entities whose label
+ * doesn't match the search term will be automatically filtered, meaning that
+ * searching by tag won't work. */
+const filterResults = (option: Item, inputValue: string) => {
+  return true;
+};
+
 interface State {
-  value: string;
   inputValue: string;
 }
 
@@ -71,7 +97,6 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   isMobile: boolean = false;
   state: State = {
-    value: '',
     inputValue: ''
   };
 
@@ -87,13 +112,14 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  getDataFromOptions = () => {
-    const { inputValue } = this.state;
+  getOptionsFromResults = () => {
     const [docs, community] = this.props.searchResults;
+    const { inputValue } = this.state;
     const options = [...docs, ...community];
-    return concat(options, [
+    return [
+      ...options,
       { value: 'search', label: inputValue, data: { source: 'finalLink' } }
-    ]);
+    ];
   };
 
   onInputValueChange = (inputValue: string) => {
@@ -102,25 +128,6 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     }
     this.setState({ inputValue });
     this.props.searchAlgolia(inputValue);
-  };
-
-  renderOptionsHelper = (
-    item: Item,
-    currentIndex: number,
-    highlighted: boolean,
-    itemProps: any
-  ) => {
-    const { classes } = this.props;
-    return (
-      <div
-        key={currentIndex}
-        {...itemProps}
-        className={`${classes.searchItem} ${highlighted &&
-          classes.searchItemHighlighted}`}
-      >
-        <SearchItem item={item} highlighted={highlighted} />
-      </div>
-    );
   };
 
   getLinkTarget = (inputValue: string) => {
@@ -153,8 +160,8 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes, searchEnabled, searchError } = this.props;
-    const { inputValue, value } = this.state;
-    const data = this.getDataFromOptions();
+    const { inputValue } = this.state;
+    const options = this.getOptionsFromResults();
 
     return (
       <React.Fragment>
@@ -163,21 +170,24 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
             {searchError}
           </Notice>
         )}
-        <EnhancedSelect
-          disabled={!searchEnabled}
-          options={data}
-          value={value}
-          inputValue={inputValue}
-          renderItems={this.renderOptionsHelper}
-          onInputValueChange={this.onInputValueChange}
-          onSubmit={this.handleSubmit}
-          handleSelect={this.handleSelect}
-          placeholder="Search for answers..."
-          noFilter
-          search
-          className={classes.enhancedSelectWrapper}
-          maxHeight={500}
-        />
+        <div className={classes.root}>
+          <Search className={classes.searchIcon} data-qa-search-icon />
+          <EnhancedSelect
+            disabled={!searchEnabled}
+            isMulti={false}
+            isClearable={false}
+            inputValue={inputValue}
+            options={options}
+            components={{ Option: SearchItem, DropdownIndicator: () => null }}
+            onChange={this.handleSelect}
+            onInputChange={this.onInputValueChange}
+            placeholder="Search for answers..."
+            className={classes.enhancedSelectWrapper}
+            styleOverrides={selectStyles}
+            filterOption={filterResults}
+            value={false}
+          />
+        </div>
       </React.Fragment>
     );
   }
@@ -186,7 +196,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles, { withTheme: true });
 const search = withSearch({ hitsPerPage: 10, highlight: true });
 
-export default compose<any, any, any, any>(
+export default compose<CombinedProps, {}>(
   styled,
   search,
   withRouter

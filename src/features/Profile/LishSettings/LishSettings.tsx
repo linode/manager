@@ -227,7 +227,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
 
     updateProfile({
       lish_auth_method: lishAuthMethod,
-      ...(lishAuthMethod !== 'disabled' && { authorized_keys: keys })
+      authorized_keys: keys
     })
       .then(profileData => {
         this.setState(

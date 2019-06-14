@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "0.59.0",
+  "version": "0.60.1",
   "private": true,
   "engines": {
     "node": ">= 8.11.2"
@@ -44,6 +44,7 @@
     "notistack": "^0.7.0",
     "novnc-node": "^0.5.3",
     "patch-package": "^6.1.0",
+    "perfume.js": "^2.1.2",
     "postinstall-postinstall": "^2.0.0",
     "pretty-bytes": "^5.1.0",
     "promise": "8.0.1",

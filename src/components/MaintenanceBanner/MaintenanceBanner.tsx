@@ -19,7 +19,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     '& p': {
       marginBottom: theme.spacing.unit * 2,
-      lineHeight: `${theme.spacing.unit * 2.5}px`
+      lineHeight: `20px`
     },
     '& p:last-child': {
       marginBottom: 0
@@ -91,9 +91,12 @@ const MaintenanceBanner: React.FC<CombinedProps> = props => {
       <Typography>
         {generateIntroText(type, maintenanceStart, maintenanceEnd)}
       </Typography>
-      <Typography>
-        Timezone: <Link to="/profile/display">{timezoneMsg()} </Link>
-      </Typography>
+      {/** only display timezone on the Linode detail */
+      maintenanceStart && (
+        <Typography>
+          Timezone: <Link to="/profile/display">{timezoneMsg()} </Link>
+        </Typography>
+      )}
       <Typography>
         Please see
         <a

@@ -7,33 +7,44 @@ export interface State {
   type: CreateTypes;
 }
 
-const getInitialType = (): CreateTypes => {
+export const getInitialType = (): CreateTypes => {
   const queryParams = parse(location.search.replace('?', '').toLowerCase());
 
   if (queryParams.type) {
     if (queryParams.subtype) {
+      // Lowercase the subtype to make comparisons
+      const normalizedSubtype =
+        typeof queryParams.subtype === 'string'
+          ? queryParams.subtype.toLowerCase()
+          : queryParams.subtype.map(s => s.toLowerCase());
+
       /**
        * we have a subtype in the query string so now we need to deduce what
        * endpoint we should be POSTing to based on what is in the query params
        */
-      if (queryParams.subtype.includes('stackscript')) {
+      if (normalizedSubtype.includes('stackscript')) {
         return 'fromStackScript';
-      } else if (queryParams.subtype.includes('clone')) {
+      } else if (normalizedSubtype.includes('clone')) {
         return 'fromLinode';
-      } else if (queryParams.subtype.includes('backup')) {
+      } else if (normalizedSubtype.includes('backup')) {
         return 'fromBackup';
       } else {
         return 'fromApp';
       }
     } else {
+      // Lowercase the type to make comparisons
+      const normalizedType =
+        typeof queryParams.type === 'string'
+          ? queryParams.type.toLowerCase()
+          : queryParams.type.map(s => s.toLowerCase());
       /**
        * here we know we don't have a subtype in the query string
        * but we do have a type (AKA a parent tab is selected). In this case,
        * we can assume the first child tab is selected within the parent tabs
        */
-      if (queryParams.type.includes('one-click')) {
+      if (normalizedType.includes('one-click')) {
         return 'fromApp';
-      } else if (queryParams.type.includes('images')) {
+      } else if (normalizedType.includes('images')) {
         return 'fromImage';
       } else {
         return 'fromImage';
