@@ -1,7 +1,7 @@
 import { last } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import Breadcrumb from 'src/components/Breadcrumb';
+import Breadcrumb, { BreadcrumbProps } from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import {
   StyleRulesCallback,
@@ -50,7 +50,12 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   }
 });
 
-type CombinedProps = LinodeDetailContext &
+interface Props {
+  breadcrumbProps?: BreadcrumbProps;
+}
+
+type CombinedProps = Props &
+  LinodeDetailContext &
   ConfigDrawerProps &
   EditableLabelProps &
   WithStyles<ClassNames>;
@@ -71,7 +76,9 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
 
     editableLabelError,
     resetEditableLabel,
-    setEditableLabelError
+    setEditableLabelError,
+
+    breadcrumbProps
   } = props;
 
   const disabled = linode._permissions === 'read_only';
@@ -124,6 +131,8 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
                 }
               : undefined
           }
+          /* Override with any custom breadcrumb props that may have been passed in */
+          {...breadcrumbProps}
         />
       </Grid>
       <Grid item className={classes.controls}>
@@ -162,7 +171,7 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, Props>(
   withConfigDrawerState,
   withEditableLabelState,
   withLinodeDetailContext(({ linode, updateLinode }) => ({

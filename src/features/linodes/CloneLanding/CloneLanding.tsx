@@ -32,6 +32,11 @@ import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { getParamsFromUrl } from 'src/utilities/queryParams';
 import { withLinodeDetailContext } from '../LinodesDetail/linodeDetailContext';
+import LinodeControls from '../LinodesDetail/LinodesDetailHeader/LinodeControls';
+import MutationNotification from '../LinodesDetail/LinodesDetailHeader/MutationNotification';
+import Notifications from '../LinodesDetail/LinodesDetailHeader/Notifications';
+import LinodeBusyStatus from '../LinodesDetail/LinodeSummary/LinodeBusyStatus';
+import { linodeInTransition } from '../transitions';
 import Configs from './Configs';
 import Details from './Details';
 import Disks from './Disks';
@@ -77,8 +82,11 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     history,
     match: { url },
     region,
+    label,
     linodeId,
-    requestDisks
+    requestDisks,
+    linodeEvents,
+    linodeStatus
   } = props;
 
   /**
@@ -221,12 +229,27 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
 
   const errorMap = getErrorMap(['disk_size'], state.errors);
 
+  const recentEvent = linodeEvents[0];
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Clone" />
-      <Typography variant="h1" data-qa-clone-header>
-        Clone
-      </Typography>
+      {/* The header *basically* duplicated from LinodeDetailHeader. Why don't we use that component instead?...
+      ...Because we don't want the Nav tabs and we want <LinodeControls /> with a custom <Breadcrumb />.
+      @todo: DRY this up a bit?
+      */}
+      <MutationNotification />
+      <Notifications />
+      <LinodeControls
+        breadcrumbProps={{
+          labelTitle: 'Clone',
+          linkTo: `/linodes/${linodeId}/advanced`,
+          linkText: label,
+          onEditHandlers: undefined,
+          labelOptions: undefined
+        }}
+      />
+      {linodeInTransition(linodeStatus, recentEvent) && <LinodeBusyStatus />}
       <Grid container className={classes.root}>
         <Grid item xs={12} md={9}>
           <Paper>
@@ -332,12 +355,18 @@ interface LinodeContextProps {
   configs: Linode.Config[];
   disks: Linode.Disk[];
   region: string;
+  label: string;
+  linodeStatus: Linode.LinodeStatus;
+  linodeEvents: Linode.Event[];
 }
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id,
   configs: linode._configs,
   disks: linode._disks,
-  region: linode.region
+  region: linode.region,
+  label: linode.label,
+  linodeStatus: linode.status,
+  linodeEvents: linode._events
 }));
 
 interface DispatchProps {
