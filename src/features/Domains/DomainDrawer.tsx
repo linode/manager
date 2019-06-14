@@ -154,7 +154,7 @@ const masterIPsCountLens = lensPath(['masterIPsCount']);
 const updateMasterIPsCount = (fn: (s: any) => any) => (obj: any) =>
   over(masterIPsCountLens, fn, obj);
 
-const validateEmail = (type: string, domain: string, email: string) => {
+const validateEmail = (domain: string, email: string) => {
   /**
    * Validation
    *
@@ -164,7 +164,7 @@ const validateEmail = (type: string, domain: string, email: string) => {
    * (though technically won't break anything).
    */
 
-  return type === 'master' && isValidSOAEmail(email, domain);
+  return isValidSOAEmail(email, domain);
 };
 
 class DomainDrawer extends React.Component<CombinedProps, State> {
@@ -569,7 +569,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         ? { domain, type, tags, soa_email: soaEmail }
         : { domain, type, tags, master_ips: finalMasterIPs };
 
-    if (!validateEmail(type, domain, data.soa_email || '')) {
+    if (type === 'master' && !validateEmail(domain, data.soa_email || '')) {
       this.handleEmailValidationErrors();
       return;
     }
@@ -734,7 +734,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           { domain, tags, soa_email: soaEmail, domainId: id }
         : { domain, type, tags, master_ips: finalMasterIPs, domainId: id };
 
-    if (!validateEmail(type, domain, data.soa_email || '')) {
+    if (type === 'master' && !validateEmail(domain, data.soa_email || '')) {
       this.handleEmailValidationErrors();
       return;
     }
