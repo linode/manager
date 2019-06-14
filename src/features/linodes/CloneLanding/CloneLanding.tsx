@@ -46,11 +46,26 @@ import {
   createInitialCloneLandingState
 } from './utilities';
 
-type ClassNames = 'root' | 'outerContainer' | 'diskContainer';
+type ClassNames =
+  | 'root'
+  | 'paper'
+  | 'appBar'
+  | 'outerContainer'
+  | 'diskContainer'
+  | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     marginTop: theme.spacing.unit
+  },
+  paper: {
+    paddingTop: theme.spacing.unit * 3,
+    paddingLeft: theme.spacing.unit * 3
+  },
+  appBar: {
+    '& > div': {
+      marginTop: 0
+    }
   },
   outerContainer: {
     paddingLeft: theme.spacing.unit * 2,
@@ -59,6 +74,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   diskContainer: {
     marginTop: theme.spacing.unit * 4
+  },
+  title: {
+    marginBottom: theme.spacing.unit * 2
   }
 });
 
@@ -242,9 +260,9 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
       <Notifications />
       <LinodeControls
         breadcrumbProps={{
-          labelTitle: 'Clone',
+          labelTitle: label,
           linkTo: `/linodes/${linodeId}/advanced`,
-          linkText: label,
+          linkText: 'Details',
           onEditHandlers: undefined,
           labelOptions: undefined
         }}
@@ -252,8 +270,20 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
       {linodeInTransition(linodeStatus, recentEvent) && <LinodeBusyStatus />}
       <Grid container className={classes.root}>
         <Grid item xs={12} md={9}>
-          <Paper>
-            <AppBar position="static" color="default">
+          <Paper className={classes.paper}>
+            <Typography
+              role="header"
+              variant="h2"
+              className={classes.title}
+              data-qa-title
+            >
+              Clone
+            </Typography>
+            <AppBar
+              className={classes.appBar}
+              position="static"
+              color="default"
+            >
               <Tabs
                 value={tabs.findIndex(tab => matches(tab.routeName))}
                 onChange={handleTabChange}
