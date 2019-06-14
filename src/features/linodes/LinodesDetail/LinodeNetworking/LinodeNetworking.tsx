@@ -1,4 +1,4 @@
-import { compose, head, isEmpty, path, pathOr, uniq } from 'ramda';
+import { compose, head, isEmpty, path, pathOr, uniqBy } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose as recompose } from 'recompose';
@@ -116,6 +116,9 @@ interface State {
 }
 
 type CombinedProps = ContextProps & WithStyles<ClassNames> & DispatchProps;
+
+// Save some typing below
+const uniqByIP = uniqBy((thisIP: Linode.IPAddress) => thisIP.address);
 
 class LinodeNetworking extends React.Component<CombinedProps, State> {
   state: State = {
@@ -421,15 +424,15 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
     // `ipv4.reserved` contains both Public and Private IPs, so we use the `public` field to differentiate.
     // Splitting them into two arrays so we can order as desired (Public, then Private).
-    const publicReservedIps = uniq(reservedIPs.filter(ip => ip.public));
-    const privateReservedIps = uniq(reservedIPs.filter(ip => !ip.public));
+    const publicReservedIps = uniqByIP(reservedIPs.filter(ip => ip.public));
+    const privateReservedIps = uniqByIP(reservedIPs.filter(ip => !ip.public));
     /**
      * Customer reported an issue where a shared IP was displaying in the table multiple times.
      * We were unable to reproduce this, but added this as a safety check.
      */
-    const privateIPs = uniq(_privateIPs);
-    const publicIPs = uniq(_publicIPs);
-    const sharedIPs = uniq(_sharedIPs);
+    const privateIPs = uniqByIP(_privateIPs);
+    const publicIPs = uniqByIP(_publicIPs);
+    const sharedIPs = uniqByIP(_sharedIPs);
 
     return (
       <React.Fragment>
