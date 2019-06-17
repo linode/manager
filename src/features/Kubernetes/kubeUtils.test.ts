@@ -1,15 +1,8 @@
 import { extendedTypes } from 'src/__data__/ExtendedType';
-import {
-  node1,
-  node2,
-  node3,
-  node4,
-  nodePoolRequests
-} from 'src/__data__/nodePools';
+import { nodePoolRequests } from 'src/__data__/nodePools';
 
 import {
   getMonthlyPrice,
-  getPoolUpdateGroups,
   getTotalClusterMemoryAndCPU,
   getTotalClusterPrice
 } from './kubeUtils';
@@ -45,7 +38,9 @@ describe('helper functions', () => {
   });
 
   describe('getTotalClusterPrice', () => {
-    expect(getTotalClusterPrice([mockNodePool, mockNodePool])).toBe(80);
+    it('should calculate the total cluster price', () => {
+      expect(getTotalClusterPrice([mockNodePool, mockNodePool])).toBe(20);
+    });
   });
 
   describe('Get total cluster memory/CPUs', () => {
@@ -75,24 +70,6 @@ describe('helper functions', () => {
         CPU: 0,
         RAM: 0
       });
-    });
-  });
-
-  describe('getPoolUpdateGroups', () => {
-    it('should separate a list of node pools into correct groupings', () => {
-      const updatedPool = { ...node3, count: 10000 };
-      const updatedPools = [node1, node2, updatedPool, node4];
-      const groups = getPoolUpdateGroups(updatedPools, nodePoolRequests);
-      expect(groups.add).toEqual([node1]);
-      expect(groups.delete).toEqual([node2]);
-      expect(groups.update).toEqual([updatedPool]);
-      expect(groups.unchanged).toEqual([node4]);
-    });
-
-    it('should handle odd inputs correctly', () => {
-      expect(getPoolUpdateGroups([], [])).toEqual({});
-      const unchangedGroups = getPoolUpdateGroups([node3, node4], [node3, node4]);
-      expect(unchangedGroups).toHaveProperty('unchanged', [node3, node4]);
     });
   });
 });

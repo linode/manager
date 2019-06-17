@@ -11,6 +11,8 @@ import Typography from 'src/components/core/Typography';
 import { dcDisplayNames } from 'src/constants';
 import { ExtendedCluster } from 'src/features/Kubernetes/types';
 
+import { getTotalClusterPrice } from '../kubeUtils';
+
 type ClassNames = 'root' | 'item';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
@@ -58,7 +60,9 @@ export const KubeSummaryPanel: React.FunctionComponent<
       </Paper>
       <Paper className={classes.item}>
         <Typography>Monthly Pricing</Typography>
-        <Typography>{`$${cluster.price}/month`}</Typography>
+        <Typography>{`$${getTotalClusterPrice(
+          cluster.node_pools
+        )}/month`}</Typography>
       </Paper>
     </Paper>
   );

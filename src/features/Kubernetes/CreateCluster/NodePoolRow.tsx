@@ -90,9 +90,7 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
         )}
       </TableCell>
       <TableCell parentColumn="Pricing">
-        <Typography>{`${displayPrice(
-          pool.totalMonthlyPrice * pool.count
-        )}/mo`}</Typography>
+        <Typography>{`${displayPrice(pool.totalMonthlyPrice)}/mo`}</Typography>
       </TableCell>
       <TableCell>
         <Button

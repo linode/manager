@@ -27,7 +27,7 @@ import { reportException } from 'src/exceptionReporting';
 import { getKubeConfig } from 'src/services/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { extendCluster } from '.././kubeUtils';
+import { extendCluster, getMonthlyPrice } from '.././kubeUtils';
 import { ExtendedCluster, ExtendedPoolNode } from '.././types';
 import NodePoolPanel from '../CreateCluster/NodePoolPanel';
 import KubernetesDialog from './KubernetesDialog';
@@ -196,7 +196,15 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   };
 
   const updatePool = (poolIdx: number, updatedPool: ExtendedPoolNode) => {
-    updatePools(prevPools => update(poolIdx, updatedPool, prevPools));
+    const updatedPoolWithPrice = {
+      ...updatedPool,
+      totalMonthlyPrice: getMonthlyPrice(
+        updatedPool.type,
+        updatedPool.count,
+        typesData || []
+      )
+    };
+    updatePools(prevPools => update(poolIdx, updatedPoolWithPrice, prevPools));
   };
 
   const resetFormState = () => {

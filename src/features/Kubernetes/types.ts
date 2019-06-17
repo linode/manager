@@ -25,5 +25,4 @@ export interface ExtendedCluster {
   node_pools: ExtendedPoolNode[];
   totalMemory: number;
   totalCPU: number;
-  price?: number;
 }
