@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
@@ -16,7 +17,7 @@ import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel
 import { displayTypeForKubePoolNode } from 'src/features/linodes/presentation';
 import { ExtendedPoolNode } from '.././types';
 
-type ClassNames = 'root' | 'link' | 'toDelete' | 'toAdd';
+type ClassNames = 'root' | 'link' | 'toDelete' | 'toAdd' | 'disabled';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
@@ -24,10 +25,13 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     color: `${theme.palette.primary.main} !important`
   },
   toDelete: {
-    backgroundColor: 'rgba(210, 28, 28, 0.4)',
+    backgroundColor: 'rgba(210, 28, 28, 0.4)'
   },
   toAdd: {
     backgroundColor: theme.bg.offWhite
+  },
+  disabled: {
+    color: 'gray !important'
   }
 });
 
@@ -59,8 +63,8 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
   const statusClass = pool.queuedForAddition
     ? classes.toAdd
     : pool.queuedForDeletion
-      ? classes.toDelete
-      : '' // Normal node 
+    ? classes.toDelete
+    : ''; // Normal node
 
   return (
     <TableRow data-testid={'node-pool-table-row'} className={statusClass}>
@@ -88,10 +92,14 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
       <TableCell>
         <Button
           type="remove"
-          deleteText={pool.queuedForDeletion ? "Undo Remove" : "Remove"}
+          disabled={!editable}
+          deleteText={pool.queuedForDeletion ? 'Undo Remove' : 'Remove'}
           data-testid={`delete-node-row-${idx}`}
           onClick={() => handleDelete(idx)}
-          className={classes.link}
+          className={classNames({
+            [classes.link]: true,
+            [classes.disabled]: !editable
+          })}
         />
       </TableCell>
     </TableRow>

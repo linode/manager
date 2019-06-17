@@ -7,7 +7,7 @@ import Request, {
   setXFilter
 } from '../index';
 
-import { createKubeClusterSchema } from './kubernetes.schema';
+import { createKubeClusterSchema, nodePoolSchema } from './kubernetes.schema';
 
 // Payload types
 export interface CreateKubeClusterPayload {
@@ -69,6 +69,59 @@ export const updateKubernetesCluster = (
     setMethod('PUT'),
     setURL(`${API_ROOT}/lke/clusters/${clusterID}`),
     setData(data)
+  ).then(response => response.data);
+
+/**
+ * deleteKubernetesCluster
+ *
+ * Delete the specified Cluster.
+ */
+export const deleteKubernetesCluster = (clusterID: string) =>
+  Request<{}>(
+    setMethod('DELETE'),
+    setURL(`${API_ROOT}/lke/clusters/${clusterID}`)
+  ).then(response => response.data);
+
+/**
+ * createNodePool
+ *
+ * Adds a node pool to the specified cluster.
+ */
+export const createNodePool = (
+  clusterID: string,
+  data: Linode.PoolNodeRequest
+) =>
+  Request<Page<Linode.KubeNodePoolResponse>>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools`),
+    setData(data, nodePoolSchema)
+  ).then(response => response.data);
+
+/**
+ * updateNodePool
+ *
+ * Change the type or count of a node pool
+ */
+export const updateNodePool = (
+  clusterID: string,
+  nodePoolID: string,
+  data: Linode.PoolNodeRequest
+) =>
+  Request<Page<Linode.KubeNodePoolResponse>>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`),
+    setData(data, nodePoolSchema)
+  ).then(response => response.data);
+
+/**
+ * deleteNodePool
+ *
+ * Delete a single node pool from the specified Cluster.
+ */
+export const deleteNodePool = (clusterID: string, nodePoolID: string) =>
+  Request<{}>(
+    setMethod('DELETE'),
+    setURL(`${API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`)
   ).then(response => response.data);
 
 /** getKubeConfig

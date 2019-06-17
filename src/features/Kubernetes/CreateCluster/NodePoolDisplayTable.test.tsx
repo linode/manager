@@ -10,6 +10,7 @@ import NodePoolDisplayTable from './NodePoolDisplayTable';
 const props = {
   types: extendedTypes,
   pools: nodePoolRequests,
+  editable: true,
   handleDelete: jest.fn(),
   handleChange: jest.fn(),
   updatePool: jest.fn()

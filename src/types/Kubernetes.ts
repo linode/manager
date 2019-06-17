@@ -14,7 +14,7 @@ namespace Linode {
     count: number;
     id: number;
     linodes: PoolNodeResponse[];
-    lkeid: number;
+    lke_id: number;
     type: string;
   }
 
