@@ -524,18 +524,23 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       MuiDialogActions: {
         root: {
           margin: 0,
-          padding: `0 ${spacingUnit * 3}px ${spacingUnit * 3}px ${spacingUnit *
-            3}px`,
+          padding: spacingUnit * 3,
           justifyContent: 'flex-start',
           '& .actionPanel': {
             padding: 0
           }
         }
       },
+      MuiDialogContent: {
+        root: {
+          padding: `${spacingUnit}px ${spacingUnit * 3}px`
+        }
+      },
       MuiDialogTitle: {
         root: {
           borderBottom: '1px solid #eee',
           marginBottom: spacingUnit * 2 + spacingUnit / 2,
+          padding: `${spacingUnit * 2}px ${spacingUnit * 3}px`,
           '& h2': {
             color: primaryColors.headline
           }
@@ -884,6 +889,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
           whiteSpace: 'initial',
           textOverflow: 'initial',
           color: primaryColors.text,
+          minHeight: 'auto',
           transition: `${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), '}
         ${'color .2s cubic-bezier(0.4, 0, 0.2, 1)'}`,
           '&$selected, &$selected:hover': {
