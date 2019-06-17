@@ -11,6 +11,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import SelectionCard from 'src/components/SelectionCard';
+import SupportLink from 'src/components/SupportLink';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 
@@ -185,7 +186,6 @@ export class SelectPlanPanel extends React.Component<
       tabOrder.push('highmem');
     }
 
-
     if (!isEmpty(gpu)) {
       const programInfo = (
         <Typography>
@@ -238,10 +238,30 @@ export class SelectPlanPanel extends React.Component<
     );
     const initialTab = tabOrder.indexOf(selectedTypeClass);
 
+    /**
+     * Intercept GPU-related errors to include a link to support/tickets
+     */
+
+    const finalError = true ? ( // error && selectedID && selectedID.match(/gpu/)
+      <>
+        <Typography>
+          Additional verification is required to add this service. Please {` `}
+          <SupportLink
+            title="GPU Request"
+            description=""
+            text="open a Support ticket"
+          />
+          .
+        </Typography>
+      </>
+    ) : (
+      error
+    );
+
     return (
       <TabbedPanel
         rootClass={`${classes.root} tabbedPanel`}
-        error={error}
+        error={finalError}
         header={header || 'Linode Plan'}
         copy={copy}
         tabs={tabs}

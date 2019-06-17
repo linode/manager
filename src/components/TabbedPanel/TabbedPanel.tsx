@@ -45,7 +45,7 @@ export interface Tab {
 }
 interface Props {
   header: string;
-  error?: string;
+  error?: string | JSX.Element;
   copy?: string;
   rootClass?: string;
   innerClass?: string;
