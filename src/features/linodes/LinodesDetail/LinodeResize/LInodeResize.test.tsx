@@ -1,13 +1,11 @@
 import { mount, shallow } from 'enzyme';
 import * as React from 'react';
-import { StaticRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router-dom';
 import { extDisk, swapDisk } from 'src/__data__/disks';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { types } from 'src/__data__/types';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import { LinodeResize, shouldEnableAutoResizeDiskOption } from './LinodeResize';
-
-const context = {};
 
 describe('LinodeResize', () => {
   const mockTypes = types.map(LinodeResize.extendType);
@@ -35,7 +33,7 @@ describe('LinodeResize', () => {
   it('should render the currently selected plan as a card', () => {
     const componentWithTheme = mount(
       <LinodeThemeWrapper>
-        <StaticRouter context={context}>
+        <MemoryRouter>
           <LinodeResize
             linodeDisks={[]}
             closeSnackbar={jest.fn()}
@@ -53,7 +51,7 @@ describe('LinodeResize', () => {
             deprecatedTypesData={mockTypes}
             linodeLabel=""
           />
-        </StaticRouter>
+        </MemoryRouter>
       </LinodeThemeWrapper>
     );
 
@@ -70,7 +68,7 @@ describe('LinodeResize', () => {
       it('should have a heading of No Assigned Plan', () => {
         const componentWithTheme = mount(
           <LinodeThemeWrapper>
-            <StaticRouter context={context}>
+            <MemoryRouter>
               <LinodeResize
                 closeSnackbar={jest.fn()}
                 enqueueSnackbar={jest.fn()}
@@ -89,7 +87,7 @@ describe('LinodeResize', () => {
                 deprecatedTypesData={mockTypes}
                 linodeLabel=""
               />
-            </StaticRouter>
+            </MemoryRouter>
           </LinodeThemeWrapper>
         );
 
@@ -108,7 +106,7 @@ describe('LinodeResize', () => {
       it('should have a heading of Unknown Plan', () => {
         const componentWithTheme = mount(
           <LinodeThemeWrapper>
-            <StaticRouter context={context}>
+            <MemoryRouter>
               <LinodeResize
                 closeSnackbar={jest.fn()}
                 linodeDisks={[]}
@@ -126,7 +124,7 @@ describe('LinodeResize', () => {
                 deprecatedTypesData={mockTypes}
                 linodeLabel=""
               />
-            </StaticRouter>
+            </MemoryRouter>
           </LinodeThemeWrapper>
         );
 
