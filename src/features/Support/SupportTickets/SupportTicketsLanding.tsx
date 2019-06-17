@@ -69,7 +69,6 @@ export class SupportTicketsLanding extends React.PureComponent<
     super(props);
 
     const stateParams = this.props.location.state;
-    console.log(stateParams);
 
     this.state = {
       value: getSelectedTabFromQueryString(props.location.search),
