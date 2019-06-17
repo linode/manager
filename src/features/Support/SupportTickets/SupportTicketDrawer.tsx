@@ -87,6 +87,8 @@ interface AttachmentWithTarget {
 
 export interface Props {
   open: boolean;
+  prefilledTitle?: string;
+  prefilledDescription?: string;
   onClose: () => void;
   onSuccess: (ticketId: number, attachmentErrors?: AttachmentError[]) => void;
 }
@@ -140,8 +142,8 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
   composeState = composeState;
   defaultTicket: Ticket = {
-    summary: '',
-    description: '',
+    summary: this.props.prefilledTitle || '',
+    description: this.props.prefilledDescription || '',
     entity_type: 'none',
     entity_id: ''
   };

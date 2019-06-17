@@ -46,6 +46,8 @@ interface State {
   drawerOpen: boolean;
   notice?: string;
   newTicket?: Linode.SupportTicket;
+  prefilledTitle?: string;
+  prefilledDescription?: string;
 }
 
 const tabs = ['open', 'closed'];
@@ -68,9 +70,14 @@ export class SupportTicketsLanding extends React.PureComponent<
   constructor(props: CombinedProps) {
     super(props);
 
+    const stateParams = this.props.location.state;
+
     this.state = {
       value: getSelectedTabFromQueryString(props.location.search),
-      drawerOpen: false
+      /** If we came here via a SupportLink that's passing data, use that to determine initial state */
+      drawerOpen: stateParams ? stateParams.open : false,
+      prefilledDescription: stateParams ? stateParams.description : undefined,
+      prefilledTitle: stateParams ? stateParams.title : undefined
     };
   }
 
@@ -129,12 +136,14 @@ export class SupportTicketsLanding extends React.PureComponent<
   };
 
   renderTicketDrawer = () => {
-    const { drawerOpen } = this.state;
+    const { drawerOpen, prefilledDescription, prefilledTitle } = this.state;
     return (
       <SupportTicketDrawer
         open={drawerOpen}
         onClose={this.closeDrawer}
         onSuccess={this.handleAddTicketSuccess}
+        prefilledDescription={prefilledDescription}
+        prefilledTitle={prefilledTitle}
       />
     );
   };
