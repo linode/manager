@@ -20,8 +20,16 @@ import { ApplicationState } from 'src/store';
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestClusters as _requestClusters } from 'src/store/clusters/clusters.actions';
 import { MapState } from 'src/store/types';
-import AccessKeyLanding from './AccessKeys/AccessKeyLanding';
-import BucketLanding from './Buckets/BucketLanding';
+
+import DefaultLoader from 'src/components/DefaultLoader';
+
+const BucketLanding = DefaultLoader({
+  loader: () => import('./Buckets/BucketLanding')
+});
+
+const AccessKeyLanding = DefaultLoader({
+  loader: () => import('./AccessKeys/AccessKeyLanding')
+});
 
 type CombinedProps = StateProps & DispatchProps & RouteComponentProps<{}>;
 
@@ -91,7 +99,14 @@ export const ObjectStorageLanding: React.FunctionComponent<
             <Tab
               key={tab.title}
               data-qa-tab={tab.title}
-              component={() => <TabLink to={tab.routeName} title={tab.title} />}
+              component={React.forwardRef((forwardedProps, ref) => (
+                <TabLink
+                  to={tab.routeName}
+                  title={tab.title}
+                  {...forwardedProps}
+                  ref={ref}
+                />
+              ))}
             />
           ))}
         </Tabs>
