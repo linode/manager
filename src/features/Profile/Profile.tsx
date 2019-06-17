@@ -12,14 +12,40 @@ import Tabs from 'src/components/core/Tabs';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import TabLink from 'src/components/TabLink';
-import APITokens from './APITokens';
-import AuthenticationSettings from './AuthenticationSettings';
-import DisplaySettings from './DisplaySettings';
-import LishSettings from './LishSettings';
-import OAuthClients from './OAuthClients';
-import Referrals from './Referrals';
-import Settings from './Settings';
-import SSHKeys from './SSHKeys';
+
+import DefaultLoader from 'src/components/DefaultLoader';
+
+const SSHKeys = DefaultLoader({
+  loader: () => import('./SSHKeys')
+});
+
+const Settings = DefaultLoader({
+  loader: () => import('./Settings')
+});
+
+const Referrals = DefaultLoader({
+  loader: () => import('./Referrals')
+});
+
+const OAuthClients = DefaultLoader({
+  loader: () => import('./OAuthClients')
+});
+
+const LishSettings = DefaultLoader({
+  loader: () => import('./LishSettings')
+});
+
+const DisplaySettings = DefaultLoader({
+  loader: () => import('./DisplaySettings')
+});
+
+const AuthenticationSettings = DefaultLoader({
+  loader: () => import('./AuthenticationSettings')
+});
+
+const APITokens = DefaultLoader({
+  loader: () => import('./APITokens')
+});
 
 type Props = RouteComponentProps<{}>;
 
