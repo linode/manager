@@ -13,16 +13,45 @@ import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import TabLink from 'src/components/TabLink';
 import VolumesLanding from 'src/features/Volumes/VolumesLanding';
-import LinodeActivity from './LinodeActivity';
-import LinodeAdvanced from './LinodeAdvanced';
-import LinodeBackup from './LinodeBackup';
 import { withLinodeDetailContext } from './linodeDetailContext';
-import LinodeNetworking from './LinodeNetworking';
-import LinodeRebuild from './LinodeRebuild';
-import LinodeRescue from './LinodeRescue';
-import LinodeResize from './LinodeResize';
-import LinodeSettings from './LinodeSettings';
-import LinodeSummary from './LinodeSummary';
+
+import DefaultLoader from 'src/components/DefaultLoader';
+
+const LinodeSummary = DefaultLoader({
+  loader: () => import('./LinodeSummary')
+});
+
+const LinodeSettings = DefaultLoader({
+  loader: () => import('./LinodeSettings')
+});
+
+const LinodeResize = DefaultLoader({
+  loader: () => import('./LinodeResize')
+});
+
+const LinodeRescue = DefaultLoader({
+  loader: () => import('./LinodeRescue')
+});
+
+const LinodeRebuild = DefaultLoader({
+  loader: () => import('./LinodeRebuild')
+});
+
+const LinodeNetworking = DefaultLoader({
+  loader: () => import('./LinodeNetworking')
+});
+
+const LinodeActivity = DefaultLoader({
+  loader: () => import('./LinodeActivity')
+});
+
+const LinodeAdvanced = DefaultLoader({
+  loader: () => import('./LinodeAdvanced')
+});
+
+const LinodeBackup = DefaultLoader({
+  loader: () => import('./LinodeBackup')
+});
 
 type CombinedProps = ContextProps &
   RouteComponentProps<{
