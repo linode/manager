@@ -17,6 +17,7 @@ import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableW
 import { getDomainRecords } from 'src/services/domains';
 import { getAllWithArguments } from 'src/utilities/getAll';
 
+import Loading from 'src/components/LandingLoading';
 import domainsContainer, {
   DomainActionsProps,
   StateProps
@@ -51,6 +52,7 @@ const DomainDetail: React.FC<CombinedProps> = props => {
   const {
     classes,
     domain,
+    domainsLoading,
     domainsError,
     match: {
       params: { domainId }
@@ -81,9 +83,8 @@ const DomainDetail: React.FC<CombinedProps> = props => {
       .catch(() => null);
   };
 
-  /** Empty State */
-  if (!domain) {
-    return null;
+  if (domainsLoading) {
+    return <Loading shouldDelay />;
   }
 
   /** Error State */
@@ -91,6 +92,11 @@ const DomainDetail: React.FC<CombinedProps> = props => {
     return (
       <ErrorState errorText="There was an error retrieving your domain. Please reload and try again." />
     );
+  }
+
+  /** Empty State */
+  if (!domain) {
+    return null;
   }
 
   return (

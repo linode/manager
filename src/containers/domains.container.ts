@@ -12,8 +12,6 @@ import {
 } from 'src/store/domains/domains.requests';
 import { ThunkDispatch } from 'src/store/types';
 
-import { updateDomain as _updateDomain } from 'src/store/domains/domains.requests';
-
 export interface StateProps {
   domainsData?: Linode.Domain[];
   domainsLoading: boolean;
