@@ -204,6 +204,12 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       _shouldEnableAutoResizeDiskOption
     ] = shouldEnableAutoResizeDiskOption(linodeDisks);
 
+    const isSmaller = isSmallerThanCurrentPlan(
+      this.state.selectedId,
+      linodeType || '',
+      currentTypesData
+    );
+
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`${linodeLabel} - Resize`} />
@@ -261,9 +267,15 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
                 disk or one ext disk and one swap disk on this Linode.`}
               />
             )}
+            {isSmaller && (
+              <HelpIcon
+                className={classes.toolTip}
+                text={`Your disks cannot be automatically resized when moving to a smaller plan.`}
+              />
+            )}
           </Typography>
           <Checkbox
-            disabled={!_shouldEnableAutoResizeDiskOption}
+            disabled={!_shouldEnableAutoResizeDiskOption || isSmaller}
             checked={
               !_shouldEnableAutoResizeDiskOption
                 ? false
@@ -383,6 +395,21 @@ export const shouldEnableAutoResizeDiskOption = (
     (linodeDisks.length === 1 && linodeHasOneExtDisk) ||
     (linodeDisks.length === 2 && linodeHasOneSwapDisk && linodeHasOneExtDisk);
   return [linodeExtDiskLabels[0], shouldEnable];
+};
+
+export const isSmallerThanCurrentPlan = (
+  selectedPlanID: string,
+  currentPlanID: string,
+  types: ExtendedType[]
+) => {
+  const currentType = types.find(thisType => thisType.id === currentPlanID);
+  const nextType = types.find(thisType => thisType.id === selectedPlanID);
+
+  if (!(currentType && nextType)) {
+    return false;
+  }
+
+  return currentType.disk > nextType.disk;
 };
 
 export default compose<CombinedProps, {}>(
