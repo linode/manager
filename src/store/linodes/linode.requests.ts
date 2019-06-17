@@ -94,6 +94,6 @@ export const requestLinodeForStore: RequestLinodeForStoreThunk = id => (
          */
       });
   } else {
-    return;
+    return Promise.resolve();
   }
 };
