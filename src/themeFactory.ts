@@ -294,7 +294,8 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       },
       subtitle1: {
         fontSize: '1.075rem',
-        lineHeight: '1.5rem'
+        lineHeight: '1.5rem',
+        color: primaryColors.text
       }
     },
     visually: {
