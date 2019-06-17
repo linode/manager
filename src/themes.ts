@@ -126,6 +126,9 @@ export const dark = () =>
       },
       body1: {
         color: primaryColors.text
+      },
+      subtitle1: {
+        color: primaryColors.text
       }
     },
     overrides: {
