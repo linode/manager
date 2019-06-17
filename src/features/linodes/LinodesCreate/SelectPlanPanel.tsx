@@ -242,21 +242,26 @@ export class SelectPlanPanel extends React.Component<
      * Intercept GPU-related errors to include a link to support/tickets
      */
 
-    const finalError = true ? ( // error && selectedID && selectedID.match(/gpu/)
-      <>
-        <Typography>
-          Additional verification is required to add this service. Please {` `}
-          <SupportLink
-            title="GPU Request"
-            description=""
-            text="open a Support ticket"
-          />
-          .
-        </Typography>
-      </>
-    ) : (
-      error
-    );
+    const finalError =
+      error &&
+      selectedID &&
+      selectedID.match(/gpu/) &&
+      error.match(/verification is required/) ? (
+        <>
+          <Typography>
+            Additional verification is required to add this service. Please{' '}
+            {` `}
+            <SupportLink
+              title="GPU Request"
+              description=""
+              text="open a Support ticket"
+            />
+            .
+          </Typography>
+        </>
+      ) : (
+        error
+      );
 
     return (
       <TabbedPanel
