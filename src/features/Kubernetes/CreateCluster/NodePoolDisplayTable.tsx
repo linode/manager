@@ -1,10 +1,10 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -18,13 +18,14 @@ import NodePoolRow from './NodePoolRow';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    maxWidth: '50%',
-    border: `1px solid ${theme.palette.divider}`,
-    borderBottom: 0
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      maxWidth: '50%',
+      border: `1px solid ${theme.palette.divider}`,
+      borderBottom: 0
+    }
+  });
 
 interface Props {
   pools: ExtendedPoolNode[];

@@ -1,23 +1,23 @@
 import * as React from 'react';
-
+import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-
-import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 
 type ClassNames = 'root' | 'flatImagePanel';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  flatImagePanel: {
-    padding: theme.spacing.unit * 3
-  },
-  root: {}
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    flatImagePanel: {
+      padding: theme.spacing(3)
+    },
+    root: {}
+  });
 
 interface Props {
   error?: string;

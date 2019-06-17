@@ -8,7 +8,8 @@ import { Action, compose } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { Subscription } from 'rxjs/Subscription';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -140,48 +141,49 @@ const EventsLanding = DefaultLoader({
 
 type ClassNames = 'appFrame' | 'content' | 'wrapper' | 'grid' | 'switchWrapper';
 
-const styles: StyleRulesCallback = theme => ({
-  appFrame: {
-    position: 'relative',
-    display: 'flex',
-    minHeight: '100vh',
-    flexDirection: 'column',
-    backgroundColor: theme.bg.main
-  },
-  content: {
-    flex: 1,
-    [theme.breakpoints.up('md')]: {
-      marginLeft: theme.spacing.unit * 14 + 103 // 215
+const styles = (theme: Theme) =>
+  createStyles({
+    appFrame: {
+      position: 'relative',
+      display: 'flex',
+      minHeight: '100vh',
+      flexDirection: 'column',
+      backgroundColor: theme.bg.main
     },
-    [theme.breakpoints.up('xl')]: {
-      marginLeft: theme.spacing.unit * 22 + 99 // 275
-    }
-  },
-  wrapper: {
-    padding: theme.spacing.unit * 3,
-    transition: theme.transitions.create('opacity'),
-    [theme.breakpoints.down('sm')]: {
-      paddingTop: theme.spacing.unit * 2,
-      paddingLeft: theme.spacing.unit * 2,
-      paddingRight: theme.spacing.unit * 2
-    }
-  },
-  grid: {
-    [theme.breakpoints.up('lg')]: {
-      height: '100%'
-    }
-  },
-  switchWrapper: {
-    flex: 1,
-    maxWidth: '100%',
-    position: 'relative',
-    '&.mlMain': {
+    content: {
+      flex: 1,
+      [theme.breakpoints.up('md')]: {
+        marginLeft: theme.spacing(14) + 103 // 215
+      },
+      [theme.breakpoints.up('xl')]: {
+        marginLeft: theme.spacing(22) + 99 // 275
+      }
+    },
+    wrapper: {
+      padding: theme.spacing(3),
+      transition: theme.transitions.create('opacity'),
+      [theme.breakpoints.down('sm')]: {
+        paddingTop: theme.spacing(2),
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(2)
+      }
+    },
+    grid: {
       [theme.breakpoints.up('lg')]: {
-        maxWidth: '78.8%'
+        height: '100%'
+      }
+    },
+    switchWrapper: {
+      flex: 1,
+      maxWidth: '100%',
+      position: 'relative',
+      '&.mlMain': {
+        [theme.breakpoints.up('lg')]: {
+          maxWidth: '78.8%'
+        }
       }
     }
-  }
-});
+  });
 
 interface Props {
   toggleTheme: () => void;

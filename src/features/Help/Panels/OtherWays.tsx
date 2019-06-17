@@ -4,7 +4,8 @@ import Community from 'src/assets/icons/community.svg';
 import Documentation from 'src/assets/icons/document.svg';
 import Support from 'src/assets/icons/support.svg';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -14,16 +15,17 @@ import Tile from 'src/components/Tile';
 
 type ClassNames = 'root' | 'wrapper' | 'heading';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  wrapper: {
-    marginTop: theme.spacing.unit * 2
-  },
-  heading: {
-    textAlign: 'center',
-    marginBottom: theme.spacing.unit * 4
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    wrapper: {
+      marginTop: theme.spacing(2)
+    },
+    heading: {
+      textAlign: 'center',
+      marginBottom: theme.spacing(4)
+    }
+  });
 
 interface State {
   error?: string;

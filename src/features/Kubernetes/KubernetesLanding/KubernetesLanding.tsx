@@ -57,6 +57,6 @@ const withKubernetes = KubernetesContainer(
   })
 );
 
-const enhanced = compose(withKubernetes);
+const enhanced = compose<CombinedProps, {}>(withKubernetes);
 
 export default enhanced(KubernetesLanding);

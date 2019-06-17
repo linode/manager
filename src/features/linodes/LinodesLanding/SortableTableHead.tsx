@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -12,15 +13,16 @@ import TableSortCell from 'src/components/TableSortCell';
 
 type ClassNames = 'root' | 'label' | 'tagHeader';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  label: {
-    paddingLeft: theme.spacing.unit * 2 + 49
-  },
-  tagHeader: {
-    textAlign: 'center'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    label: {
+      paddingLeft: theme.spacing(2) + 49
+    },
+    tagHeader: {
+      textAlign: 'center'
+    }
+  });
 
 interface Props {
   someLinodesHaveMaintenance: boolean;

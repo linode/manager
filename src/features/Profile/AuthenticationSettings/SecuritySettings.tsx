@@ -4,9 +4,10 @@ import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
@@ -18,16 +19,17 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    padding: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 3
-  },
-  title: {
-    marginBottom: theme.spacing.unit * 2
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(3),
+      paddingBottom: theme.spacing(3),
+      marginBottom: theme.spacing(3)
+    },
+    title: {
+      marginBottom: theme.spacing(2)
+    }
+  });
 
 interface Props {
   onSuccess: () => void;

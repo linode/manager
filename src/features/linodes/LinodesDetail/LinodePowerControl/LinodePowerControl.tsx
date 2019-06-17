@@ -7,7 +7,8 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Menu from 'src/components/core/Menu';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -32,83 +33,83 @@ type ClassNames =
   | 'buttonInner'
   | 'hidden';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0
+const styles = (theme: Theme) =>
+  createStyles({
+    '@keyframes fadeIn': {
+      from: {
+        opacity: 0
+      },
+      to: {
+        opacity: 1
+      }
     },
-    to: {
-      opacity: 1
-    }
-  },
-  root: {
-    '& svg': {
-      transition: theme.transitions.create(['color'])
-    }
-  },
-  button: {
-    position: 'relative',
-    transition: theme.transitions.create(['color', 'border-color']),
-    minWidth: 145,
-    padding: `${theme.spacing.unit - 2}px ${theme.spacing.unit}px`,
-    '&:hover': {
-      textDecoration: 'underline'
+    root: {
+      '& svg': {
+        transition: theme.transitions.create(['color'])
+      }
     },
-    '&:hover, &.active': {
-      borderColor: theme.palette.primary.light,
-      backgroundColor: 'transparent'
-    }
-  },
-  buttonText: {
-    marginLeft: theme.spacing.unit
-  },
-  caret: {
-    color: theme.palette.primary.main,
-    transition: theme.transitions.create(['color']),
-    position: 'relative',
-    top: 2,
-    left: 2,
-    marginLeft: theme.spacing.unit / 2
-  },
-  caretDisabled: {
-    color: theme.color.disabledText
-  },
-  menuItem: {
-    color: theme.palette.primary.main,
-    padding: theme.spacing.unit * 2,
-    outline: 0,
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    '&:not(.hasTooltip)': {
-      '&:hover, &:focus': {
-        '& $buttonText': {
-          color: 'white'
-        },
-        '& svg': {
-          fill: '#FFF'
-        },
-        '& .insidePath *, ': {
-          stroke: '#fff'
-        },
-        '& svg:not(.loading) .outerCircle': {
-          stroke: '#fff'
+    button: {
+      position: 'relative',
+      transition: theme.transitions.create(['color', 'border-color']),
+      minWidth: 145,
+      padding: `${theme.spacing(1) - 2}px ${theme.spacing(1)}px`,
+      '&:hover': {
+        textDecoration: 'underline'
+      },
+      '&:hover, &.active': {
+        borderColor: theme.palette.primary.light,
+        backgroundColor: 'transparent'
+      }
+    },
+    buttonText: {
+      marginLeft: theme.spacing(1)
+    },
+    caret: {
+      color: theme.palette.primary.main,
+      transition: theme.transitions.create(['color']),
+      position: 'relative',
+      top: 2,
+      left: 2,
+      marginLeft: theme.spacing(1) / 2
+    },
+    caretDisabled: {
+      color: theme.color.disabledText
+    },
+    menuItem: {
+      color: theme.palette.primary.main,
+      padding: theme.spacing(2),
+      outline: 0,
+      borderBottom: `1px solid ${theme.palette.divider}`,
+      '&:not(.hasTooltip)': {
+        '&:hover, &:focus': {
+          '& $buttonText': {
+            color: 'white'
+          },
+          '& svg': {
+            fill: '#FFF'
+          },
+          '& .insidePath *, ': {
+            stroke: '#fff'
+          },
+          '& svg:not(.loading) .outerCircle': {
+            stroke: '#fff'
+          }
         }
       }
+    },
+    menuItemInner: {
+      display: 'flex',
+      alignItems: 'center'
+    },
+    buttonInner: {
+      display: 'flex',
+      animation: '$fadeIn .2s ease-in-out',
+      alignItems: 'center'
+    },
+    hidden: {
+      ...theme.visually.hidden
     }
-  },
-  menuItemInner: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  buttonInner: {
-    display: 'flex',
-    animation: 'fadeIn .2s ease-in-out',
-    alignItems: 'center'
-  },
-  hidden: {
-    height: 0,
-    padding: 0
-  }
-});
+  });
 
 interface Props {
   id: number;
@@ -340,14 +341,14 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
     return (
       <ActionsPanel style={{ padding: 0 }}>
         <Button
-          type="cancel"
+          buttonType="cancel"
           onClick={this.closePowerAlert}
           data-qa-cancel-cancel
         >
           Cancel
         </Button>
         <Button
-          type="primary"
+          buttonType="primary"
           onClick={this.rebootOrPowerLinode}
           data-qa-confirm-cancel
         >

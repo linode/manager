@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -16,22 +17,23 @@ export interface Doc {
 
 type CSSClasses = 'root' | 'title' | 'titleLink' | 'body';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
-  root: {
-    marginTop: theme.spacing.unit * 2
-  },
-  title: {},
-  titleLink: {
-    color: theme.color.headline,
-    textDecoration: 'underline',
-    '&:hover': {
-      color: theme.color.black
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      marginTop: theme.spacing(2)
+    },
+    title: {},
+    titleLink: {
+      color: theme.color.headline,
+      textDecoration: 'underline',
+      '&:hover': {
+        color: theme.color.black
+      }
+    },
+    body: {
+      marginTop: theme.spacing(1)
     }
-  },
-  body: {
-    marginTop: theme.spacing.unit
-  }
-});
+  });
 
 type PropsWithStyles = Doc & WithStyles<CSSClasses>;
 
@@ -50,7 +52,7 @@ class DocComponent extends React.PureComponent<PropsWithStyles> {
           <Typography variant="h3" className={classes.title}>
             <ExternalLink text={title} link={src} absoluteIcon black />
           </Typography>
-          <Typography variant="body2" className={classes.body}>
+          <Typography variant="body1" className={classes.body}>
             {this.body()}
           </Typography>
         </div>

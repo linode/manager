@@ -2,9 +2,10 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { displayPrice } from 'src/components/DisplayPrice';
@@ -18,12 +19,13 @@ import { ExtendedPoolNode } from '.././types';
 
 type ClassNames = 'root' | 'link';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  link: {
-    color: `${theme.palette.primary.main} !important`
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    link: {
+      color: `${theme.palette.primary.main} !important` as any
+    }
+  });
 
 interface Props {
   pool: ExtendedPoolNode;
@@ -52,7 +54,9 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
           tiny
           type="number"
           value={pool.count}
-          onChange={e => updatePool(idx, { ...pool, count: +e.target.value })}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            updatePool(idx, { ...pool, count: +e.target.value })
+          }
         />
       </TableCell>
       <TableCell parentColumn="Pricing">
@@ -62,7 +66,7 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
       </TableCell>
       <TableCell>
         <Button
-          type="remove"
+          buttonType="remove"
           data-testid={`delete-node-row-${idx}`}
           onClick={() => handleDelete(idx)}
           className={classes.link}

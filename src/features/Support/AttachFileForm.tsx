@@ -3,7 +3,8 @@ import { equals, remove } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -16,14 +17,15 @@ import { reshapeFiles } from './ticketUtils';
 
 type ClassNames = 'root' | 'attachFileButton';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  attachFileButton: {
-    padding: '4px 8px 4px 4px',
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    attachFileButton: {
+      padding: '4px 8px 4px 4px',
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
+    }
+  });
 
 interface Props {
   files: FileAttachment[];
@@ -89,9 +91,8 @@ export class AttachFileForm extends React.Component<CombinedProps, {}> {
           onChange={this.selectFile}
         />
         <Button
-          component="span"
           className={classes.attachFileButton}
-          type="secondary"
+          buttonType="secondary"
           onClick={this.clickAttachButton}
         >
           <AttachFile />

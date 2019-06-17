@@ -1,7 +1,8 @@
 import { SnackbarProvider, SnackbarProviderProps } from 'notistack';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -10,25 +11,26 @@ import CloseSnackbar from './CloseSnackbar';
 
 type ClassNames = 'root' | 'info' | 'success' | 'error' | 'warning';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  info: {
-    backgroundColor: theme.bg.white,
-    borderLeftColor: theme.palette.primary.main
-  },
-  success: {
-    backgroundColor: theme.bg.white,
-    borderLeftColor: theme.palette.primary.main
-  },
-  error: {
-    backgroundColor: theme.bg.white,
-    borderLeftColor: theme.palette.status.errorDark
-  },
-  warning: {
-    backgroundColor: theme.bg.white,
-    borderLeftColor: theme.palette.status.warningDark
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    info: {
+      backgroundColor: theme.bg.white,
+      borderLeftColor: theme.palette.primary.main
+    },
+    success: {
+      backgroundColor: theme.bg.white,
+      borderLeftColor: theme.palette.primary.main
+    },
+    error: {
+      backgroundColor: theme.bg.white,
+      borderLeftColor: theme.palette.status.errorDark
+    },
+    warning: {
+      backgroundColor: theme.bg.white,
+      borderLeftColor: theme.palette.status.warningDark
+    }
+  });
 
 type CombinedProps = SnackbarProviderProps & WithStyles<ClassNames>;
 

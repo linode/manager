@@ -1,9 +1,10 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -17,12 +18,13 @@ import DomainTableRow from 'src/features/Domains/DomainTableRow';
 
 type ClassNames = 'root' | 'label';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  label: {
-    paddingLeft: theme.spacing.unit * 3 + 41
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    label: {
+      paddingLeft: theme.spacing(3) + 41
+    }
+  });
 
 interface Props {
   data: Linode.Domain[];

@@ -3,7 +3,8 @@ import { compose } from 'recompose';
 import Chip from 'src/components/core/Chip';
 import Divider from 'src/components/core/Divider';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -25,33 +26,33 @@ type CSSClasses =
   | 'compatibleImages'
   | 'divider';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => {
-  return {
+const styles = (theme: Theme) =>
+  createStyles({
     root: {
       backgroundColor: theme.color.white,
       '.detailsWrapper &': {
-        padding: theme.spacing.unit * 4
+        padding: theme.spacing(4)
       }
     },
     deployments: {
-      marginTop: theme.spacing.unit
+      marginTop: theme.spacing(1)
     },
     author: {
-      marginTop: theme.spacing.unit * 2,
-      marginBottom: theme.spacing.unit * 2
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
     },
     description: {
       whiteSpace: 'pre-wrap'
     },
     scriptHeading: {
-      marginBottom: theme.spacing.unit,
+      marginBottom: theme.spacing(1),
       fontSize: '1rem'
     },
     descriptionText: {
-      marginBottom: theme.spacing.unit * 2
+      marginBottom: theme.spacing(2)
     },
     deploymentSection: {
-      marginTop: theme.spacing.unit,
+      marginTop: theme.spacing(1),
       fontSize: '1rem'
     },
     dateTimeDisplay: {
@@ -60,14 +61,13 @@ const styles: StyleRulesCallback<CSSClasses> = theme => {
     },
     compatibleImages: {
       display: 'block',
-      marginTop: theme.spacing.unit
+      marginTop: theme.spacing(1)
     },
     divider: {
-      marginTop: theme.spacing.unit * 2,
-      marginBottom: theme.spacing.unit * 2
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
     }
-  };
-};
+  });
 
 export interface Props {
   data: Linode.StackScript.Response;

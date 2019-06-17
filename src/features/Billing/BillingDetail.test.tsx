@@ -25,7 +25,7 @@ describe('Account Landing', () => {
   it('should render a headline of "Billing"', () => {
     expect(
       component
-        .find('WithStyles(Typography)')
+        .find('WithStyles(ForwardRef(Typography))')
         .first()
         .children()
         .text()

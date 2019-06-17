@@ -3,7 +3,8 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -17,25 +18,26 @@ import { formatDate } from 'src/utilities/formatDate';
 
 type ClassNames = 'root' | 'inner' | 'panelBody' | 'wrapper';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    flexGrow: 1,
-    width: '100%',
-    backgroundColor: theme.color.white,
-    marginTop: theme.spacing.unit * 3
-  },
-  inner: {
-    padding: theme.spacing.unit * 3
-  },
-  panelBody: {
-    width: '100%',
-    padding: `${theme.spacing.unit * 2}px 0 0`
-  },
-  wrapper: {
-    padding: theme.spacing.unit,
-    minHeight: 120
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+      width: '100%',
+      backgroundColor: theme.color.white,
+      marginTop: theme.spacing(3)
+    },
+    inner: {
+      padding: theme.spacing(3)
+    },
+    panelBody: {
+      width: '100%',
+      padding: `${theme.spacing(2)}px 0 0`
+    },
+    wrapper: {
+      padding: theme.spacing(1),
+      minHeight: 120
+    }
+  });
 
 interface BackupInfo {
   title: string;

@@ -2,7 +2,8 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -21,20 +22,21 @@ export interface ExtendedLinode extends Linode.Linode {
 
 type ClassNames = 'root' | 'inner' | 'panelBody';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    flexGrow: 1,
-    width: '100%',
-    backgroundColor: theme.color.white,
-    marginBottom: theme.spacing.unit * 3
-  },
-  inner: {
-    padding: theme.spacing.unit * 3
-  },
-  panelBody: {
-    padding: `${theme.spacing.unit * 2}px 0 0`
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+      width: '100%',
+      backgroundColor: theme.color.white,
+      marginBottom: theme.spacing(3)
+    },
+    inner: {
+      padding: theme.spacing(3)
+    },
+    panelBody: {
+      padding: `${theme.spacing(2)}px 0 0`
+    }
+  });
 
 interface Notice {
   text: string;

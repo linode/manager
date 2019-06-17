@@ -3,7 +3,8 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import ListItem from 'src/components/core/ListItem';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -14,16 +15,16 @@ type ClassNames =
   | 'title'
   | 'content'
   | 'unread'
+  | 'linkItem'
   | 'pointer'
-  | 'noLink'
-  | 'linkItem';
+  | 'noLink';
 
-const styles: StyleRulesCallback<ClassNames> = theme => {
+const styles = (theme: Theme) => {
   const {
     palette: { status }
   } = theme;
 
-  return {
+  return createStyles({
     root: {
       ...theme.notificationList,
       padding: 0,
@@ -37,10 +38,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
     },
     linkItem: {
       display: 'block',
-      padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`
+      padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`
     },
     title: {
-      marginBottom: theme.spacing.unit / 2
+      marginBottom: theme.spacing(1) / 2
     },
     content: {
       ...theme.typography.body1
@@ -65,10 +66,10 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
     },
     noLink: {
       '& $title': {
-        opacity: '.5'
+        opacity: 0.5
       }
     }
-  };
+  });
 };
 
 export interface Props {
@@ -77,58 +78,63 @@ export interface Props {
   success?: boolean;
   warning?: boolean;
   error?: boolean;
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   className?: any;
   linkPath: string | undefined;
-  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const userEventsListItem: React.StatelessComponent<CombinedProps> = props => {
-  const {
-    classes,
-    title,
-    content,
-    warning,
-    success,
-    error,
-    className,
-    linkPath,
-    onClick
-  } = props;
+class UserEventsListItem extends React.Component<CombinedProps> {
+  render() {
+    const {
+      classes,
+      title,
+      content,
+      warning,
+      success,
+      error,
+      onClick,
+      linkPath,
+      className
+    } = this.props;
 
-  return (
-    <ListItem
-      className={classNames(
-        {
-          [classes.root]: true,
-          [classes.unread]: error || warning || success,
-          [classes.pointer]: Boolean(onClick),
-          [classes.noLink]: Boolean(!onClick)
-        },
-        className
-      )}
-      component="li"
-      tabIndex={1}
-      onClick={onClick}
-      button={Boolean(onClick)}
-      role="menuitem"
-    >
-      <Link
-        to={linkPath ? linkPath : '/'}
-        href="javascript:void(0)"
+    const listItem = (
+      <ListItem
+        className={classNames(
+          {
+            [classes.root]: true,
+            [classes.unread]: error || warning || success,
+            [classes.pointer]: Boolean(onClick),
+            [classes.noLink]: Boolean(!onClick)
+          },
+          className
+        )}
+        component="li"
+        tabIndex={1}
         onClick={onClick}
-        className={classes.linkItem}
+        role="menuitem"
       >
-        <Typography variant="h3" className={classes.title}>
-          {title}
-        </Typography>
-        {content && <div className={classes.content}>{content}</div>}
-      </Link>
-    </ListItem>
-  );
-};
+        <Link
+          to={linkPath ? linkPath : '/'}
+          href="javascript:void(0)"
+          onClick={onClick}
+          className={classes.linkItem}
+        >
+          <Typography variant="h3" className={classes.title}>
+            {title}
+          </Typography>
+          {content && <div className={classes.content}>{content}</div>}
+        </Link>
+      </ListItem>
+    );
+
+    return !Boolean(onClick)
+      ? listItem
+      : React.cloneElement(listItem, { button: true });
+  }
+}
 
 const styled = withStyles(styles);
 
-export default styled(userEventsListItem);
+export default styled(UserEventsListItem);

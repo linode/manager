@@ -1,8 +1,9 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -20,47 +21,48 @@ type ClassNames =
   | 'volumesWrapper'
   | 'linodeVolumesWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  // styles for /volumes table
-  volumesWrapper: {},
-  // styles for linodes/id/volumes table
-  linodeVolumesWrapper: {
-    '& $labelCol': {
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    // styles for /volumes table
+    volumesWrapper: {},
+    // styles for linodes/id/volumes table
+    linodeVolumesWrapper: {
+      '& $labelCol': {
+        width: '20%',
+        minWidth: 150
+      },
+      '& $sizeCol': {
+        width: '15%',
+        minWidth: 100
+      },
+      '& $pathCol': {
+        width: '55%',
+        minWidth: 150
+      }
+    },
+    regionCol: {
       width: '20%',
-      minWidth: 150
+      minWidth: 75
     },
-    '& $sizeCol': {
+    labelCol: {
+      width: '20%',
+      minWidth: 75,
+      paddingLeft: theme.spacing(2) + 49
+    },
+    attachmentCol: {
       width: '15%',
-      minWidth: 100
+      minWidth: 75
     },
-    '& $pathCol': {
-      width: '55%',
-      minWidth: 150
+    sizeCol: {
+      width: '10%',
+      minWidth: 75
+    },
+    pathCol: {
+      width: '25%',
+      minWidth: 100
     }
-  },
-  regionCol: {
-    width: '20%',
-    minWidth: 75
-  },
-  labelCol: {
-    width: '20%',
-    minWidth: 75,
-    paddingLeft: theme.spacing.unit * 2 + 49
-  },
-  attachmentCol: {
-    width: '15%',
-    minWidth: 75
-  },
-  sizeCol: {
-    width: '10%',
-    minWidth: 75
-  },
-  pathCol: {
-    width: '25%',
-    minWidth: 100
-  }
-});
+  });
 
 interface SortableVolumesTableHeaderProps {
   isVolumesLanding: boolean;

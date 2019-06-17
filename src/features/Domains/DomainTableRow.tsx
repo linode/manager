@@ -1,8 +1,9 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EntityIcon from 'src/components/EntityIcon';
@@ -20,31 +21,32 @@ type ClassNames =
   | 'domainRow'
   | 'domainCellContainer';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  domain: {
-    width: '60%'
-  },
-  domainRow: {
-    backgroundColor: theme.bg.white
-  },
-  domainCellContainer: {
-    [theme.breakpoints.down('sm')]: {
-      textAlign: 'left'
+const styles = (theme: Theme) =>
+  createStyles({
+    domain: {
+      width: '60%'
+    },
+    domainRow: {
+      backgroundColor: theme.bg.white
+    },
+    domainCellContainer: {
+      [theme.breakpoints.down('sm')]: {
+        textAlign: 'left'
+      }
+    },
+    labelStatusWrapper: {
+      display: 'flex',
+      flexFlow: 'row nowrap',
+      alignItems: 'center',
+      wordBreak: 'break-all'
+    },
+    tagWrapper: {
+      marginTop: theme.spacing(1) / 2,
+      '& [class*="MuiChip"]': {
+        cursor: 'pointer'
+      }
     }
-  },
-  labelStatusWrapper: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-    wordBreak: 'break-all'
-  },
-  tagWrapper: {
-    marginTop: theme.spacing.unit / 2,
-    '& [class*="MuiChip"]': {
-      cursor: 'pointer'
-    }
-  }
-});
+  });
 
 interface Props {
   domain: string;

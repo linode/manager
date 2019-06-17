@@ -3,6 +3,8 @@ import MenuItem, {
 } from '@material-ui/core/MenuItem';
 
 /* tslint:disable-next-line:no-empty-interface */
-export interface MenuItemProps extends _MenuItemProps {}
+export interface MenuItemProps extends _MenuItemProps {
+  button?: undefined;
+}
 
 export default MenuItem;

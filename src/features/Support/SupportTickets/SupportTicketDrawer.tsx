@@ -5,7 +5,8 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -46,32 +47,33 @@ type ClassNames =
   | 'rootReply'
   | 'reference';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  suffix: {
-    fontSize: '.9rem',
-    marginRight: theme.spacing.unit
-  },
-  actionPanel: {
-    marginTop: theme.spacing.unit * 2
-  },
-  expPanelSummary: {
-    backgroundColor: theme.bg.offWhite,
-    borderTop: `1px solid ${theme.bg.main}`
-  },
-  innerReply: {
-    padding: 0
-  },
-  rootReply: {
-    padding: 0,
-    marginBottom: theme.spacing.unit * 2
-  },
-  reference: {
-    '& > p': {
-      marginBottom: theme.spacing.unit
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    suffix: {
+      fontSize: '.9rem',
+      marginRight: theme.spacing(1)
+    },
+    actionPanel: {
+      marginTop: theme.spacing(2)
+    },
+    expPanelSummary: {
+      backgroundColor: theme.bg.offWhite,
+      borderTop: `1px solid ${theme.bg.main}`
+    },
+    innerReply: {
+      padding: 0
+    },
+    rootReply: {
+      padding: 0,
+      marginBottom: theme.spacing(2)
+    },
+    reference: {
+      '& > p': {
+        marginBottom: theme.spacing(1)
+      }
     }
-  }
-});
+  });
 
 interface Accumulator {
   success: string[];
@@ -310,7 +312,7 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
             /* null out an uploaded file after upload */
             set(lensPath(['files', idx, 'file']), null),
             set(lensPath(['files', idx, 'uploading']), false),
-            set(lensPath(['files', idx, 'uploaded']), true)
+            set(lensPath(['files', idx, 'uploaded']), true) as () => boolean
           )
         );
         return accumulator;
@@ -535,14 +537,14 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
             onClick={this.onSubmit}
             disabled={!requirementsMet}
             loading={submitting}
-            type="primary"
+            buttonType="primary"
             data-qa-submit
           >
             Open Ticket
           </Button>
           <Button
             onClick={this.close}
-            type="secondary"
+            buttonType="secondary"
             className="cancel"
             data-qa-cancel
           >

@@ -1,7 +1,7 @@
 import * as React from 'react';
-
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -10,13 +10,14 @@ import SelectionCard from 'src/components/SelectionCard';
 
 type ClassNames = 'root' | 'flatImagePanelSelections';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  flatImagePanelSelections: {
-    marginTop: theme.spacing.unit * 2,
-    padding: `${theme.spacing.unit}px 0`
-  },
-  root: {}
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    flatImagePanelSelections: {
+      marginTop: theme.spacing(2),
+      padding: `${theme.spacing(1)}px 0`
+    },
+    root: {}
+  });
 interface Props {
   images: Linode.Image[];
   disabled?: boolean;

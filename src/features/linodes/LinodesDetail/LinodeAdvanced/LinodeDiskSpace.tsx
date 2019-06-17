@@ -1,12 +1,12 @@
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from '@material-ui/core/styles';
 import * as React from 'react';
-
 import BarPercent from 'src/components/BarPercent';
 import Divider from 'src/components/core/Divider';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
 type ClassNames =
@@ -18,30 +18,31 @@ type ClassNames =
   | 'textOuter'
   | 'code';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  header: {
-    marginTop: theme.spacing.unit + 6,
-    marginBottom: theme.spacing.unit
-  },
-  bar: {
-    marginBottom: theme.spacing.unit
-  },
-  text: {
-    margin: `${theme.spacing.unit + 2}px 0`,
-    paddingRight: 40
-  },
-  divider: {
-    backgroundColor: theme.color.grey2
-  },
-  textOuter: {
-    margin: `${theme.spacing.unit + 2}px 0`
-  },
-  code: {
-    color: theme.color.black,
-    margin: `0 0 ${theme.spacing.unit + 2}px`
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    header: {
+      marginTop: theme.spacing(1) + 6,
+      marginBottom: theme.spacing(1)
+    },
+    bar: {
+      marginBottom: theme.spacing(1)
+    },
+    text: {
+      margin: `${theme.spacing(1) + 2}px 0`,
+      paddingRight: 40
+    },
+    divider: {
+      backgroundColor: theme.color.grey2
+    },
+    textOuter: {
+      margin: `${theme.spacing(1) + 2}px 0`
+    },
+    code: {
+      color: theme.color.black,
+      margin: `0 0 ${theme.spacing(1) + 2}px`
+    }
+  });
 
 interface Props {
   disks: Linode.Disk[];

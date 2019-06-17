@@ -1,7 +1,7 @@
 import * as React from 'react';
-
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -11,13 +11,14 @@ import ShowMoreExpansion from 'src/components/ShowMoreExpansion';
 
 type ClassNames = 'root' | 'flatImagePanelSelections';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  flatImagePanelSelections: {
-    marginTop: theme.spacing.unit * 2,
-    padding: `${theme.spacing.unit}px 0`
-  },
-  root: {}
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    flatImagePanelSelections: {
+      marginTop: theme.spacing(2),
+      padding: `${theme.spacing(1)}px 0`
+    },
+    root: {}
+  });
 interface Props {
   images: Linode.Image[];
   oldImages: Linode.Image[];
@@ -76,7 +77,7 @@ const PublicImages: React.StatelessComponent<CombinedProps> = props => {
       </Grid>
       {oldImages.length > 0 && (
         <ShowMoreExpansion name="Show Older Images" defaultExpanded={false}>
-          <Grid container spacing={16} style={{ marginTop: 16 }}>
+          <Grid container spacing={2} style={{ marginTop: 16 }}>
             {renderImages(oldImages)}
           </Grid>
         </ShowMoreExpansion>

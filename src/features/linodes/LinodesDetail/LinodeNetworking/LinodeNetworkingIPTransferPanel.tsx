@@ -15,7 +15,8 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -40,48 +41,49 @@ type ClassNames =
   | 'emptyStateText'
   | 'autoGridsm';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  containerDivider: {
-    marginTop: theme.spacing.unit
-  },
-  mobileFieldWrapper: {
-    [theme.breakpoints.down('xs')]: {
-      width: '100%'
+const styles = (theme: Theme) =>
+  createStyles({
+    containerDivider: {
+      marginTop: theme.spacing(1)
+    },
+    mobileFieldWrapper: {
+      [theme.breakpoints.down('xs')]: {
+        width: '100%'
+      }
+    },
+    ipField: {
+      marginTop: 0,
+      width: '100%',
+      [theme.breakpoints.up('sm')]: {
+        width: 175
+      }
+    },
+    ipFieldLabel: {
+      width: '100%',
+      [theme.breakpoints.up('sm')]: {
+        width: `calc(175px + ${theme.spacing(2)}px)`
+      }
+    },
+    actionsLabel: {
+      [theme.breakpoints.down('sm')]: {
+        display: 'none'
+      }
+    },
+    autoGridsm: {
+      minWidth: 175,
+      [theme.breakpoints.up('sm')]: {
+        maxWidth: 'auto',
+        flexBasis: 'auto'
+      }
+    },
+    networkActionText: {
+      marginBottom: theme.spacing(2)
+    },
+    emptyStateText: {
+      marginTop: theme.spacing(2),
+      color: theme.color.grey1
     }
-  },
-  ipField: {
-    marginTop: 0,
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: 175
-    }
-  },
-  ipFieldLabel: {
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: `calc(175px + ${theme.spacing.unit * 2}px)`
-    }
-  },
-  actionsLabel: {
-    [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    }
-  },
-  autoGridsm: {
-    minWidth: 175,
-    [theme.breakpoints.up('sm')]: {
-      maxWidth: 'auto',
-      flexBasis: 'auto'
-    }
-  },
-  networkActionText: {
-    marginBottom: theme.spacing.unit * 2
-  },
-  emptyStateText: {
-    marginTop: theme.spacing.unit * 2,
-    color: theme.color.grey1
-  }
-});
+  });
 
 interface Props {
   linodeID: number;
@@ -282,7 +284,9 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
             defaultValue={state.mode}
             options={actionsList}
             textFieldProps={{
-              'data-qa-ip-transfer-action-menu': state.mode
+              dataAttrs: {
+                'data-qa-ip-transfer-action-menu': state.mode
+              }
             }}
             onChange={this.onModeChange(state.sourceIP)}
             disabled={readOnly}
@@ -313,7 +317,9 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
         <Select
           options={linodeList}
           textFieldProps={{
-            'data-qa-linode-select': true
+            dataAttrs: {
+              'data-qa-linode-select': true
+            }
           }}
           disabled={readOnly || this.state.linodes.length === 1}
           defaultValue={defaultLinode}
@@ -344,7 +350,9 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
           options={IPList}
           onChange={this.onSelectedIPChange(sourceIP)}
           textFieldProps={{
-            'data-qa-swap-ip-action-menu': true
+            dataAttrs: {
+              'data-qa-swap-ip-action-menu': true
+            }
           }}
           isClearable={false}
           noMarginTop
@@ -490,7 +498,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
         <Button
           loading={this.state.submitting}
           onClick={this.onSubmit}
-          type="primary"
+          buttonType="primary"
           disabled={readOnly || this.state.linodes.length === 0}
           data-qa-ip-transfer-save
         >
@@ -499,7 +507,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
         <Button
           disabled={this.state.submitting || this.state.linodes.length === 0}
           onClick={this.onReset}
-          type="secondary"
+          buttonType="secondary"
           data-qa-ip-transfer-cancel
         >
           Cancel

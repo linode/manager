@@ -3,7 +3,7 @@ import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   Theme,
   withStyles,
   WithStyles
@@ -20,29 +20,30 @@ type ClassNames =
   | 'toggleLabel'
   | 'toggleLabelText';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {
-    backgroundColor: theme.bg.offWhite,
-    padding: theme.spacing.unit
-  },
-  header: {
-    marginBottom: theme.spacing.unit,
-    fontSize: 17
-  },
-  icon: {
-    display: 'inline-block',
-    fontSize: '0.8em'
-  },
-  toggleLabel: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    marginLeft: 0,
-    marginBottom: theme.spacing.unit
-  },
-  toggleLabelText: {
-    marginTop: theme.spacing.unit + theme.spacing.unit / 2
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      backgroundColor: theme.bg.offWhite,
+      padding: theme.spacing(1)
+    },
+    header: {
+      marginBottom: theme.spacing(1),
+      fontSize: 17
+    },
+    icon: {
+      display: 'inline-block',
+      fontSize: '0.8em'
+    },
+    toggleLabel: {
+      display: 'flex',
+      alignItems: 'flex-start',
+      marginLeft: 0,
+      marginBottom: theme.spacing(1)
+    },
+    toggleLabelText: {
+      marginTop: theme.spacing(1) + theme.spacing(1) / 2
+    }
+  });
 
 interface Props {
   enabled: boolean;

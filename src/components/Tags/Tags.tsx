@@ -1,7 +1,8 @@
 import { splitAt } from 'ramda';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -15,15 +16,14 @@ export interface Props {
 
 type ClassNames = 'root' | 'tag';
 
-const styles: StyleRulesCallback<ClassNames> = theme => {
-  return {
+const styles = (theme: Theme) =>
+  createStyles({
     root: {},
     tag: {
       color: theme.palette.text.primary,
       fontFamily: 'LatoWeb'
     }
-  };
-};
+  });
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 

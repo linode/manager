@@ -12,9 +12,10 @@ import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
@@ -55,33 +56,34 @@ type ClassNames =
   | 'tagWrapper'
   | 'tagGroup';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  titleWrapper: {
-    flex: 1
-  },
-  title: {
-    marginBottom: theme.spacing.unit + theme.spacing.unit / 2
-  },
-  domain: {
-    width: '60%'
-  },
-  dnsWarning: {
-    '& h3:first-child': {
-      marginBottom: theme.spacing.unit
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    titleWrapper: {
+      flex: 1
+    },
+    title: {
+      marginBottom: theme.spacing(1) + theme.spacing(1) / 2
+    },
+    domain: {
+      width: '60%'
+    },
+    dnsWarning: {
+      '& h3:first-child': {
+        marginBottom: theme.spacing(1)
+      }
+    },
+    tagWrapper: {
+      marginTop: theme.spacing(1) / 2,
+      '& [class*="MuiChip"]': {
+        cursor: 'pointer'
+      }
+    },
+    tagGroup: {
+      flexDirection: 'row-reverse',
+      marginBottom: theme.spacing(1)
     }
-  },
-  tagWrapper: {
-    marginTop: theme.spacing.unit / 2,
-    '& [class*="MuiChip"]': {
-      cursor: 'pointer'
-    }
-  },
-  tagGroup: {
-    flexDirection: 'row-reverse',
-    marginBottom: theme.spacing.unit
-  }
-});
+  });
 
 interface State {
   importDrawer: {
@@ -156,11 +158,15 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
   getActions = () => {
     return (
       <ActionsPanel>
-        <Button type="cancel" onClick={this.closeRemoveDialog} data-qa-cancel>
+        <Button
+          buttonType="cancel"
+          onClick={this.closeRemoveDialog}
+          data-qa-cancel
+        >
           Cancel
         </Button>
         <Button
-          type="secondary"
+          buttonType="secondary"
           destructive
           onClick={this.removeDomain}
           data-qa-submit

@@ -5,7 +5,8 @@ import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -37,25 +38,25 @@ type ClassNames =
   | 'panel'
   | 'graphWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = theme => {
-  return {
+const styles = (theme: Theme) =>
+  createStyles({
     header: {
-      padding: theme.spacing.unit * 2
+      padding: theme.spacing(2)
     },
     panel: {
-      padding: theme.spacing.unit * 2,
-      marginTop: theme.spacing.unit * 2
+      padding: theme.spacing(2),
+      marginTop: theme.spacing(2)
     },
     graphWrapper: {
-      marginTop: theme.spacing.unit * 2
+      marginTop: theme.spacing(2)
     },
     title: {
-      marginBottom: theme.spacing.unit * 2
+      marginBottom: theme.spacing(2)
     },
     chart: {
       position: 'relative',
       width: '100%',
-      padding: theme.spacing.unit * 4
+      padding: theme.spacing(4)
     },
     leftLegend: {
       position: 'absolute',
@@ -66,9 +67,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
       fontSize: 14
     },
     bottomLegend: {
-      margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px ${
-        theme.spacing.unit
-      }px`,
+      margin: `${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(
+        1
+      )}px`,
       padding: 10,
       color: '#777',
       backgroundColor: theme.bg.offWhiteDT,
@@ -76,7 +77,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
       fontSize: 14,
       [theme.breakpoints.down('md')]: {
         '& > div': {
-          marginBottom: theme.spacing.unit * 2
+          marginBottom: theme.spacing(2)
         }
       }
     },
@@ -84,7 +85,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
       display: 'flex',
       alignItems: 'center',
       [theme.breakpoints.up('md')]: {
-        margin: `${theme.spacing.unit * 2}px 0`
+        margin: `${theme.spacing(2)}px 0`
       }
     },
     blue: {
@@ -107,8 +108,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
         backgroundColor: theme.color.yellow
       }
     }
-  };
-};
+  });
 
 interface Props {
   nodeBalancer: Linode.ExtendedNodeBalancer;

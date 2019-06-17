@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -12,12 +13,13 @@ import TableSortCell from 'src/components/TableSortCell';
 
 type ClassNames = 'root' | 'label';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  label: {
-    paddingLeft: 65
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    label: {
+      paddingLeft: 65
+    }
+  });
 
 type combinedProps = Omit<OrderByProps, 'data'> & WithStyles<ClassNames>;
 

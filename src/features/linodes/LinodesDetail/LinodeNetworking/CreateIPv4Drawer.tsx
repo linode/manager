@@ -1,11 +1,6 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
@@ -14,12 +9,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import substituteLink from 'src/utilities/substituteLink';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props {
   open: boolean;
@@ -33,7 +22,7 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
   state: State = {
@@ -106,11 +95,11 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
             </div>
           )}
           <ActionsPanel style={{ marginTop: 16 }}>
-            <Button type="primary" onClick={this.create} data-qa-submit>
+            <Button buttonType="primary" onClick={this.create} data-qa-submit>
               Allocate
             </Button>
             <Button
-              type="secondary"
+              buttonType="secondary"
               className="cancel"
               onClick={onClose}
               data-qa-cancel
@@ -124,6 +113,4 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles);
-
-export default styled(CreateIPv4Drawer);
+export default CreateIPv4Drawer;

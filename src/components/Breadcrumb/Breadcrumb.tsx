@@ -4,7 +4,8 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import IconButton from 'src/components/core/IconButton';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -21,74 +22,75 @@ type ClassNames =
   | 'subtitleLinkText'
   | 'prefixComponentWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  backButton: {
-    margin: '0',
-    padding: '0',
-    width: 'auto',
-    height: 'auto',
-    '& svg': {
-      position: 'relative',
-      top: 2,
-      width: 24,
-      height: 24
-    }
-  },
-  linkText: {
-    display: 'flex',
-    alignItems: 'center',
-    color: '#3683DC',
-    borderColor: theme.color.grey,
-    whiteSpace: 'nowrap',
-    '&:after': {
-      content: "''",
-      display: 'inline-block',
-      padding: '0 8px 0 6px',
-      height: '39px',
-      borderRight: `1px solid ${theme.color.grey1}`
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    backButton: {
+      margin: '0',
+      padding: '0',
+      width: 'auto',
+      height: 'auto',
+      '& svg': {
+        position: 'relative',
+        top: 2,
+        width: 24,
+        height: 24
+      }
     },
-    [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    }
-  },
-  linkTextWrapper: {
-    position: 'relative',
-    top: 2
-  },
-  subtitleLinkText: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    color: '#3683DC',
-    borderColor: theme.color.grey,
-    whiteSpace: 'nowrap',
-    '&:after': {
-      content: "''",
-      display: 'inline-block',
-      padding: '0 0 0 8px',
-      color: theme.color.grey1,
-      borderRight: `1px solid ${theme.color.grey1}`,
-      height: 24,
-      marginTop: -7,
-      position: 'relative',
-      top: 4
+    linkText: {
+      display: 'flex',
+      alignItems: 'center',
+      color: '#3683DC',
+      borderColor: theme.color.grey,
+      whiteSpace: 'nowrap',
+      '&:after': {
+        content: "''",
+        display: 'inline-block',
+        padding: '0 8px 0 6px',
+        height: '39px',
+        borderRight: `1px solid ${theme.color.grey1}`
+      },
+      [theme.breakpoints.down('sm')]: {
+        display: 'none'
+      }
     },
-    [theme.breakpoints.down('sm')]: {
-      display: 'none'
-    }
-  },
-  labelText: {
-    padding: '2px 10px'
-  },
-  prefixComponentWrapper: {
-    marginLeft: '14px',
-    '& svg': {
+    linkTextWrapper: {
       position: 'relative',
-      top: 2,
-      marginRight: '0'
+      top: 2
+    },
+    subtitleLinkText: {
+      display: 'flex',
+      alignItems: 'flex-start',
+      color: '#3683DC',
+      borderColor: theme.color.grey,
+      whiteSpace: 'nowrap',
+      '&:after': {
+        content: "''",
+        display: 'inline-block',
+        padding: '0 0 0 8px',
+        color: theme.color.grey1,
+        borderRight: `1px solid ${theme.color.grey1}`,
+        height: 24,
+        marginTop: -7,
+        position: 'relative',
+        top: 4
+      },
+      [theme.breakpoints.down('sm')]: {
+        display: 'none'
+      }
+    },
+    labelText: {
+      padding: '2px 10px'
+    },
+    prefixComponentWrapper: {
+      marginLeft: '14px',
+      '& svg': {
+        position: 'relative',
+        top: 2,
+        marginRight: '0'
+      }
     }
-  }
-});
+  });
 interface EditableProps {
   onCancel: () => void;
   onEdit: (value: string) => Promise<any>;

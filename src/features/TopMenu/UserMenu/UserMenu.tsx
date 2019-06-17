@@ -6,11 +6,11 @@ import { compose } from 'recompose';
 import UserIcon from 'src/assets/icons/user.svg';
 import ButtonBase from 'src/components/core/ButtonBase';
 import Hidden from 'src/components/core/Hidden';
-
 import Menu from 'src/components/core/Menu';
 import MenuItem from 'src/components/core/MenuItem';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -36,63 +36,63 @@ type CSSClasses =
   | 'menuItem'
   | 'hidden';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
-  menu: {
-    transform: `translateY(${theme.spacing.unit}px)`
-  },
-  button: {
-    padding: theme.spacing.unit,
-    borderRadius: 30,
-    '&:hover, &.active': {
-      '& $username': {
-        color: theme.palette.primary.main
+const styles = (theme: Theme) =>
+  createStyles({
+    menu: {
+      transform: `translateY(${theme.spacing(1)}px)`
+    },
+    button: {
+      padding: theme.spacing(1),
+      borderRadius: 30,
+      '&:hover, &.active': {
+        '& $username': {
+          color: theme.palette.primary.main
+        },
+        '& $userWrapper': {
+          boxShadow: '0 0 10px #bbb'
+        }
       },
-      '& $userWrapper': {
-        boxShadow: '0 0 10px #bbb'
+      '&:focus': {
+        '& $username': {
+          color: theme.palette.primary.main
+        }
       }
     },
-    '&:focus': {
-      '& $username': {
-        color: theme.palette.primary.main
+    userWrapper: {
+      marginRight: theme.spacing(1),
+      borderRadius: '50%',
+      width: '42px',
+      height: '42px',
+      transition: theme.transitions.create(['box-shadow']),
+      [theme.breakpoints.down('md')]: {
+        margin: 0,
+        width: '30px',
+        height: '30px'
       }
+    },
+    leftIcon: {
+      width: '100%',
+      height: '100%',
+      borderRadius: '50%'
+    },
+    username: {
+      transition: theme.transitions.create(['color']),
+      [theme.breakpoints.down('md')]: {
+        display: 'none'
+      }
+    },
+    menuItem: {
+      fontSize: '.9rem',
+      fontFamily: 'LatoWeb',
+      '&:hover, &:focus': {
+        backgroundColor: theme.palette.primary.main,
+        color: 'white'
+      }
+    },
+    hidden: {
+      ...theme.visually.hidden
     }
-  },
-  userWrapper: {
-    marginRight: theme.spacing.unit,
-    borderRadius: '50%',
-    width: '42px',
-    height: '42px',
-    transition: theme.transitions.create(['box-shadow']),
-    [theme.breakpoints.down('md')]: {
-      margin: 0,
-      width: '30px',
-      height: '30px'
-    }
-  },
-  leftIcon: {
-    width: '100%',
-    height: '100%',
-    borderRadius: '50%'
-  },
-  username: {
-    transition: theme.transitions.create(['color']),
-    [theme.breakpoints.down('md')]: {
-      display: 'none'
-    }
-  },
-  menuItem: {
-    fontSize: '.9rem',
-    fontFamily: 'LatoWeb',
-    '&:hover, &:focus': {
-      backgroundColor: theme.palette.primary.main,
-      color: 'white'
-    }
-  },
-  hidden: {
-    height: 0,
-    padding: 0
-  }
-});
+  });
 
 type CombinedProps = StateProps & WithStyles<CSSClasses>;
 

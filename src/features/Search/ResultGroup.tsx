@@ -1,13 +1,12 @@
 import { isEmpty, splitAt } from 'ramda';
 import * as React from 'react';
-
 import { compose, withStateHandlers } from 'recompose';
-
 import Button from 'src/components/Button';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -31,25 +30,26 @@ type ClassNames =
   | 'emptyCell'
   | 'headerCell';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    marginBottom: theme.spacing.unit * 2 + theme.spacing.unit / 2
-  },
-  entityHeadingWrapper: {},
-  entityHeading: {
-    marginBottom: theme.spacing.unit + 2
-  },
-  button: {
-    marginTop: theme.spacing.unit,
-    width: '10%'
-  },
-  emptyCell: {
-    padding: 0
-  },
-  headerCell: {
-    padding: `${theme.spacing.unit + 2}px ${theme.spacing.unit / 2}px`
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      marginBottom: theme.spacing(2) + theme.spacing(1) / 2
+    },
+    entityHeadingWrapper: {},
+    entityHeading: {
+      marginBottom: theme.spacing(1) + 2
+    },
+    button: {
+      marginTop: theme.spacing(1),
+      width: '10%'
+    },
+    emptyCell: {
+      padding: 0
+    },
+    headerCell: {
+      padding: `${theme.spacing(1) + 2}px ${theme.spacing(1) / 2}px`
+    }
+  });
 
 interface Props {
   entity: string;
@@ -119,7 +119,7 @@ export const ResultGroup: React.StatelessComponent<CombinedProps> = props => {
       </Paper>
       {!isEmpty(hidden) && (
         <Button
-          type="primary"
+          buttonType="primary"
           onClick={toggle}
           className={classes.button}
           data-qa-show-more-toggle

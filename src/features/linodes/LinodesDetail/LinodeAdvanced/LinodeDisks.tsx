@@ -7,7 +7,8 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import RootRef from 'src/components/core/RootRef';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -48,40 +49,41 @@ type ClassNames =
   | 'tableContainer'
   | 'diskSpaceWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  headline: {
-    marginBottom: theme.spacing.unit * 2,
-    [theme.breakpoints.down('xs')]: {
-      marginBottom: 0,
-      marginTop: theme.spacing.unit * 2
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    headline: {
+      marginBottom: theme.spacing(2),
+      [theme.breakpoints.down('xs')]: {
+        marginBottom: 0,
+        marginTop: theme.spacing(2)
+      }
+    },
+    addNewWrapper: {
+      [theme.breakpoints.down('xs')]: {
+        width: '100%',
+        marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
+        marginTop: -theme.spacing(1)
+      }
+    },
+    loadingContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    tableContainer: {
+      marginTop: -theme.spacing(2)
+    },
+    diskSpaceWrapper: {
+      backgroundColor: theme.bg.tableHeader,
+      border: `1px solid ${theme.color.diskSpaceBorder}`,
+      padding: theme.spacing(2),
+      minHeight: '250px',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center'
     }
-  },
-  addNewWrapper: {
-    [theme.breakpoints.down('xs')]: {
-      width: '100%',
-      marginLeft: -(theme.spacing.unit + theme.spacing.unit / 2),
-      marginTop: -theme.spacing.unit
-    }
-  },
-  loadingContainer: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  tableContainer: {
-    marginTop: -theme.spacing.unit * 2
-  },
-  diskSpaceWrapper: {
-    backgroundColor: theme.bg.tableHeader,
-    border: `1px solid ${theme.color.diskSpaceBorder}`,
-    padding: theme.spacing.unit * 2,
-    minHeight: '250px',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center'
-  }
-});
+  });
 
 type Filesystem = 'raw' | 'swap' | 'ext3' | 'ext4' | 'initrd' | '_none_';
 
@@ -299,11 +301,11 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     const { submitting } = this.state.confirmDelete;
     return (
       <ActionsPanel style={{ padding: 0 }}>
-        <Button type="cancel" onClick={onClose} data-qa-cancel-delete>
+        <Button buttonType="cancel" onClick={onClose} data-qa-cancel-delete>
           Cancel
         </Button>
         <Button
-          type="secondary"
+          buttonType="secondary"
           destructive
           loading={submitting}
           onClick={this.deleteDisk}

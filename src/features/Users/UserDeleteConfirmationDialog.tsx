@@ -2,17 +2,6 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props {
   username: string;
@@ -21,7 +10,7 @@ interface Props {
   onCancel: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 class UserDeleteConfirmationDialog extends React.PureComponent<
   CombinedProps,
@@ -48,14 +37,14 @@ class UserDeleteConfirmationDialog extends React.PureComponent<
     return (
       <ActionsPanel style={{ padding: 0 }}>
         <Button
-          type="cancel"
+          buttonType="cancel"
           onClick={this.props.onCancel}
           data-qa-cancel-delete
         >
           Cancel
         </Button>
         <Button
-          type="secondary"
+          buttonType="secondary"
           destructive
           onClick={this.deleteUser}
           data-qa-confirm-delete
@@ -67,6 +56,4 @@ class UserDeleteConfirmationDialog extends React.PureComponent<
   };
 }
 
-const styled = withStyles(styles);
-
-export default styled(UserDeleteConfirmationDialog);
+export default UserDeleteConfirmationDialog;

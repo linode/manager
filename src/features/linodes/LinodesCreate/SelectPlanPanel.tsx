@@ -2,7 +2,8 @@ import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -21,15 +22,16 @@ export interface ExtendedType extends Linode.LinodeType {
 
 type ClassNames = 'root' | 'copy';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    marginTop: theme.spacing.unit * 3
-  },
-  copy: {
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit * 3
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      marginTop: theme.spacing(3)
+    },
+    copy: {
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(3)
+    }
+  });
 
 interface Props {
   types: ExtendedType[];
@@ -113,7 +115,7 @@ export class SelectPlanPanel extends React.Component<
                 Nanode instances are good for low-duty workloads, where
                 performance isn't critical.
               </Typography>
-              <Grid container spacing={16}>
+              <Grid container spacing={2}>
                 {nanodes.map(this.renderCard)}
               </Grid>
             </>
@@ -133,7 +135,7 @@ export class SelectPlanPanel extends React.Component<
                 Standard instances are good for medium-duty workloads and are a
                 good mix of performance, resources, and price.
               </Typography>
-              <Grid container spacing={16}>
+              <Grid container spacing={2}>
                 {standards.map(this.renderCard)}
               </Grid>
             </>
@@ -153,7 +155,7 @@ export class SelectPlanPanel extends React.Component<
                 Dedicated CPU instances are good for full-duty workloads where
                 consistent performance is important.
               </Typography>
-              <Grid container spacing={16}>
+              <Grid container spacing={2}>
                 {dedicated.map(this.renderCard)}
               </Grid>
             </>
@@ -174,7 +176,7 @@ export class SelectPlanPanel extends React.Component<
                 good for memory hungry use cases like caching and in-memory
                 databases.
               </Typography>
-              <Grid container spacing={16}>
+              <Grid container spacing={2}>
                 {highmem.map(this.renderCard)}
               </Grid>
             </>
@@ -210,7 +212,7 @@ export class SelectPlanPanel extends React.Component<
                 applications such as machine learning, AI, and video
                 transcoding.
               </Typography>
-              <Grid container spacing={16}>
+              <Grid container spacing={2}>
                 {gpu.map(this.renderCard)}
               </Grid>
             </>

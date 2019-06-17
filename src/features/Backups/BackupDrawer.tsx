@@ -5,12 +5,6 @@ import { connect, MapDispatchToProps, MapStateToProps } from 'react-redux';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import {
-  StyleRulesCallback,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DisplayPrice from 'src/components/DisplayPrice';
 import Drawer from 'src/components/Drawer';
@@ -30,12 +24,6 @@ import { ThunkDispatch } from 'src/store/types';
 import { getTypeInfo } from 'src/utilities/typesHelpers';
 import AutoEnroll from './AutoEnroll';
 import BackupsTable from './BackupsTable';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {}
-});
 
 export interface ExtendedLinode extends LinodeWithTypeInfo {
   linodeError?: BackupError;
@@ -75,7 +63,6 @@ interface StateProps {
 type CombinedProps = DispatchProps &
   StateProps &
   WithTypesProps &
-  WithStyles<ClassNames> &
   WithSnackbarProps;
 
 const getFailureNotificationText = (
@@ -192,7 +179,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
               <Button
                 onClick={this.handleSubmit}
                 loading={loading || enabling || enrolling}
-                type="primary"
+                buttonType="primary"
                 data-qa-submit
                 data-testid={'submit'}
               >
@@ -200,7 +187,7 @@ export class BackupDrawer extends React.Component<CombinedProps, {}> {
               </Button>
               <Button
                 onClick={close}
-                type="secondary"
+                buttonType="secondary"
                 className="cancel"
                 data-qa-cancel
                 data-testid={'cancel'}
@@ -310,8 +297,6 @@ const connected = connect(
   mapDispatchToProps
 );
 
-const styled = withStyles(styles);
-
 interface WithTypesProps {
   typesData: Linode.LinodeType[];
 }
@@ -321,7 +306,6 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
 }));
 
 const enhanced = compose<CombinedProps, {}>(
-  styled,
   withTypes,
   connected,
   withSnackbar

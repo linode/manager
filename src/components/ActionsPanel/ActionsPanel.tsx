@@ -2,7 +2,8 @@ import * as classNames from 'classnames';
 import { compose } from 'ramda';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -10,18 +11,19 @@ import RenderGuard from 'src/components/RenderGuard';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit,
-    '& > button': {
-      marginBottom: theme.spacing.unit
-    },
-    '& > :first-child': {
-      marginRight: theme.spacing.unit
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      paddingTop: theme.spacing(2),
+      paddingBottom: theme.spacing(1),
+      '& > button': {
+        marginBottom: theme.spacing(1)
+      },
+      '& > :first-child': {
+        marginRight: theme.spacing(1)
+      }
     }
-  }
-});
+  });
 
 interface Props {
   className?: string;

@@ -1,41 +1,25 @@
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-
 import Button from 'src/components/Button';
 import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Notice from 'src/components/Notice';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import createMailto from 'src/features/Footer/createMailto';
-
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
+import createMailto from 'src/features/Footer/createMailto';
 import { getInvoiceItems } from 'src/services/account';
 import { getAll } from 'src/utilities/getAll';
-
-type ClassNames = 'root' | 'button';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  button: {
-    padding: 0
-  }
-});
 
 interface Props {
   invoice: Linode.Invoice;
   account: Linode.Account;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const RecentInvoicesRow: React.FC<CombinedProps> = props => {
-  const { account, classes, invoice } = props;
+  const { account, invoice } = props;
 
   const [pdfError, setPDFError] = React.useState<Error | undefined>(undefined);
   const [isGeneratingPDF, setGeneratingPDF] = React.useState<boolean>(false);
@@ -87,7 +71,9 @@ const RecentInvoicesRow: React.FC<CombinedProps> = props => {
       <TableCell>
         {account && (
           <Button
-            className={classes.button}
+            style={{
+              padding: 0
+            }}
             onClick={e => _printInvoice(e, account as Linode.Account, invoice)}
             loading={isGeneratingPDF}
           >
@@ -108,9 +94,6 @@ const RecentInvoicesRow: React.FC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
 export default compose<CombinedProps, Props>(
-  styled,
-  React.memo
+  React.memo,
 )(RecentInvoicesRow);

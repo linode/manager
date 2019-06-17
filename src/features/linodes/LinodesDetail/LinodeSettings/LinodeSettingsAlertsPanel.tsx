@@ -3,11 +3,6 @@ import * as React from 'react';
 import { compose as rCompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
@@ -20,12 +15,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import AlertSection from './AlertSection';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props {
   linodeId: number;
@@ -63,10 +52,7 @@ interface Section {
   endAdornment: string;
 }
 
-type CombinedProps = Props &
-  ContextProps &
-  LinodeActionsProps &
-  WithStyles<ClassNames>;
+type CombinedProps = Props & ContextProps & LinodeActionsProps;
 
 const maybeNumber = (v: string) => (v === '' ? '' : Number(v));
 
@@ -225,7 +211,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
     return (
       <ActionsPanel>
         <Button
-          type="primary"
+          buttonType="primary"
           onClick={this.setLinodeAlertThresholds}
           disabled={noError || permissions === 'read_only'}
           loading={noError}
@@ -281,7 +267,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
   };
 
   public render() {
-    const { classes, permissions } = this.props;
+    const { permissions } = this.props;
     const alertSections: Section[] = this.renderAlertSections();
     const hasErrorFor = getAPIErrorFor({}, this.state.errors);
     const generalError = hasErrorFor('none');
@@ -295,7 +281,7 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
         {generalError && <Notice error>{generalError}</Notice>}
         {alertSections.map((p, idx) => (
           <AlertSection
-            updateFor={[p.state, p.value, this.state.errors, classes]}
+            updateFor={[p.state, p.value, this.state.errors]}
             key={idx}
             {...p}
             readOnly={permissions === 'read_only'}
@@ -308,8 +294,6 @@ class LinodeSettingsAlertsPanel extends React.Component<CombinedProps, State> {
 
 const valueUnlessOff = ({ state, value }: { state: boolean; value: number }) =>
   state ? value : 0;
-
-const styled = withStyles(styles);
 
 const errorBoundary = PanelErrorBoundary({
   heading: 'Notification Thresholds'
@@ -326,6 +310,5 @@ const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
 export default rCompose<CombinedProps, Props>(
   errorBoundary,
   linodeContext,
-  styled,
   withLinodeActions
 )(LinodeSettingsAlertsPanel) as React.ComponentType<Props>;
