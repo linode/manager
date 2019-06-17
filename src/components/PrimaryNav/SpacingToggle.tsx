@@ -8,7 +8,8 @@ import {
   WithTheme
 } from 'src/components/core/styles';
 import Toggle from 'src/components/Toggle';
-import { spacing as spacingStorage } from 'src/utilities/storage';
+
+import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 
 type ClassNames = 'switchWrapper' | 'switchText' | 'toggle';
 
@@ -47,8 +48,9 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames> & WithTheme;
 
 export const SpacingToggle: React.StatelessComponent<CombinedProps> = props => {
-  const { classes, toggleSpacing } = props;
-  const spacingMode = spacingStorage.get();
+  const { classes, toggleSpacing, theme } = props;
+  const spacingMode =
+    theme.spacing() === COMPACT_SPACING_UNIT ? 'compact' : 'normal';
 
   return (
     <div className={classes.switchWrapper}>

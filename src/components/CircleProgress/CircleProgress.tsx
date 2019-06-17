@@ -136,6 +136,7 @@ const circleProgressComponent: React.StatelessComponent<
     mini,
     tag,
     sort,
+    noInner,
     ...rest
   } = props;
 
@@ -163,7 +164,7 @@ const circleProgressComponent: React.StatelessComponent<
       {children !== undefined && (
         <div className={classes.valueInside}>{children}</div>
       )}
-      {props.noInner !== true && (
+      {noInner !== true && (
         <div className={classes.topWrapper}>
           <div className={classes.top} />
         </div>
