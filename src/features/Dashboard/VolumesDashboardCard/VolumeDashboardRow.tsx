@@ -1,9 +1,9 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-
 import Hidden from 'src/components/core/Hidden';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -25,40 +25,41 @@ type ClassNames =
   | 'actionsCol'
   | 'wrapHeader';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  icon: {
-    position: 'relative',
-    top: 3,
-    width: 40,
-    height: 40,
-    '& .circle': {
-      fill: theme.bg.offWhiteDT
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    icon: {
+      position: 'relative',
+      top: 3,
+      width: 40,
+      height: 40,
+      '& .circle': {
+        fill: theme.bg.offWhiteDT
+      },
+      '& .outerCircle': {
+        stroke: theme.bg.main
+      }
     },
-    '& .outerCircle': {
-      stroke: theme.bg.main
+    labelGridWrapper: {
+      paddingLeft: `${theme.spacing(1) / 2}px !important`,
+      paddingRight: `${theme.spacing(1) / 2}px !important`
+    },
+    description: {
+      paddingTop: theme.spacing(1) / 2
+    },
+    labelCol: {
+      width: '50%'
+    },
+    moreCol: {
+      width: '25%'
+    },
+    actionsCol: {
+      width: '10%'
+    },
+    wrapHeader: {
+      wordBreak: 'break-all'
     }
-  },
-  labelGridWrapper: {
-    paddingLeft: `${theme.spacing.unit / 2}px !important`,
-    paddingRight: `${theme.spacing.unit / 2}px !important`
-  },
-  description: {
-    paddingTop: theme.spacing.unit / 2
-  },
-  labelCol: {
-    width: '50%'
-  },
-  moreCol: {
-    width: '25%'
-  },
-  actionsCol: {
-    width: '10%'
-  },
-  wrapHeader: {
-    wordBreak: 'break-all'
-  }
-});
+  });
 
 interface Props {
   volume: Linode.Volume;

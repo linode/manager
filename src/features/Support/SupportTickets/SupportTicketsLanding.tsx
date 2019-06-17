@@ -6,9 +6,10 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import AppBar from 'src/components/core/AppBar';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
@@ -22,17 +23,18 @@ import TicketList from './TicketList';
 
 type ClassNames = 'root' | 'title' | 'titleWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  title: {
-    marginBottom: theme.spacing.unit * 2
-  },
-  titleWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    wordBreak: 'break-all'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    title: {
+      marginBottom: theme.spacing(2)
+    },
+    titleWrapper: {
+      display: 'flex',
+      alignItems: 'center',
+      wordBreak: 'break-all'
+    }
+  });
 
 interface Props {
   history: any;
@@ -158,7 +160,7 @@ export class SupportTicketsLanding extends React.PureComponent<
             <Grid container alignItems="flex-end">
               <Grid item>
                 <Button
-                  type="primary"
+                  buttonType="primary"
                   onClick={this.openDrawer}
                   data-qa-open-ticket-link
                 >

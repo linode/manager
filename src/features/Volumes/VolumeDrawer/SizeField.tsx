@@ -1,19 +1,8 @@
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from '@material-ui/core/styles';
 import * as React from 'react';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import TextField from 'src/components/TextField';
 import { MAX_VOLUME_SIZE } from 'src/constants';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props {
   error?: string;
@@ -25,7 +14,7 @@ interface Props {
   disabled?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const SizeField: React.StatelessComponent<CombinedProps> = ({
   error,
@@ -63,6 +52,4 @@ const SizeField: React.StatelessComponent<CombinedProps> = ({
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(SizeField);
+export default SizeField;

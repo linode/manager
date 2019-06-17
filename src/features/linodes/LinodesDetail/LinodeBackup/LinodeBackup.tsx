@@ -15,7 +15,8 @@ import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -75,54 +76,55 @@ type ClassNames =
   | 'chooseDay'
   | 'cancelButton';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  paper: {
-    padding: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 3
-  },
-  title: {
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit * 2
-  },
-  subTitle: {
-    marginBottom: theme.spacing.unit
-  },
-  snapshotFormControl: {
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'flex-start',
-    flexWrap: 'wrap',
-    '& > div': {
-      width: 'auto',
-      marginRight: theme.spacing.unit * 2
+const styles = (theme: Theme) =>
+  createStyles({
+    paper: {
+      padding: theme.spacing(3),
+      marginBottom: theme.spacing(3)
     },
-    '& button': {
-      marginTop: theme.spacing.unit * 4
+    title: {
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(2)
+    },
+    subTitle: {
+      marginBottom: theme.spacing(1)
+    },
+    snapshotFormControl: {
+      display: 'flex',
+      flexDirection: 'row',
+      alignItems: 'flex-start',
+      flexWrap: 'wrap',
+      '& > div': {
+        width: 'auto',
+        marginRight: theme.spacing(2)
+      },
+      '& button': {
+        marginTop: theme.spacing(4)
+      }
+    },
+    scheduleAction: {
+      padding: 0,
+      '& button': {
+        marginLeft: 0,
+        marginTop: theme.spacing(2)
+      }
+    },
+    chooseTime: {
+      marginRight: theme.spacing(2)
+    },
+    chooseDay: {
+      minWidth: 150
+    },
+    cancelButton: {
+      marginBottom: theme.spacing(1)
+    },
+    snapshotNameField: {
+      minWidth: 275
+    },
+    snapshotGeneralError: {
+      minWidth: '100%'
     }
-  },
-  scheduleAction: {
-    padding: 0,
-    '& button': {
-      marginLeft: 0,
-      marginTop: theme.spacing.unit * 2
-    }
-  },
-  chooseTime: {
-    marginRight: theme.spacing.unit * 2
-  },
-  chooseDay: {
-    minWidth: 150
-  },
-  cancelButton: {
-    marginBottom: theme.spacing.unit
-  },
-  snapshotNameField: {
-    minWidth: 275
-  },
-  snapshotGeneralError: {
-    minWidth: '100%'
-  }
-});
+  });
 
 interface ContextProps {
   linodeID: number;
@@ -594,7 +596,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             <Tooltip title={linodeInTransition ? 'This Linode is busy' : ''}>
               <div>
                 <Button
-                  type="primary"
+                  buttonType="primary"
                   onClick={this.takeSnapshot}
                   data-qa-snapshot-button
                   disabled={linodeInTransition || disabled}
@@ -663,7 +665,9 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           <FormControl className={classes.chooseTime}>
             <Select
               textFieldProps={{
-                'data-qa-time-select': true
+                dataAttrs: {
+                  'data-qa-time-select': true
+                }
               }}
               options={timeSelection}
               onChange={this.handleSelectBackupWindow}
@@ -682,7 +686,9 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           <FormControl className={classes.chooseDay}>
             <Select
               textFieldProps={{
-                'data-qa-weekday-select': true
+                dataAttrs: {
+                  'data-qa-weekday-select': true
+                }
               }}
               options={daySelection}
               defaultValue={defaultDaySelection}
@@ -695,7 +701,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           </FormControl>
           <ActionsPanel className={classes.scheduleAction}>
             <Button
-              type="primary"
+              buttonType="primary"
               onClick={this.saveSettings}
               disabled={isReadOnly(permissions)}
               data-qa-schedule
@@ -739,7 +745,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         <this.SnapshotForm />
         <this.SettingsForm />
         <Button
-          type="secondary"
+          buttonType="secondary"
           destructive
           className={classes.cancelButton}
           onClick={this.handleOpenBackupsAlert}
@@ -780,14 +786,14 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     return (
       <ActionsPanel style={{ padding: 0 }}>
         <Button
-          type="cancel"
+          buttonType="cancel"
           onClick={this.handleCloseBackupsAlert}
           data-qa-cancel-cancel
         >
           Close
         </Button>
         <Button
-          type="secondary"
+          buttonType="secondary"
           destructive
           onClick={this.cancelBackups}
           data-qa-confirm-cancel
@@ -857,7 +863,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 export default compose<CombinedProps, {}>(
   linodeContext,
   preloaded,
-  styled as any,
+  styled,
   withRouter,
   connected,
   withSnackbar,

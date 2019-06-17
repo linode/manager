@@ -31,7 +31,8 @@ import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -68,37 +69,38 @@ type ClassNames =
   | 'paypalButtonWrapper'
   | 'PaypalHidden';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  positive: {
-    color: theme.color.green
-  },
-  negative: {
-    color: theme.color.red
-  },
-  actionPanel: {
-    display: 'flex',
-    alignItems: 'center',
-    flexWrap: 'wrap',
-    position: 'relative'
-  },
-  paypalMask: {
-    width: 175,
-    height: 45,
-    position: 'absolute',
-    zIndex: 10,
-    left: theme.spacing.unit * 2,
-    top: theme.spacing.unit * 2
-  },
-  paypalButtonWrapper: {
-    position: 'relative',
-    zIndex: 1,
-    transition: theme.transitions.create(['opacity'])
-  },
-  PaypalHidden: {
-    opacity: 0.3
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    positive: {
+      color: theme.color.green
+    },
+    negative: {
+      color: theme.color.red
+    },
+    actionPanel: {
+      display: 'flex',
+      alignItems: 'center',
+      flexWrap: 'wrap',
+      position: 'relative'
+    },
+    paypalMask: {
+      width: 175,
+      height: 45,
+      position: 'absolute',
+      zIndex: 10,
+      left: theme.spacing(2),
+      top: theme.spacing(2)
+    },
+    paypalButtonWrapper: {
+      position: 'relative',
+      zIndex: 1,
+      transition: theme.transitions.create(['opacity'])
+    },
+    PaypalHidden: {
+      opacity: 0.3
+    }
+  });
 
 interface State {
   type: 'CREDIT_CARD' | 'PAYPAL';
@@ -570,11 +572,11 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
             </div>
           </React.Fragment>
         ) : (
-          <Button type="primary" onClick={this.openCreditCardDialog}>
+          <Button buttonType="primary" onClick={this.openCreditCardDialog}>
             Submit Payment
           </Button>
         )}
-        <Button type="cancel" onClick={this.resetForm}>
+        <Button buttonType="cancel" onClick={this.resetForm}>
           Cancel
         </Button>
       </ActionsPanel>

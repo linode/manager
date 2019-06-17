@@ -18,7 +18,8 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -58,22 +59,23 @@ import {
 
 type ClassNames = 'root' | 'title' | 'port' | 'nbStatuses';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  title: {
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit * 2
-  },
-  port: {
-    marginRight: theme.spacing.unit * 2
-  },
-  nbStatuses: {
-    display: 'block',
-    [theme.breakpoints.up('sm')]: {
-      display: 'inline'
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    title: {
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(2)
+    },
+    port: {
+      marginRight: theme.spacing(2)
+    },
+    nbStatuses: {
+      display: 'block',
+      [theme.breakpoints.up('sm')]: {
+        display: 'inline'
+      }
     }
-  }
-});
+  });
 
 interface Props {
   nodeBalancerLabel: string;
@@ -271,7 +273,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           lensPath(['configs', configIdx, 'nodes', ...nodePathError.path]),
           append(nodePathError.error)
         ),
-        defaultTo([])
+        defaultTo([]) as () => Array<{}>
       );
     });
 
@@ -881,7 +883,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           L.healthCheckIntervalLens,
           NodeBalancerConfigurations.defaultFieldsStates.configs[0]
             .check_interval
-        ),
+        ) as () => string,
         set(
           L.healthCheckTimeoutLens,
           NodeBalancerConfigurations.defaultFieldsStates.configs[0]
@@ -1067,7 +1069,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     <ActionsPanel style={{ padding: 0 }}>
       <Button
         onClick={onClose}
-        type="secondary"
+        buttonType="secondary"
         className="cancel"
         data-qa-cancel-cancel
       >
@@ -1076,7 +1078,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       <Button
         data-qa-confirm-cancel
         onClick={this.deleteConfig}
-        type="secondary"
+        buttonType="secondary"
         destructive
         loading={this.state.deleteConfigConfirmDialog.submitting}
       >
@@ -1127,7 +1129,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         {!hasUnsavedConfig && (
           <Grid item style={{ marginTop: 16 }}>
             <Button
-              type="secondary"
+              buttonType="secondary"
               onClick={() => this.addNodeBalancerConfig()}
               data-qa-add-config
             >

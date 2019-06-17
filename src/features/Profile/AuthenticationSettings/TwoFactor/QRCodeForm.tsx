@@ -2,9 +2,10 @@ import * as QRCode from 'qrcode.react';
 import { compose } from 'ramda';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import RenderGuard from 'src/components/RenderGuard';
@@ -18,17 +19,18 @@ declare module 'qrcode.react' {
 
 type ClassNames = 'root' | 'instructions' | 'qrcodeContainer';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  instructions: {
-    marginTop: theme.spacing.unit * 2
-  },
-  qrcodeContainer: {
-    margin: `${theme.spacing.unit * 2}px 0`,
-    border: `5px solid #fff`,
-    display: 'inline-block'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    instructions: {
+      marginTop: theme.spacing(2)
+    },
+    qrcodeContainer: {
+      margin: `${theme.spacing(2)}px 0`,
+      border: `5px solid #fff`,
+      display: 'inline-block'
+    }
+  });
 
 interface Props {
   secret: string;

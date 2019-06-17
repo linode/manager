@@ -2,11 +2,6 @@ import { Formik } from 'formik';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
@@ -14,12 +9,6 @@ import TextField from 'src/components/TextField';
 import { ObjectStorageKeyRequest } from 'src/services/profile/objectStorageKeys';
 import { createObjectStorageKeysSchema } from 'src/services/profile/objectStorageKeys.schema';
 import { MODES } from './AccessKeyLanding';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 export interface Props {
   open: boolean;
@@ -30,7 +19,7 @@ export interface Props {
   objectStorageKey?: Linode.ObjectStorageKey;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 export const AccessKeyDrawer: React.StatelessComponent<
   CombinedProps
@@ -86,7 +75,7 @@ export const AccessKeyDrawer: React.StatelessComponent<
               />
               <ActionsPanel>
                 <Button
-                  type="primary"
+                  buttonType="primary"
                   onClick={() => handleSubmit()}
                   loading={isSubmitting}
                   data-qa-submit
@@ -96,7 +85,7 @@ export const AccessKeyDrawer: React.StatelessComponent<
                 <Button
                   onClick={onClose}
                   data-qa-cancel
-                  type="secondary"
+                  buttonType="secondary"
                   className="cancel"
                 >
                   Cancel
@@ -110,6 +99,4 @@ export const AccessKeyDrawer: React.StatelessComponent<
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(AccessKeyDrawer);
+export default AccessKeyDrawer;

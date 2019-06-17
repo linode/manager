@@ -30,11 +30,11 @@ const DeleteDialog: React.StatelessComponent<CombinedProps> = props => {
     return (
       <React.Fragment>
         <ActionsPanel>
-          <Button type="cancel" onClick={handleClose}>
+          <Button buttonType="cancel" onClick={handleClose}>
             Cancel
           </Button>
           <Button
-            type="secondary"
+           buttonType="secondary"
             destructive
             loading={loading}
             onClick={triggerMakePublic}

@@ -4,7 +4,8 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles,
   WithTheme
@@ -35,9 +36,10 @@ import MaintenanceBanner from 'src/components/MaintenanceBanner';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {}
+  });
 
 interface StateProps {
   accountBackups: boolean;
@@ -82,7 +84,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
           userTimezoneLoading={props.userTimezoneLoading}
         />
       )}
-      <Grid container spacing={24}>
+      <Grid container spacing={3}>
         <AbuseTicketBanner />
         <DocumentTitleSegment segment="Dashboard" />
         <Grid item xs={12}>

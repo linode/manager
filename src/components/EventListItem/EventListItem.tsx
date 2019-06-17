@@ -3,21 +3,22 @@ import * as React from 'react';
 import ListItemText from 'src/components/core/ListItemText';
 import MenuItem, { MenuItemProps } from 'src/components/core/MenuItem';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'error' | 'warning' | 'success';
 
-const styles: StyleRulesCallback<ClassNames> = theme => {
+const styles = (theme: Theme) => {
   const {
     palette: { status }
   } = theme;
-  return {
+  return createStyles({
     root: {
-      paddingTop: theme.spacing.unit * 2,
-      paddingBottom: theme.spacing.unit * 2,
+      paddingTop: theme.spacing(2),
+      paddingBottom: theme.spacing(2),
       borderLeftWidth: 5,
       borderLeftStyle: 'solid',
       borderLeftColor: 'transparent',
@@ -35,7 +36,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
     success: {
       borderLeftColor: status.successDark
     }
-  };
+  });
 };
 
 interface Props extends MenuItemProps {

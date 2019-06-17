@@ -206,10 +206,10 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <ActionsPanel>
-          <Button type="cancel" onClick={this.handleCloseDialog}>
+          <Button buttonType="cancel" onClick={this.handleCloseDialog}>
             Cancel
           </Button>
-          <Button type="secondary" destructive onClick={this.handleMakePublic}>
+          <Button buttonType="secondary" destructive onClick={this.handleMakePublic}>
             Yes, make me a star!
           </Button>
         </ActionsPanel>
@@ -221,11 +221,11 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <ActionsPanel>
-          <Button type="cancel" onClick={this.handleCloseDialog}>
+          <Button buttonType="cancel" onClick={this.handleCloseDialog}>
             Cancel
           </Button>
           <Button
-            type="secondary"
+           buttonType="secondary"
             destructive
             onClick={this.handleDeleteStackScript}
           >

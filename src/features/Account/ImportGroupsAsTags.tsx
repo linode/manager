@@ -1,7 +1,8 @@
 import * as React from 'react';
 import Button from 'src/components/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -10,12 +11,13 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 
 type ClassNames = 'root' | 'helperText';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  helperText: {
-    marginBottom: theme.spacing.unit * 2
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    helperText: {
+      marginBottom: theme.spacing(2)
+    }
+  });
 
 interface Props {
   openDrawer: () => void;
@@ -41,7 +43,7 @@ export const ImportGroupsAsTags: React.StatelessComponent<
         <strong>Your existing tags will not be affected.</strong>
       </Typography>
       <Button
-        type="primary"
+        buttonType="primary"
         onClick={openDrawer}
         data-qa-open-import-drawer-button
       >

@@ -4,7 +4,8 @@ import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -25,30 +26,31 @@ import withEditableLabelState, {
 
 type ClassNames = 'titleWrapper' | 'controls' | 'launchButton';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  titleWrapper: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  controls: {
-    marginTop: 9 - theme.spacing.unit / 2, // 4
-    [theme.breakpoints.down('sm')]: {
-      margin: 0,
+const styles = (theme: Theme) =>
+  createStyles({
+    titleWrapper: {
       display: 'flex',
-      flexBasis: '100%'
-    }
-  },
-  launchButton: {
-    lineHeight: 1,
-    '&:hover': {
-      backgroundColor: 'transparent',
-      textDecoration: 'underline'
+      alignItems: 'center'
     },
-    '&:focus > span:first-child': {
-      outline: '1px dotted #999'
+    controls: {
+      marginTop: 9 - theme.spacing(1) / 2, // 4
+      [theme.breakpoints.down('sm')]: {
+        margin: 0,
+        display: 'flex',
+        flexBasis: '100%'
+      }
+    },
+    launchButton: {
+      lineHeight: 1,
+      '&:hover': {
+        backgroundColor: 'transparent',
+        textDecoration: 'underline'
+      },
+      '&:focus > span:first-child': {
+        outline: '1px dotted #999'
+      }
     }
-  }
-});
+  });
 
 type CombinedProps = LinodeDetailContext &
   ConfigDrawerProps &

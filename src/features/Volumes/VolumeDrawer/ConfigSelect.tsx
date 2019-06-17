@@ -1,18 +1,7 @@
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from '@material-ui/core/styles';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { getLinodeConfigs } from 'src/services/linodes';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props {
   error?: string;
@@ -30,7 +19,7 @@ interface State {
   loading: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 class ConfigSelect extends React.Component<CombinedProps, State> {
   state: State = {
@@ -142,6 +131,4 @@ class ConfigSelect extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles);
-
-export default styled(ConfigSelect);
+export default ConfigSelect;

@@ -10,7 +10,8 @@ import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -51,39 +52,40 @@ type ClassNames =
   | 'ip'
   | 'tagGroup';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  titleWrapper: {
-    flex: 1
-  },
-  title: {
-    marginBottom: theme.spacing.unit + theme.spacing.unit / 2
-  },
-  nameCell: {
-    width: '15%',
-    minWidth: 150
-  },
-  nodeStatus: {
-    width: '10%',
-    minWidth: 100
-  },
-  transferred: {
-    width: '10%',
-    minWidth: 100
-  },
-  ports: {
-    width: '10%',
-    minWidth: 50
-  },
-  ip: {
-    width: '30%',
-    minWidth: 200
-  },
-  tagGroup: {
-    flexDirection: 'row-reverse',
-    marginBottom: theme.spacing.unit
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    titleWrapper: {
+      flex: 1
+    },
+    title: {
+      marginBottom: theme.spacing(1) + theme.spacing(1) / 2
+    },
+    nameCell: {
+      width: '15%',
+      minWidth: 150
+    },
+    nodeStatus: {
+      width: '10%',
+      minWidth: 100
+    },
+    transferred: {
+      width: '10%',
+      minWidth: 100
+    },
+    ports: {
+      width: '10%',
+      minWidth: 50
+    },
+    ip: {
+      width: '30%',
+      minWidth: 200
+    },
+    tagGroup: {
+      flexDirection: 'row-reverse',
+      marginBottom: theme.spacing(1)
+    }
+  });
 
 interface DeleteConfirmDialogState {
   open: boolean;
@@ -314,7 +316,7 @@ export class NodeBalancersLanding extends React.Component<
     return (
       <ActionsPanel style={{ padding: 0 }}>
         <Button
-          type="cancel"
+          buttonType="cancel"
           onClick={this.closeConfirmationDialog}
           data-qa-cancel-cancel
         >
@@ -323,7 +325,7 @@ export class NodeBalancersLanding extends React.Component<
         <Button
           data-qa-confirm-cancel
           onClick={this.onSubmitDelete}
-          type="secondary"
+          buttonType="secondary"
           destructive
           loading={this.state.deleteConfirmDialog.submitting}
         >

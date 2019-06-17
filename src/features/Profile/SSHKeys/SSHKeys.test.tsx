@@ -13,7 +13,6 @@ describe('SSHKeys', () => {
   describe('layout', () => {
     const wrapper = shallow(
       <SSHKeys
-        classes={{ root: '' }}
         {...pageyProps}
         data={[
           { id: 1, label: '', ssh_key: '', created: '', fingerprint: '' },
@@ -44,7 +43,7 @@ describe('SSHKeys', () => {
 
     it('should display table row for each key', () => {
       expect(
-        wrapper.find(`WithStyles(TableRow)[data-qa-content-row]`)
+        wrapper.find(`WithStyles(ForwardRef(TableRow))[data-qa-content-row]`)
       ).toHaveLength(3);
     });
   });
@@ -52,7 +51,6 @@ describe('SSHKeys', () => {
   it('should display TableRowLoading if props.loading is true.', () => {
     const wrapper = shallow(
       <SSHKeys
-        classes={{ root: '' }}
         {...pageyProps}
         loading={true}
         data={undefined}
@@ -66,7 +64,6 @@ describe('SSHKeys', () => {
   it('should display TableRowError if error if state.error is set.', () => {
     const wrapper = shallow(
       <SSHKeys
-        classes={{ root: '' }}
         {...pageyProps}
         error={new Error('error here')}
         data={undefined}
@@ -74,13 +71,12 @@ describe('SSHKeys', () => {
       />
     );
 
-    expect(wrapper.find(`WithStyles(TableRowError)`).exists()).toBeTruthy();
+    expect(wrapper.find(`TableRowError`).exists()).toBeTruthy();
   });
 
   it('should display TableEmptyState if done loading and count is 0', () => {
     const wrapper = shallow(
       <SSHKeys
-        classes={{ root: '' }}
         {...pageyProps}
         data={undefined}
         timezone={'GMT'}

@@ -1,19 +1,8 @@
 import { defaultTo, flatten } from 'ramda';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
 import { titlecase } from 'src/features/linodes/presentation';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 export interface ExtendedDisk extends Linode.Disk {
   _id: string;
@@ -36,7 +25,7 @@ interface Props {
   disabled?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 export const getSelectedOption = (
   selectedValue: string,
@@ -59,7 +48,6 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = props => {
     getSelected,
     slots,
     rescue,
-    classes,
     disabled
   } = props;
 
@@ -89,7 +77,7 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = props => {
 
         return counter < idx ? null : (
           <FormControl
-            updateFor={[selectedDevice, deviceList, classes]}
+            updateFor={[selectedDevice, deviceList]}
             key={slot}
             fullWidth
           >
@@ -125,6 +113,4 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(DeviceSelection) as React.ComponentType<Props>;
+export default DeviceSelection as React.ComponentType<Props>;

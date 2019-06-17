@@ -1,16 +1,5 @@
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from '@material-ui/core/styles';
 import * as React from 'react';
 import Notice from 'src/components/Notice';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props {
   success?: string;
@@ -18,7 +7,7 @@ interface Props {
   important?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const NoticePanel: React.StatelessComponent<CombinedProps> = ({
   success,
@@ -42,6 +31,4 @@ const NoticePanel: React.StatelessComponent<CombinedProps> = ({
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(NoticePanel);
+export default NoticePanel;

@@ -49,7 +49,7 @@ describe('AttachFileListItem component', () => {
   });
   it('should render a progress bar when a file is uploading', () => {
     component.setProps({ file: attachment2 });
-    expect(component.find('WithStyles(LinearProgressComponent)')).toHaveLength(
+    expect(component.find('LinearProgressComponent')).toHaveLength(
       1
     );
   });

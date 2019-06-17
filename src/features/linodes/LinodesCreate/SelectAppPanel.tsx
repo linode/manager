@@ -1,11 +1,11 @@
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
@@ -17,19 +17,20 @@ import { AppsData } from './types';
 
 type ClassNames = 'flatImagePanelSelections' | 'panel' | 'loading';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  flatImagePanelSelections: {
-    marginTop: theme.spacing.unit * 2,
-    padding: `${theme.spacing.unit}px 0`
-  },
-  panel: {
-    marginBottom: theme.spacing.unit * 3
-  },
-  loading: {
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    flatImagePanelSelections: {
+      marginTop: theme.spacing(2),
+      padding: `${theme.spacing(1)}px 0`
+    },
+    panel: {
+      marginBottom: theme.spacing(3)
+    },
+    loading: {
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
+    }
+  });
 
 interface Props extends AppsData {
   handleClick: (

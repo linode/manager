@@ -2,7 +2,8 @@ import * as React from 'react';
 import Drawer from 'src/components/core/Drawer';
 import Hidden from 'src/components/core/Hidden';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -10,21 +11,22 @@ import PrimaryNav from 'src/components/PrimaryNav';
 
 type ClassNames = 'menuPaper' | 'menuDocked';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  menuPaper: {
-    height: '100%',
-    width: theme.spacing.unit * 14 + 103, // 215
-    backgroundColor: theme.bg.navy,
-    left: 'inherit',
-    boxShadow: 'none',
-    [theme.breakpoints.up('xl')]: {
-      width: theme.spacing.unit * 22 + 99 // 275
+const styles = (theme: Theme) =>
+  createStyles({
+    menuPaper: {
+      height: '100%',
+      width: theme.spacing(14) + 103, // 215
+      backgroundColor: theme.bg.navy,
+      left: 'inherit',
+      boxShadow: 'none',
+      [theme.breakpoints.up('xl')]: {
+        width: theme.spacing(22) + 99 // 275
+      }
+    },
+    menuDocked: {
+      height: '100%'
     }
-  },
-  menuDocked: {
-    height: '100%'
-  }
-});
+  });
 
 interface Props {
   open: boolean;

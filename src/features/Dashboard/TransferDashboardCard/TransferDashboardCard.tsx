@@ -4,7 +4,8 @@ import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -27,58 +28,59 @@ export type ClassNames =
   | 'itemText'
   | 'itemTextFirst';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    marginTop: 0,
-    padding: `${theme.spacing.unit * 4}px ${theme.spacing.unit * 3}px`
-  },
-  card: {
-    marginTop: 24,
-    [theme.breakpoints.down('sm')]: {
-      marginTop: 0
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      marginTop: 0,
+      padding: `${theme.spacing(4)}px ${theme.spacing(3)}px`
+    },
+    card: {
+      marginTop: 24,
+      [theme.breakpoints.down('sm')]: {
+        marginTop: 0
+      }
+    },
+    grid: {
+      paddingLeft: 8,
+      paddingRight: 8
+    },
+    poolUsageProgress: {
+      marginBottom: theme.spacing(2),
+      [theme.breakpoints.up('lg')]: {}
+    },
+    circleChildren: {
+      textAlign: 'center',
+      position: 'relative',
+      top: -6
+    },
+    used: {
+      fontSize: '1.5rem',
+      fontFamily: theme.font.bold,
+      color: theme.color.green
+    },
+    quota: {
+      marginTop: theme.spacing(1)
+    },
+    initialLoader: {
+      minHeight: 150,
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    },
+    title: {
+      paddingBottom: theme.spacing(2)
+    },
+    divider: {
+      backgroundColor: theme.palette.divider,
+      margin: `${theme.spacing(1)}px 0`
+    },
+    itemText: {
+      fontSize: '1rem'
+    },
+    itemTextFirst: {
+      marginBottom: theme.spacing(1)
     }
-  },
-  grid: {
-    paddingLeft: 8,
-    paddingRight: 8
-  },
-  poolUsageProgress: {
-    marginBottom: theme.spacing.unit * 2,
-    [theme.breakpoints.up('lg')]: {}
-  },
-  circleChildren: {
-    textAlign: 'center',
-    position: 'relative',
-    top: -6
-  },
-  used: {
-    fontSize: '1.5rem',
-    fontFamily: theme.font.bold,
-    color: theme.color.green
-  },
-  quota: {
-    marginTop: theme.spacing.unit
-  },
-  initialLoader: {
-    minHeight: 150,
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  },
-  title: {
-    paddingBottom: theme.spacing.unit * 2
-  },
-  divider: {
-    backgroundColor: theme.palette.divider,
-    margin: `${theme.spacing.unit}px 0`
-  },
-  itemText: {
-    fontSize: '1rem'
-  },
-  itemTextFirst: {
-    marginBottom: theme.spacing.unit
-  }
-});
+  });
 
 interface State {
   loading: boolean;

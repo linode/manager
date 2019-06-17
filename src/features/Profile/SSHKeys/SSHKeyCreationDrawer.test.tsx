@@ -25,7 +25,6 @@ describe('SSHKeyCreationDrawer', () => {
         open={true}
         onCancel={onCancel}
         onSuccess={onSuccess}
-        classes={{ root: '' }}
       />
     );
   });

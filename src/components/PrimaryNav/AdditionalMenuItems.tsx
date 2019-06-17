@@ -1,20 +1,7 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from '@material-ui/core/styles';
-
 import NavItem, { PrimaryLink } from './NavItem';
 // import { sendAdaEvent } from 'src/utilities/ga';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props {
   closeMenu: () => void;
@@ -23,7 +10,7 @@ interface Props {
   dividerClasses: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const AdditionalMenuItems: React.FC<CombinedProps> = props => {
   // const [adaError, setAdaError] = React.useState<string>('');
@@ -69,20 +56,13 @@ const AdditionalMenuItems: React.FC<CombinedProps> = props => {
   /** ada chat bot */
   // let ada: any;
 
-  const { classes, ...restOfProps } = props;
-
   return (
     <React.Fragment>
       {links.map(eachLink => {
-        return <NavItem {...eachLink} {...restOfProps} key={eachLink.key} />;
+        return <NavItem {...eachLink} {...props} key={eachLink.key} />;
       })}
     </React.Fragment>
   );
 };
 
-const styled = withStyles(styles);
-
-export default compose<CombinedProps, Props>(
-  styled,
-  React.memo
-)(AdditionalMenuItems);
+export default compose<CombinedProps, Props>(React.memo)(AdditionalMenuItems);

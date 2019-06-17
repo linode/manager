@@ -6,7 +6,8 @@ import CloudUpload from '@material-ui/icons/CloudUpload';
 
 import InputAdornment from 'src/components/core/InputAdornment';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -25,34 +26,35 @@ type ClassNames =
   | 'closeIcon'
   | 'uploadProgress';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  attachmentsContainer: {
-    maxWidth: 800
-  },
-  attachmentField: {
-    marginTop: 0,
-    width: 415,
-    [theme.breakpoints.down('xs')]: {
-      width: 165
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    attachmentsContainer: {
+      maxWidth: 800
     },
-    '& > div ': {
-      backgroundColor: theme.bg.main,
-      border: 0
+    attachmentField: {
+      marginTop: 0,
+      width: 415,
+      [theme.breakpoints.down('xs')]: {
+        width: 165
+      },
+      '& > div ': {
+        backgroundColor: theme.bg.main,
+        border: 0
+      },
+      '& svg': {
+        color: theme.palette.text.primary,
+        width: 24,
+        fontSize: 22
+      }
     },
-    '& svg': {
-      color: theme.palette.text.primary,
-      width: 24,
-      fontSize: 22
+    closeIcon: {
+      cursor: 'pointer'
+    },
+    uploadProgress: {
+      maxWidth: 415
     }
-  },
-  closeIcon: {
-    cursor: 'pointer'
-  },
-  uploadProgress: {
-    maxWidth: 415
-  }
-});
+  });
 
 interface HandlerProps {
   onClick: () => void;
@@ -106,7 +108,11 @@ export const AttachFileListItem: React.StatelessComponent<
         </Grid>
         {!inlineDisplay && (
           <Grid item>
-            <Button type="remove" data-qa-delete-button onClick={onClick} />
+            <Button
+              buttonType="remove"
+              data-qa-delete-button
+              onClick={onClick}
+            />
           </Grid>
         )}
         {file.uploading && (

@@ -12,11 +12,6 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button, { ButtonProps } from 'src/components/Button';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
@@ -38,12 +33,6 @@ import { isValidDomainRecord, isValidSOAEmail } from './domainUtils';
 const TextField: React.StatelessComponent<TextFieldProps> = props => (
   <_TextField {...props} />
 );
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props extends EditableRecordFields, EditableDomainFields {
   open: boolean;
@@ -96,7 +85,7 @@ interface State {
   fields: EditableRecordFields | EditableDomainFields;
 }
 
-type CombinedProps = Props & DomainActionsProps & WithStyles<ClassNames>;
+type CombinedProps = Props & DomainActionsProps;
 
 /* tslint:disable-next-line */
 interface _TextFieldProps {
@@ -190,15 +179,18 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         DomainRecordDrawer.defaultFieldsState(this.props)[field],
         this.state.fields[field]
       )}
-      onChange={e => this.updateField(field)(e.target.value)}
+      onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+        this.updateField(field)(e.target.value)
+      }
       data-qa-target={label}
     />
   );
 
   NumberField = ({ label, field }: NumberFieldProps) => {
-    const defaultValue = DomainRecordDrawer.defaultFieldsState(this.props)[
+    const defaultValue: number = DomainRecordDrawer.defaultFieldsState(this.props)[
       field
     ];
+
     return (
       <TextField
         label={label}
@@ -208,8 +200,8 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
           this.state.errors
         )(field)}
         value={defaultTo(defaultValue, this.state.fields[field])}
-        onChange={e =>
-          this.updateField(field)(defaultNumeric(defaultValue)(e.target.value))
+        onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+          this.updateField(field)(defaultNumeric(defaultValue, e.target.value))
         }
         data-qa-target={label}
       />
@@ -280,7 +272,9 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         onChange={(e: Item) => this.setExpireSec(+e.value)}
         isClearable={false}
         textFieldProps={{
-          'data-qa-domain-select': 'Expire Rate'
+          dataAttrs: {
+            'data-qa-domain-select': 'Expire Rate'
+          }
         }}
       />
     );
@@ -329,7 +323,9 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         onChange={(e: Item) => fn(+e.value)}
         isClearable={false}
         textFieldProps={{
-          'data-qa-domain-select': label
+          dataAttrs: {
+            'data-qa-domain-select': label
+          }
         }}
       />
     );
@@ -362,7 +358,9 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         onChange={(e: Item) => this.setProtocol(e.value)}
         isClearable={false}
         textFieldProps={{
-          'data-qa-domain-select': 'Protocol'
+          dataAttrs: {
+            'data-qa-domain-select': 'Protocol'
+          }
         }}
       />
     );
@@ -392,7 +390,9 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         onChange={(e: Item) => this.setTag(e.value)}
         isClearable={false}
         textFieldProps={{
-          'data-qa-domain-select': 'caa tag'
+          dataAttrs: {
+            'data-qa-domain-select': 'caa tag'
+          }
         }}
       />
     );
@@ -701,7 +701,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     const isDomain = type === 'master' || type === 'slave';
 
     const buttonProps: ButtonProps = {
-      type: 'primary',
+      buttonType: 'primary',
       disabled: submitting,
       loading: submitting,
       onClick: isDomain
@@ -731,7 +731,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         <ActionsPanel>
           <Button {...buttonProps} data-qa-record-save />
           <Button
-            type="secondary"
+            buttonType="secondary"
             className="cancel"
             onClick={this.onClose}
             data-qa-record-cancel
@@ -763,10 +763,7 @@ const typeMap = {
   TXT: 'TXT'
 };
 
-const styled = withStyles(styles);
-
 const enhanced = compose<CombinedProps, Props>(
-  styled,
   withDomainActions
 );
 

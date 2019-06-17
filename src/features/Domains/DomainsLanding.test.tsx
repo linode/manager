@@ -28,6 +28,16 @@ const props: CombinedProps = {
   ...reactRouterProps
 };
 
+window.matchMedia = jest.fn().mockImplementation(query => {
+  return {
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn()
+  };
+});
+
 describe('Domains Landing', () => {
   it('should render a notice when there are no Linodes but at least 1 domain', () => {
     const { getByText } = render(wrapWithTheme(<DomainsLanding {...props} />));

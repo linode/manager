@@ -2,7 +2,8 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import ListItem from 'src/components/core/ListItem';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -20,19 +21,19 @@ type ClassNames =
   | 'pointer'
   | 'root';
 
-const styles: StyleRulesCallback = theme => {
+const styles = (theme: Theme) => {
   const {
     palette: { status }
   } = theme;
 
-  return {
+  return createStyles({
     pointer: {
       cursor: 'pointer'
     },
     root: {
       margin: 0,
       justifyContent: 'center',
-      padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`,
+      padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
       borderBottom: `1px solid ${theme.palette.divider}`,
       transition: theme.transitions.create('background-color'),
       '& p': {
@@ -62,7 +63,7 @@ const styles: StyleRulesCallback = theme => {
       }
     },
     innerTitle: {
-      marginBottom: theme.spacing.unit / 2
+      marginBottom: theme.spacing(1) / 2
     },
     noticeText: {
       color: theme.palette.text.primary,
@@ -78,9 +79,9 @@ const styles: StyleRulesCallback = theme => {
       borderLeft: `5px solid ${status.successDark}`
     },
     flag: {
-      marginRight: theme.spacing.unit * 2
+      marginRight: theme.spacing(2)
     }
-  };
+  });
 };
 
 interface Props {
@@ -92,40 +93,43 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const userNotificationListItem: React.StatelessComponent<
-  CombinedProps
-> = props => {
-  const { classes, label, message, severity, onClick } = props;
+class UserNotificationListItem extends React.Component<CombinedProps> {
+  render() {
+    const { classes, label, message, severity, onClick } = this.props;
 
-  return (
-    <ListItem
-      className={classNames({
-        [classes.root]: true,
-        [classes[severity]]: true,
-        [classes.pointer]: Boolean(onClick),
-        notice: true
-      })}
-      data-qa-notice
-      component="li"
-      tabIndex={1}
-      onClick={onClick}
-      button={Boolean(onClick)}
-    >
-      <div
+    const listItem = (
+      <ListItem
         className={classNames({
-          [classes.inner]: true,
-          [classes.innerLink]: Boolean(onClick)
+          [classes.root]: true,
+          [classes[severity]]: true,
+          [classes.pointer]: Boolean(onClick),
+          notice: true
         })}
+        data-qa-notice
+        component="li"
+        tabIndex={1}
+        onClick={onClick}
       >
-        <Typography variant="h3" className={classes.innerTitle}>
-          {label}
-        </Typography>
-        <Typography variant="body1">{message}</Typography>
-      </div>
-    </ListItem>
-  );
-};
+        <div
+          className={classNames({
+            [classes.inner]: true,
+            [classes.innerLink]: Boolean(onClick)
+          })}
+        >
+          <Typography variant="h3" className={classes.innerTitle}>
+            {label}
+          </Typography>
+          <Typography variant="body1">{message}</Typography>
+        </div>
+      </ListItem>
+    );
+
+    return !Boolean(onClick)
+      ? listItem
+      : React.cloneElement(listItem, { button: true });
+  }
+}
 
 const styled = withStyles(styles);
 
-export default styled(userNotificationListItem);
+export default styled(UserNotificationListItem);

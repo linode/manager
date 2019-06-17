@@ -4,7 +4,8 @@ import { clamp, equals } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles,
   WithTheme
@@ -22,51 +23,51 @@ type ClassNames =
   | 'selectSmall'
   | 'tiny';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  helpWrapper: {
-    display: 'flex',
-    alignItems: 'flex-end'
-  },
-  helpWrapperTextField: {
-    width: 415,
-    [theme.breakpoints.down('xs')]: {
-      width: '100%'
-    }
-  },
-  expand: {
-    maxWidth: '100%'
-  },
-  small: {
-    minHeight: 32,
-    marginTop: 0,
-    '& input': {
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    helpWrapper: {
+      display: 'flex',
+      alignItems: 'flex-end'
+    },
+    helpWrapperTextField: {
+      width: 415,
+      [theme.breakpoints.down('xs')]: {
+        width: '100%'
+      }
+    },
+    expand: {
+      maxWidth: '100%'
+    },
+    small: {
       minHeight: 32,
-      padding: theme.spacing.unit
-    }
-  },
-  selectSmall: {
-    padding: '8px 32px 0 8px',
-    minHeight: 32,
-    minWidth: 132,
-    '& svg': {
       marginTop: 0,
-      width: 24,
-      height: 24
+      '& input': {
+        minHeight: 32,
+        padding: theme.spacing(1)
+      }
+    },
+    selectSmall: {
+      padding: '8px 32px 0 8px',
+      minHeight: 32,
+      minWidth: 132,
+      '& svg': {
+        marginTop: 0,
+        width: 24,
+        height: 24
+      }
+    },
+    tiny: {
+      width: '3em'
     }
-  },
-  tiny: {
-    width: '3em'
-  }
-});
+  });
 
-export type Props = TextFieldProps & {
+interface BaseProps {
   errorText?: string;
   errorGroup?: string;
   affirmative?: Boolean;
   tooltipText?: string;
   className?: any;
-  [index: string]: any;
   expand?: boolean;
   small?: boolean;
   tiny?: boolean;
@@ -76,7 +77,10 @@ export type Props = TextFieldProps & {
    */
   min?: number;
   max?: number;
-};
+  dataAttrs?: Record<string, any>;
+}
+
+export type Props = BaseProps & TextFieldProps;
 
 type CombinedProps = Props & WithTheme & WithStyles<ClassNames>;
 
@@ -88,7 +92,6 @@ class LinodeTextField extends React.Component<CombinedProps> {
   state: State = {
     value: ''
   };
-
   shouldComponentUpdate(nextProps: CombinedProps, nextState: State) {
     return (
       nextProps.value !== this.props.value ||
@@ -144,36 +147,30 @@ class LinodeTextField extends React.Component<CombinedProps> {
       affirmative,
       classes,
       fullWidth,
+      onChange,
       children,
       tooltipText,
       theme,
       className,
-      onChange,
       expand,
       small,
       tiny,
+      InputProps,
+      InputLabelProps,
+      SelectProps,
+      dataAttrs,
       ...textFieldProps
     } = this.props;
-
-    const finalProps: TextFieldProps = { ...textFieldProps };
 
     let errorScrollClassName = '';
 
     if (errorText) {
-      finalProps.error = true;
-      finalProps.helperText = errorText;
+      textFieldProps.error = true;
+      textFieldProps.helperText = errorText;
       errorScrollClassName = errorGroup
         ? `error-for-scroll-${errorGroup}`
         : `error-for-scroll`;
     }
-
-    if (affirmative) {
-      finalProps.InputProps = {
-        className: 'affirmative'
-      };
-    }
-
-    finalProps.fullWidth = fullWidth === false ? false : true;
 
     return (
       <div
@@ -183,12 +180,13 @@ class LinodeTextField extends React.Component<CombinedProps> {
         })}
       >
         <TextField
-          {...finalProps}
-          /* props value should always override state */
+          {...textFieldProps}
+          {...dataAttrs}
+          fullWidth
           value={this.props.value || this.state.value}
           onChange={this.handleChange}
           InputLabelProps={{
-            ...finalProps.InputLabelProps,
+            ...InputLabelProps,
             shrink: true
           }}
           InputProps={{
@@ -198,13 +196,15 @@ class LinodeTextField extends React.Component<CombinedProps> {
               {
                 [classes.expand]: expand,
                 [classes.small]: small,
-                [classes.tiny]: tiny
+                [classes.tiny]: tiny,
+                affirmative: !!affirmative
               },
               className
             ),
-            ...finalProps.InputProps
+            ...InputProps
           }}
           SelectProps={{
+            disableUnderline: true,
             IconComponent: KeyboardArrowDown,
             MenuProps: {
               getContentAnchorEl: undefined,
@@ -217,7 +217,8 @@ class LinodeTextField extends React.Component<CombinedProps> {
               className: classNames({
                 [classes.selectSmall]: small
               })
-            }
+            },
+            ...SelectProps
           }}
           className={classNames(
             {
@@ -242,4 +243,6 @@ class LinodeTextField extends React.Component<CombinedProps> {
 
 const styled = withStyles(styles, { withTheme: true });
 
-export default compose<CombinedProps, Props>(styled)(LinodeTextField);
+export default compose<CombinedProps, Props>(styled)(
+  LinodeTextField
+) as React.ComponentType<Props>;

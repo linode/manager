@@ -2,7 +2,8 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -16,14 +17,15 @@ import RebuildFromStackScript from './RebuildFromStackScript';
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    padding: theme.spacing.unit * 3
-  },
-  title: {
-    marginBottom: theme.spacing.unit * 2
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(3)
+    },
+    title: {
+      marginBottom: theme.spacing(2)
+    }
+  });
 
 interface ContextProps {
   linodeLabel: string;

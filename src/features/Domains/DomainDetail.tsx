@@ -11,7 +11,8 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -57,32 +58,33 @@ type ClassNames =
   | 'titleWrapper'
   | 'error';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  main: {
-    [theme.breakpoints.up('md')]: {
-      order: 1
+const styles = (theme: Theme) =>
+  createStyles({
+    main: {
+      [theme.breakpoints.up('md')]: {
+        order: 1
+      }
+    },
+    error: {
+      marginTop: `${theme.spacing(3)}px !important`,
+      marginBottom: `0 !important`
+    },
+    sidebar: {
+      [theme.breakpoints.up('md')]: {
+        order: 2
+      }
+    },
+    domainSidebar: {
+      [theme.breakpoints.up('md')]: {
+        marginTop: theme.spacing(1) + 24
+      }
+    },
+    titleWrapper: {
+      display: 'flex',
+      alignItems: 'center',
+      wordBreak: 'break-all'
     }
-  },
-  error: {
-    marginTop: `${theme.spacing.unit * 3}px !important`,
-    marginBottom: `0 !important`
-  },
-  sidebar: {
-    [theme.breakpoints.up('md')]: {
-      order: 2
-    }
-  },
-  domainSidebar: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing.unit + 24
-    }
-  },
-  titleWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    wordBreak: 'break-all'
-  }
-});
+  });
 
 type CombinedProps = DomainActionsProps &
   RouteProps &
@@ -297,9 +299,14 @@ class DomainDetail extends React.Component<CombinedProps, State> {
               <Tab
                 key={tab.title}
                 disabled={tab.disabled}
-                component={() => (
-                  <TabLink to={tab.routeName} title={tab.title} />
-                )}
+                component={React.forwardRef((props, ref) => (
+                  <TabLink
+                    to={tab.routeName}
+                    title={tab.title}
+                    {...props}
+                    ref={ref}
+                  />
+                ))}
               />
             ))}
           </Tabs>

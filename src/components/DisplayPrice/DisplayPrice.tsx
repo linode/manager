@@ -1,6 +1,6 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   Theme,
   withStyles,
   WithStyles
@@ -10,19 +10,20 @@ import Currency from 'src/components/Currency';
 
 type ClassNames = 'root' | 'price' | 'per';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
-  price: {
-    fontSize: '1.5rem',
-    color: theme.color.green,
-    display: 'inline-block'
-  },
-  per: {
-    color: theme.color.green,
-    display: 'inline-block',
-    fontWeight: 400
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    price: {
+      fontSize: '1.5rem',
+      color: theme.color.green,
+      display: 'inline-block'
+    },
+    per: {
+      color: theme.color.green,
+      display: 'inline-block',
+      fontWeight: 400
+    }
+  });
 
 interface Props {
   price: number;

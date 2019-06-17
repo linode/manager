@@ -2,7 +2,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -14,14 +15,15 @@ import TextField from 'src/components/TextField';
 
 type ClassNames = 'root' | 'radioGroupLabel';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    margin: `${theme.spacing.unit * 3}px 0 0`
-  },
-  radioGroupLabel: {
-    display: 'block'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      margin: `${theme.spacing(3)}px 0 0`
+    },
+    radioGroupLabel: {
+      display: 'block'
+    }
+  });
 
 interface Props {
   updateFormState: (key: string, value: any) => void;

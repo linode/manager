@@ -3,12 +3,12 @@ import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { Sticky, StickyProps } from 'react-sticky';
 import { compose } from 'recompose';
-
 import AccessPanel from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -45,20 +45,21 @@ import {
 
 type ClassNames = 'sidebar' | 'emptyImagePanel' | 'emptyImagePanelText';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  sidebar: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: '-130px !important'
+const styles = (theme: Theme) =>
+  createStyles({
+    sidebar: {
+      [theme.breakpoints.up('md')]: {
+        marginTop: '-130px !important'
+      }
+    },
+    emptyImagePanel: {
+      padding: theme.spacing(3)
+    },
+    emptyImagePanelText: {
+      marginTop: theme.spacing(1),
+      padding: `${theme.spacing(1)}px 0`
     }
-  },
-  emptyImagePanel: {
-    padding: theme.spacing.unit * 3
-  },
-  emptyImagePanelText: {
-    marginTop: theme.spacing.unit,
-    padding: `${theme.spacing.unit}px 0`
-  }
-});
+  });
 
 const errorResources = {
   type: 'A plan selection',

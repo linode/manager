@@ -5,9 +5,10 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -29,15 +30,16 @@ import BucketTableRow from './BucketTableRow';
 
 type ClassNames = 'root' | 'label' | 'confirmationCopy';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  label: {
-    paddingLeft: 65
-  },
-  confirmationCopy: {
-    marginTop: theme.spacing.unit
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    label: {
+      paddingLeft: 65
+    },
+    confirmationCopy: {
+      marginTop: theme.spacing(1)
+    }
+  });
 
 interface Props {
   data: Linode.Bucket[];
@@ -94,7 +96,7 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
   const actions = () => (
     <ActionsPanel>
       <Button
-        type="cancel"
+        buttonType="cancel"
         onClick={() => {
           removeBucketConfirmationDialog.close();
         }}
@@ -103,7 +105,7 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
         Cancel
       </Button>
       <Button
-        type="secondary"
+        buttonType="secondary"
         destructive
         onClick={removeBucket}
         data-qa-submit-rebuild
@@ -236,7 +238,9 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
           >
             {deleteBucketConfirmationMessage}
             <TextField
-              onChange={e => setConfirmBucketName(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setConfirmBucketName(e.target.value)
+              }
               expand
             />
           </ConfirmationDialog>

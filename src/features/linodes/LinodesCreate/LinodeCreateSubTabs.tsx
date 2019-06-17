@@ -3,7 +3,8 @@ import * as React from 'react';
 import AppBar from 'src/components/core/AppBar';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -18,21 +19,24 @@ import { safeGetTabRender } from 'src/utilities/safeGetTabRender';
 
 type ClassNames = 'root' | 'inner';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    flexGrow: 1,
-    width: '100%',
-    backgroundColor: theme.color.white
-  },
-  inner: {
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 2}px 0 ${theme
-      .spacing.unit * 2}px`,
-    [theme.breakpoints.up('sm')]: {
-      padding: `${theme.spacing.unit * 3}px ${theme.spacing.unit *
-        3}px 0 ${theme.spacing.unit * 3}px`
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+      width: '100%',
+      backgroundColor: theme.color.white
+    },
+    inner: {
+      padding: `${theme.spacing(2)}px ${theme.spacing(2)}px 0 ${theme.spacing(
+        2
+      )}px`,
+      [theme.breakpoints.up('sm')]: {
+        padding: `${theme.spacing(3)}px ${theme.spacing(3)}px 0 ${theme.spacing(
+          3
+        )}px`
+      }
     }
-  }
-});
+  });
 
 export interface Tab {
   title: string | JSX.Element;

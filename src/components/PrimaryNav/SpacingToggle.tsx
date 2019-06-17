@@ -1,41 +1,44 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles,
   WithTheme
 } from 'src/components/core/styles';
 import Toggle from 'src/components/Toggle';
+import { spacing as spacingStorage } from 'src/utilities/storage';
 
 type ClassNames = 'switchWrapper' | 'switchText' | 'toggle';
 
-export const styles: StyleRulesCallback<ClassNames> = theme => ({
-  switchText: {
-    color: '#777',
-    fontSize: '.8rem',
-    transition: theme.transitions.create(['color']),
-    '&.active': {
+export const styles = (theme: Theme) =>
+  createStyles({
+    switchText: {
+      color: '#777',
+      fontSize: '.8rem',
       transition: theme.transitions.create(['color']),
-      color: '#C9CACB'
-    }
-  },
-  switchWrapper: {
-    alignItems: 'center',
-    marginTop: 'auto',
-    justifyContent: 'center',
-    display: 'flex'
-  },
-  toggle: {
-    '& > span:last-child': {
-      backgroundColor: '#f4f4f4 !important',
-      opacity: `0.38 !important`
+      '&.active': {
+        transition: theme.transitions.create(['color']),
+        color: '#C9CACB'
+      }
     },
-    '&.dt .square': {
-      fill: '#444 !important'
+    switchWrapper: {
+      alignItems: 'center',
+      marginTop: 'auto',
+      justifyContent: 'center',
+      display: 'flex'
+    },
+    toggle: {
+      '& > span:last-child': {
+        backgroundColor: '#f4f4f4 !important' as '#f4f4f4',
+        opacity: '0.38 !important' as any
+      },
+      '&.dt .square': {
+        fill: '#444 !important'
+      }
     }
-  }
-});
+  });
 
 interface Props {
   toggleSpacing: () => void;
@@ -44,32 +47,32 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames> & WithTheme;
 
 export const SpacingToggle: React.StatelessComponent<CombinedProps> = props => {
-  const { classes, toggleSpacing, theme } = props;
-  const { spacing: spacingUnit } = theme;
+  const { classes, toggleSpacing } = props;
+  const spacingMode = spacingStorage.get();
 
   return (
     <div className={classes.switchWrapper}>
       <span
         className={classNames({
           [classes.switchText]: true,
-          active: spacingUnit.unit === 8
+          active: spacingMode === 'normal'
         })}
       >
         Normal
       </span>
       <Toggle
         onChange={toggleSpacing}
-        checked={spacingUnit.unit !== 8}
+        checked={spacingMode === 'compact'}
         className={classNames({
           [classes.toggle]: true,
-          dt: spacingUnit.unit === 4
+          dt: spacingMode === 'compact'
         })}
         aria-label="Switch Spacing"
       />
       <span
         className={classNames({
           [classes.switchText]: true,
-          active: spacingUnit.unit === 4
+          active: spacingMode === 'compact'
         })}
         style={{ marginLeft: 4 }}
       >

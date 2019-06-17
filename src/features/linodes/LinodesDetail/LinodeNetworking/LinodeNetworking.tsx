@@ -6,7 +6,8 @@ import AddNewLink from 'src/components/AddNewLink';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -52,53 +53,54 @@ type ClassNames =
   | 'ipv4TitleContainer'
   | 'netActionsTitle';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  title: {
-    marginTop: `${theme.spacing.unit}px`,
-    marginBottom: `${theme.spacing.unit * 2}px`
-  },
-  address: {
-    width: '30%'
-  },
-  reverseDNS: {
-    width: '30%'
-  },
-  defaultGateway: {
-    width: '20%'
-  },
-  type: {
-    width: '20%'
-  },
-  action: {
-    textAlign: 'right',
-    '& a': {
-      marginRight: theme.spacing.unit
-    }
-  },
-  ipv4Container: {
-    [theme.breakpoints.down('sm')]: {
-      justifyContent: 'flex-start',
-      '& button': {
-        marginLeft: -14
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    title: {
+      marginTop: `${theme.spacing(1)}px`,
+      marginBottom: `${theme.spacing(2)}px`
+    },
+    address: {
+      width: '30%'
+    },
+    reverseDNS: {
+      width: '30%'
+    },
+    defaultGateway: {
+      width: '20%'
+    },
+    type: {
+      width: '20%'
+    },
+    action: {
+      textAlign: 'right',
+      '& a': {
+        marginRight: theme.spacing(1)
       }
+    },
+    ipv4Container: {
+      [theme.breakpoints.down('sm')]: {
+        justifyContent: 'flex-start',
+        '& button': {
+          marginLeft: -14
+        }
+      }
+    },
+    ipv4Title: {
+      marginBottom: theme.spacing(2),
+      marginTop: theme.spacing(4)
+    },
+    ipv4TitleContainer: {
+      flex: 1,
+      [theme.breakpoints.down('sm')]: {
+        flexBasis: '100%'
+      }
+    },
+    netActionsTitle: {
+      marginBottom: theme.spacing(2),
+      marginTop: theme.spacing(4)
     }
-  },
-  ipv4Title: {
-    marginBottom: theme.spacing.unit * 2,
-    marginTop: theme.spacing.unit * 4
-  },
-  ipv4TitleContainer: {
-    flex: 1,
-    [theme.breakpoints.down('sm')]: {
-      flexBasis: '100%'
-    }
-  },
-  netActionsTitle: {
-    marginBottom: theme.spacing.unit * 2,
-    marginTop: theme.spacing.unit * 4
-  }
-});
+  });
 
 interface State {
   linodeIPs?: Linode.LinodeIPsResponse;

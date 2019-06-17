@@ -5,11 +5,7 @@ import { LongviewLanding } from './LongviewLanding';
 
 describe('LongView Landing', () => {
   const component = shallow(
-    <LongviewLanding
-      classes={{
-        root: ''
-      }}
-    />
+    <LongviewLanding />
   );
   it('should render a placeholder', () => {
     expect(component.find('WithStyles(Placeholder)')).toHaveLength(1);

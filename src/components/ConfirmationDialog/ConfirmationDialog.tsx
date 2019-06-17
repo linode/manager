@@ -5,23 +5,25 @@ import DialogContent from 'src/components/core/DialogContent';
 import DialogContentText from 'src/components/core/DialogContentText';
 import DialogTitle from 'src/components/core/DialogTitle';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'error' | 'actions';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  error: {
-    color: '#C44742',
-    marginTop: theme.spacing.unit * 2
-  },
-  actions: {
-    justifyContent: 'flex-end'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    error: {
+      color: '#C44742',
+      marginTop: theme.spacing(2)
+    },
+    actions: {
+      justifyContent: 'flex-end'
+    }
+  });
 
 interface Props extends DialogProps {
   actions?: ((props: any) => JSX.Element) | JSX.Element;

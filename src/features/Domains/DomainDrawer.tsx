@@ -12,7 +12,8 @@ import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
 import RadioGroup from 'src/components/core/RadioGroup';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -51,15 +52,16 @@ import { isValidSOAEmail } from './domainUtils';
 
 type ClassNames = 'root' | 'masterIPErrorNotice' | 'addIP';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  masterIPErrorNotice: {
-    marginTop: theme.spacing.unit * 2
-  },
-  addIP: {
-    left: -theme.spacing.unit * 2 + 3
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    masterIPErrorNotice: {
+      marginTop: theme.spacing(2)
+    },
+    addIP: {
+      left: -theme.spacing(2) + 3
+    }
+  });
 
 type DefaultRecordsType = 'none' | 'linode' | 'nodebalancer';
 
@@ -433,7 +435,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           )}
         <ActionsPanel>
           <Button
-            type="primary"
+            buttonType="primary"
             onClick={this.submit}
             data-qa-submit
             loading={submitting}
@@ -441,7 +443,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           >
             {mode === EDITING ? 'Update' : 'Create'}
           </Button>
-          <Button onClick={this.closeDrawer} type="cancel" data-qa-cancel>
+          <Button onClick={this.closeDrawer} buttonType="cancel" data-qa-cancel>
             Cancel
           </Button>
         </ActionsPanel>

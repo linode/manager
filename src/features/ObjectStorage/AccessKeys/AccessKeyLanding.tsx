@@ -3,9 +3,10 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
@@ -28,14 +29,13 @@ import RevokeAccessKeyDialog from './RevokeAccessKeyDialog';
 
 type ClassNames = 'headline';
 
-const styles: StyleRulesCallback<ClassNames> = theme => {
-  return {
+const styles = (theme: Theme) =>
+  createStyles({
     headline: {
-      marginTop: theme.spacing.unit * 2,
-      marginBottom: theme.spacing.unit * 2
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
     }
-  };
-};
+  });
 
 type Props = PaginationProps<Linode.ObjectStorageKey> & WithStyles<ClassNames>;
 
@@ -271,7 +271,7 @@ const updatedRequest = (_: Props, params: any, filters: any) =>
 
 const paginated = Pagey(updatedRequest);
 
-const enhanced = compose(
+const enhanced = compose<Props, {}>(
   styled,
   paginated
 );

@@ -8,7 +8,8 @@ import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import AddNewLink from 'src/components/AddNewLink';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -63,65 +64,66 @@ type ClassNames =
   | 'volumesWrapper'
   | 'linodeVolumesWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  tagGroup: {
-    flexDirection: 'row-reverse',
-    marginBottom: theme.spacing.unit
-  },
-  titleWrapper: {
-    flex: 1
-  },
-  title: {
-    marginBottom: theme.spacing.unit + theme.spacing.unit / 2
-  },
-  // styles for /volumes table
-  volumesWrapper: {},
-  // styles for linodes/id/volumes table
-  linodeVolumesWrapper: {
-    '& $labelCol': {
-      width: '20%',
-      minWidth: 200
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    tagGroup: {
+      flexDirection: 'row-reverse',
+      marginBottom: theme.spacing(1)
     },
-    '& $sizeCol': {
+    titleWrapper: {
+      flex: 1
+    },
+    title: {
+      marginBottom: theme.spacing(1) + theme.spacing(1) / 2
+    },
+    // styles for /volumes table
+    volumesWrapper: {},
+    // styles for linodes/id/volumes table
+    linodeVolumesWrapper: {
+      '& $labelCol': {
+        width: '20%',
+        minWidth: 200
+      },
+      '& $sizeCol': {
+        width: '15%',
+        minWidth: 100
+      },
+      '& $pathCol': {
+        width: '55%',
+        minWidth: 350
+      }
+    },
+    labelCol: {
+      width: '25%',
+      minWidth: 150,
+      paddingLeft: 65
+    },
+    icon: {
+      position: 'relative',
+      top: 3,
+      width: 40,
+      height: 40,
+      '& .circle': {
+        fill: theme.bg.offWhiteDT
+      },
+      '& .outerCircle': {
+        stroke: theme.bg.main
+      }
+    },
+    attachmentCol: {
       width: '15%',
-      minWidth: 100
+      minWidth: 150
     },
-    '& $pathCol': {
-      width: '55%',
-      minWidth: 350
-    }
-  },
-  labelCol: {
-    width: '25%',
-    minWidth: 150,
-    paddingLeft: 65
-  },
-  icon: {
-    position: 'relative',
-    top: 3,
-    width: 40,
-    height: 40,
-    '& .circle': {
-      fill: theme.bg.offWhiteDT
+    sizeCol: {
+      width: '10%',
+      minWidth: 75
     },
-    '& .outerCircle': {
-      stroke: theme.bg.main
+    pathCol: {
+      width: '25%',
+      minWidth: 250
     }
-  },
-  attachmentCol: {
-    width: '15%',
-    minWidth: 150
-  },
-  sizeCol: {
-    width: '10%',
-    minWidth: 75
-  },
-  pathCol: {
-    width: '25%',
-    minWidth: 250
-  }
-});
+  });
 
 interface WithLinodesProps {
   linodesData: Linode.Linode[];

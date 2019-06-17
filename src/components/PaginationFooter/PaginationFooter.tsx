@@ -1,7 +1,8 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -11,16 +12,15 @@ import PaginationControls from '../PaginationControls';
 
 type ClassNames = 'root' | 'padded';
 
-const styles: StyleRulesCallback<ClassNames> = theme => {
-  return {
+const styles = (theme: Theme) =>
+  createStyles({
     root: {
-      marginTop: theme.spacing.unit
+      marginTop: theme.spacing(1)
     },
     padded: {
-      padding: `0 ${theme.spacing.unit * 2}px ${theme.spacing.unit}px`
+      padding: `0 ${theme.spacing(2)}px ${theme.spacing(1)}px`
     }
-  };
-};
+  });
 
 export interface PaginationProps {
   count: number;

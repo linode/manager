@@ -1,24 +1,11 @@
-import { compose } from 'ramda';
 import * as React from 'react';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { compose } from 'recompose';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Placeholder from 'src/components/Placeholder';
 import { MonitoringYourServer } from 'src/documentation';
 
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
-
-type CombinedProps = WithStyles<ClassNames>;
-
-export class LongviewLanding extends React.Component<CombinedProps, {}> {
+export class LongviewLanding extends React.Component<{}, {}> {
   static docs: Linode.Doc[] = [
     {
       title: 'What is Longview and How to Use it',
@@ -46,9 +33,6 @@ export class LongviewLanding extends React.Component<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles);
-
-export default compose(
+export default compose<{}, {}>(
   setDocs(LongviewLanding.docs),
-  styled
 )(LongviewLanding);

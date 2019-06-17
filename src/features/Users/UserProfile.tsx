@@ -9,7 +9,8 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -33,37 +34,38 @@ type ClassNames =
   | 'emailField'
   | 'emailAddress';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    flexGrow: 1,
-    width: '100%',
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit * 3,
-    backgroundColor: theme.color.white
-  },
-  deleteRoot: {
-    flexGrow: 1,
-    width: '100%',
-    marginTop: theme.spacing.unit * 3,
-    backgroundColor: theme.color.white
-  },
-  inner: {
-    padding: theme.spacing.unit * 3
-  },
-  field: {
-    marginTop: theme.spacing.unit * 3
-  },
-  topMargin: {
-    marginTop: theme.spacing.unit * 2
-  },
-  emailField: {
-    marginTop: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 2
-  },
-  emailAddress: {
-    marginTop: theme.spacing.unit
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+      width: '100%',
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(3),
+      backgroundColor: theme.color.white
+    },
+    deleteRoot: {
+      flexGrow: 1,
+      width: '100%',
+      marginTop: theme.spacing(3),
+      backgroundColor: theme.color.white
+    },
+    inner: {
+      padding: theme.spacing(3)
+    },
+    field: {
+      marginTop: theme.spacing(3)
+    },
+    topMargin: {
+      marginTop: theme.spacing(2)
+    },
+    emailField: {
+      marginTop: theme.spacing(3),
+      marginBottom: theme.spacing(2)
+    },
+    emailAddress: {
+      marginTop: theme.spacing(1)
+    }
+  });
 
 interface Props {
   username: string;
@@ -166,7 +168,7 @@ class UserProfile extends React.Component<CombinedProps> {
             />
             <ActionsPanel>
               <Button
-                type="primary"
+                buttonType="primary"
                 loading={accountSaving}
                 onClick={saveAccount}
                 data-qa-submit
@@ -205,7 +207,7 @@ class UserProfile extends React.Component<CombinedProps> {
               <Button
                 // This should be disabled if this is NOT the current user.
                 disabled={profileUsername !== originalUsername}
-                type="primary"
+                buttonType="primary"
                 loading={profileSaving}
                 onClick={saveProfile}
                 data-qa-submit
@@ -274,7 +276,7 @@ class UserProfile extends React.Component<CombinedProps> {
           <Button
             disabled={profileUsername === toDeleteUsername}
             className={classes.topMargin}
-            type="secondary"
+            buttonType="secondary"
             destructive
             onClick={this.onDelete}
             data-qa-confirm-delete

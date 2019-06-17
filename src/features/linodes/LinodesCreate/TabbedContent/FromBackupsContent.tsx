@@ -7,7 +7,8 @@ import CheckoutBar from 'src/components/CheckoutBar';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -35,15 +36,16 @@ import { reportException } from 'src/exceptionReporting';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  main: {},
-  sidebar: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: '-130px !important'
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    main: {},
+    sidebar: {
+      [theme.breakpoints.up('md')]: {
+        marginTop: '-130px !important'
+      }
     }
-  }
-});
+  });
 
 interface Props {
   disabled?: boolean;

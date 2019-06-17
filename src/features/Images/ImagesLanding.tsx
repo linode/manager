@@ -12,9 +12,10 @@ import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -39,12 +40,13 @@ import ImagesDrawer from './ImagesDrawer';
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  title: {
-    marginBottom: theme.spacing.unit + theme.spacing.unit / 2
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    title: {
+      marginBottom: theme.spacing(1) + theme.spacing(1) / 2
+    }
+  });
 
 interface State {
   imageDrawer: {
@@ -160,7 +162,11 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
       return;
     }
     this.setState({
-      removeDialog: { ...removeDialog, submitting: true, errors: undefined }
+      removeDialog: {
+        ...(removeDialog as any),
+        submitting: true,
+        errors: undefined
+      }
     });
     deleteImage(this.state.removeDialog.imageID)
       .then(() => {
@@ -230,11 +236,15 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
   getActions = () => {
     return (
       <ActionsPanel>
-        <Button type="cancel" onClick={this.closeRemoveDialog} data-qa-cancel>
+        <Button
+          buttonType="cancel"
+          onClick={this.closeRemoveDialog}
+          data-qa-cancel
+        >
           Cancel
         </Button>
         <Button
-          type="secondary"
+          buttonType="secondary"
           destructive
           loading={this.state.removeDialog.submitting}
           onClick={this.removeImage}

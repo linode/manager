@@ -1,30 +1,28 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import Tooltip from 'src/components/core/Tooltip';
-import IconButton from 'src/components/IconButton';
-
-import { sendAdaEvent } from 'src/utilities/ga';
-
 import AdaIcon from 'src/assets/icons/ada.svg';
-
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
-} from '@material-ui/core/styles';
-
+} from 'src/components/core/styles';
+import Tooltip from 'src/components/core/Tooltip';
+import IconButton from 'src/components/IconButton';
+import { sendAdaEvent } from 'src/utilities/ga';
 type ClassNames = 'root' | 'disabled';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    width: 44,
-    height: 44,
-    padding: 0
-  },
-  disabled: {
-    opacity: 0.3
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      width: 44,
+      height: 44,
+      padding: 0
+    },
+    disabled: {
+      opacity: 0.3
+    }
+  });
 
 interface Props {
   closeMenu?: () => void;

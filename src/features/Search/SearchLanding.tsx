@@ -4,7 +4,8 @@ import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -28,35 +29,36 @@ type ClassNames =
   | 'emptyResult'
   | 'errorIcon';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  headline: {
-    marginBottom: 10
-  },
-  emptyResultWrapper: {
-    padding: `${theme.spacing.unit * 10}px ${theme.spacing.unit * 4}px`,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  emptyResult: {
-    padding: `${theme.spacing.unit * 10}px ${theme.spacing.unit * 4}px`,
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-    [theme.breakpoints.down('sm')]: {
-      padding: theme.spacing.unit * 4
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    headline: {
+      marginBottom: 10
+    },
+    emptyResultWrapper: {
+      padding: `${theme.spacing(10)}px ${theme.spacing(4)}px`,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center'
+    },
+    emptyResult: {
+      padding: `${theme.spacing(10)}px ${theme.spacing(4)}px`,
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+      [theme.breakpoints.down('sm')]: {
+        padding: theme.spacing(4)
+      }
+    },
+    errorIcon: {
+      width: 60,
+      height: 60,
+      color: theme.palette.text.primary,
+      marginBottom: theme.spacing(4)
     }
-  },
-  errorIcon: {
-    width: 60,
-    height: 60,
-    color: theme.palette.text.primary,
-    marginBottom: theme.spacing.unit * 4
-  }
-});
+  });
 
 const displayMap = {
   linodes: 'Linodes',

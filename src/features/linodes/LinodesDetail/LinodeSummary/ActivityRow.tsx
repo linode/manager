@@ -1,7 +1,6 @@
 import * as React from 'react';
-
 import {
-  StyleRulesCallback,
+  createStyles,
   Theme,
   withStyles,
   WithStyles
@@ -14,14 +13,15 @@ import { onUnfound } from 'src/features/Events/EventRow';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {
-    padding: theme.spacing.unit,
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    width: '100%',
-    margin: 0
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(1),
+      borderBottom: `1px solid ${theme.palette.divider}`,
+      width: '100%',
+      margin: 0
+    }
+  });
 
 interface Props {
   event: Linode.Event;

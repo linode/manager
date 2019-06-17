@@ -1,14 +1,14 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
@@ -25,25 +25,26 @@ import NodePoolDisplayTable from './NodePoolDisplayTable';
 
 type ClassNames = 'root' | 'title' | 'gridItem' | 'countInput';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2,
-    '& .tabbedPanel': {
-      marginTop: 0
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2),
+      '& .tabbedPanel': {
+        marginTop: 0
+      }
+    },
+    title: {
+      marginBottom: theme.spacing(1)
+    },
+    gridItem: {
+      paddingLeft: theme.spacing(3),
+      marginBottom: theme.spacing(2)
+    },
+    countInput: {
+      maxWidth: '5em'
     }
-  },
-  title: {
-    marginBottom: theme.spacing.unit
-  },
-  gridItem: {
-    paddingLeft: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 2
-  },
-  countInput: {
-    maxWidth: '5em'
-  }
-});
+  });
 
 interface Props {
   pools: ExtendedPoolNode[];
@@ -156,12 +157,14 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           tiny
           type="number"
           value={nodeCount}
-          onChange={e => updateNodeCount(+e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            updateNodeCount(+e.target.value)
+          }
           errorText={countError}
         />
       </Grid>
       <Grid item className={classes.gridItem}>
-        <Button type="secondary" onClick={submitForm}>
+        <Button buttonType="secondary" onClick={submitForm}>
           Add Node Pool
         </Button>
       </Grid>

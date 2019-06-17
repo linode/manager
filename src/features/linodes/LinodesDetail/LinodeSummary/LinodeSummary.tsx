@@ -4,7 +4,8 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -51,8 +52,8 @@ type ClassNames =
   | 'graphControls'
   | 'totalTraffic';
 
-const styles: StyleRulesCallback<ClassNames> = theme => {
-  return {
+const styles = (theme: Theme) =>
+  createStyles({
     main: {
       [theme.breakpoints.up('md')]: {
         order: 1
@@ -64,13 +65,13 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
       }
     },
     headerWrapper: {
-      marginTop: theme.spacing.unit,
-      marginBottom: theme.spacing.unit * 2
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(2)
     },
     chart: {
       position: 'relative',
       width: 'calc(100vw - 80px)',
-      paddingLeft: theme.spacing.unit * 4,
+      paddingLeft: theme.spacing(4),
       [theme.breakpoints.up('md')]: {
         width: 'calc(80vw - 310px)'
       },
@@ -87,9 +88,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
       fontSize: 14
     },
     bottomLegend: {
-      margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px ${
-        theme.spacing.unit
-      }px`,
+      margin: `${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(
+        1
+      )}px`,
       padding: 10,
       color: '#777',
       backgroundColor: theme.bg.offWhiteDT,
@@ -97,15 +98,15 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
       fontSize: 14,
       [theme.breakpoints.down('md')]: {
         '& > div': {
-          marginBottom: theme.spacing.unit * 2
+          marginBottom: theme.spacing(2)
         }
       }
     },
     graphTitle: {
-      marginRight: theme.spacing.unit * 2
+      marginRight: theme.spacing(2)
     },
     graphSelectTitle: {
-      marginRight: theme.spacing.unit,
+      marginRight: theme.spacing(1),
       position: 'relative',
       color: theme.color.headline,
       top: -1
@@ -113,8 +114,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
     graphControls: {
       display: 'flex',
       alignItems: 'center',
-      marginTop: theme.spacing.unit * 2,
-      marginBottom: theme.spacing.unit * 2
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
     },
     totalTraffic: {
       margin: '12px'
@@ -122,8 +123,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
     chartSelect: {
       maxWidth: 150
     }
-  };
-};
+  });
 
 interface LinodeContextProps {
   linodeCreated: string;

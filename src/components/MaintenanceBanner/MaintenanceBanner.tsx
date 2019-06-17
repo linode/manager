@@ -1,35 +1,35 @@
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from '@material-ui/core/styles';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
-
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-
 import { formatDate } from 'src/utilities/formatDate';
 import isPast from 'src/utilities/isPast';
 
 type ClassNames = 'root' | 'dateTime';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    '& p': {
-      marginBottom: theme.spacing.unit * 2,
-      lineHeight: `20px`
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      '& p': {
+        marginBottom: theme.spacing(2),
+        lineHeight: `20px`
+      },
+      '& p:last-child': {
+        marginBottom: 0
+      }
     },
-    '& p:last-child': {
-      marginBottom: 0
+    dateTime: {
+      fontSize: theme.spacing(2),
+      lineHeight: `${theme.spacing(2.5)}px`
     }
-  },
-  dateTime: {
-    fontSize: theme.spacing.unit * 2,
-    lineHeight: `${theme.spacing.unit * 2.5}px`
-  }
-});
+  });
 
 interface Props {
   /** please keep in mind here that it's possible the start time can be in the past */

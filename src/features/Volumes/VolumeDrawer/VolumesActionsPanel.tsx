@@ -1,17 +1,6 @@
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from '@material-ui/core/styles';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props {
   isSubmitting: boolean;
@@ -20,7 +9,7 @@ interface Props {
   disabled?: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const VolumesActionsPanel: React.StatelessComponent<CombinedProps> = ({
   onSubmit,
@@ -33,7 +22,7 @@ const VolumesActionsPanel: React.StatelessComponent<CombinedProps> = ({
       {onSubmit && (
         <Button
           onClick={onSubmit}
-          type="primary"
+          buttonType="primary"
           loading={isSubmitting}
           disabled={disabled}
           data-qa-submit
@@ -42,7 +31,7 @@ const VolumesActionsPanel: React.StatelessComponent<CombinedProps> = ({
         </Button>
       )}
       {onCancel && (
-        <Button onClick={onCancel} type="cancel" data-qa-cancel>
+        <Button onClick={onCancel} buttonType="cancel" data-qa-cancel>
           Cancel
         </Button>
       )}
@@ -50,6 +39,4 @@ const VolumesActionsPanel: React.StatelessComponent<CombinedProps> = ({
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(VolumesActionsPanel);
+export default VolumesActionsPanel;
