@@ -82,7 +82,6 @@ interface Props {
   domain: Linode.Domain;
   domainRecords: Linode.DomainRecord[];
   updateRecords: () => void;
-  updateDomain: () => void;
 }
 
 interface ConfirmationState {
@@ -804,7 +803,6 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           records={domainRecords}
           type={drawer.type}
           updateRecords={this.props.updateRecords}
-          updateDomain={this.props.updateDomain}
           {...drawer.fields}
         />
       </React.Fragment>
