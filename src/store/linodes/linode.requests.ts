@@ -73,11 +73,27 @@ const getBackupsForLinodes = ({ data }: { data: Linode.Linode[] }) =>
   Bluebird.map(data, requestMostRecentBackupForLinode);
 
 type RequestLinodeForStoreThunk = ThunkActionCreator<void>;
-export const requestLinodeForStore: RequestLinodeForStoreThunk = id => dispatch => {
-  _getLinode(id)
-    .then(response => response.data)
-    .then(requestMostRecentBackupForLinode)
-    .then(linode => {
-      return dispatch(upsertLinode(linode));
-    });
+export const requestLinodeForStore: RequestLinodeForStoreThunk = id => (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+  /** Don't request a Linode if it's already been deleted. */
+  if (state.__resources.linodes.results.includes(id)) {
+    return _getLinode(id)
+      .then(response => response.data)
+      .then(requestMostRecentBackupForLinode)
+      .then(linode => {
+        return dispatch(upsertLinode(linode));
+      })
+      .catch(_ => {
+        /**
+         * Usually this will fire when we're requesting events for a deleted Linode.
+         * Should be safe to ignore, the only cost would be a stale value in the store
+         * (if it fails for any other reason).
+         */
+      });
+  } else {
+    return;
+  }
 };
