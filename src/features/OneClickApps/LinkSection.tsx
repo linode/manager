@@ -2,7 +2,8 @@ import * as React from 'react';
 
 import Grid from 'src/components/core/Grid';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -11,27 +12,28 @@ import ExternalLink from 'src/components/ExternalLink';
 
 type ClassNames = 'root' | 'icon' | 'link' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    marginTop: theme.spacing.unit * 4
-  },
-  icon: {
-    width: 24,
-    position: 'relative',
-    top: 2,
-    marginRight: theme.spacing.unit,
-    color: theme.color.headline
-  },
-  link: {
-    marginLeft: theme.spacing.unit * 4,
-    fontSize: '1em',
-    lineHeight: 2
-  },
-  title: {
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      marginTop: theme.spacing(4)
+    },
+    icon: {
+      width: 24,
+      position: 'relative',
+      top: 2,
+      marginRight: theme.spacing(4),
+      color: theme.color.headline
+    },
+    link: {
+      marginLeft: theme.spacing(4),
+      fontSize: '1em',
+      lineHeight: 2
+    },
+    title: {
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(1)
+    }
+  });
 
 interface Link {
   href: string;

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -14,85 +15,86 @@ type CSSClasses =
   | 'innerGrid'
   | 'subheading';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0
+const styles = (theme: Theme) =>
+  createStyles({
+    '@keyframes fadeIn': {
+      from: {
+        opacity: 0
+      },
+      to: {
+        opacity: 1
+      }
     },
-    to: {
-      opacity: 1
-    }
-  },
-  icon: {
-    display: 'flex',
-    justifyContent: 'flex-end',
-    '& svg, & span': {
-      fontSize: '32px',
-      color: '#939598'
+    icon: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      '& svg, & span': {
+        fontSize: '32px',
+        color: '#939598'
+      },
+      '& img': {
+        maxHeight: '32px',
+        maxWidth: '32px'
+      }
     },
-    '& img': {
-      maxHeight: '32px',
-      maxWidth: '32px'
-    }
-  },
-  checked: {
-    display: 'flex',
-    animation: 'fadeIn 225ms ease-in-out forwards 10ms',
-    '& svg': {
-      borderRadius: '16px',
-      border: '1px solid',
-      borderColor: theme.palette.primary.main,
-      fontSize: '16px',
-      color: theme.palette.primary.main
-    }
-  },
-  heading: {
-    fontFamily: theme.font.bold,
-    fontSize: '1rem',
-    color: theme.color.headline
-  },
-  subheading: {
-    fontSize: '0.875rem',
-    color: theme.palette.text.primary
-  },
-  innerGrid: {
-    position: 'relative',
-    width: '100%',
-    height: '100%',
-    minHeight: 70,
-    backgroundColor: theme.bg.offWhiteDT,
-    border: '1px solid ' + `${theme.bg.main}`,
-    margin: 0,
-    padding: `0 ${theme.spacing.unit}px !important`,
-    transition: `
-      ${'background-color 225ms ease-in-out, '}
-      ${'border-color 225ms ease-in-out'}
-    `,
-    '&:hover': {
-      backgroundColor: theme.bg.main,
-      borderColor: theme.color.border2
+    checked: {
+      display: 'flex',
+      animation: 'fadeIn 225ms ease-in-out forwards 10ms',
+      '& svg': {
+        borderRadius: '16px',
+        border: '1px solid',
+        borderColor: theme.palette.primary.main,
+        fontSize: '16px',
+        color: theme.palette.primary.main
+      }
     },
-    '&:before': {
-      content: '""',
-      display: 'block',
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      width: 5,
+    heading: {
+      fontFamily: theme.font.bold,
+      fontSize: '1rem',
+      color: theme.color.headline
+    },
+    subheading: {
+      fontSize: '0.875rem',
+      color: theme.palette.text.primary
+    },
+    innerGrid: {
+      position: 'relative',
+      width: '100%',
       height: '100%',
-      backgroundColor: 'transparent',
-      transition: theme.transitions.create('backgroundColor')
+      minHeight: 70,
+      backgroundColor: theme.bg.offWhiteDT,
+      border: '1px solid ' + `${theme.bg.main}`,
+      margin: 0,
+      padding: `0 ${theme.spacing(1)}px !important`,
+      transition: `
+        ${'background-color 225ms ease-in-out, '}
+        ${'border-color 225ms ease-in-out'}
+      `,
+      '&:hover': {
+        backgroundColor: theme.bg.main,
+        borderColor: theme.color.border2
+      },
+      '&:before': {
+        content: '""',
+        display: 'block',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: 5,
+        height: '100%',
+        backgroundColor: 'transparent',
+        transition: theme.transitions.create('backgroundColor')
+      }
+    },
+    flex: {
+      flex: 1,
+      flexDirection: 'column',
+      justifyContent: 'space-around',
+      '&> div': {
+        lineHeight: 1.3
+      }
     }
-  },
-  flex: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-around',
-    '&> div': {
-      lineHeight: 1.3
-    }
-  }
-});
+  });
 
 export interface Props {
   onClick?: (e: React.SyntheticEvent<HTMLElement>) => void;

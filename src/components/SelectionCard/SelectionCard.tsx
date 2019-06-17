@@ -120,6 +120,26 @@ const styles = (theme: Theme) =>
         borderColor: theme.color.border2
       }
     },
+    info: {
+      display: 'flex',
+      justifyContent: 'flex-end',
+      color: theme.palette.primary.main,
+      '& .circle': {
+        transition: theme.transitions.create('fill')
+      },
+      '& .path': {
+        transition: theme.transitions.create('stroke')
+      },
+      '&:hover': {
+        color: theme.palette.primary.main,
+        '& .circle': {
+          fill: theme.palette.primary.main
+        },
+        '& .path': {
+          color: 'white'
+        }
+      }
+    },
     flex: {
       flex: 1,
       flexDirection: 'column',

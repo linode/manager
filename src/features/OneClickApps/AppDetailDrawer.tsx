@@ -2,7 +2,8 @@ import * as React from 'react';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -25,30 +26,31 @@ type ClassNames =
   | 'divider'
   | 'image';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  logo: {
-    marginRight: theme.spacing.unit
-  },
-  appName: {
-    fontSize: '2.4rem',
-    fontFamily: theme.font.normal,
-    color: theme.color.grey4
-  },
-  summary: {
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2,
-    textAlign: 'center'
-  },
-  description: {},
-  divider: {
-    marginTop: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 2
-  },
-  image: {
-    maxWidth: 50
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    logo: {
+      marginRight: theme.spacing(1)
+    },
+    appName: {
+      fontSize: '2.4rem',
+      fontFamily: theme.font.normal,
+      color: theme.color.grey4
+    },
+    summary: {
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2),
+      textAlign: 'center'
+    },
+    description: {},
+    divider: {
+      marginTop: theme.spacing(3),
+      marginBottom: theme.spacing(2)
+    },
+    image: {
+      maxWidth: 50
+    }
+  });
 
 interface Props {
   stackscriptID: string;
