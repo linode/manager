@@ -37,16 +37,14 @@ export const extendCluster = (
   cluster: Linode.KubernetesCluster,
   types: ExtendedType[]
 ): ExtendedCluster => {
-  const pools = responseToExtendedNodePool(cluster.node_pools);
+  const pools = responseToExtendedNodePool(cluster.node_pools, types);
   const { CPU, RAM } = getTotalClusterMemoryAndCPU(pools, types);
-  const extendedPools: ExtendedPoolNode[] = pools.map(thisPool => ({
-    ...thisPool,
-    totalMonthlyPrice: getMonthlyPrice(thisPool.type, thisPool.count, types)
-  }));
-  const price = getTotalClusterPrice(extendedPools);
+
+  console.log(pools);
+  const price = getTotalClusterPrice(pools);
   return {
     ...cluster,
-    node_pools: extendedPools,
+    node_pools: pools,
     price,
     totalMemory: RAM,
     totalCPU: CPU
@@ -82,14 +80,17 @@ export const getTotalClusterMemoryAndCPU = (
   );
 };
 
-export const responseToExtendedNodePool = (pools: Linode.KubeNodePoolResponse[]): ExtendedPoolNode[] => {
+export const responseToExtendedNodePool = (
+  pools: Linode.KubeNodePoolResponse[],
+  types: ExtendedType[]
+): ExtendedPoolNode[] => {
   return pools.map(thisPool => ({
     id: thisPool.id,
     count: thisPool.count,
     type: thisPool.type,
-    totalMonthlyPrice: 0
-  }))
-}
+    totalMonthlyPrice: getMonthlyPrice(thisPool.type, thisPool.count, types)
+  }));
+};
 
 /** getPoolUpdateGroups
  *
@@ -114,7 +115,7 @@ export const responseToExtendedNodePool = (pools: Linode.KubeNodePoolResponse[])
  *  'delete': [same, here],
  *  'unchanged': [same, here]
  * }
- * 
+ *
  * NOTE: If a particular group is empty, that property will _not_ exist in the resulting object.
  * Use safe object access.
  */

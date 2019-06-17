@@ -40,22 +40,25 @@ interface Props {
   type?: ExtendedType;
   editable: boolean;
   idx: number;
-  handleDelete: (poolIdx: number) => void;
-  updatePool: (poolIdx: number, updatedPool: ExtendedPoolNode) => void;
+  deletePool?: (poolIdx: number) => void;
+  updatePool?: (poolIdx: number, updatedPool: ExtendedPoolNode) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
-  const {
-    classes,
-    editable,
-    pool,
-    idx,
-    handleDelete,
-    type,
-    updatePool
-  } = props;
+  const { classes, editable, pool, idx, deletePool, type, updatePool } = props;
+
+  if (editable && !(updatePool && deletePool)) {
+    // Checking for conditionally required props
+    throw new Error(
+      'handleDelete and updatePool must be provided to an editable NodePoolRow.'
+    );
+  }
+
+  const handleUpdate = updatePool || (() => null);
+  const handleDelete = deletePool || (() => null);
+
   const typeLabel = type
     ? displayTypeForKubePoolNode(type.class, type.memory, type.vcpus)
     : 'Unknown type'; // This should never happen, but better not to crash if it does.
@@ -78,7 +81,9 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
             tiny
             type="number"
             value={pool.count}
-            onChange={e => updatePool(idx, { ...pool, count: +e.target.value })}
+            onChange={e =>
+              handleUpdate(idx, { ...pool, count: +e.target.value })
+            }
           />
         ) : (
           <Typography>{pool.count}</Typography>

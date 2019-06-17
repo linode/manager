@@ -103,12 +103,7 @@ export const NodePoolsDisplay: React.FunctionComponent<
               updatePool={updatePool}
             />
           ) : (
-            <NodePoolDisplayTable
-              pools={pools}
-              types={types}
-              handleDelete={() => null}
-              updatePool={() => null}
-            />
+            <NodePoolDisplayTable pools={pools} types={types} />
           )}
         </Grid>
         <Grid item>
