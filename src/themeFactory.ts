@@ -182,7 +182,8 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       lightBlue: '#d7e3ef',
       white: '#fff',
       pureWhite: '#fff',
-      tableHeader: '#fbfbfb'
+      tableHeader: '#fbfbfb',
+      primaryNavActive: '#f4f4f4'
     },
     color: {
       headline: primaryColors.headline,

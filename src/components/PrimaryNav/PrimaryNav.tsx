@@ -89,16 +89,14 @@ const styles = (theme: Theme) =>
       padding: `${theme.spacing(1) + 2}px 0 ${theme.spacing(1)}px`
     },
     listItem: {
+      position: 'relative',
       cursor: 'pointer',
-      borderLeft: '6px solid transparent',
-      transition: theme.transitions.create([
-        'background-color',
-        'border-left-color'
-      ]),
-      padding: `${theme.spacing(1) / 2 + 6}px ${theme.spacing(4) -
-        2}px ${theme.spacing(1) / 2 + 6}px ${theme.spacing(3)}px`,
+      transition: theme.transitions.create(['background-color']),
+      padding: `${theme.spacing(2)}px ${theme.spacing(4) - 2}px ${theme.spacing(
+        2
+      ) - 1}px ${theme.spacing(4) + 1}px`,
       '&:hover': {
-        backgroundColor: 'rgba(0, 0, 0, 0.1)',
+        backgroundColor: '#272b31', // todo need dt version here
         '& $linkItem': {
           color: 'white'
         }
@@ -113,11 +111,35 @@ const styles = (theme: Theme) =>
       fontFamily: 'LatoWebBold' // we keep this bold at all times
     },
     active: {
-      transition: 'border-color .7s ease-in-out',
-      backgroundColor: 'rgba(0, 0, 0, 0.1)',
-      borderLeftColor: theme.color.green,
+      // transition: 'before .7s ease-in-out',
+      backgroundColor: '#272b31', // todo need dt version here
+      '&:before': {
+        content: "''",
+        borderStyle: 'solid',
+        borderWidth: `${theme.spacing(2) + 5}px ${theme.spacing(
+          2
+        )}px ${theme.spacing(2) + 5}px 0`,
+        borderColor: `transparent ${
+          theme.bg.primaryNavActive
+        } transparent transparent`,
+        position: 'absolute',
+        right: 0,
+        top: 3
+      },
       '&:hover': {
-        borderLeftColor: theme.color.green
+        '&:before': {
+          content: "''",
+          borderStyle: 'solid',
+          borderWidth: `${theme.spacing(2) + 5}px ${theme.spacing(
+            2
+          )}px ${theme.spacing(2) + 5}px 0`,
+          borderColor: `transparent ${
+            theme.bg.primaryNavActive
+          } transparent transparent`,
+          position: 'absolute',
+          right: 0,
+          top: 3
+        }
       }
     },
     sublinkPanel: {
