@@ -336,12 +336,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`Support Ticket ${ticketId}`} />
-        <Grid
-          container
-          justify="space-between"
-          alignItems="flex-end"
-          style={{ marginTop: 8, marginBottom: 8 }}
-        >
+        <Grid container justify="space-between" alignItems="flex-end">
           <Grid item className={classes.titleWrapper}>
             <Breadcrumb
               linkTo={{

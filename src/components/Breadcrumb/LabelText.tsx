@@ -46,7 +46,7 @@ export const LabelText: React.StatelessComponent<CombinedProps> = props => {
   );
 
   return (
-    <div style={{ display: 'block' }}>
+    <div>
       {titleLink ? (
         <Link to={titleLink!} data-qa-label-link>
           <span className={classes.underlineOnHover}>{labelTitle}</span>
