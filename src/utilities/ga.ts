@@ -188,3 +188,40 @@ export const sendCreateLinodeEvent = (
     label: eventLabel
   });
 };
+
+export const sendCreateBucketEvent = (eventLabel: string) => {
+  sendEvent({
+    category: 'Object Storage',
+    action: 'Create Bucket',
+    label: eventLabel
+  });
+};
+
+export const sendDeleteBucketEvent = (eventLabel: string) => {
+  sendEvent({
+    category: 'Object Storage',
+    action: 'Delete Bucket',
+    label: eventLabel
+  });
+};
+
+export const sendCreateAccessKeyEvent = () => {
+  sendEvent({
+    category: 'Object Storage',
+    action: 'Create Access Key'
+  });
+};
+
+export const sendEditAccessKeyEvent = () => {
+  sendEvent({
+    category: 'Object Storage',
+    action: 'Edit Access Key'
+  });
+};
+
+export const sendRevokeAccessKeyEvent = () => {
+  sendEvent({
+    category: 'Object Storage',
+    action: 'Revoke Access Key'
+  });
+};
