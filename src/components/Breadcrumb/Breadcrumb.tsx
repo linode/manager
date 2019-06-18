@@ -26,7 +26,10 @@ const styles = (theme: Theme) =>
       whiteSpace: 'nowrap',
       marginRight: theme.spacing(1),
       ...theme.typography.h1,
-      color: theme.palette.primary.main
+      color: theme.palette.primary.main,
+      '&:hover': {
+        color: theme.palette.primary.light
+      }
     },
     subtitleLinkText: {
       display: 'flex',
