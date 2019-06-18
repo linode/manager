@@ -9,6 +9,7 @@ import { getEmailHash } from 'src/utilities/gravatar';
 
 export interface UserSSHKeyProps {
   userSSHKeys: UserSSHKeyObject[];
+  requestKeys: () => void;
 }
 
 export interface State {

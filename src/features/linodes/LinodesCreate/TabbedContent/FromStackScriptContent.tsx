@@ -193,6 +193,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       selectedStackScriptLabel,
       label,
       request,
+      requestKeys,
       header,
       toggleBackupsEnabled,
       togglePrivateIPEnabled,
@@ -315,6 +316,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
             password={password}
             handleChange={updatePassword}
             users={userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []}
+            requestKeys={requestKeys}
           />
           <AddonsPanel
             backups={backupsEnabled}
