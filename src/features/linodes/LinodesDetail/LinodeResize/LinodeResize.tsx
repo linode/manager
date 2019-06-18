@@ -39,7 +39,8 @@ type ClassNames =
   | 'subTitle'
   | 'toolTip'
   | 'currentPlanContainer'
-  | 'checkbox';
+  | 'checkbox'
+  | 'resizeTitle';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -55,6 +56,11 @@ const styles = (theme: Theme) =>
     },
     title: {
       marginBottom: theme.spacing(2)
+    },
+    resizeTitle: {
+      display: 'flex',
+      alignItems: 'center',
+      minHeight: '44px'
     },
     subTitle: {
       marginTop: theme.spacing(3),
@@ -258,21 +264,20 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           disabled={disabled}
         />
         <Paper className={`${classes.checkbox} ${classes.root}`}>
-          <Typography variant="h2" className={classes.title}>
+          <Typography variant="h2" className={classes.resizeTitle}>
             Auto Resize Disk
-            {!_shouldEnableAutoResizeDiskOption && (
-              <HelpIcon
-                className={classes.toolTip}
-                text={`Your ext disk can only be automatically resized if you have one ext
-                disk or one ext disk and one swap disk on this Linode.`}
-              />
-            )}
-            {isSmaller && (
+            {isSmaller ? (
               <HelpIcon
                 className={classes.toolTip}
                 text={`Your disks cannot be automatically resized when moving to a smaller plan.`}
               />
-            )}
+            ) : !_shouldEnableAutoResizeDiskOption ? (
+              <HelpIcon
+                className={classes.toolTip}
+                text={`Your ext disk can only be automatically resized if you have one ext
+                      disk or one ext disk and one swap disk on this Linode.`}
+              />
+            ) : null}
           </Typography>
           <Checkbox
             disabled={!_shouldEnableAutoResizeDiskOption || isSmaller}
