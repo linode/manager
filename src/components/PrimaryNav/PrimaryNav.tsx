@@ -111,7 +111,6 @@ const styles = (theme: Theme) =>
       fontFamily: 'LatoWebBold' // we keep this bold at all times
     },
     active: {
-      // transition: 'before .7s ease-in-out',
       backgroundColor: '#272b31',
       '&:before': {
         content: "''",
@@ -122,7 +121,7 @@ const styles = (theme: Theme) =>
         borderColor: 'transparent #f4f4f4 transparent transparent',
         position: 'absolute',
         right: 0,
-        top: 3
+        top: '8%'
       },
       '&:hover': {
         '&:before': {
@@ -134,7 +133,7 @@ const styles = (theme: Theme) =>
           borderColor: 'transparent #f4f4f4 transparent transparent',
           position: 'absolute',
           right: 0,
-          top: 3
+          top: '8%'
         }
       }
     },
