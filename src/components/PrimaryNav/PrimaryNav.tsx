@@ -96,7 +96,7 @@ const styles = (theme: Theme) =>
         2
       ) - 1}px ${theme.spacing(4) + 1}px`,
       '&:hover': {
-        backgroundColor: '#272b31', // todo need dt version here
+        backgroundColor: '#272b31',
         '& $linkItem': {
           color: 'white'
         }
@@ -112,16 +112,14 @@ const styles = (theme: Theme) =>
     },
     active: {
       // transition: 'before .7s ease-in-out',
-      backgroundColor: '#272b31', // todo need dt version here
+      backgroundColor: '#272b31',
       '&:before': {
         content: "''",
         borderStyle: 'solid',
         borderWidth: `${theme.spacing(2) + 5}px ${theme.spacing(
           2
         )}px ${theme.spacing(2) + 5}px 0`,
-        borderColor: `transparent ${
-          theme.bg.primaryNavActive
-        } transparent transparent`,
+        borderColor: 'transparent #f4f4f4 transparent transparent',
         position: 'absolute',
         right: 0,
         top: 3
@@ -133,9 +131,7 @@ const styles = (theme: Theme) =>
           borderWidth: `${theme.spacing(2) + 5}px ${theme.spacing(
             2
           )}px ${theme.spacing(2) + 5}px 0`,
-          borderColor: `transparent ${
-            theme.bg.primaryNavActive
-          } transparent transparent`,
+          borderColor: 'transparent #f4f4f4 transparent transparent',
           position: 'absolute',
           right: 0,
           top: 3
