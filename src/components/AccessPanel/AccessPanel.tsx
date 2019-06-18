@@ -70,6 +70,7 @@ interface Props {
   required?: boolean;
   placeholder?: string;
   users?: UserSSHKeyObject[];
+  requestKeys: () => void;
   disabled?: boolean;
   disabledReason?: string;
   hideStrengthLabel?: boolean;
@@ -108,7 +109,8 @@ class AccessPanel extends React.Component<CombinedProps> {
       className,
       small,
       isOptional,
-      hideHelperText
+      hideHelperText,
+      requestKeys
     } = this.props;
 
     return (
@@ -137,7 +139,7 @@ class AccessPanel extends React.Component<CombinedProps> {
             hideStrengthLabel={hideStrengthLabel}
             hideHelperText={hideHelperText}
           />
-          {users && users.length > 0 && <UserSSHKeyPanel users={users} />}
+          <UserSSHKeyPanel users={users} onKeyAddSuccess={requestKeys} />
         </div>
       </Paper>
     );

@@ -173,6 +173,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
       typeDisplayInfo,
       backupsMonthlyPrice,
       userSSHKeys,
+      requestKeys,
       userCannotCreateLinode,
       selectedImageID,
       selectedRegionID,
@@ -306,6 +307,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
             password={password}
             handleChange={updatePassword}
             users={userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []}
+            requestKeys={requestKeys}
           />
           <AddonsPanel
             backups={backupsEnabled}

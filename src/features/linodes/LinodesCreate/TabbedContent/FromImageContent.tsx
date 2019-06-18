@@ -105,6 +105,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
       typeDisplayInfo,
       backupsMonthlyPrice,
       userSSHKeys,
+      requestKeys,
       userCannotCreateLinode,
       errors,
       imagePanelTitle,
@@ -218,6 +219,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
                 ? userSSHKeys
                 : []
             }
+            requestKeys={requestKeys}
           />
           <AddonsPanel
             data-qa-addons-panel

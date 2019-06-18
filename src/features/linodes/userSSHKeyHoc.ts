@@ -14,6 +14,7 @@ export interface UserSSHKeyProps {
 export interface State {
   userSSHKeys: UserSSHKeyObject[];
   resetSSHKeys: () => void;
+  requestKeys: () => void;
 }
 
 const resetKeys = (key: UserSSHKeyObject) => {
@@ -28,24 +29,11 @@ export default (Component: React.ComponentType<any>) => {
       this.setState({ userSSHKeys: newKeys });
     };
 
-    state = {
-      userSSHKeys: [],
-      resetSSHKeys: this.resetSSHKeys
-    };
-
-    mounted: boolean = false;
-
-    componentWillUnmount() {
-      this.mounted = false;
-    }
-
-    componentDidMount() {
-      this.mounted = true;
+    requestKeys = () => {
       const { username, userEmailAddress } = this.props;
       if (!username || !userEmailAddress) {
         return;
       }
-
       getSSHKeys()
         .then(response => {
           const keys = response.data;
@@ -55,7 +43,6 @@ export default (Component: React.ComponentType<any>) => {
 
           this.setState({
             userSSHKeys: [
-              ...this.state.userSSHKeys,
               this.createUserObject(
                 username,
                 userEmailAddress,
@@ -100,6 +87,23 @@ export default (Component: React.ComponentType<any>) => {
         .catch(() => {
           /* We don't need to do anything here, we just don't add the keys. */
         });
+    };
+
+    state = {
+      userSSHKeys: [],
+      resetSSHKeys: this.resetSSHKeys,
+      requestKeys: this.requestKeys
+    };
+
+    mounted: boolean = false;
+
+    componentWillUnmount() {
+      this.mounted = false;
+    }
+
+    componentDidMount() {
+      this.mounted = true;
+      this.requestKeys();
     }
 
     render() {
