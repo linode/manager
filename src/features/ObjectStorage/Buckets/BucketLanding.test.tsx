@@ -6,10 +6,13 @@ import { BucketLanding } from './BucketLanding';
 describe('ObjectStorageLanding', () => {
   const wrapper = shallow(
     <BucketLanding
+      createBucket={jest.fn()}
       bucketsData={buckets}
       bucketsLoading={false}
       openBucketDrawer={jest.fn()}
       closeBucketDrawer={jest.fn()}
+      classes={{ root: '', confirmationCopy: '' }}
+      deleteBucket={jest.fn()}
     />
   );
 
