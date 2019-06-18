@@ -2,9 +2,20 @@ import { API_ROOT } from 'src/constants';
 import Request, { setData, setMethod, setURL } from 'src/services';
 
 import {
+  CancelAccountSchema,
   updateAccountSchema,
   UpdateAccountSettingsSchema
 } from './account.schema';
+
+interface CancelAccount {
+  survey_link: string;
+}
+
+interface CancelAccountPayload {
+  comments: string;
+  customerID: number;
+  username: string;
+}
 
 /**
  * getAccountInfo
@@ -67,3 +78,16 @@ export const updateAccountSettings = (data: Partial<Linode.AccountSettings>) =>
     setMethod('PUT'),
     setData(data, UpdateAccountSettingsSchema)
   ).then(response => response.data);
+
+/**
+ * cancelAccount
+ *
+ * Cancels an account and returns a survey monkey link for a user to fill out
+ */
+export const cancelAccount = (data: CancelAccountPayload) => {
+  Request<CancelAccount>(
+    setURL(`${API_ROOT}/cancel`),
+    setMethod('POST'),
+    setData(data, CancelAccountSchema)
+  ).then(response => response.data);
+};
