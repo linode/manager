@@ -150,7 +150,7 @@ interface State {
 
 export interface Props {
   tags: string[];
-  updateTags: (tags: string[]) => Promise<void>;
+  updateTags: (tags: string[]) => Promise<any>;
   disabled?: boolean;
 }
 

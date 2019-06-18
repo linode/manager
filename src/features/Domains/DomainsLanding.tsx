@@ -26,7 +26,8 @@ import OrderBy from 'src/components/OrderBy';
 import Placeholder from 'src/components/Placeholder';
 import Toggle from 'src/components/Toggle';
 import domainsContainer, {
-  Props as WithDomainsProps
+  Props as DomainProps,
+  StateProps as DomainStateProps
 } from 'src/containers/domains.container';
 import localStorageContainer from 'src/containers/localStorage.container';
 import { Domains } from 'src/documentation';
@@ -37,10 +38,6 @@ import {
   openForCreating,
   openForEditing
 } from 'src/store/domainDrawer';
-import {
-  DomainActionsProps,
-  withDomainActions
-} from 'src/store/domains/domains.container';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
@@ -106,8 +103,7 @@ interface State {
   };
 }
 
-export type CombinedProps = WithDomainsProps &
-  DomainActionsProps &
+export type CombinedProps = DomainProps &
   LocalStorageProps &
   WithStyles<ClassNames> &
   RouteComponentProps<{}> &
@@ -181,10 +177,9 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     const {
       removeDialog: { domainId }
     } = this.state;
-    const { enqueueSnackbar, domainActions } = this.props;
+    const { enqueueSnackbar, deleteDomain } = this.props;
     if (domainId) {
-      domainActions
-        .deleteDomain({ domainId })
+      deleteDomain({ domainId })
         .then(() => {
           this.closeRemoveDialog();
         })
@@ -220,8 +215,6 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
     const { domainsError, domainsData, domainsLoading } = this.props;
 
-    const domainsLength = domainsData.length;
-
     if (domainsLoading) {
       return <RenderLoading />;
     }
@@ -230,7 +223,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       return <RenderError />;
     }
 
-    if (domainsLength === 0) {
+    if (!domainsData || domainsData.length === 0) {
       return <RenderEmpty onClick={this.props.openForCreating} />;
     }
 
@@ -282,7 +275,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
         </Grid>
         {!this.props.linodesLoading &&
           this.props.howManyLinodesOnAccount === 0 &&
-          domainsLength > 0 && (
+          domainsData.length > 0 && (
             <Notice warning important className={classes.dnsWarning}>
               <Typography variant="h3">
                 Your DNS zones are not being served.
@@ -454,11 +447,16 @@ export const connected = connect(
 
 export default compose<CombinedProps, {}>(
   setDocs(DomainsLanding.docs),
-  domainsContainer,
+  domainsContainer<DomainStateProps, {}>(
+    (ownProps, domainsLoading, domains, domainsError) => ({
+      domainsData: domains,
+      domainsError,
+      domainsLoading
+    })
+  ),
   withRouter,
   withLocalStorage,
   styled,
   connected,
-  withSnackbar,
-  withDomainActions
+  withSnackbar
 )(DomainsLanding);

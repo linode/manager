@@ -41,7 +41,6 @@ interface Props extends EditableRecordFields, EditableDomainFields {
   mode: 'create' | 'edit';
   records: Linode.DomainRecord[];
   updateRecords: () => void;
-  updateDomain: () => void;
 
   /**
    * Used to populate fields on edits.
@@ -187,9 +186,9 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   );
 
   NumberField = ({ label, field }: NumberFieldProps) => {
-    const defaultValue: number = DomainRecordDrawer.defaultFieldsState(this.props)[
-      field
-    ];
+    const defaultValue: number = DomainRecordDrawer.defaultFieldsState(
+      this.props
+    )[field];
 
     return (
       <TextField
@@ -469,7 +468,6 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     domainActions
       .updateDomain({ domainId, ...data, status: 'active' })
       .then(() => {
-        this.props.updateDomain();
         this.onClose();
       })
       .catch(this.handleSubmissionErrors);
@@ -763,8 +761,6 @@ const typeMap = {
   TXT: 'TXT'
 };
 
-const enhanced = compose<CombinedProps, Props>(
-  withDomainActions
-);
+const enhanced = compose<CombinedProps, Props>(withDomainActions);
 
 export default enhanced(DomainRecordDrawer);
