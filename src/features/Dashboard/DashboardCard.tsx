@@ -20,7 +20,7 @@ const styles = (theme: Theme) =>
     headerAction: {
       position: 'relative',
       top: 6,
-      left: -16,
+      left: -theme.spacing(2),
       marginLeft: theme.spacing(1) / 2
     }
   });
