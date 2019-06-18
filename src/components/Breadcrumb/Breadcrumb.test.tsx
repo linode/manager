@@ -11,22 +11,14 @@ describe('Breadcrumb component', () => {
       labelTitle="MyTestLinode"
       classes={{
         root: '',
-        backButton: 'backButton',
         linkText: '',
-        linkTextWrapper: '',
         labelText: '',
         subtitleLinkText: '',
-        prefixComponentWrapper: ''
+        prefixComponentWrapper: '',
+        slash: ''
       }}
     />
   );
-
-  it('contains back icon', () => {
-    expect(wrapper.find('WithStyles(ForwardRef(IconButton))')).toHaveLength(1);
-    expect(
-      wrapper.find('WithStyles(ForwardRef(IconButton))').hasClass('backButton')
-    ).toBeTruthy();
-  });
 
   it('contains link text', () => {
     expect(wrapper.find('[data-qa-link-text]')).toHaveLength(1);
