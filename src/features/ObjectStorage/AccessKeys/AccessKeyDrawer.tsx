@@ -64,8 +64,9 @@ export const AccessKeyDrawer: React.StatelessComponent<
                   target="_blank"
                   className="h-u"
                 >
-                  S3-compatible client.
+                  S3-compatible client
                 </a>
+                .
               </Typography>
             )}
 
