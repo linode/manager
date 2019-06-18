@@ -576,64 +576,68 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
          * domain records for them. If so, create some A/AAAA and MX records
          * with the first IPv4 and IPv6 from the Linode or NodeBalancer they
          * selected.
+         *
+         * This only applies to master domains.
          */
-        if (defaultRecordsSetting === 'linode') {
-          return generateDefaultDomainRecords(
-            domainData.domain,
-            domainData.id,
-            path(['ipv4', 0], selectedDefaultLinode),
-            path(['ipv6'], selectedDefaultLinode)
-          )
-            .then(() => {
-              return this.redirectToLandingOrDetail(type, domainData.id);
-            })
-            .catch((e: Linode.ApiFieldError[]) => {
-              reportException(
-                `Default DNS Records couldn't be created from Linode: ${
-                  e[0].reason
-                }`,
-                {
-                  selectedLinode: this.state.selectedDefaultLinode!.id,
-                  domainID: domainData.id,
-                  ipv4: path(['ipv4', 0], selectedDefaultLinode),
-                  ipv6: path(['ipv6'], selectedDefaultLinode)
-                }
-              );
-              return this.redirectToLandingOrDetail(type, domainData.id, {
-                recordError:
-                  'There was an issue creating default domain records.'
+        if (type === 'master') {
+          if (defaultRecordsSetting === 'linode') {
+            return generateDefaultDomainRecords(
+              domainData.domain,
+              domainData.id,
+              path(['ipv4', 0], selectedDefaultLinode),
+              path(['ipv6'], selectedDefaultLinode)
+            )
+              .then(() => {
+                return this.redirectToLandingOrDetail(type, domainData.id);
+              })
+              .catch((e: Linode.ApiFieldError[]) => {
+                reportException(
+                  `Default DNS Records couldn't be created from Linode: ${
+                    e[0].reason
+                  }`,
+                  {
+                    selectedLinode: this.state.selectedDefaultLinode!.id,
+                    domainID: domainData.id,
+                    ipv4: path(['ipv4', 0], selectedDefaultLinode),
+                    ipv6: path(['ipv6'], selectedDefaultLinode)
+                  }
+                );
+                return this.redirectToLandingOrDetail(type, domainData.id, {
+                  recordError:
+                    'There was an issue creating default domain records.'
+                });
               });
-            });
-        }
+          }
 
-        if (defaultRecordsSetting === 'nodebalancer') {
-          return generateDefaultDomainRecords(
-            domainData.domain,
-            domainData.id,
-            path(['ipv4'], selectedDefaultNodeBalancer),
-            path(['ipv6'], selectedDefaultNodeBalancer)
-          )
-            .then(() => {
-              return this.redirectToLandingOrDetail(type, domainData.id);
-            })
-            .catch((e: Linode.ApiFieldError[]) => {
-              reportException(
-                `Default DNS Records couldn't be created from NodeBalancer: ${
-                  e[0].reason
-                }`,
-                {
-                  selectedNodeBalancer: this.state.selectedDefaultNodeBalancer!
-                    .id,
-                  domainID: domainData.id,
-                  ipv4: path(['ipv4'], selectedDefaultNodeBalancer),
-                  ipv6: path(['ipv6'], selectedDefaultNodeBalancer)
-                }
-              );
-              return this.redirectToLandingOrDetail(type, domainData.id, {
-                recordError:
-                  'There was an issue creating default domain records.'
+          if (defaultRecordsSetting === 'nodebalancer') {
+            return generateDefaultDomainRecords(
+              domainData.domain,
+              domainData.id,
+              path(['ipv4'], selectedDefaultNodeBalancer),
+              path(['ipv6'], selectedDefaultNodeBalancer)
+            )
+              .then(() => {
+                return this.redirectToLandingOrDetail(type, domainData.id);
+              })
+              .catch((e: Linode.ApiFieldError[]) => {
+                reportException(
+                  `Default DNS Records couldn't be created from NodeBalancer: ${
+                    e[0].reason
+                  }`,
+                  {
+                    selectedNodeBalancer: this.state
+                      .selectedDefaultNodeBalancer!.id,
+                    domainID: domainData.id,
+                    ipv4: path(['ipv4'], selectedDefaultNodeBalancer),
+                    ipv6: path(['ipv6'], selectedDefaultNodeBalancer)
+                  }
+                );
+                return this.redirectToLandingOrDetail(type, domainData.id, {
+                  recordError:
+                    'There was an issue creating default domain records.'
+                });
               });
-            });
+          }
         }
 
         return this.redirectToLandingOrDetail(type, domainData.id);
