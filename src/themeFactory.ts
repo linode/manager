@@ -890,6 +890,8 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
           textOverflow: 'initial',
           color: primaryColors.text,
           minHeight: 'auto',
+          paddingTop: spacingUnit * 2,
+          paddingBottom: spacingUnit * 2,
           transition: `${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), '}
         ${'color .2s cubic-bezier(0.4, 0, 0.2, 1)'}`,
           '&$selected, &$selected:hover': {
