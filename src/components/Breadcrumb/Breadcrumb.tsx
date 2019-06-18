@@ -1,8 +1,6 @@
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import { LocationDescriptor } from 'history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import IconButton from 'src/components/core/IconButton';
 import {
   createStyles,
   Theme,
@@ -15,48 +13,20 @@ import LabelText from './LabelText';
 
 type ClassNames =
   | 'root'
-  | 'backButton'
   | 'linkText'
-  | 'linkTextWrapper'
   | 'labelText'
   | 'subtitleLinkText'
-  | 'prefixComponentWrapper';
+  | 'prefixComponentWrapper'
+  | 'slash';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
-    backButton: {
-      margin: '0',
-      padding: '0',
-      width: 'auto',
-      height: 'auto',
-      '& svg': {
-        position: 'relative',
-        top: 2,
-        width: 24,
-        height: 24
-      }
-    },
     linkText: {
-      display: 'flex',
-      alignItems: 'center',
-      color: '#3683DC',
-      borderColor: theme.color.grey,
       whiteSpace: 'nowrap',
-      '&:after': {
-        content: "''",
-        display: 'inline-block',
-        padding: '0 8px 0 6px',
-        height: '39px',
-        borderRight: `1px solid ${theme.color.grey1}`
-      },
-      [theme.breakpoints.down('sm')]: {
-        display: 'none'
-      }
-    },
-    linkTextWrapper: {
-      position: 'relative',
-      top: 2
+      marginRight: theme.spacing(1),
+      ...theme.typography.h1,
+      color: theme.palette.primary.main
     },
     subtitleLinkText: {
       display: 'flex',
@@ -89,6 +59,9 @@ const styles = (theme: Theme) =>
         top: 2,
         marginRight: '0'
       }
+    },
+    slash: {
+      fontSize: 24
     }
   });
 interface EditableProps {
@@ -127,30 +100,27 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = props => {
   return (
     <React.Fragment>
       <Link to={linkTo} data-qa-link>
-        <IconButton className={classes.backButton} tabIndex={-1}>
-          <KeyboardArrowLeft />
-          {linkText && (
-            <Typography
-              variant="h3"
-              className={
-                labelOptions && labelOptions.subtitle
-                  ? classes.subtitleLinkText
-                  : classes.linkText
-              }
-              data-qa-link-text
-            >
-              <span className={classes.linkTextWrapper}>{linkText}</span>
-            </Typography>
-          )}
-        </IconButton>
+        {linkText && (
+          <Typography
+            className={
+              labelOptions && labelOptions.subtitle
+                ? classes.subtitleLinkText
+                : classes.linkText
+            }
+            data-qa-link-text
+          >
+            {linkText}
+          </Typography>
+        )}
       </Link>
-
       {labelOptions && labelOptions.prefixComponent && (
         <div className={classes.prefixComponentWrapper} data-qa-prefixwrapper>
           {labelOptions.prefixComponent}
         </div>
       )}
-
+      <Typography component="span" className={classes.slash}>
+        /
+      </Typography>
       {onEditHandlers ? (
         <EditableText
           typeVariant="h2"

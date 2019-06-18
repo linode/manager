@@ -45,7 +45,7 @@ const styles = (theme: Theme) =>
       }
     },
     root: {
-      padding: '5px 10px',
+      padding: '5px 8px',
       display: 'inline-block',
       border: '1px solid transparent',
       transition: theme.transitions.create(['opacity']),
@@ -89,6 +89,7 @@ const styles = (theme: Theme) =>
       borderColor: `${theme.palette.primary.main} !important`,
       backgroundColor: 'transparent',
       boxShadow: 'none',
+      minHeight: 40,
       [theme.breakpoints.up('md')]: {
         maxWidth: 415,
         width: '100%'
@@ -115,7 +116,7 @@ const styles = (theme: Theme) =>
       fontSize: 26
     },
     input: {
-      padding: '5px 10px',
+      padding: '5px 8px',
       ...theme.typography.h1
     },
     headline: {
