@@ -109,6 +109,7 @@ const interceptNotification = (
     return {
       ...notification,
       label: `Maintenance Scheduled`,
+      severity: 'major',
       message: notification.message
         .toLowerCase()
         .replace(
