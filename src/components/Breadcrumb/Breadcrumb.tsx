@@ -15,7 +15,6 @@ type ClassNames =
   | 'root'
   | 'linkText'
   | 'labelText'
-  | 'subtitleLinkText'
   | 'prefixComponentWrapper'
   | 'slash';
 
@@ -29,27 +28,6 @@ const styles = (theme: Theme) =>
       color: theme.palette.primary.main,
       '&:hover': {
         color: theme.palette.primary.light
-      }
-    },
-    subtitleLinkText: {
-      display: 'flex',
-      alignItems: 'flex-start',
-      color: '#3683DC',
-      borderColor: theme.color.grey,
-      whiteSpace: 'nowrap',
-      '&:after': {
-        content: "''",
-        display: 'inline-block',
-        padding: '0 0 0 8px',
-        color: theme.color.grey1,
-        borderRight: `1px solid ${theme.color.grey1}`,
-        height: 24,
-        marginTop: -7,
-        position: 'relative',
-        top: 4
-      },
-      [theme.breakpoints.down('sm')]: {
-        display: 'none'
       }
     },
     labelText: {
@@ -104,14 +82,7 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = props => {
     <React.Fragment>
       <Link to={linkTo} data-qa-link>
         {linkText && (
-          <Typography
-            className={
-              labelOptions && labelOptions.subtitle
-                ? classes.subtitleLinkText
-                : classes.linkText
-            }
-            data-qa-link-text
-          >
+          <Typography className={classes.linkText} data-qa-link-text>
             {linkText}
           </Typography>
         )}
