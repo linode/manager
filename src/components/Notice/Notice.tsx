@@ -61,6 +61,14 @@ const styles = (theme: Theme) => {
         fontFamily: theme.font.normal
       }
     },
+    icon: {
+      color: 'white',
+      position: 'absolute',
+      left: theme.spacing(1) + 7
+    },
+    closeIcon: {
+      paddingLeft: theme.spacing(1)
+    },
     inner: {
       width: '100%'
     },
@@ -82,7 +90,7 @@ const styles = (theme: Theme) => {
       borderLeft: `5px solid ${status.errorDark}`,
       animation: '$fadeIn 225ms linear forwards',
       '&$important': {
-        borderLeftWidth: 26
+        borderLeftWidth: 32
       }
     },
     errorList: {
@@ -92,7 +100,10 @@ const styles = (theme: Theme) => {
       borderLeft: `5px solid ${status.warningDark}`,
       animation: '$fadeIn 225ms linear forwards',
       '&$important': {
-        borderLeftWidth: 26
+        borderLeftWidth: 32
+      },
+      '& $icon': {
+        color: '#555'
       }
     },
     warningList: {
@@ -102,7 +113,7 @@ const styles = (theme: Theme) => {
       borderLeft: `5px solid ${status.successDark}`,
       animation: '$fadeIn 225ms linear forwards',
       '&$important': {
-        borderLeftWidth: 26
+        borderLeftWidth: 32
       }
     },
     successList: {
@@ -110,14 +121,6 @@ const styles = (theme: Theme) => {
     },
     flag: {
       marginRight: theme.spacing(2)
-    },
-    icon: {
-      color: 'white',
-      marginLeft: -(theme.spacing(2) + 22),
-      marginRight: 18
-    },
-    closeIcon: {
-      paddingLeft: theme.spacing(1)
     }
   });
 };
