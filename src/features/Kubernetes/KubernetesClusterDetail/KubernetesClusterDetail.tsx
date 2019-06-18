@@ -121,6 +121,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   const [success, setSuccess] = React.useState<boolean>(false);
   /** Deletion confirmation modal */
   const [confirmationOpen, setConfirmation] = React.useState<boolean>(false);
+  const [deleting, setDeleting] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     /**
@@ -278,10 +279,11 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   };
 
   const handleDeleteCluster = () => {
+    setDeleting(true);
     props
       .deleteCluster({ clusterID: cluster.id })
       .then(() => props.history.push('/kubernetes'))
-      .catch(_ => null); // Handle errors through Redux
+      .catch(_ => setDeleting(false)); // Handle errors through Redux
   };
 
   const openDeleteConfirmation = () => {
@@ -417,6 +419,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
       </Grid>
       <KubernetesDialog
         open={confirmationOpen}
+        loading={deleting}
         error={path([0, 'reason'], clusterDeleteError)}
         clusterLabel={cluster.label}
         onClose={() => setConfirmation(false)}
@@ -433,7 +436,7 @@ const withCluster = KubeContainer<
   WithTypesProps & RouteComponentProps<{ clusterID: string }>
 >((ownProps, clustersLoading, lastUpdated, clustersError, clustersData) => {
   const thisCluster = clustersData.find(
-    c => c.id == +ownProps.match.params.clusterID
+    c => +c.id === +ownProps.match.params.clusterID
   );
   const cluster = thisCluster
     ? extendCluster(thisCluster, ownProps.typesData || [])

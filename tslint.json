@@ -34,7 +34,6 @@
     "import-blacklist": [true, "rxjs", "@material-ui/core", "@material-ui/icons"],
     "prefer-for-of": {"severity": "warning"},
     "trailing-comma": { "severity": "warning" },
-    "triple-equals": false,
     "variable-name": false
   }
 }

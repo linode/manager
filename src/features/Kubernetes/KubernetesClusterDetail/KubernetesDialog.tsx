@@ -2,40 +2,32 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
-
 interface Props {
   open: boolean;
+  loading: boolean;
   clusterLabel: string;
   error?: string;
   onClose: () => void;
   onDelete: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 class KubernetesDialog extends React.PureComponent<CombinedProps, {}> {
   renderActions = () => {
+    const { loading, onClose } = this.props;
     return (
       <ActionsPanel style={{ padding: 0 }}>
-        <Button type="cancel" onClick={this.props.onClose} data-qa-cancel>
+        <Button type="cancel" onClick={onClose} data-qa-cancel>
           Cancel
         </Button>
         <Button
           type="secondary"
           destructive
+          loading={loading}
           onClick={this.props.onDelete}
           data-qa-confirm
         >
@@ -62,6 +54,4 @@ class KubernetesDialog extends React.PureComponent<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles);
-
-export default styled(KubernetesDialog);
+export default KubernetesDialog;
