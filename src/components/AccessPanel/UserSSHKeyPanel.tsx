@@ -111,7 +111,7 @@ const UserSSHKeyPanel: React.FunctionComponent<CombinedProps> = props => {
           ) : (
             <TableRowEmptyState
               colSpan={12}
-              message={"You don't have any SSH keys on your account."}
+              message={"You don't have any SSH keys available."}
             />
           )}
         </TableBody>
