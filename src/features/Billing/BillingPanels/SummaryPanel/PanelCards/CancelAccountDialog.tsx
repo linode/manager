@@ -98,7 +98,7 @@ const CancelAccountDialog: React.FC<CombinedProps> = props => {
         etc will be lost and may not be able to be restored.
       </Typography>
       <TextField
-        label="Your Username (required)"
+        label="Please enter your username to confirm."
         placeholder="Username"
         value={inputtedUsername}
         onChange={e => setUsername(e.target.value)}
