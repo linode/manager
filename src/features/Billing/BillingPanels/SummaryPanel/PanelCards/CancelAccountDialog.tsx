@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { compose } from 'recompose';
+import { makeStyles, Theme } from 'src/components/core/styles';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -12,9 +13,16 @@ import { cancelAccount } from 'src/services/account';
 interface Props {
   open: boolean;
   closeDialog: () => void;
+  username: string;
 }
 
 type CombinedProps = Props;
+
+const useStyles = makeStyles((theme: Theme) => ({
+  dontgo: {
+    marginTop: theme.spacing(2)
+  }
+}));
 
 const CancelAccountDialog: React.FC<CombinedProps> = props => {
   const [isCancelling, setCancelling] = React.useState<boolean>(false);
@@ -22,13 +30,32 @@ const CancelAccountDialog: React.FC<CombinedProps> = props => {
     Linode.ApiFieldError[] | undefined
   >(undefined);
   const [comments, setComments] = React.useState<string>('');
+  const [inputtedUsername, setUsername] = React.useState<string>('');
+  const [canSubmit, setCanSubmit] = React.useState<boolean>(false);
+
+  const classes = useStyles();
 
   React.useEffect(() => {
     if (props.open) {
-      /** reset error state when we open the modal */
+      /**
+       * reset error state, username, and disabled status when we open the modal
+       * intentionally not resetting comments
+       */
       setErrors(undefined);
+      setUsername('');
+      setCanSubmit(false);
     }
   }, [props.open]);
+
+  /**
+   * enable the submit button if the user entered their
+   * username correctly
+   */
+  React.useEffect(() => {
+    if (inputtedUsername === props.username) {
+      setCanSubmit(true);
+    }
+  }, [inputtedUsername]);
 
   const handleCancelAccount = () => {
     setCancelling(true);
@@ -61,10 +88,22 @@ const CancelAccountDialog: React.FC<CombinedProps> = props => {
           onClose={props.closeDialog}
           isCancelling={isCancelling}
           onSubmit={handleCancelAccount}
+          disabled={!canSubmit}
         />
       }
     >
       <Typography>
+        Please note this is an extremely destructive action. Cancelling your
+        account means that all services include Linodes, Volumes, DNS Records
+        will be lost and may not be able to be restored.
+      </Typography>
+      <TextField
+        label="Your Username (required)"
+        placeholder="Username"
+        value={inputtedUsername}
+        onChange={e => setUsername(e.target.value)}
+      />
+      <Typography className={classes.dontgo}>
         We'd hate to see you go. Please let us know what we could be doing
         better in the comments section below. After your account is cancelled,
         you'll be directed to a quick survey so we can better gauge your
@@ -72,6 +111,7 @@ const CancelAccountDialog: React.FC<CombinedProps> = props => {
       </Typography>
       <TextField
         multiline
+        value={comments}
         rows={2}
         label="Comments (optional)"
         placeholder="Provide Feedback"
@@ -85,6 +125,7 @@ interface ActionsProps {
   onClose: () => void;
   onSubmit: () => void;
   isCancelling: boolean;
+  disabled: boolean;
 }
 
 const Actions: React.FC<ActionsProps> = props => {
@@ -94,6 +135,7 @@ const Actions: React.FC<ActionsProps> = props => {
         Cancel
       </Button>
       <Button
+        disabled={props.disabled}
         onClick={props.onSubmit}
         loading={props.isCancelling}
         destructive

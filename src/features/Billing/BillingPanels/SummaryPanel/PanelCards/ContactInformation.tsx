@@ -43,6 +43,7 @@ interface Props {
   email: string;
   phone: string;
   activeSince: string;
+  username: string;
 }
 
 type CombinedProps = Props & StyleProps;
@@ -62,6 +63,7 @@ const ContactInformation: React.FC<CombinedProps> = props => {
     address1,
     address2,
     email,
+    username,
     phone,
     activeSince,
     classes
@@ -117,7 +119,11 @@ const ContactInformation: React.FC<CombinedProps> = props => {
           Cancel Account
         </Typography>
       </Paper>
-      <Dialog closeDialog={() => toggleModal(false)} open={modalOpen} />
+      <Dialog
+        username={username}
+        closeDialog={() => toggleModal(false)}
+        open={modalOpen}
+      />
     </React.Fragment>
   );
 };

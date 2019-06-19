@@ -1,10 +1,13 @@
+import { path } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
 
+import withProfile from 'src/containers/profile.container';
 import { withAccount } from '../../context';
+
 import BillingInfo from './PanelCards/BillingInformation';
 import ContactInfo from './PanelCards/ContactInformation';
 
@@ -15,27 +18,35 @@ interface AccountContextProps {
   accountLoading: boolean;
 }
 
-export type CombinedProps = AccountContextProps;
+export type CombinedProps = AccountContextProps & Profile;
 
 export class SummaryPanel extends React.Component<CombinedProps, {}> {
   render() {
-    const { data, accountLoading, errors } = this.props;
+    const {
+      data,
+      accountLoading,
+      errors,
+      username,
+      profileError,
+      profileLoading
+    } = this.props;
 
-    if (accountLoading) {
+    if (accountLoading || profileLoading) {
       return <CircleProgress noTopMargin />;
     }
 
-    if (errors) {
+    if (errors || profileError) {
       return <ErrorState compact errorText="Unable to load account details." />;
     }
 
-    if (!data) {
+    if (!data || !username) {
       return null;
     }
 
     return (
       <React.Fragment>
         <ContactInfo
+          username={username}
           company={data.company}
           firstName={data.first_name}
           lastName={data.last_name}
@@ -68,6 +79,19 @@ const accountContext = withAccount(
   })
 );
 
-const enhanced = compose<CombinedProps, {}>(accountContext);
+interface Profile {
+  profileLoading: boolean;
+  profileError?: Linode.ApiFieldError[];
+  username?: string;
+}
+
+const enhanced = compose<CombinedProps, {}>(
+  accountContext,
+  withProfile<Profile, {}>((ownProps, profile) => ({
+    username: path(['username'], profile.data),
+    profileError: profile.error,
+    profileLoading: profile.loading
+  }))
+);
 
 export default enhanced(SummaryPanel) as React.ComponentType<{}>;
