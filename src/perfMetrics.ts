@@ -12,7 +12,6 @@ export const perfume = new Perfume({
     enable: true,
     timingVar: 'perfMetrics'
   },
-  browserTracker: true,
   logPrefix: 'Performance:',
   logging: LOG_PERFORMANCE_METRICS
 });
