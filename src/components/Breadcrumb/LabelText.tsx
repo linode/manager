@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
   createStyles,
+  CSSProperties,
   Theme,
   withStyles,
   WithStyles
@@ -14,7 +15,7 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     labelTitle: {
-      padding: '0 10px',
+      padding: `0 ${theme.spacing(1)}px`,
       lineHeight: '1.5rem'
     },
     labelSubtitle: {
@@ -32,12 +33,13 @@ interface Props {
   title: string;
   subtitle?: string;
   titleLink?: string;
+  style?: CSSProperties;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const LabelText: React.StatelessComponent<CombinedProps> = props => {
-  const { classes, title, subtitle, titleLink } = props;
+  const { classes, title, subtitle, titleLink, style } = props;
 
   const labelTitle = (
     <Typography variant="h1" className={classes.labelTitle} data-qa-label-title>
@@ -46,7 +48,7 @@ export const LabelText: React.StatelessComponent<CombinedProps> = props => {
   );
 
   return (
-    <div>
+    <div style={style}>
       {titleLink ? (
         <Link to={titleLink!} data-qa-label-link>
           <span className={classes.underlineOnHover}>{labelTitle}</span>

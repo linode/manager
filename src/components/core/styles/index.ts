@@ -3,11 +3,16 @@ import {
   WithTheme as _WithTheme
 } from '@material-ui/core/styles';
 
+import { CSSProperties as _CSSProperties } from '@material-ui/styles';
+
 /* tslint:disable-next-line:no-empty-interface */
 export interface WithStyles<P extends string> extends _WithStyles<P> {}
 
 /* tslint:disable-next-line:no-empty-interface */
 export interface WithTheme extends _WithTheme {}
+
+/* tslint:disable-next-line:no-empty-interface */
+export interface CSSProperties extends _CSSProperties {}
 
 export {
   createGenerateClassName,

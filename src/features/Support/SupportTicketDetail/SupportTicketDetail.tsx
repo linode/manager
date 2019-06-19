@@ -36,7 +36,6 @@ import Reply from './TabbedReply';
 type ClassNames =
   | 'root'
   | 'title'
-  | 'titleWrapper'
   | 'backButton'
   | 'listParent'
   | 'label'
@@ -52,12 +51,6 @@ const styles = (theme: Theme) =>
     title: {
       display: 'flex',
       alignItems: 'center'
-    },
-    titleWrapper: {
-      display: 'flex',
-      alignItems: 'flex-start',
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(2)
     },
     backButton: {
       margin: '-6px 0 0 -16px',
@@ -337,7 +330,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <DocumentTitleSegment segment={`Support Ticket ${ticketId}`} />
         <Grid container justify="space-between" alignItems="flex-end">
-          <Grid item className={classes.titleWrapper}>
+          <Grid item>
             <Breadcrumb
               linkTo={{
                 pathname: `/support/tickets`,

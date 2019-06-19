@@ -11,15 +11,14 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
 import StackScript from 'src/components/StackScript';
 import withProfile from 'src/containers/profile.container';
 import { StackScripts as StackScriptsDocs } from 'src/documentation';
-
 import { getStackScript } from 'src/services/stackscripts';
-
 import { getStackScriptUrl } from './stackScriptUtils';
 
 interface MatchProps {
@@ -31,16 +30,11 @@ interface State {
   stackScript?: Linode.StackScript.Response;
 }
 
-type ClassNames = 'root' | 'titleWrapper' | 'cta' | 'button';
+type ClassNames = 'root' | 'cta' | 'button' | 'userName' | 'userNameSlash';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
-    titleWrapper: {
-      display: 'flex',
-      alignItems: 'center',
-      marginTop: 5
-    },
     cta: {
       marginTop: theme.spacing(1),
       [theme.breakpoints.down('sm')]: {
@@ -51,6 +45,13 @@ const styles = (theme: Theme) =>
     },
     button: {
       marginBottom: theme.spacing(2)
+    },
+    userName: {
+      ...theme.typography.h1
+    },
+    userNameSlash: {
+      color: theme.palette.text.primary,
+      fontFamily: theme.font.normal
     }
   });
 
@@ -108,15 +109,22 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
       return <NotFound />;
     }
 
+    const userNameSlash = (
+      <Typography className={classes.userName}>
+        {stackScript.username} <span className={classes.userNameSlash}>/</span>
+      </Typography>
+    );
+
     return (
       <React.Fragment>
         <Grid container justify="space-between">
-          <Grid item className={classes.titleWrapper}>
-            <div className={classes.titleWrapper}>
+          <Grid item>
+            <div>
               <Breadcrumb
                 linkTo="/stackscripts"
                 linkText="StackScripts"
-                labelTitle={`${stackScript.username} / ${stackScript.label}`}
+                labelOptions={{ prefixComponent: userNameSlash }}
+                labelTitle={stackScript.label}
               />
             </div>
           </Grid>
@@ -140,12 +148,12 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
 }
 
 export default compose<CombinedProps, {}>(
-  withStyles(styles),
   setDocs([StackScriptsDocs]),
   withProfile((ownProps, profile) => {
     return {
       ...ownProps,
       username: path(['data', 'username'], profile)
     };
-  })
+  }),
+  withStyles(styles)
 )(StackScriptsDetail);

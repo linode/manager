@@ -21,18 +21,13 @@ import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import SupportTicketDrawer from './SupportTicketDrawer';
 import TicketList from './TicketList';
 
-type ClassNames = 'root' | 'title' | 'titleWrapper';
+type ClassNames = 'root' | 'title';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
     title: {
       marginBottom: theme.spacing(2)
-    },
-    titleWrapper: {
-      display: 'flex',
-      alignItems: 'center',
-      wordBreak: 'break-all'
     }
   });
 
@@ -157,7 +152,7 @@ export class SupportTicketsLanding extends React.PureComponent<
         <DocumentTitleSegment segment="Support Tickets" />
         <AbuseTicketBanner />
         <Grid container justify="space-between" updateFor={[classes]}>
-          <Grid item className={classes.titleWrapper}>
+          <Grid item>
             <Breadcrumb
               linkTo="/support"
               linkText="Get Help"

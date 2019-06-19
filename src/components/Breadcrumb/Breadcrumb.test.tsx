@@ -11,10 +11,12 @@ describe('Breadcrumb component', () => {
       labelTitle="MyTestLinode"
       classes={{
         root: '',
+        preContainer: '',
         linkText: '',
         labelText: '',
         prefixComponentWrapper: '',
-        slash: ''
+        slash: '',
+        firstSlash: ''
       }}
     />
   );

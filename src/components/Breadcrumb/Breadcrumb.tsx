@@ -1,8 +1,10 @@
+import * as classNames from 'classnames';
 import { LocationDescriptor } from 'history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
   createStyles,
+  CSSProperties,
   Theme,
   withStyles,
   WithStyles
@@ -13,14 +15,23 @@ import LabelText from './LabelText';
 
 type ClassNames =
   | 'root'
+  | 'preContainer'
   | 'linkText'
   | 'labelText'
   | 'prefixComponentWrapper'
-  | 'slash';
+  | 'slash'
+  | 'firstSlash';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
+    root: {
+      display: 'flex'
+    },
+    preContainer: {
+      display: 'flex',
+      alignItems: 'center',
+      marginTop: -3
+    },
     linkText: {
       whiteSpace: 'nowrap',
       marginRight: theme.spacing(1),
@@ -31,18 +42,22 @@ const styles = (theme: Theme) =>
       }
     },
     labelText: {
-      padding: '2px 10px'
+      padding: `2px 10px`
     },
     prefixComponentWrapper: {
-      marginLeft: '14px',
-      '& svg': {
+      marginLeft: theme.spacing(1),
+      '& svg, & img': {
         position: 'relative',
         top: 2,
-        marginRight: '0'
+        marginRight: 4,
+        marginLeft: 4
       }
     },
     slash: {
       fontSize: 24
+    },
+    firstSlash: {
+      marginRight: theme.spacing(1)
     }
   });
 interface EditableProps {
@@ -55,6 +70,7 @@ interface LabelProps {
   linkTo?: string;
   prefixComponent?: JSX.Element | null;
   subtitle?: string;
+  style?: CSSProperties;
 }
 export interface Props {
   // linkTo will be passed in to a <Link /> component, so we borrow the
@@ -79,22 +95,43 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = props => {
   } = props;
 
   return (
-    <React.Fragment>
-      <Link to={linkTo} data-qa-link>
-        {linkText && (
-          <Typography className={classes.linkText} data-qa-link-text>
-            {linkText}
+    <div className={classes.root}>
+      <div className={classes.preContainer}>
+        <Typography
+          component="span"
+          className={classNames({
+            [classes.slash]: true,
+            [classes.firstSlash]: true
+          })}
+        >
+          /
+        </Typography>
+        <Link to={linkTo} data-qa-link>
+          {linkText && (
+            <Typography className={classes.linkText} data-qa-link-text>
+              {linkText}
+            </Typography>
+          )}
+        </Link>
+        {labelOptions && labelOptions.prefixComponent && (
+          <>
+            <Typography component="span" className={classes.slash}>
+              /
+            </Typography>
+            <div
+              className={classes.prefixComponentWrapper}
+              data-qa-prefixwrapper
+            >
+              {labelOptions.prefixComponent}
+            </div>
+          </>
+        )}
+        {!(labelOptions && labelOptions.prefixComponent) && (
+          <Typography component="span" className={classes.slash}>
+            /
           </Typography>
         )}
-      </Link>
-      {labelOptions && labelOptions.prefixComponent && (
-        <div className={classes.prefixComponentWrapper} data-qa-prefixwrapper>
-          {labelOptions.prefixComponent}
-        </div>
-      )}
-      <Typography component="span" className={classes.slash}>
-        /
-      </Typography>
+      </div>
       {onEditHandlers ? (
         <EditableText
           typeVariant="h2"
@@ -110,10 +147,11 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = props => {
           title={props.labelTitle}
           subtitle={labelOptions && labelOptions.subtitle}
           titleLink={labelOptions && labelOptions.linkTo}
+          style={labelOptions && labelOptions.style}
           data-qa-labeltext
         />
       )}
-    </React.Fragment>
+    </div>
   );
 };
 
