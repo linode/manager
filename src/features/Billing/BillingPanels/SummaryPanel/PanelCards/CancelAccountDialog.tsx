@@ -57,6 +57,18 @@ const CancelAccountDialog: React.FC<CombinedProps> = props => {
     }
   }, [inputtedUsername]);
 
+  const inputRef = React.useCallback(
+    node => {
+      /**
+       * focus on first textfield when modal is opened
+       */
+      if (node && node.focus && props.open === true) {
+        node.focus();
+      }
+    },
+    [props.open]
+  );
+
   const handleCancelAccount = () => {
     setCancelling(true);
     return cancelAccount({
@@ -100,8 +112,10 @@ const CancelAccountDialog: React.FC<CombinedProps> = props => {
       <TextField
         label="Please enter your username to confirm."
         placeholder="Username"
+        aria-label="username field"
         value={inputtedUsername}
         onChange={e => setUsername(e.target.value)}
+        inputRef={inputRef}
       />
       <Typography className={classes.dontgo}>
         We'd hate to see you go. Please let us know what we could be doing
@@ -112,6 +126,7 @@ const CancelAccountDialog: React.FC<CombinedProps> = props => {
       <TextField
         multiline
         value={comments}
+        aria-label="Optional comments field"
         rows={2}
         label="Comments (optional)"
         placeholder="Provide Feedback"
