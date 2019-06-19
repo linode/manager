@@ -94,8 +94,8 @@ const CancelAccountDialog: React.FC<CombinedProps> = props => {
     >
       <Typography>
         Please note this is an extremely destructive action. Cancelling your
-        account means that all services include Linodes, Volumes, DNS Records
-        will be lost and may not be able to be restored.
+        account means that all services including Linodes, Volumes, DNS Records,
+        etc will be lost and may not be able to be restored.
       </Typography>
       <TextField
         label="Your Username (required)"
