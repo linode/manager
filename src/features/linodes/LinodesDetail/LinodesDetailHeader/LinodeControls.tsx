@@ -24,14 +24,10 @@ import withEditableLabelState, {
   EditableLabelProps
 } from './editableLabelState';
 
-type ClassNames = 'titleWrapper' | 'controls' | 'launchButton';
+type ClassNames = 'controls' | 'launchButton';
 
 const styles = (theme: Theme) =>
   createStyles({
-    titleWrapper: {
-      display: 'flex',
-      alignItems: 'center'
-    },
     controls: {
       marginTop: 9 - theme.spacing(1) / 2, // 4
       [theme.breakpoints.down('sm')]: {
@@ -111,7 +107,7 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
 
   return (
     <Grid container justify="space-between" data-qa-linode={linode.label}>
-      <Grid item className={classes.titleWrapper}>
+      <Grid item>
         <Breadcrumb
           linkTo="/linodes"
           linkText="Linodes"

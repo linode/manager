@@ -32,7 +32,7 @@ import { getGravatarUrl } from 'src/utilities/gravatar';
 import UserPermissions from './UserPermissions';
 import UserProfile from './UserProfile';
 
-type ClassNames = 'titleWrapper' | 'avatar' | 'backButton' | 'emptyImage';
+type ClassNames = 'avatar' | 'backButton' | 'emptyImage';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -48,17 +48,13 @@ const styles = (theme: Theme) =>
       margin: '0 8px 0 -4px',
       color: '#606469',
       borderRadius: '50%',
-      width: '46px',
-      height: '46px',
+      width: 34,
+      height: 34,
       animation: '$fadeIn 150ms linear forwards'
     },
     emptyImage: {
       width: 42,
       height: 49
-    },
-    titleWrapper: {
-      display: 'flex',
-      alignItems: 'center'
     },
     backButton: {
       margin: '4px 0 0 -16px',
@@ -357,7 +353,7 @@ class UserDetail extends React.Component<CombinedProps> {
       return (
         <React.Fragment>
           <Grid container justify="space-between">
-            <Grid item className={classes.titleWrapper}>
+            <Grid item>
               <Breadcrumb
                 linkTo="/account/users"
                 linkText="Users"
@@ -386,12 +382,15 @@ class UserDetail extends React.Component<CombinedProps> {
     return (
       <React.Fragment>
         <Grid container justify="space-between">
-          <Grid item className={classes.titleWrapper}>
+          <Grid item>
             <Breadcrumb
               linkTo="/account/users"
               linkText="Users"
               labelTitle={username}
-              labelOptions={{ prefixComponent: maybeGravatar }}
+              labelOptions={{
+                prefixComponent: maybeGravatar,
+                style: { marginTop: 4 }
+              }}
             />
           </Grid>
         </Grid>

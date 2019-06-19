@@ -32,7 +32,7 @@ import { MapState } from 'src/store/types';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-type ClassNames = 'root' | 'backButton' | 'titleWrapper' | 'createTitle';
+type ClassNames = 'root' | 'backButton' | 'createTitle';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -46,13 +46,6 @@ const styles = (theme: Theme) =>
     },
     createTitle: {
       lineHeight: '2.25em'
-    },
-    titleWrapper: {
-      display: 'flex',
-      marginTop: 5,
-      marginBottom: 20,
-      alignItems: 'center',
-      wordBreak: 'break-all'
     }
   });
 
@@ -285,12 +278,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const {
-      classes,
-      username,
-      imagesLoading,
-      userCannotModifyStackScript
-    } = this.props;
+    const { username, imagesLoading, userCannotModifyStackScript } = this.props;
     const {
       availableImages,
       selectedImages,
@@ -322,7 +310,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
         />
         {generalError && <Notice error text={generalError} />}
         <Grid container justify="space-between">
-          <Grid item className={classes.titleWrapper}>
+          <Grid item>
             <Breadcrumb
               linkTo="/stackscripts"
               linkText="StackScripts"
