@@ -5,10 +5,17 @@ import RenderGuard from 'src/components/RenderGuard';
 
 interface Props {
   updateFormState: (key: string, value: any) => void;
-  udf_data: Linode.StackScript.UserDefinedField;
   field: Linode.StackScript.UserDefinedField;
   isOptional: boolean;
   error?: string;
+  /**
+   * value will end up being a comma-seperated list
+   * something like TCP,TCPIP,Helloworld
+   *
+   * reason for this is because that's the format the API
+   * accepts
+   */
+  value: string;
 }
 
 interface State {
@@ -34,7 +41,18 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
 
   render() {
     const { manyof } = this.state;
-    const { error, field, isOptional } = this.props;
+    const { error, field, isOptional, value: propValue } = this.props;
+
+    /**
+     * if we don't have any options selected for this multivalue
+     * UDF, just pass undefined as the value, so the form is reset
+     */
+    const value = !!propValue
+      ? propValue.split(',').map(eachValue => ({
+          label: eachValue,
+          value: eachValue
+        }))
+      : undefined;
 
     const manyOfOptions = manyof.map((choice: string) => {
       return {
@@ -49,6 +67,7 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
         <Select
           label={field.label}
           {...!isOptional && '*'}
+          value={value}
           isMulti={true}
           onChange={this.handleSelectManyOf}
           options={manyOfOptions}
