@@ -1,9 +1,12 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
+import Typography from 'src/components/core/Typography';
+import Notice from 'src/components/Notice';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableHeader from 'src/components/TableHeader';
@@ -66,16 +69,31 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 const UserSSHKeyPanel: React.FunctionComponent<CombinedProps> = props => {
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+  const [success, setSuccess] = React.useState<boolean>(false);
   const { classes, onKeyAddSuccess, users } = props;
 
   const handleKeyAddSuccess = () => {
     onKeyAddSuccess();
+    setSuccess(true);
     setDrawerOpen(false);
   };
+
+  const handleOpenDrawer = () => {
+    setSuccess(false);
+    setDrawerOpen(true);
+  };
+
+  const successMsg = (
+    <Typography>
+      SSH key added successfully. <Link to="/profile/keys">Click here</Link> to
+      manage your keys.
+    </Typography>
+  );
 
   return (
     <React.Fragment>
       <TableHeader title="SSH Keys" />
+      {success && <Notice success text={successMsg} />}
       <Table isResponsive={false} border spacingBottom={16}>
         <TableHead>
           <TableRow>
@@ -116,7 +134,7 @@ const UserSSHKeyPanel: React.FunctionComponent<CombinedProps> = props => {
           )}
         </TableBody>
       </Table>
-      <Button buttonType="primary" onClick={() => setDrawerOpen(true)}>
+      <Button buttonType="primary" onClick={handleOpenDrawer}>
         Add an SSH Key
       </Button>
       <SSHKeyCreationDrawer
