@@ -53,7 +53,7 @@ Here are a list of all the required and optional environment variables the Manag
 
 `REACT_APP_GTM_ID`: The ID that matches with a configured Google Tag Manager property
 
-`REACT_APP_ACCESS_TOKEN`: Access Token that overrides the token recieved from the Login service.
+`REACT_APP_ACCESS_TOKEN`: Access Token that overrides the token received from the Login service.
 e.g `Bearer 1232313` or `Admin 1231423`
 
 `REACT_APP_DISABLE_EVENT_THROTTLE`: <Boolean> Whether the app should poll the `/events` endpoint at provided intervals
