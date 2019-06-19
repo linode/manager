@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import Paper from 'src/components/core/Paper';
@@ -5,12 +6,14 @@ import {
   createStyles,
   Theme,
   withStyles,
-  WithStyles
+  WithStyles,
+  WithTheme
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 import AlgoliaSearchBar from './AlgoliaSearchBar';
 
-type ClassNames = 'root' | 'bgIcon' | 'searchHeading';
+type ClassNames = 'root' | 'bgIcon' | 'searchHeading' | 'bgIconCompact';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -40,6 +43,19 @@ const styles = (theme: Theme) =>
       },
       '& .insidePath path': {
         stroke: '#04994D'
+      },
+      [theme.breakpoints.down('xs')]: {
+        display: 'none'
+      }
+    },
+    bgIconCompact: {
+      [theme.breakpoints.up('sm')]: {
+        width: 150,
+        height: 150
+      },
+      [theme.breakpoints.up('lg')]: {
+        width: 200,
+        height: 200
       }
     },
     searchHeading: {
@@ -50,15 +66,22 @@ const styles = (theme: Theme) =>
     }
   });
 
-type CombinedProps = WithStyles<ClassNames>;
+type CombinedProps = WithStyles<ClassNames> & WithTheme;
 
 class SearchPanel extends React.Component<CombinedProps, {}> {
   render() {
-    const { classes } = this.props;
+    const { classes, theme } = this.props;
+    const spacingMode =
+      theme.spacing() === COMPACT_SPACING_UNIT ? 'compact' : 'normal';
     return (
       <React.Fragment>
         <Paper className={classes.root}>
-          <LinodeIcon className={classes.bgIcon} />
+          <LinodeIcon
+            className={classNames({
+              [classes.bgIcon]: true,
+              [classes.bgIconCompact]: spacingMode === 'compact'
+            })}
+          />
           <Typography
             variant="h1"
             className={classes.searchHeading}
@@ -73,6 +96,6 @@ class SearchPanel extends React.Component<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles);
+const styled = withStyles(styles, { withTheme: true });
 
 export default styled(SearchPanel);
