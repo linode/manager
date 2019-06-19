@@ -15,16 +15,13 @@ export interface Doc {
 export const oneClickApps: OCA[] = [
   {
     name: 'Ark',
-    description: `Ark: Survival Evolved is a multiplayer action-survival game released in 2017.
-      You are placed on a series of fictional islands inhabited by dinosaurs and
-      other prehistoric animals. In Ark, the main objective is to survive. Ark is
-      an ongoing battle where animals and other players have the ability to destroy you.
+    description: `In Ark: Survival Evolved, you are placed on a series of fictional islands inhabited by dinosaurs and
+      other prehistoric animals. Ark is an ongoing battle where animals and other players have the ability to destroy you.
       You must build structures, farm resources, breed dinosaurs, and even set up
       trading hubs with neighboring tribes. Hosting an Ark server gives you control
       of the entire game. You can define the leveling speed, the amount of players,
       and the types of weapons available.`,
-    summary: `Multiplayer action-survival game where you are placed on a series of fictional
-      islands inhabited by prehistoric creatures. You have only one objective: survive.`,
+    summary: `Multiplayer action-survival game. You have only one objective: survive.`,
     related_guides: [
       {
         title: 'Deploy an ARK: Survival Evolved Server with One-Click Apps',
@@ -38,7 +35,7 @@ export const oneClickApps: OCA[] = [
   {
     name: 'CS:GO',
     description: `Fast-paced, competitive FPS. Partner with your team to compete the objective at hand, or take matters into your own hands and go solo.`,
-    summary: `Global Offensive is a fast-paced first person shooter. In CS:GO there are two teams: Terrorists and Counter-Terrorists.
+    summary: `In CS:GO there are two teams: Terrorists and Counter-Terrorists.
       The teams compete against each other to complete objectives or to eliminate the opposing team.
       A competitive match requires two teams of five players, but hosting your own server allows you control over team size and server location,
       so you and your friends can play with low latency. Up to 64 players can be hosted on a single server.`,
@@ -91,8 +88,8 @@ export const oneClickApps: OCA[] = [
       interactive community websites with forums, user blogs, and private messaging.
       Drupal also has support for personal publishing projects and can power podcasts,
       blogs, and knowledge-based systems, all within a single, unified platform.`,
-    summary: `Powerful content management system built on PHP and supported by a database.
-      engine. Drupal sites can be rich and interactive, and the Drupal API eases development.`,
+    summary: `Powerful content management system built on PHP and supported by a database
+      engine.`,
     related_guides: [
       {
         title: 'Deploy Drupal with One-Click Apps',
@@ -118,8 +115,7 @@ export const oneClickApps: OCA[] = [
       PHP application code to your new app or use a PHP framework to write
       a new application on the Linode.`,
     summary: `Build PHP-based applications with the LAMP software stack: Linux, Apache,
-      MySQL, and PHP. The LAMP stack is the foundation for popular frameworks
-      like WordPress and Drupal.`,
+      MySQL, and PHP.`,
     related_guides: [
       {
         title: 'Deploy a LAMP Stack with One-Click Apps',
@@ -132,7 +128,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Rust',
-    description: `In Rust, you play as a survivor and must work with or against other players
+    description: `In Rust, you must work with or against other players
       to ensure your own survival. Players are able to steal, lie, cheat, or
       trick each other. Build a shelter, hunt animals for food, craft weapons and
       armor, and much more. Hosting your own Rust server allows you to customize
@@ -151,9 +147,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Terraria',
-    description: `Terraria is a two-dimensional sandbox game in which players explore the
-      world, collect resources, build structures, and battle enemies in
-      procedurally generated environments. In Terraria a player begins by digging
+    description: `Terraria generates unique environments where a player begins by digging
       for ore, and the further they dig the more adventure they find. Multiplayer
       mode can be either cooperative or PvP.
       Hosting your own Terraria server gives you control over the world, the players,
@@ -173,10 +167,9 @@ export const oneClickApps: OCA[] = [
   {
     name: 'TF2',
     description: `Team Fortress 2 is a team-based multiplayer first-person shooter.
-      In TF2, you and your team choose from 9 unique classes and play against
-      an enemy team in a variety of game modes. These modes include capture the
-      flag, king of the hill, and even a battle pitting your team against a
-      robotic horde. Setting up a personal game server puts you in control of
+      In TF2, you and your team choose from a number of hero classes and different game modes, 
+      ensuring a unique in-game experience every match.
+      Setting up a personal game server puts you in control of
       what game modes and maps you use, as well as a variety of other settings
       to customize your experience.`,
     summary: `Choose from 9 unique classes in this highly original FPS. Compete against
@@ -194,8 +187,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'WooCommerce',
-    description: `WooCommerce is an open source eCommerce platform built to integrate with
-      WordPress. You can use WooCommerce to securely sell both digital and
+    description: `With WooCommerce, you can securely sell both digital and
       physical goods, and take payments via major credit cards, bank transfers,
       PayPal, and other providers like Stripe. With more than 300 extensions to
       choose from, WooCommerce is extremely flexible.`,
@@ -223,7 +215,7 @@ export const oneClickApps: OCA[] = [
       characteristics make them a great choice for your applications. Upload your
       existing MERN website code to your new Linode, or use MERN's scaffolding tool
       to start writing new web applications on the Linode.`,
-    summary: `Build production-ready universal apps with the MERN stack: MongoDB, Express, React, and Node.js.`,
+    summary: `Build production-ready apps with the MERN stack: MongoDB, Express, React, and Node.js.`,
     related_guides: [
       {
         title: 'Deploy a MERN Stack with One-Click Apps',
@@ -235,12 +227,12 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'OpenVPN',
-    description: `OpenVPN is a widely trusted, free, and open-source virtual private network
-      (VPN) application. OpenVPN creates network tunnels between groups of
+    description: `OpenVPN is a widely trusted, free, and open-source virtual private network 
+    application. OpenVPN creates network tunnels between groups of
       computers that are not on the same local network, and it uses OpenSSL
       to encrypt your traffic.`,
-    summary: `Widely trusted, free, and open-source virtual private network (VPN)
-      application. OpenVPN securely connects your computer to your servers,
+    summary: `Open-source virtual private network (VPN) application. 
+      OpenVPN securely connects your computer to your servers,
       or to the public Internet.`,
     related_guides: [
       {
@@ -288,10 +280,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'WireGuard',
-    description: `WireGuard is a simple, fast, and modern virtual private network (VPN) which utilizes
-      state-of-the-art cryptography. It aims to be faster and leaner than other VPN protocols
-      such as OpenVPN and IPSec, and it has a much smaller source code footprint.
-      Configuring WireGuard is as simple as configuring SSH. A connection is established by an
+    description: `Configuring WireGuard is as simple as configuring SSH. A connection is established by an
       exchange of public keys between server and client, and only a client whose public key is
       present in the server's configuration file is considered authorized. WireGuard sets up
       standard network interfaces which behave similarly to other common network interfaces,
@@ -330,11 +319,11 @@ export const oneClickApps: OCA[] = [
   {
     name: 'WordPress',
     description: `With 60 million users around the globe, WordPress is the industry standard
-      for content-focused websites such as blogs, news sites, and personal
-      websites. With a focus on best in class usability and flexibility,
+      for custom websites such as blogs, news sites, personal
+      websites, and anything in-between. With a focus on best in class usability and flexibility,
       you can have a customized website up and running in minutes.`,
     summary:
-      'Flexible, open source content management system (CMS) for blogs, news sites, and other content-focused websites.',
+      'Flexible, open source content management system (CMS) for content-focused websites of any kind.',
     related_guides: [
       {
         title: 'Deploy WordPress with One-Click Apps',
