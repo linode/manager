@@ -105,7 +105,7 @@ const CancelAccountDialog: React.FC<CombinedProps> = props => {
       }
     >
       <Typography>
-        Please note this is an extremely destructive action. Cancelling your
+        Please note this is an extremely destructive action. Closing your
         account means that all services including Linodes, Volumes, DNS Records,
         etc will be lost and may not be able to be restored.
       </Typography>
@@ -119,7 +119,7 @@ const CancelAccountDialog: React.FC<CombinedProps> = props => {
       />
       <Typography className={classes.dontgo}>
         We'd hate to see you go. Please let us know what we could be doing
-        better in the comments section below. After your account is cancelled,
+        better in the comments section below. After your account is closed,
         you'll be directed to a quick survey so we can better gauge your
         feedback.
       </Typography>
