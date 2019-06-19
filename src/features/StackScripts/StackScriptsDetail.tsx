@@ -117,16 +117,14 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
 
     return (
       <React.Fragment>
-        <Grid container justify="space-between">
+        <Grid container justify="space-between" alignItems="center">
           <Grid item>
-            <div>
-              <Breadcrumb
-                linkTo="/stackscripts"
-                linkText="StackScripts"
-                labelOptions={{ prefixComponent: userNameSlash }}
-                labelTitle={stackScript.label}
-              />
-            </div>
+            <Breadcrumb
+              linkTo="/stackscripts"
+              linkText="StackScripts"
+              labelOptions={{ prefixComponent: userNameSlash }}
+              labelTitle={stackScript.label}
+            />
           </Grid>
           <Grid item className={classes.cta}>
             <Button
