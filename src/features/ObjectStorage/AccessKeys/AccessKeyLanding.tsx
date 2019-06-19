@@ -22,6 +22,11 @@ import {
   updateObjectStorageKey
 } from 'src/services/profile/objectStorageKeys';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import {
+  sendCreateAccessKeyEvent,
+  sendEditAccessKeyEvent,
+  sendRevokeAccessKeyEvent
+} from 'src/utilities/ga';
 import AccessKeyDisplayDialog from './AccessKeyDisplayDialog';
 import AccessKeyDrawer from './AccessKeyDrawer';
 import AccessKeyTable from './AccessKeyTable';
@@ -96,6 +101,9 @@ export const AccessKeyLanding: React.StatelessComponent<Props> = props => {
 
         createOrEditDrawer.close();
         displayKeysDialog.open();
+
+        // @analytics
+        sendCreateAccessKeyEvent();
       })
       .catch(errorResponse => {
         setSubmitting(false);
@@ -143,6 +151,9 @@ export const AccessKeyLanding: React.StatelessComponent<Props> = props => {
         paginationProps.request();
 
         createOrEditDrawer.close();
+
+        // @analytics
+        sendEditAccessKeyEvent();
       })
       .catch(errorResponse => {
         setSubmitting(false);
@@ -179,6 +190,9 @@ export const AccessKeyLanding: React.StatelessComponent<Props> = props => {
         paginationProps.request();
 
         revokeKeysDialog.close();
+
+        // @analytics
+        sendRevokeAccessKeyEvent();
       })
       .catch(errorResponse => {
         setIsRevoking(false);

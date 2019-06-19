@@ -21,6 +21,7 @@ import {
 // @todo: Extract ActionPanel out of Volumes
 import BucketsActionPanel from 'src/features/Volumes/VolumeDrawer/VolumesActionsPanel';
 import { CreateBucketSchema } from 'src/services/objectStorage/buckets.schema';
+import { sendCreateBucketEvent } from 'src/utilities/ga';
 import ClusterSelect from './ClusterSelect';
 
 type ClassNames = 'root' | 'textWrapper';
@@ -67,6 +68,9 @@ export const CreateBucketForm: React.StatelessComponent<
             resetForm(initialValues);
             setSubmitting(false);
             onSuccess(bucketLabel);
+
+            // @analytics
+            sendCreateBucketEvent(cluster);
           })
           .catch(errorResponse => {
             const defaultMessage = `Unable to create a Bucket. Please try again later.`;
