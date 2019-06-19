@@ -1,8 +1,10 @@
 import Search from '@material-ui/icons/Search';
+import * as classNames from 'classnames';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+
 import {
   createStyles,
   Theme,
@@ -13,6 +15,7 @@ import {
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect';
 import Notice from 'src/components/Notice';
 import { selectStyles } from 'src/features/TopMenu/SearchBar';
+import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 import windowIsNarrowerThan from 'src/utilities/breakpoints';
 import withSearch, { AlgoliaState as AlgoliaProps } from '../SearchHOC';
 import SearchItem from './SearchItem';
@@ -23,7 +26,9 @@ type ClassNames =
   | 'searchItem'
   | 'searchItemHighlighted'
   | 'enhancedSelectWrapper'
-  | 'textfield';
+  | 'textfield'
+  | 'searchIconCompact'
+  | 'enhancedSelectWrapperCompact';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -42,6 +47,10 @@ const styles = (theme: Theme) =>
       zIndex: 3,
       bottom: 12,
       left: 5
+    },
+    searchIconCompact: {
+      top: 8,
+      left: 1
     },
     searchItemHighlighted: {
       backgroundColor: theme.color.grey2,
@@ -75,6 +84,16 @@ const styles = (theme: Theme) =>
       },
       [theme.breakpoints.up('md')]: {
         width: 500
+      }
+    },
+    enhancedSelectWrapperCompact: {
+      '& .input': {
+        '& p': {
+          paddingLeft: theme.spacing(4)
+        }
+      },
+      '& .react-select__input': {
+        paddingLeft: 10
       }
     }
   });
@@ -161,10 +180,11 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, searchEnabled, searchError } = this.props;
+    const { classes, searchEnabled, searchError, theme } = this.props;
     const { inputValue } = this.state;
     const options = this.getOptionsFromResults();
-
+    const spacingMode =
+      theme.spacing() === COMPACT_SPACING_UNIT ? 'compact' : 'normal';
     return (
       <React.Fragment>
         {searchError && (
@@ -173,7 +193,13 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
           </Notice>
         )}
         <div className={classes.root}>
-          <Search className={classes.searchIcon} data-qa-search-icon />
+          <Search
+            className={classNames({
+              [classes.searchIcon]: true,
+              [classes.searchIconCompact]: spacingMode === 'compact'
+            })}
+            data-qa-search-icon
+          />
           <EnhancedSelect
             disabled={!searchEnabled}
             isMulti={false}
@@ -184,7 +210,10 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
             onChange={this.handleSelect}
             onInputChange={this.onInputValueChange}
             placeholder="Search for answers..."
-            className={classes.enhancedSelectWrapper}
+            className={classNames({
+              [classes.enhancedSelectWrapper]: true,
+              [classes.enhancedSelectWrapperCompact]: spacingMode === 'compact'
+            })}
             styleOverrides={selectStyles}
             filterOption={filterResults}
             value={false}
