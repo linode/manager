@@ -310,7 +310,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
         />
         {generalError && <Notice error text={generalError} />}
         <Grid container justify="space-between">
-          <Grid item>
+          <Grid item style={{ marginBottom: 16 }}>
             <Breadcrumb
               linkTo="/stackscripts"
               linkText="StackScripts"
