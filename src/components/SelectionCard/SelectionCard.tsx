@@ -40,13 +40,13 @@ const styles = (theme: Theme) =>
       alignItems: 'center',
       display: 'flex',
       outline: 0,
-      '&.checked $innerGrid': {
+      '&.checked .innerGrid': {
         borderColor: theme.palette.primary.main,
         '& span': {
           color: theme.palette.primary.main
         }
       },
-      '&:focus $innerGrid': {
+      '&:focus .innerGrid': {
         outline: `1px dotted ${theme.color.focusBorder}`
       },
       '& .disabledInnerGrid': {
