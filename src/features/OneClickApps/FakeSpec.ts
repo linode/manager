@@ -205,11 +205,10 @@ export const oneClickApps: OCA[] = [
   {
     name: 'MERN',
     description: `MERN is a full stack platform that contains everything you need to build a web application:
-      - MongoDB is a document database used to persist your application's data.
-      - Express serves as the web application framework.
-      - React is used to build your application's user interfaces. React offers a
-      sever-side rendering function which makes it easier for search engines to crawl your web application.
-      - Node.js serves as the run-time environment for your application.
+      MongoDB, a document database used to persist your application's data;
+      Express, which serves as the web application framework;
+      React, used to build your application's user interfaces;
+      and Node.js, which serves as the run-time environment for your application.
       All of these technologies are well-established, offer robust feature sets,
       and are well-supported by their maintaining organizations. These
       characteristics make them a great choice for your applications. Upload your
