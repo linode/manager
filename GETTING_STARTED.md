@@ -58,6 +58,8 @@ e.g `Bearer 1232313` or `Admin 1231423`
 
 `REACT_APP_DISABLE_EVENT_THROTTLE`: <Boolean> Whether the app should poll the `/events` endpoint at provided intervals
 
+`REACT_APP_LOG_PERFORMANCE_METRICS`: Set to `'true'` to log performance metrics to the console. Only works in development mode (i.e. while running `yarn start`).
+
 ### Testing Variables
 
 These are environment variables that can be used for automated testing processes
