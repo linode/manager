@@ -70,12 +70,20 @@ export class SupportTicketsLanding extends React.PureComponent<
   constructor(props: CombinedProps) {
     super(props);
 
+    /** ?drawerOpen=true to allow external links to go directly to the ticket drawer */
+    const parsedParams = getParamsFromUrl(props.location.search);
+    const drawerOpen = Boolean(pathOr(false, ['drawerOpen'], parsedParams));
+
     const stateParams = this.props.location.state;
 
     this.state = {
       value: getSelectedTabFromQueryString(props.location.search),
-      /** If we came here via a SupportLink that's passing data, use that to determine initial state */
-      drawerOpen: stateParams ? stateParams.open : false,
+      /** If we came here via a SupportLink that's passing data, use that to determine initial state
+       * @todo used state state params here to allow passing long/private descriptions without
+       * messing with the URL. However, since we also want to be able to have external links
+       * that open the drawer, is this duplicative and bad?
+       */
+      drawerOpen: stateParams ? stateParams.open : drawerOpen,
       prefilledDescription: stateParams ? stateParams.description : undefined,
       prefilledTitle: stateParams ? stateParams.title : undefined
     };
