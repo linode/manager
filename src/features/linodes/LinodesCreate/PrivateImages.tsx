@@ -41,6 +41,7 @@ const PrivateImages: React.StatelessComponent<CombinedProps> = props => {
             heading={image.label as string}
             subheadings={[image.description as string]}
             disabled={disabled}
+            variant="check"
           />
         ))}
     </Grid>

@@ -34,6 +34,7 @@ const LinodeConfigSelectionDrawer: React.StatelessComponent<
             subheadings={[config.kernel]}
             onClick={() => onChange(config.id)}
             checked={selected === String(config.id)}
+            variant="check"
           />
         ))}
       </Grid>

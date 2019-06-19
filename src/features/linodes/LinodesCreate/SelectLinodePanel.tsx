@@ -70,6 +70,7 @@ class SelectLinodePanel extends React.Component<CombinedProps> {
         heading={linode.heading}
         subheadings={linode.subHeadings}
         disabled={disabled}
+        variant="check"
       />
     );
   }

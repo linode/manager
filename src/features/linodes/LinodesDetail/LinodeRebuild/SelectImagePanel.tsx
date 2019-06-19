@@ -115,6 +115,7 @@ const imagePanelFactory = (
       }}
       heading={image.vendor as string}
       subheadings={[image.label]}
+      variant="check"
       data-qa-selection-card
     />
   ));
