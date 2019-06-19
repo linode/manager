@@ -1,4 +1,4 @@
-import { compose, path, pathOr } from 'ramda';
+import { compose, path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import {
@@ -106,15 +106,17 @@ const interceptNotification = (
     notification.entity.type === 'linode'
   ) {
     /** replace "this Linode" with the name of the Linode */
+    const linodeAttachedToNotification = path(['label'], notification.entity);
     return {
       ...notification,
       label: `Maintenance Scheduled`,
       severity: 'major',
-      message: `Linode ${pathOr(
-        'this Linode',
-        ['label'],
-        notification.entity
-      )} has scheduled maintenance.`
+      message: `${
+        linodeAttachedToNotification
+          ? `Linode ${linodeAttachedToNotification}`
+          : `This Linode`
+      }
+          has scheduled maintenance`
     };
   }
 
