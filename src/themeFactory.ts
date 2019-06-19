@@ -196,6 +196,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       grey1: '#abadaf',
       grey2: '#e7e7e7',
       grey3: '#ccc',
+      grey4: '#8C929D',
       white: '#fff',
       black: '#222',
       offBlack: primaryColors.offBlack,
@@ -267,7 +268,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
         color: primaryColors.headline,
         fontSize: '1rem',
         fontFamily: spacingUnit === 4 ? primaryFonts.normal : primaryFonts.bold,
-        lineHeight: '1rem'
+        lineHeight: '1.4rem'
       },
       body1: {
         fontSize: '0.875rem',
@@ -276,7 +277,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       },
       body2: {
         fontSize: '0.875rem',
-        lineHeight: '1rem'
+        lineHeight: '1.2rem'
       },
       caption: {
         fontSize: '0.625rem',

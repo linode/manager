@@ -40,6 +40,7 @@ interface Props extends AppsData {
     stackScriptImages: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]
   ) => void;
+  openDrawer: (stackScriptLabel: string) => void;
   disabled: boolean;
   selectedStackScriptID?: number;
   error?: string;
@@ -90,7 +91,8 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
       appInstances,
       appInstancesError,
       appInstancesLoading,
-      handleClick
+      handleClick,
+      openDrawer
     } = this.props;
 
     if (appInstancesError) {
@@ -124,6 +126,7 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
               availableImages={eachApp.images}
               userDefinedFields={eachApp.user_defined_fields}
               handleClick={handleClick}
+              openDrawer={openDrawer}
               disabled={disabled}
               id={eachApp.id}
               iconUrl={eachApp.logo_url || ''}
@@ -150,6 +153,7 @@ interface SelectionProps {
     stackScriptImages: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]
   ) => void;
+  openDrawer: (stackScriptLabel: string) => void;
   iconUrl: string;
   id: number;
   label: string;
@@ -172,6 +176,11 @@ class SelectionCardWrapper extends React.PureComponent<SelectionProps> {
     );
   };
 
+  handleOpenDrawer = () => {
+    const { label, openDrawer } = this.props;
+    openDrawer(label);
+  };
+
   render() {
     const { iconUrl, id, checked, label, disabled } = this.props;
     /**
@@ -189,11 +198,13 @@ class SelectionCardWrapper extends React.PureComponent<SelectionProps> {
         key={id}
         checked={checked}
         onClick={this.handleSelectApp}
+        onClickInfo={this.handleOpenDrawer}
         renderIcon={renderIcon}
         heading={label}
         subheadings={['']}
         data-qa-selection-card
         disabled={disabled}
+        variant="info"
       />
     );
   }

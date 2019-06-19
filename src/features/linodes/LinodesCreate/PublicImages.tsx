@@ -67,6 +67,7 @@ const PublicImages: React.StatelessComponent<CombinedProps> = props => {
         subheadings={[image.label]}
         data-qa-selection-card
         disabled={disabled}
+        variant="check"
       />
     ));
 

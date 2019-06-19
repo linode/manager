@@ -445,6 +445,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             subheadings={['The user cannot view any billing information.']}
             checked={grants.global.account_access === null}
             onClick={this.billingPermOnClick(null)}
+            variant="check"
             data-qa-billing-access="None"
           />
           <SelectionCard
@@ -454,6 +455,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             ]}
             checked={grants.global.account_access === 'read_only'}
             onClick={this.billingPermOnClick('read_only')}
+            variant="check"
             data-qa-billing-access="Read Only"
           />
           <SelectionCard
@@ -463,6 +465,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
             ]}
             checked={grants.global.account_access === 'read_write'}
             onClick={this.billingPermOnClick('read_write')}
+            variant="check"
             data-qa-billing-access="Read-Write"
           />
         </Grid>

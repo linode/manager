@@ -240,6 +240,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
                 heading={currentPlanHeading}
                 subheadings={currentPlanSubHeadings}
                 disabled={disabled}
+                variant="check"
               />
             }
           </div>
