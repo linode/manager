@@ -94,11 +94,15 @@ const styles = (theme: Theme) =>
     }
   });
 
-type CombinedProps = StateProps & WithStyles<CSSClasses>;
+type CombinedProps = StateProps & Props & WithStyles<CSSClasses>;
 
 interface State {
   anchorEl?: HTMLElement;
   gravatarUrl: string | undefined;
+}
+
+interface Props {
+  closeMenu: (e: any) => void;
 }
 
 export class UserMenu extends React.Component<CombinedProps, State> {
@@ -121,7 +125,7 @@ export class UserMenu extends React.Component<CombinedProps, State> {
     this.setState({ anchorEl: undefined });
   };
 
-  renderMenuLink(menuLink: MenuLink) {
+  renderMenuLink(menuLink: MenuLink, onClick: any) {
     const { classes } = this.props;
     return (
       <Link
@@ -131,6 +135,7 @@ export class UserMenu extends React.Component<CombinedProps, State> {
         className={classes.menuItem}
         data-qa-menu-link={menuLink.display}
         key={menuLink.display}
+        onClick={onClick}
       >
         <MenuItem key={menuLink.display}>{menuLink.display}</MenuItem>
       </Link>
@@ -225,7 +230,9 @@ export class UserMenu extends React.Component<CombinedProps, State> {
               aria-hidden
               className={classes.hidden}
             />
-            {menuLinks.map(menuLink => this.renderMenuLink(menuLink))}
+            {menuLinks.map(menuLink =>
+              this.renderMenuLink(menuLink, this.handleClose)
+            )}
           </Menu>
         </Hidden>
       </React.Fragment>
