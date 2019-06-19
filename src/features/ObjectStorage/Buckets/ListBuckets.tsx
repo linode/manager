@@ -25,6 +25,7 @@ import bucketRequestsContainer, {
 } from 'src/containers/bucketRequests.container';
 import useOpenClose from 'src/hooks/useOpenClose';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import { sendDeleteBucketEvent } from 'src/utilities/ga';
 import { readableBytes } from 'src/utilities/unitConversions';
 import BucketTableRow from './BucketTableRow';
 
@@ -85,6 +86,9 @@ export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
       .then(() => {
         removeBucketConfirmationDialog.close();
         setIsLoading(false);
+
+        // @analytics
+        sendDeleteBucketEvent(cluster);
       })
       .catch(e => {
         setIsLoading(false);
