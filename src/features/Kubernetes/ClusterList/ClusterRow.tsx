@@ -14,7 +14,7 @@ import TableRow from 'src/components/TableRow';
 import { ExtendedCluster } from './../types';
 import ActionMenu from './ClusterActionMenu';
 
-type ClassNames = 'root' | 'label' | 'clusterDescription';
+type ClassNames = 'root' | 'label' | 'clusterDescription' | 'clusterRow';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {},
@@ -26,6 +26,11 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   clusterDescription: {
     paddingTop: theme.spacing.unit / 2
+  },
+  clusterRow: {
+    '&:before': {
+      display: 'none'
+    }
   }
 });
 
@@ -43,6 +48,7 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
       data-qa-cluster-cell={cluster.id}
       data-testid={'cluster-row'}
       rowLink={`/kubernetes/clusters/${cluster.id}`}
+      className={classes.clusterRow}
     >
       <TableCell
         parentColumn="Cluster Label"

@@ -17,7 +17,8 @@ const props = {
   classes: {
     root: '',
     label: '',
-    clusterDescription: ''
+    clusterDescription: '',
+    clusterRow: ''
   }
 };
 

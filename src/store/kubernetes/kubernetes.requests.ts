@@ -66,12 +66,11 @@ export const deleteNodePool = createRequestThunk(
 
 export const createNodePool = createRequestThunk(
   createNodePoolActions,
-  ({ clusterID, ...data }) =>
-    _createNodePool(clusterID, data).then(response => response.data)
+  ({ clusterID, ...data }) => _createNodePool(clusterID, data)
 );
 
 export const updateNodePool = createRequestThunk(
   updateNodePoolActions,
   ({ clusterID, nodePoolID, ...data }) =>
-    _updateNodePool(clusterID, nodePoolID, data).then(response => response.data)
+    _updateNodePool(clusterID, nodePoolID, data)
 );

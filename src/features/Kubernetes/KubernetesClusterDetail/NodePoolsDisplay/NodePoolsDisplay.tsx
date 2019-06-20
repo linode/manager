@@ -10,6 +10,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Notice from 'src/components/Notice';
 
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 
@@ -35,6 +36,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 
 interface Props {
   editing: boolean;
+  submittingForm: boolean;
+  submissionSuccess: boolean;
+  submissionError?: Linode.ApiFieldError[];
   pools: ExtendedPoolNode[];
   poolsForEdit: ExtendedPoolNode[];
   types: ExtendedType[];
@@ -42,6 +46,7 @@ interface Props {
   updatePool: (poolIdx: number, updatedPool: ExtendedPoolNode) => void;
   deletePool: (poolID: number) => void;
   resetForm: () => void;
+  submitForm: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -49,7 +54,21 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const NodePoolsDisplay: React.FunctionComponent<
   CombinedProps
 > = props => {
-  const { classes, deletePool, editing, pools, poolsForEdit, resetForm, toggleEditing, types, updatePool } = props;
+  const {
+    classes,
+    deletePool,
+    editing,
+    pools,
+    poolsForEdit,
+    resetForm,
+    submitForm,
+    submissionError,
+    submissionSuccess,
+    submittingForm,
+    toggleEditing,
+    types,
+    updatePool
+  } = props;
 
   return (
     <Paper className={classes.root}>
@@ -64,6 +83,16 @@ export const NodePoolsDisplay: React.FunctionComponent<
             </Button>
           </Grid>
         </Grid>
+        {submissionSuccess && (
+          <Grid item>
+            <Notice success text="Node pools updated successfully." />
+          </Grid>
+        )}
+        {submissionError && submissionError.length > 0 && (
+          <Grid item>
+            <Notice error text={submissionError[0].reason} />
+          </Grid>
+        )}
         <Grid item>
           {editing ? (
             <NodePoolDisplayTable
@@ -74,25 +103,23 @@ export const NodePoolsDisplay: React.FunctionComponent<
               updatePool={updatePool}
             />
           ) : (
-            <NodePoolDisplayTable
-              pools={pools}
-              types={types}
-              handleDelete={() => null}
-              updatePool={() => null}
-            />
+            <NodePoolDisplayTable pools={pools} types={types} />
           )}
         </Grid>
         <Grid item>
-          {editing && 
+          {editing && (
             <Typography className={classes.pricing}>
-              *Updated Monthly Estimate: {`$${getTotalClusterPrice(poolsForEdit)}/month`}
+              *Updated Monthly Estimate:{' '}
+              {`$${getTotalClusterPrice(poolsForEdit)}/month`}
             </Typography>
-          }
+          )}
           <Grid item container>
             <Button
               className={classes.button}
               type="primary"
-              disabled={!editing}
+              disabled={!editing || submittingForm}
+              loading={submittingForm}
+              onClick={submitForm}
             >
               Save
             </Button>

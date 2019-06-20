@@ -6,7 +6,7 @@ namespace Linode {
     status: string; // @todo enum this
     label: string;
     version: string;
-    id: string;
+    id: number;
     node_pools: KubeNodePoolResponse[];
   }
 
@@ -14,7 +14,7 @@ namespace Linode {
     count: number;
     id: number;
     linodes: PoolNodeResponse[];
-    lke_id: number;
+    lkeid: number;
     type: string;
   }
 

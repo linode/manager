@@ -4,6 +4,7 @@ export interface PoolNode {
 }
 
 export interface ExtendedPoolNode extends PoolNode {
+  id: number;
   totalMonthlyPrice: number;
   queuedForDeletion?: boolean;
   queuedForAddition?: boolean;
@@ -20,9 +21,8 @@ export interface ExtendedCluster {
   status: string; // @todo enum this
   label: string;
   version: string;
-  id: string;
+  id: number;
   node_pools: ExtendedPoolNode[];
   totalMemory: number;
   totalCPU: number;
-  price?: number;
 }

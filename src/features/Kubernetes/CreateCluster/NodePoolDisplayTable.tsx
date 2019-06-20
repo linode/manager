@@ -32,8 +32,8 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface Props {
   pools: ExtendedPoolNode[];
   types: ExtendedType[];
-  handleDelete: (poolIdx: number) => void;
-  updatePool: (poolIdx: number, updatedPool: ExtendedPoolNode) => void;
+  handleDelete?: (poolIdx: number) => void;
+  updatePool?: (poolIdx: number, updatedPool: ExtendedPoolNode) => void;
   small?: boolean;
   editable?: boolean;
 }
@@ -86,9 +86,15 @@ export const NodePoolDisplayTable: React.FunctionComponent<
                 idx={idx}
                 pool={thisPool}
                 type={thisPoolType}
-                handleDelete={() => handleDelete(idx)}
+                deletePool={handleDelete ? () => handleDelete(idx) : undefined}
                 updatePool={updatePool}
-                updateFor={[thisPool, thisPoolType, editable, classes, updatePool]}
+                updateFor={[
+                  thisPool,
+                  thisPoolType,
+                  editable,
+                  classes,
+                  updatePool
+                ]}
               />
             );
           })

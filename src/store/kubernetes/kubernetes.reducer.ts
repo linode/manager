@@ -7,6 +7,7 @@ import {
   deleteClusterActions,
   deleteNodePoolActions,
   requestClustersActions,
+  setErrors,
   updateClusterActions,
   updateNodePoolActions,
   upsertCluster
@@ -82,14 +83,15 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, createNodePoolActions.done)) {
     const { result } = action.payload;
     const cluster = state.entities.find(
-      thisCluster => +thisCluster.id === result[0].lke_id
+      thisCluster => +thisCluster.id === result.lkeid
     );
     if (!cluster) {
       return state;
     }
+
     const updatedCluster = {
       ...cluster,
-      node_pools: result
+      node_pools: [...cluster.node_pools, result]
     };
 
     const update = updateOrAdd(updatedCluster, state.entities);
@@ -101,17 +103,34 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     };
   }
 
+  if (isType(action, updateNodePoolActions.failed)) {
+    const { error } = action.payload;
+
+    return {
+      ...state,
+      error: {
+        ...state.error,
+        update: error
+      }
+    };
+  }
+
   if (isType(action, updateNodePoolActions.done)) {
     const { result } = action.payload;
     const cluster = state.entities.find(
-      thisCluster => +thisCluster.id === result[0].lke_id
+      thisCluster => +thisCluster.id === result.lkeid
     );
     if (!cluster) {
       return state;
     }
+
+    const updatedNodePools = cluster.node_pools.map(thisPool => {
+      return thisPool.id === result.id ? result : thisPool;
+    });
+
     const updatedCluster = {
       ...cluster,
-      node_pools: result
+      node_pools: updatedNodePools
     };
 
     const update = updateOrAdd(updatedCluster, state.entities);
@@ -136,6 +155,21 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     };
   }
 
+  if (isType(action, deleteClusterActions.failed)) {
+    const { error } = action.payload;
+
+    return {
+      ...state,
+      error: {
+        ...state.error,
+        delete: {
+          ...state.error,
+          ...error
+        }
+      }
+    };
+  }
+
   if (isType(action, deleteNodePoolActions.done)) {
     const {
       params: { clusterID, nodePoolID }
@@ -147,7 +181,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       return state;
     }
     const nodePools = cluster.node_pools.filter(
-      thisPool => +thisPool.id === +nodePoolID
+      thisPool => thisPool.id !== nodePoolID
     );
     const updatedCluster = { ...cluster, node_pools: nodePools };
     const update = updateOrAdd(updatedCluster, state.entities);
@@ -156,6 +190,14 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       ...state,
       entities: update,
       results: update.map(c => c.id)
+    };
+  }
+
+  if (isType(action, setErrors)) {
+    const error = action.payload;
+    return {
+      ...state,
+      error
     };
   }
   return state;
