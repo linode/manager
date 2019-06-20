@@ -282,7 +282,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           <Checkbox
             disabled={!_shouldEnableAutoResizeDiskOption || isSmaller}
             checked={
-              !_shouldEnableAutoResizeDiskOption
+              !_shouldEnableAutoResizeDiskOption || isSmaller
                 ? false
                 : this.state.autoDiskResize
             }
