@@ -1,6 +1,6 @@
 import Close from '@material-ui/icons/Close';
 import * as React from 'react';
-import { compose } from 'recompose';
+import { compose as recompose } from 'recompose';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
 import List from 'src/components/core/List';
@@ -15,7 +15,12 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { formatRegion } from 'src/utilities';
 import LinodeSelect from '../LinodeSelect';
-import { ExtendedConfig } from './utilities';
+import {
+  EstimatedCloneTimeMode,
+  ExtendedConfig,
+  getAllDisks,
+  getEstimatedCloneTime
+} from './utilities';
 
 type ClassNames =
   | 'root'
@@ -81,8 +86,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
 interface Props {
   selectedConfigs: ExtendedConfig[];
   selectedDisks: Linode.Disk[];
-  selectedLinode: number | null;
-  region: string;
+  selectedLinodeId: number | null;
+  selectedLinodeRegion?: string;
+  thisLinodeRegion: string;
   isSubmitting: boolean;
   currentLinodeId: number;
   errorMap: Record<string, string | undefined>;
@@ -101,13 +107,14 @@ export const Configs: React.FC<CombinedProps> = props => {
     currentLinodeId,
     selectedConfigs,
     selectedDisks,
-    selectedLinode,
-    region,
+    selectedLinodeId,
+    thisLinodeRegion,
     isSubmitting,
     errorMap,
     handleToggleConfig,
     handleToggleDisk,
     handleSelectLinode,
+    selectedLinodeRegion,
     handleClone,
     clearAll
   } = props;
@@ -137,8 +144,8 @@ export const Configs: React.FC<CombinedProps> = props => {
   }
 
   const errorMessageLinks = {
-    shrink: `/linodes/${selectedLinode}/advanced`,
-    resize: `/linodes/${selectedLinode}/resize`
+    shrink: `/linodes/${selectedLinodeId}/advanced`,
+    resize: `/linodes/${selectedLinodeId}/resize`
   };
 
   /**
@@ -153,8 +160,20 @@ export const Configs: React.FC<CombinedProps> = props => {
   // or if there are no selected configs or disks, or if the selected Linode should be excluded.
   const isCloneButtonDisabled =
     (selectedConfigs.length === 0 && selectedDisks.length === 0) ||
-    !selectedLinode ||
-    (shouldExcludeCurrentLinode && selectedLinode === currentLinodeId);
+    !selectedLinodeId ||
+    (shouldExcludeCurrentLinode && selectedLinodeId === currentLinodeId);
+
+  // Estimate the clone time by
+  const allDisks = getAllDisks(selectedConfigs, selectedDisks);
+  const totalSize = allDisks.reduce((sum, eachDisk) => {
+    return sum + eachDisk.size;
+  }, 0);
+
+  const mode: EstimatedCloneTimeMode =
+    thisLinodeRegion === selectedLinodeRegion
+      ? 'sameDatacenter'
+      : 'differentDatacenter';
+  const estimatedCloneTime = getEstimatedCloneTime(totalSize, mode);
 
   return (
     <Paper className={classes.root}>
@@ -232,11 +251,18 @@ export const Configs: React.FC<CombinedProps> = props => {
         <Divider className={classes.divider} />
       )}
 
-      <Typography>Current Datacenter: {formatRegion(region)}</Typography>
+      <Typography>
+        Current Datacenter: {formatRegion(thisLinodeRegion)}
+      </Typography>
+
+      {/* Show the estimated clone time if we're able to submit the form. */}
+      {!isCloneButtonDisabled && (
+        <Typography>Estimated time: {estimatedCloneTime}</Typography>
+      )}
 
       <LinodeSelect
         label="Destination"
-        selectedLinode={selectedLinode}
+        selectedLinode={selectedLinodeId}
         handleChange={linode => handleSelectLinode(linode.id)}
         excludedLinodes={
           shouldExcludeCurrentLinode ? [currentLinodeId] : undefined
@@ -246,7 +272,7 @@ export const Configs: React.FC<CombinedProps> = props => {
         }}
         groupByRegion
         updateFor={[
-          selectedLinode,
+          selectedLinodeId,
           shouldExcludeCurrentLinode,
           errorMap,
           classes
@@ -280,6 +306,6 @@ export const Configs: React.FC<CombinedProps> = props => {
 };
 
 const styled = withStyles(styles);
-const enhanced = compose<CombinedProps, Props>(styled);
+const enhanced = recompose<CombinedProps, Props>(styled);
 
 export default enhanced(Configs);

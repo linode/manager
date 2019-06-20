@@ -104,7 +104,8 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     linodeId,
     requestDisks,
     linodeEvents,
-    linodeStatus
+    linodeStatus,
+    linodesData
   } = props;
 
   /**
@@ -249,6 +250,12 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
 
   const recentEvent = linodeEvents[0];
 
+  const selectedLinode = linodesData.find(
+    eachLinode => eachLinode.id === state.selectedLinodeId
+  );
+
+  const selectedLinodeRegion = selectedLinode && selectedLinode.region;
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Clone" />
@@ -365,8 +372,9 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
                 ).length === 0
               );
             })}
-            selectedLinode={state.selectedLinodeId}
-            region={region}
+            selectedLinodeId={state.selectedLinodeId}
+            selectedLinodeRegion={selectedLinodeRegion}
+            thisLinodeRegion={region}
             handleSelectLinode={setSelectedLinodeId}
             handleToggleConfig={toggleConfig}
             handleToggleDisk={toggleDisk}
