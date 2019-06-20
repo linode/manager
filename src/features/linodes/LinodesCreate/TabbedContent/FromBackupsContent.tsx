@@ -150,7 +150,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
     const tagsToAdd = tags ? tags.map(item => item.value) : undefined;
 
-    this.props.handleSubmitForm('createFromBackup', {
+    this.props.handleSubmitForm({
       region: selectedRegionID,
       type: selectedTypeID,
       private_ip: privateIPEnabled,

@@ -23,17 +23,17 @@ interface Props {
   isPassword?: boolean;
   field: Linode.StackScript.UserDefinedField;
   updateFormState: (key: string, value: any) => void;
-  udf_data: Linode.StackScript.UserDefinedField;
   isOptional: boolean;
   placeholder?: string;
   error?: string;
+  value: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class UserDefinedText extends React.Component<CombinedProps, {}> {
   renderTextField = () => {
-    const { udf_data, error, field, placeholder, isOptional } = this.props;
+    const { error, field, placeholder, isOptional } = this.props;
 
     return (
       <React.Fragment>
@@ -41,29 +41,21 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
           required={!isOptional}
           onChange={this.handleUpdateText}
           label={field.label}
-          value={udf_data[field.name] || ''}
           errorText={error}
           // small={isOptional}
           helperText={placeholder}
+          value={this.props.value}
         />
       </React.Fragment>
     );
   };
 
   renderPasswordField = () => {
-    const {
-      udf_data,
-      error,
-      field,
-      placeholder,
-      isOptional,
-      classes
-    } = this.props;
+    const { error, field, placeholder, isOptional, classes } = this.props;
 
     return (
       <AccessPanel
         required={!isOptional}
-        password={udf_data[field.name] || ''}
         handleChange={this.handleUpdatePassword}
         label={field.label}
         noPadding
@@ -73,6 +65,7 @@ class UserDefinedText extends React.Component<CombinedProps, {}> {
         className={!isOptional ? classes.accessPanel : ''}
         isOptional={isOptional}
         hideHelperText
+        password={this.props.value}
       />
     );
   };

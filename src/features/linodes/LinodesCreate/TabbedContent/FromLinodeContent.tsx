@@ -70,7 +70,6 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
 
   cloneLinode = () => {
     return this.props.handleSubmitForm(
-      'clone',
       {
         region: this.props.selectedRegionID,
         type: this.props.selectedTypeID,
