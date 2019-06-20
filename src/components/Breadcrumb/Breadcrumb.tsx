@@ -48,7 +48,6 @@ const styles = (theme: Theme) =>
       marginLeft: theme.spacing(1),
       '& svg, & img': {
         position: 'relative',
-        top: 2,
         marginRight: 4,
         marginLeft: 4
       }
@@ -69,6 +68,7 @@ interface EditableProps {
 interface LabelProps {
   linkTo?: string;
   prefixComponent?: JSX.Element | null;
+  suffixComponent?: JSX.Element | null;
   subtitle?: string;
   style?: CSSProperties;
 }
@@ -154,6 +154,9 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = props => {
           data-qa-labeltext
         />
       )}
+      {labelOptions &&
+        labelOptions.suffixComponent &&
+        labelOptions.suffixComponent}
     </div>
   );
 };
