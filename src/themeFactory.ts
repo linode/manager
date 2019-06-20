@@ -784,6 +784,11 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
           }
         }
       },
+      MuiInputBase: {
+        input: {
+          height: 'auto'
+        }
+      },
       MuiInputAdornment: {
         root: {
           fontSize: '.9rem',
