@@ -42,7 +42,9 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(2),
       textAlign: 'center'
     },
-    description: {},
+    description: {
+      lineHeight: 1.5
+    },
     divider: {
       marginTop: theme.spacing(3),
       marginBottom: theme.spacing(2)
