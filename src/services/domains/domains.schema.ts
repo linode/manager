@@ -37,7 +37,7 @@ export const createDomainSchema = domainSchemaBase.shape({
     .oneOf(['master', 'slave']),
   soa_email: string()
     .when('type', {
-      is: 'master',
+      is: type => type === 'master',
       then: string().required('SOA Email is required.'),
       otherwise: string()
     })

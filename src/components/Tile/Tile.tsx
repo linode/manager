@@ -2,7 +2,8 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -12,68 +13,69 @@ import Notice from 'src/components/Notice';
 
 type ClassNames = 'root' | 'card' | 'clickableTile' | 'icon' | 'tileTitle';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  '@keyframes dash': {
-    to: {
-      'stroke-dashoffset': 0
-    }
-  },
-  root: {},
-  card: {
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-    backgroundColor: theme.color.white,
-    padding: theme.spacing.unit * 4,
-    border: `1px solid ${theme.color.grey2}`,
-    height: '100%'
-  },
-  clickableTile: {
-    position: 'relative',
-    transition: 'border-color 225ms ease-in-out',
-    '&:hover': {
-      '& $icon': {
-        ...theme.animateCircleIcon
-      },
-      '& svg': {
-        fill: theme.palette.primary.main,
-        transition: 'fill .2s ease-in-out .2s'
+const styles = (theme: Theme) =>
+  createStyles({
+    '@keyframes dash': {
+      to: {
+        'stroke-dashoffset': 0
       }
     },
-    '& .tile-link::after': {
-      content: "''",
-      position: 'absolute',
-      width: '100%',
-      height: '100%',
-      left: 0,
-      top: 0
-    }
-  },
-  tileTitle: {
-    fontSize: '1.2rem',
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit,
-    textAlign: 'center'
-  },
-  icon: {
-    margin: '0 auto 16px',
-    display: 'block',
-    '& .outerCircle': {
-      stroke: theme.bg.main
+    root: {},
+    card: {
+      display: 'flex',
+      flexDirection: 'column',
+      alignItems: 'center',
+      backgroundColor: theme.color.white,
+      padding: theme.spacing(4),
+      border: `1px solid ${theme.color.grey2}`,
+      height: '100%'
     },
-    '& .insidePath': {
-      fill: 'none',
-      stroke: '#3683DC',
-      strokeWidth: 1.25,
-      strokeLinejoin: 'round'
+    clickableTile: {
+      position: 'relative',
+      transition: 'border-color 225ms ease-in-out',
+      '&:hover': {
+        '& $icon': {
+          ...theme.animateCircleIcon
+        },
+        '& svg': {
+          fill: theme.palette.primary.main,
+          transition: 'fill .2s ease-in-out .2s'
+        }
+      },
+      '& .tile-link::after': {
+        content: "''",
+        position: 'absolute',
+        width: '100%',
+        height: '100%',
+        left: 0,
+        top: 0
+      }
     },
-    '& svg': {
-      width: 70,
-      height: 70,
-      fill: theme.bg.offWhiteDT
+    tileTitle: {
+      fontSize: '1.2rem',
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(1),
+      textAlign: 'center'
+    },
+    icon: {
+      margin: '0 auto 16px',
+      display: 'block',
+      '& .outerCircle': {
+        stroke: theme.bg.main
+      },
+      '& .insidePath': {
+        fill: 'none',
+        stroke: '#3683DC',
+        strokeWidth: 1.25,
+        strokeLinejoin: 'round'
+      },
+      '& svg': {
+        width: 70,
+        height: 70,
+        fill: theme.bg.offWhiteDT
+      }
     }
-  }
-});
+  });
 
 type onClickFn = (e: React.MouseEvent<HTMLElement>) => void;
 

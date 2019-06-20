@@ -1,23 +1,12 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { createSSHKey } from 'src/services/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props {
   open: boolean;
@@ -32,7 +21,7 @@ interface State {
   sshKey: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 export class SSHKeyCreationDrawer extends React.PureComponent<
   CombinedProps,
@@ -96,13 +85,17 @@ export class SSHKeyCreationDrawer extends React.PureComponent<
         <ActionsPanel>
           <Button
             data-qa-submit
-            type="primary"
+            buttonType="primary"
             loading={this.state.submitting}
             onClick={this.onSubmit}
           >
             Add Key
           </Button>
-          <Button data-qa-cancel type="cancel" onClick={this.props.onCancel}>
+          <Button
+            data-qa-cancel
+            buttonType="cancel"
+            onClick={this.props.onCancel}
+          >
             Cancel
           </Button>
         </ActionsPanel>
@@ -154,6 +147,4 @@ export class SSHKeyCreationDrawer extends React.PureComponent<
   };
 }
 
-const styled = withStyles(styles);
-
-export default styled(SSHKeyCreationDrawer);
+export default SSHKeyCreationDrawer;

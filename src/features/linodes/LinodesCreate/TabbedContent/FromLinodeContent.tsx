@@ -5,7 +5,8 @@ import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -32,15 +33,16 @@ import {
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  main: {},
-  sidebar: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: '-130px !important'
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    main: {},
+    sidebar: {
+      [theme.breakpoints.up('md')]: {
+        marginTop: '-130px !important'
+      }
     }
-  }
-});
+  });
 
 const errorResources = {
   type: 'A plan selection',

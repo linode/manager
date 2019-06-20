@@ -3,9 +3,10 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
@@ -21,6 +22,11 @@ import {
   updateObjectStorageKey
 } from 'src/services/profile/objectStorageKeys';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import {
+  sendCreateAccessKeyEvent,
+  sendEditAccessKeyEvent,
+  sendRevokeAccessKeyEvent
+} from 'src/utilities/ga';
 import AccessKeyDisplayDialog from './AccessKeyDisplayDialog';
 import AccessKeyDrawer from './AccessKeyDrawer';
 import AccessKeyTable from './AccessKeyTable';
@@ -28,14 +34,13 @@ import RevokeAccessKeyDialog from './RevokeAccessKeyDialog';
 
 type ClassNames = 'headline';
 
-const styles: StyleRulesCallback<ClassNames> = theme => {
-  return {
+const styles = (theme: Theme) =>
+  createStyles({
     headline: {
-      marginTop: theme.spacing.unit * 2,
-      marginBottom: theme.spacing.unit * 2
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
     }
-  };
-};
+  });
 
 type Props = PaginationProps<Linode.ObjectStorageKey> & WithStyles<ClassNames>;
 
@@ -96,6 +101,9 @@ export const AccessKeyLanding: React.StatelessComponent<Props> = props => {
 
         createOrEditDrawer.close();
         displayKeysDialog.open();
+
+        // @analytics
+        sendCreateAccessKeyEvent();
       })
       .catch(errorResponse => {
         setSubmitting(false);
@@ -143,6 +151,9 @@ export const AccessKeyLanding: React.StatelessComponent<Props> = props => {
         paginationProps.request();
 
         createOrEditDrawer.close();
+
+        // @analytics
+        sendEditAccessKeyEvent();
       })
       .catch(errorResponse => {
         setSubmitting(false);
@@ -179,6 +190,9 @@ export const AccessKeyLanding: React.StatelessComponent<Props> = props => {
         paginationProps.request();
 
         revokeKeysDialog.close();
+
+        // @analytics
+        sendRevokeAccessKeyEvent();
       })
       .catch(errorResponse => {
         setIsRevoking(false);
@@ -271,7 +285,7 @@ const updatedRequest = (_: Props, params: any, filters: any) =>
 
 const paginated = Pagey(updatedRequest);
 
-const enhanced = compose(
+const enhanced = compose<Props, {}>(
   styled,
   paginated
 );

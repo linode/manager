@@ -2,7 +2,8 @@ import { Form, Formik } from 'formik';
 import * as React from 'react';
 import { compose } from 'recompose';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -20,15 +21,17 @@ import {
 // @todo: Extract ActionPanel out of Volumes
 import BucketsActionPanel from 'src/features/Volumes/VolumeDrawer/VolumesActionsPanel';
 import { CreateBucketSchema } from 'src/services/objectStorage/buckets.schema';
+import { sendCreateBucketEvent } from 'src/utilities/ga';
 import ClusterSelect from './ClusterSelect';
 
 type ClassNames = 'root' | 'textWrapper';
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  textWrapper: {
-    marginBottom: theme.spacing.unit + 2
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    textWrapper: {
+      marginBottom: theme.spacing(1) + 2
+    }
+  });
 
 interface Props {
   onClose: () => void;
@@ -65,6 +68,9 @@ export const CreateBucketForm: React.StatelessComponent<
             resetForm(initialValues);
             setSubmitting(false);
             onSuccess(bucketLabel);
+
+            // @analytics
+            sendCreateBucketEvent(cluster);
           })
           .catch(errorResponse => {
             const defaultMessage = `Unable to create a Bucket. Please try again later.`;

@@ -2,7 +2,8 @@ import { isEmpty } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -10,18 +11,19 @@ import Typography from 'src/components/core/Typography';
 
 type ClassNames = 'root' | 'groupBox' | 'groupItem';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    background: theme.bg.tableHeader,
-    padding: theme.spacing.unit * 2
-  },
-  groupBox: {
-    marginTop: theme.spacing.unit * 3
-  },
-  groupItem: {
-    margin: theme.spacing.unit
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      background: theme.bg.tableHeader,
+      padding: theme.spacing(2)
+    },
+    groupBox: {
+      marginTop: theme.spacing(3)
+    },
+    groupItem: {
+      margin: theme.spacing(1)
+    }
+  });
 
 interface Props {
   entity: 'Linode' | 'Domain';

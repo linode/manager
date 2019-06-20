@@ -2,12 +2,14 @@ import Modal from '@material-ui/core/Modal';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
+import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
 import MenuList from 'src/components/core/MenuList';
 import Paper from 'src/components/core/Paper';
 import Popper from 'src/components/core/Popper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -18,41 +20,38 @@ import { removeBlacklistedEvents } from 'src/utilities/eventUtils';
 import UserEventsButton from './UserEventsButton';
 import UserEventsList from './UserEventsList';
 
-type ClassNames = 'root' | 'dropDown' | 'hidden' | 'viewAll';
+type ClassNames = 'root' | 'dropDown' | 'viewAll';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    boxShadow: `0 0 5px ${theme.color.boxShadow}`,
-    outline: 0,
-    position: 'absolute',
-    right: theme.spacing.unit * 2,
-    top: 40 + theme.spacing.unit * 4
-  },
-  dropDown: {
-    outline: 0,
-    overflowY: 'auto',
-    overflowX: 'hidden',
-    minHeight: 16,
-    maxWidth: 250,
-    maxHeight: 360,
-    [theme.breakpoints.up('sm')]: {
-      maxWidth: 450
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      boxShadow: `0 0 5px ${theme.color.boxShadow}`,
+      outline: 0,
+      position: 'absolute',
+      right: theme.spacing(2),
+      top: 40 + theme.spacing(4)
+    },
+    dropDown: {
+      outline: 0,
+      overflowY: 'auto',
+      overflowX: 'hidden',
+      minHeight: 16,
+      maxWidth: 250,
+      maxHeight: 360,
+      [theme.breakpoints.up('sm')]: {
+        maxWidth: 450
+      }
+    },
+    viewAll: {
+      backgroundColor: theme.bg.offWhiteDT,
+      width: '100%',
+      textAlign: 'left',
+      color: theme.color.headline,
+      '& > span': {
+        justifyContent: 'flex-start'
+      }
     }
-  },
-  hidden: {
-    height: 0,
-    padding: 0
-  },
-  viewAll: {
-    backgroundColor: theme.bg.offWhiteDT,
-    width: '100%',
-    textAlign: 'left',
-    color: theme.color.headline,
-    '& > span': {
-      justifyContent: 'flex-start'
-    }
-  }
-});
+  });
 
 interface State {
   anchorEl?: HTMLElement;
@@ -112,19 +111,30 @@ export class UserEventsMenu extends React.Component<CombinedProps, State> {
                 <MenuList className={classes.dropDown}>
                   <UserEventsList
                     events={filteredEvents}
-                    closeMenu={this.closeMenu}
+                    closeMenu={(e: any) => this.closeMenu(e)}
                   />
                 </MenuList>
-                <Button
-                  data-qa-view-all-events
-                  className={classes.viewAll}
+                <Link
+                  role="menuitem"
+                  to={'/events'}
+                  href="javascript:void(0)"
                   onClick={(e: any) => {
+                    e.preventDefault();
                     push('/events');
                     this.closeMenu(e);
                   }}
                 >
-                  View All Events
-                </Button>
+                  <Button
+                    data-qa-view-all-events
+                    className={classes.viewAll}
+                    onClick={(e: any) => {
+                      push('/events');
+                      this.closeMenu(e);
+                    }}
+                  >
+                    View All Events
+                  </Button>
+                </Link>
               </Paper>
             </Modal>
           )}

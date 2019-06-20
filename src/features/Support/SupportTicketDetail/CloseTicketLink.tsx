@@ -54,7 +54,7 @@ class CloseTicketLink extends React.Component<CombinedProps, State> {
     this.setState({ dialogOpen: false });
   };
 
-  onClose = (e: React.MouseEvent<HTMLAnchorElement>) => {
+  onClose = (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     this.closeTicket();
   };
@@ -91,14 +91,14 @@ class CloseTicketLink extends React.Component<CombinedProps, State> {
     return (
       <ActionsPanel>
         <Button
-          type="cancel"
+          buttonType="cancel"
           onClick={this.closeConfirmationDialog}
           data-qa-dialog-cancel
         >
           Cancel
         </Button>
         <Button
-          type="primary"
+          buttonType="primary"
           loading={this.state.isClosingTicket}
           onClick={this.onClose}
           data-qa-dialog-submit

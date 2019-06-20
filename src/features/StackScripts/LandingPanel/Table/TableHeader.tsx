@@ -1,27 +1,27 @@
+import TableHead from '@material-ui/core/TableHead';
+import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
-} from '@material-ui/core/styles';
-import * as React from 'react';
-
-import TableHead from '@material-ui/core/TableHead';
-
+} from 'src/components/core/styles';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 
 type ClassNames = 'root' | 'activeDeploys' | 'lastRevision';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  activeDeploys: {
-    minWidth: 140
-  },
-  lastRevision: {
-    minWidth: 130
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    activeDeploys: {
+      minWidth: 140
+    },
+    lastRevision: {
+      minWidth: 130
+    }
+  });
 
 interface Props {
   sortOrder: 'asc' | 'desc';

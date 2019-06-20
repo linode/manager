@@ -52,6 +52,7 @@ import { powerOffLinode, rebootLinode } from './powerActions';
 import ToggleBox from './ToggleBox';
 
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
+import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 
 interface ConfigDrawerState {
   open: boolean;
@@ -409,7 +410,18 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                   <Grid item className={classes.CSVlinkContainer}>
                     <CSVLink
                       data={linodesData}
-                      headers={headers}
+                      headers={
+                        this.props.someLinodesHaveScheduledMaintenance
+                          ? [
+                              ...headers,
+                              /** only add maintenance window to CSV if one Linode has a window */
+                              {
+                                label: 'Maintenance Status',
+                                key: 'maintenance.when'
+                              }
+                            ]
+                          : headers
+                      }
                       filename={`linodes-${formatDate(moment().format())}.csv`}
                       className={classes.CSVlink}
                     >
@@ -459,14 +471,14 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     return (
       <ActionsPanel style={{ padding: 0 }}>
         <Button
-          type="cancel"
+          buttonType="cancel"
           onClick={this.closePowerAlert}
           data-qa-cancel-cancel
         >
           Cancel
         </Button>
         <Button
-          type="secondary"
+          buttonType="secondary"
           onClick={this.executeAction}
           data-qa-confirm-cancel
           loading={confirmationLoading}
@@ -518,7 +530,7 @@ const getUserSelectedDisplay = (
 interface StateProps {
   managed: boolean;
   linodesCount: number;
-  linodesData: Linode.Linode[];
+  linodesData: LinodeWithMaintenance[];
   linodesRequestError?: Linode.ApiFieldError[];
   linodesRequestLoading: boolean;
   userTimezone: string;
@@ -628,7 +640,7 @@ interface WithImagesProps {
   imagesError?: Linode.ApiFieldError[];
 }
 
-export const enhanced = compose(
+export const enhanced = compose<CombinedProps, {}>(
   withRouter,
   toggleGroupState,
   styled,

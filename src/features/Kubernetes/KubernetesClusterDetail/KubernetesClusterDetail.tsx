@@ -11,7 +11,8 @@ import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
@@ -43,35 +44,36 @@ type ClassNames =
   | 'panelItem'
   | 'button';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  title: {
-    display: 'flex',
-    alignItems: 'center',
-    padding: theme.spacing.unit
-  },
-  titleWrapper: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  backButton: {
-    margin: '-6px 0 0 -16px',
-    '& svg': {
-      width: 34,
-      height: 34
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    title: {
+      display: 'flex',
+      alignItems: 'center',
+      padding: theme.spacing(1)
     },
-    padding: 0
-  },
-  section: {
-    margin: theme.spacing.unit * 2
-  },
-  panelItem: {
-    padding: theme.spacing.unit
-  },
-  button: {
-    marginLeft: theme.spacing.unit * 2
-  }
-});
+    titleWrapper: {
+      display: 'flex',
+      alignItems: 'center'
+    },
+    backButton: {
+      margin: '-6px 0 0 -16px',
+      '& svg': {
+        width: 34,
+        height: 34
+      },
+      padding: 0
+    },
+    section: {
+      margin: theme.spacing(2)
+    },
+    panelItem: {
+      padding: theme.spacing(1)
+    },
+    button: {
+      marginLeft: theme.spacing(2)
+    }
+  });
 interface KubernetesContainerProps {
   cluster: ExtendedCluster | null;
   clustersLoading: boolean;
@@ -389,7 +391,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
           <Grid item className={classes.section}>
             <Button
               destructive
-              type="secondary"
+              buttonType="secondary"
               onClick={openDeleteConfirmation}
             >
               Delete Cluster
@@ -398,7 +400,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
         </Grid>
         <Grid container item direction="column" xs={3}>
           <Grid item className={classes.button}>
-            <Button type="primary" onClick={downloadKubeConfig}>
+            <Button buttonType="primary" onClick={downloadKubeConfig}>
               Download kubeconfig
             </Button>
           </Grid>

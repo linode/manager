@@ -22,5 +22,5 @@ export const BucketDrawer: React.StatelessComponent<CombinedProps> = props => {
   );
 };
 
-const enhanced = compose(bucketDrawerContainer);
+const enhanced = compose<CombinedProps, {}>(bucketDrawerContainer);
 export default enhanced(BucketDrawer);

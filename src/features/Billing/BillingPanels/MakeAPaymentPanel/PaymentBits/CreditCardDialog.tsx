@@ -40,11 +40,11 @@ class DialogActions extends React.PureComponent<Actions> {
   render() {
     return (
       <ActionsPanel>
-        <Button type="cancel" onClick={this.props.cancel} data-qa-cancel>
+        <Button buttonType="cancel" onClick={this.props.cancel} data-qa-cancel>
           Cancel
         </Button>
         <Button
-          type="secondary"
+          buttonType="secondary"
           loading={this.props.isMakingPayment}
           onClick={this.props.executePayment}
           data-qa-submit

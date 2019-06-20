@@ -2,7 +2,8 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -20,24 +21,25 @@ type ClassNames =
   | 'advDescription'
   | 'optionalFieldWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    padding: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 3,
-    '& > div:last-child': {
-      border: 0,
-      marginBottom: 0,
-      paddingBottom: 0
-    }
-  },
-  advDescription: {
-    margin: `${theme.spacing.unit * 2}px 0`
-  },
-  username: {
-    color: theme.color.grey1
-  },
-  optionalFieldWrapper: {}
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(3),
+      marginBottom: theme.spacing(3),
+      '& > div:last-child': {
+        border: 0,
+        marginBottom: 0,
+        paddingBottom: 0
+      }
+    },
+    advDescription: {
+      margin: `${theme.spacing(2)}px 0`
+    },
+    username: {
+      color: theme.color.grey1
+    },
+    optionalFieldWrapper: {}
+  });
 
 interface Props {
   errors?: Linode.ApiFieldError[];

@@ -1,26 +1,28 @@
-import * as React from 'react';
-
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import KeyboardArrowRight from '@material-ui/icons/KeyboardArrowRight';
-
+import * as React from 'react';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import PageButton from 'src/components/PaginationControls/PageButton';
 import { sendPaginationEvent } from 'src/utilities/ga';
-
 import PageNumbers from './PageNumbers';
-
-import { StyleRulesCallback, withStyles } from 'src/components/core/styles';
 
 type CSSClasses = 'root';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
-  root: {
-    display: 'flex',
-    flexWrap: 'wrap',
-    alignItems: 'center'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      alignItems: 'center'
+    }
+  });
 
-const styled = withStyles<CSSClasses>(styles);
+const styled = withStyles(styles);
 
 interface Props {
   count: number;
@@ -31,7 +33,9 @@ interface Props {
   classes: any;
 }
 
-export class PaginationControls extends React.Component<Props, {}> {
+type CombinedProps = Props & WithStyles<CSSClasses>;
+
+export class PaginationControls extends React.Component<CombinedProps, {}> {
   handleSendEvent = (eventLabel: string) => {
     const { eventCategory } = this.props;
 

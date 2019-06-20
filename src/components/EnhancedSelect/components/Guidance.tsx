@@ -1,31 +1,33 @@
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from '@material-ui/core/styles';
 import HelpOutline from '@material-ui/icons/HelpOutline';
 import * as React from 'react';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
 type ClassNames = 'guidance' | 'text' | 'helpIcon';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  guidance: {
-    backgroundColor: theme.bg.offWhiteDT,
-    borderTop: `1px solid ${theme.palette.divider}`,
-    padding: theme.spacing.unit * 2
-  },
-  text: {
-    fontSize: '.8rem'
-  },
-  helpIcon: {
-    width: 16,
-    height: 16,
-    position: 'relative',
-    top: 3,
-    marginRight: theme.spacing.unit
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    guidance: {
+      backgroundColor: theme.bg.offWhiteDT,
+      borderTop: `1px solid ${theme.palette.divider}`,
+      padding: theme.spacing(2)
+    },
+    text: {
+      fontSize: '.8rem'
+    },
+    helpIcon: {
+      width: 16,
+      height: 16,
+      position: 'relative',
+      top: 3,
+      marginRight: theme.spacing(1)
+    }
+  });
 
 /** arbitrary comment lolololol */
 

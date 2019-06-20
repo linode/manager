@@ -2,7 +2,7 @@ import OpenInNew from '@material-ui/icons/OpenInNew';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import {
-  StyleRulesCallback,
+  createStyles,
   Theme,
   withStyles,
   WithStyles
@@ -14,21 +14,22 @@ import Toggle from 'src/components/Toggle';
 
 type ClassNames = 'root' | 'footnote' | 'link' | 'icon';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
-  footnote: {
-    fontSize: 14,
-    cursor: 'pointer'
-  },
-  link: {
-    textDecoration: 'underline'
-  },
-  icon: {
-    display: 'inline-block',
-    fontSize: '0.8em',
-    marginLeft: theme.spacing.unit / 3
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    footnote: {
+      fontSize: 14,
+      cursor: 'pointer'
+    },
+    link: {
+      textDecoration: 'underline'
+    },
+    icon: {
+      display: 'inline-block',
+      fontSize: '0.8em',
+      marginLeft: theme.spacing(1) / 3
+    }
+  });
 
 interface Props {
   backups_enabled: boolean;

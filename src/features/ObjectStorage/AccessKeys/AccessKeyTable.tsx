@@ -3,9 +3,10 @@ import { compose } from 'recompose';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -21,15 +22,15 @@ import AccessKeyMenu from './AccessKeyMenu';
 
 type ClassNames = 'root' | 'headline' | 'paper' | 'labelCell' | 'copyIcon';
 
-const styles: StyleRulesCallback<ClassNames> = theme => {
-  return {
+const styles = (theme: Theme) =>
+  createStyles({
     root: {},
     headline: {
-      marginTop: theme.spacing.unit * 2,
-      marginBottom: theme.spacing.unit * 2
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
     },
     paper: {
-      marginBottom: theme.spacing.unit * 2
+      marginBottom: theme.spacing(2)
     },
     labelCell: {
       width: '40%'
@@ -40,10 +41,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
         width: 12,
         height: 12
       },
-      marginLeft: theme.spacing.unit
+      marginLeft: theme.spacing(1)
     }
-  };
-};
+  });
 
 interface Props {
   openRevokeDialog: (objectStorageKey: Linode.ObjectStorageKey) => void;

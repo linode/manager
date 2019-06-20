@@ -10,11 +10,17 @@ export default (
   const id = path(['id'], entity);
 
   if (['user_ssh_key_add', 'user_ssh_key_delete'].includes(action)) {
-    return (e: React.MouseEvent<HTMLElement>) => onClick(`/profile/keys`);
+    return (e: React.MouseEvent<HTMLElement>) => {
+      e.preventDefault();
+      onClick(`/profile/keys`);
+    };
   }
 
   if (['account_settings_update'].includes(action)) {
-    return (e: React.MouseEvent<HTMLElement>) => onClick(`/account/settings`);
+    return (e: React.MouseEvent<HTMLElement>) => {
+      e.preventDefault();
+      onClick(`/account/settings`);
+    };
   }
 
   /**
@@ -32,31 +38,48 @@ export default (
 
   switch (type) {
     case 'linode':
-      return (e: React.MouseEvent<HTMLElement>) => onClick(`/linodes/${id}`);
+      return (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
+        onClick(`/linodes/${id}`);
+      };
 
     case 'ticket':
-      return (e: React.MouseEvent<HTMLElement>) =>
+      return (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
         onClick(`/support/tickets/${id}`);
+      };
 
     case 'domain':
-      return (e: React.MouseEvent<HTMLElement>) => onClick(`/domains/${id}`);
+      return (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
+        onClick(`/domains/${id}`);
+      };
 
     case 'volume':
-      return (e: React.MouseEvent<HTMLElement>) => onClick(`/volumes`);
+      return (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
+        onClick(`/volumes`);
+      };
 
     case 'stackscript':
-      return (e: React.MouseEvent<HTMLElement>) =>
+      return (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
         onClick(`/stackscripts/${id}`);
+      };
 
     case 'nodebalancer':
       switch (action) {
         case 'nodebalancer_config_create':
-          return (e: React.MouseEvent<HTMLElement>) =>
+          return (e: React.MouseEvent<HTMLElement>) => {
+            e.preventDefault();
             onClick(`/nodebalancers/${id}/configurations`);
+          };
 
         default:
-          return (e: React.MouseEvent<HTMLElement>) =>
+          return (e: React.MouseEvent<HTMLElement>) => {
+            e.preventDefault();
             onClick(`/nodebalancers/${id}/summary`);
+          };
       }
 
     case 'community_question':

@@ -2,19 +2,8 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props {
   open: boolean;
@@ -27,7 +16,7 @@ interface Props {
   linodeLabel: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
   renderActions = () => {
@@ -43,10 +32,15 @@ class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
 
     return (
       <ActionsPanel style={{ padding: 0 }}>
-        <Button type="cancel" onClick={this.props.onClose} data-qa-cancel>
+        <Button buttonType="cancel" onClick={this.props.onClose} data-qa-cancel>
           Cancel
         </Button>
-        <Button type="secondary" destructive onClick={method} data-qa-confirm>
+        <Button
+          buttonType="secondary"
+          destructive
+          onClick={method}
+          data-qa-confirm
+        >
           {action}
         </Button>
       </ActionsPanel>
@@ -77,6 +71,4 @@ class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles);
-
-export default styled(DestructiveVolumeDialog);
+export default DestructiveVolumeDialog;

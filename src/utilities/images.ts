@@ -30,7 +30,7 @@ export const sortCreatedDESC = compose<any, any, any>(
   reverse,
   sortBy(
     compose(
-      created => moment(created).format('x'),
+      (created: string) => moment(created).format('x'),
       prop('created')
     )
   )

@@ -183,10 +183,10 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
 };
 
 const enhanced = compose<CombinedProps, Props>(
-  styled,
   withRecentEvent,
   hasMutationAvailable,
-  withNotifications
+  withNotifications,
+  styled
 );
 
 export default enhanced(LinodeRow);

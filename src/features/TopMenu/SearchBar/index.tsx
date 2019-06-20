@@ -1,1 +1,1 @@
-export { default } from './SearchBar';
+export { default, selectStyles } from './SearchBar';

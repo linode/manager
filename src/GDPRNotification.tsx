@@ -1,29 +1,18 @@
 import * as React from 'react';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props {
   open: boolean;
   onClose: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 class GDPRNotification extends React.PureComponent<CombinedProps, {}> {
   actions = () => (
-    <Button onClick={this.props.onClose} type="primary">
+    <Button onClick={this.props.onClose} buttonType="primary">
       Dismiss
     </Button>
   );
@@ -51,6 +40,4 @@ class GDPRNotification extends React.PureComponent<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles);
-
-export default styled(GDPRNotification);
+export default GDPRNotification;

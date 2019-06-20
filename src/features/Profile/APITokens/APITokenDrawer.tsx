@@ -5,7 +5,8 @@ import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -70,39 +71,40 @@ type ClassNames =
   | 'readOnlyCell'
   | 'readWritecell';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  permsTable: {
-    marginTop: theme.spacing.unit * 3
-  },
-  selectCell: {
-    fontFamily: 'LatoWebBold', // we keep this bold at all times
-    fontSize: '.9rem'
-  },
-  accessCell: {
-    width: '31%',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%'
+const styles = (theme: Theme) =>
+  createStyles({
+    permsTable: {
+      marginTop: theme.spacing(3)
+    },
+    selectCell: {
+      fontFamily: 'LatoWebBold', // we keep this bold at all times
+      fontSize: '.9rem'
+    },
+    accessCell: {
+      width: '31%',
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      }
+    },
+    noneCell: {
+      width: '23%',
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      }
+    },
+    readOnlyCell: {
+      width: '23%',
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      }
+    },
+    readWritecell: {
+      width: '23%',
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      }
     }
-  },
-  noneCell: {
-    width: '23%',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%'
-    }
-  },
-  readOnlyCell: {
-    width: '23%',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%'
-    }
-  },
-  readWritecell: {
-    width: '23%',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%'
-    }
-  }
-});
+  });
 
 export type DrawerMode = 'view' | 'edit' | 'create';
 
@@ -433,14 +435,18 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
         )}
         <ActionsPanel>
           {mode === 'view' && (
-            <Button type="primary" onClick={closeDrawer} data-qa-close-drawer>
+            <Button
+              buttonType="primary"
+              onClick={closeDrawer}
+              data-qa-close-drawer
+            >
               Done
             </Button>
           )}
           {(mode === 'create' || mode === 'edit') && [
             <Button
               key="create"
-              type="primary"
+              buttonType="primary"
               onClick={
                 (mode as string) === 'create'
                   ? () => onCreate(permTuplesToScopeString(this.state.scopes))
@@ -451,7 +457,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
               {(mode as string) === 'create' ? 'Submit' : 'Save'}
             </Button>,
             <Button
-              type="secondary"
+              buttonType="secondary"
               className="cancel"
               key="cancel"
               onClick={closeDrawer}

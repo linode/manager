@@ -2,7 +2,8 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -12,14 +13,15 @@ import { formatRegion } from 'src/utilities';
 
 type ClassNames = 'root' | 'section';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  section: {
-    marginBottom: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 2,
-    borderBottom: `1px solid ${theme.palette.divider}`
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    section: {
+      marginBottom: theme.spacing(2),
+      paddingBottom: theme.spacing(2),
+      borderBottom: `1px solid ${theme.palette.divider}`
+    }
+  });
 
 interface Props {
   open: boolean;
@@ -92,7 +94,11 @@ const ViewIPDrawer: React.StatelessComponent<CombinedProps> = props => {
           </div>
 
           <ActionsPanel>
-            <Button type="secondary" onClick={props.onClose} data-qa-cancel>
+            <Button
+              buttonType="secondary"
+              onClick={props.onClose}
+              data-qa-cancel
+            >
               Close
             </Button>
           </ActionsPanel>

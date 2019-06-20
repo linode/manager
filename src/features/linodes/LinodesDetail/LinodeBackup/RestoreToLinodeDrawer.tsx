@@ -7,11 +7,6 @@ import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputLabel from 'src/components/core/InputLabel';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
@@ -21,12 +16,6 @@ import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissio
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props {
   open: boolean;
@@ -45,10 +34,9 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props &
-  WithStyles<ClassNames> & {
-    profile?: Linode.Profile;
-  };
+type CombinedProps = Props & {
+  profile?: Linode.Profile;
+};
 
 const canEditLinode = (
   profile: Linode.Profile | null,
@@ -185,7 +173,9 @@ export class RestoreToLinodeDrawer extends React.Component<
           </InputLabel>
           <Select
             textFieldProps={{
-              'data-qa-select-linode': true
+              dataAttrs: {
+                'data-qa-select-linode': true
+              }
             }}
             defaultValue={selectedLinode || ''}
             options={linodeList}
@@ -223,7 +213,7 @@ export class RestoreToLinodeDrawer extends React.Component<
         )}
         <ActionsPanel>
           <Button
-            type="primary"
+            buttonType="primary"
             onClick={this.restoreToLinode}
             data-qa-restore-submit
             disabled={readOnly}
@@ -239,10 +229,7 @@ export class RestoreToLinodeDrawer extends React.Component<
   }
 }
 
-const styled = withStyles(styles);
-
 const enhanced = compose<CombinedProps, Props>(
-  styled,
   withProfile((ownProps, profile) => {
     return {
       ...ownProps,

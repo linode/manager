@@ -8,9 +8,10 @@ import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
@@ -34,37 +35,38 @@ type ClassNames =
   | 'visibility'
   | 'showHideText';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    padding: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 3
-  },
-  container: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-    justifyContent: 'left',
-    marginTop: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 3
-  },
-  title: {
-    marginBottom: theme.spacing.unit
-  },
-  helpText: {
-    maxWidth: 900
-  },
-  visibility: {
-    color: theme.palette.primary.main,
-    padding: 0,
-    border: 0
-  },
-  showHideText: {
-    fontSize: '1rem',
-    marginLeft: theme.spacing.unit * 2,
-    color: theme.palette.text.primary
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(3),
+      paddingBottom: theme.spacing(2),
+      marginBottom: theme.spacing(3)
+    },
+    container: {
+      display: 'flex',
+      flexFlow: 'row nowrap',
+      alignItems: 'center',
+      justifyContent: 'left',
+      marginTop: theme.spacing(3),
+      marginBottom: theme.spacing(3)
+    },
+    title: {
+      marginBottom: theme.spacing(1)
+    },
+    helpText: {
+      maxWidth: 900
+    },
+    visibility: {
+      color: theme.palette.primary.main,
+      padding: 0,
+      border: 0
+    },
+    showHideText: {
+      fontSize: '1rem',
+      marginLeft: theme.spacing(2),
+      color: theme.palette.text.primary
+    }
+  });
 
 interface Props {
   clearState: () => void;
@@ -275,7 +277,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
                     <div className={classes.container}>
                       {showQRCode ? (
                         <Button
-                          type="secondary"
+                          buttonType="secondary"
                           className={classes.visibility}
                           onClick={this.toggleHidden}
                           destructive
@@ -288,7 +290,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
                         </Button>
                       ) : (
                         <Button
-                          type="secondary"
+                          buttonType="secondary"
                           className={classes.visibility}
                           onClick={this.toggleHidden}
                           data-qa-hide-show-code

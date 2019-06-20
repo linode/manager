@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -13,21 +14,22 @@ import HelpIcon from 'src/components/HelpIcon';
 
 type ClassNames = 'root' | 'selectContainer' | 'icon';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    width: '100%'
-  },
-  icon: {
-    marginTop: theme.spacing.unit * 2 + 14,
-    marginLeft: -theme.spacing.unit
-  },
-  selectContainer: {
-    width: 415 + theme.spacing.unit * 2,
-    [theme.breakpoints.down('xs')]: {
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
       width: '100%'
+    },
+    icon: {
+      marginTop: theme.spacing(2) + 14,
+      marginLeft: -theme.spacing(1)
+    },
+    selectContainer: {
+      width: 415 + theme.spacing(2),
+      [theme.breakpoints.down('xs')]: {
+        width: '100%'
+      }
     }
-  }
-});
+  });
 
 interface Props {
   images: Linode.Image[];

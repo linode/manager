@@ -1,10 +1,11 @@
-import { compose, isEmpty, pathOr } from 'ramda';
+import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
+import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   Theme,
   withStyles,
   WithStyles
@@ -20,29 +21,30 @@ interface Props {
   dismissed: () => void;
 }
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {
-    padding: theme.spacing.unit * 2,
-    margin: `${theme.spacing.unit}px 0 ${theme.spacing.unit * 3}px 0`,
-    [theme.breakpoints.down('md')]: {
-      marginTop: -theme.spacing.unit,
-      width: '100%'
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(2),
+      margin: `${theme.spacing(1)}px 0 ${theme.spacing(3)}px 0`,
+      [theme.breakpoints.down('md')]: {
+        marginTop: -theme.spacing(1),
+        width: '100%'
+      }
+    },
+    container: {
+      [theme.breakpoints.down('md')]: {
+        alignItems: 'center'
+      }
+    },
+    buttonsContainer: {
+      marginTop: theme.spacing(1)
+    },
+    dismiss: {
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+      minWidth: 'auto'
     }
-  },
-  container: {
-    [theme.breakpoints.down('md')]: {
-      alignItems: 'center'
-    }
-  },
-  buttonsContainer: {
-    marginTop: theme.spacing.unit
-  },
-  dismiss: {
-    paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 2,
-    minWidth: 'auto'
-  }
-});
+  });
 
 type CombinedProps = StateProps &
   Props &
@@ -86,7 +88,7 @@ const BackupsCTA: React.StatelessComponent<CombinedProps> = props => {
         <Grid item className={classes.buttonsContainer}>
           <Button
             data-qa-backup-existing
-            type="primary"
+            buttonType="primary"
             onClick={openBackupsDrawer}
           >
             Enable Now
@@ -145,7 +147,7 @@ const connected = connect(
   mapDispatchToProps
 );
 
-const enhanced: any = compose(
+const enhanced = compose<CombinedProps, Props>(
   styled,
   connected
 )(BackupsCTA);

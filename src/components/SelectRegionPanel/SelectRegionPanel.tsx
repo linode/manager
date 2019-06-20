@@ -1,6 +1,7 @@
 import CA from 'flag-icon-css/flags/4x3/ca.svg';
 import DE from 'flag-icon-css/flags/4x3/de.svg';
 import UK from 'flag-icon-css/flags/4x3/gb.svg';
+import IN from 'flag-icon-css/flags/4x3/in.svg';
 import JP from 'flag-icon-css/flags/4x3/jp.svg';
 import SG from 'flag-icon-css/flags/4x3/sg.svg';
 import US from 'flag-icon-css/flags/4x3/us.svg';
@@ -8,7 +9,8 @@ import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -32,7 +34,8 @@ const flags = {
   ),
   uk: () => <UK width="32" height="24" viewBox="0 0 640 480" />,
   de: () => <DE width="32" height="24" viewBox="0 0 720 480" />,
-  ca: () => <CA width="32" height="24" viewBox="0 0 640 480" />
+  ca: () => <CA width="32" height="24" viewBox="0 0 640 480" />,
+  in: () => <IN width="32" height="24" viewBox="0 0 640 480" />
 };
 
 export interface ExtendedRegion extends Linode.Region {
@@ -41,11 +44,12 @@ export interface ExtendedRegion extends Linode.Region {
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    marginTop: theme.spacing.unit * 3
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      marginTop: theme.spacing(3)
+    }
+  });
 
 interface Props {
   regions: ExtendedRegion[];
@@ -63,7 +67,7 @@ const getEURegions = (regions: ExtendedRegion[]) =>
   regions.filter(r => /(de|uk)/.test(r.country));
 
 const getASRegions = (regions: ExtendedRegion[]) =>
-  regions.filter(r => /(jp|sg)/.test(r.country));
+  regions.filter(r => /(jp|sg|in)/.test(r.country));
 
 const renderCard = (
   handleSelection: Function,
@@ -78,6 +82,7 @@ const renderCard = (
     heading={region.country.toUpperCase()}
     subheadings={[region.display]}
     disabled={disabled}
+    variant="check"
   />
 );
 
@@ -96,7 +101,7 @@ class SelectRegionPanel extends React.Component<
         title: 'North America',
         render: () => {
           return (
-            <Grid container spacing={16}>
+            <Grid container spacing={2}>
               {na.map(renderCard(handleSelection, selectedID, disabled))}
             </Grid>
           );
@@ -109,7 +114,7 @@ class SelectRegionPanel extends React.Component<
         title: 'Europe',
         render: () => {
           return (
-            <Grid container spacing={16}>
+            <Grid container spacing={2}>
               {eu.map(renderCard(handleSelection, selectedID, disabled))}
             </Grid>
           );

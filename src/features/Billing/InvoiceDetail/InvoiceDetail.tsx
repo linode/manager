@@ -6,7 +6,8 @@ import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -26,30 +27,31 @@ import InvoiceTable from './InvoiceTable';
 
 type ClassNames = 'root' | 'backButton' | 'titleWrapper' | 'totals';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`
-  },
-  totals: {
-    display: 'flex',
-    flexDirection: 'column',
-    textAlign: 'right',
-    '& h2': {
-      margin: theme.spacing.unit
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`
+    },
+    totals: {
+      display: 'flex',
+      flexDirection: 'column',
+      textAlign: 'right',
+      '& h2': {
+        margin: theme.spacing(1)
+      }
+    },
+    titleWrapper: {
+      display: 'flex',
+      alignItems: 'center'
+    },
+    backButton: {
+      margin: '5px 0 0 -16px',
+      '& svg': {
+        width: 34,
+        height: 34
+      }
     }
-  },
-  titleWrapper: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  backButton: {
-    margin: '5px 0 0 -16px',
-    '& svg': {
-      width: 34,
-      height: 34
-    }
-  }
-});
+  });
 
 interface State {
   invoice?: Linode.Invoice;
@@ -157,8 +159,8 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
               >
                 {data && invoice && items && (
                   <Button
-                    type="primary"
-                    target="_blank"
+                    buttonType="primary"
+                    // target="_blank" M3-2869 - needed?
                     onClick={() => this.printInvoice(data, invoice, items)}
                   >
                     Download PDF

@@ -1,7 +1,8 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -11,20 +12,21 @@ import RenderGuard from 'src/components/RenderGuard';
 
 type ClassNames = 'root' | 'inner' | 'panelBody';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    flexGrow: 1,
-    width: '100%',
-    marginTop: theme.spacing.unit * 3,
-    backgroundColor: theme.color.white
-  },
-  inner: {
-    padding: theme.spacing.unit * 3
-  },
-  panelBody: {
-    padding: `${theme.spacing.unit * 3}px 0 ${theme.spacing.unit}px`
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+      width: '100%',
+      marginTop: theme.spacing(3),
+      backgroundColor: theme.color.white
+    },
+    inner: {
+      padding: theme.spacing(3)
+    },
+    panelBody: {
+      padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`
+    }
+  });
 
 const styled = withStyles(styles);
 

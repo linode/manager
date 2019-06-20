@@ -9,7 +9,8 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -40,35 +41,36 @@ type ClassNames =
   | 'currentPlanContainer'
   | 'checkbox';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    padding: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit * 2
-  },
-  checkbox: {
-    marginTop: theme.spacing.unit * 3
-  },
-  toolTip: {
-    paddingTop: theme.spacing.unit
-  },
-  title: {
-    marginBottom: theme.spacing.unit * 2
-  },
-  subTitle: {
-    marginTop: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit
-  },
-  currentPlanContainer: {
-    '& .selectionCard': {
-      padding: `0 ${theme.spacing.unit}px 0 0`,
-      cursor: 'not-allowed',
-      '& > div, &:focus > div': {
-        backgroundColor: theme.bg.main,
-        borderColor: theme.color.border2
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(3),
+      paddingBottom: theme.spacing(2)
+    },
+    checkbox: {
+      marginTop: theme.spacing(3)
+    },
+    toolTip: {
+      paddingTop: theme.spacing(1)
+    },
+    title: {
+      marginBottom: theme.spacing(2)
+    },
+    subTitle: {
+      marginTop: theme.spacing(3),
+      marginBottom: theme.spacing(1)
+    },
+    currentPlanContainer: {
+      '& .selectionCard': {
+        padding: `0 ${theme.spacing(1)}px 0 0`,
+        cursor: 'not-allowed',
+        '& > div, &:focus > div': {
+          backgroundColor: theme.bg.main,
+          borderColor: theme.color.border2
+        }
       }
     }
-  }
-});
+  });
 
 interface LinodeContextProps {
   linodeId: number;
@@ -238,6 +240,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
                 heading={currentPlanHeading}
                 subheadings={currentPlanSubHeadings}
                 disabled={disabled}
+                variant="check"
               />
             }
           </div>
@@ -290,7 +293,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
               disabled
             }
             loading={this.state.isLoading}
-            type="primary"
+            buttonType="primary"
             onClick={this.onSubmit}
             data-qa-submit
           >

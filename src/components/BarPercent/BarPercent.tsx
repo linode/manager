@@ -1,28 +1,29 @@
+import * as React from 'react';
+import LinearProgress from 'src/components/core/LinearProgress';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
-} from '@material-ui/core/styles';
-import * as React from 'react';
-
-import LinearProgress from 'src/components/core/LinearProgress';
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
 type ClassNames = 'root' | 'primaryColor' | 'loadingText';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    padding: theme.spacing.unit * 2 + theme.spacing.unit / 4,
-    backgroundColor: theme.color.grey2
-  },
-  primaryColor: {
-    backgroundColor: theme.color.green
-  },
-  loadingText: {
-    marginBottom: theme.spacing.unit * 2,
-    textAlign: 'center'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(2) + theme.spacing(1) / 4,
+      backgroundColor: theme.color.grey2
+    },
+    primaryColor: {
+      backgroundColor: theme.color.green
+    },
+    loadingText: {
+      marginBottom: theme.spacing(2),
+      textAlign: 'center'
+    }
+  });
 
 interface Props {
   max: number;

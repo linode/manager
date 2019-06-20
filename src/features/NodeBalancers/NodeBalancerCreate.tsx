@@ -14,6 +14,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Sticky, StickyContainer, StickyProps } from 'react-sticky';
+import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import CheckoutBar from 'src/components/CheckoutBar';
@@ -21,7 +22,8 @@ import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -60,14 +62,15 @@ import {
 
 type ClassNames = 'root' | 'main' | 'sidebar' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  main: {},
-  sidebar: {},
-  title: {
-    marginTop: theme.spacing.unit * 3
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    main: {},
+    sidebar: {},
+    title: {
+      marginTop: theme.spacing(3)
+    }
+  });
 
 type CombinedProps = WithNodeBalancerActions &
   StateProps &
@@ -205,7 +208,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         set(
           L.healthCheckAttemptsLens,
           NodeBalancerCreate.defaultFieldsStates.configs[0].check_attempts
-        ),
+        ) as () => any,
         set(
           L.healthCheckIntervalLens,
           NodeBalancerCreate.defaultFieldsStates.configs[0].check_interval
@@ -213,7 +216,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
         set(
           L.healthCheckTimeoutLens,
           NodeBalancerCreate.defaultFieldsStates.configs[0].check_timeout
-        )
+        ) as () => any
       )
     );
   };
@@ -277,7 +280,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
           lensPath(['nodeBalancerFields', ...nodePathError.path]),
           append(nodePathError.error)
         ),
-        defaultTo([])
+        defaultTo([]) as () => Array<{}>
       );
     });
 
@@ -421,7 +424,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     <ActionsPanel style={{ padding: 0 }}>
       <Button
         onClick={onClose}
-        type="secondary"
+        buttonType="secondary"
         className="cancel"
         data-qa-cancel-cancel
       >
@@ -430,7 +433,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       <Button
         data-qa-confirm-cancel
         onClick={this.onRemoveConfig}
-        type="secondary"
+        buttonType="secondary"
         destructive
         loading={this.state.deleteConfigConfirmDialog.submitting}
       >
@@ -647,7 +650,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
               )}
               <Grid item>
                 <Button
-                  type="secondary"
+                  buttonType="secondary"
                   onClick={this.addNodeBalancer}
                   data-qa-add-config
                   disabled={disabled}
@@ -680,7 +683,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                     heading={`${this.state.nodeBalancerFields.label ||
                       'NodeBalancer'} Summary`}
                     onDeploy={this.createNodeBalancer}
-                    calculatedPrice={20}
+                    calculatedPrice={10}
                     displaySections={displaySections && [displaySections]}
                     disabled={this.state.submitting || disabled}
                     {...props}
@@ -804,7 +807,7 @@ const withRegions = regionsContainer(({ data, loading, error }) => ({
   regionsError: error
 }));
 
-export default compose(
+export default recompose<CombinedProps, {}>(
   connected,
   withRegions,
   withNodeBalancerActions,

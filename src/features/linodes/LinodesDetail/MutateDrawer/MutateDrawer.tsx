@@ -2,20 +2,9 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ListItem from 'src/components/core/ListItem';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface MutateInfo {
   vcpus: number | null;
@@ -54,7 +43,7 @@ interface State {
   extendedUpgradeInfo: ExtendedUpgradeInfo;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 class MutateDrawer extends React.Component<CombinedProps, State> {
   constructor(props: CombinedProps) {
@@ -162,7 +151,7 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
           <Button
             loading={loading}
             onClick={this.props.initMutation}
-            type="primary"
+            buttonType="primary"
             compact
           >
             Enter the Upgrade Queue
@@ -183,6 +172,4 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles);
-
-export default styled(MutateDrawer);
+export default MutateDrawer;

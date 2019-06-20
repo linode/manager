@@ -1,7 +1,8 @@
 import MenuItem from '@material-ui/core/MenuItem';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -9,54 +10,56 @@ import Typography from 'src/components/core/Typography';
 
 type CSSClasses = 'root' | 'content' | 'titleLink' | 'body' | 'iconWrapper';
 
-const styles: StyleRulesCallback = theme => ({
-  '@keyframes dash': {
-    to: {
-      'stroke-dashoffset': 0
-    }
-  },
-  root: {
-    paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 2,
-    paddingTop: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 2,
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    maxWidth: '350px',
-    display: 'flex',
-    alignItems: 'center',
-    transition: 'background-color .2s ease-in-out',
-    '& .circle': {
-      fill: theme.bg.offWhiteDT
+const styles = (theme: Theme) =>
+  createStyles({
+    '@keyframes dash': {
+      to: {
+        'stroke-dashoffset': 0
+      }
     },
-    '& .outerCircle': {
-      stroke: theme.bg.main
+    root: {
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+      paddingTop: theme.spacing(2),
+      paddingBottom: theme.spacing(2),
+      borderBottom: `1px solid ${theme.palette.divider}`,
+      maxWidth: '350px',
+      display: 'flex',
+      alignItems: 'center',
+      transition: 'background-color .2s ease-in-out',
+      '& .circle': {
+        fill: theme.bg.offWhiteDT
+      },
+      '& .outerCircle': {
+        stroke: theme.bg.main
+      },
+      '&:hover, &:focus': {
+        ...theme.animateCircleIcon,
+        backgroundColor: theme.bg.offWhiteDT,
+        color: theme.palette.text.primary
+      }
     },
-    '&:hover, &:focus': {
-      ...theme.animateCircleIcon,
-      backgroundColor: theme.bg.offWhiteDT
+    iconWrapper: {
+      width: 49,
+      height: 49
+    },
+    content: {
+      display: 'flex',
+      flexDirection: 'column',
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2)
+    },
+    titleLink: {
+      textDecoration: 'none',
+      color: theme.color.black,
+      fontSize: '1.18rem'
+    },
+    body: {
+      marginTop: 3,
+      fontSize: '.9rem',
+      lineHeight: '1.1rem'
     }
-  },
-  iconWrapper: {
-    width: 49,
-    height: 49
-  },
-  content: {
-    display: 'flex',
-    flexDirection: 'column',
-    paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 2
-  },
-  titleLink: {
-    textDecoration: 'none',
-    color: theme.color.black,
-    fontSize: '1.18rem'
-  },
-  body: {
-    marginTop: 3,
-    fontSize: '.9rem',
-    lineHeight: '1.1rem'
-  }
-});
+  });
 
 export interface MenuItems {
   title: string;

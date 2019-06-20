@@ -14,7 +14,7 @@ describe('DateTimeDisplay component', () => {
       component.setProps({ value: APIDate, humanizeCutoff: undefined });
       expect(
         component
-          .find('WithStyles(Typography)')
+          .find('WithStyles(ForwardRef(Typography))')
           .children()
           .text()
       ).toContain('2018-07-20 04:23:17');
@@ -29,7 +29,7 @@ describe('DateTimeDisplay component', () => {
       });
       expect(
         component
-          .find('WithStyles(Typography)')
+          .find('WithStyles(ForwardRef(Typography))')
           .children()
           .text()
       ).toContain('5 minutes ago');
@@ -42,14 +42,14 @@ describe('DateTimeDisplay component', () => {
       });
       expect(
         component
-          .find('WithStyles(Typography)')
+          .find('WithStyles(ForwardRef(Typography))')
           .children()
           .text()
       ).toContain('6 days ago');
       component.setProps({ humanizeCutoff: 'day' });
       expect(
         component
-          .find('WithStyles(Typography)')
+          .find('WithStyles(ForwardRef(Typography))')
           .children()
           .text()
       ).toContain(almostOneWeek.year());
@@ -62,7 +62,7 @@ describe('DateTimeDisplay component', () => {
       });
       expect(
         component
-          .find('WithStyles(Typography)')
+          .find('WithStyles(ForwardRef(Typography))')
           .children()
           .text()
       ).toContain('10 years ago');

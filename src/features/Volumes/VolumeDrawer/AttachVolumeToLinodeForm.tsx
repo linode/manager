@@ -1,8 +1,3 @@
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from '@material-ui/core/styles';
 import { Form, Formik } from 'formik';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -12,7 +7,6 @@ import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/events';
-
 import { attachVolume } from 'src/services/volumes';
 import { MapState } from 'src/store/types';
 import { openForCreating } from 'src/store/volumeDrawer';
@@ -25,12 +19,6 @@ import { handleFieldErrors, handleGeneralErrors } from './utils';
 import VolumesActionsPanel from './VolumesActionsPanel';
 import VolumeSelect from './VolumeSelect';
 
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
-
 interface Props {
   onClose: () => void;
   linodeId: number;
@@ -39,11 +27,7 @@ interface Props {
   readOnly?: boolean;
 }
 
-type CombinedProps = Props &
-  StateProps &
-  DispatchProps &
-  VolumesRequests &
-  WithStyles<ClassNames>;
+type CombinedProps = Props & StateProps & DispatchProps & VolumesRequests;
 
 /**
  * I had to provide a separate validation schema since the linode_id (which is required by API) is
@@ -170,8 +154,6 @@ const AttachVolumeToLinodeForm: React.StatelessComponent<
   );
 };
 
-const styled = withStyles(styles);
-
 interface DispatchProps {
   actions: {
     switchToCreating: () => void;
@@ -212,7 +194,6 @@ const connected = connect(
 );
 
 const enhanced = compose<CombinedProps, Props>(
-  styled,
   connected,
   withVolumesRequests
 );

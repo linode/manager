@@ -1,7 +1,7 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   Theme,
   withStyles,
   WithStyles
@@ -14,13 +14,14 @@ import { ExtendedLinode } from './BackupDrawer';
 
 type ClassNames = 'root' | 'error';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
-  error: {
-    color: theme.color.red,
-    fontSize: 13
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    error: {
+      color: theme.color.red,
+      fontSize: 13
+    }
+  });
 
 interface Props {
   linodes: ExtendedLinode[];

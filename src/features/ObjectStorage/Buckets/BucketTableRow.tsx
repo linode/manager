@@ -2,9 +2,10 @@ import * as React from 'react';
 // @todo: uncomment this Link import when a bucket landing page exists
 // import { Link } from 'react-router-dom';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
@@ -18,17 +19,18 @@ import BucketActionMenu from './BucketActionMenu';
 
 type ClassNames = 'root' | 'labelStatusWrapper' | 'bucketRow';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  bucketRow: {
-    backgroundColor: theme.bg.white
-  },
-  labelStatusWrapper: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    bucketRow: {
+      backgroundColor: theme.bg.white
+    },
+    labelStatusWrapper: {
+      display: 'flex',
+      flexFlow: 'row nowrap',
+      alignItems: 'center'
+    }
+  });
 
 interface BucketTableRowProps extends Linode.Bucket {
   onRemove: () => void;

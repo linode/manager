@@ -1,21 +1,9 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
 import SelectionCard from 'src/components/SelectionCard';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 export type LinodeConfigSelectionDrawerCallback = (id: number) => void;
 
@@ -29,7 +17,7 @@ interface Props {
   error?: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const LinodeConfigSelectionDrawer: React.StatelessComponent<
   CombinedProps
@@ -38,7 +26,7 @@ const LinodeConfigSelectionDrawer: React.StatelessComponent<
 
   return (
     <Drawer open={open} onClose={onClose} title="Select a Linode Configuration">
-      <Grid container spacing={8} style={{ marginTop: 16 }}>
+      <Grid container spacing={1} style={{ marginTop: 16 }}>
         {configs.map(config => (
           <SelectionCard
             key={config.id}
@@ -46,14 +34,15 @@ const LinodeConfigSelectionDrawer: React.StatelessComponent<
             subheadings={[config.kernel]}
             onClick={() => onChange(config.id)}
             checked={selected === String(config.id)}
+            variant="check"
           />
         ))}
       </Grid>
       <ActionsPanel>
-        <Button type="primary" onClick={onSubmit}>
+        <Button buttonType="primary" onClick={onSubmit}>
           Submit
         </Button>
-        <Button onClick={onClose} type="secondary" className="cancel">
+        <Button onClick={onClose} buttonType="secondary" className="cancel">
           Cancel
         </Button>
       </ActionsPanel>
@@ -67,8 +56,4 @@ LinodeConfigSelectionDrawer.defaultProps = {
   configs: []
 };
 
-const styled = withStyles(styles);
-
-const enhanced = compose<CombinedProps, Props>(styled);
-
-export default enhanced(LinodeConfigSelectionDrawer);
+export default LinodeConfigSelectionDrawer;

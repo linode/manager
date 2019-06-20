@@ -1,26 +1,11 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
-import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
-} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import RenderVolumeData, { RenderVolumeDataProps } from './RenderVolumeData';
 import SortableVolumesTableHeader from './SortableVolumesTableHeader';
-
-type ClassNames = 'root' | 'volumesWrapper' | 'linodeVolumesWrapper';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  // styles for /volumes table
-  volumesWrapper: {},
-  // styles for linodes/id/volumes table
-  linodeVolumesWrapper: {}
-});
 
 interface Props {
   data: Linode.Volume[];
@@ -30,17 +15,10 @@ interface Props {
   handleOrderChange: (orderBy: string, order?: 'asc' | 'desc') => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const ListVolumes: React.StatelessComponent<CombinedProps> = props => {
-  const {
-    classes,
-    orderBy,
-    order,
-    handleOrderChange,
-    data,
-    renderProps
-  } = props;
+  const { orderBy, order, handleOrderChange, data, renderProps } = props;
   return (
     <Paginate data={data} pageSize={25}>
       {({
@@ -53,15 +31,7 @@ const ListVolumes: React.StatelessComponent<CombinedProps> = props => {
       }) => (
         <React.Fragment>
           <Paper>
-            <Table
-              removeLabelonMobile
-              aria-label="List of your Volumes"
-              className={
-                renderProps.isVolumesLanding
-                  ? classes.volumesWrapper
-                  : classes.linodeVolumesWrapper
-              }
-            >
+            <Table removeLabelonMobile aria-label="List of your Volumes">
               <SortableVolumesTableHeader
                 order={order}
                 orderBy={orderBy}
@@ -87,6 +57,4 @@ const ListVolumes: React.StatelessComponent<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(ListVolumes);
+export default ListVolumes;

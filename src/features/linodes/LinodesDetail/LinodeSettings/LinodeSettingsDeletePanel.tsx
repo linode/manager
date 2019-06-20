@@ -5,11 +5,6 @@ import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
@@ -20,12 +15,6 @@ import {
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props {
   linodeId: number;
@@ -40,8 +29,7 @@ interface State {
 type CombinedProps = Props &
   ContextProps &
   LinodeActionsProps &
-  RouteComponentProps<{}> &
-  WithStyles<ClassNames>;
+  RouteComponentProps<{}>;
 
 class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -82,7 +70,7 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <ExpansionPanel heading="Delete Linode">
           <Button
-            type="secondary"
+            buttonType="secondary"
             destructive
             style={{ marginBottom: 8 }}
             onClick={this.openDeleteDialog}
@@ -114,14 +102,14 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
   renderConfirmationActions = () => (
     <ActionsPanel style={{ padding: 0 }}>
       <Button
-        type="cancel"
+        buttonType="cancel"
         onClick={this.closeDeleteDialog}
         data-qa-cancel-delete
       >
         Cancel
       </Button>
       <Button
-        type="secondary"
+        buttonType="secondary"
         destructive
         onClick={this.deleteLinode}
         data-qa-confirm-delete
@@ -131,8 +119,6 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
     </ActionsPanel>
   );
 }
-
-const styled = withStyles(styles);
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Delete Linode' });
 
@@ -148,7 +134,6 @@ const enhanced = compose<CombinedProps, Props>(
   errorBoundary,
   linodeContext,
   withRouter,
-  styled,
   withLinodeActions
 );
 

@@ -6,7 +6,8 @@ import Divider from 'src/components/core/Divider';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -27,55 +28,56 @@ type ClassNames =
   | 'subLabel'
   | 'caption';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    flexGrow: 1,
-    width: '100%',
-    marginTop: theme.spacing.unit * 3,
-    backgroundColor: theme.color.white
-  },
-  flex: {
-    flex: 1
-  },
-  title: {
-    marginBottom: theme.spacing.unit * 2
-  },
-  divider: {
-    marginTop: theme.spacing.unit
-  },
-  lastItem: {
-    paddingBottom: '0 !important'
-  },
-  inner: {
-    padding: theme.spacing.unit * 3
-  },
-  panelBody: {
-    padding: `${theme.spacing.unit * 3}px 0 ${theme.spacing.unit}px`
-  },
-  label: {
-    '& > span:last-child': {
-      color: theme.color.headline,
-      fontFamily: theme.font.bold,
-      fontSize: '1rem',
-      lineHeight: '1.2em',
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+      width: '100%',
+      marginTop: theme.spacing(3),
+      backgroundColor: theme.color.white
+    },
+    flex: {
+      flex: 1
+    },
+    title: {
+      marginBottom: theme.spacing(2)
+    },
+    divider: {
+      marginTop: theme.spacing(1)
+    },
+    lastItem: {
+      paddingBottom: '0 !important'
+    },
+    inner: {
+      padding: theme.spacing(3)
+    },
+    panelBody: {
+      padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`
+    },
+    label: {
+      '& > span:last-child': {
+        color: theme.color.headline,
+        fontFamily: theme.font.bold,
+        fontSize: '1rem',
+        lineHeight: '1.2em',
+        [theme.breakpoints.up('md')]: {
+          marginLeft: theme.spacing(2)
+        }
+      }
+    },
+    subLabel: {
+      display: 'inline-block',
+      position: 'relative',
+      top: 3
+    },
+    caption: {
+      marginTop: -8,
+      paddingLeft: theme.spacing(2) + 23, // 39,
       [theme.breakpoints.up('md')]: {
-        marginLeft: theme.spacing.unit * 2
+        paddingLeft: theme.spacing(4) + 23 // 55
       }
     }
-  },
-  subLabel: {
-    display: 'inline-block',
-    position: 'relative',
-    top: 3
-  },
-  caption: {
-    marginTop: -8,
-    paddingLeft: theme.spacing.unit * 2 + 23, // 39,
-    [theme.breakpoints.up('md')]: {
-      paddingLeft: theme.spacing.unit * 4 + 23 // 55
-    }
-  }
-});
+  });
 
 const styled = withStyles(styles);
 

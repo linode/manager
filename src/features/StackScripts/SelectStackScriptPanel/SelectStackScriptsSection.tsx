@@ -1,7 +1,8 @@
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -15,13 +16,14 @@ import StackScriptSelectionRow from './StackScriptSelectionRow';
 
 type ClassNames = 'root' | 'loadingWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  loadingWrapper: {
-    border: 0,
-    paddingTop: 100
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    loadingWrapper: {
+      border: 0,
+      paddingTop: 100
+    }
+  });
 
 export interface Props {
   onSelect: (s: Linode.StackScript.Response) => void;

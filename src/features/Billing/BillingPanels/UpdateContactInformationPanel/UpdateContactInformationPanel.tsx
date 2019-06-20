@@ -4,7 +4,8 @@ import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -25,17 +26,18 @@ import CountryData, { Region } from './countryRegionData';
 
 type ClassNames = 'root' | 'mainFormContainer' | 'stateZip';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  mainFormContainer: {
-    maxWidth: 860
-  },
-  stateZip: {
-    [theme.breakpoints.up('md')]: {
-      maxWidth: `calc(415px + ${theme.spacing.unit * 2}px)`
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    mainFormContainer: {
+      maxWidth: 860
+    },
+    stateZip: {
+      [theme.breakpoints.up('md')]: {
+        maxWidth: `calc(415px + ${theme.spacing(2)}px)`
+      }
     }
-  }
-});
+  });
 
 interface State {
   submitting: boolean;
@@ -363,7 +365,6 @@ class UpdateContactInformationPanel extends React.Component<
                 label="State / Province"
                 errorText={errorMap.state}
                 onChange={this.updateState}
-                data-qa-contact-province
                 placeholder="Select a State"
                 options={regionResults}
                 isClearable={false}
@@ -374,6 +375,11 @@ class UpdateContactInformationPanel extends React.Component<
                     ? null
                     : { value: account.state, label: account.state }
                 }
+                textFieldProps={{
+                  dataAttrs: {
+                    'data-qa-contact-province': true
+                  }
+                }}
               />
             </Grid>
             <Grid item xs={12} sm={5}>
@@ -403,7 +409,6 @@ class UpdateContactInformationPanel extends React.Component<
             label="Country"
             errorText={errorMap.country}
             onChange={this.updateCountry}
-            data-qa-contact-country
             placeholder="Select a Country"
             options={countryResults}
             isClearable={false}
@@ -412,6 +417,11 @@ class UpdateContactInformationPanel extends React.Component<
                 ? value === fields.country
                 : value === account.country
             )}
+            textFieldProps={{
+              dataAttrs: {
+                'data-qa-contact-country': true
+              }
+            }}
           />
         </Grid>
 
@@ -443,7 +453,7 @@ class UpdateContactInformationPanel extends React.Component<
     return (
       <ActionsPanel>
         <Button
-          type="primary"
+          buttonType="primary"
           onClick={this.submitForm}
           loading={this.state.submitting}
           data-qa-save-contact-info
@@ -451,7 +461,7 @@ class UpdateContactInformationPanel extends React.Component<
           Save
         </Button>
         <Button
-          type="secondary"
+          buttonType="secondary"
           onClick={this.resetForm}
           data-qa-reset-contact-info
         >

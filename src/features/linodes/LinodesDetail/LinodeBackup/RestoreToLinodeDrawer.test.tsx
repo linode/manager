@@ -14,7 +14,7 @@ describe('RestoreToLinodeDrawer', () => {
   };
 
   const wrapper = shallow<RestoreToLinodeDrawer>(
-    <RestoreToLinodeDrawer {...props} classes={{ root: '' }} />
+    <RestoreToLinodeDrawer {...props} />
   );
 
   it("doesn't wipe linodes when calling reset() method", () => {

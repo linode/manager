@@ -12,7 +12,8 @@ import FormControlLabel from 'src/components/core/FormControlLabel';
 import FormHelperText from 'src/components/core/FormHelperText';
 import RadioGroup from 'src/components/core/RadioGroup';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -51,15 +52,16 @@ import { isValidSOAEmail } from './domainUtils';
 
 type ClassNames = 'root' | 'masterIPErrorNotice' | 'addIP';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  masterIPErrorNotice: {
-    marginTop: theme.spacing.unit * 2
-  },
-  addIP: {
-    left: -theme.spacing.unit * 2 + 3
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    masterIPErrorNotice: {
+      marginTop: theme.spacing(2)
+    },
+    addIP: {
+      left: -theme.spacing(2) + 3
+    }
+  });
 
 type DefaultRecordsType = 'none' | 'linode' | 'nodebalancer';
 
@@ -153,19 +155,6 @@ const setMasterIP = (idx: number, value: string) =>
 const masterIPsCountLens = lensPath(['masterIPsCount']);
 const updateMasterIPsCount = (fn: (s: any) => any) => (obj: any) =>
   over(masterIPsCountLens, fn, obj);
-
-const validateEmail = (type: string, domain: string, email: string) => {
-  /**
-   * Validation
-   *
-   * Currently, the API does not check that the soaEmail
-   * is not associated with the target hostname. If you're creating
-   * example.com, using `marty@example.com` as your soaEmail is unwise
-   * (though technically won't break anything).
-   */
-
-  return type === 'master' && isValidSOAEmail(email, domain);
-};
 
 class DomainDrawer extends React.Component<CombinedProps, State> {
   mounted: boolean = false;
@@ -446,7 +435,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           )}
         <ActionsPanel>
           <Button
-            type="primary"
+            buttonType="primary"
             onClick={this.submit}
             data-qa-submit
             loading={submitting}
@@ -454,7 +443,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           >
             {mode === EDITING ? 'Update' : 'Create'}
           </Button>
-          <Button onClick={this.closeDrawer} type="cancel" data-qa-cancel>
+          <Button onClick={this.closeDrawer} buttonType="cancel" data-qa-cancel>
             Cancel
           </Button>
         </ActionsPanel>
@@ -569,7 +558,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         ? { domain, type, tags, soa_email: soaEmail }
         : { domain, type, tags, master_ips: finalMasterIPs };
 
-    if (!validateEmail(type, domain, data.soa_email || '')) {
+    if (type === 'master' && !isValidSOAEmail(data.soa_email || '', domain)) {
       this.handleEmailValidationErrors();
       return;
     }
@@ -587,64 +576,68 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
          * domain records for them. If so, create some A/AAAA and MX records
          * with the first IPv4 and IPv6 from the Linode or NodeBalancer they
          * selected.
+         *
+         * This only applies to master domains.
          */
-        if (defaultRecordsSetting === 'linode') {
-          return generateDefaultDomainRecords(
-            domainData.domain,
-            domainData.id,
-            path(['ipv4', 0], selectedDefaultLinode),
-            path(['ipv6'], selectedDefaultLinode)
-          )
-            .then(() => {
-              return this.redirectToLandingOrDetail(type, domainData.id);
-            })
-            .catch((e: Linode.ApiFieldError[]) => {
-              reportException(
-                `Default DNS Records couldn't be created from Linode: ${
-                  e[0].reason
-                }`,
-                {
-                  selectedLinode: this.state.selectedDefaultLinode!.id,
-                  domainID: domainData.id,
-                  ipv4: path(['ipv4', 0], selectedDefaultLinode),
-                  ipv6: path(['ipv6'], selectedDefaultLinode)
-                }
-              );
-              return this.redirectToLandingOrDetail(type, domainData.id, {
-                recordError:
-                  'There was an issue creating default domain records.'
+        if (type === 'master') {
+          if (defaultRecordsSetting === 'linode') {
+            return generateDefaultDomainRecords(
+              domainData.domain,
+              domainData.id,
+              path(['ipv4', 0], selectedDefaultLinode),
+              path(['ipv6'], selectedDefaultLinode)
+            )
+              .then(() => {
+                return this.redirectToLandingOrDetail(type, domainData.id);
+              })
+              .catch((e: Linode.ApiFieldError[]) => {
+                reportException(
+                  `Default DNS Records couldn't be created from Linode: ${
+                    e[0].reason
+                  }`,
+                  {
+                    selectedLinode: this.state.selectedDefaultLinode!.id,
+                    domainID: domainData.id,
+                    ipv4: path(['ipv4', 0], selectedDefaultLinode),
+                    ipv6: path(['ipv6'], selectedDefaultLinode)
+                  }
+                );
+                return this.redirectToLandingOrDetail(type, domainData.id, {
+                  recordError:
+                    'There was an issue creating default domain records.'
+                });
               });
-            });
-        }
+          }
 
-        if (defaultRecordsSetting === 'nodebalancer') {
-          return generateDefaultDomainRecords(
-            domainData.domain,
-            domainData.id,
-            path(['ipv4'], selectedDefaultNodeBalancer),
-            path(['ipv6'], selectedDefaultNodeBalancer)
-          )
-            .then(() => {
-              return this.redirectToLandingOrDetail(type, domainData.id);
-            })
-            .catch((e: Linode.ApiFieldError[]) => {
-              reportException(
-                `Default DNS Records couldn't be created from NodeBalancer: ${
-                  e[0].reason
-                }`,
-                {
-                  selectedNodeBalancer: this.state.selectedDefaultNodeBalancer!
-                    .id,
-                  domainID: domainData.id,
-                  ipv4: path(['ipv4'], selectedDefaultNodeBalancer),
-                  ipv6: path(['ipv6'], selectedDefaultNodeBalancer)
-                }
-              );
-              return this.redirectToLandingOrDetail(type, domainData.id, {
-                recordError:
-                  'There was an issue creating default domain records.'
+          if (defaultRecordsSetting === 'nodebalancer') {
+            return generateDefaultDomainRecords(
+              domainData.domain,
+              domainData.id,
+              path(['ipv4'], selectedDefaultNodeBalancer),
+              path(['ipv6'], selectedDefaultNodeBalancer)
+            )
+              .then(() => {
+                return this.redirectToLandingOrDetail(type, domainData.id);
+              })
+              .catch((e: Linode.ApiFieldError[]) => {
+                reportException(
+                  `Default DNS Records couldn't be created from NodeBalancer: ${
+                    e[0].reason
+                  }`,
+                  {
+                    selectedNodeBalancer: this.state
+                      .selectedDefaultNodeBalancer!.id,
+                    domainID: domainData.id,
+                    ipv4: path(['ipv4'], selectedDefaultNodeBalancer),
+                    ipv6: path(['ipv6'], selectedDefaultNodeBalancer)
+                  }
+                );
+                return this.redirectToLandingOrDetail(type, domainData.id, {
+                  recordError:
+                    'There was an issue creating default domain records.'
+                });
               });
-            });
+          }
         }
 
         return this.redirectToLandingOrDetail(type, domainData.id);
@@ -734,7 +727,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           { domain, tags, soa_email: soaEmail, domainId: id }
         : { domain, type, tags, master_ips: finalMasterIPs, domainId: id };
 
-    if (!validateEmail(type, domain, data.soa_email || '')) {
+    if (type === 'master' && !isValidSOAEmail(data.soa_email || '', domain)) {
       this.handleEmailValidationErrors();
       return;
     }

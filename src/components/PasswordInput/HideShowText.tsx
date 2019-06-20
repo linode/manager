@@ -24,14 +24,14 @@ class HideShowText extends React.Component<Props, State> {
 
   render() {
     const { hidden } = this.state;
-    const { required } = this.props;
 
     return (
       <TextField
         {...this.props}
-        data-qa-hide={hidden}
+        dataAttrs={{
+          'data-qa-hide': hidden
+        }}
         type={hidden ? 'password' : 'text'}
-        required={required}
         InputProps={{
           startAdornment: hidden ? (
             <Visibility
@@ -50,4 +50,4 @@ class HideShowText extends React.Component<Props, State> {
   }
 }
 
-export default HideShowText;
+export default HideShowText as React.ComponentType<Props>;

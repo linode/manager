@@ -3,7 +3,8 @@ import * as classNames from 'classnames';
 import * as copy from 'copy-to-clipboard';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -20,58 +21,59 @@ interface State {
 
 type CSSClasses = 'root' | 'copied' | 'standAlone';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
-  '@keyframes popUp': {
-    from: {
-      opacity: 0,
-      top: -10,
-      transform: 'scale(.1)'
+const styles = (theme: Theme) =>
+  createStyles({
+    '@keyframes popUp': {
+      from: {
+        opacity: 0,
+        top: -10,
+        transform: 'scale(.1)'
+      },
+      to: {
+        opacity: 1,
+        top: -45,
+        transform: 'scale(1)'
+      }
     },
-    to: {
-      opacity: 1,
-      top: -45,
-      transform: 'scale(1)'
-    }
-  },
-  root: {
-    position: 'relative',
-    padding: 4,
-    transition: theme.transitions.create(['background-color']),
-    borderRadius: 4,
-    color: theme.color.grey1,
-    '& svg': {
-      transition: theme.transitions.create(['color']),
-      color: theme.color.grey1,
-      margin: 0,
+    root: {
       position: 'relative',
-      width: 16,
-      height: 16
-    },
-    '&:hover': {
-      backgroundColor: theme.color.grey1,
+      padding: 4,
+      transition: theme.transitions.create(['background-color']),
+      borderRadius: 4,
+      color: theme.color.grey1,
       '& svg': {
-        color: theme.color.white
+        transition: theme.transitions.create(['color']),
+        color: theme.color.grey1,
+        margin: 0,
+        position: 'relative',
+        width: 16,
+        height: 16
+      },
+      '&:hover': {
+        backgroundColor: theme.color.grey1,
+        '& svg': {
+          color: theme.color.white
+        }
+      }
+    },
+    copied: {
+      fontSize: '.85rem',
+      left: -16,
+      color: theme.palette.text.primary,
+      padding: '6px 8px',
+      backgroundColor: theme.color.white,
+      position: 'absolute',
+      boxShadow: `0 0 5px ${theme.color.boxShadow}`,
+      transition: 'opacity .5s ease-in-out',
+      animation: '$popUp 200ms ease-in-out forwards'
+    },
+    standAlone: {
+      marginLeft: theme.spacing(1),
+      '& svg': {
+        width: 14
       }
     }
-  },
-  copied: {
-    fontSize: '.85rem',
-    left: -16,
-    color: theme.palette.text.primary,
-    padding: '6px 8px',
-    backgroundColor: theme.color.white,
-    position: 'absolute',
-    boxShadow: `0 0 5px ${theme.color.boxShadow}`,
-    transition: 'opacity .5s ease-in-out',
-    animation: 'popUp 200ms ease-in-out forwards'
-  },
-  standAlone: {
-    marginLeft: theme.spacing.unit,
-    '& svg': {
-      width: 14
-    }
-  }
-});
+  });
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
 

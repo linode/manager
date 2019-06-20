@@ -35,6 +35,9 @@ export const GTM_ID = process.env.REACT_APP_GTM_ID;
 /** for hard-coding token used for API Requests. Example: "Bearer 1234" */
 export const ACCESS_TOKEN = process.env.REACT_APP_ACCESS_TOKEN;
 
+export const LOG_PERFORMANCE_METRICS =
+  !isProduction && process.env.REACT_APP_LOG_PERFORMANCE_METRICS === 'true';
+
 // Features
 export const isObjectStorageEnabledForEnvironment =
   process.env.REACT_APP_IS_OBJECT_STORAGE_ENABLED === 'true';
@@ -73,7 +76,8 @@ export const ZONES: Record<string, Linode.ZoneName> = {
   'ap-south': 'singapore',
   'ap-south-1a': 'singapore',
   'ca-central': 'toronto1',
-  'ca-east': 'toronto1' // @todo Fallback for old Toronto ID; remove once DB has been updated.
+  'ca-east': 'toronto1', // @todo Fallback for old Toronto ID; remove once DB has been updated.
+  'ap-west': 'mumbai1'
 };
 
 export const dcDisplayNames = {
@@ -94,7 +98,8 @@ export const dcDisplayNames = {
   'eu-central': 'Frankfurt, DE',
   'ap-northeast': 'Tokyo 2, JP',
   'ca-central': 'Toronto, ON',
-  'ca-east': 'Toronto, ON' // @todo Fallback for old Toronto ID; remove once DB has been updated.
+  'ca-east': 'Toronto, ON', // @todo Fallback for old Toronto ID; remove once DB has been updated.
+  'ap-west': 'Mumbai, IN'
 };
 
 export const dcDisplayCountry = {
@@ -115,7 +120,8 @@ export const dcDisplayCountry = {
   'eu-central': 'DE',
   'ap-northeast': 'JP',
   'ca-central': 'CA',
-  'ca-east': 'CA'
+  'ca-east': 'CA',
+  'ap-west': 'IN'
 };
 
 export type ContinentKey = 'NA' | 'EU' | 'AS';

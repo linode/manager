@@ -11,7 +11,8 @@ import ExpansionPanelSummary, {
   ExpansionPanelSummaryProps
 } from 'src/components/core/ExpansionPanelSummary';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -22,11 +23,11 @@ import Notice from '../Notice';
 
 type ClassNames = 'root' | 'success' | 'warning' | 'error';
 
-const styles: StyleRulesCallback<ClassNames> = theme => {
+const styles = (theme: Theme) => {
   const {
     palette: { status }
   } = theme;
-  return {
+  return createStyles({
     root: {},
     success: {
       backgroundColor: status.success,
@@ -64,7 +65,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
         color: theme.palette.text.primary
       }
     }
-  };
+  });
 };
 
 export interface Props extends ExpansionPanelProps {

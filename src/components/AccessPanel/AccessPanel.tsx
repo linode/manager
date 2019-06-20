@@ -4,7 +4,8 @@ import { compose } from 'recompose';
 import CheckBox from 'src/components/CheckBox';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -30,57 +31,58 @@ type ClassNames =
   | 'passwordInputOuter'
   | 'isOptional';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    flexGrow: 1,
-    width: '100%',
-    marginTop: theme.spacing.unit * 3,
-    backgroundColor: theme.color.white
-  },
-  inner: {
-    padding: theme.spacing.unit * 3
-  },
-  panelBody: {
-    padding: `${theme.spacing.unit * 3}px 0 ${theme.spacing.unit}px`
-  },
-  cellCheckbox: {
-    width: 50,
-    paddingLeft: theme.spacing.unit,
-    paddingRight: theme.spacing.unit
-  },
-  cellUser: {
-    width: '30%'
-  },
-  userWrapper: {
-    display: 'inline-flex',
-    alignItems: 'center',
-    marginTop: theme.spacing.unit / 2
-  },
-  gravatar: {
-    borderRadius: '50%',
-    marginRight: theme.spacing.unit
-  },
-  small: {
-    '&$root': {
-      marginTop: 0
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+      width: '100%',
+      marginTop: theme.spacing(3),
+      backgroundColor: theme.color.white
     },
-    '& $passwordInputOuter': {
-      marginTop: 0
+    inner: {
+      padding: theme.spacing(3)
     },
-    '& .input': {
-      minHeight: 32,
-      '& input': {
-        padding: 8
+    panelBody: {
+      padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`
+    },
+    cellCheckbox: {
+      width: 50,
+      paddingLeft: theme.spacing(1),
+      paddingRight: theme.spacing(1)
+    },
+    cellUser: {
+      width: '30%'
+    },
+    userWrapper: {
+      display: 'inline-flex',
+      alignItems: 'center',
+      marginTop: theme.spacing(1) / 2
+    },
+    gravatar: {
+      borderRadius: '50%',
+      marginRight: theme.spacing(1)
+    },
+    small: {
+      '&$root': {
+        marginTop: 0
+      },
+      '& $passwordInputOuter': {
+        marginTop: 0
+      },
+      '& .input': {
+        minHeight: 32,
+        '& input': {
+          padding: 8
+        }
+      }
+    },
+    passwordInputOuter: {},
+    isOptional: {
+      '& $passwordInputOuter': {
+        marginTop: 0
       }
     }
-  },
-  passwordInputOuter: {},
-  isOptional: {
-    '& $passwordInputOuter': {
-      marginTop: 0
-    }
-  }
-});
+  });
 
 const styled = withStyles(styles);
 

@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import CopyTooltip from 'src/components/CopyTooltip';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -23,28 +24,29 @@ type ClassNames =
   | 'ips'
   | 'error';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    marginTop: theme.spacing.unit * 2,
-    padding: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit * 2 + theme.spacing.unit / 2
-  },
-  section: {
-    marginBottom: theme.spacing.unit
-  },
-  title: {
-    marginBottom: theme.spacing.unit
-  },
-  individualContainer: {
-    marginBottom: theme.spacing.unit
-  },
-  ips: {
-    padding: `0 ${theme.spacing.unit}px !important`
-  },
-  error: {
-    color: theme.palette.status.errorDark
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      marginTop: theme.spacing(2),
+      padding: theme.spacing(3),
+      paddingBottom: theme.spacing(2) + theme.spacing(1) / 2
+    },
+    section: {
+      marginBottom: theme.spacing(1)
+    },
+    title: {
+      marginBottom: theme.spacing(1)
+    },
+    individualContainer: {
+      marginBottom: theme.spacing(1)
+    },
+    ips: {
+      padding: `0 ${theme.spacing(1)}px !important`
+    },
+    error: {
+      color: theme.palette.status.errorDark
+    }
+  });
 
 const styled = withStyles(styles);
 
