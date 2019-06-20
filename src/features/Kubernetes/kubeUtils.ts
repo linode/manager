@@ -23,30 +23,27 @@ export const getTotalClusterPrice = (pools: ExtendedPoolNode[]) =>
   pools.reduce((accumulator, node) => {
     return node.queuedForDeletion
       ? accumulator // If we're going to delete it, don't include it in the cost
-      : accumulator + node.totalMonthlyPrice * node.count;
+      : accumulator + node.totalMonthlyPrice;
   }, 0);
 
 /**
  * Usually when displaying or editing clusters, we need access
- * to pricing information as well as statistics, which aren't 
+ * to pricing information as well as statistics, which aren't
  * returned from the API and must be computed.
  */
-export const extendCluster = (cluster: Linode.KubernetesCluster, types: ExtendedType[]): ExtendedCluster => {
-  const pools = cluster.node_pools;
+export const extendCluster = (
+  cluster: Linode.KubernetesCluster,
+  types: ExtendedType[]
+): ExtendedCluster => {
+  const pools = responseToExtendedNodePool(cluster.node_pools, types);
   const { CPU, RAM } = getTotalClusterMemoryAndCPU(pools, types);
-  const extendedPools: ExtendedPoolNode[] = pools.map(thisPool => ({
-    ...thisPool,
-    totalMonthlyPrice: getMonthlyPrice(thisPool.type, thisPool.count, types)
-  }));
-  const price = getTotalClusterPrice(extendedPools);
   return {
     ...cluster,
-    node_pools: extendedPools,
-    price,
+    node_pools: pools,
     totalMemory: RAM,
     totalCPU: CPU
-  }
-}
+  };
+};
 
 interface ClusterData {
   CPU: number;
@@ -75,4 +72,16 @@ export const getTotalClusterMemoryAndCPU = (
     },
     { RAM: 0, CPU: 0 }
   );
+};
+
+export const responseToExtendedNodePool = (
+  pools: Linode.KubeNodePoolResponse[],
+  types: ExtendedType[]
+): ExtendedPoolNode[] => {
+  return pools.map(thisPool => ({
+    id: thisPool.id,
+    count: thisPool.count,
+    type: thisPool.type,
+    totalMonthlyPrice: getMonthlyPrice(thisPool.type, thisPool.count, types)
+  }));
 };

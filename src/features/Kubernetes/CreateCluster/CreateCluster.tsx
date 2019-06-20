@@ -24,15 +24,12 @@ import regionsContainer from 'src/containers/regions.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { WithRegionsProps } from 'src/features/linodes/LinodesCreate/types';
 import { createKubernetesCluster } from 'src/services/kubernetes';
-import {
-  getAPIErrorOrDefault,
-  getErrorMap
-} from 'src/utilities/errorUtils';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { getTagsAsStrings } from 'src/utilities/tagUtils';
 
 import KubeCheckoutBar from '.././KubeCheckoutBar';
-import { KubernetesVersionOptions } from '.././kubeUtils';
+import { getMonthlyPrice, KubernetesVersionOptions } from '.././kubeUtils';
 import { ExtendedPoolNode } from '.././types';
 import NodePoolPanel from './NodePoolPanel';
 
@@ -132,8 +129,16 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
 
   updatePool = (poolIdx: number, updatedPool: ExtendedPoolNode) => {
     const { nodePools } = this.state;
+    const updatedPoolWithPrice = {
+      ...updatedPool,
+      totalMonthlyPrice: getMonthlyPrice(
+        updatedPool.type,
+        updatedPool.count,
+        this.props.typesData || []
+      )
+    };
     this.setState({
-      nodePools: update(poolIdx, updatedPool, nodePools)
+      nodePools: update(poolIdx, updatedPoolWithPrice, nodePools)
     });
   };
 
