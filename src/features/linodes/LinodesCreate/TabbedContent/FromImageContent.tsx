@@ -75,7 +75,7 @@ export type CombinedProps = Props &
 export class FromImageContent extends React.PureComponent<CombinedProps> {
   /** create the Linode */
   createLinode = () => {
-    this.props.handleSubmitForm('create', {
+    this.props.handleSubmitForm({
       type: this.props.selectedTypeID,
       region: this.props.selectedRegionID,
       image: this.props.selectedImageID,
