@@ -391,6 +391,7 @@ class UserDetail extends React.Component<CombinedProps> {
                 prefixComponent: maybeGravatar,
                 style: { marginTop: 4 }
               }}
+              prefixStyle={{ height: 34 }}
             />
           </Grid>
         </Grid>

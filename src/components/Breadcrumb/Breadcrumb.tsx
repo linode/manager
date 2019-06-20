@@ -80,6 +80,7 @@ export interface Props {
   labelTitle: string;
   labelOptions?: LabelProps;
   onEditHandlers?: EditableProps;
+  prefixStyle?: CSSProperties;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -91,7 +92,8 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = props => {
     linkText,
     labelTitle,
     labelOptions,
-    onEditHandlers
+    onEditHandlers,
+    prefixStyle
   } = props;
 
   return (
@@ -121,6 +123,7 @@ export const Breadcrumb: React.StatelessComponent<CombinedProps> = props => {
             <div
               className={classes.prefixComponentWrapper}
               data-qa-prefixwrapper
+              style={prefixStyle && prefixStyle}
             >
               {labelOptions.prefixComponent}
             </div>

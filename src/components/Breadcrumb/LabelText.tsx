@@ -34,6 +34,7 @@ interface Props {
   subtitle?: string;
   titleLink?: string;
   style?: CSSProperties;
+  prefixStyle?: CSSProperties;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
