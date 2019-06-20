@@ -112,7 +112,11 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
   } = props;
 
   if (!hideTable && !(pools && updatePool && deleteNodePool)) {
-    /** These props are required when showing the table. */
+    /**
+     * These props are required when showing the table,
+     * which will be the case when hideTable is false or undefined
+     * (i.e. omitted since it's an optional prop).
+     */
     throw new Error(
       'You must provide pools, update and delete functions when displaying the table in NodePoolPanel.'
     );
