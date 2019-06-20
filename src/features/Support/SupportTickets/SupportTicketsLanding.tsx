@@ -72,7 +72,7 @@ export class SupportTicketsLanding extends React.PureComponent<
 
     /** ?drawerOpen=true to allow external links to go directly to the ticket drawer */
     const parsedParams = getParamsFromUrl(props.location.search);
-    const drawerOpen = Boolean(pathOr(false, ['drawerOpen'], parsedParams));
+    const drawerOpen = pathOr('false', ['drawerOpen'], parsedParams) === 'true';
 
     const stateParams = this.props.location.state;
 
