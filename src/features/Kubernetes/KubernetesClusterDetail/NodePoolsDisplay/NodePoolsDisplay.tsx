@@ -19,7 +19,7 @@ import NodePoolDisplayTable from '../../CreateCluster/NodePoolDisplayTable';
 import { getTotalClusterPrice } from '../../kubeUtils';
 import { ExtendedPoolNode } from '../../types';
 
-type ClassNames = 'root' | 'button' | 'pricing';
+type ClassNames = 'root' | 'button' | 'pricing' | 'ctaOuter';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
@@ -33,6 +33,9 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing(2),
       fontSize: '1.em',
       fontWeight: 'bold'
+    },
+    ctaOuter: {
+      marginTop: theme.spacing(2) - 1
     }
   });
 
@@ -75,7 +78,13 @@ export const NodePoolsDisplay: React.FunctionComponent<
   return (
     <Paper className={classes.root}>
       <Grid container direction="column">
-        <Grid container item direction="row" justify="space-between">
+        <Grid
+          container
+          item
+          direction="row"
+          justify="space-between"
+          alignItems="center"
+        >
           <Grid item>
             <Typography variant="h2">Node Pools</Typography>
           </Grid>
@@ -115,7 +124,7 @@ export const NodePoolsDisplay: React.FunctionComponent<
               {`$${getTotalClusterPrice(poolsForEdit)}/month`}
             </Typography>
           )}
-          <Grid item container>
+          <Grid item container className={classes.ctaOuter}>
             <Button
               className={classes.button}
               buttonType="primary"

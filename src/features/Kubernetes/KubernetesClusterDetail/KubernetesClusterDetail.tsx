@@ -42,15 +42,17 @@ type ClassNames =
   | 'backButton'
   | 'section'
   | 'panelItem'
-  | 'button';
+  | 'button'
+  | 'tagSectionInner'
+  | 'deleteSection';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
     title: {
-      display: 'flex',
-      alignItems: 'center',
-      padding: theme.spacing(1)
+      // display: 'flex',
+      // alignItems: 'center',
+      // padding: theme.spacing(1)
     },
     titleWrapper: {
       display: 'flex',
@@ -64,14 +66,20 @@ const styles = (theme: Theme) =>
       },
       padding: 0
     },
-    section: {
-      margin: theme.spacing(2)
-    },
+    section: {},
     panelItem: {
-      padding: theme.spacing(1)
+      // padding: theme.spacing(1)
     },
     button: {
-      marginLeft: theme.spacing(2)
+      [theme.breakpoints.up('md')]: {
+        marginBottom: theme.spacing(3)
+      }
+    },
+    tagSectionInner: {
+      padding: `${theme.spacing(2) + 3}px ${theme.spacing(3)}px`
+    },
+    deleteSection: {
+      marginLeft: theme.spacing(3)
     }
   });
 interface KubernetesContainerProps {
@@ -338,20 +346,25 @@ export const KubernetesClusterDetail: React.FunctionComponent<
         alignItems="flex-end"
         style={{ marginTop: 8, marginBottom: 8 }}
       >
-        <Grid item className={classes.titleWrapper}>
+        <Grid item xs={12} className={classes.titleWrapper}>
           <Breadcrumb
             linkTo={{
               pathname: `/kubernetes`
             }}
             linkText="Clusters"
             labelTitle={cluster.label}
+            // onEditHandlers={{
+            //   onEdit: this.updateLabel,
+            //   onCancel: this.cancelUpdate,
+            //   errorText: apiErrorText
+            // }}
             data-qa-breadcrumb
           />
         </Grid>
       </Grid>
 
-      <Grid container direction="row" className={classes.section}>
-        <Grid container item direction="column" xs={9}>
+      <Grid container direction="row" className={classes.section} spacing={3}>
+        <Grid container item direction="column" xs={12} md={9}>
           <Grid item>
             <NodePoolsDisplay
               submittingForm={submitting}
@@ -368,7 +381,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
               types={typesData || []}
             />
           </Grid>
-          <Grid item>
+          <Grid item xs={12}>
             <NodePoolPanel
               hideTable
               selectedType={selectedType}
@@ -388,7 +401,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
               }
             />
           </Grid>
-          <Grid item className={classes.section}>
+          <Grid item xs={12} className={classes.deleteSection}>
             <Button
               destructive
               buttonType="secondary"
@@ -398,7 +411,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
             </Button>
           </Grid>
         </Grid>
-        <Grid container item direction="column" xs={3}>
+        <Grid container item direction="column" xs={12} md={3}>
           <Grid item className={classes.button}>
             <Button buttonType="primary" onClick={downloadKubeConfig}>
               Download kubeconfig
@@ -407,12 +420,12 @@ export const KubernetesClusterDetail: React.FunctionComponent<
           <Grid item className={classes.section}>
             <KubeSummaryPanel cluster={cluster} />
           </Grid>
-          <Grid item className={classes.section}>
-            <Paper>
-              <Typography variant="h3" className={classes.title} data-qa-title>
+          <Grid item>
+            <Paper className={classes.tagSectionInner}>
+              <Typography variant="h2" data-qa-title>
                 Cluster Tags
               </Typography>
-              <div className={classes.panelItem}>
+              <div>
                 <TagsPanel tags={tags} updateTags={handleUpdateTags} />
               </div>
             </Paper>

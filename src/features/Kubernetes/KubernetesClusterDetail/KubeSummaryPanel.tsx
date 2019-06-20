@@ -14,13 +14,21 @@ import { ExtendedCluster } from 'src/features/Kubernetes/types';
 
 import { getTotalClusterPrice } from '../kubeUtils';
 
-type ClassNames = 'root' | 'item';
+type ClassNames = 'root' | 'item' | 'label';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
+    root: {
+      marginBottom: theme.spacing(3),
+      padding: `${theme.spacing(3) + 5}px ${theme.spacing(3) +
+        1}px ${theme.spacing(2) - 3}px`
+    },
     item: {
-      padding: theme.spacing(1)
+      paddingBottom: theme.spacing(2)
+    },
+    label: {
+      color: '#272b31',
+      marginBottom: theme.spacing(1)
     }
   });
 
@@ -38,30 +46,32 @@ export const KubeSummaryPanel: React.FunctionComponent<
   return (
     <Paper className={classes.root}>
       <Paper className={classes.item}>
-        <Typography variant="h3">Details</Typography>
+        <Typography variant="h2">Details</Typography>
       </Paper>
       <Paper className={classes.item}>
-        <Typography>Version</Typography>
+        <Typography className={classes.label}>Version</Typography>
         <Typography>{cluster.version}</Typography>
       </Paper>
       <Paper className={classes.item}>
-        <Typography>Total RAM</Typography>
+        <Typography className={classes.label}>Total RAM</Typography>
         <Typography>{cluster.totalMemory / 1024}GB</Typography>
       </Paper>
       <Paper className={classes.item}>
-        <Typography>Total CPU Cores</Typography>
+        <Typography className={classes.label}>Total CPU Cores</Typography>
         <Typography>{cluster.totalCPU}</Typography>
       </Paper>
       <Paper className={classes.item}>
-        <Typography>Kubernetes API Endpoint</Typography>
+        <Typography className={classes.label}>
+          Kubernetes API Endpoint
+        </Typography>
         <Typography>8.8.8.8</Typography>
       </Paper>
       <Paper className={classes.item}>
-        <Typography>Region</Typography>
+        <Typography className={classes.label}>Region</Typography>
         <Typography>{region}</Typography>
       </Paper>
       <Paper className={classes.item}>
-        <Typography>Monthly Pricing</Typography>
+        <Typography className={classes.label}>Monthly Pricing</Typography>
         <Typography>{`$${getTotalClusterPrice(
           cluster.node_pools
         )}/month`}</Typography>

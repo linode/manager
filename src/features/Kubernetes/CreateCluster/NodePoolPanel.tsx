@@ -28,8 +28,8 @@ type ClassNames = 'root' | 'title' | 'gridItem' | 'countInput';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2),
+      marginTop: theme.spacing(3),
+      marginBottom: theme.spacing(3),
       '& .tabbedPanel': {
         marginTop: 0
       }
@@ -39,7 +39,7 @@ const styles = (theme: Theme) =>
     },
     gridItem: {
       paddingLeft: theme.spacing(3),
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(3)
     },
     countInput: {
       maxWidth: '5em'
