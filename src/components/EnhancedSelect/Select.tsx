@@ -205,7 +205,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
           })
         }}
         /** let us explicitly pass an empty string */
-        value={value || ''}
+        value={value || null}
         onBlur={onBlur}
         options={options}
         components={combinedComponents}
