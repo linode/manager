@@ -26,7 +26,8 @@ type ClassNames =
   | 'closeIcon'
   | 'divider'
   | 'submitButton'
-  | 'labelOuter';
+  | 'labelOuter'
+  | 'errorText';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
@@ -66,6 +67,14 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     display: 'flex',
     justifyContent: 'space-between',
     width: '100%'
+  },
+  errorText: {
+    color: theme.color.red,
+    marginTop: theme.spacing.unit,
+    '& a': {
+      textDecoration: 'underline',
+      color: theme.color.red
+    }
   }
 });
 
@@ -76,7 +85,7 @@ interface Props {
   region: string;
   isSubmitting: boolean;
   currentLinodeId: number;
-  errorMap?: Record<string, string | undefined>;
+  errorMap: Record<string, string | undefined>;
   handleToggleConfig: (id: number) => void;
   handleToggleDisk: (id: number) => void;
   handleSelectLinode: (linodeId: number) => void;
@@ -103,9 +112,34 @@ export const Configs: React.FC<CombinedProps> = props => {
     clearAll
   } = props;
 
-  // These errors come back from from the API under the "disk_size" field
-  // when duplicating a disk on the same Linode.
-  const linodeError = errorMap && errorMap.disk_size;
+  const noneError = errorMap.none;
+  // When duplicating a disk on the SAME Linode, if there's not a enough space,
+  // we get back an error with a field of "disk_size"
+  const diskError = errorMap.disk_size;
+
+  /**
+   * When cloning a disk or config to a DIFFERENT Linode, if there's not enough space on the destination Linode,
+   * we get an error from the API that looks like this: `[{ "reason": "Not enough free space on <label>." }]`.
+   * There's no "field" on this error , but we want this error to appear as a field error on the LinodeSelect.
+   *
+   * If the API error message ever changes and this regex breaks, the worst that will happen is that
+   * the error will appear as a general error (<Notice />) instead of a field error.
+   */
+  const isNoneErrorActuallyALinodeError = Boolean(
+    noneError && noneError.match(/free space/)
+  );
+
+  // The Linode field error could either be the none error, or the disk_size error (or nothing).
+  let linodeError = isNoneErrorActuallyALinodeError ? noneError : diskError;
+  // Ensure there is a period at the end of the error.
+  if (linodeError && !linodeError.endsWith('.')) {
+    linodeError += '.';
+  }
+
+  const errorMessageLinks = {
+    shrink: `/linodes/${selectedLinode}/advanced`,
+    resize: `/linodes/${selectedLinode}/resize`
+  };
 
   /**
    * Don't include the current Linode in the LinodeSelect component if:
@@ -136,7 +170,9 @@ export const Configs: React.FC<CombinedProps> = props => {
         </Button>
       </header>
 
-      {errorMap && errorMap.none && <Notice error text={errorMap.none} />}
+      {noneError && !isNoneErrorActuallyALinodeError && (
+        <Notice error text={noneError} />
+      )}
 
       <List>
         {selectedConfigs.map(eachConfig => {
@@ -198,15 +234,16 @@ export const Configs: React.FC<CombinedProps> = props => {
 
       <Typography>Current Datacenter: {formatRegion(region)}</Typography>
 
-      {/* @todo: This LinodeSelect needs to be grouped by region */}
       <LinodeSelect
         label="Destination"
-        generalError={linodeError}
         selectedLinode={selectedLinode}
         handleChange={linode => handleSelectLinode(linode.id)}
         excludedLinodes={
           shouldExcludeCurrentLinode ? [currentLinodeId] : undefined
         }
+        textFieldProps={{
+          error: !!linodeError
+        }}
         groupByRegion
         updateFor={[
           selectedLinode,
@@ -215,6 +252,19 @@ export const Configs: React.FC<CombinedProps> = props => {
           classes
         ]}
       />
+
+      {linodeError && (
+        <Typography variant="body1" className={classes.errorText}>
+          {linodeError}{' '}
+          <a href={errorMessageLinks.shrink} target="_blank">
+            Shrink your existing disks
+          </a>{' '}
+          or{' '}
+          <a href={errorMessageLinks.resize} target="_blank">
+            resize your Linode to a larger plan.
+          </a>
+        </Typography>
+      )}
 
       <Button
         className={classes.submitButton}
