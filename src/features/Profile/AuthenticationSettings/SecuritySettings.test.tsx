@@ -13,6 +13,7 @@ describe('Security settings (IP whitelisting) form', () => {
         root: '',
         title: ''
       }}
+      ipWhitelistingEnabled={false}
       onSuccess={onSuccess}
       updateProfile={updateProfile}
     />

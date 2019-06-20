@@ -1,4 +1,3 @@
-import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -12,10 +11,10 @@ import {
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
-import { updateProfile } from 'src/services/profile';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
+
+import { ProfileWithPreferences } from 'src/store/profile/profile.actions';
 
 type ClassNames = 'root' | 'title';
 
@@ -33,26 +32,17 @@ const styles = (theme: Theme) =>
 
 interface Props {
   onSuccess: () => void;
-  updateProfile: (v: Partial<Linode.Profile>) => void;
-}
-
-interface State {
-  errors?: Linode.ApiFieldError[];
-  ipWhitelistingToggle: boolean;
+  updateProfile: (
+    v: Partial<Linode.Profile>
+  ) => Promise<ProfileWithPreferences>;
+  updateProfileError?: Linode.ApiFieldError[];
+  ipWhitelistingEnabled: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const L = {
-  ipWhitelistingToggle: lensPath(['ipWhitelistingToggle'])
-};
-
-export class SecuritySettings extends React.Component<CombinedProps, State> {
+export class SecuritySettings extends React.Component<CombinedProps, {}> {
   mounted: boolean = false;
-  state: State = {
-    errors: undefined,
-    ipWhitelistingToggle: true
-  };
 
   componentDidMount() {
     this.mounted = true;
@@ -62,53 +52,29 @@ export class SecuritySettings extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  toggleIpWhitelisting = () => {
-    this.setState(
-      set(L.ipWhitelistingToggle, !this.state.ipWhitelistingToggle),
-      this.onSubmit
-    );
-  };
-
   onSubmit = () => {
-    const { ipWhitelistingToggle } = this.state;
     const { onSuccess } = this.props;
-    if (ipWhitelistingToggle) {
+    if (this.props.ipWhitelistingEnabled) {
       return;
     }
-    this.setState({ errors: undefined });
 
     // This feature can only be disabled.
-    updateProfile({ ip_whitelist_enabled: false })
-      .then(response => {
-        onSuccess();
-        this.props.updateProfile(response);
-        if (this.mounted) {
-          this.setState({ errors: undefined });
-        }
+    this.props
+      .updateProfile({
+        ip_whitelist_enabled: !this.props.ipWhitelistingEnabled
       })
-      .catch(error => {
-        if (!this.mounted) {
-          return;
-        }
-        this.setState(
-          {
-            errors: getAPIErrorOrDefault(
-              error,
-              'Unable to disable IP whitelisting. Please try again.'
-            ),
-            ipWhitelistingToggle: true
-          },
-          () => {
-            scrollErrorIntoView();
-          }
-        );
+      .then(() => {
+        onSuccess();
+      })
+      .catch(e => {
+        /** rely on redux update error */
+        scrollErrorIntoView();
       });
   };
 
   render() {
-    const { classes } = this.props;
-    const { errors, ipWhitelistingToggle } = this.state;
-    const hasErrorFor = getAPIErrorFor({}, errors);
+    const { classes, updateProfileError, ipWhitelistingEnabled } = this.props;
+    const hasErrorFor = getAPIErrorFor({}, updateProfileError);
     const generalError = hasErrorFor('none');
 
     return (
@@ -125,11 +91,11 @@ export class SecuritySettings extends React.Component<CombinedProps, State> {
           </Typography>
           <FormControl fullWidth>
             <FormControlLabel
-              label={ipWhitelistingToggle ? 'Enabled' : 'Disabled'}
+              label={ipWhitelistingEnabled ? 'Enabled' : 'Disabled'}
               control={
                 <Toggle
-                  checked={ipWhitelistingToggle}
-                  onChange={this.toggleIpWhitelisting}
+                  checked={ipWhitelistingEnabled}
+                  onChange={this.onSubmit}
                 />
               }
             />

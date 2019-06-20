@@ -25,7 +25,7 @@ import TabLink from 'src/components/TabLink';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getUser, updateUser } from 'src/services/account';
 import { updateProfile } from 'src/services/profile';
-import { handleUpdate } from 'src/store/profile/profile.actions';
+import { requestProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getGravatarUrl } from 'src/utilities/gravatar';
@@ -196,7 +196,7 @@ class UserDetail extends React.Component<CombinedProps> {
       history,
       match: { path },
       profileUsername,
-      actions: { updateCurrentUser }
+      refreshProfile
     } = this.props;
 
     const { originalUsername, username, restricted } = this.state;
@@ -229,7 +229,7 @@ class UserDetail extends React.Component<CombinedProps> {
          * If the user we updated is the current user, we need to reflect that change at the global level.
          */
         if (profileUsername === originalUsername) {
-          updateCurrentUser(user);
+          refreshProfile();
         }
 
         /**
@@ -253,9 +253,7 @@ class UserDetail extends React.Component<CombinedProps> {
 
   onSaveProfile = () => {
     const { email, originalUsername } = this.state;
-    const {
-      actions: { updateCurrentUser }
-    } = this.props;
+    const { refreshProfile } = this.props;
 
     this.setState({
       profileSuccess: false,
@@ -276,7 +274,7 @@ class UserDetail extends React.Component<CombinedProps> {
          * If the user we updated is the current user, we need to reflect that change at the global level.
          */
         if (profile.username === originalUsername) {
-          updateCurrentUser(profile);
+          refreshProfile();
         }
       })
       .catch(errResponse => {
@@ -448,16 +446,11 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 });
 
 interface DispatchProps {
-  actions: {
-    updateCurrentUser: (user: Linode.User | Linode.Profile) => void;
-  };
+  refreshProfile: () => void;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-  actions: {
-    updateCurrentUser: (u: Linode.User | Linode.Profile) =>
-      dispatch(handleUpdate(u))
-  }
+  refreshProfile: () => dispatch(requestProfile() as any)
 });
 
 const reloadable = reloadableWithRouter<CombinedProps, MatchProps>(

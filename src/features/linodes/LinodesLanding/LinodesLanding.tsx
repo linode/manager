@@ -560,7 +560,10 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
     linodesRequestError: path(['error', 'read'], state.__resources.linodes),
     userTimezone: pathOr('', ['data', 'timezone'], state.__resources.profile),
     userTimezoneLoading: state.__resources.profile.loading,
-    userTimezoneError: state.__resources.profile.error
+    userTimezoneError: path<Linode.ApiFieldError[]>(
+      ['read'],
+      state.__resources.profile.error
+    )
   };
 };
 
