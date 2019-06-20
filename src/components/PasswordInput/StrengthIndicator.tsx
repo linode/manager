@@ -14,7 +14,12 @@ interface Props {
   strength: null | 0 | 1 | 2 | 3;
   hideStrengthLabel?: boolean;
 }
-type ClassNames = 'root' | 'block' | 'strengthText' | 'strengthLabel';
+type ClassNames =
+  | 'root'
+  | 'block'
+  | 'strengthText'
+  | 'strengthLabel'
+  | 'blockOuter';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -44,6 +49,9 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.down('xs')]: {
         display: 'none'
       }
+    },
+    blockOuter: {
+      padding: '4px !important' as '4px'
     }
   });
 
@@ -63,7 +71,7 @@ const StrengthIndicator: React.StatelessComponent<CombinedProps> = props => {
       data-qa-strength={strength}
     >
       {Array.from(Array(3), (v, idx) => idx + 1).map(idx => (
-        <Grid item key={idx} xs={3}>
+        <Grid item key={idx} xs={3} className={classes.blockOuter}>
           <div
             className={classNames({
               [classes.block]: true,
