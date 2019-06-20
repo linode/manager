@@ -11,9 +11,11 @@ import { compose } from 'recompose';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import AppBar from 'src/components/core/AppBar';
+import Box from 'src/components/core/Box';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import Typography from 'src/components/core/Typography';
+import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import TabLink from 'src/components/TabLink';
 import { ApplicationState } from 'src/store';
@@ -22,7 +24,6 @@ import { requestClusters as _requestClusters } from 'src/store/clusters/clusters
 import { MapState } from 'src/store/types';
 
 import DefaultLoader from 'src/components/DefaultLoader';
-
 const BucketLanding = DefaultLoader({
   loader: () => import('./Buckets/BucketLanding')
 });
@@ -88,9 +89,10 @@ export const ObjectStorageLanding: React.FunctionComponent<
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Object Storage" />
-      <Typography variant="h1" data-qa-profile-header>
-        Object Storage
-      </Typography>
+      <Box display="flex" flexDirection="row" justifyContent="space-between">
+        <Typography variant="h1">Object Storage</Typography>
+        <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/" />
+      </Box>
       <AppBar position="static" color="default">
         <Tabs
           value={tabs.findIndex(tab => matches(tab.routeName))}
