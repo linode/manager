@@ -171,9 +171,11 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
         <TextField
           tiny
           type="number"
+          min={1}
+          max={Infinity}
           value={nodeCount}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            updateNodeCount(+e.target.value)
+            updateNodeCount(Math.max(+e.target.value, 1))
           }
           errorText={countError}
         />
