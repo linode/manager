@@ -1312,6 +1312,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       MuiTableSortLabel: {
         root: {
           fontSize: '.9rem',
+          lineHeight: '1.1rem',
           transition: 'color 225ms ease-in-out',
           '&:hover': {
             color: primaryColors.main
