@@ -3,7 +3,7 @@ import * as classNames from 'classnames';
 import { compose, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
@@ -27,6 +27,7 @@ import { getTicket, getTicketReplies } from 'src/services/support';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
+import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
 import TicketAttachmentList from '../TicketAttachmentList';
@@ -258,8 +259,12 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
 
   renderEntityLabelWithIcon = () => {
     const { classes } = this.props;
-    const { label, type } = this.state.ticket!.entity;
-    const icon: JSX.Element = this.getEntityIcon(type);
+    const { entity } = this.state.ticket!;
+    if (!entity) {
+      return null;
+    }
+    const icon: JSX.Element = this.getEntityIcon(entity.type);
+    const target = getLinkTargets(entity);
     return (
       <Grid
         container
@@ -271,7 +276,15 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
           {icon}
         </Grid>
         <Grid item>
-          <Typography className={classes.ticketLabel}>{label}</Typography>
+          {target !== null ? (
+            <Link to={target} className="secondaryLink">
+              {entity.label}
+            </Link>
+          ) : (
+            <Typography className={classes.ticketLabel}>
+              {entity.label}
+            </Typography>
+          )}
         </Grid>
       </Grid>
     );
