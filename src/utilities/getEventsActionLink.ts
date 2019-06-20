@@ -1,4 +1,8 @@
 import { path } from 'ramda';
+import {
+  EntityType,
+  getEntityByIDFromStore
+} from 'src/utilities/getEntityByIDFromStore';
 
 export default (
   action: Linode.EventAction,
@@ -99,8 +103,22 @@ export default (
 
 export const getLinkTargets = (entity: Linode.Entity | null) => {
   if (entity === null) {
-    return '';
+    return null;
   }
+
+  const entityInStore = getEntityByIDFromStore(
+    entity.type as EntityType,
+    entity.id
+  );
+  /**
+   * If the entity doesn't exist in the store, don't link to it
+   * as it is probably an old ticket re: an entity that
+   * has since been deleted.
+   */
+  if (!entityInStore) {
+    return null;
+  }
+
   switch (entity.type) {
     case 'linode':
       return `/linodes/${entity.id}`;
