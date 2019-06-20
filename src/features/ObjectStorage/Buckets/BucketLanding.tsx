@@ -225,8 +225,8 @@ const RenderEmpty: React.StatelessComponent<{
     <React.Fragment>
       <DocumentTitleSegment segment="Buckets" />
       <Placeholder
-        title="Add a Bucket"
-        copy="Click below to add a Bucket and start using Object Storage today."
+        title="Object Storage"
+        copy={<EmptyCopy />}
         icon={BucketIcon}
         buttonProps={{
           onClick: props.onClick,
@@ -236,6 +236,22 @@ const RenderEmpty: React.StatelessComponent<{
     </React.Fragment>
   );
 };
+
+const EmptyCopy = () => (
+  <>
+    <Typography variant="subtitle1">Need help getting started?</Typography>
+    <Typography variant="subtitle1">
+      <a
+        href="https://linode.com/docs/platform/object-storage/how-to-use-object-storage/"
+        target="_blank"
+        className="h-u"
+      >
+        Learn more about storage options for your multimedia, archives, and data
+        backups here.
+      </a>
+    </Typography>
+  </>
+);
 
 const styled = withStyles(styles);
 
