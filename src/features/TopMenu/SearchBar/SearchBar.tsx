@@ -1,11 +1,12 @@
 import Close from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
-import { compose, take } from 'ramda';
+import { take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import _Control from 'react-select/lib/components/Control';
 import _Option from 'react-select/lib/components/Option';
+import { compose } from 'recompose';
 import IconButton from 'src/components/core/IconButton';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import withImages from 'src/containers/withImages.container';
@@ -43,7 +44,7 @@ const Option = (props: any) => {
 };
 
 // Style overrides for React Select
-const selectStyles = {
+export const selectStyles = {
   control: (base: any) => ({
     ...base,
     backgroundColor: '#f4f4f4',
@@ -58,7 +59,7 @@ const selectStyles = {
     margin: 0,
     border: 0
   }),
-  dropdownIndicator: (base: any) => ({ ...base, display: 'none' }),
+  dropdownIndicator: (base: any) => ({ display: 'none' }),
   placeholder: (base: any) => ({ ...base, color: 'blue' }),
   menu: (base: any) => ({ ...base, maxWidth: '100% !important' })
 };
@@ -233,7 +234,7 @@ interface WithImagesProps {
   imagesLoading: boolean;
 }
 
-export default compose(
+export default compose<CombinedProps, {}>(
   styled,
   withTypes,
   withRouter,

@@ -9,12 +9,6 @@
  */
 
 // import NoSsr from '@material-ui/core/NoSsr'
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles,
-  WithTheme
-} from '@material-ui/core/styles';
 // import { jssPreset, StylesProvider } from '@material-ui/styles'
 // import { create } from 'jss';
 // import rtl from 'jss-rtl';
@@ -23,18 +17,10 @@ import * as React from 'react';
 // import Frame from 'react-frame-component';
 import { compose } from 'recompose';
 
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
-
-type CombinedProps = WithStyles<ClassNames> & WithTheme;
-
 // let contentDocument: any;
 // let contentWindow: any;
 
-const _Frame: React.FC<CombinedProps> = props => {
+const _Frame: React.FC<{}> = props => {
   // const { children, classes } = props;
 
   // const handleRef = (ref: any) => {
@@ -91,9 +77,4 @@ const _Frame: React.FC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
-
-export default compose<CombinedProps, {}>(
-  styled,
-  React.memo
-)(_Frame);
+export default compose<{}, {}>(React.memo)(_Frame);

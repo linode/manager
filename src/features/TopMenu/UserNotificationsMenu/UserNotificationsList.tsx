@@ -1,8 +1,9 @@
-import { compose, path, pathOr } from 'ramda';
+import { compose, path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -13,12 +14,13 @@ import UserNotificationListItem from './UserNotificationListItem';
 
 type ClassNames = 'emptyText';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  emptyText: {
-    padding: `${theme.spacing.unit * 2}px ${theme.spacing.unit * 3}px`,
-    fontFamily: theme.font.bold
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    emptyText: {
+      padding: `${theme.spacing(2)}px ${theme.spacing(3)}px`,
+      fontFamily: theme.font.bold
+    }
+  });
 
 interface Props {
   notifications: Linode.Notification[];
@@ -104,15 +106,17 @@ const interceptNotification = (
     notification.entity.type === 'linode'
   ) {
     /** replace "this Linode" with the name of the Linode */
+    const linodeAttachedToNotification = path(['label'], notification.entity);
     return {
       ...notification,
       label: `Maintenance Scheduled`,
-      message: notification.message
-        .toLowerCase()
-        .replace(
-          'this linode',
-          `Linode ${pathOr('this Linode', ['label'], notification.entity)}`
-        )
+      severity: 'major',
+      message: `${
+        linodeAttachedToNotification
+          ? `Linode ${linodeAttachedToNotification}`
+          : `This Linode`
+      }
+          has scheduled maintenance`
     };
   }
 

@@ -1,0 +1,16 @@
+<svg width="24px" height="20px" viewBox="0 0 24 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
+        <g id="A-03.-Details-Drawer" transform="translate(-1000.000000, -758.000000)" stroke="#333333" stroke-width="1.5">
+            <g id="drawer" transform="translate(960.000000, 0.000000)">
+                <g id="more-info" transform="translate(40.000000, 754.000000)">
+                    <g id="more-info-header">
+                        <g id="hyperlink-3" transform="translate(0.000000, 5.000000)">
+                            <path d="M9.364,15.5 L8.432,16.432 C6.67462993,18.1893701 3.82537007,18.1893701 2.068,16.432 C0.310629926,14.6746299 0.310629926,11.8253701 2.068,10.068 L6.841,5.294 C8.50061595,3.63062743 11.1606395,3.52414597 12.9479026,5.04953902 C14.7351657,6.57493208 15.0479521,9.21864692 13.666,11.119" id="Path"></path>
+                            <path d="M14.818,2.567 L15.568,1.817 C17.3253701,0.059629926 20.1746299,0.059629926 21.932,1.817 C23.6893701,3.57437007 23.6893701,6.42362993 21.932,8.181 L17.159,12.954 C15.4990526,14.6166529 12.8393789,14.7224899 11.0525649,13.1969948 C9.26575077,11.6714996 8.95321353,9.0281332 10.335,7.128" id="Path"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

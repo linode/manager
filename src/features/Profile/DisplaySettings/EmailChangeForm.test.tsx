@@ -24,12 +24,12 @@ describe('Email change form', () => {
   );
 
   it('should render textfields for username and email.', () => {
-    expect(component.find('TextField')).toHaveLength(2);
+    expect(component.find('ForwardRef(TextField)')).toHaveLength(2);
   });
 
   it('the username field should be disabled.', () => {
     expect(
-      component.find('TextField[data-qa-username]').props().disabled
+      component.find('ForwardRef(TextField)[data-qa-username]').props().disabled
     ).toBeTruthy();
   });
 

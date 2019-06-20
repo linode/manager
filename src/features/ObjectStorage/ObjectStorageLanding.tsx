@@ -11,17 +11,26 @@ import { compose } from 'recompose';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import AppBar from 'src/components/core/AppBar';
+import Box from 'src/components/core/Box';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import Typography from 'src/components/core/Typography';
+import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import TabLink from 'src/components/TabLink';
 import { ApplicationState } from 'src/store';
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestClusters as _requestClusters } from 'src/store/clusters/clusters.actions';
 import { MapState } from 'src/store/types';
-import AccessKeyLanding from './AccessKeys/AccessKeyLanding';
-import BucketLanding from './Buckets/BucketLanding';
+
+import DefaultLoader from 'src/components/DefaultLoader';
+const BucketLanding = DefaultLoader({
+  loader: () => import('./Buckets/BucketLanding')
+});
+
+const AccessKeyLanding = DefaultLoader({
+  loader: () => import('./AccessKeys/AccessKeyLanding')
+});
 
 type CombinedProps = StateProps & DispatchProps & RouteComponentProps<{}>;
 
@@ -51,17 +60,22 @@ export const ObjectStorageLanding: React.FunctionComponent<
       requestClusters
     } = props;
 
-    // When OBJ is generally available, consider moving
-    // these requests to App.tsx like other entities.
+    /**
+     * @todo: Move these requests to App.tsx like other entities when OBJ is generally available.
+     */
 
     // Request buckets if we haven't already
     if (bucketsLastUpdated === 0) {
-      requestBuckets();
+      requestBuckets().catch(err => {
+        /** We choose to do nothing, relying on the Redux error state. */
+      });
     }
 
     // Request clusters if we haven't already
     if (clustersLastUpdated === 0) {
-      requestClusters();
+      requestClusters().catch(err => {
+        /** We choose to do nothing, relying on the Redux error state. */
+      });
     }
   }, []);
 
@@ -75,9 +89,10 @@ export const ObjectStorageLanding: React.FunctionComponent<
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Object Storage" />
-      <Typography variant="h1" data-qa-profile-header>
-        Object Storage
-      </Typography>
+      <Box display="flex" flexDirection="row" justifyContent="space-between">
+        <Typography variant="h1">Object Storage</Typography>
+        <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/" />
+      </Box>
       <AppBar position="static" color="default">
         <Tabs
           value={tabs.findIndex(tab => matches(tab.routeName))}
@@ -91,7 +106,14 @@ export const ObjectStorageLanding: React.FunctionComponent<
             <Tab
               key={tab.title}
               data-qa-tab={tab.title}
-              component={() => <TabLink to={tab.routeName} title={tab.title} />}
+              component={React.forwardRef((forwardedProps, ref) => (
+                <TabLink
+                  to={tab.routeName}
+                  title={tab.title}
+                  {...forwardedProps}
+                  ref={ref}
+                />
+              ))}
             />
           ))}
         </Tabs>

@@ -1,26 +1,28 @@
-import { compose } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-import RenderGuard from 'src/components/RenderGuard';
+import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 
 type ClassNames = 'root' | 'warning';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  warning: {
-    marginTop: theme.spacing.unit * 2,
-    marginLeft: '0 !important'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    warning: {
+      marginTop: theme.spacing(2),
+      marginLeft: '0 !important'
+    }
+  });
 
 interface Props {
   token: string;
@@ -32,7 +34,7 @@ interface Props {
   onSubmit: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames> & RenderGuardProps;
 
 const ConfirmToken: React.StatelessComponent<CombinedProps> = props => {
   const {
@@ -60,14 +62,14 @@ const ConfirmToken: React.StatelessComponent<CombinedProps> = props => {
       />
       <ActionsPanel>
         <Button
-          type="primary"
+          buttonType="primary"
           onClick={onSubmit}
           loading={submitting}
           data-qa-submit
         >
           Confirm Token
         </Button>
-        <Button type="cancel" onClick={onCancel} data-qa-cancel>
+        <Button buttonType="cancel" onClick={onCancel} data-qa-cancel>
           Cancel
         </Button>
         {twoFactorConfirmed && (
@@ -87,7 +89,7 @@ const ConfirmToken: React.StatelessComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-export default compose<any, any, any>(
+export default compose<CombinedProps, Props & RenderGuardProps>(
   styled,
   RenderGuard
 )(ConfirmToken);

@@ -2,9 +2,10 @@ import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import { confirmTwoFactor } from 'src/services/profile';
@@ -16,13 +17,14 @@ import QRCodeForm from './QRCodeForm';
 
 type ClassNames = 'root' | 'divider';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  divider: {
-    margin: `${theme.spacing.unit * 3}px 0`,
-    width: `calc(100% - ${theme.spacing.unit * 2}px)`
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    divider: {
+      margin: `${theme.spacing(3)}px 0`,
+      width: `calc(100% - ${theme.spacing(2)}px)`
+    }
+  });
 
 interface Props {
   loading: boolean;
@@ -59,7 +61,8 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
 
   getSecretLink = () => {
     const { secret, username } = this.props;
-    return `otpauth://totp/LinodeManager%3A${username}?secret=${secret}`;
+    const issuer = 'Linode';
+    return `otpauth://totp/${issuer}%3A${username}?secret=${secret}&issuer=${issuer}`;
   };
 
   handleTokenInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {

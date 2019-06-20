@@ -12,37 +12,42 @@ const Divider = () => (
 storiesOf('Button', module)
   .add('Types', () => (
     <React.Fragment>
-      <Button type="primary" data-qa-button="primary">
+      <Button buttonType="primary" data-qa-button="primary">
         Primary
       </Button>
       <Divider />
-      <Button type="secondary" data-qa-button="secondary">
+      <Button buttonType="secondary" data-qa-button="secondary">
         Secondary
       </Button>
       <Divider />
-      <Button type="cancel" data-qa-button="cancel">
+      <Button buttonType="cancel" data-qa-button="cancel">
         Cancel
       </Button>
       <Divider />
-      <Button type="remove" data-qa-button="remove" />
+      <Button buttonType="remove" data-qa-button="remove" />
       <Divider />
     </React.Fragment>
   ))
   .add('Disabled', () => (
     <React.Fragment>
-      <Button disabled type="primary" data-qa-button="primary">
+      <Button disabled buttonType="primary" data-qa-button="primary">
         Primary
       </Button>
       <Divider />
-      <Button disabled type="secondary" data-qa-button="secondary">
+      <Button disabled buttonType="secondary" data-qa-button="secondary">
         Secondary
       </Button>
       <Divider />
-      <Button disabled destructive type="primary" data-qa-button="destructive">
+      <Button
+        disabled
+        destructive
+        buttonType="primary"
+        data-qa-button="destructive"
+      >
         Destructive
       </Button>
       <Divider />
-      <Button disabled type="cancel" data-qa-button="cancel">
+      <Button disabled buttonType="cancel" data-qa-button="cancel">
         Cancel
       </Button>
       <Divider />
@@ -50,15 +55,15 @@ storiesOf('Button', module)
   ))
   .add('Loading', () => (
     <React.Fragment>
-      <Button loading type="primary" data-qa-button="primary">
+      <Button loading buttonType="primary" data-qa-button="primary">
         Primary
       </Button>
       <Divider />
-      <Button loading type="secondary" data-qa-button="secondary">
+      <Button loading buttonType="secondary" data-qa-button="secondary">
         Secondary
       </Button>
       <Divider />
-      <Button loading type="cancel" data-qa-button="cancel">
+      <Button loading buttonType="cancel" data-qa-button="cancel">
         Cancel
       </Button>
       <Divider />
@@ -66,11 +71,11 @@ storiesOf('Button', module)
   ))
   .add('Destructive', () => (
     <React.Fragment>
-      <Button destructive type="primary" data-qa-button="primary">
+      <Button destructive buttonType="primary" data-qa-button="primary">
         Primary
       </Button>
       <Divider />
-      <Button destructive type="secondary" data-qa-button="secondary">
+      <Button destructive buttonType="secondary" data-qa-button="secondary">
         Secondary
       </Button>
       <Divider />
@@ -78,11 +83,16 @@ storiesOf('Button', module)
   ))
   .add('Loading Destructive', () => (
     <React.Fragment>
-      <Button loading destructive type="primary" data-qa-button="primary">
+      <Button loading destructive buttonType="primary" data-qa-button="primary">
         Primary
       </Button>
       <Divider />
-      <Button loading destructive type="secondary" data-qa-button="secondary">
+      <Button
+        loading
+        destructive
+        buttonType="secondary"
+        data-qa-button="secondary"
+      >
         Secondary
       </Button>
       <Divider />
@@ -91,7 +101,7 @@ storiesOf('Button', module)
   .add('Primary Dropdown', () => (
     <React.Fragment>
       <Button
-        type="primary"
+        buttonType="primary"
         className="button-dropdown"
         data-qa-button="dropdown"
       >
@@ -100,7 +110,7 @@ storiesOf('Button', module)
       </Button>
       <Divider />
       <Button
-        type="primary"
+        buttonType="primary"
         className="button-dropdown"
         data-qa-button="dropdown"
       >
@@ -109,7 +119,7 @@ storiesOf('Button', module)
       </Button>
       <Divider />
       <Button
-        type="primary"
+        buttonType="primary"
         disabled
         className="button-dropdown"
         data-qa-button="dropdown"
@@ -122,7 +132,7 @@ storiesOf('Button', module)
   .add('Secondary Dropdown', () => (
     <React.Fragment>
       <Button
-        type="secondary"
+        buttonType="secondary"
         className="button-dropdown"
         data-qa-button="dropdown-secondary"
       >
@@ -131,7 +141,7 @@ storiesOf('Button', module)
       </Button>
       <Divider />
       <Button
-        type="secondary"
+        buttonType="secondary"
         className="button-dropdown"
         data-qa-button="dropdown-secondary"
       >
@@ -140,7 +150,7 @@ storiesOf('Button', module)
       </Button>
       <Divider />
       <Button
-        type="secondary"
+        buttonType="secondary"
         disabled
         className="button-dropdown"
         data-qa-button="dropdown-secondary"

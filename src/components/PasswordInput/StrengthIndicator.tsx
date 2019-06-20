@@ -2,7 +2,8 @@ import * as classNames from 'classnames';
 import { isNil } from 'ramda';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -15,37 +16,38 @@ interface Props {
 }
 type ClassNames = 'root' | 'block' | 'strengthText' | 'strengthLabel';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    maxWidth: `calc(415px + ${theme.spacing.unit}px)`,
-    [theme.breakpoints.down('xs')]: {
-      maxWidth: `calc(100% + ${theme.spacing.unit}px)`
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      maxWidth: `calc(415px + ${theme.spacing(1)}px)`,
+      [theme.breakpoints.down('xs')]: {
+        maxWidth: `calc(100% + ${theme.spacing(1)}px)`
+      }
+    },
+    block: {
+      backgroundColor: '#C9CACB',
+      height: '4px',
+      transition: 'background-color .5s ease-in-out',
+      '&[class*="strength-"]': {
+        backgroundColor: theme.palette.primary.main
+      }
+    },
+    strengthText: {
+      position: 'relative',
+      fontSize: '.85rem',
+      textAlign: 'right',
+      [theme.breakpoints.down('xs')]: {
+        textAlign: 'center'
+      }
+    },
+    strengthLabel: {
+      [theme.breakpoints.down('xs')]: {
+        display: 'none'
+      }
     }
-  },
-  block: {
-    backgroundColor: '#C9CACB',
-    height: '4px',
-    transition: 'background-color .5s ease-in-out',
-    '&[class*="strength-"]': {
-      backgroundColor: theme.palette.primary.main
-    }
-  },
-  strengthText: {
-    position: 'relative',
-    fontSize: '.85rem',
-    textAlign: 'right',
-    [theme.breakpoints.down('xs')]: {
-      textAlign: 'center'
-    }
-  },
-  strengthLabel: {
-    [theme.breakpoints.down('xs')]: {
-      display: 'none'
-    }
-  }
-});
+  });
 
-const styled = withStyles<ClassNames>(styles);
+const styled = withStyles(styles);
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
@@ -56,7 +58,7 @@ const StrengthIndicator: React.StatelessComponent<CombinedProps> = props => {
     <Grid
       container
       alignItems="flex-end"
-      spacing={8}
+      spacing={1}
       className={classes.root}
       data-qa-strength={strength}
     >

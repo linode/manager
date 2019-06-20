@@ -39,7 +39,9 @@ export const LandingLoading: React.FC<Props> = ({ shouldDelay, delayInMS }) => {
     } else {
       setShowLoading(true);
     }
-    return () => (didCancel = true);
+    return () => {
+      didCancel = true;
+    };
   }, []);
   return showLoading ? <CircleProgress /> : null;
 };

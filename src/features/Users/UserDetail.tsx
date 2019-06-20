@@ -11,9 +11,10 @@ import UserIcon from 'src/assets/icons/user.svg';
 import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
@@ -33,39 +34,40 @@ import UserProfile from './UserProfile';
 
 type ClassNames = 'titleWrapper' | 'avatar' | 'backButton' | 'emptyImage';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0
+const styles = (theme: Theme) =>
+  createStyles({
+    '@keyframes fadeIn': {
+      from: {
+        opacity: 0
+      },
+      to: {
+        opacity: 1
+      }
     },
-    to: {
-      opacity: 1
+    avatar: {
+      margin: '0 8px 0 -4px',
+      color: '#606469',
+      borderRadius: '50%',
+      width: '46px',
+      height: '46px',
+      animation: '$fadeIn 150ms linear forwards'
+    },
+    emptyImage: {
+      width: 42,
+      height: 49
+    },
+    titleWrapper: {
+      display: 'flex',
+      alignItems: 'center'
+    },
+    backButton: {
+      margin: '4px 0 0 -16px',
+      '& svg': {
+        width: 34,
+        height: 34
+      }
     }
-  },
-  avatar: {
-    margin: '0 8px 0 -4px',
-    color: '#606469',
-    borderRadius: '50%',
-    width: '46px',
-    height: '46px',
-    animation: 'fadeIn 150ms linear forwards'
-  },
-  emptyImage: {
-    width: 42,
-    height: 49
-  },
-  titleWrapper: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  backButton: {
-    margin: '4px 0 0 -16px',
-    '& svg': {
-      width: 34,
-      height: 34
-    }
-  }
-});
+  });
 
 interface MatchProps {
   username: string;
@@ -406,9 +408,14 @@ class UserDetail extends React.Component<CombinedProps> {
               <Tab
                 key={tab.title}
                 data-qa-tab={tab.title}
-                component={() => (
-                  <TabLink to={tab.routeName} title={tab.title} />
-                )}
+                component={React.forwardRef((props, ref) => (
+                  <TabLink
+                    to={tab.routeName}
+                    title={tab.title}
+                    {...props}
+                    ref={ref}
+                  />
+                ))}
               />
             ))}
           </Tabs>

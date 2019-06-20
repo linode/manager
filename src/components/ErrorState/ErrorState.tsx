@@ -2,7 +2,8 @@ import ErrorOutline from '@material-ui/icons/ErrorOutline';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -17,26 +18,27 @@ interface Props {
 
 type CSSClasses = 'root' | 'iconContainer' | 'icon' | 'compact' | 'cozy';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
-  root: {
-    padding: theme.spacing.unit * 10
-  },
-  compact: {
-    padding: theme.spacing.unit * 5
-  },
-  cozy: {
-    padding: theme.spacing.unit
-  },
-  iconContainer: {
-    textAlign: 'center'
-  },
-  icon: {
-    marginBottom: theme.spacing.unit * 2,
-    color: theme.color.red,
-    width: 50,
-    height: 50
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(10)
+    },
+    compact: {
+      padding: theme.spacing(5)
+    },
+    cozy: {
+      padding: theme.spacing(1)
+    },
+    iconContainer: {
+      textAlign: 'center'
+    },
+    icon: {
+      marginBottom: theme.spacing(2),
+      color: theme.color.red,
+      width: 50,
+      height: 50
+    }
+  });
 
 const ErrorState = (props: Props & WithStyles<CSSClasses>) => {
   return (

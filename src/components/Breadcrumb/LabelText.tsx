@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -9,22 +10,23 @@ import Typography from 'src/components/core/Typography';
 
 type ClassNames = 'root' | 'labelTitle' | 'labelSubtitle' | 'underlineOnHover';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  labelTitle: {
-    padding: '0 10px',
-    lineHeight: '1.5rem'
-  },
-  labelSubtitle: {
-    margin: '8px 0 0 10px'
-  },
-  underlineOnHover: {
-    '&:hover, &:focus': {
-      textDecoration: 'underline',
-      color: theme.color.black
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    labelTitle: {
+      padding: '0 10px',
+      lineHeight: '1.5rem'
+    },
+    labelSubtitle: {
+      margin: '8px 0 0 10px'
+    },
+    underlineOnHover: {
+      '&:hover, &:focus': {
+        textDecoration: 'underline',
+        color: theme.color.black
+      }
     }
-  }
-});
+  });
 
 interface Props {
   title: string;

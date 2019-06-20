@@ -1,13 +1,15 @@
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { assoc, clamp, compose, pathOr } from 'ramda';
+import { assoc, clamp, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -32,22 +34,23 @@ import DeviceSelection, {
 
 type ClassNames = 'root' | 'title' | 'intro';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    padding: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit,
-    '& .iconTextLink': {
-      display: 'inline-flex',
-      margin: `${theme.spacing.unit * 3}px 0 0 0`
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(3),
+      paddingBottom: theme.spacing(1),
+      '& .iconTextLink': {
+        display: 'inline-flex',
+        margin: `${theme.spacing(3)}px 0 0 0`
+      }
+    },
+    title: {
+      marginBottom: theme.spacing(2)
+    },
+    intro: {
+      marginBottom: theme.spacing(2)
     }
-  },
-  title: {
-    marginBottom: theme.spacing.unit * 2
-  },
-  intro: {
-    marginBottom: theme.spacing.unit * 2
-  }
-});
+  });
 
 interface ContextProps {
   linodeId: number;
@@ -238,7 +241,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
           <ActionsPanel>
             <Button
               onClick={this.onSubmit}
-              type="primary"
+              buttonType="primary"
               data-qa-submit
               disabled={disabled}
             >
@@ -271,7 +274,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
 
 const connected = connect(mapStateToProps);
 
-export default compose(
+export default compose<CombinedProps, {}>(
   linodeContext,
   SectionErrorBoundary,
   styled,

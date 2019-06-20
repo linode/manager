@@ -2,7 +2,8 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -12,23 +13,24 @@ import _TableRow, {
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    transition: theme.transitions.create(['background-color']),
-    [theme.breakpoints.up('md')]: {
-      '&:before': {
-        content: "''",
-        display: 'table-cell',
-        width: '0.01%',
-        height: '100%',
-        backgroundColor: 'transparent',
-        borderBottom: `2px solid ${theme.palette.divider}`,
-        transition: theme.transitions.create(['background-color']),
-        paddingLeft: 5
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      transition: theme.transitions.create(['background-color']),
+      [theme.breakpoints.up('md')]: {
+        '&:before': {
+          content: "''",
+          display: 'table-cell',
+          width: '0.01%',
+          height: '100%',
+          backgroundColor: 'transparent',
+          borderBottom: `2px solid ${theme.palette.divider}`,
+          transition: theme.transitions.create(['background-color']),
+          paddingLeft: 5
+        }
       }
     }
-  }
-});
+  });
 
 type onClickFn = (e: React.ChangeEvent<HTMLTableRowElement>) => void;
 
@@ -113,6 +115,6 @@ class TableRow extends React.Component<CombinedProps> {
   }
 }
 
-const styled = withStyles<ClassNames>(styles);
+const styled = withStyles(styles);
 
 export default styled(withRouter(TableRow));

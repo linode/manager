@@ -1,7 +1,8 @@
 import { compose } from 'ramda';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -26,39 +27,40 @@ type ClassNames =
   | 'paginationCell'
   | 'groupContainer';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  tagGridRow: {
-    marginBottom: theme.spacing.unit * 2 + theme.spacing.unit / 2
-  },
-  tagHeaderRow: {
-    backgroundColor: theme.bg.main,
-    height: 'auto',
-    '& td': {
-      // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
-      padding: `${theme.spacing.unit * 2 + theme.spacing.unit / 2}px 0 ${theme
-        .spacing.unit + 2}px`,
-      borderBottom: 'none'
-    }
-  },
-  groupContainer: {
-    '&:first-of-type': {
-      '& $tagHeaderRow > td': {
-        padding: `${theme.spacing.unit + 2}px 0`
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    tagGridRow: {
+      marginBottom: theme.spacing(2) + theme.spacing(1) / 2
+    },
+    tagHeaderRow: {
+      backgroundColor: theme.bg.main,
+      height: 'auto',
+      '& td': {
+        // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
+        padding: `${theme.spacing(2) +
+          theme.spacing(1) / 2}px 0 ${theme.spacing(1) + 2}px`,
+        borderBottom: 'none'
+      }
+    },
+    groupContainer: {
+      '&:first-of-type': {
+        '& $tagHeaderRow > td': {
+          padding: `${theme.spacing(1) + 2}px 0`
+        }
+      }
+    },
+    tagHeader: {
+      marginBottom: 2
+    },
+    tagHeaderOuter: {},
+    paginationCell: {
+      paddingTop: 2,
+      '& div:first-child': {
+        marginTop: 0
       }
     }
-  },
-  tagHeader: {
-    marginBottom: 2
-  },
-  tagHeaderOuter: {},
-  paginationCell: {
-    paddingTop: 2,
-    '& div:first-child': {
-      marginTop: 0
-    }
-  }
-});
+  });
 interface Props {
   data: Linode.Domain[];
   orderBy: string;

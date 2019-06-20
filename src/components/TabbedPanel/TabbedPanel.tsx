@@ -3,9 +3,10 @@ import * as React from 'react';
 import AppBar from 'src/components/core/AppBar';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
@@ -15,29 +16,30 @@ import Notice from '../Notice';
 
 type ClassNames = 'root' | 'inner' | 'copy' | 'tabs' | 'panelBody';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    flexGrow: 1,
-    width: '100%',
-    backgroundColor: theme.color.white
-  },
-  inner: {
-    padding: theme.spacing.unit * 2,
-    [theme.breakpoints.up('sm')]: {
-      padding: theme.spacing.unit * 3
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      flexGrow: 1,
+      width: '100%',
+      backgroundColor: theme.color.white
+    },
+    inner: {
+      padding: theme.spacing(2),
+      [theme.breakpoints.up('sm')]: {
+        padding: theme.spacing(3)
+      }
+    },
+    copy: {
+      fontSize: '0.875rem',
+      marginTop: theme.spacing(1)
+    },
+    tabs: {
+      margin: `${theme.spacing(1)}px 0`
+    },
+    panelBody: {
+      padding: `${theme.spacing(2)}px 0 0`
     }
-  },
-  copy: {
-    fontSize: '0.875rem',
-    marginTop: theme.spacing.unit
-  },
-  tabs: {
-    margin: `${theme.spacing.unit}px 0`
-  },
-  panelBody: {
-    padding: `${theme.spacing.unit * 2}px 0 0`
-  }
-});
+  });
 
 export interface Tab {
   title: string;
@@ -45,7 +47,7 @@ export interface Tab {
 }
 interface Props {
   header: string;
-  error?: string;
+  error?: string | JSX.Element;
   copy?: string;
   rootClass?: string;
   innerClass?: string;

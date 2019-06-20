@@ -2,11 +2,6 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import _Option from 'react-select/lib/components/Option';
 import FormHelperText from 'src/components/core/FormHelperText';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { getLinodes } from 'src/services/linodes';
 import { doesRegionSupportBlockStorage } from 'src/utilities/doesRegionSupportBlockStorage';
@@ -14,12 +9,6 @@ import { debounce } from 'throttle-debounce';
 
 export const regionSupportMessage =
   'This Linode is in a region that does not currently support Block Storage';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props {
   /** * @todo Does not having value passed here break the cycle? */
@@ -38,7 +27,7 @@ interface State {
   selectedLinodeId?: number;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 export class LinodeSelect extends React.Component<CombinedProps, State> {
   mounted: boolean;
@@ -194,7 +183,9 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
           onChange={this.setSelectedLinode}
           onInputChange={this.onInputChange}
           textFieldProps={{
-            'data-qa-select-linode': true
+            dataAttrs: {
+              'data-qa-select-linode': true
+            }
           }}
           {...rest}
         />
@@ -209,6 +200,4 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles);
-
-export default styled(LinodeSelect);
+export default LinodeSelect;

@@ -188,3 +188,45 @@ export const sendCreateLinodeEvent = (
     label: eventLabel
   });
 };
+
+// CreateBucketForm.tsx
+export const sendCreateBucketEvent = (eventLabel: string) => {
+  sendEvent({
+    category: 'Object Storage',
+    action: 'Create Bucket',
+    label: eventLabel
+  });
+};
+
+// BucketsLanding.tsx
+export const sendDeleteBucketEvent = (eventLabel: string) => {
+  sendEvent({
+    category: 'Object Storage',
+    action: 'Delete Bucket',
+    label: eventLabel
+  });
+};
+
+// AccessKeyLanding.tsx
+export const sendCreateAccessKeyEvent = () => {
+  sendEvent({
+    category: 'Object Storage',
+    action: 'Create Access Key'
+  });
+};
+
+// AccessKeyLanding.tsx
+export const sendEditAccessKeyEvent = () => {
+  sendEvent({
+    category: 'Object Storage',
+    action: 'Edit Access Key'
+  });
+};
+
+// AccessKeyLanding.tsx
+export const sendRevokeAccessKeyEvent = () => {
+  sendEvent({
+    category: 'Object Storage',
+    action: 'Revoke Access Key'
+  });
+};

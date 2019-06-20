@@ -3,11 +3,6 @@ import * as React from 'react';
 import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
@@ -20,12 +15,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
-
 interface State {
   initialValue: string;
   updatedValue: string;
@@ -34,7 +23,7 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = ContextProps & WithStyles<ClassNames>;
+type CombinedProps = ContextProps;
 
 class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
   state: State = {
@@ -97,7 +86,7 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
           <ActionsPanel>
             <Button
               onClick={this.changeLabel}
-              type="primary"
+              buttonType="primary"
               disabled={disabled || (submitting && !labelError)}
               loading={submitting && !labelError}
               data-qa-label-save
@@ -125,8 +114,6 @@ class LinodeSettingsLabelPanel extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles);
-
 const errorBoundary = PanelErrorBoundary({ heading: 'Linode Label' });
 
 interface ContextProps {
@@ -143,8 +130,6 @@ const linodeContext = withLinodeDetailContext<ContextProps>(
   })
 );
 
-export default recompose<CombinedProps, {}>(
-  errorBoundary,
-  styled,
-  linodeContext
-)(LinodeSettingsLabelPanel) as React.ComponentType<{}>;
+export default recompose<CombinedProps, {}>(errorBoundary, linodeContext)(
+  LinodeSettingsLabelPanel
+) as React.ComponentType<{}>;

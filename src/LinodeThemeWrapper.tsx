@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { MuiThemeProvider } from 'src/components/core/styles';
+import { ThemeProvider } from 'src/components/core/styles';
 import { dark, light } from 'src/themes';
 import {
   Spacing,
@@ -71,11 +71,11 @@ class LinodeThemeWrapper extends React.Component<Props, State> {
     const theme = themes[themeChoice];
 
     return (
-      <MuiThemeProvider theme={theme()}>
+      <ThemeProvider theme={theme()}>
         {isRenderChildren(children)
           ? children(this.toggleTheme, this.toggleSpacing)
           : children}
-      </MuiThemeProvider>
+      </ThemeProvider>
     );
   }
 }

@@ -1,7 +1,9 @@
-import { compose, lensPath, set, view } from 'ramda';
+import { lensPath, set, view } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -23,23 +25,24 @@ import { AccountProvider } from './context';
 
 type ClassNames = 'root' | 'main' | 'sidebar' | 'heading';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  main: {
-    [theme.breakpoints.up('md')]: {
-      order: 1
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    main: {
+      [theme.breakpoints.up('md')]: {
+        order: 1
+      }
+    },
+    sidebar: {
+      [theme.breakpoints.up('md')]: {
+        order: 2
+      }
+    },
+    heading: {
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(2)
     }
-  },
-  sidebar: {
-    [theme.breakpoints.up('md')]: {
-      order: 2
-    }
-  },
-  heading: {
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit * 2
-  }
-});
+  });
 
 interface PreloadedProps {
   account: { response: Linode.Account };
@@ -148,7 +151,7 @@ export class BillingDetail extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default compose(
+export default compose<CombinedProps, {}>(
   styled,
   setDocs(BillingDetail.docs)
 )(BillingDetail);

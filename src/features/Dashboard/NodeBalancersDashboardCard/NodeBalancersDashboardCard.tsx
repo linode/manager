@@ -1,10 +1,11 @@
-import { compose, take } from 'ramda';
+import { take } from 'ramda';
 import * as React from 'react';
-import { Subscription } from 'rxjs/Subscription';
+import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -19,9 +20,8 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import ViewAllLink from 'src/components/ViewAllLink';
-import { events$ } from 'src/events';
+import NodeBalancerContainer from 'src/containers/withNodeBalancers.container';
 import RegionIndicator from 'src/features/linodes/LinodesLanding/RegionIndicator';
-import { getNodeBalancers } from 'src/services/nodebalancers';
 import DashboardCard from '../DashboardCard';
 
 type ClassNames =
@@ -34,162 +34,98 @@ type ClassNames =
   | 'actionsCol'
   | 'wrapHeader';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  icon: {
-    position: 'relative',
-    top: 3,
-    width: 40,
-    height: 40,
-    '& .circle': {
-      fill: theme.bg.offWhiteDT
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    icon: {
+      position: 'relative',
+      top: 3,
+      width: 40,
+      height: 40,
+      '& .circle': {
+        fill: theme.bg.offWhiteDT
+      },
+      '& .outerCircle': {
+        stroke: theme.bg.main
+      }
     },
-    '& .outerCircle': {
-      stroke: theme.bg.main
+    labelGridWrapper: {
+      paddingLeft: '4px !important',
+      paddingRight: '4px !important'
+    },
+    description: {
+      paddingTop: theme.spacing(1) / 2
+    },
+    labelCol: {
+      width: '70%'
+    },
+    moreCol: {
+      width: '30%'
+    },
+    actionsCol: {
+      width: '10%'
+    },
+    wrapHeader: {
+      wordBreak: 'break-all'
     }
-  },
-  labelGridWrapper: {
-    paddingLeft: '4px !important',
-    paddingRight: '4px !important'
-  },
-  description: {
-    paddingTop: theme.spacing.unit / 2
-  },
-  labelCol: {
-    width: '70%'
-  },
-  moreCol: {
-    width: '30%'
-  },
-  actionsCol: {
-    width: '10%'
-  },
-  wrapHeader: {
-    wordBreak: 'break-all'
-  }
-});
+  });
 
-interface State {
-  loading: boolean;
-  errors?: Linode.ApiFieldError[];
-  data?: Linode.NodeBalancer[];
-  results?: number;
+interface NodeBalancerProps {
+  nodeBalancersData: Linode.NodeBalancer[];
+  nodeBalancersLoading: boolean;
+  nodeBalancersError?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = WithStyles<ClassNames>;
+type CombinedProps = NodeBalancerProps & WithStyles<ClassNames>;
 
-class NodeBalancersDashboardCard extends React.Component<CombinedProps, State> {
-  state: State = {
-    loading: true
-  };
+const NodeBalancersDashboardCard: React.FunctionComponent<
+  CombinedProps
+> = props => {
+  const {
+    classes,
+    nodeBalancersError,
+    nodeBalancersLoading,
+    nodeBalancersData
+  } = props;
 
-  mounted: boolean = false;
+  const data = take(5, nodeBalancersData);
 
-  subscription: Subscription;
-
-  requestData = (initial: boolean = false) => {
-    if (!this.mounted) {
-      return;
-    }
-
-    if (initial) {
-      this.setState({ loading: true });
-    }
-
-    getNodeBalancers(
-      { page_size: 25 },
-      { '+order_by': 'label', '+order': 'asc' }
-    )
-      .then(({ data, results }) => {
-        if (!this.mounted) {
-          return;
-        }
-        this.setState({
-          loading: false,
-          data: take(5, data),
-          results
-        });
-      })
-      .catch(error => {
-        this.setState({
-          loading: false,
-          errors: [{ reason: 'Unable to load NodeBalancers.' }]
-        });
-      });
-  };
-
-  componentDidMount() {
-    this.mounted = true;
-
-    this.requestData(true);
-
-    this.subscription = events$
-      .filter(e => !e._initial)
-      .filter(e => Boolean(e.entity && e.entity.type === 'nodebalancer'))
-      .filter(
-        e =>
-          Boolean(this.state.data && this.state.data.length < 5) ||
-          isFoundInData(e.entity!.id, this.state.data)
-      )
-      .subscribe(() => this.requestData(false));
-  }
-
-  componentWillUnmount() {
-    this.mounted = false;
-    this.subscription.unsubscribe();
-  }
-
-  render() {
-    return (
-      <DashboardCard title="NodeBalancers" headerAction={this.renderAction}>
-        <Paper>
-          <Table>
-            <TableBody>{this.renderContent()}</TableBody>
-          </Table>
-        </Paper>
-      </DashboardCard>
-    );
-  }
-
-  renderAction = () =>
-    this.state.results && this.state.results > 5 ? (
+  const renderAction = () =>
+    nodeBalancersData.length > 5 ? (
       <ViewAllLink
         text="View All"
         link={'/nodebalancers'}
-        count={this.state.results}
+        count={nodeBalancersData.length}
       />
     ) : null;
 
-  renderContent = () => {
-    const { loading, data, errors } = this.state;
-    if (loading) {
-      return this.renderLoading();
+  const renderContent = () => {
+    if (nodeBalancersLoading && nodeBalancersData.length === 0) {
+      return renderLoading();
     }
 
-    if (errors) {
-      return this.renderErrors(errors);
+    if (nodeBalancersError) {
+      return renderErrors(nodeBalancersError);
     }
 
     if (data && data.length > 0) {
-      return this.renderData(data);
+      return renderData();
     }
 
-    return this.renderEmpty();
+    return renderEmpty();
   };
 
-  renderLoading = () => {
+  const renderLoading = () => {
     return <TableRowLoading colSpan={2} />;
   };
 
-  renderErrors = (errors: Linode.ApiFieldError[]) => (
+  const renderErrors = (errors: Linode.ApiFieldError[]) => (
     <TableRowError colSpan={2} message={`Unable to load NodeBalancers.`} />
   );
 
-  renderEmpty = () => <TableRowEmptyState colSpan={2} />;
+  const renderEmpty = () => <TableRowEmptyState colSpan={2} />;
 
-  renderData = (data: Linode.NodeBalancer[]) => {
-    const { classes } = this.props;
-
+  const renderData = () => {
     return data.map(({ id, label, region, hostname }) => (
       <TableRow key={label} rowLink={`/nodebalancers/${id}`}>
         <TableCell className={classes.labelCol}>
@@ -219,16 +155,31 @@ class NodeBalancersDashboardCard extends React.Component<CombinedProps, State> {
       </TableRow>
     ));
   };
-}
+
+  return (
+    <DashboardCard title="NodeBalancers" headerAction={renderAction}>
+      <Paper>
+        <Table>
+          <TableBody>{renderContent()}</TableBody>
+        </Table>
+      </Paper>
+    </DashboardCard>
+  );
+};
 
 const styled = withStyles(styles);
 
-const enhanced = compose(styled);
+const withNodeBalancers = NodeBalancerContainer(
+  (ownProps, nodeBalancersData, nodeBalancersLoading, nodeBalancersError) => ({
+    ...ownProps,
+    nodeBalancersData,
+    nodeBalancersLoading,
+    nodeBalancersError
+  })
+);
+const enhanced = compose<CombinedProps, {}>(
+  styled,
+  withNodeBalancers
+);
 
-const isFoundInData = (id: number, data: Linode.NodeBalancer[] = []): boolean =>
-  data.reduce(
-    (result, nodebalancer) => result || nodebalancer.id === id,
-    false
-  );
-
-export default enhanced(NodeBalancersDashboardCard) as React.ComponentType<{}>;
+export default enhanced(NodeBalancersDashboardCard);

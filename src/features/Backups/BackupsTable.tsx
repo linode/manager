@@ -1,7 +1,7 @@
 import { isEmpty } from 'ramda';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
   Theme,
   withStyles,
   WithStyles
@@ -17,17 +17,18 @@ import BackupLinodes from './BackupLinodes';
 
 type ClassNames = 'root' | 'container';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {
-    width: '100%'
-  },
-  container: {
-    width: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      width: '100%'
+    },
+    container: {
+      width: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center'
+    }
+  });
 
 interface Props {
   linodes: ExtendedLinode[];

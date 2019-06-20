@@ -1,9 +1,10 @@
+import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
-} from '@material-ui/core/styles';
-import * as React from 'react';
+} from 'src/components/core/styles';
 import DisplayPrice from 'src/components/DisplayPrice';
 import { MAX_VOLUME_SIZE } from 'src/constants';
 
@@ -20,11 +21,12 @@ const getClampedPrice = (newSize: number, currentSize: number) =>
       : getPrice(MAX_VOLUME_SIZE)
     : getPrice(currentSize);
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    marginTop: theme.spacing.unit * 4
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      marginTop: theme.spacing(4)
+    }
+  });
 
 interface Props {
   value: number;

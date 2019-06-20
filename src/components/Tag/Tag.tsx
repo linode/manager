@@ -6,7 +6,8 @@ import { compose } from 'recompose';
 import Button from 'src/components/core/Button';
 import Chip, { ChipProps } from 'src/components/core/Chip';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -24,8 +25,8 @@ type Variants =
 
 type CSSClasses = 'label' | 'root' | 'deleteButton' | Variants;
 
-const styles: StyleRulesCallback<CSSClasses> = theme => {
-  return {
+const styles = (theme: Theme) =>
+  createStyles({
     label: {},
     root: {},
     deleteButton: {
@@ -94,14 +95,14 @@ const styles: StyleRulesCallback<CSSClasses> = theme => {
         backgroundColor: '#FCF4DD'
       }
     }
-  };
-};
+  });
 
 export interface Props extends ChipProps {
   label: string;
   colorVariant?: Variants;
   asSuggestion?: boolean;
   closeMenu?: any;
+  component?: string;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}> & WithStyles<CSSClasses>;

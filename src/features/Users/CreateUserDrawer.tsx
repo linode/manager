@@ -3,11 +3,6 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
-} from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
@@ -15,12 +10,6 @@ import Toggle from 'src/components/Toggle';
 import { createUser } from 'src/services/account';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props {
   open: boolean;
@@ -36,7 +25,7 @@ interface State {
   submitting: boolean;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = Props & RouteComponentProps<{}>;
 
 class CreateUserDrawer extends React.Component<CombinedProps, State> {
   state: State = {
@@ -161,14 +150,14 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
         </div>
         <ActionsPanel>
           <Button
-            type="primary"
+            buttonType="primary"
             onClick={this.onSubmit}
             loading={submitting}
             data-qa-submit
           >
             Submit
           </Button>
-          <Button type="cancel" onClick={onClose} data-qa-cancel>
+          <Button buttonType="cancel" onClick={onClose} data-qa-cancel>
             Cancel
           </Button>
         </ActionsPanel>
@@ -177,6 +166,4 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles);
-
-export default styled(withRouter(CreateUserDrawer));
+export default withRouter(CreateUserDrawer);

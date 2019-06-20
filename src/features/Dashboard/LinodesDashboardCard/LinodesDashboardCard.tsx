@@ -2,10 +2,12 @@ import { compose, path, pathOr, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { compose as recompose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -34,27 +36,28 @@ type ClassNames =
   | 'actionsCol'
   | 'wrapHeader';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    marginTop: 0
-  },
-  linodeWrapper: {
-    display: 'inline-flex',
-    width: 'auto'
-  },
-  labelCol: {
-    width: '60%'
-  },
-  moreCol: {
-    width: '30%'
-  },
-  actionsCol: {
-    width: '10%'
-  },
-  wrapHeader: {
-    whiteSpace: 'nowrap'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      marginTop: 0
+    },
+    linodeWrapper: {
+      display: 'inline-flex',
+      width: 'auto'
+    },
+    labelCol: {
+      width: '60%'
+    },
+    moreCol: {
+      width: '30%'
+    },
+    actionsCol: {
+      width: '10%'
+    },
+    wrapHeader: {
+      whiteSpace: 'nowrap'
+    }
+  });
 
 interface ConnectedProps {
   types: Linode.LinodeType[];
@@ -224,7 +227,7 @@ const isWantedEvent = (e: Linode.Event): e is Linode.EntityEvent => {
   return false;
 };
 
-const enhanced = compose(
+const enhanced = recompose<CombinedProps, {}>(
   withUpdatingLinodes,
   styled,
   withTypes

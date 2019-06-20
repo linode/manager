@@ -1,9 +1,11 @@
 import { compose, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { compose as recompose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -35,31 +37,32 @@ type ClassNames =
   | 'actionsCol'
   | 'wrapHeader';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  labelGridWrapper: {
-    paddingLeft: `${theme.spacing.unit / 2}px !important`,
-    paddingRight: `${theme.spacing.unit / 2}px !important`
-  },
-  description: {
-    paddingTop: theme.spacing.unit / 2
-  },
-  labelStatusWrapper: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-    wordBreak: 'break-all'
-  },
-  labelCol: {
-    width: '90%'
-  },
-  actionsCol: {
-    width: '10%'
-  },
-  wrapHeader: {
-    wordBreak: 'break-all'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    labelGridWrapper: {
+      paddingLeft: `${theme.spacing(1) / 2}px !important`,
+      paddingRight: `${theme.spacing(1) / 2}px !important`
+    },
+    description: {
+      paddingTop: theme.spacing(1) / 2
+    },
+    labelStatusWrapper: {
+      display: 'flex',
+      flexFlow: 'row nowrap',
+      alignItems: 'center',
+      wordBreak: 'break-all'
+    },
+    labelCol: {
+      width: '90%'
+    },
+    actionsCol: {
+      width: '10%'
+    },
+    wrapHeader: {
+      wordBreak: 'break-all'
+    }
+  });
 
 interface State {
   loading: boolean;
@@ -108,7 +111,7 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
 
   renderContent = () => {
     const { loading, domains, error } = this.props;
-    if (loading) {
+    if (loading && domains.length === 0) {
       return this.renderLoading();
     }
 
@@ -223,7 +226,7 @@ const connected = connect(
   { openForEditing }
 );
 
-const enhanced = compose(
+const enhanced = recompose<CombinedProps, {}>(
   connected,
   styled,
   withUpdatingDomains

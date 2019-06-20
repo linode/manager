@@ -3,7 +3,8 @@ import * as React from 'react';
 import IconButton from 'src/components/core/IconButton';
 import Menu from 'src/components/core/Menu';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -17,61 +18,52 @@ export interface Action {
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
 }
 
-type CSSClasses =
-  | 'root'
-  | 'item'
-  | 'button'
-  | 'actionSingleLink'
-  | 'hidden'
-  | 'menu';
+type CSSClasses = 'root' | 'item' | 'button' | 'actionSingleLink' | 'menu';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-end'
-  },
-  item: {
-    paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 2,
-    paddingTop: theme.spacing.unit * 1.5,
-    paddingBottom: theme.spacing.unit * 1.5,
-    fontFamily: 'LatoWeb',
-    fontSize: '.9rem',
-    color: theme.color.blueDTwhite,
-    transition: `
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-end'
+    },
+    item: {
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2),
+      paddingTop: theme.spacing(1) * 1.5,
+      paddingBottom: theme.spacing(1) * 1.5,
+      fontFamily: 'LatoWeb',
+      fontSize: '.9rem',
+      color: theme.color.blueDTwhite,
+      transition: `
       ${'color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms, '}
       ${'background-color 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'}
     `,
-    '&:hover, &:focus': {
-      backgroundColor: theme.palette.primary.main,
-      color: '#fff'
-    }
-  },
-  button: {
-    width: 26,
-    padding: 0,
-    '& svg': {
-      fontSize: '28px'
+      '&:hover, &:focus': {
+        backgroundColor: theme.palette.primary.main,
+        color: '#fff'
+      }
     },
-    '&[aria-expanded="true"] .kebob': {
-      fill: theme.palette.primary.dark
+    button: {
+      width: 26,
+      padding: 0,
+      '& svg': {
+        fontSize: '28px'
+      },
+      '&[aria-expanded="true"] .kebob': {
+        fill: theme.palette.primary.dark
+      }
+    },
+    actionSingleLink: {
+      marginRight: theme.spacing(1),
+      whiteSpace: 'nowrap',
+      float: 'right',
+      fontFamily: theme.font.bold
+    },
+    menu: {
+      maxWidth: theme.spacing(25)
     }
-  },
-  actionSingleLink: {
-    marginRight: theme.spacing.unit,
-    whiteSpace: 'nowrap',
-    float: 'right',
-    fontFamily: theme.font.bold
-  },
-  hidden: {
-    height: 0,
-    padding: 0
-  },
-  menu: {
-    maxWidth: theme.spacing.unit * 25
-  }
-});
+  });
 
 interface Props {
   createActions: (closeMenu: Function) => Action[];
@@ -107,7 +99,7 @@ export class ActionMenu extends React.Component<CombinedProps, State> {
     this.generateActions(createActions);
   }
 
-  handleClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+  handleClick = (event: React.MouseEvent<HTMLElement>) => {
     if (this.props.toggleOpenCallback) {
       this.props.toggleOpenCallback();
     }
@@ -150,11 +142,9 @@ export class ActionMenu extends React.Component<CombinedProps, State> {
           BackdropProps={{
             style: {
               backgroundColor: 'transparent'
-            },
-            'data-qa-backdrop': true
+            }
           }}
         >
-          <MenuItem key="placeholder" aria-hidden className={classes.hidden} />
           {(actions as Action[]).map((a, idx) => (
             <MenuItem
               key={idx}

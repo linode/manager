@@ -1,10 +1,11 @@
 import browser from 'browser-detect';
-import { compose } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'recompose';
 import Menu from 'src/components/core/Menu';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -18,36 +19,36 @@ import UserNotificationsList from './UserNotificationsList';
 
 type ClassNames = 'root' | 'dropDown' | 'hidden';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    transform: `translate(-${theme.spacing.unit}px, ${theme.spacing.unit}px)`
-  },
-  dropDown: {
-    position: 'absolute',
-    outline: 0,
-    boxShadow: `0 0 5px ${theme.color.boxShadow}`,
-    overflowY: 'auto',
-    overflowX: 'hidden',
-    minHeight: 16,
-    width: 250,
-    maxHeight: 300,
-    [theme.breakpoints.up('sm')]: {
-      width: 380
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      transform: `translate(-${theme.spacing(1)}px, ${theme.spacing(1)}px)`
     },
-    '& .notification': {
-      margin: 0,
-      ...theme.notificationList,
-      ...theme.typography.h3,
-      '& p': {
-        ...theme.typography.h3
+    dropDown: {
+      position: 'absolute',
+      outline: 0,
+      boxShadow: `0 0 5px ${theme.color.boxShadow}`,
+      overflowY: 'auto',
+      overflowX: 'hidden',
+      minHeight: 16,
+      width: 250,
+      maxHeight: 300,
+      [theme.breakpoints.up('sm')]: {
+        width: 380
+      },
+      '& .notification': {
+        margin: 0,
+        ...theme.notificationList,
+        ...theme.typography.h3,
+        '& p': {
+          ...theme.typography.h3
+        }
       }
+    },
+    hidden: {
+      ...theme.visually.hidden
     }
-  },
-  hidden: {
-    height: 0,
-    padding: 0
-  }
-});
+  });
 
 interface State {
   anchorEl?: HTMLElement;
@@ -193,13 +194,13 @@ const isPrivacyPolicityNotification = (n: Linode.Notification) =>
 
 const reduceSeverity = (
   result: Linode.NotificationSeverity | null,
-  { severity }: Linode.Notification
+  { severity, type }: Linode.Notification
 ) => {
+  if (result === 'major' || severity === 'major' || type === 'maintenance') {
+    return 'major';
+  }
   if (result === 'critical' || severity === 'critical') {
     return 'critical';
-  }
-  if (result === 'major' || severity === 'major') {
-    return 'major';
   }
   if (result === 'minor' || severity === 'minor') {
     return 'minor';
@@ -256,9 +257,9 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose(
+const enhanced = compose<CombinedProps, {}>(
   styled,
   connected
 );
 
-export default enhanced(UserNotificationsMenu) as React.ComponentType<{}>;
+export default enhanced(UserNotificationsMenu);

@@ -3,7 +3,8 @@ import { compose } from 'recompose';
 
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -15,12 +16,13 @@ import { getTotalClusterPrice } from '../kubeUtils';
 
 type ClassNames = 'root' | 'item';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  item: {
-    padding: theme.spacing.unit
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    item: {
+      padding: theme.spacing(1)
+    }
+  });
 
 interface Props {
   cluster: ExtendedCluster;

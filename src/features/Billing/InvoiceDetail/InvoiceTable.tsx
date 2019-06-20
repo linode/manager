@@ -104,10 +104,7 @@ const RenderData: React.StatelessComponent<{
           <TableRow>
             <TableCell
               style={{
-                paddingTop: 2,
-                '& div:firstChild': {
-                  marginTop: 0
-                }
+                paddingTop: 2
               }}
               colSpan={8}
             >

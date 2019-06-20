@@ -4,7 +4,8 @@ import { compose } from 'redux';
 import KubernetesSvg from 'src/assets/addnewmenu/kubernetes.svg';
 import Button from 'src/components/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -13,55 +14,56 @@ import Grid from 'src/components/Grid';
 
 type CSSClasses = 'root' | 'copy' | 'icon' | 'title';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
-  '@keyframes scaleIn': {
-    from: {
-      transform: 'translateX( -10px ) rotateY( -180deg )'
+const styles = (theme: Theme) =>
+  createStyles({
+    '@keyframes scaleIn': {
+      from: {
+        transform: 'translateX( -10px ) rotateY( -180deg )'
+      },
+      to: {
+        transformOrigin: 'center center'
+      }
     },
-    to: {
-      transformOrigin: 'center center'
-    }
-  },
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0
+    '@keyframes fadeIn': {
+      from: {
+        opacity: 0
+      },
+      to: {
+        opacity: 1
+      }
     },
-    to: {
-      opacity: 1
-    }
-  },
-  root: {
-    padding: `${theme.spacing.unit * 2}px 0`,
-    [theme.breakpoints.up('md')]: {
-      padding: `${theme.spacing.unit * 10}px 0`
-    }
-  },
-  copy: {
-    textAlign: 'center',
-    maxWidth: 800
-  },
-  icon: {
-    animation: 'scaleIn .5s ease-in-out',
-    width: 225,
-    height: 225,
-    '& use': {
-      fill: theme.bg.main
+    root: {
+      padding: `${theme.spacing(2)}px 0`,
+      [theme.breakpoints.up('md')]: {
+        padding: `${theme.spacing(10)}px 0`
+      }
     },
-    '& .outerCircle': {
-      fill: theme.color.absWhite,
-      stroke: theme.bg.offWhite
+    copy: {
+      textAlign: 'center',
+      maxWidth: 800
     },
-    '& .insidePath path': {
-      opacity: 0,
-      animation: 'fadeIn .2s ease-in-out forwards .3s',
-      stroke: theme.palette.primary.main
+    icon: {
+      animation: '$scaleIn .5s ease-in-out',
+      width: 225,
+      height: 225,
+      '& use': {
+        fill: theme.bg.main
+      },
+      '& .outerCircle': {
+        fill: theme.color.absWhite,
+        stroke: theme.bg.offWhite
+      },
+      '& .insidePath path': {
+        opacity: 0,
+        animation: '$fadeIn .2s ease-in-out forwards .3s',
+        stroke: theme.palette.primary.main
+      }
+    },
+    title: {
+      fontFamily: theme.font.bold,
+      textAlign: 'center'
     }
-  },
-  title: {
-    fontFamily: theme.font.bold,
-    textAlign: 'center'
-  }
-});
+  });
 
 type PropsWithStyles = WithStyles<CSSClasses> & RouteComponentProps<{}>;
 
@@ -72,7 +74,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
     return (
       <Grid
         container
-        spacing={24}
+        spacing={3}
         alignItems="center"
         direction="column"
         justify="center"
@@ -105,7 +107,7 @@ class ListLinodesEmptyState extends React.Component<PropsWithStyles> {
         </Grid>
         <Grid item xs={12} lg={10} className={classes.copy}>
           <Button
-            type="primary"
+            buttonType="primary"
             onClick={() => this.props.history.push('/kubernetes/create')}
           >
             Create a Cluster

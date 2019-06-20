@@ -1,11 +1,11 @@
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
@@ -17,19 +17,20 @@ import { AppsData } from './types';
 
 type ClassNames = 'flatImagePanelSelections' | 'panel' | 'loading';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  flatImagePanelSelections: {
-    marginTop: theme.spacing.unit * 2,
-    padding: `${theme.spacing.unit}px 0`
-  },
-  panel: {
-    marginBottom: theme.spacing.unit * 3
-  },
-  loading: {
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    flatImagePanelSelections: {
+      marginTop: theme.spacing(2),
+      padding: `${theme.spacing(1)}px 0`
+    },
+    panel: {
+      marginBottom: theme.spacing(3)
+    },
+    loading: {
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
+    }
+  });
 
 interface Props extends AppsData {
   handleClick: (
@@ -39,6 +40,7 @@ interface Props extends AppsData {
     stackScriptImages: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]
   ) => void;
+  openDrawer: (stackScriptLabel: string) => void;
   disabled: boolean;
   selectedStackScriptID?: number;
   error?: string;
@@ -89,7 +91,8 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
       appInstances,
       appInstancesError,
       appInstancesLoading,
-      handleClick
+      handleClick,
+      openDrawer
     } = this.props;
 
     if (appInstancesError) {
@@ -123,6 +126,7 @@ class SelectAppPanel extends React.PureComponent<CombinedProps> {
               availableImages={eachApp.images}
               userDefinedFields={eachApp.user_defined_fields}
               handleClick={handleClick}
+              openDrawer={openDrawer}
               disabled={disabled}
               id={eachApp.id}
               iconUrl={eachApp.logo_url || ''}
@@ -149,6 +153,7 @@ interface SelectionProps {
     stackScriptImages: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]
   ) => void;
+  openDrawer: (stackScriptLabel: string) => void;
   iconUrl: string;
   id: number;
   label: string;
@@ -171,6 +176,11 @@ class SelectionCardWrapper extends React.PureComponent<SelectionProps> {
     );
   };
 
+  handleOpenDrawer = () => {
+    const { label, openDrawer } = this.props;
+    openDrawer(label);
+  };
+
   render() {
     const { iconUrl, id, checked, label, disabled } = this.props;
     /**
@@ -188,11 +198,13 @@ class SelectionCardWrapper extends React.PureComponent<SelectionProps> {
         key={id}
         checked={checked}
         onClick={this.handleSelectApp}
+        onClickInfo={this.handleOpenDrawer}
         renderIcon={renderIcon}
         heading={label}
         subheadings={['']}
         data-qa-selection-card
         disabled={disabled}
+        variant="info"
       />
     );
   }

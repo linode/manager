@@ -4,10 +4,11 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { clone } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
-import Button from 'src/components/core/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -30,99 +31,100 @@ type ClassNames =
   | 'progress'
   | 'loading';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0
-    },
-    to: {
-      opacity: 1
-    }
-  },
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-    flexWrap: 'wrap'
-  },
-  tag: {
-    marginTop: theme.spacing.unit / 2,
-    marginRight: theme.spacing.unit,
-    [theme.breakpoints.down('xs')]: {
-      marginRight: theme.spacing.unit * 2
-    }
-  },
-  addButtonWrapper: {
-    width: '100%',
-    marginTop: theme.spacing.unit * 2 - 1,
-    marginBottom: theme.spacing.unit * 2 + 1
-  },
-  hasError: {
-    marginTop: 0
-  },
-  errorNotice: {
-    '& .noticeText': {
-      ...theme.typography.body1,
-      fontFamily: '"LatoWeb", sans-serif'
-    }
-  },
-  addButton: {
-    padding: 0,
-    position: 'relative',
-    top: 2,
-    '& svg': {
-      marginRight: theme.spacing.unit
-    },
-    '&:hover p': {
-      color: theme.palette.primary.main
-    }
-  },
-  tagsPanelItemWrapper: {
-    marginBottom: theme.spacing.unit * 2,
-    position: 'relative'
-  },
-  selectTag: {
-    marginTop: theme.spacing.unit,
-    width: '100%',
-    position: 'relative',
-    zIndex: 3,
-    animation: 'fadeIn .3s ease-in-out forwards',
-    maxWidth: 275,
-    '& > div > div': {
-      marginTop: 0
-    },
-    '& .error-for-scroll > div': {
-      flexDirection: 'row',
-      flexWrap: 'wrap-reverse'
-    },
-    '& .input': {
-      '& p': {
-        fontSize: '.9rem',
-        color: theme.color.grey1,
-        borderLeft: 'none'
+const styles = (theme: Theme) =>
+  createStyles({
+    '@keyframes fadeIn': {
+      from: {
+        opacity: 0
+      },
+      to: {
+        opacity: 1
       }
     },
-    '& .react-select__input': {
-      fontSize: '.9rem',
-      color: theme.palette.text.primary,
-      backgroundColor: 'transparent'
+    root: {
+      display: 'flex',
+      alignItems: 'center',
+      flexWrap: 'wrap'
     },
-    '& .react-select__value-container': {
-      padding: '6px'
+    tag: {
+      marginTop: theme.spacing(1) / 2,
+      marginRight: theme.spacing(1),
+      [theme.breakpoints.down('xs')]: {
+        marginRight: theme.spacing(2)
+      }
+    },
+    addButtonWrapper: {
+      width: '100%',
+      marginTop: theme.spacing(2) - 1,
+      marginBottom: theme.spacing(2) + 1
+    },
+    hasError: {
+      marginTop: 0
+    },
+    errorNotice: {
+      '& .noticeText': {
+        ...theme.typography.body1,
+        fontFamily: '"LatoWeb", sans-serif'
+      }
+    },
+    addButton: {
+      padding: 0,
+      position: 'relative',
+      top: 2,
+      '& svg': {
+        marginRight: theme.spacing(1)
+      },
+      '&:hover p': {
+        color: theme.palette.primary.main
+      }
+    },
+    tagsPanelItemWrapper: {
+      marginBottom: theme.spacing(2),
+      position: 'relative'
+    },
+    selectTag: {
+      marginTop: theme.spacing(1),
+      width: '100%',
+      position: 'relative',
+      zIndex: 3,
+      animation: '$fadeIn .3s ease-in-out forwards',
+      maxWidth: 275,
+      '& > div > div': {
+        marginTop: 0
+      },
+      '& .error-for-scroll > div': {
+        flexDirection: 'row',
+        flexWrap: 'wrap-reverse'
+      },
+      '& .input': {
+        '& p': {
+          fontSize: '.9rem',
+          color: theme.color.grey1,
+          borderLeft: 'none'
+        }
+      },
+      '& .react-select__input': {
+        fontSize: '.9rem',
+        color: theme.palette.text.primary,
+        backgroundColor: 'transparent'
+      },
+      '& .react-select__value-container': {
+        padding: '6px'
+      }
+    },
+    progress: {
+      position: 'absolute',
+      height: '100%',
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      zIndex: 2
+    },
+    loading: {
+      opacity: 0.4
     }
-  },
-  progress: {
-    position: 'absolute',
-    height: '100%',
-    width: '100%',
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    zIndex: 2
-  },
-  loading: {
-    opacity: 0.4
-  }
-});
+  });
 
 interface Item {
   label: string;
@@ -148,7 +150,7 @@ interface State {
 
 export interface Props {
   tags: string[];
-  updateTags: (tags: string[]) => Promise<void>;
+  updateTags: (tags: string[]) => Promise<any>;
   disabled?: boolean;
 }
 
@@ -410,7 +412,8 @@ class TagsPanel extends React.Component<CombinedProps, State> {
             <Button
               onClick={this.toggleTagInput}
               className={classes.addButton}
-              type="primary"
+              disableFocusRipple
+              disableRipple
               disabled={loading || disabled}
             >
               <AddCircle data-qa-add-tag />

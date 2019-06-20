@@ -1,8 +1,10 @@
 import { compose, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
+import { compose as recompose } from 'recompose';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -14,17 +16,20 @@ import { MapState } from 'src/store/types';
 import EmailChangeForm from './EmailChangeForm';
 import TimezoneForm from './TimezoneForm';
 
+import { RequestableData } from 'src/store/types';
+
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    padding: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit * 3
-  },
-  title: {
-    marginBottom: theme.spacing.unit * 2
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(3),
+      paddingBottom: theme.spacing(3)
+    },
+    title: {
+      marginBottom: theme.spacing(2)
+    }
+  });
 
 interface State {
   submitting: boolean;
@@ -122,14 +127,14 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
 const defaultTimezone = compose(
   tz => (tz === '' ? 'GMT' : tz),
   pathOr('GMT', ['data', 'timezone'])
-);
+) as (profile: RequestableData<Linode.Profile>) => string;
 
 const connected = connect(
   mapStateToProps,
   mapDispatchToProps
 );
 
-const enhanced = compose(
+const enhanced = recompose<CombinedProps, {}>(
   styled,
   connected,
   setDocs(DisplaySettings.docs)

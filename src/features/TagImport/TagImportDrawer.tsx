@@ -14,11 +14,6 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { compose, lifecycle } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
@@ -41,12 +36,6 @@ import { sortAlphabetically } from 'src/utilities/sort-by';
 import { storage } from 'src/utilities/storage';
 import DisplayGroupList from './DisplayGroupList';
 
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
-
 interface StateProps {
   open: boolean;
   loading: boolean;
@@ -62,10 +51,7 @@ interface DispatchProps {
   };
 }
 
-type CombinedProps = StateProps &
-  DispatchProps &
-  WithSnackbarProps &
-  WithStyles<ClassNames>;
+type CombinedProps = StateProps & DispatchProps & WithSnackbarProps;
 
 export const getGroupImportList = (entities: GroupImportProps[]) => {
   const importList: any = _compose(
@@ -133,14 +119,14 @@ export const TagImportDrawer: React.StatelessComponent<
             <Button
               onClick={handleSubmit}
               loading={loading}
-              type="primary"
+              buttonType="primary"
               data-qa-submit
             >
               Import Display Groups Now
             </Button>
             <Button
               onClick={close}
-              type="secondary"
+              buttonType="secondary"
               className="cancel"
               data-qa-cancel
             >
@@ -182,8 +168,6 @@ const connected = connect(
   mapDispatchToProps
 );
 
-const styled = withStyles(styles);
-
 // Create Label for GA event. Contains the number of Linodes and Domains
 // with groups that have been imported. Example: "Linodes: 3; Domains: 0"
 export const createLabel = (numLinodes: number, numDomains: number) => {
@@ -212,7 +196,6 @@ export const withUpdates = lifecycle({
 });
 
 const enhanced = compose<CombinedProps, {}>(
-  styled,
   connected,
   withSnackbar,
   withUpdates

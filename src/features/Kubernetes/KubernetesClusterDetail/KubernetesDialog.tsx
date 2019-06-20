@@ -21,11 +21,11 @@ class KubernetesDialog extends React.PureComponent<CombinedProps, {}> {
     const { loading, onClose } = this.props;
     return (
       <ActionsPanel style={{ padding: 0 }}>
-        <Button type="cancel" onClick={onClose} data-qa-cancel>
+        <Button buttonType="cancel" onClick={onClose} data-qa-cancel>
           Cancel
         </Button>
         <Button
-          type="secondary"
+          buttonType="secondary"
           destructive
           loading={loading}
           onClick={this.props.onDelete}

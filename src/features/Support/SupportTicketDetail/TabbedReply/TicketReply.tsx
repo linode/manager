@@ -1,22 +1,24 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import TextField from 'src/components/TextField';
 
 type ClassNames = 'replyField';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  replyField: {
-    maxHeight: 200,
-    marginTop: 0,
-    '& > div': {
-      maxWidth: '100% !important'
+const styles = (theme: Theme) =>
+  createStyles({
+    replyField: {
+      maxHeight: 200,
+      marginTop: 0,
+      '& > div': {
+        maxWidth: '100% !important'
+      }
     }
-  }
-});
+  });
 
 export interface Props {
   error?: string;
@@ -40,7 +42,9 @@ class TicketReply extends React.Component<CombinedProps> {
           value={value}
           placeholder={placeholder || 'Enter your reply'}
           data-qa-ticket-description
-          onChange={e => handleChange(e.target.value)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+            handleChange(e.target.value)
+          }
           errorText={error}
         />
       </React.Fragment>

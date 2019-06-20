@@ -18,11 +18,11 @@ export const RebuildDialog: React.StatelessComponent<
 
   const actions = () => (
     <ActionsPanel>
-      <Button type="cancel" onClick={handleClose} data-qa-cancel>
+      <Button buttonType="cancel" onClick={handleClose} data-qa-cancel>
         Cancel
       </Button>
       <Button
-        type="secondary"
+        buttonType="secondary"
         destructive
         onClick={handleSubmit}
         data-qa-submit-rebuild

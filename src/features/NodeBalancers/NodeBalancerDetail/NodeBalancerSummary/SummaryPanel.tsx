@@ -3,7 +3,8 @@ import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -21,32 +22,33 @@ type ClassNames =
   | 'nodeTransfer'
   | 'hostName';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  title: {},
-  summarySection: {},
-  section: {},
-  main: {},
-  sidebar: {},
-  domainSidebar: {},
-  titleWrapper: {},
-  NBsummarySection: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing.unit * 3 + 24
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    title: {},
+    summarySection: {},
+    section: {},
+    main: {},
+    sidebar: {},
+    domainSidebar: {},
+    titleWrapper: {},
+    NBsummarySection: {
+      [theme.breakpoints.up('md')]: {
+        marginTop: theme.spacing(3) + 24
+      }
+    },
+    IPgrouping: {
+      margin: '-2px 0 0 2px',
+      display: 'flex',
+      flexDirection: 'column'
+    },
+    nodeTransfer: {
+      marginTop: 12
+    },
+    hostName: {
+      wordBreak: 'break-word'
     }
-  },
-  IPgrouping: {
-    margin: '-2px 0 0 2px',
-    display: 'flex',
-    flexDirection: 'column'
-  },
-  nodeTransfer: {
-    marginTop: 12
-  },
-  hostName: {
-    wordBreak: 'break-word'
-  }
-});
+  });
 
 interface Props {
   nodeBalancer: Linode.ExtendedNodeBalancer;

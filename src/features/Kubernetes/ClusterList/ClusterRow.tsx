@@ -1,8 +1,9 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
@@ -16,23 +17,24 @@ import ActionMenu from './ClusterActionMenu';
 
 type ClassNames = 'root' | 'label' | 'clusterDescription' | 'clusterRow';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  label: {
-    width: '30%',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%'
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    label: {
+      width: '30%',
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      }
+    },
+    clusterDescription: {
+      paddingTop: theme.spacing(1) / 2
+    },
+    clusterRow: {
+      '&:before': {
+        display: 'none'
+      }
     }
-  },
-  clusterDescription: {
-    paddingTop: theme.spacing.unit / 2
-  },
-  clusterRow: {
-    '&:before': {
-      display: 'none'
-    }
-  }
-});
+  });
 
 interface Props {
   cluster: ExtendedCluster;

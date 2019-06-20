@@ -1,10 +1,11 @@
 import * as classNames from 'classnames';
-import { compose } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -18,31 +19,35 @@ import { withAccount } from '../../context';
 
 type ClassNames = 'expired' | 'balance' | 'positive' | 'negative' | 'wordWrap';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  title: {},
-  summarySection: {},
-  section: {},
-  main: {},
-  sidebar: {},
-  domainSidebar: {},
-  titleWrapper: {},
-  expired: {
-    color: theme.color.red
-  },
-  balance: {
-    display: 'flex'
-  },
-  positive: {
-    color: theme.color.green
-  },
-  negative: {
-    color: theme.color.red
-  },
-  wordWrap: {
-    wordBreak: 'break-all'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    title: {},
+    summarySection: {},
+    section: {},
+    main: {},
+    sidebar: {},
+    domainSidebar: {},
+    titleWrapper: {},
+    region: {},
+    regionInner: {},
+    volumeLink: {},
+    expired: {
+      color: theme.color.red
+    },
+    balance: {
+      display: 'flex'
+    },
+    positive: {
+      color: theme.color.green
+    },
+    negative: {
+      color: theme.color.red
+    },
+    wordWrap: {
+      wordBreak: 'break-all'
+    }
+  });
 
 interface AccountContextProps {
   loading: boolean;
@@ -211,7 +216,7 @@ const accountContext = withAccount(
   })
 );
 
-const enhanced = compose(
+const enhanced = compose<CombinedProps, {}>(
   styled,
   localStyles,
   accountContext

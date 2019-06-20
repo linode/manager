@@ -7,9 +7,10 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -41,14 +42,14 @@ import APITokenMenu from './APITokenMenu';
 
 type ClassNames = 'headline' | 'paper' | 'labelCell' | 'createdCell';
 
-const styles: StyleRulesCallback<ClassNames> = theme => {
-  return {
+const styles = (theme: Theme) =>
+  createStyles({
     headline: {
-      marginTop: theme.spacing.unit * 2,
-      marginBottom: theme.spacing.unit * 2
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
     },
     paper: {
-      marginBottom: theme.spacing.unit * 2
+      marginBottom: theme.spacing(2)
     },
     labelCell: {
       width: '40%'
@@ -56,8 +57,7 @@ const styles: StyleRulesCallback<ClassNames> = theme => {
     createdCell: {
       width: '30%'
     }
-  };
-};
+  });
 
 export type APITokenType = 'OAuth Client Token' | 'Personal Access Token';
 export type APITokenTitle = 'Apps' | 'Personal Access Tokens';
@@ -257,7 +257,6 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       dialog: {
         ...this.state.dialog,
         open: true,
-        submitting: false,
         errors: apiError
       }
     });
@@ -596,14 +595,14 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <ActionsPanel>
           <Button
-            type="cancel"
+            buttonType="cancel"
             onClick={this.closeRevokeDialog}
             data-qa-button-cancel
           >
             Cancel
           </Button>
           <Button
-            type="secondary"
+            buttonType="secondary"
             destructive
             onClick={this.revokeAction}
             data-qa-button-confirm
@@ -617,7 +616,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
 
   renderPersonalAccessTokenDisplayActions = () => (
     <Button
-      type="secondary"
+      buttonType="secondary"
       onClick={this.closeTokenDialog}
       data-qa-close-dialog
     >

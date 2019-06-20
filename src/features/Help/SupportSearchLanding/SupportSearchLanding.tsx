@@ -6,7 +6,8 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import IconButton from 'src/components/core/IconButton';
 import InputAdornment from 'src/components/core/InputAdornment';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -29,47 +30,48 @@ type ClassNames =
   | 'searchField'
   | 'searchIcon';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    maxWidth: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'flex-start',
-    position: 'relative'
-  },
-  backButton: {
-    margin: '2px 0 0 -16px',
-    '& svg': {
-      width: 34,
-      height: 34
-    }
-  },
-  searchBar: {
-    maxWidth: '100%'
-  },
-  searchBoxInner: {
-    padding: theme.spacing.unit * 3,
-    backgroundColor: theme.color.grey2,
-    marginTop: 0,
-    '& > div': {
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      maxWidth: '100%',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'flex-start',
+      position: 'relative'
+    },
+    backButton: {
+      margin: '2px 0 0 -16px',
+      '& svg': {
+        width: 34,
+        height: 34
+      }
+    },
+    searchBar: {
       maxWidth: '100%'
+    },
+    searchBoxInner: {
+      padding: theme.spacing(3),
+      backgroundColor: theme.color.grey2,
+      marginTop: 0,
+      '& > div': {
+        maxWidth: '100%'
+      }
+    },
+    searchHeading: {
+      color: theme.color.black,
+      marginBottom: theme.spacing(2),
+      fontSize: '175%'
+    },
+    searchField: {
+      padding: theme.spacing(3)
+    },
+    searchIcon: {
+      marginRight: 0,
+      '& svg': {
+        color: theme.palette.text.primary
+      }
     }
-  },
-  searchHeading: {
-    color: theme.color.black,
-    marginBottom: theme.spacing.unit * 2,
-    fontSize: '175%'
-  },
-  searchField: {
-    padding: theme.spacing.unit * 3
-  },
-  searchIcon: {
-    marginRight: 0,
-    '& svg': {
-      color: theme.palette.text.primary
-    }
-  }
-});
+  });
 
 interface State {
   query: string;

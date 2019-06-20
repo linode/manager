@@ -3,13 +3,13 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
 import { compose } from 'recompose';
-
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -35,21 +35,22 @@ import NodePoolPanel from './NodePoolPanel';
 
 type ClassNames = 'root' | 'title' | 'sidebar' | 'inner';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  title: {
-    marginBottom: theme.spacing.unit + theme.spacing.unit / 2
-  },
-  sidebar: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: '45px !important'
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    title: {
+      marginBottom: theme.spacing(1) + theme.spacing(1) / 2
+    },
+    sidebar: {
+      [theme.breakpoints.up('md')]: {
+        marginTop: '45px !important'
+      }
+    },
+    inner: {
+      padding: theme.spacing(3),
+      paddingTop: `${theme.spacing(1)}px !important`
     }
-  },
-  inner: {
-    padding: theme.spacing.unit * 3,
-    paddingTop: `${theme.spacing.unit}px !important`
-  }
-});
+  });
 
 interface State {
   selectedRegion?: string;
@@ -200,7 +201,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
 
     return (
       <StickyContainer>
-        <Grid container spacing={16}>
+        <Grid container spacing={2}>
           <DocumentTitleSegment segment="Create a Kubernetes Cluster" />
           <Grid item className={`mlMain py0`}>
             <Typography variant="h1" data-qa-title className={classes.title}>
@@ -263,7 +264,9 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
                   data-qa-label-input
                   errorText={errorMap.label}
                   label="Cluster Label"
-                  onChange={e => this.updateLabel(e.target.value)}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                    this.updateLabel(e.target.value)
+                  }
                   value={label || ''}
                 />
                 <Select

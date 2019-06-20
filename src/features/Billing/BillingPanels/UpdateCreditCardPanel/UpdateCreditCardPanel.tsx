@@ -5,7 +5,8 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -30,29 +31,30 @@ type ClassNames =
   | 'cardNumber'
   | 'fullWidthMobile';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  expired: {
-    color: theme.color.red
-  },
-  currentccContainer: {
-    padding: `${theme.spacing.unit * 2}px 0 ${theme.spacing.unit * 4}px`
-  },
-  newccContainer: {
-    padding: `${theme.spacing.unit}px 0 0`
-  },
-  currentCCTitle: {
-    marginBottom: theme.spacing.unit
-  },
-  cardNumber: {
-    minWidth: 225
-  },
-  fullWidthMobile: {
-    [theme.breakpoints.down('xs')]: {
-      width: '100%'
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    expired: {
+      color: theme.color.red
+    },
+    currentccContainer: {
+      padding: `${theme.spacing(2)}px 0 ${theme.spacing(4)}px`
+    },
+    newccContainer: {
+      padding: `${theme.spacing(1)}px 0 0`
+    },
+    currentCCTitle: {
+      marginBottom: theme.spacing(1)
+    },
+    cardNumber: {
+      minWidth: 225
+    },
+    fullWidthMobile: {
+      [theme.breakpoints.down('xs')]: {
+        width: '100%'
+      }
     }
-  }
-});
+  });
 
 interface AccountContextProps {
   accountLoading: boolean;
@@ -268,13 +270,13 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
     return (
       <ActionsPanel>
         <Button
-          type="primary"
+          buttonType="primary"
           onClick={this.submitForm}
           loading={this.state.submitting}
         >
           Save
         </Button>
-        <Button type="cancel" onClick={this.resetForm}>
+        <Button buttonType="cancel" onClick={this.resetForm}>
           Cancel
         </Button>
       </ActionsPanel>

@@ -1,9 +1,11 @@
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose as recompose } from 'recompose';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -21,12 +23,13 @@ import {
 
 type ClassNames = 'root' | 'shutDownWatchdog';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  shutDownWatchdog: {
-    margin: `${theme.spacing.unit * 2}px 0`
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    shutDownWatchdog: {
+      margin: `${theme.spacing(2)}px 0`
+    }
+  });
 
 interface Props {
   linodeId: number;
@@ -72,7 +75,7 @@ class LinodeWatchdogPanel extends React.Component<CombinedProps, State> {
             setSuccess(
               `Watchdog succesfully ${value ? 'enabled' : 'disabled.'}`
             ),
-            setCurrentStatus(response.watchdog_enabled)
+            setCurrentStatus(response.watchdog_enabled) as any
           )
         );
       })
@@ -166,7 +169,7 @@ const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
   permissions: linode._permissions
 }));
 
-export default compose(
+export default recompose<CombinedProps, Props>(
   errorBoundary,
   withRouter,
   styled,

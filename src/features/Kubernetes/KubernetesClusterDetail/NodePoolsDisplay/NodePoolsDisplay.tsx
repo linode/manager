@@ -5,7 +5,8 @@ import Button from 'src/components/Button';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -19,20 +20,21 @@ import { getTotalClusterPrice } from '../../kubeUtils';
 import { ExtendedPoolNode } from '../../types';
 
 type ClassNames = 'root' | 'button' | 'pricing';
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    padding: theme.spacing.unit * 3
-  },
-  button: {
-    marginTop: theme.spacing.unit,
-    marginRight: theme.spacing.unit
-  },
-  pricing: {
-    marginTop: theme.spacing.unit * 2,
-    fontSize: '1.em',
-    fontWeight: 'bold'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(3)
+    },
+    button: {
+      marginTop: theme.spacing(1),
+      marginRight: theme.spacing(1)
+    },
+    pricing: {
+      marginTop: theme.spacing(2),
+      fontSize: '1.em',
+      fontWeight: 'bold'
+    }
+  });
 
 interface Props {
   editing: boolean;
@@ -78,7 +80,7 @@ export const NodePoolsDisplay: React.FunctionComponent<
             <Typography variant="h2">Node Pools</Typography>
           </Grid>
           <Grid item>
-            <Button type="secondary" onClick={toggleEditing}>
+            <Button buttonType="secondary" onClick={toggleEditing}>
               {editing ? 'Cancel' : 'Edit'}
             </Button>
           </Grid>
@@ -116,7 +118,7 @@ export const NodePoolsDisplay: React.FunctionComponent<
           <Grid item container>
             <Button
               className={classes.button}
-              type="primary"
+              buttonType="primary"
               disabled={!editing || submittingForm}
               loading={submittingForm}
               onClick={submitForm}
@@ -125,7 +127,7 @@ export const NodePoolsDisplay: React.FunctionComponent<
             </Button>
             <Button
               className={classes.button}
-              type="secondary"
+              buttonType="secondary"
               disabled={!editing}
               onClick={resetForm}
             >

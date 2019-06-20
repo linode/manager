@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -18,33 +19,34 @@ type ClassNames =
   | 'transferred'
   | 'region';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  nameCell: {
-    width: '20%',
-    minWidth: 150,
-    paddingLeft: theme.spacing.unit * 2 + 49
-  },
-  nodeStatus: {
-    width: '15%',
-    minWidth: 100
-  },
-  transferred: {
-    width: '15%',
-    minWidth: 100
-  },
-  ports: {
-    width: '15%',
-    minWidth: 50
-  },
-  ip: {
-    width: '15%',
-    minWidth: 200
-  },
-  region: {
-    width: '15%',
-    minWidth: 150
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    nameCell: {
+      width: '20%',
+      minWidth: 150,
+      paddingLeft: theme.spacing(2) + 49
+    },
+    nodeStatus: {
+      width: '15%',
+      minWidth: 100
+    },
+    transferred: {
+      width: '15%',
+      minWidth: 100
+    },
+    ports: {
+      width: '15%',
+      minWidth: 50
+    },
+    ip: {
+      width: '15%',
+      minWidth: 200
+    },
+    region: {
+      width: '15%',
+      minWidth: 150
+    }
+  });
 
 type CombinedProps = WithStyles<ClassNames> & Omit<OrderByProps, 'data'>;
 

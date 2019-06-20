@@ -63,7 +63,10 @@ export const setData = <T>(
   } catch (error) {
     return compose(
       set(L.data, updatedData),
-      set(L.validationErrors, convertYupToLinodeErrors(error))
+      set(
+        L.validationErrors,
+        convertYupToLinodeErrors(error)
+      ) as () => Linode.ApiFieldError[]
     );
   }
 };

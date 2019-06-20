@@ -1,8 +1,8 @@
 import * as React from 'react';
-
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -19,35 +19,36 @@ type ClassNames =
   | 'withSeparator'
   | 'postLink';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    paddingTop: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit * 3,
-    border: `1px solid ${theme.color.grey2}`,
-    margin: `${theme.spacing.unit * 6}px 0`
-  },
-  postCard: {
-    height: '100%',
-    paddingRight: theme.spacing.unit * 3,
-    paddingLeft: theme.spacing.unit * 3
-  },
-  wrapper: {},
-  postTitle: {
-    marginBottom: theme.spacing.unit * 2
-  },
-  post: {
-    marginBottom: theme.spacing.unit / 2,
-    ...theme.typography.body1
-  },
-  postLink: {
-    '&:hover': {
-      textDecoration: 'underline'
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      paddingTop: theme.spacing(3),
+      paddingBottom: theme.spacing(3),
+      border: `1px solid ${theme.color.grey2}`,
+      margin: `${theme.spacing(6)}px 0`
+    },
+    postCard: {
+      height: '100%',
+      paddingRight: theme.spacing(3),
+      paddingLeft: theme.spacing(3)
+    },
+    wrapper: {},
+    postTitle: {
+      marginBottom: theme.spacing(2)
+    },
+    post: {
+      marginBottom: theme.spacing(1) / 2,
+      ...theme.typography.body1
+    },
+    postLink: {
+      '&:hover': {
+        textDecoration: 'underline'
+      }
+    },
+    withSeparator: {
+      borderRight: `1px solid ${theme.palette.divider}`
     }
-  },
-  withSeparator: {
-    borderRight: `1px solid ${theme.palette.divider}`
-  }
-});
+  });
 
 type CombinedProps = WithStyles<ClassNames>;
 

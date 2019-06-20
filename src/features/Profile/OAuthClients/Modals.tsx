@@ -94,12 +94,16 @@ const resetDialogActions = ({
   return (
     <React.Fragment>
       <ActionsPanel>
-        <Button onClick={closeDialogs} type="cancel" data-qa-button-cancel>
+        <Button
+          onClick={closeDialogs}
+          buttonType="cancel"
+          data-qa-button-cancel
+        >
           Cancel
         </Button>
         <Button
           destructive
-          type="secondary"
+          buttonType="secondary"
           onClick={resetSecret}
           data-qa-button-confirm
           loading={loading}
@@ -125,12 +129,16 @@ const deleteDialogActions = ({
   return (
     <React.Fragment>
       <ActionsPanel>
-        <Button onClick={closeDialogs} type="cancel" data-qa-button-cancel>
+        <Button
+          onClick={closeDialogs}
+          buttonType="cancel"
+          data-qa-button-cancel
+        >
           Cancel
         </Button>
         <Button
           destructive
-          type="secondary"
+          buttonType="secondary"
           onClick={deleteSecret}
           data-qa-button-confirm
           loading={loading}
@@ -143,7 +151,11 @@ const deleteDialogActions = ({
 };
 
 const clientSecretActions = (props: { closeDialogs: () => void }) => (
-  <Button type="primary" onClick={props.closeDialogs} data-qa-close-dialog>
+  <Button
+    buttonType="primary"
+    onClick={props.closeDialogs}
+    data-qa-close-dialog
+  >
     Got it!
   </Button>
 );

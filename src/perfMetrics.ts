@@ -1,5 +1,5 @@
 import * as _Perfume from 'perfume.js';
-import { isProduction } from './constants';
+import { LOG_PERFORMANCE_METRICS } from './constants';
 
 // Something is off about the way `perfume.js` is exported, and it behaves
 // differently when running the app vs. running tests. Not sure if this is an
@@ -12,7 +12,6 @@ export const perfume = new Perfume({
     enable: true,
     timingVar: 'perfMetrics'
   },
-  browserTracker: true,
   logPrefix: 'Performance:',
-  logging: !isProduction
+  logging: LOG_PERFORMANCE_METRICS
 });

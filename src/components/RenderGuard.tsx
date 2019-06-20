@@ -1,6 +1,9 @@
+import { WithTheme } from '@material-ui/core/styles';
 import { equals } from 'ramda';
 import * as React from 'react';
-import { withTheme, WithTheme } from 'src/components/core/styles';
+import { withTheme } from 'src/components/core/styles';
+
+import { getDisplayName } from 'src/utilities/getDisplayName.ts';
 
 export interface RenderGuardProps {
   updateFor?: any[];
@@ -22,7 +25,7 @@ const renderGuard = <P extends {}>(
         return (
           !equals(this.props.updateFor, nextProps.updateFor) ||
           this.props.theme.name !== nextProps.theme.name ||
-          this.props.theme.spacing.unit !== nextProps.theme.spacing.unit
+          this.props.theme.spacing(1) !== nextProps.theme.spacing(1)
         );
       }
       // if updateFor isn't provided, always update (this is React's default behavior)
@@ -42,9 +45,6 @@ const renderGuard = <P extends {}>(
   >;
 };
 
-const themed = withTheme();
-
-const getDisplayName = (Component: React.ComponentType) =>
-  Component.displayName || Component.name || 'Component';
+const themed = withTheme;
 
 export default renderGuard;

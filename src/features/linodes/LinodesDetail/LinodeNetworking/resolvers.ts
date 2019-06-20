@@ -103,6 +103,18 @@ export const ipv4DNSResolvers: Record<Linode.ZoneName, string[]> = {
     '172.105.9.5',
     '172.105.10.5',
     '172.105.11.5'
+  ],
+  mumbai1: [
+    '172.105.34.5',
+    '172.105.35.5',
+    '172.105.36.5',
+    '172.105.37.5',
+    '172.105.38.5',
+    '172.105.39.5',
+    '172.105.40.5',
+    '172.105.41.5',
+    '172.105.42.5',
+    '172.105.43.5'
   ]
 };
 
@@ -146,5 +158,6 @@ export const ipv6DNSResolverPrefixes: Record<Linode.ZoneName, string> = {
   singapore: '2400:8901::',
   frankfurt: '2a01:7e01::',
   shinagawa1: '2400:8902::',
-  toronto1: '2600:3C04::'
+  toronto1: '2600:3C04::',
+  mumbai1: '2400:8904::'
 };

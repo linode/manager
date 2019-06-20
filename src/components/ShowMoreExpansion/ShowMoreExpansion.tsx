@@ -3,42 +3,44 @@ import * as React from 'react';
 import Button from 'src/components/Button';
 import Collapse from 'src/components/core/Collapse';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
 
 type CSSClasses = 'root' | 'caret';
 
-const styles: StyleRulesCallback = theme => ({
-  root: {
-    paddingLeft: 0,
-    paddingRight: 0,
-    backgroundColor: 'transparent !important',
-    display: 'flex',
-    alignItems: 'center',
-    fontFamily: theme.font.bold,
-    width: 'auto',
-    color: theme.color.headline,
-    transition: theme.transitions.create('color'),
-    '&:hover': {
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      paddingLeft: 0,
+      paddingRight: 0,
+      backgroundColor: 'transparent !important',
+      display: 'flex',
+      alignItems: 'center',
+      fontFamily: theme.font.bold,
+      width: 'auto',
+      color: theme.color.headline,
+      transition: theme.transitions.create('color'),
+      '&:hover': {
+        color: theme.palette.primary.main,
+        '& $caret': {
+          color: theme.palette.primary.light
+        }
+      }
+    },
+    caret: {
       color: theme.palette.primary.main,
-      '& $caret': {
-        color: theme.palette.primary.light
+      marginRight: theme.spacing(1) / 2,
+      fontSize: 28,
+      transition: 'transform .1s ease-in-out',
+      '&.rotate': {
+        transition: 'transform .3s ease-in-out',
+        transform: 'rotate(90deg)'
       }
     }
-  },
-  caret: {
-    color: theme.palette.primary.main,
-    marginRight: theme.spacing.unit / 2,
-    fontSize: 28,
-    transition: 'transform .1s ease-in-out',
-    '&.rotate': {
-      transition: 'transform .3s ease-in-out',
-      transform: 'rotate(90deg)'
-    }
-  }
-});
+  });
 
 interface Props {
   name: string;

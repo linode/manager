@@ -3,9 +3,10 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { displayPrice } from 'src/components/DisplayPrice';
@@ -19,21 +20,22 @@ import { ExtendedPoolNode } from '.././types';
 
 type ClassNames = 'root' | 'link' | 'toDelete' | 'toAdd' | 'disabled';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  link: {
-    color: `${theme.palette.primary.main} !important`
-  },
-  toDelete: {
-    backgroundColor: 'rgba(210, 28, 28, 0.4)'
-  },
-  toAdd: {
-    backgroundColor: theme.bg.offWhite
-  },
-  disabled: {
-    color: 'gray !important'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    link: {
+      color: `${theme.palette.primary.main} !important` as any
+    },
+    toDelete: {
+      backgroundColor: 'rgba(210, 28, 28, 0.4)'
+    },
+    toAdd: {
+      backgroundColor: theme.bg.offWhite
+    },
+    disabled: {
+      color: 'gray !important'
+    }
+  });
 
 interface Props {
   pool: ExtendedPoolNode;
@@ -94,7 +96,7 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
       </TableCell>
       <TableCell>
         <Button
-          type="remove"
+          buttonType="remove"
           disabled={!editable}
           deleteText={pool.queuedForDeletion ? 'Undo Remove' : 'Remove'}
           data-testid={`delete-node-row-${idx}`}

@@ -1,26 +1,28 @@
 import * as React from 'react';
 import { compose } from 'recompose';
+import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import Button from 'src/components/core/Button';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 
 type ClassNames = 'helperText' | 'confirmationDialog';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  helperText: {
-    marginBottom: theme.spacing.unit * 3
-  },
-  confirmationDialog: {
-    paddingBottom: 0,
-    marginBottom: 0
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    helperText: {
+      marginBottom: theme.spacing(3)
+    },
+    confirmationDialog: {
+      paddingBottom: 0,
+      marginBottom: 0
+    }
+  });
 
 interface Props {
   objectStorageKey: Linode.ObjectStorageKey | null;
@@ -44,7 +46,7 @@ export const AccessKeyDisplayDialog: React.StatelessComponent<
     <ConfirmationDialog
       title="Access Keys"
       actions={
-        <Button type="secondary" onClick={close} data-qa-close-dialog>
+        <Button buttonType="secondary" onClick={close} data-qa-close-dialog>
           OK
         </Button>
       }

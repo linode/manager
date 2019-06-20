@@ -7,7 +7,8 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import RootRef from 'src/components/core/RootRef';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -34,23 +35,24 @@ import Paginate from 'src/components/Paginate';
 
 type ClassNames = 'root' | 'headline' | 'addNewWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  headline: {
-    marginBottom: theme.spacing.unit * 2,
-    [theme.breakpoints.down('xs')]: {
-      marginBottom: 0,
-      marginTop: theme.spacing.unit * 2
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    headline: {
+      marginBottom: theme.spacing(2),
+      [theme.breakpoints.down('xs')]: {
+        marginBottom: 0,
+        marginTop: theme.spacing(2)
+      }
+    },
+    addNewWrapper: {
+      [theme.breakpoints.down('xs')]: {
+        width: '100%',
+        marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2),
+        marginTop: -theme.spacing(1)
+      }
     }
-  },
-  addNewWrapper: {
-    [theme.breakpoints.down('xs')]: {
-      width: '100%',
-      marginLeft: -(theme.spacing.unit + theme.spacing.unit / 2),
-      marginTop: -theme.spacing.unit
-    }
-  }
-});
+  });
 
 type CombinedProps = LinodeContext & WithStyles<ClassNames> & WithSnackbarProps;
 
@@ -137,11 +139,11 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
 
   deleteConfigConfirmationActions = ({ onClose }: { onClose: () => void }) => (
     <ActionsPanel style={{ padding: 0 }}>
-      <Button onClick={onClose} type="cancel" data-qa-cancel-delete>
+      <Button onClick={onClose} buttonType="cancel" data-qa-cancel-delete>
         Cancel
       </Button>
       <Button
-        type="secondary"
+        buttonType="secondary"
         destructive
         onClick={this.deleteConfig}
         data-qa-confirm-delete

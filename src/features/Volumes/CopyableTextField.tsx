@@ -2,7 +2,8 @@ import * as copy from 'copy-to-clipboard';
 import * as React from 'react';
 import CopyTooltip from 'src/components/CopyTooltip';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -10,15 +11,16 @@ import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
 type ClassNames = 'root' | 'input' | 'copyIcon';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  input: {
-    backgroundColor: theme.bg.offWhite
-  },
-  copyIcon: {
-    marginRight: theme.spacing.unit
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    input: {
+      backgroundColor: theme.bg.offWhite
+    },
+    copyIcon: {
+      marginRight: theme.spacing(1)
+    }
+  });
 
 type Props = TextFieldProps & {
   className: string;

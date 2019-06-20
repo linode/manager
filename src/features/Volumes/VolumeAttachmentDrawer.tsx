@@ -7,11 +7,6 @@ import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import InputLabel from 'src/components/core/InputLabel';
-import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
-} from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
@@ -27,12 +22,6 @@ import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props {
   open: boolean;
@@ -54,11 +43,7 @@ interface LinodesProps {
   linodesError?: boolean;
 }
 
-type CombinedProps = Props &
-  VolumesRequests &
-  WithStyles<ClassNames> &
-  LinodesProps &
-  StateProps;
+type CombinedProps = Props & VolumesRequests & LinodesProps & StateProps;
 
 class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
   defaultState = {
@@ -239,7 +224,7 @@ class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
         <ActionsPanel>
           <Button
             disabled={disabled || readOnly}
-            type="primary"
+            buttonType="primary"
             onClick={this.attachToLinode}
             data-qa-submit
           >
@@ -278,10 +263,7 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
 
 const connected = connect(mapStateToProps);
 
-const styled = withStyles(styles);
-
 const enhanced = compose<CombinedProps, Props>(
-  styled,
   withVolumesRequests,
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
     ...ownProps,

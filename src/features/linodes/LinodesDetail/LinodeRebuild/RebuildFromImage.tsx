@@ -8,7 +8,8 @@ import AccessPanel from 'src/components/AccessPanel';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -33,14 +34,15 @@ import SelectImagePanel from './SelectImagePanel';
 
 type ClassNames = 'root' | 'error';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    paddingTop: theme.spacing.unit * 3
-  },
-  error: {
-    marginTop: theme.spacing.unit * 2
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      paddingTop: theme.spacing(3)
+    },
+    error: {
+      marginTop: theme.spacing(2)
+    }
+  });
 
 interface WithImagesProps {
   imagesData: Linode.Image[];
@@ -197,7 +199,7 @@ export const RebuildFromImage: React.StatelessComponent<
             />
             <ActionsPanel>
               <Button
-                type="secondary"
+                buttonType="secondary"
                 className="destructive"
                 onClick={handleRebuildButtonClick}
                 data-testid="rebuild-button"
