@@ -59,17 +59,22 @@ export const ObjectStorageLanding: React.FunctionComponent<
       requestClusters
     } = props;
 
-    // When OBJ is generally available, consider moving
-    // these requests to App.tsx like other entities.
+    /**
+     * @todo: Move these requests to App.tsx like other entities when OBJ is generally available.
+     */
 
     // Request buckets if we haven't already
     if (bucketsLastUpdated === 0) {
-      requestBuckets();
+      requestBuckets().catch(err => {
+        /** We choose to do nothing, relying on the Redux error state. */
+      });
     }
 
     // Request clusters if we haven't already
     if (clustersLastUpdated === 0) {
-      requestClusters();
+      requestClusters().catch(err => {
+        /** We choose to do nothing, relying on the Redux error state. */
+      });
     }
   }, []);
 
