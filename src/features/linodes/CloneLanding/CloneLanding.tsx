@@ -323,7 +323,9 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
                 <div className={classes.outerContainer}>
                   <Typography>
                     You can make a copy of a disk to the same or different
-                    Linode. We recommend you power off your Linode first.
+                    Linode. We recommend you power off your Linode first, and
+                    keep it powered off until the disk has finished being
+                    cloned.
                   </Typography>
                   <div className={classes.diskContainer}>
                     <Disks
