@@ -323,6 +323,19 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     // Format date for header
     const formattedDate = formatDate(ticket.updated);
 
+    const _Chip = () => (
+      <Chip
+        className={classNames({
+          [classes.status]: true,
+          [classes.open]: ticket.status === 'open' || ticket.status === 'new',
+          [classes.closed]: ticket.status === 'closed'
+        })}
+        label={ticket.status}
+        component="div"
+        role="term"
+      />
+    );
+
     // Might be an opportunity to refactor the nested grid containing the ticket summary, status, and last updated
     // details.  For more info see the below link.
     // https://github.com/linode/manager/pull/4056/files/b0977c6e397e42720479478db96df56022618151#r232298065
@@ -342,20 +355,10 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
               labelOptions={{
                 subtitle: `${
                   ticket.status === 'closed' ? 'Closed' : 'Last updated'
-                } by ${ticket.updated_by} at ${formattedDate}`
+                } by ${ticket.updated_by} at ${formattedDate}`,
+                suffixComponent: <_Chip />
               }}
               data-qa-breadcrumb
-            />
-            <Chip
-              className={classNames({
-                [classes.status]: true,
-                [classes.open]:
-                  ticket.status === 'open' || ticket.status === 'new',
-                [classes.closed]: ticket.status === 'closed'
-              })}
-              label={ticket.status}
-              component="div"
-              role="term"
             />
           </Grid>
         </Grid>

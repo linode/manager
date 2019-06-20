@@ -389,7 +389,7 @@ class UserDetail extends React.Component<CombinedProps> {
               labelTitle={username}
               labelOptions={{
                 prefixComponent: maybeGravatar,
-                style: { marginTop: 4 }
+                style: { marginTop: 2 }
               }}
               prefixStyle={{ height: 34 }}
             />
