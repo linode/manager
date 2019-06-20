@@ -1,4 +1,3 @@
-import { withLDProvider } from 'launchdarkly-react-client-sdk';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { shim } from 'promise.prototype.finally';
 import { path, pathOr } from 'ramda';
@@ -24,6 +23,7 @@ import LandingLoading from 'src/components/LandingLoading';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
 import VATBanner from 'src/components/VATBanner';
+import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
@@ -48,7 +48,7 @@ import { getAllVolumes } from 'src/store/volume/volume.requests';
 import composeState from 'src/utilities/composeState';
 import { notifications } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
-import { isKubernetesEnabled, LAUNCH_DARKLY_API_KEY } from './constants';
+import { isKubernetesEnabled } from './constants';
 import BucketDrawer from './features/ObjectStorage/Buckets/BucketDrawer';
 import { requestClusters } from './store/clusters/clusters.actions';
 import {
@@ -616,9 +616,7 @@ export default compose(
   withDocumentTitleProvider,
   withSnackbar,
   withNodeBalancerActions,
-  withLDProvider({
-    clientSideID: LAUNCH_DARKLY_API_KEY,
-  })
+  withFeatureFlagProvider
 )(App);
 
 export const hasOauthError = (
