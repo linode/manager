@@ -128,16 +128,35 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
   };
 
   onSubmit = () => {
-    const { linodeId, enqueueSnackbar, history, updateLinode } = this.props;
+    const {
+      linodeId,
+      linodeType,
+      enqueueSnackbar,
+      history,
+      updateLinode,
+      currentTypesData
+    } = this.props;
     const { selectedId } = this.state;
 
     if (!linodeId) {
       return;
     }
 
+    const isSmaller = isSmallerThanCurrentPlan(
+      selectedId,
+      linodeType || '',
+      currentTypesData
+    );
+
     this.setState({ isLoading: true });
 
-    resizeLinode(linodeId, selectedId, this.state.autoDiskResize)
+    /**
+     * Only set the allow_auto_disk_resize flag to true if both the user
+     * has selected it (this.state.autoDiskResize) and
+     * the flag would be honored (so disable if the current plan
+     * is larger than the target plan).
+     */
+    resizeLinode(linodeId, selectedId, this.state.autoDiskResize && !isSmaller)
       .then(_ => {
         this.setState({ selectedId: '', isLoading: false });
         resetEventsPolling();
