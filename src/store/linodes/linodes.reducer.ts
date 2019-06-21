@@ -82,10 +82,6 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
   /** Get ALL */
   if (isType(action, getLinodesActions.started)) {
-    if (state.initialLoad) {
-      // Don't set loading; we want this to run in the background.
-      return state;
-    }
     return {
       ...state,
       loading: true

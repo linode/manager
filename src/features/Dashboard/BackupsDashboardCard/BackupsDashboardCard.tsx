@@ -3,6 +3,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -63,6 +64,7 @@ const styles = (theme: Theme) =>
 
 interface Props {
   accountBackups: boolean;
+  loading: boolean;
   linodesWithoutBackups: number;
   openBackupDrawer: () => void;
 }
@@ -75,12 +77,22 @@ export const BackupsDashboardCard: React.StatelessComponent<
   const {
     accountBackups,
     classes,
+    loading,
     linodesWithoutBackups,
     openBackupDrawer
   } = props;
 
   if (accountBackups && !linodesWithoutBackups) {
     return null;
+  }
+
+  if (loading) {
+    /**
+     * The information in this card will be inaccurate until all
+     * of our initial requests for Linodes have completed,
+     * so we need a loading state.
+     */
+    return <CircleProgress />;
   }
 
   return (

@@ -45,6 +45,7 @@ interface StateProps {
   accountBackups: boolean;
   linodesWithoutBackups: Linode.Linode[];
   managed: boolean;
+  linodesLoading: boolean;
   backupError?: Error;
   entitiesWithGroupsToImport: GroupedEntitiesForImport;
   userTimezone: string;
@@ -70,6 +71,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
     accountBackups,
     actions: { openBackupDrawer, openImportDrawer },
     backupError,
+    linodesLoading,
     linodesWithoutBackups,
     managed,
     entitiesWithGroupsToImport
@@ -103,6 +105,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
           {!managed && !backupError && (
             <BackupsDashboardCard
               accountBackups={accountBackups}
+              loading={linodesLoading}
               linodesWithoutBackups={linodesWithoutBackups.length}
               openBackupDrawer={openBackupDrawer}
             />
@@ -125,6 +128,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
 
 const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
   const linodesData = state.__resources.linodes.entities;
+  const linodesLoading = state.__resources.linodes.loading;
 
   return {
     accountBackups: pathOr(
@@ -135,6 +139,7 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
     userTimezone: pathOr('', ['data', 'timezone'], state.__resources.profile),
     userTimezoneLoading: state.__resources.profile.loading,
     userTimezoneError: state.__resources.profile.error,
+    linodesLoading,
     someLinodesHaveScheduledMaintenance: linodesData
       ? linodesData.some(eachLinode => !!eachLinode.maintenance)
       : false,

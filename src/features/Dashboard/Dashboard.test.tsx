@@ -7,6 +7,7 @@ const props = {
   accountBackups: false,
   userTimezone: 'GMT',
   userTimezoneLoading: false,
+  linodesLoading: false,
   someLinodesHaveScheduledMaintenance: true,
   actions: {
     openBackupDrawer: jest.fn(),

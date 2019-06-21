@@ -548,7 +548,7 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
       ['__resources', 'accountSettings', 'data', 'managed'],
       state
     ),
-    linodesCount: state.__resources.linodes.results.length,
+    linodesCount: state.__resources.linodes.linodeCount,
     linodesData,
     someLinodesHaveScheduledMaintenance: linodesData
       ? linodesData.some(

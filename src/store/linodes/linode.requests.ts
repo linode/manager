@@ -50,7 +50,7 @@ export const rebootLinode = createRequestThunk(
 export const requestLinodes: ThunkActionCreator<
   Promise<Linode.Linode[]>
 > = () => (dispatch, getState) => {
-  dispatch(getLinodesActions.started);
+  dispatch(getLinodesActions.started());
 
   const store = getState();
   /** If we've already fetched the first page, don't do it again */

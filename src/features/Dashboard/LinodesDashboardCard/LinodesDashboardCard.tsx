@@ -197,7 +197,9 @@ const withUpdatingLinodes = connect((state: ApplicationState, ownProps: {}) => {
       // sortBy(prop('label')) this leads to weirdness when the background linodes load
     )(state.__resources.linodes.entities),
     linodeCount: state.__resources.linodes.linodeCount,
-    loading: state.__resources.linodes.loading,
+    loading:
+      state.__resources.linodes.loading &&
+      state.__resources.linodes.lastUpdated === 0,
     error: path(['read'], state.__resources.linodes.error)
   };
 });
