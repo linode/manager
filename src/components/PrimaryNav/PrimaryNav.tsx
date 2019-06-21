@@ -19,10 +19,12 @@ import {
   WithTheme
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-import { isKubernetesEnabled } from 'src/constants';
 import { MapState } from 'src/store/types';
 import { NORMAL_SPACING_UNIT } from 'src/themeFactory';
-import { isObjectStorageEnabled } from 'src/utilities/accountCapabilities';
+import {
+  isKubernetesEnabled,
+  isObjectStorageEnabled
+} from 'src/utilities/accountCapabilities';
 import { sendSpacingToggleEvent, sendThemeToggleEvent } from 'src/utilities/ga';
 import AdditionalMenuItems from './AdditionalMenuItems';
 import SpacingToggle from './SpacingToggle';
@@ -301,7 +303,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     });
     // }
 
-    if (isKubernetesEnabled) {
+    if (isKubernetesEnabled(accountCapabilities)) {
       primaryLinks.push({
         display: 'Kubernetes',
         href: '/kubernetes',

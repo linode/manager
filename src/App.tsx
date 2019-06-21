@@ -47,7 +47,6 @@ import { getAllVolumes } from 'src/store/volume/volume.requests';
 import composeState from 'src/utilities/composeState';
 import { notifications } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
-import { isKubernetesEnabled } from './constants';
 import BucketDrawer from './features/ObjectStorage/Buckets/BucketDrawer';
 import { requestClusters } from './store/clusters/clusters.actions';
 import {
@@ -55,7 +54,10 @@ import {
   WithNodeBalancerActions
 } from './store/nodeBalancer/nodeBalancer.containers';
 import { MapState } from './store/types';
-import { isObjectStorageEnabled } from './utilities/accountCapabilities';
+import {
+  isKubernetesEnabled as _isKubernetesEnabled,
+  isObjectStorageEnabled
+} from './utilities/accountCapabilities';
 
 import ErrorState from 'src/components/ErrorState';
 import { addNotificationsToLinodes } from 'src/store/linodes/linodes.actions';
@@ -373,6 +375,8 @@ export class App extends React.Component<CombinedProps, State> {
     ) {
       return null;
     }
+
+    const isKubernetesEnabled = _isKubernetesEnabled(accountCapabilities);
 
     return (
       <React.Fragment>
