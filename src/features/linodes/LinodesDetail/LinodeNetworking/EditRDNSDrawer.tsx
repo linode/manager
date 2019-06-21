@@ -2,11 +2,6 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import TextField from 'src/components/TextField';
@@ -15,26 +10,20 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
-
 interface Props {
   open: boolean;
   onClose: () => void;
-  rdns?: string;
+  rdns?: string | null;
   address?: string;
 }
 
 interface State {
-  rdns?: string;
+  rdns?: string | null;
   address?: string;
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 class ViewRangeDrawer extends React.Component<CombinedProps, State> {
   state: State = {
@@ -104,11 +93,11 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
           )}
 
           <ActionsPanel style={{ marginTop: 16 }}>
-            <Button type="primary" onClick={this.save} data-qa-submit>
+            <Button buttonType="primary" onClick={this.save} data-qa-submit>
               Save
             </Button>
             <Button
-              type="secondary"
+              buttonType="secondary"
               className="cancel"
               onClick={onClose}
               data-qa-cancel
@@ -122,6 +111,4 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles);
-
-export default styled(ViewRangeDrawer);
+export default ViewRangeDrawer;

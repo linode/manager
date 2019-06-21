@@ -2,7 +2,7 @@ import * as React from 'react';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   Theme,
   withStyles,
   WithStyles
@@ -22,16 +22,17 @@ import { removeBlacklistedEvents } from 'src/utilities/eventUtils';
 
 type ClassNames = 'root' | 'header' | 'viewMore';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
-  header: {
-    marginBottom: theme.spacing.unit * 2
-  },
-  viewMore: {
-    position: 'relative',
-    top: 2
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    header: {
+      marginBottom: theme.spacing(2)
+    },
+    viewMore: {
+      position: 'relative',
+      top: 2
+    }
+  });
 
 interface Props {
   linodeId: number;
@@ -165,4 +166,3 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles);
 
 export default styled(ActivitySummary);
-

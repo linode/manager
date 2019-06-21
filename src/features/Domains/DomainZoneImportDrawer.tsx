@@ -1,23 +1,12 @@
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import LinodeTextField from 'src/components/TextField';
 import { importZone } from 'src/services/domains';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props {
   open: boolean;
@@ -32,7 +21,7 @@ interface State {
   remote_nameserver?: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 class DomainZoneImportDrawer extends React.Component<CombinedProps, State> {
   state: State = {
@@ -72,14 +61,14 @@ class DomainZoneImportDrawer extends React.Component<CombinedProps, State> {
         />
         <ActionsPanel>
           <Button
-            type="primary"
+           buttonType="primary"
             loading={submitting}
             onClick={this.onSubmit}
             disabled={!requirementsMet}
           >
             Save
           </Button>
-          <Button type="cancel" onClick={this.onClose}>
+          <Button buttonType="cancel" onClick={this.onClose}>
             Cancel
           </Button>
         </ActionsPanel>
@@ -147,6 +136,4 @@ class DomainZoneImportDrawer extends React.Component<CombinedProps, State> {
   };
 }
 
-const styled = withStyles(styles);
-
-export default styled(DomainZoneImportDrawer);
+export default DomainZoneImportDrawer;

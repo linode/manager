@@ -38,7 +38,7 @@ describe('Access Panel Suite', () => {
             expect($(passwordstrength).isVisible()).toBe(true);
         });
 
-        it('pasword strength indicator updates on input', () => {
+        it('password strength indicator updates on input', () => {
             const passwords = [{password: 'password', strength: 'Weak'},
                 {password: '12345test!', strength: 'Fair'},
                 {password: '9]%3%7?98+n[', strength: 'Good'}

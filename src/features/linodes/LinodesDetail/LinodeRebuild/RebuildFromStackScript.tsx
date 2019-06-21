@@ -9,7 +9,8 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -45,21 +46,22 @@ import { RebuildDialog } from './RebuildDialog';
 
 type ClassNames = 'root' | 'error' | 'emptyImagePanel' | 'emptyImagePanelText';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    paddingTop: theme.spacing.unit * 3
-  },
-  error: {
-    marginTop: theme.spacing.unit * 2
-  },
-  emptyImagePanel: {
-    padding: theme.spacing.unit * 3
-  },
-  emptyImagePanelText: {
-    marginTop: theme.spacing.unit,
-    padding: `${theme.spacing.unit}px 0`
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      paddingTop: theme.spacing(3)
+    },
+    error: {
+      marginTop: theme.spacing(2)
+    },
+    emptyImagePanel: {
+      padding: theme.spacing(3)
+    },
+    emptyImagePanelText: {
+      marginTop: theme.spacing(1),
+      padding: `${theme.spacing(1)}px 0`
+    }
+  });
 
 interface Props {
   type: 'community' | 'account';
@@ -323,7 +325,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
             />
             <ActionsPanel>
               <Button
-                type="secondary"
+                buttonType="secondary"
                 className="destructive"
                 onClick={handleRebuildButtonClick}
                 data-qa-rebuild

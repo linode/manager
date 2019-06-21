@@ -18,7 +18,8 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -45,42 +46,42 @@ import Drawer from './DomainRecordDrawer';
 
 type ClassNames = 'root' | 'cells' | 'titles' | 'linkContainer';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    [theme.breakpoints.down('xs')]: {
-      flexDirection: 'column',
-      alignItems: 'flex-start'
-    }
-  },
-  cells: {
-    [theme.breakpoints.up('md')]: {
-      maxWidth: 300,
-      wordBreak: 'break-all'
-    }
-  },
-  titles: {
-    marginBottom: theme.spacing.unit,
-    [theme.breakpoints.down('xs')]: {
-      marginTop: theme.spacing.unit * 2
-    }
-  },
-  linkContainer: {
-    position: 'relative',
-    top: theme.spacing.unit + 2,
-    [theme.breakpoints.down('xs')]: {
-      top: -10,
-      '& button': {
-        padding: 0
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      [theme.breakpoints.down('xs')]: {
+        flexDirection: 'column',
+        alignItems: 'flex-start'
+      }
+    },
+    cells: {
+      [theme.breakpoints.up('md')]: {
+        maxWidth: 300,
+        wordBreak: 'break-all'
+      }
+    },
+    titles: {
+      marginBottom: theme.spacing(1),
+      [theme.breakpoints.down('xs')]: {
+        marginTop: theme.spacing(2)
+      }
+    },
+    linkContainer: {
+      position: 'relative',
+      top: theme.spacing(1) + 2,
+      [theme.breakpoints.down('xs')]: {
+        top: -10,
+        '& button': {
+          padding: 0
+        }
       }
     }
-  }
-});
+  });
 
 interface Props {
   domain: Linode.Domain;
   domainRecords: Linode.DomainRecord[];
   updateRecords: () => void;
-  updateDomain: () => void;
 }
 
 interface ConfirmationState {
@@ -641,10 +642,14 @@ class DomainRecords extends React.Component<CombinedProps, State> {
   renderDialogActions = () => {
     return (
       <ActionsPanel>
-        <Button type="cancel" onClick={this.handleCloseDialog}>
+        <Button buttonType="cancel" onClick={this.handleCloseDialog}>
           Cancel
         </Button>
-        <Button type="secondary" destructive onClick={this.deleteDomainRecord}>
+        <Button
+          buttonType="secondary"
+          destructive
+          onClick={this.deleteDomainRecord}
+        >
           Delete
         </Button>
       </ActionsPanel>
@@ -798,7 +803,6 @@ class DomainRecords extends React.Component<CombinedProps, State> {
           records={domainRecords}
           type={drawer.type}
           updateRecords={this.props.updateRecords}
-          updateDomain={this.props.updateDomain}
           {...drawer.fields}
         />
       </React.Fragment>

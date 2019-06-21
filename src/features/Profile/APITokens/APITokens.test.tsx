@@ -30,7 +30,6 @@ describe('APITokens', () => {
           headline: '',
           paper: '',
           labelCell: '',
-          typeCell: '',
           createdCell: ''
         }}
         title="Personal Access Tokens"

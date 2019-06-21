@@ -5,7 +5,8 @@ import AccessPanel from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -40,22 +41,23 @@ type ClassNames =
   | 'emptyImagePanel'
   | 'emptyImagePanelText';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  main: {},
-  sidebar: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: '-130px !important'
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    main: {},
+    sidebar: {
+      [theme.breakpoints.up('md')]: {
+        marginTop: '-130px !important'
+      }
+    },
+    emptyImagePanel: {
+      padding: theme.spacing(3)
+    },
+    emptyImagePanelText: {
+      marginTop: theme.spacing(1),
+      padding: `${theme.spacing(1)}px 0`
     }
-  },
-  emptyImagePanel: {
-    padding: theme.spacing.unit * 3
-  },
-  emptyImagePanelText: {
-    marginTop: theme.spacing.unit,
-    padding: `${theme.spacing.unit}px 0`
-  }
-});
+  });
 
 interface Props {
   request: (
@@ -147,7 +149,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       tags
     } = this.props;
 
-    handleSubmitForm('createFromStackScript', {
+    handleSubmitForm({
       region: selectedRegionID,
       type: selectedTypeID,
       stackscript_id: selectedStackScriptID,

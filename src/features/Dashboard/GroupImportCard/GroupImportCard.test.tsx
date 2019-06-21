@@ -11,7 +11,6 @@ describe('GroupImportCard', () => {
       theme="someThemeName"
       classes={{
         root: '',
-        header: '',
         section: '',
         title: '',
         button: '',

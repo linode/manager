@@ -2,7 +2,8 @@ import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -22,25 +23,26 @@ export interface ExtendedLinode extends Linode.Linode {
 
 type ClassNames = 'root' | 'creating' | 'table' | 'link';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    marginBottom: theme.spacing.unit * 3
-  },
-  table: {
-    flexGrow: 1,
-    width: '100%',
-    backgroundColor: theme.color.white
-  },
-  creating: {
-    paddingTop: 0
-  },
-  link: {
-    display: 'block',
-    textAlign: 'right',
-    marginBottom: theme.spacing.unit * 2,
-    marginTop: theme.spacing.unit
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      marginBottom: theme.spacing(3)
+    },
+    table: {
+      flexGrow: 1,
+      width: '100%',
+      backgroundColor: theme.color.white
+    },
+    creating: {
+      paddingTop: 0
+    },
+    link: {
+      display: 'block',
+      textAlign: 'right',
+      marginBottom: theme.spacing(2),
+      marginTop: theme.spacing(1)
+    }
+  });
 
 interface Props {
   error?: string;

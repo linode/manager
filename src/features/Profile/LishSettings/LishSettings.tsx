@@ -8,7 +8,8 @@ import Button from 'src/components/Button';
 import FormControl from 'src/components/core/FormControl';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -37,46 +38,47 @@ type ClassNames =
   | 'addNew'
   | 'remove';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    padding: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit * 3
-  },
-  title: {
-    marginBottom: theme.spacing.unit * 2
-  },
-  intro: {
-    marginBottom: theme.spacing.unit * 2
-  },
-  modeControl: {
-    display: 'flex'
-  },
-  image: {
-    display: 'flex',
-    flexWrap: 'wrap'
-  },
-  addNew: {
-    marginTop: theme.spacing.unit * 2
-  },
-  sshWrap: {
-    margin: `${theme.spacing.unit}px 0`,
-    [theme.breakpoints.up('md')]: {
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(3),
+      paddingBottom: theme.spacing(3)
+    },
+    title: {
+      marginBottom: theme.spacing(2)
+    },
+    intro: {
+      marginBottom: theme.spacing(2)
+    },
+    modeControl: {
+      display: 'flex'
+    },
+    image: {
       display: 'flex',
-      alignItems: 'flex-end'
+      flexWrap: 'wrap'
+    },
+    addNew: {
+      marginTop: theme.spacing(2)
+    },
+    sshWrap: {
+      margin: `${theme.spacing(1)}px 0`,
+      [theme.breakpoints.up('md')]: {
+        display: 'flex',
+        alignItems: 'flex-end'
+      }
+    },
+    keyTextarea: {
+      [theme.breakpoints.up('md')]: {
+        minWidth: 415
+      }
+    },
+    remove: {
+      margin: '8px 0 0 -26px',
+      [theme.breakpoints.up('md')]: {
+        margin: `0 0 ${theme.spacing(1) / 2}px 0`
+      }
     }
-  },
-  keyTextarea: {
-    [theme.breakpoints.up('md')]: {
-      minWidth: 415
-    }
-  },
-  remove: {
-    margin: '8px 0 0 -26px',
-    [theme.breakpoints.up('md')]: {
-      margin: `0 0 ${theme.spacing.unit / 2}px 0`
-    }
-  }
-});
+  });
 
 interface State {
   submitting: boolean;
@@ -157,7 +159,9 @@ class LishSettings extends React.Component<CombinedProps, State> {
               <FormControl className={classes.modeControl}>
                 <Select
                   textFieldProps={{
-                    'data-qa-mode-select': true
+                    dataAttrs: {
+                      'data-qa-mode-select': true
+                    }
                   }}
                   options={modeOptions}
                   name="mode-select"
@@ -183,7 +187,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
                     data-qa-public-key
                   />
                   <Button
-                    type="remove"
+                    buttonType="remove"
                     onClick={this.onPublicKeyRemove(idx)}
                     className={classes.remove}
                     data-qa-remove
@@ -200,7 +204,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
           )}
           <ActionsPanel>
             <Button
-              type="primary"
+              buttonType="primary"
               onClick={this.onSubmit}
               loading={this.state.submitting}
               data-qa-save
@@ -265,9 +269,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
     this.setState(set(lensPath(['authorizedKeys', idx]), e.target.value));
   };
 
-  onPublicKeyRemove = (idx: number) => (
-    e: React.MouseEvent<HTMLDivElement>
-  ) => {
+  onPublicKeyRemove = (idx: number) => (e: React.MouseEvent<HTMLElement>) => {
     this.setState({
       authorizedKeys: remove(idx, 1, this.state.authorizedKeys),
       authorizedKeysCount: dec(this.state.authorizedKeysCount)

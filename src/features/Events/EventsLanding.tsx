@@ -4,10 +4,10 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import Waypoint from 'react-waypoint';
 import { compose } from 'recompose';
-
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -35,25 +35,26 @@ import EventRow from './EventRow';
 
 type ClassNames = 'root' | 'header' | 'labelCell' | 'timeCell' | 'noMoreEvents';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  header: {
-    marginBottom: theme.spacing.unit
-  },
-  noMoreEvents: {
-    padding: theme.spacing.unit * 4,
-    textAlign: 'center'
-  },
-  labelCell: {
-    width: '69%',
-    minWidth: 200,
-    paddingLeft: 10
-  },
-  timeCell: {
-    width: '30%',
-    paddingLeft: theme.spacing.unit / 2
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    header: {
+      marginBottom: theme.spacing(1)
+    },
+    noMoreEvents: {
+      padding: theme.spacing(4),
+      textAlign: 'center'
+    },
+    labelCell: {
+      width: '69%',
+      minWidth: 200,
+      paddingLeft: 10
+    },
+    timeCell: {
+      width: '30%',
+      paddingLeft: theme.spacing(1) / 2
+    }
+  });
 
 interface Props {
   getEventsRequest?: typeof getEvents;
@@ -95,10 +96,9 @@ export interface ReducerActions {
   payload: Payload;
 }
 
-export const reducer: React.Reducer<ReducerState, ReducerActions> = (
-  state,
-  action
-) => {
+type EventsReducer = React.Reducer<ReducerState, ReducerActions>;
+
+export const reducer: EventsReducer = (state, action) => {
   const {
     payload: {
       eventsFromRedux: nextReduxEvents,
@@ -185,15 +185,12 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
   const [isRequesting, setRequesting] = React.useState<boolean>(false);
   const [initialLoaded, setInitialLoaded] = React.useState<boolean>(false);
 
-  const [events, dispatch] = React.useReducer<ReducerState, ReducerActions>(
-    reducer,
-    {
-      inProgressEvents: props.inProgressEvents,
-      eventsFromRedux: props.eventsFromRedux,
-      reactStateEvents: [],
-      mostRecentEventTime: props.mostRecentEventTime
-    }
-  );
+  const [events, dispatch] = React.useReducer<EventsReducer>(reducer, {
+    inProgressEvents: props.inProgressEvents,
+    eventsFromRedux: props.eventsFromRedux,
+    reactStateEvents: [],
+    mostRecentEventTime: props.mostRecentEventTime
+  });
 
   const getNext = () => {
     if (isRequesting) {

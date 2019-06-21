@@ -37,6 +37,11 @@ if (SENTRY_URL) {
       'jigsaw is not defined',
       'ComboSearch is not defined',
       'http://loading.retry.widdit.com/',
+      /**
+       * see https://github.com/getsentry/sentry-javascript/issues/2074
+       * for this noisy issue
+       */
+      'convert undefined or null to object',
       'atomicFindClose',
       // Facebook borked
       'fb_xd_fragment',
@@ -56,8 +61,12 @@ if (SENTRY_URL) {
   });
 }
 
-window.addEventListener('unhandledrejection', (err: PromiseRejectionEvent) => {
+window.addEventListener('unhandledrejection', err => {
   reportException(err.reason);
+});
+
+window.addEventListener('error', err => {
+  reportException(err.message);
 });
 
 export const reportException = (

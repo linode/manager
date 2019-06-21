@@ -12,11 +12,22 @@ import Tabs from 'src/components/core/Tabs';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import TabLink from 'src/components/TabLink';
-import Billing from 'src/features/Billing';
-import Users from 'src/features/Users';
-import GlobalSettings from './GlobalSettings';
+
+import DefaultLoader from 'src/components/DefaultLoader';
 
 type Props = RouteComponentProps<{}>;
+
+const GlobalSettings = DefaultLoader({
+  loader: () => import('./GlobalSettings')
+});
+
+const Users = DefaultLoader({
+  loader: () => import('src/features/Users')
+});
+
+const Billing = DefaultLoader({
+  loader: () => import('src/features/Billing')
+});
 
 class AccountLanding extends React.Component<Props> {
   handleTabChange = (
@@ -62,9 +73,14 @@ class AccountLanding extends React.Component<Props> {
               <Tab
                 key={tab.title}
                 data-qa-tab={tab.title}
-                component={() => (
-                  <TabLink to={tab.routeName} title={tab.title} />
-                )}
+                component={React.forwardRef((props, ref) => (
+                  <TabLink
+                    to={tab.routeName}
+                    title={tab.title}
+                    {...props}
+                    ref={ref}
+                  />
+                ))}
               />
             ))}
           </Tabs>

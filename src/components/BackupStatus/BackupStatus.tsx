@@ -2,7 +2,8 @@ import Backup from '@material-ui/icons/Backup';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -18,31 +19,32 @@ type ClassNames =
   | 'backupLink'
   | 'backupText';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  icon: {
-    fontSize: 18,
-    fill: theme.color.grey1
-  },
-  noBackupText: {
-    marginRight: theme.spacing.unit
-  },
-  root: {},
-  wrapper: {
-    display: 'flex',
-    alignContent: 'center'
-  },
-  backupLink: {
-    display: 'flex',
-    '&:hover': {
-      '& $icon': {
-        fill: theme.palette.primary.main
+const styles = (theme: Theme) =>
+  createStyles({
+    icon: {
+      fontSize: 18,
+      fill: theme.color.grey1
+    },
+    noBackupText: {
+      marginRight: theme.spacing(1)
+    },
+    root: {},
+    wrapper: {
+      display: 'flex',
+      alignContent: 'center'
+    },
+    backupLink: {
+      display: 'flex',
+      '&:hover': {
+        '& $icon': {
+          fill: theme.palette.primary.main
+        }
       }
+    },
+    backupText: {
+      whiteSpace: 'nowrap'
     }
-  },
-  backupText: {
-    whiteSpace: 'nowrap'
-  }
-});
+  });
 
 interface Props {
   mostRecentBackup: string | null;

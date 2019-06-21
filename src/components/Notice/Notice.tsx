@@ -6,7 +6,8 @@ import Check from 'src/assets/icons/check.svg';
 import Flag from 'src/assets/icons/flag.svg';
 import Warning from 'src/assets/icons/warning.svg';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -29,12 +30,12 @@ type ClassNames =
   | 'icon'
   | 'closeIcon';
 
-const styles: StyleRulesCallback = theme => {
+const styles = (theme: Theme) => {
   const {
     palette: { status }
   } = theme;
 
-  return {
+  return createStyles({
     '@keyframes fadeIn': {
       from: {
         opacity: 0
@@ -44,21 +45,29 @@ const styles: StyleRulesCallback = theme => {
       }
     },
     root: {
-      marginBottom: theme.spacing.unit * 2,
+      marginBottom: theme.spacing(2),
       padding: '4px 16px',
       maxWidth: '100%',
       display: 'flex',
       alignItems: 'center',
       '& + .notice': {
-        marginTop: `${theme.spacing.unit}px !important`
+        marginTop: `${theme.spacing(1)}px !important`
       }
     },
     important: {
       backgroundColor: theme.bg.white,
-      padding: theme.spacing.unit * 2,
+      padding: theme.spacing(2),
       '& $noticeText': {
         fontFamily: theme.font.normal
       }
+    },
+    icon: {
+      color: 'white',
+      position: 'absolute',
+      left: theme.spacing(1) + 7
+    },
+    closeIcon: {
+      paddingLeft: theme.spacing(1)
     },
     inner: {
       width: '100%'
@@ -70,8 +79,8 @@ const styles: StyleRulesCallback = theme => {
     },
     noticeText: {
       color: theme.palette.text.primary,
-      fontSize: theme.spacing.unit * 2,
-      lineHeight: `${theme.spacing.unit * 2.5}px`,
+      fontSize: '1rem',
+      lineHeight: `${theme.spacing(2.5)}px`,
       fontFamily: 'LatoWebBold', // we keep this bold at all times
       '& p': {
         fontSize: '1rem'
@@ -79,9 +88,9 @@ const styles: StyleRulesCallback = theme => {
     },
     error: {
       borderLeft: `5px solid ${status.errorDark}`,
-      animation: 'fadeIn 225ms linear forwards',
+      animation: '$fadeIn 225ms linear forwards',
       '&$important': {
-        borderLeftWidth: 26
+        borderLeftWidth: 32
       }
     },
     errorList: {
@@ -89,9 +98,12 @@ const styles: StyleRulesCallback = theme => {
     },
     warning: {
       borderLeft: `5px solid ${status.warningDark}`,
-      animation: 'fadeIn 225ms linear forwards',
+      animation: '$fadeIn 225ms linear forwards',
       '&$important': {
-        borderLeftWidth: 26
+        borderLeftWidth: 32
+      },
+      '& $icon': {
+        color: '#555'
       }
     },
     warningList: {
@@ -99,26 +111,18 @@ const styles: StyleRulesCallback = theme => {
     },
     success: {
       borderLeft: `5px solid ${status.successDark}`,
-      animation: 'fadeIn 225ms linear forwards',
+      animation: '$fadeIn 225ms linear forwards',
       '&$important': {
-        borderLeftWidth: 26
+        borderLeftWidth: 32
       }
     },
     successList: {
       borderLeft: `5px solid ${status.successDark}`
     },
     flag: {
-      marginRight: theme.spacing.unit * 2
-    },
-    icon: {
-      color: 'white',
-      marginLeft: -(theme.spacing.unit * 2 + 22),
-      marginRight: 18
-    },
-    closeIcon: {
-      paddingLeft: theme.spacing.unit
+      marginRight: theme.spacing(2)
     }
-  };
+  });
 };
 
 interface Props extends GridProps {

@@ -2,26 +2,15 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props {
   open: boolean;
   onClose: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const CreateIPv6Drawer: React.StatelessComponent<CombinedProps> = props => {
   return (
@@ -40,7 +29,7 @@ const CreateIPv6Drawer: React.StatelessComponent<CombinedProps> = props => {
         </Typography>
         <ActionsPanel style={{ marginTop: 16 }}>
           <Button
-            type="primary"
+           buttonType="primary"
             className="cancel"
             onClick={props.onClose}
             data-qa-cancel
@@ -53,6 +42,4 @@ const CreateIPv6Drawer: React.StatelessComponent<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(CreateIPv6Drawer);
+export default CreateIPv6Drawer;

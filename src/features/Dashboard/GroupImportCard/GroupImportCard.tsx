@@ -1,12 +1,11 @@
+import Close from '@material-ui/icons/Close';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { compose, onlyUpdateForKeys, withStateHandlers } from 'recompose';
-
-import Close from '@material-ui/icons/Close';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   Theme,
   withStyles,
   WithStyles
@@ -16,43 +15,44 @@ import DashboardCard from '../DashboardCard';
 
 type ClassNames = 'root' | 'section' | 'title' | 'button' | 'icon';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {
-    width: '100%'
-  },
-  section: {
-    padding: theme.spacing.unit * 3,
-    borderBottom: `1px solid ${theme.palette.divider}`
-  },
-  title: {
-    background: theme.bg.tableHeader,
-    position: 'relative',
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-    padding: `${theme.spacing.unit}px ${theme.spacing.unit * 3}px !important`,
-    [theme.breakpoints.down('md')]: {
-      justifyContent: 'space-between',
-      alignItems: 'flex-start'
-    }
-  },
-  button: {
-    marginTop: theme.spacing.unit * 3
-  },
-  icon: {
-    position: 'absolute',
-    top: theme.spacing.unit,
-    right: 0,
-    cursor: 'pointer',
-    border: 'none',
-    color: theme.palette.text.primary,
-    backgroundColor: 'transparent',
-    [theme.breakpoints.down('md')]: {
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      width: '100%'
+    },
+    section: {
+      padding: theme.spacing(3),
+      borderBottom: `1px solid ${theme.palette.divider}`
+    },
+    title: {
+      background: theme.bg.tableHeader,
       position: 'relative',
-      top: 3
+      display: 'flex',
+      flexFlow: 'row nowrap',
+      alignItems: 'center',
+      padding: `${theme.spacing(1)}px ${theme.spacing(3)}px !important`,
+      [theme.breakpoints.down('md')]: {
+        justifyContent: 'space-between',
+        alignItems: 'flex-start'
+      }
+    },
+    button: {
+      marginTop: theme.spacing(3)
+    },
+    icon: {
+      position: 'absolute',
+      top: theme.spacing(1),
+      right: 0,
+      cursor: 'pointer',
+      border: 'none',
+      color: theme.palette.text.primary,
+      backgroundColor: 'transparent',
+      [theme.breakpoints.down('md')]: {
+        position: 'relative',
+        top: 3
+      }
     }
-  }
-});
+  });
 
 interface Props {
   openImportDrawer: () => void;
@@ -111,7 +111,7 @@ export const GroupImportCard: React.StatelessComponent<
           <strong>Your existing tags will not be affected.</strong>
         </Typography>
         <Button
-          type="primary"
+          buttonType="primary"
           onClick={openImportDrawer}
           className={classes.button}
           data-qa-open-import-drawer-button

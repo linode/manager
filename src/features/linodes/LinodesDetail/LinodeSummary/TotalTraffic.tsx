@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -8,26 +9,27 @@ import Typography from 'src/components/core/Typography';
 
 type ClassNames = 'root' | 'text' | 'heading';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    display: 'flex',
-    alignItems: 'center',
-    marginTop: theme.spacing.unit * 3,
-    [theme.breakpoints.down('sm')]: {
-      justifyContent: 'space-between'
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      display: 'flex',
+      alignItems: 'center',
+      marginTop: theme.spacing(3),
+      [theme.breakpoints.down('sm')]: {
+        justifyContent: 'space-between'
+      }
+    },
+    text: {
+      color: theme.color.black,
+      [theme.breakpoints.up('sm')]: {
+        marginLeft: theme.spacing(3)
+      }
+    },
+    heading: {
+      fontSize: '0.9rem',
+      color: theme.palette.text.primary
     }
-  },
-  text: {
-    color: theme.color.black,
-    [theme.breakpoints.up('sm')]: {
-      marginLeft: theme.spacing.unit * 3
-    }
-  },
-  heading: {
-    fontSize: '0.9rem',
-    color: theme.palette.text.primary
-  }
-});
+  });
 
 export interface TotalTrafficProps {
   inTraffic: string;

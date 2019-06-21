@@ -4,15 +4,17 @@ import Edit from '@material-ui/icons/Edit';
 import * as classnames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { compose } from 'recompose';
 import Button from 'src/components/Button';
 import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
 import { TextFieldProps } from 'src/components/core/TextField';
-import Typography, { TypographyProps } from 'src/components/core/Typography';
+import Typography from 'src/components/core/Typography';
 import TextField from '../TextField';
 
 type ClassNames =
@@ -32,109 +34,110 @@ type ClassNames =
   | 'editIcon'
   | 'underlineOnHover';
 
-const styles: StyleRulesCallback = theme => ({
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0
-    },
-    to: {
-      opacity: 1
-    }
-  },
-  root: {
-    padding: '5px 10px',
-    display: 'inline-block',
-    border: '1px solid transparent',
-    transition: theme.transitions.create(['opacity']),
-    wordBreak: 'break-all',
-    textDecoration: 'inherit',
-    lineHeight: 1
-  },
-  container: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-    alignItems: 'center',
-    maxHeight: 48,
-    position: 'relative',
-    transform: 'translate(-2px, -0.5px)'
-  },
-  initial: {
-    border: '1px solid transparent',
-    '&:hover, &:focus': {
-      '& $editIcon': {
-        opacity: 1
+const styles = (theme: Theme) =>
+  createStyles({
+    '@keyframes fadeIn': {
+      from: {
+        opacity: 0
       },
-      '& $icon': {
-        color: theme.color.grey1,
-        '&:hover': {
-          color: theme.color.black
+      to: {
+        opacity: 1
+      }
+    },
+    root: {
+      padding: '5px 10px',
+      display: 'inline-block',
+      border: '1px solid transparent',
+      transition: theme.transitions.create(['opacity']),
+      wordBreak: 'break-all',
+      textDecoration: 'inherit',
+      lineHeight: 1
+    },
+    container: {
+      display: 'flex',
+      justifyContent: 'flex-start',
+      alignItems: 'center',
+      maxHeight: 48,
+      position: 'relative',
+      transform: 'translate(-2px, -0.5px)'
+    },
+    initial: {
+      border: '1px solid transparent',
+      '&:hover, &:focus': {
+        '& $editIcon': {
+          opacity: 1
+        },
+        '& $icon': {
+          color: theme.color.grey1,
+          '&:hover': {
+            color: theme.color.black
+          }
         }
       }
-    }
-  },
-  edit: {
-    fontSize: 22,
-    border: '1px solid transparent'
-  },
-  textField: {
-    opacity: 0,
-    animation: 'fadeIn .3s ease-in-out forwards',
-    margin: 0
-  },
-  inputRoot: {
-    maxWidth: 170,
-    borderColor: `${theme.palette.primary.main} !important`,
-    backgroundColor: 'transparent',
-    boxShadow: 'none',
-    [theme.breakpoints.up('md')]: {
-      maxWidth: 415,
-      width: '100%'
-    }
-  },
-  button: {
-    minWidth: 'auto',
-    minHeight: 48,
-    padding: 0,
-    marginTop: 0,
-    background: 'transparent !important'
-  },
-  icon: {
-    margin: '0 10px',
-    color: theme.palette.text.primary,
-    '&:hover, &:focus': {
-      color: theme.palette.primary.light
-    }
-  },
-  save: {
-    fontSize: 26
-  },
-  close: {
-    fontSize: 26
-  },
-  input: {
-    padding: '5px 10px',
-    ...theme.typography.h1
-  },
-  headline: {
-    ...theme.typography.h1
-  },
-  title: {
-    ...theme.typography.h1
-  },
-  editIcon: {
-    [theme.breakpoints.up('sm')]: {
+    },
+    edit: {
+      fontSize: 22,
+      border: '1px solid transparent'
+    },
+    textField: {
       opacity: 0,
-      '&:focus': {
-        opacity: 1
+      animation: '$fadeIn .3s ease-in-out forwards',
+      margin: 0
+    },
+    inputRoot: {
+      maxWidth: 170,
+      borderColor: `${theme.palette.primary.main} !important`,
+      backgroundColor: 'transparent',
+      boxShadow: 'none',
+      [theme.breakpoints.up('md')]: {
+        maxWidth: 415,
+        width: '100%'
+      }
+    },
+    button: {
+      minWidth: 'auto',
+      minHeight: 48,
+      padding: 0,
+      marginTop: 0,
+      background: 'transparent !important'
+    },
+    icon: {
+      margin: '0 10px',
+      color: theme.palette.text.primary,
+      '&:hover, &:focus': {
+        color: theme.palette.primary.light
+      }
+    },
+    save: {
+      fontSize: 26
+    },
+    close: {
+      fontSize: 26
+    },
+    input: {
+      padding: '5px 10px',
+      ...theme.typography.h1
+    },
+    headline: {
+      ...theme.typography.h1
+    },
+    title: {
+      ...theme.typography.h1
+    },
+    editIcon: {
+      [theme.breakpoints.up('sm')]: {
+        opacity: 0,
+        '&:focus': {
+          opacity: 1
+        }
+      }
+    },
+    underlineOnHover: {
+      '&:hover, &:focus': {
+        textDecoration: 'underline !important'
       }
     }
-  },
-  underlineOnHover: {
-    '&:hover, &:focus': {
-      textDecoration: 'underline !important'
-    }
-  }
-});
+  });
 
 interface Props {
   onEdit: (text: string) => Promise<any>;
@@ -150,7 +153,7 @@ interface State {
   isEditing: Boolean;
 }
 
-type PassThroughProps = Props & TextFieldProps & TypographyProps;
+type PassThroughProps = Props & TextFieldProps;
 
 type FinalProps = PassThroughProps & WithStyles<ClassNames>;
 
@@ -218,20 +221,17 @@ export class EditableText extends React.Component<FinalProps, State> {
     const {
       classes,
       labelLink,
-      onEdit,
       errorText,
+      onEdit,
+      onCancel,
+      text: propText,
       typeVariant,
       ...rest
     } = this.props;
     const { isEditing, text } = this.state;
 
     const labelText = (
-      <Typography
-        className={classes.root}
-        {...rest}
-        variant="h1"
-        data-qa-editable-text
-      >
+      <Typography className={classes.root} variant="h1" data-qa-editable-text>
         {this.state.text}
       </Typography>
     );
@@ -267,18 +267,18 @@ export class EditableText extends React.Component<FinalProps, State> {
           data-qa-edit-field
         >
           <TextField
+            {...rest}
             className={classes.textField}
             type="text"
             onChange={this.onChange}
             onKeyDown={this.handleKeyPress}
             value={text}
             errorText={this.props.errorText}
-            {...rest}
             InputProps={{ className: classes.inputRoot }}
             inputProps={{
               className: classnames({
-                [classes.headline]: this.props.typeVariant === 'h1',
-                [classes.title]: this.props.typeVariant === 'h2',
+                [classes.headline]: typeVariant === 'h1',
+                [classes.title]: typeVariant === 'h2',
                 [classes.input]: true
               })
             }}
@@ -306,4 +306,4 @@ export class EditableText extends React.Component<FinalProps, State> {
 
 const styled = withStyles(styles);
 
-export default styled(EditableText);
+export default compose<FinalProps, PassThroughProps>(styled)(EditableText);

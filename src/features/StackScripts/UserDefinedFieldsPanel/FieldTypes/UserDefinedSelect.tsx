@@ -2,7 +2,8 @@ import InputLabel from '@material-ui/core/InputLabel';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -14,18 +15,19 @@ import TextField from 'src/components/TextField';
 
 type ClassNames = 'root' | 'radioGroupLabel';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    margin: `${theme.spacing.unit * 3}px 0 0`
-  },
-  radioGroupLabel: {
-    display: 'block'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      margin: `${theme.spacing(3)}px 0 0`
+    },
+    radioGroupLabel: {
+      display: 'block'
+    }
+  });
 
 interface Props {
   updateFormState: (key: string, value: any) => void;
-  udf_data: Linode.StackScript.UserDefinedField;
+  value: string;
   field: Linode.StackScript.UserDefinedField;
   isOptional: boolean;
   error?: string;
@@ -51,7 +53,7 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
 
   render() {
     const { oneof } = this.state;
-    const { udf_data, error, field, classes, isOptional } = this.props;
+    const { value, error, field, classes, isOptional } = this.props;
 
     /* Display a select if there are more than 2 oneof options, otherwise display as radio. */
     if (oneof.length > 2) {
@@ -61,7 +63,7 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
           <TextField
             label={field.label}
             onChange={this.handleSelectOneOf}
-            value={udf_data[field.name]}
+            value={value}
             // small={isOptional}
             select
           >
@@ -92,10 +94,7 @@ class UserDefinedSelect extends React.Component<CombinedProps, State> {
                   control={
                     <Radio
                       name={choice}
-                      checked={
-                        !!udf_data[field.name] &&
-                        udf_data[field.name] === choice
-                      }
+                      checked={!!value && value === choice}
                       /*
                       NOTE: Although the API returns a default value and we're auto selecting
                       a value for the user, it is not necessary to store this value

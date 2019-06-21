@@ -4,7 +4,8 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -23,19 +24,20 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 type ClassNames = 'root' | 'suffix' | 'actionPanel' | 'helperText';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  suffix: {
-    fontSize: '.9rem',
-    marginRight: theme.spacing.unit
-  },
-  actionPanel: {
-    marginTop: theme.spacing.unit * 2
-  },
-  helperText: {
-    paddingTop: theme.spacing.unit / 2
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    suffix: {
+      fontSize: '.9rem',
+      marginRight: theme.spacing(1)
+    },
+    actionPanel: {
+      marginTop: theme.spacing(2)
+    },
+    helperText: {
+      paddingTop: theme.spacing(1) / 2
+    }
+  });
 
 export interface Props {
   mode: string;
@@ -361,14 +363,14 @@ class ImageDrawer extends React.Component<CombinedProps, State> {
           <Button
             onClick={this.onSubmit}
             disabled={requirementsMet}
-            type="primary"
+            buttonType="primary"
             data-qa-submit
           >
             {mode === modes.EDITING ? 'Update' : 'Create'}
           </Button>
           <Button
             onClick={this.close}
-            type="secondary"
+            buttonType="secondary"
             className="cancel"
             data-qa-cancel
           >

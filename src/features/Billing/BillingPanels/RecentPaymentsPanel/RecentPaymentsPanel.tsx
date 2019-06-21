@@ -1,11 +1,6 @@
 import { compose } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -27,15 +22,9 @@ import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { ThunkDispatch } from 'src/store/types';
 
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
-
 interface Props extends PaginationProps<Linode.Payment> {}
 
-type CombinedProps = Props & WithStyles<ClassNames> & StateProps;
+type CombinedProps = Props & StateProps;
 
 interface PdfGenerationError {
   itemId: number | undefined;
@@ -199,8 +188,6 @@ const connected = connect(
   })
 );
 
-const styled = withStyles(styles);
-
 const updatedRequest = (ownProps: any, params: any) =>
   getPayments(params, { '+order_by': 'date', '+order': 'desc' }).then(
     response => response
@@ -211,7 +198,6 @@ const paginated = paginate(updatedRequest);
 const enhanced = compose(
   connected,
   paginated,
-  styled
 );
 
 export default enhanced(RecentPaymentsPanel);

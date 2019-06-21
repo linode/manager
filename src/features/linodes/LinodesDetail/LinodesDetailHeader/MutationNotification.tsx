@@ -5,7 +5,8 @@ import { compose } from 'recompose';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -27,15 +28,16 @@ import withMutationDrawerState, {
 
 type ClassNames = 'pendingMutationLink';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  pendingMutationLink: {
-    color: theme.palette.primary.main,
-    cursor: 'pointer',
-    '&:hover': {
-      textDecoration: 'underline'
+const styles = (theme: Theme) =>
+  createStyles({
+    pendingMutationLink: {
+      color: theme.palette.primary.main,
+      cursor: 'pointer',
+      '&:hover': {
+        textDecoration: 'underline'
+      }
     }
-  }
-});
+  });
 
 type CombinedProps = MutationDrawerProps &
   ContextProps &

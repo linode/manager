@@ -1,10 +1,12 @@
-import { compose, path } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
+import { compose } from 'recompose';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -18,18 +20,19 @@ import { MapState } from 'src/store/types';
 
 type ClassNames = 'root' | 'title' | 'label';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    padding: theme.spacing.unit * 3,
-    marginTop: theme.spacing.unit * 2
-  },
-  title: {
-    marginBottom: theme.spacing.unit * 2
-  },
-  label: {
-    marginLeft: theme.spacing.unit
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(3),
+      marginTop: theme.spacing(2)
+    },
+    title: {
+      marginBottom: theme.spacing(2)
+    },
+    label: {
+      marginLeft: theme.spacing(1)
+    }
+  });
 
 interface State {
   submitting: boolean;
@@ -110,7 +113,7 @@ const connected = connect(
   mapDispatchToProps
 );
 
-const enhanced = compose(
+const enhanced = compose<CombinedProps, {}>(
   styled,
   connected
 );

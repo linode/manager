@@ -2,7 +2,8 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import IconButton, { IconButtonProps } from 'src/components/core/IconButton';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -17,21 +18,22 @@ interface Props extends IconButtonProps {
   disabled?: boolean;
 }
 
-const styles: StyleRulesCallback = theme => ({
-  root: {
-    transition: theme.transitions.create(['opacity'])
-  },
-  destructive: {
-    color: theme.palette.status.errorDark,
-    '&:hover': {
-      color: theme.palette.status.errorDark,
-      opacity: 0.8
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      transition: theme.transitions.create(['opacity'])
     },
-    '&:focus': {
-      color: theme.palette.status.errorDark
+    destructive: {
+      color: theme.palette.status.errorDark,
+      '&:hover': {
+        color: theme.palette.status.errorDark,
+        opacity: 0.8
+      },
+      '&:focus': {
+        color: theme.palette.status.errorDark
+      }
     }
-  }
-});
+  });
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 

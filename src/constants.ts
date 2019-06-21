@@ -35,6 +35,9 @@ export const GTM_ID = process.env.REACT_APP_GTM_ID;
 /** for hard-coding token used for API Requests. Example: "Bearer 1234" */
 export const ACCESS_TOKEN = process.env.REACT_APP_ACCESS_TOKEN;
 
+export const LOG_PERFORMANCE_METRICS =
+  !isProduction && process.env.REACT_APP_LOG_PERFORMANCE_METRICS === 'true';
+
 // Features
 export const isObjectStorageEnabledForEnvironment =
   process.env.REACT_APP_IS_OBJECT_STORAGE_ENABLED === 'true';

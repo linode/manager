@@ -8,10 +8,6 @@ declare module '*.png';
 
 declare module 'react-csv';
 
-declare type Omit<T, K extends keyof any> = T extends any
-  ? Pick<T, Exclude<keyof T, K>>
-  : never;
-
 namespace Linode {
   export type TodoAny = any;
 
@@ -191,7 +187,7 @@ namespace Linode {
     closed: string | null;
     closable: boolean;
     description: string;
-    entity: any | null;
+    entity: Entity | null;
     gravatar_id: string;
     attachments: string[];
     opened_by: string;

@@ -1,11 +1,11 @@
 import Backup from '@material-ui/icons/Backup';
 import * as classNames from 'classnames';
-import { compose } from 'ramda';
 import * as React from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
   Theme,
   withStyles,
   WithStyles
@@ -23,42 +23,43 @@ type ClassNames =
   | 'title'
   | 'ctaLink';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {
-    width: '100%'
-  },
-  header: {
-    textAlign: 'center',
-    fontSize: 18
-  },
-  icon: {
-    color: theme.color.blueDTwhite,
-    margin: theme.spacing.unit,
-    fontSize: 32
-  },
-  itemTitle: {
-    marginBottom: theme.spacing.unit,
-    color: theme.palette.primary.main
-  },
-  section: {
-    padding: theme.spacing.unit * 3,
-    borderBottom: `1px solid ${theme.palette.divider}`
-  },
-  sectionLink: {
-    cursor: 'pointer'
-  },
-  title: {
-    background: theme.bg.tableHeader,
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: `${theme.spacing.unit}px !important`
-  },
-  ctaLink: {
-    display: 'block'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      width: '100%'
+    },
+    header: {
+      textAlign: 'center',
+      fontSize: 18
+    },
+    icon: {
+      color: theme.color.blueDTwhite,
+      margin: theme.spacing(1),
+      fontSize: 32
+    },
+    itemTitle: {
+      marginBottom: theme.spacing(1),
+      color: theme.palette.primary.main
+    },
+    section: {
+      padding: theme.spacing(3),
+      borderBottom: `1px solid ${theme.palette.divider}`
+    },
+    sectionLink: {
+      cursor: 'pointer'
+    },
+    title: {
+      background: theme.bg.tableHeader,
+      display: 'flex',
+      flexFlow: 'row nowrap',
+      alignItems: 'center',
+      justifyContent: 'center',
+      padding: `${theme.spacing(1)}px !important`
+    },
+    ctaLink: {
+      display: 'block'
+    }
+  });
 
 interface Props {
   accountBackups: boolean;
@@ -152,7 +153,7 @@ BackupsDashboardCard.displayName = 'BackupsDashboardCard';
 
 const styled = withStyles(styles);
 
-const enhanced: any = compose(
+const enhanced = compose<CombinedProps, Props>(
   styled,
   withRouter
 )(BackupsDashboardCard);

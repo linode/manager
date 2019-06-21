@@ -11,9 +11,9 @@ import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import Button from 'src/components/Button';
 import Menu from 'src/components/core/Menu';
-import MenuItem from 'src/components/core/MenuItem';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -29,51 +29,47 @@ type CSSClasses =
   | 'button'
   | 'caret'
   | 'mobileCreate'
-  | 'mobileButton'
-  | 'hidden';
+  | 'mobileButton';
 
-const styles: StyleRulesCallback = theme => ({
-  wrapper: {
-    [theme.breakpoints.down('sm')]: {
-      flex: 1
+const styles = (theme: Theme) =>
+  createStyles({
+    wrapper: {
+      [theme.breakpoints.down('sm')]: {
+        flex: 1
+      }
+    },
+    menu: {
+      [theme.breakpoints.up('md')]: {
+        marginTop: 20
+      }
+    },
+    paper: {
+      maxWidth: 450,
+      position: 'absolute',
+      boxShadow: `0 0 5px ${theme.color.boxShadow}`
+    },
+    button: {
+      position: 'relative',
+      minHeight: 40,
+      paddingRight: `calc(${theme.spacing(3)}px + 24px)`,
+      [theme.breakpoints.down('sm')]: {
+        padding: '6px 34px 7px 11px'
+      }
+    },
+    caret: {
+      position: 'absolute',
+      right: -30,
+      top: -3,
+      marginLeft: theme.spacing(1) / 2
+    },
+    mobileButton: {
+      marginLeft: -theme.spacing(1)
+    },
+    mobileCreate: {
+      width: 32,
+      height: 32
     }
-  },
-  menu: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: 20
-    }
-  },
-  paper: {
-    maxWidth: 450,
-    position: 'absolute',
-    boxShadow: `0 0 5px ${theme.color.boxShadow}`
-  },
-  button: {
-    position: 'relative',
-    minHeight: 40,
-    paddingRight: `calc(${theme.spacing.unit * 3}px + 24px)`,
-    [theme.breakpoints.down('sm')]: {
-      padding: '6px 34px 7px 11px'
-    }
-  },
-  caret: {
-    position: 'absolute',
-    right: -30,
-    top: -3,
-    marginLeft: theme.spacing.unit / 2
-  },
-  mobileButton: {
-    marginLeft: -theme.spacing.unit
-  },
-  mobileCreate: {
-    width: 32,
-    height: 32
-  },
-  hidden: {
-    height: 0,
-    padding: 0
-  }
-});
+  });
 
 interface Props {
   openVolumeDrawerForCreating: typeof openVolumeDrawerForCreating;
@@ -173,7 +169,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
     return (
       <div className={classes.wrapper}>
         <Button
-          type="primary"
+          buttonType="primary"
           onClick={this.handleClick}
           className={classes.button}
           data-qa-add-new-menu-button
@@ -197,7 +193,6 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
           transformOrigin={{ vertical: 'top', horizontal: 'left' }}
           className={classes.menu}
         >
-          <MenuItem key="placeholder" aria-hidden className={classes.hidden} />
           {items.map((i, idx) => (
             <AddNewMenuItem key={idx} index={idx} count={itemsLen} {...i} />
           ))}

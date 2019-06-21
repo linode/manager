@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -17,30 +18,31 @@ import NodeBalancerActionMenu from './NodeBalancerActionMenu';
 
 type ClassNames = 'tagWrapper' | 'ipsWrapper' | 'icon';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  tagWrapper: {
-    marginTop: theme.spacing.unit / 2,
-    '& [class*="MuiChip"]': {
-      cursor: 'pointer'
-    }
-  },
-  ipsWrapper: {
-    display: 'inline-flex',
-    flexDirection: 'column'
-  },
-  icon: {
-    position: 'relative',
-    top: 3,
-    width: 40,
-    height: 40,
-    '& .circle': {
-      fill: theme.bg.offWhiteDT
+const styles = (theme: Theme) =>
+  createStyles({
+    tagWrapper: {
+      marginTop: theme.spacing(1) / 2,
+      '& [class*="MuiChip"]': {
+        cursor: 'pointer'
+      }
     },
-    '& .outerCircle': {
-      stroke: theme.bg.main
+    ipsWrapper: {
+      display: 'inline-flex',
+      flexDirection: 'column'
+    },
+    icon: {
+      position: 'relative',
+      top: 3,
+      width: 40,
+      height: 40,
+      '& .circle': {
+        fill: theme.bg.offWhiteDT
+      },
+      '& .outerCircle': {
+        stroke: theme.bg.main
+      }
     }
-  }
-});
+  });
 
 interface Props {
   data: Linode.NodeBalancerWithConfigs[];

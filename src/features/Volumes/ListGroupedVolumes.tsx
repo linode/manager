@@ -1,7 +1,8 @@
 import { compose } from 'ramda';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -27,38 +28,39 @@ type ClassNames =
   | 'paginationCell'
   | 'groupContainer';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  tagGridRow: {
-    marginBottom: 20
-  },
-  tagHeaderRow: {
-    backgroundColor: theme.bg.main,
-    height: 'auto',
-    '& td': {
-      // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
-      padding: '20px 0 10px',
-      borderBottom: 'none'
-    }
-  },
-  groupContainer: {
-    '&:first-of-type': {
-      '& $tagHeaderRow > td': {
-        padding: '10px 0'
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    tagGridRow: {
+      marginBottom: 20
+    },
+    tagHeaderRow: {
+      backgroundColor: theme.bg.main,
+      height: 'auto',
+      '& td': {
+        // This is maintaining the spacing between groups because of how tables handle margin/padding. Adjust with care!
+        padding: '20px 0 10px',
+        borderBottom: 'none'
+      }
+    },
+    groupContainer: {
+      '&:first-of-type': {
+        '& $tagHeaderRow > td': {
+          padding: '10px 0'
+        }
+      }
+    },
+    tagHeader: {
+      marginBottom: 2
+    },
+    tagHeaderOuter: {},
+    paginationCell: {
+      paddingTop: 2,
+      '& div:first-child': {
+        marginTop: 0
       }
     }
-  },
-  tagHeader: {
-    marginBottom: 2
-  },
-  tagHeaderOuter: {},
-  paginationCell: {
-    paddingTop: 2,
-    '& div:first-child': {
-      marginTop: 0
-    }
-  }
-});
+  });
 interface Props {
   data: ExtendedVolume[];
   orderBy: string;

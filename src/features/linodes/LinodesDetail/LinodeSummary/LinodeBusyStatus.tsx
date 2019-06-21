@@ -3,7 +3,8 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -14,16 +15,17 @@ import { withLinodeDetailContext } from '../linodeDetailContext';
 
 type ClassNames = 'root' | 'status';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    padding: theme.spacing.unit * 3,
-    marginTop: theme.spacing.unit * 2
-  },
-  status: {
-    textTransform: 'capitalize',
-    marginBottom: theme.spacing.unit
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(3),
+      marginTop: theme.spacing(2)
+    },
+    status: {
+      textTransform: 'capitalize',
+      marginBottom: theme.spacing(1)
+    }
+  });
 
 interface LinodeDetailContextProps {
   status: string;

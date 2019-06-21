@@ -2,7 +2,8 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -12,15 +13,16 @@ import NoticePanel from './NoticePanel';
 
 type ClassNames = 'root' | 'copySection' | 'copyField';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  copySection: {
-    marginTop: theme.spacing.unit * 2
-  },
-  copyField: {
-    marginTop: theme.spacing.unit
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    copySection: {
+      marginTop: theme.spacing(2)
+    },
+    copyField: {
+      marginTop: theme.spacing(1)
+    }
+  });
 
 interface Props {
   volumeLabel: string;
@@ -83,7 +85,7 @@ const ResizeVolumeInstructions: React.StatelessComponent<
         />
       </div>
       <ActionsPanel>
-        <Button onClick={onClose} type="primary">
+        <Button onClick={onClose} buttonType="primary">
           Close
         </Button>
       </ActionsPanel>

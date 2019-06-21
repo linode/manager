@@ -43,22 +43,14 @@ describe('Backups dashboard card', () => {
   });
   it('should display the number of Linodes to be backed up', () => {
     component.setProps({ linodesWithoutBackups: 3 });
-    expect(
-      component
-        .find('[data-qa-linodes-message]')
-        .dive()
-        .dive()
-        .text()
-    ).toMatch('3 Linodes');
+    expect(component.find('[data-qa-linodes-message]').text()).toMatch(
+      '3 Linodes'
+    );
   });
   it('should pluralize the displayed number of Linodes correctly', () => {
     component.setProps({ linodesWithoutBackups: 1 });
-    expect(
-      component
-        .find('[data-qa-linodes-message]')
-        .dive()
-        .dive()
-        .text()
-    ).toMatch('1 Linode');
+    expect(component.find('[data-qa-linodes-message]').text()).toMatch(
+      '1 Linode'
+    );
   });
 });

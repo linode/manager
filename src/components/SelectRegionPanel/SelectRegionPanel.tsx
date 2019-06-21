@@ -9,7 +9,8 @@ import { isEmpty } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -43,11 +44,12 @@ export interface ExtendedRegion extends Linode.Region {
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    marginTop: theme.spacing.unit * 3
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      marginTop: theme.spacing(3)
+    }
+  });
 
 interface Props {
   regions: ExtendedRegion[];
@@ -80,6 +82,7 @@ const renderCard = (
     heading={region.country.toUpperCase()}
     subheadings={[region.display]}
     disabled={disabled}
+    variant="check"
   />
 );
 
@@ -98,7 +101,7 @@ class SelectRegionPanel extends React.Component<
         title: 'North America',
         render: () => {
           return (
-            <Grid container spacing={16}>
+            <Grid container spacing={2}>
               {na.map(renderCard(handleSelection, selectedID, disabled))}
             </Grid>
           );
@@ -111,7 +114,7 @@ class SelectRegionPanel extends React.Component<
         title: 'Europe',
         render: () => {
           return (
-            <Grid container spacing={16}>
+            <Grid container spacing={2}>
               {eu.map(renderCard(handleSelection, selectedID, disabled))}
             </Grid>
           );

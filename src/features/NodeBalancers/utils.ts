@@ -12,8 +12,8 @@ export const clampNumericString = (low: number, hi: number) =>
   compose(
     toString,
     clamp(low, hi),
-    defaultNumeric(0)
-  );
+    (value: number) => defaultNumeric(0, value)
+  ) as (value: any) => string;
 
 export const createNewNodeBalancerConfigNode = (): Linode.NodeBalancerConfigNodeFields => ({
   label: '',

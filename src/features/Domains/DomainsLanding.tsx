@@ -12,9 +12,10 @@ import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
@@ -25,7 +26,8 @@ import OrderBy from 'src/components/OrderBy';
 import Placeholder from 'src/components/Placeholder';
 import Toggle from 'src/components/Toggle';
 import domainsContainer, {
-  Props as WithDomainsProps
+  Props as DomainProps,
+  StateProps as DomainStateProps
 } from 'src/containers/domains.container';
 import localStorageContainer from 'src/containers/localStorage.container';
 import { Domains } from 'src/documentation';
@@ -36,10 +38,6 @@ import {
   openForCreating,
   openForEditing
 } from 'src/store/domainDrawer';
-import {
-  DomainActionsProps,
-  withDomainActions
-} from 'src/store/domains/domains.container';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
@@ -55,33 +53,34 @@ type ClassNames =
   | 'tagWrapper'
   | 'tagGroup';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  titleWrapper: {
-    flex: 1
-  },
-  title: {
-    marginBottom: theme.spacing.unit + theme.spacing.unit / 2
-  },
-  domain: {
-    width: '60%'
-  },
-  dnsWarning: {
-    '& h3:first-child': {
-      marginBottom: theme.spacing.unit
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    titleWrapper: {
+      flex: 1
+    },
+    title: {
+      marginBottom: theme.spacing(1) + theme.spacing(1) / 2
+    },
+    domain: {
+      width: '60%'
+    },
+    dnsWarning: {
+      '& h3:first-child': {
+        marginBottom: theme.spacing(1)
+      }
+    },
+    tagWrapper: {
+      marginTop: theme.spacing(1) / 2,
+      '& [class*="MuiChip"]': {
+        cursor: 'pointer'
+      }
+    },
+    tagGroup: {
+      flexDirection: 'row-reverse',
+      marginBottom: theme.spacing(1)
     }
-  },
-  tagWrapper: {
-    marginTop: theme.spacing.unit / 2,
-    '& [class*="MuiChip"]': {
-      cursor: 'pointer'
-    }
-  },
-  tagGroup: {
-    flexDirection: 'row-reverse',
-    marginBottom: theme.spacing.unit
-  }
-});
+  });
 
 interface State {
   importDrawer: {
@@ -104,8 +103,7 @@ interface State {
   };
 }
 
-export type CombinedProps = WithDomainsProps &
-  DomainActionsProps &
+export type CombinedProps = DomainProps &
   LocalStorageProps &
   WithStyles<ClassNames> &
   RouteComponentProps<{}> &
@@ -156,11 +154,15 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
   getActions = () => {
     return (
       <ActionsPanel>
-        <Button type="cancel" onClick={this.closeRemoveDialog} data-qa-cancel>
+        <Button
+          buttonType="cancel"
+          onClick={this.closeRemoveDialog}
+          data-qa-cancel
+        >
           Cancel
         </Button>
         <Button
-          type="secondary"
+          buttonType="secondary"
           destructive
           onClick={this.removeDomain}
           data-qa-submit
@@ -175,10 +177,9 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     const {
       removeDialog: { domainId }
     } = this.state;
-    const { enqueueSnackbar, domainActions } = this.props;
+    const { enqueueSnackbar, deleteDomain } = this.props;
     if (domainId) {
-      domainActions
-        .deleteDomain({ domainId })
+      deleteDomain({ domainId })
         .then(() => {
           this.closeRemoveDialog();
         })
@@ -214,8 +215,6 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
     const { domainsError, domainsData, domainsLoading } = this.props;
 
-    const domainsLength = domainsData.length;
-
     if (domainsLoading) {
       return <RenderLoading />;
     }
@@ -224,7 +223,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       return <RenderError />;
     }
 
-    if (domainsLength === 0) {
+    if (!domainsData || domainsData.length === 0) {
       return <RenderEmpty onClick={this.props.openForCreating} />;
     }
 
@@ -276,7 +275,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
         </Grid>
         {!this.props.linodesLoading &&
           this.props.howManyLinodesOnAccount === 0 &&
-          domainsLength > 0 && (
+          domainsData.length > 0 && (
             <Notice warning important className={classes.dnsWarning}>
               <Typography variant="h3">
                 Your DNS zones are not being served.
@@ -448,11 +447,16 @@ export const connected = connect(
 
 export default compose<CombinedProps, {}>(
   setDocs(DomainsLanding.docs),
-  domainsContainer,
+  domainsContainer<DomainStateProps, {}>(
+    (ownProps, domainsLoading, domains, domainsError) => ({
+      domainsData: domains,
+      domainsError,
+      domainsLoading
+    })
+  ),
   withRouter,
   withLocalStorage,
   styled,
   connected,
-  withSnackbar,
-  withDomainActions
+  withSnackbar
 )(DomainsLanding);

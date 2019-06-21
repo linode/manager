@@ -29,11 +29,13 @@ export const ClusterSelect: React.StatelessComponent<CombinedProps> = props => {
     label: formatRegion(eachCluster.region)
   }));
 
-  // If there's only one option, we want it to selected by default.
-  // If it isn't already selected, call `onChange` with it so Formik knows about it.
-  if (options.length === 1 && selectedCluster !== options[0].value) {
-    onChange(options[0].value);
-  }
+  React.useEffect(() => {
+    // If there's only one option, we want it to selected by default.
+    // If it isn't already selected, call `onChange` with it so Formik knows about it.
+    if (options.length === 1 && selectedCluster !== options[0].value) {
+      onChange(options[0].value);
+    }
+  }, []);
 
   // Error could be: 1. General Clusters error, 2. Field error, 3. Nothing
   const errorText = clustersError

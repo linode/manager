@@ -11,7 +11,8 @@ import InputAdornment from 'src/components/core/InputAdornment';
 import MenuItem from 'src/components/core/MenuItem';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -38,78 +39,79 @@ type ClassNames =
   | 'statusChip'
   | 'passiveChecks';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  inner: {},
-  divider: {
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit
-  },
-  backendIPAction: {
-    display: 'flex',
-    alignItems: 'flex-end',
-    paddingLeft: theme.spacing.unit * 2,
-    marginLeft: -theme.spacing.unit,
-    [theme.breakpoints.down('md')]: {
-      marginTop: -theme.spacing.unit
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    inner: {},
+    divider: {
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(1)
     },
-    [theme.breakpoints.down('xs')]: {
-      marginTop: 0
-    }
-  },
-  suggestionsParent: {
-    position: 'relative'
-  },
-  suggestions: {
-    position: 'absolute',
-    left: 0,
-    right: 0,
-    top: 80,
-    padding: 0,
-    boxShadow: `0 0 10px ${theme.color.boxShadow}`,
-    maxHeight: 150,
-    overflowY: 'auto',
-    width: '100%',
-    maxWidth: 415,
-    zIndex: 2
-  },
-  suggestionItem: {
-    borderBottom: `1px solid ${theme.palette.divider}`,
-    color: theme.palette.text.primary,
-    '&:hover, &:focus': {
+    backendIPAction: {
+      display: 'flex',
+      alignItems: 'flex-end',
+      paddingLeft: theme.spacing(2),
+      marginLeft: -theme.spacing(1),
+      [theme.breakpoints.down('md')]: {
+        marginTop: -theme.spacing(1)
+      },
+      [theme.breakpoints.down('xs')]: {
+        marginTop: 0
+      }
+    },
+    suggestionsParent: {
+      position: 'relative'
+    },
+    suggestions: {
+      position: 'absolute',
+      left: 0,
+      right: 0,
+      top: 80,
+      padding: 0,
+      boxShadow: `0 0 10px ${theme.color.boxShadow}`,
+      maxHeight: 150,
+      overflowY: 'auto',
+      width: '100%',
+      maxWidth: 415,
+      zIndex: 2
+    },
+    suggestionItem: {
+      borderBottom: `1px solid ${theme.palette.divider}`,
+      color: theme.palette.text.primary,
+      '&:hover, &:focus': {
+        backgroundColor: `${theme.palette.primary.main} !important`,
+        color: `white !important`
+      },
+      '&:last-item': {
+        border: 0
+      }
+    },
+    selectedSuggestionItem: {
       backgroundColor: `${theme.palette.primary.main} !important`,
-      color: `white !important`
+      color: '#fff !important'
     },
-    '&:last-item': {
-      border: 0
+    'chip-UP': {
+      backgroundColor: theme.color.green
+    },
+    'chip-DOWN': {
+      backgroundColor: theme.color.red
+    },
+    statusHeader: {
+      fontSize: '.9rem',
+      color: theme.color.label
+    },
+    statusChip: {
+      marginTop: theme.spacing(1),
+      color: 'white',
+      '&.undefined': {
+        backgroundColor: theme.color.grey2,
+        color: theme.palette.text.primary
+      }
+    },
+    passiveChecks: {
+      marginTop: theme.spacing(1)
     }
-  },
-  selectedSuggestionItem: {
-    backgroundColor: `${theme.palette.primary.main} !important`,
-    color: '#fff !important'
-  },
-  'chip-UP': {
-    backgroundColor: theme.color.green
-  },
-  'chip-DOWN': {
-    backgroundColor: theme.color.red
-  },
-  statusHeader: {
-    fontSize: '.9rem',
-    color: theme.color.label
-  },
-  statusChip: {
-    marginTop: theme.spacing.unit,
-    color: 'white',
-    '&.undefined': {
-      backgroundColor: theme.color.grey2,
-      color: theme.palette.text.primary
-    }
-  },
-  passiveChecks: {
-    marginTop: theme.spacing.unit
-  }
-});
+  });
 
 const styled = withStyles(styles);
 
@@ -462,7 +464,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                 errorText={hasErrorFor('check')}
                 errorGroup={forEdit ? `${configIdx}` : undefined}
                 textFieldProps={{
-                  'data-qa-active-check-select': true
+                  dataAttrs: {
+                    'data-qa-active-check-select': true
+                  }
                 }}
                 small
                 disabled={disabled}
@@ -792,7 +796,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorText={hasErrorFor('protocol')}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   textFieldProps={{
-                    'data-qa-protocol-select': true
+                    dataAttrs: {
+                      'data-qa-protocol-select': true
+                    }
                   }}
                   disabled={disabled}
                   noMarginTop
@@ -858,7 +864,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorText={hasErrorFor('algorithm')}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   textFieldProps={{
-                    'data-qa-algorithm-select': true
+                    dataAttrs: {
+                      'data-qa-algorithm-select': true
+                    }
                   }}
                   small
                   disabled={disabled}
@@ -881,7 +889,9 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   errorText={hasErrorFor('stickiness')}
                   errorGroup={forEdit ? `${configIdx}` : undefined}
                   textFieldProps={{
-                    'data-qa-session-stickiness-select': true
+                    dataAttrs: {
+                      'data-qa-session-stickiness-select': true
+                    }
                   }}
                   small
                   disabled={disabled}
@@ -1191,7 +1201,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               <ActionsPanel className={classes.backendIPAction}>
                                 {(forEdit || idx !== 0) && (
                                   <Button
-                                    type="remove"
+                                    buttonType="remove"
                                     data-node-idx={idx}
                                     onClick={this.removeNode}
                                     data-qa-remove-node
@@ -1241,7 +1251,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                     <ActionsPanel style={{ paddingLeft: 0 }}>
                       {forEdit && (
                         <Button
-                          type="primary"
+                          buttonType="primary"
                           onClick={this.onSave}
                           loading={submitting}
                           data-qa-save-config
@@ -1253,7 +1263,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                       {(forEdit || configIdx !== 0) && (
                         <Button
                           onClick={this.props.onDelete}
-                          type="secondary"
+                          buttonType="secondary"
                           destructive
                           data-qa-delete-config
                           disabled={disabled}

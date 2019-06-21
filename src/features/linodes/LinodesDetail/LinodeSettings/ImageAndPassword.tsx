@@ -1,23 +1,11 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
-
 import AccessPanel, { UserSSHKeyObject } from 'src/components/AccessPanel';
 import { Item } from 'src/components/EnhancedSelect/Select';
 import withImages, { WithImages } from 'src/containers/withImages.container';
 import { ImageSelect } from 'src/features/Images';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface ContextProps {
   permissions: Linode.GrantLevel;
@@ -34,7 +22,7 @@ interface Props {
   userSSHKeys: UserSSHKeyObject[];
 }
 
-type CombinedProps = Props & ContextProps & WithImages & WithStyles<ClassNames>;
+type CombinedProps = Props & ContextProps & WithImages;
 
 export const ImageAndPassword: React.StatelessComponent<
   CombinedProps
@@ -80,14 +68,11 @@ export const ImageAndPassword: React.StatelessComponent<
   );
 };
 
-const styled = withStyles(styles);
-
 const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
   permissions: linode._permissions
 }));
 
 const enhanced = compose<CombinedProps, Props>(
-  styled,
   withImages((ownProps, images, imagesLoading, imageError) => ({
     ...ownProps,
     linodeContext,

@@ -4,7 +4,8 @@ import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -27,13 +28,14 @@ import StackScriptRow from './StackScriptRow';
 
 type ClassNames = 'root' | 'loadingWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  loadingWrapper: {
-    border: 0,
-    paddingTop: 100
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    loadingWrapper: {
+      border: 0,
+      paddingTop: 100
+    }
+  });
 
 export interface Props {
   data: Linode.StackScript.Response[];

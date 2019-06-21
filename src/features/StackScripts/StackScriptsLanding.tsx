@@ -1,10 +1,11 @@
-import { compose } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import CircleProgress from 'src/components/CircleProgress';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -17,12 +18,13 @@ import StackScriptPanel from './StackScriptPanel';
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  title: {
-    marginBottom: theme.spacing.unit + theme.spacing.unit / 2
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    title: {
+      marginBottom: theme.spacing(1) + theme.spacing(1) / 2
+    }
+  });
 
 type CombinedProps = WithImagesProps &
   WithStyles<ClassNames> &
@@ -89,7 +91,7 @@ interface WithImagesProps {
   imagesError?: Linode.ApiFieldError[];
 }
 
-export default compose(
+export default compose<CombinedProps, {}>(
   withImagesContainer((ownProps, imagesData, imagesLoading, imagesError) => ({
     ...ownProps,
     imagesData: imagesData.filter(i => i.is_public === true),

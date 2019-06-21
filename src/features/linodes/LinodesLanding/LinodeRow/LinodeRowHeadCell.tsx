@@ -1,7 +1,8 @@
 import * as React from 'react';
 import { compose } from 'recompose';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -29,54 +30,55 @@ type ClassNames =
   | 'dashboard'
   | 'wrapHeader';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  link: {
-    display: 'block'
-  },
-  labelWrapper: {
-    minHeight: 50,
-    paddingTop: theme.spacing.unit / 4
-  },
-  root: {
-    '& h3': {
-      transition: theme.transitions.create(['color'])
+const styles = (theme: Theme) =>
+  createStyles({
+    link: {
+      display: 'block'
     },
-    [theme.breakpoints.up('lg')]: {
-      width: '40%'
+    labelWrapper: {
+      minHeight: 50,
+      paddingTop: theme.spacing(1) / 4
     },
-    [theme.breakpoints.up('xl')]: {
-      width: '35%'
+    root: {
+      '& h3': {
+        transition: theme.transitions.create(['color'])
+      },
+      [theme.breakpoints.up('lg')]: {
+        width: '40%'
+      },
+      [theme.breakpoints.up('xl')]: {
+        width: '35%'
+      }
+    },
+    dashboard: {
+      width: '70%'
+    },
+    status: {
+      marginLeft: theme.spacing(1) / 2,
+      position: 'relative',
+      top: 0,
+      lineHeight: '0.8rem'
+    },
+    labelRow: {
+      display: 'flex',
+      flexFlow: 'row nowrap',
+      alignItems: 'center'
+    },
+    loadingStatus: {
+      marginBottom: theme.spacing(1) / 2
+    },
+    linodeDescription: {
+      paddingTop: theme.spacing(1) / 2
+    },
+    labelStatusWrapper: {
+      display: 'flex',
+      flexFlow: 'row nowrap',
+      alignItems: 'center'
+    },
+    wrapHeader: {
+      wordBreak: 'break-all'
     }
-  },
-  dashboard: {
-    width: '70%'
-  },
-  status: {
-    marginLeft: theme.spacing.unit / 2,
-    position: 'relative',
-    top: 0,
-    lineHeight: '0.8rem'
-  },
-  labelRow: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center'
-  },
-  loadingStatus: {
-    marginBottom: theme.spacing.unit / 2
-  },
-  linodeDescription: {
-    paddingTop: theme.spacing.unit / 2
-  },
-  labelStatusWrapper: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center'
-  },
-  wrapHeader: {
-    wordBreak: 'break-all'
-  }
-});
+  });
 
 interface Props {
   backups: Linode.LinodeBackups;

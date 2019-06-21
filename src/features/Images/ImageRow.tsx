@@ -1,8 +1,9 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import TableRow from 'src/components/core/TableRow';
 import RenderGuard from 'src/components/RenderGuard';
@@ -12,15 +13,16 @@ import ActionMenu from './ImagesActionMenu';
 
 type ClassNames = 'root' | 'label';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  label: {
-    width: '30%',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%'
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    label: {
+      width: '30%',
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      }
     }
-  }
-});
+  });
 
 interface Props {
   onEdit: (label: string, description: string, imageID: string) => void;
@@ -61,4 +63,4 @@ const ImageRow: React.StatelessComponent<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 
-export default styled(RenderGuard<Props>(ImageRow));
+export default RenderGuard(styled(ImageRow));

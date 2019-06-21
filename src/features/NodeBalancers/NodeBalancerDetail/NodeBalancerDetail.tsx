@@ -13,7 +13,8 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import AppBar from 'src/components/core/AppBar';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -48,21 +49,22 @@ import NodeBalancerSummary from './NodeBalancerSummary';
 
 type ClassNames = 'root' | 'titleWrapper' | 'backButton';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  titleWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    marginTop: 5
-  },
-  backButton: {
-    margin: '5px 0 0 -16px',
-    '& svg': {
-      width: 34,
-      height: 34
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    titleWrapper: {
+      display: 'flex',
+      alignItems: 'center',
+      marginTop: 5
+    },
+    backButton: {
+      margin: '5px 0 0 -16px',
+      '& svg': {
+        width: 34,
+        height: 34
+      }
     }
-  }
-});
+  });
 
 type RouteProps = RouteComponentProps<{ nodeBalancerId?: string }>;
 

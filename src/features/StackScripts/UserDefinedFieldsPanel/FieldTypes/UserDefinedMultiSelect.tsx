@@ -1,32 +1,28 @@
 import * as React from 'react';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import RenderGuard from 'src/components/RenderGuard';
 
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
-
 interface Props {
   updateFormState: (key: string, value: any) => void;
-  udf_data: Linode.StackScript.UserDefinedField;
   field: Linode.StackScript.UserDefinedField;
   isOptional: boolean;
   error?: string;
+  /**
+   * value will end up being a comma-seperated list
+   * something like TCP,TCPIP,Helloworld
+   *
+   * reason for this is because that's the format the API
+   * accepts
+   */
+  value: string;
 }
 
 interface State {
   manyof: string[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
   state: State = {
@@ -45,7 +41,18 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
 
   render() {
     const { manyof } = this.state;
-    const { error, field, classes, isOptional } = this.props;
+    const { error, field, isOptional, value: propValue } = this.props;
+
+    /**
+     * if we don't have any options selected for this multivalue
+     * UDF, just pass undefined as the value, so the form is reset
+     */
+    const value = !!propValue
+      ? propValue.split(',').map(eachValue => ({
+          label: eachValue,
+          value: eachValue
+        }))
+      : undefined;
 
     const manyOfOptions = manyof.map((choice: string) => {
       return {
@@ -55,11 +62,12 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
     });
 
     return (
-      <div className={classes.root}>
+      <div>
         {error && <Notice error text={error} spacingTop={8} />}
         <Select
           label={field.label}
           {...!isOptional && '*'}
+          value={value}
           isMulti={true}
           onChange={this.handleSelectManyOf}
           options={manyOfOptions}
@@ -70,6 +78,4 @@ class UserDefinedMultiSelect extends React.Component<CombinedProps, State> {
   }
 }
 
-const styled = withStyles(styles);
-
-export default styled(RenderGuard<CombinedProps>(UserDefinedMultiSelect));
+export default RenderGuard<CombinedProps>(UserDefinedMultiSelect);

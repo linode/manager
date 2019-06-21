@@ -1,14 +1,13 @@
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-
 import Collapse from 'src/assets/icons/minus-square.svg';
 import Expand from 'src/assets/icons/plus-square.svg';
-
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import IconButton from 'src/components/IconButton';
@@ -17,31 +16,32 @@ import truncateText from 'src/utilities/truncateText';
 
 type ClassNames = 'root' | 'formattedText' | 'expCol' | 'expButton' | 'toggle';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  expCol: {
-    display: 'flex',
-    justifyContent: 'flex-end'
-  },
-  expButton: {
-    position: 'relative',
-    top: -theme.spacing.unit,
-    left: theme.spacing.unit,
-    [theme.breakpoints.down('sm')]: {
-      position: 'absolute',
-      top: 16,
-      right: 16,
-      left: 'auto'
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    expCol: {
+      display: 'flex',
+      justifyContent: 'flex-end'
+    },
+    expButton: {
+      position: 'relative',
+      top: -theme.spacing(1),
+      left: theme.spacing(1),
+      [theme.breakpoints.down('sm')]: {
+        position: 'absolute',
+        top: 16,
+        right: 16,
+        left: 'auto'
+      }
+    },
+    toggle: {
+      height: 24,
+      width: 24
+    },
+    formattedText: {
+      whiteSpace: 'pre-line'
     }
-  },
-  toggle: {
-    height: 24,
-    width: 24
-  },
-  formattedText: {
-    whiteSpace: 'pre-line'
-  }
-});
+  });
 
 interface Props {
   text?: string;

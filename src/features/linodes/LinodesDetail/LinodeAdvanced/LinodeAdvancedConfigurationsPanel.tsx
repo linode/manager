@@ -2,7 +2,8 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -15,24 +16,25 @@ import LinodeDiskSpace from './LinodeDiskSpace';
 
 type ClassNames = 'root' | 'title' | 'paper' | 'main' | 'sidebar';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  title: {
-    marginBottom: theme.spacing.unit * 2
-  },
-  paper: {
-    padding: theme.spacing.unit * 3,
-    paddingTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit * 3
-  },
-  main: {},
-  sidebar: {
-    marginTop: -theme.spacing.unit * 2,
-    [theme.breakpoints.up('md')]: {
-      marginTop: theme.spacing.unit * 2 + 24
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    title: {
+      marginBottom: theme.spacing(2)
+    },
+    paper: {
+      padding: theme.spacing(3),
+      paddingTop: theme.spacing(1),
+      marginBottom: theme.spacing(3)
+    },
+    main: {},
+    sidebar: {
+      marginTop: -theme.spacing(2),
+      [theme.breakpoints.up('md')]: {
+        marginTop: theme.spacing(2) + 24
+      }
     }
-  }
-});
+  });
 
 type CombinedProps = LinodeContextProps & WithStyles<ClassNames>;
 
@@ -75,7 +77,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   disks: linode._disks
 }));
 
-const styled = withStyles<ClassNames>(styles);
+const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, {}>(
   styled,

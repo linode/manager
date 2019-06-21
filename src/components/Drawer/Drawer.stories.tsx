@@ -33,10 +33,10 @@ class Example extends React.Component {
             data-qa-text-field
           />
           <ActionsPanel>
-            <Button type="primary" data-qa-save>
+            <Button buttonType="primary" data-qa-save>
               Save
             </Button>
-            <Button type="secondary" className="cancel" data-qa-cancel>
+            <Button buttonType="secondary" className="cancel" data-qa-cancel>
               Cancel
             </Button>
           </ActionsPanel>

@@ -25,7 +25,8 @@ describe('OverflowIPs', () => {
         <OverflowIPs ips={['8.8.8.8', '8.8.4.4', '192.168.100.112']} />
       </LinodeThemeWrapper>
     );
-    const chip = result.find('Chip');
+
+    const chip = result.find('ForwardRef(Chip)');
     chip.simulate('click');
     const ipAddresses = result.find('IPAddress');
 

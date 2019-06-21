@@ -6,7 +6,8 @@ import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -38,43 +39,44 @@ type ClassNames =
   | 'inner'
   | 'header';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    marginBottom: theme.spacing.unit * 3
-  },
-  table: {
-    flexGrow: 1,
-    width: '100%',
-    backgroundColor: theme.color.white
-  },
-  selecting: {
-    minHeight: '400px',
-    maxHeight: '1000px',
-    overflowY: 'scroll',
-    paddingTop: 0
-  },
-  link: {
-    display: 'block',
-    textAlign: 'right',
-    marginBottom: 24,
-    marginTop: theme.spacing.unit
-  },
-  panel: {
-    flexGrow: 1,
-    width: '100%',
-    backgroundColor: theme.color.white,
-    marginBottom: theme.spacing.unit * 3
-  },
-  inner: {
-    padding: theme.spacing.unit * 2,
-    paddingTop: 0,
-    [theme.breakpoints.up('sm')]: {
-      padding: theme.spacing.unit * 3,
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      marginBottom: theme.spacing(3)
+    },
+    table: {
+      flexGrow: 1,
+      width: '100%',
+      backgroundColor: theme.color.white
+    },
+    selecting: {
+      minHeight: '400px',
+      maxHeight: '1000px',
+      overflowY: 'scroll',
       paddingTop: 0
-    }
-  },
-  header: {}
-});
+    },
+    link: {
+      display: 'block',
+      textAlign: 'right',
+      marginBottom: 24,
+      marginTop: theme.spacing(1)
+    },
+    panel: {
+      flexGrow: 1,
+      width: '100%',
+      backgroundColor: theme.color.white,
+      marginBottom: theme.spacing(3)
+    },
+    inner: {
+      padding: theme.spacing(2),
+      paddingTop: 0,
+      [theme.breakpoints.up('sm')]: {
+        padding: theme.spacing(3),
+        paddingTop: 0
+      }
+    },
+    header: {}
+  });
 
 interface Props extends RenderGuardProps {
   selectedId: number | undefined;
@@ -189,7 +191,7 @@ class SelectStackScriptPanel extends React.Component<CombinedProps, State> {
               </tbody>
             </Table>
             <div className={classes.link}>
-              <Button onClick={this.resetStackScript} type="secondary">
+              <Button onClick={this.resetStackScript} buttonType="secondary">
                 Choose another StackScript
               </Button>
             </div>
