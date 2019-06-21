@@ -52,6 +52,7 @@ const styles = (theme: Theme) =>
 interface Props extends BaseFormStateAndHandlers {
   variant?: 'public' | 'private' | 'all';
   imagePanelTitle?: string;
+  showGeneralError?: boolean;
 }
 
 const errorMap = [
@@ -108,6 +109,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
       userCannotCreateLinode,
       errors,
       imagePanelTitle,
+      showGeneralError,
       variant
     } = this.props;
 
@@ -137,13 +139,16 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
      * subtab component handles displaying general errors internally, but the
      * issue here is that the FromImageContent isn't nested under
      * sub-tabs, so we need to display general errors here
+     *
+     * NOTE: This only applies to from Distro; "My Images" must be handled
+     * separately.
      */
     const hasErrorFor = getErrorMap(errorMap, errors);
 
     return (
       <React.Fragment>
         <Grid item className={`${classes.main} mlMain py0`}>
-          {hasErrorFor.none && (
+          {hasErrorFor.none && !!showGeneralError && (
             <Notice error spacingTop={8} text={hasErrorFor.none} />
           )}
           <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />

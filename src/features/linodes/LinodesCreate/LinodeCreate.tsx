@@ -142,6 +142,7 @@ export class LinodeCreate extends React.PureComponent<
           <FromImageContent
             variant="public"
             imagePanelTitle="Choose a Distribution"
+            showGeneralError={true}
             imagesData={imagesData!}
             regionsData={regionsData!}
             typesData={typesData!}
