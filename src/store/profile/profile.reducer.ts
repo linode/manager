@@ -29,12 +29,18 @@ const reducer: Reducer<State> = (
     /** only set loading if we don't have any data */
     const loading = state.data ? false : true;
 
-    return { ...state, loading, error: undefined };
+    return { ...state, loading };
   }
 
   if (isType(action, getProfileActions.done)) {
     const { result } = action.payload;
-    return { ...state, loading: false, lastUpdated: Date.now(), data: result };
+    return {
+      ...state,
+      error: undefined,
+      loading: false,
+      lastUpdated: Date.now(),
+      data: result
+    };
   }
 
   if (isType(action, getProfileActions.failed)) {
@@ -52,8 +58,8 @@ const reducer: Reducer<State> = (
   if (isType(action, handleUpdateProfile.started)) {
     return {
       ...state,
-      loading: true,
-      error: undefined
+      loading: true
+      // error: undefined
     };
   }
 
@@ -83,6 +89,7 @@ const reducer: Reducer<State> = (
     return {
       ...state,
       loading: false,
+      data: undefined,
       lastUpdated: Date.now(),
       error: {
         update: action.payload.error

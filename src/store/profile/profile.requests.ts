@@ -55,7 +55,7 @@ export const requestProfile: ThunkActionCreator<
     })
     .catch(error => {
       dispatch(failed({ error }));
-      return error;
+      throw error;
     });
 };
 
