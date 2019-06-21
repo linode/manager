@@ -43,9 +43,7 @@ interface DispatchProps {
   };
 }
 
-type CombinedProps = StateProps &
-  DispatchProps &
-  WithSnackbarProps;
+type CombinedProps = StateProps & DispatchProps & WithSnackbarProps;
 
 class GlobalSettings extends React.Component<CombinedProps, {}> {
   toggleAutomaticBackups = () => {
@@ -87,7 +85,8 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
       loading,
       linodesWithoutBackups,
       updateError,
-      entitiesWithGroupsToImport
+      entitiesWithGroupsToImport,
+      isManaged
     } = this.props;
 
     if (loading) {
@@ -105,14 +104,13 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
 
     return (
       <React.Fragment>
-        {!this.props.isManaged && (
-          <AutoBackups
-            backups_enabled={backups_enabled}
-            onChange={this.toggleAutomaticBackups}
-            openBackupsDrawer={openBackupsDrawer}
-            hasLinodesWithoutBackups={!isEmpty(linodesWithoutBackups)}
-          />
-        )}
+        <AutoBackups
+          isManagedCustomer={isManaged}
+          backups_enabled={backups_enabled}
+          onChange={this.toggleAutomaticBackups}
+          openBackupsDrawer={openBackupsDrawer}
+          hasLinodesWithoutBackups={!isEmpty(linodesWithoutBackups)}
+        />
         <NetworkHelper
           onChange={this.toggleNetworkHelper}
           networkHelperEnabled={networkHelperEnabled}
