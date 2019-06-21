@@ -110,7 +110,7 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
       <Grid item>
         <Breadcrumb
           linkTo="/linodes"
-          // linkText="Linodes"
+          removeCrumb={2}
           labelOptions={{ linkTo: getLabelLink() }}
           onEditHandlers={
             !disabled
