@@ -11,7 +11,6 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EditableText from 'src/components/EditableText';
-// import LabelText from './LabelText';
 
 type ClassNames =
   | 'root'
@@ -88,6 +87,7 @@ export interface Props {
   labelOptions?: LabelProps;
   onEditHandlers?: EditableProps;
   prefixStyle?: CSSProperties;
+  removeCrumb?: number;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -96,7 +96,16 @@ export class Breadcrumb extends React.Component<CombinedProps, State> {
   state = {
     paths: []
   };
+
   componentDidMount() {
+    const pathName = document.location.pathname.slice(1);
+    const paths = pathName.split('/');
+    this.setState({
+      paths
+    });
+  }
+
+  componentWillReceiveProps() {
     const pathName = document.location.pathname.slice(1);
     const paths = pathName.split('/');
     this.setState({
@@ -112,14 +121,18 @@ export class Breadcrumb extends React.Component<CombinedProps, State> {
       labelTitle,
       labelOptions,
       onEditHandlers,
-      prefixStyle
+      prefixStyle,
+      removeCrumb
     } = this.props;
 
     const Crumbs = () => {
       const { paths } = this.state;
+      const pathMap = removeCrumb
+        ? paths.splice(removeCrumb - 1, 1) && paths
+        : paths;
       return (
         <>
-          {paths.slice(0, -1).map((crumb, key) => {
+          {pathMap.map((crumb, key) => {
             const link =
               '/' + paths.slice(0, -(paths.length - (key + 1))).join('/');
             return (

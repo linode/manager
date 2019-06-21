@@ -307,6 +307,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
                 linkText="NodeBalancers"
                 labelTitle={nodeBalancerLabel}
                 labelOptions={{ linkTo: this.getLabelLink() }}
+                removeCrumb={2}
                 onEditHandlers={{
                   editableTextTitle: nodeBalancerLabel,
                   onEdit: this.updateLabel,
