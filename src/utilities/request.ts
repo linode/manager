@@ -2,6 +2,7 @@ import Axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
 import { pathOr } from 'ramda';
 
 import { ACCESS_TOKEN, DEFAULT_ERROR_MESSAGE } from 'src/constants';
+import { interceptGPUErrors } from 'src/utilities/interceptGPUError';
 
 import store from 'src/store';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
@@ -27,14 +28,33 @@ export const handleError = (error: AxiosError) => {
     store.dispatch(handleLogout());
   }
 
-  // Downstream components should only have to handle ApiFieldErrors, not AxiosErrors.
-  return Promise.reject(
-    pathOr(
-      [{ reason: DEFAULT_ERROR_MESSAGE }],
-      ['response', 'data', 'errors'],
-      error
-    )
+  /**
+   * In one special case (trying to create a GPU Linode
+   * and failing because your account's reputation
+   * is insufficient), we want to replace the error
+   * message from the API with a link to an open,
+   * pre-filled Support ticket. This is hacky and horrible,
+   * apologies.
+   */
+  const errors = pathOr(
+    [{ reason: DEFAULT_ERROR_MESSAGE }],
+    ['response', 'data', 'errors'],
+    error
   );
+
+  /** AxiosError contains the original POST data as stringified JSON */
+  let requestData;
+  try {
+    requestData = JSON.parse(pathOr('', ['config', 'data'], error));
+  } catch {
+    requestData = {};
+  }
+  const requestedLinodeType = pathOr('', ['type'], requestData);
+  /** If any of this fails we'll just return the errors unchanged. */
+  const interceptedErrors = interceptGPUErrors(requestedLinodeType, errors);
+
+  // Downstream components should only have to handle ApiFieldErrors, not AxiosErrors.
+  return Promise.reject(interceptedErrors);
 };
 
 Axios.interceptors.request.use(
