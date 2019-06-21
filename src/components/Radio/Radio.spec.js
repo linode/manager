@@ -19,7 +19,7 @@ describe('Radio Suite', () => {
         radios.forEach(r => expect(r.isVisible()).toBe(true));
     });
 
-    it('should check enabled buttons on click', () => {
+    xit('should check enabled buttons on click', () => {
         const enabledRadios = $$(radio).filter(r => !r.getAttribute('class').includes('disabled'));
         enabledRadios.forEach(r => {
             r.click();
@@ -27,7 +27,7 @@ describe('Radio Suite', () => {
         });
     });
 
-    it('should not check disabled buttons on click', () => {
+    xit('should not check disabled buttons on click', () => {
         const disabledRadios = $$(radio).filter(r => r.getAttribute('class').includes('disabled'));
         disabledRadios.forEach(r => {
             r.$('..').click();

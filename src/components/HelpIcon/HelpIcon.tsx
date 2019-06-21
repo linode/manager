@@ -1,11 +1,6 @@
 import HelpOutline from '@material-ui/icons/HelpOutline';
 import * as React from 'react';
 import IconButton from 'src/components/core/IconButton';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 
 interface Props {
@@ -13,13 +8,7 @@ interface Props {
   className?: string;
 }
 
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
-
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const HelpIcon: React.StatelessComponent<CombinedProps> = props => {
   const { text, className } = props;
@@ -40,6 +29,4 @@ const HelpIcon: React.StatelessComponent<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles, { withTheme: true });
-
-export default styled(HelpIcon);
+export default HelpIcon;

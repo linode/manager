@@ -7,7 +7,8 @@ import InputAdornment from 'src/components/core/InputAdornment';
 import InputLabel from 'src/components/core/InputLabel';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -35,72 +36,73 @@ type ClassNames =
   | 'warning'
   | 'targetTag';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    padding: theme.spacing.unit * 2
-  },
-  backButton: {
-    margin: '5px 0 0 -16px',
-    '& svg': {
-      width: 34,
-      height: 34
-    }
-  },
-  createTitle: {
-    lineHeight: '2.25em'
-  },
-  divider: {
-    margin: `0 0 ${theme.spacing.unit * 2}px 0`,
-    height: 0
-  },
-  labelField: {
-    '& input': {
-      paddingLeft: 0
-    }
-  },
-  titleWrapper: {
-    display: 'flex',
-    marginTop: 5
-  },
-  gridWithTips: {
-    maxWidth: '50%',
-    [theme.breakpoints.down('sm')]: {
-      maxWidth: '100%',
-      width: '100%'
-    }
-  },
-  tips: {
-    marginLeft: theme.spacing.unit * 4,
-    marginTop: `${theme.spacing.unit * 4}px !important`,
-    padding: theme.spacing.unit * 4,
-    backgroundColor: theme.palette.divider,
-    [theme.breakpoints.down('lg')]: {
-      marginLeft: 0
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(2)
     },
-    [theme.breakpoints.down('md')]: {
-      paddingLeft: theme.spacing.unit * 2
+    backButton: {
+      margin: '5px 0 0 -16px',
+      '& svg': {
+        width: 34,
+        height: 34
+      }
+    },
+    createTitle: {
+      lineHeight: '2.25em'
+    },
+    divider: {
+      margin: `0 0 ${theme.spacing(2)}px 0`,
+      height: 0
+    },
+    labelField: {
+      '& input': {
+        paddingLeft: 0
+      }
+    },
+    titleWrapper: {
+      display: 'flex',
+      marginTop: 5
+    },
+    gridWithTips: {
+      maxWidth: '50%',
+      [theme.breakpoints.down('sm')]: {
+        maxWidth: '100%',
+        width: '100%'
+      }
+    },
+    tips: {
+      marginLeft: theme.spacing(4),
+      marginTop: `${theme.spacing(4)}px !important`,
+      padding: theme.spacing(4),
+      backgroundColor: theme.palette.divider,
+      [theme.breakpoints.down('lg')]: {
+        marginLeft: 0
+      },
+      [theme.breakpoints.down('md')]: {
+        paddingLeft: theme.spacing(2)
+      }
+    },
+    chipsContainer: {
+      maxWidth: 415
+    },
+    warning: {
+      marginTop: theme.spacing(4)
+    },
+    targetTag: {
+      margin: `${theme.spacing(1)}px ${theme.spacing(1)}px 0 0`
+    },
+    scriptTextarea: {
+      maxWidth: '100%',
+      height: 400,
+      '& textarea': {
+        height: '100%'
+      }
+    },
+    revisionTextarea: {
+      maxWidth: '100%'
     }
-  },
-  chipsContainer: {
-    maxWidth: 415
-  },
-  warning: {
-    marginTop: theme.spacing.unit * 4
-  },
-  targetTag: {
-    margin: `${theme.spacing.unit}px ${theme.spacing.unit}px 0 0`
-  },
-  scriptTextarea: {
-    maxWidth: '100%',
-    height: 400,
-    '& textarea': {
-      height: '100%'
-    }
-  },
-  revisionTextarea: {
-    maxWidth: '100%'
-  }
-});
+  });
 
 interface TextFieldHandler {
   value: string;
@@ -260,7 +262,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
           <ActionsPanel style={{ paddingBottom: 0 }}>
             <Button
               onClick={onSubmit}
-              type="primary"
+              buttonType="primary"
               loading={isSubmitting}
               disabled={disabled}
               data-qa-save
@@ -269,7 +271,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
             </Button>
             <Button
               onClick={onCancel}
-              type="secondary"
+              buttonType="secondary"
               className="cancel"
               disabled={disabled}
               data-qa-cancel

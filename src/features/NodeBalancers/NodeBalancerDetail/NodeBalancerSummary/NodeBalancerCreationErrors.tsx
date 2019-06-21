@@ -2,18 +2,7 @@ import * as React from 'react';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
 import ListItemText from 'src/components/core/ListItemText';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface ErrorResponse {
   errors: Linode.ApiFieldError[];
@@ -33,7 +22,7 @@ interface Props {
   errors?: ConfigOrNodeErrorResponse[];
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const NodeBalancerCreationError: React.StatelessComponent<
   CombinedProps
@@ -58,9 +47,7 @@ const NodeBalancerCreationError: React.StatelessComponent<
   );
 };
 
-const styled = withStyles(styles);
-
-export default styled(NodeBalancerCreationError);
+export default NodeBalancerCreationError;
 
 const maybeListReason = (errors?: Linode.ApiFieldError[]) => {
   if (!errors || errors.length === 0) {

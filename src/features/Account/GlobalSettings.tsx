@@ -6,12 +6,6 @@ import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import CircleProgress from 'src/components/CircleProgress';
-import {
-  StyleRulesCallback,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import TagImportDrawer from 'src/features/TagImport';
 import { ApplicationState } from 'src/store';
@@ -29,12 +23,6 @@ import { storage } from 'src/utilities/storage';
 import AutoBackups from './AutoBackups';
 import ImportGroupsAsTags from './ImportGroupsAsTags';
 import NetworkHelper from './NetworkHelper';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {}
-});
 
 interface StateProps {
   loading: boolean;
@@ -55,10 +43,7 @@ interface DispatchProps {
   };
 }
 
-type CombinedProps = StateProps &
-  DispatchProps &
-  WithStyles<ClassNames> &
-  WithSnackbarProps;
+type CombinedProps = StateProps & DispatchProps & WithSnackbarProps;
 
 class GlobalSettings extends React.Component<CombinedProps, {}> {
   toggleAutomaticBackups = () => {
@@ -100,7 +85,8 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
       loading,
       linodesWithoutBackups,
       updateError,
-      entitiesWithGroupsToImport
+      entitiesWithGroupsToImport,
+      isManaged
     } = this.props;
 
     if (loading) {
@@ -118,14 +104,13 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
 
     return (
       <React.Fragment>
-        {!this.props.isManaged && (
-          <AutoBackups
-            backups_enabled={backups_enabled}
-            onChange={this.toggleAutomaticBackups}
-            openBackupsDrawer={openBackupsDrawer}
-            hasLinodesWithoutBackups={!isEmpty(linodesWithoutBackups)}
-          />
-        )}
+        <AutoBackups
+          isManagedCustomer={isManaged}
+          backups_enabled={backups_enabled}
+          onChange={this.toggleAutomaticBackups}
+          openBackupsDrawer={openBackupsDrawer}
+          hasLinodesWithoutBackups={!isEmpty(linodesWithoutBackups)}
+        />
         <NetworkHelper
           onChange={this.toggleNetworkHelper}
           networkHelperEnabled={networkHelperEnabled}
@@ -177,15 +162,12 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const styled = withStyles(styles);
-
 const connected = connect(
   mapStateToProps,
   mapDispatchToProps
 );
 
 const enhanced = compose<CombinedProps, {}>(
-  styled,
   connected,
   withSnackbar
 )(GlobalSettings);

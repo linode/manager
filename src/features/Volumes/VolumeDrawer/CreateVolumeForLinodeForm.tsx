@@ -6,7 +6,8 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -41,12 +42,13 @@ import {
 import VolumesActionsPanel from './VolumesActionsPanel';
 
 type ClassNames = 'root' | 'textWrapper';
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  textWrapper: {
-    marginBottom: theme.spacing.unit + 2
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    textWrapper: {
+      marginBottom: theme.spacing(1) + 2
+    }
+  });
 
 interface Props {
   onClose: () => void;
@@ -213,7 +215,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
                 touched.tags
                   ? errors.tags
                     ? getErrorStringOrDefault(
-                        errors.tags,
+                        errors.tags as Linode.ApiFieldError[],
                         'Unable to tag volume.'
                       )
                     : undefined

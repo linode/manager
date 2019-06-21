@@ -1,7 +1,8 @@
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -21,18 +22,19 @@ type ClassNames =
   | 'title'
   | 'transferred';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  ip: { width: '30%', minWidth: 200 },
-  nameCell: { width: '15%', minWidth: 150 },
-  nodeStatus: { width: '10%', minWidth: 100 },
-  ports: { width: '10%', minWidth: 50 },
-  tagGroup: {
-    flexDirection: 'row-reverse',
-    marginBottom: theme.spacing.unit - 2
-  },
-  title: { marginBottom: theme.spacing.unit * 2 },
-  transferred: { width: '10%', minWidth: 100 }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    ip: { width: '30%', minWidth: 200 },
+    nameCell: { width: '15%', minWidth: 150 },
+    nodeStatus: { width: '10%', minWidth: 100 },
+    ports: { width: '10%', minWidth: 50 },
+    tagGroup: {
+      flexDirection: 'row-reverse',
+      marginBottom: theme.spacing(1) - 2
+    },
+    title: { marginBottom: theme.spacing(2) },
+    transferred: { width: '10%', minWidth: 100 }
+  });
 
 interface Props {
   data: Linode.NodeBalancerWithConfigs[];

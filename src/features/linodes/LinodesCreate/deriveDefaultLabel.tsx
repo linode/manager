@@ -11,7 +11,7 @@ export type LabelArgTypes = string | null | undefined;
 export const deriveDefaultLabel = (...args: LabelArgTypes[]): string => {
   const filtered = filter(Boolean)(args);
   const cleaned = map((s: string) => s.replace(labelRegex, '').toLowerCase())(
-    filtered
+    filtered as string[]
   );
 
   const withDash = join('-');

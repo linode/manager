@@ -19,7 +19,7 @@ describe('StackScripts Landing', () => {
 
   it('title of page should read "StackScripts"', () => {
     const titleText = component
-      .find('WithStyles(Typography)[variant="h1"]')
+      .find('WithStyles(ForwardRef(Typography))[variant="h1"]')
       .children()
       .text();
     expect(titleText).toBe('StackScripts');

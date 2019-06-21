@@ -43,11 +43,11 @@ const PaypalDialogActionButtons: React.SFC<CombinedProps> = props => {
   } else {
     return (
       <ActionsPanel>
-        <Button type="cancel" onClick={handleCancelPayment} data-qa-cancel>
+        <Button buttonType="cancel" onClick={handleCancelPayment} data-qa-cancel>
           Cancel
         </Button>
         <Button
-          type="secondary"
+          buttonType="secondary"
           loading={isExecutingPayment}
           onClick={initExecutePayment}
           data-qa-submit

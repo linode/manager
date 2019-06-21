@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -13,24 +14,25 @@ import Tooltip from 'src/components/core/Tooltip';
 
 type ClassNames = 'root' | 'tagLink' | 'wrapper';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    width: '8%',
-    height: '20px !important',
-    paddingTop: '0 !important',
-    paddingBottom: '0 !important',
-    textAlign: 'center',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%'
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      width: '8%',
+      height: '20px !important',
+      paddingTop: '0 !important',
+      paddingBottom: '0 !important',
+      textAlign: 'center',
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      }
+    },
+    tagLink: {
+      color: `${theme.color.blueDTwhite} !important`
+    },
+    wrapper: {
+      paddingRight: theme.spacing(2)
     }
-  },
-  tagLink: {
-    color: `${theme.color.blueDTwhite} !important`
-  },
-  wrapper: {
-    paddingRight: theme.spacing.unit * 2
-  }
-});
+  });
 
 export interface Props {
   tags: string[];

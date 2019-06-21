@@ -2,7 +2,8 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -20,24 +21,25 @@ type ClassNames =
   | 'advDescription'
   | 'optionalFieldWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    padding: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 3,
-    '& > div:last-child': {
-      border: 0,
-      marginBottom: 0,
-      paddingBottom: 0
-    }
-  },
-  advDescription: {
-    margin: `${theme.spacing.unit * 2}px 0`
-  },
-  username: {
-    color: theme.color.grey1
-  },
-  optionalFieldWrapper: {}
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(3),
+      marginBottom: theme.spacing(3),
+      '& > div:last-child': {
+        border: 0,
+        marginBottom: 0,
+        paddingBottom: 0
+      }
+    },
+    advDescription: {
+      margin: `${theme.spacing(2)}px 0`
+    },
+    username: {
+      color: theme.color.grey1
+    },
+    optionalFieldWrapper: {}
+  });
 
 interface Props {
   errors?: Linode.ApiFieldError[];
@@ -58,15 +60,16 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
     const { udf_data, handleChange } = this.props;
     // if the 'default' key is returned from the API, the field is optional
     const isOptional = field.hasOwnProperty('default');
+
     if (isMultiSelect(field)) {
       return (
         <Grid item xs={12} lg={5} key={field.name}>
           <UserDefinedMultiSelect
             key={field.name}
             field={field}
-            udf_data={udf_data}
+            value={udf_data[field.name] || ''}
             updateFormState={handleChange}
-            updateFor={[udf_data[field.name], error]}
+            updateFor={[field.label, udf_data[field.name], error]}
             isOptional={isOptional}
             error={error}
           />
@@ -79,8 +82,8 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
           <UserDefinedSelect
             field={field}
             updateFormState={handleChange}
-            udf_data={udf_data}
-            updateFor={[udf_data[field.name], error]}
+            value={udf_data[field.name] || ''}
+            updateFor={[field.label, udf_data[field.name], error]}
             isOptional={isOptional}
             key={field.name}
             error={error}
@@ -92,11 +95,29 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
       return (
         <Grid item xs={12} lg={5} key={field.name}>
           <UserDefinedText
+            /**
+             * we explicitly passing the value to solve for the situation
+             * where you're switching between stackscripts or one-click-apps
+             * and the same UDF with the same label appears in both stackscripts.
+             *
+             * The problem here is that unless we explicitly pass the value,
+             * the form state will be reset but because MUI handles the
+             * value internally, the pre-inputted value will still exist in the
+             * textfield
+             *
+             * To test the incorrect behavior, try removing the "value" prop here,
+             * navigate to the One-Click app creation flow, click on MERN, fill out
+             * a DB password, then switch to LAMP. You'll see the value will
+             * still be in the form field.
+             *
+             * This comment is wordy as heck but it's important that we never remove this
+             * prop or that bug will return
+             */
+            value={udf_data[field.name] || ''}
             updateFormState={handleChange}
             isPassword={true}
             field={field}
-            udf_data={udf_data}
-            updateFor={[udf_data[field.name], error]}
+            updateFor={[field.label, udf_data[field.name], error]}
             isOptional={isOptional}
             placeholder={field.example}
             error={error}
@@ -107,10 +128,11 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
     return (
       <Grid item xs={12} lg={5} key={field.name}>
         <UserDefinedText
+          /** see comment above for why we're passing the value prop */
+          value={udf_data[field.name] || ''}
           updateFormState={handleChange}
           field={field}
-          udf_data={udf_data}
-          updateFor={[udf_data[field.name], error]}
+          updateFor={[field.label, udf_data[field.name], error]}
           isOptional={isOptional}
           placeholder={field.example}
           error={error}

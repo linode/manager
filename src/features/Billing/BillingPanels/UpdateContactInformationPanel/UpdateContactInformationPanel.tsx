@@ -4,7 +4,8 @@ import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -25,17 +26,18 @@ import CountryData, { Region } from './countryRegionData';
 
 type ClassNames = 'root' | 'mainFormContainer' | 'stateZip';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  mainFormContainer: {
-    maxWidth: 860
-  },
-  stateZip: {
-    [theme.breakpoints.up('md')]: {
-      maxWidth: `calc(415px + ${theme.spacing.unit * 2}px)`
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    mainFormContainer: {
+      maxWidth: 860
+    },
+    stateZip: {
+      [theme.breakpoints.up('md')]: {
+        maxWidth: `calc(415px + ${theme.spacing(2)}px)`
+      }
     }
-  }
-});
+  });
 
 interface State {
   submitting: boolean;
@@ -374,7 +376,9 @@ class UpdateContactInformationPanel extends React.Component<
                     : { value: account.state, label: account.state }
                 }
                 textFieldProps={{
-                  'data-qa-contact-province': true
+                  dataAttrs: {
+                    'data-qa-contact-province': true
+                  }
                 }}
               />
             </Grid>
@@ -414,7 +418,9 @@ class UpdateContactInformationPanel extends React.Component<
                 : value === account.country
             )}
             textFieldProps={{
-              'data-qa-contact-country': true
+              dataAttrs: {
+                'data-qa-contact-country': true
+              }
             }}
           />
         </Grid>
@@ -447,7 +453,7 @@ class UpdateContactInformationPanel extends React.Component<
     return (
       <ActionsPanel>
         <Button
-          type="primary"
+          buttonType="primary"
           onClick={this.submitForm}
           loading={this.state.submitting}
           data-qa-save-contact-info
@@ -455,7 +461,7 @@ class UpdateContactInformationPanel extends React.Component<
           Save
         </Button>
         <Button
-          type="secondary"
+          buttonType="secondary"
           onClick={this.resetForm}
           data-qa-reset-contact-info
         >

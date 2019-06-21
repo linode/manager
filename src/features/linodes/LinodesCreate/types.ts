@@ -82,12 +82,6 @@ export interface ReduxStateProps {
 }
 
 export type HandleSubmit = (
-  type:
-    | 'create'
-    | 'clone'
-    | 'createFromStackScript'
-    | 'createFromBackup'
-    | 'createFromApp',
   payload: CreateLinodeRequest,
   linodeID?: number
 ) => void;

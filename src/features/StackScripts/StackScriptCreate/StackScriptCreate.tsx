@@ -8,7 +8,8 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -33,26 +34,27 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root' | 'backButton' | 'titleWrapper' | 'createTitle';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  backButton: {
-    margin: '5px 0 0 -16px',
-    '& svg': {
-      width: 34,
-      height: 34
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    backButton: {
+      margin: '5px 0 0 -16px',
+      '& svg': {
+        width: 34,
+        height: 34
+      }
+    },
+    createTitle: {
+      lineHeight: '2.25em'
+    },
+    titleWrapper: {
+      display: 'flex',
+      marginTop: 5,
+      marginBottom: 20,
+      alignItems: 'center',
+      wordBreak: 'break-all'
     }
-  },
-  createTitle: {
-    lineHeight: '2.25em'
-  },
-  titleWrapper: {
-    display: 'flex',
-    marginTop: 5,
-    marginBottom: 20,
-    alignItems: 'center',
-    wordBreak: 'break-all'
-  }
-});
+  });
 
 interface State {
   labelText: string;
@@ -202,14 +204,14 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     return (
       <ActionsPanel>
         <Button
-          type="cancel"
+          buttonType="cancel"
           onClick={this.handleCloseDialog}
           data-qa-cancel-cancel
         >
           Cancel
         </Button>
         <Button
-          type="secondary"
+          buttonType="secondary"
           destructive
           onClick={this.resetAllFields}
           data-qa-confirm-cancel

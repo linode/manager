@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -14,19 +15,20 @@ import TablesPanel from './TablesPanel';
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  main: {
-    [theme.breakpoints.up('md')]: {
-      order: 1
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    main: {
+      [theme.breakpoints.up('md')]: {
+        order: 1
+      }
+    },
+    sidebar: {
+      [theme.breakpoints.up('md')]: {
+        order: 2
+      }
     }
-  },
-  sidebar: {
-    [theme.breakpoints.up('md')]: {
-      order: 2
-    }
-  }
-});
+  });
 
 interface Props {
   nodeBalancer: Linode.ExtendedNodeBalancer;

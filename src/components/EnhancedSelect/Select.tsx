@@ -13,7 +13,6 @@ Styles added in this file and the below imports will be utilized for the abstrac
 import DropdownIndicator from './components/DropdownIndicator';
 import LoadingIndicator from './components/LoadingIndicator';
 import MenuList from './components/MenuList';
-import MultiValueContainer from './components/MultiValueContainer';
 import MultiValueLabel from './components/MultiValueLabel';
 import MultiValueRemove from './components/MultiValueRemove';
 import NoOptionsMessage from './components/NoOptionsMessage';
@@ -86,7 +85,6 @@ const _components = {
   Control,
   NoOptionsMessage,
   Placeholder,
-  MultiValueContainer,
   MultiValueLabel,
   MultiValueRemove,
   MenuList,
@@ -206,7 +204,8 @@ class Select extends React.PureComponent<CombinedProps, {}> {
             [classes.hideLabel]: hideLabel
           })
         }}
-        value={value}
+        /** let us explicitly pass an empty string */
+        value={value || null}
         onBlur={onBlur}
         options={options}
         components={combinedComponents}

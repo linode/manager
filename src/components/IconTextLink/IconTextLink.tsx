@@ -2,7 +2,8 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -10,55 +11,56 @@ import SvgIcon from 'src/components/core/SvgIcon';
 
 type CSSClasses = 'root' | 'active' | 'disabled' | 'icon' | 'left' | 'label';
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
-  root: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    cursor: 'pointer',
-    padding: theme.spacing.unit + theme.spacing.unit / 2,
-    color: theme.palette.primary.main,
-    transition: theme.transitions.create(['color']),
-    margin: `0 -${theme.spacing.unit + theme.spacing.unit / 2}px 2px 0`,
-    minHeight: 'auto',
-    '&:hover': {
-      color: theme.palette.primary.light,
-      backgroundColor: 'transparent',
-      '& $icon': {
-        fill: theme.palette.primary.light,
-        color: 'white'
-      },
-      '& .border': {
-        color: theme.palette.primary.light
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      display: 'flex',
+      alignItems: 'flex-start',
+      cursor: 'pointer',
+      padding: theme.spacing(1) + theme.spacing(1) / 2,
+      color: theme.palette.primary.main,
+      transition: theme.transitions.create(['color']),
+      margin: `0 -${theme.spacing(1) + theme.spacing(1) / 2}px 2px 0`,
+      minHeight: 'auto',
+      '&:hover': {
+        color: theme.palette.primary.light,
+        backgroundColor: 'transparent',
+        '& $icon': {
+          fill: theme.palette.primary.light,
+          color: 'white'
+        },
+        '& .border': {
+          color: theme.palette.primary.light
+        }
       }
-    }
-  },
-  active: {
-    color: '#1f64b6'
-  },
-  disabled: {
-    color: '#939598',
-    pointerEvents: 'none',
-    '& $icon': {
+    },
+    active: {
+      color: '#1f64b6'
+    },
+    disabled: {
       color: '#939598',
-      borderColor: '#939598'
+      pointerEvents: 'none',
+      '& $icon': {
+        color: '#939598',
+        borderColor: '#939598'
+      }
+    },
+    icon: {
+      transition: theme.transitions.create(['fill', 'color']),
+      fontSize: 18,
+      marginRight: theme.spacing(1) + 1,
+      color: theme.palette.primary.main,
+      '& .border': {
+        transition: theme.transitions.create(['color'])
+      }
+    },
+    left: {
+      left: -(theme.spacing(1) + theme.spacing(1) / 2)
+    },
+    label: {
+      whiteSpace: 'nowrap'
     }
-  },
-  icon: {
-    transition: theme.transitions.create(['fill', 'color']),
-    fontSize: 18,
-    marginRight: theme.spacing.unit + 1,
-    color: theme.palette.primary.main,
-    '& .border': {
-      transition: theme.transitions.create(['color'])
-    }
-  },
-  left: {
-    left: -(theme.spacing.unit + theme.spacing.unit / 2)
-  },
-  label: {
-    whiteSpace: 'nowrap'
-  }
-});
+  });
 
 export interface Props {
   SideIcon: typeof SvgIcon | React.ComponentClass;

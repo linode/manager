@@ -1,8 +1,9 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
@@ -16,18 +17,19 @@ import ActionMenu from './ClusterActionMenu';
 
 type ClassNames = 'root' | 'label' | 'clusterDescription';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  label: {
-    width: '30%',
-    [theme.breakpoints.down('sm')]: {
-      width: '100%'
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    label: {
+      width: '30%',
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      }
+    },
+    clusterDescription: {
+      paddingTop: theme.spacing(1) / 2
     }
-  },
-  clusterDescription: {
-    paddingTop: theme.spacing.unit / 2
-  }
-});
+  });
 
 interface Props {
   cluster: ExtendedCluster;

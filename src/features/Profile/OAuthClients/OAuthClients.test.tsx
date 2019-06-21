@@ -49,13 +49,13 @@ describe('OAuth Clients', () => {
   });
 
   it('should have a table header with 5 cells', () => {
-    const tableHead = wrapper.find('WithStyles(TableHead)[data-qa-table-head]');
+    const tableHead = wrapper.find('WithStyles(ForwardRef(TableHead))[data-qa-table-head]');
     expect(tableHead.exists()).toBeTruthy();
     expect(tableHead.childAt(0).children().length).toEqual(5);
   });
 
   it('should have a table body', () => {
-    expect(wrapper.find('WithStyles(TableBody)').exists()).toBeTruthy();
+    expect(wrapper.find('WithStyles(ForwardRef(TableBody))').exists()).toBeTruthy();
   });
 
   it('should have pagination controls', () => {
@@ -63,7 +63,7 @@ describe('OAuth Clients', () => {
   });
 
   it('should render a row for each client', () => {
-    expect(wrapper.find('WithStyles(TableBody)').children()).toHaveLength(3);
+    expect(wrapper.find('WithStyles(ForwardRef(TableBody))').children()).toHaveLength(3);
   });
 
   it('should display label, access, id, and callback URL for a given client', () => {
@@ -98,7 +98,7 @@ describe('OAuth Clients', () => {
 
   it('should display TableRowError if error if state.error is set.', () => {
     wrapper.setProps({ error: Error('Test Error') });
-    expect(wrapper.find(`WithStyles(TableRowError)`).exists()).toBeTruthy();
+    expect(wrapper.find(`TableRowError`).exists()).toBeTruthy();
   });
 
   it('should display TableEmptyState if done loading and there is no data', () => {

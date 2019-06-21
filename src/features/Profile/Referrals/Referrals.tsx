@@ -1,9 +1,11 @@
-import { compose, path } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -15,18 +17,19 @@ import { MapState } from 'src/store/types';
 
 type ClassNames = 'root' | 'results' | 'title' | 'copyField';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    padding: theme.spacing.unit * 3
-  },
-  title: {},
-  results: {
-    margin: `${theme.spacing.unit * 2}px 0`
-  },
-  copyField: {
-    marginTop: theme.spacing.unit
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(3)
+    },
+    title: {},
+    results: {
+      margin: `${theme.spacing(2)}px 0`
+    },
+    copyField: {
+      marginTop: theme.spacing(1)
+    }
+  });
 
 type CombinedProps = StateProps & WithStyles<ClassNames>;
 
@@ -120,7 +123,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose(
+const enhanced = compose<CombinedProps, {}>(
   styled,
   connected
 );

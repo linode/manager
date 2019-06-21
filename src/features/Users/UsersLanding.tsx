@@ -9,9 +9,10 @@ import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -37,49 +38,50 @@ import ActionMenu from './UsersActionMenu';
 
 type ClassNames = 'title' | 'avatar' | 'userButton' | 'emptyImage';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  '@keyframes fadeIn': {
-    from: {
-      opacity: 0
+const styles = (theme: Theme) =>
+  createStyles({
+    '@keyframes fadeIn': {
+      from: {
+        opacity: 0
+      },
+      to: {
+        opacity: 1
+      }
     },
-    to: {
-      opacity: 1
+    title: {
+      marginBottom: theme.spacing(2)
+    },
+    userButton: {
+      borderRadius: 30,
+      fontFamily: 'LatoWeb',
+      padding: 0,
+      color: theme.palette.text.primary,
+      '&:hover': {
+        color: theme.palette.primary.main
+      }
+    },
+    avatar: {
+      borderRadius: '50%',
+      width: 30,
+      height: 30,
+      marginRight: theme.spacing(2),
+      animation: '$fadeIn 150ms linear forwards',
+      [theme.breakpoints.up('md')]: {
+        width: 50,
+        height: 50
+      }
+    },
+    emptyImage: {
+      display: 'inline',
+      width: 30,
+      height: 30,
+      marginRight: theme.spacing(2),
+      [theme.breakpoints.up('md')]: {
+        width: 50,
+        height: 50
+      }
     }
-  },
-  title: {
-    marginBottom: theme.spacing.unit * 2
-  },
-  userButton: {
-    borderRadius: 30,
-    fontFamily: 'LatoWeb',
-    padding: 0,
-    color: theme.palette.text.primary,
-    '&:hover': {
-      color: theme.palette.primary.main
-    }
-  },
-  avatar: {
-    borderRadius: '50%',
-    width: 30,
-    height: 30,
-    marginRight: theme.spacing.unit * 2,
-    animation: 'fadeIn 150ms linear forwards',
-    [theme.breakpoints.up('md')]: {
-      width: 50,
-      height: 50
-    }
-  },
-  emptyImage: {
-    display: 'inline',
-    width: 30,
-    height: 30,
-    marginRight: theme.spacing.unit * 2,
-    [theme.breakpoints.up('md')]: {
-      width: 50,
-      height: 50
-    }
-  }
-});
+  });
 
 interface State {
   createDrawerOpen: boolean;

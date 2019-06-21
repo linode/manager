@@ -2,7 +2,8 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import FormHelperText from 'src/components/core/FormHelperText';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -17,9 +18,10 @@ export const regionSupportMessage =
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {}
+  });
 interface Props {
   error?: string;
   name: string;
@@ -59,7 +61,9 @@ export const RegionSelect: React.StatelessComponent<CombinedProps> = props => {
         onChange={(item: Item<string>) => onChange(item.value)}
         onBlur={onBlur}
         textFieldProps={{
-          'data-qa-select-region': true
+          dataAttrs: {
+            'data-qa-select-region': true
+          }
         }}
         disabled={disabled}
         label="Region"

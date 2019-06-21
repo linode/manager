@@ -1,28 +1,28 @@
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { Converter } from 'showdown';
 import 'showdown-highlightjs-extension';
-
 import Paper from 'src/components/core/Paper';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    border: '1px solid #ccc',
-    height: 200,
-    padding: `9px 12px 9px 12px`,
-    overflowY: 'auto'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      border: '1px solid #ccc',
+      height: 200,
+      padding: `9px 12px 9px 12px`,
+      overflowY: 'auto'
+    }
+  });
 
 interface Props {
   value: string;

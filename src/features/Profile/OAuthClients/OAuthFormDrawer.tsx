@@ -4,21 +4,10 @@ import Button from 'src/components/Button';
 import CheckBox from 'src/components/CheckBox';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props {
   open: boolean;
@@ -35,7 +24,7 @@ interface Props {
   onChangePublic: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = props => {
   const {
@@ -93,7 +82,7 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = props => {
       </FormControl>
       <ActionsPanel>
         <Button
-          type="primary"
+          buttonType="primary"
           onClick={onSubmit}
           loading={loading}
           data-qa-submit
@@ -103,7 +92,7 @@ const OAuthCreationDrawer: React.StatelessComponent<CombinedProps> = props => {
         <Button
           onClick={onClose}
           data-qa-cancel
-          type="secondary"
+          buttonType="secondary"
           className="cancel"
         >
           Cancel
@@ -119,6 +108,4 @@ OAuthCreationDrawer.defaultProps = {
   errors: []
 };
 
-const styled = withStyles(styles);
-
-export default styled(OAuthCreationDrawer);
+export default OAuthCreationDrawer;

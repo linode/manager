@@ -5,9 +5,10 @@ import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -32,45 +33,46 @@ type ClassNames =
   | 'addNewIP'
   | 'remove';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  addNewButton: {
-    marginTop: theme.spacing.unit * 3,
-    marginBottom: -theme.spacing.unit * 2
-  },
-  containerDivider: {
-    marginTop: theme.spacing.unit
-  },
-  ipField: {
-    width: '100%',
-    marginTop: 0
-  },
-  ipFieldLabel: {
-    width: '100%',
-    [theme.breakpoints.up('sm')]: {
-      width: `calc(175px + ${theme.spacing.unit * 2}px)`
+const styles = (theme: Theme) =>
+  createStyles({
+    addNewButton: {
+      marginTop: theme.spacing(3),
+      marginBottom: -theme.spacing(2)
+    },
+    containerDivider: {
+      marginTop: theme.spacing(1)
+    },
+    ipField: {
+      width: '100%',
+      marginTop: 0
+    },
+    ipFieldLabel: {
+      width: '100%',
+      [theme.breakpoints.up('sm')]: {
+        width: `calc(175px + ${theme.spacing(2)}px)`
+      }
+    },
+    noIPsMessage: {
+      marginTop: theme.spacing(2),
+      color: theme.color.grey1
+    },
+    networkActionText: {
+      marginBottom: theme.spacing(2)
+    },
+    removeCont: {
+      [theme.breakpoints.down('xs')]: {
+        width: '100%'
+      }
+    },
+    addNewIP: {
+      marginLeft: -(theme.spacing(1) + theme.spacing(1) / 2)
+    },
+    remove: {
+      [theme.breakpoints.down('xs')]: {
+        margin: '-16px 0 0 -26px'
+      }
     }
-  },
-  noIPsMessage: {
-    marginTop: theme.spacing.unit * 2,
-    color: theme.color.grey1
-  },
-  networkActionText: {
-    marginBottom: theme.spacing.unit * 2
-  },
-  removeCont: {
-    [theme.breakpoints.down('xs')]: {
-      width: '100%'
-    }
-  },
-  addNewIP: {
-    marginLeft: -(theme.spacing.unit + theme.spacing.unit / 2)
-  },
-  remove: {
-    [theme.breakpoints.down('xs')]: {
-      margin: '-16px 0 0 -26px'
-    }
-  }
-});
+  });
 
 interface Props {
   linodeID: number;
@@ -127,9 +129,11 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
               });
               return linode.ipv4;
             })
-        ).filter((ip: string) => {
-          return !ip.startsWith('192.168.');
-        });
+        );
+        /**
+         * NB: We were previously filtering private IP addresses out at this point,
+         * but it seems that the API (or our infra) doesn't care about this.
+         */
         ipChoices.unshift(IPSharingPanel.selectIPText);
         if (!this.mounted) {
           return;
@@ -242,7 +246,9 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
             onChange={this.onIPSelect(idx)}
             className={classes.ipField}
             textFieldProps={{
-              'data-qa-share-ip': true
+              dataAttrs: {
+                'data-qa-share-ip': true
+              }
             }}
             disabled={readOnly}
             isClearable={false}
@@ -251,7 +257,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
         </Grid>
         <Grid item className={classes.removeCont}>
           <Button
-            type="remove"
+            buttonType="remove"
             onClick={this.onIPDelete(idx)}
             className={classes.remove}
             data-qa-remove-shared-ip
@@ -334,7 +340,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
           loading={submitting}
           disabled={readOnly || loading || noChoices}
           onClick={this.onSubmit}
-          type="primary"
+          buttonType="primary"
           data-qa-submit
         >
           Save
@@ -342,7 +348,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
         <Button
           disabled={submitting || loading || noChoices}
           onClick={this.onCancel}
-          type="secondary"
+          buttonType="secondary"
           data-qa-cancel
         >
           Cancel

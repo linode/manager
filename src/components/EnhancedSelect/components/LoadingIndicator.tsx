@@ -2,19 +2,21 @@ import * as React from 'react';
 import { IndicatorProps } from 'react-select/lib/components/indicators';
 import CircularProgress from 'src/components/core/CircularProgress';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    position: 'relative',
-    right: 20
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      position: 'relative',
+      right: 20
+    }
+  });
 
 interface Props extends IndicatorProps<any> {}
 

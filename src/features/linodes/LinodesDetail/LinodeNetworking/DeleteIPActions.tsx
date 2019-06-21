@@ -28,7 +28,7 @@ class DeleteIPActions extends React.PureComponent<CombinedProps> {
       <ActionsPanel>
         <Button onClick={handleCancel}>Cancel</Button>
         <Button
-          type="secondary"
+          buttonType="secondary"
           destructive
           onClick={this.handleDeleteIP}
           loading={loading}

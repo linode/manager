@@ -1,27 +1,29 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
 type ClassNames = 'root' | 'container' | 'headerAction';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  container: {
-    marginTop: theme.spacing.unit * 3
-  },
-  headerAction: {
-    position: 'relative',
-    top: 6,
-    left: -16,
-    marginLeft: theme.spacing.unit / 2
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    container: {
+      marginTop: theme.spacing(3)
+    },
+    headerAction: {
+      position: 'relative',
+      top: 6,
+      left: -theme.spacing(2),
+      marginLeft: theme.spacing(1) / 2
+    }
+  });
 
 interface Props {
   title?: string;

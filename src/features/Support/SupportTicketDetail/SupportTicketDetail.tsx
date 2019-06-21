@@ -3,7 +3,7 @@ import * as classNames from 'classnames';
 import { compose, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
@@ -12,9 +12,10 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import Chip from 'src/components/core/Chip';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import setDocs from 'src/components/DocsSidebar/setDocs';
@@ -26,6 +27,7 @@ import { getTicket, getTicketReplies } from 'src/services/support';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
+import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
 import TicketAttachmentList from '../TicketAttachmentList';
@@ -45,55 +47,56 @@ type ClassNames =
   | 'ticketLabel'
   | 'closed';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  title: {
-    display: 'flex',
-    alignItems: 'center'
-  },
-  titleWrapper: {
-    display: 'flex',
-    alignItems: 'flex-start',
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit * 2
-  },
-  backButton: {
-    margin: '-6px 0 0 -16px',
-    '& svg': {
-      width: 34,
-      height: 34
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    title: {
+      display: 'flex',
+      alignItems: 'center'
     },
-    padding: 0
-  },
-  label: {
-    marginBottom: theme.spacing.unit
-  },
-  ticketLabel: {
-    position: 'relative',
-    top: -3
-  },
-  labelIcon: {
-    paddingRight: 0,
-    '& .outerCircle': {
-      fill: theme.bg.offWhiteDT,
-      stroke: theme.bg.main
+    titleWrapper: {
+      display: 'flex',
+      alignItems: 'flex-start',
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(2)
     },
-    '& .circle': {
-      stroke: theme.bg.main
+    backButton: {
+      margin: '-6px 0 0 -16px',
+      '& svg': {
+        width: 34,
+        height: 34
+      },
+      padding: 0
+    },
+    label: {
+      marginBottom: theme.spacing(1)
+    },
+    ticketLabel: {
+      position: 'relative',
+      top: -3
+    },
+    labelIcon: {
+      paddingRight: 0,
+      '& .outerCircle': {
+        fill: theme.bg.offWhiteDT,
+        stroke: theme.bg.main
+      },
+      '& .circle': {
+        stroke: theme.bg.main
+      }
+    },
+    listParent: {},
+    status: {
+      marginLeft: theme.spacing(1),
+      color: theme.color.white
+    },
+    open: {
+      backgroundColor: theme.color.green
+    },
+    closed: {
+      backgroundColor: theme.color.red
     }
-  },
-  listParent: {},
-  status: {
-    marginLeft: theme.spacing.unit,
-    color: theme.color.white
-  },
-  open: {
-    backgroundColor: theme.color.green
-  },
-  closed: {
-    backgroundColor: theme.color.red
-  }
-});
+  });
 
 type RouteProps = RouteComponentProps<{ ticketId?: string }>;
 
@@ -174,9 +177,9 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
       this.setState({
         ticket: {
           ...this.state.ticket!,
-          attachments: ticket.attachments,
-          ticketCloseSuccess: false
-        }
+          attachments: ticket.attachments
+        },
+        ticketCloseSuccess: false
       });
     });
   };
@@ -256,8 +259,12 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
 
   renderEntityLabelWithIcon = () => {
     const { classes } = this.props;
-    const { label, type } = this.state.ticket!.entity;
-    const icon: JSX.Element = this.getEntityIcon(type);
+    const { entity } = this.state.ticket!;
+    if (!entity) {
+      return null;
+    }
+    const icon: JSX.Element = this.getEntityIcon(entity.type);
+    const target = getLinkTargets(entity);
     return (
       <Grid
         container
@@ -269,7 +276,15 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
           {icon}
         </Grid>
         <Grid item>
-          <Typography className={classes.ticketLabel}>{label}</Typography>
+          {target !== null ? (
+            <Link to={target} className="secondaryLink">
+              {entity.label}
+            </Link>
+          ) : (
+            <Typography className={classes.ticketLabel}>
+              {entity.label}
+            </Typography>
+          )}
         </Grid>
       </Grid>
     );

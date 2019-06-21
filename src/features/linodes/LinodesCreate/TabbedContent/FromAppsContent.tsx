@@ -3,12 +3,12 @@ import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { Sticky, StickyProps } from 'react-sticky';
 import { compose } from 'recompose';
-
 import AccessPanel from 'src/components/AccessPanel';
 import CheckoutBar from 'src/components/CheckoutBar';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -21,6 +21,7 @@ import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
+import { AppDetailDrawer } from 'src/features/OneClickApps';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import AddonsPanel from '../AddonsPanel';
 import SelectAppPanel from '../SelectAppPanel';
@@ -45,20 +46,21 @@ import {
 
 type ClassNames = 'sidebar' | 'emptyImagePanel' | 'emptyImagePanelText';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  sidebar: {
-    [theme.breakpoints.up('md')]: {
-      marginTop: '-130px !important'
+const styles = (theme: Theme) =>
+  createStyles({
+    sidebar: {
+      [theme.breakpoints.up('md')]: {
+        marginTop: '-130px !important'
+      }
+    },
+    emptyImagePanel: {
+      padding: theme.spacing(3)
+    },
+    emptyImagePanelText: {
+      marginTop: theme.spacing(1),
+      padding: `${theme.spacing(1)}px 0`
     }
-  },
-  emptyImagePanel: {
-    padding: theme.spacing.unit * 3
-  },
-  emptyImagePanelText: {
-    marginTop: theme.spacing.unit,
-    padding: `${theme.spacing.unit}px 0`
-  }
-});
+  });
 
 const errorResources = {
   type: 'A plan selection',
@@ -81,7 +83,17 @@ type CombinedProps = WithStyles<ClassNames> &
   StateProps &
   SetDocsProps;
 
-class FromAppsContent extends React.PureComponent<CombinedProps> {
+interface State {
+  detailDrawerOpen: boolean;
+  selectedScriptForDrawer: string;
+}
+
+class FromAppsContent extends React.PureComponent<CombinedProps, State> {
+  state: State = {
+    detailDrawerOpen: false,
+    selectedScriptForDrawer: ''
+  };
+
   handleSelectStackScript = (
     id: number,
     label: string,
@@ -143,7 +155,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
       tags
     } = this.props;
 
-    handleSubmitForm('createFromApp', {
+    handleSubmitForm({
       region: selectedRegionID,
       type: selectedTypeID,
       stackscript_id: selectedStackScriptID,
@@ -158,6 +170,19 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
         .filter(u => u.selected)
         .map(u => u.username),
       tags: tags ? tags.map((item: Tag) => item.value) : []
+    });
+  };
+
+  openDrawer = (stackScriptLabel: string) => {
+    this.setState({
+      detailDrawerOpen: true,
+      selectedScriptForDrawer: stackScriptLabel
+    });
+  };
+
+  closeDrawer = () => {
+    this.setState({
+      detailDrawerOpen: false
     });
   };
 
@@ -215,6 +240,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
             selectedStackScriptID={selectedStackScriptID}
             disabled={userCannotCreateLinode}
             handleClick={this.handleSelectStackScript}
+            openDrawer={this.openDrawer}
             error={hasErrorFor('stackscript_id')}
           />
           {!userCannotCreateLinode &&
@@ -383,6 +409,11 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
             }}
           </Sticky>
         </Grid>
+        <AppDetailDrawer
+          open={this.state.detailDrawerOpen}
+          stackscriptID={this.state.selectedScriptForDrawer}
+          onClose={this.closeDrawer}
+        />
       </React.Fragment>
     );
   }

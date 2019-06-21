@@ -7,7 +7,8 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import MenuItem from 'src/components/core/MenuItem';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -23,14 +24,15 @@ import ImageAndPassword from '../LinodeSettings/ImageAndPassword';
 
 type ClassNames = 'root' | 'section' | 'divider';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  section: {},
-  divider: {
-    margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px 0 `,
-    width: `calc(100% - ${theme.spacing.unit * 2}px)`
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    section: {},
+    divider: {
+      margin: `${theme.spacing(2)}px ${theme.spacing(1)}px 0 `,
+      width: `calc(100% - ${theme.spacing(2)}px)`
+    }
+  });
 
 interface EditableFields {
   label: string;
@@ -263,7 +265,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
             <ActionsPanel>
               <Button
                 onClick={onSubmit}
-                type="primary"
+                buttonType="primary"
                 loading={submitting}
                 data-qa-disk-submit
               >
@@ -271,7 +273,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
               </Button>
               <Button
                 onClick={onClose}
-                type="secondary"
+                buttonType="secondary"
                 className="cancel"
                 data-qa-disk-cancel
               >

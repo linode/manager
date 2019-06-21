@@ -2,20 +2,9 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { deleteSSHKey } from 'src/services/profile';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props {
   open: boolean;
@@ -30,7 +19,7 @@ interface State {
   error?: Error;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 class DeleteSSHKeyDialog extends React.PureComponent<CombinedProps, State> {
   state: State = {
@@ -71,12 +60,12 @@ class DeleteSSHKeyDialog extends React.PureComponent<CombinedProps, State> {
 
     return (
       <ActionsPanel>
-        <Button type="cancel" onClick={closeDialog} data-qa-cancel-delete>
+        <Button buttonType="cancel" onClick={closeDialog} data-qa-cancel-delete>
           Cancel
         </Button>
         <Button
           loading={submitting}
-          type="primary"
+          buttonType="primary"
           onClick={this.onSubmit}
           data-qa-confirm-delete
         >
@@ -103,6 +92,4 @@ class DeleteSSHKeyDialog extends React.PureComponent<CombinedProps, State> {
   };
 }
 
-const styled = withStyles(styles);
-
-export default styled(DeleteSSHKeyDialog);
+export default DeleteSSHKeyDialog;

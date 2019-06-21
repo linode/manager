@@ -4,7 +4,8 @@ import { compose, map, pathOr, take } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -22,15 +23,16 @@ type ClassNames = 'root' | 'itemTitle';
 
 const req = Axios.create();
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    padding: theme.spacing.unit * 3,
-    borderBottom: `1px solid ${theme.palette.divider}`
-  },
-  itemTitle: {
-    marginBottom: theme.spacing.unit
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(3),
+      borderBottom: `1px solid ${theme.palette.divider}`
+    },
+    itemTitle: {
+      marginBottom: theme.spacing(1)
+    }
+  });
 
 export interface BlogItem {
   description: string;

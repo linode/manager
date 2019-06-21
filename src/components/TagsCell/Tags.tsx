@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -10,11 +11,12 @@ import Tag from 'src/components/Tag';
 
 type ClassNames = 'root';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    backgroundColor: 'transparent'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      backgroundColor: 'transparent'
+    }
+  });
 
 interface Props {
   tags: string[];

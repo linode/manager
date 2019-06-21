@@ -1,13 +1,5 @@
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from '@material-ui/core/styles';
 import * as React from 'react';
 import { compose } from 'recompose';
-
-import { deleteTrustedDevice } from 'src/services/profile';
-
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -15,13 +7,8 @@ import Typography from 'src/components/core/Typography';
 import withLoadingAndError, {
   Props as LoadingAndErrorProps
 } from 'src/components/withLoadingAndError';
+import { deleteTrustedDevice } from 'src/services/profile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props {
   open: boolean;
@@ -30,7 +17,7 @@ interface Props {
   refreshListOfDevices: () => void;
 }
 
-type CombinedProps = Props & LoadingAndErrorProps & WithStyles<ClassNames>;
+type CombinedProps = Props & LoadingAndErrorProps;
 
 class TrustedDevicesDialog extends React.PureComponent<CombinedProps, {}> {
   handleCloseDialog = () => {
@@ -86,10 +73,7 @@ class TrustedDevicesDialog extends React.PureComponent<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles);
-
 export default compose<CombinedProps, Props>(
-  styled,
   withLoadingAndError
 )(TrustedDevicesDialog);
 
@@ -108,11 +92,11 @@ class DialogActions extends React.PureComponent<ActionsProps, {}> {
   render() {
     return (
       <ActionsPanel>
-        <Button type="cancel" onClick={this.props.closeDialog} data-qa-cancel>
+        <Button buttonType="cancel" onClick={this.props.closeDialog} data-qa-cancel>
           Cancel
         </Button>
         <Button
-          type="primary"
+          buttonType="primary"
           loading={this.props.loading}
           onClick={this.handleSubmit}
           data-qa-submit

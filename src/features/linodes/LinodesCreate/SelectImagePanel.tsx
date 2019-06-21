@@ -41,13 +41,13 @@ const sortCreatedDESC = compose<any, any, any>(
   reverse,
   sortBy(
     compose(
-      created => moment(created).format('x'),
+      (created: string) => moment(created).format('x'),
       prop('created')
     )
   )
 );
 
-const groupByVendor = groupBy(prop('vendor'));
+const groupByVendor = groupBy(prop('vendor') as any);
 
 export const getPublicImages = compose<any, any, any, any, any, any, any>(
   sortByVendor,

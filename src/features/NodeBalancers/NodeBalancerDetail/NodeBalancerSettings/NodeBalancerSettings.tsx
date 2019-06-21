@@ -7,7 +7,8 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import InputAdornment from 'src/components/core/InputAdornment';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -27,22 +28,23 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 type ClassNames = 'root' | 'title' | 'inner' | 'expPanelButton';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    padding: theme.spacing.unit * 3
-  },
-  title: {
-    marginTop: theme.spacing.unit,
-    marginBottom: theme.spacing.unit * 2
-  },
-  inner: {
-    paddingBottom: theme.spacing.unit * 3
-  },
-  expPanelButton: {
-    padding: 0,
-    marginTop: theme.spacing.unit * 2
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(3)
+    },
+    title: {
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(2)
+    },
+    inner: {
+      paddingBottom: theme.spacing(3)
+    },
+    expPanelButton: {
+      padding: 0,
+      marginTop: theme.spacing(2)
+    }
+  });
 
 interface Props {
   nodeBalancerId: number;
@@ -181,7 +183,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
           <ActionsPanel className={classes.expPanelButton}>
             <Button
               onClick={this.onSubmitUpdateNodeBalancer}
-              type="primary"
+              buttonType="primary"
               disabled={isSubmitting}
               data-qa-label-save
             >
@@ -196,7 +198,7 @@ class NodeBalancerSettings extends React.Component<CombinedProps, State> {
 
 const controlClientConnectionThrottle = compose(
   clamp(0, 20),
-  defaultNumeric(0)
+  (value: string) => defaultNumeric(0, value)
 );
 
 const styled = withStyles(styles);

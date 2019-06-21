@@ -2,24 +2,26 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
-  StyleRulesCallback,
+  createStyles,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
 
 type ClassNames = 'root' | 'selected';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: any) => ({
-  root: {
-    ...theme.overrides.MuiTab.root
-  },
-  selected: {}
-});
+const styles = (theme: any) =>
+  createStyles({
+    root: {
+      ...theme.overrides.MuiTab.root
+    },
+    selected: {}
+  });
 
 interface Props {
   to: string;
   title: string;
   selected?: boolean;
+  ref?: any;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -47,6 +49,6 @@ class TabLink extends React.Component<CombinedProps> {
   }
 }
 
-const styled = withStyles<ClassNames>(styles);
+const styled = withStyles(styles);
 
 export default styled(TabLink);

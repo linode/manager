@@ -1,8 +1,3 @@
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from '@material-ui/core/styles';
 import * as React from 'react';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell';
@@ -10,12 +5,6 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmpty from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props {
   loading: boolean;
@@ -25,7 +14,7 @@ interface Props {
   toggleDialog: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props;
 
 class TrustedDevicesTable extends React.PureComponent<CombinedProps, {}> {
   triggerDeletion = (deviceId: number) => {
@@ -89,9 +78,7 @@ class TrustedDevicesTable extends React.PureComponent<CombinedProps, {}> {
   }
 }
 
-const styled = withStyles(styles);
-
-export default styled(TrustedDevicesTable);
+export default TrustedDevicesTable;
 
 interface ButtonProps {
   deviceId?: number;

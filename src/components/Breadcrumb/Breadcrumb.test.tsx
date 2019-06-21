@@ -22,9 +22,9 @@ describe('Breadcrumb component', () => {
   );
 
   it('contains back icon', () => {
-    expect(wrapper.find('WithStyles(IconButton)')).toHaveLength(1);
+    expect(wrapper.find('WithStyles(ForwardRef(IconButton))')).toHaveLength(1);
     expect(
-      wrapper.find('WithStyles(IconButton)').hasClass('backButton')
+      wrapper.find('WithStyles(ForwardRef(IconButton))').hasClass('backButton')
     ).toBeTruthy();
   });
 

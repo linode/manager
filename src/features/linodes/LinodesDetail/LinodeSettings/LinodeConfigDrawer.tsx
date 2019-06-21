@@ -3,7 +3,6 @@
  * should source it directly from there rather than making an additional request. OR We can source
  * it from there and make the (thunk) request to get the latest/greatest information.
  */
-
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -18,7 +17,8 @@ import FormGroup from 'src/components/core/FormGroup';
 import FormLabel from 'src/components/core/FormLabel';
 import RadioGroup from 'src/components/core/RadioGroup';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -53,15 +53,16 @@ import {
 
 type ClassNames = 'section' | 'divider';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  section: {
-    marginTop: theme.spacing.unit * 2
-  },
-  divider: {
-    margin: `${theme.spacing.unit * 2}px ${theme.spacing.unit}px 0 `,
-    width: `calc(100% - ${theme.spacing.unit * 2}px)`
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    section: {
+      marginTop: theme.spacing(2)
+    },
+    divider: {
+      margin: `${theme.spacing(2)}px ${theme.spacing(1)}px 0 `,
+      width: `calc(100% - ${theme.spacing(2)}px)`
+    }
+  });
 
 interface Helpers {
   updatedb_disabled: boolean;
@@ -97,6 +98,7 @@ interface Props {
 interface State {
   loading: {
     kernels: boolean;
+    config: boolean;
   };
   kernels: Linode.Kernel[];
   errors?: Error | Linode.ApiFieldError[];
@@ -113,7 +115,8 @@ const getAllKernels = getAll<Linode.Kernel>(getLinodeKernels);
 class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   state: State = {
     loading: {
-      kernels: false
+      kernels: false,
+      config: false
     },
     kernels: [],
     fields: LinodeConfigDrawer.defaultFieldsValues()
@@ -341,7 +344,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
           updateFor={[virt_mode, classes]}
         >
           <Typography variant="h3">Virtual Machine</Typography>
-          <FormControl component={'fieldset' as 'div'}>
+          <FormControl>
             <FormLabel
               htmlFor="virt_mode"
               component="label"
@@ -407,7 +410,6 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
           <FormControl
             updateFor={[run_level, classes]}
             fullWidth
-            component={'fieldset' as 'div'}
             disabled={readOnly}
           >
             <FormLabel htmlFor="run_level" component="label">
@@ -451,10 +453,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             user explicity selects the option to change the
             memory limit.
           */}
-          <FormControl
-            updateFor={[this.state.fields.setMemoryLimit, classes]}
-            component={'fieldset' as 'div'}
-          >
+          <FormControl updateFor={[this.state.fields.setMemoryLimit, classes]}>
             <FormLabel
               htmlFor="memory_limit"
               component="label"
@@ -567,7 +566,6 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
               classes
             ]}
             fullWidth
-            component={'fieldset' as 'div'}
           >
             <FormGroup>
               <FormControlLabel
@@ -629,10 +627,14 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
         </Grid>
         <Grid item>
           <ActionsPanel>
-            <Button onClick={this.onSubmit} type="primary" disabled={readOnly}>
+            <Button
+              onClick={this.onSubmit}
+              buttonType="primary"
+              disabled={readOnly}
+            >
               Submit
             </Button>
-            <Button type="secondary" className="cancel" onClick={onClose}>
+            <Button buttonType="secondary" className="cancel" onClick={onClose}>
               Cancel
             </Button>
           </ActionsPanel>

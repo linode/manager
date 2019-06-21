@@ -2,7 +2,7 @@ import OpenInNew from '@material-ui/icons/OpenInNew';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import {
-  StyleRulesCallback,
+  createStyles,
   Theme,
   withStyles,
   WithStyles
@@ -12,29 +12,36 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
 
-type ClassNames = 'root' | 'footnote' | 'link' | 'icon';
+import HelpIcon from 'src/components/HelpIcon';
 
-const styles: StyleRulesCallback<ClassNames> = (theme: Theme) => ({
-  root: {},
-  footnote: {
-    fontSize: 14,
-    cursor: 'pointer'
-  },
-  link: {
-    textDecoration: 'underline'
-  },
-  icon: {
-    display: 'inline-block',
-    fontSize: '0.8em',
-    marginLeft: theme.spacing.unit / 3
-  }
-});
+type ClassNames = 'root' | 'footnote' | 'link' | 'icon' | 'toolTip';
+
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    footnote: {
+      fontSize: 14,
+      cursor: 'pointer'
+    },
+    link: {
+      textDecoration: 'underline'
+    },
+    icon: {
+      display: 'inline-block',
+      fontSize: '0.8em',
+      marginLeft: theme.spacing(1) / 3
+    },
+    toolTip: {
+      paddingTop: theme.spacing(1)
+    }
+  });
 
 interface Props {
   backups_enabled: boolean;
   hasLinodesWithoutBackups: boolean;
   onChange: () => void;
   openBackupsDrawer: () => void;
+  isManagedCustomer: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -45,7 +52,8 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = props => {
     classes,
     hasLinodesWithoutBackups,
     onChange,
-    openBackupsDrawer
+    openBackupsDrawer,
+    isManagedCustomer
   } = props;
 
   return (
@@ -53,7 +61,16 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = props => {
       <ExpansionPanel heading="Backup Auto Enrollment" defaultExpanded={true}>
         <Grid container direction="column" className={classes.root}>
           <Grid item>
-            <Typography variant="h2">Back Up All New Linodes</Typography>
+            <Typography variant="h2">
+              Back Up All New Linodes
+              {!!isManagedCustomer && (
+                <HelpIcon
+                  className={classes.toolTip}
+                  text={`You're a Managed customer, which means your Linodes are already automatically
+              backed up - no need to toggle this setting.`}
+                />
+              )}
+            </Typography>
           </Grid>
           <Grid item>
             <Typography variant="body1">
@@ -79,8 +96,9 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = props => {
                 control={
                   <Toggle
                     onChange={onChange}
-                    checked={backups_enabled}
+                    checked={!!isManagedCustomer ? true : backups_enabled}
                     data-qa-toggle-auto-backup
+                    disabled={!!isManagedCustomer}
                   />
                 }
                 label={
@@ -91,7 +109,7 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = props => {
               />
             </Grid>
           </Grid>
-          {!backups_enabled && hasLinodesWithoutBackups && (
+          {!isManagedCustomer && !backups_enabled && hasLinodesWithoutBackups && (
             <Grid item>
               <Typography variant="body1" className={classes.footnote}>
                 {`For existing Linodes without backups, `}

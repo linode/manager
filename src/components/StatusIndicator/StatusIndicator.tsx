@@ -1,7 +1,8 @@
 import Cached from '@material-ui/icons/Cached';
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -17,38 +18,39 @@ const defaultStyles = {
   'user-select': 'none'
 };
 
-const styles: StyleRulesCallback<CSSClasses> = theme => ({
-  '@keyframes rotate': {
-    from: {
-      transform: 'rotate(0deg)'
+const styles = (theme: Theme) =>
+  createStyles({
+    '@keyframes rotate': {
+      from: {
+        transform: 'rotate(0deg)'
+      },
+      to: {
+        transform: 'rotate(360deg)'
+      }
     },
-    to: {
-      transform: 'rotate(360deg)'
+    loading: {
+      fontSize: '1.0rem',
+      position: 'relative',
+      top: 1,
+      left: -1,
+      '& svg': {
+        animation: '$rotate 2s linear infinite',
+        fill: theme.color.offBlack
+      }
+    },
+    active: {
+      color: '#01b159',
+      ...defaultStyles
+    },
+    error: {
+      color: '#d01e1e',
+      ...defaultStyles
+    },
+    inactive: {
+      color: '#efefef',
+      ...defaultStyles
     }
-  },
-  loading: {
-    fontSize: '1.0rem',
-    position: 'relative',
-    top: 1,
-    left: -1,
-    '& svg': {
-      animation: 'rotate 2s linear infinite',
-      fill: theme.color.offBlack
-    }
-  },
-  active: {
-    color: '#01b159',
-    ...defaultStyles
-  },
-  error: {
-    color: '#d01e1e',
-    ...defaultStyles
-  },
-  inactive: {
-    color: '#efefef',
-    ...defaultStyles
-  }
-});
+  });
 
 const StatusIndicator = (props: Props & WithStyles<CSSClasses>) => {
   const { classes, status } = props;

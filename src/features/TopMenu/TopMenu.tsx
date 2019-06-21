@@ -3,7 +3,8 @@ import * as React from 'react';
 import AppBar from 'src/components/core/AppBar';
 import IconButton from 'src/components/core/IconButton';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -17,41 +18,42 @@ import UserNotificationsMenu from './UserNotificationsMenu';
 
 type ClassNames = 'root' | 'flex' | 'appBar' | 'toolbar' | 'navIconHide';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    color: theme.palette.text.primary
-  },
-  flex: {
-    flex: 1
-  },
-  appBar: {
-    color: theme.palette.text.primary,
-    backgroundColor: theme.bg.white,
-    position: 'relative',
-    paddingRight: '0 !important'
-  },
-  toolbar: {
-    minHeight: theme.spacing.unit * 4 + 32,
-    padding: `${theme.spacing.unit}px 0`,
-    [theme.breakpoints.up('md')]: {
-      minHeight: theme.spacing.unit * 5 + 40,
-      paddingLeft: theme.spacing.unit * 3,
-      paddingRight: theme.spacing.unit * 3
-    }
-  },
-  navIconHide: {
-    '& > span': {
-      justifyContent: 'flex-start'
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      color: theme.palette.text.primary
     },
-    '& svg': {
-      width: 32,
-      height: 32
+    flex: {
+      flex: 1
     },
-    [theme.breakpoints.up('md')]: {
-      display: 'none'
+    appBar: {
+      color: theme.palette.text.primary,
+      backgroundColor: theme.bg.white,
+      position: 'relative',
+      paddingRight: '0 !important'
+    },
+    toolbar: {
+      minHeight: theme.spacing(4) + 32,
+      padding: `${theme.spacing(1)}px 0`,
+      [theme.breakpoints.up('md')]: {
+        minHeight: theme.spacing(5) + 40,
+        paddingLeft: theme.spacing(3),
+        paddingRight: theme.spacing(3)
+      }
+    },
+    navIconHide: {
+      '& > span': {
+        justifyContent: 'flex-start'
+      },
+      '& svg': {
+        width: 32,
+        height: 32
+      },
+      [theme.breakpoints.up('md')]: {
+        display: 'none'
+      }
     }
-  }
-});
+  });
 
 interface Props {
   openSideMenu: () => void;

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -9,13 +10,14 @@ import Grid from 'src/components/Grid';
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  title: {
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    title: {
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
+    }
+  });
 
 interface Props {
   title: string;

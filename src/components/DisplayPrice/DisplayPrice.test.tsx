@@ -20,11 +20,11 @@ describe('DisplayPrice component', () => {
     expect(displayPrice(100)).toEqual('$100.00');
   });
   it('should not display an interval unless specified', () => {
-    expect(component.find('WithStyles(Typography)')).toHaveLength(1);
+    expect(component.find('WithStyles(ForwardRef(Typography))')).toHaveLength(1);
   });
   it('should display the interval when specified', () => {
     component.setProps({ interval: 'mo' });
-    expect(component.find('WithStyles(Typography)')).toHaveLength(2);
+    expect(component.find('WithStyles(ForwardRef(Typography))')).toHaveLength(2);
     expect(
       component.containsMatchingElement(<Typography>/mo</Typography>)
     ).toBeTruthy();

@@ -1,8 +1,10 @@
-import { compose, lensPath, path, set } from 'ramda';
+import { lensPath, path, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
+import { compose } from 'recompose';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -19,16 +21,17 @@ import TwoFactor from './TwoFactor';
 
 type ClassNames = 'root' | 'title';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {
-    padding: theme.spacing.unit * 3,
-    paddingBottom: theme.spacing.unit * 3,
-    marginBottom: theme.spacing.unit * 3
-  },
-  title: {
-    marginBottom: theme.spacing.unit * 2
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {
+      padding: theme.spacing(3),
+      paddingBottom: theme.spacing(3),
+      marginBottom: theme.spacing(3)
+    },
+    title: {
+      marginBottom: theme.spacing(2)
+    }
+  });
 
 interface State {
   success?: string;
@@ -141,7 +144,7 @@ const connected = connect(
   mapDispatchToProps
 );
 
-const enhanced = compose(
+const enhanced = compose<CombinedProps, {}>(
   styled,
   connected,
   setDocs(AuthenticationSettings.docs)

@@ -6,9 +6,10 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import AppBar from 'src/components/core/AppBar';
 import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
 } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
@@ -22,17 +23,18 @@ import TicketList from './TicketList';
 
 type ClassNames = 'root' | 'title' | 'titleWrapper';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  title: {
-    marginBottom: theme.spacing.unit * 2
-  },
-  titleWrapper: {
-    display: 'flex',
-    alignItems: 'center',
-    wordBreak: 'break-all'
-  }
-});
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    title: {
+      marginBottom: theme.spacing(2)
+    },
+    titleWrapper: {
+      display: 'flex',
+      alignItems: 'center',
+      wordBreak: 'break-all'
+    }
+  });
 
 interface Props {
   history: any;
@@ -44,6 +46,8 @@ interface State {
   drawerOpen: boolean;
   notice?: string;
   newTicket?: Linode.SupportTicket;
+  prefilledTitle?: string;
+  prefilledDescription?: string;
 }
 
 const tabs = ['open', 'closed'];
@@ -66,9 +70,22 @@ export class SupportTicketsLanding extends React.PureComponent<
   constructor(props: CombinedProps) {
     super(props);
 
+    /** ?drawerOpen=true to allow external links to go directly to the ticket drawer */
+    const parsedParams = getParamsFromUrl(props.location.search);
+    const drawerOpen = pathOr('false', ['drawerOpen'], parsedParams) === 'true';
+
+    const stateParams = this.props.location.state;
+
     this.state = {
       value: getSelectedTabFromQueryString(props.location.search),
-      drawerOpen: false
+      /** If we came here via a SupportLink that's passing data, use that to determine initial state
+       * @todo used state state params here to allow passing long/private descriptions without
+       * messing with the URL. However, since we also want to be able to have external links
+       * that open the drawer, is this duplicative and bad?
+       */
+      drawerOpen: stateParams ? stateParams.open : drawerOpen,
+      prefilledDescription: stateParams ? stateParams.description : undefined,
+      prefilledTitle: stateParams ? stateParams.title : undefined
     };
   }
 
@@ -127,12 +144,14 @@ export class SupportTicketsLanding extends React.PureComponent<
   };
 
   renderTicketDrawer = () => {
-    const { drawerOpen } = this.state;
+    const { drawerOpen, prefilledDescription, prefilledTitle } = this.state;
     return (
       <SupportTicketDrawer
         open={drawerOpen}
         onClose={this.closeDrawer}
         onSuccess={this.handleAddTicketSuccess}
+        prefilledDescription={prefilledDescription}
+        prefilledTitle={prefilledTitle}
       />
     );
   };
@@ -158,7 +177,7 @@ export class SupportTicketsLanding extends React.PureComponent<
             <Grid container alignItems="flex-end">
               <Grid item>
                 <Button
-                  type="primary"
+                  buttonType="primary"
                   onClick={this.openDrawer}
                   data-qa-open-ticket-link
                 >

@@ -1,12 +1,8 @@
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
+import { compose as recompose } from 'recompose'
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import {
-  StyleRulesCallback,
-  WithStyles,
-  withStyles
-} from 'src/components/core/styles';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
@@ -17,12 +13,6 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { debounce } from 'throttle-debounce';
 import { withLinodeDetailContext } from '../linodeDetailContext';
-
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {}
-});
 
 interface Props {
   linodeId: number;
@@ -43,7 +33,7 @@ interface State {
   errors?: Linode.ApiFieldError[];
 }
 
-type CombinedProps = Props & ContextProps & WithStyles<ClassNames>;
+type CombinedProps = Props & ContextProps;
 
 interface ContextProps {
   permissions: Linode.GrantLevel;
@@ -71,7 +61,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
       compose(
         set(lensPath(['submitting']), true),
         set(lensPath(['success']), undefined),
-        set(lensPath(['errors']), undefined)
+        set(lensPath(['errors']), undefined) as () => Linode.ApiFieldError[]
       )
     );
 
@@ -81,7 +71,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
           compose(
             set(lensPath(['success']), `Linode password changed successfully.`),
             set(lensPath(['submitting']), false),
-            set(lensPath(['value']), '')
+            set(lensPath(['value']), '') as () => string
           )
         );
       })
@@ -110,7 +100,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
     return (
       <ActionsPanel>
         <Button
-          type="primary"
+          buttonType="primary"
           onClick={this.changeDiskPassword}
           loading={submitting}
           disabled={disabled || linodeStatus !== 'offline' || submitting}
@@ -249,16 +239,13 @@ class LinodeSettingsPasswordPanel extends React.Component<
   }
 }
 
-const styled = withStyles(styles);
-
 const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
   permissions: linode._permissions
 }));
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Reset Root Password' });
 
-export default compose(
+export default recompose<CombinedProps, Props>(
   errorBoundary,
   linodeContext,
-  styled
 )(LinodeSettingsPasswordPanel) as React.ComponentType<Props>;

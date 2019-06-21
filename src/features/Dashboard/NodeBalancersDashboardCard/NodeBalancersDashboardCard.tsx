@@ -4,7 +4,8 @@ import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import {
-  StyleRulesCallback,
+  createStyles,
+  Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
@@ -33,40 +34,41 @@ type ClassNames =
   | 'actionsCol'
   | 'wrapHeader';
 
-const styles: StyleRulesCallback<ClassNames> = theme => ({
-  root: {},
-  icon: {
-    position: 'relative',
-    top: 3,
-    width: 40,
-    height: 40,
-    '& .circle': {
-      fill: theme.bg.offWhiteDT
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    icon: {
+      position: 'relative',
+      top: 3,
+      width: 40,
+      height: 40,
+      '& .circle': {
+        fill: theme.bg.offWhiteDT
+      },
+      '& .outerCircle': {
+        stroke: theme.bg.main
+      }
     },
-    '& .outerCircle': {
-      stroke: theme.bg.main
+    labelGridWrapper: {
+      paddingLeft: '4px !important',
+      paddingRight: '4px !important'
+    },
+    description: {
+      paddingTop: theme.spacing(1) / 2
+    },
+    labelCol: {
+      width: '70%'
+    },
+    moreCol: {
+      width: '30%'
+    },
+    actionsCol: {
+      width: '10%'
+    },
+    wrapHeader: {
+      wordBreak: 'break-all'
     }
-  },
-  labelGridWrapper: {
-    paddingLeft: '4px !important',
-    paddingRight: '4px !important'
-  },
-  description: {
-    paddingTop: theme.spacing.unit / 2
-  },
-  labelCol: {
-    width: '70%'
-  },
-  moreCol: {
-    width: '30%'
-  },
-  actionsCol: {
-    width: '10%'
-  },
-  wrapHeader: {
-    wordBreak: 'break-all'
-  }
-});
+  });
 
 interface NodeBalancerProps {
   nodeBalancersData: Linode.NodeBalancer[];

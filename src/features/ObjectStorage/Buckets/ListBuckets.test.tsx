@@ -11,8 +11,7 @@ describe('ListBuckets', () => {
       orderBy="label"
       order="asc"
       handleOrderChange={jest.fn()}
-      createBucket={jest.fn()}
-      deleteBucket={jest.fn()}
+      handleClickRemove={jest.fn()}
     />
   );
 
