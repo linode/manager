@@ -21,6 +21,9 @@ export const interceptGPUErrors = (
    * but if we do this anywhere else we'll have to update the typings.
    */
   return errors.map(thisError => {
+    if (!thisError.reason) {
+      return thisError;
+    }
     if (
       thisError.reason.match(/verification is required/) &&
       selectedTypeID.match(/gpu/)
