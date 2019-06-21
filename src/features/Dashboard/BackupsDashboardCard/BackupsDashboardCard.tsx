@@ -22,7 +22,8 @@ type ClassNames =
   | 'section'
   | 'sectionLink'
   | 'title'
-  | 'ctaLink';
+  | 'ctaLink'
+  | 'loading';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -59,6 +60,11 @@ const styles = (theme: Theme) =>
     },
     ctaLink: {
       display: 'block'
+    },
+    loading: {
+      width: '100%',
+      display: 'flex',
+      justifyContent: 'center'
     }
   });
 
@@ -84,15 +90,6 @@ export const BackupsDashboardCard: React.StatelessComponent<
 
   if (accountBackups && !linodesWithoutBackups) {
     return null;
-  }
-
-  if (loading) {
-    /**
-     * The information in this card will be inaccurate until all
-     * of our initial requests for Linodes have completed,
-     * so we need a loading state.
-     */
-    return <CircleProgress />;
   }
 
   return (
@@ -130,32 +127,43 @@ export const BackupsDashboardCard: React.StatelessComponent<
           </Paper>
         </Link>
       )}
-      {/* Only show this section if the user has Linodes without backups */}
-      {Boolean(linodesWithoutBackups) && (
-        <a
-          onClick={openBackupDrawer}
-          data-qa-backup-existing
-          className={classes.ctaLink}
-          href="javascript:;"
-        >
-          <Paper
-            className={classNames({
-              [classes.section]: true,
-              [classes.sectionLink]: true
-            })}
+      {loading ? (
+        /**
+         * The information below will be inaccurate until all
+         * of our initial requests for Linodes have completed,
+         * so we need a loading state.
+         */
+        <Paper className={classes.loading}>
+          <CircleProgress mini />
+        </Paper>
+      ) : (
+        /* Only show this section if the user has Linodes without backups */
+        Boolean(linodesWithoutBackups) && (
+          <a
+            onClick={openBackupDrawer}
+            data-qa-backup-existing
+            className={classes.ctaLink}
+            href="javascript:;"
           >
-            <Typography variant="h3" className={classes.itemTitle}>
-              Enable Backups for Existing Linodes
-            </Typography>
-            <Typography variant="body1" data-qa-linodes-message>
-              {`You currently have
-                ${linodesWithoutBackups} ${
-                linodesWithoutBackups > 1 ? 'Linodes' : 'Linode'
-              }
-                without backups. Enable backups to protect your data.`}
-            </Typography>
-          </Paper>
-        </a>
+            <Paper
+              className={classNames({
+                [classes.section]: true,
+                [classes.sectionLink]: true
+              })}
+            >
+              <Typography variant="h3" className={classes.itemTitle}>
+                Enable Backups for Existing Linodes
+              </Typography>
+              <Typography variant="body1" data-qa-linodes-message>
+                {`You currently have
+                     ${linodesWithoutBackups} ${
+                  linodesWithoutBackups > 1 ? 'Linodes' : 'Linode'
+                }
+                   without backups. Enable backups to protect your data.`}
+              </Typography>
+            </Paper>
+          </a>
+        )
       )}
     </DashboardCard>
   );

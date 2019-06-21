@@ -19,6 +19,7 @@ const classes = {
 const props = {
   linodesWithoutBackups: 0,
   openBackupDrawer: jest.fn(),
+  loading: false,
   classes
 };
 

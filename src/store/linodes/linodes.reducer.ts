@@ -29,6 +29,7 @@ const getId = <E extends HasNumericID>({ id }: E) => id;
  */
 export interface State extends EntityState<LinodeWithMaintenance, EntityError> {
   initialLoad: boolean;
+  hasFullyLoaded: boolean;
   linodeCount: number;
 }
 
@@ -39,7 +40,8 @@ export const defaultState: State = {
   lastUpdated: 0,
   initialLoad: false,
   linodeCount: 0,
-  error: undefined
+  error: undefined,
+  hasFullyLoaded: false
 };
 
 /**
@@ -106,7 +108,8 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
          * want to get everything rather than
          * have a stale first page.
          */
-        initialLoad: false
+        initialLoad: false,
+        hasFullyLoaded: true
       };
     }
     return {

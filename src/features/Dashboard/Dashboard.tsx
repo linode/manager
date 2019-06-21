@@ -128,7 +128,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
 
 const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
   const linodesData = state.__resources.linodes.entities;
-  const linodesLoading = state.__resources.linodes.loading;
+  const linodesLoading = !state.__resources.linodes.hasFullyLoaded;
 
   return {
     accountBackups: pathOr(
