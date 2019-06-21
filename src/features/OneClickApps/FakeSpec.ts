@@ -77,7 +77,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://linode.com/docs/quick-answers/linux/how-to-use-git/'
       }
     ],
-    href: 'about.gitlab.com',
+    href: 'https://about.gitlab.com',
     logo_url: 'assets/gitlab_color.svg'
   },
   {
