@@ -217,7 +217,10 @@ interface StateProps {
   accountCapabilities: Linode.AccountCapability[];
 }
 
-const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
+const mapStateToProps: MapState<StateProps, CombinedProps> = (
+  state,
+  ownProps
+) => {
   return {
     accountCapabilities: pathOr(
       [],
@@ -238,7 +241,7 @@ const connected = connect(
   mapDispatchToProps
 );
 
-export default compose<CombinedProps, Props>(
+export default compose<CombinedProps, {}>(
   connected,
   withRouter,
   styled
