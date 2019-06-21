@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import { compose } from 'recompose'
+import { compose } from 'recompose';
 import Flag from 'src/assets/icons/flag.svg';
 import Button from 'src/components/Button';
 import Card from 'src/components/core/Card';
@@ -180,8 +180,8 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
               <RegionIndicator region={region} />
             </div>
             <div className={classes.cardSection} data-qa-ips>
-              <IPAddress ips={ipv4} copyRight showAll />
-              <IPAddress ips={[ipv6]} copyRight showAll />
+              {ipv4 && <IPAddress ips={ipv4} copyRight showAll />}
+              {ipv6 && <IPAddress ips={[ipv6]} copyRight showAll />}
             </div>
             <div className={classes.cardSection} data-qa-image>
               {imageLabel}
