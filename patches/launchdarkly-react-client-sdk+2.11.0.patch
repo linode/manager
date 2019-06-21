@@ -1,0 +1,13 @@
+diff --git a/node_modules/launchdarkly-react-client-sdk/lib/withLDProvider.d.ts b/node_modules/launchdarkly-react-client-sdk/lib/withLDProvider.d.ts
+index d5d9676..517ea4c 100644
+--- a/node_modules/launchdarkly-react-client-sdk/lib/withLDProvider.d.ts
++++ b/node_modules/launchdarkly-react-client-sdk/lib/withLDProvider.d.ts
+@@ -56,7 +56,7 @@ export declare function withLDProvider(config: ProviderConfig): <P>(WrappedCompo
+         context: any;
+         setState<K extends "flags" | "ldClient">(state: HocState | ((prevState: Readonly<HocState>, props: Readonly<P>) => HocState | Pick<HocState, K> | null) | Pick<HocState, K> | null, callback?: (() => void) | undefined): void;
+         forceUpdate(callBack?: (() => void) | undefined): void;
+-        readonly props: Readonly<React.PropsWithChildren<P>>;
++        readonly props: Readonly<P> & Readonly<{ children?: React.ReactNode }>;
+         refs: {
+             [key: string]: React.ReactInstance;
+         };

@@ -23,6 +23,7 @@ import LandingLoading from 'src/components/LandingLoading';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
 import VATBanner from 'src/components/VATBanner';
+import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
@@ -618,7 +619,8 @@ export default compose(
   styled,
   withDocumentTitleProvider,
   withSnackbar,
-  withNodeBalancerActions
+  withNodeBalancerActions,
+  withFeatureFlagProvider
 )(App);
 
 export const hasOauthError = (
