@@ -12,11 +12,11 @@ describe('Breadcrumb component', () => {
       classes={{
         root: '',
         preContainer: '',
-        linkText: '',
+        crumb: '',
+        crumbLink: '',
         labelText: '',
         prefixComponentWrapper: '',
-        slash: '',
-        firstSlash: ''
+        slash: ''
       }}
     />
   );

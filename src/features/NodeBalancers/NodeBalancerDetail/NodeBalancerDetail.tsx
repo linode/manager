@@ -308,6 +308,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
                 labelTitle={nodeBalancerLabel}
                 labelOptions={{ linkTo: this.getLabelLink() }}
                 onEditHandlers={{
+                  editableTextTitle: nodeBalancerLabel,
                   onEdit: this.updateLabel,
                   onCancel: this.cancelUpdate,
                   errorText: apiErrorText

@@ -151,12 +151,17 @@ export class SupportTicketsLanding extends React.PureComponent<
       <React.Fragment>
         <DocumentTitleSegment segment="Support Tickets" />
         <AbuseTicketBanner />
-        <Grid container justify="space-between" updateFor={[classes]}>
+        <Grid
+          container
+          justify="space-between"
+          updateFor={[classes]}
+          alignItems="center"
+        >
           <Grid item>
             <Breadcrumb
               linkTo="/support"
               linkText="Get Help"
-              labelTitle="Customer Support"
+              labelTitle="Support Tickets"
               data-qa-breadcrumb
             />
           </Grid>
