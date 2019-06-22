@@ -109,9 +109,9 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
     <Grid container justify="space-between" data-qa-linode={linode.label}>
       <Grid item>
         <Breadcrumb
-          linkTo="/linodes"
-          removeCrumb={2}
+          removeCrumbX={2}
           labelOptions={{ linkTo: getLabelLink() }}
+          preserveLastCrumb
           onEditHandlers={
             !disabled
               ? {
