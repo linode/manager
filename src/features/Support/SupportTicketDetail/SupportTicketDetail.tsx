@@ -345,12 +345,24 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
         <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
             <Breadcrumb
-              linkTo={{
-                pathname: `/support/tickets`,
-                // If we're viewing a `Closed` ticket, the Breadcrumb link should take us to `Closed` tickets.
-                search: `type=${ticket.status === 'closed' ? 'closed' : 'open'}`
-              }}
-              linkText="Support Tickets"
+              // linkTo={{
+              //   pathname: `/support/tickets`,
+              //   // If we're viewing a `Closed` ticket, the Breadcrumb link should take us to `Closed` tickets.
+              //   search: `type=${ticket.status === 'closed' ? 'closed' : 'open'}`
+              // }}
+              // linkText="Tickets"
+              linkOverrides={[
+                {
+                  position: 2,
+                  linkTo: {
+                    pathname: `/support/tickets`,
+                    // If we're viewing a `Closed` ticket, the Breadcrumb link should take us to `Closed` tickets.
+                    search: `type=${
+                      ticket.status === 'closed' ? 'closed' : 'open'
+                    }`
+                  }
+                }
+              ]}
               labelTitle={`#${ticket.id}: ${ticket.summary}`}
               labelOptions={{
                 subtitle: `${

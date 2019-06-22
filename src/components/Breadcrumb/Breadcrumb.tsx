@@ -78,16 +78,24 @@ interface LabelProps {
   subtitle?: string;
   style?: CSSProperties;
 }
+
+interface LinkOverridesProps {
+  position: number;
+  linkTo: LocationDescriptor;
+}
+
 export interface Props {
   // linkTo will be passed in to a <Link /> component, so we borrow the
   // LocationDescriptor interface from the history module
-  linkTo: LocationDescriptor;
-  linkText?: string;
+  // linkTo: LocationDescriptor;
+  // linkText?: string;
   labelTitle?: string;
   labelOptions?: LabelProps;
   onEditHandlers?: EditableProps;
   prefixStyle?: CSSProperties;
-  removeCrumb?: number;
+  removeCrumbX?: number;
+  preserveLastCrumb?: boolean;
+  linkOverrides?: LinkOverridesProps[];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -122,22 +130,29 @@ export class Breadcrumb extends React.Component<CombinedProps, State> {
       labelOptions,
       onEditHandlers,
       prefixStyle,
-      removeCrumb
+      removeCrumbX,
+      linkOverrides
     } = this.props;
 
     const Crumbs = () => {
       const { paths } = this.state;
-      const pathMap = removeCrumb
-        ? paths.splice(removeCrumb - 1, 1) && paths
+      const pathMap = removeCrumbX
+        ? paths.splice(removeCrumbX - 1, 1) && paths
         : paths;
       return (
         <>
-          {pathMap.map((crumb, key) => {
+          {pathMap.slice(0, -1).map((crumb, key) => {
             const link =
               '/' + paths.slice(0, -(paths.length - (key + 1))).join('/');
+            const override =
+              linkOverrides && linkOverrides.find(e => e.position === key + 1);
+
             return (
               <React.Fragment key={key}>
-                <Link to={link} data-qa-link>
+                <Link
+                  to={linkOverrides && override ? override.linkTo : link}
+                  data-qa-link
+                >
                   <Typography
                     className={classNames({
                       [classes.crumb]: true,

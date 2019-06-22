@@ -159,9 +159,9 @@ export class SupportTicketsLanding extends React.PureComponent<
         >
           <Grid item>
             <Breadcrumb
-              linkTo="/support"
-              linkText="Get Help"
-              labelTitle="Support Tickets"
+              // linkTo="/support"
+              // linkText="Get Help"
+              labelTitle="Tickets"
               data-qa-breadcrumb
             />
           </Grid>
