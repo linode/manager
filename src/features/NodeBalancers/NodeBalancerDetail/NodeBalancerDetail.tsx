@@ -303,9 +303,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
           <Grid container justify="space-between">
             <Grid item>
               <Breadcrumb
-                linkTo="/nodebalancers"
-                linkText="NodeBalancers"
-                labelTitle={nodeBalancerLabel}
+                // labelTitle={nodeBalancerLabel}
                 labelOptions={{ linkTo: this.getLabelLink() }}
                 removeCrumbX={2}
                 onEditHandlers={{

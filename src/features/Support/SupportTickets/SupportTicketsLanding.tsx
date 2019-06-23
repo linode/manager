@@ -158,12 +158,7 @@ export class SupportTicketsLanding extends React.PureComponent<
           alignItems="center"
         >
           <Grid item>
-            <Breadcrumb
-              // linkTo="/support"
-              // linkText="Get Help"
-              labelTitle="Tickets"
-              data-qa-breadcrumb
-            />
+            <Breadcrumb labelTitle="Tickets" data-qa-breadcrumb />
           </Grid>
           <Grid item>
             <Grid container alignItems="flex-end">

@@ -384,8 +384,6 @@ class UserDetail extends React.Component<CombinedProps> {
         <Grid container justify="space-between">
           <Grid item>
             <Breadcrumb
-              linkTo="/account/users"
-              linkText="Users"
               labelTitle={username}
               labelOptions={{
                 prefixComponent: maybeGravatar,

@@ -312,10 +312,11 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
         <Grid container justify="space-between">
           <Grid item style={{ marginBottom: 16 }}>
             <Breadcrumb
-              linkTo="/stackscripts"
-              linkText="StackScripts"
-              labelTitle="Edit StackScript"
+              labelTitle="Edit"
               data-qa-update-stackscript-breadcrumb
+              linkOverrides={[
+                { position: 2, label: this.defaultStackScriptValues.labelText }
+              ]}
             />
           </Grid>
         </Grid>
