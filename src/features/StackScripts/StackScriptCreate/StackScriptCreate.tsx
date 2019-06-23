@@ -263,8 +263,6 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         <Grid container justify="space-between">
           <Grid item>
             <Breadcrumb
-              linkTo="/stackscripts"
-              linkText="StackScripts"
               labelTitle="Create New StackScript"
               data-qa-create-stackscript-breadcrumb
             />

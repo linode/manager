@@ -81,14 +81,11 @@ interface LabelProps {
 
 interface LinkOverridesProps {
   position: number;
-  linkTo: LocationDescriptor;
+  linkTo?: LocationDescriptor;
+  label?: string;
 }
 
 export interface Props {
-  // linkTo will be passed in to a <Link /> component, so we borrow the
-  // LocationDescriptor interface from the history module
-  // linkTo: LocationDescriptor;
-  // linkText?: string;
   labelTitle?: string;
   labelOptions?: LabelProps;
   onEditHandlers?: EditableProps;
@@ -150,7 +147,13 @@ export class Breadcrumb extends React.Component<CombinedProps, State> {
             return (
               <React.Fragment key={key}>
                 <Link
-                  to={linkOverrides && override ? override.linkTo : link}
+                  to={
+                    linkOverrides && override
+                      ? override.linkTo
+                        ? override.linkTo
+                        : link
+                      : link
+                  }
                   data-qa-link
                 >
                   <Typography
@@ -160,7 +163,11 @@ export class Breadcrumb extends React.Component<CombinedProps, State> {
                     })}
                     data-qa-link-text
                   >
-                    {crumb}
+                    {linkOverrides && override
+                      ? override.label
+                        ? override.label
+                        : crumb
+                      : crumb}
                   </Typography>
                 </Link>
                 <Typography component="span" className={classes.slash}>
