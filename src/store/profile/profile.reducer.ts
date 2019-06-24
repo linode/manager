@@ -2,13 +2,9 @@ import { pathOr } from 'ramda';
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
 import { EntityError, RequestableData } from '../types';
-import {
-  getProfileActions,
-  handleUpdateProfile,
-  ProfileWithPreferences
-} from './profile.actions';
+import { getProfileActions, handleUpdateProfile } from './profile.actions';
 
-export type State = RequestableData<ProfileWithPreferences, EntityError>;
+export type State = RequestableData<Linode.Profile, EntityError>;
 
 interface Action<T> {
   type: string;
@@ -25,7 +21,7 @@ export const defaultState: State = {
 
 const reducer: Reducer<State> = (
   state: State = defaultState,
-  action: Action<ProfileWithPreferences>
+  action: Action<Linode.Profile>
 ) => {
   if (isType(action, getProfileActions.started)) {
     const {} = action.payload;

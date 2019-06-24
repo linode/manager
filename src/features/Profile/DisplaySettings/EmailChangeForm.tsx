@@ -15,8 +15,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import { ProfileWithPreferences } from 'src/store/profile/profile.actions';
-
 type ClassNames = 'root' | 'title';
 
 const styles = (theme: Theme) =>
@@ -33,9 +31,7 @@ const styles = (theme: Theme) =>
 interface Props {
   username: string;
   email: string;
-  updateProfile: (
-    v: Partial<Linode.Profile>
-  ) => Promise<ProfileWithPreferences>;
+  updateProfile: (v: Partial<Linode.Profile>) => Promise<Linode.Profile>;
   errors?: Linode.ApiFieldError[];
 }
 

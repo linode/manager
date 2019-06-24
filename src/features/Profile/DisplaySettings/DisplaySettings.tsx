@@ -11,7 +11,6 @@ import {
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { AccountsAndPasswords } from 'src/documentation';
-import { ProfileWithPreferences } from 'src/store/profile/profile.actions';
 import { updateProfile as handleUpdateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
 import EmailChangeForm from './EmailChangeForm';
@@ -112,7 +111,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
 };
 
 interface DispatchProps {
-  updateProfile: (v: Linode.Profile) => Promise<ProfileWithPreferences>;
+  updateProfile: (v: Linode.Profile) => Promise<Linode.Profile>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
