@@ -16,6 +16,7 @@ import styled, { StyleProps } from 'src/containers/SummaryPanels.styles';
 import withImage from 'src/containers/withImage.container';
 import withMostRecentBackup from 'src/containers/withMostRecentBackup.container';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
+import { getImage } from 'src/services/images';
 import {
   LinodeActionsProps,
   withLinodeActions
@@ -75,15 +76,32 @@ type CombinedProps = LinodeContextProps &
   StyleProps &
   WithStyles<ClassNames>;
 
-class SummaryPanel extends React.Component<CombinedProps> {
-  renderImage = () => {
-    const { image } = this.props;
+interface State {
+  imageLabel: string;
+}
 
-    return (
-      <span>
-        {image ? image.label : image === null ? 'No Image' : 'Unknown Image'}
-      </span>
-    );
+class SummaryPanel extends React.Component<CombinedProps, State> {
+  state: State = { imageLabel: this.props.image ? this.props.image.label : '' };
+
+  componentDidMount() {
+    if (!this.props.image && this.props.linodeImageId) {
+      getImage(this.props.linodeImageId)
+        .then(image => {
+          this.setState({
+            imageLabel: image.label
+          });
+        })
+        .catch(err => {
+          // Displaying an error message is probably less preferable than doing nothing,
+          // so we do nothing here.
+        });
+    }
+  }
+
+  renderImage = () => {
+    const { imageLabel } = this.state;
+
+    return imageLabel ? <span>{imageLabel}</span> : null;
   };
 
   updateTags = async (tags: string[]) => {
@@ -194,7 +212,7 @@ interface WithImage {
 
 interface LinodeContextProps {
   linodeId: number;
-  linodeImageId: string;
+  linodeImageId: string | null;
   linodeIpv4: any;
   linodeIpv6: any;
   linodeRegion: string;
