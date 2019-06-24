@@ -54,7 +54,7 @@ storiesOf('Breadcrumb', module)
   .add('Basic Breadcrumb', () => (
     <StaticRouter location="/" context={{}}>
       <div style={{ padding: 24 }}>
-        <Breadcrumb allCustomCrumbs={customCrumbs} />
+        <Breadcrumb allCustomCrumbs={customCrumbs} removeCrumbX={2} />
       </div>
     </StaticRouter>
   ))

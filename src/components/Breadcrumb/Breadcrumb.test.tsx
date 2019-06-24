@@ -39,19 +39,18 @@ describe('Breadcrumb component', () => {
     expect(getAllByTestId('link-text')).toHaveLength(customCrumbs.length - 1);
   });
 
-  // it('removes a crumb given the corresponding prop', () => {
-  //   const { debug, getAllByTestId } = render(
-  //     wrapWithTheme(
-  //       <Breadcrumb
-  //         allCustomCrumbs={customCrumbs}
-  //         {...props}
-  //         removeCrumbX={2}
-  //       />
-  //     )
-  //   );
-  //   debug();
-  //   expect(getAllByTestId('link-text')).toHaveLength(customCrumbs.length - 2);
-  // });
+  it('removes a crumb given the corresponding prop', () => {
+    const { getAllByTestId } = render(
+      wrapWithTheme(
+        <Breadcrumb
+          allCustomCrumbs={customCrumbs}
+          {...props}
+          removeCrumbX={2}
+        />
+      )
+    );
+    expect(getAllByTestId('link-text')).toHaveLength(customCrumbs.length - 2);
+  });
 
   it('renders an editable text field given editable props', () => {
     const { queryByTestId } = render(
