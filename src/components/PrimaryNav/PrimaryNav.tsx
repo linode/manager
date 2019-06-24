@@ -118,7 +118,9 @@ const styles = (theme: Theme) =>
         borderWidth: `${theme.spacing(2) + 5}px ${theme.spacing(
           2
         )}px ${theme.spacing(2) + 5}px 0`,
-        borderColor: 'transparent #f4f4f4 transparent transparent',
+        borderColor: `transparent ${
+          theme.bg.primaryNavActive
+        } transparent transparent`,
         position: 'absolute',
         right: 0,
         top: '8%'
@@ -130,7 +132,9 @@ const styles = (theme: Theme) =>
           borderWidth: `${theme.spacing(2) + 5}px ${theme.spacing(
             2
           )}px ${theme.spacing(2) + 5}px 0`,
-          borderColor: 'transparent #f4f4f4 transparent transparent',
+          borderColor: `transparent ${
+            theme.bg.primaryNavActive
+          } transparent transparent`,
           position: 'absolute',
           right: 0,
           top: '8%'
