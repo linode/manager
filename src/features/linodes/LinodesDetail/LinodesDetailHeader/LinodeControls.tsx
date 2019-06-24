@@ -111,7 +111,6 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
         <Breadcrumb
           removeCrumbX={2}
           labelOptions={{ linkTo: getLabelLink() }}
-          preserveLastCrumb
           onEditHandlers={
             !disabled
               ? {

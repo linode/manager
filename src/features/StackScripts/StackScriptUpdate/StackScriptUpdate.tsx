@@ -314,7 +314,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
             <Breadcrumb
               labelTitle="Edit"
               data-qa-update-stackscript-breadcrumb
-              linkOverrides={[
+              crumbOverrides={[
                 { position: 2, label: this.defaultStackScriptValues.labelText }
               ]}
             />

@@ -147,6 +147,7 @@ interface Props {
   errorText?: string;
   labelLink?: string;
   typeVariant: string;
+  className?: string;
 }
 
 interface State {
@@ -227,6 +228,7 @@ export class EditableText extends React.Component<FinalProps, State> {
       onCancel,
       text: propText,
       typeVariant,
+      className,
       ...rest
     } = this.props;
     const { isEditing, text } = this.state;
@@ -238,7 +240,10 @@ export class EditableText extends React.Component<FinalProps, State> {
     );
 
     return !isEditing && !errorText ? (
-      <div className={`${classes.container} ${classes.initial}`}>
+      <div
+        className={`${classes.container} ${classes.initial} ${className}`}
+        data-testid={'editable-text'}
+      >
         <React.Fragment>
           {!!labelLink ? (
             <Link to={labelLink!} className={classes.underlineOnHover}>
@@ -264,7 +269,7 @@ export class EditableText extends React.Component<FinalProps, State> {
         mouseEvent="onMouseDown"
       >
         <div
-          className={`${classes.container} ${classes.edit}`}
+          className={`${classes.container} ${classes.edit} ${className}`}
           data-qa-edit-field
         >
           <TextField
