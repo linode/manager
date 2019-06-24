@@ -44,16 +44,14 @@ type ClassNames =
   | 'panelItem'
   | 'button'
   | 'tagSectionInner'
-  | 'deleteSection';
+  | 'deleteSection'
+  | 'titleGridWrapper'
+  | 'tagHeading';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
-    title: {
-      // display: 'flex',
-      // alignItems: 'center',
-      // padding: theme.spacing(1)
-    },
+    title: {},
     titleWrapper: {
       display: 'flex',
       alignItems: 'center'
@@ -67,19 +65,25 @@ const styles = (theme: Theme) =>
       padding: 0
     },
     section: {},
-    panelItem: {
-      // padding: theme.spacing(1)
-    },
+    panelItem: {},
     button: {
       [theme.breakpoints.up('md')]: {
         marginBottom: theme.spacing(3)
       }
     },
     tagSectionInner: {
-      padding: `${theme.spacing(2) + 3}px ${theme.spacing(3)}px`
+      padding: `${theme.spacing(2) + 3}px ${theme.spacing(3)}px ${theme.spacing(
+        1
+      ) - 1}px`
     },
     deleteSection: {
       marginLeft: theme.spacing(3)
+    },
+    titleGridWrapper: {
+      marginBottom: theme.spacing(1) + 4
+    },
+    tagHeading: {
+      marginBottom: theme.spacing(1) + 4
     }
   });
 interface KubernetesContainerProps {
@@ -132,6 +136,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   /** Deletion confirmation modal */
   const [confirmationOpen, setConfirmation] = React.useState<boolean>(false);
   const [deleting, setDeleting] = React.useState<boolean>(false);
+  /** For editing label */
+  const [label, updateLabel] = React.useState<string>('');
 
   React.useEffect(() => {
     /**
@@ -337,6 +343,13 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     updateTags(newTags);
   };
 
+  const handleLabelChange = async (newLabel: string) => {
+    props.updateCluster({ clusterID: cluster.id, label: newLabel });
+    updateLabel(newLabel);
+  };
+
+  const cancelUpdate = () => {};
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={`Kubernetes Cluster ${'label'}`} />
@@ -344,7 +357,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<
         container
         justify="space-between"
         alignItems="flex-end"
-        style={{ marginTop: 8, marginBottom: 8 }}
+        spacing={3}
+        className={classes.titleGridWrapper}
       >
         <Grid item xs={12} className={classes.titleWrapper}>
           <Breadcrumb
@@ -353,19 +367,18 @@ export const KubernetesClusterDetail: React.FunctionComponent<
             }}
             linkText="Clusters"
             labelTitle={cluster.label}
-            // onEditHandlers={{
-            //   onEdit: this.updateLabel,
-            //   onCancel: this.cancelUpdate,
-            //   errorText: apiErrorText
-            // }}
+            onEditHandlers={{
+              onEdit: handleLabelChange,
+              onCancel: cancelUpdate
+            }}
             data-qa-breadcrumb
           />
         </Grid>
       </Grid>
 
       <Grid container direction="row" className={classes.section} spacing={3}>
-        <Grid container item direction="column" xs={12} md={9}>
-          <Grid item>
+        <Grid container item direction="row" xs={12} md={9}>
+          <Grid item xs={12}>
             <NodePoolsDisplay
               submittingForm={submitting}
               submitForm={submitForm}
@@ -422,7 +435,11 @@ export const KubernetesClusterDetail: React.FunctionComponent<
           </Grid>
           <Grid item>
             <Paper className={classes.tagSectionInner}>
-              <Typography variant="h2" data-qa-title>
+              <Typography
+                variant="h2"
+                className={classes.tagHeading}
+                data-qa-title
+              >
                 Cluster Tags
               </Typography>
               <div>
