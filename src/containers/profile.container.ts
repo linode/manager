@@ -1,7 +1,6 @@
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 
-import { ProfileWithPreferences } from 'src/store/profile/profile.actions';
 import { State } from 'src/store/profile/profile.reducer';
 import {
   requestProfile,
@@ -11,10 +10,8 @@ import {
 import { ThunkDispatch } from 'src/store/types';
 
 export interface ProfileActionsProps {
-  getProfile: () => Promise<ProfileWithPreferences>;
-  updateProfile: (
-    params: Partial<ProfileWithPreferences>
-  ) => Promise<ProfileWithPreferences>;
+  getProfile: () => Promise<Linode.Profile>;
+  updateProfile: (params: Partial<Linode.Profile>) => Promise<Linode.Profile>;
 }
 
 export default <TInner extends {}, TOuter extends {}>(
@@ -26,7 +23,7 @@ export default <TInner extends {}, TOuter extends {}>(
     },
     (dispatch: ThunkDispatch) => ({
       getProfile: () => dispatch(requestProfile()),
-      updateProfile: (payload: Partial<ProfileWithPreferences>) =>
+      updateProfile: (payload: Partial<Linode.Profile>) =>
         dispatch(updateProfile(payload))
     })
   );

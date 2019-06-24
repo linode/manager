@@ -18,6 +18,7 @@ it('renders without crashing', () => {
             linodes={[]}
             notifications={[]}
             {...mockNodeBalancerActions}
+            profileError={undefined}
             username=""
             isLoggedInAsCustomer={false}
             closeSnackbar={jest.fn()}
@@ -36,14 +37,14 @@ it('renders without crashing', () => {
               switchWrapper: ''
             }}
             userId={123456}
-            // profileLoading={false}
+            profileLoading={false}
             requestAccount={jest.fn()}
             addNotificationsToLinodes={jest.fn()}
             requestDomains={jest.fn()}
             requestImages={jest.fn()}
             requestLinodes={jest.fn()}
             requestNotifications={jest.fn()}
-            // requestProfile={jest.fn()}
+            requestProfile={jest.fn()}
             requestSettings={jest.fn()}
             requestTypes={jest.fn()}
             requestRegions={jest.fn()}

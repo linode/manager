@@ -12,8 +12,10 @@ const mockState = {
   __resources: {
     notifications: {
       data: [abuseTicketNotification, mockNotification]
-    },
-    profile: {}
+    }
+  },
+  preferences: {
+    data: undefined
   }
 };
 

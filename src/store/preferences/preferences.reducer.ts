@@ -43,7 +43,8 @@ const reducer: Reducer<State> = reducerWithInitialState(defaultState)
   })
   .case(handleUpdatePreferences.started, state => {
     return {
-      ...state
+      ...state,
+      error: undefined
     };
   })
   .caseWithAction(handleUpdatePreferences.done, (state, action) => {

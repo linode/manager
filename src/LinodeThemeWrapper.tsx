@@ -6,9 +6,9 @@ import { dark, light } from 'src/themes';
 
 import { COMPACT_SPACING_UNIT, NORMAL_SPACING_UNIT } from 'src/themeFactory';
 
-import withProfile, {
-  ProfileActionsProps
-} from 'src/containers/profile.container';
+import withPreferences, {
+  PreferencesActionsProps
+} from 'src/containers/preferences.container';
 
 type ThemeChoice = 'light' | 'dark';
 type SpacingChoice = 'compact' | 'normal';
@@ -30,7 +30,7 @@ interface Props {
 
 const themes = { light, dark };
 
-type CombinedProps = Props & ProfileProps & ProfileActionsProps;
+type CombinedProps = Props & PreferenceProps & PreferencesActionsProps;
 
 const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
   const [theme, setTheme] = React.useState<ThemeChoice | undefined>(
@@ -55,16 +55,14 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
        *
        * Don't update anything if the GET fails
        */
-      if (!!props.profileError) {
+      if (!!props.preferenceError) {
         props
-          .getProfile()
+          .getUserPreferences()
           .then(response => {
-            props.updateProfile({
-              preferences: {
-                ...response.preferences,
-                theme,
-                spacing
-              }
+            props.updateUserPreferences({
+              ...response.preferences,
+              theme,
+              spacing
             });
           })
           .catch(() => /** swallow the error */ null);
@@ -81,12 +79,10 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
           spacing
           // && preferencesHaveBeenUpdated(props.preferences, theme, spacing)
         ) {
-          props.updateProfile({
-            preferences: {
-              ...props.preferences,
-              theme,
-              spacing
-            }
+          props.updateUserPreferences({
+            ...props.preferences,
+            theme,
+            spacing
           });
         }
       }
@@ -107,7 +103,7 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
      *
      * Do NOT try and PUT to the API - we don't want to overwrite other unrelated preferences
      */
-    if (!!props.profileError && lastUpdated === 0) {
+    if (!!props.preferenceError && lastUpdated === 0) {
       setSpacing('normal');
       setTheme('light');
 
@@ -143,7 +139,7 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
       /** set local state so we don't repeat any of this previous behavior */
       setLastUpdated(Date.now());
     }
-  }, [props.profileError, props.preferences]);
+  }, [props.preferenceError, props.preferences]);
 
   const toggleTheme = () => {
     document.body.classList.add('no-transition');
@@ -163,14 +159,14 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
   };
 
   React.useEffect(() => {
-    /** request the profile on app load */
-    props.getProfile();
+    /** request the user preferences on app load */
+    props.getUserPreferences();
   }, []);
 
   const { children } = props;
 
   if (!theme || !spacing) {
-    return <span>hello world</span>;
+    return null;
   }
 
   const themeChoice = themes[theme];
@@ -196,9 +192,9 @@ const isRenderChildren = (
   return typeof c === 'function';
 };
 
-interface ProfileProps {
+interface PreferenceProps {
   preferences?: Record<string, any>;
-  profileError?: any;
+  preferenceError?: any;
   preferencesLastUpdated: number;
 }
 
@@ -215,8 +211,8 @@ const memoized = (component: React.FC<CombinedProps>) =>
     return (
       !(!prevProps.preferences && !!nextProps.preferences) &&
       !(!!prevProps.preferences && !nextProps.preferences) &&
-      !(!prevProps.profileError && !!nextProps.profileError) &&
-      !(!!prevProps.profileError && !nextProps.profileError) &&
+      !(!prevProps.preferenceError && !!nextProps.preferenceError) &&
+      !(!!prevProps.preferenceError && !nextProps.preferenceError) &&
       equals(prevProps.children, nextProps.children) &&
       /** we only care what the server tells us on app load */
       !(
@@ -227,11 +223,13 @@ const memoized = (component: React.FC<CombinedProps>) =>
   });
 
 export default compose<CombinedProps, Props>(
-  withProfile<ProfileProps, Props>((ownProps, profile) => ({
-    preferences: path(['preferences'], profile.data),
-    profileError: path(['error'], profile),
-    preferencesLastUpdated: profile.lastUpdated
-  })),
+  withPreferences<PreferenceProps, Props>(
+    (ownProps, { data: preferences, error, lastUpdated }) => ({
+      preferences,
+      preferenceError: error,
+      preferencesLastUpdated: lastUpdated
+    })
+  ),
   memoized
 )(LinodeThemeWrapper);
 
