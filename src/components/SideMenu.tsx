@@ -17,6 +17,7 @@ const styles = (theme: Theme) =>
       height: '100%',
       width: theme.spacing(14) + 103, // 215
       backgroundColor: theme.bg.navy,
+      borderColor: theme.bg.primaryNavBorder,
       left: 'inherit',
       boxShadow: 'none',
       [theme.breakpoints.up('xl')]: {

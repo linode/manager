@@ -62,7 +62,8 @@ export const dark = () =>
       white: '#32363c',
       pureWhite: '#000',
       tableHeader: '#2B2E32',
-      primaryNavActive: '#222'
+      primaryNavActive: '#2f3236',
+      primaryNavBorder: 'rgba(0, 0, 0, 0.12)'
     },
     color: {
       headline: primaryColors.headline,
