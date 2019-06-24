@@ -12,7 +12,6 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Notice from 'src/components/Notice';
 import { AccountsAndPasswords, SecurityControls } from 'src/documentation';
-import { ProfileWithPreferences } from 'src/store/profile/profile.actions';
 import { updateProfile as _updateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
 import ResetPassword from './ResetPassword';
@@ -133,13 +132,11 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
 };
 
 interface DispatchProps {
-  updateProfile: (
-    v: Partial<ProfileWithPreferences>
-  ) => Promise<ProfileWithPreferences>;
+  updateProfile: (v: Partial<Linode.Profile>) => Promise<Linode.Profile>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-  updateProfile: (v: Partial<ProfileWithPreferences>) =>
+  updateProfile: (v: Partial<Linode.Profile>) =>
     dispatch(_updateProfile(v) as any)
 });
 
