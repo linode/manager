@@ -103,7 +103,7 @@ const enhanced = compose<CombinedProps, {}>(
   })),
   withProfile<ProfileProps, {}>((undefined, profile) => ({
     userTimezone: path(['data', 'timezone'], profile),
-    userTimezoneError: profile.error,
+    userTimezoneError: path(['read'], profile.error),
     userTimezoneLoading: profile.loading
   }))
 );

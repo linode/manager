@@ -2,12 +2,18 @@ import { actionCreatorFactory } from 'typescript-fsa';
 
 const actionCreator = actionCreatorFactory(`@@manager/profile`);
 
+export interface ProfileWithPreferences extends Linode.Profile {
+  preferences: Record<string, any>;
+}
+
 export const getProfileActions = actionCreator.async<
   void,
-  Linode.Profile,
+  ProfileWithPreferences,
   Linode.ApiFieldError[]
 >(`request`);
 
-export const handleUpdate = actionCreator<
-  Partial<Linode.Profile> | Partial<Linode.User>
+export const handleUpdateProfile = actionCreator.async<
+  Partial<ProfileWithPreferences>,
+  Partial<ProfileWithPreferences>,
+  Linode.ApiFieldError[]
 >(`update`);

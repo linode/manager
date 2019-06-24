@@ -576,7 +576,7 @@ interface StateProps {
 const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
   /** Profile */
   profileLoading: state.__resources.profile.loading,
-  profileError: state.__resources.profile.error,
+  profileError: path(['read'], state.__resources.profile.error),
   linodes: state.__resources.linodes.entities,
   linodesError: path(['read'], state.__resources.linodes.error),
   domainsError: state.__resources.domains.error,
