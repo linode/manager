@@ -1,6 +1,6 @@
 <svg width="24px" height="20px" viewBox="0 0 24 20" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
     <g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="round" stroke-linejoin="round">
-        <g id="A-03.-Details-Drawer" transform="translate(-1000.000000, -758.000000)" stroke="#333333" stroke-width="1.5">
+        <g id="A-03.-Details-Drawer" transform="translate(-1000.000000, -758.000000)" stroke="currentColor" stroke-width="1.5">
             <g id="drawer" transform="translate(960.000000, 0.000000)">
                 <g id="more-info" transform="translate(40.000000, 754.000000)">
                     <g id="more-info-header">
