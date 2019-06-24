@@ -6,8 +6,8 @@ describe('safeGetImageLabel', () => {
     expect(safeGetImageLabel(images, null)).toBe('');
   });
 
-  it('should return "Unknown Image" if the slug does not exist in the image data', () => {
-    expect(safeGetImageLabel(images, 'duhhhhhhhhhh')).toBe('Unknown Image');
+  it('should return an empty string if the slug does not exist in the image data', () => {
+    expect(safeGetImageLabel(images, 'duhhhhhhhhhh')).toBe('');
   });
 
   it('should return "Fedora 23"', () => {

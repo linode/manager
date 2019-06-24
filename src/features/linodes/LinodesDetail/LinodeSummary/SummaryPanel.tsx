@@ -84,6 +84,8 @@ class SummaryPanel extends React.Component<CombinedProps, State> {
   state: State = { imageLabel: this.props.image ? this.props.image.label : '' };
 
   componentDidMount() {
+    // If this is a deprecated image, and therefore we have no image data already available,
+    // request the image data directly.
     if (!this.props.image && this.props.linodeImageId) {
       getImage(this.props.linodeImageId)
         .then(image => {
