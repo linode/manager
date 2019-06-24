@@ -18,7 +18,13 @@ import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel
 import { displayTypeForKubePoolNode } from 'src/features/linodes/presentation';
 import { ExtendedPoolNode } from '.././types';
 
-type ClassNames = 'root' | 'link' | 'toDelete' | 'toAdd' | 'disabled';
+type ClassNames =
+  | 'root'
+  | 'link'
+  | 'toDelete'
+  | 'toAdd'
+  | 'disabled'
+  | 'removeButton';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -27,13 +33,16 @@ const styles = (theme: Theme) =>
       color: `${theme.palette.primary.main} !important` as any
     },
     toDelete: {
-      backgroundColor: 'rgba(210, 28, 28, 0.4)'
+      backgroundColor: 'rgba(207, 30, 30, 0.16)'
     },
     toAdd: {
-      backgroundColor: theme.bg.offWhite
+      backgroundColor: theme.bg.main
     },
     disabled: {
       color: 'gray !important'
+    },
+    removeButton: {
+      float: 'right'
     }
   });
 
@@ -103,7 +112,8 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
           onClick={() => handleDelete(idx)}
           className={classNames({
             [classes.link]: true,
-            [classes.disabled]: !editable
+            [classes.disabled]: !editable,
+            [classes.removeButton]: true
           })}
         />
       </TableCell>

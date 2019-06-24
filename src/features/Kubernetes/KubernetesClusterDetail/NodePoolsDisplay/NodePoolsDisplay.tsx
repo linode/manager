@@ -30,9 +30,10 @@ const styles = (theme: Theme) =>
       marginRight: theme.spacing(1)
     },
     pricing: {
-      marginTop: theme.spacing(2),
-      fontSize: '1.em',
-      fontWeight: 'bold'
+      marginTop: theme.spacing(3),
+      fontFamily: theme.font.bold,
+      fontSize: '1rem',
+      color: theme.color.headline
     },
     ctaOuter: {
       marginTop: theme.spacing(2) - 1
