@@ -260,23 +260,20 @@ export const getAllDisks = (
 
 export type EstimatedCloneTimeMode = 'sameDatacenter' | 'differentDatacenter';
 
+/**
+ * Provides a rough estimate of the clone time, based on the size of the disk(s),
+ * and whether or not the destination Linode is in the same DC or different DC.
+ */
 export const getEstimatedCloneTime = (
-  size: number,
+  sizeInMb: number,
   mode: EstimatedCloneTimeMode
 ) => {
   const multiplier = mode === 'sameDatacenter' ? 0.75 : 10;
-
-  // This is not *exactly* accurate, but it at least gives the user some idea of how long it will take.
-  const estimatedTimeInMinutes = Math.ceil((multiplier * size) / 1024);
+  const estimatedTimeInMinutes = Math.ceil((multiplier * sizeInMb) / 1024);
 
   const humanizedEstimate = moment
     .duration(estimatedTimeInMinutes, 'minutes')
     .humanize();
-
-  // Just a small detail – my own personal taste.
-  if (humanizedEstimate === 'a minute') {
-    return '1 minute';
-  }
 
   return humanizedEstimate;
 };
