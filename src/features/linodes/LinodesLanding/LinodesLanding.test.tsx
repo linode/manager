@@ -5,6 +5,9 @@ import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import { clearDocs, setDocs } from 'src/store/documentation';
 import { ListLinodes } from './LinodesLanding';
 
+import { Provider } from 'react-redux';
+import store from 'src/store';
+
 const RoutedListLinodes = withRouter(ListLinodes);
 
 describe('ListLinodes', () => {
@@ -17,63 +20,67 @@ describe('ListLinodes', () => {
 
   it('renders without error', () => {
     shallow(
-      <LinodeThemeWrapper>
-        <StaticRouter location="/" context={{}}>
-          <RoutedListLinodes
-            imagesLoading={false}
-            imagesError={undefined}
-            userTimezone="GMT"
-            userTimezoneLoading={false}
-            someLinodesHaveScheduledMaintenance={true}
-            linodesData={[]}
-            width={'lg'}
-            classes={classes}
-            clearDocs={clearDocs}
-            enqueueSnackbar={jest.fn()}
-            groupByTags={false}
-            linodesCount={0}
-            linodesRequestError={undefined}
-            linodesRequestLoading={false}
-            managed={false}
-            closeSnackbar={jest.fn()}
-            setDocs={setDocs}
-            toggleGroupByTag={jest.fn()}
-            backupsCTA={false}
-            deleteLinode={jest.fn()}
-          />
-        </StaticRouter>
-      </LinodeThemeWrapper>
+      <Provider store={store}>
+        <LinodeThemeWrapper theme="dark" spacing="normal">
+          <StaticRouter location="/" context={{}}>
+            <RoutedListLinodes
+              imagesLoading={false}
+              imagesError={undefined}
+              userTimezone="GMT"
+              userTimezoneLoading={false}
+              someLinodesHaveScheduledMaintenance={true}
+              linodesData={[]}
+              width={'lg'}
+              classes={classes}
+              clearDocs={clearDocs}
+              enqueueSnackbar={jest.fn()}
+              groupByTags={false}
+              linodesCount={0}
+              linodesRequestError={undefined}
+              linodesRequestLoading={false}
+              managed={false}
+              closeSnackbar={jest.fn()}
+              setDocs={setDocs}
+              toggleGroupByTag={jest.fn()}
+              backupsCTA={false}
+              deleteLinode={jest.fn()}
+            />
+          </StaticRouter>
+        </LinodeThemeWrapper>
+      </Provider>
     );
   });
 
   it.skip('renders an empty state with no linodes', () => {
     const component = shallow(
-      <LinodeThemeWrapper>
-        <StaticRouter location="/" context={{}}>
-          <RoutedListLinodes
-            imagesLoading={false}
-            imagesError={undefined}
-            linodesData={[]}
-            width={'lg'}
-            classes={classes}
-            clearDocs={clearDocs}
-            userTimezone="GMT"
-            userTimezoneLoading={false}
-            someLinodesHaveScheduledMaintenance={true}
-            enqueueSnackbar={jest.fn()}
-            groupByTags={false}
-            linodesCount={0}
-            linodesRequestError={undefined}
-            linodesRequestLoading={false}
-            managed={false}
-            closeSnackbar={jest.fn()}
-            setDocs={setDocs}
-            toggleGroupByTag={jest.fn()}
-            backupsCTA={false}
-            deleteLinode={jest.fn()}
-          />
-        </StaticRouter>
-      </LinodeThemeWrapper>
+      <Provider store={store}>
+        <LinodeThemeWrapper theme="dark" spacing="normal">
+          <StaticRouter location="/" context={{}}>
+            <RoutedListLinodes
+              imagesLoading={false}
+              imagesError={undefined}
+              linodesData={[]}
+              width={'lg'}
+              classes={classes}
+              clearDocs={clearDocs}
+              userTimezone="GMT"
+              userTimezoneLoading={false}
+              someLinodesHaveScheduledMaintenance={true}
+              enqueueSnackbar={jest.fn()}
+              groupByTags={false}
+              linodesCount={0}
+              linodesRequestError={undefined}
+              linodesRequestLoading={false}
+              managed={false}
+              closeSnackbar={jest.fn()}
+              setDocs={setDocs}
+              toggleGroupByTag={jest.fn()}
+              backupsCTA={false}
+              deleteLinode={jest.fn()}
+            />
+          </StaticRouter>
+        </LinodeThemeWrapper>
+      </Provider>
     );
 
     const emptyState = component.find('ListLinodesEmptyState');
@@ -84,32 +91,34 @@ describe('ListLinodes', () => {
   /** Test is not specific to the LinodesLanding Page */
   it.skip('renders menu actions when the kabob is clicked', () => {
     const component = shallow(
-      <LinodeThemeWrapper>
-        <StaticRouter location="/" context={{}}>
-          <RoutedListLinodes
-            imagesLoading={false}
-            imagesError={undefined}
-            linodesData={[]}
-            width={'lg'}
-            userTimezone="GMT"
-            userTimezoneLoading={false}
-            someLinodesHaveScheduledMaintenance={true}
-            classes={classes}
-            clearDocs={clearDocs}
-            enqueueSnackbar={jest.fn()}
-            groupByTags={false}
-            linodesCount={0}
-            linodesRequestError={undefined}
-            linodesRequestLoading={false}
-            managed={false}
-            closeSnackbar={jest.fn()}
-            setDocs={setDocs}
-            toggleGroupByTag={jest.fn()}
-            backupsCTA={false}
-            deleteLinode={jest.fn()}
-          />
-        </StaticRouter>
-      </LinodeThemeWrapper>
+      <Provider store={store}>
+        <LinodeThemeWrapper theme="dark" spacing="normal">
+          <StaticRouter location="/" context={{}}>
+            <RoutedListLinodes
+              imagesLoading={false}
+              imagesError={undefined}
+              linodesData={[]}
+              width={'lg'}
+              userTimezone="GMT"
+              userTimezoneLoading={false}
+              someLinodesHaveScheduledMaintenance={true}
+              classes={classes}
+              clearDocs={clearDocs}
+              enqueueSnackbar={jest.fn()}
+              groupByTags={false}
+              linodesCount={0}
+              linodesRequestError={undefined}
+              linodesRequestLoading={false}
+              managed={false}
+              closeSnackbar={jest.fn()}
+              setDocs={setDocs}
+              toggleGroupByTag={jest.fn()}
+              backupsCTA={false}
+              deleteLinode={jest.fn()}
+            />
+          </StaticRouter>
+        </LinodeThemeWrapper>
+      </Provider>
     );
 
     const kabobButton = component.find('MoreHoriz').first();

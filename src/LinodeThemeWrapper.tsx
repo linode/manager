@@ -1,4 +1,4 @@
-import { path } from 'ramda';
+import { equals, path } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { ThemeProvider } from 'src/components/core/styles';
@@ -20,6 +20,12 @@ type RenderChildren = (
 
 interface Props {
   children: RenderChildren | React.ReactNode;
+  /**
+   * override base theme with props
+   * this is mostly so the unit tests work
+   */
+  theme?: ThemeChoice;
+  spacing?: SpacingChoice;
 }
 
 const themes = { light, dark };
@@ -27,9 +33,11 @@ const themes = { light, dark };
 type CombinedProps = Props & ProfileProps & ProfileActionsProps;
 
 const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
-  const [theme, setTheme] = React.useState<ThemeChoice | undefined>(undefined);
+  const [theme, setTheme] = React.useState<ThemeChoice | undefined>(
+    props.theme
+  );
   const [spacing, setSpacing] = React.useState<SpacingChoice | undefined>(
-    undefined
+    props.spacing
   );
   const [lastUpdated, setLastUpdated] = React.useState<number>(0);
 
@@ -162,7 +170,7 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
   const { children } = props;
 
   if (!theme || !spacing) {
-    return null;
+    return <span>hello world</span>;
   }
 
   const themeChoice = themes[theme];
@@ -209,6 +217,7 @@ const memoized = (component: React.FC<CombinedProps>) =>
       !(!!prevProps.preferences && !nextProps.preferences) &&
       !(!prevProps.profileError && !!nextProps.profileError) &&
       !(!!prevProps.profileError && !nextProps.profileError) &&
+      equals(prevProps.children, nextProps.children) &&
       /** we only care what the server tells us on app load */
       !(
         prevProps.preferencesLastUpdated === 0 &&
@@ -220,7 +229,7 @@ const memoized = (component: React.FC<CombinedProps>) =>
 export default compose<CombinedProps, Props>(
   withProfile<ProfileProps, Props>((ownProps, profile) => ({
     preferences: path(['preferences'], profile.data),
-    profileError: profile.error,
+    profileError: path(['error'], profile),
     preferencesLastUpdated: profile.lastUpdated
   })),
   memoized
