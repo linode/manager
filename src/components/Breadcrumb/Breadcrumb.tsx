@@ -158,10 +158,15 @@ export class Breadcrumb extends React.Component<CombinedProps, State> {
       allCustomCrumbs
     } = this.props;
 
+    const removeByIndex = (list: Array<string>, index: number) => [
+      ...list.slice(0, index),
+      ...list.slice(index + 1)
+    ];
+
     const Crumbs = () => {
       const paths = allCustomCrumbs ? allCustomCrumbs : this.state.paths;
       const pathMap = removeCrumbX
-        ? paths.splice(removeCrumbX - 1, 1) && paths
+        ? removeByIndex(paths, removeCrumbX - 1)
         : paths;
       const lastCrumb = pathMap.slice(-1)[0];
       return (
