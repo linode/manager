@@ -48,6 +48,10 @@ export class StackScriptDrawer extends React.Component<CombinedProps, State> {
     }
   }
 
+  componentWillUnmount() {
+    this.props.closeDrawer();
+  }
+
   render() {
     const { open, closeDrawer } = this.props;
     const { stackScript, error, loading } = this.state;
