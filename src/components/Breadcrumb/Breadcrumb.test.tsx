@@ -1,49 +1,72 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
+import { cleanup, render } from 'react-testing-library';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import { Breadcrumb } from './Breadcrumb';
+import { Breadcrumb, CombinedProps as BreadCrumbProps } from './Breadcrumb';
+
+const customCrumbs = [
+  'First Crumb',
+  'Second Crumb',
+  'Third Crumb',
+  'Fourth Crumb'
+];
+
+const props: BreadCrumbProps = {
+  classes: {
+    root: '',
+    preContainer: '',
+    crumbsWrapper: '',
+    crumb: '',
+    lastCrumb: '',
+    crumbLink: '',
+    labelWrapper: '',
+    labelText: '',
+    labelSubtitle: '',
+    editableContainer: '',
+    prefixComponentWrapper: '',
+    slash: '',
+    firstSlash: ''
+  }
+};
+
+afterEach(cleanup);
 
 describe('Breadcrumb component', () => {
-  const wrapper = shallow(
-    <Breadcrumb
-      linkTo="/linodes"
-      linkText="Linodes"
-      labelTitle="MyTestLinode"
-      classes={{
-        root: '',
-        preContainer: '',
-        crumb: '',
-        crumbLink: '',
-        labelText: '',
-        prefixComponentWrapper: '',
-        slash: ''
-      }}
-    />
-  );
-
-  it('contains link text', () => {
-    expect(wrapper.find('[data-qa-link-text]')).toHaveLength(1);
+  it('contains the appropriate number of link text', () => {
+    const { getAllByTestId } = render(
+      wrapWithTheme(<Breadcrumb allCustomCrumbs={customCrumbs} {...props} />)
+    );
+    expect(getAllByTestId('link-text')).toHaveLength(customCrumbs.length - 1);
   });
 
-  it('renders labelText without editable props', () => {
-    expect(wrapper.find('[data-qa-labeltext]')).toHaveLength(1);
-  });
+  // it('removes a crumb given the corresponding prop', () => {
+  //   const { debug, getAllByTestId } = render(
+  //     wrapWithTheme(
+  //       <Breadcrumb
+  //         allCustomCrumbs={customCrumbs}
+  //         {...props}
+  //         removeCrumbX={2}
+  //       />
+  //     )
+  //   );
+  //   debug();
+  //   expect(getAllByTestId('link-text')).toHaveLength(customCrumbs.length - 2);
+  // });
 
-  it('renders a prefixComponent wrapper', () => {
-    wrapper.setProps({
-      labelOptions: { prefixComponent: <React.Fragment /> }
-    });
-    expect(wrapper.find('[data-qa-prefixwrapper]')).toHaveLength(1);
-  });
-
-  it('renders editable text when given editable props', () => {
-    wrapper.setProps({
-      onEditHandlers: {
-        onEdit: jest.fn(),
-        onCancel: jest.fn()
-      }
-    });
-    expect(wrapper.find('[data-qa-label-title]')).toHaveLength(0);
-    expect(wrapper.find('[data-qa-editable-text]')).toHaveLength(1);
+  it('renders an editable text field given editable props', () => {
+    const { queryByTestId } = render(
+      wrapWithTheme(
+        <Breadcrumb
+          allCustomCrumbs={customCrumbs}
+          {...props}
+          onEditHandlers={{
+            editableTextTitle: 'Editable text',
+            onEdit: jest.fn(),
+            onCancel: jest.fn()
+          }}
+        />
+      )
+    );
+    expect(queryByTestId('editable-text')).toBeInTheDocument();
   });
 });

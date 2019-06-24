@@ -354,11 +354,7 @@ class UserDetail extends React.Component<CombinedProps> {
         <React.Fragment>
           <Grid container justify="space-between">
             <Grid item>
-              <Breadcrumb
-                linkTo="/account/users"
-                linkText="Users"
-                labelTitle={username || ''}
-              />
+              <Breadcrumb labelTitle={username || ''} />
             </Grid>
           </Grid>
           <ErrorState errorText="There was an error retrieving the user data. Please reload and try again." />
