@@ -1,4 +1,4 @@
-import { lensPath, path, set } from 'ramda';
+import { lensPath, path, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
@@ -12,7 +12,8 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Notice from 'src/components/Notice';
 import { AccountsAndPasswords, SecurityControls } from 'src/documentation';
-import { handleUpdate } from 'src/store/profile/profile.actions';
+import { ProfileWithPreferences } from 'src/store/profile/profile.actions';
+import { updateProfile as _updateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
 import ResetPassword from './ResetPassword';
 import SecuritySettings from './SecuritySettings';
@@ -72,7 +73,7 @@ export class AuthenticationSettings extends React.Component<
       ipWhitelisting,
       twoFactor,
       username,
-      actions
+      updateProfile
     } = this.props;
     const { success } = this.state;
 
@@ -88,14 +89,16 @@ export class AuthenticationSettings extends React.Component<
               twoFactor={twoFactor}
               username={username}
               clearState={this.clearState}
-              updateProfile={actions.updateProfile}
+              updateProfile={updateProfile}
             />
             <TrustedDevices />
             {ipWhitelisting && (
               <SecuritySettings
-                updateProfile={actions.updateProfile}
+                updateProfile={updateProfile}
                 onSuccess={this.onWhitelistingDisable}
                 data-qa-whitelisting-form
+                updateProfileError={this.props.profileUpdateError}
+                ipWhitelistingEnabled={ipWhitelisting}
               />
             )}
           </React.Fragment>
@@ -111,9 +114,10 @@ const styled = withStyles(styles);
 
 interface StateProps {
   loading: boolean;
-  ipWhitelisting?: boolean;
+  ipWhitelisting: boolean;
   twoFactor?: boolean;
   username?: string;
+  profileUpdateError?: Linode.ApiFieldError[];
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => {
@@ -121,22 +125,22 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
 
   return {
     loading: profile.loading,
-    ipWhitelisting: path(['data', 'ip_whitelist_enabled'], profile),
+    ipWhitelisting: pathOr(false, ['data', 'ip_whitelist_enabled'], profile),
     twoFactor: path(['data', 'two_factor_auth'], profile),
-    username: path(['data', 'username'], profile)
+    username: path(['data', 'username'], profile),
+    profileUpdateError: path<Linode.ApiFieldError[]>(['update'], profile.error)
   };
 };
 
 interface DispatchProps {
-  actions: {
-    updateProfile: (v: Partial<Linode.Profile>) => void;
-  };
+  updateProfile: (
+    v: Partial<ProfileWithPreferences>
+  ) => Promise<ProfileWithPreferences>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-  actions: {
-    updateProfile: (v: Partial<Linode.Profile>) => dispatch(handleUpdate(v))
-  }
+  updateProfile: (v: Partial<ProfileWithPreferences>) =>
+    dispatch(_updateProfile(v) as any)
 });
 
 const connected = connect(
