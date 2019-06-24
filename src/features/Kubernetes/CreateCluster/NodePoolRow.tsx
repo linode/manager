@@ -91,9 +91,14 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
             small
             tiny
             type="number"
+            min={1}
+            max={Infinity}
             value={pool.count}
             onChange={e =>
-              handleUpdate(idx, { ...pool, count: +e.target.value })
+              handleUpdate(idx, {
+                ...pool,
+                count: Math.max(+e.target.value, 1)
+              })
             }
           />
         ) : (

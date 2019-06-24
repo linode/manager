@@ -255,7 +255,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
       });
     } else {
       /** From a static state, adding a node pool should trigger editing state */
-      setEditing(true);
+      toggleEditing();
       /** Make sure the list of node pools is correct */
       updatePools([
         ...cluster.node_pools,
