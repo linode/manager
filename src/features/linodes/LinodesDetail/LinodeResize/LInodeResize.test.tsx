@@ -5,7 +5,11 @@ import { extDisk, swapDisk } from 'src/__data__/disks';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { types } from 'src/__data__/types';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
-import { LinodeResize, shouldEnableAutoResizeDiskOption } from './LinodeResize';
+import {
+  isSmallerThanCurrentPlan,
+  LinodeResize,
+  shouldEnableAutoResizeDiskOption
+} from './LinodeResize';
 
 describe('LinodeResize', () => {
   const mockTypes = types.map(LinodeResize.extendType);
@@ -183,6 +187,35 @@ describe('LinodeResize', () => {
       ]);
       expect(diskLabel).toBe('Arch Linux Disk');
       expect(shouldEnable).toBeFalsy();
+    });
+
+    describe('isSmallerThanCurrentPlan', () => {
+      it('returns false when the first type provided is larger than the second', () => {
+        expect(
+          isSmallerThanCurrentPlan('g5-standard-2', 'g5-standard-1', mockTypes)
+        ).toBe(false);
+      });
+
+      it('returns true when the first type provided is smaller than the second', () => {
+        expect(
+          isSmallerThanCurrentPlan('g5-standard-1', 'g5-standard-2', mockTypes)
+        ).toBe(true);
+      });
+
+      it("defaults to false if one or both of the passed plans aren't found", () => {
+        expect(
+          isSmallerThanCurrentPlan('g5-standard-2', 'g5-fake-1', mockTypes)
+        ).toBe(false);
+        expect(
+          isSmallerThanCurrentPlan('g5-fake-2', 'g5-standard-1', mockTypes)
+        ).toBe(false);
+        expect(
+          isSmallerThanCurrentPlan('g5-fake-2', 'g5-fake-1', mockTypes)
+        ).toBe(false);
+        expect(
+          isSmallerThanCurrentPlan('g5-standard-2', 'g5-standard-1', [])
+        ).toBe(false);
+      });
     });
   });
 });
