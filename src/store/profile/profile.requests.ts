@@ -6,21 +6,15 @@ import { ActionCreator, Failure, Success } from 'typescript-fsa';
 import {
   getMyGrants,
   getProfile,
-  getUserPreferences,
-  updateProfile as _updateProfile,
-  updateUserPreferences
+  updateProfile as _updateProfile
 } from 'src/services/profile';
 import { ApplicationState } from 'src/store';
 import { ThunkActionCreator } from 'src/store/types';
-import {
-  getProfileActions,
-  handleUpdateProfile,
-  ProfileWithPreferences
-} from './profile.actions';
+import { getProfileActions, handleUpdateProfile } from './profile.actions';
 
 const maybeRequestGrants: (
-  response: ProfileWithPreferences
-) => Promise<ProfileWithPreferences> = profile => {
+  response: Linode.Profile
+) => Promise<Linode.Profile> = profile => {
   if (profile.restricted === false) {
     return Promise.resolve(profile);
   }
@@ -43,20 +37,16 @@ export const getTimezone = (state: ApplicationState, timezone: string) => {
 };
 
 export const requestProfile: ThunkActionCreator<
-  Promise<ProfileWithPreferences>
+  Promise<Linode.Profile>
 > = () => (dispatch, getState) => {
   const { started, done, failed } = getProfileActions;
 
   dispatch(started());
 
-  return Promise.all([getProfile(), getUserPreferences()])
-    .then(([profile, userPrefs]) => ({
-      ...profile.data,
-      preferences: userPrefs
-    }))
+  return getProfile()
     .then(profile => ({
-      ...profile,
-      timezone: getTimezone(getState(), profile.timezone)
+      ...profile.data,
+      timezone: getTimezone(getState(), profile.data.timezone)
     }))
     .then(maybeRequestGrants)
     .then(response => {
@@ -73,8 +63,8 @@ export const requestProfile: ThunkActionCreator<
  * @todo this doesn't let you update grants
  */
 export const updateProfile: ThunkActionCreator<
-  Promise<Partial<ProfileWithPreferences>>
-> = (payload: Partial<ProfileWithPreferences>) => dispatch => {
+  Promise<Partial<Linode.Profile>>
+> = (payload: Partial<Linode.Profile>) => dispatch => {
   const { done, failed } = handleUpdateProfile;
 
   /**
@@ -82,41 +72,16 @@ export const updateProfile: ThunkActionCreator<
    * at the component level
    */
 
-  if (!!payload.preferences) {
-    return updateProfileAndPreferences(payload as ProfileWithPreferences)
-      .then(([profile, preferences]) => {
-        return handleUpdateSuccess(
-          payload,
-          {
-            ...profile,
-            preferences
-          },
-          done,
-          dispatch
-        );
-      })
-      .catch(error => {
-        return handleUpdateFailure(payload, error, failed, dispatch);
-      });
-  }
-
   return _updateProfile(payload)
     .then(response => handleUpdateSuccess(payload, response, done, dispatch))
     .catch(err => handleUpdateFailure(payload, err, failed, dispatch));
 };
 
-const updateProfileAndPreferences = (payload: ProfileWithPreferences) => {
-  return Promise.all([
-    _updateProfile(payload),
-    updateUserPreferences(payload.preferences)
-  ]);
-};
-
 const handleUpdateSuccess = (
-  payload: Partial<ProfileWithPreferences>,
-  result: Partial<ProfileWithPreferences>,
+  payload: Partial<Linode.Profile>,
+  result: Partial<Linode.Profile>,
   done: ActionCreator<
-    Success<Partial<ProfileWithPreferences>, Partial<ProfileWithPreferences>>
+    Success<Partial<Linode.Profile>, Partial<Linode.Profile>>
   >,
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => {
@@ -130,10 +95,10 @@ const handleUpdateSuccess = (
 };
 
 const handleUpdateFailure = (
-  payload: Partial<ProfileWithPreferences>,
+  payload: Partial<Linode.Profile>,
   error: Linode.ApiFieldError[],
   failed: ActionCreator<
-    Failure<Partial<ProfileWithPreferences>, Linode.ApiFieldError[]>
+    Failure<Partial<Linode.Profile>, Linode.ApiFieldError[]>
   >,
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => {

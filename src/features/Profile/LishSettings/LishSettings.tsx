@@ -20,7 +20,6 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { LISH } from 'src/documentation';
-import { ProfileWithPreferences } from 'src/store/profile/profile.actions';
 import { updateProfile as handleUpdateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -293,9 +292,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
 };
 
 interface DispatchProps {
-  updateProfile: (
-    v: Partial<Linode.Profile>
-  ) => Promise<ProfileWithPreferences>;
+  updateProfile: (v: Partial<Linode.Profile>) => Promise<Linode.Profile>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({

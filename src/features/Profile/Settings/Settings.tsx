@@ -14,7 +14,6 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
-import { ProfileWithPreferences } from 'src/store/profile/profile.actions';
 import { updateProfile as handleUpdateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
 
@@ -90,9 +89,7 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles);
 
 interface DispatchProps {
-  updateProfile: (
-    p: Partial<Linode.Profile>
-  ) => Promise<ProfileWithPreferences>;
+  updateProfile: (p: Partial<Linode.Profile>) => Promise<Linode.Profile>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({

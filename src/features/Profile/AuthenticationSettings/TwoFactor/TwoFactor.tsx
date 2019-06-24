@@ -18,7 +18,6 @@ import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
 import ToggleState from 'src/components/ToggleState';
 import { getTFAToken } from 'src/services/profile';
-import { ProfileWithPreferences } from 'src/store/profile/profile.actions';
 import { requestProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -73,9 +72,7 @@ interface Props {
   clearState: () => void;
   twoFactor?: boolean;
   username?: string;
-  updateProfile: (
-    profile: Partial<Linode.Profile>
-  ) => Promise<ProfileWithPreferences>;
+  updateProfile: (profile: Partial<Linode.Profile>) => Promise<Linode.Profile>;
 }
 
 interface ConfirmDisable {
