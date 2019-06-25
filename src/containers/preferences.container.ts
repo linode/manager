@@ -17,11 +17,14 @@ export interface PreferencesActionsProps {
 }
 
 export default <TInner extends {}, TOuter extends {}>(
-  mapAccountToProps: (ownProps: TOuter, profile: State) => TInner
+  mapAccountToProps?: (ownProps: TOuter, profile: State) => TInner
 ) =>
   connect(
     (state: ApplicationState, ownProps: TOuter) => {
-      return mapAccountToProps(ownProps, state.preferences);
+      if (mapAccountToProps) {
+        return mapAccountToProps(ownProps, state.preferences);
+      }
+      return undefined;
     },
     (dispatch: ThunkDispatch) => ({
       getUserPreferences: () => dispatch(getUserPreferences()),
