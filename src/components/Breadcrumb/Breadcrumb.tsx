@@ -177,9 +177,12 @@ export class Breadcrumb extends React.Component<CombinedProps, State> {
       // We remove the last item of the crumbs by default and choose it to be
       // either a custom one, an editable text component, or the default crumb we slice back in.
 
-      // The override for a crumb works by the position (required) of the crumb (index + 1).s
+      // The override for a crumb works by the position (required) of the crumb (index + 1). Just provide
+      // the actual position of the crumb in the array.
       // We can either override the label or link or both. Omitted values will inherit the path default
       // It is an array, so we can replace as many as needed.
+
+      // The remove function also works with the same position as above.
 
       // allCustomCrumbs is used in storybook and should be used only to replace all crumbs
       // as a last resort if none of the URL paths are providing explicit values we can use.
