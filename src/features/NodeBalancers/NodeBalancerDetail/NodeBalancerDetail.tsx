@@ -303,6 +303,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
           <Grid container justify="space-between">
             <Grid item>
               <Breadcrumb
+                location={location}
                 labelOptions={{ linkTo: this.getLabelLink() }}
                 crumbOverrides={[
                   {

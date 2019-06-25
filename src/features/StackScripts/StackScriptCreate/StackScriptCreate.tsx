@@ -45,7 +45,8 @@ const styles = (theme: Theme) =>
       }
     },
     createTitle: {
-      lineHeight: '2.25em'
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
     }
   });
 
@@ -233,7 +234,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { username, userCannotCreateStackScripts } = this.props;
+    const { username, userCannotCreateStackScripts, classes } = this.props;
     const {
       selectedImages,
       script,
@@ -263,7 +264,9 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         <Grid container justify="space-between">
           <Grid item>
             <Breadcrumb
+              location={location}
               labelTitle="Create New StackScript"
+              className={classes.createTitle}
               data-qa-create-stackscript-breadcrumb
             />
           </Grid>

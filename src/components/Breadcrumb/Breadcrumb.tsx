@@ -89,10 +89,6 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface State {
-  paths: any;
-}
-
 interface EditableProps {
   onCancel: () => void;
   onEdit: (value: string) => Promise<any>;
@@ -124,31 +120,12 @@ export interface Props {
   crumbOverrides?: CrumbOverridesProps[];
   allCustomCrumbs?: Array<string>;
   className?: string;
+  location: any;
 }
 
 export type CombinedProps = Props & WithStyles<ClassNames>;
 
-export class Breadcrumb extends React.Component<CombinedProps, State> {
-  state = {
-    paths: []
-  };
-
-  componentDidMount() {
-    const pathName = document.location.pathname.slice(1);
-    const paths = pathName.split('/');
-    this.setState({
-      paths
-    });
-  }
-
-  componentWillReceiveProps() {
-    const pathName = document.location.pathname.slice(1);
-    const paths = pathName.split('/');
-    this.setState({
-      paths
-    });
-  }
-
+export class Breadcrumb extends React.Component<CombinedProps> {
   render() {
     const {
       classes,
@@ -158,9 +135,12 @@ export class Breadcrumb extends React.Component<CombinedProps, State> {
       prefixStyle,
       removeCrumbX,
       crumbOverrides,
-      allCustomCrumbs,
-      className
+      className,
+      location
     } = this.props;
+
+    const url = location && location.pathname.slice(1);
+    const allPaths = url.split('/');
 
     const removeByIndex = (list: Array<string>, index: number) => [
       ...list.slice(0, index),
@@ -168,7 +148,7 @@ export class Breadcrumb extends React.Component<CombinedProps, State> {
     ];
 
     const Crumbs = () => {
-      const paths = allCustomCrumbs ? allCustomCrumbs : this.state.paths;
+      const paths = allPaths;
       const pathMap = removeCrumbX
         ? removeByIndex(paths, removeCrumbX - 1)
         : paths;
@@ -183,13 +163,9 @@ export class Breadcrumb extends React.Component<CombinedProps, State> {
       // It is an array, so we can replace as many as needed.
 
       // The remove function also works with the same position as above.
-
-      // allCustomCrumbs is used in storybook and should be used only to replace all crumbs
-      // as a last resort if none of the URL paths are providing explicit values we can use.
-      // (use overrides instead if possible)
       return (
         <>
-          {pathMap.slice(0, -1).map((crumb, key) => {
+          {pathMap.slice(0, -1).map((crumb: string, key: number) => {
             const link =
               '/' + paths.slice(0, -(paths.length - (key + 1))).join('/');
             const override =

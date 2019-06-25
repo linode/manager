@@ -354,7 +354,7 @@ class UserDetail extends React.Component<CombinedProps> {
         <React.Fragment>
           <Grid container justify="space-between">
             <Grid item>
-              <Breadcrumb labelTitle={username || ''} />
+              <Breadcrumb location={location} labelTitle={username || ''} />
             </Grid>
           </Grid>
           <ErrorState errorText="There was an error retrieving the user data. Please reload and try again." />
@@ -380,6 +380,7 @@ class UserDetail extends React.Component<CombinedProps> {
         <Grid container justify="space-between">
           <Grid item>
             <Breadcrumb
+              location={location}
               labelTitle={username}
               labelOptions={{
                 prefixComponent: maybeGravatar,

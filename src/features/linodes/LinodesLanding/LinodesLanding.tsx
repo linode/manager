@@ -365,6 +365,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               >
                 <Grid item className={classes.title}>
                   <Breadcrumb
+                    location={location}
                     data-qa-title
                     labelTitle="Linodes"
                     className={classes.title}

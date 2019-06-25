@@ -4,13 +4,6 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { Breadcrumb, CombinedProps as BreadCrumbProps } from './Breadcrumb';
 
-const customCrumbs = [
-  'First Crumb',
-  'Second Crumb',
-  'Third Crumb',
-  'Fourth Crumb'
-];
-
 const props: BreadCrumbProps = {
   classes: {
     root: '',
@@ -26,7 +19,8 @@ const props: BreadCrumbProps = {
     prefixComponentWrapper: '',
     slash: '',
     firstSlash: ''
-  }
+  },
+  location: { pathname: '/linodes/9872893679817/test/lastcrumb' }
 };
 
 afterEach(cleanup);
@@ -34,29 +28,25 @@ afterEach(cleanup);
 describe('Breadcrumb component', () => {
   it('contains the appropriate number of link text', () => {
     const { getAllByTestId } = render(
-      wrapWithTheme(<Breadcrumb allCustomCrumbs={customCrumbs} {...props} />)
+      wrapWithTheme(<Breadcrumb location={location} {...props} />)
     );
-    expect(getAllByTestId('link-text')).toHaveLength(customCrumbs.length - 1);
+    expect(getAllByTestId('link-text')).toHaveLength(3);
   });
 
   it('removes a crumb given the corresponding prop', () => {
     const { getAllByTestId } = render(
       wrapWithTheme(
-        <Breadcrumb
-          allCustomCrumbs={customCrumbs}
-          {...props}
-          removeCrumbX={2}
-        />
+        <Breadcrumb location={location} {...props} removeCrumbX={2} />
       )
     );
-    expect(getAllByTestId('link-text')).toHaveLength(customCrumbs.length - 2);
+    expect(getAllByTestId('link-text')).toHaveLength(2);
   });
 
   it('renders an editable text field given editable props', () => {
     const { queryByTestId } = render(
       wrapWithTheme(
         <Breadcrumb
-          allCustomCrumbs={customCrumbs}
+          location={location}
           {...props}
           onEditHandlers={{
             editableTextTitle: 'Editable text',

@@ -249,6 +249,7 @@ export class NodeBalancersLanding extends React.Component<
         >
           <Grid item className={classes.titleWrapper}>
             <Breadcrumb
+              location={location}
               data-qa-title
               labelTitle="NodeBalancers"
               className={classes.title}

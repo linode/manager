@@ -242,7 +242,11 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
           style={{ paddingBottom: 0 }}
         >
           <Grid item className={classes.titleWrapper}>
-            <Breadcrumb labelTitle="Domains" className={classes.breadcrumbs} />
+            <Breadcrumb
+              location={location}
+              labelTitle="Domains"
+              className={classes.breadcrumbs}
+            />
           </Grid>
           <Grid item className="p0">
             <FormControlLabel
