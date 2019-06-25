@@ -142,8 +142,9 @@ const addRightHeader = (doc: jsPDF, account: Linode.Account) => {
   const RightHeaderPadding = 300;
 
   const addLine = (text: string, fontSize = 9) => {
-    doc.text(text, RightHeaderPadding, currentLine, { charSpace: 0.75 });
-    currentLine += fontSize;
+    const splitText = doc.splitTextToSize(text, 110);
+    doc.text(splitText, RightHeaderPadding, currentLine, { charSpace: 0.75 });
+    currentLine += fontSize * splitText.length;
   };
 
   let currentLine = 55;
@@ -270,8 +271,8 @@ export const printInvoice = (
         autoSize: false
       });
 
-      /* 
-        Place table body 26px under the table header 
+      /*
+        Place table body 26px under the table header
 
         NOTE: doc.table() has functionality to automatically generate both
         the headers and table rows at once, but we're creating two seperate tables
@@ -295,9 +296,9 @@ export const printInvoice = (
     };
 
     const addTotalAmount = () => {
-      /* 
+      /*
         these will be hidden - purely to define the widths of the table rows
-        NOTE: I patch-package'd the minified NPM script, so I could use the "align" property 
+        NOTE: I patch-package'd the minified NPM script, so I could use the "align" property
        */
       const tableTotalHeaders = [
         {
@@ -356,8 +357,8 @@ export const printInvoice = (
               text: `Invoice: #${invoiceId}`
             },
             {
-              /* 
-            300px left margin is a hacky way of aligning the text to the right 
+              /*
+            300px left margin is a hacky way of aligning the text to the right
             because this library stinks
            */
               text: `Tax ID: ${account.tax_id}`,
@@ -433,9 +434,9 @@ export const printPayment = (
     };
 
     const addTotalAmount = () => {
-      /* 
+      /*
         these will be hidden - purely to define the widths of the table rows
-        NOTE: I patch-package'd the minified NPM script, so I could use the "align" property 
+        NOTE: I patch-package'd the minified NPM script, so I could use the "align" property
        */
       const tableTotalHeaders = [
         {
