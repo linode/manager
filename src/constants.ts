@@ -24,9 +24,10 @@ export const ALGOLIA_APPLICATION_ID =
   process.env.REACT_APP_ALGOLIA_APPLICATION_ID || '';
 export const ALGOLIA_SEARCH_KEY =
   process.env.REACT_APP_ALGOLIA_SEARCH_KEY || '';
-export const LAUNCH_DARKLY_API_KEY = (isProduction
-  ? process.env.REACT_APP_LAUNCH_DARKLY_ID_PRODUCTION
-  : process.env.REACT_APP_LAUNCH_DARKLY_ID_DEV) || '';
+export const LAUNCH_DARKLY_API_KEY =
+  (isProduction
+    ? process.env.REACT_APP_LAUNCH_DARKLY_ID_PRODUCTION
+    : process.env.REACT_APP_LAUNCH_DARKLY_ID_DEV) || '';
 
 /** optional variables */
 export const SENTRY_URL = process.env.REACT_APP_SENTRY_URL;
@@ -146,7 +147,8 @@ export const dcContinent: Record<string, ContinentKey> = {
   'eu-central': 'EU',
   'ap-northeast': 'AS',
   'ca-central': 'NA',
-  'ca-east': 'NA'
+  'ca-east': 'NA',
+  'ap-west': 'AS'
 };
 
 // At this time, the following regions do not support block storage.
