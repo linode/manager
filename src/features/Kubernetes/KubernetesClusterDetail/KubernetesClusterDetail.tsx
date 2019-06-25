@@ -136,8 +136,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   /** Deletion confirmation modal */
   const [confirmationOpen, setConfirmation] = React.useState<boolean>(false);
   const [deleting, setDeleting] = React.useState<boolean>(false);
-  /** For editing label */
-  const [label, updateLabel] = React.useState<string>('');
 
   React.useEffect(() => {
     /**
@@ -345,10 +343,12 @@ export const KubernetesClusterDetail: React.FunctionComponent<
 
   const handleLabelChange = async (newLabel: string) => {
     props.updateCluster({ clusterID: cluster.id, label: newLabel });
-    updateLabel(newLabel);
+    return cluster.label;
   };
 
-  const cancelUpdate = () => {};
+  const resetEditableLabel = () => {
+    return cluster.label;
+  };
 
   return (
     <React.Fragment>
@@ -369,7 +369,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
             labelTitle={cluster.label}
             onEditHandlers={{
               onEdit: handleLabelChange,
-              onCancel: cancelUpdate
+              onCancel: resetEditableLabel
             }}
             data-qa-breadcrumb
           />
