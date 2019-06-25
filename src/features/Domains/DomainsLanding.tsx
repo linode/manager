@@ -7,6 +7,7 @@ import { compose } from 'recompose';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
+import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -48,6 +49,7 @@ type ClassNames =
   | 'root'
   | 'titleWrapper'
   | 'title'
+  | 'breadcrumbs'
   | 'domain'
   | 'dnsWarning'
   | 'tagWrapper'
@@ -61,6 +63,9 @@ const styles = (theme: Theme) =>
     },
     title: {
       marginBottom: theme.spacing(1) + theme.spacing(1) / 2
+    },
+    breadcrumbs: {
+      marginBottom: theme.spacing(1)
     },
     domain: {
       width: '60%'
@@ -78,7 +83,7 @@ const styles = (theme: Theme) =>
     },
     tagGroup: {
       flexDirection: 'row-reverse',
-      marginBottom: theme.spacing(1)
+      marginBottom: theme.spacing(2) - 8
     }
   });
 
@@ -237,9 +242,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
           style={{ paddingBottom: 0 }}
         >
           <Grid item className={classes.titleWrapper}>
-            <Typography variant="h1" data-qa-title className={classes.title}>
-              Domains
-            </Typography>
+            <Breadcrumb labelTitle="Domains" className={classes.breadcrumbs} />
           </Grid>
           <Grid item className="p0">
             <FormControlLabel
@@ -456,7 +459,7 @@ export default compose<CombinedProps, {}>(
   ),
   withRouter,
   withLocalStorage,
-  styled,
   connected,
-  withSnackbar
+  withSnackbar,
+  styled
 )(DomainsLanding);

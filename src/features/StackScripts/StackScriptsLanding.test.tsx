@@ -17,14 +17,6 @@ describe('StackScripts Landing', () => {
     />
   );
 
-  it('title of page should read "StackScripts"', () => {
-    const titleText = component
-      .find('WithStyles(ForwardRef(Typography))[variant="h1"]')
-      .children()
-      .text();
-    expect(titleText).toBe('StackScripts');
-  });
-
   it('should have an Icon Text Link', () => {
     expect(component.find('[data-qa-create-new-stackscript]')).toHaveLength(1);
   });

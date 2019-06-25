@@ -17,7 +17,7 @@ type ClassNames =
   | 'preContainer'
   | 'crumbsWrapper'
   | 'crumb'
-  | 'lastCrumb'
+  | 'noCap'
   | 'crumbLink'
   | 'labelWrapper'
   | 'labelText'
@@ -50,7 +50,7 @@ const styles = (theme: Theme) =>
       textTransform: 'capitalize',
       ...theme.typography.h1
     },
-    lastCrumb: {
+    noCap: {
       textTransform: 'initial'
     },
     crumbLink: {
@@ -67,7 +67,7 @@ const styles = (theme: Theme) =>
       padding: `2px 10px`
     },
     labelSubtitle: {
-      margin: '8px 0 0 10px'
+      margin: '4px 0 0 10px'
     },
     editableContainer: {
       marginTop: -8
@@ -77,7 +77,8 @@ const styles = (theme: Theme) =>
       '& svg, & img': {
         position: 'relative',
         marginRight: 4,
-        marginLeft: 4
+        marginLeft: 4,
+        top: -2
       }
     },
     slash: {
@@ -105,6 +106,7 @@ interface LabelProps {
   suffixComponent?: JSX.Element | null;
   subtitle?: string;
   style?: CSSProperties;
+  noCap?: boolean;
 }
 
 interface CrumbOverridesProps {
@@ -229,9 +231,10 @@ export class Breadcrumb extends React.Component<CombinedProps, State> {
           {labelTitle ? (
             <div className={classes.labelWrapper}>
               <Typography
+                variant="h1"
                 className={classNames({
                   [classes.crumb]: true,
-                  [classes.lastCrumb]: true
+                  [classes.noCap]: labelOptions && labelOptions.noCap
                 })}
                 data-qa-label-text
               >
@@ -263,7 +266,7 @@ export class Breadcrumb extends React.Component<CombinedProps, State> {
               <Typography
                 className={classNames({
                   [classes.crumb]: true,
-                  [classes.lastCrumb]: true
+                  [classes.noCap]: labelOptions && labelOptions.noCap
                 })}
                 data-qa-label-text
               >
@@ -271,7 +274,7 @@ export class Breadcrumb extends React.Component<CombinedProps, State> {
               </Typography>
               {labelOptions && labelOptions.subtitle && (
                 <Typography
-                  variant="body1"
+                  variant="h1"
                   className={classes.labelSubtitle}
                   data-qa-label-subtitle
                 >

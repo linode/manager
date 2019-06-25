@@ -17,7 +17,7 @@ const props: BreadCrumbProps = {
     preContainer: '',
     crumbsWrapper: '',
     crumb: '',
-    lastCrumb: '',
+    noCap: '',
     crumbLink: '',
     labelWrapper: '',
     labelText: '',

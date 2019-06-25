@@ -23,7 +23,8 @@ const props: CombinedProps = {
     titleWrapper: '',
     tagWrapper: '',
     tagGroup: '',
-    title: ''
+    title: '',
+    breadcrumbs: ''
   },
   ...reactRouterProps
 };
