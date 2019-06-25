@@ -104,7 +104,7 @@ const generateDefaultDomainRecords = (
   const cleanedIPv6 =
     ipv6 && ipv6.includes('/') ? ipv6.substr(0, ipv6.indexOf('/')) : ipv6;
 
-  return Promise.all([
+  const baseIPv4Requests = [
     createDomainRecord(domainID, {
       type: 'A',
       target: ipv4
@@ -118,27 +118,36 @@ const generateDefaultDomainRecords = (
       type: 'A',
       target: ipv4,
       name: 'mail'
-    }),
-    createDomainRecord(domainID, {
-      type: 'AAAA',
-      target: cleanedIPv6
-    }),
-    createDomainRecord(domainID, {
-      type: 'AAAA',
-      target: cleanedIPv6,
-      name: 'www'
-    }),
-    createDomainRecord(domainID, {
-      type: 'AAAA',
-      target: cleanedIPv6,
-      name: 'mail'
-    }),
-    createDomainRecord(domainID, {
-      type: 'MX',
-      priority: 10,
-      target: `mail.${domain}`
     })
-  ]);
+  ];
+
+  return Promise.all(
+    /** ipv6 can be null so don't try to create domain records in that case */
+    !!cleanedIPv6
+      ? [
+          ...baseIPv4Requests,
+          createDomainRecord(domainID, {
+            type: 'AAAA',
+            target: cleanedIPv6
+          }),
+          createDomainRecord(domainID, {
+            type: 'AAAA',
+            target: cleanedIPv6,
+            name: 'www'
+          }),
+          createDomainRecord(domainID, {
+            type: 'AAAA',
+            target: cleanedIPv6,
+            name: 'mail'
+          }),
+          createDomainRecord(domainID, {
+            type: 'MX',
+            priority: 10,
+            target: `mail.${domain}`
+          })
+        ]
+      : baseIPv4Requests
+  );
 };
 
 const masterIPsLens = lensPath(['master_ips']);
