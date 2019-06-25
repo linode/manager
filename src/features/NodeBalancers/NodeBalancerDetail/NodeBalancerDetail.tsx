@@ -304,6 +304,12 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
             <Grid item>
               <Breadcrumb
                 labelOptions={{ linkTo: this.getLabelLink() }}
+                crumbOverrides={[
+                  {
+                    position: 1,
+                    label: 'NodeBalancers'
+                  }
+                ]}
                 removeCrumbX={2}
                 onEditHandlers={{
                   editableTextTitle: nodeBalancerLabel,
