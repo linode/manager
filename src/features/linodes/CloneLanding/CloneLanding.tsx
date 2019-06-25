@@ -46,11 +46,26 @@ import {
   createInitialCloneLandingState
 } from './utilities';
 
-type ClassNames = 'root' | 'outerContainer' | 'diskContainer';
+type ClassNames =
+  | 'root'
+  | 'paper'
+  | 'appBar'
+  | 'outerContainer'
+  | 'diskContainer'
+  | 'title';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
     marginTop: theme.spacing.unit
+  },
+  paper: {
+    paddingTop: theme.spacing.unit * 3,
+    paddingLeft: theme.spacing.unit * 3
+  },
+  appBar: {
+    '& > div': {
+      marginTop: 0
+    }
   },
   outerContainer: {
     paddingLeft: theme.spacing.unit * 2,
@@ -59,6 +74,9 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   diskContainer: {
     marginTop: theme.spacing.unit * 4
+  },
+  title: {
+    marginBottom: theme.spacing.unit * 2
   }
 });
 
@@ -86,7 +104,8 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     linodeId,
     requestDisks,
     linodeEvents,
-    linodeStatus
+    linodeStatus,
+    linodesData
   } = props;
 
   /**
@@ -231,6 +250,12 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
 
   const recentEvent = linodeEvents[0];
 
+  const selectedLinode = linodesData.find(
+    eachLinode => eachLinode.id === state.selectedLinodeId
+  );
+
+  const selectedLinodeRegion = selectedLinode && selectedLinode.region;
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Clone" />
@@ -242,9 +267,9 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
       <Notifications />
       <LinodeControls
         breadcrumbProps={{
-          labelTitle: 'Clone',
+          labelTitle: label,
           linkTo: `/linodes/${linodeId}/advanced`,
-          linkText: label,
+          linkText: 'Details',
           onEditHandlers: undefined,
           labelOptions: undefined
         }}
@@ -252,8 +277,20 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
       {linodeInTransition(linodeStatus, recentEvent) && <LinodeBusyStatus />}
       <Grid container className={classes.root}>
         <Grid item xs={12} md={9}>
-          <Paper>
-            <AppBar position="static" color="default">
+          <Paper className={classes.paper}>
+            <Typography
+              role="header"
+              variant="h2"
+              className={classes.title}
+              data-qa-title
+            >
+              Clone
+            </Typography>
+            <AppBar
+              className={classes.appBar}
+              position="static"
+              color="default"
+            >
               <Tabs
                 value={tabs.findIndex(tab => matches(tab.routeName))}
                 onChange={handleTabChange}
@@ -293,7 +330,9 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
                 <div className={classes.outerContainer}>
                   <Typography>
                     You can make a copy of a disk to the same or different
-                    Linode. We recommend you power off your Linode first.
+                    Linode. We recommend you power off your Linode first, and
+                    keep it powered off until the disk has finished being
+                    cloned.
                   </Typography>
                   <div className={classes.diskContainer}>
                     <Disks
@@ -333,8 +372,9 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
                 ).length === 0
               );
             })}
-            selectedLinode={state.selectedLinodeId}
-            region={region}
+            selectedLinodeId={state.selectedLinodeId}
+            selectedLinodeRegion={selectedLinodeRegion}
+            thisLinodeRegion={region}
             handleSelectLinode={setSelectedLinodeId}
             handleToggleConfig={toggleConfig}
             handleToggleDisk={toggleDisk}

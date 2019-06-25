@@ -1,6 +1,6 @@
 import Close from '@material-ui/icons/Close';
 import * as React from 'react';
-import { compose } from 'recompose';
+import { compose as recompose } from 'recompose';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
 import List from 'src/components/core/List';
@@ -15,7 +15,12 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { formatRegion } from 'src/utilities';
 import LinodeSelect from '../LinodeSelect';
-import { ExtendedConfig } from './utilities';
+import {
+  EstimatedCloneTimeMode,
+  ExtendedConfig,
+  getAllDisks,
+  getEstimatedCloneTime
+} from './utilities';
 
 type ClassNames =
   | 'root'
@@ -26,7 +31,8 @@ type ClassNames =
   | 'closeIcon'
   | 'divider'
   | 'submitButton'
-  | 'labelOuter';
+  | 'labelOuter'
+  | 'errorText';
 
 const styles: StyleRulesCallback<ClassNames> = theme => ({
   root: {
@@ -66,17 +72,26 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     display: 'flex',
     justifyContent: 'space-between',
     width: '100%'
+  },
+  errorText: {
+    color: theme.color.red,
+    marginTop: theme.spacing.unit,
+    '& a': {
+      textDecoration: 'underline',
+      color: theme.color.red
+    }
   }
 });
 
 interface Props {
   selectedConfigs: ExtendedConfig[];
   selectedDisks: Linode.Disk[];
-  selectedLinode: number | null;
-  region: string;
+  selectedLinodeId: number | null;
+  selectedLinodeRegion?: string;
+  thisLinodeRegion: string;
   isSubmitting: boolean;
   currentLinodeId: number;
-  errorMap?: Record<string, string | undefined>;
+  errorMap: Record<string, string | undefined>;
   handleToggleConfig: (id: number) => void;
   handleToggleDisk: (id: number) => void;
   handleSelectLinode: (linodeId: number) => void;
@@ -92,20 +107,46 @@ export const Configs: React.FC<CombinedProps> = props => {
     currentLinodeId,
     selectedConfigs,
     selectedDisks,
-    selectedLinode,
-    region,
+    selectedLinodeId,
+    thisLinodeRegion,
     isSubmitting,
     errorMap,
     handleToggleConfig,
     handleToggleDisk,
     handleSelectLinode,
+    selectedLinodeRegion,
     handleClone,
     clearAll
   } = props;
 
-  // These errors come back from from the API under the "disk_size" field
-  // when duplicating a disk on the same Linode.
-  const linodeError = errorMap && errorMap.disk_size;
+  const noneError = errorMap.none;
+  // When duplicating a disk on the SAME Linode, if there's not a enough space,
+  // we get back an error with a field of "disk_size"
+  const diskError = errorMap.disk_size;
+
+  /**
+   * When cloning a disk or config to a DIFFERENT Linode, if there's not enough space on the destination Linode,
+   * we get an error from the API that looks like this: `[{ "reason": "Not enough free space on <label>." }]`.
+   * There's no "field" on this error , but we want this error to appear as a field error on the LinodeSelect.
+   *
+   * If the API error message ever changes and this regex breaks, the worst that will happen is that
+   * the error will appear as a general error (<Notice />) instead of a field error.
+   */
+  const isNoneErrorActuallyALinodeError = Boolean(
+    noneError && noneError.match(/free space/)
+  );
+
+  // The Linode field error could either be the none error, or the disk_size error (or nothing).
+  let linodeError = isNoneErrorActuallyALinodeError ? noneError : diskError;
+  // Ensure there is a period at the end of the error.
+  if (linodeError && !linodeError.endsWith('.')) {
+    linodeError += '.';
+  }
+
+  const errorMessageLinks = {
+    shrink: `/linodes/${selectedLinodeId}/advanced`,
+    resize: `/linodes/${selectedLinodeId}/resize`
+  };
 
   /**
    * Don't include the current Linode in the LinodeSelect component if:
@@ -119,8 +160,20 @@ export const Configs: React.FC<CombinedProps> = props => {
   // or if there are no selected configs or disks, or if the selected Linode should be excluded.
   const isCloneButtonDisabled =
     (selectedConfigs.length === 0 && selectedDisks.length === 0) ||
-    !selectedLinode ||
-    (shouldExcludeCurrentLinode && selectedLinode === currentLinodeId);
+    !selectedLinodeId ||
+    (shouldExcludeCurrentLinode && selectedLinodeId === currentLinodeId);
+
+  // Estimate the clone time by
+  const allDisks = getAllDisks(selectedConfigs, selectedDisks);
+  const totalSize = allDisks.reduce((sum, eachDisk) => {
+    return sum + eachDisk.size;
+  }, 0);
+
+  const mode: EstimatedCloneTimeMode =
+    thisLinodeRegion === selectedLinodeRegion
+      ? 'sameDatacenter'
+      : 'differentDatacenter';
+  const estimatedCloneTime = getEstimatedCloneTime(totalSize, mode);
 
   return (
     <Paper className={classes.root}>
@@ -136,7 +189,9 @@ export const Configs: React.FC<CombinedProps> = props => {
         </Button>
       </header>
 
-      {errorMap && errorMap.none && <Notice error text={errorMap.none} />}
+      {noneError && !isNoneErrorActuallyALinodeError && (
+        <Notice error text={noneError} />
+      )}
 
       <List>
         {selectedConfigs.map(eachConfig => {
@@ -196,25 +251,46 @@ export const Configs: React.FC<CombinedProps> = props => {
         <Divider className={classes.divider} />
       )}
 
-      <Typography>Current Datacenter: {formatRegion(region)}</Typography>
+      <Typography>
+        Current Datacenter: {formatRegion(thisLinodeRegion)}
+      </Typography>
 
-      {/* @todo: This LinodeSelect needs to be grouped by region */}
+      {/* Show the estimated clone time if we're able to submit the form. */}
+      {!isCloneButtonDisabled && (
+        <Typography>Estimated time: {estimatedCloneTime}</Typography>
+      )}
+
       <LinodeSelect
         label="Destination"
-        generalError={linodeError}
-        selectedLinode={selectedLinode}
+        selectedLinode={selectedLinodeId}
         handleChange={linode => handleSelectLinode(linode.id)}
         excludedLinodes={
           shouldExcludeCurrentLinode ? [currentLinodeId] : undefined
         }
+        textFieldProps={{
+          error: !!linodeError
+        }}
         groupByRegion
         updateFor={[
-          selectedLinode,
+          selectedLinodeId,
           shouldExcludeCurrentLinode,
           errorMap,
           classes
         ]}
       />
+
+      {linodeError && (
+        <Typography variant="body1" className={classes.errorText}>
+          {linodeError}{' '}
+          <a href={errorMessageLinks.shrink} target="_blank">
+            Shrink your existing disks
+          </a>{' '}
+          or{' '}
+          <a href={errorMessageLinks.resize} target="_blank">
+            resize your Linode to a larger plan.
+          </a>
+        </Typography>
+      )}
 
       <Button
         className={classes.submitButton}
@@ -230,6 +306,6 @@ export const Configs: React.FC<CombinedProps> = props => {
 };
 
 const styled = withStyles(styles);
-const enhanced = compose<CombinedProps, Props>(styled);
+const enhanced = recompose<CombinedProps, Props>(styled);
 
 export default enhanced(Configs);
