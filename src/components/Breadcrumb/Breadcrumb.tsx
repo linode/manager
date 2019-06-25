@@ -121,6 +121,7 @@ export interface Props {
   removeCrumbX?: number;
   crumbOverrides?: CrumbOverridesProps[];
   allCustomCrumbs?: Array<string>;
+  className?: string;
 }
 
 export type CombinedProps = Props & WithStyles<ClassNames>;
@@ -155,7 +156,8 @@ export class Breadcrumb extends React.Component<CombinedProps, State> {
       prefixStyle,
       removeCrumbX,
       crumbOverrides,
-      allCustomCrumbs
+      allCustomCrumbs,
+      className
     } = this.props;
 
     const removeByIndex = (list: Array<string>, index: number) => [
@@ -283,7 +285,7 @@ export class Breadcrumb extends React.Component<CombinedProps, State> {
     };
 
     return (
-      <div className={classes.root}>
+      <div className={`${classes.root} ${className}`}>
         <div className={classes.preContainer}>
           <Typography
             component="span"

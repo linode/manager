@@ -5,6 +5,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
+import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -247,9 +248,7 @@ export class NodeBalancersLanding extends React.Component<
           style={{ paddingBottom: 0 }}
         >
           <Grid item className={classes.titleWrapper}>
-            <Typography variant="h1" data-qa-title className={classes.title}>
-              NodeBalancers
-            </Typography>
+            <Breadcrumb labelTitle="NodeBalancers" className={classes.title} />
           </Grid>
           <Grid item className="p0">
             <FormControlLabel
@@ -409,11 +408,11 @@ export const enhanced = compose<CombinedProps, {}>(
     };
   }),
   withLocalStorage,
-  styled,
   withRouter,
   withNodeBalancerActions,
   SectionErrorBoundary,
-  setDocs(NodeBalancersLanding.docs)
+  setDocs(NodeBalancersLanding.docs),
+  styled
 );
 
 export default enhanced(NodeBalancersLanding);
