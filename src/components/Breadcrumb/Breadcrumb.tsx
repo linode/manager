@@ -173,6 +173,17 @@ export class Breadcrumb extends React.Component<CombinedProps, State> {
         ? removeByIndex(paths, removeCrumbX - 1)
         : paths;
       const lastCrumb = pathMap.slice(-1)[0];
+
+      // We remove the last item of the crumbs by default and choose it to be
+      // either a custom one, an editable text component, or the default crumb we slice back in.
+
+      // The override for a crumb works by the position (required) of the crumb (index + 1).s
+      // We can either override the label or link or both. Omitted values will inherit the path default
+      // It is an array, so we can replace as many as needed.
+
+      // allCustomCrumbs is used in storybook and should be used only to replace all crumbs
+      // as a last resort if none of the URL paths are providing explicit values we can use.
+      // (use overrides instead if possible)
       return (
         <>
           {pathMap.slice(0, -1).map((crumb, key) => {
