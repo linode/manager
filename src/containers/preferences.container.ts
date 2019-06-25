@@ -24,7 +24,7 @@ export default <TInner extends {}, TOuter extends {}>(
       if (mapAccountToProps) {
         return mapAccountToProps(ownProps, state.preferences);
       }
-      return undefined;
+      return {};
     },
     (dispatch: ThunkDispatch) => ({
       getUserPreferences: () => dispatch(getUserPreferences()),
