@@ -11,6 +11,7 @@ import { compose, withStateHandlers } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -356,19 +357,18 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               <DocumentTitleSegment segment="Linodes" />
               <Grid
                 container
+                alignItems="center"
                 justify="space-between"
                 item
                 xs={12}
                 style={{ paddingBottom: 0 }}
               >
                 <Grid item className={classes.title}>
-                  <Typography
-                    variant="h1"
-                    className={this.props.classes.title}
+                  <Breadcrumb
                     data-qa-title
-                  >
-                    Linodes
-                  </Typography>
+                    labelTitle="Linodes"
+                    className={classes.title}
+                  />
                 </Grid>
                 <Hidden xsDown>
                   <FormControlLabel
@@ -643,7 +643,6 @@ interface WithImagesProps {
 export const enhanced = compose<CombinedProps, {}>(
   withRouter,
   toggleGroupState,
-  styled,
   setDocs(ListLinodes.docs),
   withSnackbar,
   withWidth(),
@@ -653,7 +652,8 @@ export const enhanced = compose<CombinedProps, {}>(
     imagesLoading,
     imagesError
   })),
-  withBackupCta
+  withBackupCta,
+  styled
 );
 
 export default enhanced(ListLinodes);

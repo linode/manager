@@ -6,10 +6,10 @@ import {
   Switch,
   withRouter
 } from 'react-router-dom';
+import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
-import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import TabLink from 'src/components/TabLink';
 
@@ -57,9 +57,11 @@ class AccountLanding extends React.Component<Props> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Account Settings" />
-        <Typography variant="h1" data-qa-profile-header>
-          Account Settings
-        </Typography>
+        <Breadcrumb
+          labelTitle="Account"
+          removeCrumbX={1}
+          data-qa-profile-header
+        />
         <AppBar position="static" color="default">
           <Tabs
             value={this.tabs.findIndex(tab => matches(tab.routeName))}

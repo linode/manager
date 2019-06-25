@@ -383,9 +383,11 @@ class UserDetail extends React.Component<CombinedProps> {
               labelTitle={username}
               labelOptions={{
                 prefixComponent: maybeGravatar,
-                style: { marginTop: 2 }
+                style: { marginTop: 2 },
+                noCap: true
               }}
               prefixStyle={{ height: 34 }}
+              removeCrumbX={3}
             />
           </Grid>
         </Grid>

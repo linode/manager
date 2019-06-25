@@ -36,6 +36,7 @@ import Reply from './TabbedReply';
 type ClassNames =
   | 'root'
   | 'title'
+  | 'breadcrumbs'
   | 'backButton'
   | 'listParent'
   | 'label'
@@ -51,6 +52,10 @@ const styles = (theme: Theme) =>
     title: {
       display: 'flex',
       alignItems: 'center'
+    },
+    breadcrumbs: {
+      marginBottom: theme.spacing(2),
+      marginTop: theme.spacing(1)
     },
     backButton: {
       margin: '-6px 0 0 -16px',
@@ -364,6 +369,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
                 } by ${ticket.updated_by} at ${formattedDate}`,
                 suffixComponent: <_Chip />
               }}
+              className={classes.breadcrumbs}
               data-qa-breadcrumb
             />
           </Grid>

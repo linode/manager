@@ -248,7 +248,11 @@ export class NodeBalancersLanding extends React.Component<
           style={{ paddingBottom: 0 }}
         >
           <Grid item className={classes.titleWrapper}>
-            <Breadcrumb labelTitle="NodeBalancers" className={classes.title} />
+            <Breadcrumb
+              data-qa-title
+              labelTitle="NodeBalancers"
+              className={classes.title}
+            />
           </Grid>
           <Grid item className="p0">
             <FormControlLabel

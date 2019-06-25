@@ -2,6 +2,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
+import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import {
   createStyles,
@@ -9,7 +10,6 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -22,6 +22,7 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     title: {
+      marginTop: theme.spacing(3),
       marginBottom: theme.spacing(1) + theme.spacing(1) / 2
     }
   });
@@ -53,9 +54,11 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
           style={{ paddingBottom: 0 }}
         >
           <Grid item className="py0">
-            <Typography variant="h1" className={classes.title} data-qa-title>
-              StackScripts
-            </Typography>
+            <Breadcrumb
+              labelTitle="StackScripts"
+              data-qa-title
+              className={classes.title}
+            />
           </Grid>
           <Grid item className="py0">
             <Grid container alignItems="flex-end">

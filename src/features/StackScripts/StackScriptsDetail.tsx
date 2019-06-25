@@ -44,7 +44,7 @@ const styles = (theme: Theme) =>
       }
     },
     button: {
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(1)
     },
     userName: {
       ...theme.typography.h1
