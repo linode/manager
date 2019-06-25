@@ -101,8 +101,8 @@ storiesOf('Breadcrumb', module)
                   margin: '2px 0 0 0',
                   color: '#606469',
                   borderRadius: '50%',
-                  width: 24,
-                  height: 24,
+                  width: 32,
+                  height: 32,
                   animation: '$fadeIn 150ms linear forwards'
                 }}
               />
