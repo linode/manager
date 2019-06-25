@@ -55,6 +55,7 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
         >
           <Grid item className="py0">
             <Breadcrumb
+              location={location}
               labelTitle="StackScripts"
               data-qa-title
               className={classes.title}

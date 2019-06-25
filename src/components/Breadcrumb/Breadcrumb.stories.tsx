@@ -8,12 +8,7 @@ interface Props {
   labelLink?: string;
 }
 
-const customCrumbs = [
-  'First Crumb',
-  'Second Crumb',
-  'Third Crumb',
-  'Fourth Crumb'
-];
+const customCrumbs = { pathname: '/linodes/9872893679817/test/lastcrumb' };
 
 class InteractiveEditableBreadcrumb extends React.Component<Props, {}> {
   state = {
@@ -35,7 +30,7 @@ class InteractiveEditableBreadcrumb extends React.Component<Props, {}> {
     return (
       <React.Fragment>
         <Breadcrumb
-          allCustomCrumbs={customCrumbs}
+          location={customCrumbs}
           labelOptions={{
             linkTo: this.props.labelLink
           }}
@@ -54,14 +49,14 @@ storiesOf('Breadcrumb', module)
   .add('Basic Breadcrumb', () => (
     <StaticRouter location="/" context={{}}>
       <div style={{ padding: 24 }}>
-        <Breadcrumb allCustomCrumbs={customCrumbs} removeCrumbX={2} />
+        <Breadcrumb location={customCrumbs} removeCrumbX={2} />
       </div>
     </StaticRouter>
   ))
   .add('Breadcrumb with custom label', () => (
     <StaticRouter location="/" context={{}}>
       <div style={{ padding: 24 }}>
-        <Breadcrumb allCustomCrumbs={customCrumbs} labelTitle="Custom label" />
+        <Breadcrumb location={customCrumbs} labelTitle="Custom label" />
       </div>
     </StaticRouter>
   ))
@@ -69,7 +64,7 @@ storiesOf('Breadcrumb', module)
     <StaticRouter location="/" context={{}}>
       <div style={{ padding: 24 }}>
         <Breadcrumb
-          allCustomCrumbs={customCrumbs}
+          location={customCrumbs}
           labelOptions={{
             subtitle: 'A label subtitle'
           }}
@@ -81,7 +76,7 @@ storiesOf('Breadcrumb', module)
     <StaticRouter location="/" context={{}}>
       <div style={{ padding: 24 }}>
         <Breadcrumb
-          allCustomCrumbs={customCrumbs}
+          location={customCrumbs}
           crumbOverrides={[
             {
               position: 2,
@@ -97,7 +92,7 @@ storiesOf('Breadcrumb', module)
     <StaticRouter location="/" context={{}}>
       <div style={{ padding: 24 }}>
         <Breadcrumb
-          allCustomCrumbs={customCrumbs}
+          location={customCrumbs}
           labelTitle="Static text"
           labelOptions={{
             prefixComponent: (

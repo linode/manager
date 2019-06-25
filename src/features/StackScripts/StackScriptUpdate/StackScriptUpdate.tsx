@@ -312,6 +312,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
         <Grid container justify="space-between">
           <Grid item style={{ marginBottom: 16 }}>
             <Breadcrumb
+              location={location}
               labelTitle="Edit"
               data-qa-update-stackscript-breadcrumb
               crumbOverrides={[

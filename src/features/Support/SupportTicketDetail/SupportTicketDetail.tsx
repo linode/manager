@@ -350,6 +350,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
         <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
             <Breadcrumb
+              location={location}
               crumbOverrides={[
                 {
                   position: 2,

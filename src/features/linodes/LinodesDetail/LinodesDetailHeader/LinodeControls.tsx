@@ -121,6 +121,7 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
     >
       <Grid item>
         <Breadcrumb
+          location={location}
           removeCrumbX={2}
           labelOptions={{ linkTo: getLabelLink() }}
           className={classes.breadCrumbs}

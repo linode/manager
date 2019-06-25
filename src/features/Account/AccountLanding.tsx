@@ -58,6 +58,7 @@ class AccountLanding extends React.Component<Props> {
       <React.Fragment>
         <DocumentTitleSegment segment="Account Settings" />
         <Breadcrumb
+          location={location}
           labelTitle="Account"
           removeCrumbX={1}
           data-qa-profile-header
