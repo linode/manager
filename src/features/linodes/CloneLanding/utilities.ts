@@ -1,4 +1,5 @@
-import { map } from 'ramda';
+import * as moment from 'moment';
+import { append, compose, flatten, map, uniqBy } from 'ramda';
 
 /**
  * TYPES
@@ -231,4 +232,48 @@ export const attachAssociatedDisksToConfigs = (
     const associatedDisks = getAssociatedDisks(eachConfig, disks);
     return { ...eachConfig, associatedDisks };
   });
+};
+
+export const getAllDisks = (
+  configs: ExtendedConfig[],
+  disks: Linode.Disk[]
+): Linode.Disk[] => {
+  /**
+   * Get ALL disks so the estimated clone time can be calculated.
+   *
+   * 1. Grab associated disks from the selected CONFIGS
+   * 2. Append the selected DISKS (the ones not attached to configs)
+   * 3. Flatten
+   * 4. There may be duplicates, so do uniqBy ID
+   *
+   * ...I can't believe the typing worked out for this...
+   */
+  const allDisks: Linode.Disk[] = compose(
+    uniqBy((eachDisk: Linode.Disk) => eachDisk.id),
+    flatten,
+    append(disks),
+    map((eachConfig: ExtendedConfig) => eachConfig.associatedDisks)
+  )(configs);
+
+  return allDisks;
+};
+
+export type EstimatedCloneTimeMode = 'sameDatacenter' | 'differentDatacenter';
+
+/**
+ * Provides a rough estimate of the clone time, based on the size of the disk(s),
+ * and whether or not the destination Linode is in the same DC or different DC.
+ */
+export const getEstimatedCloneTime = (
+  sizeInMb: number,
+  mode: EstimatedCloneTimeMode
+) => {
+  const multiplier = mode === 'sameDatacenter' ? 0.75 : 10;
+  const estimatedTimeInMinutes = Math.ceil((multiplier * sizeInMb) / 1024);
+
+  const humanizedEstimate = moment
+    .duration(estimatedTimeInMinutes, 'minutes')
+    .humanize();
+
+  return humanizedEstimate;
 };
