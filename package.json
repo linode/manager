@@ -225,7 +225,7 @@
     "prettier": "1.16.1",
     "react-dev-utils": "^7.0.3",
     "react-hooks-testing-library": "^0.3.8",
-    "react-testing-library": "^7.0.0",
+    "react-testing-library": "^8.0.1",
     "reselect-tools": "^0.0.7",
     "selenium-standalone": "^6.13.0",
     "source-map-loader": "^0.2.4",
