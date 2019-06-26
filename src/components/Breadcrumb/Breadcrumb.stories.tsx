@@ -49,7 +49,7 @@ storiesOf('Breadcrumb', module)
   .add('Basic Breadcrumb', () => (
     <StaticRouter location="/" context={{}}>
       <div style={{ padding: 24 }}>
-        <Breadcrumb pathname={customCrumbs} removeCrumbX={2} />
+        <Breadcrumb pathname={customCrumbs} />
       </div>
     </StaticRouter>
   ))
@@ -70,6 +70,13 @@ storiesOf('Breadcrumb', module)
             subtitle: 'A label subtitle'
           }}
         />
+      </div>
+    </StaticRouter>
+  ))
+  .add('Breadcrumb with a crumb removed', () => (
+    <StaticRouter location="/" context={{}}>
+      <div style={{ padding: 24 }}>
+        <Breadcrumb pathname={customCrumbs} removeCrumbX={2} />
       </div>
     </StaticRouter>
   ))
