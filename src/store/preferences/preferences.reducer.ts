@@ -19,14 +19,19 @@ const reducer: Reducer<State> = reducerWithInitialState(defaultState)
   .case(handleGetPreferences.started, state => {
     return {
       ...state,
-      loading: true,
-      error: undefined
+      loading: true
+      /**
+       * intentionally not resetting error state here because it will cause
+       * the PreferenceToggle.tsx component to re-render, causing the entire app
+       * to re-render unnecessarily
+       */
     };
   })
   .caseWithAction(handleGetPreferences.done, (state, action) => {
     return {
       ...state,
       loading: false,
+      error: undefined,
       lastUpdated: Date.now(),
       data: action.payload.result
     };
@@ -43,8 +48,12 @@ const reducer: Reducer<State> = reducerWithInitialState(defaultState)
   })
   .case(handleUpdatePreferences.started, state => {
     return {
-      ...state,
-      error: undefined
+      ...state
+      /**
+       * intentionally not resetting error state here because it will cause
+       * the PreferenceToggle.tsx component to re-render, causing the entire app
+       * to re-render unnecessarily
+       */
     };
   })
   .caseWithAction(handleUpdatePreferences.done, (state, action) => {
@@ -52,7 +61,8 @@ const reducer: Reducer<State> = reducerWithInitialState(defaultState)
       ...state,
       data: action.payload.result,
       lastUpdated: Date.now(),
-      loading: false
+      loading: false,
+      error: undefined
     };
   })
   .caseWithAction(handleUpdatePreferences.failed, (state, action) => {

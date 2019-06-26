@@ -51,7 +51,12 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
 
   React.useEffect(() => {
     /** request the user preferences on app load */
-    props.getUserPreferences();
+    props
+      .getUserPreferences()
+      .catch(
+        () =>
+          /** swallow the error. PreferenceToggle.tsx handles failures gracefully */ null
+      );
   }, []);
 
   const { children } = props;
@@ -80,7 +85,7 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
             togglePreference: _toggleSpacing
           }: ToggleProps<SpacingChoice>) => (
             <ThemeProvider
-              theme={themes[themeChoice]({
+              theme={safelyGetTheme(themes, themeChoice)({
                 spacingOverride:
                   spacingChoice === 'compact'
                     ? COMPACT_SPACING_UNIT
@@ -96,6 +101,19 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
       )}
     </PreferenceToggle>
   );
+};
+
+/** safely return light theme if the theme choice isn't "light" or "dark" */
+const safelyGetTheme = (
+  themesToChoose: Record<'dark' | 'light', any>,
+  themeChoice: string
+) => {
+  /* tslint:disable */
+  return !!Object.keys(themesToChoose).some(
+    eachTheme => eachTheme === themeChoice
+  )
+    ? themesToChoose[themeChoice]
+    : themesToChoose['light'];
 };
 
 export default compose<CombinedProps, Props>(withPreferences())(

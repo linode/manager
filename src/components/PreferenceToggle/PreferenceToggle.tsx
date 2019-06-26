@@ -41,6 +41,12 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
     preferences
   } = props;
 
+  /** will be undefined and render-block children unless otherwise specified */
+  const [currentlySetPreference, setPreference] = React.useState<
+    PreferenceValue | undefined
+  >(value);
+  const [lastUpdated, setLastUpdated] = React.useState<number>(0);
+
   React.useEffect(() => {
     /** make sure out overridden value appears int the list of options to toggle */
     if (
@@ -51,13 +57,7 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
         'Preference Toggle: The passed "value" prop must appear in the list of options'
       );
     }
-  }, []);
-
-  /** will be undefined and render-block children unless otherwise specified */
-  const [currentlySetPreference, setPreference] = React.useState<
-    PreferenceValue | undefined
-  >(value);
-  const [lastUpdated, setLastUpdated] = React.useState<number>(0);
+  }, [value]);
 
   React.useEffect(() => {
     /**
@@ -77,8 +77,6 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
       lastUpdated === 0
     ) {
       setPreference(preferenceOptions[0]);
-
-      setLastUpdated(Date.now());
     }
 
     /**
@@ -98,9 +96,6 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
         : preferenceFromAPI;
 
       setPreference(preferenceToSet);
-
-      /** set local state so we don't repeat any of this previous behavior */
-      setLastUpdated(Date.now());
     }
   }, [props.preferenceError, props.preferences]);
 
@@ -112,32 +107,42 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
        *
        * Don't update anything if the GET fails
        */
-      if (!!preferenceError) {
+      if (!!preferenceError && lastUpdated !== 0) {
         props
           .getUserPreferences()
           .then(response => {
-            props.updateUserPreferences({
-              ...response.preferences,
-              [preferenceKey]: currentlySetPreference
-            });
+            props
+              .updateUserPreferences({
+                ...response.preferences,
+                [preferenceKey]: currentlySetPreference
+              })
+              .catch(() => /** swallow the error */ null);
           })
           .catch(() => /** swallow the error */ null);
-      } else {
+      } else if (
+        !!preferences &&
+        currentlySetPreference &&
+        lastUpdated !== 0
+        // && preferencesHaveBeenUpdated(props.preferences, theme, spacing)
+      ) {
         /**
          * PUT to /preferences on every toggle, debounced.
          */
-        if (
-          !!preferences &&
-          currentlySetPreference
-          // && preferencesHaveBeenUpdated(props.preferences, theme, spacing)
-        ) {
-          props.updateUserPreferences({
+
+        props
+          .updateUserPreferences({
             ...props.preferences,
             [preferenceKey]: currentlySetPreference
-          });
-        }
+          })
+          .catch(() => /** swallow the error */ null);
+      } else if (lastUpdated === 0) {
+        /**
+         * this is the case where the app has just been mounted and the preferences are
+         * being set in local state for the first time
+         */
+        setLastUpdated(Date.now());
       }
-    }, 750);
+    }, 500);
 
     return () => clearTimeout(debouncedErrorUpdate);
   }, [currentlySetPreference]);
@@ -192,19 +197,43 @@ const memoized = (component: React.FC<CombinedProps>) =>
      * state. All the relevant preference state will be handled in the component.
      * This component only cares about what the preferences are on app load.
      */
-    return (
-      !(!prevProps.preferences && !!nextProps.preferences) &&
-      !(!!prevProps.preferences && !nextProps.preferences) &&
-      !(!prevProps.preferenceError && !!nextProps.preferenceError) &&
-      !(!!prevProps.preferenceError && !nextProps.preferenceError) &&
-      equals(prevProps.children, nextProps.children) &&
+    // console.log(wasUndefinedNowDefined(prevProps.preferenceError, nextProps.preferenceError))
+    const shouldRerender =
+      wasUndefinedNowDefined(prevProps.preferences, nextProps.preferences) ||
+      wasDefinedNowUndefined(prevProps.preferences, nextProps.preferences) ||
+      wasUndefinedNowDefined(
+        prevProps.preferenceError,
+        nextProps.preferenceError
+      ) ||
+      wasDefinedNowUndefined(
+        prevProps.preferenceError,
+        nextProps.preferenceError
+      ) ||
+      !equals(prevProps.children, nextProps.children) ||
       /** we only care what the server tells us on app load */
-      !(
-        prevProps.preferencesLastUpdated === 0 &&
-        nextProps.preferencesLastUpdated !== 0
-      )
-    );
+      isUpdatingForTheFirstTime(
+        prevProps.preferencesLastUpdated,
+        nextProps.preferencesLastUpdated
+      );
+
+    /** react memo cares about if the props are equal so set to the opposite */
+    return !shouldRerender;
   });
+
+const wasUndefinedNowDefined = (prevProp: any, nextProp: any) => {
+  return !prevProp && !!nextProp;
+};
+
+const wasDefinedNowUndefined = (prevProp: any, nextProp: any) => {
+  return !!prevProp && !nextProp;
+};
+
+const isUpdatingForTheFirstTime = (
+  prevLastUpdated: number,
+  nextLastUpdated: number
+) => {
+  return prevLastUpdated === 0 && nextLastUpdated !== 0;
+};
 
 export default compose<CombinedProps, Props>(
   withPreferences<PreferenceProps, Props>(

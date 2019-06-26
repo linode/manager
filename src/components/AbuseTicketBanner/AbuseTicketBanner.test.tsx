@@ -1,31 +1,9 @@
 import * as React from 'react';
 import { cleanup, render } from 'react-testing-library';
 
-import {
-  abuseTicketNotification,
-  mockNotification
-} from 'src/__data__/notifications';
+import { abuseTicketNotification } from 'src/__data__/notifications';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
-import Component, { AbuseTicketBanner } from './AbuseTicketBanner';
-
-const mockState = {
-  __resources: {
-    notifications: {
-      data: [abuseTicketNotification, mockNotification]
-    }
-  },
-  preferences: {
-    data: undefined
-  }
-};
-
-jest.mock('src/store', () => ({
-  default: {
-    getState: () => mockState,
-    subscribe: () => jest.fn(),
-    dispatch: () => jest.fn()
-  }
-}));
+import { AbuseTicketBanner } from './AbuseTicketBanner';
 
 afterEach(cleanup);
 
@@ -66,12 +44,5 @@ describe('Abuse ticket banner', () => {
     );
 
     expect(queryByTestId('abuse-ticket-link')).toBeNull();
-  });
-
-  describe('integration tests', () => {
-    it('should filter out abuse ticket notifications from the store', () => {
-      const { queryAllByText } = render(wrapWithTheme(<Component />));
-      expect(queryAllByText(/abuse/)).toHaveLength(1);
-    });
   });
 });
