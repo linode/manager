@@ -28,7 +28,7 @@ const styles = (theme: Theme) =>
     },
     appBar: {
       color: theme.palette.text.primary,
-      backgroundColor: theme.bg.white,
+      backgroundColor: theme.bg.topMenu,
       position: 'relative',
       paddingRight: '0 !important'
     },

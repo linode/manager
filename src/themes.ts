@@ -62,8 +62,10 @@ export const dark = () =>
       white: '#32363c',
       pureWhite: '#000',
       tableHeader: '#2B2E32',
-      primaryNavActive: '#2f3236',
-      primaryNavBorder: 'rgba(0, 0, 0, 0.12)'
+      primaryNavActive: '#303235',
+      primaryNavBorder: '#303235',
+      primaryNavPaper: '#3a3f45',
+      topMenu: '#33383d'
     },
     color: {
       headline: primaryColors.headline,
@@ -92,7 +94,8 @@ export const dark = () =>
       diskSpaceBorder: '#222222',
       drawerBackdrop: 'rgba(0, 0, 0, 0.5)',
       label: '#c9cacb',
-      disabledText: '#c9cacb'
+      disabledText: '#c9cacb',
+      primaryNavText: '#fff'
     },
     animateCircleIcon: {
       ...iconCircleAnimation
