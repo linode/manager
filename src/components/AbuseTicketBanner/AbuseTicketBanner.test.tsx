@@ -1,9 +1,14 @@
 import * as React from 'react';
 import { cleanup, render } from 'react-testing-library';
 
-import { abuseTicketNotification } from 'src/__data__/notifications';
+import {
+  abuseTicketNotification,
+  mockNotification
+} from 'src/__data__/notifications';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { AbuseTicketBanner } from './AbuseTicketBanner';
+
+import filterAbuseTickets from 'src/store/selectors/getAbuseTicket';
 
 afterEach(cleanup);
 
@@ -44,5 +49,16 @@ describe('Abuse ticket banner', () => {
     );
 
     expect(queryByTestId('abuse-ticket-link')).toBeNull();
+  });
+
+  describe('integration tests', () => {
+    it('should filter out abuse ticket notifications from the store', () => {
+      const tickets = filterAbuseTickets({
+        notifications: {
+          data: [mockNotification, abuseTicketNotification]
+        }
+      } as any);
+      expect(tickets[0].label).toMatch(/abuse/);
+    });
   });
 });
