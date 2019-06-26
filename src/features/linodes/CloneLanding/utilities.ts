@@ -5,7 +5,7 @@ import { append, compose, flatten, map, uniqBy } from 'ramda';
  * TYPES
  */
 
-interface CloneLandingState {
+export interface CloneLandingState {
   configSelection: ConfigSelection;
   diskSelection: DiskSelection;
   selectedLinodeId: number | null;
