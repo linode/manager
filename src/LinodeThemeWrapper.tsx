@@ -6,10 +6,14 @@ import { dark, light } from 'src/themes';
 import { COMPACT_SPACING_UNIT, NORMAL_SPACING_UNIT } from 'src/themeFactory';
 
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
-
 import withPreferences, {
   PreferencesActionsProps
 } from 'src/containers/preferences.container';
+import {
+  sendCurrentThemeSettingsEvent,
+  sendSpacingToggleEvent,
+  sendThemeToggleEvent
+} from 'src/utilities/ga';
 
 type ThemeChoice = 'light' | 'dark';
 type SpacingChoice = 'compact' | 'normal';
@@ -40,13 +44,20 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
     }, 500);
   });
 
-  const toggleTheme = () => {
+  const toggleTheme = (value: ThemeChoice) => {
     document.body.classList.add('no-transition');
-    /** @todo send to GA */
+    /** send to GA */
+    sendThemeToggleEvent(value);
   };
 
-  const toggleSpacing = () => {
-    /** @todo send to GA */
+  const toggleSpacing = (value: SpacingChoice) => {
+    /** send to GA */
+    sendSpacingToggleEvent(value);
+  };
+
+  const setThemePrefsOnAppLoad = (value: ThemeChoice | SpacingChoice) => {
+    /** send to GA */
+    sendCurrentThemeSettingsEvent(value);
   };
 
   React.useEffect(() => {
@@ -68,6 +79,7 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
       toggleCallbackFn={toggleTheme}
       /** purely for unit test purposes */
       value={props.theme}
+      initialSetCallbackFn={setThemePrefsOnAppLoad}
     >
       {({
         preference: themeChoice,
@@ -79,6 +91,7 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
           toggleCallbackFn={toggleSpacing}
           /** purely for unit test purposes */
           value={props.spacing}
+          initialSetCallbackFn={setThemePrefsOnAppLoad}
         >
           {({
             preference: spacingChoice,

@@ -24,7 +24,8 @@ interface Props<T = PreferenceValue> {
   preferenceKey: string;
   preferenceOptions: [T, T];
   value?: T;
-  toggleCallbackFn?: (value: PreferenceValue) => void;
+  toggleCallbackFn?: (value: T) => void;
+  initialSetCallbackFn?: (value: T) => void;
   children: RenderChildren;
 }
 
@@ -66,7 +67,12 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
       !!props.preferenceError &&
       lastUpdated === 0
     ) {
-      setPreference(preferenceOptions[0]);
+      const preferenceToSet = preferenceOptions[0];
+      setPreference(preferenceToSet);
+
+      if (props.initialSetCallbackFn) {
+        props.initialSetCallbackFn(preferenceToSet);
+      }
     }
 
     /**
@@ -86,6 +92,11 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
         : preferenceFromAPI;
 
       setPreference(preferenceToSet);
+
+      /** run callback function is passed one */
+      if (props.initialSetCallbackFn) {
+        props.initialSetCallbackFn(preferenceToSet);
+      }
     }
   }, [props.preferenceError, props.preferences]);
 
