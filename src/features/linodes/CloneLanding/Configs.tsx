@@ -32,7 +32,7 @@ interface Props {
   handleSelect: (id: number) => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+export type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const Configs: React.FC<CombinedProps> = props => {
   const { classes, configs, handleSelect, configSelection } = props;
@@ -66,6 +66,7 @@ export const Configs: React.FC<CombinedProps> = props => {
                           checked={configSelection[config.id].isSelected}
                           onChange={() => handleSelect(config.id)}
                           text={config.label}
+                          data-testid={`checkbox-${config.id}`}
                         />
                       </TableCell>
                     </TableRow>
