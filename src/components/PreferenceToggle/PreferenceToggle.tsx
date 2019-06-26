@@ -25,6 +25,7 @@ interface Props<T = PreferenceValue> {
   preferenceOptions: [T, T];
   value?: T;
   toggleCallbackFn?: (value: T) => void;
+  toggleCallbackFnDebounced?: (value: T) => void;
   initialSetCallbackFn?: (value: T) => void;
   children: RenderChildren;
 }
@@ -39,6 +40,7 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
     preferenceError,
     preferenceKey,
     preferenceOptions,
+    toggleCallbackFnDebounced,
     toggleCallbackFn,
     children,
     preferences
@@ -109,6 +111,11 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
        * Don't update anything if the GET fails
        */
       if (!!preferenceError && lastUpdated !== 0) {
+        /** invoke our callback prop if we have one */
+        if (toggleCallbackFnDebounced && currentlySetPreference) {
+          toggleCallbackFnDebounced(currentlySetPreference);
+        }
+
         props
           .getUserPreferences()
           .then(response => {
@@ -129,13 +136,17 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
         /**
          * PUT to /preferences on every toggle, debounced.
          */
-
         props
           .updateUserPreferences({
             ...props.preferences,
             [preferenceKey]: currentlySetPreference
           })
           .catch(() => /** swallow the error */ null);
+
+        /** invoke our callback prop if we have one */
+        if (toggleCallbackFnDebounced && currentlySetPreference) {
+          toggleCallbackFnDebounced(currentlySetPreference);
+        }
       } else if (lastUpdated === 0) {
         /**
          * this is the case where the app has just been mounted and the preferences are

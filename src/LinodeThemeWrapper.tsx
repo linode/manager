@@ -76,7 +76,7 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
     <PreferenceToggle<'light' | 'dark'>
       preferenceKey="theme"
       preferenceOptions={['light', 'dark']}
-      toggleCallbackFn={toggleTheme}
+      toggleCallbackFnDebounced={toggleTheme}
       /** purely for unit test purposes */
       value={props.theme}
       initialSetCallbackFn={setThemePrefsOnAppLoad}
@@ -88,7 +88,7 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
         <PreferenceToggle<'normal' | 'compact'>
           preferenceKey="spacing"
           preferenceOptions={['normal', 'compact']}
-          toggleCallbackFn={toggleSpacing}
+          toggleCallbackFnDebounced={toggleSpacing}
           /** purely for unit test purposes */
           value={props.spacing}
           initialSetCallbackFn={setThemePrefsOnAppLoad}
