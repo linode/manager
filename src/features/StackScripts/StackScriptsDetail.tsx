@@ -120,7 +120,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
         <Grid container justify="space-between" alignItems="center">
           <Grid item>
             <Breadcrumb
-              location={location}
+              pathname={this.props.location.pathname}
               labelOptions={{ prefixComponent: userNameSlash }}
               labelTitle={stackScript.label}
             />

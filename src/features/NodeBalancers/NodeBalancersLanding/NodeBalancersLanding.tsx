@@ -219,7 +219,8 @@ export class NodeBalancersLanding extends React.Component<
       nodeBalancersData,
       nodeBalancersError,
       groupByTag,
-      toggleGroupByTag
+      toggleGroupByTag,
+      location
     } = this.props;
 
     const {
@@ -249,7 +250,7 @@ export class NodeBalancersLanding extends React.Component<
         >
           <Grid item className={classes.titleWrapper}>
             <Breadcrumb
-              location={location}
+              pathname={location.pathname}
               data-qa-title
               labelTitle="NodeBalancers"
               className={classes.title}

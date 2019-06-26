@@ -1,5 +1,6 @@
 import { last } from 'ramda';
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
@@ -60,6 +61,7 @@ const styles = (theme: Theme) =>
 type CombinedProps = LinodeDetailContext &
   ConfigDrawerProps &
   EditableLabelProps &
+  RouteComponentProps<{}> &
   WithStyles<ClassNames>;
 
 const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
@@ -121,7 +123,7 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
     >
       <Grid item>
         <Breadcrumb
-          location={location}
+          pathname={props.location.pathname}
           removeCrumbX={2}
           labelOptions={{ linkTo: getLabelLink() }}
           className={classes.breadCrumbs}
@@ -176,6 +178,7 @@ const styled = withStyles(styles);
 const enhanced = compose<CombinedProps, {}>(
   withConfigDrawerState,
   withEditableLabelState,
+  withRouter,
   withLinodeDetailContext(({ linode, updateLinode }) => ({
     linode,
     updateLinode,

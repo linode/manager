@@ -120,7 +120,7 @@ export interface Props {
   crumbOverrides?: CrumbOverridesProps[];
   allCustomCrumbs?: Array<string>;
   className?: string;
-  location: any;
+  pathname: string;
 }
 
 export type CombinedProps = Props & WithStyles<ClassNames>;
@@ -136,10 +136,10 @@ export class Breadcrumb extends React.Component<CombinedProps> {
       removeCrumbX,
       crumbOverrides,
       className,
-      location
+      pathname
     } = this.props;
 
-    const url = location && location.pathname.slice(1);
+    const url = pathname && pathname.slice(1);
     const allPaths = url.split('/');
 
     const removeByIndex = (list: Array<string>, index: number) => [

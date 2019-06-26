@@ -294,7 +294,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, profileUsername } = this.props;
+    const { classes, profileUsername, location } = this.props;
     const {
       attachmentErrors,
       errors,
@@ -350,7 +350,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
         <Grid container justify="space-between" alignItems="flex-end">
           <Grid item>
             <Breadcrumb
-              location={location}
+              pathname={location.pathname}
               crumbOverrides={[
                 {
                   position: 2,

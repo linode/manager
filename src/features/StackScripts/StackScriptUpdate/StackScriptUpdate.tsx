@@ -278,7 +278,12 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { username, imagesLoading, userCannotModifyStackScript } = this.props;
+    const {
+      username,
+      imagesLoading,
+      userCannotModifyStackScript,
+      location
+    } = this.props;
     const {
       availableImages,
       selectedImages,
@@ -312,7 +317,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
         <Grid container justify="space-between">
           <Grid item style={{ marginBottom: 16 }}>
             <Breadcrumb
-              location={location}
+              pathname={location.pathname}
               labelTitle="Edit"
               data-qa-update-stackscript-breadcrumb
               crumbOverrides={[
