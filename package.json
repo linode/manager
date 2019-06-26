@@ -149,7 +149,7 @@
     "@types/bluebird": "^3.5.20",
     "@types/chart.js": "^2.7.54",
     "@types/classnames": "^2.2.3",
-    "@types/enzyme": "^3.9.3",
+    "@types/enzyme": "^3.9.4",
     "@types/hapi": "^17.0.17",
     "@types/he": "^1.1.0",
     "@types/inert": "^5.1.1",
