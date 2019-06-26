@@ -147,7 +147,7 @@
     "@storybook/react": "^4.2.0-alpha.11",
     "@types/algoliasearch": "^3.27.5",
     "@types/bluebird": "^3.5.20",
-    "@types/chart.js": "^2.7.13",
+    "@types/chart.js": "^2.7.54",
     "@types/classnames": "^2.2.3",
     "@types/enzyme": "^3.9.3",
     "@types/hapi": "^17.0.17",

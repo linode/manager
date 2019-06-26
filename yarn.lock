@@ -2083,10 +2083,10 @@
   resolved "https://registry.yarnpkg.com/@types/catbox/-/catbox-10.0.3.tgz#6cbf87ddd35108b8d3945b0838794de8488a1cae"
   integrity sha512-f77b7+fhDLVD9d0dbprmCcAJ7wxipuQwN+8UNws33ZDlf+7G7NDgaBnrPUfXF9DGsfKQWdlzU3ZPLIrNEzqBqA==
 
-"@types/chart.js@^2.7.13":
-  version "2.7.42"
-  resolved "https://registry.yarnpkg.com/@types/chart.js/-/chart.js-2.7.42.tgz#3a201969379ef96f99c2901705fa7b57330ba127"
-  integrity sha512-+0v+PV2J9wsV7u36Vqt5Oke7ugtiZqNeYJgNk5mgNMkEkqtjxo2Q9N5Q9znHlgmXeOTfQL6e1sfcAbTnPHAzlA==
+"@types/chart.js@^2.7.54":
+  version "2.7.54"
+  resolved "https://registry.yarnpkg.com/@types/chart.js/-/chart.js-2.7.54.tgz#d50c0db14f45d9de6eaa2820d5feb26cea68caf7"
+  integrity sha512-BxIUR4mfk0zOqOPEu4gxLP5herra6INQLyFmgVE6JVRNNB+r36g2cd67nDUEEdD/EShZvaR33xausxOGv1+nbw==
 
 "@types/cheerio@*":
   version "0.22.10"
