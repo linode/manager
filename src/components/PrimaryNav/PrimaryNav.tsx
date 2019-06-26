@@ -103,11 +103,11 @@ const styles = (theme: Theme) =>
       }
     },
     collapsible: {
-      fontSize: '.9rem'
+      fontSize: '0.9rem'
     },
     linkItem: {
       transition: theme.transitions.create(['color']),
-      color: '#C9CACB',
+      color: theme.color.primaryNavText,
       fontFamily: 'LatoWebBold' // we keep this bold at all times
     },
     active: {

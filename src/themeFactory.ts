@@ -184,7 +184,9 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       pureWhite: '#fff',
       tableHeader: '#fbfbfb',
       primaryNavActive: '#f4f4f4',
-      primaryNavBorder: '#f4f4f4'
+      primaryNavBorder: '#f4f4f4',
+      primaryNavPaper: '#32363c',
+      topMenu: '#fff'
     },
     color: {
       headline: primaryColors.headline,
@@ -213,7 +215,8 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       diskSpaceBorder: '#f4f4f4',
       drawerBackdrop: 'rgba(255, 255, 255, 0.5)',
       label: '#555',
-      disabledText: '#c9cacb'
+      disabledText: '#c9cacb',
+      primaryNavText: '#c9cacb'
     },
     font: {
       normal: primaryFonts.normal,
