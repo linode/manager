@@ -38,7 +38,13 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
   };
 
   render() {
-    const { classes, history, imagesData, imagesLoading } = this.props;
+    const {
+      classes,
+      history,
+      imagesData,
+      imagesLoading,
+      location
+    } = this.props;
 
     return (
       <React.Fragment>
@@ -55,7 +61,7 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
         >
           <Grid item className="py0">
             <Breadcrumb
-              location={location}
+              pathname={location.pathname}
               labelTitle="StackScripts"
               data-qa-title
               className={classes.title}

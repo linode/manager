@@ -243,7 +243,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
         >
           <Grid item className={classes.titleWrapper}>
             <Breadcrumb
-              location={location}
+              pathname={this.props.location.pathname}
               labelTitle="Domains"
               className={classes.breadcrumbs}
             />

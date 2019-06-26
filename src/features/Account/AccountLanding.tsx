@@ -48,7 +48,8 @@ class AccountLanding extends React.Component<Props> {
 
   render() {
     const {
-      match: { url }
+      match: { url },
+      location
     } = this.props;
     const matches = (p: string) => {
       return Boolean(matchPath(p, { path: this.props.location.pathname }));
@@ -58,7 +59,7 @@ class AccountLanding extends React.Component<Props> {
       <React.Fragment>
         <DocumentTitleSegment segment="Account Settings" />
         <Breadcrumb
-          location={location}
+          pathname={location.pathname}
           labelTitle="Account"
           removeCrumbX={1}
           data-qa-profile-header

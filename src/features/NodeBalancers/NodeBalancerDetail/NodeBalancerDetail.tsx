@@ -261,7 +261,8 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
     const {
       match: { path, url },
       error,
-      loading
+      loading,
+      location
     } = this.props;
     const { nodeBalancer } = this.state;
 
@@ -303,7 +304,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
           <Grid container justify="space-between">
             <Grid item>
               <Breadcrumb
-                location={location}
+                pathname={location.pathname}
                 labelOptions={{ linkTo: this.getLabelLink() }}
                 crumbOverrides={[
                   {

@@ -49,6 +49,7 @@ const DomainDetail: React.FC<CombinedProps> = props => {
     domain,
     domainsLoading,
     domainsError,
+    location,
     match: {
       params: { domainId }
     }
@@ -98,7 +99,7 @@ const DomainDetail: React.FC<CombinedProps> = props => {
     <React.Fragment>
       <Grid container justify="space-between">
         <Grid item>
-          <Breadcrumb location={location} labelTitle={domain.domain} />
+          <Breadcrumb pathname={location.pathname} labelTitle={domain.domain} />
         </Grid>
       </Grid>
       {props.location.state && props.location.state.recordError && (

@@ -20,24 +20,20 @@ const props: BreadCrumbProps = {
     slash: '',
     firstSlash: ''
   },
-  location: { pathname: '/linodes/9872893679817/test/lastcrumb' }
+  pathname: '/linodes/9872893679817/test/lastcrumb'
 };
 
 afterEach(cleanup);
 
 describe('Breadcrumb component', () => {
   it('contains the appropriate number of link text', () => {
-    const { getAllByTestId } = render(
-      wrapWithTheme(<Breadcrumb location={location} {...props} />)
-    );
+    const { getAllByTestId } = render(wrapWithTheme(<Breadcrumb {...props} />));
     expect(getAllByTestId('link-text')).toHaveLength(3);
   });
 
   it('removes a crumb given the corresponding prop', () => {
     const { getAllByTestId } = render(
-      wrapWithTheme(
-        <Breadcrumb location={location} {...props} removeCrumbX={2} />
-      )
+      wrapWithTheme(<Breadcrumb {...props} removeCrumbX={2} />)
     );
     expect(getAllByTestId('link-text')).toHaveLength(2);
   });
@@ -46,7 +42,6 @@ describe('Breadcrumb component', () => {
     const { queryByTestId } = render(
       wrapWithTheme(
         <Breadcrumb
-          location={location}
           {...props}
           onEditHandlers={{
             editableTextTitle: 'Editable text',

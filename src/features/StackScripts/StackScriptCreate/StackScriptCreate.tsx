@@ -234,7 +234,12 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { username, userCannotCreateStackScripts, classes } = this.props;
+    const {
+      username,
+      userCannotCreateStackScripts,
+      classes,
+      location
+    } = this.props;
     const {
       selectedImages,
       script,
@@ -264,7 +269,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         <Grid container justify="space-between">
           <Grid item>
             <Breadcrumb
-              location={location}
+              pathname={location.pathname}
               labelTitle="Create New StackScript"
               className={classes.createTitle}
               data-qa-create-stackscript-breadcrumb

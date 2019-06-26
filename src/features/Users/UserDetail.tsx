@@ -345,7 +345,8 @@ class UserDetail extends React.Component<CombinedProps> {
       match: {
         url,
         params: { username }
-      }
+      },
+      location
     } = this.props;
     const { error, gravatarUrl, createdUsername } = this.state;
 
@@ -354,7 +355,10 @@ class UserDetail extends React.Component<CombinedProps> {
         <React.Fragment>
           <Grid container justify="space-between">
             <Grid item>
-              <Breadcrumb location={location} labelTitle={username || ''} />
+              <Breadcrumb
+                pathname={location.pathname}
+                labelTitle={username || ''}
+              />
             </Grid>
           </Grid>
           <ErrorState errorText="There was an error retrieving the user data. Please reload and try again." />
@@ -380,7 +384,7 @@ class UserDetail extends React.Component<CombinedProps> {
         <Grid container justify="space-between">
           <Grid item>
             <Breadcrumb
-              location={location}
+              pathname={location.pathname}
               labelTitle={username}
               labelOptions={{
                 prefixComponent: maybeGravatar,

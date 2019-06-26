@@ -144,7 +144,7 @@ export class SupportTicketsLanding extends React.PureComponent<
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, location } = this.props;
     const { notice, newTicket, value } = this.state;
 
     return (
@@ -159,7 +159,7 @@ export class SupportTicketsLanding extends React.PureComponent<
         >
           <Grid item>
             <Breadcrumb
-              location={location}
+              pathname={location.pathname}
               labelTitle="Tickets"
               data-qa-breadcrumb
             />
