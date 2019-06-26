@@ -1,15 +1,18 @@
-import { disks, extDisk2, extDiskCopy } from 'src/__data__/disks';
+import { disks, extDisk2, extDisk3, extDiskCopy } from 'src/__data__/disks';
 import { linodeConfigs } from 'src/__data__/linodeConfigs';
 import {
+  attachAssociatedDisksToConfigs,
   cloneLandingReducer,
   CloneLandingState,
+  createInitialCloneLandingState,
   ExtendedConfig,
   getAllDisks,
+  getAssociatedDisks,
   getEstimatedCloneTime
 } from './utilities';
 
 describe('utilities', () => {
-  describe('reducer', () => {
+  describe('cloneLandingReducer', () => {
     const baseState: CloneLandingState = {
       configSelection: {
         1000: {
@@ -104,6 +107,118 @@ describe('utilities', () => {
         cloneLandingReducer(state, { type: 'setSelectedLinodeId', id: 3000 })
           .errors
       ).toBe(undefined);
+    });
+  });
+
+  describe('createInitialCloneLandingState', () => {
+    it('defaults isSelected to false for each config and disk', () => {
+      const state = createInitialCloneLandingState(linodeConfigs, disks);
+      linodeConfigs.forEach(eachConfig => {
+        expect(state.configSelection[eachConfig.id].isSelected).toBe(false);
+      });
+
+      disks.forEach(eachDisk => {
+        expect(state.diskSelection[eachDisk.id].isSelected).toBe(false);
+      });
+    });
+
+    it('sets isSelected to true if pre-selected IDs are set', () => {
+      const configId = linodeConfigs[0].id;
+      const diskId = disks[0].id;
+      const state = createInitialCloneLandingState(
+        linodeConfigs,
+        disks,
+        configId,
+        diskId
+      );
+      expect(state.configSelection[configId].isSelected).toBe(true);
+      expect(state.diskSelection[diskId].isSelected).toBe(true);
+    });
+
+    it('adds associated disk and config IDs', () => {
+      const state = createInitialCloneLandingState(linodeConfigs, [extDisk3]);
+      const configId = linodeConfigs[0].id;
+      const diskId = extDisk3.id;
+
+      expect(
+        state.configSelection[configId].associatedDiskIds.includes(diskId)
+      ).toBe(true);
+
+      expect(
+        state.diskSelection[diskId].associatedConfigIds.includes(configId)
+      ).toBe(true);
+    });
+
+    it('defaults isSubmitting to false', () => {
+      const state = createInitialCloneLandingState(linodeConfigs, disks);
+      expect(state.isSubmitting).toBe(false);
+    });
+
+    it('defaults selectedLinodeId to null', () => {
+      const state = createInitialCloneLandingState(linodeConfigs, disks);
+      expect(state.selectedLinodeId).toBe(null);
+    });
+
+    it('defaults errors to undefined', () => {
+      const state = createInitialCloneLandingState(linodeConfigs, disks);
+      expect(state.errors).toBeUndefined();
+    });
+
+    it('works when there are no configs or disks', () => {
+      const state = createInitialCloneLandingState([], []);
+      expect(state.configSelection).toEqual({});
+      expect(state.diskSelection).toEqual({});
+      expect(state.isSubmitting).toBe(false);
+      expect(state.selectedLinodeId).toBe(null);
+      expect(state.errors).toBeUndefined();
+    });
+  });
+
+  describe('getAssociatedDisks', () => {
+    const extendedConfig: ExtendedConfig = {
+      ...linodeConfigs[0],
+      associatedDisks: disks
+    };
+
+    it('returns an array of disks associated with the config', () => {
+      const associatedDisks = getAssociatedDisks(extendedConfig, [
+        ...disks,
+        extDisk3
+      ]);
+      expect(associatedDisks).toHaveLength(1);
+      expect(associatedDisks[0]).toEqual(extDisk3);
+    });
+
+    it('returns an empty array if no disks match', () => {
+      const associatedDisks = getAssociatedDisks(extendedConfig, disks);
+      expect(associatedDisks).toHaveLength(0);
+    });
+  });
+
+  describe('attachAssociatedDisksToConfigs', () => {
+    it('returns the same number of configs passed in', () => {
+      expect(attachAssociatedDisksToConfigs(linodeConfigs, disks)).toHaveLength(
+        linodeConfigs.length
+      );
+    });
+
+    it('attaches disks to their associated configs', () => {
+      const extendedConfigs = attachAssociatedDisksToConfigs(linodeConfigs, [
+        ...disks,
+        extDisk3
+      ]);
+      expect(extendedConfigs[0]).toHaveProperty('associatedDisks');
+      expect(extendedConfigs[0].associatedDisks).toHaveLength(1);
+      expect(extendedConfigs[0].associatedDisks[0]).toEqual(extDisk3);
+    });
+
+    it("doesn't add disks to a config with no associated disks", () => {
+      const extendedConfigs = attachAssociatedDisksToConfigs(
+        linodeConfigs,
+        disks
+      );
+      expect(extendedConfigs[0]).toHaveProperty('associatedDisks');
+      expect(extendedConfigs[0].associatedDisks).toHaveLength(0);
     });
   });
 

@@ -38,4 +38,14 @@ export const extDisk2: Linode.Disk = {
   id: 19040625
 };
 
+export const extDisk3: Linode.Disk = {
+  updated: '2018-08-05T18:16:08',
+  label: 'Custom Disk which matches config',
+  created: '2018-08-06T18:15:43',
+  filesystem: 'ext4',
+  status: 'ready',
+  size: 10000,
+  id: 18795181
+};
+
 export const disks = [extDisk, swapDisk];
