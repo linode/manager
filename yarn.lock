@@ -2413,10 +2413,10 @@
   dependencies:
     redux "*"
 
-"@types/sanitize-html@^1.18.3":
-  version "1.18.3"
-  resolved "https://registry.yarnpkg.com/@types/sanitize-html/-/sanitize-html-1.18.3.tgz#5916419bac4e68ed50fa20dfdec2e597a9f932ee"
-  integrity sha512-rc2QO3fudRfDckthQj4xJ9oFpbWV6g1bkjNG5NSXeYo89f3qvOwBiKnFk6I12c4d3y2Qjrpst5YPh8PrdEKJcg==
+"@types/sanitize-html@^1.20.0":
+  version "1.20.0"
+  resolved "https://registry.yarnpkg.com/@types/sanitize-html/-/sanitize-html-1.20.0.tgz#b3beaa9eacab0e0fa5022d5faa727fea8fb9fc5d"
+  integrity sha512-didHnmdOqYconeLOaHbYK9Y0jEULat5UbblgPUmwTJCEU7gA9AW1m9Zsi4h5gMFP56zAWRuAnH42D/h1zwZr+Q==
   dependencies:
     "@types/htmlparser2" "*"
 

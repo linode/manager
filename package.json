@@ -20,7 +20,7 @@
     "@material-ui/icons": "^4.1.0",
     "@material-ui/styles": "^4.1.0",
     "@sentry/browser": "^4.6.0",
-    "@types/sanitize-html": "^1.18.3",
+    "@types/sanitize-html": "^1.20.0",
     "algoliasearch": "^3.30.0",
     "axios": "^0.18.0",
     "axios-mock-adapter": "^1.15.0",
