@@ -65,6 +65,7 @@ storiesOf('Breadcrumb', module)
       <div style={{ padding: 24 }}>
         <Breadcrumb
           pathname={customCrumbs}
+          labelTitle="Last crumb with subtitle"
           labelOptions={{
             subtitle: 'A label subtitle'
           }}
