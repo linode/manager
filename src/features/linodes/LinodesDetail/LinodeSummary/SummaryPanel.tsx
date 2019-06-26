@@ -12,7 +12,9 @@ import {
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import TagsPanel from 'src/components/TagsPanel';
-import styled, { StyleProps } from 'src/containers/SummaryPanels.styles';
+import summaryPanelStyles, {
+  StyleProps
+} from 'src/containers/SummaryPanels.styles';
 import withImage from 'src/containers/withImage.container';
 import withMostRecentBackup from 'src/containers/withMostRecentBackup.container';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
@@ -30,14 +32,7 @@ type ClassNames = 'region' | 'volumeLink' | 'regionInner';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
-    title: {},
-    summarySection: {},
-    section: {},
-    main: {},
-    sidebar: {},
-    domainSidebar: {},
-    titleWrapper: {},
+    ...summaryPanelStyles(theme),
     region: {
       [theme.breakpoints.between('sm', 'md')]: {
         flexBasis: '100%',
@@ -220,8 +215,6 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 }));
 
 const enhanced = compose<CombinedProps, {}>(
-  styled,
-  localStyles,
   linodeContext,
   withLinodeActions,
   withMostRecentBackup<LinodeContextProps & WithImage, LinodeContextProps>(
@@ -231,7 +224,8 @@ const enhanced = compose<CombinedProps, {}>(
   withImage<LinodeContextProps & WithImage, LinodeContextProps>(
     props => props.linodeImageId,
     (ownProps, image) => ({ ...ownProps, image })
-  )
+  ),
+  localStyles
 );
 
 export default enhanced(SummaryPanel);
