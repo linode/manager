@@ -62,7 +62,7 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
   const { children } = props;
 
   return (
-    <PreferenceToggle
+    <PreferenceToggle<'light' | 'dark'>
       preferenceKey="theme"
       preferenceOptions={['light', 'dark']}
       toggleCallbackFn={toggleTheme}
@@ -73,7 +73,7 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
         preference: themeChoice,
         togglePreference: _toggleTheme
       }: ToggleProps<ThemeChoice>) => (
-        <PreferenceToggle
+        <PreferenceToggle<'normal' | 'compact'>
           preferenceKey="spacing"
           preferenceOptions={['normal', 'compact']}
           toggleCallbackFn={toggleSpacing}

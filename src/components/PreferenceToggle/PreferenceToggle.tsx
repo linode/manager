@@ -20,15 +20,17 @@ interface RenderChildrenProps {
 
 type RenderChildren = (props: RenderChildrenProps) => JSX.Element;
 
-interface Props {
+interface Props<T = PreferenceValue> {
   preferenceKey: string;
-  preferenceOptions: [PreferenceValue, PreferenceValue];
-  value?: PreferenceValue;
+  preferenceOptions: [T, T];
+  value?: T;
   toggleCallbackFn?: (value: PreferenceValue) => void;
   children: RenderChildren;
 }
 
-type CombinedProps = Props & PreferenceProps & PreferencesActionsProps;
+type CombinedProps<T = PreferenceValue> = Props<T> &
+  PreferenceProps &
+  PreferencesActionsProps;
 
 const PreferenceToggle: React.FC<CombinedProps> = props => {
   const {
@@ -46,18 +48,6 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
     PreferenceValue | undefined
   >(value);
   const [lastUpdated, setLastUpdated] = React.useState<number>(0);
-
-  React.useEffect(() => {
-    /** make sure out overridden value appears int the list of options to toggle */
-    if (
-      !!value &&
-      !preferenceOptions.find(eachOption => eachOption === value)
-    ) {
-      throw new Error(
-        'Preference Toggle: The passed "value" prop must appear in the list of options'
-      );
-    }
-  }, [value]);
 
   React.useEffect(() => {
     /**
@@ -235,7 +225,7 @@ const isUpdatingForTheFirstTime = (
   return prevLastUpdated === 0 && nextLastUpdated !== 0;
 };
 
-export default compose<CombinedProps, Props>(
+export default (compose<CombinedProps, Props>(
   withPreferences<PreferenceProps, Props>(
     (ownProps, { data: preferences, error, lastUpdated }) => ({
       preferences,
@@ -244,4 +234,4 @@ export default compose<CombinedProps, Props>(
     })
   ),
   memoized
-)(PreferenceToggle as React.FC<CombinedProps>);
+)(PreferenceToggle) as unknown) as <T>(props: Props<T>) => React.ReactElement;
