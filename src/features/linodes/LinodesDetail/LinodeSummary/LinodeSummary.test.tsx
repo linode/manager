@@ -27,7 +27,9 @@ describe('LinodeSummary', () => {
         totalTraffic: '',
         chartSelect: ''
       }}
+      linodeVolumes={[]}
       typesData={[]}
+      imagesData={[]}
     />
   );
 
