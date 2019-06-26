@@ -102,9 +102,9 @@ interface EditableProps {
 interface LabelProps {
   linkTo?: string;
   prefixComponent?: JSX.Element | null;
+  prefixStyle?: CSSProperties;
   suffixComponent?: JSX.Element | null;
   subtitle?: string;
-  style?: CSSProperties;
   noCap?: boolean;
 }
 
@@ -118,10 +118,8 @@ export interface Props {
   labelTitle?: string;
   labelOptions?: LabelProps;
   onEditHandlers?: EditableProps;
-  prefixStyle?: CSSProperties;
   removeCrumbX?: number;
   crumbOverrides?: CrumbOverridesProps[];
-  allCustomCrumbs?: Array<string>;
   className?: string;
   pathname: string;
 }
@@ -135,7 +133,6 @@ export class Breadcrumb extends React.Component<CombinedProps> {
       labelTitle,
       labelOptions,
       onEditHandlers,
-      prefixStyle,
       removeCrumbX,
       crumbOverrides,
       className,
@@ -158,15 +155,6 @@ export class Breadcrumb extends React.Component<CombinedProps> {
         : paths;
       const lastCrumb = pathMap.slice(-1)[0];
 
-      // We remove the last item of the crumbs by default and choose it to be
-      // either a custom one, an editable text component, or the default crumb we slice back in.
-
-      // The override for a crumb works by the position (required) of the crumb (index + 1). Just provide
-      // the actual position of the crumb in the array.
-      // We can either override the label or link or both. Omitted values will inherit the path default
-      // It is an array, so we can replace as many as needed.
-
-      // The remove function also works with the same position as above.
       return (
         <>
           {pathMap.slice(0, -1).map((crumb: string, key: number) => {
@@ -215,7 +203,7 @@ export class Breadcrumb extends React.Component<CombinedProps> {
               <div
                 className={classes.prefixComponentWrapper}
                 data-qa-prefixwrapper
-                style={prefixStyle && prefixStyle}
+                style={labelOptions.prefixStyle && labelOptions.prefixStyle}
               >
                 {labelOptions.prefixComponent}
               </div>
