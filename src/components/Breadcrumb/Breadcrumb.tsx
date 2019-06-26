@@ -70,7 +70,10 @@ const styles = (theme: Theme) =>
       margin: '4px 0 0 10px'
     },
     editableContainer: {
-      marginTop: -8
+      marginTop: -9,
+      [theme.breakpoints.up('lg')]: {
+        marginTop: -8
+      }
     },
     prefixComponentWrapper: {
       marginLeft: theme.spacing(1),
@@ -142,10 +145,11 @@ export class Breadcrumb extends React.Component<CombinedProps> {
     const url = pathname && pathname.slice(1);
     const allPaths = url.split('/');
 
-    const removeByIndex = (list: Array<string>, index: number) => [
-      ...list.slice(0, index),
-      ...list.slice(index + 1)
-    ];
+    const removeByIndex = (list: string[], indexToRemove: number) => {
+      return list.filter((value, index) => {
+        return index !== indexToRemove;
+      });
+    };
 
     const Crumbs = () => {
       const paths = allPaths;
