@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import BackupStatus from 'src/components/BackupStatus';
 import Paper from 'src/components/core/Paper';
@@ -20,13 +19,10 @@ import {
   LinodeActionsProps,
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
-import { formatRegion } from 'src/utilities';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodeNetSummary from './LinodeNetSummary';
 
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-
-type ClassNames = 'region' | 'volumeLink' | 'regionInner';
+type ClassNames = 'region' | 'regionInner';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -59,13 +55,6 @@ const styles = (theme: Theme) =>
           padding: `0 ${theme.spacing(1)}px !important`
         }
       }
-    },
-    volumeLink: {
-      color: theme.palette.primary.main,
-      fontSize: '1rem',
-      '&:hover, &:focus': {
-        textDecoration: 'underline'
-      }
     }
   });
 
@@ -96,11 +85,8 @@ class SummaryPanel extends React.Component<CombinedProps> {
   render() {
     const {
       classes,
-      linodeVolumes,
-      linodeVolumesError,
       linodeTags,
       linodeId,
-      linodeRegion,
       linodeIpv4,
       linodeIpv6,
       backupsEnabled,
@@ -110,33 +96,6 @@ class SummaryPanel extends React.Component<CombinedProps> {
 
     return (
       <div className={classes.root}>
-        <Paper className={classes.summarySection}>
-          <Typography variant="h3" className={classes.title} data-qa-title>
-            Linode Details
-          </Typography>
-          <div className={classes.section}>{this.renderImage()}</div>
-          <div
-            className={classes.section}
-            data-qa-volumes={linodeVolumes.length}
-          >
-            <Typography>
-              Volumes:&#160;
-              {linodeVolumesError ? (
-                getErrorStringOrDefault(linodeVolumesError)
-              ) : (
-                <Link
-                  className={classes.volumeLink}
-                  to={`/linodes/${linodeId}/volumes`}
-                >
-                  {linodeVolumes.length}
-                </Link>
-              )}
-            </Typography>
-          </div>
-          <div className={`${classes.section}`}>
-            {formatRegion(linodeRegion)}
-          </div>
-        </Paper>
         <Paper className={classes.summarySection}>
           <Typography variant="h3" className={classes.title} data-qa-title>
             IP Addresses

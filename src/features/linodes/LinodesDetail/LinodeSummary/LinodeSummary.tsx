@@ -2,6 +2,7 @@ import * as moment from 'moment';
 import { map, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import {
   createStyles,
@@ -9,13 +10,14 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import { images } from 'src/__data__';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
-import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
+import { displayType } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
 import { ApplicationState } from 'src/store';
 import { setUpCharts } from 'src/utilities/charts';
@@ -34,8 +36,10 @@ import MetricsDisplay from './MetricsDisplay';
 import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
 import TotalTraffic, { TotalTrafficProps } from './TotalTraffic';
-
 import { ExtendedEvent } from 'src/store/events/event.helpers';
+import { formatRegion } from 'src/utilities';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import getLinodeDescription from 'src/utilities/getLinodeDescription';
 
 setUpCharts();
 
@@ -129,6 +133,9 @@ interface LinodeContextProps {
   linodeCreated: string;
   linodeId: number;
   linodeData: Linode.Linode;
+  linodeVolumes: Linode.Volume[];
+  linodeVolumesError?: Linode.ApiFieldError[];
+  imagesData: Linode.Image[];
 }
 
 interface State {
@@ -654,7 +661,14 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { linodeData: linode, classes, typesData } = this.props;
+    const {
+      linodeData: linode,
+      classes,
+      typesData,
+      imagesData,
+      linodeVolumesError,
+      linodeVolumes
+    } = this.props;
 
     const { dataIsLoading, statsError, isTooEarlyForGraphData } = this.state;
 
@@ -670,11 +684,13 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       return null;
     }
 
-    const longLabel = typeLabelLong(
+    const newLabel = getLinodeDescription(
       displayType(linode.type, typesData || []),
       linode.specs.memory,
       linode.specs.disk,
-      linode.specs.vcpus
+      linode.specs.vcpus,
+      linode.image,
+      imagesData
     );
 
     return (
@@ -695,7 +711,24 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             >
               <Grid item className="py0">
                 <Typography variant="h2" className={classes.graphTitle}>
-                  {longLabel}
+                  {newLabel}
+                </Typography>
+                <Typography variant="h3">
+                  Volumes:&#160;
+                  {linodeVolumesError ? (
+                    getErrorStringOrDefault(linodeVolumesError)
+                  ) : (
+                    <Link
+                      // className={classes.volumeLink}
+                      to={`/linodes/${linode.id}/volumes`}
+                    >
+                      {linodeVolumes.length}
+                    </Link>
+                  )}
+                </Typography>
+                <Typography variant="h3">
+                  Region:&#160;
+                  {formatRegion(linode.region)}
                 </Typography>
               </Grid>
             </Grid>
@@ -762,7 +795,10 @@ const styled = withStyles(styles);
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeCreated: linode.created,
   linodeId: linode.id,
-  linodeData: linode
+  linodeData: linode,
+  linodeVolumes: linode._volumes,
+  linodeVolumesError: linode._volumesError,
+  imagesData: images
 }));
 
 interface WithTypesProps {
