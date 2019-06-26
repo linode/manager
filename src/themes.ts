@@ -63,6 +63,7 @@ export const dark = () =>
       pureWhite: '#000',
       tableHeader: '#2B2E32',
       primaryNavActive: '#303235',
+      primaryNavActiveBG: '#464c53',
       primaryNavBorder: '#303235',
       primaryNavPaper: '#3a3f45',
       topMenu: '#33383d'

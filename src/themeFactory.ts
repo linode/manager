@@ -184,6 +184,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       pureWhite: '#fff',
       tableHeader: '#fbfbfb',
       primaryNavActive: '#f4f4f4',
+      primaryNavActiveBG: '#272b31',
       primaryNavBorder: '#f4f4f4',
       primaryNavPaper: '#32363c',
       topMenu: '#fff'

@@ -96,7 +96,7 @@ const styles = (theme: Theme) =>
         2
       ) - 1}px ${theme.spacing(4) + 1}px`,
       '&:hover': {
-        backgroundColor: '#272b31',
+        backgroundColor: theme.bg.primaryNavActiveBG,
         '& $linkItem': {
           color: 'white'
         }
@@ -111,7 +111,7 @@ const styles = (theme: Theme) =>
       fontFamily: 'LatoWebBold' // we keep this bold at all times
     },
     active: {
-      backgroundColor: '#272b31',
+      backgroundColor: theme.bg.primaryNavActiveBG,
       '&:before': {
         content: "''",
         borderStyle: 'solid',
