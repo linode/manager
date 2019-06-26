@@ -95,7 +95,7 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
 
       setPreference(preferenceToSet);
 
-      /** run callback function is passed one */
+      /** run callback function if passed one */
       if (props.initialSetCallbackFn) {
         props.initialSetCallbackFn(preferenceToSet);
       }
@@ -127,12 +127,7 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
               .catch(() => /** swallow the error */ null);
           })
           .catch(() => /** swallow the error */ null);
-      } else if (
-        !!preferences &&
-        currentlySetPreference &&
-        lastUpdated !== 0
-        // && preferencesHaveBeenUpdated(props.preferences, theme, spacing)
-      ) {
+      } else if (!!preferences && currentlySetPreference && lastUpdated !== 0) {
         /**
          * PUT to /preferences on every toggle, debounced.
          */
