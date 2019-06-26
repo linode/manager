@@ -28,6 +28,7 @@ import { reportException } from 'src/exceptionReporting';
 import { getKubeConfig } from 'src/services/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import scrollTo from 'src/utilities/scrollTo';
 import { extendCluster, getMonthlyPrice } from '.././kubeUtils';
 import { ExtendedCluster, ExtendedPoolNode } from '.././types';
 import NodePoolPanel from '../CreateCluster/NodePoolPanel';
@@ -249,10 +250,12 @@ export const KubernetesClusterDetail: React.FunctionComponent<
             queuedForAddition: true
           }
         ];
+        scrollTo();
         return newPools;
       });
     } else {
       /** From a static state, adding a node pool should trigger editing state */
+      scrollTo();
       toggleEditing();
       /** Make sure the list of node pools is correct */
       updatePools([
