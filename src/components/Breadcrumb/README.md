@@ -26,8 +26,6 @@ The component utilizes the prop.location provided by RouteComponentProps to buil
 
 ## Usage
 
-### withLinodeDetailContext.
-
 The only required prop is `pathname`. Since we need it to be a string passed from RouteComponentProps, we do need to import the props along with `withRouter` for the export. ex:
 
 ```jsx
