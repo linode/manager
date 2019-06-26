@@ -12,7 +12,9 @@ import {
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import styled, { StyleProps } from 'src/containers/SummaryPanels.styles';
+import summaryPanelStyles, {
+  StyleProps
+} from 'src/containers/SummaryPanels.styles';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getDomainRecords } from 'src/services/domains';
 import { getAllWithArguments } from 'src/utilities/getAll';
@@ -31,6 +33,7 @@ type ClassNames = 'titleWrapper' | 'error';
 
 const styles = (theme: Theme) =>
   createStyles({
+    ...summaryPanelStyles(theme),
     error: {
       marginTop: `${theme.spacing(3)}px !important`,
       marginBottom: `0 !important`
@@ -156,6 +159,5 @@ export default compose<CombinedProps, {}>(
           )
     })
   ),
-  localStyles,
-  styled
+  localStyles
 )(DomainDetail);

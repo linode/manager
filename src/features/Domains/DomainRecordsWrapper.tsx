@@ -1,14 +1,13 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import { makeStyles, Theme } from 'src/components/core/styles';
-
 import Paper from 'src/components/core/Paper';
+import { makeStyles, Theme, withStyles } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import TagsPanel from 'src/components/TagsPanel';
-
-import styled, { StyleProps } from 'src/containers/SummaryPanels.styles';
-
+import summaryPanelStyles, {
+  StyleProps
+} from 'src/containers/SummaryPanels.styles';
 import DomainRecords from './DomainRecords';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -70,6 +69,8 @@ const DomainRecordsWrapper: React.FC<CombinedProps> = props => {
     </Grid>
   );
 };
+
+const styled = withStyles(summaryPanelStyles);
 
 export default compose<CombinedProps, Props>(
   React.memo,

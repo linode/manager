@@ -1,9 +1,4 @@
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { createStyles, Theme, WithStyles } from 'src/components/core/styles';
 
 type ClassNames =
   | 'region'
@@ -16,7 +11,7 @@ type ClassNames =
 
 export type StyleProps = WithStyles<ClassNames>;
 
-const styles = (theme: Theme) =>
+const summaryPanelStyles = (theme: Theme) =>
   createStyles({
     region: {
       [theme.breakpoints.between('sm', 'md')]: {
@@ -74,11 +69,7 @@ const styles = (theme: Theme) =>
           right: -10
         }
       }
-    },
-    main: {},
-    sidebar: {},
-    domainSidebar: {},
-    titleWrapper: {}
+    }
   });
 
-export default withStyles(styles);
+export default summaryPanelStyles;
