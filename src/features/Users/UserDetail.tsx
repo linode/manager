@@ -388,10 +388,9 @@ class UserDetail extends React.Component<CombinedProps> {
               labelTitle={username}
               labelOptions={{
                 prefixComponent: maybeGravatar,
-                style: { marginTop: 2 },
+                prefixStyle: { height: 34, marginTop: 2 },
                 noCap: true
               }}
-              prefixStyle={{ height: 34 }}
               removeCrumbX={3}
             />
           </Grid>
@@ -479,6 +478,6 @@ export const connected = connect(
 
 export default compose<any, any, any, any>(
   connected,
-  styled,
-  reloadable
+  reloadable,
+  styled
 )(UserDetail);
