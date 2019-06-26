@@ -38,7 +38,7 @@ describe('LinodeRow', () => {
   const mockProps: CombinedProps = {
     classes: mockClasses,
     toggleConfirmation: jest.fn(),
-    theme: light(),
+    theme: light({ spacingOverride: 4 }),
     maintenanceStartTime: '',
     someLinodesHaveMaintenance: false,
     recentEvent: undefined,

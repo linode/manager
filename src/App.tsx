@@ -252,9 +252,9 @@ export class App extends React.Component<CombinedProps, State> {
     perfume.start('InitialRequests');
     const dataFetchingPromises: Promise<any>[] = [
       this.props.requestAccount(),
-      this.props.requestProfile(),
       this.props.requestDomains(),
       this.props.requestImages(),
+      this.props.requestProfile(),
       this.props.requestLinodes(),
       this.props.requestNotifications(),
       this.props.requestSettings(),
@@ -332,16 +332,16 @@ export class App extends React.Component<CombinedProps, State> {
       classes,
       toggleSpacing,
       toggleTheme,
-      profileLoading,
       linodesError,
       domainsError,
       typesError,
       imagesError,
       notificationsError,
       regionsError,
+      profileLoading,
+      profileError,
       volumesError,
       settingsError,
-      profileError,
       bucketsError,
       accountCapabilities,
       accountLoading,
@@ -366,8 +366,8 @@ export class App extends React.Component<CombinedProps, State> {
         notificationsError,
         regionsError,
         volumesError,
-        settingsError,
         profileError,
+        settingsError,
         bucketsError
       )
     ) {
@@ -508,11 +508,11 @@ interface DispatchProps {
   requestImages: () => Promise<Linode.Image[]>;
   requestLinodes: () => Promise<Linode.Linode[]>;
   requestNotifications: () => Promise<Linode.Notification[]>;
-  requestProfile: () => Promise<Linode.Profile>;
   requestSettings: () => Promise<Linode.AccountSettings>;
   requestTypes: () => Promise<Linode.LinodeType[]>;
   requestRegions: () => Promise<Linode.Region[]>;
   requestVolumes: () => Promise<Linode.Volume[]>;
+  requestProfile: () => Promise<Linode.Profile>;
   requestBuckets: () => Promise<Linode.Bucket[]>;
   requestClusters: () => Promise<Linode.Cluster[]>;
   addNotificationsToLinodes: (
@@ -530,11 +530,11 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
     requestImages: () => dispatch(requestImages()),
     requestLinodes: () => dispatch(requestLinodes()),
     requestNotifications: () => dispatch(requestNotifications()),
-    requestProfile: () => dispatch(requestProfile()),
     requestSettings: () => dispatch(requestAccountSettings()),
     requestTypes: () => dispatch(requestTypes()),
     requestRegions: () => dispatch(requestRegions()),
     requestVolumes: () => dispatch(getAllVolumes()),
+    requestProfile: () => dispatch(requestProfile()),
     requestBuckets: () => dispatch(getAllBuckets()),
     requestClusters: () => dispatch(requestClusters()),
     addNotificationsToLinodes: (
@@ -568,7 +568,7 @@ interface StateProps {
   accountError?: Error | Linode.ApiFieldError[];
 }
 
-const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
+const mapStateToProps: MapState<StateProps, Props> = state => ({
   /** Profile */
   profileLoading: state.__resources.profile.loading,
   profileError: path(['read'], state.__resources.profile.error),
