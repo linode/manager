@@ -1,88 +1,121 @@
 import * as React from 'react';
+import { compose } from 'recompose';
 import { ThemeProvider } from 'src/components/core/styles';
 import { dark, light } from 'src/themes';
-import {
-  Spacing,
-  spacing as spacingStorage,
-  theme as themeStorage
-} from 'src/utilities/storage';
 
-interface State {
-  themeChoice: 'light' | 'dark';
-  spacing: Spacing;
-}
+import { COMPACT_SPACING_UNIT, NORMAL_SPACING_UNIT } from 'src/themeFactory';
+
+import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
+
+import withPreferences, {
+  PreferencesActionsProps
+} from 'src/containers/preferences.container';
+
+type ThemeChoice = 'light' | 'dark';
+type SpacingChoice = 'compact' | 'normal';
+
 type RenderChildren = (
   toggle: () => void,
   spacing: () => void
 ) => React.ReactNode;
+
 interface Props {
   children: RenderChildren | React.ReactNode;
+  /**
+   * override base theme with props
+   * this is mostly so the unit tests work
+   */
+  theme?: ThemeChoice;
+  spacing?: SpacingChoice;
 }
 
 const themes = { light, dark };
 
-class LinodeThemeWrapper extends React.Component<Props, State> {
-  state: State = {
-    themeChoice: 'light',
-    spacing: 'normal'
-  };
+type CombinedProps = Props & PreferencesActionsProps;
 
-  componentDidUpdate() {
+const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
+  React.useEffect(() => {
     setTimeout(() => {
       document.body.classList.remove('no-transition');
     }, 500);
-  }
+  });
 
-  componentDidMount() {
-    const themeSetting = themeStorage.get();
-    const spacingSetting = spacingStorage.get();
-
-    return this.setState({
-      themeChoice: themeSetting,
-      spacing: spacingSetting
-    });
-  }
-
-  toggleTheme = () => {
+  const toggleTheme = () => {
     document.body.classList.add('no-transition');
-    if (this.state.themeChoice === 'light') {
-      this.setState({ themeChoice: 'dark' });
-      themeStorage.set('dark');
-    } else {
-      this.setState({ themeChoice: 'light' });
-      themeStorage.set('light');
-    }
+    /** @todo send to GA */
   };
 
-  toggleSpacing = () => {
-    const { spacing } = this.state;
-    if (spacing === 'compact') {
-      spacingStorage.set('normal');
-      this.setState({ spacing: 'normal' });
-    } else {
-      spacingStorage.set('compact');
-      this.setState({ spacing: 'compact' });
-    }
+  const toggleSpacing = () => {
+    /** @todo send to GA */
   };
 
-  render() {
-    const { children } = this.props;
-    const { themeChoice } = this.state;
-    const theme = themes[themeChoice];
+  React.useEffect(() => {
+    /** request the user preferences on app load */
+    props
+      .getUserPreferences()
+      .catch(
+        () =>
+          /** swallow the error. PreferenceToggle.tsx handles failures gracefully */ null
+      );
+  }, []);
 
-    return (
-      <ThemeProvider theme={theme()}>
-        {isRenderChildren(children)
-          ? children(this.toggleTheme, this.toggleSpacing)
-          : children}
-      </ThemeProvider>
-    );
-  }
-}
-const isRenderChildren = (
-  c: RenderChildren | React.ReactNode
-): c is RenderChildren => {
-  return typeof c === 'function';
+  const { children } = props;
+
+  return (
+    <PreferenceToggle<'light' | 'dark'>
+      preferenceKey="theme"
+      preferenceOptions={['light', 'dark']}
+      toggleCallbackFn={toggleTheme}
+      /** purely for unit test purposes */
+      value={props.theme}
+    >
+      {({
+        preference: themeChoice,
+        togglePreference: _toggleTheme
+      }: ToggleProps<ThemeChoice>) => (
+        <PreferenceToggle<'normal' | 'compact'>
+          preferenceKey="spacing"
+          preferenceOptions={['normal', 'compact']}
+          toggleCallbackFn={toggleSpacing}
+          /** purely for unit test purposes */
+          value={props.spacing}
+        >
+          {({
+            preference: spacingChoice,
+            togglePreference: _toggleSpacing
+          }: ToggleProps<SpacingChoice>) => (
+            <ThemeProvider
+              theme={safelyGetTheme(themes, themeChoice)({
+                spacingOverride:
+                  spacingChoice === 'compact'
+                    ? COMPACT_SPACING_UNIT
+                    : NORMAL_SPACING_UNIT
+              })}
+            >
+              {typeof children === 'function'
+                ? (children as RenderChildren)(_toggleTheme, _toggleSpacing)
+                : children}
+            </ThemeProvider>
+          )}
+        </PreferenceToggle>
+      )}
+    </PreferenceToggle>
+  );
 };
 
-export default LinodeThemeWrapper;
+/** safely return light theme if the theme choice isn't "light" or "dark" */
+const safelyGetTheme = (
+  themesToChoose: Record<'dark' | 'light', any>,
+  themeChoice: string
+) => {
+  /* tslint:disable */
+  return !!Object.keys(themesToChoose).some(
+    eachTheme => eachTheme === themeChoice
+  )
+    ? themesToChoose[themeChoice]
+    : themesToChoose['light'];
+};
+
+export default compose<CombinedProps, Props>(withPreferences())(
+  LinodeThemeWrapper
+);

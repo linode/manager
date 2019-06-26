@@ -5,31 +5,36 @@ import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import { NodeBalancersLanding } from './NodeBalancersLanding';
 
+import { Provider } from 'react-redux';
+import store from 'src/store';
+
 describe.skip('NodeBalancers', () => {
   const component = mount(
     <StaticRouter context={{}}>
-      <LinodeThemeWrapper>
-        <NodeBalancersLanding
-          {...reactRouterProps}
-          groupByTag={false}
-          toggleGroupByTag={jest.fn()}
-          nodeBalancersLoading={false}
-          nodeBalancersError={undefined}
-          nodeBalancersData={[]}
-          nodeBalancersCount={0}
-          classes={{
-            root: '',
-            title: '',
-            nameCell: '',
-            icon: '',
-            nodeStatus: '',
-            transferred: '',
-            ports: '',
-            ip: '',
-            tagGroup: ''
-          }}
-        />
-      </LinodeThemeWrapper>
+      <Provider store={store}>
+        <LinodeThemeWrapper theme="dark" spacing="normal">
+          <NodeBalancersLanding
+            {...reactRouterProps}
+            groupByTag={false}
+            toggleGroupByTag={jest.fn()}
+            nodeBalancersLoading={false}
+            nodeBalancersError={undefined}
+            nodeBalancersData={[]}
+            nodeBalancersCount={0}
+            classes={{
+              root: '',
+              title: '',
+              nameCell: '',
+              icon: '',
+              nodeStatus: '',
+              transferred: '',
+              ports: '',
+              ip: '',
+              tagGroup: ''
+            }}
+          />
+        </LinodeThemeWrapper>
+      </Provider>
     </StaticRouter>
   );
 

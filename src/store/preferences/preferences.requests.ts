@@ -13,7 +13,7 @@ export const getUserPreferences: ThunkActionCreator<
 > = () => dispatch => {
   const { started, done, failed } = handleGetPreferences;
 
-  dispatch(started);
+  dispatch(started());
 
   return _getUserPreferences()
     .then(response => {
@@ -39,7 +39,11 @@ export const updateUserPreferences: ThunkActionCreator<
 > = (payload: Record<string, any>) => dispatch => {
   const { started, done, failed } = handleUpdatePreferences;
 
-  dispatch(started);
+  dispatch(
+    started({
+      params: payload
+    })
+  );
 
   return _updateUserPreferences(payload)
     .then(response => {
