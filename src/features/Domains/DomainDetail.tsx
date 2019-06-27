@@ -99,7 +99,11 @@ const DomainDetail: React.FC<CombinedProps> = props => {
     <React.Fragment>
       <Grid container justify="space-between">
         <Grid item>
-          <Breadcrumb pathname={location.pathname} labelTitle={domain.domain} />
+          <Breadcrumb
+            pathname={location.pathname}
+            labelTitle={domain.domain}
+            labelOptions={{ noCap: true }}
+          />
         </Grid>
       </Grid>
       {props.location.state && props.location.state.recordError && (
