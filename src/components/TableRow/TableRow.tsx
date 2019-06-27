@@ -97,6 +97,18 @@ class TableRow extends React.Component<CombinedProps> {
 
     return (
       <_TableRow
+        onAuxClick={e => {
+          e.preventDefault();
+          e.stopPropagation();
+          /**
+           * e.button === 1 means "middle click"
+           * see the W3C spec:
+           * https://w3c.github.io/uievents/#event-type-auxclick
+           */
+          if (rowLink && typeof rowLink === 'string' && e.button === 1) {
+            window.open(rowLink, '_blank');
+          }
+        }}
         onClick={(e: any) => rowLink && this.rowClick(e, e, rowLink)} // same argument, different methods (one to stop propagation, one to add the listener for meta/ctrl key)
         onKeyUp={(e: any) =>
           rowLink && e.keyCode === 13 && this.rowClick(e, e, rowLink)
