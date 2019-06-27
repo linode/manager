@@ -29,7 +29,7 @@ import DomainRecords from './DomainRecordsWrapper';
 
 type RouteProps = RouteComponentProps<{ domainId?: string }>;
 
-type ClassNames = 'titleWrapper' | 'error';
+type ClassNames = 'error';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -37,11 +37,6 @@ const styles = (theme: Theme) =>
     error: {
       marginTop: `${theme.spacing(3)}px !important`,
       marginBottom: `0 !important`
-    },
-    titleWrapper: {
-      display: 'flex',
-      alignItems: 'center',
-      wordBreak: 'break-all'
     }
   });
 
@@ -57,6 +52,7 @@ const DomainDetail: React.FC<CombinedProps> = props => {
     domain,
     domainsLoading,
     domainsError,
+    location,
     match: {
       params: { domainId }
     }
@@ -105,11 +101,11 @@ const DomainDetail: React.FC<CombinedProps> = props => {
   return (
     <React.Fragment>
       <Grid container justify="space-between">
-        <Grid item className={classes.titleWrapper}>
+        <Grid item>
           <Breadcrumb
-            linkTo="/domains"
-            linkText="Domains"
+            pathname={location.pathname}
             labelTitle={domain.domain}
+            labelOptions={{ noCap: true }}
           />
         </Grid>
       </Grid>
