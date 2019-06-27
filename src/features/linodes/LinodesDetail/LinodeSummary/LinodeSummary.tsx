@@ -4,13 +4,13 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
+import { images } from 'src/__data__';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import { images } from 'src/__data__';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -20,7 +20,11 @@ import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/lino
 import { displayType } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
 import { ApplicationState } from 'src/store';
+import { ExtendedEvent } from 'src/store/events/event.helpers';
+import { formatRegion } from 'src/utilities';
 import { setUpCharts } from 'src/utilities/charts';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import { initAll } from 'src/utilities/initAll';
 import { isRecent } from 'src/utilities/isRecent';
 import {
@@ -36,10 +40,6 @@ import MetricsDisplay from './MetricsDisplay';
 import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
 import TotalTraffic, { TotalTrafficProps } from './TotalTraffic';
-import { ExtendedEvent } from 'src/store/events/event.helpers';
-import { formatRegion } from 'src/utilities';
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import getLinodeDescription from 'src/utilities/getLinodeDescription';
 
 setUpCharts();
 
@@ -718,17 +718,11 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                   {linodeVolumesError ? (
                     getErrorStringOrDefault(linodeVolumesError)
                   ) : (
-                    <Link
-                      // className={classes.volumeLink}
-                      to={`/linodes/${linode.id}/volumes`}
-                    >
+                    <Link to={`/linodes/${linode.id}/volumes`}>
                       {linodeVolumes.length}
                     </Link>
                   )}
-                </Typography>
-                <Typography variant="h3">
-                  Region:&#160;
-                  {formatRegion(linode.region)}
+                  , {formatRegion(linode.region)}
                 </Typography>
               </Grid>
             </Grid>
