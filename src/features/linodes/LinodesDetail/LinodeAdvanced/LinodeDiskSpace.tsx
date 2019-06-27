@@ -1,6 +1,6 @@
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
-import Divider from 'src/components/core/Divider';
+import Grid from 'src/components/core/Grid';
 import {
   createStyles,
   Theme,
@@ -29,8 +29,8 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(1)
     },
     text: {
-      margin: `${theme.spacing(1) + 2}px 0`,
-      paddingRight: 40
+      margin: `${theme.spacing(2)}px 0`
+      // paddingRight: 40
     },
     divider: {
       backgroundColor: theme.color.grey2
@@ -74,25 +74,21 @@ export class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
           className={classes.bar}
           max={totalDiskSpace}
           value={usedDiskSpace}
+          rounded
         />
+        <Grid container justify="space-between">
+          <Grid item style={{ marginRight: 10 }}>
+            <Typography>{usedDiskSpace} MB Used</Typography>
+          </Grid>
+          <Grid item>
+            <Typography>{freeDiskSpace} MB Available</Typography>
+          </Grid>
+        </Grid>
         <Typography className={classes.text}>
           <strong data-qa-disk-used-percentage>{formattedPercentage}%</strong>{' '}
           of your {totalDiskSpace}MB is allocated towards
           <strong> {disks.length}</strong> disk{' '}
           {disks.length === 1 ? 'image' : 'images'}.
-        </Typography>
-        <Divider className={classes.divider} />
-        <div className={classes.textOuter}>
-          <Typography variant="subtitle2">
-            Total: <strong>{totalDiskSpace} MB</strong>
-          </Typography>
-          <Typography variant="subtitle2">
-            Used: <strong>{usedDiskSpace} MB</strong>
-          </Typography>
-        </div>
-        <Divider className={classes.divider} />
-        <Typography variant="subtitle2" className={classes.text}>
-          Free: <strong>{freeDiskSpace} MB</strong>
         </Typography>
         <Typography className={classes.text}>
           <strong>Note: </strong> This section represents your plan's available

@@ -1,56 +1,56 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
+import { cleanup, render } from 'react-testing-library';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import { Breadcrumb } from './Breadcrumb';
+import { Breadcrumb, CombinedProps as BreadCrumbProps } from './Breadcrumb';
+
+const props: BreadCrumbProps = {
+  classes: {
+    root: '',
+    preContainer: '',
+    crumbsWrapper: '',
+    crumb: '',
+    noCap: '',
+    crumbLink: '',
+    labelWrapper: '',
+    labelText: '',
+    labelSubtitle: '',
+    editableContainer: '',
+    prefixComponentWrapper: '',
+    slash: '',
+    firstSlash: ''
+  },
+  pathname: '/linodes/9872893679817/test/lastcrumb'
+};
+
+afterEach(cleanup);
 
 describe('Breadcrumb component', () => {
-  const wrapper = shallow(
-    <Breadcrumb
-      linkTo="/linodes"
-      linkText="Linodes"
-      labelTitle="MyTestLinode"
-      classes={{
-        root: '',
-        backButton: 'backButton',
-        linkText: '',
-        linkTextWrapper: '',
-        labelText: '',
-        subtitleLinkText: '',
-        prefixComponentWrapper: ''
-      }}
-    />
-  );
-
-  it('contains back icon', () => {
-    expect(wrapper.find('WithStyles(ForwardRef(IconButton))')).toHaveLength(1);
-    expect(
-      wrapper.find('WithStyles(ForwardRef(IconButton))').hasClass('backButton')
-    ).toBeTruthy();
+  it('contains the appropriate number of link text', () => {
+    const { getAllByTestId } = render(wrapWithTheme(<Breadcrumb {...props} />));
+    expect(getAllByTestId('link-text')).toHaveLength(3);
   });
 
-  it('contains link text', () => {
-    expect(wrapper.find('[data-qa-link-text]')).toHaveLength(1);
+  it('removes a crumb given the corresponding prop', () => {
+    const { getAllByTestId } = render(
+      wrapWithTheme(<Breadcrumb {...props} removeCrumbX={2} />)
+    );
+    expect(getAllByTestId('link-text')).toHaveLength(2);
   });
 
-  it('renders labelText without editable props', () => {
-    expect(wrapper.find('[data-qa-labeltext]')).toHaveLength(1);
-  });
-
-  it('renders a prefixComponent wrapper', () => {
-    wrapper.setProps({
-      labelOptions: { prefixComponent: <React.Fragment /> }
-    });
-    expect(wrapper.find('[data-qa-prefixwrapper]')).toHaveLength(1);
-  });
-
-  it('renders editable text when given editable props', () => {
-    wrapper.setProps({
-      onEditHandlers: {
-        onEdit: jest.fn(),
-        onCancel: jest.fn()
-      }
-    });
-    expect(wrapper.find('[data-qa-label-title]')).toHaveLength(0);
-    expect(wrapper.find('[data-qa-editable-text]')).toHaveLength(1);
+  it('renders an editable text field given editable props', () => {
+    const { queryByTestId } = render(
+      wrapWithTheme(
+        <Breadcrumb
+          {...props}
+          onEditHandlers={{
+            editableTextTitle: 'Editable text',
+            onEdit: jest.fn(),
+            onCancel: jest.fn()
+          }}
+        />
+      )
+    );
+    expect(queryByTestId('editable-text')).toBeInTheDocument();
   });
 });

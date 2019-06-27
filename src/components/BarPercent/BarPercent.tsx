@@ -1,3 +1,4 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 import LinearProgress from 'src/components/core/LinearProgress';
 import {
@@ -8,16 +9,19 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
-type ClassNames = 'root' | 'primaryColor' | 'loadingText';
+type ClassNames = 'root' | 'primaryColor' | 'loadingText' | 'rounded';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      padding: theme.spacing(2) + theme.spacing(1) / 4,
+      padding: 16,
       backgroundColor: theme.color.grey2
     },
     primaryColor: {
       backgroundColor: theme.color.green
+    },
+    rounded: {
+      borderRadius: theme.shape.borderRadius
     },
     loadingText: {
       marginBottom: theme.spacing(2),
@@ -31,6 +35,7 @@ interface Props {
   isFetchingValue?: boolean;
   loadingText?: string;
   className?: string;
+  rounded?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -43,7 +48,8 @@ export class BarPercent extends React.PureComponent<CombinedProps, {}> {
       value,
       max,
       isFetchingValue,
-      loadingText
+      loadingText,
+      rounded
     } = this.props;
     return (
       <div className={className}>
@@ -59,6 +65,9 @@ export class BarPercent extends React.PureComponent<CombinedProps, {}> {
             root: classes.root,
             barColorPrimary: classes.primaryColor
           }}
+          className={classNames({
+            [classes.rounded]: rounded
+          })}
         />
       </div>
     );
