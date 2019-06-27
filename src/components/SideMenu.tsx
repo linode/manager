@@ -16,7 +16,8 @@ const styles = (theme: Theme) =>
     menuPaper: {
       height: '100%',
       width: theme.spacing(14) + 103, // 215
-      backgroundColor: theme.bg.navy,
+      backgroundColor: theme.bg.primaryNavPaper,
+      borderColor: theme.bg.primaryNavBorder,
       left: 'inherit',
       boxShadow: 'none',
       [theme.breakpoints.up('xl')]: {

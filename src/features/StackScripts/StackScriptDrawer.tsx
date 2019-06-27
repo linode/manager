@@ -19,24 +19,23 @@ interface DispatchProps {
   closeDrawer: () => void;
 }
 
-interface StateProps {
+interface Props {
   open: boolean;
   stackScriptId?: number;
 }
 
-type CombinedProps = DispatchProps & StateProps;
+type CombinedProps = DispatchProps & Props;
 
 export class StackScriptDrawer extends React.Component<CombinedProps, State> {
   state: State = {
-    loading: true,
+    loading: false,
     error: false
   };
 
-  componentDidUpdate(prevProps: StateProps) {
+  componentDidUpdate(prevProps: Props, prevState: State) {
     const { stackScriptId } = this.props;
-    const { stackScriptId: prevStackScriptId } = prevProps;
 
-    if (stackScriptId && stackScriptId !== prevStackScriptId) {
+    if (stackScriptId && !prevProps.open && this.props.open) {
       this.setState({ loading: true, stackScript: undefined });
       getStackScript(stackScriptId)
         .then(stackScript => {
@@ -46,6 +45,10 @@ export class StackScriptDrawer extends React.Component<CombinedProps, State> {
           this.setState({ error: true, loading: false });
         });
     }
+  }
+
+  componentWillUnmount() {
+    this.props.closeDrawer();
   }
 
   render() {
@@ -74,9 +77,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   };
 };
 
-const mapStateToProps: MapState<StateProps, {}> = (
-  state: ApplicationState
-) => ({
+const mapStateToProps: MapState<Props, {}> = (state: ApplicationState) => ({
   open: pathOr(false, ['stackScriptDrawer', 'open'], state),
   stackScriptId: path(['stackScriptDrawer', 'stackScriptId'], state)
 });
