@@ -47,7 +47,9 @@ type ClassNames =
   | 'tagSectionInner'
   | 'deleteSection'
   | 'titleGridWrapper'
-  | 'tagHeading';
+  | 'tagHeading'
+  | 'sectionMain'
+  | 'sectionSideBar';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -85,6 +87,16 @@ const styles = (theme: Theme) =>
     },
     tagHeading: {
       marginBottom: theme.spacing(1) + 4
+    },
+    sectionMain: {
+      [theme.breakpoints.up('md')]: {
+        order: 1
+      }
+    },
+    SectionSideBar: {
+      [theme.breakpoints.up('md')]: {
+        order: 2
+      }
     }
   });
 interface KubernetesContainerProps {
@@ -380,7 +392,46 @@ export const KubernetesClusterDetail: React.FunctionComponent<
       </Grid>
 
       <Grid container direction="row" className={classes.section} spacing={3}>
-        <Grid container item direction="row" xs={12} md={9}>
+        <Grid
+          container
+          item
+          direction="column"
+          className={classes.sectionSideBar}
+          style={{ order: 1 }}
+          xs={12}
+          md={3}
+        >
+          <Grid item className={classes.button}>
+            <Button buttonType="primary" onClick={downloadKubeConfig}>
+              Download kubeconfig
+            </Button>
+          </Grid>
+          <Grid item className={classes.section}>
+            <KubeSummaryPanel cluster={cluster} />
+          </Grid>
+          <Grid item>
+            <Paper className={classes.tagSectionInner}>
+              <Typography
+                variant="h2"
+                className={classes.tagHeading}
+                data-qa-title
+              >
+                Cluster Tags
+              </Typography>
+              <div>
+                <TagsPanel tags={tags} updateTags={handleUpdateTags} />
+              </div>
+            </Paper>
+          </Grid>
+        </Grid>
+        <Grid
+          container
+          item
+          direction="row"
+          xs={12}
+          md={9}
+          className={classes.sectionMain}
+        >
           <Grid item xs={12}>
             <NodePoolsDisplay
               submittingForm={submitting}
@@ -425,30 +476,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<
             >
               Delete Cluster
             </Button>
-          </Grid>
-        </Grid>
-        <Grid container item direction="column" xs={12} md={3}>
-          <Grid item className={classes.button}>
-            <Button buttonType="primary" onClick={downloadKubeConfig}>
-              Download kubeconfig
-            </Button>
-          </Grid>
-          <Grid item className={classes.section}>
-            <KubeSummaryPanel cluster={cluster} />
-          </Grid>
-          <Grid item>
-            <Paper className={classes.tagSectionInner}>
-              <Typography
-                variant="h2"
-                className={classes.tagHeading}
-                data-qa-title
-              >
-                Cluster Tags
-              </Typography>
-              <div>
-                <TagsPanel tags={tags} updateTags={handleUpdateTags} />
-              </div>
-            </Paper>
           </Grid>
         </Grid>
       </Grid>
