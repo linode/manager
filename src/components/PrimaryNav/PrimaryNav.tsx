@@ -21,11 +21,7 @@ import {
 import Grid from 'src/components/Grid';
 import { MapState } from 'src/store/types';
 import { NORMAL_SPACING_UNIT } from 'src/themeFactory';
-import {
-  isKubernetesEnabled,
-  isObjectStorageEnabled
-} from 'src/utilities/accountCapabilities';
-import { sendSpacingToggleEvent, sendThemeToggleEvent } from 'src/utilities/ga';
+import { isObjectStorageEnabled } from 'src/utilities/accountCapabilities';
 import AdditionalMenuItems from './AdditionalMenuItems';
 import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
@@ -402,23 +398,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     this.setState({ anchorEl: undefined });
   };
 
-  handleSpacingToggle = () => {
-    const { toggleSpacing } = this.props;
-    // Checking the previous spacingUnit value to determine which way to switch.
-    const eventLabel = NORMAL_SPACING_UNIT ? 'compact' : 'normal';
-    toggleSpacing();
-    sendSpacingToggleEvent(eventLabel);
-  };
-
-  handleThemeToggle = () => {
-    const { toggleTheme, theme } = this.props;
-    // Checking the previous theme.name value to determine which way to switch.
-    const eventLabel = theme.name === 'darkTheme' ? 'light' : 'dark';
-
-    toggleTheme();
-    sendThemeToggleEvent(eventLabel);
-  };
-
   renderPrimaryLink = (primaryLink: PrimaryLink, isLast: boolean) => {
     const { classes } = this.props;
 
@@ -571,8 +550,8 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
                 className: classes.settingsBackdrop
               }}
             >
-              <ThemeToggle toggleTheme={this.handleThemeToggle} />
-              <SpacingToggle toggleSpacing={this.handleSpacingToggle} />
+              <ThemeToggle toggleTheme={this.props.toggleTheme} />
+              <SpacingToggle toggleSpacing={this.props.toggleSpacing} />
             </Menu>
           </div>
         </Grid>

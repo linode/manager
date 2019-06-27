@@ -24,7 +24,9 @@ interface Props<T = PreferenceValue> {
   preferenceKey: string;
   preferenceOptions: [T, T];
   value?: T;
-  toggleCallbackFn?: (value: PreferenceValue) => void;
+  toggleCallbackFn?: (value: T) => void;
+  toggleCallbackFnDebounced?: (value: T) => void;
+  initialSetCallbackFn?: (value: T) => void;
   children: RenderChildren;
 }
 
@@ -38,6 +40,7 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
     preferenceError,
     preferenceKey,
     preferenceOptions,
+    toggleCallbackFnDebounced,
     toggleCallbackFn,
     children,
     preferences
@@ -66,7 +69,12 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
       !!props.preferenceError &&
       lastUpdated === 0
     ) {
-      setPreference(preferenceOptions[0]);
+      const preferenceToSet = preferenceOptions[0];
+      setPreference(preferenceToSet);
+
+      if (props.initialSetCallbackFn) {
+        props.initialSetCallbackFn(preferenceToSet);
+      }
     }
 
     /**
@@ -86,6 +94,11 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
         : preferenceFromAPI;
 
       setPreference(preferenceToSet);
+
+      /** run callback function if passed one */
+      if (props.initialSetCallbackFn) {
+        props.initialSetCallbackFn(preferenceToSet);
+      }
     }
   }, [props.preferenceError, props.preferences]);
 
@@ -98,6 +111,11 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
        * Don't update anything if the GET fails
        */
       if (!!preferenceError && lastUpdated !== 0) {
+        /** invoke our callback prop if we have one */
+        if (toggleCallbackFnDebounced && currentlySetPreference) {
+          toggleCallbackFnDebounced(currentlySetPreference);
+        }
+
         props
           .getUserPreferences()
           .then(response => {
@@ -109,22 +127,21 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
               .catch(() => /** swallow the error */ null);
           })
           .catch(() => /** swallow the error */ null);
-      } else if (
-        !!preferences &&
-        currentlySetPreference &&
-        lastUpdated !== 0
-        // && preferencesHaveBeenUpdated(props.preferences, theme, spacing)
-      ) {
+      } else if (!!preferences && currentlySetPreference && lastUpdated !== 0) {
         /**
          * PUT to /preferences on every toggle, debounced.
          */
-
         props
           .updateUserPreferences({
             ...props.preferences,
             [preferenceKey]: currentlySetPreference
           })
           .catch(() => /** swallow the error */ null);
+
+        /** invoke our callback prop if we have one */
+        if (toggleCallbackFnDebounced && currentlySetPreference) {
+          toggleCallbackFnDebounced(currentlySetPreference);
+        }
       } else if (lastUpdated === 0) {
         /**
          * this is the case where the app has just been mounted and the preferences are
