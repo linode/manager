@@ -134,9 +134,7 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
               </Typography>
             </Grid>
             <Grid item>
-              <Typography>
-                {total - readableUsed.value} {readableFree.unit} Available
-              </Typography>
+              <Typography>{readableFree.formatted} Available</Typography>
             </Grid>
           </Grid>
         </Grid>
