@@ -7,12 +7,14 @@ const componentLoading = shallow(
     classes={{
       root: '',
       primaryColor: '',
-      loadingText: ''
+      loadingText: '',
+      rounded: ''
     }}
     value={20}
     max={100}
     loadingText="loading..."
     isFetchingValue={true}
+    rounded={false}
   />
 );
 
@@ -27,14 +29,18 @@ describe('BarPercent', () => {
   isFetchingValue prop is true and loadingText prop is not undefined`, () => {
     expect(componentLoading.find('WithStyles(Typography)')).toBeDefined();
     expect(
-      componentLoading.find('WithStyles(ForwardRef(LinearProgress))').prop('variant')
+      componentLoading
+        .find('WithStyles(ForwardRef(LinearProgress))')
+        .prop('variant')
     ).toBe('indeterminate');
   });
 
   it('should return determinate progress bar if isFetchingValue prop is false', () => {
     componentLoading.setProps({ isFetchingValue: false });
     expect(
-      componentLoading.find('WithStyles(ForwardRef(LinearProgress))').prop('variant')
+      componentLoading
+        .find('WithStyles(ForwardRef(LinearProgress))')
+        .prop('variant')
     ).toBe('determinate');
   });
 });
