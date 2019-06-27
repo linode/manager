@@ -28,6 +28,7 @@ if (SENTRY_URL) {
     ignoreErrors: [
       // Random plugins/extensions
       'top.GLOBALS',
+      'MetaMask detected another web3',
       // See: http://blog.errorception.com/2012/03/tale-of-unfindable-js-error.html
       'originalCreateNotification',
       'canvas.contentDocument',
@@ -43,6 +44,16 @@ if (SENTRY_URL) {
        */
       'convert undefined or null to object',
       'atomicFindClose',
+      'Cannot redefine property: play',
+      /** material-ui errors */
+      'e.touches is undefined',
+      "Object doesn't support property or method 'closest'",
+      'target.className.indexOf is not a function',
+      "can't access dead object",
+      /** paypal errors */
+      'No ack for postMessage getName()',
+      '/graphql returned status 401',
+      'https://www.paypal.com/xoplatform/logger/api/logger',
       // Facebook borked
       'fb_xd_fragment',
       // ISP "optimizing" proxy - `Cache-Control: no-transform` seems to

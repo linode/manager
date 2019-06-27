@@ -19,10 +19,12 @@ import {
   WithTheme
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-import { isKubernetesEnabled } from 'src/constants';
 import { MapState } from 'src/store/types';
 import { NORMAL_SPACING_UNIT } from 'src/themeFactory';
-import { isObjectStorageEnabled } from 'src/utilities/accountCapabilities';
+import {
+  isKubernetesEnabled,
+  isObjectStorageEnabled
+} from 'src/utilities/accountCapabilities';
 import { sendSpacingToggleEvent, sendThemeToggleEvent } from 'src/utilities/ga';
 import AdditionalMenuItems from './AdditionalMenuItems';
 import SpacingToggle from './SpacingToggle';
@@ -89,35 +91,56 @@ const styles = (theme: Theme) =>
       padding: `${theme.spacing(1) + 2}px 0 ${theme.spacing(1)}px`
     },
     listItem: {
+      position: 'relative',
       cursor: 'pointer',
-      borderLeft: '6px solid transparent',
-      transition: theme.transitions.create([
-        'background-color',
-        'border-left-color'
-      ]),
-      padding: `${theme.spacing(1) / 2 + 6}px ${theme.spacing(4) -
-        2}px ${theme.spacing(1) / 2 + 6}px ${theme.spacing(3)}px`,
+      transition: theme.transitions.create(['background-color']),
+      padding: `${theme.spacing(2)}px ${theme.spacing(4) - 2}px ${theme.spacing(
+        2
+      ) - 1}px ${theme.spacing(4) + 1}px`,
       '&:hover': {
-        backgroundColor: 'rgba(0, 0, 0, 0.1)',
+        backgroundColor: theme.bg.primaryNavActiveBG,
         '& $linkItem': {
           color: 'white'
         }
       }
     },
     collapsible: {
-      fontSize: '.9rem'
+      fontSize: '0.9rem'
     },
     linkItem: {
       transition: theme.transitions.create(['color']),
-      color: '#C9CACB',
+      color: theme.color.primaryNavText,
       fontFamily: 'LatoWebBold' // we keep this bold at all times
     },
     active: {
-      transition: 'border-color .7s ease-in-out',
-      backgroundColor: 'rgba(0, 0, 0, 0.1)',
-      borderLeftColor: theme.color.green,
+      backgroundColor: theme.bg.primaryNavActiveBG,
+      '&:before': {
+        content: "''",
+        borderStyle: 'solid',
+        borderWidth: `${theme.spacing(2) + 5}px ${theme.spacing(
+          2
+        )}px ${theme.spacing(2) + 5}px 0`,
+        borderColor: `transparent ${
+          theme.bg.primaryNavActive
+        } transparent transparent`,
+        position: 'absolute',
+        right: 0,
+        top: '8%'
+      },
       '&:hover': {
-        borderLeftColor: theme.color.green
+        '&:before': {
+          content: "''",
+          borderStyle: 'solid',
+          borderWidth: `${theme.spacing(2) + 5}px ${theme.spacing(
+            2
+          )}px ${theme.spacing(2) + 5}px 0`,
+          borderColor: `transparent ${
+            theme.bg.primaryNavActive
+          } transparent transparent`,
+          position: 'absolute',
+          right: 0,
+          top: '8%'
+        }
       }
     },
     sublinkPanel: {
@@ -301,7 +324,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     });
     // }
 
-    if (isKubernetesEnabled) {
+    if (isKubernetesEnabled(accountCapabilities)) {
       primaryLinks.push({
         display: 'Kubernetes',
         href: '/kubernetes',
