@@ -14,6 +14,8 @@ import AccountContainer, {
   DispatchProps
 } from 'src/containers/account.container';
 import localStorageContainer from 'src/containers/localStorage.container';
+import featureFlags, { FlagSet } from 'src/featureFlags';
+import useFlags from 'src/hooks/useFlags';
 
 type ClassNames = 'root';
 
@@ -107,6 +109,13 @@ export const VATBanner: React.FunctionComponent<CombinedProps> = props => {
       {`.`}
     </div>
   );
+
+  const flags = useFlags() as FlagSet;
+
+  /** @featureFlag */
+  if (!featureFlags.vatBanner.isEnabled(flags)) {
+    return null;
+  }
 
   if (!shouldShowVatBanner(showVATBanner, country, taxId)) {
     return null;
