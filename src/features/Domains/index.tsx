@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  Redirect,
   Route,
   RouteComponentProps,
   Switch,
@@ -26,8 +27,9 @@ class DomainsRoutes extends React.Component<Props> {
 
     return (
       <Switch>
-        <Route component={DomainDetails} path={`${path}/:domainId`} />
+        <Route component={DomainDetails} path={`${path}/:domainId`} exact />
         <Route component={DomainsLanding} path={path} exact />
+        <Redirect to={`${path}`} />
       </Switch>
     );
   }

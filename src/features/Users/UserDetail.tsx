@@ -3,6 +3,7 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import {
   matchPath,
+  Redirect,
   Route,
   RouteComponentProps,
   Switch
@@ -432,7 +433,12 @@ class UserDetail extends React.Component<CombinedProps> {
             path={`${url}/permissions`}
             component={this.renderUserPermissions}
           />
-          <Route path={`${url}`} render={this.renderUserProfile} />
+          <Route
+            path={`${url}/profile`}
+            render={this.renderUserProfile}
+            exact
+          />
+          <Redirect to={`${url}/profile`} />
         </Switch>
       </React.Fragment>
     );
