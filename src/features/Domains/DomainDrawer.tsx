@@ -416,8 +416,12 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               />
               {!errorMap.defaultLinode && (
                 <FormHelperText>
-                  We'll automatically create domain records for both the first
-                  IPv4 and IPv6 on this Linode.
+                  {this.state.selectedDefaultLinode &&
+                  !this.state.selectedDefaultLinode.ipv6
+                    ? `We'll automatically create domains for the first IPv4 address on this
+                    Linode.`
+                    : `We'll automatically create domain records for both the first
+                    IPv4 and IPv6 addresses on this Linode.`}
                 </FormHelperText>
               )}
             </React.Fragment>
@@ -436,8 +440,12 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               />
               {!errorMap.defaultNodeBalancer && (
                 <FormHelperText>
-                  We'll automatically create domain records for both the first
-                  IPv4 and IPv6 on this NodeBalancer.
+                  {this.state.selectedDefaultNodeBalancer &&
+                  !this.state.selectedDefaultNodeBalancer.ipv6
+                    ? `We'll automatically create domains for the first IPv4 address on this
+                  NodeBalancer.`
+                    : `We'll automatically create domain records for both the first
+                  IPv4 and IPv6 addresses on this NodeBalancer.`}
                 </FormHelperText>
               )}
             </React.Fragment>
