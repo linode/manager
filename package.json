@@ -160,7 +160,7 @@
     "@types/md5": "^2.1.32",
     "@types/memoizee": "^0.4.2",
     "@types/moment-timezone": "^0.5.4",
-    "@types/node": "^9.4.6",
+    "@types/node": "^12.0.10",
     "@types/normalizr": "^2.0.18",
     "@types/pretty-bytes": "^5.1.0",
     "@types/promise.prototype.finally": "^2.0.2",
