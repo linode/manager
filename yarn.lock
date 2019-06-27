@@ -15460,10 +15460,10 @@ typeface-lato@^0.0.54:
   resolved "https://registry.yarnpkg.com/typeface-lato/-/typeface-lato-0.0.54.tgz#6ea56309a8b0cfdb7e8246e05de4b58b8272b47c"
   integrity sha512-2/oP5YrXCBSLg+N2ZdWnMbJ0PRIidrJVFHgRoLxo5MNsdu9eE4aBwsoEY/K/+9rKdktGO8zpiXBYPRn9F6U/Sw==
 
-typeface-ubuntu-mono@^0.0.54:
-  version "0.0.54"
-  resolved "https://registry.yarnpkg.com/typeface-ubuntu-mono/-/typeface-ubuntu-mono-0.0.54.tgz#773582617ff60dc252acbaaeb22880ba7f559fe6"
-  integrity sha512-hwfEPLzA3f/q8RowZlW6Mmvqe8yffYk7vlwzia+n7xVjY16C2UvWWPCgGMXUbUIgFZIeqA5OvFwUjDMzi95wRw==
+typeface-ubuntu-mono@^0.0.72:
+  version "0.0.72"
+  resolved "https://registry.yarnpkg.com/typeface-ubuntu-mono/-/typeface-ubuntu-mono-0.0.72.tgz#3ecdb1dc90900522451c90661da7ae316a6fdb8b"
+  integrity sha512-l+Tt4NVCeceb42wNk3iev35xt3d+O3NxPtYq90k70OXjbtQtvUGDNaDB9uouJ1Y7Co0V6DgKHNS5S5ljBz9QRA==
 
 typescript-estree@^18.1.0:
   version "18.1.0"
