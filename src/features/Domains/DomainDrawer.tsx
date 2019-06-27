@@ -458,7 +458,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
   };
 
   redirect = (id: number | '', state?: Record<string, string>) => {
-    const returnPath = !!id ? `/domains/${id}/records` : '/domains';
+    const returnPath = !!id ? `/domains/${id}` : '/domains';
     this.props.history.push(returnPath, state);
   };
 
