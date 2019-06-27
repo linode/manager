@@ -204,7 +204,6 @@ const memoized = (component: React.FC<CombinedProps>) =>
      * state. All the relevant preference state will be handled in the component.
      * This component only cares about what the preferences are on app load.
      */
-    // console.log(wasUndefinedNowDefined(prevProps.preferenceError, nextProps.preferenceError))
     const shouldRerender =
       wasUndefinedNowDefined(prevProps.preferences, nextProps.preferences) ||
       wasDefinedNowUndefined(prevProps.preferences, nextProps.preferences) ||

@@ -21,7 +21,10 @@ import {
 import Grid from 'src/components/Grid';
 import { MapState } from 'src/store/types';
 import { NORMAL_SPACING_UNIT } from 'src/themeFactory';
-import { isObjectStorageEnabled } from 'src/utilities/accountCapabilities';
+import {
+  isKubernetesEnabled,
+  isObjectStorageEnabled
+} from 'src/utilities/accountCapabilities';
 import AdditionalMenuItems from './AdditionalMenuItems';
 import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
