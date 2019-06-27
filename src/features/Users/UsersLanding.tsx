@@ -2,11 +2,10 @@ import { map as mapPromise } from 'bluebird';
 import * as memoize from 'memoizee';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import UserIcon from 'src/assets/icons/user.svg';
 import AddNewLink from 'src/components/AddNewLink';
-import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -36,7 +35,7 @@ import CreateUserDrawer from './CreateUserDrawer';
 import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
 import ActionMenu from './UsersActionMenu';
 
-type ClassNames = 'title' | 'avatar' | 'userButton' | 'emptyImage';
+type ClassNames = 'title' | 'avatar' | 'emptyImage';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -51,15 +50,6 @@ const styles = (theme: Theme) =>
     title: {
       marginBottom: theme.spacing(2)
     },
-    userButton: {
-      borderRadius: 30,
-      fontFamily: 'LatoWeb',
-      padding: 0,
-      color: theme.palette.text.primary,
-      '&:hover': {
-        color: theme.palette.primary.main
-      }
-    },
     avatar: {
       borderRadius: '50%',
       width: 30,
@@ -67,8 +57,8 @@ const styles = (theme: Theme) =>
       marginRight: theme.spacing(2),
       animation: '$fadeIn 150ms linear forwards',
       [theme.breakpoints.up('md')]: {
-        width: 50,
-        height: 50
+        width: 40,
+        height: 40
       }
     },
     emptyImage: {
@@ -77,8 +67,8 @@ const styles = (theme: Theme) =>
       height: 30,
       marginRight: theme.spacing(2),
       [theme.breakpoints.up('md')]: {
-        width: 50,
-        height: 50
+        width: 40,
+        height: 40
       }
     }
   });
@@ -191,11 +181,11 @@ class UsersLanding extends React.Component<CombinedProps, State> {
       <TableRow
         key={user.username}
         data-qa-user-row
-        rowLink={`/account/users/${user.username}`}
+        rowLink={`/account/users/${user.username}/profile`}
       >
         <TableCell parentColumn="Username" data-qa-username>
-          <Link to={`/account/users/${user.username}`} title={user.username}>
-            <Button className={classes.userButton} tabIndex={-1}>
+          <Grid container alignItems="center">
+            <Grid item>
               {user.gravatarUrl === undefined ? (
                 <div className={classes.emptyImage} />
               ) : user.gravatarUrl === 'not found' ? (
@@ -207,9 +197,11 @@ class UsersLanding extends React.Component<CombinedProps, State> {
                   className={classes.avatar}
                 />
               )}
+            </Grid>
+            <Grid item className="px0">
               {user.username}
-            </Button>
-          </Link>
+            </Grid>
+          </Grid>
         </TableCell>
         <TableCell parentColumn="Email Address" data-qa-user-email>
           {user.email}

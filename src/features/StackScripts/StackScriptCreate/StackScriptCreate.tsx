@@ -32,7 +32,7 @@ import { MapState } from 'src/store/types';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-type ClassNames = 'root' | 'backButton' | 'titleWrapper' | 'createTitle';
+type ClassNames = 'root' | 'backButton' | 'createTitle';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -45,14 +45,8 @@ const styles = (theme: Theme) =>
       }
     },
     createTitle: {
-      lineHeight: '2.25em'
-    },
-    titleWrapper: {
-      display: 'flex',
-      marginTop: 5,
-      marginBottom: 20,
-      alignItems: 'center',
-      wordBreak: 'break-all'
+      marginTop: theme.spacing(2),
+      marginBottom: theme.spacing(2)
     }
   });
 
@@ -240,7 +234,12 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, username, userCannotCreateStackScripts } = this.props;
+    const {
+      username,
+      userCannotCreateStackScripts,
+      classes,
+      location
+    } = this.props;
     const {
       selectedImages,
       script,
@@ -268,11 +267,11 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment="Create New StackScript" />
         {generalError && <Notice error text={generalError} />}
         <Grid container justify="space-between">
-          <Grid item className={classes.titleWrapper}>
+          <Grid item>
             <Breadcrumb
-              linkTo="/stackscripts"
-              linkText="StackScripts"
+              pathname={location.pathname}
               labelTitle="Create New StackScript"
+              className={classes.createTitle}
               data-qa-create-stackscript-breadcrumb
             />
           </Grid>

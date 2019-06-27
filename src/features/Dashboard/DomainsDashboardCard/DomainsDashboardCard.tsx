@@ -140,7 +140,7 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
 
     return data.map(({ id, domain, type, status }) => (
-      <TableRow key={domain} rowLink={`/domains/${id}/records`}>
+      <TableRow key={domain} rowLink={`/domains/${id}`}>
         <TableCell className={classes.labelCol}>
           <Grid container wrap="nowrap" alignItems="center">
             <Grid item className="py0">
