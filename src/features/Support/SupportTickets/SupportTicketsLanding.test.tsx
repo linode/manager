@@ -16,7 +16,7 @@ describe('Support Tickets Landing', () => {
 
   it('title of page should read "Customer Support"', () => {
     const titleText = component.find('[data-qa-breadcrumb]').prop('labelTitle');
-    expect(titleText).toBe('Customer Support');
+    expect(titleText).toBe('Tickets');
   });
 
   it('should have an Open New Ticket Button', () => {

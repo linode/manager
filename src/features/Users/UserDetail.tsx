@@ -3,6 +3,7 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import {
   matchPath,
+  Redirect,
   Route,
   RouteComponentProps,
   Switch
@@ -32,7 +33,7 @@ import { getGravatarUrl } from 'src/utilities/gravatar';
 import UserPermissions from './UserPermissions';
 import UserProfile from './UserProfile';
 
-type ClassNames = 'titleWrapper' | 'avatar' | 'backButton' | 'emptyImage';
+type ClassNames = 'avatar' | 'backButton' | 'emptyImage';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -48,17 +49,13 @@ const styles = (theme: Theme) =>
       margin: '0 8px 0 -4px',
       color: '#606469',
       borderRadius: '50%',
-      width: '46px',
-      height: '46px',
+      width: 34,
+      height: 34,
       animation: '$fadeIn 150ms linear forwards'
     },
     emptyImage: {
       width: 42,
       height: 49
-    },
-    titleWrapper: {
-      display: 'flex',
-      alignItems: 'center'
     },
     backButton: {
       margin: '4px 0 0 -16px',
@@ -349,7 +346,8 @@ class UserDetail extends React.Component<CombinedProps> {
       match: {
         url,
         params: { username }
-      }
+      },
+      location
     } = this.props;
     const { error, gravatarUrl, createdUsername } = this.state;
 
@@ -357,10 +355,9 @@ class UserDetail extends React.Component<CombinedProps> {
       return (
         <React.Fragment>
           <Grid container justify="space-between">
-            <Grid item className={classes.titleWrapper}>
+            <Grid item>
               <Breadcrumb
-                linkTo="/account/users"
-                linkText="Users"
+                pathname={location.pathname}
                 labelTitle={username || ''}
               />
             </Grid>
@@ -386,12 +383,16 @@ class UserDetail extends React.Component<CombinedProps> {
     return (
       <React.Fragment>
         <Grid container justify="space-between">
-          <Grid item className={classes.titleWrapper}>
+          <Grid item>
             <Breadcrumb
-              linkTo="/account/users"
-              linkText="Users"
+              pathname={location.pathname}
               labelTitle={username}
-              labelOptions={{ prefixComponent: maybeGravatar }}
+              labelOptions={{
+                prefixComponent: maybeGravatar,
+                prefixStyle: { height: 34, marginTop: 2 },
+                noCap: true
+              }}
+              removeCrumbX={3}
             />
           </Grid>
         </Grid>
@@ -432,7 +433,12 @@ class UserDetail extends React.Component<CombinedProps> {
             path={`${url}/permissions`}
             component={this.renderUserPermissions}
           />
-          <Route path={`${url}`} render={this.renderUserProfile} />
+          <Route
+            path={`${url}/profile`}
+            render={this.renderUserProfile}
+            exact
+          />
+          <Redirect to={`${url}/profile`} />
         </Switch>
       </React.Fragment>
     );
@@ -478,6 +484,6 @@ export const connected = connect(
 
 export default compose<any, any, any, any>(
   connected,
-  styled,
-  reloadable
+  reloadable,
+  styled
 )(UserDetail);

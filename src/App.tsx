@@ -438,6 +438,7 @@ export class App extends React.Component<CombinedProps, State> {
                           <Route
                             path="/support/tickets/:ticketId"
                             component={SupportTicketDetail}
+                            exact
                           />
                           <Route path="/profile" component={Profile} />
                           <Route exact path="/support" component={Help} />
