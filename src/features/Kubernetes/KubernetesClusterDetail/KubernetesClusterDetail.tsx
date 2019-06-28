@@ -49,7 +49,8 @@ type ClassNames =
   | 'titleGridWrapper'
   | 'tagHeading'
   | 'sectionMain'
-  | 'sectionSideBar';
+  | 'sectionSideBar'
+  | 'tagSection';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -71,6 +72,9 @@ const styles = (theme: Theme) =>
     panelItem: {},
     button: {
       marginBottom: theme.spacing(3),
+      [theme.breakpoints.down('sm')]: {
+        order: 2
+      },
       '& button': {
         [theme.breakpoints.only('md')]: {
           padding: `${theme.spacing(2)}px ${theme.spacing(1)}px`
@@ -101,6 +105,11 @@ const styles = (theme: Theme) =>
     sectionSideBar: {
       [theme.breakpoints.up('md')]: {
         order: 2
+      }
+    },
+    tagSection: {
+      [theme.breakpoints.down('sm')]: {
+        order: 3
       }
     }
   });
@@ -413,7 +422,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
           <Grid item className={classes.section}>
             <KubeSummaryPanel cluster={cluster} />
           </Grid>
-          <Grid item>
+          <Grid item className={classes.tagSection}>
             <Paper className={classes.tagSectionInner}>
               <Typography
                 variant="h2"
