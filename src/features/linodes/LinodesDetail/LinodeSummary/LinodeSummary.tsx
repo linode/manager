@@ -54,7 +54,8 @@ type ClassNames =
   | 'graphTitle'
   | 'graphSelectTitle'
   | 'graphControls'
-  | 'totalTraffic';
+  | 'totalTraffic'
+  | 'subHeaderOuter';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -126,6 +127,11 @@ const styles = (theme: Theme) =>
     },
     chartSelect: {
       maxWidth: 150
+    },
+    subHeaderOuter: {
+      [theme.breakpoints.up('md')]: {
+        textAlign: 'right'
+      }
     }
   });
 
@@ -707,13 +713,20 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               justify="space-between"
               alignItems="flex-start"
               className={classes.headerWrapper}
-              direction="column"
+              direction="row"
             >
-              <Grid item className="py0">
+              <Grid item className="py0" xs={12} md={8}>
                 <Typography variant="h2" className={classes.graphTitle}>
                   {newLabel}
                 </Typography>
-                <Typography variant="h3">
+              </Grid>
+              <Grid
+                item
+                className={`py0 ${classes.subHeaderOuter}`}
+                xs={12}
+                md={4}
+              >
+                <Typography variant="h2">
                   Volumes:&#160;
                   {linodeVolumesError ? (
                     getErrorStringOrDefault(linodeVolumesError)
@@ -722,7 +735,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                       {linodeVolumes.length}
                     </Link>
                   )}
-                  , {formatRegion(linode.region)}
+                  , Region: {formatRegion(linode.region)}
                 </Typography>
               </Grid>
             </Grid>
