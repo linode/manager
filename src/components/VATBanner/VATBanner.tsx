@@ -9,12 +9,11 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
-import { EU_COUNTRIES } from 'src/constants';
 import AccountContainer, {
   DispatchProps
 } from 'src/containers/account.container';
 import localStorageContainer from 'src/containers/localStorage.container';
-import featureFlags, { FlagSet } from 'src/featureFlags';
+import { FlagSet } from 'src/featureFlags';
 import useFlags from 'src/hooks/useFlags';
 
 type ClassNames = 'root';
@@ -45,6 +44,7 @@ type CombinedProps = AccountProps &
 
 export const shouldShowVatBanner = (
   showBanner: boolean,
+  countriesForVatBannerDisplay: string[] = [],
   country?: string,
   taxId?: string
 ) => {
@@ -65,10 +65,10 @@ export const shouldShowVatBanner = (
   }
 
   /**
-   * We want to show the banner to users in the EU who
+   * We want to show the banner to users in specified countries (via feature flag) who
    * don't already have a tax_id set on their account
    */
-  return EU_COUNTRIES.includes(country || '') && !taxId;
+  return countriesForVatBannerDisplay.includes(country || '') && !taxId;
 };
 
 export const VATBanner: React.FunctionComponent<CombinedProps> = props => {
@@ -113,11 +113,16 @@ export const VATBanner: React.FunctionComponent<CombinedProps> = props => {
   const flags = useFlags() as FlagSet;
 
   /** @featureFlag */
-  if (!featureFlags.vatBanner.isEnabled(flags)) {
-    return null;
-  }
+  const countriesForVatBannerDisplay = flags.vatBanner || [];
 
-  if (!shouldShowVatBanner(showVATBanner, country, taxId)) {
+  if (
+    !shouldShowVatBanner(
+      showVATBanner,
+      countriesForVatBannerDisplay,
+      country,
+      taxId
+    )
+  ) {
     return null;
   }
 
