@@ -70,8 +70,11 @@ const styles = (theme: Theme) =>
     section: {},
     panelItem: {},
     button: {
-      [theme.breakpoints.up('md')]: {
-        marginBottom: theme.spacing(3)
+      marginBottom: theme.spacing(3),
+      '& button': {
+        [theme.breakpoints.only('md')]: {
+          padding: `${theme.spacing(2)}px ${theme.spacing(1)}px`
+        }
       }
     },
     tagSectionInner: {
@@ -80,7 +83,9 @@ const styles = (theme: Theme) =>
       ) - 1}px`
     },
     deleteSection: {
-      marginLeft: theme.spacing(3)
+      [theme.breakpoints.up('md')]: {
+        marginLeft: theme.spacing(3)
+      }
     },
     titleGridWrapper: {
       marginBottom: theme.spacing(1) + 4
@@ -93,7 +98,7 @@ const styles = (theme: Theme) =>
         order: 1
       }
     },
-    SectionSideBar: {
+    sectionSideBar: {
       [theme.breakpoints.up('md')]: {
         order: 2
       }
@@ -397,7 +402,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<
           item
           direction="column"
           className={classes.sectionSideBar}
-          style={{ order: 1 }}
           xs={12}
           md={3}
         >

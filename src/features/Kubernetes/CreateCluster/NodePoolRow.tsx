@@ -24,7 +24,9 @@ type ClassNames =
   | 'toDelete'
   | 'toAdd'
   | 'disabled'
-  | 'removeButton';
+  | 'removeButton'
+  | 'removeButtonWrapper'
+  | 'editableCount';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -43,6 +45,18 @@ const styles = (theme: Theme) =>
     },
     removeButton: {
       float: 'right'
+    },
+    removeButtonWrapper: {
+      [theme.breakpoints.down('sm')]: {
+        justifyContent: 'flex-end !important' as 'flex-end',
+        padding: 0,
+        paddingRight: '0 !important' as '0'
+      }
+    },
+    editableCount: {
+      [theme.breakpoints.down('sm')]: {
+        alignItems: 'flex-end'
+      }
     }
   });
 
@@ -91,6 +105,7 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
             small
             tiny
             type="number"
+            className={classes.editableCount}
             min={1}
             max={Infinity}
             value={pool.count}
@@ -108,7 +123,7 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
       <TableCell parentColumn="Pricing">
         <Typography>{`${displayPrice(pool.totalMonthlyPrice)}/mo`}</Typography>
       </TableCell>
-      <TableCell>
+      <TableCell className={classes.removeButtonWrapper}>
         <Button
           buttonType="remove"
           disabled={!editable}

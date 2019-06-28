@@ -23,7 +23,13 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       border: `1px solid ${theme.palette.divider}`,
-      borderBottom: 0
+      borderBottom: 0,
+      '& .data': {
+        [theme.breakpoints.only('sm')]: {
+          marginLeft: theme.spacing(1),
+          textAlign: 'right'
+        }
+      }
     },
     small: {
       maxWidth: '50%'
