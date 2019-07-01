@@ -102,7 +102,7 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = props => {
                   />
                 }
                 label={
-                  backups_enabled
+                  backups_enabled || isManagedCustomer
                     ? 'Enabled (Auto enroll all new Linodes in Backups)'
                     : "Disabled (Don't enroll new Linodes in Backups automatically)"
                 }
