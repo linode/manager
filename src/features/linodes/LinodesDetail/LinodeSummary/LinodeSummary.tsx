@@ -110,7 +110,7 @@ const styles = (theme: Theme) =>
       }
     },
     graphTitle: {
-      // marginRight: theme.spacing(2)
+      marginRight: theme.spacing(2)
     },
     graphSelectTitle: {
       marginRight: theme.spacing(1),
