@@ -55,7 +55,8 @@ type ClassNames =
   | 'graphSelectTitle'
   | 'graphControls'
   | 'totalTraffic'
-  | 'subHeaderOuter';
+  | 'subHeaderOuter'
+  | 'textWrap';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -132,6 +133,10 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.up('md')]: {
         textAlign: 'right'
       }
+    },
+    textWrap: {
+      display: 'inline-block',
+      whiteSpace: 'nowrap'
     }
   });
 
@@ -726,17 +731,24 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 xs={12}
                 md={4}
               >
-                <Typography variant="h2">
-                  Volumes:&#160;
-                  {linodeVolumesError ? (
-                    getErrorStringOrDefault(linodeVolumesError)
-                  ) : (
-                    <Link to={`/linodes/${linode.id}/volumes`}>
-                      {linodeVolumes.length}
-                    </Link>
-                  )}
-                  , Region: {formatRegion(linode.region)}
-                </Typography>
+                <span className={classes.textWrap}>
+                  <Typography variant="h2">
+                    Volumes:&#160;
+                    {linodeVolumesError ? (
+                      getErrorStringOrDefault(linodeVolumesError)
+                    ) : (
+                      <Link to={`/linodes/${linode.id}/volumes`}>
+                        {linodeVolumes.length}
+                      </Link>
+                    )}
+                    ,&#160;
+                  </Typography>
+                </span>
+                <span className={classes.textWrap}>
+                  <Typography variant="h2">
+                    Region: {formatRegion(linode.region)}
+                  </Typography>
+                </span>
               </Grid>
             </Grid>
 
