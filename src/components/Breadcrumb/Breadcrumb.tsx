@@ -70,9 +70,9 @@ const styles = (theme: Theme) =>
       margin: '4px 0 0 10px'
     },
     editableContainer: {
-      marginTop: -9,
+      marginTop: -10,
       [theme.breakpoints.up('lg')]: {
-        marginTop: -8
+        marginTop: -9
       }
     },
     prefixComponentWrapper: {

@@ -58,8 +58,7 @@ const styles = (theme: Theme) =>
       justifyContent: 'flex-start',
       alignItems: 'center',
       maxHeight: 48,
-      position: 'relative',
-      transform: 'translate(-2px, -0.5px)'
+      position: 'relative'
     },
     initial: {
       border: '1px solid transparent',
