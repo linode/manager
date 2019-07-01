@@ -7,6 +7,7 @@ import 'rxjs/add/operator/filter';
 import { Subscription } from 'rxjs/Subscription';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
+import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -309,9 +310,11 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
           style={{ paddingBottom: 0 }}
         >
           <Grid item>
-            <Typography variant="h1" data-qa-title className={classes.title}>
-              Images
-            </Typography>
+            <Breadcrumb
+              pathname={this.props.location.pathname}
+              labelTitle="Images"
+              className={classes.title}
+            />
           </Grid>
           <Grid item>
             <Grid container alignItems="flex-end">
