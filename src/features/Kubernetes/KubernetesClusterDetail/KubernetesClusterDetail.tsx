@@ -28,6 +28,7 @@ import { reportException } from 'src/exceptionReporting';
 import { getKubeConfig } from 'src/services/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import scrollTo from 'src/utilities/scrollTo';
 import { extendCluster, getMonthlyPrice } from '.././kubeUtils';
 import { ExtendedCluster, ExtendedPoolNode } from '.././types';
 import NodePoolPanel from '../CreateCluster/NodePoolPanel';
@@ -42,16 +43,19 @@ type ClassNames =
   | 'backButton'
   | 'section'
   | 'panelItem'
-  | 'button';
+  | 'button'
+  | 'tagSectionInner'
+  | 'deleteSection'
+  | 'titleGridWrapper'
+  | 'tagHeading'
+  | 'sectionMain'
+  | 'sectionSideBar'
+  | 'tagSection';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
-    title: {
-      display: 'flex',
-      alignItems: 'center',
-      padding: theme.spacing(1)
-    },
+    title: {},
     titleWrapper: {
       display: 'flex',
       alignItems: 'center'
@@ -64,14 +68,49 @@ const styles = (theme: Theme) =>
       },
       padding: 0
     },
-    section: {
-      margin: theme.spacing(2)
-    },
-    panelItem: {
-      padding: theme.spacing(1)
-    },
+    section: {},
+    panelItem: {},
     button: {
-      marginLeft: theme.spacing(2)
+      marginBottom: theme.spacing(3),
+      [theme.breakpoints.down('sm')]: {
+        order: 2
+      },
+      '& button': {
+        [theme.breakpoints.only('md')]: {
+          padding: `${theme.spacing(2)}px ${theme.spacing(1)}px`
+        }
+      }
+    },
+    tagSectionInner: {
+      padding: `${theme.spacing(2) + 3}px ${theme.spacing(3)}px ${theme.spacing(
+        1
+      ) - 1}px`
+    },
+    deleteSection: {
+      [theme.breakpoints.up('md')]: {
+        marginLeft: theme.spacing(3)
+      }
+    },
+    titleGridWrapper: {
+      marginBottom: theme.spacing(1) + 4
+    },
+    tagHeading: {
+      marginBottom: theme.spacing(1) + 4
+    },
+    sectionMain: {
+      [theme.breakpoints.up('md')]: {
+        order: 1
+      }
+    },
+    sectionSideBar: {
+      [theme.breakpoints.up('md')]: {
+        order: 2
+      }
+    },
+    tagSection: {
+      [theme.breakpoints.down('sm')]: {
+        order: 3
+      }
     }
   });
 interface KubernetesContainerProps {
@@ -237,10 +276,12 @@ export const KubernetesClusterDetail: React.FunctionComponent<
             queuedForAddition: true
           }
         ];
+        scrollTo();
         return newPools;
       });
     } else {
       /** From a static state, adding a node pool should trigger editing state */
+      scrollTo();
       toggleEditing();
       /** Make sure the list of node pools is correct */
       updatePools([
@@ -329,6 +370,15 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     updateTags(newTags);
   };
 
+  const handleLabelChange = async (newLabel: string) => {
+    props.updateCluster({ clusterID: cluster.id, label: newLabel });
+    return cluster.label;
+  };
+
+  const resetEditableLabel = () => {
+    return cluster.label;
+  };
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={`Kubernetes Cluster ${'label'}`} />
@@ -336,23 +386,66 @@ export const KubernetesClusterDetail: React.FunctionComponent<
         container
         justify="space-between"
         alignItems="flex-end"
-        style={{ marginTop: 8, marginBottom: 8 }}
+        spacing={3}
+        className={classes.titleGridWrapper}
       >
-        <Grid item className={classes.titleWrapper}>
+        <Grid item xs={12} className={classes.titleWrapper}>
           <Breadcrumb
             linkTo={{
               pathname: `/kubernetes`
             }}
             linkText="Clusters"
             labelTitle={cluster.label}
+            onEditHandlers={{
+              onEdit: handleLabelChange,
+              onCancel: resetEditableLabel
+            }}
             data-qa-breadcrumb
           />
         </Grid>
       </Grid>
 
-      <Grid container direction="row" className={classes.section}>
-        <Grid container item direction="column" xs={9}>
-          <Grid item>
+      <Grid container direction="row" className={classes.section} spacing={3}>
+        <Grid
+          container
+          item
+          direction="column"
+          className={classes.sectionSideBar}
+          xs={12}
+          md={3}
+        >
+          <Grid item className={classes.button}>
+            <Button buttonType="primary" onClick={downloadKubeConfig}>
+              Download kubeconfig
+            </Button>
+          </Grid>
+          <Grid item className={classes.section}>
+            <KubeSummaryPanel cluster={cluster} />
+          </Grid>
+          <Grid item className={classes.tagSection}>
+            <Paper className={classes.tagSectionInner}>
+              <Typography
+                variant="h2"
+                className={classes.tagHeading}
+                data-qa-title
+              >
+                Cluster Tags
+              </Typography>
+              <div>
+                <TagsPanel tags={tags} updateTags={handleUpdateTags} />
+              </div>
+            </Paper>
+          </Grid>
+        </Grid>
+        <Grid
+          container
+          item
+          direction="row"
+          xs={12}
+          md={9}
+          className={classes.sectionMain}
+        >
+          <Grid item xs={12}>
             <NodePoolsDisplay
               submittingForm={submitting}
               submitForm={submitForm}
@@ -368,7 +461,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
               types={typesData || []}
             />
           </Grid>
-          <Grid item>
+          <Grid item xs={12}>
             <NodePoolPanel
               hideTable
               selectedType={selectedType}
@@ -388,7 +481,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
               }
             />
           </Grid>
-          <Grid item className={classes.section}>
+          <Grid item xs={12} className={classes.deleteSection}>
             <Button
               destructive
               buttonType="secondary"
@@ -396,26 +489,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<
             >
               Delete Cluster
             </Button>
-          </Grid>
-        </Grid>
-        <Grid container item direction="column" xs={3}>
-          <Grid item className={classes.button}>
-            <Button buttonType="primary" onClick={downloadKubeConfig}>
-              Download kubeconfig
-            </Button>
-          </Grid>
-          <Grid item className={classes.section}>
-            <KubeSummaryPanel cluster={cluster} />
-          </Grid>
-          <Grid item className={classes.section}>
-            <Paper>
-              <Typography variant="h3" className={classes.title} data-qa-title>
-                Cluster Tags
-              </Typography>
-              <div className={classes.panelItem}>
-                <TagsPanel tags={tags} updateTags={handleUpdateTags} />
-              </div>
-            </Paper>
           </Grid>
         </Grid>
       </Grid>

@@ -19,7 +19,7 @@ import NodePoolDisplayTable from '../../CreateCluster/NodePoolDisplayTable';
 import { getTotalClusterPrice } from '../../kubeUtils';
 import { ExtendedPoolNode } from '../../types';
 
-type ClassNames = 'root' | 'button' | 'pricing';
+type ClassNames = 'root' | 'button' | 'pricing' | 'ctaOuter' | 'displayTable';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
@@ -30,9 +30,16 @@ const styles = (theme: Theme) =>
       marginRight: theme.spacing(1)
     },
     pricing: {
-      marginTop: theme.spacing(2),
-      fontSize: '1.em',
-      fontWeight: 'bold'
+      marginTop: theme.spacing(3),
+      fontFamily: theme.font.bold,
+      fontSize: '1rem',
+      color: theme.color.headline
+    },
+    ctaOuter: {
+      marginTop: theme.spacing(2) - 1
+    },
+    displayTable: {
+      width: '100%'
     }
   });
 
@@ -75,7 +82,14 @@ export const NodePoolsDisplay: React.FunctionComponent<
   return (
     <Paper className={classes.root}>
       <Grid container direction="column">
-        <Grid container item direction="row" justify="space-between">
+        <Grid
+          container
+          item
+          direction="row"
+          justify="space-between"
+          alignItems="center"
+          xs={12}
+        >
           <Grid item>
             <Typography variant="h2">Node Pools</Typography>
           </Grid>
@@ -86,16 +100,16 @@ export const NodePoolsDisplay: React.FunctionComponent<
           </Grid>
         </Grid>
         {submissionSuccess && (
-          <Grid item>
+          <Grid item xs={12}>
             <Notice success text="Node pools updated successfully." />
           </Grid>
         )}
         {submissionError && submissionError.length > 0 && (
-          <Grid item>
+          <Grid item xs={12}>
             <Notice error text={submissionError[0].reason} />
           </Grid>
         )}
-        <Grid item>
+        <Grid item xs={12} className={classes.displayTable}>
           {editing ? (
             <NodePoolDisplayTable
               editable
@@ -108,14 +122,14 @@ export const NodePoolsDisplay: React.FunctionComponent<
             <NodePoolDisplayTable pools={pools} types={types} />
           )}
         </Grid>
-        <Grid item>
+        <Grid item xs={12}>
           {editing && (
             <Typography className={classes.pricing}>
               *Updated Monthly Estimate:{' '}
               {`$${getTotalClusterPrice(poolsForEdit)}/month`}
             </Typography>
           )}
-          <Grid item container>
+          <Grid item container xs={12} className={classes.ctaOuter}>
             <Button
               className={classes.button}
               buttonType="primary"
