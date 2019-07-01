@@ -358,11 +358,6 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
             color: primaryColors.light
           }
         },
-        // flat: {
-        //   '&.cancel:hover': {
-        //     backgroundColor: 'transparent'
-        //   }
-        // },
         containedPrimary: {
           '&:hover, &:focus': {
             backgroundColor: primaryColors.light
@@ -430,8 +425,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
             minWidth: 100,
             '& svg': {
               width: 22,
-              height: 22,
-              animation: 'rotate 2s linear infinite'
+              height: 22
             }
           }
         }
