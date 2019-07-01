@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import {
   matchPath,
+  Redirect,
   Route,
   RouteComponentProps,
   Switch,
@@ -123,9 +124,14 @@ export const ObjectStorageLanding: React.FunctionComponent<
         </Tabs>
       </AppBar>
       <Switch>
-        <Route exact path={`${url}/buckets`} component={BucketLanding} />
-        <Route exact path={`${url}/access-keys`} component={AccessKeyLanding} />
-        <Route exact path={`${url}`} component={BucketLanding} />
+        <Route exact strict path={`${url}/buckets`} component={BucketLanding} />
+        <Route
+          exact
+          strict
+          path={`${url}/access-keys`}
+          component={AccessKeyLanding}
+        />
+        <Redirect to={`${url}/buckets`} />
       </Switch>
     </React.Fragment>
   );
