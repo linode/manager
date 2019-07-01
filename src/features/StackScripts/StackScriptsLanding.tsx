@@ -22,7 +22,7 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     title: {
-      marginTop: theme.spacing(3),
+      marginTop: theme.spacing(2),
       marginBottom: theme.spacing(1) + theme.spacing(1) / 2
     }
   });
@@ -108,7 +108,6 @@ export default compose<CombinedProps, {}>(
     imagesLoading,
     imagesError
   })),
-
-  styled,
-  withRouter
+  withRouter,
+  styled
 )(StackScriptsLanding);
