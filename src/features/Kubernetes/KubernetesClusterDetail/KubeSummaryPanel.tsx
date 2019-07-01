@@ -27,7 +27,7 @@ const styles = (theme: Theme) =>
       paddingBottom: theme.spacing(2)
     },
     label: {
-      color: '#272b31',
+      color: theme.color.kubeLabel,
       marginBottom: theme.spacing(1)
     }
   });

@@ -212,7 +212,8 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       diskSpaceBorder: '#f4f4f4',
       drawerBackdrop: 'rgba(255, 255, 255, 0.5)',
       label: '#555',
-      disabledText: '#c9cacb'
+      disabledText: '#c9cacb',
+      kubeLabel: '#272b31'
     },
     font: {
       normal: primaryFonts.normal,
