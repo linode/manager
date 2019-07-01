@@ -4,7 +4,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
-import { images } from 'src/__data__';
 import {
   createStyles,
   Theme,
@@ -16,6 +15,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
+import withImages from 'src/containers/withImages.container';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { displayType } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
@@ -156,7 +156,12 @@ interface LinodeContextProps {
   linodeData: Linode.Linode;
   linodeVolumes: Linode.Volume[];
   linodeVolumesError?: Linode.ApiFieldError[];
+}
+
+interface WithImagesProps {
   imagesData: Linode.Image[];
+  imagesLoading: boolean;
+  imagesError?: string;
 }
 
 interface State {
@@ -170,6 +175,7 @@ interface State {
 
 type CombinedProps = LinodeContextProps &
   WithTypesProps &
+  WithImagesProps &
   WithStyles<ClassNames>;
 
 const chartHeight = 300;
@@ -819,8 +825,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id,
   linodeData: linode,
   linodeVolumes: linode._volumes,
-  linodeVolumesError: linode._volumesError,
-  imagesData: images
+  linodeVolumesError: linode._volumesError
 }));
 
 interface WithTypesProps {
@@ -846,7 +851,13 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
 const enhanced = compose<CombinedProps, {}>(
   styled,
   withTypes,
-  linodeContext
+  linodeContext,
+  withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
+    ...ownProps,
+    imagesData,
+    imagesLoading,
+    imagesError
+  }))
 );
 
 export default enhanced(LinodeSummary);
