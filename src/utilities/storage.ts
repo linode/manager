@@ -17,16 +17,25 @@ export const getStorage = (key: string, fallback?: any) => {
   }
 
   try {
-    localStorageCache[key] = item;
-    return JSON.parse(item as any);
+    // Try to parse as JSON first. This will turn "true" (string) into `true` (boolean).
+    const parsedItem = JSON.parse(item as any);
+    localStorageCache[key] = parsedItem;
+    return parsedItem;
   } catch (e) {
+    // It's okay if we can't parse as JSON -- just use the raw value instead.
     localStorageCache[key] = item;
     return item;
   }
 };
 
 export const setStorage = (key: string, value: string) => {
-  localStorageCache[key] = value;
+  try {
+    // Store parsed JSON if possible.
+    localStorageCache[key] = JSON.parse(value);
+  } catch {
+    // Otherwise just use the raw value.
+    localStorageCache[key] = value;
+  }
   return window.localStorage.setItem(key, value);
 };
 
