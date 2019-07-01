@@ -5,8 +5,8 @@ import { NodeBalancerConfigFields } from './interfaces';
 export const nodeBalancerConfigNodeSchema = object({
   label: string()
     .matches(
-      /^[a-z0-9-_]+$/,
-      "Label can't contain special characters, uppercase characters, or whitespace."
+      /^[a-zA-Z0-9.\-_]+$/,
+      "Label can't contain special characters or spaces."
     )
     .min(3, 'Label should be between 3 and 32 characters.')
     .max(32, 'Label should be between 3 and 32 characters.')
