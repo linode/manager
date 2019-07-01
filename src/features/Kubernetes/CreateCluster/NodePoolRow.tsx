@@ -18,7 +18,15 @@ import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel
 import { displayTypeForKubePoolNode } from 'src/features/linodes/presentation';
 import { ExtendedPoolNode } from '.././types';
 
-type ClassNames = 'root' | 'link' | 'toDelete' | 'toAdd' | 'disabled';
+type ClassNames =
+  | 'root'
+  | 'link'
+  | 'toDelete'
+  | 'toAdd'
+  | 'disabled'
+  | 'removeButton'
+  | 'removeButtonWrapper'
+  | 'editableCount';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -27,13 +35,28 @@ const styles = (theme: Theme) =>
       color: `${theme.palette.primary.main} !important` as any
     },
     toDelete: {
-      backgroundColor: 'rgba(210, 28, 28, 0.4)'
+      backgroundColor: 'rgba(207, 30, 30, 0.16)'
     },
     toAdd: {
-      backgroundColor: theme.bg.offWhite
+      backgroundColor: theme.bg.main
     },
     disabled: {
       color: 'gray !important'
+    },
+    removeButton: {
+      float: 'right'
+    },
+    removeButtonWrapper: {
+      [theme.breakpoints.down('sm')]: {
+        justifyContent: 'flex-end !important' as 'flex-end',
+        padding: 0,
+        paddingRight: '0 !important' as '0'
+      }
+    },
+    editableCount: {
+      [theme.breakpoints.down('sm')]: {
+        alignItems: 'flex-end'
+      }
     }
   });
 
@@ -82,6 +105,7 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
             small
             tiny
             type="number"
+            className={classes.editableCount}
             min={1}
             max={Infinity}
             value={pool.count}
@@ -99,7 +123,7 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
       <TableCell parentColumn="Pricing">
         <Typography>{`${displayPrice(pool.totalMonthlyPrice)}/mo`}</Typography>
       </TableCell>
-      <TableCell>
+      <TableCell className={classes.removeButtonWrapper}>
         <Button
           buttonType="remove"
           disabled={!editable}
@@ -108,7 +132,8 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
           onClick={() => handleDelete(idx)}
           className={classNames({
             [classes.link]: true,
-            [classes.disabled]: !editable
+            [classes.disabled]: !editable,
+            [classes.removeButton]: true
           })}
         />
       </TableCell>
