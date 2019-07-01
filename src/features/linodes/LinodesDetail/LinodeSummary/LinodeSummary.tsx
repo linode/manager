@@ -56,7 +56,8 @@ type ClassNames =
   | 'graphControls'
   | 'totalTraffic'
   | 'subHeaderOuter'
-  | 'textWrap';
+  | 'textWrap'
+  | 'headerOuter';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -109,7 +110,7 @@ const styles = (theme: Theme) =>
       }
     },
     graphTitle: {
-      marginRight: theme.spacing(2)
+      // marginRight: theme.spacing(2)
     },
     graphSelectTitle: {
       marginRight: theme.spacing(1),
@@ -130,13 +131,22 @@ const styles = (theme: Theme) =>
       maxWidth: 150
     },
     subHeaderOuter: {
+      width: '100%',
+      display: 'inline-block',
       [theme.breakpoints.up('md')]: {
+        width: 'auto',
         textAlign: 'right'
       }
     },
     textWrap: {
       display: 'inline-block',
       whiteSpace: 'nowrap'
+    },
+    headerOuter: {
+      [theme.breakpoints.up('md')]: {
+        display: 'flex',
+        justifyContent: 'space-between'
+      }
     }
   });
 
@@ -720,35 +730,28 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               className={classes.headerWrapper}
               direction="row"
             >
-              <Grid item className="py0" xs={12} md={8}>
+              <Grid item className="py0" xs={12}>
                 <Typography variant="h2" className={classes.graphTitle}>
-                  {newLabel}
+                  <span className={classes.headerOuter}>
+                    <span>{newLabel}</span>
+                    <span className={`py0 ${classes.subHeaderOuter}`}>
+                      <span className={classes.textWrap}>
+                        Volumes:&#160;
+                        {linodeVolumesError ? (
+                          getErrorStringOrDefault(linodeVolumesError)
+                        ) : (
+                          <Link to={`/linodes/${linode.id}/volumes`}>
+                            {linodeVolumes.length}
+                          </Link>
+                        )}
+                        ,&#160;
+                      </span>
+                      <span className={classes.textWrap}>
+                        Region: {formatRegion(linode.region)}
+                      </span>
+                    </span>
+                  </span>
                 </Typography>
-              </Grid>
-              <Grid
-                item
-                className={`py0 ${classes.subHeaderOuter}`}
-                xs={12}
-                md={4}
-              >
-                <span className={classes.textWrap}>
-                  <Typography variant="h2">
-                    Volumes:&#160;
-                    {linodeVolumesError ? (
-                      getErrorStringOrDefault(linodeVolumesError)
-                    ) : (
-                      <Link to={`/linodes/${linode.id}/volumes`}>
-                        {linodeVolumes.length}
-                      </Link>
-                    )}
-                    ,&#160;
-                  </Typography>
-                </span>
-                <span className={classes.textWrap}>
-                  <Typography variant="h2">
-                    Region: {formatRegion(linode.region)}
-                  </Typography>
-                </span>
               </Grid>
             </Grid>
 
