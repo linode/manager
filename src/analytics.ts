@@ -36,8 +36,12 @@ const initGTM = (w: any, d: any, s: any, l: any, i: any) => {
  * @param gaId Your Google Analytics Tracking ID
  * @param production current environment of the app
  */
-export const initAnalytics = (gaId?: string, production: boolean = false) => {
-  if (!gaId) {
+export const initAnalytics = (
+  production: boolean,
+  ...gaIDs: (string | undefined)[]
+) => {
+  /** if no GA IDs exist */
+  if (gaIDs.every(eachID => !eachID)) {
     return;
   }
 
@@ -47,7 +51,13 @@ export const initAnalytics = (gaId?: string, production: boolean = false) => {
 
   gaInit(window, document, 'script', url, 'ga', {}, {});
 
-  (window as any).ga('create', gaId, 'auto');
+  gaIDs.forEach(eachID => {
+    if (!eachID) {
+      return;
+    }
+    (window as any).ga('create', eachID, 'auto');
+  });
+
   (window as any).ga('send', 'pageview');
 };
 
