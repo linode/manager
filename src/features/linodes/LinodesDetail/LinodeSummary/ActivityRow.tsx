@@ -9,7 +9,10 @@ import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import eventMessageGenerator from 'src/eventMessageGenerator';
-import { onUnfound } from 'src/features/Events/EventRow';
+import {
+  maybeRemoveTrailingPeriod,
+  onUnfound
+} from 'src/features/Events/EventRow';
 
 type ClassNames = 'root';
 
@@ -48,7 +51,11 @@ export const ActivityRow: React.StatelessComponent<CombinedProps> = props => {
       data-qa-activity-row
     >
       <Grid item>
-        <Typography>{message}</Typography>
+        <Typography>
+          {event.username
+            ? `${maybeRemoveTrailingPeriod(message)} by ${event.username}.`
+            : message}
+        </Typography>
       </Grid>
       <Grid item>
         <DateTimeDisplay value={event.created} humanizeCutoff={'month'} />
