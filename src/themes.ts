@@ -291,7 +291,7 @@ export const dark = () =>
       },
       MuiExpansionPanelSummary: {
         root: {
-          '& $focused': {
+          '&$focused': {
             backgroundColor: '#111111'
           },
           backgroundColor: '#32363c',

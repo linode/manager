@@ -185,7 +185,11 @@ class LinodeTextField extends React.Component<CombinedProps> {
           {...dataAttrs}
           fullWidth
           /* let us explicitly pass an empty string to the input */
-          value={typeof value === 'string' ? value : this.state.value}
+          value={
+            typeof value === 'string'
+              ? value
+              : this.state.value || this.props.value
+          }
           onChange={this.handleChange}
           InputLabelProps={{
             ...InputLabelProps,
