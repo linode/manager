@@ -39,8 +39,6 @@ export const setStorage = (key: string, value: string) => {
   return window.localStorage.setItem(key, value);
 };
 
-const THEME = 'themeChoice';
-const SPACING = 'spacingChoice';
 const PAGE_SIZE = 'PAGE_SIZE';
 const BETA_NOTIFICATION = 'BetaNotification';
 const VAT_NOTIFICATION = 'vatNotification';
@@ -57,8 +55,6 @@ const NONCE = 'authentication/nonce';
 const SCOPES = 'authentication/scopes';
 const EXPIRE = 'authentication/expire';
 
-type Theme = 'dark' | 'light';
-export type Spacing = 'compact' | 'normal';
 export type PageSize = number;
 type Beta = 'open' | 'closed';
 type Notification = 'show' | 'hide';
@@ -80,14 +76,6 @@ export interface Storage {
     nonce: AuthGetAndSet;
     scopes: AuthGetAndSet;
     expire: AuthGetAndSet;
-  };
-  theme: {
-    get: () => Theme;
-    set: (theme: Theme) => void;
-  };
-  spacing: {
-    get: () => Spacing;
-    set: (spacing: Spacing) => void;
   };
   pageSize: {
     get: () => PageSize;
@@ -159,14 +147,6 @@ export const storage: Storage = {
       set: v => setStorage(EXPIRE, v)
     }
   },
-  theme: {
-    get: () => getStorage(THEME, 'light'),
-    set: v => setStorage(THEME, v)
-  },
-  spacing: {
-    get: () => getStorage(SPACING, 'normal'),
-    set: v => setStorage(SPACING, v)
-  },
   pageSize: {
     get: () => {
       return parseInt(getStorage(PAGE_SIZE, '25'), 10);
@@ -230,4 +210,4 @@ export const storage: Storage = {
   }
 };
 
-export const { theme, notifications, views, authentication, spacing } = storage;
+export const { notifications, views, authentication } = storage;

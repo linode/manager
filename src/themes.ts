@@ -1,11 +1,12 @@
 import createBreakpoints from 'src/components/core/styles/createBreakpoints';
-import createTheme from './themeFactory';
+import createTheme, { ThemeOverrides } from './themeFactory';
 
 const breakpoints = createBreakpoints({});
 
-export const light = () =>
+export const light = (options: ThemeOverrides) =>
   createTheme({
-    name: 'lightTheme'
+    name: 'lightTheme',
+    ...options
   });
 
 const primaryColors = {
@@ -36,7 +37,7 @@ const iconCircleAnimation = {
   }
 };
 
-export const dark = () =>
+export const dark = (options: ThemeOverrides) =>
   createTheme({
     name: 'darkTheme',
     breakpoints,
@@ -617,5 +618,6 @@ export const dark = () =>
           }
         }
       }
-    }
+    },
+    ...options
   });

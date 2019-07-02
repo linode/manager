@@ -20,8 +20,7 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { LISH } from 'src/documentation';
-import { updateProfile } from 'src/services/profile';
-import { handleUpdate } from 'src/store/profile/profile.actions';
+import { updateProfile as handleUpdateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -84,7 +83,7 @@ interface State {
   submitting: boolean;
   errors?: Linode.ApiFieldError[];
   success?: string;
-  lishAuthMethod?: string;
+  lishAuthMethod: Pick<Linode.Profile, 'lish_auth_method'>;
   authorizedKeys: string[];
   authorizedKeysCount: number;
 }
@@ -94,7 +93,7 @@ type CombinedProps = StateProps & DispatchProps & WithStyles<ClassNames>;
 class LishSettings extends React.Component<CombinedProps, State> {
   state: State = {
     submitting: false,
-    lishAuthMethod: this.props.lishAuthMethod || 'password_keys',
+    lishAuthMethod: this.props.lishAuthMethod || ('password_keys' as any),
     authorizedKeys: this.props.authorizedKeys || [],
     authorizedKeysCount: this.props.authorizedKeys
       ? this.props.authorizedKeys.length
@@ -137,7 +136,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
     ];
 
     const defaultMode = modeOptions.find(eachMode => {
-      return eachMode.value === lishAuthMethod;
+      return (eachMode.value as any) === lishAuthMethod;
     });
 
     return (
@@ -167,7 +166,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
                   name="mode-select"
                   id="mode-select"
                   defaultValue={defaultMode}
-                  onChange={this.onListAuthMethodChange}
+                  onChange={this.onListAuthMethodChange as any}
                   label="Authentication Mode"
                   isClearable={false}
                   errorText={authMethodError}
@@ -224,27 +223,24 @@ class LishSettings extends React.Component<CombinedProps, State> {
 
   onSubmit = () => {
     const { authorizedKeys, lishAuthMethod } = this.state;
-    const { actions } = this.props;
+    const { updateProfile } = this.props;
     const keys = authorizedKeys.filter(v => v !== '');
 
     this.setState({ errors: undefined, submitting: true });
 
     updateProfile({
-      lish_auth_method: lishAuthMethod,
+      lish_auth_method: lishAuthMethod as any,
       authorized_keys: keys
     })
       .then(profileData => {
-        this.setState(
-          {
-            submitting: false,
-            success: 'LISH authentication settings have been updated.',
-            authorizedKeys: profileData.authorized_keys || [],
-            authorizedKeysCount: profileData.authorized_keys
-              ? profileData.authorized_keys.length
-              : 1
-          },
-          () => actions.updateProfile(profileData)
-        );
+        this.setState({
+          submitting: false,
+          success: 'LISH authentication settings have been updated.',
+          authorizedKeys: profileData.authorized_keys || [],
+          authorizedKeysCount: profileData.authorized_keys
+            ? profileData.authorized_keys.length
+            : 1
+        });
       })
       .catch(error => {
         this.setState(
@@ -260,8 +256,9 @@ class LishSettings extends React.Component<CombinedProps, State> {
       });
   };
 
-  onListAuthMethodChange = (e: Item<string>) =>
-    this.setState({ lishAuthMethod: e.value });
+  onListAuthMethodChange = (
+    e: Item<Pick<Linode.Profile, 'lish_auth_method'>>
+  ) => this.setState({ lishAuthMethod: e.value });
 
   onPublicKeyChange = (idx: number) => (
     e: React.ChangeEvent<HTMLInputElement>
@@ -280,7 +277,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles);
 
 interface StateProps {
-  lishAuthMethod?: string;
+  lishAuthMethod?: Pick<Linode.Profile, 'lish_auth_method'>;
   authorizedKeys?: string[];
   loading: boolean;
 }
@@ -295,15 +292,11 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
 };
 
 interface DispatchProps {
-  actions: {
-    updateProfile: (v: Linode.Profile) => void;
-  };
+  updateProfile: (v: Partial<Linode.Profile>) => Promise<Linode.Profile>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-  actions: {
-    updateProfile: (v: Linode.Profile) => dispatch(handleUpdate(v))
-  }
+  updateProfile: (v: Linode.Profile) => dispatch(handleUpdateProfile(v) as any)
 });
 
 const connected = connect(

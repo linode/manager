@@ -12,9 +12,7 @@ describe('Authentication settings profile tab', () => {
       ipWhitelisting={true}
       twoFactor={true}
       username={'username'}
-      actions={{
-        updateProfile: update
-      }}
+      updateProfile={update}
       classes={{
         root: '',
         title: ''
