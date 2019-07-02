@@ -13,11 +13,10 @@ import NodeBalancerCreationErrors, {
 import SummaryPanel from './SummaryPanel';
 import TablesPanel from './TablesPanel';
 
-type ClassNames = 'root' | 'main' | 'sidebar';
+type ClassNames = 'main' | 'sidebar';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
     main: {
       [theme.breakpoints.up('md')]: {
         order: 1

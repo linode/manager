@@ -104,7 +104,7 @@ const generateDefaultDomainRecords = (
   const cleanedIPv6 =
     ipv6 && ipv6.includes('/') ? ipv6.substr(0, ipv6.indexOf('/')) : ipv6;
 
-  return Promise.all([
+  const baseIPv4Requests = [
     createDomainRecord(domainID, {
       type: 'A',
       target: ipv4
@@ -118,27 +118,36 @@ const generateDefaultDomainRecords = (
       type: 'A',
       target: ipv4,
       name: 'mail'
-    }),
-    createDomainRecord(domainID, {
-      type: 'AAAA',
-      target: cleanedIPv6
-    }),
-    createDomainRecord(domainID, {
-      type: 'AAAA',
-      target: cleanedIPv6,
-      name: 'www'
-    }),
-    createDomainRecord(domainID, {
-      type: 'AAAA',
-      target: cleanedIPv6,
-      name: 'mail'
-    }),
-    createDomainRecord(domainID, {
-      type: 'MX',
-      priority: 10,
-      target: `mail.${domain}`
     })
-  ]);
+  ];
+
+  return Promise.all(
+    /** ipv6 can be null so don't try to create domain records in that case */
+    !!cleanedIPv6
+      ? [
+          ...baseIPv4Requests,
+          createDomainRecord(domainID, {
+            type: 'AAAA',
+            target: cleanedIPv6
+          }),
+          createDomainRecord(domainID, {
+            type: 'AAAA',
+            target: cleanedIPv6,
+            name: 'www'
+          }),
+          createDomainRecord(domainID, {
+            type: 'AAAA',
+            target: cleanedIPv6,
+            name: 'mail'
+          }),
+          createDomainRecord(domainID, {
+            type: 'MX',
+            priority: 10,
+            target: `mail.${domain}`
+          })
+        ]
+      : baseIPv4Requests
+  );
 };
 
 const masterIPsLens = lensPath(['master_ips']);
@@ -407,8 +416,12 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               />
               {!errorMap.defaultLinode && (
                 <FormHelperText>
-                  We'll automatically create domain records for both the first
-                  IPv4 and IPv6 on this Linode.
+                  {this.state.selectedDefaultLinode &&
+                  !this.state.selectedDefaultLinode.ipv6
+                    ? `We'll automatically create domains for the first IPv4 address on this
+                    Linode.`
+                    : `We'll automatically create domain records for both the first
+                    IPv4 and IPv6 addresses on this Linode.`}
                 </FormHelperText>
               )}
             </React.Fragment>
@@ -427,8 +440,12 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               />
               {!errorMap.defaultNodeBalancer && (
                 <FormHelperText>
-                  We'll automatically create domain records for both the first
-                  IPv4 and IPv6 on this NodeBalancer.
+                  {this.state.selectedDefaultNodeBalancer &&
+                  !this.state.selectedDefaultNodeBalancer.ipv6
+                    ? `We'll automatically create domains for the first IPv4 address on this
+                  NodeBalancer.`
+                    : `We'll automatically create domain records for both the first
+                  IPv4 and IPv6 addresses on this NodeBalancer.`}
                 </FormHelperText>
               )}
             </React.Fragment>
@@ -458,7 +475,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
   };
 
   redirect = (id: number | '', state?: Record<string, string>) => {
-    const returnPath = !!id ? `/domains/${id}/records` : '/domains';
+    const returnPath = !!id ? `/domains/${id}` : '/domains';
     this.props.history.push(returnPath, state);
   };
 

@@ -63,8 +63,8 @@ describe('Create Linode from Image - With Tags Suite', () => {
     });
 
     it('should successfully remove the tag', () => {
-        /** 
-         * remove the available tag name from context 
+        /**
+         * remove the available tag name from context
          * because it's possbile this available tag might keep us
          * from deploying a Linode successfully
          */
@@ -86,8 +86,8 @@ describe('Create Linode from Image - With Tags Suite', () => {
 
     describe('List Linodes - Tags Suite', () => {
         it('should display the linode with tags on the grid view', () => {
-            /** 
-             * we should now be on the Linodes detail screen 
+            /**
+             * we should now be on the Linodes detail screen
              * so we need to navigate to the landing page
              */
             browser.url(constants.routes.linodes)
@@ -97,13 +97,6 @@ describe('Create Linode from Image - With Tags Suite', () => {
             ListLinodes.gridToggle.click();
             ListLinodes.rebootButton.waitForVisible(constants.wait.normal);
 
-            assertTagsDisplay(addedTags);
-        });
-
-        it('should display the linode with tags on list view', () => {
-            ListLinodes.listToggle.click();
-            ListLinodes.rebootButton.waitForVisible(constants.wait.normal, true);
-            ListLinodes.hoverLinodeTags(linodeName);
             assertTagsDisplay(addedTags);
         });
     });

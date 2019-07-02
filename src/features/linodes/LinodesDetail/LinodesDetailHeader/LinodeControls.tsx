@@ -1,5 +1,6 @@
 import { last } from 'ramda';
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
@@ -24,18 +25,23 @@ import withEditableLabelState, {
   EditableLabelProps
 } from './editableLabelState';
 
-type ClassNames = 'titleWrapper' | 'controls' | 'launchButton';
+type ClassNames = 'breadCrumbs' | 'controls' | 'launchButton';
 
 const styles = (theme: Theme) =>
   createStyles({
-    titleWrapper: {
-      display: 'flex',
-      alignItems: 'center'
+    breadCrumbs: {
+      position: 'relative',
+      top: -2,
+      [theme.breakpoints.down('sm')]: {
+        top: 10
+      }
     },
     controls: {
+      position: 'relative',
       marginTop: 9 - theme.spacing(1) / 2, // 4
       [theme.breakpoints.down('sm')]: {
         margin: 0,
+        left: -8,
         display: 'flex',
         flexBasis: '100%'
       }
@@ -55,6 +61,7 @@ const styles = (theme: Theme) =>
 type CombinedProps = LinodeDetailContext &
   ConfigDrawerProps &
   EditableLabelProps &
+  RouteComponentProps<{}> &
   WithStyles<ClassNames>;
 
 const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
@@ -62,7 +69,6 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
     classes,
     linode,
     updateLinode,
-
     configDrawerAction,
     configDrawerError,
     configDrawerOpen,
@@ -70,7 +76,6 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
     closeConfigDrawer,
     openConfigDrawer,
     configDrawerSelectConfig,
-
     editableLabelError,
     resetEditableLabel,
     setEditableLabelError
@@ -110,16 +115,22 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
   };
 
   return (
-    <Grid container justify="space-between" data-qa-linode={linode.label}>
-      <Grid item className={classes.titleWrapper}>
+    <Grid
+      container
+      justify="space-between"
+      alignItems="flex-end"
+      data-qa-linode={linode.label}
+    >
+      <Grid item>
         <Breadcrumb
-          linkTo="/linodes"
-          linkText="Linodes"
-          labelTitle={linode.label}
+          pathname={props.location.pathname}
+          removeCrumbX={2}
           labelOptions={{ linkTo: getLabelLink() }}
+          className={classes.breadCrumbs}
           onEditHandlers={
             !disabled
               ? {
+                  editableTextTitle: linode.label,
                   onEdit: handleSubmitLabelChange,
                   onCancel: resetEditableLabel,
                   errorText: editableLabelError
@@ -167,6 +178,7 @@ const styled = withStyles(styles);
 const enhanced = compose<CombinedProps, {}>(
   withConfigDrawerState,
   withEditableLabelState,
+  withRouter,
   withLinodeDetailContext(({ linode, updateLinode }) => ({
     linode,
     updateLinode,

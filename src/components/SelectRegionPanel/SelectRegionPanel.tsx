@@ -157,6 +157,7 @@ class SelectRegionPanel extends React.Component<
         copy={this.props.copy}
         tabs={this.createTabs()}
         initTab={initialTab}
+        key={initialTab}
       />
     );
   }

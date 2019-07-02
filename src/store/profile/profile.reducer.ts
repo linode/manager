@@ -1,9 +1,10 @@
+import { pathOr } from 'ramda';
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
-import { RequestableData } from '../types';
-import { getProfileActions, handleUpdate } from './profile.actions';
+import { EntityError, RequestableData } from '../types';
+import { getProfileActions, handleUpdateProfile } from './profile.actions';
 
-export type State = RequestableData<Linode.Profile>;
+export type State = RequestableData<Linode.Profile, EntityError>;
 
 interface Action<T> {
   type: string;
@@ -24,25 +25,75 @@ const reducer: Reducer<State> = (
 ) => {
   if (isType(action, getProfileActions.started)) {
     const {} = action.payload;
-    return { ...state, loading: true };
+
+    /** only set loading if we don't have any data */
+    const loading = state.data ? false : true;
+
+    return { ...state, loading };
   }
 
   if (isType(action, getProfileActions.done)) {
     const { result } = action.payload;
-    return { ...state, loading: false, lastUpdated: Date.now(), data: result };
+    return {
+      ...state,
+      error: undefined,
+      loading: false,
+      lastUpdated: Date.now(),
+      data: result
+    };
   }
 
   if (isType(action, getProfileActions.failed)) {
     const { error } = action.payload;
-    return { ...state, loading: false, lastUpdated: Date.now(), error };
-  }
-
-  if (isType(action, handleUpdate)) {
     return {
       ...state,
       loading: false,
       lastUpdated: Date.now(),
-      data: action.payload
+      error: {
+        read: error
+      }
+    };
+  }
+
+  if (isType(action, handleUpdateProfile.started)) {
+    return {
+      ...state,
+      loading: true
+      // error: undefined
+    };
+  }
+
+  if (isType(action, handleUpdateProfile.done)) {
+    return {
+      ...state,
+      loading: false,
+      lastUpdated: Date.now(),
+      error: undefined,
+      data: {
+        /**
+         * update what changed
+         * but ensure our _preferences_ key exists
+         */
+        preferences: pathOr({}, ['preferences'], state.data),
+        /**
+         * we can assume state.data is defined because
+         * you can't update data without getting it first
+         */
+        ...state.data!,
+        ...action.payload.result
+      }
+    };
+  }
+
+  if (isType(action, handleUpdateProfile.failed)) {
+    return {
+      ...state,
+      loading: false,
+      data: undefined,
+      lastUpdated: Date.now(),
+      error: {
+        update: action.payload.error
+      }
     };
   }
 
