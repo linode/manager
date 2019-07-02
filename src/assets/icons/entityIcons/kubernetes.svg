@@ -6,13 +6,13 @@
     <g id="LKE_dropdown" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
         <g id="linode">
             <g id="Oval-2">
-                <g id="path-1-link" fill="currentColor">
+                <g id="path-1-link">
                     <circle id="path-1" cx="24" cy="24" r="24"></circle>
                 </g>
-                <circle id="Oval" stroke="currentColor" stroke-width="2" cx="24" cy="24" r="23"></circle>
+                <circle id="Oval" stroke="currentColor" stroke-width="2" cx="24" cy="24" r="23" class="outerCircle"></circle>
             </g>
         </g>
-        <g id="LKE_icon" transform="translate(12.000000, 12.000000)" stroke="#939598" stroke-linecap="round" stroke-linejoin="round">
+        <g id="LKE_icon" transform="translate(12.000000, 12.000000)" stroke="#939598" stroke-linecap="round" stroke-linejoin="round" class="insidePath">
             <polygon id="Path" stroke-width="0.875" points="12.5 2.42553191 8.29081633 0 4.08163265 2.42553191 4.08163265 2.42553191 8.29081633 4.85106383 8.29081633 4.85106383"></polygon>
             <polygon id="Path" stroke-width="0.875" points="12.5 2.4 8.41836735 4.78222318 8.41836735 9.54893617 12.5 7.16444636"></polygon>
             <polygon id="Path" stroke-width="0.875" points="4.09 2.4 4.09 7.16444636 8.17163265 9.54893617 8.17163265 4.78222318"></polygon>
