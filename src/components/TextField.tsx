@@ -149,7 +149,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
         target: e.target.cloneNode()
       } as React.ChangeEvent<HTMLInputElement>;
 
-      clonedEvent.target.value = cleanedValue as any;
+      clonedEvent.target.value = `${cleanedValue}`;
       onChange(clonedEvent);
     }
   };
