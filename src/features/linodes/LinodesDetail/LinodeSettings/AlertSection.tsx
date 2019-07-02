@@ -118,7 +118,7 @@ class AlertSection extends React.Component<CombinedProps> {
             <TextField
               label={this.props.textTitle}
               type="number"
-              defaultValue={this.props.value}
+              value={this.props.value}
               disabled={!this.props.state || readOnly}
               InputProps={{
                 endAdornment: (
