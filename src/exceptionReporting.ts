@@ -2,8 +2,8 @@ import {
   BrowserOptions,
   captureException,
   configureScope,
-  init,
-  SentryEvent
+  Event as SentryEvent,
+  init
 } from '@sentry/browser';
 import { lensPath, over, pathOr } from 'ramda';
 import { SENTRY_URL } from 'src/constants';
