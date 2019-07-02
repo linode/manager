@@ -80,6 +80,7 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
       /** purely for unit test purposes */
       value={props.theme}
       initialSetCallbackFn={setThemePrefsOnAppLoad}
+      localStorageKey="themeChoice"
     >
       {({
         preference: themeChoice,
@@ -92,6 +93,7 @@ const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
           /** purely for unit test purposes */
           value={props.spacing}
           initialSetCallbackFn={setThemePrefsOnAppLoad}
+          localStorageKey="spacingChoice"
         >
           {({
             preference: spacingChoice,
