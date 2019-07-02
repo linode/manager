@@ -90,7 +90,12 @@ interface State {
 
 class LinodeTextField extends React.Component<CombinedProps> {
   state: State = {
-    value: ''
+    /** initialize the state with our passed value if we have one */
+    value:
+      typeof this.props.value === 'string' ||
+      typeof this.props.value === 'number'
+        ? this.props.value
+        : ''
   };
   shouldComponentUpdate(nextProps: CombinedProps, nextState: State) {
     return (
@@ -134,9 +139,18 @@ class LinodeTextField extends React.Component<CombinedProps> {
       value: cleanedValue
     });
 
-    /** invoke the onChange prop if one is provided */
+    /**
+     * invoke the onChange prop if one is provided with the cleaned value.
+     */
     if (onChange) {
-      onChange(e);
+      /** create clone of event node */
+      const clonedEvent = {
+        ...e,
+        target: e.target.cloneNode()
+      } as React.ChangeEvent<HTMLInputElement>;
+
+      clonedEvent.target.value = `${cleanedValue}`;
+      onChange(clonedEvent);
     }
   };
 
@@ -184,8 +198,12 @@ class LinodeTextField extends React.Component<CombinedProps> {
           {...textFieldProps}
           {...dataAttrs}
           fullWidth
-          /* let us explicitly pass an empty string to the input */
-          value={typeof value === 'string' ? value : this.state.value}
+          /*
+            let us explicitly pass an empty string to the input
+
+            see UserDefinedFieldsPanel.tsx for a verbose explanation why.
+          */
+          value={value}
           onChange={this.handleChange}
           InputLabelProps={{
             ...InputLabelProps,
