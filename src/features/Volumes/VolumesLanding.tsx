@@ -6,6 +6,7 @@ import { compose } from 'recompose';
 import { bindActionCreators } from 'redux';
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import AddNewLink from 'src/components/AddNewLink';
+import Breadcrumb from 'src/components/Breadcrumb';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import {
   createStyles,
@@ -75,7 +76,7 @@ const styles = (theme: Theme) =>
       flex: 1
     },
     title: {
-      marginBottom: theme.spacing(1) + theme.spacing(1) / 2
+      marginBottom: theme.spacing(1)
     },
     // styles for /volumes table
     volumesWrapper: {},
@@ -325,9 +326,11 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           style={{ paddingBottom: 0 }}
         >
           <Grid item className={classes.titleWrapper}>
-            <Typography variant="h1" className={classes.title} data-qa-title>
-              Volumes
-            </Typography>
+            <Breadcrumb
+              pathname={this.props.location.pathname}
+              labelTitle="Volumes"
+              className={classes.title}
+            />
           </Grid>
           <Grid item className="p0">
             <FormControlLabel

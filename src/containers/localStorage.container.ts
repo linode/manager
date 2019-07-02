@@ -7,13 +7,11 @@ const localStorageContainer = <TState, TUpdaters, TOuter>(
     s: Storage
   ) => StateUpdaters<TOuter, TState, StateHandlerMap<TState> & TUpdaters>
 ) => {
-  const state = mapState(storage);
   const handlers = mapHandlers(storage);
-  return withStateHandlers<
-    TState,
-    StateHandlerMap<TState> & TUpdaters,
-    TOuter
-  >(state, handlers);
+  return withStateHandlers<TState, StateHandlerMap<TState> & TUpdaters, TOuter>(
+    () => mapState(storage),
+    handlers
+  );
 };
 
 export default localStorageContainer;

@@ -23,7 +23,8 @@ import LandingLoading from 'src/components/LandingLoading';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
 import VATBanner from 'src/components/VATBanner';
-import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
+/** @todo: Uncomment when we deploy with LD */
+// import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
@@ -408,7 +409,13 @@ export class App extends React.Component<CombinedProps, State> {
                       <Grid item className={classes.switchWrapper}>
                         <Switch>
                           <Route path="/linodes" component={LinodesRoutes} />
-                          <Route path="/volumes" component={Volumes} />
+                          <Route
+                            path="/volumes"
+                            component={Volumes}
+                            exact
+                            strict
+                          />
+                          <Redirect path="/volumes*" to="/volumes" />
                           <Route
                             path="/nodebalancers"
                             component={NodeBalancers}
@@ -416,7 +423,13 @@ export class App extends React.Component<CombinedProps, State> {
                           <Route path="/domains" component={Domains} />
                           <Route exact path="/managed" component={Managed} />
                           <Route exact path="/longview" component={Longview} />
-                          <Route exact path="/images" component={Images} />
+                          <Route
+                            exact
+                            strict
+                            path="/images"
+                            component={Images}
+                          />
+                          <Redirect path="/images*" to="/images" />
                           <Route
                             path="/stackscripts"
                             component={StackScripts}
@@ -432,6 +445,7 @@ export class App extends React.Component<CombinedProps, State> {
                           <Route path="/account" component={Account} />
                           <Route
                             exact
+                            strict
                             path="/support/tickets"
                             component={SupportTickets}
                           />
@@ -439,11 +453,13 @@ export class App extends React.Component<CombinedProps, State> {
                             path="/support/tickets/:ticketId"
                             component={SupportTicketDetail}
                             exact
+                            strict
                           />
                           <Route path="/profile" component={Profile} />
                           <Route exact path="/support" component={Help} />
                           <Route
                             exact
+                            strict
                             path="/support/search/"
                             component={SupportSearchLanding}
                           />
@@ -620,8 +636,9 @@ export default compose(
   styled,
   withDocumentTitleProvider,
   withSnackbar,
-  withNodeBalancerActions,
-  withFeatureFlagProvider
+  withNodeBalancerActions
+  /** @todo: Uncomment when we deploy with LD */
+  // withFeatureFlagProvider
 )(App);
 
 export const hasOauthError = (

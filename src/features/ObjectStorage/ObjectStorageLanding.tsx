@@ -2,6 +2,7 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import {
   matchPath,
+  Redirect,
   Route,
   RouteComponentProps,
   Switch,
@@ -10,11 +11,12 @@ import {
 import { compose } from 'recompose';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
 import Box from 'src/components/core/Box';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
-import Typography from 'src/components/core/Typography';
+import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import TabLink from 'src/components/TabLink';
@@ -23,7 +25,6 @@ import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestClusters as _requestClusters } from 'src/store/clusters/clusters.actions';
 import { MapState } from 'src/store/types';
 
-import DefaultLoader from 'src/components/DefaultLoader';
 const BucketLanding = DefaultLoader({
   loader: () => import('./Buckets/BucketLanding')
 });
@@ -90,7 +91,11 @@ export const ObjectStorageLanding: React.FunctionComponent<
     <React.Fragment>
       <DocumentTitleSegment segment="Object Storage" />
       <Box display="flex" flexDirection="row" justifyContent="space-between">
-        <Typography variant="h1">Object Storage</Typography>
+        <Breadcrumb
+          pathname={props.location.pathname}
+          labelTitle="Object Storage"
+          removeCrumbX={1}
+        />
         <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/" />
       </Box>
       <AppBar position="static" color="default">
@@ -119,9 +124,14 @@ export const ObjectStorageLanding: React.FunctionComponent<
         </Tabs>
       </AppBar>
       <Switch>
-        <Route exact path={`${url}/buckets`} component={BucketLanding} />
-        <Route exact path={`${url}/access-keys`} component={AccessKeyLanding} />
-        <Route exact path={`${url}`} component={BucketLanding} />
+        <Route exact strict path={`${url}/buckets`} component={BucketLanding} />
+        <Route
+          exact
+          strict
+          path={`${url}/access-keys`}
+          component={AccessKeyLanding}
+        />
+        <Redirect to={`${url}/buckets`} />
       </Switch>
     </React.Fragment>
   );
