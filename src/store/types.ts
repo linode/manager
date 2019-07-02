@@ -62,11 +62,11 @@ export interface EntityState<
   error?: E;
 }
 
-export interface RequestableData<D> {
+export interface RequestableData<D, E = Linode.ApiFieldError[]> {
   lastUpdated: number;
   loading: boolean;
   data?: D;
-  error?: Linode.ApiFieldError[];
+  error?: E;
 }
 
 // Rename to RequestableData and delete above when all components are using this pattern
