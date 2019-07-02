@@ -18,7 +18,7 @@ import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
 import ToggleState from 'src/components/ToggleState';
 import { getTFAToken } from 'src/services/profile';
-import { handleUpdate } from 'src/store/profile/profile.actions';
+import { requestProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
@@ -72,7 +72,7 @@ interface Props {
   clearState: () => void;
   twoFactor?: boolean;
   username?: string;
-  updateProfile: (profile: Partial<Linode.Profile>) => void;
+  updateProfile: (profile: Partial<Linode.Profile>) => Promise<Linode.Profile>;
 }
 
 interface ConfirmDisable {
@@ -147,11 +147,17 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
     });
   };
 
-  confirmToken = (scratchCode: string) => {
-    this.props.actions.updateProfile({
-      ...this.props.profile,
-      two_factor_auth: true
-    });
+  /**
+   * success when TFA is enabled
+   */
+  handleEnableSuccess = (scratchCode: string) => {
+    /**
+     * have redux re-request profile
+     *
+     * we need to do this because we just got a 200 from /profile/tfa
+     * so we need to update the Redux profile state
+     */
+    this.props.refreshProfile();
     this.setState({
       success: 'Two-factor authentication has been enabled.',
       showQRCode: false,
@@ -161,11 +167,17 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
     });
   };
 
-  disableTFASuccess = () => {
-    this.props.actions.updateProfile({
-      ...this.props.profile,
-      two_factor_auth: false
-    });
+  /**
+   * success when TFA is disabled
+   */
+  handleDisableSuccess = () => {
+    /**
+     * have redux re-request profile
+     *
+     * we need to do this because we just got a 200 from /profile/tfa
+     * so we need to update the Redux profile state
+     */
+    this.props.refreshProfile();
     this.setState({
       success: 'Two-factor authentication has been disabled.',
       twoFactorEnabled: false,
@@ -313,7 +325,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
                         secret={secret}
                         username={username}
                         loading={loading}
-                        onSuccess={this.confirmToken}
+                        onSuccess={this.handleEnableSuccess}
                         twoFactorConfirmed={twoFactorConfirmed}
                         toggleDialog={toggleScratchDialog}
                       />
@@ -325,7 +337,7 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
                   scratchCode={this.state.scratchCode}
                 />
                 <DisableTwoFactorDialog
-                  onSuccess={this.disableTFASuccess}
+                  onSuccess={this.handleDisableSuccess}
                   open={disable2FAOpen}
                   closeDialog={toggleDisable2FA}
                 />
@@ -341,30 +353,24 @@ export class TwoFactor extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles);
 
 interface StateProps {
-  profile?: Linode.Profile;
   twoFactor?: boolean;
   username?: string;
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => ({
-  profile: path(['data'], state.__resources.profile),
   twoFactor: path(['data', 'two_factor_auth'], state.__resources.profile),
   username: path(['data', 'username'], state.__resources.profile)
 });
 
 interface DispatchProps {
-  actions: {
-    updateProfile: (v: Partial<Linode.Profile>) => void;
-  };
+  refreshProfile: () => void;
 }
 
-const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
-  dispatch,
-  ownProps
-) => ({
-  actions: {
-    updateProfile: (profile: Linode.Profile) => dispatch(handleUpdate(profile))
-  }
+const mapDispatchToProps: MapDispatchToProps<
+  DispatchProps,
+  Props
+> = dispatch => ({
+  refreshProfile: () => dispatch(requestProfile() as any)
 });
 
 const connected = connect(

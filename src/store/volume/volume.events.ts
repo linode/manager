@@ -10,6 +10,7 @@ const volumeEventsHandler: EventHandler = (event, dispatch) => {
   switch (action) {
     case 'volume_create':
     case 'volume_attach':
+    case 'volume_update':
     case 'volume_detach':
     case 'volume_resize':
       return handleVolumeUpdate(dispatch, status, id);

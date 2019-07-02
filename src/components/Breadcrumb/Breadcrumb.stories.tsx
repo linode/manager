@@ -7,6 +7,9 @@ import Breadcrumb from './Breadcrumb';
 interface Props {
   labelLink?: string;
 }
+
+const customCrumbs = '/linodes/9872893679817/test/lastcrumb' as any;
+
 class InteractiveEditableBreadcrumb extends React.Component<Props, {}> {
   state = {
     linkTo: '/linodes',
@@ -27,13 +30,12 @@ class InteractiveEditableBreadcrumb extends React.Component<Props, {}> {
     return (
       <React.Fragment>
         <Breadcrumb
-          linkTo={this.state.linkTo}
-          linkText={this.state.linkText}
-          labelTitle={this.state.text}
+          pathname={customCrumbs}
           labelOptions={{
             linkTo: this.props.labelLink
           }}
           onEditHandlers={{
+            editableTextTitle: this.state.text,
             onEdit: this.onEdit,
             onCancel: this.onCancel
           }}
@@ -44,38 +46,26 @@ class InteractiveEditableBreadcrumb extends React.Component<Props, {}> {
 }
 
 storiesOf('Breadcrumb', module)
-  .add('Static text', () => (
+  .add('Basic Breadcrumb', () => (
     <StaticRouter location="/" context={{}}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <Breadcrumb
-          linkTo={'/linodes'}
-          linkText={'Linodes'}
-          labelTitle={'Static text'}
-        />
+      <div style={{ padding: 24 }}>
+        <Breadcrumb pathname={customCrumbs} />
       </div>
     </StaticRouter>
   ))
-  .add('Static text with label link', () => (
+  .add('Breadcrumb with custom label', () => (
     <StaticRouter location="/" context={{}}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <Breadcrumb
-          linkTo="/linodes"
-          linkText="Linodes"
-          labelTitle="Static text"
-          labelOptions={{
-            linkTo: '/summary'
-          }}
-        />
+      <div style={{ padding: 24 }}>
+        <Breadcrumb pathname={customCrumbs} labelTitle="Custom label" />
       </div>
     </StaticRouter>
   ))
-  .add('Static text with subtitle', () => (
+  .add('Breadcrumb with subtitle', () => (
     <StaticRouter location="/" context={{}}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{ padding: 24 }}>
         <Breadcrumb
-          linkTo="/linodes"
-          linkText="Linodes"
-          labelTitle="Static text"
+          pathname={customCrumbs}
+          labelTitle="Last crumb with subtitle"
           labelOptions={{
             subtitle: 'A label subtitle'
           }}
@@ -83,37 +73,44 @@ storiesOf('Breadcrumb', module)
       </div>
     </StaticRouter>
   ))
-  .add('Static text with link, subtitle', () => (
+  .add('Breadcrumb with a crumb removed', () => (
     <StaticRouter location="/" context={{}}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{ padding: 24 }}>
+        <Breadcrumb pathname={customCrumbs} removeCrumbX={2} />
+      </div>
+    </StaticRouter>
+  ))
+  .add('Breadcrumb with crumb override', () => (
+    <StaticRouter location="/" context={{}}>
+      <div style={{ padding: 24 }}>
         <Breadcrumb
-          linkTo="/linodes"
-          linkText="Linodes"
-          labelTitle="Static text"
-          labelOptions={{
-            linkTo: '/summary',
-            subtitle: 'A label subtitle'
-          }}
+          pathname={customCrumbs}
+          crumbOverrides={[
+            {
+              position: 2,
+              label: 'Link changed here',
+              linkTo: { pathname: `/new-location` }
+            }
+          ]}
         />
       </div>
     </StaticRouter>
   ))
-  .add('Static text with user avatar', () => (
+  .add('Breadcrumb with prefix component', () => (
     <StaticRouter location="/" context={{}}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{ padding: 24 }}>
         <Breadcrumb
-          linkTo="/linodes"
-          linkText="Linodes"
+          pathname={customCrumbs}
           labelTitle="Static text"
           labelOptions={{
             prefixComponent: (
               <UserIcon
                 style={{
-                  margin: '0 8px 0 -4px',
+                  margin: '2px 0 0 0',
                   color: '#606469',
                   borderRadius: '50%',
-                  width: '46px',
-                  height: '46px',
+                  width: 32,
+                  height: 32,
                   animation: '$fadeIn 150ms linear forwards'
                 }}
               />
@@ -123,17 +120,10 @@ storiesOf('Breadcrumb', module)
       </div>
     </StaticRouter>
   ))
-  .add('Editable text', () => (
+  .add('Breadcrumb with editable text', () => (
     <StaticRouter location="/" context={{}}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
+      <div style={{ padding: 24 }}>
         <InteractiveEditableBreadcrumb />
-      </div>
-    </StaticRouter>
-  ))
-  .add('Editable text with label link', () => (
-    <StaticRouter location="/" context={{}}>
-      <div style={{ display: 'flex', alignItems: 'center' }}>
-        <InteractiveEditableBreadcrumb labelLink="/summary" />
       </div>
     </StaticRouter>
   ));

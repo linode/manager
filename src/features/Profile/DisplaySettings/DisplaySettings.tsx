@@ -1,4 +1,4 @@
-import { compose, path, pathOr } from 'ramda';
+import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose as recompose } from 'recompose';
@@ -11,12 +11,10 @@ import {
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import { AccountsAndPasswords } from 'src/documentation';
-import { handleUpdate } from 'src/store/profile/profile.actions';
+import { updateProfile as handleUpdateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
 import EmailChangeForm from './EmailChangeForm';
 import TimezoneForm from './TimezoneForm';
-
-import { RequestableData } from 'src/store/types';
 
 type ClassNames = 'root' | 'title';
 
@@ -50,8 +48,8 @@ export class DisplaySettings extends React.Component<CombinedProps, State> {
 
   render() {
     const {
-      actions,
       email,
+      updateProfile,
       loggedInAsCustomer,
       loading,
       timezone,
@@ -70,12 +68,12 @@ export class DisplaySettings extends React.Component<CombinedProps, State> {
             <EmailChangeForm
               email={email}
               username={username}
-              updateProfile={actions.updateProfile}
+              updateProfile={updateProfile}
               data-qa-email-change
             />
             <TimezoneForm
               timezone={timezone}
-              updateProfile={actions.updateProfile}
+              updateProfile={updateProfile}
               loggedInAsCustomer={loggedInAsCustomer}
             />
           </React.Fragment>
@@ -103,7 +101,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     loading: profile.loading,
     username: path(['data', 'username'], profile),
     email: path(['data', 'email'], profile),
-    timezone: defaultTimezone(profile),
+    timezone: pathOr<string>('GMT', ['data', 'timezone'], profile),
     loggedInAsCustomer: pathOr(
       false,
       ['authentication', 'loggedInAsCustomer'],
@@ -113,21 +111,12 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
 };
 
 interface DispatchProps {
-  actions: {
-    updateProfile: (v: Linode.Profile) => void;
-  };
+  updateProfile: (v: Linode.Profile) => Promise<Linode.Profile>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-  actions: {
-    updateProfile: (v: Linode.Profile) => dispatch(handleUpdate(v))
-  }
+  updateProfile: (v: Linode.Profile) => dispatch(handleUpdateProfile(v) as any)
 });
-
-const defaultTimezone = compose(
-  tz => (tz === '' ? 'GMT' : tz),
-  pathOr('GMT', ['data', 'timezone'])
-) as (profile: RequestableData<Linode.Profile>) => string;
 
 const connected = connect(
   mapStateToProps,

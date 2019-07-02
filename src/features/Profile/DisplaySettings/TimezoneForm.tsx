@@ -13,8 +13,6 @@ import {
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
-import { updateProfile } from 'src/services/profile';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
@@ -36,15 +34,16 @@ const styles = (theme: Theme) =>
 interface Props {
   timezone: string;
   loggedInAsCustomer: boolean;
-  updateProfile: (v: Linode.Profile) => void;
+  updateProfile: (v: Partial<Linode.Profile>) => Promise<Linode.Profile>;
+  errors?: Linode.ApiFieldError[];
 }
 
 interface State {
   updatedTimezone: Item | null;
   inputValue: string;
-  errors?: Linode.ApiFieldError[];
   submitting: boolean;
   success?: string;
+  errors?: Linode.ApiFieldError[];
 }
 
 interface Timezone {
@@ -75,9 +74,9 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
   state: State = {
     updatedTimezone: null,
     inputValue: '',
-    errors: undefined,
     submitting: false,
-    success: undefined
+    success: undefined,
+    errors: this.props.errors
   };
 
   getTimezone = (timezoneValue: string) => {
@@ -91,7 +90,7 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
     if (timezone) {
       this.setState(set(lensPath(['updatedTimezone']), timezone));
     } else {
-      this.setState({ errors: undefined, success: undefined });
+      this.setState({ success: undefined });
     }
   };
 
@@ -100,22 +99,23 @@ export class TimezoneForm extends React.Component<CombinedProps, State> {
     if (!updatedTimezone) {
       return;
     }
-    this.setState({ errors: undefined, submitting: true });
+    this.setState({ submitting: true });
 
-    updateProfile({ timezone: updatedTimezone.value })
-      .then(response => {
-        this.props.updateProfile(response);
+    this.props
+      .updateProfile({ timezone: updatedTimezone.value as string })
+      .then(() => {
         this.setState({
           submitting: false,
-          success: 'Account timezone updated.'
+          success: 'Account timezone updated.',
+          errors: undefined
         });
       })
-      .catch(error => {
+      .catch(e => {
         this.setState(
           {
             submitting: false,
-            errors: getAPIErrorOrDefault(error),
-            success: undefined
+            success: undefined,
+            errors: e
           },
           () => {
             scrollErrorIntoView();

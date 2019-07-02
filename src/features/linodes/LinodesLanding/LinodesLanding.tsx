@@ -11,6 +11,7 @@ import { compose, withStateHandlers } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import ActionsPanel from 'src/components/ActionsPanel';
+import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -256,7 +257,8 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       groupByTags,
       width,
       classes,
-      backupsCTA
+      backupsCTA,
+      location
     } = this.props;
 
     const {
@@ -356,19 +358,19 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               <DocumentTitleSegment segment="Linodes" />
               <Grid
                 container
+                alignItems="center"
                 justify="space-between"
                 item
                 xs={12}
                 style={{ paddingBottom: 0 }}
               >
                 <Grid item className={classes.title}>
-                  <Typography
-                    variant="h1"
-                    className={this.props.classes.title}
+                  <Breadcrumb
+                    pathname={location.pathname}
                     data-qa-title
-                  >
-                    Linodes
-                  </Typography>
+                    labelTitle="Linodes"
+                    className={classes.title}
+                  />
                 </Grid>
                 <Hidden xsDown>
                   <FormControlLabel
@@ -560,7 +562,10 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
     linodesRequestError: path(['error', 'read'], state.__resources.linodes),
     userTimezone: pathOr('', ['data', 'timezone'], state.__resources.profile),
     userTimezoneLoading: state.__resources.profile.loading,
-    userTimezoneError: state.__resources.profile.error
+    userTimezoneError: path<Linode.ApiFieldError[]>(
+      ['read'],
+      state.__resources.profile.error
+    )
   };
 };
 
@@ -643,7 +648,6 @@ interface WithImagesProps {
 export const enhanced = compose<CombinedProps, {}>(
   withRouter,
   toggleGroupState,
-  styled,
   setDocs(ListLinodes.docs),
   withSnackbar,
   withWidth(),
@@ -653,7 +657,8 @@ export const enhanced = compose<CombinedProps, {}>(
     imagesLoading,
     imagesError
   })),
-  withBackupCta
+  withBackupCta,
+  styled
 );
 
 export default enhanced(ListLinodes);

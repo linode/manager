@@ -11,7 +11,6 @@ import {
 } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { updateProfile } from 'src/services/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -32,7 +31,8 @@ const styles = (theme: Theme) =>
 interface Props {
   username: string;
   email: string;
-  updateProfile: (v: Partial<Linode.Profile>) => void;
+  updateProfile: (v: Partial<Linode.Profile>) => Promise<Linode.Profile>;
+  errors?: Linode.ApiFieldError[];
 }
 
 interface State {
@@ -47,7 +47,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export class EmailChangeForm extends React.Component<CombinedProps, State> {
   state: State = {
     updatedEmail: this.props.email || '',
-    errors: undefined,
+    errors: this.props.errors,
     success: undefined,
     submitting: false
   };
@@ -69,12 +69,13 @@ export class EmailChangeForm extends React.Component<CombinedProps, State> {
     const { updatedEmail } = this.state;
     this.setState({ errors: undefined, submitting: true });
 
-    updateProfile({ email: updatedEmail })
-      .then(response => {
-        this.props.updateProfile(response);
+    this.props
+      .updateProfile({ email: updatedEmail })
+      .then(() => {
         this.setState({
           submitting: false,
-          success: 'Email address updated.'
+          success: 'Email address updated.',
+          errors: undefined
         });
       })
       .catch(error => {
