@@ -143,13 +143,8 @@ class LinodeTextField extends React.Component<CombinedProps> {
      * invoke the onChange prop if one is provided with the cleaned value.
      */
     if (onChange) {
-      onChange({
-        ...e,
-        target: {
-          ...e.target,
-          value: cleanedValue as any
-        }
-      });
+      e.target.value = cleanedValue as any;
+      onChange(e);
     }
   };
 
