@@ -160,8 +160,6 @@ interface LinodeContextProps {
 
 interface WithImagesProps {
   imagesData: Linode.Image[];
-  imagesLoading: boolean;
-  imagesError?: string;
 }
 
 interface State {
@@ -852,11 +850,9 @@ const enhanced = compose<CombinedProps, {}>(
   styled,
   withTypes,
   linodeContext,
-  withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
+  withImages((ownProps, imagesData) => ({
     ...ownProps,
-    imagesData,
-    imagesLoading,
-    imagesError
+    imagesData
   }))
 );
 
