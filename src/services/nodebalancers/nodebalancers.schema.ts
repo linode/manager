@@ -6,7 +6,7 @@ export const nodeBalancerConfigNodeSchema = object({
   label: string()
     .matches(
       /^[a-zA-Z0-9.\-_]+$/,
-      "Label can't contain special characters or spaces."
+      'Label may only contain letters, numbers, periods, dashes, and underscores.'
     )
     .min(3, 'Label should be between 3 and 32 characters.')
     .max(32, 'Label should be between 3 and 32 characters.')
