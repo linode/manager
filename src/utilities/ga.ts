@@ -11,7 +11,7 @@ interface AnalyticsEvent {
  * Will throw error unless analytics is initialized
  */
 export const sendEvent = (eventPayload: AnalyticsEvent) => {
-  event(eventPayload);
+  event(eventPayload, ['linodecom']);
 };
 
 // LinodeActionMenu.tsx

@@ -34,7 +34,16 @@ const Lish = DefaultLoader({
 /*
  * Initialize Analytic and Google Tag Manager
  */
-initAnalytics(isProduction, GA_ID, GA_ID_2);
+initAnalytics(
+  isProduction,
+  {
+    id: GA_ID
+  },
+  {
+    id: GA_ID_2,
+    name: 'linodecom'
+  }
+);
 initTagManager(GTM_ID);
 
 /**
