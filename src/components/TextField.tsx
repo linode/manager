@@ -143,14 +143,31 @@ class LinodeTextField extends React.Component<CombinedProps> {
      * invoke the onChange prop if one is provided with the cleaned value.
      */
     if (onChange) {
-      /** create clone of event node */
-      const clonedEvent = {
-        ...e,
-        target: e.target.cloneNode()
-      } as React.ChangeEvent<HTMLInputElement>;
+      /**
+       * create clone of event node only if our cleanedValue
+       * is different from the e.target.value
+       *
+       * This solves for a specific scenario where the e.target on
+       * the MUI TextField select variants were actually a plain object
+       * rather than a DOM node.
+       *
+       * So e.target on a text field === <input />
+       *
+       * while e.target on the select variant === { value: 10, name: undefined }
+       *
+       * See GitHub issue: https://github.com/mui-org/material-ui/issues/16470
+       */
+      if (e.target.value !== cleanedValue) {
+        const clonedEvent = {
+          ...e,
+          target: e.target.cloneNode()
+        } as React.ChangeEvent<HTMLInputElement>;
 
-      clonedEvent.target.value = `${cleanedValue}`;
-      onChange(clonedEvent);
+        clonedEvent.target.value = `${cleanedValue}`;
+        onChange(clonedEvent);
+      } else {
+        onChange(e);
+      }
     }
   };
 
