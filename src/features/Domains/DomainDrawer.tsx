@@ -50,7 +50,14 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { isValidSOAEmail } from './domainUtils';
 
-type ClassNames = 'root' | 'masterIPErrorNotice' | 'addIP';
+import CheckBox from 'src/components/CheckBox';
+
+type ClassNames =
+  | 'root'
+  | 'masterIPErrorNotice'
+  | 'addIP'
+  | 'actionPanel'
+  | 'gmailCheck';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -60,6 +67,14 @@ const styles = (theme: Theme) =>
     },
     addIP: {
       left: -theme.spacing(2) + 3
+    },
+    gmailCheck: {
+      marginTop: theme.spacing(1)
+    },
+    actionPanel: {
+      display: 'flex',
+      flexFlow: 'row wrap',
+      alignItems: 'center'
     }
   });
 
@@ -78,6 +93,8 @@ interface State {
   defaultRecordsSetting: DefaultRecordsType;
   selectedDefaultLinode?: Linode.Linode;
   selectedDefaultNodeBalancer?: Linode.NodeBalancer;
+  loadingText?: string;
+  shouldCreateGmailRecords: boolean;
 }
 
 type CombinedProps = WithStyles<ClassNames> &
@@ -87,11 +104,50 @@ type CombinedProps = WithStyles<ClassNames> &
   StateProps &
   WithSnackbarProps;
 
+const gmailMXRecords = (domainID: number) => {
+  return [
+    /**
+     * see https://support.google.com/a/answer/140034?hl=en
+     * for where this list came from.
+     */
+    createDomainRecord(domainID, {
+      type: 'MX',
+      ttl_sec: 3600,
+      priority: 1,
+      target: 'ASPMX.L.GOOGLE.COM.'
+    }),
+    createDomainRecord(domainID, {
+      type: 'MX',
+      ttl_sec: 3600,
+      priority: 5,
+      target: 'ALT1.ASPMX.L.GOOGLE.COM.'
+    }),
+    createDomainRecord(domainID, {
+      type: 'MX',
+      ttl_sec: 3600,
+      priority: 5,
+      target: 'ALT2.ASPMX.L.GOOGLE.COM.'
+    }),
+    createDomainRecord(domainID, {
+      type: 'MX',
+      ttl_sec: 3600,
+      priority: 10,
+      target: 'ALT3.ASPMX.L.GOOGLE.COM.'
+    }),
+    createDomainRecord(domainID, {
+      type: 'MX',
+      ttl_sec: 3600,
+      priority: 10,
+      target: 'ALT4.ASPMX.L.GOOGLE.COM.'
+    })
+  ];
+};
+
 const generateDefaultDomainRecords = (
   domain: string,
   domainID: number,
-  ipv4?: string,
-  ipv6?: string
+  ipv4: string,
+  ipv6: string | null
 ) => {
   /**
    * at this point, the IPv6 is including the prefix and we need to strip that
@@ -179,7 +235,8 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     masterIPsCount: 1,
     defaultRecordsSetting: 'none',
     selectedDefaultLinode: undefined,
-    selectedDefaultNodeBalancer: undefined
+    selectedDefaultNodeBalancer: undefined,
+    shouldCreateGmailRecords: false
   };
 
   state: State = {
@@ -450,7 +507,16 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               )}
             </React.Fragment>
           )}
-        <ActionsPanel>
+        {isCreatingMasterDomain && (
+          <CheckBox
+            className={classes.gmailCheck}
+            onChange={this.toggleGmailCheckBox}
+            checked={this.state.shouldCreateGmailRecords}
+            text="Automatically Create Gmail MX Records For Me"
+            subtext="If checked, we will create 5 MX records for the Google mail servers."
+          />
+        )}
+        <ActionsPanel className={classes.actionPanel}>
           <Button
             buttonType="primary"
             onClick={this.submit}
@@ -460,9 +526,19 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           >
             {mode === EDITING ? 'Update' : 'Create'}
           </Button>
-          <Button onClick={this.closeDrawer} buttonType="cancel" data-qa-cancel>
-            Cancel
-          </Button>
+          {!!submitting ? (
+            <span>
+              {this.state.loadingText ? this.state.loadingText : null}
+            </span>
+          ) : (
+            <Button
+              onClick={this.closeDrawer}
+              buttonType="cancel"
+              data-qa-cancel
+            >
+              Cancel
+            </Button>
+          )}
         </ActionsPanel>
       </Drawer>
     );
@@ -484,12 +560,20 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     domainID: number,
     state: Record<string, string> = {}
   ) => {
-    if (type === 'master' && domainID) {
-      this.redirect(domainID, state);
-    } else {
-      this.redirect('', state);
-    }
-    this.closeDrawer();
+    this.setState(
+      {
+        submitting: false,
+        loadingText: ''
+      },
+      () => {
+        if (type === 'master' && domainID) {
+          this.redirect(domainID, state);
+        } else {
+          this.redirect('', state);
+        }
+        this.closeDrawer();
+      }
+    );
   };
 
   handleEmailValidationErrors = () => {
@@ -580,10 +664,50 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
       return;
     }
 
-    this.setState({ submitting: true });
+    this.setState({
+      submitting: true,
+      loadingText: `Creating ${data.domain}...`
+    });
     domainActions
       .createDomain(data)
       .then((domainData: Linode.Domain) => {
+        if (!this.mounted) {
+          return Promise.resolve(domainData);
+        }
+
+        /** attempt to create some default Gmail MX records */
+        if (this.state.shouldCreateGmailRecords) {
+          this.setState({ loadingText: 'Creating your Gmail MX Records...' });
+          return (
+            Promise.all(gmailMXRecords(domainData.id))
+              .then(() => {
+                return Promise.resolve(domainData);
+              })
+              /**
+               * if we fail, just continue on and promise.resolve
+               * Creating domain records shouldn't any processes.
+               * We'll concat all the errors and show them to the user
+               * when we redirect them off to Domain Detail page.
+               */
+              .catch(e => {
+                reportException(
+                  `Default Gmail MX Records could not be created:
+             ${e[0].reason}`,
+                  {
+                    domainID: domainData.id
+                  }
+                );
+                return Promise.resolve({
+                  ...domainData,
+                  error: 'There was an issue creating some Gmail MX records.'
+                });
+              })
+          );
+        }
+
+        return Promise.resolve(domainData);
+      })
+      .then((domainData: Linode.Domain & { error: string }) => {
         if (!this.mounted) {
           return;
         }
@@ -598,14 +722,21 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
          */
         if (type === 'master') {
           if (defaultRecordsSetting === 'linode') {
+            this.setState({ loadingText: 'Creating some default records...' });
             return generateDefaultDomainRecords(
               domainData.domain,
               domainData.id,
-              path(['ipv4', 0], selectedDefaultLinode),
-              path(['ipv6'], selectedDefaultLinode)
+              /**
+               * we did undefined checking above so selectedDefaultLinode is
+               * most certainly defined
+               */
+              selectedDefaultLinode!.ipv4[0],
+              selectedDefaultLinode!.ipv6
             )
               .then(() => {
-                return this.redirectToLandingOrDetail(type, domainData.id);
+                return this.redirectToLandingOrDetail(type, domainData.id, {
+                  recordError: domainData.error
+                });
               })
               .catch((e: Linode.ApiFieldError[]) => {
                 reportException(
@@ -621,17 +752,28 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
                 );
                 return this.redirectToLandingOrDetail(type, domainData.id, {
                   recordError:
-                    'There was an issue creating default domain records.'
+                    /**
+                     * if domainData.error exists, it means there was an issue creating
+                     * Gmail MX records
+                     */
+                    domainData.error
+                      ? 'There were issues creating some Gmail MX records and default domain records.'
+                      : 'There was an issue creating default domain records.'
                 });
               });
           }
 
           if (defaultRecordsSetting === 'nodebalancer') {
+            this.setState({ loadingText: 'Creating some default records...' });
             return generateDefaultDomainRecords(
               domainData.domain,
               domainData.id,
-              path(['ipv4'], selectedDefaultNodeBalancer),
-              path(['ipv6'], selectedDefaultNodeBalancer)
+              /**
+               * we did undefined checking above so selectedDefaultLinode is
+               * most certainly defined
+               */
+              selectedDefaultNodeBalancer!.ipv4,
+              selectedDefaultNodeBalancer!.ipv6
             )
               .then(() => {
                 return this.redirectToLandingOrDetail(type, domainData.id);
@@ -666,6 +808,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         this.setState(
           {
             submitting: false,
+            loadingText: '',
             errors: getAPIErrorOrDefault(err)
           },
           () => {
@@ -787,6 +930,12 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
   closeDrawer = () => {
     this.resetInternalState();
     this.props.resetDrawer();
+  };
+
+  toggleGmailCheckBox = () => {
+    this.setState({
+      shouldCreateGmailRecords: !this.state.shouldCreateGmailRecords
+    });
   };
 
   updateLabel = (e: React.ChangeEvent<HTMLInputElement>) =>

@@ -10,6 +10,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import HelpIcon from 'src/components/HelpIcon';
 
 type CSSClasses = 'root' | 'checked' | 'disabled' | 'warning' | 'error';
@@ -71,13 +72,14 @@ const styles = (theme: Theme) =>
 interface Props extends CheckboxProps {
   variant?: 'warning' | 'error';
   text?: string | JSX.Element;
+  subtext?: string | JSX.Element;
   toolTipText?: string;
 }
 
 type FinalProps = Props & WithStyles<CSSClasses>;
 
 const LinodeCheckBox: React.StatelessComponent<FinalProps> = props => {
-  const { toolTipText, text, classes, ...rest } = props;
+  const { toolTipText, text, classes, subtext, className, ...rest } = props;
 
   const classnames = classNames({
     [classes.root]: true,
@@ -91,6 +93,7 @@ const LinodeCheckBox: React.StatelessComponent<FinalProps> = props => {
     return (
       <React.Fragment>
         <FormControlLabel
+          className={className}
           control={
             <Checkbox
               color="primary"
@@ -104,6 +107,7 @@ const LinodeCheckBox: React.StatelessComponent<FinalProps> = props => {
           label={props.text}
         />
         {toolTipText && <HelpIcon text={toolTipText} />}
+        {subtext && <Typography>{subtext}</Typography>}
       </React.Fragment>
     );
   }
