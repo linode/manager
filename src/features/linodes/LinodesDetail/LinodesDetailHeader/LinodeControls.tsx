@@ -59,7 +59,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  breadcrumbProps?: BreadcrumbProps;
+  breadcrumbProps?: Partial<BreadcrumbProps>;
 }
 
 type CombinedProps = Props &

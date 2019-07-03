@@ -2,17 +2,16 @@ import * as React from 'react';
 import { cleanup, fireEvent, render } from 'react-testing-library';
 import { linodeConfigs } from 'src/__data__/linodeConfigs';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
-import { CombinedProps as ConfigsProps, Configs } from './Configs';
+import { Configs, Props } from './Configs';
 
 afterEach(cleanup);
 
 const mockHandleSelect = jest.fn();
 
-const props: ConfigsProps = {
+const props: Props = {
   configs: linodeConfigs,
   configSelection: { 9859511: { isSelected: false, associatedDiskIds: [] } },
-  handleSelect: (id: number) => mockHandleSelect(id),
-  classes: { root: '' }
+  handleSelect: (id: number) => mockHandleSelect(id)
 };
 
 describe('Configs', () => {

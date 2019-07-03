@@ -1,11 +1,6 @@
 import * as React from 'react';
-import { compose } from 'recompose';
 import CheckBox from 'src/components/CheckBox';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
@@ -15,9 +10,7 @@ import Table from 'src/components/Table';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { ConfigSelection } from './utilities';
 
-type ClassNames = 'root';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& td': {
       borderBottom: 'none',
@@ -25,17 +18,17 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
       paddingBottom: 0
     }
   }
-});
-interface Props {
+}));
+export interface Props {
   configs: Linode.Config[];
   configSelection: ConfigSelection;
   handleSelect: (id: number) => void;
 }
 
-export type CombinedProps = Props & WithStyles<ClassNames>;
+export const Configs: React.FC<Props> = props => {
+  const { configs, handleSelect, configSelection } = props;
 
-export const Configs: React.FC<CombinedProps> = props => {
-  const { classes, configs, handleSelect, configSelection } = props;
+  const classes = useStyles();
 
   return (
     <Paginate data={configs}>
@@ -89,7 +82,4 @@ export const Configs: React.FC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-const enhanced = compose<CombinedProps, Props>(styled);
-
-export default enhanced(Configs);
+export default Configs;

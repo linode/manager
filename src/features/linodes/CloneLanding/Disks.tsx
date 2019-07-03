@@ -1,12 +1,7 @@
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
-import { compose } from 'recompose';
 import CheckBox from 'src/components/CheckBox';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableCell from 'src/components/core/TableCell';
 import TableHead from 'src/components/core/TableHead';
@@ -18,9 +13,7 @@ import Table from 'src/components/Table';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { DiskSelection } from './utilities';
 
-type ClassNames = 'root' | 'tableCell' | 'labelCol' | 'sizeCol';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   tableCell: {
     paddingTop: 0,
@@ -32,25 +25,19 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   sizeCol: {
     width: '35%'
   }
-});
+}));
 
-interface Props {
+export interface Props {
   disks: Linode.Disk[];
   diskSelection: DiskSelection;
   selectedConfigIds: number[];
   handleSelect: (id: number) => void;
 }
 
-export type CombinedProps = Props & WithStyles<ClassNames>;
+export const Disks: React.FC<Props> = props => {
+  const { disks, diskSelection, selectedConfigIds, handleSelect } = props;
 
-export const Disks: React.FC<CombinedProps> = props => {
-  const {
-    classes,
-    disks,
-    diskSelection,
-    selectedConfigIds,
-    handleSelect
-  } = props;
+  const classes = useStyles();
 
   return (
     <Paginate data={disks}>
@@ -128,7 +115,4 @@ export const Disks: React.FC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-const enhanced = compose<CombinedProps, Props>(styled);
-
-export default enhanced(Disks);
+export default Disks;

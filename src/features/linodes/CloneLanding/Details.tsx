@@ -1,16 +1,11 @@
 import Close from '@material-ui/icons/Close';
 import * as React from 'react';
-import { compose as recompose } from 'recompose';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
 import Paper from 'src/components/core/Paper';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import { formatRegion } from 'src/utilities';
@@ -22,37 +17,25 @@ import {
   getEstimatedCloneTime
 } from './utilities';
 
-type ClassNames =
-  | 'root'
-  | 'header'
-  | 'clearButton'
-  | 'list'
-  | 'nestedList'
-  | 'closeIcon'
-  | 'divider'
-  | 'submitButton'
-  | 'labelOuter'
-  | 'errorText';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing.unit * 2
+    padding: theme.spacing(2)
   },
   header: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'space-between',
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   },
   clearButton: {
-    top: -(theme.spacing.unit / 2)
+    top: -(theme.spacing(1) / 2)
   },
   list: {
     flexWrap: 'wrap',
     justifyContent: 'space-between'
   },
   nestedList: {
-    marginLeft: theme.spacing.unit * 2,
+    marginLeft: theme.spacing(2),
     flexBasis: '100%'
   },
   closeIcon: {
@@ -61,12 +44,12 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     top: -4
   },
   divider: {
-    marginTop: theme.spacing.unit * 2,
-    marginBottom: theme.spacing.unit * 2,
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2),
     backgroundColor: theme.color.grey3
   },
   submitButton: {
-    marginTop: theme.spacing.unit * 3
+    marginTop: theme.spacing(3)
   },
   labelOuter: {
     display: 'flex',
@@ -75,13 +58,13 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
   },
   errorText: {
     color: theme.color.red,
-    marginTop: theme.spacing.unit,
+    marginTop: theme.spacing(1),
     '& a': {
       textDecoration: 'underline',
       color: theme.color.red
     }
   }
-});
+}));
 
 interface Props {
   selectedConfigs: ExtendedConfig[];
@@ -99,11 +82,8 @@ interface Props {
   clearAll: () => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-export const Configs: React.FC<CombinedProps> = props => {
+export const Configs: React.FC<Props> = props => {
   const {
-    classes,
     currentLinodeId,
     selectedConfigs,
     selectedDisks,
@@ -118,6 +98,8 @@ export const Configs: React.FC<CombinedProps> = props => {
     handleClone,
     clearAll
   } = props;
+
+  const classes = useStyles();
 
   const noneError = errorMap.none;
   // When duplicating a disk on the SAME Linode, if there's not a enough space,
@@ -181,7 +163,7 @@ export const Configs: React.FC<CombinedProps> = props => {
         <Typography variant="h2">Selected</Typography>
         <Button
           className={classes.clearButton}
-          type="secondary"
+          buttonType="secondary"
           onClick={clearAll}
           superCompact
         >
@@ -295,7 +277,7 @@ export const Configs: React.FC<CombinedProps> = props => {
       <Button
         className={classes.submitButton}
         disabled={isCloneButtonDisabled}
-        type="primary"
+        buttonType="primary"
         onClick={handleClone}
         loading={isSubmitting}
       >
@@ -305,7 +287,4 @@ export const Configs: React.FC<CombinedProps> = props => {
   );
 };
 
-const styled = withStyles(styles);
-const enhanced = recompose<CombinedProps, Props>(styled);
-
-export default enhanced(Configs);
+export default Configs;

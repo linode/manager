@@ -13,11 +13,7 @@ import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import AppBar from 'src/components/core/AppBar';
 import Paper from 'src/components/core/Paper';
-import {
-  StyleRulesCallback,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import Typography from 'src/components/core/Typography';
@@ -46,21 +42,13 @@ import {
   createInitialCloneLandingState
 } from './utilities';
 
-type ClassNames =
-  | 'root'
-  | 'paper'
-  | 'appBar'
-  | 'outerContainer'
-  | 'diskContainer'
-  | 'title';
-
-const styles: StyleRulesCallback<ClassNames> = theme => ({
+const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing.unit
+    marginTop: theme.spacing(1)
   },
   paper: {
-    paddingTop: theme.spacing.unit * 3,
-    paddingLeft: theme.spacing.unit * 3
+    paddingTop: theme.spacing(3),
+    paddingLeft: theme.spacing(3)
   },
   appBar: {
     '& > div': {
@@ -68,17 +56,17 @@ const styles: StyleRulesCallback<ClassNames> = theme => ({
     }
   },
   outerContainer: {
-    paddingLeft: theme.spacing.unit * 2,
-    paddingRight: theme.spacing.unit * 2,
-    paddingBottom: theme.spacing.unit * 2
+    paddingLeft: theme.spacing(2),
+    paddingRight: theme.spacing(2),
+    paddingBottom: theme.spacing(2)
   },
   diskContainer: {
-    marginTop: theme.spacing.unit * 4
+    marginTop: theme.spacing(4)
   },
   title: {
-    marginBottom: theme.spacing.unit * 2
+    marginBottom: theme.spacing(2)
   }
-});
+}));
 
 interface WithLinodesProps {
   linodesData: Linode.Linode[];
@@ -89,12 +77,10 @@ interface WithLinodesProps {
 type CombinedProps = RouteComponentProps<{}> &
   LinodeContextProps &
   WithLinodesProps &
-  DispatchProps &
-  WithStyles<ClassNames>;
+  DispatchProps;
 
 export const CloneLanding: React.FC<CombinedProps> = props => {
   const {
-    classes,
     configs,
     disks,
     history,
@@ -107,6 +93,8 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     linodeStatus,
     linodesData
   } = props;
+
+  const classes = useStyles();
 
   /**
    * ROUTING
@@ -267,11 +255,18 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
       <Notifications />
       <LinodeControls
         breadcrumbProps={{
-          labelTitle: label,
-          linkTo: `/linodes/${linodeId}/advanced`,
-          linkText: 'Details',
-          onEditHandlers: undefined,
-          labelOptions: undefined
+          removeCrumbX: 4,
+          crumbOverrides: [
+            {
+              label,
+              position: 2,
+              linkTo: {
+                pathname: `/linodes/${linodeId}/summary`
+              },
+              noCap: true
+            }
+          ],
+          onEditHandlers: undefined
         }}
       />
       {linodeInTransition(linodeStatus, recentEvent) && <LinodeBusyStatus />}
@@ -303,9 +298,9 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
                   <Tab
                     key={tab.title}
                     data-qa-tab={tab.title}
-                    component={() => (
+                    component={React.forwardRef((forwardedProps, ref) => (
                       <TabLink to={tab.routeName} title={tab.title} />
-                    )}
+                    ))}
                   />
                 ))}
               </Tabs>
@@ -427,12 +422,9 @@ const connected = connect(
   mapDispatchToProps
 );
 
-const styled = withStyles(styles);
-
 const enhanced = compose<CombinedProps, {}>(
   connected,
   linodeContext,
-  styled,
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
     ...ownProps,
     linodesData,

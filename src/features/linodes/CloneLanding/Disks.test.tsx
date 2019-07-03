@@ -2,7 +2,7 @@ import * as React from 'react';
 import { cleanup, fireEvent, render } from 'react-testing-library';
 import { extDisk3, swapDisk } from 'src/__data__/disks';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
-import { CombinedProps as DisksProps, Disks } from './Disks';
+import { Disks, Props } from './Disks';
 
 afterEach(cleanup);
 
@@ -10,15 +10,14 @@ const disks = [extDisk3, swapDisk];
 
 const mockHandleSelect = jest.fn();
 
-const props: DisksProps = {
+const props: Props = {
   disks,
   diskSelection: {
     18795181: { isSelected: false, associatedConfigIds: [] },
     19040624: { isSelected: false, associatedConfigIds: [9859511] }
   },
   selectedConfigIds: [],
-  handleSelect: (id: number) => mockHandleSelect(id),
-  classes: { root: '', labelCol: '', sizeCol: '', tableCell: '' }
+  handleSelect: (id: number) => mockHandleSelect(id)
 };
 
 describe('Disks', () => {

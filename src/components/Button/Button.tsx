@@ -109,8 +109,8 @@ const styles = (theme: Theme) =>
     superCompact: {
       paddingLeft: 0,
       paddingRight: 0,
-      paddingTop: theme.spacing(),
-      paddingBottom: theme.spacing()
+      paddingTop: theme.spacing(1),
+      paddingBottom: theme.spacing(1)
     },
     hidden: {
       visibility: 'hidden'
