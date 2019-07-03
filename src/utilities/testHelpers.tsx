@@ -20,17 +20,17 @@ createResourcePage = data => ({
 
 export const wrapWithTheme = (ui: any) => {
   return (
-    <LinodeThemeWrapper>
-      <Provider store={store}>
+    <Provider store={store}>
+      <LinodeThemeWrapper theme="dark" spacing="normal">
         <MemoryRouter>{ui}</MemoryRouter>
-      </Provider>
-    </LinodeThemeWrapper>
+      </LinodeThemeWrapper>
+    </Provider>
   );
 };
 
 export const renderWithTheme = (ui: any) => {
   return render(
-    <LinodeThemeWrapper>
+    <LinodeThemeWrapper theme="dark" spacing="normal">
       <MemoryRouter>{ui}</MemoryRouter>
     </LinodeThemeWrapper>
   );

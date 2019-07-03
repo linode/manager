@@ -15,7 +15,7 @@ const ThemeDecorator = (story: Function) => {
   const content = story();
 
   return (
-    <ThemeProvider theme={options[key]()}>
+    <ThemeProvider theme={options[key]({ spacingOverride: 8 })}>
       <CssBaseline />
       {content}
     </ThemeProvider>

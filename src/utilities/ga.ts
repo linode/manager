@@ -52,7 +52,7 @@ export const sendPaginationEvent = (
   });
 };
 
-// src/index.tsx
+// LinodeThemeWrapper.tsx
 export const sendCurrentThemeSettingsEvent = (eventAction: string) => {
   sendEvent({
     category: 'Theme Choice',
@@ -104,7 +104,7 @@ export const sendImportDisplayGroupSubmitEvent = (
   });
 };
 
-// PrimaryNav.tsx
+// LinodeThemeWrapper.tsx
 export const sendSpacingToggleEvent = (eventLabel: string) => {
   sendEvent({
     category: 'Theme Choice',
@@ -113,7 +113,7 @@ export const sendSpacingToggleEvent = (eventLabel: string) => {
   });
 };
 
-// PrimaryNav.tsx
+// LinodeThemeWrapper.tsx
 export const sendThemeToggleEvent = (eventLabel: string) => {
   sendEvent({
     category: 'Theme Choice',

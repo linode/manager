@@ -20,10 +20,8 @@ import Logout from 'src/layouts/Logout';
 import OAuthCallbackPage from 'src/layouts/OAuth';
 import store from 'src/store';
 import 'src/utilities/createImageBitmap';
-import { sendCurrentThemeSettingsEvent } from 'src/utilities/ga';
 import 'src/utilities/request';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
-import { spacing as spacingChoice, theme } from 'src/utilities/storage';
 import App from './App';
 import './events';
 import './index.css';
@@ -38,12 +36,6 @@ const Lish = DefaultLoader({
  */
 initAnalytics(GA_ID, isProduction);
 initTagManager(GTM_ID);
-
-const themeChoice = theme.get() === 'dark' ? 'Dark Theme' : 'Light Theme';
-const spacingMode =
-  spacingChoice.get() === 'compact' ? 'Compact Mode' : 'Normal Mode';
-
-sendCurrentThemeSettingsEvent(`${themeChoice} | ${spacingMode}`);
 
 /**
  * Send pageviews unless blacklisted.

@@ -119,6 +119,8 @@ class AlertSection extends React.Component<CombinedProps> {
               label={this.props.textTitle}
               type="number"
               value={this.props.value}
+              min={0}
+              max={Infinity}
               disabled={!this.props.state || readOnly}
               InputProps={{
                 endAdornment: (
