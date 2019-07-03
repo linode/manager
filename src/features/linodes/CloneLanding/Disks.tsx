@@ -41,9 +41,9 @@ interface Props {
   handleSelect: (id: number) => void;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+export type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const Configs: React.FC<CombinedProps> = props => {
+export const Disks: React.FC<CombinedProps> = props => {
   const {
     classes,
     disks,
@@ -101,6 +101,7 @@ export const Configs: React.FC<CombinedProps> = props => {
                                 checked={isDiskSelected || isConfigSelected}
                                 disabled={isConfigSelected}
                                 onChange={() => handleSelect(disk.id)}
+                                data-testid={`checkbox-${disk.id}`}
                               />
                             </TableCell>
                             <TableCell>{disk.size} MB</TableCell>
@@ -130,4 +131,4 @@ export const Configs: React.FC<CombinedProps> = props => {
 const styled = withStyles(styles);
 const enhanced = compose<CombinedProps, Props>(styled);
 
-export default enhanced(Configs);
+export default enhanced(Disks);

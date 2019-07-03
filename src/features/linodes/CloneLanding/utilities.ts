@@ -5,7 +5,7 @@ import { append, compose, flatten, map, uniqBy } from 'ramda';
  * TYPES
  */
 
-interface CloneLandingState {
+export interface CloneLandingState {
   configSelection: ConfigSelection;
   diskSelection: DiskSelection;
   selectedLinodeId: number | null;
@@ -160,7 +160,7 @@ export const createInitialCloneLandingState = (
   };
 
   // Mapping of diskIds to an array of associated configIds
-  const diskConfigMap: Record<number, number[]> = [];
+  const diskConfigMap: Record<number, number[]> = {};
 
   configs.forEach(eachConfig => {
     // We default `isSelected` to `false`, unless this config was
@@ -189,7 +189,7 @@ export const createInitialCloneLandingState = (
     const isSelected = eachDisk.id === preSelectedDiskId;
 
     // Since we built the mapping earlier, we can just grab them here
-    const associatedConfigIds = diskConfigMap[eachDisk.id];
+    const associatedConfigIds = diskConfigMap[eachDisk.id] || [];
 
     state.diskSelection[eachDisk.id] = {
       isSelected,
