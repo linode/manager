@@ -3,7 +3,6 @@ import createBreakpoints from 'src/components/core/styles/createBreakpoints';
 import createMuiTheme, {
   ThemeOptions
 } from 'src/components/core/styles/createMuiTheme';
-import { spacing as spacingStorage } from 'src/utilities/storage';
 
 /**
  * Augmenting Palette and Palette Options
@@ -65,16 +64,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
   }
 }
 
-type ThemeDefaults = (options: ThemeArguments) => ThemeOptions;
-
-interface ThemeArguments {
-  spacing: 'compact' | 'normal';
-}
-
 const breakpoints = createBreakpoints({});
-
-export const COMPACT_SPACING_UNIT = 4;
-export const NORMAL_SPACING_UNIT = 8;
 
 const primaryColors = {
   main: '#3683dc',
@@ -127,10 +117,16 @@ const visuallyHidden = {
   clip: 'rect(1px, 1px, 1px, 1px)'
 };
 
-const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
-  const spacingUnit =
-    options.spacing === 'compact' ? COMPACT_SPACING_UNIT : NORMAL_SPACING_UNIT;
+export const COMPACT_SPACING_UNIT = 4;
+export const NORMAL_SPACING_UNIT = 8;
 
+export interface ThemeOverrides {
+  spacingOverride: typeof COMPACT_SPACING_UNIT | typeof NORMAL_SPACING_UNIT;
+}
+
+type ThemeDefaults = (options: ThemeOverrides) => ThemeOptions;
+
+const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
   return {
     breakpoints,
     shadows: [
@@ -358,11 +354,6 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
             color: primaryColors.light
           }
         },
-        // flat: {
-        //   '&.cancel:hover': {
-        //     backgroundColor: 'transparent'
-        //   }
-        // },
         containedPrimary: {
           '&:hover, &:focus': {
             backgroundColor: primaryColors.light
@@ -430,8 +421,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
             minWidth: 100,
             '& svg': {
               width: 22,
-              height: 22,
-              animation: 'rotate 2s linear infinite'
+              height: 22
             }
           }
         }
@@ -1370,11 +1360,11 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
   };
 };
 
-export default (options: ThemeOptions) =>
+export default (options: ThemeOptions & ThemeOverrides) =>
   createMuiTheme(
     mergeDeepRight(
       themeDefaults({
-        spacing: spacingStorage.get()
+        spacingOverride: options.spacingOverride
       }),
       options
     )

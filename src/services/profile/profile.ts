@@ -90,3 +90,29 @@ export const deleteTrustedDevice = (id: number) =>
     setURL(`${API_ROOT}/profile/devices/${id}`),
     setMethod('DELETE')
   ).then(response => response.data);
+
+/**
+ * getUserPreferences
+ *
+ * Retrieves an arbitrary JSON blob for the purposes of implementing
+ * conditional logic based on preferences the user chooses
+ */
+export const getUserPreferences = () => {
+  return Request<Record<string, any>>(
+    setURL(`${API_ROOT}/profile/preferences`)
+  ).then(response => response.data);
+};
+
+/**
+ * getUserPreferences
+ *
+ * Stores an arbitrary JSON blob for the purposes of implementing
+ * conditional logic based on preferences the user chooses
+ */
+export const updateUserPreferences = (payload: Record<string, any>) => {
+  return Request<Record<string, any>>(
+    setURL(`${API_ROOT}/profile/preferences`),
+    setData(payload),
+    setMethod('PUT')
+  ).then(response => response.data);
+};

@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   matchPath,
+  Redirect,
   Route,
   RouteComponentProps,
   Switch,
@@ -90,10 +91,16 @@ class AccountLanding extends React.Component<Props> {
           </Tabs>
         </AppBar>
         <Switch>
-          <Route exact path={`${url}/billing`} component={Billing} />
-          <Route exact path={`${url}/users`} component={Users} />
-          <Route exact path={`${url}/settings`} component={GlobalSettings} />
-          <Route exact path={`${url}`} component={Billing} />
+          <Route exact strict path={`${url}/billing`} component={Billing} />
+          <Route exact strict path={`${url}/users`} component={Users} />
+          <Route
+            exact
+            strict
+            path={`${url}/settings`}
+            component={GlobalSettings}
+          />
+          <Route exact strict path={`${url}`} component={Billing} />
+          <Redirect to={`${url}/billing`} />
         </Switch>
       </React.Fragment>
     );

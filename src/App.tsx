@@ -23,7 +23,8 @@ import LandingLoading from 'src/components/LandingLoading';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
 import VATBanner from 'src/components/VATBanner';
-import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
+/** @todo: Uncomment when we deploy with LD */
+// import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
@@ -255,9 +256,9 @@ export class App extends React.Component<CombinedProps, State> {
     perfume.start('InitialRequests');
     const dataFetchingPromises: Promise<any>[] = [
       this.props.requestAccount(),
-      this.props.requestProfile(),
       this.props.requestDomains(),
       this.props.requestImages(),
+      this.props.requestProfile(),
       this.props.requestLinodes(),
       this.props.requestNotifications(),
       this.props.requestSettings(),
@@ -335,16 +336,16 @@ export class App extends React.Component<CombinedProps, State> {
       classes,
       toggleSpacing,
       toggleTheme,
-      profileLoading,
       linodesError,
       domainsError,
       typesError,
       imagesError,
       notificationsError,
       regionsError,
+      profileLoading,
+      profileError,
       volumesError,
       settingsError,
-      profileError,
       bucketsError,
       accountCapabilities,
       accountLoading,
@@ -369,8 +370,8 @@ export class App extends React.Component<CombinedProps, State> {
         notificationsError,
         regionsError,
         volumesError,
-        settingsError,
         profileError,
+        settingsError,
         bucketsError
       )
     ) {
@@ -408,7 +409,13 @@ export class App extends React.Component<CombinedProps, State> {
                       <Grid item className={classes.switchWrapper}>
                         <Switch>
                           <Route path="/linodes" component={LinodesRoutes} />
-                          <Route path="/volumes" component={Volumes} />
+                          <Route
+                            path="/volumes"
+                            component={Volumes}
+                            exact
+                            strict
+                          />
+                          <Redirect path="/volumes*" to="/volumes" />
                           <Route
                             path="/nodebalancers"
                             component={NodeBalancers}
@@ -416,7 +423,13 @@ export class App extends React.Component<CombinedProps, State> {
                           <Route path="/domains" component={Domains} />
                           <Route exact path="/managed" component={Managed} />
                           <Route exact path="/longview" component={Longview} />
-                          <Route exact path="/images" component={Images} />
+                          <Route
+                            exact
+                            strict
+                            path="/images"
+                            component={Images}
+                          />
+                          <Redirect path="/images*" to="/images" />
                           <Route
                             path="/stackscripts"
                             component={StackScripts}
@@ -432,6 +445,7 @@ export class App extends React.Component<CombinedProps, State> {
                           <Route path="/account" component={Account} />
                           <Route
                             exact
+                            strict
                             path="/support/tickets"
                             component={SupportTickets}
                           />
@@ -439,11 +453,13 @@ export class App extends React.Component<CombinedProps, State> {
                             path="/support/tickets/:ticketId"
                             component={SupportTicketDetail}
                             exact
+                            strict
                           />
                           <Route path="/profile" component={Profile} />
                           <Route exact path="/support" component={Help} />
                           <Route
                             exact
+                            strict
                             path="/support/search/"
                             component={SupportSearchLanding}
                           />
@@ -514,11 +530,11 @@ interface DispatchProps {
   requestImages: () => Promise<Linode.Image[]>;
   requestLinodes: () => Promise<Linode.Linode[]>;
   requestNotifications: () => Promise<Linode.Notification[]>;
-  requestProfile: () => Promise<Linode.Profile>;
   requestSettings: () => Promise<Linode.AccountSettings>;
   requestTypes: () => Promise<Linode.LinodeType[]>;
   requestRegions: () => Promise<Linode.Region[]>;
   requestVolumes: () => Promise<Linode.Volume[]>;
+  requestProfile: () => Promise<Linode.Profile>;
   requestBuckets: () => Promise<Linode.Bucket[]>;
   requestClusters: () => Promise<Linode.Cluster[]>;
   addNotificationsToLinodes: (
@@ -536,11 +552,11 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
     requestImages: () => dispatch(requestImages()),
     requestLinodes: () => dispatch(requestLinodes()),
     requestNotifications: () => dispatch(requestNotifications()),
-    requestProfile: () => dispatch(requestProfile()),
     requestSettings: () => dispatch(requestAccountSettings()),
     requestTypes: () => dispatch(requestTypes()),
     requestRegions: () => dispatch(requestRegions()),
     requestVolumes: () => dispatch(getAllVolumes()),
+    requestProfile: () => dispatch(requestProfile()),
     requestBuckets: () => dispatch(getAllBuckets()),
     requestClusters: () => dispatch(requestClusters()),
     addNotificationsToLinodes: (
@@ -574,10 +590,10 @@ interface StateProps {
   accountError?: Error | Linode.ApiFieldError[];
 }
 
-const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => ({
+const mapStateToProps: MapState<StateProps, Props> = state => ({
   /** Profile */
   profileLoading: state.__resources.profile.loading,
-  profileError: state.__resources.profile.error,
+  profileError: path(['read'], state.__resources.profile.error),
   linodes: state.__resources.linodes.entities,
   linodesError: path(['read'], state.__resources.linodes.error),
   domainsError: state.__resources.domains.error,
@@ -620,8 +636,9 @@ export default compose(
   styled,
   withDocumentTitleProvider,
   withSnackbar,
-  withNodeBalancerActions,
-  withFeatureFlagProvider
+  withNodeBalancerActions
+  /** @todo: Uncomment when we deploy with LD */
+  // withFeatureFlagProvider
 )(App);
 
 export const hasOauthError = (
