@@ -48,6 +48,7 @@ import NodeBalancerSelect from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { createDomainRecord } from 'src/services/domains/records';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
+import { createDomainEvent } from 'src/utilities/ga';
 import { isValidSOAEmail } from './domainUtils';
 
 import CheckBox from 'src/components/CheckBox';
@@ -603,7 +604,8 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
       master_ips,
       defaultRecordsSetting,
       selectedDefaultLinode,
-      selectedDefaultNodeBalancer
+      selectedDefaultNodeBalancer,
+      shouldCreateGmailRecords
     } = this.state;
     const { domainActions } = this.props;
 
@@ -671,6 +673,28 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     domainActions
       .createDomain(data)
       .then((domainData: Linode.Domain) => {
+        /**
+         * the domain has now been created. Lets send the user's config
+         * options to Google Analytics
+         */
+        let analyticsLabel = '';
+
+        if (defaultRecordsSetting === 'linode') {
+          analyticsLabel += 'from Linode ';
+        } else if (defaultRecordsSetting === 'nodebalancer') {
+          analyticsLabel += 'from NodeBalancer ';
+        }
+        if (shouldCreateGmailRecords) {
+          analyticsLabel += 'with Gmail MX Records';
+        }
+
+        createDomainEvent(
+          defaultRecordsSetting !== 'none' || shouldCreateGmailRecords
+            ? 'with defaults'
+            : 'plain',
+          analyticsLabel
+        );
+
         if (!this.mounted) {
           return Promise.resolve(domainData);
         }
