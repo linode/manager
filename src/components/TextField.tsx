@@ -154,6 +154,8 @@ class LinodeTextField extends React.Component<CombinedProps> {
        * So e.target on a text field === <input />
        *
        * while e.target on the select variant === { value: 10, name: undefined }
+       *
+       * See GitHub issue: https://github.com/mui-org/material-ui/issues/16470
        */
       if (e.target.value !== cleanedValue) {
         const clonedEvent = {
