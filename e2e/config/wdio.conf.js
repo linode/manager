@@ -32,7 +32,7 @@ const specsToRun = () => {
 
 const specs = specsToRun();
 
-const selectedReporters = argv.log ? ['spec', 'junit'] : ['dot'];
+const selectedReporters = argv.log ? ['spec', 'junit'] : reporters: ['dot','spec','junit','mochawesome'],;
 
 const getRunnerCount = () => {
     const userCount = keysIn(process.env).filter(users => users.includes('MANAGER_USER')).length;
@@ -68,6 +68,7 @@ if (!(CRED_STORE_MODE in credStores)) {
 const credStore = credStores[CRED_STORE_MODE];
 
 exports.config = {
+    runner: 'local',
     // Selenium Host/Port
     host: process.env.DOCKER ? 'selenium' : 'localhost',
     port: 4444,
@@ -405,5 +406,12 @@ exports.config = {
         /* delete all data created during the test and remove test credentials
            from the underlying store */
         return credStore.cleanupAccounts();
-    }
+    },
+    /**
+    * Gets executed when a refresh happens.
+    * @param {String} oldSessionId session ID of the old session
+    * @param {String} newSessionId session ID of the new session
+    */
+    //onReload: function(oldSessionId, newSessionId) {
+    //}
 }

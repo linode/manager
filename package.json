@@ -5,7 +5,7 @@
   "version": "0.62.1",
   "private": true,
   "engines": {
-    "node": ">= 8.11.2"
+    "node": ">=10.0.0"
   },
   "bugs": {
     "url": "https://github.com/Linode/manager/issues"
@@ -188,6 +188,14 @@
     "@types/xml2js": "^0.4.3",
     "@types/yup": "^0.24.9",
     "@types/zxcvbn": "^4.4.0",
+    "@wdio/cli": "^5.10.10",
+    "@wdio/dot-reporter": "^5.9.3",
+    "@wdio/jasmine-framework": "^5.10.8",
+    "@wdio/junit-reporter": "^5.9.3",
+    "@wdio/local-runner": "^5.10.10",
+    "@wdio/selenium-standalone-service": "^5.9.3",
+    "@wdio/spec-reporter": "^5.9.3",
+    "@wdio/sync": "^5.10.8",
     "autoprefixer": "^9.4.8",
     "axe-core": "^3.1.1",
     "babel-core": "^7.0.0-bridge.0",
@@ -243,13 +251,8 @@
     "typescript": "^3.2.2",
     "url-loader": "^1.1.2",
     "utility-types": "^2.1.0",
-    "wdio-browserstack-service": "^0.1.16",
-    "wdio-dot-reporter": "0.0.9",
-    "wdio-jasmine-framework": "^0.3.8",
-    "wdio-junit-reporter": "^0.4.2",
-    "wdio-selenium-standalone-service": "^0.0.12",
-    "wdio-spec-reporter": "^0.1.5",
-    "webdriverio": "4.12.0",
+    "wdio-mochawesome-reporter": "^3.1.0",
+    "webdriverio": "^5.10.10",
     "webpack": "^4.29.5",
     "webpack-cli": "^3.2.1",
     "webpack-dev-server": "^3.2.0",
