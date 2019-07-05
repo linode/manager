@@ -12,22 +12,22 @@ describe('Access Panel Suite', () => {
       const hideShowPassword = '[data-qa-hide] svg';
 
         beforeAll(() => {
-            navigateToStory(component, childStories[0], () => {
-                browser.waitForVisible(passwordRegion, constants.wait.normal);
-            });
+            navigateToStory(component, childStories[0])
+            const passwordElem = $(passwordRegion);
+            passwordElem.waitForDisplayed(constants.wait.normal);
         });
 
         it('there should be a root password input field', () => {
-            expect($(passwordInput).isVisible()).toBe(true);
+            expect($(passwordInput).isDisplayed()).toBe(true);
             expect($(`${passwordRegion} label`).getText()).toEqual('Root Password')
         });
 
-        it('there should be an icon to show plain text password, but should be hidden by default',()=> {
-            expect($(hideShowPassword).isVisible()).toBe(true);
+        it('there should be an icon to show plain text password, but should be hidden by default', ()=> {
+            expect($(hideShowPassword).isDisplayed()).toBe(true);
             expect($(passwordInput).getAttribute('type')).toEqual('password');
         });
 
-        it('password input changes to text type when show password option is selected',()=> {
+        it('password input changes to text type when show password option is selected', ()=> {
             $(hideShowPassword).click();
             expect($(passwordInput).getAttribute('type')).toEqual('text');
             //Hide for remaining tests
@@ -35,7 +35,7 @@ describe('Access Panel Suite', () => {
         });
 
         it('there should be a password strength indicator', () => {
-            expect($(passwordstrength).isVisible()).toBe(true);
+            expect($(passwordstrength).isDisplayed()).toBe(true);
         });
 
         it('password strength indicator updates on input', () => {
@@ -66,23 +66,22 @@ describe('Access Panel Suite', () => {
         }
 
         beforeAll(() => {
-            navigateToStory(component, childStories[1], () => {
-                browser.waitForVisible(passwordRegion, constants.wait.normal);
-            });
+            navigateToStory(component, childStories[1])
+            $(passwordRegion).waitForDisplayed(constants.wait.normal);
         });
 
         it('there should be an ssh key table', () => {
-            expect($(sshKeysTable).isVisible()).toBe(true);
+            expect($(sshKeysTable).isDisplayed()).toBe(true);
             expect($(sshKeysTable).getText()).toEqual('SSH Keys');
         });
 
         it('the table should have a checkbox column, User column, and a SSH Keys column', () => {
             const sshKeysHeader = '[data-qa-table-header=\"SSH Keys\"]';
 
-            expect($(userTableHeader).isVisible()).toBe(true);
+            expect($(userTableHeader).isDisplayed()).toBe(true);
             expect($(userTableHeader).getText()).toEqual('User');
 
-            expect($(sshKeysHeader).isVisible()).toBe(true);
+            expect($(sshKeysHeader).isDisplayed()).toBe(true);
             expect($(sshKeysHeader).getText()).toEqual('SSH Keys');
 
             expect($$(checkboxes).length).toEqual(3);
