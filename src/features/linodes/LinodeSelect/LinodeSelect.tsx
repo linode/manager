@@ -12,30 +12,64 @@ interface WithLinodesProps {
   linodesError?: Linode.ApiFieldError[];
 }
 
+type Override = keyof Linode.Linode | ((linode: Linode.Linode) => any);
+
 interface Props {
   generalError?: string;
   linodeError?: string;
+  className?: string;
   selectedLinode: number | null;
   disabled?: boolean;
   region?: string;
   handleChange: (linode: Linode.Linode) => void;
   textFieldProps?: TextFieldProps;
+  placeholder?: string;
+  valueOverride?: Override;
+  labelOverride?: Override;
+  filterCondition?: (linode: Linode.Linode) => boolean;
+  label?: string;
+  noOptionsMessage?: string;
+  small?: boolean;
+  noMarginTop?: boolean;
 }
 
 type CombinedProps = Props & WithLinodesProps;
 
-const linodesToItems = (linodes: Linode.Linode[]): Item<number>[] =>
-  linodes.map(thisLinode => ({
-    value: thisLinode.id,
-    label: thisLinode.label,
+const linodesToItems = (
+  linodes: Linode.Linode[],
+  valueOverride?: Override,
+  labelOverride?: Override,
+  filterCondition?: (linodes: Linode.Linode) => boolean
+): Item<any>[] => {
+  const maybeFilteredLinodes = filterCondition
+    ? linodes.filter(filterCondition)
+    : linodes;
+
+  return maybeFilteredLinodes.map(thisLinode => ({
+    value:
+      typeof valueOverride === 'function'
+        ? valueOverride(thisLinode)
+        : !!valueOverride
+        ? thisLinode[valueOverride]
+        : thisLinode.id,
+    label:
+      typeof labelOverride === 'function'
+        ? labelOverride(thisLinode)
+        : !!labelOverride
+        ? labelOverride
+        : thisLinode.label,
     data: thisLinode
   }));
+};
 
 const linodeFromItems = (linodes: Item<number>[], linodeId: number | null) => {
   if (!linodeId) {
     return;
   }
-  return linodes.find(thisLinode => thisLinode.value === linodeId);
+
+  return linodes.find(thisLinode => {
+    return (thisLinode.data as Linode.Linode).id === linodeId;
+  });
 };
 
 const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
@@ -48,13 +82,23 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
     linodesLoading,
     linodesData,
     region,
-    selectedLinode
+    selectedLinode,
+    className,
+    placeholder,
+    valueOverride,
+    labelOverride,
+    filterCondition
   } = props;
 
   const linodes = region
     ? linodesData.filter(thisLinode => thisLinode.region === region)
     : linodesData;
-  const options = linodesToItems(linodes);
+  const options = linodesToItems(
+    linodes,
+    valueOverride,
+    labelOverride,
+    filterCondition
+  );
 
   const noOptionsMessage =
     !linodeError && !linodesLoading && options.length === 0
@@ -63,11 +107,14 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
 
   return (
     <EnhancedSelect
-      label="Linode"
-      placeholder="Select a Linode"
+      label={props.label || 'Linode'}
+      className={className}
+      noMarginTop={props.noMarginTop}
+      placeholder={placeholder || 'Select a Linode'}
       value={linodeFromItems(options, selectedLinode)}
       options={options}
       disabled={disabled}
+      small={props.small}
       isLoading={linodesLoading}
       onChange={(selected: Item<number>) => {
         return handleChange(selected.data);
@@ -77,7 +124,7 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
       )}
       isClearable={false}
       textFieldProps={props.textFieldProps}
-      noOptionsMessage={() => noOptionsMessage}
+      noOptionsMessage={() => props.noOptionsMessage || noOptionsMessage}
     />
   );
 };
