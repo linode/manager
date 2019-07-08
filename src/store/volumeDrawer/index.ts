@@ -14,6 +14,7 @@ export interface State {
   linodeLabel?: string;
   linodeRegion?: string;
   message?: string;
+  openedFrom?: OpenedVolumeDrawerFrom;
 }
 
 const actionCreator = actionCreatorFactory(`@@manager/volumesDrawer`);
@@ -210,7 +211,8 @@ export const volumeDrawer: Reducer<State> = (
   if (isType(action, createVolume)) {
     return {
       ...state,
-      mode: getMode(action)
+      mode: getMode(action),
+      openedFrom: action.payload.openedDrawerFrom
     };
   }
 
@@ -222,6 +224,7 @@ export const volumeDrawer: Reducer<State> = (
     return {
       ...state,
       mode: getMode(action),
+      openedFrom: 'linodeDetails',
       linodeId,
       linodeLabel,
       linodeRegion
@@ -244,7 +247,8 @@ export const volumeDrawer: Reducer<State> = (
     case CLOSE:
       return {
         ...state,
-        mode: modes.CLOSED
+        mode: modes.CLOSED,
+        openedFrom: undefined
       };
 
     case CREATING_FOR_LINODE:
