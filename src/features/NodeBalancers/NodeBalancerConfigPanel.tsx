@@ -26,8 +26,6 @@ import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import SelectIP from './ConfigNodeIPSelect';
 
 type ClassNames =
-  | 'root'
-  | 'inner'
   | 'divider'
   | 'backendIPAction'
   | 'suggestionsParent'
@@ -42,8 +40,6 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
-    inner: {},
     divider: {
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(1)
@@ -117,7 +113,7 @@ const styles = (theme: Theme) =>
 const styled = withStyles(styles);
 
 interface Props {
-  linodesWithPrivateIPs?: Linode.Linode[] | null;
+  nodeBalancerRegion?: string;
   errors?: Linode.ApiFieldError[];
   nodeMessage?: string;
   configIdx?: number;
@@ -678,8 +674,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
 
     return (
       <Grid item xs={12}>
-        <Paper className={classes.root} data-qa-label-header>
-          <div className={classes.inner}>
+        <Paper data-qa-label-header>
+          <div>
             {globalFormError && (
               <Notice
                 className={`error-for-scroll-${configIdx}`}
@@ -853,7 +849,16 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               </Grid>
             </Grid>
 
-            <Grid updateFor={[nodes, errors, nodeMessage, classes]} container>
+            <Grid
+              updateFor={[
+                nodes,
+                errors,
+                nodeMessage,
+                classes,
+                this.props.nodeBalancerRegion
+              ]}
+              container
+            >
               <Grid item xs={12}>
                 <Grid updateFor={[nodeMessage, classes]} item xs={12}>
                   {nodeMessage && <Notice text={nodeMessage} success />}
@@ -958,6 +963,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               key={idx}
                               updateFor={[
                                 nodes.length,
+                                this.props.nodeBalancerRegion,
                                 node,
                                 errors,
                                 configIdx,
@@ -974,9 +980,10 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               >
                                 <SelectIP
                                   handleChange={this.props.onNodeAddressChange}
-                                  selectedRegion="ca-cefdsfntral"
+                                  selectedRegion={this.props.nodeBalancerRegion}
                                   nodeIndex={idx}
                                   errorText={nodesHasErrorFor('address')}
+                                  nodeAddress={node.address}
                                 />
                               </Grid>
                               <Grid item xs={6} sm={3} lg={2}>

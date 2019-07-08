@@ -204,7 +204,6 @@ class Select extends React.PureComponent<CombinedProps, {}> {
             [classes.hideLabel]: hideLabel
           })
         }}
-        /** let us explicitly pass an empty string */
         value={value || undefined}
         onBlur={onBlur}
         options={options}

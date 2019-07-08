@@ -4,10 +4,11 @@ import { compose } from 'recompose';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 
 interface Props {
-  selectedRegion: string;
+  selectedRegion?: string;
   handleChange: (nodeIndex: number, ipAddress: string) => void;
   nodeIndex: number;
   errorText?: string;
+  nodeAddress?: string;
 }
 
 type CombinedProps = Props;
@@ -32,9 +33,22 @@ const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
     props.handleChange(props.nodeIndex, thisLinodesPrivateIP!);
   };
 
+  React.useEffect(() => {
+    props.handleChange(props.nodeIndex, '');
+    setSelectedLinode(null);
+  }, [props.selectedRegion]);
+
   return (
     <LinodeSelect
       noMarginTop
+      value={
+        props.nodeAddress
+          ? {
+              value: props.nodeAddress,
+              label: props.nodeAddress
+            }
+          : undefined
+      }
       selectedLinode={selectedLinode}
       noOptionsMessage="No options - please ensure you have at least 1 Linode with a private IP and selected a region"
       generalError={props.errorText}

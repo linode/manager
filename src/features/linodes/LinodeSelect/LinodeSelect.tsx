@@ -31,6 +31,7 @@ interface Props {
   noOptionsMessage?: string;
   small?: boolean;
   noMarginTop?: boolean;
+  value?: Item<any>;
 }
 
 type CombinedProps = Props & WithLinodesProps;
