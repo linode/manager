@@ -22,8 +22,8 @@ import Grid from 'src/components/Grid';
 import LandingLoading from 'src/components/LandingLoading';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
-import VATBanner from 'src/components/VATBanner';
 /** @todo: Uncomment when we deploy with LD */
+// import VATBanner from 'src/components/VATBanner';
 // import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
@@ -403,7 +403,8 @@ export class App extends React.Component<CombinedProps, State> {
                     isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
                     username={this.props.username}
                   />
-                  <VATBanner />
+                  {/* @todo: Uncomment when we deploy with LD */}
+                  {/* <VATBanner /> */}
                   <div className={classes.wrapper} id="main-content">
                     <Grid container spacing={0} className={classes.grid}>
                       <Grid item className={classes.switchWrapper}>
