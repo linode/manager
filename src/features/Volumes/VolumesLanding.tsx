@@ -169,10 +169,7 @@ interface DispatchProps {
     volumeSize: number,
     volumeRegion: string
   ) => void;
-  openForCreating: (
-    openedDrawerFrom: Origin,
-    linodeOptions?: LinodeOptions
-  ) => void;
+  openForCreating: (origin: Origin, linodeOptions?: LinodeOptions) => void;
   openForConfig: (volumeLabel: string, volumePath: string) => void;
 }
 
