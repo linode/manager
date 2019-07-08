@@ -1,3 +1,4 @@
+const { constants } = require('../../../e2e/constants');
 const { navigateToStory, executeInAllStories } = require('../../../e2e/utils/storybook');
 
 describe('Button Suite', () => {
@@ -20,9 +21,9 @@ describe('Button Suite', () => {
 
     it('should display buttons in each story', () => {
         executeInAllStories(component, childStories, () => {
-            browser.waitForVisible('[data-qa-button]');
+            $('[data-qa-button]').waitForDisplayed(constants.wait.normal)
             const buttons = $$(button.generic);
-            buttons.forEach(b => expect(b.isVisible()).toBe(true));
+            buttons.forEach(b => expect(b.isDisplayed()).toBe(true));
         });
     });
 
@@ -34,7 +35,7 @@ describe('Button Suite', () => {
         });
 
         it('should display primary button', () => {
-            browser.waitForVisible(button.primary);
+            $(button.primary).waitForDisplayed(constants.wait.normal);
 
             primaryButtons = $$(button.primary);
             expect(primaryButtons.length).toBe(1);
@@ -42,7 +43,7 @@ describe('Button Suite', () => {
 
         it('should display primary buttons with white text', () => {
             primaryButtons.forEach(button => {
-                expect(button.getCssProperty('color').parsed.hex.includes('#ffffff'))
+                expect(button.getCSSProperty('color').parsed.hex.includes('#ffffff'))
             });
         });
 
@@ -56,13 +57,13 @@ describe('Button Suite', () => {
             const secondaryButton = $(button.secondary);
             secondaryButtons = $$(button.secondary);
 
-            expect(secondaryButton.isVisible()).toBe(true);
+            expect(secondaryButton.isDisplayed()).toBe(true);
             expect(secondaryButtons.length).toBe(1);
         });
 
        it('should display buttons with transparent backgrounds', () => {
            secondaryButtons.forEach(button => {
-               expect(button.getCssProperty('background-color').parsed.hex.includes('#000000')).toBe(true)
+               expect(button.getCSSProperty('background-color').parsed.hex.includes('#000000')).toBe(true)
             });
        });
 
@@ -78,7 +79,7 @@ describe('Button Suite', () => {
 
         beforeAll(() => {
             navigateToStory(component, childStories[2]);
-            browser.waitForVisible(button.generic);
+            $(button.generic).waitForDisplayed(constants.wait.normal);
         });
 
         it('should display dropdown buttons with carat', () => {
@@ -122,13 +123,13 @@ describe('Button Suite', () => {
         beforeAll(() => {
             navigateToStory(component, childStories[4]);
         });
-        
+
         let destructiveButtons;
 
         it('should display an enabled destructive button and a disabled button', () => {
             destructiveButtons = $$(button.destructive);
             const disabledButtons = destructiveButtons.filter(d => d.getAttribute('disabled') !== null);
-            
+
             destructiveButtons.forEach(d => {
                 expect(d.isVisible()).toBe(true);
             });
