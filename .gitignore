@@ -28,6 +28,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
+# Test results
+junit.xml
+
 # Runtime data
 pids
 *.pid
