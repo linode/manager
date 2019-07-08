@@ -104,8 +104,8 @@
     "build": "node scripts/build.js",
     "prepush": "./scripts/pre-push.sh",
     "mock": "./scripts/mb.js",
-    "test": "node scripts/test.js --env=jsdom --reporters=default --reporters=jest-junit",
-    "test:debug": "node --inspect-brk scripts/test.js --runInBand --env=jsdom",
+    "test": "node scripts/test.js",
+    "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "storybook": "start-storybook -p 6006 --ci",
     "storybook-static": "build-storybook -c .storybook -o .out",
     "storybook:e2e": "./node_modules/.bin/wdio ./e2e/config/wdio.storybook.conf.js",
@@ -274,7 +274,7 @@
       "<rootDir>/src/**/__tests__/**/*.ts?(x)",
       "<rootDir>/src/**/?(*.)(spec|test).ts?(x)"
     ],
-    "testEnvironment": "node",
+    "testEnvironment": "jsdom",
     "testPathIgnorePatterns": [
       "<rootDir>/src/components/Storyshots.test.tsx"
     ],
@@ -305,6 +305,7 @@
       "json",
       "node"
     ],
+    "reporters": [ "default", "jest-junit" ],
     "globals": {
       "ts-jest": {
         "tsConfig": "tsconfig.test.json"
