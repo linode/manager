@@ -3,3 +3,4 @@ dist
 build
 localStorage.json
 e2e/test-results
+junit.xml
