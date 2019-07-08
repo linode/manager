@@ -63,10 +63,13 @@ export const sendCurrentThemeSettingsEvent = (eventAction: string) => {
 
 // CreateVolumeForm.tsx
 // CreateVolumeForLinodeForm.tsx
-export const sendCreateVolumeEvent = (eventLabel: string) => {
+export const sendCreateVolumeEvent = (
+  eventLabel: string,
+  eventAction?: string
+) => {
   sendEvent({
     category: 'Create Volume',
-    action: 'Create Volume',
+    action: eventAction || 'Create Volume',
     label: eventLabel
   });
 };

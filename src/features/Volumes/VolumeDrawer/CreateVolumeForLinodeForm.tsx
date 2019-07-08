@@ -24,7 +24,10 @@ import {
 } from 'src/features/Profile/permissionsHelpers';
 import { CreateVolumeSchema } from 'src/services/volumes/volumes.schema.ts';
 import { MapState } from 'src/store/types';
-import { openForAttaching } from 'src/store/volumeDrawer';
+import {
+  OpenedVolumeDrawerFrom,
+  openForAttaching
+} from 'src/store/volumeDrawer';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { sendCreateVolumeEvent } from 'src/utilities/ga';
 import ConfigSelect from './ConfigSelect';
@@ -77,7 +80,8 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
     linodeRegion,
     actions,
     createVolume,
-    disabled
+    disabled,
+    openedFrom
   } = props;
 
   return (
@@ -107,7 +111,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               `Volume scheduled for creation.`
             );
             // GA Event
-            sendCreateVolumeEvent(`${label}: ${size}GiB`);
+            sendCreateVolumeEvent(`${label}: ${size}GiB`, openedFrom);
           })
           .catch(errorResponse => {
             const defaultMessage = `Unable to create a volume at this time. Please try again later.`;
@@ -289,11 +293,13 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
 
 interface StateProps {
   disabled: boolean;
+  openedFrom?: OpenedVolumeDrawerFrom;
 }
 
 const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
   // disabled if the profile is restricted and doesn't have add_volumes grant
-  disabled: isRestrictedUser(state) && !hasGrant(state, 'add_volumes')
+  disabled: isRestrictedUser(state) && !hasGrant(state, 'add_volumes'),
+  openedFrom: state.volumeDrawer.openedFrom
 });
 
 const connected = connect(
