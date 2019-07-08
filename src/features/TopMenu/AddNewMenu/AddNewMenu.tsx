@@ -110,7 +110,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
       {
         title: 'Volume',
         onClick: e => {
-          this.props.openVolumeDrawerForCreating();
+          this.props.openVolumeDrawerForCreating('addNewMenu');
           this.handleClose();
           e.preventDefault();
         },

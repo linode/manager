@@ -46,19 +46,35 @@ interface CreatingForLinode extends Action {
   linodeRegion: string;
 }
 
+export type OpenedVolumeDrawerFrom =
+  | 'addNewMenu'
+  | 'volumesLanding'
+  | 'linodeDetails';
+
+export interface LinodeOptions {
+  linodeId: number;
+  linodeLabel: string;
+  linodeRegion: string;
+}
 export const openForCreating = (
-  linodeId?: number,
-  linodeLabel?: string,
-  linodeRegion?: string
+  openedDrawerFrom: OpenedVolumeDrawerFrom,
+  linodeOptions?: LinodeOptions
 ) => {
-  if (linodeId && linodeLabel && linodeRegion) {
+  if (linodeOptions) {
+    const { linodeId, linodeLabel, linodeRegion } = linodeOptions;
     return createVolumeForLinode({ linodeId, linodeLabel, linodeRegion });
   }
 
-  return createVolume();
+  return createVolume({ openedDrawerFrom });
 };
 
-const createVolume = actionCreator<void>(`CREATE_VOLUME`, { mode: 'creating' });
+interface CreateVolumePayload {
+  openedDrawerFrom: OpenedVolumeDrawerFrom;
+}
+
+const createVolume = actionCreator<CreateVolumePayload>(`CREATE_VOLUME`, {
+  mode: 'creating'
+});
 
 interface CreateVolumeForLinodePayload {
   linodeId: number;
