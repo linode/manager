@@ -37,12 +37,12 @@ import { resetEventsPolling } from 'src/events';
 import LinodePermissionsError from 'src/features/linodes/LinodesDetail/LinodePermissionsError';
 import {
   LinodeOptions,
-  OpenedVolumeDrawerFrom,
   openForClone,
   openForConfig,
   openForCreating,
   openForEdit,
-  openForResize
+  openForResize,
+  Origin
 } from 'src/store/volumeDrawer';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
@@ -170,7 +170,7 @@ interface DispatchProps {
     volumeRegion: string
   ) => void;
   openForCreating: (
-    openedDrawerFrom: OpenedVolumeDrawerFrom,
+    openedDrawerFrom: Origin,
     linodeOptions?: LinodeOptions
   ) => void;
   openForConfig: (volumeLabel: string, volumePath: string) => void;
