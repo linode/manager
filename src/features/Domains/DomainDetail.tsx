@@ -87,7 +87,7 @@ const DomainDetail: React.FC<CombinedProps> = props => {
   }
 
   /** Error State */
-  if (domainsError) {
+  if (domainsError.read) {
     return (
       <ErrorState errorText="There was an error retrieving your domain. Please reload and try again." />
     );
@@ -143,7 +143,7 @@ interface DomainProps extends Omit<StateProps, 'domainsData'> {
 export default compose<CombinedProps, {}>(
   reloaded,
   domainsContainer<DomainProps, RouteComponentProps<{ domainId?: string }>>(
-    (ownProps, domainsLoading, domains, domainsError) => ({
+    (ownProps, domainsLoading, domainsError, domains) => ({
       domainsError,
       domainsLoading,
       domain: !domains

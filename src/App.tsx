@@ -597,7 +597,7 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   profileError: path(['read'], state.__resources.profile.error),
   linodes: state.__resources.linodes.entities,
   linodesError: path(['read'], state.__resources.linodes.error),
-  domainsError: state.__resources.domains.error,
+  domainsError: state.__resources.domains.error.read,
   imagesError: state.__resources.images.error,
   notifications: state.__resources.notifications.data,
   notificationsError: state.__resources.notifications.error,

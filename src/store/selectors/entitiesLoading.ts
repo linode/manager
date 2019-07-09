@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';
-import { EntityError } from 'src/store/types';
+import { EntityError, RequestableDataWithEntityError } from 'src/store/types';
 
 type State = ApplicationState['__resources'];
 
@@ -26,15 +26,16 @@ export const domainsSelector = (state: State) => state.domains;
 export const imagesSelector = (state: State) => state.images;
 export const typesSelector = (state: State) => state.types;
 
-const isInitialLoad = (e: Resource<any, any>) =>
-  e.loading && e.lastUpdated === 0;
+const isInitialLoad = (
+  e: Resource<any, any> | RequestableDataWithEntityError<any>
+) => e.loading && e.lastUpdated === 0;
 
 export default createSelector<
   State,
   Resource<Linode.Linode[], EntityError>,
   Resource<Linode.Volume[]>,
   Resource<Linode.NodeBalancer[][]>,
-  Resource<Linode.Domain[]>,
+  RequestableDataWithEntityError<Linode.Domain[]>,
   Resource<Linode.Image[]>,
   Resource<Linode.LinodeType[]>,
   boolean

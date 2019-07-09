@@ -10,12 +10,12 @@ import {
   deleteDomain,
   updateDomain
 } from 'src/store/domains/domains.requests';
-import { ThunkDispatch } from 'src/store/types';
+import { EntityError, ThunkDispatch } from 'src/store/types';
 
 export interface StateProps {
   domainsData?: Linode.Domain[];
   domainsLoading: boolean;
-  domainsError?: Linode.ApiFieldError[];
+  domainsError: EntityError;
 }
 
 export interface DomainActionsProps {
@@ -30,8 +30,8 @@ export default <InnerStateProps extends {}, TOuter extends {}>(
   mapDomainsToProps: (
     ownProps: TOuter,
     domainsLoading: boolean,
-    domains?: Linode.Domain[],
-    domainsError?: Linode.ApiFieldError[]
+    domainsError: EntityError,
+    domains?: Linode.Domain[]
   ) => InnerStateProps
 ) =>
   connect(
@@ -39,8 +39,8 @@ export default <InnerStateProps extends {}, TOuter extends {}>(
       return mapDomainsToProps(
         ownProps,
         state.__resources.domains.loading,
-        state.__resources.domains.entities,
-        state.__resources.domains.error
+        state.__resources.domains.error,
+        state.__resources.domains.data
       );
     },
     (dispatch: ThunkDispatch) => ({

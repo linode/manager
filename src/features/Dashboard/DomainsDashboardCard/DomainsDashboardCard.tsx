@@ -180,15 +180,16 @@ interface WithUpdatingDomainsProps {
 }
 
 const withUpdatingDomains = connect((state: ApplicationState, ownProps: {}) => {
+  const domainState = state.__resources.domains;
   return {
     domains: compose(
       mergeEvents(state.events.events),
       take(5),
       sortBy(prop('domain'))
-    )(state.__resources.domains.entities),
-    loading: state.__resources.domains.loading,
-    domainCount: state.__resources.domains.entities.length,
-    error: state.__resources.domains.error
+    )(domainState.data),
+    loading: domainState.loading,
+    domainCount: domainState.data ? domainState.data.length : 0,
+    error: domainState.error
   };
 });
 

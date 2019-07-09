@@ -75,12 +75,14 @@ export const requestDomainForStore: RequestDomainForStoreThunk = id => (
   dispatch,
   getState
 ) => {
-  const { results } = getState().__resources.domains;
+  const { data } = getState().__resources.domains;
+
+  const ids = data ? data.map(domain => domain.id) : [];
 
   getDomain(id)
     .then(response => response)
     .then(domain => {
-      if (results.includes(id)) {
+      if (ids.includes(id)) {
         return dispatch(upsertDomain(domain));
       }
       return dispatch(upsertDomain(domain));

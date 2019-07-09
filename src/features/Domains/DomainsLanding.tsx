@@ -224,7 +224,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       return <RenderLoading />;
     }
 
-    if (domainsError) {
+    if (domainsError.read) {
       return <RenderError />;
     }
 
@@ -455,7 +455,7 @@ export const connected = connect(
 export default compose<CombinedProps, {}>(
   setDocs(DomainsLanding.docs),
   domainsContainer<DomainStateProps, {}>(
-    (ownProps, domainsLoading, domains, domainsError) => ({
+    (ownProps, domainsLoading, domainsError, domains) => ({
       domainsData: domains,
       domainsError,
       domainsLoading
