@@ -143,6 +143,7 @@ interface Props {
   linodeConfigs?: Linode.Config[];
   recentEvent?: Linode.Event;
   readOnly?: boolean;
+  removeBreadCrumb?: boolean;
 }
 
 //
@@ -292,7 +293,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       volumesError,
       volumesLoading,
       mappedVolumesDataWithLinodes,
-      readOnly
+      readOnly,
+      removeBreadCrumb
     } = this.props;
 
     if (volumesLoading) {
@@ -322,15 +324,19 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         <Grid
           container
           justify="space-between"
-          alignItems="flex-end"
+          alignItems={removeBreadCrumb ? 'center' : 'flex-end'}
           style={{ paddingBottom: 0 }}
         >
           <Grid item className={classes.titleWrapper}>
-            <Breadcrumb
-              pathname={this.props.location.pathname}
-              labelTitle="Volumes"
-              className={classes.title}
-            />
+            {removeBreadCrumb ? (
+              <Typography variant="h2">Volumes</Typography>
+            ) : (
+              <Breadcrumb
+                pathname={this.props.location.pathname}
+                labelTitle="Volumes"
+                className={classes.title}
+              />
+            )}
           </Grid>
           <Grid item className="p0">
             <FormControlLabel
