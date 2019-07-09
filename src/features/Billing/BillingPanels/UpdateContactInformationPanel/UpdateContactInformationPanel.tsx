@@ -368,10 +368,14 @@ class UpdateContactInformationPanel extends React.Component<
                 isClearable={false}
                 // Explicitly setting the value as an object so the text will populate on selection.
                 // For more info see here: https://github.com/JedWatson/react-select/issues/2674
-                value={{
-                  label: fields.state,
-                  value: fields.state
-                }}
+                value={
+                  fields.state
+                    ? {
+                        label: fields.state,
+                        value: fields.state
+                      }
+                    : ''
+                }
                 textFieldProps={{
                   dataAttrs: {
                     'data-qa-contact-province': true
