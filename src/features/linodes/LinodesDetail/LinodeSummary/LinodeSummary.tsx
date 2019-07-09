@@ -2,6 +2,7 @@ import * as moment from 'moment';
 import { map, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import {
   createStyles,
@@ -14,11 +15,16 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
+import withImages from 'src/containers/withImages.container';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
-import { displayType, typeLabelLong } from 'src/features/linodes/presentation';
+import { displayType } from 'src/features/linodes/presentation';
 import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
 import { ApplicationState } from 'src/store';
+import { ExtendedEvent } from 'src/store/events/event.helpers';
+import { formatRegion } from 'src/utilities';
 import { setUpCharts } from 'src/utilities/charts';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import { initAll } from 'src/utilities/initAll';
 import { isRecent } from 'src/utilities/isRecent';
 import {
@@ -35,8 +41,6 @@ import StatsPanel from './StatsPanel';
 import SummaryPanel from './SummaryPanel';
 import TotalTraffic, { TotalTrafficProps } from './TotalTraffic';
 
-import { ExtendedEvent } from 'src/store/events/event.helpers';
-
 setUpCharts();
 
 type ClassNames =
@@ -50,7 +54,10 @@ type ClassNames =
   | 'graphTitle'
   | 'graphSelectTitle'
   | 'graphControls'
-  | 'totalTraffic';
+  | 'totalTraffic'
+  | 'subHeaderOuter'
+  | 'textWrap'
+  | 'headerOuter';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -102,9 +109,7 @@ const styles = (theme: Theme) =>
         }
       }
     },
-    graphTitle: {
-      marginRight: theme.spacing(2)
-    },
+    graphTitle: {},
     graphSelectTitle: {
       marginRight: theme.spacing(1),
       position: 'relative',
@@ -122,6 +127,24 @@ const styles = (theme: Theme) =>
     },
     chartSelect: {
       maxWidth: 150
+    },
+    subHeaderOuter: {
+      width: '100%',
+      display: 'inline-block',
+      [theme.breakpoints.up('md')]: {
+        width: 'auto',
+        textAlign: 'right'
+      }
+    },
+    textWrap: {
+      display: 'inline-block',
+      whiteSpace: 'nowrap'
+    },
+    headerOuter: {
+      [theme.breakpoints.up('md')]: {
+        display: 'flex',
+        justifyContent: 'space-between'
+      }
     }
   });
 
@@ -129,6 +152,12 @@ interface LinodeContextProps {
   linodeCreated: string;
   linodeId: number;
   linodeData: Linode.Linode;
+  linodeVolumes: Linode.Volume[];
+  linodeVolumesError?: Linode.ApiFieldError[];
+}
+
+interface WithImagesProps {
+  imagesData: Linode.Image[];
 }
 
 interface State {
@@ -142,6 +171,7 @@ interface State {
 
 type CombinedProps = LinodeContextProps &
   WithTypesProps &
+  WithImagesProps &
   WithStyles<ClassNames>;
 
 const chartHeight = 300;
@@ -654,7 +684,14 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { linodeData: linode, classes, typesData } = this.props;
+    const {
+      linodeData: linode,
+      classes,
+      typesData,
+      imagesData,
+      linodeVolumesError,
+      linodeVolumes
+    } = this.props;
 
     const { dataIsLoading, statsError, isTooEarlyForGraphData } = this.state;
 
@@ -670,11 +707,13 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
       return null;
     }
 
-    const longLabel = typeLabelLong(
+    const newLabel = getLinodeDescription(
       displayType(linode.type, typesData || []),
       linode.specs.memory,
       linode.specs.disk,
-      linode.specs.vcpus
+      linode.specs.vcpus,
+      linode.image,
+      imagesData
     );
 
     return (
@@ -691,11 +730,29 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
               justify="space-between"
               alignItems="flex-start"
               className={classes.headerWrapper}
-              direction="column"
+              direction="row"
             >
-              <Grid item className="py0">
+              <Grid item className="py0" xs={12}>
                 <Typography variant="h2" className={classes.graphTitle}>
-                  {longLabel}
+                  <span className={classes.headerOuter}>
+                    <span>{newLabel}</span>
+                    <span className={`py0 ${classes.subHeaderOuter}`}>
+                      <span className={classes.textWrap}>
+                        Volumes:&#160;
+                        {linodeVolumesError ? (
+                          getErrorStringOrDefault(linodeVolumesError)
+                        ) : (
+                          <Link to={`/linodes/${linode.id}/volumes`}>
+                            {linodeVolumes.length}
+                          </Link>
+                        )}
+                        ,&#160;
+                      </span>
+                      <span className={classes.textWrap}>
+                        Region: {formatRegion(linode.region)}
+                      </span>
+                    </span>
+                  </span>
                 </Typography>
               </Grid>
             </Grid>
@@ -762,7 +819,9 @@ const styled = withStyles(styles);
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeCreated: linode.created,
   linodeId: linode.id,
-  linodeData: linode
+  linodeData: linode,
+  linodeVolumes: linode._volumes,
+  linodeVolumesError: linode._volumesError
 }));
 
 interface WithTypesProps {
@@ -788,7 +847,11 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
 const enhanced = compose<CombinedProps, {}>(
   styled,
   withTypes,
-  linodeContext
+  linodeContext,
+  withImages((ownProps, imagesData) => ({
+    ...ownProps,
+    imagesData
+  }))
 );
 
 export default enhanced(LinodeSummary);
