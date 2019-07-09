@@ -117,7 +117,7 @@ const ContactInformation: React.FC<CombinedProps> = props => {
           onClick={() => toggleModal(true)}
           className={localClasses.cancel}
         >
-          <strong>Cancel Account</strong>
+          <strong>Close Account</strong>
         </Typography>
       </Paper>
       <Dialog
