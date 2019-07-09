@@ -9,6 +9,7 @@ interface Props {
   nodeIndex: number;
   errorText?: string;
   nodeAddress?: string;
+  workflow: 'create' | 'edit';
 }
 
 type CombinedProps = Props;
@@ -34,8 +35,15 @@ const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
   };
 
   React.useEffect(() => {
-    props.handleChange(props.nodeIndex, '');
-    setSelectedLinode(null);
+    /**
+     * In other words, when we select a new region in the create workflow
+     * clear out the selected IP Address because it might belong to a node
+     * NOT in the selected region
+     */
+    if (props.workflow === 'create') {
+      setSelectedLinode(null);
+      props.handleChange(props.nodeIndex, '');
+    }
   }, [props.selectedRegion]);
 
   return (
@@ -47,7 +55,7 @@ const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
               value: props.nodeAddress,
               label: props.nodeAddress
             }
-          : undefined
+          : null
       }
       selectedLinode={selectedLinode}
       noOptionsMessage="No options - please ensure you have at least 1 Linode with a private IP and selected a region"

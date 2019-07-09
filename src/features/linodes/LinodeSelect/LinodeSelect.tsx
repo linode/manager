@@ -31,7 +31,7 @@ interface Props {
   noOptionsMessage?: string;
   small?: boolean;
   noMarginTop?: boolean;
-  value?: Item<any>;
+  value?: Item<any> | null;
 }
 
 type CombinedProps = Props & WithLinodesProps;
@@ -65,7 +65,7 @@ const linodesToItems = (
 
 const linodeFromItems = (linodes: Item<number>[], linodeId: number | null) => {
   if (!linodeId) {
-    return;
+    return undefined;
   }
 
   return linodes.find(thisLinode => {
@@ -88,7 +88,8 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
     placeholder,
     valueOverride,
     labelOverride,
-    filterCondition
+    filterCondition,
+    value
   } = props;
 
   const linodes = region
@@ -112,7 +113,21 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
       className={className}
       noMarginTop={props.noMarginTop}
       placeholder={placeholder || 'Select a Linode'}
-      value={linodeFromItems(options, selectedLinode)}
+      /**
+       * react-select wants you to pass null to clear out the value so we need
+       * to allow the parent to pass that. This solves for the situiation where
+       *
+       * 1. Navigate to Create NodeBalancer Form
+       * 2. Select region
+       * 3. Select Node Config Node IP Address
+       * 4. Click different region
+       * 5. IP Address _should_ be cleared
+       */
+      value={
+        typeof value === 'undefined'
+          ? linodeFromItems(options, selectedLinode)
+          : value
+      }
       options={options}
       disabled={disabled}
       small={props.small}

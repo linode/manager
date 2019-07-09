@@ -984,6 +984,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                   nodeIndex={idx}
                                   errorText={nodesHasErrorFor('address')}
                                   nodeAddress={node.address}
+                                  workflow={forEdit ? 'edit' : 'create'}
                                 />
                               </Grid>
                               <Grid item xs={6} sm={3} lg={2}>
