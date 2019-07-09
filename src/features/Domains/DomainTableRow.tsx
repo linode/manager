@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import {
   createStyles,
   Theme,
@@ -109,9 +110,17 @@ const DomainTableRow: React.StatelessComponent<CombinedProps> = props => {
           </Grid>
           <Grid item className={classes.domainCellContainer}>
             <div className={classes.labelStatusWrapper}>
-              <Typography variant="h3" data-qa-label>
-                {domain}
-              </Typography>
+              {type !== 'slave' ? (
+                <Link to={`/domains/${id}`} tabIndex={-1}>
+                  <Typography variant="h3" data-qa-label>
+                    {domain}
+                  </Typography>
+                </Link>
+              ) : (
+                <Typography variant="h3" data-qa-label>
+                  {domain}
+                </Typography>
+              )}
             </div>
             <div className={classes.tagWrapper}>
               <Tags tags={tags} />
