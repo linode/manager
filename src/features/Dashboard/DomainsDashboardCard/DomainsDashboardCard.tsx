@@ -172,7 +172,7 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
             <Grid item className={classes.labelGridWrapper}>
               <div className={classes.labelStatusWrapper}>
                 {type !== 'slave' ? (
-                  <Link to={`/domains/${id}`}>
+                  <Link to={`/domains/${id}`} tabIndex={-1}>
                     <Typography
                       variant="h3"
                       className={classes.wrapHeader}
