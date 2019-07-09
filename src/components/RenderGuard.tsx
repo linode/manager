@@ -1,9 +1,8 @@
-import { WithTheme } from '@material-ui/core/styles';
 import { equals } from 'ramda';
 import * as React from 'react';
-import { withTheme } from 'src/components/core/styles';
+import { withTheme, WithTheme } from 'src/components/core/styles';
 
-import { getDisplayName } from 'src/utilities/getDisplayName.ts'
+import { getDisplayName } from 'src/utilities/getDisplayName.ts';
 
 export interface RenderGuardProps {
   updateFor?: any[];
@@ -15,7 +14,7 @@ const renderGuard = <P extends {}>(
 ) => {
   class ComponentWithRenderGuard extends React.Component<
     RenderGuardProps & WithTheme
-    > {
+  > {
     static displayName = `WithRenderGuard(${getDisplayName(Component)})`;
 
     shouldComponentUpdate(nextProps: P & RenderGuardProps & WithTheme) {

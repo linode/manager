@@ -1,4 +1,3 @@
-import Hidden from '@material-ui/core/Hidden';
 import Close from '@material-ui/icons/Close';
 import { compose } from 'ramda';
 import * as React from 'react';
@@ -8,6 +7,7 @@ import Resource from 'src/assets/icons/resource.svg';
 import Streamline from 'src/assets/icons/streamline.svg';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Hidden from 'src/components/core/Hidden';
 import {
   createStyles,
   Theme,
