@@ -83,7 +83,7 @@ export const updateAccountSettings = (data: Partial<Linode.AccountSettings>) =>
  */
 export const cancelAccount = (data: CancelAccountPayload) => {
   return Request<CancelAccount>(
-    setURL(`${API_ROOT}/cancel`),
+    setURL(`${API_ROOT}/account/cancel`),
     setMethod('POST'),
     setData(data)
   ).then(response => response.data);
