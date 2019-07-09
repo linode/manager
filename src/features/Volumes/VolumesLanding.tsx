@@ -492,14 +492,14 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   openCreateVolumeDrawer = (e: any) => {
     const { linodeId, linodeLabel, linodeRegion } = this.props;
     if (linodeId && linodeLabel && linodeRegion) {
-      return this.props.openForCreating('linodeDetails', {
+      return this.props.openForCreating('Created from Linode Details', {
         linodeId,
         linodeLabel,
         linodeRegion
       });
     }
 
-    this.props.openForCreating('volumesLanding');
+    this.props.openForCreating('Created from Volumes Landing');
 
     e.preventDefault();
   };

@@ -47,7 +47,10 @@ interface CreatingForLinode extends Action {
   linodeRegion: string;
 }
 
-export type Origin = 'addNewMenu' | 'volumesLanding' | 'linodeDetails';
+export type Origin =
+  | 'Created from Add New Menu'
+  | 'Created from Volumes Landing'
+  | 'Created from Linode Details';
 
 export interface LinodeOptions {
   linodeId: number;
@@ -221,7 +224,7 @@ export const volumeDrawer: Reducer<State> = (
     return {
       ...state,
       mode: getMode(action),
-      origin: 'linodeDetails',
+      origin: 'Created from Linode Details',
       linodeId,
       linodeLabel,
       linodeRegion

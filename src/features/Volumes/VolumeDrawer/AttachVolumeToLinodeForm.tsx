@@ -167,7 +167,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
   actions: {
     switchToCreating: () =>
       dispatch(
-        openForCreating('linodeDetails', {
+        openForCreating('Created from Linode Details', {
           linodeId: ownProps.linodeId,
           linodeLabel: ownProps.linodeLabel,
           linodeRegion: ownProps.linodeRegion
