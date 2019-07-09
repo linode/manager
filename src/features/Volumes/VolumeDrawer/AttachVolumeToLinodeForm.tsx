@@ -27,10 +27,7 @@ interface Props {
   readOnly?: boolean;
 }
 
-type CombinedProps = Props &
-  StateProps &
-  DispatchProps &
-  VolumesRequests;
+type CombinedProps = Props & StateProps & DispatchProps & VolumesRequests;
 
 /**
  * I had to provide a separate validation schema since the linode_id (which is required by API) is
@@ -170,11 +167,11 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
   actions: {
     switchToCreating: () =>
       dispatch(
-        openForCreating(
-          ownProps.linodeId,
-          ownProps.linodeLabel,
-          ownProps.linodeRegion
-        )
+        openForCreating('Created from Linode Details', {
+          linodeId: ownProps.linodeId,
+          linodeLabel: ownProps.linodeLabel,
+          linodeRegion: ownProps.linodeRegion
+        })
       )
   }
 });

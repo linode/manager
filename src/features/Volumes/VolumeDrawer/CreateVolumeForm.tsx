@@ -21,6 +21,7 @@ import {
 } from 'src/features/Profile/permissionsHelpers';
 import { CreateVolumeSchema } from 'src/services/volumes/volumes.schema.ts';
 import { MapState } from 'src/store/types';
+import { Origin as VolumeDrawerOrigin } from 'src/store/volumeDrawer';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { sendCreateVolumeEvent } from 'src/utilities/ga';
 import ConfigSelect from './ConfigSelect';
@@ -62,7 +63,7 @@ type CombinedProps = Props &
   StateProps;
 
 const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
-  const { onClose, onSuccess, classes, createVolume, disabled } = props;
+  const { onClose, onSuccess, classes, createVolume, disabled, origin } = props;
   return (
     <Formik
       initialValues={initialValues}
@@ -97,7 +98,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               `Volume scheduled for creation.`
             );
             // GA Event
-            sendCreateVolumeEvent(`${label}: ${size}GiB`);
+            sendCreateVolumeEvent(`${label}: ${size}GiB`, origin);
           })
           .catch(errorResponse => {
             const defaultMessage = `Unable to create a volume at this time. Please try again later.`;
@@ -272,10 +273,12 @@ const initialValues: FormState = {
 
 interface StateProps {
   disabled: boolean;
+  origin?: VolumeDrawerOrigin;
 }
 
 const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
-  disabled: isRestrictedUser(state) && !hasGrant(state, 'add_volumes')
+  disabled: isRestrictedUser(state) && !hasGrant(state, 'add_volumes'),
+  origin: state.volumeDrawer.origin
 });
 
 const connected = connect(mapStateToProps);
