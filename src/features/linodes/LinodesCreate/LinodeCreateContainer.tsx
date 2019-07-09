@@ -54,7 +54,6 @@ import { cloneLinode, CreateLinodeRequest } from 'src/services/linodes';
 import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { MapState } from 'src/store/types';
 
-import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendCreateLinodeEvent } from 'src/utilities/ga';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -427,17 +426,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             variant: 'success'
           }
         );
-
-        /**
-         * allocate private IP if we have one
-         *
-         * @todo we need to update redux state here as well but it's not
-         * crucial now because the networking tab already makes a request to
-         * /ips on componentDidMount
-         */
-        if (payload.private_ip) {
-          allocatePrivateIP(response.id);
-        }
 
         /** reset the Events polling */
         resetEventsPolling();
