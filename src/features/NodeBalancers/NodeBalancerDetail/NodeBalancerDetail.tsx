@@ -324,7 +324,9 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
           </Grid>
           <AppBar position="static" color="default">
             <Tabs
-              value={this.tabs.findIndex(tab => any(matches)(tab.routeNames))}
+              value={this.tabs.findIndex(
+                (tab, i) => i !== -1 && any(matches)(tab.routeNames)
+              )}
               onChange={this.handleTabChange}
               indicatorColor="primary"
               textColor="primary"
