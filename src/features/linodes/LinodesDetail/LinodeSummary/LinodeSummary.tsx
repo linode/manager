@@ -109,9 +109,7 @@ const styles = (theme: Theme) =>
         }
       }
     },
-    graphTitle: {
-      marginRight: theme.spacing(2)
-    },
+    graphTitle: {},
     graphSelectTitle: {
       marginRight: theme.spacing(1),
       position: 'relative',
