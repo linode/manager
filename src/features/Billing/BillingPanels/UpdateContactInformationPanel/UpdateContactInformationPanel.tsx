@@ -90,6 +90,13 @@ class UpdateContactInformationPanel extends React.Component<
 
   composeState = composeState;
 
+  componentDidMount() {
+    const { account } = this.props;
+    if (account && account !== undefined) {
+      this.setState({ fields: { state: account.state } });
+    }
+  }
+
   render() {
     return (
       <ExpansionPanel
@@ -169,15 +176,17 @@ class UpdateContactInformationPanel extends React.Component<
       };
     });
 
-    const regionSelection = regionResults.find(region => {
-      return fields.state
-        ? region.value === fields.state
-        : region.value === account.state;
-    });
+    // const regionSelection = regionResults.find(region => {
+    //   return fields.state
+    //     ? region.value === fields.state
+    //     : region.value === account.state;
+    // });
 
-    const hasChangedCountry =
-      fields.country && fields.country !== account.country;
+    // const hasChangedCountry =
+    //   fields.country && fields.country !== account.country;
 
+    console.log(fields.state);
+    console.log(fields.country);
     return (
       <Grid
         container
@@ -368,13 +377,12 @@ class UpdateContactInformationPanel extends React.Component<
                 placeholder="Select a State"
                 options={regionResults}
                 isClearable={false}
-                value={
-                  regionSelection
-                    ? regionSelection
-                    : hasChangedCountry
-                    ? null
-                    : { value: account.state, label: account.state }
-                }
+                value={defaultTo(account.state, fields.state)}
+                // regionSelection
+                //   ? regionSelection
+                //   : hasChangedCountry
+                //   ? null
+                //   : { value: account.state, label: account.state }
                 textFieldProps={{
                   dataAttrs: {
                     'data-qa-contact-province': true
@@ -511,6 +519,7 @@ class UpdateContactInformationPanel extends React.Component<
 
   updateCountry = (selectedCountry: Item) => {
     this.composeState([set(L.fields.country, selectedCountry.value)]);
+    this.composeState([set(L.fields.state, undefined)]);
   };
 
   updateTaxID = (e: React.ChangeEvent<HTMLInputElement>) => {
