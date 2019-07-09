@@ -26,6 +26,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     wordBreak: 'break-all'
   },
   cancel: {
+    marginTop: theme.spacing(2),
     color: theme.palette.primary.main,
     cursor: 'pointer'
   }
@@ -116,7 +117,7 @@ const ContactInformation: React.FC<CombinedProps> = props => {
           onClick={() => toggleModal(true)}
           className={localClasses.cancel}
         >
-          Cancel Account
+          <strong>Cancel Account</strong>
         </Typography>
       </Paper>
       <Dialog
