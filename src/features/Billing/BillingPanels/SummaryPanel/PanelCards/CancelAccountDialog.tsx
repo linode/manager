@@ -54,6 +54,8 @@ const CancelAccountDialog: React.FC<CombinedProps> = props => {
   React.useEffect(() => {
     if (inputtedUsername === props.username) {
       setCanSubmit(true);
+    } else {
+      setCanSubmit(false);
     }
   }, [inputtedUsername]);
 
