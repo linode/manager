@@ -36,11 +36,13 @@ import { BlockStorage } from 'src/documentation';
 import { resetEventsPolling } from 'src/events';
 import LinodePermissionsError from 'src/features/linodes/LinodesDetail/LinodePermissionsError';
 import {
+  LinodeOptions,
   openForClone,
   openForConfig,
   openForCreating,
   openForEdit,
-  openForResize
+  openForResize,
+  Origin as VolumeDrawerOrigin
 } from 'src/store/volumeDrawer';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
@@ -169,9 +171,8 @@ interface DispatchProps {
     volumeRegion: string
   ) => void;
   openForCreating: (
-    linodeId?: number,
-    linodeLabel?: string,
-    linodeRegion?: string
+    origin: VolumeDrawerOrigin,
+    linodeOptions?: LinodeOptions
   ) => void;
   openForConfig: (volumeLabel: string, volumePath: string) => void;
 }
@@ -497,10 +498,14 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   openCreateVolumeDrawer = (e: any) => {
     const { linodeId, linodeLabel, linodeRegion } = this.props;
     if (linodeId && linodeLabel && linodeRegion) {
-      return this.props.openForCreating(linodeId, linodeLabel, linodeRegion);
+      return this.props.openForCreating('Created from Linode Details', {
+        linodeId,
+        linodeLabel,
+        linodeRegion
+      });
     }
 
-    this.props.openForCreating();
+    this.props.openForCreating('Created from Volumes Landing');
 
     e.preventDefault();
   };
