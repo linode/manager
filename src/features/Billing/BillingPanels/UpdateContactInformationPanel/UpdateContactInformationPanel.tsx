@@ -185,8 +185,8 @@ class UpdateContactInformationPanel extends React.Component<
     // const hasChangedCountry =
     //   fields.country && fields.country !== account.country;
 
-    console.log(fields.state);
-    console.log(fields.country);
+    console.log('current State: ' + fields.state);
+    console.log('current Country ' + fields.country);
     return (
       <Grid
         container
@@ -377,9 +377,11 @@ class UpdateContactInformationPanel extends React.Component<
                 placeholder="Select a State"
                 options={regionResults}
                 isClearable={false}
+                // Explicitly setting the value as an object so the text will populate on selection.
+                // For more info see here: https://github.com/JedWatson/react-select/issues/2674
                 value={{
-                  label: defaultTo(account.state, fields.state),
-                  value: defaultTo(account.state, fields.state)
+                  label: fields.state,
+                  value: fields.state
                 }}
                 // regionSelection
                 //   ? regionSelection
@@ -522,7 +524,7 @@ class UpdateContactInformationPanel extends React.Component<
 
   updateCountry = (selectedCountry: Item) => {
     this.composeState([set(L.fields.country, selectedCountry.value)]);
-    this.composeState([set(L.fields.state, undefined)]);
+    this.composeState([set(L.fields.state, null)]);
   };
 
   updateTaxID = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -556,12 +558,16 @@ class UpdateContactInformationPanel extends React.Component<
       });
   };
 
-  resetForm = () =>
+  resetForm = () => {
+    const { account } = this.props;
     this.setState({
-      fields: {},
+      fields: {
+        state: account ? account.state : undefined
+      },
       submitting: false,
       success: undefined
     });
+  };
 }
 
 const styled = withStyles(styles);
