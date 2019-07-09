@@ -24,7 +24,10 @@ import {
 } from 'src/features/Profile/permissionsHelpers';
 import { CreateVolumeSchema } from 'src/services/volumes/volumes.schema.ts';
 import { MapState } from 'src/store/types';
-import { openForAttaching, Origin } from 'src/store/volumeDrawer';
+import {
+  openForAttaching,
+  Origin as VolumeDrawerOrigin
+} from 'src/store/volumeDrawer';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { sendCreateVolumeEvent } from 'src/utilities/ga';
 import ConfigSelect from './ConfigSelect';
@@ -290,7 +293,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
 
 interface StateProps {
   disabled: boolean;
-  origin?: Origin;
+  origin?: VolumeDrawerOrigin;
 }
 
 const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({

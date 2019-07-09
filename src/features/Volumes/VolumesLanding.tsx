@@ -42,7 +42,7 @@ import {
   openForCreating,
   openForEdit,
   openForResize,
-  Origin
+  Origin as VolumeDrawerOrigin
 } from 'src/store/volumeDrawer';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
@@ -169,7 +169,10 @@ interface DispatchProps {
     volumeSize: number,
     volumeRegion: string
   ) => void;
-  openForCreating: (origin: Origin, linodeOptions?: LinodeOptions) => void;
+  openForCreating: (
+    origin: VolumeDrawerOrigin,
+    linodeOptions?: LinodeOptions
+  ) => void;
   openForConfig: (volumeLabel: string, volumePath: string) => void;
 }
 
