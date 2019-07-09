@@ -176,17 +176,6 @@ class UpdateContactInformationPanel extends React.Component<
       };
     });
 
-    // const regionSelection = regionResults.find(region => {
-    //   return fields.state
-    //     ? region.value === fields.state
-    //     : region.value === account.state;
-    // });
-
-    // const hasChangedCountry =
-    //   fields.country && fields.country !== account.country;
-
-    console.log('current State: ' + fields.state);
-    console.log('current Country ' + fields.country);
     return (
       <Grid
         container
@@ -383,11 +372,6 @@ class UpdateContactInformationPanel extends React.Component<
                   label: fields.state,
                   value: fields.state
                 }}
-                // regionSelection
-                //   ? regionSelection
-                //   : hasChangedCountry
-                //   ? null
-                //   : { value: account.state, label: account.state }
                 textFieldProps={{
                   dataAttrs: {
                     'data-qa-contact-province': true
@@ -523,8 +507,12 @@ class UpdateContactInformationPanel extends React.Component<
   };
 
   updateCountry = (selectedCountry: Item) => {
+    this.setState({
+      fields: {
+        state: undefined
+      }
+    });
     this.composeState([set(L.fields.country, selectedCountry.value)]);
-    this.composeState([set(L.fields.state, null)]);
   };
 
   updateTaxID = (e: React.ChangeEvent<HTMLInputElement>) => {
