@@ -8,7 +8,7 @@ describe('getEventMessage', () => {
     };
     const result = getEventMessage(mockEvent as Linode.Event);
 
-    expect(result).toBeUndefined();
+    expect(result).toBe('__unknown__');
   });
 
   it('should filter mangled events', () => {
@@ -19,7 +19,7 @@ describe('getEventMessage', () => {
     };
     const result = getEventMessage(mockEvent as Linode.Event);
 
-    expect(result).toBeUndefined();
+    expect(result).toBe('');
   });
 
   it('should call the message generator with the event', () => {
