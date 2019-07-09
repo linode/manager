@@ -377,7 +377,10 @@ class UpdateContactInformationPanel extends React.Component<
                 placeholder="Select a State"
                 options={regionResults}
                 isClearable={false}
-                value={defaultTo(account.state, fields.state)}
+                value={{
+                  label: defaultTo(account.state, fields.state),
+                  value: defaultTo(account.state, fields.state)
+                }}
                 // regionSelection
                 //   ? regionSelection
                 //   : hasChangedCountry
