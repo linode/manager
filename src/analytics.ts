@@ -43,7 +43,7 @@ interface Tracker {
  */
 export const initAnalytics = (production: boolean, ...gaIDs: Tracker[]) => {
   /** if no GA IDs exist */
-  if (gaIDs.every(eachID => !eachID)) {
+  if (!gaIDs || gaIDs.every(eachID => !eachID.id)) {
     return;
   }
 
