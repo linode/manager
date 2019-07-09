@@ -432,10 +432,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   }
 };
 
-export default (
-  e: Linode.Event,
-  onError?: (e: Linode.Event, err: Error) => void
-): string => {
+export default (e: Linode.Event): string => {
   const fn = path<EventMessageCreator>(
     [e.action, e.status],
     eventMessageCreators
@@ -458,10 +455,6 @@ export default (
   try {
     message = fn(e);
   } catch (error) {
-    /** invoke our error callback if we have one */
-    if (onError) {
-      onError(e, error);
-    }
     /** report our error to sentry */
     reportException('Known API Event Received with Error', {
       event_data: e,
