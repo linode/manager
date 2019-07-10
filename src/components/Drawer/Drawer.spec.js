@@ -13,48 +13,48 @@ describe('Drawer Suite', () => {
     });
 
     it('should display the drawer on click', () => {
-        browser.waitForVisible(toggleDrawer);
-        browser.click(toggleDrawer);
-        browser.waitForVisible(drawerElem);
+        $(toggleDrawer).waitForDisplayed();
+        $(toggleDrawer).click();
+        $(drawerElem).waitForDisplayed();
     });
 
     it('should display a title', () => {
         const title = $('[data-qa-drawer-title]');
 
-        expect(title.isVisible()).toBe(true);
+        expect(title.isDisplayed()).toBe(true);
         expect(title.getText()).toBe('My Drawer');
     });
 
     it('should display an text field', () => {
        const textField = $('[data-qa-text-field]');
        
-       expect(textField.isVisible()).toBe(true); 
+       expect(textField.isDisplayed()).toBe(true); 
     });
 
     it('should display save and cancel buttons', () => {
         const cancelButton = $('[data-qa-cancel]');
         const saveButton = $('[data-qa-save]');
 
-        expect(cancelButton.isVisible()).toBe(true);
+        expect(cancelButton.isDisplayed()).toBe(true);
         expect(cancelButton.getAttribute('class')).toContain('Secondary');
-        expect(saveButton.isVisible()).toBe(true);
+        expect(saveButton.isDisplayed()).toBe(true);
         expect(saveButton.getAttribute('class')).toContain('Primary');
     });
 
     it('should dismiss drawer on close', () => {
         const close = $('[data-qa-close-drawer]');
         
-        expect(close.isVisible()).toBe(true);
+        expect(close.isDisplayed()).toBe(true);
         
         close.click();
-        browser.waitForVisible(drawerElem, 10000, true);
+        $(drawerElem, 10000, true).waitForDisplayed();
     });
 
     it('should dismiss on esc', () => {
-        browser.click(toggleDrawer);
-        browser.waitForVisible(drawerElem);
-        browser.click('[data-qa-text-field]');
-        browser.setValue('[data-qa-text-field] input', '\uE00C');
-        browser.waitForVisible(drawerElem, 10000, true);
+        $(toggleDrawer).click(toggleDrawer);
+        $(drawerElem).waitForDisplayed(drawerElem);
+        $('[data-qa-text-field]').click();
+        $('[data-qa-text-field] input', '\uE00C').setValue();
+        $(drawerElem, 10000, true).waitForDisplayed();
     });
 });
