@@ -15,6 +15,7 @@ const styles = (theme: Theme) =>
     root: {
       position: 'absolute',
       left: '10px',
+      width: '100%',
       wordWrap: 'normal',
       whiteSpace: 'nowrap',
       overflow: 'hidden',

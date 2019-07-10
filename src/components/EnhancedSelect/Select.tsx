@@ -204,8 +204,11 @@ class Select extends React.PureComponent<CombinedProps, {}> {
             [classes.hideLabel]: hideLabel
           })
         }}
-        /** let us explicitly pass an empty string */
-        value={value || undefined}
+        /**
+         * react-select wants you to pass "null" to clear out the value
+         * so we need to allow the parent to pass that if it wants
+         */
+        value={typeof value === 'undefined' ? undefined : value}
         onBlur={onBlur}
         options={options}
         components={combinedComponents}
