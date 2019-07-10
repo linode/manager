@@ -8,6 +8,9 @@ describe('SummaryPanel', () => {
   const baseProps: CombinedProps = {
     accountLoading: false,
     lastUpdated: 10,
+    username: 'helloworld',
+    profileError: undefined,
+    profileLoading: false,
     data: {
       company: '',
       first_name: '',

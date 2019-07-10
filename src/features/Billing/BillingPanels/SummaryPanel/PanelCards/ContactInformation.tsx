@@ -6,24 +6,17 @@ import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 
-import styled, { StyleProps } from 'src/containers/SummaryPanels.styles';
+import Dialog from './CancelAccountDialog';
+
+import styled from 'src/containers/SummaryPanels.styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
-  title: {},
-  summarySection: {},
-  section: {},
-  main: {},
-  sidebar: {},
-  domainSidebar: {},
-  titleWrapper: {},
-  region: {},
-  regionInner: {},
-  volumeLink: {},
+  ...styled(theme),
   wordWrap: {
     wordBreak: 'break-all'
   },
   cancel: {
+    marginTop: theme.spacing(2),
     color: theme.palette.primary.main,
     cursor: 'pointer'
   }
@@ -41,14 +34,15 @@ interface Props {
   email: string;
   phone: string;
   activeSince: string;
+  username: string;
 }
 
-type CombinedProps = Props & StyleProps;
+type CombinedProps = Props;
 
 const ContactInformation: React.FC<CombinedProps> = props => {
-  const localClasses = useStyles();
+  const classes = useStyles();
 
-  // const [modalOpen, toggleModal] = React.useState<boolean>(false)
+  const [modalOpen, toggleModal] = React.useState<boolean>(false);
 
   const {
     city,
@@ -60,59 +54,64 @@ const ContactInformation: React.FC<CombinedProps> = props => {
     address1,
     address2,
     email,
+    username,
     phone,
-    activeSince,
-    classes
+    activeSince
   } = props;
 
   return (
-    <Paper className={classes.summarySection} data-qa-contact-summary>
-      <Typography variant="h3" className={classes.title}>
-        Contact Information
-      </Typography>
+    <React.Fragment>
+      <Paper className={classes.summarySection} data-qa-contact-summary>
+        <Typography variant="h3" className={classes.title}>
+          Contact Information
+        </Typography>
 
-      <div className={classes.section} data-qa-company>
-        <strong>Company Name:&nbsp;</strong>
-        <div className={localClasses.wordWrap}>
-          {company ? company : 'None'}
+        <div className={classes.section} data-qa-company>
+          <strong>Company Name:&nbsp;</strong>
+          <div className={classes.wordWrap}>{company ? company : 'None'}</div>
         </div>
-      </div>
-      <div className={classes.section} data-qa-contact-name>
-        <strong>Name:&nbsp;</strong>
-        {!(firstName || lastName) && 'None'}
-        <div
-          className={localClasses.wordWrap}
-        >{`${firstName} ${lastName}`}</div>
-      </div>
-      <div className={classes.section} data-qa-contact-address>
-        <div>
-          <strong>Address:&nbsp;</strong>
+        <div className={classes.section} data-qa-contact-name>
+          <strong>Name:&nbsp;</strong>
+          {!(firstName || lastName) && 'None'}
+          <div className={classes.wordWrap}>{`${firstName} ${lastName}`}</div>
         </div>
-        <div>
-          {!(address1 || address2 || city || state || zip) && 'None'}
-          <span>{address1}</span>
-          <div>{address2}</div>
-          <div>{`${city} ${city && state && ', '} ${state} ${zip}`}</div>
+        <div className={classes.section} data-qa-contact-address>
+          <div>
+            <strong>Address:&nbsp;</strong>
+          </div>
+          <div>
+            {!(address1 || address2 || city || state || zip) && 'None'}
+            <span>{address1}</span>
+            <div>{address2}</div>
+            <div>{`${city} ${city && state && ', '} ${state} ${zip}`}</div>
+          </div>
         </div>
-      </div>
-      <div className={classes.section} data-qa-contact-email>
-        <strong>Email:&nbsp;</strong>
-        <div className={localClasses.wordWrap}>{email}</div>
-      </div>
-      <div className={classes.section} data-qa-contact-phone>
-        <strong>Phone Number:&nbsp;</strong>
-        {phone ? phone : 'None'}
-      </div>
-      <div className={classes.section}>
-        <strong>Active Since:&nbsp;</strong>
-        <DateTimeDisplay value={activeSince} format="MMMM D, YYYY" />
-      </div>
-      <Typography className={localClasses.cancel}>Cancel Account</Typography>
-    </Paper>
+        <div className={classes.section} data-qa-contact-email>
+          <strong>Email:&nbsp;</strong>
+          <div className={classes.wordWrap}>{email}</div>
+        </div>
+        <div className={classes.section} data-qa-contact-phone>
+          <strong>Phone Number:&nbsp;</strong>
+          {phone ? phone : 'None'}
+        </div>
+        <div className={classes.section}>
+          <strong>Active Since:&nbsp;</strong>
+          <DateTimeDisplay value={activeSince} format="MMMM D, YYYY" />
+        </div>
+        <Typography
+          onClick={() => toggleModal(true)}
+          className={classes.cancel}
+        >
+          <strong>Close Account</strong>
+        </Typography>
+      </Paper>
+      <Dialog
+        username={username}
+        closeDialog={() => toggleModal(false)}
+        open={modalOpen}
+      />
+    </React.Fragment>
   );
 };
 
-export default compose<CombinedProps, Props>(
-  React.memo,
-  styled
-)(ContactInformation);
+export default compose<CombinedProps, Props>(React.memo)(ContactInformation);

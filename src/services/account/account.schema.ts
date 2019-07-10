@@ -93,12 +93,6 @@ const GrantSchema = object({
   )
 });
 
-export const CancelAccountSchema = object({
-  comments: string(),
-  customerID: number().required('Customer ID is required.'),
-  username: string().required('Username is required.')
-});
-
 export const UpdateGrantSchema = object({
   global: object(),
   linode: array().of(GrantSchema),

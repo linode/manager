@@ -7,22 +7,12 @@ import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 
-import styled, { StyleProps } from 'src/containers/SummaryPanels.styles';
+import styled from 'src/containers/SummaryPanels.styles';
 
 import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
-  title: {},
-  summarySection: {},
-  section: {},
-  main: {},
-  sidebar: {},
-  domainSidebar: {},
-  titleWrapper: {},
-  region: {},
-  regionInner: {},
-  volumeLink: {},
+  ...styled(theme),
   expired: {
     color: theme.color.red
   },
@@ -44,12 +34,12 @@ interface Props {
   lastFour: string;
 }
 
-type CombinedProps = Props & StyleProps;
+type CombinedProps = Props;
 
 const BillingInformation: React.FC<CombinedProps> = props => {
-  const localClasses = useStyles();
+  const classes = useStyles();
 
-  const { balance, balanceUninvoiced, lastFour, expiry, classes } = props;
+  const { balance, balanceUninvoiced, lastFour, expiry } = props;
 
   return (
     <Paper className={classes.summarySection} data-qa-billing-summary>
@@ -63,15 +53,15 @@ const BillingInformation: React.FC<CombinedProps> = props => {
         </div>
       )}
       <div
-        className={`${classes.section} ${localClasses.balance}`}
+        className={`${classes.section} ${classes.balance}`}
         data-qa-current-balance
       >
         <strong>Current Balance:&nbsp;</strong>
         <Typography
           component={'span'}
           className={classNames({
-            [localClasses.negative]: balance > 0,
-            [localClasses.positive]: balance <= 0
+            [classes.negative]: balance > 0,
+            [classes.positive]: balance <= 0
           })}
         >
           <Currency quantity={Math.abs(balance)} />
@@ -86,14 +76,11 @@ const BillingInformation: React.FC<CombinedProps> = props => {
         <strong>Expiration Date: </strong>
         {expiry ? `${expiry} ` : 'None'}
         {expiry && isCreditCardExpired(expiry) && (
-          <span className={localClasses.expired}>Expired</span>
+          <span className={classes.expired}>Expired</span>
         )}
       </div>
     </Paper>
   );
 };
 
-export default compose<CombinedProps, Props>(
-  React.memo,
-  styled
-)(BillingInformation);
+export default compose<CombinedProps, Props>(React.memo)(BillingInformation);
