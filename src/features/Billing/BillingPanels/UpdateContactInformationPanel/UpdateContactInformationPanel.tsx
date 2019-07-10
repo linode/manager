@@ -92,7 +92,7 @@ class UpdateContactInformationPanel extends React.Component<
 
   componentDidMount() {
     const { account } = this.props;
-    if (account && account !== undefined) {
+    if (account) {
       this.setState({ fields: { state: account.state } });
     }
   }
