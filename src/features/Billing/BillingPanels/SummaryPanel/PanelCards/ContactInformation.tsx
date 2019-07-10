@@ -8,20 +8,10 @@ import DateTimeDisplay from 'src/components/DateTimeDisplay';
 
 import Dialog from './CancelAccountDialog';
 
-import styled, { StyleProps } from 'src/containers/SummaryPanels.styles';
+import styled from 'src/containers/SummaryPanels.styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
-  title: {},
-  summarySection: {},
-  section: {},
-  main: {},
-  sidebar: {},
-  domainSidebar: {},
-  titleWrapper: {},
-  region: {},
-  regionInner: {},
-  volumeLink: {},
+  ...styled(theme),
   wordWrap: {
     wordBreak: 'break-all'
   },
@@ -47,10 +37,10 @@ interface Props {
   username: string;
 }
 
-type CombinedProps = Props & StyleProps;
+type CombinedProps = Props;
 
 const ContactInformation: React.FC<CombinedProps> = props => {
-  const localClasses = useStyles();
+  const classes = useStyles();
 
   const [modalOpen, toggleModal] = React.useState<boolean>(false);
 
@@ -66,8 +56,7 @@ const ContactInformation: React.FC<CombinedProps> = props => {
     email,
     username,
     phone,
-    activeSince,
-    classes
+    activeSince
   } = props;
 
   return (
@@ -79,16 +68,12 @@ const ContactInformation: React.FC<CombinedProps> = props => {
 
         <div className={classes.section} data-qa-company>
           <strong>Company Name:&nbsp;</strong>
-          <div className={localClasses.wordWrap}>
-            {company ? company : 'None'}
-          </div>
+          <div className={classes.wordWrap}>{company ? company : 'None'}</div>
         </div>
         <div className={classes.section} data-qa-contact-name>
           <strong>Name:&nbsp;</strong>
           {!(firstName || lastName) && 'None'}
-          <div
-            className={localClasses.wordWrap}
-          >{`${firstName} ${lastName}`}</div>
+          <div className={classes.wordWrap}>{`${firstName} ${lastName}`}</div>
         </div>
         <div className={classes.section} data-qa-contact-address>
           <div>
@@ -103,7 +88,7 @@ const ContactInformation: React.FC<CombinedProps> = props => {
         </div>
         <div className={classes.section} data-qa-contact-email>
           <strong>Email:&nbsp;</strong>
-          <div className={localClasses.wordWrap}>{email}</div>
+          <div className={classes.wordWrap}>{email}</div>
         </div>
         <div className={classes.section} data-qa-contact-phone>
           <strong>Phone Number:&nbsp;</strong>
@@ -115,7 +100,7 @@ const ContactInformation: React.FC<CombinedProps> = props => {
         </div>
         <Typography
           onClick={() => toggleModal(true)}
-          className={localClasses.cancel}
+          className={classes.cancel}
         >
           <strong>Close Account</strong>
         </Typography>
@@ -129,7 +114,4 @@ const ContactInformation: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, Props>(
-  React.memo,
-  styled
-)(ContactInformation);
+export default compose<CombinedProps, Props>(React.memo)(ContactInformation);
