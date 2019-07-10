@@ -34,7 +34,8 @@ namespace Linode {
     | 'Linodes'
     | 'NodeBalancers'
     | 'Block Storage'
-    | 'Object Storage';
+    | 'Object Storage'
+    | 'Kubernetes';
 
   export interface AccountSettings {
     managed: boolean;

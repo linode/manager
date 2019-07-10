@@ -21,6 +21,7 @@ import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
+import { AppDetailDrawer } from 'src/features/OneClickApps';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import AddonsPanel from '../AddonsPanel';
 import SelectAppPanel from '../SelectAppPanel';
@@ -82,7 +83,17 @@ type CombinedProps = WithStyles<ClassNames> &
   StateProps &
   SetDocsProps;
 
-class FromAppsContent extends React.PureComponent<CombinedProps> {
+interface State {
+  detailDrawerOpen: boolean;
+  selectedScriptForDrawer: string;
+}
+
+class FromAppsContent extends React.PureComponent<CombinedProps, State> {
+  state: State = {
+    detailDrawerOpen: false,
+    selectedScriptForDrawer: ''
+  };
+
   handleSelectStackScript = (
     id: number,
     label: string,
@@ -144,7 +155,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
       tags
     } = this.props;
 
-    handleSubmitForm('createFromApp', {
+    handleSubmitForm({
       region: selectedRegionID,
       type: selectedTypeID,
       stackscript_id: selectedStackScriptID,
@@ -159,6 +170,19 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
         .filter(u => u.selected)
         .map(u => u.username),
       tags: tags ? tags.map((item: Tag) => item.value) : []
+    });
+  };
+
+  openDrawer = (stackScriptLabel: string) => {
+    this.setState({
+      detailDrawerOpen: true,
+      selectedScriptForDrawer: stackScriptLabel
+    });
+  };
+
+  closeDrawer = () => {
+    this.setState({
+      detailDrawerOpen: false
     });
   };
 
@@ -217,6 +241,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
             selectedStackScriptID={selectedStackScriptID}
             disabled={userCannotCreateLinode}
             handleClick={this.handleSelectStackScript}
+            openDrawer={this.openDrawer}
             error={hasErrorFor('stackscript_id')}
           />
           {!userCannotCreateLinode &&
@@ -386,6 +411,11 @@ class FromAppsContent extends React.PureComponent<CombinedProps> {
             }}
           </Sticky>
         </Grid>
+        <AppDetailDrawer
+          open={this.state.detailDrawerOpen}
+          stackscriptID={this.state.selectedScriptForDrawer}
+          onClose={this.closeDrawer}
+        />
       </React.Fragment>
     );
   }

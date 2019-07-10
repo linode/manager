@@ -187,7 +187,7 @@ namespace Linode {
     closed: string | null;
     closable: boolean;
     description: string;
-    entity: any | null;
+    entity: Entity | null;
     gravatar_id: string;
     attachments: string[];
     opened_by: string;

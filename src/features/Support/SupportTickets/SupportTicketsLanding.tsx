@@ -21,18 +21,13 @@ import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import SupportTicketDrawer from './SupportTicketDrawer';
 import TicketList from './TicketList';
 
-type ClassNames = 'root' | 'title' | 'titleWrapper';
+type ClassNames = 'root' | 'title';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
     title: {
       marginBottom: theme.spacing(2)
-    },
-    titleWrapper: {
-      display: 'flex',
-      alignItems: 'center',
-      wordBreak: 'break-all'
     }
   });
 
@@ -70,12 +65,20 @@ export class SupportTicketsLanding extends React.PureComponent<
   constructor(props: CombinedProps) {
     super(props);
 
+    /** ?drawerOpen=true to allow external links to go directly to the ticket drawer */
+    const parsedParams = getParamsFromUrl(props.location.search);
+    const drawerOpen = pathOr('false', ['drawerOpen'], parsedParams) === 'true';
+
     const stateParams = this.props.location.state;
 
     this.state = {
       value: getSelectedTabFromQueryString(props.location.search),
-      /** If we came here via a SupportLink that's passing data, use that to determine initial state */
-      drawerOpen: stateParams ? stateParams.open : false,
+      /** If we came here via a SupportLink that's passing data, use that to determine initial state
+       * @todo used state state params here to allow passing long/private descriptions without
+       * messing with the URL. However, since we also want to be able to have external links
+       * that open the drawer, is this duplicative and bad?
+       */
+      drawerOpen: stateParams ? stateParams.open : drawerOpen,
       prefilledDescription: stateParams ? stateParams.description : undefined,
       prefilledTitle: stateParams ? stateParams.title : undefined
     };
@@ -149,19 +152,23 @@ export class SupportTicketsLanding extends React.PureComponent<
   };
 
   render() {
-    const { classes } = this.props;
+    const { classes, location } = this.props;
     const { notice, newTicket, value } = this.state;
 
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Support Tickets" />
         <AbuseTicketBanner />
-        <Grid container justify="space-between" updateFor={[classes]}>
-          <Grid item className={classes.titleWrapper}>
+        <Grid
+          container
+          justify="space-between"
+          updateFor={[classes]}
+          alignItems="center"
+        >
+          <Grid item>
             <Breadcrumb
-              linkTo="/support"
-              linkText="Get Help"
-              labelTitle="Customer Support"
+              pathname={location.pathname}
+              labelTitle="Tickets"
               data-qa-breadcrumb
             />
           </Grid>

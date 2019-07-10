@@ -58,7 +58,15 @@ export const AccessKeyDrawer: React.StatelessComponent<
             {/* Explainer copy if we're in 'creating' mode */}
             {mode === 'creating' && (
               <Typography>
-                Generate an Access Key for use with an S3-compatible client.
+                Generate an Access Key for use with an{' '}
+                <a
+                  href="https://linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools"
+                  target="_blank"
+                  className="h-u"
+                >
+                  S3-compatible client
+                </a>
+                .
               </Typography>
             )}
 

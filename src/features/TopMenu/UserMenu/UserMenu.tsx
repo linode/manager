@@ -131,6 +131,7 @@ export class UserMenu extends React.Component<CombinedProps, State> {
         className={classes.menuItem}
         data-qa-menu-link={menuLink.display}
         key={menuLink.display}
+        onClick={this.handleClose}
       >
         <MenuItem key={menuLink.display}>{menuLink.display}</MenuItem>
       </Link>

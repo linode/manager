@@ -104,7 +104,7 @@ const generateDefaultDomainRecords = (
   const cleanedIPv6 =
     ipv6 && ipv6.includes('/') ? ipv6.substr(0, ipv6.indexOf('/')) : ipv6;
 
-  return Promise.all([
+  const baseIPv4Requests = [
     createDomainRecord(domainID, {
       type: 'A',
       target: ipv4
@@ -118,27 +118,36 @@ const generateDefaultDomainRecords = (
       type: 'A',
       target: ipv4,
       name: 'mail'
-    }),
-    createDomainRecord(domainID, {
-      type: 'AAAA',
-      target: cleanedIPv6
-    }),
-    createDomainRecord(domainID, {
-      type: 'AAAA',
-      target: cleanedIPv6,
-      name: 'www'
-    }),
-    createDomainRecord(domainID, {
-      type: 'AAAA',
-      target: cleanedIPv6,
-      name: 'mail'
-    }),
-    createDomainRecord(domainID, {
-      type: 'MX',
-      priority: 10,
-      target: `mail.${domain}`
     })
-  ]);
+  ];
+
+  return Promise.all(
+    /** ipv6 can be null so don't try to create domain records in that case */
+    !!cleanedIPv6
+      ? [
+          ...baseIPv4Requests,
+          createDomainRecord(domainID, {
+            type: 'AAAA',
+            target: cleanedIPv6
+          }),
+          createDomainRecord(domainID, {
+            type: 'AAAA',
+            target: cleanedIPv6,
+            name: 'www'
+          }),
+          createDomainRecord(domainID, {
+            type: 'AAAA',
+            target: cleanedIPv6,
+            name: 'mail'
+          }),
+          createDomainRecord(domainID, {
+            type: 'MX',
+            priority: 10,
+            target: `mail.${domain}`
+          })
+        ]
+      : baseIPv4Requests
+  );
 };
 
 const masterIPsLens = lensPath(['master_ips']);
@@ -407,8 +416,12 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               />
               {!errorMap.defaultLinode && (
                 <FormHelperText>
-                  We'll automatically create domain records for both the first
-                  IPv4 and IPv6 on this Linode.
+                  {this.state.selectedDefaultLinode &&
+                  !this.state.selectedDefaultLinode.ipv6
+                    ? `We'll automatically create domains for the first IPv4 address on this
+                    Linode.`
+                    : `We'll automatically create domain records for both the first
+                    IPv4 and IPv6 addresses on this Linode.`}
                 </FormHelperText>
               )}
             </React.Fragment>
@@ -427,8 +440,12 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               />
               {!errorMap.defaultNodeBalancer && (
                 <FormHelperText>
-                  We'll automatically create domain records for both the first
-                  IPv4 and IPv6 on this NodeBalancer.
+                  {this.state.selectedDefaultNodeBalancer &&
+                  !this.state.selectedDefaultNodeBalancer.ipv6
+                    ? `We'll automatically create domains for the first IPv4 address on this
+                  NodeBalancer.`
+                    : `We'll automatically create domain records for both the first
+                  IPv4 and IPv6 addresses on this NodeBalancer.`}
                 </FormHelperText>
               )}
             </React.Fragment>
@@ -458,7 +475,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
   };
 
   redirect = (id: number | '', state?: Record<string, string>) => {
-    const returnPath = !!id ? `/domains/${id}/records` : '/domains';
+    const returnPath = !!id ? `/domains/${id}` : '/domains';
     this.props.history.push(returnPath, state);
   };
 
@@ -576,64 +593,68 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
          * domain records for them. If so, create some A/AAAA and MX records
          * with the first IPv4 and IPv6 from the Linode or NodeBalancer they
          * selected.
+         *
+         * This only applies to master domains.
          */
-        if (defaultRecordsSetting === 'linode') {
-          return generateDefaultDomainRecords(
-            domainData.domain,
-            domainData.id,
-            path(['ipv4', 0], selectedDefaultLinode),
-            path(['ipv6'], selectedDefaultLinode)
-          )
-            .then(() => {
-              return this.redirectToLandingOrDetail(type, domainData.id);
-            })
-            .catch((e: Linode.ApiFieldError[]) => {
-              reportException(
-                `Default DNS Records couldn't be created from Linode: ${
-                  e[0].reason
-                }`,
-                {
-                  selectedLinode: this.state.selectedDefaultLinode!.id,
-                  domainID: domainData.id,
-                  ipv4: path(['ipv4', 0], selectedDefaultLinode),
-                  ipv6: path(['ipv6'], selectedDefaultLinode)
-                }
-              );
-              return this.redirectToLandingOrDetail(type, domainData.id, {
-                recordError:
-                  'There was an issue creating default domain records.'
+        if (type === 'master') {
+          if (defaultRecordsSetting === 'linode') {
+            return generateDefaultDomainRecords(
+              domainData.domain,
+              domainData.id,
+              path(['ipv4', 0], selectedDefaultLinode),
+              path(['ipv6'], selectedDefaultLinode)
+            )
+              .then(() => {
+                return this.redirectToLandingOrDetail(type, domainData.id);
+              })
+              .catch((e: Linode.ApiFieldError[]) => {
+                reportException(
+                  `Default DNS Records couldn't be created from Linode: ${
+                    e[0].reason
+                  }`,
+                  {
+                    selectedLinode: this.state.selectedDefaultLinode!.id,
+                    domainID: domainData.id,
+                    ipv4: path(['ipv4', 0], selectedDefaultLinode),
+                    ipv6: path(['ipv6'], selectedDefaultLinode)
+                  }
+                );
+                return this.redirectToLandingOrDetail(type, domainData.id, {
+                  recordError:
+                    'There was an issue creating default domain records.'
+                });
               });
-            });
-        }
+          }
 
-        if (defaultRecordsSetting === 'nodebalancer') {
-          return generateDefaultDomainRecords(
-            domainData.domain,
-            domainData.id,
-            path(['ipv4'], selectedDefaultNodeBalancer),
-            path(['ipv6'], selectedDefaultNodeBalancer)
-          )
-            .then(() => {
-              return this.redirectToLandingOrDetail(type, domainData.id);
-            })
-            .catch((e: Linode.ApiFieldError[]) => {
-              reportException(
-                `Default DNS Records couldn't be created from NodeBalancer: ${
-                  e[0].reason
-                }`,
-                {
-                  selectedNodeBalancer: this.state.selectedDefaultNodeBalancer!
-                    .id,
-                  domainID: domainData.id,
-                  ipv4: path(['ipv4'], selectedDefaultNodeBalancer),
-                  ipv6: path(['ipv6'], selectedDefaultNodeBalancer)
-                }
-              );
-              return this.redirectToLandingOrDetail(type, domainData.id, {
-                recordError:
-                  'There was an issue creating default domain records.'
+          if (defaultRecordsSetting === 'nodebalancer') {
+            return generateDefaultDomainRecords(
+              domainData.domain,
+              domainData.id,
+              path(['ipv4'], selectedDefaultNodeBalancer),
+              path(['ipv6'], selectedDefaultNodeBalancer)
+            )
+              .then(() => {
+                return this.redirectToLandingOrDetail(type, domainData.id);
+              })
+              .catch((e: Linode.ApiFieldError[]) => {
+                reportException(
+                  `Default DNS Records couldn't be created from NodeBalancer: ${
+                    e[0].reason
+                  }`,
+                  {
+                    selectedNodeBalancer: this.state
+                      .selectedDefaultNodeBalancer!.id,
+                    domainID: domainData.id,
+                    ipv4: path(['ipv4'], selectedDefaultNodeBalancer),
+                    ipv6: path(['ipv6'], selectedDefaultNodeBalancer)
+                  }
+                );
+                return this.redirectToLandingOrDetail(type, domainData.id, {
+                  recordError:
+                    'There was an issue creating default domain records.'
+                });
               });
-            });
+          }
         }
 
         return this.redirectToLandingOrDetail(type, domainData.id);

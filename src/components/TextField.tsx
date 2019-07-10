@@ -90,7 +90,12 @@ interface State {
 
 class LinodeTextField extends React.Component<CombinedProps> {
   state: State = {
-    value: ''
+    /** initialize the state with our passed value if we have one */
+    value:
+      typeof this.props.value === 'string' ||
+      typeof this.props.value === 'number'
+        ? this.props.value
+        : ''
   };
   shouldComponentUpdate(nextProps: CombinedProps, nextState: State) {
     return (
@@ -134,9 +139,35 @@ class LinodeTextField extends React.Component<CombinedProps> {
       value: cleanedValue
     });
 
-    /** invoke the onChange prop if one is provided */
+    /**
+     * invoke the onChange prop if one is provided with the cleaned value.
+     */
     if (onChange) {
-      onChange(e);
+      /**
+       * create clone of event node only if our cleanedValue
+       * is different from the e.target.value
+       *
+       * This solves for a specific scenario where the e.target on
+       * the MUI TextField select variants were actually a plain object
+       * rather than a DOM node.
+       *
+       * So e.target on a text field === <input />
+       *
+       * while e.target on the select variant === { value: 10, name: undefined }
+       *
+       * See GitHub issue: https://github.com/mui-org/material-ui/issues/16470
+       */
+      if (e.target.value !== cleanedValue) {
+        const clonedEvent = {
+          ...e,
+          target: e.target.cloneNode()
+        } as React.ChangeEvent<HTMLInputElement>;
+
+        clonedEvent.target.value = `${cleanedValue}`;
+        onChange(clonedEvent);
+      } else {
+        onChange(e);
+      }
     }
   };
 
@@ -158,6 +189,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
       InputProps,
       InputLabelProps,
       SelectProps,
+      value,
       dataAttrs,
       ...textFieldProps
     } = this.props;
@@ -183,7 +215,12 @@ class LinodeTextField extends React.Component<CombinedProps> {
           {...textFieldProps}
           {...dataAttrs}
           fullWidth
-          value={this.props.value || this.state.value}
+          /*
+            let us explicitly pass an empty string to the input
+
+            see UserDefinedFieldsPanel.tsx for a verbose explanation why.
+          */
+          value={value}
           onChange={this.handleChange}
           InputLabelProps={{
             ...InputLabelProps,

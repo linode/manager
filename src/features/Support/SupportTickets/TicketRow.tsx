@@ -14,11 +14,21 @@ interface Props {
 }
 
 const renderEntityLink = (ticket: Linode.SupportTicket) => {
+  const target = getLinkTargets(ticket.entity);
   return ticket.entity ? (
-    <Link to={getLinkTargets(ticket.entity)} className="secondaryLink">
-      {ticket.entity.label}
-    </Link>
-  ) : null;
+    target !== null ? (
+      <Link to={target} className="secondaryLink">
+        {ticket.entity.label}
+      </Link>
+    ) : (
+      /**
+       * Ticket has a labeled entity, but the entity no longer exists (or there was some other problem).
+       * Include the label but don't make it a clickable link.
+       */
+      <Typography>{ticket.entity.label}</Typography>
+    )
+  ) : /** This ticket doesn't have an entity; leave the link column blank. */
+  null;
 };
 
 const TicketRow: React.StatelessComponent<Props> = props => {

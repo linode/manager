@@ -1,7 +1,6 @@
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
 import CircleProgress from 'src/components/CircleProgress';
-import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -19,14 +18,8 @@ export type ClassNames =
   | 'card'
   | 'grid'
   | 'poolUsageProgress'
-  | 'circleChildren'
-  | 'used'
-  | 'quota'
   | 'initialLoader'
-  | 'title'
-  | 'divider'
-  | 'itemText'
-  | 'itemTextFirst';
+  | 'title';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -45,21 +38,7 @@ const styles = (theme: Theme) =>
       paddingRight: 8
     },
     poolUsageProgress: {
-      marginBottom: theme.spacing(2),
-      [theme.breakpoints.up('lg')]: {}
-    },
-    circleChildren: {
-      textAlign: 'center',
-      position: 'relative',
-      top: -6
-    },
-    used: {
-      fontSize: '1.5rem',
-      fontFamily: theme.font.bold,
-      color: theme.color.green
-    },
-    quota: {
-      marginTop: theme.spacing(1)
+      marginBottom: theme.spacing(1) / 2
     },
     initialLoader: {
       minHeight: 150,
@@ -69,16 +48,6 @@ const styles = (theme: Theme) =>
     },
     title: {
       paddingBottom: theme.spacing(2)
-    },
-    divider: {
-      backgroundColor: theme.palette.divider,
-      margin: `${theme.spacing(1)}px 0`
-    },
-    itemText: {
-      fontSize: '1rem'
-    },
-    itemTextFirst: {
-      marginBottom: theme.spacing(1)
     }
   });
 
@@ -138,31 +107,22 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
           >
             <Grid item container direction="column">
               <Typography variant="h2" className={classes.title}>
-                This Month's Network Transfer Pool
+                Monthly Network Transfer Pool
               </Typography>
               <BarPercent
                 max={100}
                 value={Math.ceil(poolUsagePct)}
                 className={classes.poolUsageProgress}
+                rounded
               />
-              <Typography>
-                You have used{' '}
-                <strong>{renderPercentageString(poolUsagePct)}</strong> of your
-                available network transfer during the current billing cycle.
-              </Typography>
-              <Divider className={classes.divider} />
-              <Typography
-                className={classes.itemText + ' ' + classes.itemTextFirst}
-              >
-                Total: <strong>{quota}</strong> GB
-              </Typography>
-              <Typography className={classes.itemText}>
-                Used: <strong>{used}</strong> GB
-              </Typography>
-              <Divider className={classes.divider} />
-              <Typography className={classes.itemText}>
-                Free: <strong>{quota - used}</strong> GB
-              </Typography>
+              <Grid container justify="space-between">
+                <Grid item style={{ marginRight: 10 }}>
+                  <Typography>{used} GB Used</Typography>
+                </Grid>
+                <Grid item>
+                  <Typography>{quota - used} GB Available</Typography>
+                </Grid>
+              </Grid>
             </Grid>
           </Grid>
         </Paper>

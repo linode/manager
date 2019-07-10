@@ -13,7 +13,9 @@ import Typography from 'src/components/core/Typography';
 import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ErrorState from 'src/components/ErrorState';
-import styled, { StyleProps } from 'src/containers/SummaryPanels.styles';
+import summaryPanelStyles, {
+  StyleProps
+} from 'src/containers/SummaryPanels.styles';
 import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
 import { withAccount } from '../../context';
 
@@ -21,17 +23,7 @@ type ClassNames = 'expired' | 'balance' | 'positive' | 'negative' | 'wordWrap';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
-    title: {},
-    summarySection: {},
-    section: {},
-    main: {},
-    sidebar: {},
-    domainSidebar: {},
-    titleWrapper: {},
-    region: {},
-    regionInner: {},
-    volumeLink: {},
+    ...summaryPanelStyles(theme),
     expired: {
       color: theme.color.red
     },
@@ -217,9 +209,8 @@ const accountContext = withAccount(
 );
 
 const enhanced = compose<CombinedProps, {}>(
-  styled,
-  localStyles,
-  accountContext
+  accountContext,
+  localStyles
 );
 
 export default enhanced(SummaryPanel) as React.ComponentType<{}>;

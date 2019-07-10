@@ -683,7 +683,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
                     heading={`${this.state.nodeBalancerFields.label ||
                       'NodeBalancer'} Summary`}
                     onDeploy={this.createNodeBalancer}
-                    calculatedPrice={20}
+                    calculatedPrice={10}
                     displaySections={displaySections && [displaySections]}
                     disabled={this.state.submitting || disabled}
                     {...props}

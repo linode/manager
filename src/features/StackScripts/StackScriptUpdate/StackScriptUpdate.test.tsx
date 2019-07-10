@@ -43,10 +43,7 @@ describe('StackScriptUpdate', () => {
       expect(breadcrumb).toHaveLength(1);
     });
     it('should include "Edit StackScript" as the label title', () => {
-      expect(breadcrumb.prop('labelTitle')).toBe('Edit StackScript');
-    });
-    it('should take you back to the StackScripts page', () => {
-      expect(breadcrumb.prop('linkTo')).toBe('/stackscripts');
+      expect(breadcrumb.prop('labelTitle')).toBe('Edit');
     });
   });
 });

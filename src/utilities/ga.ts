@@ -52,7 +52,7 @@ export const sendPaginationEvent = (
   });
 };
 
-// src/index.tsx
+// LinodeThemeWrapper.tsx
 export const sendCurrentThemeSettingsEvent = (eventAction: string) => {
   sendEvent({
     category: 'Theme Choice',
@@ -63,10 +63,13 @@ export const sendCurrentThemeSettingsEvent = (eventAction: string) => {
 
 // CreateVolumeForm.tsx
 // CreateVolumeForLinodeForm.tsx
-export const sendCreateVolumeEvent = (eventLabel: string) => {
+export const sendCreateVolumeEvent = (
+  eventLabel: string,
+  eventAction?: string
+) => {
   sendEvent({
     category: 'Create Volume',
-    action: 'Create Volume',
+    action: eventAction || 'Create Volume',
     label: eventLabel
   });
 };
@@ -104,7 +107,7 @@ export const sendImportDisplayGroupSubmitEvent = (
   });
 };
 
-// PrimaryNav.tsx
+// LinodeThemeWrapper.tsx
 export const sendSpacingToggleEvent = (eventLabel: string) => {
   sendEvent({
     category: 'Theme Choice',
@@ -113,7 +116,7 @@ export const sendSpacingToggleEvent = (eventLabel: string) => {
   });
 };
 
-// PrimaryNav.tsx
+// LinodeThemeWrapper.tsx
 export const sendThemeToggleEvent = (eventLabel: string) => {
   sendEvent({
     category: 'Theme Choice',
@@ -186,5 +189,47 @@ export const sendCreateLinodeEvent = (
     category: 'Create Linode',
     action: eventAction,
     label: eventLabel
+  });
+};
+
+// CreateBucketForm.tsx
+export const sendCreateBucketEvent = (eventLabel: string) => {
+  sendEvent({
+    category: 'Object Storage',
+    action: 'Create Bucket',
+    label: eventLabel
+  });
+};
+
+// BucketsLanding.tsx
+export const sendDeleteBucketEvent = (eventLabel: string) => {
+  sendEvent({
+    category: 'Object Storage',
+    action: 'Delete Bucket',
+    label: eventLabel
+  });
+};
+
+// AccessKeyLanding.tsx
+export const sendCreateAccessKeyEvent = () => {
+  sendEvent({
+    category: 'Object Storage',
+    action: 'Create Access Key'
+  });
+};
+
+// AccessKeyLanding.tsx
+export const sendEditAccessKeyEvent = () => {
+  sendEvent({
+    category: 'Object Storage',
+    action: 'Edit Access Key'
+  });
+};
+
+// AccessKeyLanding.tsx
+export const sendRevokeAccessKeyEvent = () => {
+  sendEvent({
+    category: 'Object Storage',
+    action: 'Revoke Access Key'
   });
 };

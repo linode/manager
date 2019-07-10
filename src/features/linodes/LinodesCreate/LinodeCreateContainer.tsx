@@ -54,7 +54,6 @@ import { cloneLinode, CreateLinodeRequest } from 'src/services/linodes';
 import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { MapState } from 'src/store/types';
 
-import { allocatePrivateIP } from 'src/utilities/allocateIPAddress';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendCreateLinodeEvent } from 'src/utilities/ga';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -334,8 +333,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     return getLabel(arg1, arg2, arg3);
   };
 
-  submitForm: HandleSubmit = (type, payload, linodeID?: number) => {
+  submitForm: HandleSubmit = (payload, linodeID?: number) => {
     const { createType } = this.props;
+
     /**
      * run a certain linode action based on the type
      * if clone, run clone service request and upsert linode
@@ -355,7 +355,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       );
     }
 
-    if (type === 'createFromBackup' && !this.state.selectedBackupID) {
+    if (createType === 'fromBackup' && !this.state.selectedBackupID) {
       /* a backup selection is also required */
       this.setState(
         {
@@ -368,7 +368,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       return;
     }
 
-    if (type === 'createFromStackScript' && !this.state.selectedStackScriptID) {
+    if (createType === 'fromStackScript' && !this.state.selectedStackScriptID) {
       return this.setState(
         () => ({
           errors: [
@@ -382,7 +382,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       );
     }
 
-    if (type === 'createFromApp' && !this.state.selectedStackScriptID) {
+    if (createType === 'fromApp' && !this.state.selectedStackScriptID) {
       return this.setState(
         () => ({
           errors: [
@@ -426,17 +426,6 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
             variant: 'success'
           }
         );
-
-        /**
-         * allocate private IP if we have one
-         *
-         * @todo we need to update redux state here as well but it's not
-         * crucial now because the networking tab already makes a request to
-         * /ips on componentDidMount
-         */
-        if (payload.private_ip) {
-          allocatePrivateIP(response.id);
-        }
 
         /** reset the Events polling */
         resetEventsPolling();

@@ -3,6 +3,7 @@ import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import {
   matchPath,
+  Redirect,
   Route,
   RouteComponentProps,
   Switch
@@ -25,14 +26,14 @@ import TabLink from 'src/components/TabLink';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getUser, updateUser } from 'src/services/account';
 import { updateProfile } from 'src/services/profile';
-import { handleUpdate } from 'src/store/profile/profile.actions';
+import { requestProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 import UserPermissions from './UserPermissions';
 import UserProfile from './UserProfile';
 
-type ClassNames = 'titleWrapper' | 'avatar' | 'backButton' | 'emptyImage';
+type ClassNames = 'avatar' | 'backButton' | 'emptyImage';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -48,17 +49,13 @@ const styles = (theme: Theme) =>
       margin: '0 8px 0 -4px',
       color: '#606469',
       borderRadius: '50%',
-      width: '46px',
-      height: '46px',
+      width: 34,
+      height: 34,
       animation: '$fadeIn 150ms linear forwards'
     },
     emptyImage: {
       width: 42,
       height: 49
-    },
-    titleWrapper: {
-      display: 'flex',
-      alignItems: 'center'
     },
     backButton: {
       margin: '4px 0 0 -16px',
@@ -196,7 +193,7 @@ class UserDetail extends React.Component<CombinedProps> {
       history,
       match: { path },
       profileUsername,
-      actions: { updateCurrentUser }
+      refreshProfile
     } = this.props;
 
     const { originalUsername, username, restricted } = this.state;
@@ -229,7 +226,7 @@ class UserDetail extends React.Component<CombinedProps> {
          * If the user we updated is the current user, we need to reflect that change at the global level.
          */
         if (profileUsername === originalUsername) {
-          updateCurrentUser(user);
+          refreshProfile();
         }
 
         /**
@@ -253,9 +250,7 @@ class UserDetail extends React.Component<CombinedProps> {
 
   onSaveProfile = () => {
     const { email, originalUsername } = this.state;
-    const {
-      actions: { updateCurrentUser }
-    } = this.props;
+    const { refreshProfile } = this.props;
 
     this.setState({
       profileSuccess: false,
@@ -276,7 +271,7 @@ class UserDetail extends React.Component<CombinedProps> {
          * If the user we updated is the current user, we need to reflect that change at the global level.
          */
         if (profile.username === originalUsername) {
-          updateCurrentUser(profile);
+          refreshProfile();
         }
       })
       .catch(errResponse => {
@@ -349,7 +344,8 @@ class UserDetail extends React.Component<CombinedProps> {
       match: {
         url,
         params: { username }
-      }
+      },
+      location
     } = this.props;
     const { error, gravatarUrl, createdUsername } = this.state;
 
@@ -357,10 +353,9 @@ class UserDetail extends React.Component<CombinedProps> {
       return (
         <React.Fragment>
           <Grid container justify="space-between">
-            <Grid item className={classes.titleWrapper}>
+            <Grid item>
               <Breadcrumb
-                linkTo="/account/users"
-                linkText="Users"
+                pathname={location.pathname}
                 labelTitle={username || ''}
               />
             </Grid>
@@ -386,12 +381,16 @@ class UserDetail extends React.Component<CombinedProps> {
     return (
       <React.Fragment>
         <Grid container justify="space-between">
-          <Grid item className={classes.titleWrapper}>
+          <Grid item>
             <Breadcrumb
-              linkTo="/account/users"
-              linkText="Users"
+              pathname={location.pathname}
               labelTitle={username}
-              labelOptions={{ prefixComponent: maybeGravatar }}
+              labelOptions={{
+                prefixComponent: maybeGravatar,
+                prefixStyle: { height: 34, marginTop: 2 },
+                noCap: true
+              }}
+              removeCrumbX={3}
             />
           </Grid>
         </Grid>
@@ -432,7 +431,12 @@ class UserDetail extends React.Component<CombinedProps> {
             path={`${url}/permissions`}
             component={this.renderUserPermissions}
           />
-          <Route path={`${url}`} render={this.renderUserProfile} />
+          <Route
+            path={`${url}/profile`}
+            render={this.renderUserProfile}
+            exact
+          />
+          <Redirect to={`${url}/profile`} />
         </Switch>
       </React.Fragment>
     );
@@ -448,16 +452,11 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 });
 
 interface DispatchProps {
-  actions: {
-    updateCurrentUser: (user: Linode.User | Linode.Profile) => void;
-  };
+  refreshProfile: () => void;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-  actions: {
-    updateCurrentUser: (u: Linode.User | Linode.Profile) =>
-      dispatch(handleUpdate(u))
-  }
+  refreshProfile: () => dispatch(requestProfile() as any)
 });
 
 const reloadable = reloadableWithRouter<CombinedProps, MatchProps>(
@@ -478,6 +477,6 @@ export const connected = connect(
 
 export default compose<any, any, any, any>(
   connected,
-  styled,
-  reloadable
+  reloadable,
+  styled
 )(UserDetail);

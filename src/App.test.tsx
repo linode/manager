@@ -11,13 +11,14 @@ import { hasOauthError } from './App';
 
 it('renders without crashing', () => {
   const component = shallow(
-    <LinodeThemeWrapper>
-      <Provider store={store}>
+    <Provider store={store}>
+      <LinodeThemeWrapper>
         <StaticRouter location="/" context={{}}>
           <App
             linodes={[]}
             notifications={[]}
             {...mockNodeBalancerActions}
+            profileError={undefined}
             username=""
             isLoggedInAsCustomer={false}
             closeSnackbar={jest.fn()}
@@ -57,8 +58,8 @@ it('renders without crashing', () => {
             accountLoading={false}
           />
         </StaticRouter>
-      </Provider>
-    </LinodeThemeWrapper>
+      </LinodeThemeWrapper>
+    </Provider>
   );
   expect(component.find('App')).toHaveLength(1);
 });

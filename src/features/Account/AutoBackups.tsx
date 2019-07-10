@@ -12,7 +12,9 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
 
-type ClassNames = 'root' | 'footnote' | 'link' | 'icon';
+import HelpIcon from 'src/components/HelpIcon';
+
+type ClassNames = 'root' | 'footnote' | 'link' | 'icon' | 'toolTip';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -28,6 +30,9 @@ const styles = (theme: Theme) =>
       display: 'inline-block',
       fontSize: '0.8em',
       marginLeft: theme.spacing(1) / 3
+    },
+    toolTip: {
+      paddingTop: theme.spacing(1)
     }
   });
 
@@ -36,6 +41,7 @@ interface Props {
   hasLinodesWithoutBackups: boolean;
   onChange: () => void;
   openBackupsDrawer: () => void;
+  isManagedCustomer: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -46,7 +52,8 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = props => {
     classes,
     hasLinodesWithoutBackups,
     onChange,
-    openBackupsDrawer
+    openBackupsDrawer,
+    isManagedCustomer
   } = props;
 
   return (
@@ -54,7 +61,16 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = props => {
       <ExpansionPanel heading="Backup Auto Enrollment" defaultExpanded={true}>
         <Grid container direction="column" className={classes.root}>
           <Grid item>
-            <Typography variant="h2">Back Up All New Linodes</Typography>
+            <Typography variant="h2">
+              Back Up All New Linodes
+              {!!isManagedCustomer && (
+                <HelpIcon
+                  className={classes.toolTip}
+                  text={`You're a Managed customer, which means your Linodes are already automatically
+              backed up - no need to toggle this setting.`}
+                />
+              )}
+            </Typography>
           </Grid>
           <Grid item>
             <Typography variant="body1">
@@ -80,19 +96,20 @@ const AutoBackups: React.StatelessComponent<CombinedProps> = props => {
                 control={
                   <Toggle
                     onChange={onChange}
-                    checked={backups_enabled}
+                    checked={!!isManagedCustomer ? true : backups_enabled}
                     data-qa-toggle-auto-backup
+                    disabled={!!isManagedCustomer}
                   />
                 }
                 label={
-                  backups_enabled
+                  backups_enabled || isManagedCustomer
                     ? 'Enabled (Auto enroll all new Linodes in Backups)'
                     : "Disabled (Don't enroll new Linodes in Backups automatically)"
                 }
               />
             </Grid>
           </Grid>
-          {!backups_enabled && hasLinodesWithoutBackups && (
+          {!isManagedCustomer && !backups_enabled && hasLinodesWithoutBackups && (
             <Grid item>
               <Typography variant="body1" className={classes.footnote}>
                 {`For existing Linodes without backups, `}
