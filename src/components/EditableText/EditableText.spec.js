@@ -6,45 +6,48 @@ describe('Editable Text Suite', () => {
         'Headline %26 Title',
     ];
 
-    const editableTextField = '[data-qa-editable-text]';
-    const editableTextButton = '[data-qa-edit-button]';
-    const editField = '[data-qa-edit-field]';
-    const saveEdit = '[data-qa-save-edit]';
-    const cancelEdit = '[data-qa-cancel-edit]';
+    const editableTextField = '[data-testid="editable-text"]';
+    const editableTextButton = '[data-qa-edit-button=true]';
+    const editField = '[data-qa-edit-field="true"]';
+    const saveEdit = '[data-qa-save-edit="true"]';
+    const cancelEdit = '[data-qa-cancel-edit="true"]';
     const newLabel = 'someNewValue!';
 
     let originalLabel;
 
     beforeAll(() => {
         navigateToStory(component, childStories[0]);
-        browser.waitForVisible(editableTextField);
+        console.log('waiting for Editiable text field')
+        $(editableTextField).waitForDisplayed();
+        console.log('text field found')
     });
 
     it('should become an editable field on click', () => {
+        //browser.debug()
         originalLabel = $(editableTextField).getText();
-
-        $(editableTextField).moveToObject();
-        browser.waitForVisible(editableTextButton);
+        console.log(`orginal text: ${originalLabel}\n   Moving to text field`)
+        $(editableTextField).click()
+        $(editableTextButton).waitForDisplayed();
 
         $(editableTextButton).click();
-        browser.waitForVisible(editField);
+        $(editField).waitForDisplayed();
     });
 
     it('should edit the textfield', () => {
         $(editField).$('input').setValue(newLabel);
-        browser.click(saveEdit);
+        $(saveEdit).click();
         expect($(editableTextField).getText()).toBe(newLabel);
     });
 
     it('should not update the textfield on cancel', () => {
-        $(editableTextField).moveToObject();
-        browser.waitForVisible(editableTextButton);
+        $(editableTextField).click()
+        $(editableTextButton).waitForDisplayed();
 
         $(editableTextButton).click();
-        $(cancelEdit).waitForVisible();
+        $(cancelEdit).waitForDisplayed();
 
         $(editField).$('input').setValue(originalLabel);
-        browser.click(cancelEdit);
+        $(cancelEdit).click();
 
         // Should contain the new label from the prior test
         expect($(editableTextField).getText()).toBe(newLabel);
