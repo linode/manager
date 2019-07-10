@@ -6,8 +6,11 @@ describe('Debounced Search Suite', () => {
     const childStories = ['Select Field', 'Text Field'];
 
     describe('Select Field Suite', () => {
-        let enhancedSelect, selectedOptionMsg, selectOptions;
+        let selectedOptionMsg, selectOptions;
 
+        const placeholderMsg = 'Search for something (i.e "er")';
+        const enhancedSelect = `[data-qa-enhanced-select]`;
+        const enhancedSelectInput = `[data-qa-enhanced-select] input`;
         const currentResultSelector = '[data-qa-selected-result]';
         const optionSelector = '[data-qa-option]';
         const emptyResult = 'You selected:';
@@ -18,53 +21,45 @@ describe('Debounced Search Suite', () => {
         });
 
         it('should display select search bar', () => {
-            const placeholderMsg = 'Search for something (i.e "er")'
-            enhancedSelect = $(`[data-qa-enhanced-select='${placeholderMsg}']`);
-
-            expect(enhancedSelect.isVisible()).toBe(true);
-            expect(enhancedSelect.getText()).toContain(placeholderMsg)
+            console.log('checking for select search bar and placeholder text')
+            expect($(enhancedSelect).isDisplayed()).toBe(true);
+            expect($(enhancedSelect).getText()).toContain(placeholderMsg)
+            console.log('select search bar and placeholder text found')
         });
 
         it('should not have options selected on pageload', () => {
             selectedOptionMsg = $(currentResultSelector);
-
+            console.log('checking for empty results')
             expect(selectedOptionMsg.getText()).toBe(emptyResult);
+            console.log('no results found')
         });
 
         it('should display no options on a bad search query', () => {
             const badQuery = 'akjsdhfklj';
-
-            enhancedSelect.$('..').$('input').setValue(badQuery);
-            browser.waitForVisible('[data-qa-no-options]', constants.wait.normal);
+            console.log('checking for bad search query')
+            $(enhancedSelectInput).setValue(badQuery);
+            $('[data-qa-no-options]', constants.wait.normal).waitForDisplayed();
+            console.log('bad search query returns no results')
         });
 
         it('should display options on a valid search query', () => {
             // Add the value twice to fix test flakiness when running the entire functional test suite
-            const enhancedSelectInput = enhancedSelect.$('..').$('input').selector;
-            browser.trySetValue(enhancedSelectInput, validQuery);
-
-            browser.waitForVisible(optionSelector, constants.wait.normal);
-
+            console.log(`Setting value ${validQuery}`)
+            $(enhancedSelectInput).setValue(validQuery);
+            console.log(`${validQuery} entered\n      waiting for options`)
+            $(optionSelector, constants.wait.normal).waitForDisplayed();
+            
             selectOptions = $$(optionSelector);
             expect(selectOptions.length).toBe(1);
         });
 
         it('should update the selected option text on select', () => {
-            selectOptions[0].click();
-
-            browser.waitForVisible(selectOptions[0].selector, constants.wait.normal, true);
+            $(enhancedSelectInput).setValue('apples');
+            $(optionSelector, constants.wait.normal).waitForDisplayed();
+            $(optionSelector).click();
+            
             selectedOptionMsg = $(currentResultSelector);
-            expect(selectedOptionMsg.getText()).toBe('You selected: keyboards');
-        });
-
-        xit('should clear the result on click clear', () => {
-            validQuery.split('').forEach(i => {
-                enhancedSelect.$('..').$('input').addValue('\uE003');
-            });
-
-            browser.waitUntil(() => {
-                return $(currentResultSelector).getText() === emptyResult;
-            }, constants.wait.normal);
+            expect(selectedOptionMsg.getText()).toBe('You selected: apples');
         });
     });
 
@@ -76,6 +71,7 @@ describe('Debounced Search Suite', () => {
         const debouncedSearchSelector = '[data-qa-debounced-search]';
         const listItemSelector = '[data-qa-list-item]';
         const validQuery = 'apples';
+        const mainList = '[data-qa-listOfItems]'
 
         beforeAll(() => {
             navigateToStory(component, childStories[1]);
@@ -91,7 +87,7 @@ describe('Debounced Search Suite', () => {
         it('should display unfiltered list of options', () => {
             displayedListItems = $$(listItemSelector);
             displayedListItems.forEach(i => {
-                expect(i.isVisible()).toBe(true);
+                expect(i.isDisplayed()).toBe(true);
                 expect(i.getText()).toMatch(/\w/ig);
                 initialOptions.push(i.getText());
             });
@@ -99,24 +95,30 @@ describe('Debounced Search Suite', () => {
 
         it('should display no options on a bad search query', () => {
             const badQuery = 'lkajsdkhsdklf';
-
+            console.log(`setting bad query of: ${badQuery}`)
             searchTextfield.setValue(badQuery);
-
-            displayedListItems.forEach(i => i.waitForVisible(constants.wait.normal, true));
+            expect(searchTextfield.getText() === badQuery)
+            console.log(`bad query of ${badQuery} has been set`)
+            $(mainList + ' li').waitForDisplayed(constants.wait.normal, true);
         });
 
         it('should display a single option on query of a single matching list item', () => {
-            searchTextfield.setValue(validQuery);
-
+            searchTextfield = '[data-qa-debounced-search] input';
+            console.log(`looking for single option in list`)
+            $(searchTextfield).clearValue()
+            console.log(`setting a valid query: ${validQuery}`)
+            $(searchTextfield).setValue(validQuery)
+            console.log(`waiting for list to be displayed`)
             browser.waitUntil(() => {
                 displayedListItems = $$(listItemSelector);
                 return displayedListItems.length === 1;
             }, constants.wait.normal);
-
+            console.log(`checking for ${validQuery} to be in selected`)
             expect(displayedListItems[0].getText()).toBe(validQuery);
         });
 
         it('should display all list options on clear', () => {
+            
             validQuery.split('').forEach(i => {
                 $(debouncedSearchSelector).$('input').addValue('\uE003');
             });
