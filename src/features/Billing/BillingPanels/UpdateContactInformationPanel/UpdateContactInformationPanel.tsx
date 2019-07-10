@@ -99,11 +99,9 @@ class UpdateContactInformationPanel extends React.Component<
 
   componentDidUpdate(prevProps: CombinedProps) {
     if (!prevProps.account && !!this.props.account) {
-      // do whatever when account was undefined but now it's defined.
       this.setState({
         fields: {
-          state: this.props.account.state,
-          country: this.props.account.country
+          state: this.props.account.state
         }
       });
     }
