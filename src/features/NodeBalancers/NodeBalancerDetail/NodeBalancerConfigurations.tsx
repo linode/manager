@@ -30,7 +30,6 @@ import Grid from 'src/components/Grid';
 import PromiseLoader, {
   PromiseLoaderResponse
 } from 'src/components/PromiseLoader/PromiseLoader';
-import { getLinodes } from 'src/services/linodes';
 import {
   createNodeBalancerConfigNode,
   deleteNodeBalancerConfigNode,
@@ -79,6 +78,7 @@ const styles = (theme: Theme) =>
 
 interface Props {
   nodeBalancerLabel: string;
+  nodeBalancerRegion: string;
 }
 
 interface MatchProps {
@@ -94,7 +94,6 @@ interface PreloadedProps {
 }
 
 interface State {
-  linodesWithPrivateIPs: Linode.Linode[];
   configs: NodeBalancerConfigFieldsWithStatus[];
   configErrors: Linode.ApiFieldError[][];
   configSubmitting: boolean[];
@@ -172,7 +171,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   };
 
   state: State = {
-    linodesWithPrivateIPs: [],
     configs: pathOr([], ['response'], this.props.configs),
     configErrors: [],
     configSubmitting: [],
@@ -1004,7 +1002,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
         }
       >
         <NodeBalancerConfigPanel
-          linodesWithPrivateIPs={this.state.linodesWithPrivateIPs}
+          nodeBalancerRegion={this.props.nodeBalancerRegion}
           forEdit
           configIdx={idx}
           onSave={this.onSaveConfig(idx)}
@@ -1086,21 +1084,6 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       </Button>
     </ActionsPanel>
   );
-
-  componentDidMount() {
-    getLinodes()
-      .then(result => {
-        const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
-        const linodesWithPrivateIPs = result.data.filter(linode => {
-          return linode.ipv4.some(ipv4 => !!ipv4.match(privateIPRegex)); // does it have a private IP address
-        });
-        this.setState({ linodesWithPrivateIPs });
-      })
-      // we don't really need to do anything here because if the request fails
-      // the user won't be presented with any suggestions when typing in the
-      // node address field, which isn't the end of the world.
-      .catch(err => err);
-  }
 
   render() {
     const { classes, nodeBalancerLabel } = this.props;
