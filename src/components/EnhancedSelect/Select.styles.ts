@@ -63,9 +63,7 @@ export const styles = (theme: Theme) =>
       },
       '& .react-select__input': {
         width: '100%',
-        color: theme.palette.text.primary,
-        position: 'relative',
-        top: -(theme.spacing(1) / 2) - 2
+        color: theme.palette.text.primary
       },
       '& .react-select__menu': {
         margin: '-1px 0 0 0',

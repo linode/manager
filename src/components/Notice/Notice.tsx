@@ -80,7 +80,7 @@ const styles = (theme: Theme) => {
     noticeText: {
       color: theme.palette.text.primary,
       fontSize: '1rem',
-      lineHeight: `${theme.spacing(2.5)}px`,
+      lineHeight: `20px`,
       fontFamily: 'LatoWebBold', // we keep this bold at all times
       '& p': {
         fontSize: '1rem'

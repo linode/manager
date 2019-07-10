@@ -1,177 +1,295 @@
-import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import * as classNames from 'classnames';
 import { LocationDescriptor } from 'history';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import IconButton from 'src/components/core/IconButton';
 import {
   createStyles,
+  CSSProperties,
   Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EditableText from 'src/components/EditableText';
-import LabelText from './LabelText';
 
 type ClassNames =
   | 'root'
-  | 'backButton'
-  | 'linkText'
-  | 'linkTextWrapper'
+  | 'preContainer'
+  | 'crumbsWrapper'
+  | 'crumb'
+  | 'noCap'
+  | 'crumbLink'
+  | 'labelWrapper'
   | 'labelText'
-  | 'subtitleLinkText'
-  | 'prefixComponentWrapper';
+  | 'labelSubtitle'
+  | 'editableContainer'
+  | 'prefixComponentWrapper'
+  | 'slash'
+  | 'firstSlash';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
-    backButton: {
-      margin: '0',
-      padding: '0',
-      width: 'auto',
-      height: 'auto',
-      '& svg': {
-        position: 'relative',
-        top: 2,
-        width: 24,
-        height: 24
-      }
-    },
-    linkText: {
+    root: {
       display: 'flex',
-      alignItems: 'center',
-      color: '#3683DC',
-      borderColor: theme.color.grey,
-      whiteSpace: 'nowrap',
-      '&:after': {
-        content: "''",
-        display: 'inline-block',
-        padding: '0 8px 0 6px',
-        height: '39px',
-        borderRight: `1px solid ${theme.color.grey1}`
-      },
-      [theme.breakpoints.down('sm')]: {
-        display: 'none'
-      }
+      alignItems: 'flex-start'
     },
-    linkTextWrapper: {
-      position: 'relative',
-      top: 2
-    },
-    subtitleLinkText: {
+    preContainer: {
       display: 'flex',
+      flexWrap: 'wrap',
       alignItems: 'flex-start',
-      color: '#3683DC',
-      borderColor: theme.color.grey,
+      marginTop: -3
+    },
+    crumbsWrapper: {
+      display: 'flex',
+      alignItems: 'center'
+    },
+    crumb: {
       whiteSpace: 'nowrap',
-      '&:after': {
-        content: "''",
-        display: 'inline-block',
-        padding: '0 0 0 8px',
-        color: theme.color.grey1,
-        borderRight: `1px solid ${theme.color.grey1}`,
-        height: 24,
-        marginTop: -7,
-        position: 'relative',
-        top: 4
-      },
-      [theme.breakpoints.down('sm')]: {
-        display: 'none'
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      textTransform: 'capitalize',
+      ...theme.typography.h1
+    },
+    noCap: {
+      textTransform: 'initial'
+    },
+    crumbLink: {
+      color: theme.palette.primary.main,
+      '&:hover': {
+        color: theme.palette.primary.light
       }
+    },
+    labelWrapper: {
+      display: 'flex',
+      flexDirection: 'column'
     },
     labelText: {
-      padding: '2px 10px'
+      padding: `2px 10px`
+    },
+    labelSubtitle: {
+      margin: '4px 0 0 10px'
+    },
+    editableContainer: {
+      marginTop: -10,
+      [theme.breakpoints.up('lg')]: {
+        marginTop: -9
+      }
     },
     prefixComponentWrapper: {
-      marginLeft: '14px',
-      '& svg': {
+      marginLeft: theme.spacing(1),
+      '& svg, & img': {
         position: 'relative',
-        top: 2,
-        marginRight: '0'
+        marginRight: 4,
+        marginLeft: 4,
+        top: -2
       }
+    },
+    slash: {
+      fontSize: 24
+    },
+    firstSlash: {
+      marginTop: 6
     }
   });
+
 interface EditableProps {
   onCancel: () => void;
   onEdit: (value: string) => Promise<any>;
   errorText?: string;
+  editableTextTitle: string;
 }
 
 interface LabelProps {
   linkTo?: string;
   prefixComponent?: JSX.Element | null;
+  prefixStyle?: CSSProperties;
+  suffixComponent?: JSX.Element | null;
   subtitle?: string;
+  noCap?: boolean;
 }
+
+interface CrumbOverridesProps {
+  position: number;
+  linkTo?: LocationDescriptor;
+  label?: string;
+}
+
 export interface Props {
-  // linkTo will be passed in to a <Link /> component, so we borrow the
-  // LocationDescriptor interface from the history module
-  linkTo: LocationDescriptor;
-  linkText?: string;
-  labelTitle: string;
+  labelTitle?: string;
   labelOptions?: LabelProps;
   onEditHandlers?: EditableProps;
+  removeCrumbX?: number;
+  crumbOverrides?: CrumbOverridesProps[];
+  className?: string;
+  pathname: string;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+export type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const Breadcrumb: React.StatelessComponent<CombinedProps> = props => {
-  const {
-    classes,
-    linkTo,
-    linkText,
-    labelTitle,
-    labelOptions,
-    onEditHandlers
-  } = props;
+export class Breadcrumb extends React.Component<CombinedProps> {
+  render() {
+    const {
+      classes,
+      labelTitle,
+      labelOptions,
+      onEditHandlers,
+      removeCrumbX,
+      crumbOverrides,
+      className,
+      pathname
+    } = this.props;
 
-  return (
-    <React.Fragment>
-      <Link to={linkTo} data-qa-link>
-        <IconButton className={classes.backButton} tabIndex={-1}>
-          <KeyboardArrowLeft />
-          {linkText && (
-            <Typography
-              variant="h3"
-              className={
-                labelOptions && labelOptions.subtitle
-                  ? classes.subtitleLinkText
-                  : classes.linkText
-              }
-              data-qa-link-text
-            >
-              <span className={classes.linkTextWrapper}>{linkText}</span>
-            </Typography>
+    const url = pathname && pathname.slice(1);
+    const allPaths = url.split('/');
+
+    const removeByIndex = (list: string[], indexToRemove: number) => {
+      return list.filter((value, index) => {
+        return index !== indexToRemove;
+      });
+    };
+
+    const Crumbs = () => {
+      const paths = allPaths;
+      const pathMap = removeCrumbX
+        ? removeByIndex(paths, removeCrumbX - 1)
+        : paths;
+      const lastCrumb = pathMap.slice(-1)[0];
+
+      return (
+        <>
+          {pathMap.slice(0, -1).map((crumb: string, key: number) => {
+            const link =
+              '/' + paths.slice(0, -(paths.length - (key + 1))).join('/');
+            const override =
+              crumbOverrides &&
+              crumbOverrides.find(e => e.position === key + 1);
+
+            return (
+              <div key={key} className={classes.crumbsWrapper}>
+                <Link
+                  to={
+                    crumbOverrides && override
+                      ? override.linkTo
+                        ? override.linkTo
+                        : link
+                      : link
+                  }
+                  data-qa-link
+                >
+                  <Typography
+                    className={classNames({
+                      [classes.crumb]: true,
+                      [classes.crumbLink]: true
+                    })}
+                    data-qa-link-text
+                    data-testid={'link-text'}
+                  >
+                    {crumbOverrides && override
+                      ? override.label
+                        ? override.label
+                        : crumb
+                      : crumb}
+                  </Typography>
+                </Link>
+                <Typography component="span" className={classes.slash}>
+                  /
+                </Typography>
+              </div>
+            );
+          })}
+
+          {labelOptions && labelOptions.prefixComponent && (
+            <>
+              <div
+                className={classes.prefixComponentWrapper}
+                data-qa-prefixwrapper
+                style={labelOptions.prefixStyle && labelOptions.prefixStyle}
+              >
+                {labelOptions.prefixComponent}
+              </div>
+            </>
           )}
-        </IconButton>
-      </Link>
 
-      {labelOptions && labelOptions.prefixComponent && (
-        <div className={classes.prefixComponentWrapper} data-qa-prefixwrapper>
-          {labelOptions.prefixComponent}
+          {labelTitle ? (
+            <div className={classes.labelWrapper}>
+              <Typography
+                variant="h1"
+                className={classNames({
+                  [classes.crumb]: true,
+                  [classes.noCap]: labelOptions && labelOptions.noCap
+                })}
+                data-qa-label-text
+              >
+                {labelTitle}
+              </Typography>
+              {labelOptions && labelOptions.subtitle && (
+                <Typography
+                  variant="body1"
+                  className={classes.labelSubtitle}
+                  data-qa-label-subtitle
+                >
+                  {labelOptions.subtitle}
+                </Typography>
+              )}
+            </div>
+          ) : onEditHandlers ? (
+            <EditableText
+              typeVariant="h2"
+              text={onEditHandlers.editableTextTitle}
+              errorText={onEditHandlers.errorText}
+              onEdit={onEditHandlers.onEdit}
+              onCancel={onEditHandlers.onCancel}
+              labelLink={labelOptions && labelOptions.linkTo}
+              data-qa-editable-text
+              className={classes.editableContainer}
+            />
+          ) : (
+            <div className={classes.labelWrapper}>
+              <Typography
+                className={classNames({
+                  [classes.crumb]: true,
+                  [classes.noCap]: labelOptions && labelOptions.noCap
+                })}
+                data-qa-label-text
+              >
+                {lastCrumb}
+              </Typography>
+              {labelOptions && labelOptions.subtitle && (
+                <Typography
+                  variant="h1"
+                  className={classes.labelSubtitle}
+                  data-qa-label-subtitle
+                >
+                  {labelOptions.subtitle}
+                </Typography>
+              )}
+            </div>
+          )}
+        </>
+      );
+    };
+
+    return (
+      <div className={`${classes.root} ${className}`}>
+        <div className={classes.preContainer}>
+          <Typography
+            component="span"
+            className={classNames({
+              [classes.slash]: true,
+              [classes.firstSlash]: true
+            })}
+          >
+            /
+          </Typography>
+          <Crumbs />
         </div>
-      )}
-
-      {onEditHandlers ? (
-        <EditableText
-          typeVariant="h2"
-          text={labelTitle}
-          errorText={onEditHandlers.errorText}
-          onEdit={onEditHandlers.onEdit}
-          onCancel={onEditHandlers.onCancel}
-          labelLink={labelOptions && labelOptions.linkTo}
-          data-qa-editable-text
-        />
-      ) : (
-        <LabelText
-          title={props.labelTitle}
-          subtitle={labelOptions && labelOptions.subtitle}
-          titleLink={labelOptions && labelOptions.linkTo}
-          data-qa-labeltext
-        />
-      )}
-    </React.Fragment>
-  );
-};
+        {labelOptions &&
+          labelOptions.suffixComponent &&
+          labelOptions.suffixComponent}
+      </div>
+    );
+  }
+}
 
 const styled = withStyles(styles);
 export default styled(Breadcrumb);

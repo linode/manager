@@ -39,7 +39,8 @@ type ClassNames =
   | 'subTitle'
   | 'toolTip'
   | 'currentPlanContainer'
-  | 'checkbox';
+  | 'checkbox'
+  | 'resizeTitle';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -55,6 +56,11 @@ const styles = (theme: Theme) =>
     },
     title: {
       marginBottom: theme.spacing(2)
+    },
+    resizeTitle: {
+      display: 'flex',
+      alignItems: 'center',
+      minHeight: '44px'
     },
     subTitle: {
       marginTop: theme.spacing(3),
@@ -122,16 +128,35 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
   };
 
   onSubmit = () => {
-    const { linodeId, enqueueSnackbar, history, updateLinode } = this.props;
+    const {
+      linodeId,
+      linodeType,
+      enqueueSnackbar,
+      history,
+      updateLinode,
+      currentTypesData
+    } = this.props;
     const { selectedId } = this.state;
 
     if (!linodeId) {
       return;
     }
 
+    const isSmaller = isSmallerThanCurrentPlan(
+      selectedId,
+      linodeType || '',
+      currentTypesData
+    );
+
     this.setState({ isLoading: true });
 
-    resizeLinode(linodeId, selectedId, this.state.autoDiskResize)
+    /**
+     * Only set the allow_auto_disk_resize flag to true if both the user
+     * has selected it (this.state.autoDiskResize) and
+     * the flag would be honored (so disable if the current plan
+     * is larger than the target plan).
+     */
+    resizeLinode(linodeId, selectedId, this.state.autoDiskResize && !isSmaller)
       .then(_ => {
         this.setState({ selectedId: '', isLoading: false });
         resetEventsPolling();
@@ -204,6 +229,12 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       _shouldEnableAutoResizeDiskOption
     ] = shouldEnableAutoResizeDiskOption(linodeDisks);
 
+    const isSmaller = isSmallerThanCurrentPlan(
+      this.state.selectedId,
+      linodeType || '',
+      currentTypesData
+    );
+
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`${linodeLabel} - Resize`} />
@@ -253,20 +284,25 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
           disabled={disabled}
         />
         <Paper className={`${classes.checkbox} ${classes.root}`}>
-          <Typography variant="h2" className={classes.title}>
+          <Typography variant="h2" className={classes.resizeTitle}>
             Auto Resize Disk
-            {!_shouldEnableAutoResizeDiskOption && (
+            {isSmaller ? (
+              <HelpIcon
+                className={classes.toolTip}
+                text={`Your disks cannot be automatically resized when moving to a smaller plan.`}
+              />
+            ) : !_shouldEnableAutoResizeDiskOption ? (
               <HelpIcon
                 className={classes.toolTip}
                 text={`Your ext disk can only be automatically resized if you have one ext
-                disk or one ext disk and one swap disk on this Linode.`}
+                      disk or one ext disk and one swap disk on this Linode.`}
               />
-            )}
+            ) : null}
           </Typography>
           <Checkbox
-            disabled={!_shouldEnableAutoResizeDiskOption}
+            disabled={!_shouldEnableAutoResizeDiskOption || isSmaller}
             checked={
-              !_shouldEnableAutoResizeDiskOption
+              !_shouldEnableAutoResizeDiskOption || isSmaller
                 ? false
                 : this.state.autoDiskResize
             }
@@ -384,6 +420,21 @@ export const shouldEnableAutoResizeDiskOption = (
     (linodeDisks.length === 1 && linodeHasOneExtDisk) ||
     (linodeDisks.length === 2 && linodeHasOneSwapDisk && linodeHasOneExtDisk);
   return [linodeExtDiskLabels[0], shouldEnable];
+};
+
+export const isSmallerThanCurrentPlan = (
+  selectedPlanID: string,
+  currentPlanID: string,
+  types: ExtendedType[]
+) => {
+  const currentType = types.find(thisType => thisType.id === currentPlanID);
+  const nextType = types.find(thisType => thisType.id === selectedPlanID);
+
+  if (!(currentType && nextType)) {
+    return false;
+  }
+
+  return currentType.disk > nextType.disk;
 };
 
 export default compose<CombinedProps, {}>(

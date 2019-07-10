@@ -52,7 +52,7 @@ export const sendPaginationEvent = (
   });
 };
 
-// src/index.tsx
+// LinodeThemeWrapper.tsx
 export const sendCurrentThemeSettingsEvent = (eventAction: string) => {
   sendEvent({
     category: 'Theme Choice',
@@ -63,10 +63,13 @@ export const sendCurrentThemeSettingsEvent = (eventAction: string) => {
 
 // CreateVolumeForm.tsx
 // CreateVolumeForLinodeForm.tsx
-export const sendCreateVolumeEvent = (eventLabel: string) => {
+export const sendCreateVolumeEvent = (
+  eventLabel: string,
+  eventAction?: string
+) => {
   sendEvent({
     category: 'Create Volume',
-    action: 'Create Volume',
+    action: eventAction || 'Create Volume',
     label: eventLabel
   });
 };
@@ -104,7 +107,7 @@ export const sendImportDisplayGroupSubmitEvent = (
   });
 };
 
-// PrimaryNav.tsx
+// LinodeThemeWrapper.tsx
 export const sendSpacingToggleEvent = (eventLabel: string) => {
   sendEvent({
     category: 'Theme Choice',
@@ -113,7 +116,7 @@ export const sendSpacingToggleEvent = (eventLabel: string) => {
   });
 };
 
-// PrimaryNav.tsx
+// LinodeThemeWrapper.tsx
 export const sendThemeToggleEvent = (eventLabel: string) => {
   sendEvent({
     category: 'Theme Choice',

@@ -1,11 +1,12 @@
 import createBreakpoints from 'src/components/core/styles/createBreakpoints';
-import createTheme from './themeFactory';
+import createTheme, { ThemeOverrides } from './themeFactory';
 
 const breakpoints = createBreakpoints({});
 
-export const light = () =>
+export const light = (options: ThemeOverrides) =>
   createTheme({
-    name: 'lightTheme'
+    name: 'lightTheme',
+    ...options
   });
 
 const primaryColors = {
@@ -36,7 +37,7 @@ const iconCircleAnimation = {
   }
 };
 
-export const dark = () =>
+export const dark = (options: ThemeOverrides) =>
   createTheme({
     name: 'darkTheme',
     breakpoints,
@@ -61,7 +62,12 @@ export const dark = () =>
       lightBlue: '#222',
       white: '#32363c',
       pureWhite: '#000',
-      tableHeader: '#2B2E32'
+      tableHeader: '#2B2E32',
+      primaryNavActive: '#303235',
+      primaryNavActiveBG: '#464c53',
+      primaryNavBorder: '#303235',
+      primaryNavPaper: '#3a3f45',
+      topMenu: '#33383d'
     },
     color: {
       headline: primaryColors.headline,
@@ -91,7 +97,8 @@ export const dark = () =>
       drawerBackdrop: 'rgba(0, 0, 0, 0.5)',
       label: '#c9cacb',
       disabledText: '#c9cacb',
-      kubeLabel: '#fff'
+      kubeLabel: '#fff',
+      primaryNavText: '#fff'
     },
     animateCircleIcon: {
       ...iconCircleAnimation
@@ -286,7 +293,7 @@ export const dark = () =>
       },
       MuiExpansionPanelSummary: {
         root: {
-          '& $focused': {
+          '&$focused': {
             backgroundColor: '#111111'
           },
           backgroundColor: '#32363c',
@@ -612,5 +619,6 @@ export const dark = () =>
           }
         }
       }
-    }
+    },
+    ...options
   });

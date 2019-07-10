@@ -3,7 +3,7 @@ import * as classNames from 'classnames';
 import { compose, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps } from 'react-router-dom';
+import { Link, RouteComponentProps } from 'react-router-dom';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalIcon from 'src/assets/addnewmenu/nodebalancer.svg';
@@ -27,6 +27,7 @@ import { getTicket, getTicketReplies } from 'src/services/support';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
+import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 import { getGravatarUrlFromHash } from 'src/utilities/gravatar';
 import ExpandableTicketPanel from '../ExpandableTicketPanel';
 import TicketAttachmentList from '../TicketAttachmentList';
@@ -36,7 +37,7 @@ import Reply from './TabbedReply';
 type ClassNames =
   | 'root'
   | 'title'
-  | 'titleWrapper'
+  | 'breadcrumbs'
   | 'backButton'
   | 'listParent'
   | 'label'
@@ -53,11 +54,9 @@ const styles = (theme: Theme) =>
       display: 'flex',
       alignItems: 'center'
     },
-    titleWrapper: {
-      display: 'flex',
-      alignItems: 'flex-start',
-      marginTop: theme.spacing(1),
-      marginBottom: theme.spacing(2)
+    breadcrumbs: {
+      marginBottom: theme.spacing(2),
+      marginTop: theme.spacing(1)
     },
     backButton: {
       margin: '-6px 0 0 -16px',
@@ -258,8 +257,12 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
 
   renderEntityLabelWithIcon = () => {
     const { classes } = this.props;
-    const { label, type } = this.state.ticket!.entity;
-    const icon: JSX.Element = this.getEntityIcon(type);
+    const { entity } = this.state.ticket!;
+    if (!entity) {
+      return null;
+    }
+    const icon: JSX.Element = this.getEntityIcon(entity.type);
+    const target = getLinkTargets(entity);
     return (
       <Grid
         container
@@ -271,7 +274,15 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
           {icon}
         </Grid>
         <Grid item>
-          <Typography className={classes.ticketLabel}>{label}</Typography>
+          {target !== null ? (
+            <Link to={target} className="secondaryLink">
+              {entity.label}
+            </Link>
+          ) : (
+            <Typography className={classes.ticketLabel}>
+              {entity.label}
+            </Typography>
+          )}
         </Grid>
       </Grid>
     );
@@ -296,7 +307,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
   };
 
   render() {
-    const { classes, profileUsername } = this.props;
+    const { classes, profileUsername, location } = this.props;
     const {
       attachmentErrors,
       errors,
@@ -330,44 +341,50 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     // Format date for header
     const formattedDate = formatDate(ticket.updated);
 
+    const _Chip = () => (
+      <Chip
+        className={classNames({
+          [classes.status]: true,
+          [classes.open]: ticket.status === 'open' || ticket.status === 'new',
+          [classes.closed]: ticket.status === 'closed'
+        })}
+        label={ticket.status}
+        component="div"
+        role="term"
+      />
+    );
+
     // Might be an opportunity to refactor the nested grid containing the ticket summary, status, and last updated
     // details.  For more info see the below link.
     // https://github.com/linode/manager/pull/4056/files/b0977c6e397e42720479478db96df56022618151#r232298065
     return (
       <React.Fragment>
         <DocumentTitleSegment segment={`Support Ticket ${ticketId}`} />
-        <Grid
-          container
-          justify="space-between"
-          alignItems="flex-end"
-          style={{ marginTop: 8, marginBottom: 8 }}
-        >
-          <Grid item className={classes.titleWrapper}>
+        <Grid container justify="space-between" alignItems="flex-end">
+          <Grid item>
             <Breadcrumb
-              linkTo={{
-                pathname: `/support/tickets`,
-                // If we're viewing a `Closed` ticket, the Breadcrumb link should take us to `Closed` tickets.
-                search: `type=${ticket.status === 'closed' ? 'closed' : 'open'}`
-              }}
-              linkText="Support Tickets"
+              pathname={location.pathname}
+              crumbOverrides={[
+                {
+                  position: 2,
+                  linkTo: {
+                    pathname: `/support/tickets`,
+                    // If we're viewing a `Closed` ticket, the Breadcrumb link should take us to `Closed` tickets.
+                    search: `type=${
+                      ticket.status === 'closed' ? 'closed' : 'open'
+                    }`
+                  }
+                }
+              ]}
               labelTitle={`#${ticket.id}: ${ticket.summary}`}
               labelOptions={{
                 subtitle: `${
                   ticket.status === 'closed' ? 'Closed' : 'Last updated'
-                } by ${ticket.updated_by} at ${formattedDate}`
+                } by ${ticket.updated_by} at ${formattedDate}`,
+                suffixComponent: <_Chip />
               }}
+              className={classes.breadcrumbs}
               data-qa-breadcrumb
-            />
-            <Chip
-              className={classNames({
-                [classes.status]: true,
-                [classes.open]:
-                  ticket.status === 'open' || ticket.status === 'new',
-                [classes.closed]: ticket.status === 'closed'
-              })}
-              label={ticket.status}
-              component="div"
-              role="term"
             />
           </Grid>
         </Grid>

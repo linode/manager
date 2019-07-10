@@ -45,7 +45,7 @@ const styles = (theme: Theme) =>
       }
     },
     root: {
-      padding: '5px 10px',
+      padding: '5px 8px',
       display: 'inline-block',
       border: '1px solid transparent',
       transition: theme.transitions.create(['opacity']),
@@ -58,8 +58,7 @@ const styles = (theme: Theme) =>
       justifyContent: 'flex-start',
       alignItems: 'center',
       maxHeight: 48,
-      position: 'relative',
-      transform: 'translate(-2px, -0.5px)'
+      position: 'relative'
     },
     initial: {
       border: '1px solid transparent',
@@ -89,6 +88,7 @@ const styles = (theme: Theme) =>
       borderColor: `${theme.palette.primary.main} !important`,
       backgroundColor: 'transparent',
       boxShadow: 'none',
+      minHeight: 40,
       [theme.breakpoints.up('md')]: {
         maxWidth: 415,
         width: '100%'
@@ -115,7 +115,7 @@ const styles = (theme: Theme) =>
       fontSize: 26
     },
     input: {
-      padding: '5px 10px',
+      padding: '5px 8px',
       ...theme.typography.h1
     },
     headline: {
@@ -146,6 +146,7 @@ interface Props {
   errorText?: string;
   labelLink?: string;
   typeVariant: string;
+  className?: string;
 }
 
 interface State {
@@ -226,6 +227,7 @@ export class EditableText extends React.Component<FinalProps, State> {
       onCancel,
       text: propText,
       typeVariant,
+      className,
       ...rest
     } = this.props;
     const { isEditing, text } = this.state;
@@ -237,7 +239,10 @@ export class EditableText extends React.Component<FinalProps, State> {
     );
 
     return !isEditing && !errorText ? (
-      <div className={`${classes.container} ${classes.initial}`}>
+      <div
+        className={`${classes.container} ${classes.initial} ${className}`}
+        data-testid={'editable-text'}
+      >
         <React.Fragment>
           {!!labelLink ? (
             <Link to={labelLink!} className={classes.underlineOnHover}>
@@ -263,7 +268,7 @@ export class EditableText extends React.Component<FinalProps, State> {
         mouseEvent="onMouseDown"
       >
         <div
-          className={`${classes.container} ${classes.edit}`}
+          className={`${classes.container} ${classes.edit} ${className}`}
           data-qa-edit-field
         >
           <TextField

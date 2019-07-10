@@ -10,7 +10,9 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import TagsPanel from 'src/components/TagsPanel';
-import styled, { StyleProps } from 'src/containers/SummaryPanels.styles';
+import summaryPanelStyles, {
+  StyleProps
+} from 'src/containers/SummaryPanels.styles';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
 import { formatRegion } from 'src/utilities';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
@@ -24,14 +26,7 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
-    title: {},
-    summarySection: {},
-    section: {},
-    main: {},
-    sidebar: {},
-    domainSidebar: {},
-    titleWrapper: {},
+    ...summaryPanelStyles(theme),
     NBsummarySection: {
       [theme.breakpoints.up('md')]: {
         marginTop: theme.spacing(3) + 24
@@ -149,9 +144,6 @@ const SummaryPanel: React.StatelessComponent<CombinedProps> = props => {
 
 const localStyles = withStyles(styles);
 
-const enhanced = compose<CombinedProps, Props>(
-  styled,
-  localStyles
-);
+const enhanced = compose<CombinedProps, Props>(localStyles);
 
 export default enhanced(SummaryPanel);

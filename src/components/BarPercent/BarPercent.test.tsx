@@ -7,12 +7,14 @@ const componentLoading = shallow(
     classes={{
       root: '',
       primaryColor: '',
-      loadingText: ''
+      loadingText: '',
+      rounded: ''
     }}
     value={20}
     max={100}
     loadingText="loading..."
     isFetchingValue={true}
+    rounded={false}
   />
 );
 

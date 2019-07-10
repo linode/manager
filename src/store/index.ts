@@ -116,6 +116,10 @@ import notifications, {
   defaultState as notificationsDefaultState,
   State as NotificationsState
 } from './notification/notification.reducer';
+import preferences, {
+  defaultState as preferencesState,
+  State as PreferencesState
+} from './preferences/preferences.reducer';
 import { initReselectDevtools } from './selectors';
 
 const reduxDevTools = (window as any).__REDUX_DEVTOOLS_EXTENSION__;
@@ -176,6 +180,7 @@ export interface ApplicationState {
   volumeDrawer: VolumeDrawerState;
   bucketDrawer: BucketDrawerState;
   createLinode: LinodeCreateState;
+  preferences: PreferencesState;
 }
 
 const defaultState: ApplicationState = {
@@ -189,7 +194,8 @@ const defaultState: ApplicationState = {
   tagImportDrawer: tagDrawerDefaultState,
   volumeDrawer: volumeDrawerDefaultState,
   bucketDrawer: bucketDrawerDefaultState,
-  createLinode: linodeCreateDefaultState
+  createLinode: linodeCreateDefaultState,
+  preferences: preferencesState
 };
 
 /**
@@ -226,7 +232,8 @@ const reducers = combineReducers<ApplicationState>({
   volumeDrawer,
   bucketDrawer,
   events,
-  createLinode: linodeCreateReducer
+  createLinode: linodeCreateReducer,
+  preferences
 });
 
 const enhancers = compose(
