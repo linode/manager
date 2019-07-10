@@ -8,6 +8,8 @@ export const getProfileActions = actionCreator.async<
   Linode.ApiFieldError[]
 >(`request`);
 
-export const handleUpdate = actionCreator<
-  Partial<Linode.Profile> | Partial<Linode.User>
+export const handleUpdateProfile = actionCreator.async<
+  Partial<Linode.Profile>,
+  Partial<Linode.Profile>,
+  Linode.ApiFieldError[]
 >(`update`);

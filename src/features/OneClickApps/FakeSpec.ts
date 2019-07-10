@@ -34,11 +34,11 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'CS:GO',
-    description: `Fast-paced, competitive FPS. Partner with your team to compete the objective at hand, or take matters into your own hands and go solo.`,
-    summary: `In CS:GO there are two teams: Terrorists and Counter-Terrorists.
-      The teams compete against each other to complete objectives or to eliminate the opposing team.
-      A competitive match requires two teams of five players, but hosting your own server allows you control over team size and server location,
-      so you and your friends can play with low latency. Up to 64 players can be hosted on a single server.`,
+    description: `In CS:GO there are two teams: Terrorists and Counter-Terrorists.
+    The teams compete against each other to complete objectives or to eliminate the opposing team.
+    A competitive match requires two teams of five players, but hosting your own server allows you control over team size and server location,
+    so you and your friends can play with low latency. Up to 64 players can be hosted on a single server.`,
+    summary: `Fast-paced, competitive FPS. Partner with your team to compete the objective at hand, or take matters into your own hands and go solo.`,
     related_guides: [
       {
         title: 'Deploy Counter-Strike: Global Offensive with One-Click Apps',
@@ -77,7 +77,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://linode.com/docs/quick-answers/linux/how-to-use-git/'
       }
     ],
-    href: 'about.gitlab.com',
+    href: 'https://about.gitlab.com',
     logo_url: 'assets/gitlab_color.svg'
   },
   {

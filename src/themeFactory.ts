@@ -3,7 +3,6 @@ import createBreakpoints from 'src/components/core/styles/createBreakpoints';
 import createMuiTheme, {
   ThemeOptions
 } from 'src/components/core/styles/createMuiTheme';
-import { spacing as spacingStorage } from 'src/utilities/storage';
 
 /**
  * Augmenting Palette and Palette Options
@@ -65,16 +64,7 @@ declare module '@material-ui/core/styles/createMuiTheme' {
   }
 }
 
-type ThemeDefaults = (options: ThemeArguments) => ThemeOptions;
-
-interface ThemeArguments {
-  spacing: 'compact' | 'normal';
-}
-
 const breakpoints = createBreakpoints({});
-
-export const COMPACT_SPACING_UNIT = 4;
-export const NORMAL_SPACING_UNIT = 8;
 
 const primaryColors = {
   main: '#3683dc',
@@ -127,10 +117,16 @@ const visuallyHidden = {
   clip: 'rect(1px, 1px, 1px, 1px)'
 };
 
-const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
-  const spacingUnit =
-    options.spacing === 'compact' ? COMPACT_SPACING_UNIT : NORMAL_SPACING_UNIT;
+export const COMPACT_SPACING_UNIT = 4;
+export const NORMAL_SPACING_UNIT = 8;
 
+export interface ThemeOverrides {
+  spacingOverride: typeof COMPACT_SPACING_UNIT | typeof NORMAL_SPACING_UNIT;
+}
+
+type ThemeDefaults = (options: ThemeOverrides) => ThemeOptions;
+
+const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
   return {
     breakpoints,
     shadows: [
@@ -182,7 +178,12 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       lightBlue: '#d7e3ef',
       white: '#fff',
       pureWhite: '#fff',
-      tableHeader: '#fbfbfb'
+      tableHeader: '#fbfbfb',
+      primaryNavActive: '#f4f4f4',
+      primaryNavActiveBG: '#272b31',
+      primaryNavBorder: '#f4f4f4',
+      primaryNavPaper: '#32363c',
+      topMenu: '#fff'
     },
     color: {
       headline: primaryColors.headline,
@@ -213,7 +214,8 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       drawerBackdrop: 'rgba(255, 255, 255, 0.5)',
       label: '#555',
       disabledText: '#c9cacb',
-      kubeLabel: '#272b31'
+      kubeLabel: '#272b31',
+      primaryNavText: '#c9cacb'
     },
     font: {
       normal: primaryFonts.normal,
@@ -353,11 +355,6 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
             color: primaryColors.light
           }
         },
-        // flat: {
-        //   '&.cancel:hover': {
-        //     backgroundColor: 'transparent'
-        //   }
-        // },
         containedPrimary: {
           '&:hover, &:focus': {
             backgroundColor: primaryColors.light
@@ -425,8 +422,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
             minWidth: 100,
             '& svg': {
               width: 22,
-              height: 22,
-              animation: 'rotate 2s linear infinite'
+              height: 22
             }
           }
         }
@@ -783,6 +779,11 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
           'label + &': {
             marginTop: 0
           }
+        }
+      },
+      MuiInputBase: {
+        input: {
+          height: 'auto'
         }
       },
       MuiInputAdornment: {
@@ -1313,6 +1314,7 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
       MuiTableSortLabel: {
         root: {
           fontSize: '.9rem',
+          lineHeight: '1.1rem',
           transition: 'color 225ms ease-in-out',
           '&:hover': {
             color: primaryColors.main
@@ -1359,11 +1361,11 @@ const themeDefaults: ThemeDefaults = (options: ThemeArguments) => {
   };
 };
 
-export default (options: ThemeOptions) =>
+export default (options: ThemeOptions & ThemeOverrides) =>
   createMuiTheme(
     mergeDeepRight(
       themeDefaults({
-        spacing: spacingStorage.get()
+        spacingOverride: options.spacingOverride
       }),
       options
     )

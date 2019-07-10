@@ -1,12 +1,13 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-import { Row, RowProps } from './EventRow';
+import { maybeRemoveTrailingPeriod, Row, RowProps } from './EventRow';
 
-const message = 'This is a message';
+const message = 'this is a message.';
 const props: RowProps = {
   message,
   type: 'linode',
   created: '2018-01-01',
+  username: null,
   classes: {
     root: '',
     message: ''
@@ -44,5 +45,24 @@ describe('EventRow component', () => {
     row.setProps({ entityId: 0 });
     tableRowProps = row.find('WithStyles(withRouter(TableRow))').props();
     expect(tableRowProps.rowLink).toBeDefined();
+  });
+
+  it('should display the message with a username if one exists', () => {
+    expect(row.find(`[data-qa-event-message]`).text()).toBe(
+      'this is a message.'
+    );
+    row.setProps({ username: 'marty' });
+    expect(row.find(`[data-qa-event-message]`).text()).toBe(
+      'this is a message by marty.'
+    );
+  });
+});
+
+describe('utilities', () => {
+  it('should remove trailing periods', () => {
+    expect(maybeRemoveTrailingPeriod('hello world.')).toBe('hello world');
+    expect(maybeRemoveTrailingPeriod('hello wor..ld')).toBe('hello wor..ld');
+    expect(maybeRemoveTrailingPeriod('hello world')).toBe('hello world');
+    expect(maybeRemoveTrailingPeriod('hello. world')).toBe('hello. world');
   });
 });

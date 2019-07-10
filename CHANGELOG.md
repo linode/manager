@@ -4,6 +4,66 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.63.1] - 2019-07-08
+
+### Changed:
+- Remove VAT banner.
+
+## [v0.63.0] - 2019-07-03
+
+### Added:
+- Add username to event rows on both Events Landing and Linode Detail views
+- Use preferences endpoint to save theme and spacing
+- Show helper text for auto-backups for Managed users
+- Use account.capabilities for displaying LKE
+
+### Changed:
+- Update monthly network transfer panels
+- Update breadcrumbs site-wide
+- Update primary navigation active state icon
+- Disable auto-resize option when moving to a smaller plan
+
+### Fixed:
+- Linode Notification Threshold updates not displaying
+- Group by Tag behaving inconsistently
+- Progress button loading icon
+- Fix console warnings for sidebar styles
+- Margin in header on PDF invoices
+- LinodeCreate selected region tab state
+- Issue with Volume size not updating
+- Do not attempt to create DNS records for Linodes with IPv6 disabled
+
+## [v0.62.0] - 2019-06-21
+
+### Added:
+- Add One-Click Apps detail view
+- Add helper text for auto backups
+- Add links to Object Storage documentation
+- Allow external links to open Support ticket drawer
+
+### Changed:
+- Updates to base theme
+- Make entity links in Support tickets clickable
+- Do not attempt to create domain records for slave domains
+- Update max length for Bucket label
+- Reduce NodeBalancer price
+- Copy for maintenance notifications
+- Update styles for important/critical notifications
+- Add link to support ticket in SelectTabPanel
+- UI for selecting memory limit on Linode Config Profiles
+- Adjustments for compact mode, some adjustments for mobile compact on help banner panel as well
+
+### Fixed:
+- Dashboard header spacing
+- User-defined fields not resetting on App/StackScript change
+- Catch deleted events errors
+- IP sharing private addresses not showing
+- Regression with maintenance notification list item severity
+- Expandable panel icons
+- Point of entry in dashboard
+- Animation isolation logic
+- Abuse ticket banner fix
+
 ## [v0.61.0] - 2019-06-14
 
 ### Added:

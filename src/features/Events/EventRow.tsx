@@ -67,6 +67,7 @@ export const EventRow: React.StatelessComponent<CombinedProps> = props => {
     status: pathOr(undefined, ['status'], entity),
     type,
     entityId,
+    username: event.username,
     classes
   };
 
@@ -80,6 +81,7 @@ export interface RowProps extends WithStyles<ClassNames> {
   type: 'linode' | 'domain' | 'nodebalancer' | 'stackscript' | 'volume';
   status?: string;
   created: string;
+  username: string | null;
 }
 
 export const Row: React.StatelessComponent<RowProps> = props => {
@@ -90,7 +92,8 @@ export const Row: React.StatelessComponent<RowProps> = props => {
     message,
     status,
     type,
-    created
+    created,
+    username
   } = props;
 
   /** Some event types may not be handled by our system (or new types
@@ -123,7 +126,9 @@ export const Row: React.StatelessComponent<RowProps> = props => {
           data-qa-event-message
           variant="body1"
         >
-          {message}
+          {username
+            ? `${maybeRemoveTrailingPeriod(message)} by ${username}.`
+            : message}
         </Typography>
       </TableCell>
       <TableCell parentColumn={'Time'} data-qa-event-created-cell compact>
@@ -142,3 +147,11 @@ const enhanced = compose<CombinedProps, Props & RenderGuardProps>(
 );
 
 export default enhanced(EventRow);
+
+export const maybeRemoveTrailingPeriod = (string: string) => {
+  const lastChar = string[string.length - 1];
+  if (lastChar === '.') {
+    return string.substr(0, string.length - 1);
+  }
+  return string;
+};

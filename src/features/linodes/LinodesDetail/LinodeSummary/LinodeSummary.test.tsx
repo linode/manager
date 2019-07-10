@@ -25,9 +25,14 @@ describe('LinodeSummary', () => {
         graphTitle: '',
         graphSelectTitle: '',
         totalTraffic: '',
-        chartSelect: ''
+        chartSelect: '',
+        subHeaderOuter: '',
+        textWrap: '',
+        headerOuter: ''
       }}
+      linodeVolumes={[]}
       typesData={[]}
+      imagesData={[]}
     />
   );
 

@@ -139,6 +139,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     clustersLoading,
     enqueueSnackbar,
     lastUpdated,
+    location,
     typesData,
     typesError,
     typesLoading
@@ -391,15 +392,16 @@ export const KubernetesClusterDetail: React.FunctionComponent<
       >
         <Grid item xs={12} className={classes.titleWrapper}>
           <Breadcrumb
-            linkTo={{
-              pathname: `/kubernetes`
+            labelOptions={{
+              linkTo: `/kubernetes`
             }}
-            linkText="Clusters"
             labelTitle={cluster.label}
             onEditHandlers={{
               onEdit: handleLabelChange,
-              onCancel: resetEditableLabel
+              onCancel: resetEditableLabel,
+              editableTextTitle: 'any'
             }}
+            pathname={location.pathname}
             data-qa-breadcrumb
           />
         </Grid>

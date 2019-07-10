@@ -1,9 +1,11 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { bindActionCreators, compose } from 'redux';
+import { compose } from 'recompose';
+import { bindActionCreators } from 'redux';
 import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import KubernetesIcon from 'src/assets/addnewmenu/kubernetes.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
@@ -17,9 +19,10 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import { isKubernetesEnabled } from 'src/constants';
 import { openForCreating as openDomainDrawerForCreating } from 'src/store/domainDrawer';
+import { MapState } from 'src/store/types';
 import { openForCreating as openVolumeDrawerForCreating } from 'src/store/volumeDrawer';
+import { isKubernetesEnabled } from 'src/utilities/accountCapabilities';
 import AddNewMenuItem, { MenuItems } from './AddNewMenuItem';
 
 type CSSClasses =
@@ -82,7 +85,8 @@ interface State {
 type CombinedProps = Props &
   WithStyles<CSSClasses> &
   RouteComponentProps<{}> &
-  DispatchProps;
+  DispatchProps &
+  StateProps;
 
 const styled = withStyles(styles);
 
@@ -106,7 +110,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
       {
         title: 'Volume',
         onClick: e => {
-          this.props.openVolumeDrawerForCreating();
+          this.props.openVolumeDrawerForCreating('Created from Add New Menu');
           this.handleClose();
           e.preventDefault();
         },
@@ -135,7 +139,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
       }
     ];
 
-    if (isKubernetesEnabled) {
+    if (isKubernetesEnabled(this.props.accountCapabilities)) {
       items.push({
         title: 'Kubernetes',
         onClick: e => {
@@ -209,6 +213,23 @@ interface DispatchProps {
   openVolumeDrawerForCreating: () => void;
 }
 
+interface StateProps {
+  accountCapabilities: Linode.AccountCapability[];
+}
+
+const mapStateToProps: MapState<StateProps, CombinedProps> = (
+  state,
+  ownProps
+) => {
+  return {
+    accountCapabilities: pathOr(
+      [],
+      ['__resources', 'account', 'data', 'capabilities'],
+      state
+    )
+  };
+};
+
 const mapDispatchToProps = (dispatch: Dispatch<any>) =>
   bindActionCreators(
     { openDomainDrawerForCreating, openVolumeDrawerForCreating },
@@ -216,11 +237,11 @@ const mapDispatchToProps = (dispatch: Dispatch<any>) =>
   );
 
 const connected = connect(
-  undefined,
+  mapStateToProps,
   mapDispatchToProps
 );
 
-export default compose(
+export default compose<CombinedProps, {}>(
   connected,
   withRouter,
   styled

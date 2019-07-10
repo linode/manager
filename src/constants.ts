@@ -10,6 +10,7 @@ export const LOGIN_ROOT =
   process.env.REACT_APP_LOGIN_ROOT || 'https://login.linode.com';
 export const API_ROOT =
   process.env.REACT_APP_API_ROOT || 'https://api.lindev.local';
+export const BETA_API_ROOT = API_ROOT + 'beta';
 export const LISH_ROOT =
   process.env.REACT_APP_LISH_ROOT || 'webconsole.linode.com';
 /** generate a client_id by navigating to https://cloud.linode.com/profile/clients */
@@ -24,6 +25,10 @@ export const ALGOLIA_APPLICATION_ID =
   process.env.REACT_APP_ALGOLIA_APPLICATION_ID || '';
 export const ALGOLIA_SEARCH_KEY =
   process.env.REACT_APP_ALGOLIA_SEARCH_KEY || '';
+export const LAUNCH_DARKLY_API_KEY =
+  (isProduction
+    ? process.env.REACT_APP_LAUNCH_DARKLY_ID_PRODUCTION
+    : process.env.REACT_APP_LAUNCH_DARKLY_ID_DEV) || '';
 
 /** optional variables */
 export const SENTRY_URL = process.env.REACT_APP_SENTRY_URL;
@@ -42,7 +47,7 @@ export const LOG_PERFORMANCE_METRICS =
 export const isObjectStorageEnabledForEnvironment =
   process.env.REACT_APP_IS_OBJECT_STORAGE_ENABLED === 'true';
 
-export const isKubernetesEnabled =
+export const isKubernetesEnabledForEnvironment =
   process.env.REACT_APP_KUBERNETES_ENABLED === 'true';
 
 export const DISABLE_EVENT_THROTTLE =
@@ -143,7 +148,8 @@ export const dcContinent: Record<string, ContinentKey> = {
   'eu-central': 'EU',
   'ap-northeast': 'AS',
   'ca-central': 'NA',
-  'ca-east': 'NA'
+  'ca-east': 'NA',
+  'ap-west': 'AS'
 };
 
 // At this time, the following regions do not support block storage.

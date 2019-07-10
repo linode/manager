@@ -14,8 +14,7 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import Toggle from 'src/components/Toggle';
-import { updateProfile } from 'src/services/profile';
-import { handleUpdate } from 'src/store/profile/profile.actions';
+import { updateProfile as handleUpdateProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
 
 type ClassNames = 'root' | 'title' | 'label';
@@ -75,13 +74,14 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
   toggle = () => {
     this.setState({ submitting: true });
 
-    updateProfile({ email_notifications: !this.props.status })
-      .then(profile => {
-        this.props.actions.updateProfile(profile);
+    this.props
+      .updateProfile({ email_notifications: !this.props.status })
+      .then(() => {
         this.setState({ submitting: false });
       })
       .catch(() => {
         /* Couldnt really imagine this being an issue... 1*/
+        this.setState({ submitting: false });
       });
   };
 }
@@ -89,15 +89,11 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles);
 
 interface DispatchProps {
-  actions: {
-    updateProfile: (p: Linode.Profile) => void;
-  };
+  updateProfile: (p: Partial<Linode.Profile>) => Promise<Linode.Profile>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-  actions: {
-    updateProfile: (p: Linode.Profile) => dispatch(handleUpdate(p))
-  }
+  updateProfile: (p: Linode.Profile) => dispatch(handleUpdateProfile(p) as any)
 });
 
 interface StateProps {

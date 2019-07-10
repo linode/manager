@@ -1,15 +1,16 @@
 import * as React from 'react';
 import {
   matchPath,
+  Redirect,
   Route,
   RouteComponentProps,
   Switch,
   withRouter
 } from 'react-router-dom';
+import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
-import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import TabLink from 'src/components/TabLink';
 
@@ -48,7 +49,8 @@ class AccountLanding extends React.Component<Props> {
 
   render() {
     const {
-      match: { url }
+      match: { url },
+      location
     } = this.props;
     const matches = (p: string) => {
       return Boolean(matchPath(p, { path: this.props.location.pathname }));
@@ -57,9 +59,12 @@ class AccountLanding extends React.Component<Props> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Account Settings" />
-        <Typography variant="h1" data-qa-profile-header>
-          Account Settings
-        </Typography>
+        <Breadcrumb
+          pathname={location.pathname}
+          labelTitle="Account"
+          removeCrumbX={1}
+          data-qa-profile-header
+        />
         <AppBar position="static" color="default">
           <Tabs
             value={this.tabs.findIndex(tab => matches(tab.routeName))}
@@ -86,10 +91,16 @@ class AccountLanding extends React.Component<Props> {
           </Tabs>
         </AppBar>
         <Switch>
-          <Route exact path={`${url}/billing`} component={Billing} />
-          <Route exact path={`${url}/users`} component={Users} />
-          <Route exact path={`${url}/settings`} component={GlobalSettings} />
-          <Route exact path={`${url}`} component={Billing} />
+          <Route exact strict path={`${url}/billing`} component={Billing} />
+          <Route exact strict path={`${url}/users`} component={Users} />
+          <Route
+            exact
+            strict
+            path={`${url}/settings`}
+            component={GlobalSettings}
+          />
+          <Route exact strict path={`${url}`} component={Billing} />
+          <Redirect to={`${url}/billing`} />
         </Switch>
       </React.Fragment>
     );

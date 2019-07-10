@@ -6,23 +6,9 @@ import {
   mockNotification
 } from 'src/__data__/notifications';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
-import Component, { AbuseTicketBanner } from './AbuseTicketBanner';
+import { AbuseTicketBanner } from './AbuseTicketBanner';
 
-const mockState = {
-  __resources: {
-    notifications: {
-      data: [abuseTicketNotification, mockNotification]
-    }
-  }
-};
-
-jest.mock('src/store', () => ({
-  default: {
-    getState: () => mockState,
-    subscribe: () => jest.fn(),
-    dispatch: () => jest.fn()
-  }
-}));
+import filterAbuseTickets from 'src/store/selectors/getAbuseTicket';
 
 afterEach(cleanup);
 
@@ -67,8 +53,12 @@ describe('Abuse ticket banner', () => {
 
   describe('integration tests', () => {
     it('should filter out abuse ticket notifications from the store', () => {
-      const { queryAllByText } = render(wrapWithTheme(<Component />));
-      expect(queryAllByText(/abuse/)).toHaveLength(1);
+      const tickets = filterAbuseTickets({
+        notifications: {
+          data: [mockNotification, abuseTicketNotification]
+        }
+      } as any);
+      expect(tickets[0].label).toMatch(/abuse/);
     });
   });
 });

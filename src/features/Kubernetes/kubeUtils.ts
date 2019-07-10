@@ -54,7 +54,7 @@ export const getTotalClusterMemoryAndCPU = (
   pools: PoolNode[],
   types: ExtendedType[]
 ) => {
-  if (!types) {
+  if (!types || !pools) {
     return { RAM: 0, CPU: 0 };
   }
   return pools.reduce(

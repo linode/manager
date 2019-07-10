@@ -21,11 +21,11 @@ const styles = (theme: Theme) =>
       width: 24,
       position: 'relative',
       top: 2,
-      marginRight: theme.spacing(4),
+      marginRight: 8,
       color: theme.color.headline
     },
     link: {
-      marginLeft: theme.spacing(4),
+      marginLeft: 32,
       fontSize: '1em',
       lineHeight: 2
     },

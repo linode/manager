@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  Redirect,
   Route,
   RouteComponentProps,
   Switch,
@@ -32,7 +33,8 @@ class LinodesRoutes extends React.Component<Props> {
       <Switch>
         <Route component={LinodesCreate} path={`${path}/create`} />
         <Route component={LinodesDetail} path={`${path}/:linodeId`} />
-        <Route component={LinodesLanding} path={path} exact />
+        <Route component={LinodesLanding} path={path} exact strict />
+        <Redirect to={path} />
       </Switch>
     );
   }

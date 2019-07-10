@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  Redirect,
   Route,
   RouteComponentProps,
   Switch,
@@ -41,7 +42,12 @@ class NodeBalancers extends React.Component<Props> {
           path={`${path}/:stackScriptID/edit`}
           exact
         />
-        <Route component={StackScriptsDetail} path={`${path}/:stackScriptId`} />
+        <Route
+          component={StackScriptsDetail}
+          path={`${path}/:stackScriptId`}
+          exact
+        />
+        <Redirect to={`${path}`} />
       </Switch>
     );
   }

@@ -35,9 +35,9 @@ const styles = (theme: Theme) =>
       paddingBottom: theme.spacing(1) / 2
     },
     strengthIndicator: {
-      position: 'absolute',
+      position: 'relative',
+      top: -5,
       width: '100%',
-      bottom: 0,
       [theme.breakpoints.down('xs')]: {
         maxWidth: '100%'
       }

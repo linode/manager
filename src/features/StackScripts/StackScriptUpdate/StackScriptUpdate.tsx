@@ -32,7 +32,7 @@ import { MapState } from 'src/store/types';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-type ClassNames = 'root' | 'backButton' | 'titleWrapper' | 'createTitle';
+type ClassNames = 'root' | 'backButton' | 'createTitle';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -46,13 +46,6 @@ const styles = (theme: Theme) =>
     },
     createTitle: {
       lineHeight: '2.25em'
-    },
-    titleWrapper: {
-      display: 'flex',
-      marginTop: 5,
-      marginBottom: 20,
-      alignItems: 'center',
-      wordBreak: 'break-all'
     }
   });
 
@@ -286,10 +279,10 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
 
   render() {
     const {
-      classes,
       username,
       imagesLoading,
-      userCannotModifyStackScript
+      userCannotModifyStackScript,
+      location
     } = this.props;
     const {
       availableImages,
@@ -322,12 +315,14 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
         />
         {generalError && <Notice error text={generalError} />}
         <Grid container justify="space-between">
-          <Grid item className={classes.titleWrapper}>
+          <Grid item style={{ marginBottom: 16 }}>
             <Breadcrumb
-              linkTo="/stackscripts"
-              linkText="StackScripts"
-              labelTitle="Edit StackScript"
+              pathname={location.pathname}
+              labelTitle="Edit"
               data-qa-update-stackscript-breadcrumb
+              crumbOverrides={[
+                { position: 2, label: this.defaultStackScriptValues.labelText }
+              ]}
             />
           </Grid>
         </Grid>

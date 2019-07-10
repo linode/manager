@@ -155,7 +155,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
       tags
     } = this.props;
 
-    handleSubmitForm('createFromApp', {
+    handleSubmitForm({
       region: selectedRegionID,
       type: selectedTypeID,
       stackscript_id: selectedStackScriptID,

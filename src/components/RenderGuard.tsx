@@ -1,7 +1,6 @@
-import { WithTheme } from '@material-ui/core/styles';
 import { equals } from 'ramda';
 import * as React from 'react';
-import { withTheme } from 'src/components/core/styles';
+import { withTheme, WithTheme } from 'src/components/core/styles';
 
 import { getDisplayName } from 'src/utilities/getDisplayName.ts';
 

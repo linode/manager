@@ -1,9 +1,8 @@
 import * as React from 'react';
-
-import Typography from '@material-ui/core/Typography';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import Typography from 'src/components/core/Typography';
 
 interface Props {
   isOpen: boolean;

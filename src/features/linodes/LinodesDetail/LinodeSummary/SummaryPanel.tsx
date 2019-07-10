@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import BackupStatus from 'src/components/BackupStatus';
 import Paper from 'src/components/core/Paper';
@@ -12,7 +11,9 @@ import {
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import TagsPanel from 'src/components/TagsPanel';
-import styled, { StyleProps } from 'src/containers/SummaryPanels.styles';
+import summaryPanelStyles, {
+  StyleProps
+} from 'src/containers/SummaryPanels.styles';
 import withImage from 'src/containers/withImage.container';
 import withMostRecentBackup from 'src/containers/withMostRecentBackup.container';
 import IPAddress from 'src/features/linodes/LinodesLanding/IPAddress';
@@ -20,24 +21,14 @@ import {
   LinodeActionsProps,
   withLinodeActions
 } from 'src/store/linodes/linode.containers';
-import { formatRegion } from 'src/utilities';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodeNetSummary from './LinodeNetSummary';
 
-import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-
-type ClassNames = 'region' | 'volumeLink' | 'regionInner';
+type ClassNames = 'region' | 'regionInner';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
-    title: {},
-    summarySection: {},
-    section: {},
-    main: {},
-    sidebar: {},
-    domainSidebar: {},
-    titleWrapper: {},
+    ...summaryPanelStyles(theme),
     region: {
       [theme.breakpoints.between('sm', 'md')]: {
         flexBasis: '100%',
@@ -58,13 +49,6 @@ const styles = (theme: Theme) =>
         '&:last-of-type': {
           padding: `0 ${theme.spacing(1)}px !important`
         }
-      }
-    },
-    volumeLink: {
-      color: theme.palette.primary.main,
-      fontSize: '1rem',
-      '&:hover, &:focus': {
-        textDecoration: 'underline'
       }
     }
   });
@@ -96,11 +80,8 @@ class SummaryPanel extends React.Component<CombinedProps> {
   render() {
     const {
       classes,
-      linodeVolumes,
-      linodeVolumesError,
       linodeTags,
       linodeId,
-      linodeRegion,
       linodeIpv4,
       linodeIpv6,
       backupsEnabled,
@@ -110,33 +91,6 @@ class SummaryPanel extends React.Component<CombinedProps> {
 
     return (
       <div className={classes.root}>
-        <Paper className={classes.summarySection}>
-          <Typography variant="h3" className={classes.title} data-qa-title>
-            Linode Details
-          </Typography>
-          <div className={classes.section}>{this.renderImage()}</div>
-          <div
-            className={classes.section}
-            data-qa-volumes={linodeVolumes.length}
-          >
-            <Typography>
-              Volumes:&#160;
-              {linodeVolumesError ? (
-                getErrorStringOrDefault(linodeVolumesError)
-              ) : (
-                <Link
-                  className={classes.volumeLink}
-                  to={`/linodes/${linodeId}/volumes`}
-                >
-                  {linodeVolumes.length}
-                </Link>
-              )}
-            </Typography>
-          </div>
-          <div className={`${classes.section}`}>
-            {formatRegion(linodeRegion)}
-          </div>
-        </Paper>
         <Paper className={classes.summarySection}>
           <Typography variant="h3" className={classes.title} data-qa-title>
             IP Addresses
@@ -220,8 +174,6 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 }));
 
 const enhanced = compose<CombinedProps, {}>(
-  styled,
-  localStyles,
   linodeContext,
   withLinodeActions,
   withMostRecentBackup<LinodeContextProps & WithImage, LinodeContextProps>(
@@ -231,7 +183,8 @@ const enhanced = compose<CombinedProps, {}>(
   withImage<LinodeContextProps & WithImage, LinodeContextProps>(
     props => props.linodeImageId,
     (ownProps, image) => ({ ...ownProps, image })
-  )
+  ),
+  localStyles
 );
 
 export default enhanced(SummaryPanel);

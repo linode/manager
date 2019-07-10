@@ -6,21 +6,26 @@ import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 
 import { EmailChangeForm } from './EmailChangeForm';
 
+import { Provider } from 'react-redux';
+import store from 'src/store';
+
 describe('Email change form', () => {
   const updateProfile = jest.fn();
 
   const component = mount(
-    <LinodeThemeWrapper>
-      <EmailChangeForm
-        classes={{
-          root: '',
-          title: ''
-        }}
-        username="ThisUser"
-        email="thisuser@example.com"
-        updateProfile={updateProfile}
-      />
-    </LinodeThemeWrapper>
+    <Provider store={store}>
+      <LinodeThemeWrapper theme="dark" spacing="normal">
+        <EmailChangeForm
+          classes={{
+            root: '',
+            title: ''
+          }}
+          username="ThisUser"
+          email="thisuser@example.com"
+          updateProfile={updateProfile}
+        />
+      </LinodeThemeWrapper>
+    </Provider>
   );
 
   it('should render textfields for username and email.', () => {

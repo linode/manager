@@ -6,6 +6,7 @@ import { compose } from 'recompose';
 import { bindActionCreators } from 'redux';
 import VolumesIcon from 'src/assets/addnewmenu/volume.svg';
 import AddNewLink from 'src/components/AddNewLink';
+import Breadcrumb from 'src/components/Breadcrumb';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import {
   createStyles,
@@ -35,11 +36,13 @@ import { BlockStorage } from 'src/documentation';
 import { resetEventsPolling } from 'src/events';
 import LinodePermissionsError from 'src/features/linodes/LinodesDetail/LinodePermissionsError';
 import {
+  LinodeOptions,
   openForClone,
   openForConfig,
   openForCreating,
   openForEdit,
-  openForResize
+  openForResize,
+  Origin as VolumeDrawerOrigin
 } from 'src/store/volumeDrawer';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
@@ -75,7 +78,7 @@ const styles = (theme: Theme) =>
       flex: 1
     },
     title: {
-      marginBottom: theme.spacing(1) + theme.spacing(1) / 2
+      marginBottom: theme.spacing(1)
     },
     // styles for /volumes table
     volumesWrapper: {},
@@ -142,6 +145,7 @@ interface Props {
   linodeConfigs?: Linode.Config[];
   recentEvent?: Linode.Event;
   readOnly?: boolean;
+  removeBreadCrumb?: boolean;
 }
 
 //
@@ -167,9 +171,8 @@ interface DispatchProps {
     volumeRegion: string
   ) => void;
   openForCreating: (
-    linodeId?: number,
-    linodeLabel?: string,
-    linodeRegion?: string
+    origin: VolumeDrawerOrigin,
+    linodeOptions?: LinodeOptions
   ) => void;
   openForConfig: (volumeLabel: string, volumePath: string) => void;
 }
@@ -291,7 +294,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       volumesError,
       volumesLoading,
       mappedVolumesDataWithLinodes,
-      readOnly
+      readOnly,
+      removeBreadCrumb
     } = this.props;
 
     if (volumesLoading) {
@@ -321,13 +325,19 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         <Grid
           container
           justify="space-between"
-          alignItems="flex-end"
+          alignItems={removeBreadCrumb ? 'center' : 'flex-end'}
           style={{ paddingBottom: 0 }}
         >
           <Grid item className={classes.titleWrapper}>
-            <Typography variant="h1" className={classes.title} data-qa-title>
-              Volumes
-            </Typography>
+            {removeBreadCrumb ? (
+              <Typography variant="h2">Volumes</Typography>
+            ) : (
+              <Breadcrumb
+                pathname={this.props.location.pathname}
+                labelTitle="Volumes"
+                className={classes.title}
+              />
+            )}
           </Grid>
           <Grid item className="p0">
             <FormControlLabel
@@ -488,10 +498,14 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   openCreateVolumeDrawer = (e: any) => {
     const { linodeId, linodeLabel, linodeRegion } = this.props;
     if (linodeId && linodeLabel && linodeRegion) {
-      return this.props.openForCreating(linodeId, linodeLabel, linodeRegion);
+      return this.props.openForCreating('Created from Linode Details', {
+        linodeId,
+        linodeLabel,
+        linodeRegion
+      });
     }
 
-    this.props.openForCreating();
+    this.props.openForCreating('Created from Volumes Landing');
 
     e.preventDefault();
   };
