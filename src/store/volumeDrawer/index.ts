@@ -14,6 +14,7 @@ export interface State {
   linodeLabel?: string;
   linodeRegion?: string;
   message?: string;
+  origin?: Origin;
 }
 
 const actionCreator = actionCreatorFactory(`@@manager/volumesDrawer`);
@@ -46,19 +47,35 @@ interface CreatingForLinode extends Action {
   linodeRegion: string;
 }
 
+export type Origin =
+  | 'Created from Add New Menu'
+  | 'Created from Volumes Landing'
+  | 'Created from Linode Details';
+
+export interface LinodeOptions {
+  linodeId: number;
+  linodeLabel: string;
+  linodeRegion: string;
+}
 export const openForCreating = (
-  linodeId?: number,
-  linodeLabel?: string,
-  linodeRegion?: string
+  origin: Origin,
+  linodeOptions?: LinodeOptions
 ) => {
-  if (linodeId && linodeLabel && linodeRegion) {
+  if (linodeOptions) {
+    const { linodeId, linodeLabel, linodeRegion } = linodeOptions;
     return createVolumeForLinode({ linodeId, linodeLabel, linodeRegion });
   }
 
-  return createVolume();
+  return createVolume({ origin });
 };
 
-const createVolume = actionCreator<void>(`CREATE_VOLUME`, { mode: 'creating' });
+interface CreateVolumePayload {
+  origin: Origin;
+}
+
+const createVolume = actionCreator<CreateVolumePayload>(`CREATE_VOLUME`, {
+  mode: 'creating'
+});
 
 interface CreateVolumeForLinodePayload {
   linodeId: number;
@@ -194,7 +211,8 @@ export const volumeDrawer: Reducer<State> = (
   if (isType(action, createVolume)) {
     return {
       ...state,
-      mode: getMode(action)
+      mode: getMode(action),
+      origin: action.payload.origin
     };
   }
 
@@ -206,6 +224,7 @@ export const volumeDrawer: Reducer<State> = (
     return {
       ...state,
       mode: getMode(action),
+      origin: 'Created from Linode Details',
       linodeId,
       linodeLabel,
       linodeRegion
@@ -228,7 +247,8 @@ export const volumeDrawer: Reducer<State> = (
     case CLOSE:
       return {
         ...state,
-        mode: modes.CLOSED
+        mode: modes.CLOSED,
+        origin: undefined
       };
 
     case CREATING_FOR_LINODE:
