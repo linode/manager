@@ -1,4 +1,4 @@
-import { API_ROOT } from 'src/constants';
+import { BETA_API_ROOT } from 'src/constants';
 import Request, {
   setData,
   setMethod,
@@ -30,7 +30,7 @@ export const getKubernetesClusters = (params?: any, filters?: any) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${API_ROOT}beta/lke/clusters`)
+    setURL(`${BETA_API_ROOT}/lke/clusters`)
   ).then(response => response.data);
 
 /**
@@ -41,7 +41,7 @@ export const getKubernetesClusters = (params?: any, filters?: any) =>
 export const createKubernetesCluster = (data: CreateKubeClusterPayload) =>
   Request<Linode.KubernetesCluster>(
     setMethod('POST'),
-    setURL(`${API_ROOT}beta/lke/clusters`),
+    setURL(`${BETA_API_ROOT}/lke/clusters`),
     setData(data, createKubeClusterSchema)
   ).then(response => response.data);
 
@@ -55,5 +55,5 @@ export const createKubernetesCluster = (data: CreateKubeClusterPayload) =>
 export const getKubeConfig = (clusterId: string) =>
   Request<Linode.KubeConfigResponse>(
     setMethod('GET'),
-    setURL(`${API_ROOT}beta/lke/clusters/${clusterId}/kubeconfig`)
+    setURL(`${BETA_API_ROOT}/lke/clusters/${clusterId}/kubeconfig`)
   ).then(response => response.data);

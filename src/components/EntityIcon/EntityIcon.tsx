@@ -1,4 +1,3 @@
-import { WithStyles, WithTheme } from '@material-ui/core/styles';
 import * as classNames from 'classnames';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -15,7 +14,9 @@ import {
   createStyles,
   Theme,
   withStyles,
-  withTheme
+  WithStyles,
+  withTheme,
+  WithTheme
 } from 'src/components/core/styles';
 import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 

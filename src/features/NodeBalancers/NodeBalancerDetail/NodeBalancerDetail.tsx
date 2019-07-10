@@ -374,6 +374,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
               render={() => (
                 <NodeBalancerConfigurations
                   nodeBalancerLabel={nodeBalancer.label}
+                  nodeBalancerRegion={nodeBalancer.region}
                 />
               )}
             />
@@ -382,6 +383,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
               render={() => (
                 <NodeBalancerConfigurations
                   nodeBalancerLabel={nodeBalancer.label}
+                  nodeBalancerRegion={nodeBalancer.region}
                 />
               )}
             />
