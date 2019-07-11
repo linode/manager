@@ -9,10 +9,7 @@ import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import eventMessageGenerator from 'src/eventMessageGenerator';
-import {
-  maybeRemoveTrailingPeriod,
-  onUnfound
-} from 'src/features/Events/EventRow';
+import { maybeRemoveTrailingPeriod } from 'src/features/Events/EventRow';
 
 type ClassNames = 'root';
 
@@ -35,7 +32,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 export const ActivityRow: React.StatelessComponent<CombinedProps> = props => {
   const { classes, event } = props;
 
-  const message = eventMessageGenerator(event, onUnfound);
+  const message = eventMessageGenerator(event);
 
   if (!message) {
     return null;
