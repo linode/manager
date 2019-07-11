@@ -16,7 +16,7 @@ interface Props extends PrimaryLink {
 export interface PrimaryLink {
   href?: string;
   onClick?: () => void;
-  key: string;
+  QAKey: string;
   display: string;
   logo?: React.ComponentType<any>;
   isDisabled?: () => string | undefined;
@@ -28,7 +28,7 @@ const NavItem: React.SFC<CombinedProps> = props => {
   const {
     href,
     onClick,
-    key,
+    QAKey,
     display,
     isDisabled,
     linkClasses,
@@ -51,7 +51,7 @@ const NavItem: React.SFC<CombinedProps> = props => {
           role="menuitem"
           to={href}
           onClick={closeMenu}
-          data-qa-nav-item={key}
+          data-qa-nav-item={QAKey}
           className={linkClasses(href)}
         >
           <ListItemText
@@ -71,7 +71,7 @@ const NavItem: React.SFC<CombinedProps> = props => {
                 onClick!();
               }}
               disabled={!!isDisabled ? !!isDisabled() : false}
-              data-qa-nav-item={key}
+              data-qa-nav-item={QAKey}
               className={linkClasses()}
             >
               <ListItemText
