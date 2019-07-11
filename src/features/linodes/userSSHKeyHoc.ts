@@ -35,6 +35,9 @@ export default (Component: React.ComponentType<any>) => {
       if (!username || !userEmailAddress) {
         return;
       }
+
+      const isSelected = this.isUserSelected(username);
+
       getSSHKeys()
         .then(response => {
           const keys = response.data;
@@ -47,7 +50,8 @@ export default (Component: React.ComponentType<any>) => {
               this.createUserObject(
                 username,
                 userEmailAddress,
-                keys.map(k => k.label)
+                keys.map(k => k.label),
+                isSelected
               )
             ]
           });
@@ -62,6 +66,8 @@ export default (Component: React.ComponentType<any>) => {
           if (!this.mounted || !users || users.length === 0) {
             return;
           }
+
+          const isSelected = this.isUserSelected(username);
 
           this.setState({
             userSSHKeys: [
@@ -79,7 +85,12 @@ export default (Component: React.ComponentType<any>) => {
 
                 return [
                   ...cleanedUsers,
-                  this.createUserObject(user.username, user.email, keys)
+                  this.createUserObject(
+                    user.username,
+                    user.email,
+                    keys,
+                    isSelected
+                  )
                 ];
               }, [])
             ]
@@ -90,7 +101,7 @@ export default (Component: React.ComponentType<any>) => {
         });
     };
 
-    state = {
+    state: State = {
       userSSHKeys: [],
       resetSSHKeys: this.resetSSHKeys,
       requestKeys: this.requestKeys
@@ -122,16 +133,30 @@ export default (Component: React.ComponentType<any>) => {
         )
       }));
 
-    createUserObject = (username: string, email: string, keys: string[]) => ({
+    createUserObject = (
+      username: string,
+      email: string,
+      keys: string[],
+      selected: boolean = false
+    ) => ({
       keys,
       username,
       gravatarUrl: `https://www.gravatar.com/avatar/${getEmailHash(
         email
       )}?d=mp&s=24`,
-      selected: false,
+      selected,
       onSSHKeyChange: (_: any, result: boolean) =>
         this.toggleSSHUserKeys(username, result)
     });
+
+    isUserSelected = (username: string) => {
+      const { userSSHKeys } = this.state;
+
+      const currentUserKeys = userSSHKeys.find(
+        thisKey => thisKey.username === username
+      );
+      return currentUserKeys ? currentUserKeys.selected : false;
+    };
   }
 
   return connected(WrappedComponent);
