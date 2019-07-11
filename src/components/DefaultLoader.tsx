@@ -12,7 +12,7 @@ interface OptionalLoadable<Props> {
   >;
 }
 
-const Loader = (config: OptionalLoadable<{}>) =>
+const Loader = <P extends {}>(config: OptionalLoadable<P>) =>
   Loadable({
     loading: props => {
       if (props.error) {
