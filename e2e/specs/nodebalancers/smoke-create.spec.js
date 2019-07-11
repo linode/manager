@@ -12,11 +12,13 @@ describe('Nodebalancer - Create Suite', () => {
     let linode,
         privateIp,
         token;
+    
+    const linodeLabel = `test${new Date().getTime()}`
 
     beforeAll(() => {
         token = browser.readToken(browser.options.testUser);
-        linode = apiCreateLinode();
-        linode['privateIp'] = browser.allocatePrivateIp(token, linode.id).address;
+        /** create linode with a private IP */
+        linode = apiCreateLinode(linodeLabel, true);
         browser.url(constants.routes.nodeBalancers);
     });
 
@@ -47,8 +49,8 @@ describe('Nodebalancer - Create Suite', () => {
         NodeBalancers.regionCards[0].click();
         browser.jsClick('[data-qa-deploy-linode]');
 
-        const backendLabelError = $('[data-qa-backend-ip-label]').$('p');
-        const backendAddressError = $('[data-qa-backend-ip-address]').$('p');
+        const backendLabelError = $('[data-qa-backend-ip-label] > p')
+        const backendAddressError = $('[data-qa-backend-ip-address] > p')
 
         expect(backendLabelError.getText()).toBe(labelError);
         expect(backendAddressError.getText()).toContain(addressError);
@@ -56,7 +58,20 @@ describe('Nodebalancer - Create Suite', () => {
 
     it('should create a nodebalancer with a valid backend ip', () => {
         NodeBalancers.backendIpLabel.addValue(linode.label);
-        NodeBalancers.backendIpAddress.addValue(linode.privateIp);
+
+        /** click the newark region because that's where our Linode is located */
+        $('[data-qa-select-card-subheading="Newark, NJ"]').click()
+
+        /** set the value of the IP Address field */
+        const privateIP = linode.ipv4.find(eachIP => eachIP.match(/192.168/))
+        NodeBalancers.backendIpAddress.addValue(privateIP);
+
+        /** wait for the dropdown options to appear */
+        $('[data-qa-option]').waitForVisible(constants.wait.normal)
+
+        /** press enter key which will select first value */
+        browser.keys("\uE007");
+
         NodeBalancers.backendIpPort.setValue('80');
         browser.jsClick('[data-qa-deploy-linode]');
 
