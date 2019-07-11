@@ -33,6 +33,7 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
     case 'backups_enable':
     case 'backups_cancel':
     case 'disk_imagize':
+    case 'linode_clone':
       return handleLinodeUpdate(dispatch, status, id);
 
     /** Remove Linode */
@@ -42,9 +43,6 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
     /** Create Linode */
     case 'linode_create':
       return handleLinodeCreation(dispatch, status, id, getState());
-
-    case 'linode_clone':
-      return handleLinodeClone(dispatch, status, id);
 
     default:
       return;
@@ -70,30 +68,6 @@ const handleLinodeMigrate = (
       // to clear the Migration Imminent notification
       dispatch(requestNotifications());
       return dispatch(requestLinodeForStore(id));
-    default:
-      return;
-  }
-};
-
-const handleLinodeClone = (
-  dispatch: Dispatch<any>,
-  status: Linode.EventStatus,
-  id: number
-) => {
-  switch (status) {
-    case 'failed':
-    case 'finished':
-      return dispatch(requestLinodeForStore(id));
-
-    case 'scheduled':
-    case 'started':
-      const action = updateLinode({
-        id,
-        update: existing => ({ ...existing, status: 'cloning' })
-      });
-
-      return dispatch(action);
-
     default:
       return;
   }

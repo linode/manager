@@ -20,7 +20,8 @@ export const transitionAction = [
   'backups_restore',
   'disk_imagize',
   'disk_duplicate',
-  'linode_mutate'
+  'linode_mutate',
+  'linode_clone'
 ];
 
 export const linodeInTransition = (
