@@ -979,6 +979,11 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                 lg={forEdit ? 2 : 4}
                               >
                                 <SelectIP
+                                  textfieldProps={{
+                                    dataAttrs: {
+                                      'data-qa-backend-ip-address': true
+                                    }
+                                  }}
                                   handleChange={this.props.onNodeAddressChange}
                                   selectedRegion={this.props.nodeBalancerRegion}
                                   nodeIndex={idx}
