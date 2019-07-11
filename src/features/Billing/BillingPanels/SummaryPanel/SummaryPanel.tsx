@@ -1,4 +1,4 @@
-import { path } from 'ramda';
+import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -28,7 +28,8 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
       errors,
       username,
       profileError,
-      profileLoading
+      profileLoading,
+      isRestricted
     } = this.props;
 
     if (accountLoading || profileLoading) {
@@ -58,6 +59,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
           state={data.state}
           zip={data.zip}
           activeSince={data.active_since}
+          isRestrictedUser={isRestricted}
         />
         <BillingInfo
           balance={data.balance}
@@ -83,6 +85,7 @@ interface Profile {
   profileLoading: boolean;
   profileError?: Linode.ApiFieldError[];
   username?: string;
+  isRestricted: boolean;
 }
 
 const enhanced = compose<CombinedProps, {}>(
@@ -90,7 +93,8 @@ const enhanced = compose<CombinedProps, {}>(
   withProfile<Profile, {}>((ownProps, profile) => ({
     username: path(['username'], profile.data),
     profileError: path(['read'], profile.error),
-    profileLoading: profile.loading
+    profileLoading: profile.loading,
+    isRestricted: pathOr(false, ['restricted'], profile.data)
   }))
 );
 

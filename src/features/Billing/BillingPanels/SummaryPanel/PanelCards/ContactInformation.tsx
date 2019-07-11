@@ -35,6 +35,7 @@ interface Props {
   phone: string;
   activeSince: string;
   username: string;
+  isRestrictedUser: boolean;
 }
 
 type CombinedProps = Props;
@@ -56,7 +57,8 @@ const ContactInformation: React.FC<CombinedProps> = props => {
     email,
     username,
     phone,
-    activeSince
+    activeSince,
+    isRestrictedUser
   } = props;
 
   return (
@@ -98,12 +100,14 @@ const ContactInformation: React.FC<CombinedProps> = props => {
           <strong>Active Since:&nbsp;</strong>
           <DateTimeDisplay value={activeSince} format="MMMM D, YYYY" />
         </div>
-        <Typography
-          onClick={() => toggleModal(true)}
-          className={classes.cancel}
-        >
-          <strong>Close Account</strong>
-        </Typography>
+        {!isRestrictedUser && (
+          <Typography
+            onClick={() => toggleModal(true)}
+            className={classes.cancel}
+          >
+            <strong>Close Account</strong>
+          </Typography>
+        )}
       </Paper>
       <Dialog
         username={username}

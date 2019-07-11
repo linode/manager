@@ -11,6 +11,7 @@ describe('SummaryPanel', () => {
     username: 'helloworld',
     profileError: undefined,
     profileLoading: false,
+    isRestricted: false,
     data: {
       company: '',
       first_name: '',
