@@ -515,7 +515,15 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       },
       MuiDialog: {
         paper: {
-          boxShadow: '0 0 5px #bbb'
+          boxShadow: '0 0 5px #bbb',
+          [breakpoints.down('sm')]: {
+            maxWidth: '100% !important',
+            maxHeight: 'calc(100% - 48px)',
+            margin: 24
+          }
+        },
+        paperScrollPaper: {
+          maxHeight: 'calc(100% - 48px)'
         }
       },
       MuiDialogActions: {

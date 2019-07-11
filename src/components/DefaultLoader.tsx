@@ -16,6 +16,11 @@ const Loader = (config: OptionalLoadable<{}>) =>
   Loadable({
     loading: props => {
       if (props.error) {
+        /* tslint:disable */
+        console.error(`======= DefaultLoader Error =======`);
+        console.error(props.error);
+        console.error(`======= DefaultLoader Error =======`);
+        /* tslint:enable */
         return null;
       }
 
