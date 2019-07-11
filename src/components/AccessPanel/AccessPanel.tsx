@@ -1,7 +1,6 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { compose } from 'recompose';
-import CheckBox from 'src/components/CheckBox';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -9,24 +8,16 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
 import Notice from 'src/components/Notice';
 import PasswordInput from 'src/components/PasswordInput';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
-import TableHeader from 'src/components/TableHeader';
+
+import UserSSHKeyPanel from './UserSSHKeyPanel';
 
 type ClassNames =
   | 'root'
   | 'inner'
   | 'panelBody'
-  | 'cellCheckbox'
-  | 'cellUser'
-  | 'userWrapper'
-  | 'gravatar'
   | 'small'
   | 'passwordInputOuter'
   | 'isOptional';
@@ -44,23 +35,6 @@ const styles = (theme: Theme) =>
     },
     panelBody: {
       padding: `${theme.spacing(3)}px 0 ${theme.spacing(1)}px`
-    },
-    cellCheckbox: {
-      width: 50,
-      paddingLeft: theme.spacing(1),
-      paddingRight: theme.spacing(1)
-    },
-    cellUser: {
-      width: '30%'
-    },
-    userWrapper: {
-      display: 'inline-flex',
-      alignItems: 'center',
-      marginTop: theme.spacing(1) / 2
-    },
-    gravatar: {
-      borderRadius: '50%',
-      marginRight: theme.spacing(1)
     },
     small: {
       '&$root': {
@@ -96,6 +70,7 @@ interface Props {
   required?: boolean;
   placeholder?: string;
   users?: UserSSHKeyObject[];
+  requestKeys?: () => void;
   disabled?: boolean;
   disabledReason?: string;
   hideStrengthLabel?: boolean;
@@ -134,7 +109,8 @@ class AccessPanel extends React.Component<CombinedProps> {
       className,
       small,
       isOptional,
-      hideHelperText
+      hideHelperText,
+      requestKeys
     } = this.props;
 
     return (
@@ -163,57 +139,14 @@ class AccessPanel extends React.Component<CombinedProps> {
             hideStrengthLabel={hideStrengthLabel}
             hideHelperText={hideHelperText}
           />
-          {users && users.length > 0 && this.renderUserSSHKeyTable(users)}
+          <UserSSHKeyPanel
+            users={users}
+            onKeyAddSuccess={requestKeys || (() => null)}
+          />
         </div>
       </Paper>
     );
   }
-
-  renderUserSSHKeyTable = (users: UserSSHKeyObject[]) => {
-    const { classes } = this.props;
-
-    return (
-      <React.Fragment>
-        <TableHeader title="SSH Keys" />
-        <Table isResponsive={false} border spacingBottom={16}>
-          <TableHead>
-            <TableRow>
-              <TableCell className={classes.cellCheckbox} />
-              <TableCell
-                className={classes.cellUser}
-                data-qa-table-header="User"
-              >
-                User
-              </TableCell>
-              <TableCell data-qa-table-header="SSH Keys">SSH Keys</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            {users.map(
-              ({ gravatarUrl, keys, onSSHKeyChange, selected, username }) => (
-                <TableRow key={username} data-qa-ssh-public-key>
-                  <TableCell className={classes.cellCheckbox}>
-                    <CheckBox checked={selected} onChange={onSSHKeyChange} />
-                  </TableCell>
-                  <TableCell className={classes.cellUser}>
-                    <div className={classes.userWrapper}>
-                      <img
-                        src={gravatarUrl}
-                        className={classes.gravatar}
-                        alt={username}
-                      />
-                      {username}
-                    </div>
-                  </TableCell>
-                  <TableCell>{keys.join(', ')}</TableCell>
-                </TableRow>
-              )
-            )}
-          </TableBody>
-        </Table>
-      </React.Fragment>
-    );
-  };
 
   handleChange = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.props.handleChange(e.target.value);
