@@ -1,6 +1,6 @@
 const { navigateToStory } = require('../../../e2e/utils/storybook');
 
-describe('Editable Text Suite', () => {
+describe('Editable Text', () => {
     const component = 'Editable Text';
     const childStories = [
         'Headline %26 Title',
@@ -12,44 +12,72 @@ describe('Editable Text Suite', () => {
     const saveEdit = '[data-qa-save-edit="true"]';
     const cancelEdit = '[data-qa-cancel-edit="true"]';
     const newLabel = 'someNewValue!';
+    const shouldString = 'should have been';
+    const shouldNotString = 'should not have been'
 
+    
     let originalLabel;
 
-    beforeAll(() => {
+    beforeEach(() => {
         navigateToStory(component, childStories[0]);
-        console.log('waiting for Editiable text field')
         $(editableTextField).waitForDisplayed();
-        console.log('text field found')
     });
 
     it('should become an editable field on click', () => {
-        //browser.debug()
         originalLabel = $(editableTextField).getText();
-        console.log(`orginal text: ${originalLabel}\n   Moving to text field`)
-        $(editableTextField).click()
-        $(editableTextButton).waitForDisplayed();
-
+        //checking that editable text values are not displayed
+        expect($(editField).isDisplayed()).withContext(`Edit field ${shouldNotString} enabled`).toBe(false);
+        expect($(saveEdit).isDisplayed()).withContext(`Save button ${shouldNotString} enabled`).toBe(false);
+        expect($(cancelEdit).isDisplayed()).withContext(`Cancel button ${shouldNotString} enabled`).toBe(false);
+        $(editableTextField).click();
+        //Edit text button should be displayed after clicking editable text
+        expect($(editableTextButton).isDisplayed()).withContext(`Edit text ${shouldString} displayed`).toBe(true);
         $(editableTextButton).click();
         $(editField).waitForDisplayed();
+        //checking that edit field is enabled and save and cancel buttons are displayed
+        expect($(editField).isEnabled()).withContext(`Edit field ${shouldString} enabled`).toBe(true);
+        expect($(saveEdit).isDisplayed()).withContext(`Save button ${shouldString} displayed`).toBe(true);
+        expect($(cancelEdit).isDisplayed()).withContext(`Cancel button ${shouldString} displayed`).toBe(true);
     });
 
-    it('should edit the textfield', () => {
+    it('should edit the text field with save button', () => {
+        setUpEditField();
         $(editField).$('input').setValue(newLabel);
         $(saveEdit).click();
-        expect($(editableTextField).getText()).toBe(newLabel);
+        //check that the edit field value is set correctly
+        expect($(editableTextField).getText()).withContext(`Field text ${shouldString}: '${newLabel}'`).toBe(newLabel);
     });
 
-    it('should not update the textfield on cancel', () => {
-        $(editableTextField).click()
-        $(editableTextButton).waitForDisplayed();
+    it('should edit the text field with the enter key', () => {
+        setUpEditField();
+        $(editField).$('input').setValue(newLabel);
+        browser.keys('\uE007');
+        //check that the edit field value is set correctly
+        expect($(editableTextField).getText()).withContext(`Field text ${shouldString}: '${newLabel}'`).toBe(newLabel);
+    });
 
-        $(editableTextButton).click();
+    it('should not update the text field on cancel', () => {
+        originalLabel = $(editableTextField).getText();
+        setUpEditField()
         $(cancelEdit).waitForDisplayed();
-
-        $(editField).$('input').setValue(originalLabel);
+        $(editField).$('input').setValue('sadfgertg');
         $(cancelEdit).click();
-
         // Should contain the new label from the prior test
-        expect($(editableTextField).getText()).toBe(newLabel);
+        expect($(editableTextField).getText()).withContext(`Field text ${shouldString}: '${originalLabel}'`).toBe(originalLabel);
     });
+
+    function setUpEditField(){
+        $(editableTextField).click();
+        //Edit text button should be displayed after clicking editable text
+        expect($(editableTextButton).isDisplayed()).withContext(`Edit text ${shouldString} displayed`).toBe(true);
+        $(editableTextButton).click();
+        $(editField).waitForDisplayed();
+        //checking that edit field is enabled and save and cancel buttons are displayed
+        expect($(editField).isEnabled()).withContext(`Edit field ${shouldString} enabled`).toBe(true);
+        expect($(saveEdit).isDisplayed()).withContext(`Save button ${shouldString} displayed`).toBe(true);
+        expect($(cancelEdit).isDisplayed()).withContext(`Cancel button ${shouldString} displayed`).toBe(true);
+    }
 });
+
+
+
