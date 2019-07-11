@@ -62,88 +62,92 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const handleRowClick = (
-  e:
-    | React.ChangeEvent<HTMLTableRowElement>
-    | React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-  props: CombinedProps
-) => {
-  const { domain, id, type, onEdit } = props;
+class DomainTableRow extends React.Component<CombinedProps> {
+  handleRowClick = (
+    e:
+      | React.ChangeEvent<HTMLTableRowElement>
+      | React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+    id: number,
+    domain: string,
+    type: string
+  ) => {
+    if (type === 'slave') {
+      e.preventDefault();
+      this.props.onEdit(domain, id);
+    }
+  };
 
-  if (type === 'slave') {
-    e.preventDefault();
-    onEdit(domain, id);
-  }
-};
+  render() {
+    const {
+      classes,
+      domain,
+      id,
+      tags,
+      type,
+      status,
+      onClone,
+      onRemove,
+      onEdit
+    } = this.props;
 
-const DomainTableRow: React.StatelessComponent<CombinedProps> = props => {
-  const {
-    classes,
-    domain,
-    id,
-    tags,
-    type,
-    status,
-    onClone,
-    onRemove,
-    onEdit
-  } = props;
-
-  return (
-    <TableRow
-      key={id}
-      data-qa-domain-cell={domain}
-      className={`${classes.domainRow} ${'fade-in-table'}`}
-      rowLink={
-        type === 'slave' ? e => handleRowClick(e, props) : `/domains/${id}`
-      }
-    >
-      <TableCell parentColumn="Domain" data-qa-domain-label>
-        <Grid container wrap="nowrap" alignItems="center">
-          <Grid item className="py0">
-            <EntityIcon
-              variant="domain"
-              status={status}
-              marginTop={1}
-              loading={status === 'edit_mode'}
-            />
-          </Grid>
-          <Grid item className={classes.domainCellContainer}>
-            <div className={classes.labelStatusWrapper}>
-              {type !== 'slave' ? (
-                <Link to={`/domains/${id}`} tabIndex={-1}>
+    return (
+      <TableRow
+        key={id}
+        data-qa-domain-cell={domain}
+        className={`${classes.domainRow} ${'fade-in-table'}`}
+        rowLink={
+          type === 'slave'
+            ? e => this.handleRowClick(e, id, domain, type)
+            : `/domains/${id}`
+        }
+      >
+        <TableCell parentColumn="Domain" data-qa-domain-label>
+          <Grid container wrap="nowrap" alignItems="center">
+            <Grid item className="py0">
+              <EntityIcon
+                variant="domain"
+                status={status}
+                marginTop={1}
+                loading={status === 'edit_mode'}
+              />
+            </Grid>
+            <Grid item className={classes.domainCellContainer}>
+              <div className={classes.labelStatusWrapper}>
+                {type !== 'slave' ? (
+                  <Link to={`/domains/${id}`} tabIndex={-1}>
+                    <Typography variant="h3" data-qa-label>
+                      {domain}
+                    </Typography>
+                  </Link>
+                ) : (
                   <Typography variant="h3" data-qa-label>
                     {domain}
                   </Typography>
-                </Link>
-              ) : (
-                <Typography variant="h3" data-qa-label>
-                  {domain}
-                </Typography>
-              )}
-            </div>
-            <div className={classes.tagWrapper}>
-              <Tags tags={tags} />
-            </div>
+                )}
+              </div>
+              <div className={classes.tagWrapper}>
+                <Tags tags={tags} />
+              </div>
+            </Grid>
           </Grid>
-        </Grid>
-      </TableCell>
-      <TableCell parentColumn="Type" data-qa-domain-type>
-        {type}
-      </TableCell>
-      <TableCell>
-        <ActionMenu
-          domain={domain}
-          id={id}
-          type={type}
-          onRemove={onRemove}
-          onClone={onClone}
-          onEdit={onEdit}
-        />
-      </TableCell>
-    </TableRow>
-  );
-};
+        </TableCell>
+        <TableCell parentColumn="Type" data-qa-domain-type>
+          {type}
+        </TableCell>
+        <TableCell>
+          <ActionMenu
+            domain={domain}
+            id={id}
+            type={type}
+            onRemove={onRemove}
+            onClone={onClone}
+            onEdit={onEdit}
+          />
+        </TableCell>
+      </TableRow>
+    );
+  }
+}
 
 const styled = withStyles(styles);
 
