@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "0.63.0",
+  "version": "0.63.1",
   "private": true,
   "engines": {
     "node": ">= 8.11.2"
@@ -29,7 +29,6 @@
     "chart.js": "^2.7.2",
     "classnames": "^2.2.5",
     "copy-to-clipboard": "^3.0.8",
-    "downshift": "^1.31.7",
     "flag-icon-css": "^3.0.0",
     "font-logos": "^0.10.0",
     "formik": "^1.3.2",
@@ -104,8 +103,8 @@
     "build": "node scripts/build.js",
     "prepush": "./scripts/pre-push.sh",
     "mock": "./scripts/mb.js",
-    "test": "node scripts/test.js --env=jsdom",
-    "test:debug": "node --inspect-brk scripts/test.js --runInBand --env=jsdom",
+    "test": "node scripts/test.js",
+    "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "storybook": "start-storybook -p 6006 --ci",
     "storybook-static": "build-storybook -c .storybook -o .out",
     "storybook:e2e": "./node_modules/.bin/wdio ./e2e/config/wdio.storybook.conf.js",
@@ -214,6 +213,7 @@
     "inquirer": "^6.2.0",
     "jest": "^24.5.0",
     "jest-dom": "^3.1.3",
+    "jest-junit": "^6.4.0",
     "lint-staged": "^8.1.0",
     "madge": "^3.4.3",
     "mini-css-extract-plugin": "^0.7.0",
@@ -273,7 +273,7 @@
       "<rootDir>/src/**/__tests__/**/*.ts?(x)",
       "<rootDir>/src/**/?(*.)(spec|test).ts?(x)"
     ],
-    "testEnvironment": "node",
+    "testEnvironment": "jsdom",
     "testPathIgnorePatterns": [
       "<rootDir>/src/components/Storyshots.test.tsx"
     ],
@@ -304,6 +304,7 @@
       "json",
       "node"
     ],
+    "reporters": [ "default", "jest-junit" ],
     "globals": {
       "ts-jest": {
         "tsConfig": "tsconfig.test.json"

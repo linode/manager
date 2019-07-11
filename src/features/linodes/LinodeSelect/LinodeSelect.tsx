@@ -17,17 +17,27 @@ interface WithLinodesProps {
   linodesError?: Linode.ApiFieldError[];
 }
 
+type Override = keyof Linode.Linode | ((linode: Linode.Linode) => any);
+
 interface Props {
   generalError?: string;
   linodeError?: string;
+  className?: string;
   selectedLinode: number | null;
   disabled?: boolean;
   region?: string;
   handleChange: (linode: Linode.Linode) => void;
   textFieldProps?: TextFieldProps;
-  label?: string;
-  excludedLinodes?: number[];
   groupByRegion?: boolean;
+  placeholder?: string;
+  valueOverride?: Override;
+  labelOverride?: Override;
+  filterCondition?: (linode: Linode.Linode) => boolean;
+  label?: string;
+  noOptionsMessage?: string;
+  small?: boolean;
+  noMarginTop?: boolean;
+  value?: Item<any> | null;
 }
 
 type CombinedProps = Props & WithLinodesProps;
@@ -43,22 +53,26 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
     linodesData,
     region,
     selectedLinode,
-    excludedLinodes,
-    label,
-    groupByRegion
+    groupByRegion,
+    className,
+    placeholder,
+    valueOverride,
+    labelOverride,
+    filterCondition
   } = props;
 
-  let linodes = region
+  const linodes = region
     ? linodesData.filter(thisLinode => thisLinode.region === region)
     : linodesData;
 
-  linodes = excludedLinodes
-    ? linodes.filter(thisLinode => !excludedLinodes.includes(thisLinode.id))
-    : linodes;
-
   const options = groupByRegion
-    ? linodesToGroupedItems(linodes)
-    : linodesToItems(linodes);
+    ? linodesToGroupedItems(
+        linodes,
+        valueOverride,
+        labelOverride,
+        filterCondition
+      )
+    : linodesToItems(linodes, valueOverride, labelOverride, filterCondition);
 
   const noOptionsMessage =
     !linodeError && !linodesLoading && options.length === 0
@@ -67,8 +81,6 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
 
   return (
     <EnhancedSelect
-      label={label ? label : 'Linode'}
-      placeholder="Select a Linode"
       value={
         groupByRegion
           ? linodeFromGroupedItems(
@@ -77,8 +89,13 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
             )
           : linodeFromItems(options as Item<number>[], selectedLinode)
       }
+      label={props.label || 'Linode'}
+      className={className}
+      noMarginTop={props.noMarginTop}
+      placeholder={placeholder || 'Select a Linode'}
       options={options}
       disabled={disabled}
+      small={props.small}
       isLoading={linodesLoading}
       onChange={(selected: Item<number>) => {
         return handleChange(selected.data);
@@ -88,7 +105,7 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
       )}
       isClearable={false}
       textFieldProps={props.textFieldProps}
-      noOptionsMessage={() => noOptionsMessage}
+      noOptionsMessage={() => props.noOptionsMessage || noOptionsMessage}
     />
   );
 };
@@ -107,12 +124,32 @@ export default compose<CombinedProps, Props & RenderGuardProps>(
  * UTILITIES
  */
 
-export const linodesToItems = (linodes: Linode.Linode[]): Item<number>[] =>
-  linodes.map(thisLinode => ({
-    value: thisLinode.id,
-    label: thisLinode.label,
+export const linodesToItems = (
+  linodes: Linode.Linode[],
+  valueOverride?: Override,
+  labelOverride?: Override,
+  filterCondition?: (linodes: Linode.Linode) => boolean
+): Item<any>[] => {
+  const maybeFilteredLinodes = filterCondition
+    ? linodes.filter(filterCondition)
+    : linodes;
+
+  return maybeFilteredLinodes.map(thisLinode => ({
+    value:
+      typeof valueOverride === 'function'
+        ? valueOverride(thisLinode)
+        : !!valueOverride
+        ? thisLinode[valueOverride]
+        : thisLinode.id,
+    label:
+      typeof labelOverride === 'function'
+        ? labelOverride(thisLinode)
+        : !!labelOverride
+        ? labelOverride
+        : thisLinode.label,
     data: thisLinode
   }));
+};
 
 export const linodeFromItems = (
   linodes: Item<number>[],
@@ -121,19 +158,39 @@ export const linodeFromItems = (
   if (!linodeId) {
     return null;
   }
-  return linodes.find(thisLinode => thisLinode.value === linodeId) || null;
+
+  return (
+    linodes.find(thisLinode => {
+      return (thisLinode.data as Linode.Linode).id === linodeId;
+    }) || null
+  );
 };
 
 // Grouped by Region
-export const linodesToGroupedItems = (linodes: Linode.Linode[]) => {
+export const linodesToGroupedItems = (
+  linodes: Linode.Linode[],
+  valueOverride?: Override,
+  labelOverride?: Override,
+  filterCondition?: (linodes: Linode.Linode) => boolean
+) => {
+  // We need to filter Linode BEFORE grouping by region, since some regions
+  // may become irrelevant when Linodes are filtered.
+  const maybeFilteredLinodes = filterCondition
+    ? linodes.filter(filterCondition)
+    : linodes;
+
   const groupedByRegion = groupBy((linode: Linode.Linode) => linode.region)(
-    linodes
+    maybeFilteredLinodes
   );
 
   const groupedItems = Object.keys(groupedByRegion).map(region => {
     return {
       label: formatRegion(region),
-      options: linodesToItems(groupedByRegion[region])
+      options: linodesToItems(
+        groupedByRegion[region],
+        valueOverride,
+        labelOverride
+      )
     };
   });
 

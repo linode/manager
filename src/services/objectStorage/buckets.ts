@@ -1,4 +1,4 @@
-import { API_ROOT } from 'src/constants';
+import { BETA_API_ROOT } from 'src/constants';
 import Request, {
   setData,
   setMethod,
@@ -31,7 +31,7 @@ export const getBuckets = (params?: any, filters?: any) =>
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
-    setURL(`${API_ROOT}beta/object-storage/buckets`)
+    setURL(`${BETA_API_ROOT}/object-storage/buckets`)
   ).then(response => response.data);
 
 /**
@@ -44,7 +44,7 @@ export const getBuckets = (params?: any, filters?: any) =>
  */
 export const createBucket = (data: BucketRequestPayload) =>
   Request<Linode.Bucket>(
-    setURL(`${API_ROOT}beta/object-storage/buckets`),
+    setURL(`${BETA_API_ROOT}/object-storage/buckets`),
     setMethod('POST'),
     setData(data, CreateBucketSchema)
   ).then(response => response.data);
@@ -65,7 +65,7 @@ export const deleteBucket = ({
   params
 }: DeleteBucketRequestPayload) =>
   Request<Linode.Bucket>(
-    setURL(`${API_ROOT}beta/object-storage/buckets/${cluster}/${label}`),
+    setURL(`${BETA_API_ROOT}/object-storage/buckets/${cluster}/${label}`),
     setParams(params),
     setMethod('DELETE')
   );

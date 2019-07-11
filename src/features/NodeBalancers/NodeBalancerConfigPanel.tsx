@@ -1,4 +1,3 @@
-import Downshift, { DownshiftState, StateChangeOptions } from 'downshift';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -24,9 +23,9 @@ import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
+import SelectIP from './ConfigNodeIPSelect';
+
 type ClassNames =
-  | 'root'
-  | 'inner'
   | 'divider'
   | 'backendIPAction'
   | 'suggestionsParent'
@@ -41,8 +40,6 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
-    inner: {},
     divider: {
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(1)
@@ -116,7 +113,7 @@ const styles = (theme: Theme) =>
 const styled = withStyles(styles);
 
 interface Props {
-  linodesWithPrivateIPs?: Linode.Linode[] | null;
+  nodeBalancerRegion?: string;
   errors?: Linode.ApiFieldError[];
   nodeMessage?: string;
   configIdx?: number;
@@ -313,68 +310,6 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
   };
 
   onSave = this.props.onSave;
-
-  handleSelectSuggestion = (selection: string) => {
-    const { currentNodeAddressIndex } = this.state;
-    if (currentNodeAddressIndex) {
-      this.props.onNodeAddressChange(+currentNodeAddressIndex, selection);
-    }
-  };
-
-  handleFocusAddressField = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const nodeIdx = e.currentTarget.getAttribute('data-node-idx');
-    // this is necesssary because when we select a suggested
-    // ip address, it needs to know what index we're looking at.
-    this.setState({ currentNodeAddressIndex: nodeIdx });
-  };
-
-  renderSearchSuggestion = (
-    linode: Linode.Linode,
-    index: number,
-    highlightedIndex: number | null,
-    itemProps: any
-  ) => {
-    const isHighlighted = highlightedIndex === index;
-    const { classes } = this.props;
-
-    const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
-    const privateIP = linode.ipv4.find(ipv4 => !!ipv4.match(privateIPRegex));
-    return (
-      <MenuItem
-        // when the suggested is selected, put the private IP in the field
-        {...itemProps({ item: privateIP })}
-        key={index}
-        component="div"
-        selected={isHighlighted}
-        className={classes.suggestionItem}
-        classes={{ selected: classes.selectedSuggestionItem }}
-      >
-        {
-          <React.Fragment>
-            <strong>{privateIP}</strong>&nbsp;{linode.label}
-          </React.Fragment>
-        }
-      </MenuItem>
-    );
-  };
-
-  downshiftStateReducer = (
-    state: DownshiftState,
-    changes: StateChangeOptions
-  ) => {
-    switch (changes.type) {
-      // basically, don't clear the field value when we leave the field
-      case Downshift.stateChangeTypes.blurInput:
-      case Downshift.stateChangeTypes.mouseUp:
-        return {
-          ...changes,
-          inputValue: state.inputValue || '',
-          isOpen: false
-        };
-      default:
-        return changes;
-    }
-  };
 
   renderActiveCheck() {
     const {
@@ -739,8 +674,8 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
 
     return (
       <Grid item xs={12}>
-        <Paper className={classes.root} data-qa-label-header>
-          <div className={classes.inner}>
+        <Paper data-qa-label-header>
+          <div>
             {globalFormError && (
               <Notice
                 className={`error-for-scroll-${configIdx}`}
@@ -914,7 +849,16 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
               </Grid>
             </Grid>
 
-            <Grid updateFor={[nodes, errors, nodeMessage, classes]} container>
+            <Grid
+              updateFor={[
+                nodes,
+                errors,
+                nodeMessage,
+                classes,
+                this.props.nodeBalancerRegion
+              ]}
+              container
+            >
               <Grid item xs={12}>
                 <Grid updateFor={[nodeMessage, classes]} item xs={12}>
                   {nodeMessage && <Notice text={nodeMessage} success />}
@@ -1019,6 +963,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                               key={idx}
                               updateFor={[
                                 nodes.length,
+                                this.props.nodeBalancerRegion,
                                 node,
                                 errors,
                                 configIdx,
@@ -1033,101 +978,14 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                 sm={forEdit ? 3 : 3}
                                 lg={forEdit ? 2 : 4}
                               >
-                                <Downshift
-                                  onSelect={this.handleSelectSuggestion}
-                                  stateReducer={this.downshiftStateReducer}
-                                >
-                                  {({
-                                    getInputProps,
-                                    getItemProps,
-                                    isOpen,
-                                    inputValue,
-                                    highlightedIndex,
-                                    openMenu
-                                  }) => {
-                                    return (
-                                      <div
-                                        className={classes.suggestionsParent}
-                                      >
-                                        <TextField
-                                          {...getInputProps({
-                                            onChange: this.onNodeAddressChange,
-                                            placeholder: 'Enter IP Address',
-                                            value: node.address,
-                                            onFocus: e => {
-                                              openMenu();
-                                              this.handleFocusAddressField(e);
-                                            }
-                                          })}
-                                          label="IP Address"
-                                          inputProps={{ 'data-node-idx': idx }}
-                                          errorText={nodesHasErrorFor(
-                                            'address'
-                                          )}
-                                          errorGroup={`${configIdx}`}
-                                          data-qa-backend-ip-address
-                                          small
-                                          disabled={disabled}
-                                        />
-                                        {isOpen && (
-                                          <Paper
-                                            className={classes.suggestions}
-                                          >
-                                            {/*
-                                             * Do not change from this.props.linodesWithPrivateIPS
-                                             * For some reason, referencing the destructured element
-                                             * was returning an empty array, while this.props
-                                             * is returning what we want
-                                             */}
-                                            {this.props.linodesWithPrivateIPs &&
-                                              this.props.linodesWithPrivateIPs
-                                                // filter out the linodes that don't match what we're typing
-                                                // filter by private ip and label
-                                                .filter(
-                                                  (linode: Linode.Linode) => {
-                                                    /*
-                                                     * Show all results if we have nothing entered
-                                                     */
-                                                    if (!inputValue) {
-                                                      return true;
-                                                    }
-                                                    const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
-                                                    const privateIP = linode.ipv4.find(
-                                                      ipv4 =>
-                                                        !!ipv4.match(
-                                                          privateIPRegex
-                                                        )
-                                                    );
-                                                    return (
-                                                      linode.label
-                                                        .toLowerCase()
-                                                        .includes(
-                                                          inputValue.toLowerCase()
-                                                        ) ||
-                                                      privateIP!.includes(
-                                                        inputValue.toLowerCase()
-                                                      )
-                                                    );
-                                                  }
-                                                )
-                                                // limit the results to 5. we don't want too
-                                                // many in the suggestions
-                                                .splice(0, 10)
-                                                // finally map over the results and render the suggestion
-                                                .map((linode, index) => {
-                                                  return this.renderSearchSuggestion(
-                                                    linode,
-                                                    index,
-                                                    highlightedIndex,
-                                                    getItemProps
-                                                  );
-                                                })}
-                                          </Paper>
-                                        )}
-                                      </div>
-                                    );
-                                  }}
-                                </Downshift>
+                                <SelectIP
+                                  handleChange={this.props.onNodeAddressChange}
+                                  selectedRegion={this.props.nodeBalancerRegion}
+                                  nodeIndex={idx}
+                                  errorText={nodesHasErrorFor('address')}
+                                  nodeAddress={node.address}
+                                  workflow={forEdit ? 'edit' : 'create'}
+                                />
                               </Grid>
                               <Grid item xs={6} sm={3} lg={2}>
                                 <TextField

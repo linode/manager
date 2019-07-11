@@ -246,8 +246,10 @@ export const Configs: React.FC<Props> = props => {
         label="Destination"
         selectedLinode={selectedLinodeId}
         handleChange={linode => handleSelectLinode(linode.id)}
-        excludedLinodes={
-          shouldExcludeCurrentLinode ? [currentLinodeId] : undefined
+        filterCondition={
+          shouldExcludeCurrentLinode
+            ? (linode: Linode.Linode) => linode.id !== currentLinodeId
+            : undefined
         }
         textFieldProps={{
           error: !!linodeError

@@ -4,6 +4,11 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.63.1] - 2019-07-08
+
+### Changed:
+- Remove VAT banner.
+
 ## [v0.63.0] - 2019-07-03
 
 ### Added:
