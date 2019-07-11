@@ -60,13 +60,14 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     finished: e => `A disk on Linode ${e.entity!.label} has been deleted`
     // notification: e => ``,
   },
-  // disk_duplicate: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  disk_duplicate: {
+    scheduled: e =>
+      `A disk on Linode ${e.entity!.label} is scheduled for duplication.`,
+    started: e => `A disk on Linode ${e.entity!.label} is being duplicated.`,
+    failed: e => `A disk on Linode ${e.entity!.label} could not be duplicated.`,
+    finished: e => `A disk on Linode ${e.entity!.label} has been duplicated`
+    // notification: e => ``,
+  },
   disk_imagize: {
     // Currently, the event contains no information about the image,
     // making it impossible to access the label for these messages.
