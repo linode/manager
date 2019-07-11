@@ -1,4 +1,4 @@
-import { assoc, map, path } from 'ramda';
+import { assoc, clone, map, path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
@@ -32,11 +32,18 @@ export default (Component: React.ComponentType<any>) => {
 
     requestKeys = () => {
       const { username, userEmailAddress } = this.props;
+      const { userSSHKeys } = this.state;
+      /**
+       * We need a copy of the keys to track what was selected before requesting keys.
+       * This will be an empty array on the initial request.
+       */
+      const oldKeys = clone(userSSHKeys);
       if (!username || !userEmailAddress) {
         return;
       }
 
-      const isSelected = this.isUserSelected(username);
+      /** Before this request, was this user selected? */
+      const isActiveUserSelected = this.isUserSelected(username, oldKeys);
 
       getSSHKeys()
         .then(response => {
@@ -51,7 +58,7 @@ export default (Component: React.ComponentType<any>) => {
                 username,
                 userEmailAddress,
                 keys.map(k => k.label),
-                isSelected
+                isActiveUserSelected
               )
             ]
           });
@@ -67,13 +74,13 @@ export default (Component: React.ComponentType<any>) => {
             return;
           }
 
-          const isSelected = this.isUserSelected(username);
-
           this.setState({
             userSSHKeys: [
               ...this.state.userSSHKeys,
               ...users.reduce((cleanedUsers, user) => {
                 const keys = user.ssh_keys;
+                const isSelected = this.isUserSelected(user.username, oldKeys);
+
                 if (
                   !keys ||
                   keys.length === 0 ||
@@ -149,10 +156,8 @@ export default (Component: React.ComponentType<any>) => {
         this.toggleSSHUserKeys(username, result)
     });
 
-    isUserSelected = (username: string) => {
-      const { userSSHKeys } = this.state;
-
-      const currentUserKeys = userSSHKeys.find(
+    isUserSelected = (username: string, keys: UserSSHKeyObject[]) => {
+      const currentUserKeys = keys.find(
         thisKey => thisKey.username === username
       );
       return currentUserKeys ? currentUserKeys.selected : false;
