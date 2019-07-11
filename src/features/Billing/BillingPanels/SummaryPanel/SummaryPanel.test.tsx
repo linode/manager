@@ -1,85 +1,63 @@
-import { shallow } from 'enzyme';
 import * as React from 'react';
+import { cleanup, render } from 'react-testing-library';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 
-import { SummaryPanel } from './SummaryPanel';
+import { CombinedProps, SummaryPanel } from './SummaryPanel';
 
 describe('SummaryPanel', () => {
-  const account: Linode.Account = {
-    company: '',
-    first_name: '',
-    last_name: '',
-    email: '',
-    address_1: '',
-    address_2: '',
-    phone: '',
-    city: '',
-    state: '',
-    zip: '',
-    credit_card: { expiry: '02/2012', last_four: '1234' },
-    tax_id: '',
-    country: '',
-    balance: 0,
-    balance_uninvoiced: 0,
-    active_since: 'hello world'
-    // [BETA]
-    // @todo: Uncomment this when it becomes generally available
-    // capabilities: ['Linodes', 'NodeBalancers', 'Block Storage']
+  const baseProps: CombinedProps = {
+    accountLoading: false,
+    lastUpdated: 10,
+    username: 'helloworld',
+    profileError: undefined,
+    profileLoading: false,
+    isRestricted: false,
+    data: {
+      company: '',
+      first_name: '',
+      last_name: '',
+      email: '',
+      address_1: '',
+      address_2: '',
+      phone: '',
+      city: '',
+      state: '',
+      zip: '',
+      credit_card: { expiry: '02/2012', last_four: '1234' },
+      tax_id: '',
+      country: '',
+      balance: 0,
+      balance_uninvoiced: 0,
+      active_since: '2018-05-17T18:22:50'
+      // [BETA]
+      // @todo: Uncomment this when it becomes generally available
+      // capabilities: ['Linodes', 'NodeBalancers', 'Block Storage']
+    }
   };
 
-  const mockClasses: any = {
-    root: '',
-    title: '',
-    summarySection: '',
-    section: '',
-    expired: '',
-    balance: '',
-    positive: '',
-    negative: ''
-  };
-
-  const componentExpiredCC = shallow(
-    <SummaryPanel
-      loading={false}
-      lastUpdated={1}
-      classes={mockClasses}
-      data={{
-        ...account,
-        credit_card: { ...account.credit_card, expiry: '02/2012' }
-      }}
-      accountLoading={false}
-      balance={0}
-      balance_uninvoiced={0}
-    />
-  );
-
-  const componentValidCC = shallow(
-    <SummaryPanel
-      loading={false}
-      lastUpdated={1}
-      classes={mockClasses}
-      data={{
-        ...account,
-        credit_card: { ...account.credit_card, expiry: '02/2020' }
-      }}
-      accountLoading={false}
-      balance={0}
-      balance_uninvoiced={0}
-    />
-  );
+  afterEach(cleanup);
 
   it('should render "Expired" text next to the CC expiration if has an old date', () => {
-    expect(
-      componentExpiredCC.find('span').filterWhere(n => {
-        return n.text() === 'Expired';
-      })
-    ).toHaveLength(1);
+    const expired = render(wrapWithTheme(<SummaryPanel {...baseProps} />));
+    expect(expired.getByText(/Expired/));
   });
 
   it('should not render "Expired" text next to the CC expiration if has an future date', () => {
-    expect(
-      componentValidCC.find('span').filterWhere(n => {
-        return n.text() === 'Expired';
-      })
-    ).toHaveLength(0);
+    const valid = render(
+      wrapWithTheme(
+        <SummaryPanel
+          {...baseProps}
+          data={{
+            ...baseProps.data!,
+            credit_card: {
+              ...baseProps.data!.credit_card,
+              expiry: '02/4000'
+            }
+          }}
+        />
+      )
+    );
+
+    expect(valid.queryByText(/Expired/)).toBeFalsy();
   });
 });
