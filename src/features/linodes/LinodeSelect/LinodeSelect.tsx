@@ -58,7 +58,8 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
     placeholder,
     valueOverride,
     labelOverride,
-    filterCondition
+    filterCondition,
+    value
   } = props;
 
   const linodes = region
@@ -82,12 +83,15 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
   return (
     <EnhancedSelect
       value={
-        groupByRegion
-          ? linodeFromGroupedItems(
-              options as GroupType<number>[],
-              selectedLinode
-            )
-          : linodeFromItems(options as Item<number>[], selectedLinode)
+        // Use the `value` prop if provided.
+        typeof value === 'undefined'
+          ? groupByRegion
+            ? linodeFromGroupedItems(
+                options as GroupType<number>[],
+                selectedLinode
+              )
+            : linodeFromItems(options as Item<number>[], selectedLinode)
+          : value
       }
       label={props.label || 'Linode'}
       className={className}

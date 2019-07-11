@@ -49,6 +49,14 @@ const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
   return (
     <LinodeSelect
       noMarginTop
+      value={
+        props.nodeAddress
+          ? {
+              value: props.nodeAddress,
+              label: props.nodeAddress
+            }
+          : null
+      }
       selectedLinode={selectedLinode}
       noOptionsMessage={`No options - please ensure you have at least 1 Linode
       with a private IP located in the selected region.`}
