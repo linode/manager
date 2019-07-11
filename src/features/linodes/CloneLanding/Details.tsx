@@ -145,7 +145,7 @@ export const Configs: React.FC<Props> = props => {
     !selectedLinodeId ||
     (shouldExcludeCurrentLinode && selectedLinodeId === currentLinodeId);
 
-  // Estimate the clone time by
+  // Estimate the clone time
   const allDisks = getAllDisks(selectedConfigs, selectedDisks);
   const totalSize = allDisks.reduce((sum, eachDisk) => {
     return sum + eachDisk.size;

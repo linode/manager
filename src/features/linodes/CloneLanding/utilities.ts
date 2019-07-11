@@ -13,13 +13,13 @@ export interface CloneLandingState {
   errors?: Linode.ApiFieldError[];
 }
 
-// Allows for easy toggling of a selected config
+// Allows for easy toggling of a selected config.
 export type ConfigSelection = Record<
   number,
   { isSelected: boolean; associatedDiskIds: number[] }
 >;
 
-// Allows for easy toggling of a selected disk
+// Allows for easy toggling of a selected disk.
 export type DiskSelection = Record<
   number,
   { isSelected: boolean; associatedConfigIds: number[] }
@@ -68,7 +68,6 @@ export type ExtendedConfig = Linode.Config & { associatedDisks: Linode.Disk[] };
  *       associatedConfigs: [555]
  *     }
  *   }
- * }
  * };
  * ```
  */
