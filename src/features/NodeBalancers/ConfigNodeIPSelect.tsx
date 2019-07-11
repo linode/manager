@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { compose } from 'recompose';
 
+import { Props as TextFieldProps } from 'src/components/TextField';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 
 interface Props {
@@ -10,6 +11,7 @@ interface Props {
   errorText?: string;
   nodeAddress?: string;
   workflow: 'create' | 'edit';
+  textfieldProps: TextFieldProps;
 }
 
 type CombinedProps = Props;
@@ -49,6 +51,7 @@ const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
   return (
     <LinodeSelect
       noMarginTop
+      textFieldProps={props.textfieldProps}
       value={
         props.nodeAddress
           ? {
