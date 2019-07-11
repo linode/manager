@@ -84,20 +84,6 @@ type CombinedProps = Props &
   WithUpdatingDomainsProps &
   DispatchProps;
 
-const handleRowClick = (
-  e:
-    | React.ChangeEvent<HTMLTableRowElement>
-    | React.MouseEvent<HTMLAnchorElement, MouseEvent>,
-  props: CombinedProps
-) => {
-  const { domain, id, type, onEdit } = props;
-
-  if (type === 'slave') {
-    e.preventDefault();
-    onEdit(domain, id);
-  }
-};
-
 class DomainsDashboardCard extends React.Component<CombinedProps, State> {
   render() {
     return (
@@ -110,6 +96,18 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
       </DashboardCard>
     );
   }
+
+  handleRowClick = (
+    e: React.ChangeEvent<HTMLTableRowElement>,
+    id: number,
+    domain: string,
+    type: string
+  ) => {
+    if (type === 'slave') {
+      e.preventDefault();
+      this.props.openForEditing(domain, id);
+    }
+  };
 
   renderAction = () =>
     this.props.domainCount > 5 ? (
@@ -155,7 +153,7 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
         key={domain}
         rowLink={
           type === 'slave'
-            ? e => handleRowClick(e, this.props)
+            ? e => this.handleRowClick(e, id, domain, type)
             : `/domains/${id}`
         }
       >
