@@ -126,7 +126,7 @@ export const cloneLandingReducer = (
         errors: action.errors
       };
     case 'clearAll':
-      // Set all `isSelected`s to `false, and set selectedLinodeId to null
+      // Set all `isSelected`s to `false`, and set `selectedLinodeId` to null
       return {
         ...state,
         configSelection: map(
