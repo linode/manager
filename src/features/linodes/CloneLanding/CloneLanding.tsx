@@ -17,6 +17,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import Typography from 'src/components/core/Typography';
+import DefaultLoader from 'src/components/DefaultLoader';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import TabLink from 'src/components/TabLink';
@@ -33,14 +34,20 @@ import MutationNotification from '../LinodesDetail/LinodesDetailHeader/MutationN
 import Notifications from '../LinodesDetail/LinodesDetailHeader/Notifications';
 import LinodeBusyStatus from '../LinodesDetail/LinodeSummary/LinodeBusyStatus';
 import { linodeInTransition } from '../transitions';
-import Configs from './Configs';
 import Details from './Details';
-import Disks from './Disks';
 import {
   attachAssociatedDisksToConfigs,
   cloneLandingReducer,
   createInitialCloneLandingState
 } from './utilities';
+
+const Configs = DefaultLoader({
+  loader: () => import('./Configs')
+});
+
+const Disks = DefaultLoader({
+  loader: () => import('./Disks')
+});
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {

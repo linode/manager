@@ -7,9 +7,9 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import DefaultLoader from 'src/components/DefaultLoader';
 import { WithTypes } from 'src/store/linodeType/linodeType.containers';
 import { ThunkDispatch } from 'src/store/types';
-import CloneLanding from '../CloneLanding';
 import {
   LinodeDetailContext,
   linodeDetailContextFactory as createLinodeDetailContext,
@@ -17,9 +17,19 @@ import {
 } from './linodeDetailContext';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 import linodesDetailContainer, { InnerProps } from './LinodesDetail.container';
-import LinodesDetailHeader from './LinodesDetailHeader';
-import LinodesDetailNavigation from './LinodesDetailNavigation';
 import reloadableWithRouter from './reloadableWithRouter';
+
+const CloneLanding = DefaultLoader({
+  loader: () => import('../CloneLanding')
+});
+
+const LinodesDetailHeader = DefaultLoader({
+  loader: () => import('./LinodesDetailHeader')
+});
+
+const LinodesDetailNavigation = DefaultLoader({
+  loader: () => import('./LinodesDetailNavigation')
+});
 
 interface MatchProps {
   linodeId?: string;
