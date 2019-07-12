@@ -36,6 +36,7 @@ export default <T extends { id: string | number }>(
      */
 
     reportException(`Error with running ramda adjust: ${e}`);
+    /* tslint:disable */
     console.error(`Error with running ramda adjust: ${e}`);
     console.error(`Check the ramda docs and make sure you are invoking the function
     with the arguments in the correct order.`);
