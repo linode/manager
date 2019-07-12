@@ -162,7 +162,8 @@ export const dark = (options: ThemeOverrides) =>
             backgroundColor: primaryColors.dark
           },
           '&$disabled': {
-            color: '#888'
+            color: '#888',
+            opacity: 0.5
           },
           '&.loading': {
             color: primaryColors.text

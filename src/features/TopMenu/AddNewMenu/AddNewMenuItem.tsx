@@ -1,5 +1,5 @@
-import MenuItem from '@material-ui/core/MenuItem';
 import * as React from 'react';
+import MenuItem from 'src/components/core/MenuItem';
 import {
   createStyles,
   Theme,

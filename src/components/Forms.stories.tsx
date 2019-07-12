@@ -1,8 +1,3 @@
-import FormControl from '@material-ui/core/FormControl';
-import FormControlLabel from '@material-ui/core/FormControlLabel';
-import FormHelperText from '@material-ui/core/FormHelperText';
-import InputLabel from '@material-ui/core/InputLabel';
-import RadioGroup from '@material-ui/core/RadioGroup';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import CheckBox from './CheckBox';
@@ -10,6 +5,12 @@ import MenuItem from './MenuItem';
 import Radio from './Radio';
 import Select from './Select';
 import TextField from './TextField';
+
+import FormControl from 'src/components/core/FormControl';
+import FormControlLabel from 'src/components/core/FormControlLabel';
+import FormHelperText from 'src/components/core/FormHelperText';
+import InputLabel from 'src/components/core/InputLabel';
+import RadioGroup from 'src/components/core/RadioGroup';
 
 const fields = [
   {

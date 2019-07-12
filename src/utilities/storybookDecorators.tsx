@@ -1,7 +1,7 @@
-import CssBaseline from '@material-ui/core/CssBaseline';
 import { select } from '@storybook/addon-knobs/react';
 import 'font-logos/assets/font-logos.css';
 import * as React from 'react';
+import CssBaseline from 'src/components/core/CssBaseline';
 import { ThemeProvider } from 'src/components/core/styles';
 import { dark, light } from 'src/themes';
 

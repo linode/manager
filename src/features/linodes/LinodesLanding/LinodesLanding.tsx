@@ -1,4 +1,3 @@
-import withWidth, { WithWidth } from '@material-ui/core/withWidth';
 import * as moment from 'moment-timezone';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { parse, stringify } from 'qs';
@@ -18,6 +17,7 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
 import Typography from 'src/components/core/Typography';
+import withWidth, { WithWidth } from 'src/components/core/WithWidth';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';

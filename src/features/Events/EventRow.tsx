@@ -40,12 +40,6 @@ interface Props {
   entityId?: number;
 }
 
-export const onUnfound = (event: ExtendedEvent) => {
-  return `Event: ${event.action}${
-    event.entity ? ` on ${event.entity.label}` : ''
-  }`;
-};
-
 type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
 
 export const EventRow: React.StatelessComponent<CombinedProps> = props => {
@@ -63,7 +57,7 @@ export const EventRow: React.StatelessComponent<CombinedProps> = props => {
   const rowProps = {
     created: event.created,
     linkTarget,
-    message: eventMessageGenerator(event, onUnfound),
+    message: eventMessageGenerator(event),
     status: pathOr(undefined, ['status'], entity),
     type,
     entityId,
