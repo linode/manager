@@ -4,7 +4,7 @@ import { ApplicationState } from 'src/store';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { EventHandler } from 'src/store/types';
 import { requestNotifications } from '../notification/notification.requests';
-import { deleteLinode } from './linodes.actions';
+import { deleteLinode, updateLinode } from './linodes.actions';
 
 const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
   const { action, entity, status } = event;
@@ -33,7 +33,6 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
     case 'backups_enable':
     case 'backups_cancel':
     case 'disk_imagize':
-    case 'linode_clone':
       return handleLinodeUpdate(dispatch, status, id);
 
     /** Remove Linode */
@@ -43,6 +42,9 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
     /** Create Linode */
     case 'linode_create':
       return handleLinodeCreation(dispatch, status, id, getState());
+
+    case 'linode_clone':
+      return handleLinodeClone(dispatch, status, id);
 
     default:
       return;
