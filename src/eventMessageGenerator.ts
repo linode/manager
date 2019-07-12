@@ -176,7 +176,8 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     scheduled: e => `Linode ${e.entity!.label} is scheduled to be cloned.`,
     started: e => `Linode ${e.entity!.label} is being cloned.`,
     failed: e => `Linode ${e.entity!.label} could not be cloned.`,
-    finished: e => `Linode ${e.entity!.label} has been cloned.`
+    finished: e => `Linode ${e.entity!.label} has been cloned.`,
+    notification: e => `Linode ${e.entity!.label} is scheduled to be cloned.`
   },
   linode_create: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for creation.`,

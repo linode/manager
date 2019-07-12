@@ -4,7 +4,7 @@ import { ApplicationState } from 'src/store';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { EventHandler } from 'src/store/types';
 import { requestNotifications } from '../notification/notification.requests';
-import { deleteLinode, updateLinode } from './linodes.actions';
+import { deleteLinode } from './linodes.actions';
 
 const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
   const { action, entity, status } = event;
