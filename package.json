@@ -165,7 +165,7 @@
     "@types/promise.prototype.finally": "^2.0.2",
     "@types/qrcode.react": "^0.8.0",
     "@types/qs": "^6.5.1",
-    "@types/ramda": "^0.25.18",
+    "@types/ramda": "0.25.16",
     "@types/react": "^16.8.22",
     "@types/react-currency-formatter": "^1.1.1",
     "@types/react-dom": "^16.8.4",
@@ -304,7 +304,10 @@
       "json",
       "node"
     ],
-    "reporters": [ "default", "jest-junit" ],
+    "reporters": [
+      "default",
+      "jest-junit"
+    ],
     "globals": {
       "ts-jest": {
         "tsConfig": "tsconfig.test.json"
