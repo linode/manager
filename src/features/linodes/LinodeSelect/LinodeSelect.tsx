@@ -1,9 +1,14 @@
+import { groupBy } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
+import EnhancedSelect, {
+  GroupType,
+  Item
+} from 'src/components/EnhancedSelect/Select';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import { Props as TextFieldProps } from 'src/components/TextField';
 import withLinodes from 'src/containers/withLinodes.container';
+import { formatRegion } from 'src/utilities';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 interface WithLinodesProps {
@@ -23,6 +28,7 @@ interface Props {
   region?: string;
   handleChange: (linode: Linode.Linode) => void;
   textFieldProps?: TextFieldProps;
+  groupByRegion?: boolean;
   placeholder?: string;
   valueOverride?: Override;
   labelOverride?: Override;
@@ -36,43 +42,6 @@ interface Props {
 
 type CombinedProps = Props & WithLinodesProps;
 
-const linodesToItems = (
-  linodes: Linode.Linode[],
-  valueOverride?: Override,
-  labelOverride?: Override,
-  filterCondition?: (linodes: Linode.Linode) => boolean
-): Item<any>[] => {
-  const maybeFilteredLinodes = filterCondition
-    ? linodes.filter(filterCondition)
-    : linodes;
-
-  return maybeFilteredLinodes.map(thisLinode => ({
-    value:
-      typeof valueOverride === 'function'
-        ? valueOverride(thisLinode)
-        : !!valueOverride
-        ? thisLinode[valueOverride]
-        : thisLinode.id,
-    label:
-      typeof labelOverride === 'function'
-        ? labelOverride(thisLinode)
-        : !!labelOverride
-        ? labelOverride
-        : thisLinode.label,
-    data: thisLinode
-  }));
-};
-
-const linodeFromItems = (linodes: Item<number>[], linodeId: number | null) => {
-  if (!linodeId) {
-    return undefined;
-  }
-
-  return linodes.find(thisLinode => {
-    return (thisLinode.data as Linode.Linode).id === linodeId;
-  });
-};
-
 const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
   const {
     disabled,
@@ -84,6 +53,7 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
     linodesData,
     region,
     selectedLinode,
+    groupByRegion,
     className,
     placeholder,
     valueOverride,
@@ -95,12 +65,15 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
   const linodes = region
     ? linodesData.filter(thisLinode => thisLinode.region === region)
     : linodesData;
-  const options = linodesToItems(
-    linodes,
-    valueOverride,
-    labelOverride,
-    filterCondition
-  );
+
+  const options = groupByRegion
+    ? linodesToGroupedItems(
+        linodes,
+        valueOverride,
+        labelOverride,
+        filterCondition
+      )
+    : linodesToItems(linodes, valueOverride, labelOverride, filterCondition);
 
   const noOptionsMessage =
     !linodeError && !linodesLoading && options.length === 0
@@ -109,25 +82,21 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
 
   return (
     <EnhancedSelect
+      value={
+        // Use the `value` prop if provided.
+        typeof value === 'undefined'
+          ? groupByRegion
+            ? linodeFromGroupedItems(
+                options as GroupType<number>[],
+                selectedLinode
+              )
+            : linodeFromItems(options as Item<number>[], selectedLinode)
+          : value
+      }
       label={props.label || 'Linode'}
       className={className}
       noMarginTop={props.noMarginTop}
       placeholder={placeholder || 'Select a Linode'}
-      /**
-       * react-select wants you to pass null to clear out the value so we need
-       * to allow the parent to pass that. This solves for the situiation where
-       *
-       * 1. Navigate to Create NodeBalancer Form
-       * 2. Select region
-       * 3. Select Node Config Node IP Address
-       * 4. Click different region
-       * 5. IP Address _should_ be cleared
-       */
-      value={
-        typeof value === 'undefined'
-          ? linodeFromItems(options, selectedLinode)
-          : value
-      }
       options={options}
       disabled={disabled}
       small={props.small}
@@ -154,3 +123,92 @@ export default compose<CombinedProps, Props & RenderGuardProps>(
     linodesError
   }))
 )(LinodeSelect);
+
+/**
+ * UTILITIES
+ */
+
+export const linodesToItems = (
+  linodes: Linode.Linode[],
+  valueOverride?: Override,
+  labelOverride?: Override,
+  filterCondition?: (linodes: Linode.Linode) => boolean
+): Item<any>[] => {
+  const maybeFilteredLinodes = filterCondition
+    ? linodes.filter(filterCondition)
+    : linodes;
+
+  return maybeFilteredLinodes.map(thisLinode => ({
+    value:
+      typeof valueOverride === 'function'
+        ? valueOverride(thisLinode)
+        : !!valueOverride
+        ? thisLinode[valueOverride]
+        : thisLinode.id,
+    label:
+      typeof labelOverride === 'function'
+        ? labelOverride(thisLinode)
+        : !!labelOverride
+        ? labelOverride
+        : thisLinode.label,
+    data: thisLinode
+  }));
+};
+
+export const linodeFromItems = (
+  linodes: Item<number>[],
+  linodeId: number | null
+): Item<number> | null => {
+  if (!linodeId) {
+    return null;
+  }
+
+  return (
+    linodes.find(thisLinode => {
+      return (thisLinode.data as Linode.Linode).id === linodeId;
+    }) || null
+  );
+};
+
+// Grouped by Region
+export const linodesToGroupedItems = (
+  linodes: Linode.Linode[],
+  valueOverride?: Override,
+  labelOverride?: Override,
+  filterCondition?: (linodes: Linode.Linode) => boolean
+) => {
+  // We need to filter Linode BEFORE grouping by region, since some regions
+  // may become irrelevant when Linodes are filtered.
+  const maybeFilteredLinodes = filterCondition
+    ? linodes.filter(filterCondition)
+    : linodes;
+
+  const groupedByRegion = groupBy((linode: Linode.Linode) => linode.region)(
+    maybeFilteredLinodes
+  );
+
+  const groupedItems = Object.keys(groupedByRegion).map(region => {
+    return {
+      label: formatRegion(region),
+      options: linodesToItems(
+        groupedByRegion[region],
+        valueOverride,
+        labelOverride
+      )
+    };
+  });
+
+  return groupedItems;
+};
+
+export const linodeFromGroupedItems = (
+  groupedOptions: GroupType<number>[],
+  linodeId: number | null
+) => {
+  // I wanted to use Ramda's `flatten()` but the typing is not good.
+  const flattenedOptions: Item<number>[] = [];
+  groupedOptions.forEach(eachGroup => {
+    flattenedOptions.push(...eachGroup.options);
+  });
+  return linodeFromItems(flattenedOptions, linodeId);
+};

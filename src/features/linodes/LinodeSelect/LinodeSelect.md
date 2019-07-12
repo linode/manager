@@ -51,3 +51,11 @@ const MyComponent = props => {
   )
 }
 ```
+
+### Other Options
+
+- `region <string>`
+  Only include Linodes in this region
+
+- `groupByRegion <boolean>`
+  Group Linodes by region within the component
