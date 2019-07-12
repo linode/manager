@@ -250,7 +250,7 @@ export const getAllDisks = (
   const allDisks: Linode.Disk[] = compose(
     uniqBy((eachDisk: Linode.Disk) => eachDisk.id),
     flatten,
-    append(disks),
+    append(disks) as any,
     map((eachConfig: ExtendedConfig) => eachConfig.associatedDisks)
   )(configs);
 

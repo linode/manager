@@ -47,6 +47,10 @@ export const transitionText = (
     return 'Upgrading';
   }
 
+  if (recentEvent && recentEvent.action === 'linode_clone') {
+    return 'Cloning';
+  }
+
   let event;
   if (recentEvent && transitionAction.includes(recentEvent.action)) {
     event = recentEvent.action.replace('linode_', '').replace('_', ' ');
