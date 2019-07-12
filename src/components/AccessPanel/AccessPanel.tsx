@@ -139,10 +139,12 @@ class AccessPanel extends React.Component<CombinedProps> {
             hideStrengthLabel={hideStrengthLabel}
             hideHelperText={hideHelperText}
           />
-          <UserSSHKeyPanel
-            users={users}
-            onKeyAddSuccess={requestKeys || (() => null)}
-          />
+          {users && (
+            <UserSSHKeyPanel
+              users={users}
+              onKeyAddSuccess={requestKeys || (() => null)}
+            />
+          )}
         </div>
       </Paper>
     );

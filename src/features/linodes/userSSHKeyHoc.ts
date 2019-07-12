@@ -1,4 +1,4 @@
-import { assoc, map, path } from 'ramda';
+import { assoc, clone, map, path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
@@ -32,9 +32,19 @@ export default (Component: React.ComponentType<any>) => {
 
     requestKeys = () => {
       const { username, userEmailAddress } = this.props;
+      const { userSSHKeys } = this.state;
+      /**
+       * We need a copy of the keys to track what was selected before requesting keys.
+       * This will be an empty array on the initial request.
+       */
+      const oldKeys = clone(userSSHKeys);
       if (!username || !userEmailAddress) {
         return;
       }
+
+      /** Before this request, was this user selected? */
+      const isActiveUserSelected = this.isUserSelected(username, oldKeys);
+
       getSSHKeys()
         .then(response => {
           const keys = response.data;
@@ -47,7 +57,8 @@ export default (Component: React.ComponentType<any>) => {
               this.createUserObject(
                 username,
                 userEmailAddress,
-                keys.map(k => k.label)
+                keys.map(k => k.label),
+                isActiveUserSelected
               )
             ]
           });
@@ -68,6 +79,8 @@ export default (Component: React.ComponentType<any>) => {
               ...this.state.userSSHKeys,
               ...users.reduce((cleanedUsers, user) => {
                 const keys = user.ssh_keys;
+                const isSelected = this.isUserSelected(user.username, oldKeys);
+
                 if (
                   !keys ||
                   keys.length === 0 ||
@@ -79,7 +92,12 @@ export default (Component: React.ComponentType<any>) => {
 
                 return [
                   ...cleanedUsers,
-                  this.createUserObject(user.username, user.email, keys)
+                  this.createUserObject(
+                    user.username,
+                    user.email,
+                    keys,
+                    isSelected
+                  )
                 ];
               }, [])
             ]
@@ -90,7 +108,7 @@ export default (Component: React.ComponentType<any>) => {
         });
     };
 
-    state = {
+    state: State = {
       userSSHKeys: [],
       resetSSHKeys: this.resetSSHKeys,
       requestKeys: this.requestKeys
@@ -122,16 +140,28 @@ export default (Component: React.ComponentType<any>) => {
         )
       }));
 
-    createUserObject = (username: string, email: string, keys: string[]) => ({
+    createUserObject = (
+      username: string,
+      email: string,
+      keys: string[],
+      selected: boolean = false
+    ) => ({
       keys,
       username,
       gravatarUrl: `https://www.gravatar.com/avatar/${getEmailHash(
         email
       )}?d=mp&s=24`,
-      selected: false,
+      selected,
       onSSHKeyChange: (_: any, result: boolean) =>
         this.toggleSSHUserKeys(username, result)
     });
+
+    isUserSelected = (username: string, keys: UserSSHKeyObject[]) => {
+      const currentUserKeys = keys.find(
+        thisKey => thisKey.username === username
+      );
+      return currentUserKeys ? currentUserKeys.selected : false;
+    };
   }
 
   return connected(WrappedComponent);
