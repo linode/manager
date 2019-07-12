@@ -14,5 +14,15 @@ export default <T extends { id: string | number }>(
     return list;
   }
 
-  return adjust(foundIndex, updater, list);
+  /**
+   * the current Ramda docs tell you that the
+   * foundIndex should be the first argument, but
+   * our version of ramda has these switched
+   *
+   * At the time of this comment, we have:
+   *
+   * ramda: ^0.25.0
+   * @types/ramda: 0.25.16 (0.25.17 switches the argument order)
+   */
+  return adjust(updater, foundIndex, list);
 };

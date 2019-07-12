@@ -135,6 +135,29 @@ const handleLinodeCreation = (
   }
 };
 
+const handleLinodeClone = (
+  dispatch: Dispatch<any>,
+  status: Linode.EventStatus,
+  id: number
+) => {
+  switch (status) {
+    case 'failed':
+    case 'finished':
+    case 'scheduled':
+      return dispatch(requestLinodeForStore(id));
+
+    case 'started':
+      const action = updateLinode({
+        id,
+        update: existing => ({ ...existing, status: 'cloning' })
+      });
+      return dispatch(action);
+
+    default:
+      return;
+  }
+};
+
 /**
  * shouldRequestNotifications
  *
