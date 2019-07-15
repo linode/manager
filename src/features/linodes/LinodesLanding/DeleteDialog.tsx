@@ -25,8 +25,7 @@ const DeleteLinodeDialog: React.FC<CombinedProps> = props => {
   React.useEffect(() => {
     if (props.open) {
       /**
-       * reset error state, username, and disabled status when we open the modal
-       * intentionally not resetting comments
+       * reset error and loading states
        */
       setErrors(undefined);
       setDeleting(false);
