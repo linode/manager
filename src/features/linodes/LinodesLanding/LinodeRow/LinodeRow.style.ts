@@ -12,6 +12,7 @@ type ClassNames =
   | 'actionCell'
   | 'actionInner'
   | 'bodyRow'
+  | 'statusCell'
   | 'ipCell'
   | 'ipCellWrapper'
   | 'planCell'
@@ -64,6 +65,13 @@ const styles = (theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       padding: 4
+    },
+    statusCell: {
+      width: '15%',
+      textTransform: 'capitalize',
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      }
     },
     ipCell: {
       width: '15%',

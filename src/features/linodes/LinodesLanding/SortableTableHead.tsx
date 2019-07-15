@@ -53,6 +53,15 @@ const SortableTableHead: React.StatelessComponent<combinedProps> = props => {
         </TableSortCell>
         <TableSortCell
           noWrap
+          label="status"
+          direction={order}
+          active={isActive('status')}
+          handleClick={handleOrderChange}
+        >
+          Status
+        </TableSortCell>
+        <TableSortCell
+          noWrap
           label="mostRecentBackup"
           direction={order}
           active={isActive('mostRecentBackup')}

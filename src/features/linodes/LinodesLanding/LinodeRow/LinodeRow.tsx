@@ -124,6 +124,13 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
         aria-label={label}
       >
         {!loading && headCell}
+        <TableCell
+          parentColumn="Status"
+          className={classes.statusCell}
+          data-qa-status
+        >
+          {loading ? 'Busy' : status}
+        </TableCell>
         <LinodeRowBackupCell
           linodeId={id}
           backupsEnabled={backups.enabled || false}

@@ -178,7 +178,6 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
           </div>
         </Grid>
       </Grid>
-      {/* </Link> */}
     </TableCell>
   );
 };
