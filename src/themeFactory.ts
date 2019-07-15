@@ -1296,7 +1296,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             '&$hover': {
               backgroundColor: '#fbfbfb',
               '&:before': {
-                borderLeftColor: primaryColors.main
+                backgroundColor: primaryColors.main
               }
             }
           }
@@ -1310,6 +1310,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         },
         hover: {
           cursor: 'pointer',
+          '& a': {
+            color: primaryColors.text
+          },
           '& a.secondaryLink': {
             color: primaryColors.main,
             '&:hover': {
