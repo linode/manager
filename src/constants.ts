@@ -228,12 +228,10 @@ export const EU_COUNTRIES = [
 
 /**
  * MBps rate for intra DC migrations (AKA Mutations)
- * see https://bits.linode.com/Linode/website/blob/master/conf/Config.cfm#L63
  */
 export const MBpsIntraDC = 75;
 
 /**
  * MBps rate for intra DC migrations (AKA Cross-Datacenter migrations )
- * see https://bits.linode.com/Linode/website/blob/master/conf/Config.cfm#L64
  */
 export const MBpsInterDC = 1.5;
