@@ -10,8 +10,6 @@ import { lishLaunch } from 'src/features/Lish';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
-import { powerOnLinode } from './powerActions';
-
 import {
   sendLinodeActionEvent,
   sendLinodeActionMenuItemEvent
@@ -25,6 +23,8 @@ import { getLinodeConfigs } from 'src/services/linodes';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector.ts';
 import { MapState } from 'src/store/types';
 
+import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+
 export interface Props {
   linodeId: number;
   linodeLabel: string;
@@ -33,14 +33,12 @@ export interface Props {
   linodeBackups: Linode.LinodeBackups;
   linodeStatus: string;
   noImage: boolean;
-  openConfigDrawer: (
-    configs: Linode.Config[],
-    fn: (id: number) => void
-  ) => void;
-  toggleConfirmation: (
-    bootOption: Linode.KebabAction,
-    linodeId: number,
-    linodeLabel: string
+  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openPowerActionDialog: (
+    bootAction: BootAction,
+    linodeID: number,
+    linodeLabel: string,
+    linodeConfigs: Linode.Config[]
   ) => void;
 }
 
@@ -115,8 +113,8 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
       linodeLabel,
       linodeBackups,
       linodeStatus,
-      openConfigDrawer,
-      toggleConfirmation,
+      openDeleteDialog,
+      openPowerActionDialog,
       history: { push },
       readOnly
     } = this.props;
@@ -190,7 +188,7 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
             sendLinodeActionMenuItemEvent('Delete Linode');
             e.preventDefault();
             e.stopPropagation();
-            toggleConfirmation('delete', linodeId, linodeLabel);
+            openDeleteDialog(linodeId, linodeLabel);
             closeMenu();
           },
           ...readOnlyProps
@@ -203,7 +201,7 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
           disabled: !hasMadeConfigsRequest || noConfigs || readOnly,
           isLoading: !hasMadeConfigsRequest,
           tooltip: this.state.configsError
-            ? 'Could not load configs for this Linode'
+            ? 'Could not load configs for this Linode.'
             : noConfigs
             ? 'A config needs to be added before powering on a Linode'
             : readOnly
@@ -211,7 +209,12 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
             : undefined,
           onClick: e => {
             sendLinodeActionMenuItemEvent('Power On Linode');
-            powerOnLinode(openConfigDrawer, linodeId, linodeLabel);
+            openPowerActionDialog(
+              'Power On',
+              linodeId,
+              linodeLabel,
+              this.state.configs
+            );
             closeMenu();
           }
         });
@@ -221,15 +224,23 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
         actions.unshift(
           {
             title: 'Reboot',
-            disabled: readOnly,
+            disabled: !hasMadeConfigsRequest || readOnly,
+            isLoading: !hasMadeConfigsRequest,
             tooltip: readOnly
               ? "You don't have permission to modify this Linode."
+              : this.state.configsError
+              ? 'Could not load configs for this Linode.'
               : undefined,
             onClick: (e: React.MouseEvent<HTMLElement>) => {
               sendLinodeActionMenuItemEvent('Reboot Linode');
               e.preventDefault();
               e.stopPropagation();
-              toggleConfirmation('reboot', linodeId, linodeLabel);
+              openPowerActionDialog(
+                'Reboot',
+                linodeId,
+                linodeLabel,
+                this.state.configs
+              );
               closeMenu();
             },
             ...readOnlyProps
@@ -240,7 +251,7 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
               sendLinodeActionMenuItemEvent('Power Off Linode');
               e.preventDefault();
               e.stopPropagation();
-              toggleConfirmation('power_down', linodeId, linodeLabel);
+              openPowerActionDialog('Power Off', linodeId, linodeLabel, []);
               closeMenu();
             },
             ...readOnlyProps
