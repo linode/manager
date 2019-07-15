@@ -13,6 +13,8 @@ import TableHeader from 'src/components/TableHeader';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import SSHKeyCreationDrawer from 'src/features/Profile/SSHKeys/SSHKeyCreationDrawer';
 
+export const MAX_SSH_KEYS_DISPLAY = 100;
+
 type ClassNames =
   | 'root'
   | 'cellCheckbox'
@@ -66,6 +68,18 @@ interface Props {
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
+
+export const getSSHKeyString = (keys: string[]) => {
+  /**
+   * Rather than display an insanely long list of keys,
+   * display the first 100 and if necessary "...and X more"
+   */
+  const count = keys.length;
+  return count > MAX_SSH_KEYS_DISPLAY
+    ? keys.slice(0, 100).join(', ') +
+        `...and ${count - MAX_SSH_KEYS_DISPLAY} more`
+    : keys.join(', ');
+};
 
 const UserSSHKeyPanel: React.FunctionComponent<CombinedProps> = props => {
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
@@ -130,7 +144,7 @@ const UserSSHKeyPanel: React.FunctionComponent<CombinedProps> = props => {
                       {username}
                     </div>
                   </TableCell>
-                  <TableCell>{keys.join(', ')}</TableCell>
+                  <TableCell>{getSSHKeyString(keys)}</TableCell>
                 </TableRow>
               )
             )
