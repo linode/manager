@@ -7,18 +7,16 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ## [v0.64.0] - 2019-07-15
 
 ### Added:
-- Feature: Clone configs/disks from Linode detail /advanced tab
+- Feature: Clone configs/disks from Linode detail page
 
 ### Changed:
-- Re-add links in rows for Linodes, domains and NodeBalancers
+- Improve markup for click behaviors for entity titles in clickable rows
 - Remove allocation of private IP on Linode create
-- Filter Private IPs in NodeBalancer Config Node by Region
-- Update NB Config Node schema
+- Filter private IPs in NodeBalancer config node by region
+- Update NB config node schema
 
 ### Fixed:
 - Domain record validation 
-- Domains row click functions
-- tabIndex set incorrectly
 - Important notice icon placement
 - Fix spelling mistake in LinodeConfigDrawer
 - Safe access backups.snapshot
