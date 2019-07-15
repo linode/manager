@@ -338,7 +338,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     finished: e => `Password has been reset on Linode ${e.entity!.label}.`
   },
   profile_update: {
-    notification: e => `${e.username}'s profile has been updated.`
+    notification: e => `Your profile has been updated.`
   },
   // payment_submitted: {
   //   scheduled: e => ``,
