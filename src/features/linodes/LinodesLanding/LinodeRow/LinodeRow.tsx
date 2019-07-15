@@ -130,11 +130,11 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
           parentColumn="Status"
           className={classNames({
             [classes.statusCell]: true,
-            [classes.statusCellMaintenance]: !maintenanceStartTime
+            [classes.statusCellMaintenance]: maintenanceStartTime
           })}
           data-qa-status
         >
-          {maintenanceStartTime ? (
+          {!maintenanceStartTime ? (
             loading ? (
               'Busy'
             ) : (
@@ -164,13 +164,6 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
             <IPAddress ips={ipv4} copyRight showCopyOnHover />
           </div>
         </TableCell>
-        {props.someLinodesHaveMaintenance && (
-          <TableCell
-            parentColumn="Maintenance Status"
-            className={classes.regionCell}
-            data-qa-maintenance-status
-          />
-        )}
         <TableCell
           parentColumn="Region"
           className={classes.regionCell}
