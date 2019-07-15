@@ -1,6 +1,6 @@
 const { navigateToStory } = require('../../../e2e/utils/storybook');
 
-describe('Drawer Suite', () => {
+describe('Drawer Suite - ', () => {
     const component = 'Drawer';
     const childStories = [
         'Example',
@@ -13,48 +13,59 @@ describe('Drawer Suite', () => {
     });
 
     it('should display the drawer on click', () => {
-        $(toggleDrawer).waitForDisplayed();
+        expect($(toggleDrawer).waitForDisplayed())
+        .withContext('Drawer toggle link should be displayed').toBe(true);
         $(toggleDrawer).click();
-        $(drawerElem).waitForDisplayed();
+        expect($(drawerElem).waitForDisplayed())
+        .withContext(`Drawer should be expanded and displayed`).toBe(true);
     });
 
     it('should display a title', () => {
         const title = $('[data-qa-drawer-title]');
 
-        expect(title.isDisplayed()).toBe(true);
-        expect(title.getText()).toBe('My Drawer');
+        expect(title.isDisplayed())
+        .withContext(`Drawer title should be displayed`).toBe(true);
+        expect(title.getText())
+        .withContext(`Drawer title is not correct`).toBe('My Drawer');
     });
 
-    it('should display an text field', () => {
+    it('should display a text field', () => {
        const textField = $('[data-qa-text-field]');
        
-       expect(textField.isDisplayed()).toBe(true); 
+       expect(textField.isDisplayed())
+       .withContext(`Text field should be displayed`).toBe(true); 
     });
 
     it('should display save and cancel buttons', () => {
         const cancelButton = $('[data-qa-cancel]');
         const saveButton = $('[data-qa-save]');
 
-        expect(cancelButton.isDisplayed()).toBe(true);
-        expect(cancelButton.getAttribute('class')).toContain('Secondary');
-        expect(saveButton.isDisplayed()).toBe(true);
-        expect(saveButton.getAttribute('class')).toContain('Primary');
+        expect(cancelButton.isDisplayed())
+        .withContext(`Cancel button should be displayed`).toBe(true);
+        expect(cancelButton.getAttribute('class'))
+        .withContext(`Incorrect Cancel button class`).toContain('Secondary');
+        expect(saveButton.isDisplayed())
+        .withContext(`Save button should be displayed`).toBe(true);
+        expect(saveButton.getAttribute('class'))
+        .withContext(`Incorrect Save button class`).toContain('Primary');
     });
 
     it('should dismiss drawer on close', () => {
         const close = $('[data-qa-close-drawer]');
         
-        expect(close.isDisplayed()).toBe(true);
-        
+        expect(close.isDisplayed())
+        .withContext(`Close icon should be displayed`).toBe(true);
         close.click();
-        $(drawerElem, 10000, true).waitForDisplayed();
+        expect($(drawerElem).waitForDisplayed(10000, true))
+        .withContext(`Drawer should not be displayed when selecting 'close' icon`);
     });
 
     it('should dismiss on esc', () => {
-        $(toggleDrawer).click(toggleDrawer);
+        $(toggleDrawer).click();
         $(drawerElem).waitForDisplayed(drawerElem);
         $('[data-qa-text-field]').click();
-        $('[data-qa-text-field] input', '\uE00C').setValue();
-        $(drawerElem, 10000, true).waitForDisplayed();
+        browser.keys('\uE00C');
+        expect($(drawerElem).waitForDisplayed(10000, true))
+        .withContext(`Drawer should not be displayed when using escape key`).toBe(true);
     });
 });
