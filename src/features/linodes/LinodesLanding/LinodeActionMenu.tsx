@@ -249,7 +249,7 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
       }
 
       if (!linodeBackups.enabled) {
-        actions.splice(-2, 1, {
+        actions.splice(4, 1, {
           title: 'Enable Backups',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendLinodeActionMenuItemEvent('Enable Backups');
