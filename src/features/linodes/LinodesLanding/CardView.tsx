@@ -2,24 +2,22 @@ import * as React from 'react';
 import Grid from 'src/components/Grid';
 import { PaginationProps } from 'src/components/Paginate';
 import withImages from 'src/containers/withImages.container';
-import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import LinodeCard from './LinodeCard';
 
+import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 
 interface Props {
   data: LinodeWithMaintenance[];
   images: Linode.Image[];
   showHead?: boolean;
-  openConfigDrawer: (
-    c: Linode.Config[],
-    action: LinodeConfigSelectionDrawerCallback
-  ) => void;
-  toggleConfirmation: (
-    bootOption: Linode.BootAction,
-    linodeId: number,
-    linodeLabel: string
+  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openPowerActionDialog: (
+    bootAction: Action,
+    linodeID: number,
+    linodeLabel: string,
+    linodeConfigs: Linode.Config[]
   ) => void;
   someLinodesHaveMaintenance: boolean;
 }
@@ -27,7 +25,7 @@ interface Props {
 type CombinedProps = WithImagesProps & PaginationProps & Props;
 
 const CardView: React.StatelessComponent<CombinedProps> = props => {
-  const { data, imagesData, openConfigDrawer, toggleConfirmation } = props;
+  const { data, imagesData, openDeleteDialog, openPowerActionDialog } = props;
 
   return (
     <Grid container>
@@ -53,8 +51,8 @@ const CardView: React.StatelessComponent<CombinedProps> = props => {
           type={linode.type}
           image={linode.image}
           imageLabel={safeGetImageLabel(imagesData, linode.image)}
-          openConfigDrawer={openConfigDrawer}
-          toggleConfirmation={toggleConfirmation}
+          openDeleteDialog={openDeleteDialog}
+          openPowerActionDialog={openPowerActionDialog}
         />
       ))}
     </Grid>

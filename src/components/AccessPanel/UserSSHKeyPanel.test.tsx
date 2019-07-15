@@ -50,10 +50,9 @@ describe('UserSSHKeyPanel', () => {
     });
 
     it('should include a button to add a new key', () => {
-      const { debug, queryByText } = renderWithTheme(
+      const { queryByText } = renderWithTheme(
         <UserSSHKeyPanel {...props} users={[]} />
       );
-      debug();
       expect(queryByText(/Add/i)).toBeInTheDocument();
     });
   });
