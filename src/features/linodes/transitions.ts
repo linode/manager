@@ -28,10 +28,13 @@ export const linodeInTransition = (
   status: string,
   recentEvent?: Linode.Event
 ): boolean => {
+  if (!recentEvent) {
+    return false;
+  }
+
   return (
     transitionStatus.includes(status) ||
-    ((recentEvent || false) &&
-      transitionAction.includes(recentEvent.action || '') &&
+    (transitionAction.includes(recentEvent.action || '') &&
       recentEvent.percent_complete !== null &&
       recentEvent.percent_complete < 100)
   );
