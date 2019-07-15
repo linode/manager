@@ -337,6 +337,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     failed: e => `Password reset failed for Linode ${e.entity!.label}.`,
     finished: e => `Password has been reset on Linode ${e.entity!.label}.`
   },
+  profile_update: {
+    notification: e => `${e.username}'s profile has been updated.`
+  },
   // payment_submitted: {
   //   scheduled: e => ``,
   //   started: e => ``,
