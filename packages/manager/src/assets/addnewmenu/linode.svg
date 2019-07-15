@@ -1,0 +1,40 @@
+
+<svg width="50" height="50" viewBox="0 0 50 50" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <desc>Linodes</desc>
+    <defs>
+        <circle id="path-1" cx="24" cy="24" r="24"></circle>
+    </defs>
+    <g id="ui-kit---1440" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="sticker-sheet" transform="translate(-267.000000, -93.000000)">
+            <g id="create:dropdown" transform="translate(251.000000, 73.000000)">
+                <g id="linode-:-hover">
+                    <g id="icon" transform="translate(16.000000, 20.000000)">
+                        <g id="Oval-2">
+                            <use fill="#F4F4F4" fill-rule="evenodd" xlink:href="#path-1" class="circle"></use>
+                            <circle stroke="#F4F4F4" stroke-width="2" cx="24" cy="24" r="23" class="outerCircle"></circle>
+                        </g>
+                        <g id="Group-11" transform="translate(12.000000, 12.000000)" class="insidePath">
+                            <polygon id="Stroke-3208" stroke="#939598" stroke-linecap="round" stroke-linejoin="round" points="23.5 11.5 0.5 11.5 0.5 5.5 23.5 5.5"></polygon>
+                            <polyline id="Stroke-3209" stroke="#939598" stroke-linecap="round" stroke-linejoin="round" points="0.5 5.5 6.5 0.5 17.5 0.5 23.5 5.5"></polyline>
+                            <path d="M14,9 C13.724,9 13.5,8.775 13.5,8.5 C13.5,8.223 13.724,8 14,8 C14.276,8 14.5,8.223 14.5,8.5 C14.5,8.775 14.276,9 14,9 Z" id="Stroke-3210" stroke="#939598" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M17,9 C16.724,9 16.5,8.775 16.5,8.5 C16.5,8.223 16.724,8 17,8 C17.276,8 17.5,8.223 17.5,8.5 C17.5,8.775 17.276,9 17,9 Z" id="Stroke-3211" stroke="#939598" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M20,9 C19.725,9 19.5,8.775 19.5,8.5 C19.5,8.223 19.725,8 20,8 C20.276,8 20.5,8.223 20.5,8.5 C20.5,8.775 20.276,9 20,9 Z" id="Stroke-3212" stroke="#939598" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M3.5,9.5 C2.947,9.5 2.5,9.053 2.5,8.5 C2.5,7.947 2.947,7.5 3.5,7.5 C4.052,7.5 4.5,7.947 4.5,8.5 C4.5,9.053 4.052,9.5 3.5,9.5 Z" id="Stroke-3213" stroke="#939598" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M23.5,11.5 L23.5,15.5 C23.5,16.604 22.605,17.5 21.5,17.5 L2.5,17.5 C1.396,17.5 0.5,16.604 0.5,15.5 L0.5,11.5" id="Stroke-3214" stroke="#939598" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M14,15 C13.724,15 13.5,14.775 13.5,14.5 C13.5,14.223 13.724,14 14,14 C14.276,14 14.5,14.223 14.5,14.5 C14.5,14.775 14.276,15 14,15 Z" id="Stroke-3215" stroke="#939598" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M17,15 C16.724,15 16.5,14.775 16.5,14.5 C16.5,14.223 16.724,14 17,14 C17.276,14 17.5,14.223 17.5,14.5 C17.5,14.775 17.276,15 17,15 Z" id="Stroke-3216" stroke="#939598" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M20,15 C19.725,15 19.5,14.775 19.5,14.5 C19.5,14.223 19.725,14 20,14 C20.276,14 20.5,14.223 20.5,14.5 C20.5,14.775 20.276,15 20,15 Z" id="Stroke-3217" stroke="#939598" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M3.5,15.5 C2.947,15.5 2.5,15.053 2.5,14.5 C2.5,13.947 2.947,13.5 3.5,13.5 C4.052,13.5 4.5,13.947 4.5,14.5 C4.5,15.053 4.052,15.5 3.5,15.5 Z" id="Stroke-3218" stroke="#939598" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M5.5,23.5 L18.5,23.5" id="Stroke-3219" stroke="#939598" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M12.5,17.5 L12.5,23.5" id="Stroke-3220" stroke="#939598" stroke-linecap="round" stroke-linejoin="round"></path>
+                            <path d="M1,23.5 C1,23.775 1.224,24 1.5,24 C1.776,24 2,23.775 2,23.5 C2,23.223 1.776,23 1.5,23 C1.224,23 1,23.223 1,23.5 Z" id="Fill-3221" fill="#939598"></path>
+                            <path d="M3,23.5 C3,23.775 3.224,24 3.5,24 C3.776,24 4,23.775 4,23.5 C4,23.223 3.776,23 3.5,23 C3.224,23 3,23.223 3,23.5 Z" id="Fill-3222" fill="#939598"></path>
+                            <path d="M20,23.5 C20,23.775 20.225,24 20.5,24 C20.776,24 21,23.775 21,23.5 C21,23.223 20.776,23 20.5,23 C20.225,23 20,23.223 20,23.5 Z" id="Fill-3223" fill="#939598"></path>
+                            <path d="M22,23.5 C22,23.775 22.225,24 22.5,24 C22.776,24 23,23.775 23,23.5 C23,23.223 22.776,23 22.5,23 C22.225,23 22,23.223 22,23.5 Z" id="Fill-3224" fill="#939598"></path>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>

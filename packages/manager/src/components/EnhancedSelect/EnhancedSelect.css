@@ -1,0 +1,35 @@
+.enhancedSelect-menu-item {
+  height: 24px;
+  box-sizing: 'content-box';
+  overflow: 'hidden';
+  text-overflow: 'ellipsis';
+  font-size: .9rem;
+  box-sizing: content-box;
+  transition: background-color 150ms cubic-bezier(0.4, 0, 0.2, 1), color .2s cubic-bezier(0.4, 0, 0.2, 1);
+  font-weight: 400;
+  font-family: "LatoWeb", sans-serif;
+  line-height: 1.2em;
+  white-space: initial;
+  padding: 12px;
+  text-overflow: initial;
+  width: auto;
+  display: flex;
+  position: relative;
+  text-align: left;
+  align-items: center;
+  justify-content: flex-start;
+  text-decoration: none;
+}
+
+.enhancedSelect-menu-item-highlighted {
+  background-color:#3683DC;
+  color: white;
+}
+
+.enhancedSelect-menu-item-selected {
+  color: #3683DC !important;
+}
+
+.enhancedSelect-menu-item-selected.enhancedSelect-menu-item-highlighted {
+  background-color: #f4f4f4 !important;
+}
