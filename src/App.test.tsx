@@ -29,13 +29,6 @@ it('renders without crashing', () => {
               search: '',
               state: {}
             }}
-            classes={{
-              appFrame: '',
-              content: '',
-              wrapper: '',
-              grid: '',
-              switchWrapper: ''
-            }}
             userId={123456}
             profileLoading={false}
             requestAccount={jest.fn()}

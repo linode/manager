@@ -4,7 +4,8 @@ import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { Redirect, Route, RouteProps, Switch } from 'react-router-dom';
-import { Action, compose } from 'redux';
+import { compose } from 'recompose';
+import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { Subscription } from 'rxjs/Subscription';
 import {
@@ -24,7 +25,7 @@ import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
 /** @todo: Uncomment when we deploy with LD */
 // import VATBanner from 'src/components/VATBanner';
-// import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
+import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
@@ -205,7 +206,6 @@ type CombinedProps = Props &
   WithNodeBalancerActions &
   DispatchProps &
   StateProps &
-  WithStyles<ClassNames> &
   WithSnackbarProps;
 
 export class App extends React.Component<CombinedProps, State> {
@@ -333,7 +333,6 @@ export class App extends React.Component<CombinedProps, State> {
   render() {
     const { menuOpen, hasError } = this.state;
     const {
-      classes,
       toggleSpacing,
       toggleTheme,
       linodesError,
@@ -349,7 +348,8 @@ export class App extends React.Component<CombinedProps, State> {
       bucketsError,
       accountCapabilities,
       accountLoading,
-      accountError
+      accountError,
+      username
     } = this.props;
 
     if (hasError) {
@@ -378,8 +378,6 @@ export class App extends React.Component<CombinedProps, State> {
       return null;
     }
 
-    const isKubernetesEnabled = _isKubernetesEnabled(accountCapabilities);
-
     return (
       <React.Fragment>
         <a href="#main-content" className="visually-hidden">
@@ -388,113 +386,150 @@ export class App extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment="Linode Manager" />
 
         {profileLoading === false && (
-          <React.Fragment>
-            <>
-              <div className={classes.appFrame}>
-                <SideMenu
-                  open={menuOpen}
-                  closeMenu={this.closeMenu}
-                  toggleTheme={toggleTheme}
-                  toggleSpacing={toggleSpacing}
-                />
-                <main className={classes.content}>
-                  <TopMenu
-                    openSideMenu={this.openMenu}
-                    isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
-                    username={this.props.username}
-                  />
-                  {/* @todo: Uncomment when we deploy with LD */}
-                  {/* <VATBanner /> */}
-                  <div className={classes.wrapper} id="main-content">
-                    <Grid container spacing={0} className={classes.grid}>
-                      <Grid item className={classes.switchWrapper}>
-                        <Switch>
-                          <Route path="/linodes" component={LinodesRoutes} />
-                          <Route
-                            path="/volumes"
-                            component={Volumes}
-                            exact
-                            strict
-                          />
-                          <Redirect path="/volumes*" to="/volumes" />
-                          <Route
-                            path="/nodebalancers"
-                            component={NodeBalancers}
-                          />
-                          <Route path="/domains" component={Domains} />
-                          <Route exact path="/managed" component={Managed} />
-                          <Route exact path="/longview" component={Longview} />
-                          <Route
-                            exact
-                            strict
-                            path="/images"
-                            component={Images}
-                          />
-                          <Redirect path="/images*" to="/images" />
-                          <Route
-                            path="/stackscripts"
-                            component={StackScripts}
-                          />
-                          {getObjectStorageRoute(
-                            accountLoading,
-                            accountCapabilities,
-                            accountError
-                          )}
-                          {isKubernetesEnabled && (
-                            <Route path="/kubernetes" component={Kubernetes} />
-                          )}
-                          <Route path="/account" component={Account} />
-                          <Route
-                            exact
-                            strict
-                            path="/support/tickets"
-                            component={SupportTickets}
-                          />
-                          <Route
-                            path="/support/tickets/:ticketId"
-                            component={SupportTicketDetail}
-                            exact
-                            strict
-                          />
-                          <Route path="/profile" component={Profile} />
-                          <Route exact path="/support" component={Help} />
-                          <Route
-                            exact
-                            strict
-                            path="/support/search/"
-                            component={SupportSearchLanding}
-                          />
-                          <Route path="/dashboard" component={Dashboard} />
-                          <Route path="/search" component={SearchLanding} />
-                          <Route path="/events" component={EventsLanding} />
-                          <Redirect exact from="/" to="/dashboard" />
-                          <Route component={NotFound} />
-                        </Switch>
-                      </Grid>
-                    </Grid>
-                  </div>
-                </main>
-                <Footer />
-                <WelcomeBanner
-                  open={this.state.welcomeBanner}
-                  onClose={this.closeWelcomeBanner}
-                  data-qa-beta-notice
-                />
-                <ToastNotifications />
-                <DomainDrawer />
-                <VolumeDrawer />
-                <BackupDrawer />
-                {isObjectStorageEnabled(accountCapabilities) && (
-                  <BucketDrawer />
-                )}
-              </div>
-            </>
-          </React.Fragment>
+          <Main
+            menuOpen={menuOpen}
+            openMenu={this.openMenu}
+            closeMenu={this.closeMenu}
+            isLoggedInAsCustomer={false}
+            isKubernetesEnabled={_isKubernetesEnabled(accountCapabilities)}
+            isObjectStorageEnabled={isObjectStorageEnabled(accountCapabilities)}
+            objRoute={getObjectStorageRoute(
+              accountLoading,
+              accountCapabilities,
+              accountError
+            )}
+            toggleSpacing={toggleSpacing}
+            toggleTheme={toggleTheme}
+            welcomeBanner={this.state.welcomeBanner}
+            closeWelcomeBanner={this.closeWelcomeBanner}
+            username={username}
+          />
         )}
       </React.Fragment>
     );
   }
 }
+
+interface MainProps {
+  menuOpen: boolean;
+  isLoggedInAsCustomer: boolean;
+  objRoute: JSX.Element | null;
+  isKubernetesEnabled: boolean;
+  isObjectStorageEnabled: boolean;
+  username: string;
+  welcomeBanner: any;
+  closeWelcomeBanner: () => void;
+  openMenu: () => void;
+  closeMenu: () => void;
+  toggleSpacing: () => void;
+  toggleTheme: () => void;
+}
+
+const _Main: React.FC<CombinedMainProps> = props => {
+  const {
+    classes,
+    menuOpen,
+    openMenu,
+    closeMenu,
+    isKubernetesEnabled,
+    isLoggedInAsCustomer,
+    objRoute,
+    toggleSpacing,
+    toggleTheme,
+    username,
+    welcomeBanner,
+    closeWelcomeBanner
+  } = props;
+
+  return (
+    <>
+      <div className={classes.appFrame}>
+        <SideMenu
+          open={menuOpen}
+          closeMenu={closeMenu}
+          toggleTheme={toggleTheme}
+          toggleSpacing={toggleSpacing}
+        />
+        <main className={classes.content}>
+          <TopMenu
+            openSideMenu={openMenu}
+            isLoggedInAsCustomer={isLoggedInAsCustomer}
+            username={username}
+          />
+          {/* @todo: Uncomment when we deploy with LD */}
+          {/* <VATBanner /> */}
+          <div className={classes.wrapper} id="main-content">
+            <Grid container spacing={0} className={classes.grid}>
+              <Grid item className={classes.switchWrapper}>
+                <Switch>
+                  <Route path="/linodes" component={LinodesRoutes} />
+                  <Route path="/volumes" component={Volumes} exact strict />
+                  <Redirect path="/volumes*" to="/volumes" />
+                  <Route path="/nodebalancers" component={NodeBalancers} />
+                  <Route path="/domains" component={Domains} />
+                  <Route exact path="/managed" component={Managed} />
+                  <Route exact path="/longview" component={Longview} />
+                  <Route exact strict path="/images" component={Images} />
+                  <Redirect path="/images*" to="/images" />
+                  <Route path="/stackscripts" component={StackScripts} />
+                  {objRoute}
+                  {isKubernetesEnabled && (
+                    <Route path="/kubernetes" component={Kubernetes} />
+                  )}
+                  <Route path="/account" component={Account} />
+                  <Route
+                    exact
+                    strict
+                    path="/support/tickets"
+                    component={SupportTickets}
+                  />
+                  <Route
+                    path="/support/tickets/:ticketId"
+                    component={SupportTicketDetail}
+                    exact
+                    strict
+                  />
+                  <Route path="/profile" component={Profile} />
+                  <Route exact path="/support" component={Help} />
+                  <Route
+                    exact
+                    strict
+                    path="/support/search/"
+                    component={SupportSearchLanding}
+                  />
+                  <Route path="/dashboard" component={Dashboard} />
+                  <Route path="/search" component={SearchLanding} />
+                  <Route path="/events" component={EventsLanding} />
+                  <Redirect exact from="/" to="/dashboard" />
+                  <Route component={NotFound} />
+                </Switch>
+              </Grid>
+            </Grid>
+          </div>
+        </main>
+        <Footer />
+        <WelcomeBanner
+          open={welcomeBanner}
+          onClose={closeWelcomeBanner}
+          data-qa-beta-notice
+        />
+        <ToastNotifications />
+        <DomainDrawer />
+        <VolumeDrawer />
+        <BackupDrawer />
+        {isObjectStorageEnabled && <BucketDrawer />}
+      </div>
+    </>
+  );
+};
+
+export const styled = withStyles(styles);
+
+type CombinedMainProps = MainProps & WithStyles<ClassNames>;
+const Main = compose<CombinedMainProps, MainProps>(
+  styled,
+  withFeatureFlagProvider({})
+)(_Main);
 
 // Render the correct <Route /> component for Object Storage,
 // depending on whether /account is loading or has errors, and
@@ -630,16 +665,11 @@ export const connected = connect(
   mapDispatchToProps
 );
 
-export const styled = withStyles(styles);
-
-export default compose(
+export default compose<CombinedProps, Props>(
   connected,
-  styled,
   withDocumentTitleProvider,
   withSnackbar,
   withNodeBalancerActions
-  /** @todo: Uncomment when we deploy with LD */
-  // withFeatureFlagProvider
 )(App);
 
 export const hasOauthError = (
