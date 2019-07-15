@@ -112,6 +112,10 @@ const UserSSHKeyPanel: React.FunctionComponent<CombinedProps> = props => {
     </Typography>
   );
 
+  const usersWithKeys = users
+    ? users.filter(thisUser => thisUser.keys.length > 0)
+    : [];
+
   return (
     <React.Fragment>
       <TableHeader title="SSH Keys" />
@@ -129,8 +133,8 @@ const UserSSHKeyPanel: React.FunctionComponent<CombinedProps> = props => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {users && users.length > 0 ? (
-            users.map(
+          {usersWithKeys.length > 0 ? (
+            usersWithKeys.map(
               ({ gravatarUrl, keys, onSSHKeyChange, selected, username }) => (
                 <TableRow
                   key={username}
