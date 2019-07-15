@@ -24,13 +24,7 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface Props {
-  someLinodesHaveMaintenance: boolean;
-}
-
-type combinedProps = Omit<OrderByProps, 'data'> &
-  WithStyles<ClassNames> &
-  Props;
+type combinedProps = Omit<OrderByProps, 'data'> & WithStyles<ClassNames>;
 
 const SortableTableHead: React.StatelessComponent<combinedProps> = props => {
   const { order, orderBy, handleOrderChange, classes } = props;
@@ -77,16 +71,6 @@ const SortableTableHead: React.StatelessComponent<combinedProps> = props => {
         >
           IP Address
         </TableSortCell>
-        {props.someLinodesHaveMaintenance && (
-          <TableSortCell
-            label="maintenance:when"
-            active={isActive('maintenance:when')}
-            handleClick={handleOrderChange}
-            direction={order}
-          >
-            Maintenance Status
-          </TableSortCell>
-        )}
         <TableSortCell
           label="region"
           direction={order}

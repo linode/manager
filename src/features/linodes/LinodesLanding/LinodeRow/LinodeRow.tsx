@@ -129,7 +129,11 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
           className={classes.statusCell}
           data-qa-status
         >
-          {loading ? 'Busy' : status}
+          {!maintenanceStartTime
+            ? loading
+              ? 'Busy'
+              : status
+            : parseMaintenanceStartTime(maintenanceStartTime)}
         </TableCell>
         <LinodeRowBackupCell
           linodeId={id}
