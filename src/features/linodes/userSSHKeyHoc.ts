@@ -3,7 +3,6 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
 import { getUsers } from 'src/services/account';
-import { getSSHKeys } from 'src/services/profile';
 import { MapState } from 'src/store/types';
 import { getEmailHash } from 'src/utilities/gravatar';
 
@@ -42,31 +41,6 @@ export default (Component: React.ComponentType<any>) => {
         return;
       }
 
-      /** Before this request, was this user selected? */
-      const isActiveUserSelected = this.isUserSelected(username, oldKeys);
-
-      getSSHKeys()
-        .then(response => {
-          const keys = response.data;
-          if (!this.mounted || !keys || keys.length === 0) {
-            return;
-          }
-
-          this.setState({
-            userSSHKeys: [
-              this.createUserObject(
-                username,
-                userEmailAddress,
-                keys.map(k => k.label),
-                isActiveUserSelected
-              )
-            ]
-          });
-        })
-        .catch(() => {
-          /* We don't need to do anything here, we just don't add the keys. */
-        });
-
       getUsers()
         .then(response => {
           const users = response.data;
@@ -76,19 +50,9 @@ export default (Component: React.ComponentType<any>) => {
 
           this.setState({
             userSSHKeys: [
-              ...this.state.userSSHKeys,
               ...users.reduce((cleanedUsers, user) => {
                 const keys = user.ssh_keys;
                 const isSelected = this.isUserSelected(user.username, oldKeys);
-
-                if (
-                  !keys ||
-                  keys.length === 0 ||
-                  /** We don't want the current user added again. */
-                  user.username === this.props.username
-                ) {
-                  return cleanedUsers;
-                }
 
                 return [
                   ...cleanedUsers,
