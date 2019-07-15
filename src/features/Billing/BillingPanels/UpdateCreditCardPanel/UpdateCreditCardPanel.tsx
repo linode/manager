@@ -124,7 +124,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
           credit_card: {
             last_four: takeLast(4, card_number),
             expiry: `${String(expiry_month).padStart(2, '0')}/${expiry_year}`,
-            cvv: { cvv }
+            cvv
           }
         }));
         this.setState({
@@ -169,24 +169,6 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
           });
         }}
         format="#### #### #### #######"
-      />
-    );
-  };
-
-  cvvField = (props: any) => {
-    const { inputRef, onChange, ...other } = props;
-
-    return (
-      <NumberFormat
-        {...other}
-        getInputRef={inputRef}
-        onValueChange={values => {
-          onChange({
-            target: {
-              value: values.value
-            }
-          });
-        }}
       />
     );
   };
@@ -301,11 +283,9 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
                     value={this.state.cvv}
                     onChange={this.handleCVVChange}
                     errorText={hasErrorFor('cvv')}
+                    placeholder="000"
                     inputProps={{
                       maxLength: 4
-                    }}
-                    InputProps={{
-                      inputComponent: this.cvvField
                     }}
                     className={classes.cardCVV}
                   />
@@ -357,6 +337,7 @@ const accountContext = withAccount(({ loading, errors, data, update }) => {
       accountErrors: errors,
       expiry: data.credit_card.expiry,
       last_four: data.credit_card.last_four,
+      cvv: data.credit_card.cvv,
       updateAccount: update
     };
   }
