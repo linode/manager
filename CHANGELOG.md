@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.64.0] - 2019-07-15
+
+### Added:
+- Feature: Clone configs/disks from Linode detail page
+
+### Changed:
+- Improve markup for click behaviors for entity titles in clickable rows
+- Remove allocation of private IP on Linode create
+- Filter private IPs in NodeBalancer config node by region
+- Update NB config node schema
+
+### Fixed:
+- Domain record validation 
+- Important notice icon placement
+- Fix spelling mistake in LinodeConfigDrawer
+- Safe access backups.snapshot
+
 ## [v0.63.1] - 2019-07-08
 
 ### Changed:
