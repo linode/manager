@@ -3,37 +3,21 @@ import { shim } from 'promise.prototype.finally';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { Redirect, Route, RouteProps, Switch } from 'react-router-dom';
+import { Route, RouteProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { Subscription } from 'rxjs/Subscription';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
 import DefaultLoader from 'src/components/DefaultLoader';
 import {
   DocumentTitleSegment,
   withDocumentTitleProvider
 } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
 import LandingLoading from 'src/components/LandingLoading';
-import NotFound from 'src/components/NotFound';
-import SideMenu from 'src/components/SideMenu';
 /** @todo: Uncomment when we deploy with LD */
 // import VATBanner from 'src/components/VATBanner';
-import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { events$ } from 'src/events';
-import BackupDrawer from 'src/features/Backups';
-import DomainDrawer from 'src/features/Domains/DomainDrawer';
-import Footer from 'src/features/Footer';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
-import ToastNotifications from 'src/features/ToastNotifications';
-import TopMenu from 'src/features/TopMenu';
-import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import { perfume } from 'src/perfMetrics';
 import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
@@ -49,8 +33,6 @@ import { requestRegions } from 'src/store/regions/regions.actions';
 import { getAllVolumes } from 'src/store/volume/volume.requests';
 import composeState from 'src/utilities/composeState';
 import { notifications } from 'src/utilities/storage';
-import WelcomeBanner from 'src/WelcomeBanner';
-import BucketDrawer from './features/ObjectStorage/Buckets/BucketDrawer';
 import { requestClusters } from './store/clusters/clusters.actions';
 import {
   withNodeBalancerActions,
@@ -66,129 +48,13 @@ import ErrorState from 'src/components/ErrorState';
 import { addNotificationsToLinodes } from 'src/store/linodes/linodes.actions';
 import { formatDate } from 'src/utilities/formatDate';
 
+import Main from './Main';
+
 shim(); // allows for .finally() usage
-
-const Account = DefaultLoader({
-  loader: () => import('src/features/Account')
-});
-
-const LinodesRoutes = DefaultLoader({
-  loader: () => import('src/features/linodes')
-});
-
-const Volumes = DefaultLoader({
-  loader: () => import('src/features/Volumes')
-});
-
-const Domains = DefaultLoader({
-  loader: () => import('src/features/Domains')
-});
-
-const Images = DefaultLoader({
-  loader: () => import('src/features/Images')
-});
-
-const Kubernetes = DefaultLoader({
-  loader: () => import('src/features/Kubernetes')
-});
 
 const ObjectStorage = DefaultLoader({
   loader: () => import('src/features/ObjectStorage')
 });
-
-const Profile = DefaultLoader({
-  loader: () => import('src/features/Profile')
-});
-
-const NodeBalancers = DefaultLoader({
-  loader: () => import('src/features/NodeBalancers')
-});
-
-const StackScripts = DefaultLoader({
-  loader: () => import('src/features/StackScripts')
-});
-
-const SupportTickets = DefaultLoader({
-  loader: () => import('src/features/Support/SupportTickets')
-});
-
-const SupportTicketDetail = DefaultLoader({
-  loader: () => import('src/features/Support/SupportTicketDetail')
-});
-
-const Longview = DefaultLoader({
-  loader: () => import('src/features/Longview')
-});
-
-const Managed = DefaultLoader({
-  loader: () => import('src/features/Managed')
-});
-
-const Dashboard = DefaultLoader({
-  loader: () => import('src/features/Dashboard')
-});
-
-const Help = DefaultLoader({
-  loader: () => import('src/features/Help')
-});
-
-const SupportSearchLanding = DefaultLoader({
-  loader: () => import('src/features/Help/SupportSearchLanding')
-});
-
-const SearchLanding = DefaultLoader({
-  loader: () => import('src/features/Search')
-});
-
-const EventsLanding = DefaultLoader({
-  loader: () => import('src/features/Events/EventsLanding')
-});
-
-type ClassNames = 'appFrame' | 'content' | 'wrapper' | 'grid' | 'switchWrapper';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    appFrame: {
-      position: 'relative',
-      display: 'flex',
-      minHeight: '100vh',
-      flexDirection: 'column',
-      backgroundColor: theme.bg.main
-    },
-    content: {
-      flex: 1,
-      [theme.breakpoints.up('md')]: {
-        marginLeft: theme.spacing(14) + 103 // 215
-      },
-      [theme.breakpoints.up('xl')]: {
-        marginLeft: theme.spacing(22) + 99 // 275
-      }
-    },
-    wrapper: {
-      padding: theme.spacing(3),
-      transition: theme.transitions.create('opacity'),
-      [theme.breakpoints.down('sm')]: {
-        paddingTop: theme.spacing(2),
-        paddingLeft: theme.spacing(2),
-        paddingRight: theme.spacing(2)
-      }
-    },
-    grid: {
-      [theme.breakpoints.up('lg')]: {
-        height: '100%'
-      }
-    },
-    switchWrapper: {
-      flex: 1,
-      maxWidth: '100%',
-      position: 'relative',
-      '&.mlMain': {
-        [theme.breakpoints.up('lg')]: {
-          maxWidth: '78.8%'
-        }
-      }
-    }
-  });
 
 interface Props {
   toggleTheme: () => void;
@@ -409,127 +275,6 @@ export class App extends React.Component<CombinedProps, State> {
     );
   }
 }
-
-interface MainProps {
-  menuOpen: boolean;
-  isLoggedInAsCustomer: boolean;
-  objRoute: JSX.Element | null;
-  isKubernetesEnabled: boolean;
-  isObjectStorageEnabled: boolean;
-  username: string;
-  welcomeBanner: any;
-  closeWelcomeBanner: () => void;
-  openMenu: () => void;
-  closeMenu: () => void;
-  toggleSpacing: () => void;
-  toggleTheme: () => void;
-}
-
-const _Main: React.FC<CombinedMainProps> = props => {
-  const {
-    classes,
-    menuOpen,
-    openMenu,
-    closeMenu,
-    isKubernetesEnabled,
-    isLoggedInAsCustomer,
-    objRoute,
-    toggleSpacing,
-    toggleTheme,
-    username,
-    welcomeBanner,
-    closeWelcomeBanner
-  } = props;
-
-  return (
-    <>
-      <div className={classes.appFrame}>
-        <SideMenu
-          open={menuOpen}
-          closeMenu={closeMenu}
-          toggleTheme={toggleTheme}
-          toggleSpacing={toggleSpacing}
-        />
-        <main className={classes.content}>
-          <TopMenu
-            openSideMenu={openMenu}
-            isLoggedInAsCustomer={isLoggedInAsCustomer}
-            username={username}
-          />
-          {/* @todo: Uncomment when we deploy with LD */}
-          {/* <VATBanner /> */}
-          <div className={classes.wrapper} id="main-content">
-            <Grid container spacing={0} className={classes.grid}>
-              <Grid item className={classes.switchWrapper}>
-                <Switch>
-                  <Route path="/linodes" component={LinodesRoutes} />
-                  <Route path="/volumes" component={Volumes} exact strict />
-                  <Redirect path="/volumes*" to="/volumes" />
-                  <Route path="/nodebalancers" component={NodeBalancers} />
-                  <Route path="/domains" component={Domains} />
-                  <Route exact path="/managed" component={Managed} />
-                  <Route exact path="/longview" component={Longview} />
-                  <Route exact strict path="/images" component={Images} />
-                  <Redirect path="/images*" to="/images" />
-                  <Route path="/stackscripts" component={StackScripts} />
-                  {objRoute}
-                  {isKubernetesEnabled && (
-                    <Route path="/kubernetes" component={Kubernetes} />
-                  )}
-                  <Route path="/account" component={Account} />
-                  <Route
-                    exact
-                    strict
-                    path="/support/tickets"
-                    component={SupportTickets}
-                  />
-                  <Route
-                    path="/support/tickets/:ticketId"
-                    component={SupportTicketDetail}
-                    exact
-                    strict
-                  />
-                  <Route path="/profile" component={Profile} />
-                  <Route exact path="/support" component={Help} />
-                  <Route
-                    exact
-                    strict
-                    path="/support/search/"
-                    component={SupportSearchLanding}
-                  />
-                  <Route path="/dashboard" component={Dashboard} />
-                  <Route path="/search" component={SearchLanding} />
-                  <Route path="/events" component={EventsLanding} />
-                  <Redirect exact from="/" to="/dashboard" />
-                  <Route component={NotFound} />
-                </Switch>
-              </Grid>
-            </Grid>
-          </div>
-        </main>
-        <Footer />
-        <WelcomeBanner
-          open={welcomeBanner}
-          onClose={closeWelcomeBanner}
-          data-qa-beta-notice
-        />
-        <ToastNotifications />
-        <DomainDrawer />
-        <VolumeDrawer />
-        <BackupDrawer />
-        {isObjectStorageEnabled && <BucketDrawer />}
-      </div>
-    </>
-  );
-};
-
-export const styled = withStyles(styles);
-
-type CombinedMainProps = MainProps & WithStyles<ClassNames>;
-const Main = compose<CombinedMainProps, MainProps>(
-  styled,
-  withFeatureFlagProvider({})
-)(_Main);
 
 // Render the correct <Route /> component for Object Storage,
 // depending on whether /account is loading or has errors, and
