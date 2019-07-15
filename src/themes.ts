@@ -595,7 +595,7 @@ export const dark = (options: ThemeOverrides) =>
         },
         hover: {
           '& a': {
-            color: primaryColors.main
+            color: primaryColors.text
           }
         }
       },
