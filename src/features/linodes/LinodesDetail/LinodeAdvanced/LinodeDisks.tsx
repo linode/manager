@@ -428,6 +428,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         onPasswordChange={this.onPasswordChange}
         onResetImageMode={this.onResetImageMode}
         userSSHKeys={this.props.userSSHKeys}
+        requestKeys={this.props.requestKeys}
       />
     );
   };
