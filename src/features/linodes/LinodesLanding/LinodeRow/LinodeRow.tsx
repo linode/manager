@@ -1,7 +1,9 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Flag from 'src/assets/icons/flag.svg';
 import Tooltip from 'src/components/core/Tooltip';
+import HelpIcon from 'src/components/HelpIcon';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { linodeInTransition } from 'src/features/linodes/transitions';
@@ -126,14 +128,27 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
         {!loading && headCell}
         <TableCell
           parentColumn="Status"
-          className={classes.statusCell}
+          className={classNames({
+            [classes.statusCell]: true,
+            [classes.statusCellMaintenance]: !maintenanceStartTime
+          })}
           data-qa-status
         >
-          {!maintenanceStartTime
-            ? loading
-              ? 'Busy'
-              : status
-            : parseMaintenanceStartTime(maintenanceStartTime)}
+          {maintenanceStartTime ? (
+            loading ? (
+              'Busy'
+            ) : (
+              status
+            )
+          ) : (
+            <>
+              Maintenance Scheduled
+              <HelpIcon
+                text={parseMaintenanceStartTime(maintenanceStartTime)}
+                className={classes.statusHelpIcon}
+              />
+            </>
+          )}
         </TableCell>
         <LinodeRowBackupCell
           linodeId={id}
@@ -154,9 +169,7 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
             parentColumn="Maintenance Status"
             className={classes.regionCell}
             data-qa-maintenance-status
-          >
-            {parseMaintenanceStartTime(maintenanceStartTime)}
-          </TableCell>
+          />
         )}
         <TableCell
           parentColumn="Region"

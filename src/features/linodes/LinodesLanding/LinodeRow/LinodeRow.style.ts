@@ -13,6 +13,8 @@ type ClassNames =
   | 'actionInner'
   | 'bodyRow'
   | 'statusCell'
+  | 'statusCellMaintenance'
+  | 'statusHelpIcon'
   | 'ipCell'
   | 'ipCellWrapper'
   | 'planCell'
@@ -68,10 +70,18 @@ const styles = (theme: Theme) =>
     },
     statusCell: {
       width: '15%',
+
       textTransform: 'capitalize',
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       }
+    },
+    statusCellMaintenance: {
+      minWidth: 250
+    },
+    statusHelpIcon: {
+      position: 'relative',
+      top: -2
     },
     ipCell: {
       width: '15%',
