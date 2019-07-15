@@ -46,7 +46,8 @@ export const ExecutePaypalPaymentSchema = object({
 });
 
 export const PaymentSchema = object({
-  usd: string().required('USD payment amount is required.')
+  usd: string().required('USD payment amount is required.'),
+  cvv: string().required('CVV code is required.')
 });
 
 export const CreditCardSchema = object({
