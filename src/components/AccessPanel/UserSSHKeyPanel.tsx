@@ -76,7 +76,7 @@ export const getSSHKeyString = (keys: string[]) => {
    */
   const count = keys.length;
   return count > MAX_SSH_KEYS_DISPLAY
-    ? keys.slice(0, 100).join(', ') +
+    ? keys.slice(0, MAX_SSH_KEYS_DISPLAY).join(', ') +
         `...and ${count - MAX_SSH_KEYS_DISPLAY} more`
     : keys.join(', ');
 };
@@ -115,7 +115,9 @@ const UserSSHKeyPanel: React.FunctionComponent<CombinedProps> = props => {
   return (
     <React.Fragment>
       <TableHeader title="SSH Keys" />
-      {success && <Notice success text={successMsg} />}
+      {success && (
+        <Notice success text={successMsg} data-testid="ssh-success-message" />
+      )}
       <Table isResponsive={false} border spacingBottom={16}>
         <TableHead>
           <TableRow>
@@ -130,7 +132,11 @@ const UserSSHKeyPanel: React.FunctionComponent<CombinedProps> = props => {
           {users && users.length > 0 ? (
             users.map(
               ({ gravatarUrl, keys, onSSHKeyChange, selected, username }) => (
-                <TableRow key={username} data-qa-ssh-public-key>
+                <TableRow
+                  key={username}
+                  data-qa-ssh-public-key
+                  data-testid="ssh-public-key"
+                >
                   <TableCell className={classes.cellCheckbox}>
                     <CheckBox checked={selected} onChange={onSSHKeyChange} />
                   </TableCell>
