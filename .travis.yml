@@ -10,8 +10,9 @@ cache: yarn
 before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev
   build-essential g++ google-chrome-stable curl
 install:
-- yarn --frozen-lockfile
+- lerna bootstrap --frozen-lockfile
 before_script:
+- cd ./packages/manager
 - yarn storybook &
 script:
 - yarn build
