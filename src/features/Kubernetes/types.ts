@@ -3,7 +3,7 @@ export interface PoolNode {
   count: number;
 }
 
-export interface ExtendedPoolNode extends PoolNode {
+export interface PoolNodeWithPrice extends PoolNode {
   id: number;
   totalMonthlyPrice: number;
   queuedForDeletion?: boolean;
@@ -22,7 +22,7 @@ export interface ExtendedCluster {
   label: string;
   version: string;
   id: number;
-  node_pools: ExtendedPoolNode[];
+  node_pools: PoolNodeWithPrice[];
   totalMemory: number;
   totalCPU: number;
 }
