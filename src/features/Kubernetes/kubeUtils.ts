@@ -1,5 +1,5 @@
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { ExtendedCluster, PoolNodeWithPrice, PoolNode } from './types';
+import { ExtendedCluster, PoolNode, PoolNodeWithPrice } from './types';
 
 // @todo don't hard code this
 export const KubernetesVersionOptions = ['1.13', '1.14'].map(version => ({
