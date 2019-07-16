@@ -47,7 +47,6 @@ const HIDE_DISPLAY_GROUPS_CTA = 'importDisplayGroupsCTA';
 const HAS_IMPORTED_GROUPS = 'hasImportedGroups';
 const GROUP_DOMAINS = `GROUP_DOMAINS`;
 const GROUP_NODEBALANCERS = `GROUP_NODEBALANCERS`;
-const GROUP_VOLUMES = `GROUP_VOLUMES`;
 const BACKUPSCTA_DISMISSED = 'BackupsCtaDismissed';
 const TOKEN = 'authentication/token';
 const NONCE = 'authentication/nonce';
@@ -110,10 +109,6 @@ export interface Storage {
   };
   groupDomainsByTag: GetAndSetBool;
   groupNodeBalancersByTag: {
-    get: () => boolean;
-    set: (v: 'true' | 'false') => void;
-  };
-  groupVolumesByTag: {
     get: () => boolean;
     set: (v: 'true' | 'false') => void;
   };
@@ -190,10 +185,6 @@ export const storage: Storage = {
   groupNodeBalancersByTag: {
     get: () => getStorage(GROUP_NODEBALANCERS),
     set: v => setStorage(GROUP_NODEBALANCERS, v)
-  },
-  groupVolumesByTag: {
-    get: () => getStorage(GROUP_VOLUMES),
-    set: v => setStorage(GROUP_VOLUMES, v)
   },
   BackupsCtaDismissed: {
     get: () => getStorage(BACKUPSCTA_DISMISSED),
