@@ -13,7 +13,6 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Hidden from 'src/components/core/Hidden';
-import withWidth, { WithWidth } from 'src/components/core/WithWidth';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
@@ -34,7 +33,7 @@ import {
   sendGroupByTagEnabledEvent,
   sendLinodesViewEvent
 } from 'src/utilities/ga';
-import { storage, views } from 'src/utilities/storage';
+import { BackupsCtaDismissed } from 'src/utilities/storage';
 import CardView from './CardView';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
 import DisplayLinodes from './DisplayLinodes';
@@ -44,7 +43,7 @@ import ListView from './ListView';
 import ToggleBox from './ToggleBox';
 
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
-import PreferenceToggle from 'src/components/PreferenceToggle';
+import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 
 import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
@@ -69,7 +68,6 @@ interface Params {
 type RouteProps = RouteComponentProps<Params>;
 
 type CombinedProps = WithImagesProps &
-  WithWidth &
   StateProps &
   DispatchProps &
   RouteProps &
@@ -83,12 +81,15 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     powerDialogOpen: false,
     deleteDialogOpen: false,
     groupByTag: false,
-    CtaDismissed: storage.BackupsCtaDismissed.get()
+    CtaDismissed: BackupsCtaDismissed.get()
   };
 
   static docs = [LinodeGettingStarted, SecuringYourServer];
 
-  changeView = (style: 'grid' | 'list') => {
+  /**
+   * when you change the linode view, instantly update the query params
+   */
+  changeViewInstant = (style: 'grid' | 'list') => {
     const { history, location } = this.props;
 
     const updatedParams = updateParams<Params>(location.search, params => ({
@@ -97,13 +98,12 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     }));
 
     history.push(`?${updatedParams}`);
+  };
 
-    if (style === 'grid') {
-      views.linode.set('grid');
-    } else {
-      views.linode.set('list');
-    }
-
+  /**
+   * when you change the linode view, send an event to google analytics, debounced.
+   */
+  changeViewDelayed = (style: 'grid' | 'list') => {
     sendLinodesViewEvent(eventCategory, style);
   };
 
@@ -141,7 +141,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     this.setState({
       CtaDismissed: true
     });
-    storage.BackupsCtaDismissed.set('true');
+    BackupsCtaDismissed.set('true');
   };
 
   render() {
@@ -152,7 +152,6 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       linodesRequestLoading,
       linodesCount,
       linodesData,
-      width,
       classes,
       backupsCTA,
       location
@@ -162,19 +161,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
       ignoreQueryPrefix: true
     });
 
-    const userSelectedDisplay = getUserSelectedDisplay(params.view);
-
-    const display: 'grid' | 'list' = getDisplayType(
-      width,
-      linodesCount,
-      userSelectedDisplay
-    );
-
-    const component = display === 'grid' ? CardView : ListView;
-
     const componentProps = {
-      display,
-      component,
       count: linodesCount,
       someLinodesHaveMaintenance: this.props
         .someLinodesHaveScheduledMaintenance,
@@ -238,12 +225,9 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
           <Grid
             item
             className={`${
-              backupsCTA && !storage.BackupsCtaDismissed.get() ? 'mlMain' : ''
-              }`}
-            xs={
-              !backupsCTA ||
-              (backupsCTA && storage.BackupsCtaDismissed.get() && 12)
-            }
+              backupsCTA && !BackupsCtaDismissed.get() ? 'mlMain' : ''
+            }`}
+            xs={!backupsCTA || (backupsCTA && BackupsCtaDismissed.get() && 12)}
           >
             <Grid container>
               <DocumentTitleSegment segment="Linodes" />
@@ -256,95 +240,143 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                 {({
                   preference: linodesAreGrouped,
                   togglePreference: toggleGroupLinodes
-                }) => {
+                }: ToggleProps<boolean>) => {
                   return (
-                    <React.Fragment>
-                      <Grid
-                        container
-                        alignItems="center"
-                        justify="space-between"
-                        item
-                        xs={12}
-                        style={{ paddingBottom: 0 }}
-                      >
-                        <Grid item className={classes.title}>
-                          <Breadcrumb
-                            pathname={location.pathname}
-                            data-qa-title
-                            labelTitle="Linodes"
-                            className={classes.title}
-                          />
-                        </Grid>
-                        <Hidden xsDown>
-                          <FormControlLabel
-                            className={classes.tagGroup}
-                            control={
-                              <Toggle
-                                className={
-                                  linodesAreGrouped ? ' checked' : ' unchecked'
-                                }
-                                onChange={toggleGroupLinodes}
-                                checked={linodesAreGrouped as boolean}
-                                data-qa-tags-toggle={linodesAreGrouped}
-                              />
-                            }
-                            label="Group by Tag:"
-                          />
-                          <ToggleBox
-                            handleClick={this.changeView}
-                            status={display}
-                          />
-                        </Hidden>
-                      </Grid>
-                      <Grid item xs={12}>
-                        <OrderBy
-                          data={linodesData}
-                          order={'asc'}
-                          orderBy={'label'}
-                        >
-                          {({ data, handleOrderChange, order, orderBy }) => {
-                            const finalProps = {
-                              ...componentProps,
-                              data,
-                              handleOrderChange,
-                              order,
-                              orderBy
-                            };
-
-                            return linodesAreGrouped ? (
-                              <DisplayGroupedLinodes {...finalProps} />
-                            ) : (
-                                <DisplayLinodes {...finalProps} />
-                              );
-                          }}
-                        </OrderBy>
-                        <Grid container justify="flex-end">
-                          <Grid item className={classes.CSVlinkContainer}>
-                            <CSVLink
-                              data={linodesData}
-                              headers={
-                                this.props.someLinodesHaveScheduledMaintenance
-                                  ? [
-                                    ...headers,
-                                    /** only add maintenance window to CSV if one Linode has a window */
-                                    {
-                                      label: 'Maintenance Status',
-                                      key: 'maintenance.when'
-                                    }
-                                  ]
-                                  : headers
-                              }
-                              filename={`linodes-${formatDate(
-                                moment().format()
-                              )}.csv`}
-                              className={classes.CSVlink}
+                    <PreferenceToggle<'grid' | 'list'>
+                      preferenceKey="linode_view_style"
+                      localStorageKey="LINODE_VIEW"
+                      preferenceOptions={['list', 'grid']}
+                      toggleCallbackFnDebounced={this.changeViewDelayed}
+                      toggleCallbackFn={this.changeViewInstant}
+                      /**
+                       * we want the URL query param to take priorty here, but if it's
+                       * undefined, just use the user preference
+                       */
+                      value={
+                        params.view === 'grid' || params.view === 'list'
+                          ? params.view
+                          : undefined
+                      }
+                    >
+                      {({
+                        preference: linodeViewPreference,
+                        togglePreference: toggleLinodeView
+                      }: ToggleProps<'list' | 'grid'>) => {
+                        return (
+                          <React.Fragment>
+                            <Grid
+                              container
+                              alignItems="center"
+                              justify="space-between"
+                              item
+                              xs={12}
+                              style={{ paddingBottom: 0 }}
                             >
-                              Download CSV
-                            </CSVLink>
-                          </Grid>
-                        </Grid>
-                      </Grid>
-                    </React.Fragment>
+                              <Grid item className={classes.title}>
+                                <Breadcrumb
+                                  pathname={location.pathname}
+                                  data-qa-title
+                                  labelTitle="Linodes"
+                                  className={classes.title}
+                                />
+                              </Grid>
+                              <Hidden xsDown>
+                                <FormControlLabel
+                                  className={classes.tagGroup}
+                                  control={
+                                    <Toggle
+                                      className={
+                                        linodesAreGrouped
+                                          ? ' checked'
+                                          : ' unchecked'
+                                      }
+                                      onChange={toggleGroupLinodes}
+                                      checked={linodesAreGrouped as boolean}
+                                      data-qa-tags-toggle={linodesAreGrouped}
+                                    />
+                                  }
+                                  label="Group by Tag:"
+                                />
+                                <ToggleBox
+                                  handleClick={toggleLinodeView}
+                                  status={linodeViewPreference}
+                                />
+                              </Hidden>
+                            </Grid>
+                            <Grid item xs={12}>
+                              <OrderBy
+                                data={linodesData}
+                                order={'asc'}
+                                orderBy={'label'}
+                              >
+                                {({
+                                  data,
+                                  handleOrderChange,
+                                  order,
+                                  orderBy
+                                }) => {
+                                  const finalProps = {
+                                    ...componentProps,
+                                    data,
+                                    handleOrderChange,
+                                    order,
+                                    orderBy
+                                  };
+
+                                  return linodesAreGrouped ? (
+                                    <DisplayGroupedLinodes
+                                      {...finalProps}
+                                      display={linodeViewPreference}
+                                      component={
+                                        linodeViewPreference === 'grid'
+                                          ? CardView
+                                          : ListView
+                                      }
+                                    />
+                                  ) : (
+                                    <DisplayLinodes
+                                      {...finalProps}
+                                      display={linodeViewPreference}
+                                      component={
+                                        linodeViewPreference === 'grid'
+                                          ? CardView
+                                          : ListView
+                                      }
+                                    />
+                                  );
+                                }}
+                              </OrderBy>
+                              <Grid container justify="flex-end">
+                                <Grid item className={classes.CSVlinkContainer}>
+                                  <CSVLink
+                                    data={linodesData}
+                                    headers={
+                                      this.props
+                                        .someLinodesHaveScheduledMaintenance
+                                        ? [
+                                            ...headers,
+                                            /** only add maintenance window to CSV if one Linode has a window */
+                                            {
+                                              label: 'Maintenance Status',
+                                              key: 'maintenance.when'
+                                            }
+                                          ]
+                                        : headers
+                                    }
+                                    filename={`linodes-${formatDate(
+                                      moment().format()
+                                    )}.csv`}
+                                    className={classes.CSVlink}
+                                  >
+                                    Download CSV
+                                  </CSVLink>
+                                </Grid>
+                              </Grid>
+                            </Grid>
+                          </React.Fragment>
+                        );
+                      }}
+                    </PreferenceToggle>
                   );
                 }}
               </PreferenceToggle>
@@ -369,7 +401,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
               />
             </React.Fragment>
           )}
-          {backupsCTA && !storage.BackupsCtaDismissed.get() && (
+          {backupsCTA && !BackupsCtaDismissed.get() && (
             <Grid item className="mlSidebar py0">
               <BackupsCTA dismissed={this.dismissCTA} />
             </Grid>
@@ -384,23 +416,6 @@ const eventCategory = 'linodes landing';
 
 const sendGroupByAnalytic = (value: boolean) => {
   sendGroupByTagEnabledEvent(eventCategory, value);
-};
-
-const getUserSelectedDisplay = (
-  value?: string
-): undefined | 'grid' | 'list' => {
-  /** Value comes from the URL */
-  if (value) {
-    return value === 'grid' ? 'grid' : 'list';
-  }
-
-  /* If local storage exists, set the view based on that */
-  const localStorageValue = views.linode.get();
-  if (localStorageValue !== null) {
-    return localStorageValue;
-  }
-
-  return;
 };
 
 interface StateProps {
@@ -428,9 +443,9 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
     linodesData,
     someLinodesHaveScheduledMaintenance: linodesData
       ? linodesData.some(
-        eachLinode =>
-          !!eachLinode.maintenance && !!eachLinode.maintenance.when
-      )
+          eachLinode =>
+            !!eachLinode.maintenance && !!eachLinode.maintenance.when
+        )
       : false,
     linodesRequestLoading: state.__resources.linodes.loading,
     linodesRequestError: path(['error', 'read'], state.__resources.linodes),
@@ -463,33 +478,6 @@ const updateParams = <T extends any>(params: string, updater: (s: T) => T) => {
   return stringify(updater(paramsAsObject));
 };
 
-const getDisplayType = (
-  width: string,
-  linodesCount: number,
-  userSelect?: 'grid' | 'list'
-) => {
-  /**
-   * We force the use of grid view at xs viewports.
-   */
-  if (['xs'].includes(width)) {
-    return 'grid';
-  }
-
-  /**
-   * If the user has made a selection (via URL param or localStorage) then use that value.
-   */
-  if (userSelect) {
-    return userSelect;
-  }
-
-  /**
-   * Default to choosing based on the total number of Linodes.
-   * Note: Don't use data.length, otherwise the last page of 100000 Linodes will
-   * display as a grid (and people don't like it).
-   */
-  return linodesCount >= 3 ? 'list' : 'grid';
-};
-
 interface WithImagesProps {
   imagesLoading: boolean;
   imagesError?: Linode.ApiFieldError[];
@@ -499,7 +487,6 @@ export const enhanced = compose<CombinedProps, {}>(
   withRouter,
   setDocs(ListLinodes.docs),
   withSnackbar,
-  withWidth(),
   connected,
   withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
     ...ownProps,
