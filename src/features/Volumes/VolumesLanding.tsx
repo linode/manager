@@ -457,7 +457,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
     );
   };
 
-  renderData = (volumes: ExtendedVolume[], linodesAreGrouped: boolean) => {
+  renderData = (volumes: ExtendedVolume[], volumesAreGrouped: boolean) => {
     const isVolumesLanding = this.props.match.params.linodeId === undefined;
     const renderProps = {
       isVolumesLanding,
@@ -480,7 +480,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
             data: orderedData
           };
 
-          return linodesAreGrouped ? (
+          return volumesAreGrouped ? (
             <ListGroupedVolumes
               data={orderedData}
               {...orderProps}
