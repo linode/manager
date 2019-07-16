@@ -20,6 +20,7 @@ interface Props {
 interface State {
   rdns?: string | null;
   address?: string;
+  loading: boolean;
   errors?: Linode.ApiFieldError[];
 }
 
@@ -28,7 +29,8 @@ type CombinedProps = Props;
 class ViewRangeDrawer extends React.Component<CombinedProps, State> {
   state: State = {
     rdns: this.props.rdns,
-    address: this.props.address
+    address: this.props.address,
+    loading: false
   };
 
   errorResources = {
@@ -46,14 +48,17 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
   save = () => {
     const { onClose } = this.props;
     const { rdns, address } = this.state;
+    this.setState({ loading: true });
     updateIP(address!, !rdns || rdns === '' ? null : rdns)
       .then(_ => {
+        this.setState({ loading: false });
         onClose();
       })
       .catch(errResponse => {
         this.setState(
           {
-            errors: getAPIErrorOrDefault(errResponse)
+            errors: getAPIErrorOrDefault(errResponse),
+            loading: false
           },
           () => {
             scrollErrorIntoView();
@@ -68,7 +73,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const { open, onClose } = this.props;
-    const { rdns, errors } = this.state;
+    const { rdns, errors, loading } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(this.errorResources, errors);
 
@@ -93,7 +98,12 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
           )}
 
           <ActionsPanel style={{ marginTop: 16 }}>
-            <Button buttonType="primary" onClick={this.save} data-qa-submit>
+            <Button
+              buttonType="primary"
+              onClick={this.save}
+              loading={loading}
+              data-qa-submit
+            >
               Save
             </Button>
             <Button
