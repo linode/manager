@@ -29,8 +29,6 @@ const styles = (theme: Theme) =>
     }
   });
 
-/** arbitrary comment lolololol */
-
 interface GuidanceProps {
   text: string;
 }

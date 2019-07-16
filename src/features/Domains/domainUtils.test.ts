@@ -1,5 +1,9 @@
 import { domainRecords as records } from 'src/__data__/domains';
-import { isValidDomainRecord, isValidSOAEmail } from './domainUtils';
+import {
+  isValidCNAME,
+  isValidDomainRecord,
+  isValidSOAEmail
+} from './domainUtils';
 
 describe('Domain-related utilities', () => {
   describe('Validating email addresses', () => {
@@ -21,6 +25,16 @@ describe('Domain-related utilities', () => {
         false
       );
       expect(isValidSOAEmail('admin@example.com', 'www.google.com')).toBe(true);
+    });
+  });
+
+  describe('Validating CNAME records', () => {
+    it('should prevent users from creating a CNAME record that would create a conflict', () => {
+      expect(isValidCNAME('host', records)).toBe(false);
+    });
+
+    it('should allow the creation of a new, unique CNAME', () => {
+      expect(isValidCNAME('new-domain', records)).toBe(true);
     });
   });
 

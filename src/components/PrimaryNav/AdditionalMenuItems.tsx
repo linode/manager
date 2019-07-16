@@ -44,7 +44,7 @@ const AdditionalMenuItems: React.FC<CombinedProps> = props => {
   // };
 
   const links: PrimaryLink[] = [
-    { display: 'Get Help', href: '/support', key: 'help' }
+    { display: 'Get Help', href: '/support', QAKey: 'help' }
     // {
     //   display: 'Support Bot',
     //   key: 'chat',
@@ -59,7 +59,7 @@ const AdditionalMenuItems: React.FC<CombinedProps> = props => {
   return (
     <React.Fragment>
       {links.map(eachLink => {
-        return <NavItem {...eachLink} {...props} key={eachLink.key} />;
+        return <NavItem {...eachLink} {...props} key={eachLink.QAKey} />;
       })}
     </React.Fragment>
   );

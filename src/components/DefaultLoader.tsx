@@ -12,10 +12,15 @@ interface OptionalLoadable<Props> {
   >;
 }
 
-const Loader = (config: OptionalLoadable<{}>) =>
+const Loader = <P extends {}>(config: OptionalLoadable<P>) =>
   Loadable({
     loading: props => {
       if (props.error) {
+        /* tslint:disable */
+        console.error(`======= DefaultLoader Error =======`);
+        console.error(props.error);
+        console.error(`======= DefaultLoader Error =======`);
+        /* tslint:enable */
         return null;
       }
 

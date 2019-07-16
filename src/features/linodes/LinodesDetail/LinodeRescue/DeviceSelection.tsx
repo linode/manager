@@ -44,7 +44,7 @@ export const getSelectedOption = (
 const DeviceSelection: React.StatelessComponent<CombinedProps> = props => {
   const { devices, onChange, getSelected, slots, rescue, disabled } = props;
 
-  const counter = defaultTo(0, props.counter);
+  const counter = defaultTo(0, props.counter) as number;
 
   return (
     <React.Fragment>

@@ -518,9 +518,16 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         <div className={classes.section}>
           {grants &&
             grants.global &&
-            this.globalBooleanPerms.map(perm =>
-              this.renderGlobalPerm(perm, grants.global[perm] as boolean)
-            )}
+            this.globalBooleanPerms
+              /**
+               * filtering out cancel_account because we're not observing
+               * this permission in Cloud or APIv4. Either the user is unrestricted
+               * and can cancel the account or is restricted and cannot cancel.
+               */
+              .filter(eachPerm => eachPerm !== 'cancel_account')
+              .map(perm =>
+                this.renderGlobalPerm(perm, grants.global[perm] as boolean)
+              )}
         </div>
         {this.renderBillingPerm()}
         {this.renderActions(

@@ -20,8 +20,7 @@ describe('Linode Power Control Dialogs', () => {
       id={1}
       label="Test Linode"
       status="running"
-      openConfigDrawer={jest.fn()}
-      noConfigs={false}
+      linodeConfigs={[]}
     />
   );
 
@@ -31,7 +30,7 @@ describe('Linode Power Control Dialogs', () => {
       'WithStyles(WrapperMenuItem)[data-qa-set-power="reboot"]'
     );
     button.simulate('click');
-    expect(renderedComponent.state('powerAlertOpen')).toBeTruthy();
+    expect(renderedComponent.state('powerDialogOpen')).toBeTruthy();
   });
 
   it('powerAlertOpen state should be true if power off menu item is clicked', () => {
@@ -40,7 +39,7 @@ describe('Linode Power Control Dialogs', () => {
       'WithStyles(WrapperMenuItem)[data-qa-set-power="powerOff"]'
     );
     button.simulate('click');
-    expect(renderedComponent.state('powerAlertOpen')).toBeTruthy();
+    expect(renderedComponent.state('powerDialogOpen')).toBeTruthy();
   });
 
   xit('Confirmation Dialog cancel button should set powerAlertOpen state is false', () => {
@@ -51,7 +50,7 @@ describe('Linode Power Control Dialogs', () => {
       .dive()
       .find('[data-qa-confirm-cancel]');
     cancelButton.simulate('click');
-    expect(renderedComponent.state('powerAlertOpen')).toBeFalsy();
+    expect(renderedComponent.state('powerDialogOpen')).toBeFalsy();
   });
 
   it('should only have the option to reboot if the status is "running"', () => {

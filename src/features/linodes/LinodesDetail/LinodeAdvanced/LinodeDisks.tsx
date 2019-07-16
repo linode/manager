@@ -247,7 +247,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
   }
 
   renderTableContent = (data: Linode.Disk[], status?: string) => {
-    const { readOnly } = this.props;
+    const { linodeId, readOnly } = this.props;
 
     return data.map(disk => (
       <TableRow key={disk.id} data-qa-disk={disk.label}>
@@ -257,6 +257,8 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         <TableCell>
           <LinodeDiskActionMenu
             linodeStatus={status || 'offline'}
+            linodeId={linodeId}
+            diskId={disk.id}
             onRename={this.openDrawerForRename(disk)}
             onResize={this.openDrawerForResize(disk)}
             onImagize={this.openImagizeDrawer(disk)}
@@ -426,6 +428,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         onPasswordChange={this.onPasswordChange}
         onResetImageMode={this.onResetImageMode}
         userSSHKeys={this.props.userSSHKeys}
+        requestKeys={this.props.requestKeys}
       />
     );
   };

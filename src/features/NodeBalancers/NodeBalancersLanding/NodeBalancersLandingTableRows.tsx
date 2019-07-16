@@ -83,7 +83,9 @@ const NodeBalancersLandingTableRows: React.StatelessComponent<
                   <EntityIcon variant="nodebalancer" marginTop={1} />
                 </Grid>
                 <Grid item>
-                  <Typography variant="h3">{nodeBalancer.label}</Typography>
+                  <Link to={`/nodebalancers/${nodeBalancer.id}`} tabIndex={-1}>
+                    <Typography variant="h3">{nodeBalancer.label}</Typography>
+                  </Link>
                 </Grid>
               </Grid>
             </TableCell>
