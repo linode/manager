@@ -1,8 +1,11 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
+// import { render } from 'react-testing-library';
 import { extendedTypes } from 'src/__data__/ExtendedType';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { CombinedProps, LinodeActionMenu } from './LinodeActionMenu';
+
+// import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 const props: CombinedProps = {
   linodeId: 123,
@@ -13,7 +16,8 @@ const props: CombinedProps = {
     schedule: {
       window: null,
       day: null
-    }
+    },
+    enabled: false
   },
   linodeStatus: '',
   noImage: false,
@@ -22,8 +26,58 @@ const props: CombinedProps = {
   ...reactRouterProps
 };
 
+// const includesActions = (actions: string[], query: any) => {
+//   for (const action of actions) {
+//     expect(query(action)).toBeInTheDocument();
+//   }
+// };
+
 describe('LinodeActionMenu', () => {
   const wrapper = shallow<LinodeActionMenu>(<LinodeActionMenu {...props} />);
+
+  //   it('should include standard Linode actions', () => {
+  //     const { queryByText } = render(
+  //       wrapWithTheme(<LinodeActionMenu {...props} />)
+  //     );
+  //     includesActions(
+  //       ['Launch Console', 'Clone', 'Resize', 'Settings', 'Delete'],
+  //       queryByText
+  //     );
+  //   });
+
+  // it('should render a Power On action if Linode is powered off', () => {
+  //   const { queryByText } = render(
+  //     wrapWithTheme(<LinodeActionMenu {...props} linodeStatus="offline" />)
+  //   );
+  //   expect(queryByText('Power On')).toBeInTheDocument();
+  //   expect(queryByText('Power Off')).not.toBeInTheDocument();
+  //   expect(queryByText('Reboot')).not.toBeInTheDocument();
+  // });
+
+  // it('should render Power Off and Reboot actions if Linode is powered on', () => {
+  //   const { queryByText } = render(
+  //     wrapWithTheme(<LinodeActionMenu {...props} linodeStatus="running" />)
+  //   );
+  //   expect(queryByText('Reboot')).toBeInTheDocument();
+  //   expect(queryByText('Power Off')).toBeInTheDocument();
+  //   expect(queryByText('Power On')).not.toBeInTheDocument();
+  // });
+
+  // it('should render an Enable Backups action if Backups are not enabled', () => {
+  //   const { queryByText } = render(
+  //     wrapWithTheme(<LinodeActionMenu {...props} linodeBackups.enabled={false} />)
+  //   );
+  //   expect(queryByText('Enable Backups')).toBeInTheDocument();
+  //   expect(queryByText('View Backups')).not.toBeInTheDocument();
+  // });
+
+  // it('should render a View Backups action (and not show Enable Backups) if Backups are already enabled', () => {
+  //   const { queryByText } = render(
+  //     wrapWithTheme(<LinodeActionMenu {...props} linodeBackups.enabled={true} />)
+  //   );
+  //   expect(queryByText('View Backups')).toBeInTheDocument();
+  //   expect(queryByText('Enable Backups')).not.toBeInTheDocument();
+  // });
 
   describe('buildQueryStringForLinodeClone', () => {
     it('returns `type`, `subtype`, and `linodeID` params', () => {
