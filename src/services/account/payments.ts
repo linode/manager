@@ -31,7 +31,7 @@ interface SaveCreditCardData {
   card_number: string;
   expiry_year: number;
   expiry_month: number;
-  cvv: string;
+  cvv?: string;
 }
 
 /**
@@ -61,7 +61,7 @@ export const getPayments = (params?: any, filter?: any) =>
  * credit card.
  *
  */
-export const makePayment = (data: { usd: string; cvv: string }) => {
+export const makePayment = (data: { usd: string; cvv?: string }) => {
   /**
    * in the context of APIv4, CVV is optional - in other words, it's totally
    * valid to submit a payment without a CVV
@@ -82,9 +82,9 @@ export const makePayment = (data: { usd: string; cvv: string }) => {
    *   usd: 5
    * }
    */
-  // if (!data.cvv) {
-  //   delete data.cvv;
-  // }
+  if (!data.cvv) {
+    delete data.cvv;
+  }
 
   return Request<Linode.Payment>(
     setURL(`${API_ROOT}/account/payments`),

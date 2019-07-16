@@ -47,7 +47,7 @@ namespace Linode {
   interface CreditCard {
     expiry: string;
     last_four: string;
-    cvv: string;
+    cvv?: string;
   }
 
   export interface Invoice {
