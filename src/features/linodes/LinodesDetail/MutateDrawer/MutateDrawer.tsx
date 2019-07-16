@@ -150,14 +150,14 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
             Your Linode will be upgraded and booted (if it was previously
             running).
           </ListItem>
-          <Typography variant="body1" style={{ marginTop: 16 }}>
-            After the migration completes, you can take advantage of the new
-            resources by resizing your disk images. We estimate this upgrade
-            process will take {estimatedTimeToUpgradeInMins}
-            {estimatedTimeToUpgradeInMins === 1 ? ` minute` : ` minutes`}, but
-            that may vary based on host and network load.
-          </Typography>
         </ol>
+        <Typography variant="body1" style={{ marginTop: 16 }}>
+          After the migration completes, you can take advantage of the new
+          resources by resizing your disk images. We estimate this upgrade
+          process will take {estimatedTimeToUpgradeInMins}
+          {estimatedTimeToUpgradeInMins === 1 ? ` minute` : ` minutes`}, but
+          that may vary based on host and network load.
+        </Typography>
         <ActionsPanel style={{ marginTop: 32 }}>
           <Button
             loading={loading}
