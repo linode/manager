@@ -25,7 +25,6 @@ describe('LinodeRow', () => {
     classes: mockClasses,
     theme: light({ spacingOverride: 4 }),
     maintenanceStartTime: '',
-    someLinodesHaveMaintenance: false,
     recentEvent: undefined,
     openDeleteDialog: jest.fn(),
     openPowerActionDialog: jest.fn(),

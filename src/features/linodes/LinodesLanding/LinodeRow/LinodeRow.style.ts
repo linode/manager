@@ -69,8 +69,7 @@ const styles = (theme: Theme) =>
       padding: 4
     },
     statusCell: {
-      width: '15%',
-
+      width: '14%',
       textTransform: 'capitalize',
       [theme.breakpoints.down('sm')]: {
         width: '100%'
@@ -84,7 +83,7 @@ const styles = (theme: Theme) =>
       top: -2
     },
     ipCell: {
-      width: '15%',
+      width: '14%',
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       }
@@ -94,13 +93,13 @@ const styles = (theme: Theme) =>
       flexDirection: 'column'
     },
     planCell: {
-      width: '15%',
+      width: '14%',
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       }
     },
     regionCell: {
-      width: '15%',
+      width: '14%',
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       }

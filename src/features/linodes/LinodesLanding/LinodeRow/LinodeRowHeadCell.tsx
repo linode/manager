@@ -97,9 +97,9 @@ interface Props {
   tags: string[];
   mostRecentBackup: string | null;
   width?: number;
-
   loading: boolean;
   recentEvent?: Linode.Event;
+  maintenance?: string | null;
 }
 
 interface WithImagesProps {
@@ -127,7 +127,8 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
     recentEvent,
     displayType,
     imagesData,
-    width
+    width,
+    maintenance
   } = props;
 
   const description = getLinodeDescription(
@@ -147,7 +148,7 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
         <Grid item className="py0">
           <EntityIcon
             variant="linode"
-            status={status}
+            status={!maintenance ? status : 'maintenance'}
             loading={linodeInTransition(status, recentEvent)}
             marginTop={1}
           />

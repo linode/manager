@@ -39,7 +39,6 @@ interface Props {
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;
-  someLinodesHaveMaintenance: boolean;
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
     bootAction: Action,
@@ -103,6 +102,7 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
       vcpus={vcpus}
       memory={memory}
       image={image}
+      maintenance={maintenanceStartTime}
     />
   );
 
