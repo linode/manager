@@ -48,7 +48,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
   save = () => {
     const { onClose } = this.props;
     const { rdns, address } = this.state;
-    this.setState({ loading: true });
+    this.setState({ loading: true, errors: undefined });
     updateIP(address!, !rdns || rdns === '' ? null : rdns)
       .then(_ => {
         this.setState({ loading: false });
