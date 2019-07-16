@@ -35,6 +35,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
     delayText: null
   };
 
+  timer: any = undefined;
   mounted: boolean = false;
 
   componentDidMount() {
@@ -43,6 +44,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
 
   componentWillUnmount() {
     this.mounted = false;
+    clearTimeout(this.timer);
   }
 
   errorResources = {
@@ -71,13 +73,13 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
     const { onClose } = this.props;
     const { rdns, address } = this.state;
     this.setState({ loading: true, errors: undefined });
-    const timer = setTimeout(this.showDelayText, 5000);
+    this.timer = setTimeout(this.showDelayText, 5000);
     updateIP(address!, !rdns || rdns === '' ? null : rdns)
       .then(_ => {
         if (!this.mounted) {
           return;
         }
-        clearTimeout(timer);
+        clearTimeout(this.timer);
         this.setState({ loading: false, delayText: null });
         onClose();
       })
@@ -85,7 +87,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
         if (!this.mounted) {
           return;
         }
-        clearTimeout(timer);
+        clearTimeout(this.timer);
         this.setState(
           {
             errors: getAPIErrorOrDefault(errResponse),
