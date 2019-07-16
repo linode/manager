@@ -16,6 +16,7 @@ import {
   updateClusterActions,
   upsertCluster
 } from './kubernetes.actions';
+import { requestNodePoolsForCluster } from './nodePools.requests';
 
 const getAllClusters = getAll<Linode.KubernetesCluster>(getKubernetesClusters);
 
@@ -31,6 +32,10 @@ export const requestKubernetesClusters: ThunkActionCreator<
           result: data
         })
       );
+      let i = 0;
+      for (; i < data.length; i++) {
+        dispatch(requestNodePoolsForCluster({ clusterID: data[i].id }));
+      }
       return data;
     })
     .catch(error => {
