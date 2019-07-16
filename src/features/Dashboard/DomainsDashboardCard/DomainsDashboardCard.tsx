@@ -1,6 +1,7 @@
 import { compose, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import { compose as recompose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
@@ -71,7 +72,15 @@ interface State {
   results?: number;
 }
 
-type CombinedProps = WithStyles<ClassNames> &
+interface Props {
+  domain: string;
+  id: number;
+  type: 'master' | 'slave';
+  onEdit: (domain: string, id: number) => void;
+}
+
+type CombinedProps = Props &
+  WithStyles<ClassNames> &
   WithUpdatingDomainsProps &
   DispatchProps;
 
@@ -88,17 +97,17 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
     );
   }
 
-  handleRowClick(
-    e: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+  handleRowClick = (
+    e: React.ChangeEvent<HTMLTableRowElement>,
     id: number,
     domain: string,
     type: string
-  ) {
+  ) => {
     if (type === 'slave') {
       e.preventDefault();
       this.props.openForEditing(domain, id);
     }
-  }
+  };
 
   renderAction = () =>
     this.props.domainCount > 5 ? (
@@ -140,7 +149,14 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
 
     return data.map(({ id, domain, type, status }) => (
-      <TableRow key={domain} rowLink={`/domains/${id}`}>
+      <TableRow
+        key={domain}
+        rowLink={
+          type === 'slave'
+            ? e => this.handleRowClick(e, id, domain, type)
+            : `/domains/${id}`
+        }
+      >
         <TableCell className={classes.labelCol}>
           <Grid container wrap="nowrap" alignItems="center">
             <Grid item className="py0">
@@ -153,13 +169,25 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
             </Grid>
             <Grid item className={classes.labelGridWrapper}>
               <div className={classes.labelStatusWrapper}>
-                <Typography
-                  variant="h3"
-                  className={classes.wrapHeader}
-                  data-qa-label
-                >
-                  {domain}
-                </Typography>
+                {type !== 'slave' ? (
+                  <Link to={`/domains/${id}`} tabIndex={-1}>
+                    <Typography
+                      variant="h3"
+                      className={classes.wrapHeader}
+                      data-qa-label
+                    >
+                      {domain}
+                    </Typography>
+                  </Link>
+                ) : (
+                  <Typography
+                    variant="h3"
+                    className={classes.wrapHeader}
+                    data-qa-label
+                  >
+                    {domain}
+                  </Typography>
+                )}
               </div>
               <Typography className={classes.description}>{type}</Typography>
             </Grid>
@@ -228,8 +256,8 @@ const connected = connect(
 
 const enhanced = recompose<CombinedProps, {}>(
   connected,
-  styled,
-  withUpdatingDomains
+  withUpdatingDomains,
+  styled
 );
 
 export default enhanced(DomainsDashboardCard) as React.ComponentType<{}>;

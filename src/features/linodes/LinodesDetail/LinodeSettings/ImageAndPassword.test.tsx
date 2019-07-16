@@ -14,6 +14,7 @@ const props = {
   password: '',
   onPasswordChange: jest.fn(),
   userSSHKeys: [],
+  requestKeys: jest.fn(),
   permissions: null
 };
 

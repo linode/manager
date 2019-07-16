@@ -140,13 +140,26 @@ class NodeBalancers extends Page {
     }
 
 
-    configAddNode(nodeConfig) {
+    configAddNode(nodeConfig, type='creating') {
         this.addNode.click();
         this.backendIpLabel.waitForVisible(constants.wait.normal);
         this.backendIpAddress.waitForVisible(constants.wait.normal);
         this.backendIpLabel.click();
         this.backendIpLabel.setValue(nodeConfig.label);
+
+        /** click the region where our Linode is located */
+        if (type === 'creating') {
+            $('[data-qa-select-card-subheading="Newark, NJ"]').click()
+        }
+
+        /** set the value of the ip address */
         this.backendIpAddress.setValue(nodeConfig.ip);
+
+        /** wait for the dropdown options to appear */
+        $('[data-qa-option]').waitForVisible(constants.wait.normal)
+
+        /** press enter key which will select first value */
+        browser.keys("\uE007");
     }
 
     configRemoveNode(nodeLabel) {
@@ -193,7 +206,21 @@ class NodeBalancers extends Page {
         this.selectMenuOption(this.algorithmSelect.$('div'), nodeBalancerConfig.algorithm);
         this.selectMenuOption(this.sessionStickiness.$('div'), nodeBalancerConfig.sessionStickiness);
         this.backendIpLabel.setValue(linodeConfig.label);
-        this.backendIpAddress.setValue(linodeConfig.privateIp);
+
+        /** start backend ip selection */
+        /** click the newark region because that's where our Linode is located */
+        $('[data-qa-select-card-subheading="Newark, NJ"]').click()
+
+        /** set the value of the IP Address field */
+        const privateIP = linodeConfig.ipv4.find(eachIP => eachIP.match(/192.168/))
+        this.backendIpAddress.setValue(privateIP);
+
+        /** wait for the dropdown options to appear */
+        $('[data-qa-option]').waitForVisible(constants.wait.normal)
+
+        /** press enter key which will select first value */
+        browser.keys("\uE007");
+
         this.backendIpPort.setValue(80);
         browser.jsClick('[data-qa-deploy-linode]');
     }

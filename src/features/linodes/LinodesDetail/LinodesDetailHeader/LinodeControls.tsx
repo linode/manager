@@ -2,7 +2,7 @@ import { last } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import Breadcrumb from 'src/components/Breadcrumb';
+import Breadcrumb, { BreadcrumbProps } from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import {
   createStyles,
@@ -11,7 +11,6 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-import LinodeConfigSelectionDrawer from 'src/features/LinodeConfigSelectionDrawer';
 import { lishLaunch } from 'src/features/Lish';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -20,7 +19,6 @@ import {
   withLinodeDetailContext
 } from '../linodeDetailContext';
 import LinodePowerControl from '../LinodePowerControl';
-import withConfigDrawerState, { ConfigDrawerProps } from './configDrawerState';
 import withEditableLabelState, {
   EditableLabelProps
 } from './editableLabelState';
@@ -58,8 +56,12 @@ const styles = (theme: Theme) =>
     }
   });
 
-type CombinedProps = LinodeDetailContext &
-  ConfigDrawerProps &
+interface Props {
+  breadcrumbProps?: Partial<BreadcrumbProps>;
+}
+
+type CombinedProps = Props &
+  LinodeDetailContext &
   EditableLabelProps &
   RouteComponentProps<{}> &
   WithStyles<ClassNames>;
@@ -69,26 +71,14 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
     classes,
     linode,
     updateLinode,
-    configDrawerAction,
-    configDrawerError,
-    configDrawerOpen,
-    configDrawerSelected,
-    closeConfigDrawer,
-    openConfigDrawer,
-    configDrawerSelectConfig,
     editableLabelError,
     resetEditableLabel,
-    setEditableLabelError
+    setEditableLabelError,
+
+    breadcrumbProps
   } = props;
 
   const disabled = linode._permissions === 'read_only';
-
-  const submitConfigChoice = () => {
-    if (configDrawerSelected && configDrawerAction) {
-      configDrawerAction(configDrawerSelected);
-      closeConfigDrawer();
-    }
-  };
 
   const handleSubmitLabelChange = (label: string) => {
     return updateLinode({ label })
@@ -137,6 +127,8 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
                 }
               : undefined
           }
+          /* Override with any custom breadcrumb props that may have been passed in */
+          {...breadcrumbProps}
         />
       </Grid>
       <Grid item className={classes.controls}>
@@ -155,28 +147,17 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
           recentEvent={linode.recentEvent}
           id={linode.id}
           label={linode.label}
-          noConfigs={linode._configs.length === 0}
-          openConfigDrawer={openConfigDrawer}
           disabled={disabled}
+          linodeConfigs={linode._configs}
         />
       </Grid>
-      <LinodeConfigSelectionDrawer
-        configs={linode._configs}
-        onClose={closeConfigDrawer}
-        onSubmit={submitConfigChoice}
-        onChange={configDrawerSelectConfig}
-        open={configDrawerOpen}
-        selected={String(configDrawerSelected)}
-        error={configDrawerError}
-      />
     </Grid>
   );
 };
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(
-  withConfigDrawerState,
+const enhanced = compose<CombinedProps, Props>(
   withEditableLabelState,
   withRouter,
   withLinodeDetailContext(({ linode, updateLinode }) => ({

@@ -15,12 +15,14 @@ export type RescueRequestObject = Pick<
 >;
 
 export interface LinodeCloneData {
-  linode_id?: string;
+  linode_id?: number;
   region?: string | null;
   type?: string | null;
   label?: string | null;
   backups_enabled?: boolean | null;
   tags?: string[] | null;
+  configs?: number[];
+  disks?: number[];
 }
 
 export interface RebuildRequest {

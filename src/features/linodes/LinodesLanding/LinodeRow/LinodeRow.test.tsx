@@ -20,12 +20,12 @@ describe('LinodeRow', () => {
 
   const mockProps: CombinedProps = {
     classes: mockClasses,
-    toggleConfirmation: jest.fn(),
     theme: light({ spacingOverride: 4 }),
     maintenanceStartTime: '',
     someLinodesHaveMaintenance: false,
     recentEvent: undefined,
-    openConfigDrawer: jest.fn(),
+    openDeleteDialog: jest.fn(),
+    openPowerActionDialog: jest.fn(),
     mutationAvailable: false,
     linodeNotifications: [],
     type: 'whatever',

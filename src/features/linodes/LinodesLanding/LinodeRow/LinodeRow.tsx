@@ -4,7 +4,6 @@ import Flag from 'src/assets/icons/flag.svg';
 import Tooltip from 'src/components/core/Tooltip';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { linodeInTransition } from 'src/features/linodes/transitions';
 import hasMutationAvailable, {
   HasMutationAvailable
@@ -19,6 +18,7 @@ import LinodeRowBackupCell from './LinodeRowBackupCell';
 import LinodeRowHeadCell from './LinodeRowHeadCell';
 import LinodeRowLoading from './LinodeRowLoading';
 
+import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { parseMaintenanceStartTime } from '../utils';
 
 interface Props {
@@ -38,15 +38,12 @@ interface Props {
   tags: string[];
   mostRecentBackup: string | null;
   someLinodesHaveMaintenance: boolean;
-
-  openConfigDrawer: (
-    configs: Linode.Config[],
-    action: LinodeConfigSelectionDrawerCallback
-  ) => void;
-  toggleConfirmation: (
-    bootOption: Linode.BootAction,
-    linodeId: number,
-    linodeLabel: string
+  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openPowerActionDialog: (
+    bootAction: Action,
+    linodeID: number,
+    linodeLabel: string,
+    linodeConfigs: Linode.Config[]
   ) => void;
 }
 
@@ -77,8 +74,8 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
     // other props
     classes,
     linodeNotifications,
-    openConfigDrawer,
-    toggleConfirmation,
+    openDeleteDialog,
+    openPowerActionDialog,
     // displayType, @todo use for M3-2059
     recentEvent,
     mutationAvailable
@@ -171,8 +168,8 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
               linodeType={type}
               linodeStatus={status}
               linodeBackups={backups}
-              openConfigDrawer={openConfigDrawer}
-              toggleConfirmation={toggleConfirmation}
+              openDeleteDialog={openDeleteDialog}
+              openPowerActionDialog={openPowerActionDialog}
               noImage={!image}
             />
           </div>

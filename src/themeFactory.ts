@@ -516,7 +516,15 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       },
       MuiDialog: {
         paper: {
-          boxShadow: '0 0 5px #bbb'
+          boxShadow: '0 0 5px #bbb',
+          [breakpoints.down('sm')]: {
+            maxWidth: '100% !important',
+            maxHeight: 'calc(100% - 48px)',
+            margin: 24
+          }
+        },
+        paperScrollPaper: {
+          maxHeight: 'calc(100% - 48px)'
         }
       },
       MuiDialogActions: {
@@ -1289,7 +1297,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             '&$hover': {
               backgroundColor: '#fbfbfb',
               '&:before': {
-                borderLeftColor: primaryColors.main
+                backgroundColor: primaryColors.main
               }
             }
           }
@@ -1303,6 +1311,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         },
         hover: {
           cursor: 'pointer',
+          '& a': {
+            color: primaryColors.text
+          },
           '& a.secondaryLink': {
             color: primaryColors.main,
             '&:hover': {
