@@ -11,12 +11,9 @@ import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
 import {
-  createNodePoolActions,
   deleteClusterActions,
-  deleteNodePoolActions,
   requestClustersActions,
   updateClusterActions,
-  updateNodePoolActions,
   upsertCluster
 } from './kubernetes.actions';
 
@@ -57,20 +54,4 @@ export const updateCluster = createRequestThunk(
 export const deleteCluster = createRequestThunk(
   deleteClusterActions,
   ({ clusterID }) => _deleteCluster(clusterID)
-);
-
-export const deleteNodePool = createRequestThunk(
-  deleteNodePoolActions,
-  ({ clusterID, nodePoolID }) => _deleteNodePool(clusterID, nodePoolID)
-);
-
-export const createNodePool = createRequestThunk(
-  createNodePoolActions,
-  ({ clusterID, ...data }) => _createNodePool(clusterID, data)
-);
-
-export const updateNodePool = createRequestThunk(
-  updateNodePoolActions,
-  ({ clusterID, nodePoolID, ...data }) =>
-    _updateNodePool(clusterID, nodePoolID, data)
 );
