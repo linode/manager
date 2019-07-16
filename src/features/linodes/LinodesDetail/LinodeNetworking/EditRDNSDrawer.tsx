@@ -74,11 +74,17 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
     const timer = setTimeout(this.showDelayText, 5000);
     updateIP(address!, !rdns || rdns === '' ? null : rdns)
       .then(_ => {
+        if (!this.mounted) {
+          return;
+        }
         clearTimeout(timer);
         this.setState({ loading: false, delayText: null });
         onClose();
       })
       .catch(errResponse => {
+        if (!this.mounted) {
+          return;
+        }
         clearTimeout(timer);
         this.setState(
           {
