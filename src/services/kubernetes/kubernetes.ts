@@ -7,7 +7,7 @@ import Request, {
   setXFilter
 } from '../index';
 
-import { createKubeClusterSchema, nodePoolSchema } from './kubernetes.schema';
+import { createKubeClusterSchema } from './kubernetes.schema';
 
 // Payload types
 export interface CreateKubeClusterPayload {
