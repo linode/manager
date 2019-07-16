@@ -225,6 +225,7 @@
     "lint-staged": "^8.1.0",
     "madge": "^3.4.3",
     "mini-css-extract-plugin": "^0.7.0",
+    "mochawesome-report-generator": "^3.1.5",
     "mongodb": "^3.1.13",
     "mountebank": "^1.14.1",
     "otplib": "^10.0.1",

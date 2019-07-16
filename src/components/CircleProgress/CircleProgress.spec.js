@@ -14,18 +14,18 @@ describe('Circle Progress Indicator Component Suite', () => {
         });
 
         it('should display indefinite progress indicator', () => {
-            browser.waitForVisible('[data-qa-circle-progress]');
+            $('[data-qa-circle-progress]').waitForDisplayed();
 
             const progressIndicator = $('[data-qa-circle-progress]');
             const role = progressIndicator.getAttribute('role');
 
             expect(role).toBe('progressbar');
-            expect(progressIndicator.isVisible()).toBe(true)
+            expect(progressIndicator.isDisplayed()).toBe(true)
         });
 
         it('should contain an svg child element', () => {
             const svg = $('[data-qa-circle-progress] > svg' );
-            expect(svg.isVisible()).toBe(true);
+            expect(svg.isDisplayed()).toBe(true);
         });
 
         it('should be indefinite variant', () => {
@@ -41,7 +41,7 @@ describe('Circle Progress Indicator Component Suite', () => {
         });
 
         it('should display the data inside progress indicator', () => {
-            browser.waitForVisible('[data-qa-circle-progress]');
+            $('[data-qa-circle-progress]').waitForDisplayed();
             progressbar = $('[data-qa-circle-progress]');
 
             expect(progressbar.getAttribute('data-qa-circle-progress')).toBe('50');
@@ -56,7 +56,7 @@ describe('Circle Progress Indicator Component Suite', () => {
         it('should display the progress bar as green', () => {
             const colorCode = 'rgb(0,177,89)';
 
-            expect(progressbar.$('circle').getCssProperty('stroke').value).toBe(colorCode);
+            expect(progressbar.$('circle').getCSSProperty('stroke').value).toBe(colorCode);
         });
     });
 });

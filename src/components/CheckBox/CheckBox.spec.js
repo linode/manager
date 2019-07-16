@@ -12,7 +12,7 @@ describe('Checkbox Component Suite', () => {
 
     it('should display checkboxes on interactive story', () => {
         const checkboxes = $$('[data-qa-checked]'); 
-        checkboxes.forEach(e => expect(e.isVisible()).toBe(true));
+        checkboxes.forEach(e => expect(e.isDisplayed()).toBe(true));
     });
 
     it('should check on click', () => {
