@@ -10,14 +10,14 @@ cache: yarn
 before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev
   build-essential g++ google-chrome-stable curl
 install:
-- cd ./packages/manager
-- yarn --frozen-lockfile
+- yarn global add lerna
+- lerna bootstrap --stream
 before_script:
-- yarn storybook &
+- lerna run --stream --scope linode-manager storybook &
 script:
-- yarn build
-- yarn test --coverage --maxWorkers=2
-- yarn storybook:e2e
+- lerna run build --stream --scope linode-manager
+- lerna run --stream --scope linode-manager test -- --coverage --maxWorkers=2
+- lerna run --stream --scope linode-manager storybook:e2e 
 - 'pkill -f selenium-standalone || :'
 - pkill -f storybook
 env:
