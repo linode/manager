@@ -18,7 +18,6 @@ import {
   shouldUpdateEvents
 } from 'src/features/Events/Event.helpers';
 import { ExtendedEvent } from 'src/store/events/event.helpers';
-import { removeBlacklistedEvents } from 'src/utilities/eventUtils';
 
 type ClassNames = 'root' | 'header' | 'viewMore';
 
@@ -133,7 +132,7 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
     const { classes, linodeId } = this.props;
     const { events, error, loading } = this.state;
 
-    const filteredEvents = removeBlacklistedEvents(events);
+    const _events = events || [];
 
     return (
       <>
@@ -153,7 +152,7 @@ export class ActivitySummary extends React.Component<CombinedProps, State> {
         </Grid>
         <Paper className={classes.root}>
           <ActivitySummaryContent
-            events={filteredEvents.slice(0, 5)}
+            events={_events.slice(0, 5)}
             error={error}
             loading={loading}
           />

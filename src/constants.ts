@@ -225,3 +225,13 @@ export const EU_COUNTRIES = [
   'SK', // Slovakia
   'GB' // United Kingdom
 ];
+
+export const GLOBAL_EVENTS_BLACKLIST = [
+  // We don't want to display these events because they precede similar events.
+  // Example: when a user clicks the button to upgrade a Linode, we immediately
+  // get a `linode_mutate_create` event from the API. Moments later, we get back
+  // ANOTHER event, `linode_mutate`, with a status of `scheduled`. That's the event
+  // we want to display, because it will be updated via other events with the same ID.
+  'linode_mutate_create', // This event occurs when an upgrade is first initiated.
+  'linode_resize_create' // This event occurs when a resize is first initiated.
+] as Linode.EventAction[];

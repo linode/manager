@@ -27,7 +27,6 @@ import { getEvents } from 'src/services/account';
 import { ApplicationState } from 'src/store';
 import { setDeletedEvents } from 'src/store/events/event.helpers';
 import areEntitiesLoading from 'src/store/selectors/entitiesLoading';
-import { removeBlacklistedEvents } from 'src/utilities/eventUtils';
 
 import { ExtendedEvent } from 'src/store/events/event.helpers';
 import { filterUniqueEvents, shouldUpdateEvents } from './Event.helpers';
@@ -339,7 +338,7 @@ export const renderTableBody = (
   error?: string,
   events?: Linode.Event[]
 ) => {
-  const filteredEvents = removeBlacklistedEvents(events);
+  const _events = events || [];
 
   if (loading) {
     return <TableRowLoading colSpan={12} data-qa-events-table-loading />;
@@ -351,7 +350,7 @@ export const renderTableBody = (
         data-qa-events-table-error
       />
     );
-  } else if (filteredEvents.length === 0) {
+  } else if (_events.length === 0) {
     return (
       <TableRowEmptyState
         colSpan={12}
@@ -362,7 +361,7 @@ export const renderTableBody = (
   } else {
     return (
       <>
-        {filteredEvents.map((thisEvent, idx) => (
+        {_events.map((thisEvent, idx) => (
           <EventRow
             entityId={entityId}
             key={`event-list-item-${idx}`}

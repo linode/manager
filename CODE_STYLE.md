@@ -731,3 +731,14 @@ which generally call API methods from the services library and dispatch multiple
     store.clearActions();
   });
   ```
+
+### Events Filtering
+
+The Linode API returns a large list of events to update the user of activity on their account. Some of these events
+are redundant in our UI. For example, a user might update their email, see "Email updated successfully" in the form,
+then receive a notification in the upper-right events menu when the `profile_update` event is received from the API.
+These events can be hidden by adding them to the blacklist in `UserEventsMenu.tsx`. They will then appear in the 
+events landing list, any activity feeds, etc., but not in the UserEventsMenu in the top right of the view.
+
+Other events, specifically relating to mutations, should be ignored by the app altogether. To add a globally ignored
+event, update the GLOBAL_EVENTS_BLACKLIST array in `src/constants`.

@@ -22,6 +22,14 @@ import UserEventsList from './UserEventsList';
 
 type ClassNames = 'root' | 'dropDown' | 'viewAll';
 
+/**
+ * This blacklist is for events which should be hidden only in this menu;
+ * these events will still appear in EventsLanding and ActivitySummary.
+ * To globally filter an event, add it to GLOBAL_EVENTS_BLACKLIST in
+ * src/constants.
+ */
+const blacklistedEvents = ['profile_update'] as Linode.EventAction[];
+
 const styles = (theme: Theme) =>
   createStyles({
     root: {
@@ -80,7 +88,7 @@ export class UserEventsMenu extends React.Component<CombinedProps, State> {
       history: { push }
     } = this.props;
 
-    const filteredEvents = removeBlacklistedEvents(events);
+    const filteredEvents = removeBlacklistedEvents(events, blacklistedEvents);
     const unseenCount = getNumUnseenEvents(filteredEvents);
 
     return (

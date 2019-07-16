@@ -4,6 +4,7 @@ import {
   markEventSeen
 } from 'src/services/account/events';
 import { dateFormat } from 'src/time';
+import { removeBlacklistedEvents } from 'src/utilities/eventUtils';
 import { generatePollingFilter } from 'src/utilities/requestFilters';
 import { ThunkActionCreator } from '../types';
 import { addEvents, updateEventsAsSeen } from './event.actions';
@@ -27,6 +28,8 @@ export const getEvents: ThunkActionCreator<Promise<Linode.Event[]>> = () => (
   return (
     _getEvents({ page_size: 25 }, filters)
       .then(response => response.data)
+      // This will remove globally blacklisted events, which will not appear anywhere in the app.
+      .then(removeBlacklistedEvents)
       /**
        * There is where we set _initial on the events. In the default state of events the
        * mostRecentEventTime is set to epoch. On the completion of the first successful events
