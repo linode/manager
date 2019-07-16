@@ -34,7 +34,7 @@ export const extendNodePools = (
 const extendNodePool = (
   clusterID: number,
   nodePool: Linode.KubeNodePoolResponse
-) => ({ ...nodePool, belongsTo: clusterID });
+) => ({ ...nodePool, clusterID: clusterID });
 
 export const requestNodePoolsForCluster: ThunkActionCreator<
   Promise<Linode.KubeNodePoolResponse[]>

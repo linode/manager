@@ -30,7 +30,7 @@ import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollTo from 'src/utilities/scrollTo';
 import { extendCluster, getMonthlyPrice } from '.././kubeUtils';
-import { ExtendedCluster, ExtendedPoolNode } from '.././types';
+import { ExtendedCluster, PoolNodeWithPrice } from '.././types';
 import NodePoolPanel from '../CreateCluster/NodePoolPanel';
 import KubernetesDialog from './KubernetesDialog';
 import KubeSummaryPanel from './KubeSummaryPanel';
@@ -147,7 +147,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
 
   const [editing, setEditing] = React.useState<boolean>(false);
   /** Holds the local state of the cluster's node pools when editing */
-  const [pools, updatePools] = React.useState<ExtendedPoolNode[]>([]);
+  const [pools, updatePools] = React.useState<PoolNodeWithPrice[]>([]);
   /** When adding new pools in the NodePoolPanel component, use these variables. */
   const [selectedType, setSelectedType] = React.useState<string | undefined>(
     undefined
@@ -238,7 +238,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
       });
   };
 
-  const updatePool = (poolIdx: number, updatedPool: ExtendedPoolNode) => {
+  const updatePool = (poolIdx: number, updatedPool: PoolNodeWithPrice) => {
     const updatedPoolWithPrice = {
       ...updatedPool,
       totalMonthlyPrice: getMonthlyPrice(
@@ -266,7 +266,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     setErrors(undefined);
   };
 
-  const handleAddNodePool = (pool: ExtendedPoolNode) => {
+  const handleAddNodePool = (pool: PoolNodeWithPrice) => {
     if (editing) {
       /** We're already in editing mode, so the list of pool nodes should be accurate */
       updatePools(prevPools => {
@@ -297,7 +297,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
 
   const handleDeletePool = (poolIdx: number) => {
     updatePools(prevPools => {
-      const poolToDelete = path<ExtendedPoolNode>([poolIdx], prevPools);
+      const poolToDelete = path<PoolNodeWithPrice>([poolIdx], prevPools);
       if (poolToDelete) {
         if (poolToDelete.queuedForAddition) {
           /**

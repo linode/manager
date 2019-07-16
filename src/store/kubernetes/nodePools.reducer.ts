@@ -35,7 +35,8 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return {
       ...state,
       entities: [...state.entities, ...result],
-      results: [...state.results, ...result.map(p => p.id)]
+      results: [...state.results, ...result.map(p => p.id)],
+      loading: false
     };
   }
 
@@ -57,7 +58,24 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
     return {
       ...state,
-      entities: [...state.entities, result]
+      entities: [...state.entities, result],
+      results: [...state.results, result.id],
+      error: {
+        ...state.error,
+        create: undefined
+      }
+    };
+  }
+
+  if (isType(action, createNodePoolActions.failed)) {
+    const { error } = action.payload;
+
+    return {
+      ...state,
+      error: {
+        ...state.error,
+        create: error
+      }
     };
   }
 
@@ -98,6 +116,18 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       ...state,
       entities: updatedPools,
       results: updatedPools.map(p => p.id)
+    };
+  }
+
+  if (isType(action, deleteNodePoolActions.failed)) {
+    const { error } = action.payload;
+
+    return {
+      ...state,
+      error: {
+        ...state.error,
+        delete: error
+      }
     };
   }
 

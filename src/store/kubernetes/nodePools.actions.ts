@@ -3,10 +3,12 @@ import actionCreatorFactory from 'typescript-fsa';
 import { EntityError } from 'src/store/types';
 
 export interface ExtendedNodePool extends Linode.KubeNodePoolResponse {
-  belongsTo: number; // clusterID of the cluster this node is associated with
+  clusterID: number; // clusterID of the cluster this node is associated with
 }
 
-export const actionCreator = actionCreatorFactory(`@@manager/kubernetes/nodePools`);
+export const actionCreator = actionCreatorFactory(
+  `@@manager/kubernetes/nodePools`
+);
 
 export const requestNodePoolsActions = actionCreator.async<
   void,
@@ -18,7 +20,9 @@ export const addOrUpdateNodePool = actionCreator<Linode.KubeNodePoolResponse>(
   'add_or_update'
 );
 
-export const upsertNodePool = actionCreator<Linode.KubeNodePoolResponse>(`upsert`);
+export const upsertNodePool = actionCreator<Linode.KubeNodePoolResponse>(
+  `upsert`
+);
 
 export const setErrors = actionCreator<EntityError>('set-errors');
 

@@ -20,7 +20,7 @@ import SelectPlanPanel, {
 } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 
 import { getMonthlyPrice } from '.././kubeUtils';
-import { ExtendedPoolNode } from '.././types';
+import { PoolNodeWithPrice } from '.././types';
 import NodePoolDisplayTable from './NodePoolDisplayTable';
 
 type ClassNames = 'root' | 'title' | 'gridItem' | 'countInput';
@@ -54,13 +54,13 @@ interface Props {
   selectedType?: string;
   nodeCount: number;
   hideTable?: boolean;
-  addNodePool: (pool: ExtendedPoolNode) => void;
+  addNodePool: (pool: PoolNodeWithPrice) => void;
   handleTypeSelect: (newType?: string) => void;
   updateNodeCount: (newCount: number) => void;
   // Props only needed if hideTable is false
-  pools?: ExtendedPoolNode[];
+  pools?: PoolNodeWithPrice[];
   deleteNodePool?: (poolIdx: number) => void;
-  updatePool?: (poolIdx: number, updatedPool: ExtendedPoolNode) => void;
+  updatePool?: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
