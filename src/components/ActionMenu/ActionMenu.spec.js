@@ -29,7 +29,7 @@ describe('Action Menu Suite', () => {
         $(actionMenu).click();
         $(actionMenuItem).waitForDisplayed();
         $(actionMenuItem).click();
-        $(actionMenuItem).waitForDisplayed(3000, true);
+        $(actionMenuItem).waitForExist(3000, true);
         
     });
 
