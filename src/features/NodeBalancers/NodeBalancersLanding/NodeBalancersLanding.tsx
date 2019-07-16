@@ -24,7 +24,6 @@ import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import Toggle from 'src/components/Toggle';
-import localStorageContainer from 'src/containers/localStorage.container';
 import {
   NodeBalancerGettingStarted,
   NodeBalancerReference
@@ -40,6 +39,8 @@ import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import ListGroupedNodeBalancers from './ListGroupedNodeBalancers';
 import ListNodeBalancers from './ListNodeBalancers';
 import NodeBalancersLandingEmptyState from './NodeBalancersLandingEmptyState';
+
+import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 
 type ClassNames =
   | 'root'
@@ -101,7 +102,6 @@ interface State {
 }
 
 type CombinedProps = WithNodeBalancerActions &
-  LocalStorageProps &
   WithNodeBalancers &
   WithStyles<ClassNames> &
   RouteComponentProps<{}> &
@@ -111,8 +111,6 @@ export class NodeBalancersLanding extends React.Component<
   CombinedProps,
   State
 > {
-  static eventCategory = `nodebalancers landing`;
-
   static defaultDeleteConfirmDialogState = {
     submitting: false,
     open: false,
@@ -218,8 +216,6 @@ export class NodeBalancersLanding extends React.Component<
       nodeBalancersLoading,
       nodeBalancersData,
       nodeBalancersError,
-      groupByTag,
-      toggleGroupByTag,
       location
     } = this.props;
 
@@ -242,64 +238,91 @@ export class NodeBalancersLanding extends React.Component<
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="NodeBalancers" />
-        <Grid
-          container
-          justify="space-between"
-          alignItems="flex-end"
-          style={{ paddingBottom: 0 }}
+        <PreferenceToggle<boolean>
+          preferenceKey="nodebalancers_group_by_tag"
+          preferenceOptions={[false, true]}
+          localStorageKey="GROUP_NODEBALANCERS"
+          toggleCallbackFnDebounced={toggleNodeBalancersGroupBy}
         >
-          <Grid item className={classes.titleWrapper}>
-            <Breadcrumb
-              pathname={location.pathname}
-              data-qa-title
-              labelTitle="NodeBalancers"
-              className={classes.title}
-            />
-          </Grid>
-          <Grid item className="p0">
-            <FormControlLabel
-              className={classes.tagGroup}
-              label="Group by Tag:"
-              control={
-                <Toggle
-                  className={groupByTag ? ' checked' : ' unchecked'}
-                  onChange={(e, checked) => toggleGroupByTag(checked)}
-                  checked={groupByTag}
-                />
-              }
-            />
-          </Grid>
-          <Grid item>
-            <Grid container alignItems="flex-end" style={{ width: 'auto' }}>
-              <Grid item className="pt0">
-                <AddNewLink
-                  onClick={() => history.push('/nodebalancers/create')}
-                  label="Add a NodeBalancer"
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-        <OrderBy
-          data={Object.values(nodeBalancersData)}
-          order={'desc'}
-          orderBy={`label`}
-        >
-          {({ data: orderedData, handleOrderChange, order, orderBy }) => {
-            const props = {
-              data: orderedData,
-              handleOrderChange,
-              order,
-              orderBy,
-              toggleDialog: this.toggleDialog
-            };
-            return groupByTag ? (
-              <ListGroupedNodeBalancers {...props} />
-            ) : (
-              <ListNodeBalancers {...props} />
+          {({
+            preference: nodeBalancersAreGrouped,
+            togglePreference: toggleNodeBalancerGroupByTag
+          }: ToggleProps<boolean>) => {
+            return (
+              <React.Fragment>
+                <Grid
+                  container
+                  justify="space-between"
+                  alignItems="flex-end"
+                  style={{ paddingBottom: 0 }}
+                >
+                  <Grid item className={classes.titleWrapper}>
+                    <Breadcrumb
+                      pathname={location.pathname}
+                      data-qa-title
+                      labelTitle="NodeBalancers"
+                      className={classes.title}
+                    />
+                  </Grid>
+                  <Grid item className="p0">
+                    <FormControlLabel
+                      className={classes.tagGroup}
+                      label="Group by Tag:"
+                      control={
+                        <Toggle
+                          className={
+                            nodeBalancersAreGrouped ? ' checked' : ' unchecked'
+                          }
+                          onChange={toggleNodeBalancerGroupByTag}
+                          checked={nodeBalancersAreGrouped}
+                        />
+                      }
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Grid
+                      container
+                      alignItems="flex-end"
+                      style={{ width: 'auto' }}
+                    >
+                      <Grid item className="pt0">
+                        <AddNewLink
+                          onClick={() => history.push('/nodebalancers/create')}
+                          label="Add a NodeBalancer"
+                        />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                <OrderBy
+                  data={Object.values(nodeBalancersData)}
+                  order={'desc'}
+                  orderBy={`label`}
+                >
+                  {({
+                    data: orderedData,
+                    handleOrderChange,
+                    order,
+                    orderBy
+                  }) => {
+                    const props = {
+                      data: orderedData,
+                      handleOrderChange,
+                      order,
+                      orderBy,
+                      toggleDialog: this.toggleDialog
+                    };
+                    return nodeBalancersAreGrouped ? (
+                      <ListGroupedNodeBalancers {...props} />
+                    ) : (
+                      <ListNodeBalancers {...props} />
+                    );
+                  }}
+                </OrderBy>
+              </React.Fragment>
             );
           }}
-        </OrderBy>
+        </PreferenceToggle>
         <ConfirmationDialog
           onClose={this.closeConfirmationDialog}
           title={`Delete ${this.state.selectedNodeBalancerLabel}?`}
@@ -346,6 +369,11 @@ export class NodeBalancersLanding extends React.Component<
     });
 }
 
+const eventCategory = `nodebalancers landing`;
+
+const toggleNodeBalancersGroupBy = (checked: boolean) =>
+  sendGroupByTagEnabledEvent(eventCategory, checked);
+
 const styled = withStyles(styles);
 
 interface NodeBalancerWithConfigs extends Linode.NodeBalancer {
@@ -358,41 +386,6 @@ interface WithNodeBalancers {
   nodeBalancersError?: Linode.ApiFieldError[];
   nodeBalancersLoading: boolean;
 }
-
-type LocalStorageProps = LocalStorageState & LocalStorageUpdater;
-
-interface LocalStorageState {
-  groupByTag: boolean;
-}
-
-interface LocalStorageUpdater {
-  toggleGroupByTag: (checked: boolean) => Partial<LocalStorageState>;
-  [key: string]: (...args: any[]) => Partial<LocalStorageState>;
-}
-
-const withLocalStorage = localStorageContainer<
-  LocalStorageState,
-  LocalStorageUpdater,
-  {}
->(
-  storage => {
-    return {
-      groupByTag: storage.groupNodeBalancersByTag.get()
-    };
-  },
-  storage => ({
-    toggleGroupByTag: state => (checked: boolean) => {
-      storage.groupNodeBalancersByTag.set(checked ? 'true' : 'false');
-
-      sendGroupByTagEnabledEvent(NodeBalancersLanding.eventCategory, checked);
-
-      return {
-        ...state,
-        groupByTag: checked
-      };
-    }
-  })
-);
 
 export const enhanced = compose<CombinedProps, {}>(
   connect((state: ApplicationState) => {
@@ -413,7 +406,6 @@ export const enhanced = compose<CombinedProps, {}>(
       nodeBalancersLoading: nodeBalancersLoading && lastUpdated === 0
     };
   }),
-  withLocalStorage,
   withRouter,
   withNodeBalancerActions,
   SectionErrorBoundary,
