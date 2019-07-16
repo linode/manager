@@ -22,6 +22,7 @@ interface State {
   address?: string;
   loading: boolean;
   errors?: Linode.ApiFieldError[];
+  delayText: string | null;
 }
 
 type CombinedProps = Props;
@@ -30,8 +31,19 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
   state: State = {
     rdns: this.props.rdns,
     address: this.props.address,
-    loading: false
+    loading: false,
+    delayText: null
   };
+
+  mounted: boolean = false;
+
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+  }
 
   errorResources = {
     rdns: 'RDNS'
@@ -45,20 +57,34 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
     });
   }
 
+  showDelayText = () => {
+    if (!this.mounted) {
+      return;
+    }
+    this.setState({
+      delayText:
+        'Your request is still pending. Editing RDNS can take up to 30 seconds. Thank you for your patience.'
+    });
+  };
+
   save = () => {
     const { onClose } = this.props;
     const { rdns, address } = this.state;
     this.setState({ loading: true, errors: undefined });
+    const timer = setTimeout(this.showDelayText, 5000);
     updateIP(address!, !rdns || rdns === '' ? null : rdns)
       .then(_ => {
-        this.setState({ loading: false });
+        clearTimeout(timer);
+        this.setState({ loading: false, delayText: null });
         onClose();
       })
       .catch(errResponse => {
+        clearTimeout(timer);
         this.setState(
           {
             errors: getAPIErrorOrDefault(errResponse),
-            loading: false
+            loading: false,
+            delayText: null
           },
           () => {
             scrollErrorIntoView();
@@ -73,7 +99,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const { open, onClose } = this.props;
-    const { rdns, errors, loading } = this.state;
+    const { rdns, delayText, errors, loading } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(this.errorResources, errors);
 
@@ -115,6 +141,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
               Close
             </Button>
           </ActionsPanel>
+          <Typography variant="body1">{delayText}</Typography>
         </React.Fragment>
       </Drawer>
     );
