@@ -9,13 +9,12 @@ const props: CombinedProps = {
   domainsData: domains,
   domainsLoading: false,
   howManyLinodesOnAccount: 0,
+  shouldGroupDomains: true,
   domainActions: {
     createDomain: jest.fn(),
     updateDomain: jest.fn(),
     deleteDomain: jest.fn()
   },
-  groupByTag: true,
-  toggleGroupByTag: jest.fn(),
   classes: {
     domain: '',
     dnsWarning: '',
@@ -41,7 +40,10 @@ window.matchMedia = jest.fn().mockImplementation(query => {
 
 describe('Domains Landing', () => {
   it('should render a notice when there are no Linodes but at least 1 domain', () => {
-    const { getByText } = render(wrapWithTheme(<DomainsLanding {...props} />));
+    const { getByText, debug } = render(
+      wrapWithTheme(<DomainsLanding {...props} />)
+    );
+    debug();
     expect(getByText(/not being served/));
   });
 });
