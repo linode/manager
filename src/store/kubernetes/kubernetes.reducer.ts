@@ -3,13 +3,9 @@ import { EntityError, EntityState } from 'src/store/types';
 import updateOrAdd from 'src/utilities/updateOrAdd';
 import { isType } from 'typescript-fsa';
 import {
-  createNodePoolActions,
   deleteClusterActions,
-  deleteNodePoolActions,
   requestClustersActions,
-  setErrors,
   updateClusterActions,
-  updateNodePoolActions,
   upsertCluster
 } from './kubernetes.actions';
 
@@ -80,68 +76,6 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     };
   }
 
-  if (isType(action, createNodePoolActions.done)) {
-    const { result } = action.payload;
-    const cluster = state.entities.find(
-      thisCluster => +thisCluster.id === result.lkeid
-    );
-    if (!cluster) {
-      return state;
-    }
-
-    const updatedCluster = {
-      ...cluster,
-      node_pools: [...cluster.node_pools, result]
-    };
-
-    const update = updateOrAdd(updatedCluster, state.entities);
-
-    return {
-      ...state,
-      entities: update,
-      results: update.map(c => c.id)
-    };
-  }
-
-  if (isType(action, updateNodePoolActions.failed)) {
-    const { error } = action.payload;
-
-    return {
-      ...state,
-      error: {
-        ...state.error,
-        update: error
-      }
-    };
-  }
-
-  if (isType(action, updateNodePoolActions.done)) {
-    const { result } = action.payload;
-    const cluster = state.entities.find(
-      thisCluster => +thisCluster.id === result.lkeid
-    );
-    if (!cluster) {
-      return state;
-    }
-
-    const updatedNodePools = cluster.node_pools.map(thisPool => {
-      return thisPool.id === result.id ? result : thisPool;
-    });
-
-    const updatedCluster = {
-      ...cluster,
-      node_pools: updatedNodePools
-    };
-
-    const update = updateOrAdd(updatedCluster, state.entities);
-
-    return {
-      ...state,
-      entities: update,
-      results: update.map(c => c.id)
-    };
-  }
-
   if (isType(action, deleteClusterActions.done)) {
     const {
       params: { clusterID }
@@ -170,37 +104,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     };
   }
 
-  if (isType(action, deleteNodePoolActions.done)) {
-    const {
-      params: { clusterID, nodePoolID }
-    } = action.payload;
-    const cluster = state.entities.find(
-      thisCluster => thisCluster.id === clusterID
-    );
-    if (!cluster) {
-      return state;
-    }
-    const nodePools = cluster.node_pools.filter(
-      thisPool => thisPool.id !== nodePoolID
-    );
-    const updatedCluster = { ...cluster, node_pools: nodePools };
-    const update = updateOrAdd(updatedCluster, state.entities);
-
-    return {
-      ...state,
-      entities: update,
-      results: update.map(c => c.id)
-    };
-  }
-
-  if (isType(action, setErrors)) {
-    const error = action.payload;
-    return {
-      ...state,
-      error
-    };
-  }
   return state;
-};
+}
 
 export default reducer;

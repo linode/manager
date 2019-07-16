@@ -22,10 +22,6 @@ export interface ClusterID {
   clusterID: number;
 }
 
-export interface NodePoolID {
-  nodePoolID: number;
-}
-
 export type UpdateClusterParams = ClusterID & Partial<Linode.KubernetesCluster>;
 export const updateClusterActions = actionCreator.async<
   UpdateClusterParams,
@@ -33,21 +29,6 @@ export const updateClusterActions = actionCreator.async<
   Linode.ApiFieldError[]
 >(`update`);
 
-export type CreateNodePoolParams = ClusterID & Linode.PoolNodeRequest;
-export const createNodePoolActions = actionCreator.async<
-  CreateNodePoolParams,
-  Linode.KubeNodePoolResponse,
-  Linode.ApiFieldError[]
->(`create-node-pool`);
-
-export type UpdateNodePoolParams = ClusterID &
-  NodePoolID &
-  Linode.PoolNodeRequest;
-export const updateNodePoolActions = actionCreator.async<
-  UpdateNodePoolParams,
-  Linode.KubeNodePoolResponse,
-  Linode.ApiFieldError[]
->(`update-node-pool`);
 
 export type DeleteClusterParams = ClusterID;
 export const deleteClusterActions = actionCreator.async<
@@ -56,9 +37,3 @@ export const deleteClusterActions = actionCreator.async<
   Linode.ApiFieldError[]
 >(`delete-cluster`);
 
-export type DeleteNodePoolParams = ClusterID & NodePoolID;
-export const deleteNodePoolActions = actionCreator.async<
-  DeleteNodePoolParams,
-  {},
-  Linode.ApiFieldError[]
->(`delete-node-pool`);

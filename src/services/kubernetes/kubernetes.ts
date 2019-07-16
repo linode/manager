@@ -82,48 +82,6 @@ export const deleteKubernetesCluster = (clusterID: number) =>
     setURL(`${BETA_API_ROOT}/lke/clusters/${clusterID}`)
   ).then(response => response.data);
 
-/**
- * createNodePool
- *
- * Adds a node pool to the specified cluster.
- */
-export const createNodePool = (
-  clusterID: number,
-  data: Linode.PoolNodeRequest
-) =>
-  Request<Linode.KubeNodePoolResponse>(
-    setMethod('POST'),
-    setURL(`${BETA_API_ROOT}/lke/clusters/${clusterID}/pools`),
-    setData(data, nodePoolSchema)
-  ).then(response => response.data);
-
-/**
- * updateNodePool
- *
- * Change the type or count of a node pool
- */
-export const updateNodePool = (
-  clusterID: number,
-  nodePoolID: number,
-  data: Linode.PoolNodeRequest
-) =>
-  Request<Linode.KubeNodePoolResponse>(
-    setMethod('PUT'),
-    setURL(`${BETA_API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`),
-    setData(data, nodePoolSchema)
-  ).then(response => response.data);
-
-/**
- * deleteNodePool
- *
- * Delete a single node pool from the specified Cluster.
- */
-export const deleteNodePool = (clusterID: number, nodePoolID: number) =>
-  Request<{}>(
-    setMethod('DELETE'),
-    setURL(`${BETA_API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`)
-  ).then(response => response.data);
-
 /** getKubeConfig
  *
  * Returns a base64 encoded string of a cluster's kubeconfig.yaml

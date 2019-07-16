@@ -35,7 +35,7 @@ export const extendCluster = (
   cluster: Linode.KubernetesCluster,
   types: ExtendedType[]
 ): ExtendedCluster => {
-  const pools = responseToExtendedNodePool(cluster.node_pools, types);
+  const pools = responseToExtendedNodePool(cluster.node_pools || [], types);
   const { CPU, RAM } = getTotalClusterMemoryAndCPU(pools, types);
   return {
     ...cluster,
