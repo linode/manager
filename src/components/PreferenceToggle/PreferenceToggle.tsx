@@ -87,12 +87,12 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
 
     /**
      * if for whatever reason we failed to get the preferences data
-     * just fallback to some defaults (the first in the list of options).
+     * just fallback to some default (the first in the list of options).
      *
      * Do NOT try and PUT to the API - we don't want to overwrite other unrelated preferences
      */
     if (
-      !currentlySetPreference &&
+      isNullOrUndefined(currentlySetPreference) &&
       !!props.preferenceError &&
       lastUpdated === 0
     ) {
@@ -110,7 +110,11 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
      * set the state to what we got from the server. If the preference
      * doesn't exist yet in this user's payload, set defaults in local state.
      */
-    if (!currentlySetPreference && !!props.preferences && lastUpdated === 0) {
+    if (
+      isNullOrUndefined(currentlySetPreference) &&
+      !!props.preferences &&
+      lastUpdated === 0
+    ) {
       const preferenceFromAPI = path<PreferenceValue>(
         [preferenceKey],
         props.preferences
@@ -155,7 +159,11 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
               .catch(() => /** swallow the error */ null);
           })
           .catch(() => /** swallow the error */ null);
-      } else if (!!preferences && currentlySetPreference && lastUpdated !== 0) {
+      } else if (
+        !!preferences &&
+        !isNullOrUndefined(currentlySetPreference) &&
+        lastUpdated !== 0
+      ) {
         /**
          * PUT to /preferences on every toggle, debounced.
          */
@@ -207,12 +215,16 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
    * So if you want to handle local state outside of this component,
    * you can do so and pass the value explicitly with the _value_ prop
    */
-  if (!currentlySetPreference) {
+  if (isNullOrUndefined(currentlySetPreference)) {
     return null;
   }
 
   return typeof children === 'function'
-    ? children({ preference: currentlySetPreference, togglePreference })
+    ? /**
+       * we just checked above if currentlySetPreference is null or undefined
+       * so the ! is okay here.
+       */
+      children({ preference: currentlySetPreference!, togglePreference })
     : null;
 };
 
@@ -232,9 +244,11 @@ const memoized = (component: React.FC<CombinedProps>) =>
      * state. All the relevant preference state will be handled in the component.
      * This component only cares about what the preferences are on app load.
      */
+
     const shouldRerender =
-      wasUndefinedNowDefined(prevProps.preferences, nextProps.preferences) ||
-      wasDefinedNowUndefined(prevProps.preferences, nextProps.preferences) ||
+      // wasUndefinedNowDefined(prevProps.preferences, nextProps.preferences) ||
+      // wasDefinedNowUndefined(prevProps.preferences, nextProps.preferences) ||
+      !equals(prevProps.preferences, nextProps.preferences) ||
       wasUndefinedNowDefined(
         prevProps.preferenceError,
         nextProps.preferenceError
@@ -267,6 +281,10 @@ const isUpdatingForTheFirstTime = (
   nextLastUpdated: number
 ) => {
   return prevLastUpdated === 0 && nextLastUpdated !== 0;
+};
+
+const isNullOrUndefined = (value: any) => {
+  return typeof value === 'undefined' || value === null;
 };
 
 export default (compose<CombinedProps, Props>(

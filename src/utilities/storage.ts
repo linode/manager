@@ -43,7 +43,6 @@ const PAGE_SIZE = 'PAGE_SIZE';
 const BETA_NOTIFICATION = 'BetaNotification';
 const VAT_NOTIFICATION = 'vatNotification';
 const LINODE_VIEW = 'linodesViewStyle';
-const GROUP_LINODES = 'GROUP_LINODES';
 const HIDE_DISPLAY_GROUPS_CTA = 'importDisplayGroupsCTA';
 const HAS_IMPORTED_GROUPS = 'hasImportedGroups';
 const GROUP_DOMAINS = `GROUP_DOMAINS`;
@@ -95,10 +94,6 @@ export interface Storage {
     linode: {
       get: () => LinodeView;
       set: (view: LinodeView) => void;
-    };
-    grouped: {
-      get: () => 'true' | 'false';
-      set: (v: 'true' | 'false') => void;
     };
   };
   loginCloudManager: {
@@ -168,10 +163,6 @@ export const storage: Storage = {
     linode: {
       get: (): LinodeView => getStorage(LINODE_VIEW),
       set: (view: LinodeView) => setStorage(LINODE_VIEW, view)
-    },
-    grouped: {
-      get: () => getStorage(GROUP_LINODES),
-      set: v => setStorage(GROUP_LINODES, v)
     }
   },
   loginCloudManager: {
