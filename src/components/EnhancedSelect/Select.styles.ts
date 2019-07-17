@@ -122,7 +122,7 @@ export const styles = (theme: Theme) =>
       },
       '& .react-select__single-value': {
         color: theme.palette.text.primary,
-        overflow: 'initial'
+        overflow: 'hidden'
       },
       '& .react-select__indicator-separator': {
         display: 'none'

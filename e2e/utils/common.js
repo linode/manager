@@ -58,16 +58,12 @@ export const createLinodeIfNone = () => {
 export const apiCreateLinode = (linodeLabel=false, privateIp=false, tags=[], type, region, group, image=true) => {
     const token = readToken(browser.options.testUser);
     const newLinodePass = crypto.randomBytes(20).toString('hex');
-    const linode = browser.createLinode(token, newLinodePass, linodeLabel, tags, type, region, group, image);
+    const linode = browser.createLinode(token, newLinodePass, linodeLabel, tags, type, region, group, image, privateIp);
 
     browser.url(constants.routes.linodes);
     browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.normal);
 
     waitForLinodeStatus(linodeLabel ? linodeLabel : linode.label, 'running', image);
-
-    if (privateIp) {
-        linode['privateIp'] = browser.allocatePrivateIp(token, linode.id).address;
-    }
 
     return linode;
 }
@@ -137,9 +133,7 @@ export const apiDeleteMyStackScripts = () => {
 }
 
 export const createNodeBalancer = () => {
-    const token = readToken(browser.options.testUser);
-    const linode = apiCreateLinode();
-    linode['privateIp'] = browser.allocatePrivateIp(token, linode.id).address;
+    const linode = apiCreateLinode(`test${new Date().getTime()}`, true);
     browser.url(constants.routes.nodeBalancers);
     NodeBalancers.baseElemsDisplay(true);
     NodeBalancers.create();
@@ -150,7 +144,6 @@ export const createNodeBalancer = () => {
 export const removeNodeBalancers = (doNotDeleteLinodes) => {
     const token = readToken(browser.options.testUser);
     if(!doNotDeleteLinodes){
-        console.log('here');
         apiDeleteAllLinodes();
     }
     const availableNodeBalancers = browser.getNodeBalancers(token);

@@ -109,40 +109,45 @@ export interface Props {
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
 
-export const CardBase: React.FunctionComponent<CombinedProps> = props => {
-  const { classes, heading, renderIcon, subheadings } = props;
-  return (
-    <Grid
-      container
-      alignItems="center"
-      justify="space-between"
-      className={`${classes.innerGrid} innerGrid`}
-    >
-      {renderIcon && (
-        <Grid item className={classes.icon}>
-          {renderIcon()}
+export class CardBase extends React.Component<CombinedProps> {
+  render() {
+    const { classes, heading, renderIcon, subheadings } = this.props;
+    return (
+      <Grid
+        container
+        alignItems="center"
+        justify="space-between"
+        className={`${classes.innerGrid} innerGrid`}
+      >
+        {renderIcon && (
+          <Grid item className={classes.icon}>
+            {renderIcon()}
+          </Grid>
+        )}
+        <Grid item xs={10} className={classes.flex}>
+          <div
+            className={classes.heading}
+            data-qa-select-card-heading={heading}
+          >
+            {heading}
+          </div>
+          {subheadings.map((subheading, idx) => {
+            return (
+              <div
+                key={idx}
+                className={classes.subheading}
+                data-qa-select-card-subheading={subheading}
+              >
+                {subheading}
+              </div>
+            );
+          })}
         </Grid>
-      )}
-      <Grid item xs={10} className={classes.flex}>
-        <div className={classes.heading} data-qa-select-card-heading={heading}>
-          {heading}
-        </div>
-        {subheadings.map((subheading, idx) => {
-          return (
-            <div
-              key={idx}
-              className={classes.subheading}
-              data-qa-select-card-subheading={subheading}
-            >
-              {subheading}
-            </div>
-          );
-        })}
+        {this.props.children}
       </Grid>
-      {props.children}
-    </Grid>
-  );
-};
+    );
+  }
+}
 
 const styled = withStyles(styles);
 

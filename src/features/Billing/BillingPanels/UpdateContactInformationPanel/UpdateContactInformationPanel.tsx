@@ -90,6 +90,23 @@ class UpdateContactInformationPanel extends React.Component<
 
   composeState = composeState;
 
+  componentDidMount() {
+    const { account } = this.props;
+    if (account) {
+      this.setState({ fields: { state: account.state } });
+    }
+  }
+
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (!prevProps.account && !!this.props.account) {
+      this.setState({
+        fields: {
+          state: this.props.account.state
+        }
+      });
+    }
+  }
+
   render() {
     return (
       <ExpansionPanel
@@ -168,15 +185,6 @@ class UpdateContactInformationPanel extends React.Component<
         label: region.name
       };
     });
-
-    const regionSelection = regionResults.find(region => {
-      return fields.state
-        ? region.value === fields.state
-        : region.value === account.state;
-    });
-
-    const hasChangedCountry =
-      fields.country && fields.country !== account.country;
 
     return (
       <Grid
@@ -368,12 +376,15 @@ class UpdateContactInformationPanel extends React.Component<
                 placeholder="Select a State"
                 options={regionResults}
                 isClearable={false}
+                // Explicitly setting the value as an object so the text will populate on selection.
+                // For more info see here: https://github.com/JedWatson/react-select/issues/2674
                 value={
-                  regionSelection
-                    ? regionSelection
-                    : hasChangedCountry
-                    ? null
-                    : { value: account.state, label: account.state }
+                  fields.state
+                    ? {
+                        label: fields.state,
+                        value: fields.state
+                      }
+                    : ''
                 }
                 textFieldProps={{
                   dataAttrs: {
@@ -510,6 +521,11 @@ class UpdateContactInformationPanel extends React.Component<
   };
 
   updateCountry = (selectedCountry: Item) => {
+    this.setState({
+      fields: {
+        state: undefined
+      }
+    });
     this.composeState([set(L.fields.country, selectedCountry.value)]);
   };
 
@@ -544,12 +560,16 @@ class UpdateContactInformationPanel extends React.Component<
       });
   };
 
-  resetForm = () =>
+  resetForm = () => {
+    const { account } = this.props;
     this.setState({
-      fields: {},
+      fields: {
+        state: account ? account.state : undefined
+      },
       submitting: false,
       success: undefined
     });
+  };
 }
 
 const styled = withStyles(styles);
