@@ -32,10 +32,26 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, requestNodePoolsActions.done)) {
     const { result } = action.payload;
 
+    // If there's nothing to add, return the state unchanged.
+    if (result.length === 0) {
+      return state;
+    }
+
+    /**
+     * This action payload is the current node pools for a single
+     * cluster. We need to add them to state, but make sure
+     * that we don't re-add existing ones for that cluster.
+     */
+    const clusterID = result[0].clusterID;
+    const filteredPools = state.entities.filter(
+      thisPool => thisPool.clusterID !== clusterID
+    );
+    const newPools = [...filteredPools, ...result];
+
     return {
       ...state,
-      entities: [...state.entities, ...result],
-      results: [...state.results, ...result.map(p => p.id)],
+      entities: newPools,
+      results: newPools.map(p => p.id),
       loading: false
     };
   }

@@ -1,17 +1,19 @@
 import { connect, MapDispatchToProps } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+
+import { extendCluster } from 'src/features/Kubernetes/kubeUtils';
 import { ApplicationState } from 'src/store';
 import {
   DeleteClusterParams,
   setErrors as _setErrors,
-  UpdateClusterParams,
+  UpdateClusterParams
 } from 'src/store/kubernetes/kubernetes.actions';
 import {
   deleteCluster as _deleteCluster,
   requestClusterForStore as _requestClusterForStore,
   requestKubernetesClusters as _requestKubernetesClusters,
-  updateCluster as _updateCluster,
+  updateCluster as _updateCluster
 } from 'src/store/kubernetes/kubernetes.requests';
 import {
   CreateNodePoolParams,
@@ -74,7 +76,14 @@ export default <TInner extends {}, TOuter extends {}>(
 ) =>
   connect(
     (state: ApplicationState, ownProps: TOuter) => {
-      const clusters = state.__resources.kubernetes.entities;
+      const _clusters = state.__resources.kubernetes.entities;
+      // Add node pool and pricing data to clusters
+      const nodePools = state.__resources.nodePools.entities;
+      const types = state.__resources.types.entities;
+      const clusters = _clusters.map(thisCluster =>
+        extendCluster(thisCluster, nodePools, types)
+      );
+
       const clustersLoading = state.__resources.kubernetes.loading;
       const clustersError = state.__resources.kubernetes.error || {};
       const lastUpdated = state.__resources.kubernetes.lastUpdated;

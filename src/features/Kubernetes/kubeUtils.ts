@@ -1,5 +1,4 @@
-import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { ExtendedCluster, PoolNode, PoolNodeWithPrice } from './types';
+import { ExtendedCluster, ExtendedPoolNode, PoolNodeWithPrice } from './types';
 
 // @todo don't hard code this
 export const KubernetesVersionOptions = ['1.13', '1.14'].map(version => ({
@@ -10,12 +9,12 @@ export const KubernetesVersionOptions = ['1.13', '1.14'].map(version => ({
 export const getMonthlyPrice = (
   type: string,
   count: number,
-  types: ExtendedType[]
+  types: Linode.LinodeType[]
 ) => {
   if (!types) {
     return 0;
   }
-  const thisType = types.find((t: ExtendedType) => t.id === type);
+  const thisType = types.find((t: Linode.LinodeType) => t.id === type);
   return thisType ? thisType.price.monthly * count : 0;
 };
 
@@ -33,13 +32,29 @@ export const getTotalClusterPrice = (pools: PoolNodeWithPrice[]) =>
  */
 export const extendCluster = (
   cluster: Linode.KubernetesCluster,
-  types: ExtendedType[]
+  pools: ExtendedPoolNode[],
+  types: Linode.LinodeType[]
 ): ExtendedCluster => {
-  const pools = responseToExtendedNodePool(cluster.node_pools || [], types);
-  const { CPU, RAM } = getTotalClusterMemoryAndCPU(pools, types);
+  // Identify which pools belong to this cluster and add pricing information.
+  const _pools = pools.reduce((accumulator, thisPool) => {
+    return thisPool.clusterID === cluster.id
+      ? [
+          ...accumulator,
+          {
+            ...thisPool,
+            totalMonthlyPrice: getMonthlyPrice(
+              thisPool.type,
+              thisPool.count,
+              types
+            )
+          }
+        ]
+      : accumulator;
+  }, []);
+  const { CPU, RAM } = getTotalClusterMemoryAndCPU(_pools, types);
   return {
     ...cluster,
-    node_pools: pools,
+    node_pools: _pools,
     totalMemory: RAM,
     totalCPU: CPU
   };
@@ -51,16 +66,17 @@ interface ClusterData {
 }
 
 export const getTotalClusterMemoryAndCPU = (
-  pools: PoolNode[],
-  types: ExtendedType[]
+  pools: ExtendedPoolNode[],
+  types: Linode.LinodeType[]
 ) => {
   if (!types || !pools) {
     return { RAM: 0, CPU: 0 };
   }
+
   return pools.reduce(
-    (accumulator: ClusterData, thisPool: PoolNode) => {
+    (accumulator: ClusterData, thisPool: ExtendedPoolNode) => {
       const thisType = types.find(
-        (type: ExtendedType) => type.id === thisPool.type
+        (type: Linode.LinodeType) => type.id === thisPool.type
       );
       if (!thisType) {
         return accumulator;
@@ -72,16 +88,4 @@ export const getTotalClusterMemoryAndCPU = (
     },
     { RAM: 0, CPU: 0 }
   );
-};
-
-export const responseToExtendedNodePool = (
-  pools: Linode.KubeNodePoolResponse[],
-  types: ExtendedType[]
-): PoolNodeWithPrice[] => {
-  return pools.map(thisPool => ({
-    id: thisPool.id,
-    count: thisPool.count,
-    type: thisPool.type,
-    totalMonthlyPrice: getMonthlyPrice(thisPool.type, thisPool.count, types)
-  }));
 };
