@@ -120,7 +120,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
     return {
       ...state,
-      data: data.filter(domain => domain.id !== domainId),
+      data: filteredData,
       results: filteredData.length
     };
   }
