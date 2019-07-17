@@ -1,6 +1,6 @@
-import InputLabel from '@material-ui/core/InputLabel';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
+import InputLabel from 'src/components/core/InputLabel';
 import {
   createStyles,
   Theme,

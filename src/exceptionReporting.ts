@@ -56,7 +56,7 @@ if (SENTRY_URL) {
       'Cannot redefine property: play',
       /** material-ui errors */
       'e.touches is undefined',
-      "method 'closest'",
+      "Object doesn't support property or method 'closest'",
       'target.className.indexOf is not a function',
       "can't access dead object",
       /** paypal errors */

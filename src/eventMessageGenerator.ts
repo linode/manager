@@ -1,4 +1,5 @@
 import { path } from 'ramda';
+import { reportException } from 'src/exceptionReporting';
 
 type EventMessageCreator = (e: Linode.Event) => string;
 
@@ -59,13 +60,14 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     finished: e => `A disk on Linode ${e.entity!.label} has been deleted`
     // notification: e => ``,
   },
-  // disk_duplicate: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  disk_duplicate: {
+    scheduled: e =>
+      `A disk on Linode ${e.entity!.label} is scheduled for duplication.`,
+    started: e => `A disk on Linode ${e.entity!.label} is being duplicated.`,
+    failed: e => `A disk on Linode ${e.entity!.label} could not be duplicated.`,
+    finished: e => `A disk on Linode ${e.entity!.label} has been duplicated`
+    // notification: e => ``,
+  },
   disk_imagize: {
     // Currently, the event contains no information about the image,
     // making it impossible to access the label for these messages.
@@ -174,7 +176,8 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     scheduled: e => `Linode ${e.entity!.label} is scheduled to be cloned.`,
     started: e => `Linode ${e.entity!.label} is being cloned.`,
     failed: e => `Linode ${e.entity!.label} could not be cloned.`,
-    finished: e => `Linode ${e.entity!.label} has been cloned.`
+    finished: e => `Linode ${e.entity!.label} has been cloned.`,
+    notification: e => `Linode ${e.entity!.label} is scheduled to be cloned.`
   },
   linode_create: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for creation.`,
@@ -320,11 +323,22 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   nodebalancer_delete: {
     notification: e => `NodeBalancer ${e.entity!.label} has been deleted.`
   },
+  nodebalancer_node_create: {
+    notification: e =>
+      `A node on NodeBalancer ${e.entity!.label} has been created.`
+  },
+  nodebalancer_node_update: {
+    notification: e =>
+      `A node on NodeBalancer ${e.entity!.label} has been updated.`
+  },
   password_reset: {
     scheduled: e => `A password reset is scheduled for ${e.entity!.label}.`,
     started: e => `The password for ${e.entity!.label} is being reset.`,
     failed: e => `Password reset failed for Linode ${e.entity!.label}.`,
     finished: e => `Password has been reset on Linode ${e.entity!.label}.`
+  },
+  profile_update: {
+    notification: e => `Your profile has been updated.`
   },
   // payment_submitted: {
   //   scheduled: e => ``,
@@ -423,32 +437,36 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   }
 };
 
-export default (
-  e: Linode.Event,
-  onUnfound?: (e: Linode.Event) => string | void,
-  onError?: (e: Linode.Event, err: Error) => void
-) => {
+export default (e: Linode.Event): string => {
   const fn = path<EventMessageCreator>(
     [e.action, e.status],
     eventMessageCreators
   );
 
+  /** we couldn't find the event in our list above */
   if (!fn) {
-    if (onUnfound) {
-      return onUnfound(e);
-    }
-    return;
+    /**
+     * always report to Sentry that we've got an event type we're not accounting for
+     */
+    reportException(`Unknown API Event Received`, {
+      event: e
+    });
+
+    /** finally return some default fallback text */
+    return `${e.action}${e.entity ? ` on ${e.entity.label}` : ''}`;
   }
 
-  let message;
+  let message = '';
   try {
     message = fn(e);
   } catch (error) {
-    if (onError) {
-      onError(e, error);
-    }
-    return;
+    /** report our error to sentry */
+    reportException('Known API Event Received with Error', {
+      event_data: e,
+      error
+    });
   }
 
+  /** return either the message or an empty string */
   return message;
 };

@@ -1,4 +1,5 @@
 import { event } from 'react-ga';
+import { GA_ID, GA_ID_2 } from 'src/constants';
 
 interface AnalyticsEvent {
   category: string;
@@ -11,7 +12,16 @@ interface AnalyticsEvent {
  * Will throw error unless analytics is initialized
  */
 export const sendEvent = (eventPayload: AnalyticsEvent) => {
-  event(eventPayload);
+  /**
+   * this is assuming your second GA_ID is going to be the linode.com
+   * property, which seems bad, but there's no real way to enforce that with env vars
+   */
+  const additionalNames = GA_ID_2 ? ['linodecom'] : undefined;
+
+  /** only send events if we have at least 1 GA ID */
+  return [GA_ID, GA_ID_2].some(eachID => !!eachID)
+    ? event(eventPayload, additionalNames)
+    : undefined;
 };
 
 // LinodeActionMenu.tsx
@@ -63,10 +73,13 @@ export const sendCurrentThemeSettingsEvent = (eventAction: string) => {
 
 // CreateVolumeForm.tsx
 // CreateVolumeForLinodeForm.tsx
-export const sendCreateVolumeEvent = (eventLabel: string) => {
+export const sendCreateVolumeEvent = (
+  eventLabel: string,
+  eventAction?: string
+) => {
   sendEvent({
     category: 'Create Volume',
-    action: 'Create Volume',
+    action: eventAction || 'Create Volume',
     label: eventLabel
   });
 };

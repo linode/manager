@@ -10,6 +10,7 @@ export const LOGIN_ROOT =
   process.env.REACT_APP_LOGIN_ROOT || 'https://login.linode.com';
 export const API_ROOT =
   process.env.REACT_APP_API_ROOT || 'https://api.lindev.local';
+export const BETA_API_ROOT = API_ROOT + 'beta';
 export const LISH_ROOT =
   process.env.REACT_APP_LISH_ROOT || 'webconsole.linode.com';
 /** generate a client_id by navigating to https://cloud.linode.com/profile/clients */
@@ -35,6 +36,7 @@ export const LOGIN_SESSION_LIFETIME_MS = 45 * 60 * 1000;
 export const OAUTH_TOKEN_REFRESH_TIMEOUT = LOGIN_SESSION_LIFETIME_MS / 2;
 /** Google Analytics and Tag Manager */
 export const GA_ID = process.env.REACT_APP_GA_ID;
+export const GA_ID_2 = process.env.REACT_APP_GA_ID_2;
 export const GTM_ID = process.env.REACT_APP_GTM_ID;
 /** for hard-coding token used for API Requests. Example: "Bearer 1234" */
 export const ACCESS_TOKEN = process.env.REACT_APP_ACCESS_TOKEN;

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import {
   createStyles,
@@ -68,7 +69,7 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(1) / 2
     },
     linodeDescription: {
-      paddingTop: theme.spacing(1) / 2
+      paddingTop: 2
     },
     labelStatusWrapper: {
       display: 'flex',
@@ -118,6 +119,7 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
     memory,
     disk,
     vcpus,
+    id,
     image,
     // other props
     classes,
@@ -160,13 +162,15 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
               />
             )}
             <div className={classes.labelStatusWrapper}>
-              <Typography
-                variant="h3"
-                className={classes.wrapHeader}
-                data-qa-label
-              >
-                {label}
-              </Typography>
+              <Link to={`/linodes/${id}`} tabIndex={-1}>
+                <Typography
+                  variant="h3"
+                  className={classes.wrapHeader}
+                  data-qa-label
+                >
+                  {label}
+                </Typography>
+              </Link>
             </div>
             <Typography className={classes.linodeDescription}>
               {description}
