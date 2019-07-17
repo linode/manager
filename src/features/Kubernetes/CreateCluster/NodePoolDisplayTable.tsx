@@ -14,7 +14,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { ExtendedPoolNode } from '.././types';
+import { PoolNodeWithPrice } from '.././types';
 import NodePoolRow from './NodePoolRow';
 
 type ClassNames = 'root' | 'small';
@@ -37,10 +37,10 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  pools: ExtendedPoolNode[];
+  pools: PoolNodeWithPrice[];
   types: ExtendedType[];
   handleDelete?: (poolIdx: number) => void;
-  updatePool?: (poolIdx: number, updatedPool: ExtendedPoolNode) => void;
+  updatePool?: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
   small?: boolean;
   editable?: boolean;
 }

@@ -1,5 +1,5 @@
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
-import { ExtendedCluster, ExtendedPoolNode, PoolNode } from './types';
+import { ExtendedCluster, PoolNode, PoolNodeWithPrice } from './types';
 
 // @todo don't hard code this
 export const KubernetesVersionOptions = ['1.13', '1.14'].map(version => ({
@@ -19,7 +19,7 @@ export const getMonthlyPrice = (
   return thisType ? thisType.price.monthly * count : 0;
 };
 
-export const getTotalClusterPrice = (pools: ExtendedPoolNode[]) =>
+export const getTotalClusterPrice = (pools: PoolNodeWithPrice[]) =>
   pools.reduce((accumulator, node) => {
     return node.queuedForDeletion
       ? accumulator // If we're going to delete it, don't include it in the cost
@@ -77,7 +77,7 @@ export const getTotalClusterMemoryAndCPU = (
 export const responseToExtendedNodePool = (
   pools: Linode.KubeNodePoolResponse[],
   types: ExtendedType[]
-): ExtendedPoolNode[] => {
+): PoolNodeWithPrice[] => {
   return pools.map(thisPool => ({
     id: thisPool.id,
     count: thisPool.count,

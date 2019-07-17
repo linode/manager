@@ -17,7 +17,7 @@ import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel
 
 import NodePoolDisplayTable from '../../CreateCluster/NodePoolDisplayTable';
 import { getTotalClusterPrice } from '../../kubeUtils';
-import { ExtendedPoolNode } from '../../types';
+import { PoolNodeWithPrice } from '../../types';
 
 type ClassNames = 'root' | 'button' | 'pricing' | 'ctaOuter' | 'displayTable';
 const styles = (theme: Theme) =>
@@ -48,11 +48,11 @@ interface Props {
   submittingForm: boolean;
   submissionSuccess: boolean;
   submissionError?: Linode.ApiFieldError[];
-  pools: ExtendedPoolNode[];
-  poolsForEdit: ExtendedPoolNode[];
+  pools: PoolNodeWithPrice[];
+  poolsForEdit: PoolNodeWithPrice[];
   types: ExtendedType[];
   toggleEditing: () => void;
-  updatePool: (poolIdx: number, updatedPool: ExtendedPoolNode) => void;
+  updatePool: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
   deletePool: (poolID: number) => void;
   resetForm: () => void;
   submitForm: () => void;

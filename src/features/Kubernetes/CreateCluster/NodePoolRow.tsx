@@ -16,7 +16,7 @@ import TableRow from 'src/components/TableRow';
 import TextField from 'src/components/TextField';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { displayTypeForKubePoolNode } from 'src/features/linodes/presentation';
-import { ExtendedPoolNode } from '.././types';
+import { PoolNodeWithPrice } from '.././types';
 
 type ClassNames =
   | 'root'
@@ -61,12 +61,12 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  pool: ExtendedPoolNode;
+  pool: PoolNodeWithPrice;
   type?: ExtendedType;
   editable: boolean;
   idx: number;
   deletePool?: (poolIdx: number) => void;
-  updatePool?: (poolIdx: number, updatedPool: ExtendedPoolNode) => void;
+  updatePool?: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
