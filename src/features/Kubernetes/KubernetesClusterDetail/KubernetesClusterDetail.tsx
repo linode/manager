@@ -29,7 +29,7 @@ import { getKubeConfig } from 'src/services/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollTo from 'src/utilities/scrollTo';
-import { extendCluster, getMonthlyPrice } from '.././kubeUtils';
+import { getMonthlyPrice } from '.././kubeUtils';
 import { ExtendedCluster, PoolNodeWithPrice } from '.././types';
 import NodePoolPanel from '../CreateCluster/NodePoolPanel';
 import KubernetesDialog from './KubernetesDialog';
@@ -512,12 +512,8 @@ const withCluster = KubeContainer<
   {},
   WithTypesProps & RouteComponentProps<{ clusterID: string }>
 >((ownProps, clustersLoading, lastUpdated, clustersError, clustersData) => {
-  const thisCluster = clustersData.find(
-    c => +c.id === +ownProps.match.params.clusterID
-  );
-  const cluster = thisCluster
-    ? extendCluster(thisCluster, ownProps.typesData || [])
-    : null;
+  const cluster =
+    clustersData.find(c => +c.id === +ownProps.match.params.clusterID) || null;
   return {
     ...ownProps,
     cluster,
