@@ -32,6 +32,11 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   if (isType(action, requestNodePoolsActions.done)) {
     const { result } = action.payload;
 
+    // If there's nothing to add, return the state unchanged.
+    if (result.length === 0) {
+      return state;
+    }
+
     /**
      * This action payload is the current node pools for a single
      * cluster. We need to add them to state, but make sure
