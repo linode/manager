@@ -7,7 +7,6 @@ namespace Linode {
     label: string;
     version: string;
     id: number;
-    node_pools: KubeNodePoolResponse[];
   }
 
   export interface KubeNodePoolResponse {

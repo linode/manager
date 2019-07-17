@@ -23,7 +23,6 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
-import { extendCluster } from './../kubeUtils';
 import { ExtendedCluster } from './../types';
 import ClusterRow from './ClusterRow';
 
@@ -50,14 +49,7 @@ type CombinedProps = Props &
   WithStyles<ClassNames>;
 
 export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
-  const { classes, clusters, history, typesData } = props;
-  /**
-   * Not ideal having this run on render, but interactions on this view
-   * don't generally trigger re-renders.
-   */
-  const extendedClusters: ExtendedCluster[] = clusters.map(cluster =>
-    extendCluster(cluster, typesData || [])
-  );
+  const { classes, clusters, history } = props;
 
   return (
     <React.Fragment>
@@ -85,7 +77,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
           </Grid>
         </Grid>
       </Grid>
-      <OrderBy data={extendedClusters} orderBy={'label'} order={'asc'}>
+      <OrderBy data={clusters} orderBy={'label'} order={'asc'}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => (
           <Paginate data={orderedData}>
             {({
