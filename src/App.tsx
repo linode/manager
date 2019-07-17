@@ -387,7 +387,7 @@ export class App extends React.Component<CombinedProps, State> {
         </a>
         <DocumentTitleSegment segment="Linode Manager" />
 
-        {profileLoading === false && (
+        {profileLoading === false ? (
           <React.Fragment>
             <>
               <div className={classes.appFrame}>
@@ -490,6 +490,8 @@ export class App extends React.Component<CombinedProps, State> {
               </div>
             </>
           </React.Fragment>
+        ) : (
+          <span>loading profile....</span>
         )}
       </React.Fragment>
     );
