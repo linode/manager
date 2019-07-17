@@ -1,11 +1,8 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-// import { render } from 'react-testing-library';
 import { extendedTypes } from 'src/__data__/ExtendedType';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { CombinedProps, LinodeActionMenu } from './LinodeActionMenu';
-
-// import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 const props: CombinedProps = {
   linodeId: 123,
@@ -16,8 +13,7 @@ const props: CombinedProps = {
     schedule: {
       window: null,
       day: null
-    },
-    enabled: false
+    }
   },
   linodeStatus: '',
   noImage: false,
