@@ -34,63 +34,55 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
   };
 
   createActions = () => (closeMenu: Function): Action[] => {
-    if (this.props.type === 'slave') {
-      return [
-        {
-          title: 'Edit',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.handleEdit();
-            closeMenu();
-            e.preventDefault();
-          }
-        },
-        {
-          title: 'Check Zone',
-          tooltip:
-            "Currently we don't support this action but will in the future.",
-          disabled: true,
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            closeMenu();
-            e.preventDefault();
-          }
-        },
-        {
-          title: 'Zone File',
-          tooltip:
-            "Currently we don't support this action but will in the future.",
-          disabled: true,
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            closeMenu();
-            e.preventDefault();
-          }
-        },
-        {
-          title: 'Clone',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.handleClone();
-            closeMenu();
-            e.preventDefault();
-          }
-        },
-        {
-          title: 'Remove',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.handleRemove();
-            closeMenu();
-            e.preventDefault();
-          }
+    const baseActions = [
+      {
+        title: 'Edit',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          this.handleEdit();
+          closeMenu();
+          e.preventDefault();
         }
-      ];
-    } else {
+      },
+      {
+        title: 'Check Zone',
+        tooltip:
+          "Currently we don't support this action but will in the future.",
+        disabled: true,
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          closeMenu();
+          e.preventDefault();
+        }
+      },
+      {
+        title: 'Zone File',
+        tooltip:
+          "Currently we don't support this action but will in the future.",
+        disabled: true,
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          closeMenu();
+          e.preventDefault();
+        }
+      },
+      {
+        title: 'Clone',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          this.handleClone();
+          closeMenu();
+          e.preventDefault();
+        }
+      },
+      {
+        title: 'Delete',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          this.handleRemove();
+          closeMenu();
+          e.preventDefault();
+        }
+      }
+    ];
+
+    if (this.props.type === 'master') {
       return [
-        {
-          title: 'Edit',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.handleEdit();
-            closeMenu();
-            e.preventDefault();
-          }
-        },
         {
           title: 'Edit DNS Records',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
@@ -99,43 +91,10 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
             e.preventDefault();
           }
         },
-        {
-          title: 'Check Zone',
-          tooltip:
-            "Currently we don't support this action but will in the future.",
-          disabled: true,
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            closeMenu();
-            e.preventDefault();
-          }
-        },
-        {
-          title: 'Zone File',
-          tooltip:
-            "Currently we don't support this action but will in the future.",
-          disabled: true,
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            closeMenu();
-            e.preventDefault();
-          }
-        },
-        {
-          title: 'Clone',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.handleClone();
-            closeMenu();
-            e.preventDefault();
-          }
-        },
-        {
-          title: 'Delete',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            this.handleRemove();
-            closeMenu();
-            e.preventDefault();
-          }
-        }
+        ...baseActions
       ];
+    } else {
+      return [...baseActions];
     }
   };
 
