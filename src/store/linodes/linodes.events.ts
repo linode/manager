@@ -1,6 +1,7 @@
 import * as moment from 'moment';
 import { Dispatch } from 'redux';
 import { ApplicationState } from 'src/store';
+import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { EventHandler } from 'src/store/types';
 import { requestNotifications } from '../notification/notification.requests';
@@ -24,7 +25,6 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
     case 'linode_resize':
       return handleLinodeMigrate(dispatch, status, id);
     case 'linode_reboot':
-    case 'linode_rebuild':
     case 'linode_shutdown':
     case 'linode_snapshot':
     case 'linode_addip':
@@ -35,6 +35,9 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
     case 'disk_imagize':
     case 'linode_clone':
       return handleLinodeUpdate(dispatch, status, id);
+
+    case 'linode_rebuild':
+      return handleLinodeRebuild(dispatch, status, id);
 
     /** Remove Linode */
     case 'linode_delete':
@@ -50,6 +53,31 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
 };
 
 export default linodeEventsHandler;
+
+const handleLinodeRebuild = (
+  dispatch: Dispatch<any>,
+  status: Linode.EventStatus,
+  id: number
+) => {
+  /**
+   * Rebuilding is a special case, because the rebuilt Linode
+   * has new disks, which need to be updated in our store.
+   */
+
+  switch (status) {
+    case 'notification':
+    case 'scheduled':
+    case 'started':
+      return dispatch(requestLinodeForStore(id));
+    case 'finished':
+    case 'failed':
+      // Get the new disks and update the store.
+      dispatch(getAllLinodeDisks({ linodeId: id }));
+      return dispatch(requestLinodeForStore(id));
+    default:
+      return;
+  }
+};
 
 const handleLinodeMigrate = (
   dispatch: Dispatch<any>,
