@@ -40,10 +40,7 @@ window.matchMedia = jest.fn().mockImplementation(query => {
 
 describe('Domains Landing', () => {
   it('should render a notice when there are no Linodes but at least 1 domain', () => {
-    const { getByText, debug } = render(
-      wrapWithTheme(<DomainsLanding {...props} />)
-    );
-    debug();
+    const { getByText } = render(wrapWithTheme(<DomainsLanding {...props} />));
     expect(getByText(/not being served/));
   });
 });
