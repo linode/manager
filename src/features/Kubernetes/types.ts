@@ -1,27 +1,17 @@
-export interface PoolNode {
-  type: string;
-  count: number;
-}
-
-export interface PoolNodeWithPrice extends PoolNode {
+export interface PoolNodeWithPrice extends ExtendedPoolNode {
   id: number;
   totalMonthlyPrice: number;
   queuedForDeletion?: boolean;
   queuedForAddition?: boolean;
 }
 
-/** @todo DRY; this is duplicated from Kubernetes.ts. Unable to override node_pools,
- * so the duplication avoids an unwanted dependency (since the types/ directory belongs
- * to the API wrapper and shouldn't refer to any Manager-specific types).
- */
-export interface ExtendedCluster {
-  created: string;
-  region: string;
-  tags: string[];
-  status: string; // @todo enum this
-  label: string;
-  version: string;
+export interface ExtendedPoolNode {
   id: number;
+  count: number;
+  type: string;
+  clusterID?: number;
+}
+export interface ExtendedCluster extends Linode.KubernetesCluster {
   node_pools: PoolNodeWithPrice[];
   totalMemory: number;
   totalCPU: number;
