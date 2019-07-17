@@ -76,7 +76,26 @@ const styles = (theme: Theme) =>
       }
     },
     statusCellMaintenance: {
-      minWidth: 250
+      '& .data': {
+        display: 'flex',
+        minWidth: 190,
+        alignItems: 'center',
+        lineHeight: 1.2,
+        marginRight: -12,
+        [theme.breakpoints.up('md')]: {
+          minWidth: 125,
+          marginRight: 0
+        }
+      },
+      '& button': {
+        padding: '0 6px',
+        position: 'relative',
+        top: 1,
+        [theme.breakpoints.up('md')]: {
+          padding: 6,
+          top: 2
+        }
+      }
     },
     statusHelpIcon: {
       position: 'relative',

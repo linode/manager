@@ -24,7 +24,6 @@ type ClassNames =
   | 'link'
   | 'loadingStatus'
   | 'labelWrapper'
-  | 'linodeDescription'
   | 'status'
   | 'labelRow'
   | 'labelStatusWrapper'
@@ -67,9 +66,6 @@ const styles = (theme: Theme) =>
     },
     loadingStatus: {
       marginBottom: theme.spacing(1) / 2
-    },
-    linodeDescription: {
-      paddingTop: 2
     },
     labelStatusWrapper: {
       display: 'flex',
@@ -173,9 +169,7 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
                 </Typography>
               </Link>
             </div>
-            <Typography className={classes.linodeDescription}>
-              {description}
-            </Typography>
+            <Typography>{description}</Typography>
           </div>
         </Grid>
       </Grid>

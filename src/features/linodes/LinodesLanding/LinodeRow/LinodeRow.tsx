@@ -146,6 +146,7 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
               <HelpIcon
                 text={parseMaintenanceStartTime(maintenanceStartTime)}
                 className={classes.statusHelpIcon}
+                tooltipPosition="right-start"
               />
             </>
           )}
