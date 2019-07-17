@@ -258,7 +258,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
       ...Because we don't want the Nav tabs and we want <LinodeControls /> with a custom <Breadcrumb />.
       @todo: DRY this up a bit?
       */}
-      <MutationNotification />
+      <MutationNotification disks={props.disks} />
       <Notifications />
       <LinodeControls
         breadcrumbProps={{

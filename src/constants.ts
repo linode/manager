@@ -226,6 +226,7 @@ export const EU_COUNTRIES = [
   'GB' // United Kingdom
 ];
 
+
 export const GLOBAL_EVENTS_BLACKLIST = [
   // We don't want to display these events because they precede similar events.
   // Example: when a user clicks the button to upgrade a Linode, we immediately
@@ -235,3 +236,14 @@ export const GLOBAL_EVENTS_BLACKLIST = [
   'linode_mutate_create', // This event occurs when an upgrade is first initiated.
   'linode_resize_create' // This event occurs when a resize is first initiated.
 ] as Linode.EventAction[];
+
+/**
+ * MBps rate for intra DC migrations (AKA Mutations)
+ */
+export const MBpsIntraDC = 75;
+
+/**
+ * MBps rate for intra DC migrations (AKA Cross-Datacenter migrations )
+ */
+export const MBpsInterDC = 1.5;
+
