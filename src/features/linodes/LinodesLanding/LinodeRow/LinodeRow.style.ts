@@ -78,12 +78,12 @@ const styles = (theme: Theme) =>
     statusCellMaintenance: {
       '& .data': {
         display: 'flex',
-        minWidth: 190,
+        width: 250,
         alignItems: 'center',
         lineHeight: 1.2,
         marginRight: -12,
         [theme.breakpoints.up('md')]: {
-          minWidth: 125,
+          width: 125,
           marginRight: 0
         }
       },
@@ -92,8 +92,7 @@ const styles = (theme: Theme) =>
         position: 'relative',
         top: 1,
         [theme.breakpoints.up('md')]: {
-          padding: 6,
-          top: 2
+          padding: 6
         }
       }
     },
