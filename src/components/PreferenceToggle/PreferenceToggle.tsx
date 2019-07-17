@@ -87,17 +87,22 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
 
     /**
      * if for whatever reason we failed to get the preferences data
-     * just fallback to some defaults (the first in the list of options).
+     * just fallback to some default (the first in the list of options).
      *
      * Do NOT try and PUT to the API - we don't want to overwrite other unrelated preferences
      */
     if (
-      !currentlySetPreference &&
+      isNullOrUndefined(currentlySetPreference) &&
       !!props.preferenceError &&
       lastUpdated === 0
     ) {
-      const preferenceToSet =
-        preferenceFromLocalStorage || preferenceOptions[0];
+      /**
+       * local storage value takes priority, but if that doesn't exist fall back to
+       * the first set of options
+       */
+      const preferenceToSet = isNullOrUndefined(preferenceFromLocalStorage)
+        ? preferenceOptions[0]
+        : preferenceFromLocalStorage;
       setPreference(preferenceToSet);
 
       if (props.initialSetCallbackFn) {
@@ -110,15 +115,26 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
      * set the state to what we got from the server. If the preference
      * doesn't exist yet in this user's payload, set defaults in local state.
      */
-    if (!currentlySetPreference && !!props.preferences && lastUpdated === 0) {
+    if (
+      isNullOrUndefined(currentlySetPreference) &&
+      !!props.preferences &&
+      lastUpdated === 0
+    ) {
       const preferenceFromAPI = path<PreferenceValue>(
         [preferenceKey],
         props.preferences
       );
 
-      /** this is the first time the user is setting the user preference */
-      const preferenceToSet = !preferenceFromAPI
-        ? preferenceFromLocalStorage || preferenceOptions[0]
+      /**
+       * this is the first time the user is setting the user preference
+       *
+       * if the API value is null or undefined, rely on local storage or default
+       * to the first value that was passed to this component from props.
+       */
+      const preferenceToSet = isNullOrUndefined(preferenceFromAPI)
+        ? isNullOrUndefined(preferenceFromLocalStorage)
+          ? preferenceOptions[0]
+          : preferenceFromLocalStorage
         : preferenceFromAPI;
 
       setPreference(preferenceToSet);
@@ -131,55 +147,73 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
   }, [props.preferenceError, props.preferences]);
 
   React.useEffect(() => {
-    const debouncedErrorUpdate = setTimeout(() => {
-      /**
-       * we have a preference error, so first GET the preferences
-       * before trying to PUT them.
-       *
-       * Don't update anything if the GET fails
-       */
-      if (!!preferenceError && lastUpdated !== 0) {
-        /** invoke our callback prop if we have one */
-        if (toggleCallbackFnDebounced && currentlySetPreference) {
-          toggleCallbackFnDebounced(currentlySetPreference);
-        }
-
-        props
-          .getUserPreferences()
-          .then(response => {
-            props
-              .updateUserPreferences({
-                ...response.preferences,
-                [preferenceKey]: currentlySetPreference
-              })
-              .catch(() => /** swallow the error */ null);
-          })
-          .catch(() => /** swallow the error */ null);
-      } else if (!!preferences && currentlySetPreference && lastUpdated !== 0) {
+    /**
+     * we only want to update local state if we already have something set in local state
+     * setting the initial state is the responsibility of the first useEffect
+     */
+    if (!!currentlySetPreference) {
+      const debouncedErrorUpdate = setTimeout(() => {
         /**
-         * PUT to /preferences on every toggle, debounced.
+         * we have a preference error, so first GET the preferences
+         * before trying to PUT them.
+         *
+         * Don't update anything if the GET fails
          */
-        props
-          .updateUserPreferences({
-            ...props.preferences,
-            [preferenceKey]: currentlySetPreference
-          })
-          .catch(() => /** swallow the error */ null);
+        if (!!preferenceError && lastUpdated !== 0) {
+          /** invoke our callback prop if we have one */
+          if (
+            toggleCallbackFnDebounced &&
+            !isNullOrUndefined(currentlySetPreference)
+          ) {
+            toggleCallbackFnDebounced(currentlySetPreference);
+          }
 
-        /** invoke our callback prop if we have one */
-        if (toggleCallbackFnDebounced && currentlySetPreference) {
-          toggleCallbackFnDebounced(currentlySetPreference);
+          props
+            .getUserPreferences()
+            .then(response => {
+              props
+                .updateUserPreferences({
+                  ...response.preferences,
+                  [preferenceKey]: currentlySetPreference
+                })
+                .catch(() => /** swallow the error */ null);
+            })
+            .catch(() => /** swallow the error */ null);
+        } else if (
+          !!preferences &&
+          !isNullOrUndefined(currentlySetPreference) &&
+          lastUpdated !== 0
+        ) {
+          /**
+           * PUT to /preferences on every toggle, debounced.
+           */
+          props
+            .updateUserPreferences({
+              ...props.preferences,
+              [preferenceKey]: currentlySetPreference
+            })
+            .catch(() => /** swallow the error */ null);
+
+          /** invoke our callback prop if we have one */
+          if (
+            toggleCallbackFnDebounced &&
+            !isNullOrUndefined(currentlySetPreference)
+          ) {
+            toggleCallbackFnDebounced(currentlySetPreference);
+          }
+        } else if (lastUpdated === 0) {
+          /**
+           * this is the case where the app has just been mounted and the preferences are
+           * being set in local state for the first time
+           */
+          setLastUpdated(Date.now());
         }
-      } else if (lastUpdated === 0) {
-        /**
-         * this is the case where the app has just been mounted and the preferences are
-         * being set in local state for the first time
-         */
-        setLastUpdated(Date.now());
-      }
-    }, 500);
+      }, 500);
 
-    return () => clearTimeout(debouncedErrorUpdate);
+      return () => clearTimeout(debouncedErrorUpdate);
+    }
+
+    return () => null;
   }, [currentlySetPreference]);
 
   const togglePreference = () => {
@@ -207,7 +241,7 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
    * So if you want to handle local state outside of this component,
    * you can do so and pass the value explicitly with the _value_ prop
    */
-  if (!currentlySetPreference) {
+  if (isNullOrUndefined(currentlySetPreference)) {
     return null;
   }
 
@@ -232,9 +266,9 @@ const memoized = (component: React.FC<CombinedProps>) =>
      * state. All the relevant preference state will be handled in the component.
      * This component only cares about what the preferences are on app load.
      */
+
     const shouldRerender =
-      wasUndefinedNowDefined(prevProps.preferences, nextProps.preferences) ||
-      wasDefinedNowUndefined(prevProps.preferences, nextProps.preferences) ||
+      !equals(prevProps.preferences, nextProps.preferences) ||
       wasUndefinedNowDefined(
         prevProps.preferenceError,
         nextProps.preferenceError
@@ -267,6 +301,10 @@ const isUpdatingForTheFirstTime = (
   nextLastUpdated: number
 ) => {
   return prevLastUpdated === 0 && nextLastUpdated !== 0;
+};
+
+const isNullOrUndefined = (value: any): value is null | undefined => {
+  return typeof value === 'undefined' || value === null;
 };
 
 export default (compose<CombinedProps, Props>(

@@ -14,9 +14,10 @@ import Grid from 'src/components/Grid';
 import { OrderByProps } from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
 import TableWrapper from './TableWrapper';
+
+import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 
 const DEFAULT_PAGE_SIZE = 25;
 
@@ -64,14 +65,12 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  openConfigDrawer: (
-    c: Linode.Config[],
-    action: LinodeConfigSelectionDrawerCallback
-  ) => void;
-  toggleConfirmation: (
-    bootOption: Linode.BootAction,
-    linodeId: number,
-    linodeLabel: string
+  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openPowerActionDialog: (
+    bootAction: Action,
+    linodeID: number,
+    linodeLabel: string,
+    linodeConfigs: Linode.Config[]
   ) => void;
   display: 'grid' | 'list';
   component: any;

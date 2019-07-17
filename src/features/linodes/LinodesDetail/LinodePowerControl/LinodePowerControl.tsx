@@ -2,9 +2,7 @@ import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import * as classNames from 'classnames';
 import * as React from 'react';
-import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Menu from 'src/components/core/Menu';
 import {
   createStyles,
@@ -12,15 +10,11 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import EntityIcon from 'src/components/EntityIcon';
 import MenuItem from 'src/components/MenuItem';
-import {
-  powerOffLinode,
-  powerOnLinode,
-  rebootLinode
-} from 'src/features/linodes/LinodesLanding/powerActions';
 import { linodeInTransition } from 'src/features/linodes/transitions';
+
+import PowerDialogOrDrawer, { Action } from '../../PowerActionsDialogOrDrawer';
 
 type ClassNames =
   | 'root'
@@ -115,32 +109,27 @@ interface Props {
   id: number;
   label: string;
   status: Linode.LinodeStatus;
-  noConfigs: boolean;
   disabled?: boolean;
   recentEvent?: Linode.Event;
-  openConfigDrawer: (
-    config: Linode.Config[],
-    action: (id: number) => void
-  ) => void;
+  linodeConfigs: Linode.Config[];
 }
 
 interface State {
   menu: {
     anchorEl?: HTMLElement;
   };
-  bootOption: Linode.BootAction;
-  powerAlertOpen: boolean;
+  selectedBootAction?: Action;
+  powerDialogOpen: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export class LinodePowerButton extends React.Component<CombinedProps, State> {
-  state = {
+  state: State = {
     menu: {
       anchorEl: undefined
     },
-    bootOption: null,
-    powerAlertOpen: false
+    powerDialogOpen: false
   };
 
   _toggleMenu = (value?: HTMLElement) =>
@@ -155,37 +144,35 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
   };
 
   powerOn = () => {
-    const { id, label, openConfigDrawer } = this.props;
-    powerOnLinode(openConfigDrawer, id, label);
+    // const { id, label } = this.props;
     this.closeMenu();
   };
 
-  toggleDialog = (bootOption: Linode.BootAction) => {
+  openDialog = (bootOption: Action) => {
     this.setState({
-      powerAlertOpen: !this.state.powerAlertOpen,
-      bootOption
+      powerDialogOpen: true,
+      selectedBootAction: bootOption
     });
     this.closeMenu();
   };
 
-  rebootOrPowerLinode = () => {
-    const { bootOption } = this.state;
-    const { id, label, openConfigDrawer } = this.props;
-    if (bootOption === 'reboot') {
-      rebootLinode(openConfigDrawer, id, label);
-    } else {
-      powerOffLinode(id, label);
-    }
-    this.setState({ powerAlertOpen: false });
+  closeDialog = () => {
+    this.setState({ powerDialogOpen: false });
   };
 
   render() {
-    const { status, classes, disabled, recentEvent, noConfigs } = this.props;
     const {
-      menu: { anchorEl },
-      bootOption,
-      powerAlertOpen
+      status,
+      classes,
+      disabled,
+      recentEvent,
+      linodeConfigs
+    } = this.props;
+    const {
+      menu: { anchorEl }
     } = this.state;
+
+    const hasNoConfigs = linodeConfigs.length === 0;
 
     const isBusy = linodeInTransition(status, recentEvent);
     const isRunning = !isBusy && status === 'running';
@@ -249,7 +236,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
           <MenuItem key="placeholder" aria-hidden className={classes.hidden} />
           {isRunning && (
             <MenuItem
-              onClick={this.toggleRebootDialog}
+              onClick={() => this.openDialog('Reboot')}
               className={classes.menuItem}
               data-qa-set-power="reboot"
               disabled={disabled}
@@ -268,7 +255,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
           )}
           {isRunning && (
             <MenuItem
-              onClick={this.togglePowerDownDialog}
+              onClick={() => this.openDialog('Power Off')}
               className={classes.menuItem}
               data-qa-set-power="powerOff"
               disabled={disabled}
@@ -287,12 +274,12 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
           )}
           {isOffline && (
             <MenuItem
-              onClick={this.powerOn}
+              onClick={() => this.openDialog('Power On')}
               className={classes.menuItem}
               data-qa-set-power="powerOn"
-              disabled={noConfigs || disabled}
+              disabled={hasNoConfigs || disabled}
               tooltip={
-                noConfigs
+                hasNoConfigs
                   ? 'A config needs to be added before powering on a Linode'
                   : undefined
               }
@@ -310,53 +297,17 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
             </MenuItem>
           )}
         </Menu>
-        <ConfirmationDialog
-          title={bootOption === 'reboot' ? 'Confirm Reboot' : 'Powering Off'}
-          actions={this.renderActions}
-          open={powerAlertOpen}
-          onClose={this.closePowerAlert}
-        >
-          {bootOption === 'reboot' ? (
-            <Typography>
-              Are you sure you want to reboot your Linode?
-            </Typography>
-          ) : (
-            <Typography>
-              Are you sure you want to power down your Linode?
-            </Typography>
-          )}
-        </ConfirmationDialog>
+        <PowerDialogOrDrawer
+          isOpen={this.state.powerDialogOpen}
+          action={this.state.selectedBootAction}
+          linodeID={this.props.id}
+          linodeLabel={this.props.label}
+          close={this.closeDialog}
+          linodeConfigs={this.props.linodeConfigs}
+        />
       </React.Fragment>
     );
   }
-
-  toggleRebootDialog = () => this.toggleDialog('reboot');
-
-  togglePowerDownDialog = () => this.toggleDialog('power_down');
-
-  closePowerAlert = () => this.setState({ powerAlertOpen: false });
-
-  renderActions = () => {
-    const { bootOption } = this.state;
-    return (
-      <ActionsPanel style={{ padding: 0 }}>
-        <Button
-          buttonType="cancel"
-          onClick={this.closePowerAlert}
-          data-qa-cancel-cancel
-        >
-          Cancel
-        </Button>
-        <Button
-          buttonType="primary"
-          onClick={this.rebootOrPowerLinode}
-          data-qa-confirm-cancel
-        >
-          {bootOption === 'reboot' ? 'Reboot' : 'Power Off'}
-        </Button>
-      </ActionsPanel>
-    );
-  };
 }
 
 const styled = withStyles(styles);
