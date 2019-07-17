@@ -43,12 +43,10 @@ const PAGE_SIZE = 'PAGE_SIZE';
 const BETA_NOTIFICATION = 'BetaNotification';
 const VAT_NOTIFICATION = 'vatNotification';
 const LINODE_VIEW = 'linodesViewStyle';
-const GROUP_LINODES = 'GROUP_LINODES';
 const HIDE_DISPLAY_GROUPS_CTA = 'importDisplayGroupsCTA';
 const HAS_IMPORTED_GROUPS = 'hasImportedGroups';
 const GROUP_DOMAINS = `GROUP_DOMAINS`;
 const GROUP_NODEBALANCERS = `GROUP_NODEBALANCERS`;
-const GROUP_VOLUMES = `GROUP_VOLUMES`;
 const BACKUPSCTA_DISMISSED = 'BackupsCtaDismissed';
 const TOKEN = 'authentication/token';
 const NONCE = 'authentication/nonce';
@@ -96,10 +94,6 @@ export interface Storage {
       get: () => LinodeView;
       set: (view: LinodeView) => void;
     };
-    grouped: {
-      get: () => 'true' | 'false';
-      set: (v: 'true' | 'false') => void;
-    };
   };
   loginCloudManager: {
     get: () => undefined | string;
@@ -115,10 +109,6 @@ export interface Storage {
   };
   groupDomainsByTag: GetAndSetBool;
   groupNodeBalancersByTag: {
-    get: () => boolean;
-    set: (v: 'true' | 'false') => void;
-  };
-  groupVolumesByTag: {
     get: () => boolean;
     set: (v: 'true' | 'false') => void;
   };
@@ -168,10 +158,6 @@ export const storage: Storage = {
     linode: {
       get: (): LinodeView => getStorage(LINODE_VIEW),
       set: (view: LinodeView) => setStorage(LINODE_VIEW, view)
-    },
-    grouped: {
-      get: () => getStorage(GROUP_LINODES),
-      set: v => setStorage(GROUP_LINODES, v)
     }
   },
   loginCloudManager: {
@@ -199,10 +185,6 @@ export const storage: Storage = {
   groupNodeBalancersByTag: {
     get: () => getStorage(GROUP_NODEBALANCERS),
     set: v => setStorage(GROUP_NODEBALANCERS, v)
-  },
-  groupVolumesByTag: {
-    get: () => getStorage(GROUP_VOLUMES),
-    set: v => setStorage(GROUP_VOLUMES, v)
   },
   BackupsCtaDismissed: {
     get: () => getStorage(BACKUPSCTA_DISMISSED),

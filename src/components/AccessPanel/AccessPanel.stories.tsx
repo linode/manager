@@ -15,6 +15,7 @@ class PasswordAccess extends React.Component<{}, { password: string }> {
       <AccessPanel
         password={this.state.password}
         handleChange={this.handlePasswordChange}
+        requestKeys={() => null}
       />
     );
   }
@@ -94,6 +95,7 @@ class PasswordAndSSHAccess extends React.Component<
         password={this.state.password}
         handleChange={this.handlePasswordChange}
         users={this.state.users}
+        requestKeys={() => null}
       />
     );
   }

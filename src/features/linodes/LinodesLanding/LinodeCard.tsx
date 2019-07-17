@@ -15,7 +15,6 @@ import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import Tags from 'src/components/Tags';
-import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import {
   linodeInTransition,
   transitionText
@@ -34,6 +33,7 @@ import withDisplayType, { WithDisplayType } from './withDisplayType';
 import withNotifications, { WithNotifications } from './withNotifications';
 import withRecentEvent, { WithRecentEvent } from './withRecentEvent';
 
+import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { parseMaintenanceStartTime } from './utils';
 
 interface Props {
@@ -55,14 +55,12 @@ interface Props {
   someLinodesHaveMaintenance: boolean;
 
   imageLabel: string;
-  openConfigDrawer: (
-    configs: Linode.Config[],
-    action: LinodeConfigSelectionDrawerCallback
-  ) => void;
-  toggleConfirmation: (
-    bootOption: Linode.BootAction,
-    linodeId: number,
-    linodeLabel: string
+  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openPowerActionDialog: (
+    bootAction: Action,
+    linodeID: number,
+    linodeLabel: string,
+    linodeConfigs: Linode.Config[]
   ) => void;
 }
 
@@ -82,8 +80,8 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
 
   handleRebootButtonClick = () => {
     sendLinodeActionMenuItemEvent('Reboot Linode');
-    const { id, label, toggleConfirmation } = this.props;
-    toggleConfirmation('reboot', id, label);
+    const { id, label, openPowerActionDialog } = this.props;
+    openPowerActionDialog('Reboot', id, label, []);
   };
 
   render() {
@@ -103,8 +101,8 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
       image,
 
       classes,
-      openConfigDrawer,
-      toggleConfirmation,
+      openDeleteDialog,
+      openPowerActionDialog,
       displayType,
       mutationAvailable,
       linodeNotifications,
@@ -143,8 +141,8 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
                   linodeType={type}
                   linodeStatus={status}
                   linodeBackups={backups}
-                  openConfigDrawer={openConfigDrawer}
-                  toggleConfirmation={toggleConfirmation}
+                  openDeleteDialog={openDeleteDialog}
+                  openPowerActionDialog={openPowerActionDialog}
                   noImage={!image}
                 />
               </div>

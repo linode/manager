@@ -20,7 +20,9 @@ interface Props {
 interface State {
   rdns?: string | null;
   address?: string;
+  loading: boolean;
   errors?: Linode.ApiFieldError[];
+  delayText: string | null;
 }
 
 type CombinedProps = Props;
@@ -28,8 +30,22 @@ type CombinedProps = Props;
 class ViewRangeDrawer extends React.Component<CombinedProps, State> {
   state: State = {
     rdns: this.props.rdns,
-    address: this.props.address
+    address: this.props.address,
+    loading: false,
+    delayText: null
   };
+
+  timer: any = undefined;
+  mounted: boolean = false;
+
+  componentDidMount() {
+    this.mounted = true;
+  }
+
+  componentWillUnmount() {
+    this.mounted = false;
+    clearTimeout(this.timer);
+  }
 
   errorResources = {
     rdns: 'RDNS'
@@ -43,17 +59,40 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
     });
   }
 
+  showDelayText = () => {
+    if (!this.mounted) {
+      return;
+    }
+    this.setState({
+      delayText:
+        'Your request is still pending. Editing RDNS can take up to 30 seconds. Thank you for your patience.'
+    });
+  };
+
   save = () => {
     const { onClose } = this.props;
     const { rdns, address } = this.state;
+    this.setState({ loading: true, errors: undefined });
+    this.timer = setTimeout(this.showDelayText, 5000);
     updateIP(address!, !rdns || rdns === '' ? null : rdns)
       .then(_ => {
+        if (!this.mounted) {
+          return;
+        }
+        clearTimeout(this.timer);
+        this.setState({ loading: false, delayText: null });
         onClose();
       })
       .catch(errResponse => {
+        if (!this.mounted) {
+          return;
+        }
+        clearTimeout(this.timer);
         this.setState(
           {
-            errors: getAPIErrorOrDefault(errResponse)
+            errors: getAPIErrorOrDefault(errResponse),
+            loading: false,
+            delayText: null
           },
           () => {
             scrollErrorIntoView();
@@ -68,7 +107,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
 
   render() {
     const { open, onClose } = this.props;
-    const { rdns, errors } = this.state;
+    const { rdns, delayText, errors, loading } = this.state;
 
     const hasErrorFor = getAPIErrorsFor(this.errorResources, errors);
 
@@ -93,7 +132,12 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
           )}
 
           <ActionsPanel style={{ marginTop: 16 }}>
-            <Button buttonType="primary" onClick={this.save} data-qa-submit>
+            <Button
+              buttonType="primary"
+              onClick={this.save}
+              loading={loading}
+              data-qa-submit
+            >
               Save
             </Button>
             <Button
@@ -105,6 +149,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
               Close
             </Button>
           </ActionsPanel>
+          <Typography variant="body1">{delayText}</Typography>
         </React.Fragment>
       </Drawer>
     );
