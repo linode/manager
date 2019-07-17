@@ -147,65 +147,73 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
   }, [props.preferenceError, props.preferences]);
 
   React.useEffect(() => {
-    const debouncedErrorUpdate = setTimeout(() => {
-      /**
-       * we have a preference error, so first GET the preferences
-       * before trying to PUT them.
-       *
-       * Don't update anything if the GET fails
-       */
-      if (!!preferenceError && lastUpdated !== 0) {
-        /** invoke our callback prop if we have one */
-        if (
-          toggleCallbackFnDebounced &&
-          !isNullOrUndefined(currentlySetPreference)
-        ) {
-          toggleCallbackFnDebounced(currentlySetPreference);
-        }
-
-        props
-          .getUserPreferences()
-          .then(response => {
-            props
-              .updateUserPreferences({
-                ...response.preferences,
-                [preferenceKey]: currentlySetPreference
-              })
-              .catch(() => /** swallow the error */ null);
-          })
-          .catch(() => /** swallow the error */ null);
-      } else if (
-        !!preferences &&
-        !isNullOrUndefined(currentlySetPreference) &&
-        lastUpdated !== 0
-      ) {
+    /**
+     * we only want to update local state if we already have something set in local state
+     * setting the initial state is the responsibility of the first useEffect
+     */
+    if (!!currentlySetPreference) {
+      const debouncedErrorUpdate = setTimeout(() => {
         /**
-         * PUT to /preferences on every toggle, debounced.
+         * we have a preference error, so first GET the preferences
+         * before trying to PUT them.
+         *
+         * Don't update anything if the GET fails
          */
-        props
-          .updateUserPreferences({
-            ...props.preferences,
-            [preferenceKey]: currentlySetPreference
-          })
-          .catch(() => /** swallow the error */ null);
+        if (!!preferenceError && lastUpdated !== 0) {
+          /** invoke our callback prop if we have one */
+          if (
+            toggleCallbackFnDebounced &&
+            !isNullOrUndefined(currentlySetPreference)
+          ) {
+            toggleCallbackFnDebounced(currentlySetPreference);
+          }
 
-        /** invoke our callback prop if we have one */
-        if (
-          toggleCallbackFnDebounced &&
-          !isNullOrUndefined(currentlySetPreference)
+          props
+            .getUserPreferences()
+            .then(response => {
+              props
+                .updateUserPreferences({
+                  ...response.preferences,
+                  [preferenceKey]: currentlySetPreference
+                })
+                .catch(() => /** swallow the error */ null);
+            })
+            .catch(() => /** swallow the error */ null);
+        } else if (
+          !!preferences &&
+          !isNullOrUndefined(currentlySetPreference) &&
+          lastUpdated !== 0
         ) {
-          toggleCallbackFnDebounced(currentlySetPreference);
-        }
-      } else if (lastUpdated === 0) {
-        /**
-         * this is the case where the app has just been mounted and the preferences are
-         * being set in local state for the first time
-         */
-        setLastUpdated(Date.now());
-      }
-    }, 500);
+          /**
+           * PUT to /preferences on every toggle, debounced.
+           */
+          props
+            .updateUserPreferences({
+              ...props.preferences,
+              [preferenceKey]: currentlySetPreference
+            })
+            .catch(() => /** swallow the error */ null);
 
-    return () => clearTimeout(debouncedErrorUpdate);
+          /** invoke our callback prop if we have one */
+          if (
+            toggleCallbackFnDebounced &&
+            !isNullOrUndefined(currentlySetPreference)
+          ) {
+            toggleCallbackFnDebounced(currentlySetPreference);
+          }
+        } else if (lastUpdated === 0) {
+          /**
+           * this is the case where the app has just been mounted and the preferences are
+           * being set in local state for the first time
+           */
+          setLastUpdated(Date.now());
+        }
+      }, 500);
+
+      return () => clearTimeout(debouncedErrorUpdate);
+    }
+
+    return () => null;
   }, [currentlySetPreference]);
 
   const togglePreference = () => {
