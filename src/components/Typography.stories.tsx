@@ -1,7 +1,7 @@
-import { default as MDivider } from '@material-ui/core/Divider';
-import Typography from '@material-ui/core/Typography';
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
+import { default as MDivider } from 'src/components/core/Divider';
+import Typography from 'src/components/core/Typography';
 import Placeholder from 'src/components/Placeholder';
 
 const Divider = () => (

@@ -2,7 +2,11 @@ export const collectBackups = ({
   automatic,
   snapshot
 }: Linode.LinodeBackupsResponse) =>
-  [...automatic, snapshot.current, snapshot.in_progress].filter(Boolean);
+  [
+    ...automatic,
+    snapshot && snapshot.current,
+    snapshot && snapshot.in_progress
+  ].filter(Boolean);
 
 export const mostRecentFromResponse: (
   r: Linode.LinodeBackupsResponse
@@ -12,7 +16,7 @@ export const mostRecentFromResponse: (
       /** Filter unsuccessful/in-progress backups */
       .filter((backup: Linode.LinodeBackup) => backup.status === 'successful')
 
-      /** Just make sure the backup isnt null somehow. */
+      /** Just make sure the backup isn't null somehow. */
       .filter(
         (backup: Linode.LinodeBackup) => typeof backup.finished === 'string'
       )

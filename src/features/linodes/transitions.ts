@@ -19,17 +19,22 @@ export const transitionAction = [
   'disk_resize',
   'backups_restore',
   'disk_imagize',
-  'linode_mutate'
+  'disk_duplicate',
+  'linode_mutate',
+  'linode_clone'
 ];
 
 export const linodeInTransition = (
   status: string,
   recentEvent?: Linode.Event
 ): boolean => {
+  if (!recentEvent) {
+    return false;
+  }
+
   return (
     transitionStatus.includes(status) ||
-    ((recentEvent || false) &&
-      transitionAction.includes(recentEvent.action || '') &&
+    (transitionAction.includes(recentEvent.action || '') &&
       recentEvent.percent_complete !== null &&
       recentEvent.percent_complete < 100)
   );
@@ -43,6 +48,10 @@ export const transitionText = (
   // "Upgrading" instead of "Mutate".
   if (recentEvent && recentEvent.action === 'linode_mutate') {
     return 'Upgrading';
+  }
+
+  if (recentEvent && recentEvent.action === 'linode_clone') {
+    return 'Cloning';
   }
 
   let event;

@@ -1,216 +1,101 @@
-import * as classNames from 'classnames';
+import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+
 import CircleProgress from 'src/components/CircleProgress';
-import Paper from 'src/components/core/Paper';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import Currency from 'src/components/Currency';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ErrorState from 'src/components/ErrorState';
-import summaryPanelStyles, {
-  StyleProps
-} from 'src/containers/SummaryPanels.styles';
-import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
+
+import withProfile from 'src/containers/profile.container';
 import { withAccount } from '../../context';
 
-type ClassNames = 'expired' | 'balance' | 'positive' | 'negative' | 'wordWrap';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    ...summaryPanelStyles(theme),
-    expired: {
-      color: theme.color.red
-    },
-    balance: {
-      display: 'flex'
-    },
-    positive: {
-      color: theme.color.green
-    },
-    negative: {
-      color: theme.color.red
-    },
-    wordWrap: {
-      wordBreak: 'break-all'
-    }
-  });
+import BillingInfo from './PanelCards/BillingInformation';
+import ContactInfo from './PanelCards/ContactInformation';
 
 interface AccountContextProps {
-  loading: boolean;
   errors?: Linode.ApiFieldError[];
   lastUpdated: number;
   data?: Linode.Account;
   accountLoading: boolean;
-  balance: false | number;
-  balance_uninvoiced?: number;
 }
 
-type CombinedProps = AccountContextProps & StyleProps & WithStyles<ClassNames>;
+export type CombinedProps = AccountContextProps & Profile;
 
 export class SummaryPanel extends React.Component<CombinedProps, {}> {
   render() {
-    const { data, loading, errors, lastUpdated } = this.props;
-
-    return (
-      <div>
-        {loading && lastUpdated === 0
-          ? this.loading()
-          : errors
-          ? this.error()
-          : data
-          ? this.info()
-          : null}
-      </div>
-    );
-  }
-
-  loading = () => {
-    return <CircleProgress noTopMargin />;
-  };
-
-  error = () => {
-    return <ErrorState compact errorText="Unable to load account details." />;
-  };
-
-  info = () => {
-    if (!this.props.data) {
-      return;
-    }
-
     const {
-      data: {
-        company,
-        first_name,
-        last_name,
-        address_1,
-        address_2,
-        email,
-        phone,
-        credit_card: { expiry, last_four },
-        city,
-        state,
-        zip,
-        active_since
-      },
-      balance,
-      balance_uninvoiced,
+      data,
       accountLoading,
-      classes
+      errors,
+      username,
+      profileError,
+      profileLoading,
+      isRestricted
     } = this.props;
 
-    const shouldDisplayBalance = !accountLoading && balance !== false;
+    if (accountLoading || profileLoading) {
+      return <CircleProgress noTopMargin />;
+    }
+
+    if (errors || profileError) {
+      return <ErrorState compact errorText="Unable to load account details." />;
+    }
+
+    if (!data || !username) {
+      return null;
+    }
 
     return (
       <React.Fragment>
-        <Paper className={classes.summarySection} data-qa-contact-summary>
-          <Typography variant="h3" className={classes.title}>
-            Contact Information
-          </Typography>
-
-          <div className={classes.section} data-qa-company>
-            <strong>Company Name:&nbsp;</strong>
-            <div className={classes.wordWrap}>{company ? company : 'None'}</div>
-          </div>
-          <div className={classes.section} data-qa-contact-name>
-            <strong>Name:&nbsp;</strong>
-            {!(first_name || last_name) && 'None'}
-            <div
-              className={classes.wordWrap}
-            >{`${first_name} ${last_name}`}</div>
-          </div>
-          <div className={classes.section} data-qa-contact-address>
-            <div>
-              <strong>Address:&nbsp;</strong>
-            </div>
-            <div>
-              {!(address_1 || address_2 || city || state || zip) && 'None'}
-              <span>{address_1}</span>
-              <div>{address_2}</div>
-              <div>{`${city} ${city && state && ', '} ${state} ${zip}`}</div>
-            </div>
-          </div>
-          <div className={classes.section} data-qa-contact-email>
-            <strong>Email:&nbsp;</strong>
-            <div className={classes.wordWrap}>{email}</div>
-          </div>
-          <div className={classes.section} data-qa-contact-phone>
-            <strong>Phone Number:&nbsp;</strong>
-            {phone ? phone : 'None'}
-          </div>
-          <div className={classes.section}>
-            <strong>Active Since:&nbsp;</strong>
-            <DateTimeDisplay value={active_since} format="MMMM D, YYYY" />
-          </div>
-        </Paper>
-
-        <Paper className={classes.summarySection} data-qa-billing-summary>
-          <Typography variant="h3" className={classes.title}>
-            Billing Information
-          </Typography>
-          {balance_uninvoiced !== undefined && (
-            <div className={classes.section} data-qa-contact-cc>
-              <strong>Uninvoiced Balance:&nbsp;</strong>
-              <Currency quantity={balance_uninvoiced} />
-            </div>
-          )}
-          <div
-            className={`${classes.section} ${classes.balance}`}
-            data-qa-current-balance
-          >
-            <strong>Current Balance:&nbsp;</strong>
-            <Typography
-              component={'span'}
-              className={classNames({
-                [classes.negative]: balance > 0,
-                [classes.positive]: balance <= 0
-              })}
-            >
-              {shouldDisplayBalance && (
-                <Currency quantity={Math.abs(balance as number)} />
-              )}
-              {balance < 0 && ` (credit)`}
-            </Typography>
-          </div>
-          <div className={classes.section} data-qa-contact-cc>
-            <strong>Credit Card: </strong>
-            {last_four ? `xxxx-xxxx-xxxx-${last_four}` : 'None'}
-          </div>
-          <div className={classes.section} data-qa-contact-cc-exp-date>
-            <strong>Expiration Date: </strong>
-            {expiry ? `${expiry} ` : 'None'}
-            {expiry && isCreditCardExpired(expiry) && (
-              <span className={classes.expired}>Expired</span>
-            )}
-          </div>
-        </Paper>
+        <ContactInfo
+          username={username}
+          company={data.company}
+          firstName={data.first_name}
+          lastName={data.last_name}
+          address1={data.address_1}
+          address2={data.address_2}
+          email={data.email}
+          phone={data.phone}
+          city={data.city}
+          state={data.state}
+          zip={data.zip}
+          activeSince={data.active_since}
+          isRestrictedUser={isRestricted}
+        />
+        <BillingInfo
+          balance={data.balance}
+          balanceUninvoiced={data.balance_uninvoiced}
+          expiry={data.credit_card.expiry}
+          lastFour={data.credit_card.last_four}
+        />
       </React.Fragment>
     );
-  };
+  }
 }
-
-const localStyles = withStyles(styles);
 
 const accountContext = withAccount(
   ({ data, errors, loading, lastUpdated }) => ({
     accountLoading: loading,
-    balance: data && data.balance,
-    balance_uninvoiced: data && data.balance_uninvoiced,
     errors,
     lastUpdated,
-    loading,
     data
   })
 );
 
+interface Profile {
+  profileLoading: boolean;
+  profileError?: Linode.ApiFieldError[];
+  username?: string;
+  isRestricted: boolean;
+}
+
 const enhanced = compose<CombinedProps, {}>(
   accountContext,
-  localStyles
+  withProfile<Profile, {}>((ownProps, profile) => ({
+    username: path(['username'], profile.data),
+    profileError: path(['read'], profile.error),
+    profileLoading: profile.loading,
+    isRestricted: pathOr(false, ['restricted'], profile.data)
+  }))
 );
 
 export default enhanced(SummaryPanel) as React.ComponentType<{}>;

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
+import { Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { compose, withProps } from 'recompose';
 import {
   createStyles,
@@ -7,6 +7,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import DefaultLoader from 'src/components/DefaultLoader';
 import { WithTypes } from 'src/store/linodeType/linodeType.containers';
 import { ThunkDispatch } from 'src/store/types';
 import {
@@ -16,9 +17,19 @@ import {
 } from './linodeDetailContext';
 import LinodeDetailErrorBoundary from './LinodeDetailErrorBoundary';
 import linodesDetailContainer, { InnerProps } from './LinodesDetail.container';
-import LinodesDetailHeader from './LinodesDetailHeader';
-import LinodesDetailNavigation from './LinodesDetailNavigation';
 import reloadableWithRouter from './reloadableWithRouter';
+
+const CloneLanding = DefaultLoader({
+  loader: () => import('../CloneLanding')
+});
+
+const LinodesDetailHeader = DefaultLoader({
+  loader: () => import('./LinodesDetailHeader')
+});
+
+const LinodesDetailNavigation = DefaultLoader({
+  loader: () => import('./LinodesDetailNavigation')
+});
 
 interface MatchProps {
   linodeId?: string;
@@ -45,17 +56,34 @@ const styles = (theme: Theme) =>
   });
 
 const LinodeDetail: React.StatelessComponent<CombinedProps> = props => {
-  const { linode } = props;
-
-  const { dispatch } = props;
+  const {
+    dispatch,
+    linode,
+    match: { path }
+  } = props;
 
   const ctx: LinodeDetailContext = createLinodeDetailContext(linode, dispatch);
 
   return (
     <LinodeDetailContextProvider value={ctx}>
       {/* <pre>{JSON.stringify(linode, null, 2)}</pre> */}
-      <LinodesDetailHeader />
-      <LinodesDetailNavigation />
+      <Switch>
+        {/*
+        Currently, the "Clone Configs and Disks" feature exists OUTSIDE of LinodeDetail.
+        Or... at least it appears that way to the user. We would like it to live WITHIN
+        LinodeDetail, though, because we'd like to use the same context, so we don't
+        have to reload all the configs, disks, etc. once we get to the CloneLanding page.
+        */}
+        <Route path={`${path}/clone`} component={CloneLanding} />
+        <Route
+          render={() => (
+            <React.Fragment>
+              <LinodesDetailHeader />
+              <LinodesDetailNavigation />
+            </React.Fragment>
+          )}
+        />
+      </Switch>
     </LinodeDetailContextProvider>
   );
 };

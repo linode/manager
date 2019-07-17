@@ -1,5 +1,6 @@
 import { take } from 'ramda';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
@@ -134,13 +135,15 @@ const NodeBalancersDashboardCard: React.FunctionComponent<
               <EntityIcon variant="nodebalancer" />
             </Grid>
             <Grid item className={classes.labelGridWrapper}>
-              <Typography
-                variant="h3"
-                className={classes.wrapHeader}
-                data-qa-label
-              >
-                {label}
-              </Typography>
+              <Link to={`/nodebalancers/${id}`} tabIndex={-1}>
+                <Typography
+                  variant="h3"
+                  className={classes.wrapHeader}
+                  data-qa-label
+                >
+                  {label}
+                </Typography>
+              </Link>
               <Typography className={classes.description}>
                 {hostname}
               </Typography>
@@ -178,8 +181,8 @@ const withNodeBalancers = NodeBalancerContainer(
   })
 );
 const enhanced = compose<CombinedProps, {}>(
-  styled,
-  withNodeBalancers
+  withNodeBalancers,
+  styled
 );
 
 export default enhanced(NodeBalancersDashboardCard);
