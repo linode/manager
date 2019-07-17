@@ -1,3 +1,4 @@
+import * as md5 from 'md5';
 import * as React from 'react';
 import { Redirect, Route, Switch } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -15,7 +16,9 @@ import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
 /** @todo: Uncomment when we deploy with LD */
 // import VATBanner from 'src/components/VATBanner';
-import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
+import withFeatureFlagProvider, {
+  useLDClient
+} from 'src/containers/withFeatureFlagProvider.container';
 import BackupDrawer from 'src/features/Backups';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
 import Footer from 'src/features/Footer';
@@ -23,6 +26,7 @@ import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import WelcomeBanner from 'src/WelcomeBanner';
+
 import BucketDrawer from './features/ObjectStorage/Buckets/BucketDrawer';
 
 import {
@@ -155,6 +159,7 @@ interface MainProps {
   isObjectStorageEnabled: boolean;
   username: string;
   welcomeBanner: any;
+  userID?: number;
   closeWelcomeBanner: () => void;
   openMenu: () => void;
   closeMenu: () => void;
@@ -174,9 +179,21 @@ const _Main: React.FC<CombinedMainProps> = props => {
     toggleSpacing,
     toggleTheme,
     username,
+    userID,
     welcomeBanner,
     closeWelcomeBanner
   } = props;
+
+  const ldClient = useLDClient();
+  React.useEffect(() => {
+    if (ldClient && userID) {
+      const hashedID = md5(String(userID));
+      console.log(hashedID);
+      ldClient.identify({
+        key: hashedID
+      });
+    }
+  }, [ldClient, userID]);
 
   return (
     <>
@@ -265,7 +282,7 @@ export const styled = withStyles(styles);
 type CombinedMainProps = MainProps & WithStyles<ClassNames>;
 const Main = compose<CombinedMainProps, MainProps>(
   styled,
-  withFeatureFlagProvider({})
+  withFeatureFlagProvider
 )(_Main);
 
 export default Main;

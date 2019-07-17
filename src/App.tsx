@@ -209,6 +209,7 @@ export class App extends React.Component<CombinedProps, State> {
       regionsError,
       profileLoading,
       profileError,
+      profileData,
       volumesError,
       settingsError,
       bucketsError,
@@ -269,6 +270,7 @@ export class App extends React.Component<CombinedProps, State> {
             welcomeBanner={this.state.welcomeBanner}
             closeWelcomeBanner={this.closeWelcomeBanner}
             username={username}
+            userID={profileData ? profileData.uid : undefined}
           />
         )}
       </React.Fragment>
@@ -351,6 +353,7 @@ interface StateProps {
   /** Profile */
   profileLoading: boolean;
   profileError?: Error | Linode.ApiFieldError[];
+  profileData?: Linode.Profile;
   linodes: Linode.Linode[];
   linodesError?: Linode.ApiFieldError[];
   domainsError?: Linode.ApiFieldError[];
@@ -375,6 +378,7 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   /** Profile */
   profileLoading: state.__resources.profile.loading,
   profileError: path(['read'], state.__resources.profile.error),
+  profileData: state.__resources.profile.data,
   linodes: state.__resources.linodes.entities,
   linodesError: path(['read'], state.__resources.linodes.error),
   domainsError: state.__resources.domains.error,
