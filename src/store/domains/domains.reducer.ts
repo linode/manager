@@ -81,10 +81,12 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       return state;
     }
 
+    const filteredData = data.filter(domain => domain.id !== payload);
+
     return {
       ...state,
-      data: data.filter(domain => domain.id !== payload),
-      results: data.length
+      data: filteredData,
+      results: filteredData.length
     };
   }
 
