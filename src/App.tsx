@@ -342,7 +342,6 @@ export class App extends React.Component<CombinedProps, State> {
       imagesError,
       notificationsError,
       regionsError,
-      profileLoading,
       profileError,
       volumesError,
       settingsError,
@@ -386,113 +385,99 @@ export class App extends React.Component<CombinedProps, State> {
           Skip to main content
         </a>
         <DocumentTitleSegment segment="Linode Manager" />
-
-        {profileLoading === false ? (
-          <React.Fragment>
-            <>
-              <div className={classes.appFrame}>
-                <SideMenu
-                  open={menuOpen}
-                  closeMenu={this.closeMenu}
-                  toggleTheme={toggleTheme}
-                  toggleSpacing={toggleSpacing}
+        <React.Fragment>
+          <>
+            <div className={classes.appFrame}>
+              <SideMenu
+                open={menuOpen}
+                closeMenu={this.closeMenu}
+                toggleTheme={toggleTheme}
+                toggleSpacing={toggleSpacing}
+              />
+              <main className={classes.content}>
+                <TopMenu
+                  openSideMenu={this.openMenu}
+                  isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
+                  username={this.props.username}
                 />
-                <main className={classes.content}>
-                  <TopMenu
-                    openSideMenu={this.openMenu}
-                    isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
-                    username={this.props.username}
-                  />
-                  {/* @todo: Uncomment when we deploy with LD */}
-                  {/* <VATBanner /> */}
-                  <div className={classes.wrapper} id="main-content">
-                    <Grid container spacing={0} className={classes.grid}>
-                      <Grid item className={classes.switchWrapper}>
-                        <Switch>
-                          <Route path="/linodes" component={LinodesRoutes} />
-                          <Route
-                            path="/volumes"
-                            component={Volumes}
-                            exact
-                            strict
-                          />
-                          <Redirect path="/volumes*" to="/volumes" />
-                          <Route
-                            path="/nodebalancers"
-                            component={NodeBalancers}
-                          />
-                          <Route path="/domains" component={Domains} />
-                          <Route exact path="/managed" component={Managed} />
-                          <Route exact path="/longview" component={Longview} />
-                          <Route
-                            exact
-                            strict
-                            path="/images"
-                            component={Images}
-                          />
-                          <Redirect path="/images*" to="/images" />
-                          <Route
-                            path="/stackscripts"
-                            component={StackScripts}
-                          />
-                          {getObjectStorageRoute(
-                            accountLoading,
-                            accountCapabilities,
-                            accountError
-                          )}
-                          {isKubernetesEnabled && (
-                            <Route path="/kubernetes" component={Kubernetes} />
-                          )}
-                          <Route path="/account" component={Account} />
-                          <Route
-                            exact
-                            strict
-                            path="/support/tickets"
-                            component={SupportTickets}
-                          />
-                          <Route
-                            path="/support/tickets/:ticketId"
-                            component={SupportTicketDetail}
-                            exact
-                            strict
-                          />
-                          <Route path="/profile" component={Profile} />
-                          <Route exact path="/support" component={Help} />
-                          <Route
-                            exact
-                            strict
-                            path="/support/search/"
-                            component={SupportSearchLanding}
-                          />
-                          <Route path="/dashboard" component={Dashboard} />
-                          <Route path="/search" component={SearchLanding} />
-                          <Route path="/events" component={EventsLanding} />
-                          <Redirect exact from="/" to="/dashboard" />
-                          <Route component={NotFound} />
-                        </Switch>
-                      </Grid>
+                {/* @todo: Uncomment when we deploy with LD */}
+                {/* <VATBanner /> */}
+                <div className={classes.wrapper} id="main-content">
+                  <Grid container spacing={0} className={classes.grid}>
+                    <Grid item className={classes.switchWrapper}>
+                      <Switch>
+                        <Route path="/linodes" component={LinodesRoutes} />
+                        <Route
+                          path="/volumes"
+                          component={Volumes}
+                          exact
+                          strict
+                        />
+                        <Redirect path="/volumes*" to="/volumes" />
+                        <Route
+                          path="/nodebalancers"
+                          component={NodeBalancers}
+                        />
+                        <Route path="/domains" component={Domains} />
+                        <Route exact path="/managed" component={Managed} />
+                        <Route exact path="/longview" component={Longview} />
+                        <Route exact strict path="/images" component={Images} />
+                        <Redirect path="/images*" to="/images" />
+                        <Route path="/stackscripts" component={StackScripts} />
+                        {getObjectStorageRoute(
+                          accountLoading,
+                          accountCapabilities,
+                          accountError
+                        )}
+                        {isKubernetesEnabled && (
+                          <Route path="/kubernetes" component={Kubernetes} />
+                        )}
+                        <Route path="/account" component={Account} />
+                        <Route
+                          exact
+                          strict
+                          path="/support/tickets"
+                          component={SupportTickets}
+                        />
+                        <Route
+                          path="/support/tickets/:ticketId"
+                          component={SupportTicketDetail}
+                          exact
+                          strict
+                        />
+                        <Route path="/profile" component={Profile} />
+                        <Route exact path="/support" component={Help} />
+                        <Route
+                          exact
+                          strict
+                          path="/support/search/"
+                          component={SupportSearchLanding}
+                        />
+                        <Route path="/dashboard" component={Dashboard} />
+                        <Route path="/search" component={SearchLanding} />
+                        <Route path="/events" component={EventsLanding} />
+                        <Redirect exact from="/" to="/dashboard" />
+                        <Route component={NotFound} />
+                      </Switch>
                     </Grid>
-                  </div>
-                </main>
-                <Footer />
-                <WelcomeBanner
-                  open={this.state.welcomeBanner}
-                  onClose={this.closeWelcomeBanner}
-                  data-qa-beta-notice
-                />
-                <ToastNotifications />
-                <DomainDrawer />
-                <VolumeDrawer />
-                <BackupDrawer />
-                {isObjectStorageEnabled(accountCapabilities) && (
-                  <BucketDrawer />
-                )}
-              </div>
-            </>
-          </React.Fragment>
-        ) : (
-          <span>loading profile....</span>
-        )}
+                  </Grid>
+                </div>
+              </main>
+              <Footer />
+              <WelcomeBanner
+                open={this.state.welcomeBanner}
+                onClose={this.closeWelcomeBanner}
+                data-qa-beta-notice
+              />
+              <ToastNotifications />
+              <DomainDrawer />
+              <VolumeDrawer />
+              <BackupDrawer />
+              {isObjectStorageEnabled(accountCapabilities) && <BucketDrawer />}
+            </div>
+          </>
+        </React.Fragment>
+        }
       </React.Fragment>
     );
   }
