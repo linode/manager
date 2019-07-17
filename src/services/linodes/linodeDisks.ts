@@ -120,6 +120,19 @@ export const resizeLinodeDisk = (
   );
 
 /**
+ * cloneLinodeDisk
+ *
+ * Clones (duplicates) a Disk on an individual Linode.
+ * @param linodeId { number } The id of the Linode containing the disk to be resized.
+ * @param diskId { number } The id of the disk to be resized.
+ */
+export const cloneLinodeDisk = (linodeId: number, diskId: number) =>
+  Request<Linode.Disk>(
+    setURL(`${API_ROOT}/linode/instances/${linodeId}/disks/${diskId}/clone`),
+    setMethod('POST')
+  ).then(response => response.data);
+
+/**
  * deleteLinodeDisk
  *
  * Deletes a Disk you have permission to read_write.

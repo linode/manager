@@ -53,7 +53,7 @@ describe('NodeBalancer - Configurations Suite', () => {
 
     it('should display attached node', () => {
         nodeLabel = NodeBalancers.backendIpLabel.getValue();
-        nodeIp = NodeBalancers.backendIpAddress.getValue();
+        nodeIp = $('[data-qa-backend-ip-address] div').getText();
         expect(nodeLabel).toMatch(/\w/ig);
         expect(nodeIp).toMatch(/(^127\.)|(^10\.)|(^172\.1[6-9]\.)|(^172\.2[0-9]\.)|(^172\.3[0-1]\.)|(^192\.168\.)/g);
         expect(NodeBalancers.backendIpWeight.getValue()).toBe('100');
@@ -70,7 +70,7 @@ describe('NodeBalancer - Configurations Suite', () => {
             label: nodeLabel,
             ip: nodeIp,
         }
-        NodeBalancers.configAddNode(nodeConfig);
+        NodeBalancers.configAddNode(nodeConfig, 'editing');
         NodeBalancers.configSave();
     });
 

@@ -1,10 +1,10 @@
-import Modal from '@material-ui/core/Modal';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps, withRouter } from 'react-router';
 import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
 import MenuList from 'src/components/core/MenuList';
+import Modal from 'src/components/core/Modal';
 import Paper from 'src/components/core/Paper';
 import Popper from 'src/components/core/Popper';
 import {

@@ -64,7 +64,7 @@ export const getOlderPublicImages = compose<any, any, any, any, any, any>(
     flatten,
     values,
     map(tail)
-  ),
+  ) as any,
   groupByVendor,
   sortCreatedDESC,
   filter(propSatisfies(startsWith('linode'), 'id'))

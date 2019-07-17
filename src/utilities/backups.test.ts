@@ -17,6 +17,21 @@ describe('utilities/backups', () => {
 
       expect(collectBackups(response)).toEqual(automatic);
     });
+
+    it('should not bomb out if "snapshot" comes back as null/undefined from the API', () => {
+      /**
+       * snapshot should never come back as null or undefined from the API, but
+       * we were getting Sentry errors from this function when trying to access snapshot.whatever.
+       * It's unclear how this happens, but we should handle the case without crashing.
+       */
+      const automatic = [{ id: 1 }, { id: 2 }, { id: 3 }];
+      const response = {
+        automatic,
+        snapshot: null
+      } as any;
+
+      expect(collectBackups(response)).toEqual(automatic);
+    });
   });
 
   describe('mostRecentFromResponse', () => {

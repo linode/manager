@@ -112,6 +112,7 @@ interface CrumbOverridesProps {
   position: number;
   linkTo?: LocationDescriptor;
   label?: string;
+  noCap?: boolean;
 }
 
 export interface Props {
@@ -179,7 +180,8 @@ export class Breadcrumb extends React.Component<CombinedProps> {
                   <Typography
                     className={classNames({
                       [classes.crumb]: true,
-                      [classes.crumbLink]: true
+                      [classes.crumbLink]: true,
+                      [classes.noCap]: override && override.noCap
                     })}
                     data-qa-link-text
                     data-testid={'link-text'}

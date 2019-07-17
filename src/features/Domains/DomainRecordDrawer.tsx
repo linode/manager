@@ -28,7 +28,11 @@ import defaultNumeric from 'src/utilities/defaultNumeric';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { isValidDomainRecord, isValidSOAEmail } from './domainUtils';
+import {
+  isValidCNAME,
+  isValidDomainRecord,
+  isValidSOAEmail
+} from './domainUtils';
 
 const TextField: React.StatelessComponent<TextFieldProps> = props => (
   <_TextField {...props} />
@@ -493,8 +497,11 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
      * This should be done on the API side, but several breaking
      * configurations will currently succeed on their end.
      */
+    const _domain = pathOr('', ['name'], data);
+    const invalidCNAME =
+      data.type === 'CNAME' && !isValidCNAME(_domain, records);
 
-    if (!isValidDomainRecord(pathOr('', ['name'], data), records)) {
+    if (!isValidDomainRecord(_domain, records) || invalidCNAME) {
       const error = {
         field: 'name',
         reason: 'Record conflict - CNAMES must be unique'

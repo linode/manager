@@ -360,13 +360,13 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             >
               <FormControlLabel
                 value="paravirt"
-                label="Paravirtulization"
+                label="Paravirtualization"
                 disabled={readOnly}
                 control={<Radio />}
               />
               <FormControlLabel
                 value="fullvirt"
-                label="Full-virtulization"
+                label="Full virtualization"
                 disabled={readOnly}
                 control={<Radio />}
               />
