@@ -23,7 +23,10 @@ const actionCreator = actionCreatorFactory(`@@manager/domains`);
 
 export const getDomainsRequest = actionCreator('request');
 
-export const getDomainsSuccess = actionCreator<Linode.Domain[]>('success');
+export const getDomainsSuccess = actionCreator<{
+  data: Linode.Domain[];
+  results: number;
+}>('success');
 
 export const getDomainsFailure = actionCreator<Linode.ApiFieldError[]>('fail');
 
@@ -57,7 +60,7 @@ export const requestDomains: ThunkActionCreator<
 
   return getAll<Linode.Domain>(getDomains)()
     .then(domains => {
-      dispatch(getDomainsSuccess(domains.data));
+      dispatch(getDomainsSuccess(domains));
       return domains;
     })
     .catch(err => {

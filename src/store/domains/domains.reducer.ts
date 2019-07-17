@@ -39,11 +39,13 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   if (isType(action, getDomainsSuccess)) {
-    const { payload } = action;
+    const {
+      payload: { data, results }
+    } = action;
     return {
       ...state,
-      data: entitiesFromPayload(payload),
-      results: payload.length,
+      data: entitiesFromPayload(data),
+      results,
       lastUpdated: Date.now(),
       loading: false
     };
