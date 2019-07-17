@@ -3,43 +3,55 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import SelectionCard from 'src/components/SelectionCard';
 
 export type LinodeConfigSelectionDrawerCallback = (id: number) => void;
 
 interface Props {
-  configs: Linode.Config[];
+  linodeConfigs: Linode.Config[];
   onClose: () => void;
   onSubmit: () => void;
-  onChange: (id: number) => void;
-  open: boolean;
-  selected?: string;
-  error?: string;
+  onSelectConfig: (configID: number) => void;
+  isOpen: boolean;
+  selectedConfigID?: number;
+  loading: boolean;
+  error?: Linode.ApiFieldError[];
 }
 
 type CombinedProps = Props;
 
-const LinodeConfigSelectionDrawer: React.StatelessComponent<
-  CombinedProps
-> = props => {
-  const { onClose, onSubmit, onChange, open, configs, selected } = props;
+const LinodeConfigSelectionDrawer: React.FC<CombinedProps> = props => {
+  const {
+    onClose,
+    onSubmit,
+    onSelectConfig,
+    isOpen,
+    linodeConfigs,
+    selectedConfigID
+  } = props;
 
   return (
-    <Drawer open={open} onClose={onClose} title="Select a Linode Configuration">
+    <Drawer
+      open={isOpen}
+      onClose={onClose}
+      title="Select a Linode Configuration"
+    >
+      {props.error && <Notice error>{props.error[0].reason}</Notice>}
       <Grid container spacing={1} style={{ marginTop: 16 }}>
-        {configs.map(config => (
+        {linodeConfigs.map(config => (
           <SelectionCard
             key={config.id}
             heading={config.label}
             subheadings={[config.kernel]}
-            onClick={() => onChange(config.id)}
-            checked={selected === String(config.id)}
+            onClick={() => onSelectConfig(config.id)}
+            checked={selectedConfigID === config.id}
             variant="check"
           />
         ))}
       </Grid>
       <ActionsPanel>
-        <Button buttonType="primary" onClick={onSubmit}>
+        <Button buttonType="primary" onClick={onSubmit} loading={props.loading}>
           Submit
         </Button>
         <Button onClick={onClose} buttonType="secondary" className="cancel">
@@ -48,12 +60,6 @@ const LinodeConfigSelectionDrawer: React.StatelessComponent<
       </ActionsPanel>
     </Drawer>
   );
-};
-
-LinodeConfigSelectionDrawer.defaultProps = {
-  selected: '',
-  open: false,
-  configs: []
 };
 
 export default LinodeConfigSelectionDrawer;

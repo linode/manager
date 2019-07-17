@@ -16,6 +16,7 @@ const mockProps: CombinedProps = {
   updateRegionID: jest.fn(),
   updateTags: jest.fn(),
   updateTypeID: jest.fn(),
+  requestKeys: jest.fn(),
   formIsSubmitting: false,
   label: '',
   password: '',

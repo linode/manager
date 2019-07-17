@@ -30,9 +30,11 @@ export const wrapWithTheme = (ui: any) => {
 
 export const renderWithTheme = (ui: any) => {
   return render(
-    <LinodeThemeWrapper theme="dark" spacing="normal">
-      <MemoryRouter>{ui}</MemoryRouter>
-    </LinodeThemeWrapper>
+    <Provider store={store}>
+      <LinodeThemeWrapper theme="dark" spacing="normal">
+        <MemoryRouter>{ui}</MemoryRouter>
+      </LinodeThemeWrapper>
+    </Provider>
   );
 };
 

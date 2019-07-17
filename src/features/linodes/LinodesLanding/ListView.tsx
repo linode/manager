@@ -1,22 +1,20 @@
 import * as React from 'react';
 import { PaginationProps } from 'src/components/Paginate';
-import { LinodeConfigSelectionDrawerCallback } from 'src/features/LinodeConfigSelectionDrawer';
 import LinodeRow from './LinodeRow/LinodeRow';
 
+import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 
 interface Props {
   data: LinodeWithMaintenance[];
   images: Linode.Image[];
   showHead?: boolean;
-  openConfigDrawer: (
-    c: Linode.Config[],
-    action: LinodeConfigSelectionDrawerCallback
-  ) => void;
-  toggleConfirmation: (
-    bootOption: Linode.BootAction,
-    linodeId: number,
-    linodeLabel: string
+  openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
+  openPowerActionDialog: (
+    bootAction: Action,
+    linodeID: number,
+    linodeLabel: string,
+    linodeConfigs: Linode.Config[]
   ) => void;
   someLinodesHaveMaintenance: boolean;
 }
@@ -24,7 +22,7 @@ interface Props {
 type CombinedProps = Props & PaginationProps;
 
 export const ListView: React.StatelessComponent<CombinedProps> = props => {
-  const { data, openConfigDrawer, toggleConfirmation } = props;
+  const { data, openDeleteDialog, openPowerActionDialog } = props;
   return (
     <>
       {data.map((linode, idx: number) => (
@@ -48,8 +46,8 @@ export const ListView: React.StatelessComponent<CombinedProps> = props => {
           type={linode.type}
           image={linode.image}
           key={`linode-row-${idx}`}
-          openConfigDrawer={openConfigDrawer}
-          toggleConfirmation={toggleConfirmation}
+          openDeleteDialog={openDeleteDialog}
+          openPowerActionDialog={openPowerActionDialog}
         />
       ))}
     </>

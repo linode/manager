@@ -41,6 +41,7 @@ interface EditableFields {
   password?: string;
   passwordError?: string;
   userSSHKeys?: UserSSHKeyObject[];
+  requestKeys?: () => void;
 }
 
 interface Props extends EditableFields {
@@ -212,7 +213,8 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
       onClose,
       classes,
       password,
-      userSSHKeys
+      userSSHKeys,
+      requestKeys
     } = this.props;
     const { selectedMode } = this.state;
 
@@ -257,6 +259,7 @@ export class LinodeDiskDrawer extends React.Component<CombinedProps, State> {
                 passwordError={passwordError}
                 onPasswordChange={this.props.onPasswordChange}
                 userSSHKeys={userSSHKeys || []}
+                requestKeys={requestKeys || (() => null)}
               />
             )}
             <this.sizeField />

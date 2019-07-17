@@ -54,6 +54,8 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
         },
         {
           title: 'Zone File',
+          tooltip:
+            "Currently we don't support this action but will in the future.",
           disabled: true,
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             closeMenu();
@@ -105,6 +107,8 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
         },
         {
           title: 'Zone File',
+          tooltip:
+            "Currently we don't support this action but will in the future.",
           disabled: true,
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             closeMenu();

@@ -39,7 +39,12 @@ const styles = (theme: Theme) =>
     }
   });
 
-type CombinedProps = MutationDrawerProps &
+interface Props {
+  disks: Linode.Disk[];
+}
+
+type CombinedProps = Props &
+  MutationDrawerProps &
   ContextProps &
   WithTypes &
   WithSnackbarProps &
@@ -118,6 +123,7 @@ const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
         </span>
       </Notice>
       <MutateDrawer
+        disks={props.disks}
         linodeId={linodeId}
         open={mutationDrawerOpen}
         loading={mutationDrawerLoading}
@@ -172,7 +178,7 @@ const connected = connect(
   mapDispatchToProps
 );
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, Props>(
   styled,
   connected,
   withTypes(),
