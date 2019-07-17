@@ -225,3 +225,13 @@ export const EU_COUNTRIES = [
   'SK', // Slovakia
   'GB' // United Kingdom
 ];
+
+/**
+ * MBps rate for intra DC migrations (AKA Mutations)
+ */
+export const MBpsIntraDC = 75;
+
+/**
+ * MBps rate for intra DC migrations (AKA Cross-Datacenter migrations )
+ */
+export const MBpsInterDC = 1.5;

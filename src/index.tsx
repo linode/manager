@@ -11,6 +11,7 @@ import {
 } from 'react-router-dom';
 import { initAnalytics, initTagManager } from 'src/analytics';
 import AuthenticationWrapper from 'src/components/AuthenticationWrapper';
+import CookieWarning from 'src/components/CookieWarning';
 import DefaultLoader from 'src/components/DefaultLoader';
 import SnackBar from 'src/components/SnackBar';
 import { GA_ID, GA_ID_2, GTM_ID, isProduction } from 'src/constants';
@@ -101,14 +102,20 @@ const renderAuthentication = () => (
 );
 
 ReactDOM.render(
-  <Provider store={store}>
-    <Router>
-      <Switch>
-        {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
-        <Route exact path="/null" render={renderNull} />
-        <Route render={renderAuthentication} />
-      </Switch>
-    </Router>
-  </Provider>,
+  <React.Fragment>
+    {navigator.cookieEnabled ? (
+      <Provider store={store}>
+        <Router>
+          <Switch>
+            {/* A place to go that prevents the app from loading while injecting OAuth tokens */}
+            <Route exact path="/null" render={renderNull} />
+            <Route render={renderAuthentication} />
+          </Switch>
+        </Router>
+      </Provider>
+    ) : (
+      <CookieWarning />
+    )}
+  </React.Fragment>,
   document.getElementById('root') as HTMLElement
 );

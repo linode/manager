@@ -20,6 +20,7 @@ interface Props {
   onPasswordChange: (password: string) => void;
 
   userSSHKeys: UserSSHKeyObject[];
+  requestKeys: () => void;
 }
 
 type CombinedProps = Props & ContextProps & WithImages;
@@ -35,6 +36,7 @@ export const ImageAndPassword: React.StatelessComponent<
     onPasswordChange,
     password,
     passwordError,
+    requestKeys,
     userSSHKeys,
     permissions
   } = props;
@@ -57,6 +59,7 @@ export const ImageAndPassword: React.StatelessComponent<
         handleChange={onPasswordChange}
         error={passwordError}
         users={userSSHKeys}
+        requestKeys={requestKeys}
         disabled={disabled}
         disabledReason={
           disabled
