@@ -397,10 +397,11 @@ export const KubernetesClusterDetail: React.FunctionComponent<
             }}
             labelTitle={cluster.label}
             onEditHandlers={{
+              editableTextTitle: 'any',
               onEdit: handleLabelChange,
-              onCancel: resetEditableLabel,
-              editableTextTitle: 'any'
+              onCancel: resetEditableLabel
             }}
+            removeCrumbX={2}
             pathname={location.pathname}
             data-qa-breadcrumb
           />
