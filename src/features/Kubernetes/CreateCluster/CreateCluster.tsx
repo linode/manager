@@ -30,7 +30,7 @@ import { getTagsAsStrings } from 'src/utilities/tagUtils';
 
 import KubeCheckoutBar from '.././KubeCheckoutBar';
 import { getMonthlyPrice, KubernetesVersionOptions } from '.././kubeUtils';
-import { ExtendedPoolNode } from '.././types';
+import { PoolNodeWithPrice } from '.././types';
 import NodePoolPanel from './NodePoolPanel';
 
 type ClassNames = 'root' | 'title' | 'sidebar' | 'inner';
@@ -56,7 +56,7 @@ interface State {
   selectedRegion?: string;
   selectedType?: string;
   numberOfLinodes: number;
-  nodePools: ExtendedPoolNode[];
+  nodePools: PoolNodeWithPrice[];
   label?: string;
   tags: Item<string>[];
   version?: Item<string>;
@@ -121,14 +121,14 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       );
   };
 
-  addPool = (pool: ExtendedPoolNode) => {
+  addPool = (pool: PoolNodeWithPrice) => {
     const { nodePools } = this.state;
     this.setState({
       nodePools: [...nodePools, pool]
     });
   };
 
-  updatePool = (poolIdx: number, updatedPool: ExtendedPoolNode) => {
+  updatePool = (poolIdx: number, updatedPool: PoolNodeWithPrice) => {
     const { nodePools } = this.state;
     const updatedPoolWithPrice = {
       ...updatedPool,
@@ -238,7 +238,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
               }
               nodeCount={numberOfLinodes}
               selectedType={selectedType}
-              addNodePool={(pool: ExtendedPoolNode) => this.addPool(pool)}
+              addNodePool={(pool: PoolNodeWithPrice) => this.addPool(pool)}
               deleteNodePool={(poolIdx: number) => this.removePool(poolIdx)}
               handleTypeSelect={(newType: string) => {
                 this.setState({ selectedType: newType });

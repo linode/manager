@@ -3,22 +3,26 @@ import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { ApplicationState } from 'src/store';
 import {
-  CreateNodePoolParams,
   DeleteClusterParams,
-  DeleteNodePoolParams,
   setErrors as _setErrors,
   UpdateClusterParams,
-  UpdateNodePoolParams
 } from 'src/store/kubernetes/kubernetes.actions';
 import {
-  createNodePool as _createNodePool,
   deleteCluster as _deleteCluster,
-  deleteNodePool as _deleteNodePool,
   requestClusterForStore as _requestClusterForStore,
   requestKubernetesClusters as _requestKubernetesClusters,
   updateCluster as _updateCluster,
-  updateNodePool as _updateNodePool
 } from 'src/store/kubernetes/kubernetes.requests';
+import {
+  CreateNodePoolParams,
+  DeleteNodePoolParams,
+  UpdateNodePoolParams
+} from 'src/store/kubernetes/nodePools.actions';
+import {
+  createNodePool as _createNodePool,
+  deleteNodePool as _deleteNodePool,
+  updateNodePool as _updateNodePool
+} from 'src/store/kubernetes/nodePools.requests';
 import { EntityError } from 'src/store/types';
 
 export interface KubernetesProps {

@@ -11,14 +11,12 @@ import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
 import {
-  createNodePoolActions,
   deleteClusterActions,
-  deleteNodePoolActions,
   requestClustersActions,
   updateClusterActions,
-  updateNodePoolActions,
   upsertCluster
 } from './kubernetes.actions';
+import { requestNodePoolsForCluster } from './nodePools.requests';
 
 const getAllClusters = getAll<Linode.KubernetesCluster>(getKubernetesClusters);
 
@@ -34,6 +32,10 @@ export const requestKubernetesClusters: ThunkActionCreator<
           result: data
         })
       );
+      let i = 0;
+      for (; i < data.length; i++) {
+        dispatch(requestNodePoolsForCluster({ clusterID: data[i].id }));
+      }
       return data;
     })
     .catch(error => {
@@ -57,20 +59,4 @@ export const updateCluster = createRequestThunk(
 export const deleteCluster = createRequestThunk(
   deleteClusterActions,
   ({ clusterID }) => _deleteCluster(clusterID)
-);
-
-export const deleteNodePool = createRequestThunk(
-  deleteNodePoolActions,
-  ({ clusterID, nodePoolID }) => _deleteNodePool(clusterID, nodePoolID)
-);
-
-export const createNodePool = createRequestThunk(
-  createNodePoolActions,
-  ({ clusterID, ...data }) => _createNodePool(clusterID, data)
-);
-
-export const updateNodePool = createRequestThunk(
-  updateNodePoolActions,
-  ({ clusterID, nodePoolID, ...data }) =>
-    _updateNodePool(clusterID, nodePoolID, data)
 );
