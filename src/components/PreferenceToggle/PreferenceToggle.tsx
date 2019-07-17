@@ -96,8 +96,13 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
       !!props.preferenceError &&
       lastUpdated === 0
     ) {
-      const preferenceToSet =
-        preferenceFromLocalStorage || preferenceOptions[0];
+      /**
+       * local storage value takes priority, but if that doesn't exist fall back to
+       * the first set of options
+       */
+      const preferenceToSet = isNullOrUndefined(preferenceFromLocalStorage)
+        ? preferenceOptions[0]
+        : preferenceFromLocalStorage;
       setPreference(preferenceToSet);
 
       if (props.initialSetCallbackFn) {
@@ -120,9 +125,16 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
         props.preferences
       );
 
-      /** this is the first time the user is setting the user preference */
-      const preferenceToSet = !preferenceFromAPI
-        ? preferenceFromLocalStorage || preferenceOptions[0]
+      /**
+       * this is the first time the user is setting the user preference
+       *
+       * if the API value is null or undefined, rely on local storage or default
+       * to the first value that was passed to this component from props.
+       */
+      const preferenceToSet = isNullOrUndefined(preferenceFromAPI)
+        ? isNullOrUndefined(preferenceFromLocalStorage)
+          ? preferenceOptions[0]
+          : preferenceFromLocalStorage
         : preferenceFromAPI;
 
       setPreference(preferenceToSet);
@@ -144,7 +156,10 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
        */
       if (!!preferenceError && lastUpdated !== 0) {
         /** invoke our callback prop if we have one */
-        if (toggleCallbackFnDebounced && currentlySetPreference) {
+        if (
+          toggleCallbackFnDebounced &&
+          !isNullOrUndefined(currentlySetPreference)
+        ) {
           toggleCallbackFnDebounced(currentlySetPreference);
         }
 
@@ -175,7 +190,10 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
           .catch(() => /** swallow the error */ null);
 
         /** invoke our callback prop if we have one */
-        if (toggleCallbackFnDebounced && currentlySetPreference) {
+        if (
+          toggleCallbackFnDebounced &&
+          !isNullOrUndefined(currentlySetPreference)
+        ) {
           toggleCallbackFnDebounced(currentlySetPreference);
         }
       } else if (lastUpdated === 0) {
@@ -220,11 +238,7 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
   }
 
   return typeof children === 'function'
-    ? /**
-       * we just checked above if currentlySetPreference is null or undefined
-       * so the ! is okay here.
-       */
-      children({ preference: currentlySetPreference!, togglePreference })
+    ? children({ preference: currentlySetPreference, togglePreference })
     : null;
 };
 
@@ -246,8 +260,6 @@ const memoized = (component: React.FC<CombinedProps>) =>
      */
 
     const shouldRerender =
-      // wasUndefinedNowDefined(prevProps.preferences, nextProps.preferences) ||
-      // wasDefinedNowUndefined(prevProps.preferences, nextProps.preferences) ||
       !equals(prevProps.preferences, nextProps.preferences) ||
       wasUndefinedNowDefined(
         prevProps.preferenceError,
@@ -283,7 +295,7 @@ const isUpdatingForTheFirstTime = (
   return prevLastUpdated === 0 && nextLastUpdated !== 0;
 };
 
-const isNullOrUndefined = (value: any) => {
+const isNullOrUndefined = (value: any): value is null | undefined => {
   return typeof value === 'undefined' || value === null;
 };
 
