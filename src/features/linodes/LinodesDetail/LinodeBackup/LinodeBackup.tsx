@@ -573,7 +573,8 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
             You can make a manual backup of your Linode by taking a snapshot.
             Creating the manual snapshot can take several minutes, depending on
             the size of your Linode and the amount of data you have stored on
-            it.
+            it. The manual snapshot will not be overwritten by automatic
+            backups.
           </Typography>
           <FormControl className={classes.snapshotFormControl}>
             {hasErrorFor.none && (
@@ -659,8 +660,10 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           </Typography>
           <Typography variant="body1" data-qa-settings-desc>
             Configure when automatic backups are initiated. The Linode Backup
-            Service will generate backups between the selected hours. The
-            selected day is when the backup is promoted to the weekly slot.
+            Service will generate a backup between the selected hours every
+            day, and will overwrite the previous daily backup. The selected day
+            is when the backup is promoted to the weekly slot. Up to two weekly
+            backups are saved.
           </Typography>
           <FormControl className={classes.chooseTime}>
             <Select
