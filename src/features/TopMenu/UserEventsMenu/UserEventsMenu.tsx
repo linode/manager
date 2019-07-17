@@ -16,7 +16,7 @@ import {
 import { getNumUnseenEvents } from 'src/store/events/event.helpers';
 import { markAllSeen } from 'src/store/events/event.request';
 import { MapState, ThunkDispatch } from 'src/store/types';
-import { removeBlacklistedEvents } from 'src/utilities/eventUtils';
+import { hideBlacklistedEvents } from 'src/utilities/eventUtils';
 import UserEventsButton from './UserEventsButton';
 import UserEventsList from './UserEventsList';
 
@@ -88,7 +88,8 @@ export class UserEventsMenu extends React.Component<CombinedProps, State> {
       history: { push }
     } = this.props;
 
-    const filteredEvents = removeBlacklistedEvents(events, blacklistedEvents);
+    const _events = hideBlacklistedEvents(events, blacklistedEvents);
+    const filteredEvents = _events.filter(thisEvent => !thisEvent._hidden);
     const unseenCount = getNumUnseenEvents(filteredEvents);
 
     return (

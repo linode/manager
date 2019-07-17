@@ -125,6 +125,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     // finished: e => `${e.entity!.label}`,
     notification: e => `Image ${e.entity!.label} has been deleted.`
   },
+  ipaddress_update: {
+    notification: e => `An IP address has been updated on your account.`
+  },
   linode_addip: {
     notification: e => `An IP has been added to ${e.entity!.label}.`
   },

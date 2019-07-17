@@ -97,6 +97,7 @@ namespace Linode {
     | 'domain_record_delete'
     | 'image_update'
     | 'image_delete'
+    | 'ipaddress_update'
     | 'linode_addip'
     | 'linode_boot'
     | 'linode_clone'
@@ -163,6 +164,7 @@ namespace Linode {
     time_remaining: null | number;
     username: string;
     _initial?: boolean;
+    _hidden?: boolean;
   }
   /**
    * Represents an event which has an entity. For use with type guards.
