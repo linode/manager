@@ -387,7 +387,10 @@ export const KubernetesClusterDetail: React.FunctionComponent<
           md={3}
         >
           <Grid item className={classes.button}>
-            <KubeConfigPanel clusterID={cluster.id} />
+            <KubeConfigPanel
+              clusterID={cluster.id}
+              clusterLabel={cluster.label}
+            />
           </Grid>
           <Grid item className={classes.section}>
             <KubeSummaryPanel cluster={cluster} />
