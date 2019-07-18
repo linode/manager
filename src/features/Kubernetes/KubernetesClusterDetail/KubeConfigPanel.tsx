@@ -18,6 +18,8 @@ import { getKubeConfig } from 'src/services/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
+import KubeConfigDrawer from './KubeConfigDrawer';
+
 type ClassNames = 'root' | 'item' | 'button' | 'icon';
 
 const styles = (theme: Theme) =>
@@ -44,18 +46,18 @@ interface Props {
 
 export type CombinedProps = Props & WithStyles<ClassNames> & WithSnackbarProps;
 
-const downloadKubeConfig = (clusterID: number, enqueueSnackbar: any) => {
-  /**
-   * This is reused from ClusterActionMenu, but there wasn't an easy way
-   * to share logic (more than is already abstracted in the downloadFile utility).
-   * @todo figure out a better way to keep it DRY
-   */
-  getKubeConfig(clusterID)
+export const KubeConfigPanel: React.FC<CombinedProps> = props => {
+  const { classes, clusterID, enqueueSnackbar } = props;
+  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+  const [kubeConfig, setKubeConfig] = React.useState<string>('');
+
+  const fetchKubeConfig = () => {
+    return getKubeConfig(clusterID)
     .then(response => {
       // Convert to utf-8 from base64
       try {
         const decodedFile = window.atob(response.kubeconfig);
-        downloadFile('kubeconfig.yaml', decodedFile);
+        setKubeConfig(decodedFile);
       } catch (e) {
         reportException(e, {
           'Encoded response': response.kubeconfig
@@ -73,34 +75,48 @@ const downloadKubeConfig = (clusterID: number, enqueueSnackbar: any) => {
       )[0].reason;
       enqueueSnackbar(error, { variant: 'error' });
     });
-};
+  }
 
-export const KubeConfigPanel: React.FC<CombinedProps> = props => {
-  const { classes, clusterID, enqueueSnackbar } = props;
+  const handleOpenDrawer = () => {
+    fetchKubeConfig();
+    setDrawerOpen(true);
+  }
+
+  const downloadKubeConfig = () => {
+    fetchKubeConfig().then(() => downloadFile('kubeconfig.yaml', kubeConfig));
+  }
+
   return (
-    <Paper className={classes.root}>
-      <Paper className={classes.item}>
-        <Typography variant="h2">Kubeconfig</Typography>
+    <>
+      <Paper className={classes.root}>
+        <Paper className={classes.item}>
+          <Typography variant="h2">Kubeconfig</Typography>
+        </Paper>
+        <Paper className={classes.item}>
+          <Button
+            className={classes.button}
+            buttonType="primary"
+            onClick={downloadKubeConfig}
+          >
+            Download
+            <Download className={classes.icon} />
+          </Button>
+          <Button
+            className={classes.button}
+            buttonType="secondary"
+            onClick={handleOpenDrawer}
+          >
+            View
+            <View className={classes.icon} />
+          </Button>
+        </Paper>
       </Paper>
-      <Paper className={classes.item}>
-        <Button
-          className={classes.button}
-          buttonType="primary"
-          onClick={() => downloadKubeConfig(clusterID, enqueueSnackbar)}
-        >
-          Download
-          <Download className={classes.icon} />
-        </Button>
-        <Button
-          className={classes.button}
-          buttonType="secondary"
-          onClick={() => null}
-        >
-          View
-          <View className={classes.icon} />
-        </Button>
-      </Paper>
-    </Paper>
+      <KubeConfigDrawer
+        open={drawerOpen}
+        closeDrawer={() => setDrawerOpen(false)}
+        kubeConfig={kubeConfig}
+      />
+    </>
   );
 };
 

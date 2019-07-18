@@ -13,6 +13,7 @@ import Grid from 'src/components/Grid';
 
 interface Props extends DrawerProps {
   title: string;
+  chubby?: boolean;
 }
 
 type ClassNames =
@@ -20,7 +21,8 @@ type ClassNames =
   | 'button'
   | 'drawerHeader'
   | 'drawerContent'
-  | 'backDrop';
+  | 'backDrop'
+  | 'wide';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -38,6 +40,9 @@ const styles = (theme: Theme) =>
         maxWidth: '100%',
         flexBasis: '100%'
       }
+    },
+    wide: {
+      width: 700,
     },
     drawerHeader: {
       marginBottom: theme.spacing(2)
@@ -57,19 +62,19 @@ const styles = (theme: Theme) =>
     },
     backDrop: {
       backgroundColor: theme.color.drawerBackdrop
-    }
+    },
   });
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const DDrawer: React.StatelessComponent<CombinedProps> = props => {
-  const { title, classes, children, ...rest } = props;
+  const { title, classes, children, chubby, ...rest } = props;
 
   return (
     <Drawer
       anchor="right"
       {...rest}
-      classes={{ paper: classes.paper }}
+      classes={{ paper: `${classes.paper} ${chubby ? classes.wide : ''}` }}
       ModalProps={{
         BackdropProps: { className: classes.backDrop },
         disableBackdropClick: true

@@ -57,13 +57,14 @@ const styles = (theme: Theme) =>
 
 export interface Props {
   script: string;
+  lineNumbers?: boolean;
 }
 
 type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
 export class ScriptCode extends React.Component<PropsWithStyles, {}> {
   render() {
-    const { classes, script } = this.props;
+    const { classes, lineNumbers, script } = this.props;
 
     return (
       <div className={classes.container}>
@@ -71,7 +72,7 @@ export class ScriptCode extends React.Component<PropsWithStyles, {}> {
           <tbody data-qa-script-code>
             {script.split('\n').map((line, counter) => (
               <tr className={classes.row} key={'scriptCodeLine' + counter}>
-                <td className={classes.numberCell}>{counter + 1}</td>
+                {lineNumbers && (<td className={classes.numberCell}>{counter + 1}</td>)}
                 <td className={classes.codeCell}>
                   <pre className={classes.code} data-qa-script>
                     {line}
