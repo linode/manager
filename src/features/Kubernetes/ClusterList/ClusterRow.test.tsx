@@ -4,12 +4,21 @@ import * as React from 'react';
 import { extendedClusters } from 'src/__data__/kubernetes';
 import { ClusterRow } from './ClusterRow';
 
+const cluster = {
+  ...extendedClusters[0],
+  node_pools: extendedClusters[0].node_pools.map(pool => ({
+    ...pool,
+    totalMonthlyPrice: 10
+  }))
+};
+
 const props = {
-  cluster: extendedClusters[0],
+  cluster,
   classes: {
     root: '',
     label: '',
-    clusterDescription: ''
+    clusterDescription: '',
+    clusterRow: ''
   }
 };
 

@@ -38,7 +38,12 @@ storiesOf('Button', module)
         Secondary
       </Button>
       <Divider />
-      <Button disabled destructive buttonType="primary" data-qa-button="destructive">
+      <Button
+        disabled
+        destructive
+        buttonType="primary"
+        data-qa-button="destructive"
+      >
         Destructive
       </Button>
       <Divider />
@@ -82,7 +87,12 @@ storiesOf('Button', module)
         Primary
       </Button>
       <Divider />
-      <Button loading destructive buttonType="secondary" data-qa-button="secondary">
+      <Button
+        loading
+        destructive
+        buttonType="secondary"
+        data-qa-button="secondary"
+      >
         Secondary
       </Button>
       <Divider />

@@ -30,7 +30,7 @@ import {
 } from '../stackScriptUtils';
 import withStyles, { StyleProps } from './StackScriptBase.styles';
 
-import { getDisplayName } from 'src/utilities/getDisplayName'
+import { getDisplayName } from 'src/utilities/getDisplayName';
 
 type CurrentFilter = 'label' | 'deploys' | 'revision';
 

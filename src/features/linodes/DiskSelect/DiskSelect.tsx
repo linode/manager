@@ -54,6 +54,6 @@ const DiskSelect: React.StatelessComponent<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, Props & RenderGuardProps>(
-  RenderGuard
-)(DiskSelect);
+export default compose<CombinedProps, Props & RenderGuardProps>(RenderGuard)(
+  DiskSelect
+);

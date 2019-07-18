@@ -42,5 +42,4 @@ export const ModeSelect: React.StatelessComponent<CombinedProps> = ({
   );
 };
 
-
 export default React.memo(ModeSelect);

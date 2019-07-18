@@ -182,8 +182,6 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, Props>(
-  connected,
-);
+const enhanced = compose<CombinedProps, Props>(connected);
 
 export default enhanced(StackScriptTableRows);

@@ -5,17 +5,17 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 
 import { ExtendedCluster } from './../types';
 import ActionMenu from './ClusterActionMenu';
 
-type ClassNames = 'root' | 'label' | 'clusterDescription';
+type ClassNames = 'root' | 'label' | 'clusterDescription' | 'clusterRow';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -28,6 +28,11 @@ const styles = (theme: Theme) =>
     },
     clusterDescription: {
       paddingTop: theme.spacing(1) / 2
+    },
+    clusterRow: {
+      '&:before': {
+        display: 'none'
+      }
     }
   });
 
@@ -44,6 +49,8 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
       key={cluster.id}
       data-qa-cluster-cell={cluster.id}
       data-testid={'cluster-row'}
+      rowLink={`/kubernetes/clusters/${cluster.id}`}
+      className={classes.clusterRow}
     >
       <TableCell
         parentColumn="Cluster Label"
@@ -56,10 +63,6 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
           </Grid>
           <Grid item>
             <Typography variant="h3">{cluster.label}</Typography>
-            {/* @todo add cluster description when available */}
-            {/* <Typography className={classes.clusterDescription}>
-              64 CPUs
-            </Typography> */}
           </Grid>
         </Grid>
       </TableCell>

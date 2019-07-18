@@ -24,17 +24,13 @@ import regionsContainer from 'src/containers/regions.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { WithRegionsProps } from 'src/features/linodes/LinodesCreate/types';
 import { createKubernetesCluster } from 'src/services/kubernetes';
-import {
-  getAPIErrorOrDefault,
-  getErrorMap,
-  getErrorStringOrDefault
-} from 'src/utilities/errorUtils';
+import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { getTagsAsStrings } from 'src/utilities/tagUtils';
 
 import KubeCheckoutBar from '.././KubeCheckoutBar';
-import { KubernetesVersionOptions } from '.././kubeUtils';
-import { ExtendedPoolNode } from '.././types';
+import { getMonthlyPrice, KubernetesVersionOptions } from '.././kubeUtils';
+import { PoolNodeWithPrice } from '.././types';
 import NodePoolPanel from './NodePoolPanel';
 
 type ClassNames = 'root' | 'title' | 'sidebar' | 'inner';
@@ -60,7 +56,7 @@ interface State {
   selectedRegion?: string;
   selectedType?: string;
   numberOfLinodes: number;
-  nodePools: ExtendedPoolNode[];
+  nodePools: PoolNodeWithPrice[];
   label?: string;
   tags: Item<string>[];
   version?: Item<string>;
@@ -125,17 +121,25 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       );
   };
 
-  addPool = (pool: ExtendedPoolNode) => {
+  addPool = (pool: PoolNodeWithPrice) => {
     const { nodePools } = this.state;
     this.setState({
       nodePools: [...nodePools, pool]
     });
   };
 
-  updatePool = (poolIdx: number, updatedPool: ExtendedPoolNode) => {
+  updatePool = (poolIdx: number, updatedPool: PoolNodeWithPrice) => {
     const { nodePools } = this.state;
+    const updatedPoolWithPrice = {
+      ...updatedPool,
+      totalMonthlyPrice: getMonthlyPrice(
+        updatedPool.type,
+        updatedPool.count,
+        this.props.typesData || []
+      )
+    };
     this.setState({
-      nodePools: update(poolIdx, updatedPool, nodePools)
+      nodePools: update(poolIdx, updatedPoolWithPrice, nodePools)
     });
   };
 
@@ -226,15 +230,15 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
               typesLoading={typesLoading}
               typesError={
                 typesError
-                  ? getErrorStringOrDefault(
+                  ? getAPIErrorOrDefault(
                       typesError,
                       'Error loading Linode type information.'
-                    )
+                    )[0].reason
                   : undefined
               }
               nodeCount={numberOfLinodes}
               selectedType={selectedType}
-              addNodePool={(pool: ExtendedPoolNode) => this.addPool(pool)}
+              addNodePool={(pool: PoolNodeWithPrice) => this.addPool(pool)}
               deleteNodePool={(poolIdx: number) => this.removePool(poolIdx)}
               handleTypeSelect={(newType: string) => {
                 this.setState({ selectedType: newType });

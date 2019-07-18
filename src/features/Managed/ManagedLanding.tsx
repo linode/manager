@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { compose } from 'recompose'
+import { compose } from 'recompose';
 import ManagedIcon from 'src/assets/icons/managed.svg';
 
 import setDocs from 'src/components/DocsSidebar/setDocs';
@@ -37,6 +37,4 @@ export class ManagedLanding extends React.Component<{}, {}> {
   }
 }
 
-export default compose<{}, {}>(
-  setDocs(ManagedLanding.docs),
-)(ManagedLanding);
+export default compose<{}, {}>(setDocs(ManagedLanding.docs))(ManagedLanding);

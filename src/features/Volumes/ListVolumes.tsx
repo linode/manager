@@ -18,13 +18,7 @@ interface Props {
 type CombinedProps = Props;
 
 const ListVolumes: React.StatelessComponent<CombinedProps> = props => {
-  const {
-    orderBy,
-    order,
-    handleOrderChange,
-    data,
-    renderProps
-  } = props;
+  const { orderBy, order, handleOrderChange, data, renderProps } = props;
   return (
     <Paginate data={data} pageSize={25}>
       {({
@@ -37,10 +31,7 @@ const ListVolumes: React.StatelessComponent<CombinedProps> = props => {
       }) => (
         <React.Fragment>
           <Paper>
-            <Table
-              removeLabelonMobile
-              aria-label="List of your Volumes"
-            >
+            <Table removeLabelonMobile aria-label="List of your Volumes">
               <SortableVolumesTableHeader
                 order={order}
                 orderBy={orderBy}

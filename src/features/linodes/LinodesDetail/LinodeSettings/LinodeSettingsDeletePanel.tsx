@@ -70,7 +70,7 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
       <React.Fragment>
         <ExpansionPanel heading="Delete Linode">
           <Button
-           buttonType="secondary"
+            buttonType="secondary"
             destructive
             style={{ marginBottom: 8 }}
             onClick={this.openDeleteDialog}

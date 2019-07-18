@@ -6,15 +6,13 @@ namespace Linode {
     status: string; // @todo enum this
     label: string;
     version: string;
-    id: string;
-    node_pools: KubeNodePoolResponse[];
+    id: number;
   }
 
   export interface KubeNodePoolResponse {
     count: number;
     id: number;
     linodes: PoolNodeResponse[];
-    lkeid: number;
     type: string;
   }
 

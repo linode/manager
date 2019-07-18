@@ -146,8 +146,8 @@ const RenameVolumeForm: React.StatelessComponent<CombinedProps> = props => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(
-  withVolumesRequest
-)(RenameVolumeForm);
+const enhanced = compose<CombinedProps, Props>(withVolumesRequest)(
+  RenameVolumeForm
+);
 
 export default enhanced;

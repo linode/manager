@@ -1,6 +1,6 @@
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
-import { compose as recompose } from 'recompose'
+import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
@@ -245,7 +245,6 @@ const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({
 
 const errorBoundary = PanelErrorBoundary({ heading: 'Reset Root Password' });
 
-export default recompose<CombinedProps, Props>(
-  errorBoundary,
-  linodeContext,
-)(LinodeSettingsPasswordPanel) as React.ComponentType<Props>;
+export default recompose<CombinedProps, Props>(errorBoundary, linodeContext)(
+  LinodeSettingsPasswordPanel
+) as React.ComponentType<Props>;

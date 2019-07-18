@@ -105,8 +105,6 @@ const CloneVolumeForm: React.StatelessComponent<CombinedProps> = props => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(
-  withVolumesRequests
-);
+const enhanced = compose<CombinedProps, Props>(withVolumesRequests);
 
 export default enhanced(CloneVolumeForm);

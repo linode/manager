@@ -5,12 +5,12 @@ import CheckoutBar from 'src/components/CheckoutBar';
 import renderGuard from 'src/components/RenderGuard';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { getTotalClusterMemoryAndCPU, getTotalClusterPrice } from './kubeUtils';
-import { ExtendedPoolNode } from './types';
+import { PoolNodeWithPrice } from './types';
 
 interface Props {
   label: string;
   region?: string;
-  pools: ExtendedPoolNode[];
+  pools: PoolNodeWithPrice[];
   submitting: boolean;
   typesData: ExtendedType[];
   createCluster: () => void;
@@ -56,7 +56,7 @@ export const KubeCheckoutBar: React.FunctionComponent<Props> = props => {
 export const getDisplaySections = (
   label: string,
   region: string | undefined,
-  pools: ExtendedPoolNode[],
+  pools: PoolNodeWithPrice[],
   typesData: ExtendedType[]
 ) => {
   const displaySections = [];
@@ -83,7 +83,7 @@ export const getDisplaySections = (
   if (totalCPU) {
     displaySections.push({
       title: 'Total CPU',
-      details: `${totalCPU}${totalCPU === 1 ? 'CPU' : 'CPUs'}`
+      details: `${totalCPU}${totalCPU === 1 ? ' CPU' : ' CPUs'}`
     });
   }
 

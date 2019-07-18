@@ -197,7 +197,7 @@ const paginated = paginate(updatedRequest);
 
 const enhanced = compose(
   connected,
-  paginated,
+  paginated
 );
 
 export default enhanced(RecentPaymentsPanel);

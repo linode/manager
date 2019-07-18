@@ -1,8 +1,13 @@
 import { Reducer } from 'redux';
 import { EntityError, EntityState } from 'src/store/types';
-// import updateOrAdd from 'src/utilities/updateOrAdd';
+import updateOrAdd from 'src/utilities/updateOrAdd';
 import { isType } from 'typescript-fsa';
-import { requestClustersActions } from './kubernetes.actions';
+import {
+  deleteClusterActions,
+  requestClustersActions,
+  updateClusterActions,
+  upsertCluster
+} from './kubernetes.actions';
 
 /**
  * State
@@ -48,7 +53,58 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       loading: false
     };
   }
+
+  if (isType(action, upsertCluster)) {
+    const { payload } = action;
+    const entities = updateOrAdd(payload, state.entities);
+
+    return {
+      ...state,
+      entities,
+      results: entities.map(cluster => cluster.id)
+    };
+  }
+
+  if (isType(action, updateClusterActions.done)) {
+    const { result } = action.payload;
+    const update = updateOrAdd(result, state.entities);
+
+    return {
+      ...state,
+      entities: update,
+      results: update.map(cluster => cluster.id)
+    };
+  }
+
+  if (isType(action, deleteClusterActions.done)) {
+    const {
+      params: { clusterID }
+    } = action.payload;
+    const entities = state.entities.filter(({ id }) => id !== clusterID);
+
+    return {
+      ...state,
+      entities,
+      results: entities.map(c => c.id)
+    };
+  }
+
+  if (isType(action, deleteClusterActions.failed)) {
+    const { error } = action.payload;
+
+    return {
+      ...state,
+      error: {
+        ...state.error,
+        delete: {
+          ...state.error,
+          ...error
+        }
+      }
+    };
+  }
+
   return state;
-};
+}
 
 export default reducer;
