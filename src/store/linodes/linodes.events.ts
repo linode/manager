@@ -8,7 +8,7 @@ import { requestNotifications } from '../notification/notification.requests';
 import { deleteLinode } from './linodes.actions';
 
 const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
-  const { action, entity, status } = event;
+  const { action, entity, percent_complete, status } = event;
   const { id } = entity;
 
   // We may want to request notifications here, depending on the event
@@ -37,7 +37,7 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
       return handleLinodeUpdate(dispatch, status, id);
 
     case 'linode_rebuild':
-      return handleLinodeRebuild(dispatch, status, id);
+      return handleLinodeRebuild(dispatch, status, id, percent_complete);
 
     /** Remove Linode */
     case 'linode_delete':
@@ -57,7 +57,8 @@ export default linodeEventsHandler;
 const handleLinodeRebuild = (
   dispatch: Dispatch<any>,
   status: Linode.EventStatus,
-  id: number
+  id: number,
+  percent_complete: number | null
 ) => {
   /**
    * Rebuilding is a special case, because the rebuilt Linode
@@ -68,6 +69,12 @@ const handleLinodeRebuild = (
     case 'notification':
     case 'scheduled':
     case 'started':
+      if (percent_complete === 100) {
+        // Get the new disks and update the store
+        // This is a safety hatch in case the 'finished'
+        // event doesn't come through.
+        dispatch(getAllLinodeDisks({ linodeId: id }));
+      }
       return dispatch(requestLinodeForStore(id));
     case 'finished':
     case 'failed':
