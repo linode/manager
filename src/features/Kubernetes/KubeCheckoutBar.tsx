@@ -83,7 +83,7 @@ export const getDisplaySections = (
   if (totalCPU) {
     displaySections.push({
       title: 'Total CPU',
-      details: `${totalCPU}${totalCPU === 1 ? 'CPU' : 'CPUs'}`
+      details: `${totalCPU}${totalCPU === 1 ? ' CPU' : ' CPUs'}`
     });
   }
 
