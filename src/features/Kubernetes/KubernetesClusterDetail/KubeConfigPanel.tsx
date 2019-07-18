@@ -42,49 +42,50 @@ const styles = (theme: Theme) =>
 
 interface Props {
   clusterID: number;
+  clusterLabel: string;
 }
 
 export type CombinedProps = Props & WithStyles<ClassNames> & WithSnackbarProps;
 
 export const KubeConfigPanel: React.FC<CombinedProps> = props => {
-  const { classes, clusterID, enqueueSnackbar } = props;
+  const { classes, clusterID, clusterLabel, enqueueSnackbar } = props;
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
   const [kubeConfig, setKubeConfig] = React.useState<string>('');
 
   const fetchKubeConfig = () => {
     return getKubeConfig(clusterID)
-    .then(response => {
-      // Convert to utf-8 from base64
-      try {
-        const decodedFile = window.atob(response.kubeconfig);
-        setKubeConfig(decodedFile);
-      } catch (e) {
-        reportException(e, {
-          'Encoded response': response.kubeconfig
-        });
-        enqueueSnackbar('Error parsing your kubeconfig file', {
-          variant: 'error'
-        });
-        return;
-      }
-    })
-    .catch(errorResponse => {
-      const error = getAPIErrorOrDefault(
-        errorResponse,
-        'Unable to download your kubeconfig'
-      )[0].reason;
-      enqueueSnackbar(error, { variant: 'error' });
-    });
-  }
+      .then(response => {
+        // Convert to utf-8 from base64
+        try {
+          const decodedFile = window.atob(response.kubeconfig);
+          setKubeConfig(decodedFile);
+        } catch (e) {
+          reportException(e, {
+            'Encoded response': response.kubeconfig
+          });
+          enqueueSnackbar('Error parsing your kubeconfig file', {
+            variant: 'error'
+          });
+          return;
+        }
+      })
+      .catch(errorResponse => {
+        const error = getAPIErrorOrDefault(
+          errorResponse,
+          'Unable to download your kubeconfig'
+        )[0].reason;
+        enqueueSnackbar(error, { variant: 'error' });
+      });
+  };
 
   const handleOpenDrawer = () => {
     fetchKubeConfig();
     setDrawerOpen(true);
-  }
+  };
 
   const downloadKubeConfig = () => {
     fetchKubeConfig().then(() => downloadFile('kubeconfig.yaml', kubeConfig));
-  }
+  };
 
   return (
     <>
@@ -112,6 +113,7 @@ export const KubeConfigPanel: React.FC<CombinedProps> = props => {
         </Paper>
       </Paper>
       <KubeConfigDrawer
+        clusterLabel={clusterLabel}
         open={drawerOpen}
         closeDrawer={() => setDrawerOpen(false)}
         kubeConfig={kubeConfig}
