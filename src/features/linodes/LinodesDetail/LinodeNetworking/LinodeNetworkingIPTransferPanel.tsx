@@ -281,7 +281,13 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
         </Grid>
         <Grid item xs={12} className={classes.autoGridsm}>
           <Select
-            defaultValue={state.mode}
+            value={
+              state.mode === 'none'
+                ? null
+                : actionsList.find(
+                    eachAction => eachAction.value === state.mode
+                  )
+            }
             options={actionsList}
             textFieldProps={{
               dataAttrs: {
@@ -361,19 +367,22 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
     );
   };
 
-  componentWillReceiveProps(nextProps: CombinedProps) {
-    this.setState({
-      ips: nextProps.ipAddresses.reduce(
-        (state, ip) => ({
-          ...state,
-          [ip]: LinodeNetworkingIPTransferPanel.defaultState(
+  componentDidUpdate(prevProps: CombinedProps) {
+    /**
+     * if new ip addresses were provided as props, massage the data so it matches
+     * the default shape we need to append to state
+     */
+    if (!equals(prevProps.ipAddresses, this.props.ipAddresses)) {
+      this.setState({
+        ips: this.props.ipAddresses.reduce((acc, ip) => {
+          acc[ip] = LinodeNetworkingIPTransferPanel.defaultState(
             ip,
             this.props.linodeID
-          )
-        }),
-        {}
-      )
-    });
+          );
+          return acc;
+        }, {})
+      });
+    }
   }
 
   ipRow = (ipState: IPStates) => {
