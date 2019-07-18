@@ -366,9 +366,13 @@ export const KubernetesClusterDetail: React.FunctionComponent<
       });
   };
 
-  const handleUpdateTags = async (newTags: string[]) => {
-    props.updateCluster({ clusterID: cluster.id, tags: newTags });
-    updateTags(newTags);
+  const handleUpdateTags = (newTags: string[]) => {
+    return props
+      .updateCluster({ clusterID: cluster.id, tags: newTags })
+      .then(response => {
+        updateTags(newTags);
+        return response;
+      });
   };
 
   const handleLabelChange = async (newLabel: string) => {
