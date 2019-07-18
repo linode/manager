@@ -10,7 +10,7 @@ import StackScriptTableRows from './TableRows';
 interface Props {
   type: 'linode' | 'own' | 'community';
   count: number;
-  error?: Error;
+  error?: Linode.ApiFieldError[];
   loading: boolean;
   page: number;
   pageSize: number;

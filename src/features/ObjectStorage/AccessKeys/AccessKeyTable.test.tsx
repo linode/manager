@@ -47,7 +47,7 @@ describe('ObjectStorageKeyTable', () => {
   });
 
   it('returns an error state when there is an error', () => {
-    wrapper.setProps({ error: new Error() });
+    wrapper.setProps({ error: [{ reason: 'hello world' }] });
     expect(wrapper.find('TableRowError')).toHaveLength(1);
     expect(wrapper.find('TableRowError').prop('message')).toBe(
       'We were unable to load your Access Keys.'
