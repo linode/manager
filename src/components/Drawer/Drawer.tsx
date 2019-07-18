@@ -42,7 +42,7 @@ const styles = (theme: Theme) =>
       }
     },
     wide: {
-      width: 700,
+      width: 750
     },
     drawerHeader: {
       marginBottom: theme.spacing(2)
@@ -62,7 +62,7 @@ const styles = (theme: Theme) =>
     },
     backDrop: {
       backgroundColor: theme.color.drawerBackdrop
-    },
+    }
   });
 
 type CombinedProps = Props & WithStyles<ClassNames>;
