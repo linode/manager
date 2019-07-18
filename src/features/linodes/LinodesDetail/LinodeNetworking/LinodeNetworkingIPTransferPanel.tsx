@@ -273,11 +273,7 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
           <Divider className={classes.containerDivider} />
         </Grid>
         <Grid item className={classes.mobileFieldWrapper}>
-          <TextField
-            disabled
-            value={state.sourceIP}
-            className={classes.ipField}
-          />
+          <TextField value={state.sourceIP} className={classes.ipField} />
         </Grid>
         <Grid item xs={12} className={classes.autoGridsm}>
           <Select
@@ -351,8 +347,8 @@ class LinodeNetworkingIPTransferPanel extends React.Component<
     return (
       <Grid item xs={12} className={classes.autoGridsm}>
         <Select
-          disabled={readOnly || selectedLinodesIPs.length === 1}
-          defaultValue={defaultIP}
+          disabled={readOnly}
+          value={defaultIP}
           options={IPList}
           onChange={this.onSelectedIPChange(sourceIP)}
           textFieldProps={{
