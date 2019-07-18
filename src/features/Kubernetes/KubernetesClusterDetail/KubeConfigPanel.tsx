@@ -25,7 +25,6 @@ type ClassNames = 'root' | 'item' | 'button' | 'icon';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      marginBottom: theme.spacing(3),
       padding: `${theme.spacing(3) + 5}px ${theme.spacing(3) +
         1}px ${theme.spacing(2) - 3}px`
     },
@@ -50,12 +49,17 @@ export type CombinedProps = Props & WithStyles<ClassNames> & WithSnackbarProps;
 export const KubeConfigPanel: React.FC<CombinedProps> = props => {
   const { classes, clusterID, clusterLabel, enqueueSnackbar } = props;
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+  const [drawerError, setDrawerError] = React.useState<boolean>(false);
+  const [drawerLoading, setDrawerLoading] = React.useState<boolean>(false);
   const [kubeConfig, setKubeConfig] = React.useState<string>('');
 
   const fetchKubeConfig = () => {
+    setDrawerError(false);
+    setDrawerLoading(true);
     return getKubeConfig(clusterID)
       .then(response => {
         // Convert to utf-8 from base64
+        setDrawerLoading(false);
         try {
           const decodedFile = window.atob(response.kubeconfig);
           setKubeConfig(decodedFile);
@@ -70,6 +74,8 @@ export const KubeConfigPanel: React.FC<CombinedProps> = props => {
         }
       })
       .catch(errorResponse => {
+        setDrawerError(true);
+        setDrawerLoading(false);
         const error = getAPIErrorOrDefault(
           errorResponse,
           'Unable to download your kubeconfig'
@@ -115,6 +121,8 @@ export const KubeConfigPanel: React.FC<CombinedProps> = props => {
       <KubeConfigDrawer
         clusterLabel={clusterLabel}
         open={drawerOpen}
+        loading={drawerLoading}
+        error={drawerError}
         closeDrawer={() => setDrawerOpen(false)}
         kubeConfig={kubeConfig}
       />
