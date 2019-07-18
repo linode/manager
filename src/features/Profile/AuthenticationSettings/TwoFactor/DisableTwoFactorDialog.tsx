@@ -71,9 +71,9 @@ class DisableTwoFactorDialog extends React.PureComponent<CombinedProps, {}> {
   }
 }
 
-export default compose<CombinedProps, Props>(
-  withLoadingAndError
-)(DisableTwoFactorDialog);
+export default compose<CombinedProps, Props>(withLoadingAndError)(
+  DisableTwoFactorDialog
+);
 
 interface ActionsProps {
   closeDialog: () => void;
@@ -90,7 +90,11 @@ class DialogActions extends React.PureComponent<ActionsProps, {}> {
   render() {
     return (
       <ActionsPanel>
-        <Button onClick={this.props.closeDialog} buttonType="cancel" data-qa-cancel>
+        <Button
+          onClick={this.props.closeDialog}
+          buttonType="cancel"
+          data-qa-cancel
+        >
           Cancel
         </Button>
         <Button

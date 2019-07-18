@@ -130,7 +130,6 @@ const linodeContext = withLinodeDetailContext<ContextProps>(
   })
 );
 
-export default recompose<CombinedProps, {}>(
-  errorBoundary,
-  linodeContext
-)(LinodeSettingsLabelPanel) as React.ComponentType<{}>;
+export default recompose<CombinedProps, {}>(errorBoundary, linodeContext)(
+  LinodeSettingsLabelPanel
+) as React.ComponentType<{}>;

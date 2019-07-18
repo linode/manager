@@ -73,9 +73,9 @@ class TrustedDevicesDialog extends React.PureComponent<CombinedProps, {}> {
   }
 }
 
-export default compose<CombinedProps, Props>(
-  withLoadingAndError
-)(TrustedDevicesDialog);
+export default compose<CombinedProps, Props>(withLoadingAndError)(
+  TrustedDevicesDialog
+);
 
 interface ActionsProps {
   closeDialog: () => void;
@@ -92,7 +92,11 @@ class DialogActions extends React.PureComponent<ActionsProps, {}> {
   render() {
     return (
       <ActionsPanel>
-        <Button buttonType="cancel" onClick={this.props.closeDialog} data-qa-cancel>
+        <Button
+          buttonType="cancel"
+          onClick={this.props.closeDialog}
+          data-qa-cancel
+        >
           Cancel
         </Button>
         <Button

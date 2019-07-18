@@ -29,7 +29,7 @@ const CreateIPv6Drawer: React.StatelessComponent<CombinedProps> = props => {
         </Typography>
         <ActionsPanel style={{ marginTop: 16 }}>
           <Button
-           buttonType="primary"
+            buttonType="primary"
             className="cancel"
             onClick={props.onClose}
             data-qa-cancel

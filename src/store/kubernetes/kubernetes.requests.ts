@@ -1,7 +1,22 @@
-import { getKubernetesClusters } from 'src/services/kubernetes';
+import {
+  createNodePool as _createNodePool,
+  deleteKubernetesCluster as _deleteCluster,
+  deleteNodePool as _deleteNodePool,
+  getKubernetesCluster,
+  getKubernetesClusters,
+  updateKubernetesCluster as _updateCluster,
+  updateNodePool as _updateNodePool
+} from 'src/services/kubernetes';
 import { getAll } from 'src/utilities/getAll';
+import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
-import { requestClustersActions } from './kubernetes.actions';
+import {
+  deleteClusterActions,
+  requestClustersActions,
+  updateClusterActions,
+  upsertCluster
+} from './kubernetes.actions';
+import { requestNodePoolsForCluster } from './nodePools.requests';
 
 const getAllClusters = getAll<Linode.KubernetesCluster>(getKubernetesClusters);
 
@@ -17,6 +32,10 @@ export const requestKubernetesClusters: ThunkActionCreator<
           result: data
         })
       );
+      let i = 0;
+      for (; i < data.length; i++) {
+        dispatch(requestNodePoolsForCluster({ clusterID: data[i].id }));
+      }
       return data;
     })
     .catch(error => {
@@ -24,3 +43,20 @@ export const requestKubernetesClusters: ThunkActionCreator<
       return error;
     });
 };
+
+type RequestClusterForStoreThunk = ThunkActionCreator<void>;
+export const requestClusterForStore: RequestClusterForStoreThunk = clusterID => dispatch => {
+  getKubernetesCluster(clusterID).then(cluster => {
+    return dispatch(upsertCluster(cluster));
+  });
+};
+
+export const updateCluster = createRequestThunk(
+  updateClusterActions,
+  ({ clusterID, ...data }) => _updateCluster(clusterID, data)
+);
+
+export const deleteCluster = createRequestThunk(
+  deleteClusterActions,
+  ({ clusterID }) => _deleteCluster(clusterID)
+);

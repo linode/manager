@@ -20,7 +20,7 @@ import SelectPlanPanel, {
 } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 
 import { getMonthlyPrice } from '.././kubeUtils';
-import { ExtendedPoolNode } from '.././types';
+import { PoolNodeWithPrice } from '.././types';
 import NodePoolDisplayTable from './NodePoolDisplayTable';
 
 type ClassNames = 'root' | 'title' | 'gridItem' | 'countInput';
@@ -28,8 +28,8 @@ type ClassNames = 'root' | 'title' | 'gridItem' | 'countInput';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      marginTop: theme.spacing(2),
-      marginBottom: theme.spacing(2),
+      marginTop: theme.spacing(3),
+      marginBottom: theme.spacing(3),
       '& .tabbedPanel': {
         marginTop: 0
       }
@@ -39,7 +39,7 @@ const styles = (theme: Theme) =>
     },
     gridItem: {
       paddingLeft: theme.spacing(3),
-      marginBottom: theme.spacing(2)
+      marginBottom: theme.spacing(3)
     },
     countInput: {
       maxWidth: '5em'
@@ -47,18 +47,20 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  pools: ExtendedPoolNode[];
   types: ExtendedType[];
   typesLoading: boolean;
   typesError?: string;
   apiError?: string;
   selectedType?: string;
   nodeCount: number;
-  addNodePool: (pool: ExtendedPoolNode) => void;
-  deleteNodePool: (poolIdx: number) => void;
+  hideTable?: boolean;
+  addNodePool: (pool: PoolNodeWithPrice) => void;
   handleTypeSelect: (newType?: string) => void;
   updateNodeCount: (newCount: number) => void;
-  updatePool: (poolIdx: number, updatedPool: ExtendedPoolNode) => void;
+  // Props only needed if hideTable is false
+  pools?: PoolNodeWithPrice[];
+  deleteNodePool?: (poolIdx: number) => void;
+  updatePool?: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -101,6 +103,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     apiError,
     deleteNodePool,
     handleTypeSelect,
+    hideTable,
     pools,
     selectedType,
     nodeCount,
@@ -108,6 +111,17 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
     updatePool,
     types
   } = props;
+
+  if (!hideTable && !(pools && updatePool && deleteNodePool)) {
+    /**
+     * These props are required when showing the table,
+     * which will be the case when hideTable is false or undefined
+     * (i.e. omitted since it's an optional prop).
+     */
+    throw new Error(
+      'You must provide pools, update and delete functions when displaying the table in NodePoolPanel.'
+    );
+  }
 
   const submitForm = () => {
     /** Do simple client validation for the two input fields */
@@ -126,6 +140,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
      * Add pool and reset form state.
      */
     addNodePool({
+      id: 0,
       type: selectedType,
       count: nodeCount,
       totalMonthlyPrice: getMonthlyPrice(selectedType, nodeCount, types)
@@ -156,9 +171,11 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
         <TextField
           tiny
           type="number"
+          min={1}
+          max={100}
           value={nodeCount}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            updateNodeCount(+e.target.value)
+            updateNodeCount(Math.max(+e.target.value, 1))
           }
           errorText={countError}
         />
@@ -168,14 +185,19 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           Add Node Pool
         </Button>
       </Grid>
-      <Grid item className={classes.gridItem}>
-        <NodePoolDisplayTable
-          pools={pools}
-          types={types}
-          handleDelete={(poolIdx: number) => deleteNodePool(poolIdx)}
-          updatePool={updatePool}
-        />
-      </Grid>
+      {!hideTable && (
+        /* We checked for these props above so it's safe to assume they're defined. */
+        <Grid item className={classes.gridItem}>
+          <NodePoolDisplayTable
+            small
+            editable
+            pools={pools || []}
+            types={types}
+            handleDelete={(poolIdx: number) => deleteNodePool!(poolIdx)}
+            updatePool={updatePool!}
+          />
+        </Grid>
+      )}
     </Grid>
   );
 };

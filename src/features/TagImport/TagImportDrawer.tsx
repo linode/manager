@@ -51,9 +51,7 @@ interface DispatchProps {
   };
 }
 
-type CombinedProps = StateProps &
-  DispatchProps &
-  WithSnackbarProps;
+type CombinedProps = StateProps & DispatchProps & WithSnackbarProps;
 
 export const getGroupImportList = (entities: GroupImportProps[]) => {
   const importList: any = _compose(

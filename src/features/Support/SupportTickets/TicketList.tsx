@@ -126,6 +126,4 @@ const updatedRequest = (ownProps: Props, params: any, filters: any) => {
 
 const paginated = Pagey(updatedRequest);
 
-export default compose(
-  paginated,
-)(TicketList);
+export default compose(paginated)(TicketList);

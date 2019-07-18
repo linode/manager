@@ -214,6 +214,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       drawerBackdrop: 'rgba(255, 255, 255, 0.5)',
       label: '#555',
       disabledText: '#c9cacb',
+      kubeLabel: '#272b31',
       primaryNavText: '#c9cacb'
     },
     font: {

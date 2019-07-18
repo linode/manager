@@ -61,7 +61,7 @@ class DomainZoneImportDrawer extends React.Component<CombinedProps, State> {
         />
         <ActionsPanel>
           <Button
-           buttonType="primary"
+            buttonType="primary"
             loading={submitting}
             onClick={this.onSubmit}
             disabled={!requirementsMet}

@@ -660,9 +660,9 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           </Typography>
           <Typography variant="body1" data-qa-settings-desc>
             Configure when automatic backups are initiated. The Linode Backup
-            Service will generate a backup between the selected hours every
-            day, and will overwrite the previous daily backup. The selected day
-            is when the backup is promoted to the weekly slot. Up to two weekly
+            Service will generate a backup between the selected hours every day,
+            and will overwrite the previous daily backup. The selected day is
+            when the backup is promoted to the weekly slot. Up to two weekly
             backups are saved.
           </Typography>
           <FormControl className={classes.chooseTime}>

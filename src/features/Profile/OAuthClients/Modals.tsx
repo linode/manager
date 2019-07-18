@@ -94,7 +94,11 @@ const resetDialogActions = ({
   return (
     <React.Fragment>
       <ActionsPanel>
-        <Button onClick={closeDialogs} buttonType="cancel" data-qa-button-cancel>
+        <Button
+          onClick={closeDialogs}
+          buttonType="cancel"
+          data-qa-button-cancel
+        >
           Cancel
         </Button>
         <Button
@@ -125,7 +129,11 @@ const deleteDialogActions = ({
   return (
     <React.Fragment>
       <ActionsPanel>
-        <Button onClick={closeDialogs} buttonType="cancel" data-qa-button-cancel>
+        <Button
+          onClick={closeDialogs}
+          buttonType="cancel"
+          data-qa-button-cancel
+        >
           Cancel
         </Button>
         <Button

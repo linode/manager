@@ -33,6 +33,4 @@ export class LongviewLanding extends React.Component<{}, {}> {
   }
 }
 
-export default compose<{}, {}>(
-  setDocs(LongviewLanding.docs),
-)(LongviewLanding);
+export default compose<{}, {}>(setDocs(LongviewLanding.docs))(LongviewLanding);

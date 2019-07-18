@@ -97,6 +97,7 @@ export const dark = (options: ThemeOverrides) =>
       drawerBackdrop: 'rgba(0, 0, 0, 0.5)',
       label: '#c9cacb',
       disabledText: '#c9cacb',
+      kubeLabel: '#fff',
       primaryNavText: '#fff'
     },
     animateCircleIcon: {

@@ -46,8 +46,6 @@ const EmptyCopy = () => (
   </>
 );
 
-const enhanced = compose<CombinedProps, {}>(
-  withRouter
-);
+const enhanced = compose<CombinedProps, {}>(withRouter);
 
 export default enhanced(NodeBalancerLandingEmptyState);

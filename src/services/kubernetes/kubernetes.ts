@@ -34,6 +34,17 @@ export const getKubernetesClusters = (params?: any, filters?: any) =>
   ).then(response => response.data);
 
 /**
+ * getKubernetesCluster
+ *
+ * Return details about a single Kubernetes cluster
+ */
+export const getKubernetesCluster = (clusterID: string) =>
+  Request<Linode.KubernetesCluster>(
+    setMethod('GET'),
+    setURL(`${BETA_API_ROOT}/lke/clusters/${clusterID}`)
+  ).then(response => response.data);
+
+/**
  * createKubernetesClusters
  *
  * Create a new Cluster.
@@ -45,6 +56,32 @@ export const createKubernetesCluster = (data: CreateKubeClusterPayload) =>
     setData(data, createKubeClusterSchema)
   ).then(response => response.data);
 
+/**
+ * updateKubernetesCluster
+ *
+ * Create a new Cluster.
+ */
+export const updateKubernetesCluster = (
+  clusterID: number,
+  data: Partial<Linode.KubernetesCluster>
+) =>
+  Request<Linode.KubernetesCluster>(
+    setMethod('PUT'),
+    setURL(`${BETA_API_ROOT}/lke/clusters/${clusterID}`),
+    setData(data)
+  ).then(response => response.data);
+
+/**
+ * deleteKubernetesCluster
+ *
+ * Delete the specified Cluster.
+ */
+export const deleteKubernetesCluster = (clusterID: number) =>
+  Request<{}>(
+    setMethod('DELETE'),
+    setURL(`${BETA_API_ROOT}/lke/clusters/${clusterID}`)
+  ).then(response => response.data);
+
 /** getKubeConfig
  *
  * Returns a base64 encoded string of a cluster's kubeconfig.yaml
@@ -52,7 +89,7 @@ export const createKubernetesCluster = (data: CreateKubeClusterPayload) =>
  * @param clusterId
  */
 
-export const getKubeConfig = (clusterId: string) =>
+export const getKubeConfig = (clusterId: number) =>
   Request<Linode.KubeConfigResponse>(
     setMethod('GET'),
     setURL(`${BETA_API_ROOT}/lke/clusters/${clusterId}/kubeconfig`)

@@ -94,6 +94,4 @@ const RecentInvoicesRow: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, Props>(
-  React.memo,
-)(RecentInvoicesRow);
+export default compose<CombinedProps, Props>(React.memo)(RecentInvoicesRow);

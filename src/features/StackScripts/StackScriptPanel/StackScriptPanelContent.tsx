@@ -209,7 +209,11 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
           <Button buttonType="cancel" onClick={this.handleCloseDialog}>
             Cancel
           </Button>
-          <Button buttonType="secondary" destructive onClick={this.handleMakePublic}>
+          <Button
+            buttonType="secondary"
+            destructive
+            onClick={this.handleMakePublic}
+          >
             Yes, make me a star!
           </Button>
         </ActionsPanel>
@@ -225,7 +229,7 @@ class StackScriptPanelContent extends React.Component<CombinedProps, State> {
             Cancel
           </Button>
           <Button
-           buttonType="secondary"
+            buttonType="secondary"
             destructive
             onClick={this.handleDeleteStackScript}
           >

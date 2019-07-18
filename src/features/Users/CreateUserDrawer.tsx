@@ -150,7 +150,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
         </div>
         <ActionsPanel>
           <Button
-           buttonType="primary"
+            buttonType="primary"
             onClick={this.onSubmit}
             loading={submitting}
             data-qa-submit

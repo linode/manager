@@ -7,68 +7,51 @@ import Notice from 'src/components/Notice';
 
 interface Props {
   open: boolean;
-  mode: 'detach' | 'delete';
+  loading: boolean;
+  clusterLabel: string;
   error?: string;
   onClose: () => void;
-  onDetach: () => void;
   onDelete: () => void;
-  volumeLabel: string;
-  linodeLabel: string;
 }
 
 type CombinedProps = Props;
 
-class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
+class KubernetesDialog extends React.PureComponent<CombinedProps, {}> {
   renderActions = () => {
-    const method = {
-      detach: this.props.onDetach,
-      delete: this.props.onDelete
-    }[this.props.mode];
-
-    const action = {
-      detach: 'Detach',
-      delete: 'Delete'
-    }[this.props.mode];
-
+    const { loading, onClose } = this.props;
     return (
       <ActionsPanel style={{ padding: 0 }}>
-        <Button buttonType="cancel" onClick={this.props.onClose} data-qa-cancel>
+        <Button buttonType="cancel" onClick={onClose} data-qa-cancel>
           Cancel
         </Button>
         <Button
           buttonType="secondary"
           destructive
-          onClick={method}
+          loading={loading}
+          onClick={this.props.onDelete}
           data-qa-confirm
         >
-          {action}
+          Delete
         </Button>
       </ActionsPanel>
     );
   };
 
   render() {
-    const { error, volumeLabel: label, linodeLabel } = this.props;
-    const title = {
-      detach: `Detach ${label ? label : 'Volume'}?`,
-      delete: `Delete ${label ? label : 'Volume'}?`
-    }[this.props.mode];
+    const { clusterLabel, error } = this.props;
 
     return (
       <ConfirmationDialog
         open={this.props.open}
-        title={`${title}`}
+        title={`Delete ${clusterLabel}`}
         onClose={this.props.onClose}
         actions={this.renderActions}
       >
         {error && <Notice error text={error} />}
-        <Typography>
-          Are you sure you want to {this.props.mode} this Volume
-          {`${linodeLabel ? ` from ${linodeLabel}?` : '?'}`}
-        </Typography>
+        <Typography>Are you sure you want to delete {clusterLabel}?</Typography>
       </ConfirmationDialog>
     );
   }
 }
 
-export default DestructiveVolumeDialog;
+export default KubernetesDialog;

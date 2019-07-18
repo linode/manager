@@ -27,6 +27,7 @@ export interface Props extends ButtonProps {
   className?: string;
   tooltipText?: string;
   compact?: boolean;
+  deleteText?: string;
   superCompact?: boolean;
 }
 
@@ -147,6 +148,7 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = props => {
     classes,
     loading,
     destructive,
+    deleteText,
     tooltipText,
     buttonType,
     compact,
@@ -185,7 +187,7 @@ const wrappedButton: React.StatelessComponent<CombinedProps> = props => {
         >
           {props.children}
         </span>
-        {buttonType === 'remove' && 'Remove'}
+        {buttonType === 'remove' && (deleteText ? deleteText : 'Remove')}
       </Button>
       {tooltipText && <HelpIcon text={tooltipText} />}
     </React.Fragment>

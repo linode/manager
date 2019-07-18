@@ -43,10 +43,7 @@ interface LinodesProps {
   linodesError?: boolean;
 }
 
-type CombinedProps = Props &
-  VolumesRequests &
-  LinodesProps &
-  StateProps;
+type CombinedProps = Props & VolumesRequests & LinodesProps & StateProps;
 
 class VolumeAttachmentDrawer extends React.Component<CombinedProps, State> {
   defaultState = {

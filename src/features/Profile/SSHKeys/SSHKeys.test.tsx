@@ -76,11 +76,7 @@ describe('SSHKeys', () => {
 
   it('should display TableEmptyState if done loading and count is 0', () => {
     const wrapper = shallow(
-      <SSHKeys
-        {...pageyProps}
-        data={undefined}
-        timezone={'GMT'}
-      />
+      <SSHKeys {...pageyProps} data={undefined} timezone={'GMT'} />
     );
 
     expect(

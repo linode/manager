@@ -201,6 +201,4 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
 
 const connected = connect(mapStateToProps);
 
-export default compose<CombinedProps, Props>(
-  connected
-)(VolumeSelect);
+export default compose<CombinedProps, Props>(connected)(VolumeSelect);
