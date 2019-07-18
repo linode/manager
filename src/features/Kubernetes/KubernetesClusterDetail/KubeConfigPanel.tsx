@@ -54,43 +54,59 @@ export const KubeConfigPanel: React.FC<CombinedProps> = props => {
   const [kubeConfig, setKubeConfig] = React.useState<string>('');
 
   const fetchKubeConfig = () => {
+    return getKubeConfig(clusterID).then(response => {
+      // Convert to utf-8 from base64
+      try {
+        const decodedFile = window.atob(response.kubeconfig);
+        return decodedFile;
+      } catch (e) {
+        reportException(e, {
+          'Encoded response': response.kubeconfig
+        });
+        enqueueSnackbar('Error parsing your kubeconfig file', {
+          variant: 'error'
+        });
+        return;
+      }
+    });
+  };
+
+  const handleOpenDrawer = () => {
     setDrawerError(false);
     setDrawerLoading(true);
-    return getKubeConfig(clusterID)
-      .then(response => {
-        // Convert to utf-8 from base64
+    setDrawerOpen(true);
+    fetchKubeConfig()
+      .then(decodedFile => {
         setDrawerLoading(false);
-        try {
-          const decodedFile = window.atob(response.kubeconfig);
+        if (decodedFile) {
           setKubeConfig(decodedFile);
-        } catch (e) {
-          reportException(e, {
-            'Encoded response': response.kubeconfig
-          });
-          enqueueSnackbar('Error parsing your kubeconfig file', {
-            variant: 'error'
-          });
+        } else {
+          // There was a parsing error; the drawer will show an error state.
+        }
+      })
+      .catch(_ => {
+        setDrawerError(true);
+        setDrawerLoading(false);
+      });
+  };
+
+  const downloadKubeConfig = () => {
+    fetchKubeConfig()
+      .then(decodedFile => {
+        if (decodedFile) {
+          downloadFile('kubeconfig.yaml', decodedFile);
+        } else {
+          // There was a parsing error, the user will see an error toast.
           return;
         }
       })
       .catch(errorResponse => {
-        setDrawerError(true);
-        setDrawerLoading(false);
         const error = getAPIErrorOrDefault(
           errorResponse,
           'Unable to download your kubeconfig'
         )[0].reason;
         enqueueSnackbar(error, { variant: 'error' });
       });
-  };
-
-  const handleOpenDrawer = () => {
-    fetchKubeConfig();
-    setDrawerOpen(true);
-  };
-
-  const downloadKubeConfig = () => {
-    fetchKubeConfig().then(() => downloadFile('kubeconfig.yaml', kubeConfig));
   };
 
   return (
