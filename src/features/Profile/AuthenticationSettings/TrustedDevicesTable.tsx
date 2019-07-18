@@ -8,7 +8,7 @@ import TableRowLoading from 'src/components/TableRowLoading';
 
 interface Props {
   loading: boolean;
-  error?: Error;
+  error?: Linode.ApiFieldError[];
   data?: Linode.Device[];
   setDevice: (deviceId: number) => void;
   toggleDialog: () => void;
