@@ -1,0 +1,39 @@
+{
+  "extends": [
+    "tslint:recommended",
+    "tslint-react",
+    "tslint-config-prettier"
+  ],
+  "rules": {
+    "align": { "severity": "warning" },
+    "array-type": false,
+    "ban-types": false,
+    "callable-types": { "severity": "warning" },
+    "class-name": { "severity": "warning" },
+    "curly": { "severity": "warning" },
+    "interface-name": false,
+    "interface-over-type-literal": { "severity": "warning" },
+    "jsdoc-format": { "severity": "warning" },
+    "jsx-boolean-value": false,
+    "jsx-key": { "severity": "warning" },
+    "jsx-no-lambda": false,
+    "jsx-self-close": { "severity": "warning" },
+    "max-classes-per-file": { "severity": "warning" },
+    "member-access": false,
+    "member-ordering": false,
+    "no-angle-bracket-type-assertion": { "severity": "warning" },
+    "no-console": { "severity": "warning" },
+    "no-empty-interface": { "severity": "warning" },
+    "no-empty": { "severity": "warning" },
+    "no-namespace": false,
+    "no-shadowed-variable": { "severity": "warning"},
+    "no-string-literal": { "severity": "warning" },
+    "no-unused-expression": { "severity": "warning" },
+    "object-literal-sort-keys": false,
+    "only-arrow-functions": { "severity": "warning" },
+    "import-blacklist": [true, "rxjs", "@material-ui/core", "@material-ui/icons"],
+    "prefer-for-of": {"severity": "warning"},
+    "trailing-comma": { "severity": "warning" },
+    "variable-name": false
+  }
+}
