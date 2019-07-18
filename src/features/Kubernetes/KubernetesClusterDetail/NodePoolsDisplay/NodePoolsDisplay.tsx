@@ -101,7 +101,7 @@ export const NodePoolsDisplay: React.FunctionComponent<
         </Grid>
         {submissionSuccess && (
           <Grid item xs={12}>
-            <Notice success text="Node pools updated successfully." />
+            <Notice success text="Your node pools are being updated." />
           </Grid>
         )}
         {submissionError && submissionError.length > 0 && (

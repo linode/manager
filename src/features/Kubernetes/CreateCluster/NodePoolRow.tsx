@@ -107,7 +107,7 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
             type="number"
             className={classes.editableCount}
             min={1}
-            max={Infinity}
+            max={100}
             value={pool.count}
             onChange={e =>
               handleUpdate(idx, {
