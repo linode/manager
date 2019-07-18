@@ -136,14 +136,46 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
   // We grab the query params to (potentially) use in the initial state.
   const queryParams = getParamsFromUrl(location.search);
 
-  const initialState = createInitialCloneLandingState(
-    configs,
-    disks,
-    Number(queryParams.selectedConfig),
-    Number(queryParams.selectedDisk)
+  // Stringify config and disk IDs to make prop comparison (for useMemo and useEffect).
+  // This is an alternative to doing a deep equality check, or to simply check the length,
+  // of disks and configs, which could lead to edge-case bugs.
+  const stringifiedConfigIds = JSON.stringify(configs.map(c => c.id));
+  const stringifiedDiskIds = JSON.stringify(disks.map(d => d.id));
+
+  const firstRender = React.useRef(true);
+
+  // We only need to determine the initial state ONCE, so use the firstRender ref.
+  const initialState = firstRender.current
+    ? createInitialCloneLandingState(
+        configs,
+        disks,
+        [Number(queryParams.selectedConfig)],
+        [Number(queryParams.selectedDisk)]
+      )
+    : undefined;
+
+  const [state, dispatch] = React.useReducer(
+    cloneLandingReducer,
+    // initialState will be defined since it is calculated on firstRender
+    initialState!
   );
 
-  const [state, dispatch] = React.useReducer(cloneLandingReducer, initialState);
+  // If configs or disks updates (e.g. a user adds or deletes a disk in another tab),
+  // we need to update our state.
+  React.useEffect(() => {
+    // Don't run on first render
+    if (firstRender.current) {
+      firstRender.current = false;
+      return;
+    }
+    dispatch({
+      type: 'addConfigsAndDisks',
+      payload: {
+        configs,
+        disks
+      }
+    });
+  }, [stringifiedConfigIds, stringifiedDiskIds]);
 
   // Helper functions for updating the state.
   const toggleConfig = (id: number) => {
@@ -168,13 +200,23 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
 
   const clearAll = () => dispatch({ type: 'clearAll' });
 
-  const selectedConfigs = configs.filter(
+  // Filter out configs we don't already have in our configSelection
+  const safeConfigs = configs.filter(
+    eachConfig => state.configSelection[eachConfig.id] !== undefined
+  );
+
+  // Filter out disks we don't already have in our configSelection
+  const safeDisks = disks.filter(
+    eachDisk => state.diskSelection[eachDisk.id] !== undefined
+  );
+
+  const selectedConfigs = safeConfigs.filter(
     eachConfig => state.configSelection[eachConfig.id].isSelected
   );
 
   const selectedConfigIds = selectedConfigs.map(eachConfig => eachConfig.id);
 
-  const selectedDisks = disks.filter(
+  const selectedDisks = safeDisks.filter(
     eachDisk => state.diskSelection[eachDisk.id].isSelected
   );
 
@@ -248,9 +290,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
   const selectedLinode = linodesData.find(
     eachLinode => eachLinode.id === state.selectedLinodeId
   );
-
   const selectedLinodeRegion = selectedLinode && selectedLinode.region;
-
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Clone" />
@@ -318,7 +358,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
               render={() => (
                 <div className={classes.outerContainer}>
                   <Configs
-                    configs={configs}
+                    configs={safeConfigs}
                     configSelection={state.configSelection}
                     handleSelect={toggleConfig}
                   />
@@ -338,7 +378,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
                   </Typography>
                   <div className={classes.diskContainer}>
                     <Disks
-                      disks={disks}
+                      disks={safeDisks}
                       diskSelection={state.diskSelection}
                       selectedConfigIds={selectedConfigIds}
                       handleSelect={toggleDisk}
@@ -359,7 +399,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
             // If a selected disk is associated with a selected config, we
             // don't want it to appear in the Details component, since
             // cloning the config takes precedence.
-            selectedDisks={disks.filter(disk => {
+            selectedDisks={safeDisks.filter(disk => {
               return (
                 // This disk has been individually selected ...
                 state.diskSelection[disk.id].isSelected &&
