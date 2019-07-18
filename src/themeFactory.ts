@@ -945,7 +945,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             color: '#be4678'
           },
           [`
-            & span.hljs-number,
             & span.hljs-meta,
             & span.hljs-built_in,
             & span.hljs-butonin-name,
@@ -956,6 +955,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             color: '#aa573c'
           },
           [`
+            & span.hljs-number,
             & span.hljs-string,
             & span.hljs-symbol,
             & span.hljs-bullet
