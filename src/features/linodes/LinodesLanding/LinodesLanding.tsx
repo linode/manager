@@ -243,7 +243,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                 }: ToggleProps<boolean>) => {
                   return (
                     <PreferenceToggle<'grid' | 'list'>
-                      preferenceKey="linode_view_style"
+                      preferenceKey="linodes_view_style"
                       localStorageKey="LINODE_VIEW"
                       preferenceOptions={['list', 'grid']}
                       toggleCallbackFnDebounced={this.changeViewDelayed}
