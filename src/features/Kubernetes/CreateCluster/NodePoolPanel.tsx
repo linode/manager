@@ -172,7 +172,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           tiny
           type="number"
           min={1}
-          max={Infinity}
+          max={100}
           value={nodeCount}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
             updateNodeCount(Math.max(+e.target.value, 1))
