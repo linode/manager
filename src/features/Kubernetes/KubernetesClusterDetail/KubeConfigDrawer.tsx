@@ -37,6 +37,8 @@ interface Props {
   kubeConfig: string;
   clusterLabel: string;
   open: boolean;
+  loading: boolean;
+  error: boolean;
   closeDrawer: () => void;
 }
 
@@ -56,10 +58,15 @@ const splitCode = (code: string): string => {
 };
 
 export const KubeConfigDrawer: React.FC<CombinedProps> = props => {
-  const { classes, clusterLabel, kubeConfig, closeDrawer, open } = props;
-  const error = false;
-  const loading = false;
-
+  const {
+    classes,
+    clusterLabel,
+    error,
+    loading,
+    kubeConfig,
+    closeDrawer,
+    open
+  } = props;
   const html = new Converter({
     extensions: ['highlightjs'],
     simplifiedAutoLink: true,
