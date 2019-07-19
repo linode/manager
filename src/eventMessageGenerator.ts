@@ -164,6 +164,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     finished: e =>
       `Linode ${e.entity!.label} has booted (Host initiated restart).`
   },
+  ipaddress_update: {
+    notification: e => `An IP address has been updated on your account.`
+  },
   lish_boot: {
     scheduled: e =>
       `Linode ${e.entity!.label} is scheduled to boot (Lish initiated boot).`,
@@ -434,6 +437,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   user_ssh_key_delete: {
     notification: e => `An SSH key has been removed from your profile.`
+  },
+  user_update: {
+    notification: e => `User ${e.entity!.label} has been updated.`
   }
 };
 

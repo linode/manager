@@ -1,8 +1,10 @@
 // Removes events we don't want to display.
-export const removeBlacklistedEvents = (events: Linode.Event[] = []) => {
-  return events.filter(
-    eachEvent => !blackListedEvents.includes(eachEvent.action)
-  );
+export const removeBlacklistedEvents = (
+  events: Linode.Event[] = [],
+  blacklist: string[] = []
+) => {
+  const _blacklist = [...blackListedEvents, ...blacklist];
+  return events.filter(eachEvent => !_blacklist.includes(eachEvent.action));
 };
 
 // We don't want to display these events because they precede similar events.

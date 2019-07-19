@@ -80,7 +80,7 @@ export class UserEventsMenu extends React.Component<CombinedProps, State> {
       history: { push }
     } = this.props;
 
-    const filteredEvents = removeBlacklistedEvents(events);
+    const filteredEvents = removeBlacklistedEvents(events, ['profile_update']);
     const unseenCount = getNumUnseenEvents(filteredEvents);
 
     return (
