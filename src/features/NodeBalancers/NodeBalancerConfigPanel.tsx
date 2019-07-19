@@ -38,8 +38,6 @@ type ClassNames =
   | 'statusChip'
   | 'passiveChecks';
 
-  
-
 const styles = (theme: Theme) =>
   createStyles({
     divider: {
