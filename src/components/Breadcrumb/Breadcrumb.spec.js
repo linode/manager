@@ -18,6 +18,8 @@ describe('Breadcrumb Suite', () => {
             $(link).waitForDisplayed(constants.wait.normal);
             expect($(link).getAttribute('href'))
             .withContext(`href link should not be missing`).not.toBeNull();
+            expect($$(link)[2].getAttribute('href'))
+            .withContext('Url should be').toEqual('http://localhost:6006/linodes/9872893679817/test')
         });
     });
 
@@ -35,6 +37,7 @@ describe('Breadcrumb Suite', () => {
         .withContext(`${editBtnMessage}`).toBe(false);
         expect($$(link)[2].getAttribute('href'))
         .withContext(`href link should not be blank`).not.toBeNull();
+        
     });
 
     it('Editable text header should be editable, but not contain a link', () => {
@@ -45,7 +48,7 @@ describe('Breadcrumb Suite', () => {
         expect($(editableText).$('..').getAttribute('href'))
         .withContext(`href link should be blank`).toBeNull();
     });
-    
+
     it('Only clicking the edit icon displays the edit input field', () => {
         executeInAllStories(component, [childStories[2]], () => {
             $(editableText).waitForDisplayed(true);
@@ -107,6 +110,6 @@ describe('Breadcrumb Suite', () => {
         $(editableTextInput).setValue('test do not save input');
         $('body').click();
         expect($(editableText).getText())
-        .withContext(`text should have been saved`).toEqual(originalText);
+        .withContext(`text should not have been saved`).toEqual(originalText);
     });
 });
