@@ -4,6 +4,25 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.65.0] - 2019-07-17
+
+### Added:
+- Mutation estimated time to Drawer
+- Cookies enabled check
+- Option to create SSH Keys in the Linode creation workflow
+- Tooltip to Zone File action item for Domains
+- Time-delayed patience text when editing RDNS
+- Loading state for submit button in edit RDNS drawer
+
+### Changed:
+- Observe user preferences for Volumes-group-by-tag
+- Observe user preferences for Linodes-group-by-tag
+- Linode Backup helper text
+
+### Fixed:
+- White screen issue affecting users with slower connections
+
+
 ## [v0.64.0] - 2019-07-15
 
 ### Added:
