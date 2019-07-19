@@ -28,7 +28,7 @@ const styles = (theme: Theme) =>
     },
     tooltip: {
       position: 'fixed',
-      right: 40,
+      right: theme.spacing(4),
       marginTop: theme.spacing(0.5)
     }
   });
