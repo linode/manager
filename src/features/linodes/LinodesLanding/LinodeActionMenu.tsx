@@ -164,15 +164,29 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
           },
           ...readOnlyProps
         },
-        {
-          title: 'View Backups',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendLinodeActionMenuItemEvent('Navigate to Backups Page');
-            push(`/linodes/${linodeId}/backup`);
-            e.preventDefault();
-            e.stopPropagation();
-          }
-        },
+        linodeBackups.enabled
+          ? {
+              title: 'View Backups',
+              onClick: (e: React.MouseEvent<HTMLElement>) => {
+                sendLinodeActionMenuItemEvent('Navigate to Backups Page');
+                push(`/linodes/${linodeId}/backup`);
+                e.preventDefault();
+                e.stopPropagation();
+              }
+            }
+          : {
+              title: 'Enable Backups',
+              onClick: (e: React.MouseEvent<HTMLElement>) => {
+                sendLinodeActionMenuItemEvent('Enable Backups');
+                push({
+                  pathname: `/linodes/${linodeId}/backup`,
+                  state: { enableOnLoad: true }
+                });
+                e.preventDefault();
+                e.stopPropagation();
+              },
+              ...readOnlyProps
+            },
         {
           title: 'Settings',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
@@ -257,22 +271,6 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
             ...readOnlyProps
           }
         );
-      }
-
-      if (!linodeBackups.enabled) {
-        actions.splice(-2, 1, {
-          title: 'Enable Backups',
-          onClick: (e: React.MouseEvent<HTMLElement>) => {
-            sendLinodeActionMenuItemEvent('Enable Backups');
-            push({
-              pathname: `/linodes/${linodeId}/backup`,
-              state: { enableOnLoad: true }
-            });
-            e.preventDefault();
-            e.stopPropagation();
-          },
-          ...readOnlyProps
-        });
       }
 
       return actions;
