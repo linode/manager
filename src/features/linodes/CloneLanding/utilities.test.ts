@@ -1,5 +1,5 @@
 import { disks, extDisk2, extDisk3, extDiskCopy } from 'src/__data__/disks';
-import { linodeConfigs, linodeConfig2 } from 'src/__data__/linodeConfigs';
+import { linodeConfig2, linodeConfigs } from 'src/__data__/linodeConfigs';
 import {
   attachAssociatedDisksToConfigs,
   cloneLandingReducer,

@@ -146,7 +146,7 @@ export const cloneLandingReducer = (
         errors: undefined
       };
 
-    // We're going to create new configSelection and diskSelection, based on the
+    // We're going to create new configSelection and diskSelection based on the
     // given configs and disks, and the elements already selected in the current state.
     case 'syncConfigsDisks':
       const { configs, disks } = action;
