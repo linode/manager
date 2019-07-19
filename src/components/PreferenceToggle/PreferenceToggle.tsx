@@ -242,7 +242,7 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
    * you can do so and pass the value explicitly with the _value_ prop
    */
   if (isNullOrUndefined(currentlySetPreference)) {
-    return <span>getting preferences...</span>;
+    return null;
   }
 
   return typeof children === 'function'
