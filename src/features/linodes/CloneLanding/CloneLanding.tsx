@@ -38,7 +38,7 @@ import Details from './Details';
 import {
   attachAssociatedDisksToConfigs,
   cloneLandingReducer,
-  createInitialCloneLandingState
+  defaultState
 } from './utilities';
 
 const Configs = DefaultLoader({
@@ -132,50 +132,49 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
   /**
    * STATE MANAGEMENT
    */
+  const [state, dispatch] = React.useReducer(cloneLandingReducer, defaultState);
 
-  // We grab the query params to (potentially) use in the initial state.
-  const queryParams = getParamsFromUrl(location.search);
-
-  // Stringify config and disk IDs to make prop comparison (for useMemo and useEffect).
-  // This is an alternative to doing a deep equality check, or to simply check the length,
-  // of disks and configs, which could lead to edge-case bugs.
+  /**
+   * Stringify config and disk IDs to make prop comparison (for useEffect).
+   * This is an alternative to doing a deep equality check, which is slower
+   * (benchmarks: https://jsperf.com/json-stringify-vs-ramda-equals/1) or to
+   * simply check the length of disks and configs, which could lead to edge-case bugs.
+   */
   const stringifiedConfigIds = JSON.stringify(configs.map(c => c.id));
   const stringifiedDiskIds = JSON.stringify(disks.map(d => d.id));
 
-  const firstRender = React.useRef(true);
-
-  // We only need to determine the initial state ONCE, so use the firstRender ref.
-  const initialState = firstRender.current
-    ? createInitialCloneLandingState(
-        configs,
-        disks,
-        [Number(queryParams.selectedConfig)],
-        [Number(queryParams.selectedDisk)]
-      )
-    : undefined;
-
-  const [state, dispatch] = React.useReducer(
-    cloneLandingReducer,
-    // initialState will be defined since it is calculated on firstRender
-    initialState!
-  );
-
-  // If configs or disks updates (e.g. a user adds or deletes a disk in another tab),
-  // we need to update our state.
+  // Update configs and disks if they change (which will happen after )
   React.useEffect(() => {
-    // Don't run on first render
-    if (firstRender.current) {
-      firstRender.current = false;
-      return;
-    }
     dispatch({
-      type: 'addConfigsAndDisks',
-      payload: {
-        configs,
-        disks
-      }
+      type: 'syncConfigsDisks',
+      configs,
+      disks
     });
+    // We can't use `configs` and `disks` as deps, since they are arrays.
+    // Instead we use a serialized representation of their IDs.
   }, [stringifiedConfigIds, stringifiedDiskIds]);
+
+  // A config and/or disk can be selected via query param. Memoized
+  // so it can be used as a dep in the useEffect's that consume it.
+  const queryParams = React.useMemo(() => getParamsFromUrl(location.search), [
+    location.search
+  ]);
+
+  // Toggle config if one is specified as a query param.
+  React.useEffect(() => {
+    const configFromQS = Number(queryParams.selectedConfig);
+    if (configFromQS && state.configSelection[configFromQS]) {
+      return dispatch({ type: 'toggleConfig', id: configFromQS });
+    }
+  }, [queryParams]);
+
+  // Toggle disk if one is specified as a query param.
+  React.useEffect(() => {
+    const diskFromQS = Number(queryParams.selectedDisk);
+    if (diskFromQS && state.diskSelection[diskFromQS]) {
+      return dispatch({ type: 'toggleDisk', id: diskFromQS });
+    }
+  }, [queryParams]);
 
   // Helper functions for updating the state.
   const toggleConfig = (id: number) => {

@@ -1,10 +1,10 @@
 import { disks, extDisk2, extDisk3, extDiskCopy } from 'src/__data__/disks';
-import { linodeConfigs } from 'src/__data__/linodeConfigs';
+import { linodeConfigs, linodeConfig2 } from 'src/__data__/linodeConfigs';
 import {
   attachAssociatedDisksToConfigs,
   cloneLandingReducer,
   CloneLandingState,
-  createInitialCloneLandingState,
+  createConfigDiskSelection,
   ExtendedConfig,
   getAllDisks,
   getAssociatedDisks,
@@ -92,6 +92,72 @@ describe('utilities', () => {
       expect(newState.errors).toBe(undefined);
     });
 
+    it('adds configs', () => {
+      const state: CloneLandingState = { ...baseState };
+      const newState = cloneLandingReducer(state, {
+        type: 'syncConfigsDisks',
+        configs: linodeConfigs,
+        disks: []
+      });
+      linodeConfigs.forEach(eachConfig => {
+        expect(newState.configSelection).toHaveProperty(String(eachConfig.id));
+      });
+    });
+
+    it('adds disks', () => {
+      const state: CloneLandingState = { ...baseState };
+      const newState = cloneLandingReducer(state, {
+        type: 'syncConfigsDisks',
+        configs: [],
+        disks
+      });
+      disks.forEach(eachDisk => {
+        expect(newState.diskSelection).toHaveProperty(String(eachDisk.id));
+      });
+    });
+
+    it('considers selected configs', () => {
+      const state: CloneLandingState = {
+        ...baseState,
+        configSelection: {
+          1234: {
+            isSelected: true,
+            associatedDiskIds: []
+          }
+        }
+      };
+      const newState = cloneLandingReducer(state, {
+        type: 'syncConfigsDisks',
+        configs: [...linodeConfigs, linodeConfig2],
+        disks: []
+      });
+      expect(newState.configSelection['1234']).toHaveProperty(
+        'isSelected',
+        true
+      );
+    });
+
+    it('considers selected disks', () => {
+      const state: CloneLandingState = {
+        ...baseState,
+        diskSelection: {
+          19040623: {
+            isSelected: true,
+            associatedConfigIds: []
+          }
+        }
+      };
+      const newState = cloneLandingReducer(state, {
+        type: 'syncConfigsDisks',
+        configs: [],
+        disks
+      });
+      expect(newState.diskSelection['19040623']).toHaveProperty(
+        'isSelected',
+        true
+      );
+    });
+
     it('clears errors after each type of input change', () => {
       const state: CloneLandingState = {
         ...baseState,
@@ -110,9 +176,9 @@ describe('utilities', () => {
     });
   });
 
-  describe('createInitialCloneLandingState', () => {
+  describe('createConfigDiskSelection', () => {
     it('defaults isSelected to false for each config and disk', () => {
-      const state = createInitialCloneLandingState(linodeConfigs, disks);
+      const state = createConfigDiskSelection(linodeConfigs, disks);
       linodeConfigs.forEach(eachConfig => {
         expect(state.configSelection[eachConfig.id].isSelected).toBe(false);
       });
@@ -125,7 +191,7 @@ describe('utilities', () => {
     it('sets isSelected to true if pre-selected IDs are set', () => {
       const configId = linodeConfigs[0].id;
       const diskId = disks[0].id;
-      const state = createInitialCloneLandingState(
+      const state = createConfigDiskSelection(
         linodeConfigs,
         disks,
         [configId],
@@ -136,7 +202,7 @@ describe('utilities', () => {
     });
 
     it('adds associated disk and config IDs', () => {
-      const state = createInitialCloneLandingState(linodeConfigs, [extDisk3]);
+      const state = createConfigDiskSelection(linodeConfigs, [extDisk3]);
       const configId = linodeConfigs[0].id;
       const diskId = extDisk3.id;
 
@@ -149,28 +215,10 @@ describe('utilities', () => {
       ).toBe(true);
     });
 
-    it('defaults isSubmitting to false', () => {
-      const state = createInitialCloneLandingState(linodeConfigs, disks);
-      expect(state.isSubmitting).toBe(false);
-    });
-
-    it('defaults selectedLinodeId to null', () => {
-      const state = createInitialCloneLandingState(linodeConfigs, disks);
-      expect(state.selectedLinodeId).toBe(null);
-    });
-
-    it('defaults errors to undefined', () => {
-      const state = createInitialCloneLandingState(linodeConfigs, disks);
-      expect(state.errors).toBeUndefined();
-    });
-
     it('works when there are no configs or disks', () => {
-      const state = createInitialCloneLandingState([], []);
+      const state = createConfigDiskSelection([], []);
       expect(state.configSelection).toEqual({});
       expect(state.diskSelection).toEqual({});
-      expect(state.isSubmitting).toBe(false);
-      expect(state.selectedLinodeId).toBe(null);
-      expect(state.errors).toBeUndefined();
     });
   });
 

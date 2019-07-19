@@ -33,11 +33,9 @@ export type CloneLandingAction =
   | { type: 'setErrors'; errors?: Linode.ApiFieldError[] }
   | { type: 'clearAll' }
   | {
-      type: 'addConfigsAndDisks';
-      payload: {
-        configs: Linode.Config[];
-        disks: Linode.Disk[];
-      };
+      type: 'syncConfigsDisks';
+      configs: Linode.Config[];
+      disks: Linode.Disk[];
     };
 
 export type ExtendedConfig = Linode.Config & { associatedDisks: Linode.Disk[] };
@@ -148,21 +146,20 @@ export const cloneLandingReducer = (
         errors: undefined
       };
 
-    // We're going to create new configSelection and diskSelection, based on
-    // the given configs and disks, and the elements already selected.
-    case 'addConfigsAndDisks':
-      const {
-        payload: { configs, disks }
-      } = action;
+    // We're going to create new configSelection and diskSelection, based on the
+    // given configs and disks, and the elements already selected in the current state.
+    case 'syncConfigsDisks':
+      const { configs, disks } = action;
 
-      const preSelectedConfigIds = getSelectedIDs(state.configSelection);
-      const preSelectedDiskIds = getSelectedIDs(state.diskSelection);
+      // Grab the selected configs/disks from the current state.
+      const selectedConfigIds = getSelectedIDs(state.configSelection);
+      const selectedDiskIds = getSelectedIDs(state.diskSelection);
 
-      const { configSelection, diskSelection } = createInitialCloneLandingState(
+      const { configSelection, diskSelection } = createConfigDiskSelection(
         configs,
         disks,
-        preSelectedConfigIds,
-        preSelectedDiskIds
+        selectedConfigIds,
+        selectedDiskIds
       );
 
       return {
@@ -176,6 +173,13 @@ export const cloneLandingReducer = (
   }
 };
 
+export const defaultState: CloneLandingState = {
+  configSelection: {},
+  diskSelection: {},
+  selectedLinodeId: null,
+  isSubmitting: false
+};
+
 // Returns an array of IDs of configs/disks that are selected.
 const getSelectedIDs = (selection: ConfigSelection | DiskSelection) =>
   compose(
@@ -187,25 +191,21 @@ const getSelectedIDs = (selection: ConfigSelection | DiskSelection) =>
     pickBy(c => c.isSelected)
   )(selection);
 
-export const createInitialCloneLandingState = (
+export const createConfigDiskSelection = (
   configs: Linode.Config[],
   disks: Linode.Disk[],
-  preSelectedConfigIds: number[] = [],
-  preSelectedDiskIds: number[] = []
-): CloneLandingState => {
-  const state: CloneLandingState = {
-    configSelection: {},
-    diskSelection: {},
-    selectedLinodeId: null,
-    isSubmitting: false
-  };
+  selectedConfigIds: number[] = [], // Which configs should be selected?
+  selectedDiskIds: number[] = [] // Which disks should be selected?
+): { configSelection: ConfigSelection; diskSelection: DiskSelection } => {
+  const configSelection: ConfigSelection = {};
+  const diskSelection: DiskSelection = {};
 
   // Mapping of diskIds to an array of associated configIds
   const diskConfigMap: Record<number, number[]> = {};
 
   configs.forEach(eachConfig => {
     // We default `isSelected` to `false`, unless this config was pre-selected.
-    const isSelected = preSelectedConfigIds.includes(eachConfig.id);
+    const isSelected = selectedConfigIds.includes(eachConfig.id);
 
     const associatedDisks = getAssociatedDisks(eachConfig, disks);
     const associatedDiskIds = associatedDisks.map(eachDisk => eachDisk.id);
@@ -217,7 +217,7 @@ export const createInitialCloneLandingState = (
       diskConfigMap[id].push(eachConfig.id);
     });
 
-    state.configSelection[eachConfig.id] = {
+    configSelection[eachConfig.id] = {
       isSelected,
       associatedDiskIds
     };
@@ -225,18 +225,18 @@ export const createInitialCloneLandingState = (
 
   disks.forEach(eachDisk => {
     // We default `isSelected` to `false`, unless this disk was pre-selected.
-    const isSelected = preSelectedDiskIds.includes(eachDisk.id);
+    const isSelected = selectedDiskIds.includes(eachDisk.id);
 
     // Since we built the mapping earlier, we can just grab them here
     const associatedConfigIds = diskConfigMap[eachDisk.id] || [];
 
-    state.diskSelection[eachDisk.id] = {
+    diskSelection[eachDisk.id] = {
       isSelected,
       associatedConfigIds
     };
   });
 
-  return state;
+  return { configSelection, diskSelection };
 };
 
 /**
