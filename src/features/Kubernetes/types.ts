@@ -1,5 +1,4 @@
 export interface PoolNodeWithPrice extends ExtendedPoolNode {
-  id: number;
   totalMonthlyPrice: number;
   queuedForDeletion?: boolean;
   queuedForAddition?: boolean;
