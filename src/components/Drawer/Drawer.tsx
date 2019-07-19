@@ -43,7 +43,7 @@ const styles = (theme: Theme) =>
     },
     wide: {
       [theme.breakpoints.up('sm')]: {
-        width: 750
+        width: 700
       }
     },
     drawerHeader: {
