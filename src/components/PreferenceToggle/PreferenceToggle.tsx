@@ -151,7 +151,7 @@ const PreferenceToggle: React.FC<CombinedProps> = props => {
      * we only want to update local state if we already have something set in local state
      * setting the initial state is the responsibility of the first useEffect
      */
-    if (!isNullOrUndefined(currentlySetPreference)) {
+    if (!!currentlySetPreference) {
       const debouncedErrorUpdate = setTimeout(() => {
         /**
          * we have a preference error, so first GET the preferences
