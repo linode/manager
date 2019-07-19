@@ -965,7 +965,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             & span.hljs-symbol,
             & span.hljs-bullet
           `]: {
-            color: '#955ae7'
+            color: 'black'
           },
           [`
             & span.hljs-title,

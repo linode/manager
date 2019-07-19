@@ -450,6 +450,11 @@ export const dark = (options: ThemeOverrides) =>
             color: '#aa573c'
           },
           [`
+          & span.hljs-attr
+          `]: {
+            color: 'white'
+          },
+          [`
             & span.hljs-number,
             & span.hljs-string,
             & span.hljs-symbol,
