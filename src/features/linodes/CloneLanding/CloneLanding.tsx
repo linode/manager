@@ -160,18 +160,18 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     location.search
   ]);
 
-  // Toggle config if one is specified as a query param, and that config exists in our state.
+  // Toggle config if a valid configId is specified as a query param.
   React.useEffect(() => {
     const configFromQS = Number(queryParams.selectedConfig);
-    if (configFromQS && state.configSelection[configFromQS]) {
+    if (configFromQS) {
       return dispatch({ type: 'toggleConfig', id: configFromQS });
     }
   }, [queryParams]);
 
-  // Toggle disk if one is specified as a query param, and that disk exists in our state.
+  // Toggle disk if a valid diskId is specified as a query param.
   React.useEffect(() => {
     const diskFromQS = Number(queryParams.selectedDisk);
-    if (diskFromQS && state.diskSelection[diskFromQS]) {
+    if (diskFromQS) {
       return dispatch({ type: 'toggleDisk', id: diskFromQS });
     }
   }, [queryParams]);
