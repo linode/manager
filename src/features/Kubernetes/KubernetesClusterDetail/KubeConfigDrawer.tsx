@@ -74,7 +74,7 @@ export const KubeConfigDrawer: React.FC<CombinedProps> = props => {
   }).makeHtml(splitCode('```\n' + kubeConfig + '\n```'));
 
   return (
-    <Drawer title={'View Kubeconfig'} open={open} onClose={closeDrawer} chubby>
+    <Drawer title={'View Kubeconfig'} open={open} onClose={closeDrawer} wide>
       <DrawerContent title={clusterLabel} error={error} loading={loading}>
         <Grid container spacing={2}>
           <Grid item>
