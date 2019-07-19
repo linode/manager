@@ -128,8 +128,8 @@ describe('utilities', () => {
       const state = createInitialCloneLandingState(
         linodeConfigs,
         disks,
-        configId,
-        diskId
+        [configId],
+        [diskId]
       );
       expect(state.configSelection[configId].isSelected).toBe(true);
       expect(state.diskSelection[diskId].isSelected).toBe(true);
