@@ -53,36 +53,37 @@ export const requestEvents = () => {
   });
 };
 
-setInterval(
-  () => {
-    const now = Date.now();
-    if (now > eventRequestDeadline) {
-      /**
-       * If we're waiting on a request, set reset the pollIteration and return to prevent
-       * overlapping requests.
-       */
-      if (inProgress) {
-        /** leaving this commented out for now because I'm not sure if it'll break anything */
-        // pollIteration = 1;
-        return;
-      }
-
-      requestEvents();
-
-      if (DISABLE_EVENT_THROTTLE) {
-        /*
-         * If throttling is disabled manually set the timeout so tests wait to query the mock data store.
+export const startEventsInterval = () =>
+  setInterval(
+    () => {
+      const now = Date.now();
+      if (now > eventRequestDeadline) {
+        /**
+         * If we're waiting on a request, set reset the pollIteration and return to prevent
+         * overlapping requests.
          */
-        eventRequestDeadline = now + 500;
-      } else {
-        const timeout = INTERVAL * pollIteration;
-        /** Update the dealing */
-        eventRequestDeadline = now + timeout;
-        /* Update the iteration to a maximum of 16. */
-        pollIteration = Math.min(pollIteration * 2, 16);
+        if (inProgress) {
+          /** leaving this commented out for now because I'm not sure if it'll break anything */
+          // pollIteration = 1;
+          return;
+        }
+
+        requestEvents();
+
+        if (DISABLE_EVENT_THROTTLE) {
+          /*
+           * If throttling is disabled manually set the timeout so tests wait to query the mock data store.
+           */
+          eventRequestDeadline = now + 500;
+        } else {
+          const timeout = INTERVAL * pollIteration;
+          /** Update the dealing */
+          eventRequestDeadline = now + timeout;
+          /* Update the iteration to a maximum of 16. */
+          pollIteration = Math.min(pollIteration * 2, 16);
+        }
       }
-    }
-  },
-  /* the following is the Nyquist rate for the minimum polling interval */
-  INTERVAL / 2 - 1
-);
+    },
+    /* the following is the Nyquist rate for the minimum polling interval */
+    INTERVAL / 2 - 1
+  );
