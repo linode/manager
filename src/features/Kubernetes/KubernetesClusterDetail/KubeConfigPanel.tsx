@@ -29,7 +29,9 @@ const styles = (theme: Theme) =>
         1}px ${theme.spacing(2) - 3}px`
     },
     item: {
-      paddingBottom: theme.spacing(2)
+      paddingBottom: theme.spacing(2),
+      display: 'flex',
+      flexFlow: 'row nowrap'
     },
     button: {
       marginRight: theme.spacing(3)
@@ -81,7 +83,7 @@ export const KubeConfigPanel: React.FC<CombinedProps> = props => {
         if (decodedFile) {
           setKubeConfig(decodedFile);
         } else {
-          // There was a parsing error; the drawer will show an error state.
+          // There was a parsing error; the user will see an error toast.
         }
       })
       .catch(_ => {

@@ -13,7 +13,7 @@ import Grid from 'src/components/Grid';
 
 interface Props extends DrawerProps {
   title: string;
-  chubby?: boolean;
+  wide?: boolean;
 }
 
 type ClassNames =
@@ -42,7 +42,9 @@ const styles = (theme: Theme) =>
       }
     },
     wide: {
-      width: 750
+      [theme.breakpoints.up('sm')]: {
+        width: 750
+      }
     },
     drawerHeader: {
       marginBottom: theme.spacing(2)
@@ -68,13 +70,13 @@ const styles = (theme: Theme) =>
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const DDrawer: React.StatelessComponent<CombinedProps> = props => {
-  const { title, classes, children, chubby, ...rest } = props;
+  const { title, classes, children, wide, ...rest } = props;
 
   return (
     <Drawer
       anchor="right"
       {...rest}
-      classes={{ paper: `${classes.paper} ${chubby ? classes.wide : ''}` }}
+      classes={{ paper: `${classes.paper} ${wide ? classes.wide : ''}` }}
       ModalProps={{
         BackdropProps: { className: classes.backDrop },
         disableBackdropClick: true

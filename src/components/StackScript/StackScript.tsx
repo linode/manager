@@ -173,7 +173,7 @@ export class StackScript extends React.Component<CombinedProps> {
         <Typography className={classes.scriptHeading}>
           <strong>Script:</strong>
         </Typography>
-        <ScriptCode script={script} lineNumbers />
+        <ScriptCode script={script} />
       </div>
     );
   }
