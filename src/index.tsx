@@ -22,7 +22,6 @@ import store from 'src/store';
 import 'src/utilities/createImageBitmap';
 import 'src/utilities/request';
 import isPathOneOf from 'src/utilities/routing/isPathOneOf';
-import './events';
 import './index.css';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
 

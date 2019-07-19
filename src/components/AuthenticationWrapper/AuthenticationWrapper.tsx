@@ -4,6 +4,7 @@ import { compose } from 'recompose';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
+import { startEventsInterval } from 'src/events';
 import { perfume } from 'src/perfMetrics';
 import { redirectToLogin } from 'src/session';
 import { ApplicationState } from 'src/store';
@@ -84,6 +85,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
     if (this.props.isAuthenticated) {
       this.setState({ showChildren: true });
       this.makeInitialRequests();
+      startEventsInterval();
     }
   }
 
@@ -99,6 +101,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       !this.state.showChildren
     ) {
       this.makeInitialRequests();
+      startEventsInterval();
       return this.setState({ showChildren: true });
     }
 
