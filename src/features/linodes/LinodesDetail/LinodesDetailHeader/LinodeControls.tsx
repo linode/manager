@@ -144,7 +144,7 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
         </Button>
         <LinodePowerControl
           status={linode.status}
-          recentEvent={linode.recentEvent}
+          recentEvent={linode._events[0]}
           id={linode.id}
           label={linode.label}
           disabled={disabled}
