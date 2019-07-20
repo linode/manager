@@ -44,7 +44,7 @@ const renderActions = (
   );
 };
 
-const getTotalLinodes = (pools: PoolNodeWithPrice[]) => {
+export const getTotalLinodes = (pools: PoolNodeWithPrice[]) => {
   return pools.reduce((accum, thisPool) => {
     return accum + thisPool.count;
   }, 0);
@@ -100,27 +100,3 @@ const KubernetesDialog: React.FC<CombinedProps> = props => {
 };
 
 export default KubernetesDialog;
-
-// <React.Fragment>
-//       {bucketToRemove.size > 0 ? (
-//         <Typography>
-//           This bucket contains{' '}
-//           <strong>
-//             {bucketToRemove.objects}{' '}
-//             {bucketToRemove.objects === 1 ? 'object' : 'objects'}
-//           </strong>{' '}
-//           totalling{' '}
-//           <strong>{readableBytes(bucketToRemove.size).formatted}</strong> that
-//           will be deleted along with the bucket. Deleting a bucket is permanent
-//           and can't be undone.
-//         </Typography>
-//       ) : (
-//         <Typography>
-//           Deleting a bucket is permanent and can't be undone.
-//         </Typography>
-//       )}
-//       <Typography className={classes.confirmationCopy}>
-//         To confirm deletion, type the name of the bucket ({bucketToRemove.label}
-//         ) in the field below:
-//       </Typography>
-//     </React.Fragment>
