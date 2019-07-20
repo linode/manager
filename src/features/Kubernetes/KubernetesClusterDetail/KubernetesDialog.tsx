@@ -27,7 +27,12 @@ const renderActions = (
 ) => {
   return (
     <ActionsPanel style={{ padding: 0 }}>
-      <Button buttonType="cancel" onClick={onClose} data-qa-cancel>
+      <Button
+        buttonType="cancel"
+        onClick={onClose}
+        data-qa-cancel
+        data-testid={'dialog-cancel'}
+      >
         Cancel
       </Button>
       <Button
@@ -37,6 +42,7 @@ const renderActions = (
         loading={loading}
         onClick={onDelete}
         data-qa-confirm
+        data-testid={'dialog-confirm'}
       >
         Delete
       </Button>
@@ -90,6 +96,7 @@ const KubernetesDialog: React.FC<CombinedProps> = props => {
         the field below:
       </Typography>
       <TextField
+        data-testid={'dialog-confirm-text-input'}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
           setConfirmText(e.target.value)
         }
