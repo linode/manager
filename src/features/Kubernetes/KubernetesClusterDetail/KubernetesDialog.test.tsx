@@ -56,6 +56,7 @@ describe('Kubernetes deletion dialog', () => {
     const input = getByTestId('textfield-input');
     fireEvent.change(input, { target: { value: 'this-cluster' } });
     const button = getByTestId('dialog-confirm');
+    // Now this should work.
     fireEvent.click(button);
     expect(props.onDelete).toHaveBeenCalledTimes(1);
   });

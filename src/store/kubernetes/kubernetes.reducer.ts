@@ -5,6 +5,7 @@ import { isType } from 'typescript-fsa';
 import {
   deleteClusterActions,
   requestClustersActions,
+  setErrors,
   updateClusterActions,
   upsertCluster
 } from './kubernetes.actions';
@@ -76,6 +77,24 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     };
   }
 
+  if (isType(action, setErrors)) {
+    const newErrors = action.payload;
+    return {
+      ...state,
+      error: newErrors
+    };
+  }
+
+  if (isType(action, deleteClusterActions.started)) {
+    return {
+      ...state,
+      error: {
+        ...state.error,
+        delete: undefined
+      }
+    };
+  }
+
   if (isType(action, deleteClusterActions.done)) {
     const {
       params: { clusterID }
@@ -105,6 +124,6 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   return state;
-}
+};
 
 export default reducer;

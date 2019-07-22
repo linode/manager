@@ -1,3 +1,4 @@
+import { path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -23,7 +24,10 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
-import { ExtendedCluster } from './../types';
+import { DeleteClusterParams } from 'src/store/kubernetes/kubernetes.actions';
+import { EntityError } from 'src/store/types';
+import ClusterDialog from './../KubernetesClusterDetail/KubernetesDialog';
+import { ExtendedCluster, PoolNodeWithPrice } from './../types';
 import ClusterRow from './ClusterRow';
 
 type ClassNames = 'root' | 'title' | 'labelHeader';
@@ -41,6 +45,9 @@ const styles = (theme: Theme) =>
 
 interface Props {
   clusters: Linode.KubernetesCluster[];
+  deleteCluster: (data: DeleteClusterParams) => Promise<void>;
+  error: EntityError;
+  clearErrors: () => void;
 }
 
 type CombinedProps = Props &
@@ -48,8 +55,67 @@ type CombinedProps = Props &
   WithTypesProps &
   WithStyles<ClassNames>;
 
+interface ClusterDialogState {
+  open: boolean;
+  loading: boolean;
+  selectedClusterID: number;
+  selectedClusterLabel: string;
+  selectedClusterNodePools: PoolNodeWithPrice[];
+}
+
+const defaultDialogState = {
+  open: false,
+  loading: false,
+  selectedClusterID: 0,
+  selectedClusterLabel: '',
+  selectedClusterNodePools: []
+};
+
 export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
-  const { classes, clusters, history } = props;
+  const {
+    classes,
+    clearErrors,
+    clusters,
+    deleteCluster,
+    error,
+    history
+  } = props;
+  const [dialog, setDialogState] = React.useState<ClusterDialogState>(
+    defaultDialogState
+  );
+
+  const openDialog = (
+    clusterID: number,
+    clusterLabel: string,
+    clusterPools: PoolNodeWithPrice[]
+  ) => {
+    clearErrors();
+    setDialogState({
+      open: true,
+      loading: false,
+      selectedClusterID: clusterID,
+      selectedClusterLabel: clusterLabel,
+      selectedClusterNodePools: clusterPools
+    });
+  };
+
+  const closeDialog = () => {
+    setDialogState({ ...dialog, open: false });
+  };
+
+  const handleDeleteCluster = () => {
+    setDialogState({ ...dialog, loading: true });
+    deleteCluster({ clusterID: dialog.selectedClusterID })
+      .then(() => {
+        setDialogState({
+          ...dialog,
+          loading: false
+        });
+      })
+      .catch(() => {
+        setDialogState({ ...dialog, loading: false }); // Handle errors in Redux
+      });
+  };
 
   return (
     <React.Fragment>
@@ -156,6 +222,7 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
                         <ClusterRow
                           key={`kubernetes-cluster-list-${idx}`}
                           cluster={cluster}
+                          openDeleteDialog={openDialog}
                         />
                       ))}
                     </TableBody>
@@ -174,6 +241,15 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
           </Paginate>
         )}
       </OrderBy>
+      <ClusterDialog
+        open={dialog.open}
+        loading={dialog.loading}
+        error={path(['delete', 0, 'reason'], error)}
+        clusterLabel={dialog.selectedClusterLabel}
+        clusterPools={dialog.selectedClusterNodePools}
+        onClose={closeDialog}
+        onDelete={handleDeleteCluster}
+      />
     </React.Fragment>
   );
 };

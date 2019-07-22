@@ -17,7 +17,8 @@ requests.getKubeConfig = jest
 const props = {
   clusterId: 123456,
   enqueueSnackbar: jest.fn(),
-  closeSnackbar: jest.fn()
+  closeSnackbar: jest.fn(),
+  openDialog: jest.fn()
 };
 
 afterEach(cleanup);
@@ -27,7 +28,7 @@ describe('Kubernetes cluster action menu', () => {
     const { queryByText } = render(
       wrapWithTheme(<ClusterActionMenu {...props} />)
     );
-    includesActions(['Download kubeconfig'], queryByText);
+    includesActions(['Download kubeconfig', 'Delete'], queryByText);
   });
 
   it('should query the API for a config file when Download kubeconfig is clicked', () => {
