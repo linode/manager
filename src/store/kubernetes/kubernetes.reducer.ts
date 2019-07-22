@@ -5,6 +5,7 @@ import { isType } from 'typescript-fsa';
 import {
   deleteClusterActions,
   requestClustersActions,
+  setErrors,
   updateClusterActions,
   upsertCluster
 } from './kubernetes.actions';
@@ -104,7 +105,15 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     };
   }
 
+  if (isType(action, setErrors)) {
+    const error = action.payload;
+    return {
+      ...state,
+      error
+    };
+  }
+
   return state;
-}
+};
 
 export default reducer;

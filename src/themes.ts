@@ -440,7 +440,6 @@ export const dark = (options: ThemeOverrides) =>
             color: '#be4678'
           },
           [`
-            & span.hljs-number,
             & span.hljs-meta,
             & span.hljs-built_in,
             & span.hljs-butonin-name,
@@ -451,6 +450,12 @@ export const dark = (options: ThemeOverrides) =>
             color: '#aa573c'
           },
           [`
+          & span.hljs-attr
+          `]: {
+            color: 'white'
+          },
+          [`
+            & span.hljs-number,
             & span.hljs-string,
             & span.hljs-symbol,
             & span.hljs-bullet
