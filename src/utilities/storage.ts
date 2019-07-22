@@ -42,7 +42,6 @@ export const setStorage = (key: string, value: string) => {
 const PAGE_SIZE = 'PAGE_SIZE';
 const BETA_NOTIFICATION = 'BetaNotification';
 const VAT_NOTIFICATION = 'vatNotification';
-const LINODE_VIEW = 'linodesViewStyle';
 const HIDE_DISPLAY_GROUPS_CTA = 'importDisplayGroupsCTA';
 const HAS_IMPORTED_GROUPS = 'hasImportedGroups';
 const BACKUPSCTA_DISMISSED = 'BackupsCtaDismissed';
@@ -54,7 +53,6 @@ const EXPIRE = 'authentication/expire';
 export type PageSize = number;
 type Beta = 'open' | 'closed';
 type Notification = 'show' | 'hide';
-type LinodeView = 'grid' | 'list';
 
 interface AuthGetAndSet {
   get: () => any;
@@ -80,12 +78,6 @@ export interface Storage {
     VAT: {
       get: () => Notification;
       set: (show: Notification) => void;
-    };
-  };
-  views: {
-    linode: {
-      get: () => LinodeView;
-      set: (view: LinodeView) => void;
     };
   };
   loginCloudManager: {
@@ -142,12 +134,6 @@ export const storage: Storage = {
       set: show => setStorage(VAT_NOTIFICATION, show)
     }
   },
-  views: {
-    linode: {
-      get: (): LinodeView => getStorage(LINODE_VIEW),
-      set: (view: LinodeView) => setStorage(LINODE_VIEW, view)
-    }
-  },
   loginCloudManager: {
     get: () => Cookies.get('loginCloudManager'),
     set: (
@@ -172,4 +158,4 @@ export const storage: Storage = {
   }
 };
 
-export const { notifications, views, authentication } = storage;
+export const { notifications, authentication, BackupsCtaDismissed } = storage;
