@@ -1,6 +1,7 @@
 import * as moment from 'moment';
 import { Dispatch } from 'redux';
 import { ApplicationState } from 'src/store';
+import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { EventHandler } from 'src/store/types';
@@ -74,12 +75,14 @@ const handleLinodeRebuild = (
         // This is a safety hatch in case the 'finished'
         // event doesn't come through.
         dispatch(getAllLinodeDisks({ linodeId: id }));
+        dispatch(getAllLinodeConfigs({ linodeId: id }));
       }
       return dispatch(requestLinodeForStore(id));
     case 'finished':
     case 'failed':
       // Get the new disks and update the store.
       dispatch(getAllLinodeDisks({ linodeId: id }));
+      dispatch(getAllLinodeConfigs({ linodeId: id }));
       return dispatch(requestLinodeForStore(id));
     default:
       return;
