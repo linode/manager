@@ -9,13 +9,12 @@ const props: CombinedProps = {
   domainsData: domains,
   domainsLoading: false,
   howManyLinodesOnAccount: 0,
+  shouldGroupDomains: true,
   domainActions: {
     createDomain: jest.fn(),
     updateDomain: jest.fn(),
     deleteDomain: jest.fn()
   },
-  groupByTag: true,
-  toggleGroupByTag: jest.fn(),
   classes: {
     domain: '',
     dnsWarning: '',
