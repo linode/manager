@@ -1,4 +1,4 @@
-import { assoc, clone, map, path } from 'ramda';
+import { assoc, clone, map, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
@@ -34,7 +34,7 @@ export default (Component: React.ComponentType<any>) => {
     };
 
     requestKeys = () => {
-      const { username, userEmailAddress } = this.props;
+      const { isRestricted, username, userEmailAddress } = this.props;
       const { userSSHKeys } = this.state;
       /**
        * We need a copy of the keys to track what was selected before requesting keys.
@@ -44,67 +44,68 @@ export default (Component: React.ComponentType<any>) => {
       if (!username || !userEmailAddress) {
         return;
       }
-
       /**
-       * This logic is redundant, but it is necessary because
-       * restricted users can't make GET requests to /users
+       * Restricted users can't make GET requests to /users
        * (they can't even view themselves through this endpoint)
        * so the only way to get their keys is through /profile/ssh_keys.
        */
-      const isCurrentUserSelected = this.isUserSelected(username, oldKeys);
-      getAllSSHKeys().then(response => {
-        const keys = response.data;
-        if (!this.mounted || !keys || keys.length === 0) {
-          return;
-        }
-        this.setState({
-          userSSHKeys: [
-            this.createUserObject(
-              username,
-              userEmailAddress,
-              keys.map(k => k.label),
-              isCurrentUserSelected
-            )
-          ]
-        });
-      });
 
-      getUsers()
-        .then(response => {
-          const users = response.data;
-          if (!this.mounted || !users || users.length === 0) {
+      if (isRestricted) {
+        const isCurrentUserSelected = this.isUserSelected(username, oldKeys);
+        getAllSSHKeys()
+          .then(response => {
+            const keys = response.data;
+            if (!this.mounted || !keys || keys.length === 0) {
+              return;
+            }
+            this.setState({
+              userSSHKeys: [
+                this.createUserObject(
+                  username,
+                  userEmailAddress,
+                  keys.map(k => k.label),
+                  isCurrentUserSelected
+                )
+              ]
+            });
+          })
+          .catch(error => {
             return;
-          }
-
-          this.setState({
-            userSSHKeys: [
-              ...this.state.userSSHKeys,
-              ...users.reduce((cleanedUsers, user) => {
-                /**
-                 * Don't re-add the current user
-                 */
-                if (user.username === username) {
-                  return cleanedUsers;
-                }
-                const keys = user.ssh_keys;
-                const isSelected = this.isUserSelected(user.username, oldKeys);
-
-                return [
-                  ...cleanedUsers,
-                  this.createUserObject(
-                    user.username,
-                    user.email,
-                    keys,
-                    isSelected
-                  )
-                ];
-              }, [])
-            ]
           });
-        })
-        .catch(() => {
-          /* We don't need to do anything here, we just don't add the keys. */
-        });
+      } else {
+        getUsers()
+          .then(response => {
+            const users = response.data;
+            if (!this.mounted || !users || users.length === 0) {
+              return;
+            }
+
+            this.setState({
+              userSSHKeys: [
+                ...users.reduce((cleanedUsers, user) => {
+                  const keys = user.ssh_keys;
+                  const isSelected = this.isUserSelected(
+                    user.username,
+                    oldKeys
+                  );
+
+                  return [
+                    ...cleanedUsers,
+                    this.createUserObject(
+                      user.username,
+                      user.email,
+                      keys,
+                      isSelected
+                    )
+                  ];
+                }, [])
+              ]
+            });
+          })
+          .catch(() => {
+            /* We don't need to do anything here, we just don't add the keys. */
+          });
+      }
     };
 
     state: State = {
@@ -169,10 +170,12 @@ export default (Component: React.ComponentType<any>) => {
 interface StateProps {
   username?: string;
   userEmailAddress?: string;
+  isRestricted: boolean;
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => ({
   username: path<string>(['data', 'username'], state.__resources.profile),
-  userEmailAddress: path<string>(['data', 'email'], state.__resources.profile)
+  userEmailAddress: path<string>(['data', 'email'], state.__resources.profile),
+  isRestricted: pathOr(false, ['restricted'], state.__resources.profile.data)
 });
 const connected = connect(mapStateToProps);
