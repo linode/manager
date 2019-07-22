@@ -329,9 +329,15 @@ export class App extends React.Component<CombinedProps, State> {
       volumesError,
       settingsError,
       bucketsError,
+      nodeBalancersError,
       accountCapabilities,
       accountLoading,
-      accountError
+      accountError,
+      linodesLoading,
+      domainsLoading,
+      volumesLoading,
+      bucketsLoading,
+      nodeBalancersLoading
     } = this.props;
 
     if (hasError) {
@@ -354,7 +360,8 @@ export class App extends React.Component<CombinedProps, State> {
         volumesError,
         profileError,
         settingsError,
-        bucketsError
+        bucketsError,
+        nodeBalancersError
       )
     ) {
       return null;
@@ -369,13 +376,25 @@ export class App extends React.Component<CombinedProps, State> {
         </a>
         <DataLoadedListener
           markAppAsLoaded={this.props.markAppAsDoneLoading}
-          linodesDataExists={!!this.props.linodes}
-          volumesDataExists={!!this.props.volumes.length}
-          domainsDataExists={!!this.props.domains.length}
-          bucketsDataExists={!!this.props.buckets.length}
-          nodeBalancersDataExists={!!this.props.nodeBalancers.length}
-          profileDataExists={!!this.props.userId}
-          accountDataExists={!!this.props.accountCapabilities}
+          linodesLoadingOrErrorExists={
+            linodesLoading === false || !!linodesError
+          }
+          volumesLoadingOrErrorExists={
+            volumesLoading === false || !!volumesError
+          }
+          domainsLoadingOrErrorExists={
+            domainsLoading === false || !!domainsError
+          }
+          bucketsLoadingOrErrorExists={
+            bucketsLoading === false || !!bucketsError
+          }
+          nodeBalancersLoadingOrErrorExists={
+            nodeBalancersLoading === false || !!nodeBalancersError
+          }
+          profileLoadingOrErrorExists={!!this.props.userId || !!profileError}
+          accountLoadingOrErrorExists={
+            !!this.props.accountCapabilities || !!accountError
+          }
           appIsLoaded={!this.props.appIsLoading}
         />
         <DocumentTitleSegment segment="Linode Manager" />
@@ -525,32 +544,34 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
 
 interface StateProps {
   /** Profile */
-  profileError?: Error | Linode.ApiFieldError[];
   linodes: Linode.Linode[];
-  linodesError?: Linode.ApiFieldError[];
-  domainsError?: Linode.ApiFieldError[];
-  domains: Linode.Domain[];
-  imagesError?: Linode.ApiFieldError[];
   images?: Linode.Image[];
   notifications?: Linode.Notification[];
-  notificationsError?: Linode.ApiFieldError[];
-  settingsError?: Linode.ApiFieldError[];
-  typesError?: Linode.ApiFieldError[];
   types?: string[];
-  regionsError?: Linode.ApiFieldError[];
   regions?: Linode.Region[];
-  volumesError?: Linode.ApiFieldError[];
-  volumes: string[];
-  bucketsError?: Linode.ApiFieldError[];
-  buckets: Linode.Bucket[];
   userId?: number;
   username: string;
   documentation: Linode.Doc[];
   isLoggedInAsCustomer: boolean;
   accountCapabilities: Linode.AccountCapability[];
+  linodesLoading: boolean;
+  volumesLoading: boolean;
+  domainsLoading: boolean;
+  bucketsLoading: boolean;
   accountLoading: boolean;
+  nodeBalancersLoading: boolean;
+  linodesError?: Linode.ApiFieldError[];
+  volumesError?: Linode.ApiFieldError[];
+  nodeBalancersError?: Linode.ApiFieldError[];
+  domainsError?: Linode.ApiFieldError[];
+  imagesError?: Linode.ApiFieldError[];
+  bucketsError?: Linode.ApiFieldError[];
+  profileError?: Linode.ApiFieldError[];
   accountError?: Linode.ApiFieldError[];
-  nodeBalancers: string[];
+  settingsError?: Linode.ApiFieldError[];
+  notificationsError?: Linode.ApiFieldError[];
+  typesError?: Linode.ApiFieldError[];
+  regionsError?: Linode.ApiFieldError[];
   appIsLoading: boolean;
 }
 
@@ -560,7 +581,6 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   linodes: state.__resources.linodes.entities,
   linodesError: path(['read'], state.__resources.linodes.error),
   domainsError: state.__resources.domains.error,
-  domains: state.__resources.domains.entities,
   imagesError: state.__resources.images.error,
   notifications: state.__resources.notifications.data,
   notificationsError: state.__resources.notifications.error,
@@ -570,9 +590,7 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   volumesError: state.__resources.volumes.error
     ? state.__resources.volumes.error.read
     : undefined,
-  volumes: state.__resources.volumes.items,
   bucketsError: state.__resources.buckets.error,
-  buckets: state.__resources.buckets.data,
   userId: path(['data', 'uid'], state.__resources.profile),
   username: pathOr('', ['data', 'username'], state.__resources.profile),
   documentation: state.documentation,
@@ -586,9 +604,14 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
     ['__resources', 'account', 'data', 'capabilities'],
     state
   ),
+  linodesLoading: state.__resources.linodes.loading,
+  volumesLoading: state.__resources.volumes.loading,
+  domainsLoading: state.__resources.domains.loading,
+  bucketsLoading: state.__resources.buckets.loading,
   accountLoading: state.__resources.account.loading,
-  accountError: state.__resources.account.error.read,
-  nodeBalancers: state.__resources.nodeBalancers.items,
+  nodeBalancersLoading: state.__resources.nodeBalancers.loading,
+  accountError: path(['read'], state.__resources.account.error),
+  nodeBalancersError: path(['read'], state.__resources.nodeBalancers.error),
   appIsLoading: state.initialLoad.appIsLoading
 });
 

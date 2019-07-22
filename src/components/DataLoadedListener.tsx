@@ -8,13 +8,13 @@ import * as React from 'react';
 import { compose } from 'recompose';
 
 interface Props {
-  profileDataExists: boolean;
-  accountDataExists: boolean;
-  linodesDataExists: boolean;
-  volumesDataExists: boolean;
-  nodeBalancersDataExists: boolean;
-  bucketsDataExists: boolean;
-  domainsDataExists: boolean;
+  profileLoadingOrErrorExists: boolean;
+  accountLoadingOrErrorExists: boolean;
+  linodesLoadingOrErrorExists: boolean;
+  volumesLoadingOrErrorExists: boolean;
+  nodeBalancersLoadingOrErrorExists: boolean;
+  bucketsLoadingOrErrorExists: boolean;
+  domainsLoadingOrErrorExists: boolean;
   markAppAsLoaded: () => void;
   appIsLoaded: boolean;
 }
@@ -23,13 +23,13 @@ const DataLoadedListener: React.FC<Props> = props => {
   React.useEffect(() => {
     if (
       shouldMarkAppAsDone(
-        props.profileDataExists,
-        props.accountDataExists,
-        props.linodesDataExists,
-        props.volumesDataExists,
-        props.nodeBalancersDataExists,
-        props.bucketsDataExists,
-        props.domainsDataExists
+        props.profileLoadingOrErrorExists,
+        props.accountLoadingOrErrorExists,
+        props.linodesLoadingOrErrorExists,
+        props.volumesLoadingOrErrorExists,
+        props.nodeBalancersLoadingOrErrorExists,
+        props.bucketsLoadingOrErrorExists,
+        props.domainsLoadingOrErrorExists
       ) &&
       !props.appIsLoaded
     ) {
@@ -43,54 +43,74 @@ const DataLoadedListener: React.FC<Props> = props => {
 export default compose<Props, Props>(React.memo)(DataLoadedListener);
 
 const shouldMarkAppAsDone = (
-  profileDataExists: boolean,
-  accountDataExists: boolean,
-  linodesDataExists: boolean,
-  volumesDataExists: boolean,
-  nodeBalancersDataExists: boolean,
-  bucketsDataExists: boolean,
-  domainsDataExists: boolean
+  profileLoadingOrErrorExists: boolean,
+  accountLoadingOrErrorExists: boolean,
+  linodesLoadingOrErrorExists: boolean,
+  volumesLoadingOrErrorExists: boolean,
+  nodeBalancersLoadingOrErrorExists: boolean,
+  bucketsLoadingOrErrorExists: boolean,
+  domainsLoadingOrErrorExists: boolean
 ): boolean => {
   const pathname = window.location.pathname;
 
+  /**
+   * if we're not on a route that we recognize,
+   * just return true and show the app.
+   */
+  if (
+    [
+      'dashboard',
+      'linode',
+      'volume',
+      'nodebalancer',
+      'object',
+      'profile',
+      'account'
+    ].every(eachStr => {
+      return !pathname.match(new RegExp(eachStr, 'i'));
+    })
+  ) {
+    return true;
+  }
+
   if (
     pathname.match(/dashboard/i) &&
-    (linodesDataExists &&
-      volumesDataExists &&
-      nodeBalancersDataExists &&
-      accountDataExists &&
-      profileDataExists &&
-      domainsDataExists)
+    (linodesLoadingOrErrorExists &&
+      volumesLoadingOrErrorExists &&
+      nodeBalancersLoadingOrErrorExists &&
+      accountLoadingOrErrorExists &&
+      profileLoadingOrErrorExists &&
+      domainsLoadingOrErrorExists)
     /** not checking bucket data here for now */
   ) {
     return true;
   }
 
-  if (pathname.match(/linode/i) && !!linodesDataExists) {
+  if (pathname.match(/linode/i) && !!linodesLoadingOrErrorExists) {
     return true;
   }
 
-  if (pathname.match(/volume/i) && !!volumesDataExists) {
+  if (pathname.match(/volume/i) && !!volumesLoadingOrErrorExists) {
     return true;
   }
 
-  if (pathname.match(/nodebalancer/i) && !!nodeBalancersDataExists) {
+  if (pathname.match(/nodebalancer/i) && !!nodeBalancersLoadingOrErrorExists) {
     return true;
   }
 
-  if (pathname.match(/domain/i) && !!domainsDataExists) {
+  if (pathname.match(/domain/i) && !!domainsLoadingOrErrorExists) {
     return true;
   }
 
-  if (pathname.match(/object/i) && !!bucketsDataExists) {
+  if (pathname.match(/object/i) && !!bucketsLoadingOrErrorExists) {
     return true;
   }
 
-  if (pathname.match(/profile/i) && !!profileDataExists) {
+  if (pathname.match(/profile/i) && !!profileLoadingOrErrorExists) {
     return true;
   }
 
-  if (pathname.match(/account/i) && !!accountDataExists) {
+  if (pathname.match(/account/i) && !!accountLoadingOrErrorExists) {
     return true;
   }
 
