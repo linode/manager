@@ -305,7 +305,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
         <TableRowError
           colSpan={4}
           message={
-            error[0].reason.match(/unauth/i)
+            error[0].reason.match(/auth/i)
               ? 'You do not have permission to view other users.'
               : `Unable to load user data.`
           }
