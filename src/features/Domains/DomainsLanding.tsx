@@ -30,7 +30,6 @@ import domainsContainer, {
   Props as DomainProps,
   StateProps as DomainStateProps
 } from 'src/containers/domains.container';
-import localStorageContainer from 'src/containers/localStorage.container';
 import { Domains } from 'src/documentation';
 import ListDomains from 'src/features/Domains/ListDomains';
 import ListGroupedDomains from 'src/features/Domains/ListGroupedDomains';
@@ -43,6 +42,7 @@ import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
 import Notice from 'src/components/Notice';
+import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import { ApplicationState } from 'src/store';
 
 type ClassNames =
@@ -108,16 +108,20 @@ interface State {
   };
 }
 
+interface Props {
+  /** purely so we can force a preference to get the unit tests to pass */
+  shouldGroupDomains?: boolean;
+}
+
 export type CombinedProps = DomainProps &
-  LocalStorageProps &
   WithStyles<ClassNames> &
+  Props &
   RouteComponentProps<{}> &
   StateProps &
   DispatchProps &
   WithSnackbarProps;
 
 export class DomainsLanding extends React.Component<CombinedProps, State> {
-  static eventCategory = `domains landing`;
   state: State = {
     importDrawer: {
       open: false,
@@ -235,90 +239,125 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Domains" />
-        <Grid
-          container
-          justify="space-between"
-          alignItems="flex-end"
-          style={{ paddingBottom: 0 }}
+        <PreferenceToggle<boolean>
+          preferenceKey="domains_group_by_tag"
+          preferenceOptions={[false, true]}
+          localStorageKey="GROUP_DOMAINS"
+          toggleCallbackFnDebounced={toggleDomainsGroupBy}
+          /** again, this value prop should be undefined - purely for the unit test's sake */
+          value={this.props.shouldGroupDomains}
         >
-          <Grid item className={classes.titleWrapper}>
-            <Breadcrumb
-              pathname={this.props.location.pathname}
-              labelTitle="Domains"
-              className={classes.breadcrumbs}
-            />
-          </Grid>
-          <Grid item className="p0">
-            <FormControlLabel
-              className={classes.tagGroup}
-              control={
-                <Toggle
-                  className={this.props.groupByTag ? ' checked' : ' unchecked'}
-                  onChange={(e, checked) =>
-                    this.props.toggleGroupByTag(checked)
-                  }
-                  checked={this.props.groupByTag}
-                />
-              }
-              label="Group by Tag:"
-            />
-          </Grid>
-          <Grid item>
-            <Grid container alignItems="flex-end" style={{ width: 'auto' }}>
-              <Grid item className="pt0">
-                <AddNewLink
-                  onClick={this.openImportZoneDrawer}
-                  label="Import a Zone"
-                />
-              </Grid>
-              <Grid item className="pt0">
-                <AddNewLink
-                  onClick={this.props.openForCreating}
-                  label="Add a Domain"
-                />
-              </Grid>
-            </Grid>
-          </Grid>
-        </Grid>
-        {!this.props.linodesLoading &&
-          this.props.howManyLinodesOnAccount === 0 &&
-          domainsData.length > 0 && (
-            <Notice warning important className={classes.dnsWarning}>
-              <Typography variant="h3">
-                Your DNS zones are not being served.
-              </Typography>
-              <Typography>
-                Your domains will not be served by Linode's nameservers unless
-                you have at least one active Linode on your account.
-                <Link to="/linodes/create"> You can create one here.</Link>
-              </Typography>
-            </Notice>
-          )}
-        {this.props.location.state && this.props.location.state.recordError && (
-          <Notice error text={this.props.location.state.recordError} />
-        )}
-        <Grid item xs={12}>
-          {/* Duplication starts here. How can we refactor this? */}
-          <OrderBy data={domainsData} order={'asc'} orderBy={'domain'}>
-            {({ data: orderedData, handleOrderChange, order, orderBy }) => {
-              const props = {
-                orderBy,
-                order,
-                handleOrderChange,
-                data: orderedData,
-                onClone: this.props.openForCloning,
-                onEdit: this.props.openForEditing,
-                onRemove: this.openRemoveDialog
-              };
+          {({
+            preference: domainsAreGrouped,
+            togglePreference: toggleGroupDomains
+          }: ToggleProps<boolean>) => {
+            return (
+              <React.Fragment>
+                <Grid
+                  container
+                  justify="space-between"
+                  alignItems="flex-end"
+                  style={{ paddingBottom: 0 }}
+                >
+                  <Grid item className={classes.titleWrapper}>
+                    <Breadcrumb
+                      pathname={this.props.location.pathname}
+                      labelTitle="Domains"
+                      className={classes.breadcrumbs}
+                    />
+                  </Grid>
+                  <Grid item className="p0">
+                    <FormControlLabel
+                      className={classes.tagGroup}
+                      control={
+                        <Toggle
+                          className={
+                            domainsAreGrouped ? ' checked' : ' unchecked'
+                          }
+                          onChange={toggleGroupDomains}
+                          checked={domainsAreGrouped}
+                        />
+                      }
+                      label="Group by Tag:"
+                    />
+                  </Grid>
+                  <Grid item>
+                    <Grid
+                      container
+                      alignItems="flex-end"
+                      style={{ width: 'auto' }}
+                    >
+                      <Grid item className="pt0">
+                        <AddNewLink
+                          onClick={this.openImportZoneDrawer}
+                          label="Import a Zone"
+                        />
+                      </Grid>
+                      <Grid item className="pt0">
+                        <AddNewLink
+                          onClick={this.props.openForCreating}
+                          label="Add a Domain"
+                        />
+                      </Grid>
+                    </Grid>
+                  </Grid>
+                </Grid>
+                {!this.props.linodesLoading &&
+                  this.props.howManyLinodesOnAccount === 0 &&
+                  domainsData.length > 0 && (
+                    <Notice warning important className={classes.dnsWarning}>
+                      <Typography variant="h3">
+                        Your DNS zones are not being served.
+                      </Typography>
+                      <Typography>
+                        Your domains will not be served by Linode's nameservers
+                        unless you have at least one active Linode on your
+                        account.
+                        <Link to="/linodes/create">
+                          {' '}
+                          You can create one here.
+                        </Link>
+                      </Typography>
+                    </Notice>
+                  )}
+                {this.props.location.state &&
+                  this.props.location.state.recordError && (
+                    <Notice
+                      error
+                      text={this.props.location.state.recordError}
+                    />
+                  )}
+                <Grid item xs={12}>
+                  {/* Duplication starts here. How can we refactor this? */}
+                  <OrderBy data={domainsData} order={'asc'} orderBy={'domain'}>
+                    {({
+                      data: orderedData,
+                      handleOrderChange,
+                      order,
+                      orderBy
+                    }) => {
+                      const props = {
+                        orderBy,
+                        order,
+                        handleOrderChange,
+                        data: orderedData,
+                        onClone: this.props.openForCloning,
+                        onEdit: this.props.openForEditing,
+                        onRemove: this.openRemoveDialog
+                      };
 
-              return this.props.groupByTag ? (
-                <ListGroupedDomains {...props} />
-              ) : (
-                <ListDomains {...props} />
-              );
-            }}
-          </OrderBy>
-        </Grid>
+                      return domainsAreGrouped ? (
+                        <ListGroupedDomains {...props} />
+                      ) : (
+                        <ListDomains {...props} />
+                      );
+                    }}
+                  </OrderBy>
+                </Grid>
+              </React.Fragment>
+            );
+          }}
+        </PreferenceToggle>
         <DomainZoneImportDrawer
           open={this.state.importDrawer.open}
           onClose={this.closeImportZoneDrawer}
@@ -387,6 +426,11 @@ const RenderEmpty: React.StatelessComponent<{
   );
 };
 
+const eventCategory = `domains landing`;
+
+const toggleDomainsGroupBy = (checked: boolean) =>
+  sendGroupByTagEnabledEvent(eventCategory, checked);
+
 const styled = withStyles(styles);
 
 interface DispatchProps {
@@ -394,40 +438,6 @@ interface DispatchProps {
   openForEditing: (domain: string, id: number) => void;
   openForCreating: () => void;
 }
-
-type LocalStorageProps = LocalStorageState & LocalStorageUpdater;
-
-interface LocalStorageState {
-  groupByTag: boolean;
-}
-
-interface LocalStorageUpdater {
-  toggleGroupByTag: (checked: boolean) => Partial<LocalStorageState>;
-}
-
-const withLocalStorage = localStorageContainer<
-  LocalStorageState,
-  LocalStorageUpdater,
-  {}
->(
-  storage => {
-    return {
-      groupByTag: storage.groupDomainsByTag.get()
-    };
-  },
-  storage => ({
-    toggleGroupByTag: state => (checked: boolean) => {
-      storage.groupDomainsByTag.set(checked ? 'true' : 'false');
-
-      sendGroupByTagEnabledEvent(DomainsLanding.eventCategory, checked);
-
-      return {
-        ...state,
-        groupByTag: checked
-      };
-    }
-  })
-);
 
 interface StateProps {
   howManyLinodesOnAccount: number;
@@ -452,7 +462,7 @@ export const connected = connect(
   { openForCreating, openForCloning, openForEditing }
 );
 
-export default compose<CombinedProps, {}>(
+export default compose<CombinedProps, Props>(
   setDocs(DomainsLanding.docs),
   domainsContainer<DomainStateProps, {}>(
     (ownProps, domainsLoading, domains, domainsError) => ({
@@ -462,7 +472,6 @@ export default compose<CombinedProps, {}>(
     })
   ),
   withRouter,
-  withLocalStorage,
   connected,
   withSnackbar,
   styled

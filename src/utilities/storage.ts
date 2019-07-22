@@ -45,7 +45,6 @@ const VAT_NOTIFICATION = 'vatNotification';
 const LINODE_VIEW = 'linodesViewStyle';
 const HIDE_DISPLAY_GROUPS_CTA = 'importDisplayGroupsCTA';
 const HAS_IMPORTED_GROUPS = 'hasImportedGroups';
-const GROUP_DOMAINS = `GROUP_DOMAINS`;
 const BACKUPSCTA_DISMISSED = 'BackupsCtaDismissed';
 const TOKEN = 'authentication/token';
 const NONCE = 'authentication/nonce';
@@ -60,11 +59,6 @@ type LinodeView = 'grid' | 'list';
 interface AuthGetAndSet {
   get: () => any;
   set: (value: string) => void;
-}
-
-interface GetAndSetBool {
-  get: () => boolean;
-  set: (v: 'true' | 'false') => void;
 }
 
 export interface Storage {
@@ -106,7 +100,6 @@ export interface Storage {
     get: () => 'true' | 'false';
     set: () => void;
   };
-  groupDomainsByTag: GetAndSetBool;
   BackupsCtaDismissed: {
     get: () => boolean;
     set: (v: 'true' | 'false') => void;
@@ -172,10 +165,6 @@ export const storage: Storage = {
   hasImportedGroups: {
     get: () => getStorage(HAS_IMPORTED_GROUPS),
     set: () => setStorage(HAS_IMPORTED_GROUPS, 'true')
-  },
-  groupDomainsByTag: {
-    get: () => getStorage(GROUP_DOMAINS),
-    set: v => setStorage(GROUP_DOMAINS, v)
   },
   BackupsCtaDismissed: {
     get: () => getStorage(BACKUPSCTA_DISMISSED),
