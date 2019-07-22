@@ -105,10 +105,7 @@ export default (Component: React.ComponentType<any>) => {
             });
           })
           .catch(() => {
-            console.log('about to set error state');
-            this.setState({ sshError: 'Unable to load SSH keys' }, () =>
-              console.log(this.state)
-            );
+            this.setState({ sshError: 'Unable to load SSH keys' });
           });
       }
     };
