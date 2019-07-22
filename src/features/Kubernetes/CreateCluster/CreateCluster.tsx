@@ -93,6 +93,8 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       submitting: true
     });
 
+    const _version = version ? version.value : undefined;
+
     /**
      * We need to remove the monthly price, which is used for client-side
      * calculations, and send only type and count to the API.
@@ -104,12 +106,12 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       region: selectedRegion,
       node_pools,
       label,
-      version: version ? version.value : undefined,
+      version: _version,
       tags: getTagsAsStrings(tags)
     };
 
     createKubernetesCluster(payload)
-      .then(_ => push('/kubernetes')) // No detail page yet, so redirect to landing.
+      .then(cluster => push(`/kubernetes/clusters/${cluster.id}`))
       .catch(err =>
         this.setState(
           {
