@@ -154,11 +154,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
     return (
       <TableRowError
         colSpan={4}
-        message={
-          error[0].reason.match(/unauth/i)
-            ? 'You do not have permissions to view SSH Keys.'
-            : `Unable to load SSH keys. Please try again.`
-        }
+        message="Unable to load SSH keys. Please try again."
       />
     );
   };
