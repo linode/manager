@@ -109,7 +109,8 @@ export const ClusterList: React.FunctionComponent<CombinedProps> = props => {
       .then(() => {
         setDialogState({
           ...dialog,
-          loading: false
+          loading: false,
+          open: false
         });
       })
       .catch(() => {
