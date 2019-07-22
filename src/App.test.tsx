@@ -38,16 +38,17 @@ it('renders without crashing', () => {
             userId={123456}
             addNotificationsToLinodes={jest.fn()}
             documentation={[]}
-            domains={[]}
-            volumes={[]}
             markAppAsDoneLoading={jest.fn()}
             appIsLoading={false}
-            nodeBalancers={[]}
-            buckets={[]}
             toggleTheme={jest.fn()}
             toggleSpacing={jest.fn()}
             accountCapabilities={[]}
             accountLoading={false}
+            nodeBalancersLoading={false}
+            linodesLoading={false}
+            volumesLoading={false}
+            domainsLoading={false}
+            bucketsLoading={false}
           />
         </StaticRouter>
       </LinodeThemeWrapper>
