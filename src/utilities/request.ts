@@ -31,7 +31,7 @@ export const handleError = (error: AxiosError) => {
   if (error.response && error.response.status === 403) {
     return Promise.reject([
       {
-        reason: 'You are unauthorized to view this feature.'
+        reason: 'You are not authorized to view this feature.'
       }
     ]);
   }
