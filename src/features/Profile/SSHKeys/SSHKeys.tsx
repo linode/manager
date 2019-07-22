@@ -150,11 +150,11 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
     return <TableRowEmptyState colSpan={4} />;
   };
 
-  static renderError = (e: Error) => {
+  static renderError = (error: Linode.ApiFieldError[]) => {
     return (
       <TableRowError
         colSpan={4}
-        message={`Unable to load SSH keys. Please try again.`}
+        message="Unable to load SSH keys. Please try again."
       />
     );
   };

@@ -2,7 +2,6 @@ import { clone } from 'ramda';
 import * as React from 'react';
 import { storage } from 'src/utilities/storage';
 
-
 /**
  * @todo Document loading prop update as a result of promise resolution/rejection.
  * @todo How can we test the transition of loading from false -> true -> result?
@@ -33,7 +32,7 @@ export type OrderBy = undefined | string;
 
 interface State<T = {}> {
   count: number;
-  error?: Error;
+  error?: Linode.ApiFieldError[];
   loading: boolean;
   isSorting?: boolean;
   page: number;

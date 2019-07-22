@@ -28,6 +28,14 @@ export const handleError = (error: AxiosError) => {
     store.dispatch(handleLogout());
   }
 
+  if (error.response && error.response.status === 403) {
+    return Promise.reject([
+      {
+        reason: 'You are not authorized to view this feature.'
+      }
+    ]);
+  }
+
   /**
    * In one special case (trying to create a GPU Linode
    * and failing because your account's reputation

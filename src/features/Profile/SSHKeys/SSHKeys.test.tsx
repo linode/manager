@@ -65,7 +65,7 @@ describe('SSHKeys', () => {
     const wrapper = shallow(
       <SSHKeys
         {...pageyProps}
-        error={new Error('error here')}
+        error={[{ reason: 'error here' }]}
         data={undefined}
         timezone={'GMT'}
       />
