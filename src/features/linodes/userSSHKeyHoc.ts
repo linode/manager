@@ -3,7 +3,9 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
 import { getUsers } from 'src/services/account';
+import { getSSHKeys } from 'src/services/profile';
 import { MapState } from 'src/store/types';
+import { getAll } from 'src/utilities/getAll';
 import { getEmailHash } from 'src/utilities/gravatar';
 
 export interface UserSSHKeyProps {
@@ -16,6 +18,8 @@ export interface State {
   resetSSHKeys: () => void;
   requestKeys: () => void;
 }
+
+const getAllSSHKeys = getAll<Linode.SSHKey>(getSSHKeys);
 
 const resetKeys = (key: UserSSHKeyObject) => {
   return assoc('selected', false, key);
@@ -41,6 +45,30 @@ export default (Component: React.ComponentType<any>) => {
         return;
       }
 
+      /**
+       * This logic is redundant, but it is necessary because
+       * restricted users can't make GET requests to /users
+       * (they can't even view themselves through this endpoint)
+       * so the only way to get their keys is through /profile/ssh_keys.
+       */
+      const isCurrentUserSelected = this.isUserSelected(username, oldKeys);
+      getAllSSHKeys().then(response => {
+        const keys = response.data;
+        if (!this.mounted || !keys || keys.length === 0) {
+          return;
+        }
+        this.setState({
+          userSSHKeys: [
+            this.createUserObject(
+              username,
+              userEmailAddress,
+              keys.map(k => k.label),
+              isCurrentUserSelected
+            )
+          ]
+        });
+      });
+
       getUsers()
         .then(response => {
           const users = response.data;
@@ -50,7 +78,14 @@ export default (Component: React.ComponentType<any>) => {
 
           this.setState({
             userSSHKeys: [
+              ...this.state.userSSHKeys,
               ...users.reduce((cleanedUsers, user) => {
+                /**
+                 * Don't re-add the current user
+                 */
+                if (user.username === username) {
+                  return cleanedUsers;
+                }
                 const keys = user.ssh_keys;
                 const isSelected = this.isUserSelected(user.username, oldKeys);
 

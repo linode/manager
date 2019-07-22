@@ -166,7 +166,7 @@ const UserSSHKeyPanel: React.FunctionComponent<CombinedProps> = props => {
           )}
         </TableBody>
       </Table>
-      <Button buttonType="primary" onClick={handleOpenDrawer}>
+      <Button buttonType="secondary" onClick={handleOpenDrawer}>
         Add an SSH Key
       </Button>
       <SSHKeyCreationDrawer
