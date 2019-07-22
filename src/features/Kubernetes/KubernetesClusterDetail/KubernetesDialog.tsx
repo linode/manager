@@ -91,7 +91,7 @@ const KubernetesDialog: React.FC<CombinedProps> = props => {
         that will be deleted along with the cluster. Deleting a cluster is
         permanent and can't be undone.
       </Typography>
-      <Typography style={{ marginTop: '5px' }}>
+      <Typography style={{ marginTop: '10px' }}>
         To confirm deletion, type the name of the cluster ({clusterLabel}) in
         the field below:
       </Typography>

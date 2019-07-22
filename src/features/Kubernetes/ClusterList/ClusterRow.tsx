@@ -12,7 +12,7 @@ import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 
-import { ExtendedCluster } from './../types';
+import { ExtendedCluster, PoolNodeWithPrice } from './../types';
 import ActionMenu from './ClusterActionMenu';
 
 type ClassNames = 'root' | 'label' | 'clusterDescription' | 'clusterRow';
@@ -38,12 +38,17 @@ const styles = (theme: Theme) =>
 
 interface Props {
   cluster: ExtendedCluster;
+  openDeleteDialog: (
+    clusterID: number,
+    clusterLabel: string,
+    clusterNodePools: PoolNodeWithPrice[]
+  ) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
-  const { classes, cluster } = props;
+  const { classes, cluster, openDeleteDialog } = props;
   return (
     <TableRow
       key={cluster.id}
@@ -82,7 +87,12 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
         {`${cluster.totalCPU} ${cluster.totalCPU === 1 ? 'CPU' : 'CPUs'}`}
       </TableCell>
       <TableCell>
-        <ActionMenu clusterId={cluster.id} />
+        <ActionMenu
+          clusterId={cluster.id}
+          openDialog={() =>
+            openDeleteDialog(cluster.id, cluster.label, cluster.node_pools)
+          }
+        />
       </TableCell>
     </TableRow>
   );

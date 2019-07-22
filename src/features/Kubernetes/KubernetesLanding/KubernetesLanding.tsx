@@ -20,11 +20,17 @@ export const KubernetesLanding: React.FunctionComponent<
     clusters,
     clustersError,
     clustersLoading,
-    requestKubernetesClusters
+    deleteCluster,
+    requestKubernetesClusters,
+    setKubernetesErrors
   } = props;
   React.useEffect(() => {
     requestKubernetesClusters();
   }, []);
+
+  const clearErrors = () => {
+    setKubernetesErrors({});
+  };
 
   if (clustersError.read) {
     return (
@@ -45,7 +51,14 @@ export const KubernetesLanding: React.FunctionComponent<
     return <KubernetesLandingEmptyState />;
   }
 
-  return <ClusterList clusters={clusters || []} />;
+  return (
+    <ClusterList
+      clusters={clusters || []}
+      deleteCluster={deleteCluster}
+      error={clustersError}
+      clearErrors={clearErrors}
+    />
+  );
 };
 
 const withKubernetes = KubernetesContainer(
