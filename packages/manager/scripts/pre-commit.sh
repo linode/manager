@@ -3,7 +3,7 @@
 # Get files changed in commit
 changes=$( git diff --cached --name-status | awk '$1 != "D" { print $2 }' )
 
-(
+ls & (
 yarn lint
 echo $? >| .tmp.lint.status
 ) &
