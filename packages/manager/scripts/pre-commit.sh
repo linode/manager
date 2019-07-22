@@ -13,7 +13,7 @@ yarn tsc --noEmit
 echo $? >| .tmp.tsc.status
 ) &
 (
-yarn test --findRelatedTests --passWithNoTests $changes
+yarn test --passWithNoTests --findRelatedTests $changes
 echo $? >| .tmp.test.status
 ) &
 
