@@ -101,6 +101,7 @@
     "start": "node scripts/start.js",
     "lint": "tslint 'src/**/*.ts' 'src/**/*.tsx'",
     "build": "node scripts/build.js",
+    "precommit": "lint-staged && npx madge --circular --extensions ts src/ && ./scripts/pre-commit.sh",
     "prepush": "./scripts/pre-push.sh",
     "mock": "./scripts/mb.js",
     "test": "node scripts/test.js",
@@ -120,12 +121,6 @@
     "e2e:browserstack": "npx wdio ./e2e/config/browserstack.conf.js",
     "mb": "npx mb",
     "release": "./scripts/release_changelog.sh"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged && npx madge --circular --extensions ts src/ && ./scripts/pre-commit.sh",
-      "pre-push": "yarn prepush"
-    }
   },
   "lint-staged": {
     "*.{ts,tsx}": [
