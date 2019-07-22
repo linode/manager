@@ -5,5 +5,11 @@
     "husky": "^3.0.1",
     "lerna": "^3.4.3"
   },
-  "version": "independent"
+  "version": "independent",
+  "husky": {
+    "hooks": {
+      "pre-commit": "lerna run precommit --stream --scope linode-manager",
+      "pre-push": "lerna run prepush --stream --scope linode-manager"
+    }
+  }
 }
