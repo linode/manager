@@ -84,7 +84,8 @@ export const ToggleBox: React.StatelessComponent<CombinedProps> = props => {
   return (
     <div className={classes.root} data-qa-active-view={props.status}>
       <Button
-        onClick={() => handleClick('list')}
+        /* in other words, don't toggle the view if we're clicking the already selected view button */
+        onClick={() => (status === 'grid' ? handleClick('list') : null)}
         className={`
             ${!status || (status === 'list' && classes.buttonActive)}
             ${classes.button}
@@ -95,7 +96,8 @@ export const ToggleBox: React.StatelessComponent<CombinedProps> = props => {
         List
       </Button>
       <Button
-        onClick={() => handleClick('grid')}
+        /* in other words, don't toggle the view if we're clicking the already selected view button */
+        onClick={() => (status === 'list' ? handleClick('grid') : null)}
         className={`
             ${status === 'grid' && classes.buttonActive}
             ${classes.button}
