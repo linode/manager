@@ -424,7 +424,11 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
       return (
         <TableRowError
           colSpan={6}
-          message="We were unable to load your API Tokens."
+          message={
+            error[0].reason.match(/not auth/i)
+              ? 'You do not have permission to view API Tokens.'
+              : `We were unable to load your API Tokens.`
+          }
         />
       );
     }

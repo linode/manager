@@ -293,7 +293,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
 
   renderTableContent = (
     loading: boolean,
-    error?: Error,
+    error?: Linode.ApiFieldError[],
     data?: Linode.User[]
   ) => {
     if (loading) {
@@ -302,7 +302,14 @@ class UsersLanding extends React.Component<CombinedProps, State> {
 
     if (error) {
       return (
-        <TableRowError colSpan={4} message={`Unable to load user data.`} />
+        <TableRowError
+          colSpan={4}
+          message={
+            error[0].reason.match(/not auth/i)
+              ? 'You do not have permission to view other users.'
+              : `Unable to load user data.`
+          }
+        />
       );
     }
 

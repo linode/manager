@@ -30,7 +30,7 @@ import LabelCell from '../LabelCell';
 interface StackScriptData {
   stackScripts?: Linode.StackScript.Response[];
   loading: boolean;
-  error?: Error;
+  error?: Linode.ApiFieldError[];
 }
 
 interface Props {
