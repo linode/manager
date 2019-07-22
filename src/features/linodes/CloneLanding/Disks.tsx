@@ -66,6 +66,7 @@ export const Disks: React.FC<Props> = props => {
                     ) : (
                       paginatedData.map((disk: Linode.Disk) => {
                         const isDiskSelected =
+                          diskSelection[disk.id] &&
                           diskSelection[disk.id].isSelected;
 
                         const isConfigSelected =

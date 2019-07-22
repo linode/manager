@@ -38,7 +38,7 @@ import Details from './Details';
 import {
   attachAssociatedDisksToConfigs,
   cloneLandingReducer,
-  createInitialCloneLandingState
+  defaultState
 } from './utilities';
 
 const Configs = DefaultLoader({
@@ -132,18 +132,49 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
   /**
    * STATE MANAGEMENT
    */
+  const [state, dispatch] = React.useReducer(cloneLandingReducer, defaultState);
 
-  // We grab the query params to (potentially) use in the initial state.
-  const queryParams = getParamsFromUrl(location.search);
+  /**
+   * Stringify config and disk IDs to make prop comparison (for useEffect).
+   * This is an alternative to doing a deep equality check, which is slower
+   * (benchmarks: https://jsperf.com/json-stringify-vs-ramda-equals/1) or to
+   * simply check the length of disks and configs, which could lead to edge-case bugs.
+   */
+  const stringifiedConfigIds = JSON.stringify(configs.map(c => c.id));
+  const stringifiedDiskIds = JSON.stringify(disks.map(d => d.id));
 
-  const initialState = createInitialCloneLandingState(
-    configs,
-    disks,
-    Number(queryParams.selectedConfig),
-    Number(queryParams.selectedDisk)
-  );
+  // Update configs and disks if they change
+  React.useEffect(() => {
+    dispatch({
+      type: 'syncConfigsDisks',
+      configs,
+      disks
+    });
+    // We can't use `configs` and `disks` as deps, since they are arrays.
+    // Instead we use a serialized representation of their IDs.
+  }, [stringifiedConfigIds, stringifiedDiskIds]);
 
-  const [state, dispatch] = React.useReducer(cloneLandingReducer, initialState);
+  // A config and/or disk can be selected via query param. Memoized
+  // so it can be used as a dep in the useEffects that consume it.
+  const queryParams = React.useMemo(() => getParamsFromUrl(location.search), [
+    location.search
+  ]);
+
+  // Toggle config if a valid configId is specified as a query param.
+  React.useEffect(() => {
+    const configFromQS = Number(queryParams.selectedConfig);
+    if (configFromQS) {
+      return dispatch({ type: 'toggleConfig', id: configFromQS });
+    }
+  }, [queryParams]);
+
+  // Toggle disk if a valid diskId is specified as a query param.
+  React.useEffect(() => {
+    const diskFromQS = Number(queryParams.selectedDisk);
+    if (diskFromQS) {
+      return dispatch({ type: 'toggleDisk', id: diskFromQS });
+    }
+  }, [queryParams]);
 
   // Helper functions for updating the state.
   const toggleConfig = (id: number) => {
@@ -168,16 +199,26 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
 
   const clearAll = () => dispatch({ type: 'clearAll' });
 
-  const selectedConfigs = configs.filter(
+  // The configs we know about in our configSelection state.
+  const configsInState = configs.filter(eachConfig =>
+    state.configSelection.hasOwnProperty(eachConfig.id)
+  );
+  // The configs that are selected.
+  const selectedConfigs = configsInState.filter(
     eachConfig => state.configSelection[eachConfig.id].isSelected
   );
-
+  // IDs of selected configs.
   const selectedConfigIds = selectedConfigs.map(eachConfig => eachConfig.id);
 
-  const selectedDisks = disks.filter(
+  // The disks we know about in our diskSelection state.
+  const disksInState = disks.filter(eachDisk =>
+    state.diskSelection.hasOwnProperty(eachDisk.id)
+  );
+  // The disks that are selected.
+  const selectedDisks = disksInState.filter(
     eachDisk => state.diskSelection[eachDisk.id].isSelected
   );
-
+  // IDs of selected disks.
   const selectedDiskIds = selectedDisks.map(eachDisk => eachDisk.id);
 
   const handleClone = () => {
@@ -248,9 +289,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
   const selectedLinode = linodesData.find(
     eachLinode => eachLinode.id === state.selectedLinodeId
   );
-
   const selectedLinodeRegion = selectedLinode && selectedLinode.region;
-
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Clone" />
@@ -318,7 +357,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
               render={() => (
                 <div className={classes.outerContainer}>
                   <Configs
-                    configs={configs}
+                    configs={configsInState}
                     configSelection={state.configSelection}
                     handleSelect={toggleConfig}
                   />
@@ -338,7 +377,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
                   </Typography>
                   <div className={classes.diskContainer}>
                     <Disks
-                      disks={disks}
+                      disks={disksInState}
                       diskSelection={state.diskSelection}
                       selectedConfigIds={selectedConfigIds}
                       handleSelect={toggleDisk}
@@ -359,7 +398,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
             // If a selected disk is associated with a selected config, we
             // don't want it to appear in the Details component, since
             // cloning the config takes precedence.
-            selectedDisks={disks.filter(disk => {
+            selectedDisks={disksInState.filter(disk => {
               return (
                 // This disk has been individually selected ...
                 state.diskSelection[disk.id].isSelected &&

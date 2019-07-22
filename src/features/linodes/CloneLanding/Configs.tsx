@@ -56,7 +56,10 @@ export const Configs: React.FC<Props> = props => {
                     <TableRow key={config.id} data-qa-config={config.label}>
                       <TableCell>
                         <CheckBox
-                          checked={configSelection[config.id].isSelected}
+                          checked={
+                            configSelection[config.id] &&
+                            configSelection[config.id].isSelected
+                          }
                           onChange={() => handleSelect(config.id)}
                           text={config.label}
                           data-testid={`checkbox-${config.id}`}
