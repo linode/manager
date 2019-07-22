@@ -106,6 +106,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
       typeDisplayInfo,
       backupsMonthlyPrice,
       userSSHKeys,
+      sshError,
       requestKeys,
       userCannotCreateLinode,
       errors,
@@ -211,11 +212,13 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
                 : ''
             }
             error={hasErrorFor.root_pass}
+            sshKeyError={sshError}
             password={this.props.password}
             handleChange={this.props.updatePassword}
             updateFor={[
               this.props.password,
               errors,
+              sshError,
               userSSHKeys,
               this.props.selectedImageID
             ]}

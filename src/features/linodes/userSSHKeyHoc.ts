@@ -11,10 +11,12 @@ import { getEmailHash } from 'src/utilities/gravatar';
 export interface UserSSHKeyProps {
   userSSHKeys: UserSSHKeyObject[];
   requestKeys: () => void;
+  sshError?: string;
 }
 
 export interface State {
   userSSHKeys: UserSSHKeyObject[];
+  sshError?: string;
   resetSSHKeys: () => void;
   requestKeys: () => void;
 }
@@ -69,8 +71,8 @@ export default (Component: React.ComponentType<any>) => {
               ]
             });
           })
-          .catch(error => {
-            return;
+          .catch(() => {
+            this.setState({ sshError: 'Unable to load SSH keys' });
           });
       } else {
         getUsers()
@@ -103,7 +105,10 @@ export default (Component: React.ComponentType<any>) => {
             });
           })
           .catch(() => {
-            /* We don't need to do anything here, we just don't add the keys. */
+            console.log('about to set error state');
+            this.setState({ sshError: 'Unable to load SSH keys' }, () =>
+              console.log(this.state)
+            );
           });
       }
     };
