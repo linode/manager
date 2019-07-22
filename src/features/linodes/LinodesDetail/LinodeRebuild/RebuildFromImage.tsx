@@ -80,6 +80,7 @@ export const RebuildFromImage: React.StatelessComponent<
     imagesData,
     imagesError,
     userSSHKeys,
+    sshError,
     requestKeys,
     linodeId,
     enqueueSnackbar,
@@ -185,10 +186,12 @@ export const RebuildFromImage: React.StatelessComponent<
                 classes,
                 values.root_pass,
                 errors,
+                sshError,
                 userSSHKeys,
                 values.image
               ]}
               error={errors.root_pass}
+              sshKeyError={sshError}
               users={userSSHKeys}
               requestKeys={requestKeys}
               data-qa-access-panel

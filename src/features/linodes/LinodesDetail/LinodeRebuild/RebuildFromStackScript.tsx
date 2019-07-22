@@ -103,6 +103,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
     classes,
     imagesData,
     userSSHKeys,
+    sshError,
     requestKeys,
     linodeId,
     enqueueSnackbar,
@@ -322,6 +323,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
               updateFor={[values.root_pass, errors, userSSHKeys, ss.id]}
               error={errors.root_pass}
               users={userSSHKeys}
+              sshKeyError={sshError}
               requestKeys={requestKeys}
               data-qa-access-panel
             />

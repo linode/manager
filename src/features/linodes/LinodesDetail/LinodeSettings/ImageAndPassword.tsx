@@ -21,6 +21,7 @@ interface Props {
 
   userSSHKeys: UserSSHKeyObject[];
   requestKeys: () => void;
+  sshError?: string;
 }
 
 type CombinedProps = Props & ContextProps & WithImages;
@@ -38,6 +39,7 @@ export const ImageAndPassword: React.StatelessComponent<
     passwordError,
     requestKeys,
     userSSHKeys,
+    sshError,
     permissions
   } = props;
 
@@ -60,6 +62,7 @@ export const ImageAndPassword: React.StatelessComponent<
         error={passwordError}
         users={userSSHKeys}
         requestKeys={requestKeys}
+        sshKeyError={sshError}
         disabled={disabled}
         disabledReason={
           disabled

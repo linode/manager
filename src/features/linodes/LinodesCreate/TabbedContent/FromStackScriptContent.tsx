@@ -188,6 +188,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
       password,
       imagesData,
       userSSHKeys,
+      sshError,
       userCannotCreateLinode: disabled,
       selectedStackScriptUsername,
       selectedStackScriptLabel,
@@ -312,7 +313,14 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
                 : ''
             }
             error={hasErrorFor('root_pass')}
-            updateFor={[password, errors, userSSHKeys, selectedImageID]}
+            sshKeyError={sshError}
+            updateFor={[
+              password,
+              errors,
+              userSSHKeys,
+              selectedImageID,
+              sshError
+            ]}
             password={password}
             handleChange={updatePassword}
             users={userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []}
