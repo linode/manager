@@ -21,22 +21,10 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface Props {
-  someLinodesHaveMaintenance: boolean;
-}
-
-type CombinedProps = Omit<OrderByProps, 'data'> &
-  WithStyles<ClassNames> &
-  Props;
+type CombinedProps = Omit<OrderByProps, 'data'> & WithStyles<ClassNames>;
 
 const TableWrapper: React.StatelessComponent<CombinedProps> = props => {
-  const {
-    order,
-    orderBy,
-    handleOrderChange,
-    classes,
-    someLinodesHaveMaintenance
-  } = props;
+  const { order, orderBy, handleOrderChange, classes } = props;
 
   return (
     <Paper className={classes.paperWrapper}>
@@ -47,7 +35,6 @@ const TableWrapper: React.StatelessComponent<CombinedProps> = props => {
               order={order}
               orderBy={orderBy}
               handleOrderChange={handleOrderChange}
-              someLinodesHaveMaintenance={someLinodesHaveMaintenance}
             />
             {props.children}
           </Table>

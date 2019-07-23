@@ -12,6 +12,9 @@ type ClassNames =
   | 'actionCell'
   | 'actionInner'
   | 'bodyRow'
+  | 'statusCell'
+  | 'statusCellMaintenance'
+  | 'statusHelpIcon'
   | 'ipCell'
   | 'ipCellWrapper'
   | 'planCell'
@@ -65,8 +68,40 @@ const styles = (theme: Theme) =>
       alignItems: 'center',
       padding: 4
     },
+    statusCell: {
+      width: '14%',
+      textTransform: 'capitalize',
+      [theme.breakpoints.down('sm')]: {
+        width: '100%'
+      }
+    },
+    statusCellMaintenance: {
+      '& .data': {
+        display: 'flex',
+        width: 250,
+        alignItems: 'center',
+        lineHeight: 1.2,
+        marginRight: -12,
+        [theme.breakpoints.up('md')]: {
+          width: 125,
+          marginRight: 0
+        }
+      },
+      '& button': {
+        padding: '0 6px',
+        position: 'relative',
+        top: 1,
+        [theme.breakpoints.up('md')]: {
+          padding: 6
+        }
+      }
+    },
+    statusHelpIcon: {
+      position: 'relative',
+      top: -2
+    },
     ipCell: {
-      width: '15%',
+      width: '14%',
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       }
@@ -76,13 +111,13 @@ const styles = (theme: Theme) =>
       flexDirection: 'column'
     },
     planCell: {
-      width: '15%',
+      width: '14%',
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       }
     },
     regionCell: {
-      width: '15%',
+      width: '14%',
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       }

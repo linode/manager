@@ -15,14 +15,16 @@ describe('LinodeRow', () => {
     regionCell: '',
     iconTableCell: '',
     icon: '',
-    iconGridCell: ''
+    iconGridCell: '',
+    statusCell: '',
+    statusCellMaintenance: '',
+    statusHelpIcon: ''
   };
 
   const mockProps: CombinedProps = {
     classes: mockClasses,
     theme: light({ spacingOverride: 4 }),
     maintenanceStartTime: '',
-    someLinodesHaveMaintenance: false,
     recentEvent: undefined,
     openDeleteDialog: jest.fn(),
     openPowerActionDialog: jest.fn(),

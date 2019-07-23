@@ -13,7 +13,7 @@ type ClassNames = 'root';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      width: '15%',
+      width: '14%',
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       }

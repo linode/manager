@@ -24,10 +24,12 @@ type ClassNames =
   | 'flag'
   | 'flagContainer'
   | 'linkWrapper'
+  | 'status'
+  | 'statusHelpIcon'
   | 'StatusIndicatorWrapper'
   | 'link'
   | 'statusProgress'
-  | 'statusText'
+  | 'cardMaintenance'
   | 'wrapHeader';
 
 export type StyleProps = WithStyles<ClassNames> & WithTheme;
@@ -94,6 +96,13 @@ const styles = (theme: Theme) =>
       '& button': {
         height: 48
       }
+    },
+    status: {
+      textTransform: 'capitalize'
+    },
+    statusHelpIcon: {
+      paddingTop: 0,
+      paddingBottom: 0
     },
     cardActions: {
       backgroundColor: theme.bg.offWhite,
@@ -175,7 +184,10 @@ const styles = (theme: Theme) =>
       paddingRight: 0,
       paddingTop: 6
     },
-    statusText: {}
+    cardMaintenance: {
+      display: 'flex',
+      alignItems: 'center'
+    }
   });
 
 export default withStyles(styles, { withTheme: true });
