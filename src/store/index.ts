@@ -111,6 +111,10 @@ import volumeDrawer, {
   defaultState as volumeDrawerDefaultState,
   State as VolumeDrawerState
 } from 'src/store/volumeDrawer';
+import initialLoad, {
+  defaultState as initialLoadState,
+  State as InitialLoadState
+} from './initialLoad/initialLoad.reducer';
 import diskEvents from './linodes/disk/disk.events';
 import combineEventsMiddleware from './middleware/combineEventsMiddleware';
 import imageEvents from './middleware/imageEvents';
@@ -187,6 +191,7 @@ export interface ApplicationState {
   bucketDrawer: BucketDrawerState;
   createLinode: LinodeCreateState;
   preferences: PreferencesState;
+  initialLoad: InitialLoadState;
 }
 
 const defaultState: ApplicationState = {
@@ -201,7 +206,8 @@ const defaultState: ApplicationState = {
   volumeDrawer: volumeDrawerDefaultState,
   bucketDrawer: bucketDrawerDefaultState,
   createLinode: linodeCreateDefaultState,
-  preferences: preferencesState
+  preferences: preferencesState,
+  initialLoad: initialLoadState
 };
 
 /**
@@ -240,7 +246,8 @@ const reducers = combineReducers<ApplicationState>({
   bucketDrawer,
   events,
   createLinode: linodeCreateReducer,
-  preferences
+  preferences,
+  initialLoad
 });
 
 const enhancers = compose(
