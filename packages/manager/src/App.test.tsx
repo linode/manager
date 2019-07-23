@@ -9,7 +9,7 @@ import LinodeThemeWrapper from './LinodeThemeWrapper';
 
 import { hasOauthError } from './App';
 
-it('renders without crashing', () => {
+it('renders witfdsahout crashing', () => {
   const component = shallow(
     <Provider store={store}>
       <LinodeThemeWrapper>
