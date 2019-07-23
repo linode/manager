@@ -83,6 +83,7 @@ const cloneLandingReducer = (
 ) => {
   switch (action.type) {
     case 'toggleConfig':
+      // If the ID isn't in configSelection, return the state unchanged.
       if (!draft.configSelection[action.id]) {
         break;
       }
@@ -95,6 +96,7 @@ const cloneLandingReducer = (
       break;
 
     case 'toggleDisk':
+      // If the ID isn't in diskSelection, return the state unchanged.
       if (!draft.diskSelection[action.id]) {
         break;
       }
