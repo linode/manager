@@ -8,6 +8,7 @@ import { CombinedProps, DomainsLanding } from './DomainsLanding';
 const props: CombinedProps = {
   domainsData: domains,
   domainsLoading: false,
+  domainsError: {},
   howManyLinodesOnAccount: 0,
   shouldGroupDomains: true,
   domainActions: {

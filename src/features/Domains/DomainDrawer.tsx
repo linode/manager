@@ -844,11 +844,7 @@ interface StateProps {
 
 const mapStateToProps = (state: ApplicationState) => {
   const id = path(['domainDrawer', 'id'], state);
-  const domainEntities = pathOr(
-    [],
-    ['__resources', 'domains', 'entities'],
-    state
-  );
+  const domainEntities = pathOr([], ['__resources', 'domains', 'data'], state);
   const domainProps = domainEntities.find(
     (domain: Linode.Domain) => domain.id === path(['domainDrawer', 'id'], state)
   );
