@@ -145,6 +145,7 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
                 linodeStatus={status}
                 recentEvent={recentEvent}
                 mutationAvailable={mutationAvailable}
+                maintenance={maintenanceStartTime}
               />
             }
             action={
