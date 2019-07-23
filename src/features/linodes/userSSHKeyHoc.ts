@@ -61,6 +61,7 @@ export default (Component: React.ComponentType<any>) => {
               return;
             }
             this.setState({
+              sshError: undefined,
               userSSHKeys: [
                 this.createUserObject(
                   username,
@@ -83,6 +84,7 @@ export default (Component: React.ComponentType<any>) => {
             }
 
             this.setState({
+              sshError: undefined,
               userSSHKeys: [
                 ...users.reduce((cleanedUsers, user) => {
                   const keys = user.ssh_keys;
