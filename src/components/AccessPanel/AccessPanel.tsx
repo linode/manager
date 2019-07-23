@@ -63,6 +63,7 @@ const styled = withStyles(styles);
 interface Props {
   password: string | null;
   error?: string;
+  sshKeyError?: string;
   handleChange: (value: string) => void;
   heading?: string;
   label?: string;
@@ -98,6 +99,7 @@ class AccessPanel extends React.Component<CombinedProps> {
     const {
       classes,
       error,
+      sshKeyError,
       label,
       noPadding,
       required,
@@ -142,6 +144,7 @@ class AccessPanel extends React.Component<CombinedProps> {
           {users && (
             <UserSSHKeyPanel
               users={users}
+              error={sshKeyError}
               onKeyAddSuccess={requestKeys || (() => null)}
             />
           )}
