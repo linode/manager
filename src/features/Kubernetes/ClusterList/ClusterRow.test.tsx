@@ -14,6 +14,7 @@ const cluster = {
 
 const props = {
   cluster,
+  openDeleteDialog: jest.fn(),
   classes: {
     root: '',
     label: '',
