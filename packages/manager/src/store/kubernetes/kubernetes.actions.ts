@@ -29,11 +29,9 @@ export const updateClusterActions = actionCreator.async<
   Linode.ApiFieldError[]
 >(`update`);
 
-
 export type DeleteClusterParams = ClusterID;
 export const deleteClusterActions = actionCreator.async<
   DeleteClusterParams,
   {},
   Linode.ApiFieldError[]
 >(`delete-cluster`);
-
