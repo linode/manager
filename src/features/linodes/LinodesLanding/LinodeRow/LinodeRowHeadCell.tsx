@@ -24,7 +24,6 @@ type ClassNames =
   | 'link'
   | 'loadingStatus'
   | 'labelWrapper'
-  | 'linodeDescription'
   | 'status'
   | 'labelRow'
   | 'labelStatusWrapper'
@@ -68,9 +67,6 @@ const styles = (theme: Theme) =>
     loadingStatus: {
       marginBottom: theme.spacing(1) / 2
     },
-    linodeDescription: {
-      paddingTop: 2
-    },
     labelStatusWrapper: {
       display: 'flex',
       flexFlow: 'row nowrap',
@@ -97,9 +93,9 @@ interface Props {
   tags: string[];
   mostRecentBackup: string | null;
   width?: number;
-
   loading: boolean;
   recentEvent?: Linode.Event;
+  maintenance?: string | null;
 }
 
 interface WithImagesProps {
@@ -127,7 +123,8 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
     recentEvent,
     displayType,
     imagesData,
-    width
+    width,
+    maintenance
   } = props;
 
   const description = getLinodeDescription(
@@ -147,7 +144,7 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
         <Grid item className="py0">
           <EntityIcon
             variant="linode"
-            status={status}
+            status={!maintenance ? status : 'maintenance'}
             loading={linodeInTransition(status, recentEvent)}
             marginTop={1}
           />
@@ -172,13 +169,10 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
                 </Typography>
               </Link>
             </div>
-            <Typography className={classes.linodeDescription}>
-              {description}
-            </Typography>
+            <Typography>{description}</Typography>
           </div>
         </Grid>
       </Grid>
-      {/* </Link> */}
     </TableCell>
   );
 };

@@ -13,6 +13,7 @@ import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
+import HelpIcon from 'src/components/HelpIcon';
 import LinearProgress from 'src/components/LinearProgress';
 import Tags from 'src/components/Tags';
 import {
@@ -52,8 +53,6 @@ interface Props {
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;
-  someLinodesHaveMaintenance: boolean;
-
   imageLabel: string;
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
@@ -99,7 +98,6 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
       ipv6,
       tags,
       image,
-
       classes,
       openDeleteDialog,
       openPowerActionDialog,
@@ -107,8 +105,25 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
       mutationAvailable,
       linodeNotifications,
       recentEvent,
-      imageLabel
+      imageLabel,
+      maintenanceStartTime
     } = this.props;
+
+    const loading = linodeInTransition(status, recentEvent);
+
+    const MaintenanceText = () => {
+      const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(
+        ' '
+      );
+      return (
+        <>
+          Maintenance for this Linode is scheduled to begin {dateTime[0]} at{' '}
+          {dateTime[1]}. Please consult your{' '}
+          <Link to="/support/tickets?type=open">support tickets</Link> for
+          details.
+        </>
+      );
+    };
 
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode={label}>
@@ -130,6 +145,7 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
                 linodeStatus={status}
                 recentEvent={recentEvent}
                 mutationAvailable={mutationAvailable}
+                maintenance={maintenanceStartTime}
               />
             }
             action={
@@ -159,18 +175,11 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
                 progress={recentEvent.percent_complete}
                 classes={{
                   statusProgress: classes.statusProgress,
-                  statusText: classes.statusText,
                   cardSection: classes.cardSection
                 }}
               />
             )}
-            {!!this.props.someLinodesHaveMaintenance &&
-              !!this.props.maintenanceStartTime && (
-                <div className={classes.cardSection}>
-                  Maintenance Window Start:{' '}
-                  {parseMaintenanceStartTime(this.props.maintenanceStartTime)}
-                </div>
-              )}
+
             <div className={classes.cardSection} data-qa-linode-summary>
               {`${displayType}: ${typeLabelDetails(memory, disk, vcpus)}`}
             </div>
@@ -183,6 +192,29 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
             </div>
             <div className={classes.cardSection} data-qa-image>
               {imageLabel}
+            </div>
+            <div className={classes.cardSection} data-qa-image>
+              {!maintenanceStartTime ? (
+                <Typography>
+                  Status:{' '}
+                  {loading ? (
+                    'Busy'
+                  ) : (
+                    <span className={classes.status}> {status}</span>
+                  )}
+                </Typography>
+              ) : (
+                <>
+                  <div className={classes.cardMaintenance}>
+                    <Typography>Status: Maintenance Scheduled</Typography>
+                    <HelpIcon
+                      text={<MaintenanceText />}
+                      className={classes.statusHelpIcon}
+                      tooltipPosition="right-start"
+                    />
+                  </div>
+                </>
+              )}
             </div>
             <div className={classes.cardSection}>
               <Tags tags={tags} />
@@ -225,7 +257,6 @@ const ProgressDisplay: React.StatelessComponent<{
   classes: {
     cardSection: string;
     statusProgress: string;
-    statusText: string;
   };
 }> = props => {
   const { classes, text, progress } = props;
@@ -233,7 +264,7 @@ const ProgressDisplay: React.StatelessComponent<{
   return (
     <Grid container className={classes.cardSection}>
       <Grid item>
-        <Typography variant="body2" className={classes.statusText}>
+        <Typography variant="body2">
           {text}: {displayProgress}
         </Typography>
       </Grid>
@@ -265,6 +296,7 @@ export const RenderTitle: React.StatelessComponent<{
   linodeId: number;
   mutationAvailable: boolean;
   linodeNotifications: Linode.Notification[];
+  maintenance?: string | null;
 }> = props => {
   const {
     classes,
@@ -273,7 +305,8 @@ export const RenderTitle: React.StatelessComponent<{
     linodeId,
     mutationAvailable,
     linodeNotifications,
-    recentEvent
+    recentEvent,
+    maintenance
   } = props;
 
   return (
@@ -282,7 +315,7 @@ export const RenderTitle: React.StatelessComponent<{
         <Grid item className={`${classes.StatusIndicatorWrapper} ${'py0'}`}>
           <EntityIcon
             variant="linode"
-            status={linodeStatus}
+            status={!maintenance ? linodeStatus : 'maintenance'}
             loading={
               recentEvent && linodeInTransition(linodeStatus, recentEvent)
             }

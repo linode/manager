@@ -26,6 +26,7 @@ type ClassNames =
   | 'icon'
   | 'running'
   | 'offline'
+  | 'maintenance'
   | 'loading'
   | 'loadingIcon'
   | 'animated';
@@ -54,6 +55,9 @@ const styles = (theme: Theme) =>
     },
     offline: {
       color: theme.color.red
+    },
+    maintenance: {
+      color: theme.color.yellow
     },
     loading: {
       position: 'absolute',

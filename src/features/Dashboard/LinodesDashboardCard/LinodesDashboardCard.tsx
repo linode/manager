@@ -26,6 +26,7 @@ import {
   isEntityEvent,
   isInProgressEvent
 } from 'src/store/events/event.helpers';
+import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import DashboardCard from '../DashboardCard';
 
 type ClassNames =
@@ -135,7 +136,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
 
   renderEmpty = () => <TableRowEmptyState colSpan={3} />;
 
-  renderData = (data: Linode.Linode[]) => {
+  renderData = (data: LinodeWithMaintenance[]) => {
     const { classes } = this.props;
 
     return data.map(linode => {
@@ -160,6 +161,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
             type={linode.type}
             image={linode.image}
             width={70}
+            maintenance={linode.maintenance ? linode.maintenance.when : ''}
           />
           <Hidden xsDown>
             <TableCell className={classes.moreCol} data-qa-linode-region>
@@ -183,7 +185,7 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
 }));
 
 interface WithUpdatingLinodesProps {
-  linodes: Linode.Linode[];
+  linodes: LinodeWithMaintenance[];
   linodeCount: number;
   loading: boolean;
   error?: Linode.ApiFieldError[];

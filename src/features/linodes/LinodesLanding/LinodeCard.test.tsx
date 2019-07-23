@@ -31,15 +31,16 @@ describe('LinodeRow', () => {
     StatusIndicatorWrapper: '',
     link: '',
     statusProgress: '',
-    statusText: '',
-    wrapHeader: ''
+    cardMaintenance: '',
+    wrapHeader: '',
+    status: '',
+    statusHelpIcon: ''
   };
 
   const mockProps: CombinedProps = {
     classes: mockClasses,
     theme: light({ spacingOverride: 4 }),
     maintenanceStartTime: '',
-    someLinodesHaveMaintenance: false,
     recentEvent: undefined,
     openDeleteDialog: jest.fn(),
     openPowerActionDialog: jest.fn(),

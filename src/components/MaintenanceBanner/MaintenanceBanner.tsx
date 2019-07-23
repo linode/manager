@@ -18,7 +18,7 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       '& p': {
-        marginBottom: theme.spacing(2),
+        marginBottom: theme.spacing(1),
         lineHeight: `20px`
       },
       '& p:last-child': {
@@ -185,8 +185,7 @@ const generateIntroText = (
   return (
     <React.Fragment>
       Maintenance is required for one or more of your Linodes' physical hosts.
-      Your maintenance times will be listed under the "Maintenance Status"
-      column
+      Your maintenance times will be listed under the "Status" column
       {!location.pathname.includes('/linodes') && (
         <Link to="/linodes?view=list"> here</Link>
       )}
