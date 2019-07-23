@@ -81,6 +81,7 @@ export interface Props {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   className?: any;
   linkPath: string | undefined;
+  failedImage?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -96,7 +97,8 @@ class UserEventsListItem extends React.Component<CombinedProps> {
       error,
       onClick,
       linkPath,
-      className
+      className,
+      failedImage
     } = this.props;
 
     const listItem = (
@@ -115,17 +117,26 @@ class UserEventsListItem extends React.Component<CombinedProps> {
         onClick={onClick}
         role="menuitem"
       >
-        <Link
-          to={linkPath ? linkPath : '/'}
-          href="javascript:void(0)"
-          onClick={onClick}
-          className={classes.linkItem}
-        >
-          <Typography variant="h3" className={classes.title}>
-            {title}
-          </Typography>
-          {content && <div className={classes.content}>{content}</div>}
-        </Link>
+        {failedImage ? (
+          <React.Fragment>
+            <Typography variant="h3" className={classes.title}>
+              {title}
+            </Typography>
+            {content && <div className={classes.content}>{content}</div>}
+          </React.Fragment>
+        ) : (
+          <Link
+            to={linkPath ? linkPath : '/'}
+            href="javascript:void(0)"
+            onClick={onClick}
+            className={classes.linkItem}
+          >
+            <Typography variant="h3" className={classes.title}>
+              {title}
+            </Typography>
+            {content && <div className={classes.content}>{content}</div>}
+          </Link>
+        )}
       </ListItem>
     );
 

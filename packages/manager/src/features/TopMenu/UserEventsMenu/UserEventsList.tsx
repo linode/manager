@@ -34,6 +34,8 @@ export const UserEventsList: React.StatelessComponent<
 
           const success = event.status !== 'failed' && !event.seen;
           const error = event.status === 'failed';
+          const failedImage =
+            event.action === 'disk_imagize' && event.status === 'failed';
 
           const onClick = (e: any) => {
             closeMenu(e);
@@ -46,7 +48,18 @@ export const UserEventsList: React.StatelessComponent<
           );
 
           return title
-            ? [...result, { title, content, success, error, onClick, linkPath }]
+            ? [
+                ...result,
+                {
+                  title,
+                  content,
+                  success,
+                  error,
+                  onClick,
+                  linkPath,
+                  failedImage
+                }
+              ]
             : result;
         }, [])
         .map((reducedProps: UserEventsListItemProps, key: number) => (

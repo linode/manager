@@ -73,7 +73,8 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     // making it impossible to access the label for these messages.
     scheduled: e => `Image scheduled for creation.`,
     started: e => `Image being created.`,
-    failed: e => `Image creation failed.`,
+    failed: e =>
+      `Image creation failed. Linode Images cannot be created if you are using raw disks or disks that have been formatted using custom filesystems.`,
     finished: e => `Image has been created.`
     // notification: e => ``,
   },
