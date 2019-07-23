@@ -17,7 +17,8 @@ type ClassNames =
   | 'unread'
   | 'linkItem'
   | 'pointer'
-  | 'noLink';
+  | 'noLink'
+  | 'imageContent';
 
 const styles = (theme: Theme) => {
   const {
@@ -45,6 +46,10 @@ const styles = (theme: Theme) => {
     },
     content: {
       ...theme.typography.body1
+    },
+    imageContent: {
+      ...theme.typography.body1,
+      marginBottom: theme.spacing(1)
     },
     unread: {},
     warning: {
@@ -118,12 +123,16 @@ class UserEventsListItem extends React.Component<CombinedProps> {
         role="menuitem"
       >
         {failedImage ? (
-          <React.Fragment>
+          <div className={classes.linkItem}>
             <Typography variant="h3" className={classes.title}>
               {title}
             </Typography>
+            <Typography variant="body1" className={classes.imageContent}>
+              Linode Images cannot be created if you are using raw disks or
+              disks that have been formatted using custom filesystems.
+            </Typography>
             {content && <div className={classes.content}>{content}</div>}
-          </React.Fragment>
+          </div>
         ) : (
           <Link
             to={linkPath ? linkPath : '/'}
