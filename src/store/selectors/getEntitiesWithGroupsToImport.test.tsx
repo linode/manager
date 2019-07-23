@@ -4,7 +4,7 @@ import { entitiesWithGroupsToImport } from './getEntitiesWithGroupsToImport';
 const state = {
   __resources: {
     linodes: { entities: linodes },
-    domains: { entities: domains }
+    domains: { data: domains }
   }
 };
 

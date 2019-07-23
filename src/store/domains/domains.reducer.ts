@@ -1,5 +1,5 @@
 import { Reducer } from 'redux';
-import { EntityState } from 'src/store/types';
+import { RequestableDataWithEntityError } from 'src/store/types';
 import updateOrAdd from 'src/utilities/updateOrAdd';
 import { isType } from 'typescript-fsa';
 import {
@@ -12,20 +12,19 @@ import {
   updateDomainActions,
   upsertDomain
 } from './domains.actions';
-import { entitiesFromPayload, resultsFromPayload } from './domains.helpers';
+import { entitiesFromPayload } from './domains.helpers';
 
 /**
  * State
  */
 
-export type State = EntityState<Linode.Domain>;
+export type State = RequestableDataWithEntityError<Linode.Domain[]>;
 
 export const defaultState: State = {
-  results: [],
-  entities: [],
+  data: [],
   loading: true,
   lastUpdated: 0,
-  error: undefined
+  error: {}
 };
 
 /**
@@ -40,11 +39,13 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   }
 
   if (isType(action, getDomainsSuccess)) {
-    const { payload } = action;
+    const {
+      payload: { data, results }
+    } = action;
     return {
       ...state,
-      entities: entitiesFromPayload(payload),
-      results: resultsFromPayload(payload),
+      data: entitiesFromPayload(data),
+      results,
       lastUpdated: Date.now(),
       loading: false
     };
@@ -54,63 +55,77 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     const { payload } = action;
     return {
       ...state,
-      error: payload,
+      error: {
+        read: payload
+      },
       loading: false
     };
   }
 
   if (isType(action, upsertDomain)) {
     const { payload } = action;
-    const updated = updateOrAdd(payload, state.entities);
+    const updated = updateOrAdd(payload, state.data);
 
     return {
       ...state,
-      entities: updated,
-      results: updated.map(domain => domain.id)
+      data: updated,
+      results: updated.length
     };
   }
 
   if (isType(action, deleteDomain)) {
     const { payload } = action;
-    const { entities, results } = state;
+    const { data } = state;
+
+    if (!data) {
+      return state;
+    }
+
+    const filteredData = data.filter(domain => domain.id !== payload);
 
     return {
       ...state,
-      entities: entities.filter(domain => domain.id !== payload),
-      results: results.filter(id => id !== payload)
+      data: filteredData,
+      results: filteredData.length
     };
   }
 
   if (isType(action, createDomainActions.done)) {
     const { result } = action.payload;
-    const updated = updateOrAdd(result, state.entities);
+    const updated = updateOrAdd(result, state.data);
 
     return {
       ...state,
-      entities: updated,
-      results: updated.map(domain => domain.id)
+      data: updated,
+      results: updated.length
     };
   }
 
   if (isType(action, updateDomainActions.done)) {
     const { result } = action.payload;
-    const updated = updateOrAdd(result, state.entities);
+    const updated = updateOrAdd(result, state.data);
 
     return {
       ...state,
-      entities: updated,
-      results: updated.map(domain => domain.id)
+      data: updated,
+      results: updated.length
     };
   }
 
   if (isType(action, deleteDomainActions.done)) {
     const { domainId } = action.payload.params;
-    const { entities, results } = state;
+    const { data } = state;
+
+    if (!data) {
+      return state;
+    }
+
+    const filteredData = data.filter(domain => domain.id !== domainId);
 
     return {
       ...state,
-      entities: entities.filter(domain => domain.id !== domainId),
-      results: results.filter(id => id !== domainId)
+      data: filteredData,
+      results: filteredData.length
     };
   }
 

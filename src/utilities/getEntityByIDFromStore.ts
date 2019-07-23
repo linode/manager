@@ -50,7 +50,10 @@ const _getEntityByIDFromStore = (
     case 'nodebalancer':
       return nodeBalancers.itemsById[entityID];
     case 'domain':
-      return domains.entities.find(domain => entityID === domain.id);
+      if (!domains.data) {
+        return;
+      }
+      return domains.data.find(domain => entityID === domain.id);
     case 'volume':
       return volumes.itemsById[entityID];
     case 'kubeCluster':

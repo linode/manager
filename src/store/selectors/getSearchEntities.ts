@@ -122,7 +122,7 @@ const volumeSelector = ({ volumes }: State) => Object.values(volumes.itemsById);
 const nodebalSelector = ({ nodeBalancers }: State) =>
   Object.values(nodeBalancers.itemsById);
 const imageSelector = (state: State) => state.images.entities;
-const domainSelector = (state: State) => state.domains.entities;
+const domainSelector = (state: State) => state.domains.data || [];
 const typesSelector = (state: State) => state.types.entities;
 
 export default createSelector<

@@ -74,6 +74,7 @@ export interface RequestableDataWithEntityError<D> {
   lastUpdated: number;
   loading: boolean;
   data?: D;
+  results?: number;
   error: EntityError;
 }
 
