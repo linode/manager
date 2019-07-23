@@ -37,7 +37,7 @@ import { linodeInTransition } from '../transitions';
 import Details from './Details';
 import {
   attachAssociatedDisksToConfigs,
-  cloneLandingReducer,
+  curriedCloneLandingReducer,
   defaultState
 } from './utilities';
 
@@ -132,7 +132,10 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
   /**
    * STATE MANAGEMENT
    */
-  const [state, dispatch] = React.useReducer(cloneLandingReducer, defaultState);
+  const [state, dispatch] = React.useReducer(
+    curriedCloneLandingReducer,
+    defaultState
+  );
 
   /**
    * Stringify config and disk IDs to make prop comparison (for useEffect).

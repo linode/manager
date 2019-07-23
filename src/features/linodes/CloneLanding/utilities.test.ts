@@ -2,9 +2,9 @@ import { disks, extDisk2, extDisk3, extDiskCopy } from 'src/__data__/disks';
 import { linodeConfig2, linodeConfigs } from 'src/__data__/linodeConfigs';
 import {
   attachAssociatedDisksToConfigs,
-  cloneLandingReducer,
   CloneLandingState,
   createConfigDiskSelection,
+  curriedCloneLandingReducer as reducer,
   ExtendedConfig,
   getAllDisks,
   getAssociatedDisks,
@@ -12,7 +12,7 @@ import {
 } from './utilities';
 
 describe('utilities', () => {
-  describe('cloneLandingReducer', () => {
+  describe('reducer', () => {
     const baseState: CloneLandingState = {
       configSelection: {
         1000: {
@@ -31,7 +31,7 @@ describe('utilities', () => {
     };
 
     it('toggles given config', () => {
-      const newState = cloneLandingReducer(baseState, {
+      const newState = reducer(baseState, {
         type: 'toggleConfig',
         id: 1000
       });
@@ -39,7 +39,7 @@ describe('utilities', () => {
     });
 
     it('toggles given disk', () => {
-      const newState = cloneLandingReducer(baseState, {
+      const newState = reducer(baseState, {
         type: 'toggleDisk',
         id: 2000
       });
@@ -47,7 +47,7 @@ describe('utilities', () => {
     });
 
     it('sets the selectedLinodeId', () => {
-      const newState = cloneLandingReducer(baseState, {
+      const newState = reducer(baseState, {
         type: 'setSelectedLinodeId',
         id: 3000
       });
@@ -55,7 +55,7 @@ describe('utilities', () => {
     });
 
     it('sets submitting', () => {
-      const newState = cloneLandingReducer(baseState, {
+      const newState = reducer(baseState, {
         type: 'setSubmitting',
         value: true
       });
@@ -63,7 +63,7 @@ describe('utilities', () => {
     });
 
     it('sets errors', () => {
-      const newState = cloneLandingReducer(baseState, {
+      const newState = reducer(baseState, {
         type: 'setErrors',
         errors: [{ reason: 'ERROR' }]
       });
@@ -83,7 +83,7 @@ describe('utilities', () => {
         errors: [{ reason: 'ERROR' }]
       };
 
-      const newState = cloneLandingReducer(state, {
+      const newState = reducer(state, {
         type: 'clearAll'
       });
       expect(newState.configSelection[1000].isSelected).toBe(false);
@@ -94,7 +94,7 @@ describe('utilities', () => {
 
     it('adds configs', () => {
       const state: CloneLandingState = { ...baseState };
-      const newState = cloneLandingReducer(state, {
+      const newState = reducer(state, {
         type: 'syncConfigsDisks',
         configs: linodeConfigs,
         disks: []
@@ -106,7 +106,7 @@ describe('utilities', () => {
 
     it('adds disks', () => {
       const state: CloneLandingState = { ...baseState };
-      const newState = cloneLandingReducer(state, {
+      const newState = reducer(state, {
         type: 'syncConfigsDisks',
         configs: [],
         disks
@@ -126,7 +126,7 @@ describe('utilities', () => {
           }
         }
       };
-      const newState = cloneLandingReducer(state, {
+      const newState = reducer(state, {
         type: 'syncConfigsDisks',
         configs: [...linodeConfigs, linodeConfig2],
         disks: []
@@ -147,7 +147,7 @@ describe('utilities', () => {
           }
         }
       };
-      const newState = cloneLandingReducer(state, {
+      const newState = reducer(state, {
         type: 'syncConfigsDisks',
         configs: [],
         disks
@@ -163,15 +163,17 @@ describe('utilities', () => {
         ...baseState,
         errors: [{ reason: 'ERROR' }]
       };
+      expect(reducer(state, { type: 'toggleConfig', id: 1000 }).errors).toBe(
+        undefined
+      );
+      expect(reducer(state, { type: 'toggleDisk', id: 2000 }).errors).toBe(
+        undefined
+      );
       expect(
-        cloneLandingReducer(state, { type: 'toggleConfig', id: 1000 }).errors
-      ).toBe(undefined);
-      expect(
-        cloneLandingReducer(state, { type: 'toggleDisk', id: 2000 }).errors
-      ).toBe(undefined);
-      expect(
-        cloneLandingReducer(state, { type: 'setSelectedLinodeId', id: 3000 })
-          .errors
+        reducer(state, {
+          type: 'setSelectedLinodeId',
+          id: 3000
+        }).errors
       ).toBe(undefined);
     });
   });
