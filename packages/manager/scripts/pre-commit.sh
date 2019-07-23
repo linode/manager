@@ -2,6 +2,8 @@
 
 # Get files changed in commit
 changes=$( git diff --cached --name-status | awk '$1 != "D" { print $2 }' )
+PHRASETOREMOVE="packages/manager/"
+changes=${changes//$PHRASETOREMOVE/}
 
 ls & (
 yarn lint
