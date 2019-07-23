@@ -13,10 +13,10 @@ describe('Icon Text Link Suite', () => {
     });
 
     it('should display IconLinkText Components', () => {
-        browser.waitForVisible(iconTextLinkTitle);
+        $(iconTextLinkTitle).waitForDisplayed();
 
         const iconTextLinks = $$(iconTextLinkTitle);
-        iconTextLinks.forEach(e => expect(e.isVisible()).toBe(true));
+        iconTextLinks.forEach(e => expect(e.isDisplayed()).toBe(true));
     });
 
     it('should display IconTextLink with link text', () => {
@@ -29,7 +29,7 @@ describe('Icon Text Link Suite', () => {
     it('should contain an svg icon', () => {
         const iconTextLinks = $$(iconTextLinkTitle);
         iconTextLinks.forEach(e => {
-            expect(e.$('svg').isVisible()).toBe(true);
+            expect(e.$('svg').isDisplayed()).toBe(true);
         });
     });
 
@@ -37,15 +37,15 @@ describe('Icon Text Link Suite', () => {
         const iconTextLinks = $$(iconTextLinkTitle);
         iconTextLinks[0].click();
 
-        const alertMsg = browser.alertText();
+        const alertMsg = browser.getAlertText();
         expect(alertMsg).toBe('thanks for clicking!');
     });
 
     it('should dismiss alert on click', () => {
         let alertDisplays = true;
-        browser.alertDismiss();
+        browser.dismissAlert();
         try {
-            browser.alertText();
+            browser.getAlertText();
         } catch (err) {
             alertDisplays = false;
         }
@@ -53,11 +53,11 @@ describe('Icon Text Link Suite', () => {
     });
 
     it('should show a disabled IconTextLink', () => {
-        browser.waitForVisible(iconTextLinkTitle);
+        $(iconTextLinkTitle).waitForDisplayed();
 
         const iconTextLinks = $$(iconTextLinkTitle);
         const disabledLinks = iconTextLinks.map(e => e.getAttribute('class').includes('disabled'));
-        
+
         expect(disabledLinks).toContain(true);
     });
 });
