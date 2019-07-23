@@ -11,6 +11,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableHeader from 'src/components/TableHeader';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import TableRowError from 'src/components/TableRowError';
 import SSHKeyCreationDrawer from 'src/features/Profile/SSHKeys/SSHKeyCreationDrawer';
 
 export const MAX_SSH_KEYS_DISPLAY = 100;
@@ -64,6 +65,7 @@ export interface UserSSHKeyObject {
 
 interface Props {
   users?: UserSSHKeyObject[];
+  error?: string;
   onKeyAddSuccess: () => void;
 }
 
@@ -92,7 +94,7 @@ const UserSSHKeyPanel: React.FunctionComponent<CombinedProps> = props => {
    * In addition, there's never been any error handling for SSH keys, which maybe we should add.
    */
   const [success, setSuccess] = React.useState<boolean>(false);
-  const { classes, onKeyAddSuccess, users } = props;
+  const { classes, error, onKeyAddSuccess, users } = props;
 
   const handleKeyAddSuccess = () => {
     onKeyAddSuccess();
@@ -133,7 +135,9 @@ const UserSSHKeyPanel: React.FunctionComponent<CombinedProps> = props => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {usersWithKeys.length > 0 ? (
+          {error ? (
+            <TableRowError colSpan={12} message={error} />
+          ) : usersWithKeys.length > 0 ? (
             usersWithKeys.map(
               ({ gravatarUrl, keys, onSSHKeyChange, selected, username }) => (
                 <TableRow
@@ -166,7 +170,7 @@ const UserSSHKeyPanel: React.FunctionComponent<CombinedProps> = props => {
           )}
         </TableBody>
       </Table>
-      <Button buttonType="primary" onClick={handleOpenDrawer}>
+      <Button buttonType="secondary" onClick={handleOpenDrawer}>
         Add an SSH Key
       </Button>
       <SSHKeyCreationDrawer

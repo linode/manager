@@ -197,6 +197,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
       typeDisplayInfo,
       backupsMonthlyPrice,
       userSSHKeys,
+      sshError,
       requestKeys,
       userCannotCreateLinode,
       selectedImageID,
@@ -328,7 +329,14 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
                 : ''
             }
             error={hasErrorFor('root_pass')}
-            updateFor={[password, errors, userSSHKeys, selectedImageID]}
+            sshKeyError={sshError}
+            updateFor={[
+              password,
+              errors,
+              userSSHKeys,
+              selectedImageID,
+              sshError
+            ]}
             password={password}
             handleChange={updatePassword}
             users={userSSHKeys.length > 0 && selectedImageID ? userSSHKeys : []}
