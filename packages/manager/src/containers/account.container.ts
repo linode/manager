@@ -34,7 +34,7 @@ export default <TInner extends {}, TOuter extends {}>(
     accountLoading: boolean,
     lastUpdated: number,
     accountError: EntityError,
-    account?: Linode.Account,
+    account?: Linode.Account
   ) => TInner
 ) =>
   connect(
@@ -49,7 +49,7 @@ export default <TInner extends {}, TOuter extends {}>(
         accountLoading,
         lastUpdated,
         accountError,
-        account,
+        account
       );
     },
     mapDispatchToProps
