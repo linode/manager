@@ -188,7 +188,7 @@ const withUpdatingDomains = connect((state: ApplicationState, ownProps: {}) => {
       sortBy(prop('domain'))
     )(domainState.data),
     loading: domainState.loading,
-    domainCount: domainState.data ? domainState.data.length : 0,
+    domainCount: domainState.results || 0,
     error: domainState.error
   };
 });
