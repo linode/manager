@@ -1,9 +1,11 @@
 #!/bin/bash
 
-# Get files changed in commit
+# Get files changed in commit and remove packages/manager from each git changed file
 changes=$( git diff --cached --name-status | awk '$1 != "D" { print $2 }' )
+PHRASETOREMOVE="packages/manager/"
+changes=${changes//$PHRASETOREMOVE/}
 
-(
+ls & (
 yarn lint
 echo $? >| .tmp.lint.status
 ) &
@@ -13,7 +15,7 @@ yarn tsc --noEmit
 echo $? >| .tmp.tsc.status
 ) &
 (
-yarn test --findRelatedTests $changes --passWithNoTests
+yarn test --passWithNoTests --findRelatedTests $changes
 echo $? >| .tmp.test.status
 ) &
 

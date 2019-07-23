@@ -40,4 +40,4 @@ export default connect((state: ApplicationState, ownProps) => ({
   )(state.__resources.types.entities),
   typesLoading: pathOr(false, ['loading'], state.__resources.types),
   typesError: pathOr(undefined, ['error'], state.__resources.types)
-}))
+}));
