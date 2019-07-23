@@ -1,3 +1,4 @@
+import * as classnames from 'classnames';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { shim } from 'promise.prototype.finally';
 import { path, pathOr } from 'ramda';
@@ -33,35 +34,20 @@ import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
-import { perfume } from 'src/perfMetrics';
 import { ApplicationState } from 'src/store';
-import { requestAccount } from 'src/store/account/account.requests';
-import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
-import { getAllBuckets } from 'src/store/bucket/bucket.requests';
-import { requestDomains } from 'src/store/domains/domains.actions';
-import { requestImages } from 'src/store/image/image.requests';
-import { requestLinodes } from 'src/store/linodes/linode.requests';
-import { requestTypes } from 'src/store/linodeType/linodeType.requests';
-import { requestNotifications } from 'src/store/notification/notification.requests';
-import { requestProfile } from 'src/store/profile/profile.requests';
-import { requestRegions } from 'src/store/regions/regions.actions';
-import { getAllVolumes } from 'src/store/volume/volume.requests';
 import composeState from 'src/utilities/composeState';
 import { notifications } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
 import BucketDrawer from './features/ObjectStorage/Buckets/BucketDrawer';
-import { requestClusters } from './store/clusters/clusters.actions';
-import {
-  withNodeBalancerActions,
-  WithNodeBalancerActions
-} from './store/nodeBalancer/nodeBalancer.containers';
 import { MapState } from './store/types';
 import {
   isKubernetesEnabled as _isKubernetesEnabled,
   isObjectStorageEnabled
 } from './utilities/accountCapabilities';
 
+import DataLoadedListener from 'src/components/DataLoadedListener';
 import ErrorState from 'src/components/ErrorState';
+import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
 import { addNotificationsToLinodes } from 'src/store/linodes/linodes.actions';
 import { formatDate } from 'src/utilities/formatDate';
 
@@ -73,6 +59,7 @@ const Account = DefaultLoader({
 
 const LinodesRoutes = DefaultLoader({
   loader: () => import('src/features/linodes')
+  // loading: () => <div>loading...</div>
 });
 
 const Volumes = DefaultLoader({
@@ -143,7 +130,13 @@ const EventsLanding = DefaultLoader({
   loader: () => import('src/features/Events/EventsLanding')
 });
 
-type ClassNames = 'appFrame' | 'content' | 'wrapper' | 'grid' | 'switchWrapper';
+type ClassNames =
+  | 'hidden'
+  | 'appFrame'
+  | 'content'
+  | 'wrapper'
+  | 'grid'
+  | 'switchWrapper';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -152,7 +145,8 @@ const styles = (theme: Theme) =>
       display: 'flex',
       minHeight: '100vh',
       flexDirection: 'column',
-      backgroundColor: theme.bg.main
+      backgroundColor: theme.bg.main,
+      zIndex: 1
     },
     content: {
       flex: 1,
@@ -186,6 +180,9 @@ const styles = (theme: Theme) =>
           maxWidth: '78.8%'
         }
       }
+    },
+    hidden: {
+      display: 'none'
     }
   });
 
@@ -202,7 +199,6 @@ interface State {
 }
 
 type CombinedProps = Props &
-  WithNodeBalancerActions &
   DispatchProps &
   StateProps &
   WithStyles<ClassNames> &
@@ -219,12 +215,11 @@ export class App extends React.Component<CombinedProps, State> {
     hasError: false
   };
 
-  componentDidUpdate(prevProps: CombinedProps) {
-    /** run once when both notifications and linodes are loaded in Redux state */
+  maybeAddNotificationsToLinodes = (additionalCondition: boolean = true) => {
     if (
-      !!this.props.linodes.length &&
-      !!this.props.notifications &&
-      (!prevProps.notifications || !prevProps.linodes.length)
+      !!additionalCondition &&
+      this.props.linodes.length &&
+      this.props.notifications
     ) {
       this.props.addNotificationsToLinodes(
         this.props.notifications.map(eachNotification => ({
@@ -242,39 +237,27 @@ export class App extends React.Component<CombinedProps, State> {
         this.props.linodes
       );
     }
+  };
+
+  componentDidUpdate(prevProps: CombinedProps) {
+    /**
+     * run once when both notifications and linodes are loaded in Redux state
+     * for the first time
+     */
+    this.maybeAddNotificationsToLinodes(
+      !prevProps.notifications || !prevProps.linodes.length
+    );
   }
 
   componentDidCatch() {
     this.setState({ hasError: true });
   }
 
-  async componentDidMount() {
-    const {
-      nodeBalancerActions: { getAllNodeBalancersWithConfigs }
-    } = this.props;
+  componentDidMount() {
+    // this.props.markAppAsDoneLoading();
 
-    perfume.start('InitialRequests');
-    const dataFetchingPromises: Promise<any>[] = [
-      this.props.requestAccount(),
-      this.props.requestDomains(),
-      this.props.requestImages(),
-      this.props.requestProfile(),
-      this.props.requestLinodes(),
-      this.props.requestNotifications(),
-      this.props.requestSettings(),
-      this.props.requestTypes(),
-      this.props.requestRegions(),
-      this.props.requestVolumes(),
-      getAllNodeBalancersWithConfigs()
-    ];
-
-    try {
-      await Promise.all(dataFetchingPromises);
-      perfume.end('InitialRequests');
-    } catch (error) {
-      perfume.end('InitialRequests', { didFail: true });
-      /** We choose to do nothing, relying on the Redux error state. */
-    }
+    /** try and add notifications to the Linodes object if that data exists */
+    this.maybeAddNotificationsToLinodes();
 
     /*
      * We want to listen for migration events side-wide
@@ -342,14 +325,19 @@ export class App extends React.Component<CombinedProps, State> {
       imagesError,
       notificationsError,
       regionsError,
-      profileLoading,
       profileError,
       volumesError,
       settingsError,
       bucketsError,
+      nodeBalancersError,
       accountCapabilities,
       accountLoading,
-      accountError
+      accountError,
+      linodesLoading,
+      domainsLoading,
+      volumesLoading,
+      bucketsLoading,
+      nodeBalancersLoading
     } = this.props;
 
     if (hasError) {
@@ -372,7 +360,8 @@ export class App extends React.Component<CombinedProps, State> {
         volumesError,
         profileError,
         settingsError,
-        bucketsError
+        bucketsError,
+        nodeBalancersError
       )
     ) {
       return null;
@@ -385,112 +374,120 @@ export class App extends React.Component<CombinedProps, State> {
         <a href="#main-content" className="visually-hidden">
           Skip to main content
         </a>
+        <DataLoadedListener
+          markAppAsLoaded={this.props.markAppAsDoneLoading}
+          linodesLoadingOrErrorExists={
+            linodesLoading === false || !!linodesError
+          }
+          volumesLoadingOrErrorExists={
+            volumesLoading === false || !!volumesError
+          }
+          domainsLoadingOrErrorExists={
+            domainsLoading === false || !!domainsError
+          }
+          bucketsLoadingOrErrorExists={
+            bucketsLoading === false || !!bucketsError
+          }
+          nodeBalancersLoadingOrErrorExists={
+            nodeBalancersLoading === false || !!nodeBalancersError
+          }
+          profileLoadingOrErrorExists={!!this.props.userId || !!profileError}
+          accountLoadingOrErrorExists={
+            !!this.props.accountCapabilities || !!accountError
+          }
+          appIsLoaded={!this.props.appIsLoading}
+        />
         <DocumentTitleSegment segment="Linode Manager" />
-
-        {profileLoading === false && (
-          <React.Fragment>
-            <>
-              <div className={classes.appFrame}>
-                <SideMenu
-                  open={menuOpen}
-                  closeMenu={this.closeMenu}
-                  toggleTheme={toggleTheme}
-                  toggleSpacing={toggleSpacing}
-                />
-                <main className={classes.content}>
-                  <TopMenu
-                    openSideMenu={this.openMenu}
-                    isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
-                    username={this.props.username}
-                  />
-                  {/* @todo: Uncomment when we deploy with LD */}
-                  {/* <VATBanner /> */}
-                  <div className={classes.wrapper} id="main-content">
-                    <Grid container spacing={0} className={classes.grid}>
-                      <Grid item className={classes.switchWrapper}>
-                        <Switch>
-                          <Route path="/linodes" component={LinodesRoutes} />
-                          <Route
-                            path="/volumes"
-                            component={Volumes}
-                            exact
-                            strict
-                          />
-                          <Redirect path="/volumes*" to="/volumes" />
-                          <Route
-                            path="/nodebalancers"
-                            component={NodeBalancers}
-                          />
-                          <Route path="/domains" component={Domains} />
-                          <Route exact path="/managed" component={Managed} />
-                          <Route exact path="/longview" component={Longview} />
-                          <Route
-                            exact
-                            strict
-                            path="/images"
-                            component={Images}
-                          />
-                          <Redirect path="/images*" to="/images" />
-                          <Route
-                            path="/stackscripts"
-                            component={StackScripts}
-                          />
-                          {getObjectStorageRoute(
-                            accountLoading,
-                            accountCapabilities,
-                            accountError
-                          )}
-                          {isKubernetesEnabled && (
-                            <Route path="/kubernetes" component={Kubernetes} />
-                          )}
-                          <Route path="/account" component={Account} />
-                          <Route
-                            exact
-                            strict
-                            path="/support/tickets"
-                            component={SupportTickets}
-                          />
-                          <Route
-                            path="/support/tickets/:ticketId"
-                            component={SupportTicketDetail}
-                            exact
-                            strict
-                          />
-                          <Route path="/profile" component={Profile} />
-                          <Route exact path="/support" component={Help} />
-                          <Route
-                            exact
-                            strict
-                            path="/support/search/"
-                            component={SupportSearchLanding}
-                          />
-                          <Route path="/dashboard" component={Dashboard} />
-                          <Route path="/search" component={SearchLanding} />
-                          <Route path="/events" component={EventsLanding} />
-                          <Redirect exact from="/" to="/dashboard" />
-                          <Route component={NotFound} />
-                        </Switch>
-                      </Grid>
-                    </Grid>
-                  </div>
-                </main>
-                <Footer />
-                <WelcomeBanner
-                  open={this.state.welcomeBanner}
-                  onClose={this.closeWelcomeBanner}
-                  data-qa-beta-notice
-                />
-                <ToastNotifications />
-                <DomainDrawer />
-                <VolumeDrawer />
-                <BackupDrawer />
-                {isObjectStorageEnabled(accountCapabilities) && (
-                  <BucketDrawer />
-                )}
+        <React.Fragment>
+          <div
+            className={classnames({
+              [classes.appFrame]: true,
+              /**
+               * hidden to prevent some jankiness with the app loading before the splash screen
+               */
+              [classes.hidden]: this.props.appIsLoading
+            })}
+          >
+            <SideMenu
+              open={menuOpen}
+              closeMenu={this.closeMenu}
+              toggleTheme={toggleTheme}
+              toggleSpacing={toggleSpacing}
+            />
+            <main className={classes.content}>
+              <TopMenu
+                openSideMenu={this.openMenu}
+                isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
+                username={this.props.username}
+              />
+              {/* @todo: Uncomment when we deploy with LD */}
+              {/* <VATBanner /> */}
+              <div className={classes.wrapper} id="main-content">
+                <Grid container spacing={0} className={classes.grid}>
+                  <Grid item className={classes.switchWrapper}>
+                    <Switch>
+                      <Route path="/linodes" component={LinodesRoutes} />
+                      <Route path="/volumes" component={Volumes} exact strict />
+                      <Redirect path="/volumes*" to="/volumes" />
+                      <Route path="/nodebalancers" component={NodeBalancers} />
+                      <Route path="/domains" component={Domains} />
+                      <Route exact path="/managed" component={Managed} />
+                      <Route exact path="/longview" component={Longview} />
+                      <Route exact strict path="/images" component={Images} />
+                      <Redirect path="/images*" to="/images" />
+                      <Route path="/stackscripts" component={StackScripts} />
+                      {getObjectStorageRoute(
+                        accountLoading,
+                        accountCapabilities,
+                        accountError
+                      )}
+                      {isKubernetesEnabled && (
+                        <Route path="/kubernetes" component={Kubernetes} />
+                      )}
+                      <Route path="/account" component={Account} />
+                      <Route
+                        exact
+                        strict
+                        path="/support/tickets"
+                        component={SupportTickets}
+                      />
+                      <Route
+                        path="/support/tickets/:ticketId"
+                        component={SupportTicketDetail}
+                        exact
+                        strict
+                      />
+                      <Route path="/profile" component={Profile} />
+                      <Route exact path="/support" component={Help} />
+                      <Route
+                        exact
+                        strict
+                        path="/support/search/"
+                        component={SupportSearchLanding}
+                      />
+                      <Route path="/dashboard" component={Dashboard} />
+                      <Route path="/search" component={SearchLanding} />
+                      <Route path="/events" component={EventsLanding} />
+                      <Redirect exact from="/" to="/dashboard" />
+                      <Route component={NotFound} />
+                    </Switch>
+                  </Grid>
+                </Grid>
               </div>
-            </>
-          </React.Fragment>
-        )}
+            </main>
+            <Footer />
+            <WelcomeBanner
+              open={this.state.welcomeBanner}
+              onClose={this.closeWelcomeBanner}
+              data-qa-beta-notice
+            />
+            <ToastNotifications />
+            <DomainDrawer />
+            <VolumeDrawer />
+            <BackupDrawer />
+            {isObjectStorageEnabled(accountCapabilities) && <BucketDrawer />}
+          </div>
+        </React.Fragment>
       </React.Fragment>
     );
   }
@@ -526,74 +523,60 @@ const getObjectStorageRoute = (
 };
 
 interface DispatchProps {
-  requestAccount: () => Promise<Linode.Account>;
-  requestDomains: () => Promise<Linode.Domain[]>;
-  requestImages: () => Promise<Linode.Image[]>;
-  requestLinodes: () => Promise<Linode.Linode[]>;
-  requestNotifications: () => Promise<Linode.Notification[]>;
-  requestSettings: () => Promise<Linode.AccountSettings>;
-  requestTypes: () => Promise<Linode.LinodeType[]>;
-  requestRegions: () => Promise<Linode.Region[]>;
-  requestVolumes: () => Promise<Linode.Volume[]>;
-  requestProfile: () => Promise<Linode.Profile>;
-  requestBuckets: () => Promise<Linode.Bucket[]>;
-  requestClusters: () => Promise<Linode.Cluster[]>;
   addNotificationsToLinodes: (
     notifications: Linode.Notification[],
     linodes: Linode.Linode[]
   ) => void;
+  markAppAsDoneLoading: () => void;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => {
   return {
-    requestAccount: () => dispatch(requestAccount()),
-    requestDomains: () => dispatch(requestDomains()),
-    requestImages: () => dispatch(requestImages()),
-    requestLinodes: () => dispatch(requestLinodes()),
-    requestNotifications: () => dispatch(requestNotifications()),
-    requestSettings: () => dispatch(requestAccountSettings()),
-    requestTypes: () => dispatch(requestTypes()),
-    requestRegions: () => dispatch(requestRegions()),
-    requestVolumes: () => dispatch(getAllVolumes()),
-    requestProfile: () => dispatch(requestProfile()),
-    requestBuckets: () => dispatch(getAllBuckets()),
-    requestClusters: () => dispatch(requestClusters()),
     addNotificationsToLinodes: (
       _notifications: Linode.Notification[],
       linodes: Linode.Linode[]
-    ) => dispatch(addNotificationsToLinodes(_notifications, linodes))
+    ) => dispatch(addNotificationsToLinodes(_notifications, linodes)),
+    markAppAsDoneLoading: () => dispatch(handleLoadingDone())
   };
 };
 
 interface StateProps {
   /** Profile */
-  profileLoading: boolean;
-  profileError?: Error | Linode.ApiFieldError[];
   linodes: Linode.Linode[];
-  linodesError?: Linode.ApiFieldError[];
-  domainsError?: Linode.ApiFieldError[];
-  imagesError?: Linode.ApiFieldError[];
+  images?: Linode.Image[];
   notifications?: Linode.Notification[];
-  notificationsError?: Linode.ApiFieldError[] | Error;
-  settingsError?: Linode.ApiFieldError[] | Error;
-  typesError?: Linode.ApiFieldError[];
-  regionsError?: Linode.ApiFieldError[];
-  volumesError?: Linode.ApiFieldError[];
-  bucketsError?: Error | Linode.ApiFieldError[];
+  types?: string[];
+  regions?: Linode.Region[];
   userId?: number;
   username: string;
   documentation: Linode.Doc[];
   isLoggedInAsCustomer: boolean;
   accountCapabilities: Linode.AccountCapability[];
+  linodesLoading: boolean;
+  volumesLoading: boolean;
+  domainsLoading: boolean;
+  bucketsLoading: boolean;
   accountLoading: boolean;
-  accountError?: Error | Linode.ApiFieldError[];
+  nodeBalancersLoading: boolean;
+  linodesError?: Linode.ApiFieldError[];
+  volumesError?: Linode.ApiFieldError[];
+  nodeBalancersError?: Linode.ApiFieldError[];
+  domainsError?: Linode.ApiFieldError[];
+  imagesError?: Linode.ApiFieldError[];
+  bucketsError?: Linode.ApiFieldError[];
+  profileError?: Linode.ApiFieldError[];
+  accountError?: Linode.ApiFieldError[];
+  settingsError?: Linode.ApiFieldError[];
+  notificationsError?: Linode.ApiFieldError[];
+  typesError?: Linode.ApiFieldError[];
+  regionsError?: Linode.ApiFieldError[];
+  appIsLoading: boolean;
 }
 
 const mapStateToProps: MapState<StateProps, Props> = state => ({
   /** Profile */
-  profileLoading: state.__resources.profile.loading,
   profileError: path(['read'], state.__resources.profile.error),
   linodes: state.__resources.linodes.entities,
   linodesError: path(['read'], state.__resources.linodes.error),
@@ -621,8 +604,15 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
     ['__resources', 'account', 'data', 'capabilities'],
     state
   ),
+  linodesLoading: state.__resources.linodes.loading,
+  volumesLoading: state.__resources.volumes.loading,
+  domainsLoading: state.__resources.domains.loading,
+  bucketsLoading: state.__resources.buckets.loading,
   accountLoading: state.__resources.account.loading,
-  accountError: state.__resources.account.error.read
+  nodeBalancersLoading: state.__resources.nodeBalancers.loading,
+  accountError: path(['read'], state.__resources.account.error),
+  nodeBalancersError: path(['read'], state.__resources.nodeBalancers.error),
+  appIsLoading: state.initialLoad.appIsLoading
 });
 
 export const connected = connect(
@@ -636,8 +626,7 @@ export default compose(
   connected,
   styled,
   withDocumentTitleProvider,
-  withSnackbar,
-  withNodeBalancerActions
+  withSnackbar
   /** @todo: Uncomment when we deploy with LD */
   // withFeatureFlagProvider
 )(App);

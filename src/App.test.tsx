@@ -3,7 +3,6 @@ import * as React from 'react';
 import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';
 import store from 'src/store';
-import { mockNodeBalancerActions } from './__data__/nodeBalancerActions';
 import { App } from './App';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
 
@@ -17,7 +16,6 @@ it('renders without crashing', () => {
           <App
             linodes={[]}
             notifications={[]}
-            {...mockNodeBalancerActions}
             profileError={undefined}
             username=""
             isLoggedInAsCustomer={false}
@@ -32,30 +30,25 @@ it('renders without crashing', () => {
             classes={{
               appFrame: '',
               content: '',
+              hidden: '',
               wrapper: '',
               grid: '',
               switchWrapper: ''
             }}
             userId={123456}
-            profileLoading={false}
-            requestAccount={jest.fn()}
             addNotificationsToLinodes={jest.fn()}
-            requestDomains={jest.fn()}
-            requestImages={jest.fn()}
-            requestLinodes={jest.fn()}
-            requestNotifications={jest.fn()}
-            requestProfile={jest.fn()}
-            requestSettings={jest.fn()}
-            requestTypes={jest.fn()}
-            requestRegions={jest.fn()}
-            requestVolumes={jest.fn()}
-            requestBuckets={jest.fn()}
-            requestClusters={jest.fn()}
             documentation={[]}
+            markAppAsDoneLoading={jest.fn()}
+            appIsLoading={false}
             toggleTheme={jest.fn()}
             toggleSpacing={jest.fn()}
             accountCapabilities={[]}
             accountLoading={false}
+            nodeBalancersLoading={false}
+            linodesLoading={false}
+            volumesLoading={false}
+            domainsLoading={false}
+            bucketsLoading={false}
           />
         </StaticRouter>
       </LinodeThemeWrapper>
