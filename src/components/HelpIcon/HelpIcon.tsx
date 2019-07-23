@@ -4,8 +4,10 @@ import IconButton from 'src/components/core/IconButton';
 import Tooltip from 'src/components/core/Tooltip';
 
 interface Props {
-  text: string;
+  text: string | JSX.Element;
   className?: string;
+  interactive?: boolean;
+  leaveDelay?: boolean;
   tooltipPosition?:
     | 'bottom'
     | 'bottom-end'
@@ -24,7 +26,7 @@ interface Props {
 type CombinedProps = Props;
 
 const HelpIcon: React.StatelessComponent<CombinedProps> = props => {
-  const { text, className, tooltipPosition } = props;
+  const { text, className, tooltipPosition, interactive, leaveDelay } = props;
 
   return (
     <React.Fragment>
@@ -33,6 +35,8 @@ const HelpIcon: React.StatelessComponent<CombinedProps> = props => {
         data-qa-help-tooltip
         enterTouchDelay={0}
         leaveTouchDelay={5000}
+        leaveDelay={leaveDelay ? 3000 : undefined}
+        interactive={interactive && interactive}
         placement={tooltipPosition ? tooltipPosition : 'bottom'}
       >
         <IconButton className={className} data-qa-help-button>

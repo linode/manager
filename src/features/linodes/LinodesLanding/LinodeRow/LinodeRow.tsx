@@ -1,5 +1,6 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import Flag from 'src/assets/icons/flag.svg';
 import Tooltip from 'src/components/core/Tooltip';
@@ -84,6 +85,18 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
 
   const loading = linodeInTransition(status, recentEvent);
 
+  const MaintenanceText = () => {
+    const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(' ');
+    return (
+      <>
+        Maintenance for this Linode is scheduled to begin {dateTime[0]} at{' '}
+        {dateTime[1]}. Please consult your{' '}
+        <Link to="/support/tickets?type=open">support tickets</Link> for
+        details.
+      </>
+    );
+  };
+
   const headCell = (
     <LinodeRowHeadCell
       loading={loading}
@@ -144,9 +157,11 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
             <>
               Maintenance Scheduled
               <HelpIcon
-                text={parseMaintenanceStartTime(maintenanceStartTime)}
+                text={<MaintenanceText />}
                 className={classes.statusHelpIcon}
                 tooltipPosition="right-start"
+                interactive
+                leaveDelay
               />
             </>
           )}

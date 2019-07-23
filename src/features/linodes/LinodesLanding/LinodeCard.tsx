@@ -111,6 +111,20 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
 
     const loading = linodeInTransition(status, recentEvent);
 
+    const MaintenanceText = () => {
+      const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(
+        ' '
+      );
+      return (
+        <>
+          Maintenance for this Linode is scheduled to begin {dateTime[0]} at{' '}
+          {dateTime[1]}. Please consult your{' '}
+          <Link to="/support/tickets?type=open">support tickets</Link> for
+          details.
+        </>
+      );
+    };
+
     return (
       <Grid item xs={12} sm={6} lg={4} xl={3} data-qa-linode={label}>
         <Card className={classes.flexContainer}>
@@ -193,7 +207,7 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
                   <div className={classes.cardMaintenance}>
                     <Typography>Status: Maintenance Scheduled</Typography>
                     <HelpIcon
-                      text={parseMaintenanceStartTime(maintenanceStartTime)}
+                      text={<MaintenanceText />}
                       className={classes.statusHelpIcon}
                       tooltipPosition="right-start"
                     />
