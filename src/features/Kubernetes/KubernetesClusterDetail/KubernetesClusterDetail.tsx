@@ -470,6 +470,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
         loading={deleting}
         error={path([0, 'reason'], clusterDeleteError)}
         clusterLabel={cluster.label}
+        clusterPools={cluster.node_pools}
         onClose={() => setConfirmation(false)}
         onDelete={handleDeleteCluster}
       />

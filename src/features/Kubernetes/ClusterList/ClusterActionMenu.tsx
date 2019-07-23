@@ -10,6 +10,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
   clusterId: number;
+  openDialog: () => void;
 }
 
 type CombinedProps = Props & WithSnackbarProps;
@@ -17,7 +18,7 @@ type CombinedProps = Props & WithSnackbarProps;
 export const ClusterActionMenu: React.FunctionComponent<
   CombinedProps
 > = props => {
-  const { clusterId, enqueueSnackbar } = props;
+  const { clusterId, enqueueSnackbar, openDialog } = props;
   const createActions = () => {
     return (closeMenu: Function): Action[] => {
       const actions = [
@@ -25,6 +26,14 @@ export const ClusterActionMenu: React.FunctionComponent<
           title: 'Download kubeconfig',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             downloadKubeConfig();
+            closeMenu();
+            e.preventDefault();
+          }
+        },
+        {
+          title: 'Delete',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            openDialog();
             closeMenu();
             e.preventDefault();
           }
