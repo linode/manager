@@ -179,19 +179,21 @@ interface WithUpdatingDomainsProps {
   error?: Linode.ApiFieldError[];
 }
 
-const withUpdatingDomains = connect((state: ApplicationState, ownProps: {}) => {
-  const domainState = state.__resources.domains;
-  return {
-    domains: compose(
-      mergeEvents(state.events.events),
-      take(5),
-      sortBy(prop('domain'))
-    )(domainState.data),
-    loading: domainState.loading,
-    domainCount: domainState.results || 0,
-    error: domainState.error
-  };
-});
+const withUpdatingDomains = connect(
+  (state: ApplicationState, ownProps: {}): WithUpdatingDomainsProps => {
+    const domainState = state.__resources.domains;
+    return {
+      domains: compose(
+        mergeEvents(state.events.events),
+        take(5),
+        sortBy(prop('domain'))
+      )(domainState.data),
+      loading: domainState.loading,
+      domainCount: domainState.results || 0,
+      error: domainState.error.read
+    };
+  }
+);
 
 const mergeEvents = (events: Linode.Event[]) => (domains: Linode.Domain[]) =>
   events.reduce((updatedDomains, event) => {
