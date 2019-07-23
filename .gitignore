@@ -89,13 +89,13 @@ typings/
 restart-manager.sh
 
 # E2E Test Temporary Files
-e2e/errorShots/*.png
-e2e/test-results/*.xml
+**/e2e/errorShots/*.png
+**/e2e/test-results/*.xml
 localStorage.json
-e2e/drivers
-storybook-test-results/*.xml
+**/e2e/drivers
+**/storybook-test-results/*.xml
 .tmp*.status
-e2e/creds.js
+**/e2e/creds.js
 
 # storybook static files
 .out
