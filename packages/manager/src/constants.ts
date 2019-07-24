@@ -241,4 +241,4 @@ export const MBpsInterDC = 1.5;
  * be calculated as "clickable" in menus, but for which
  * there is no sensible destination.
  */
-export const nonClickEvents = ['profile_update', 'ipaddress_update'];
+export const nonClickEvents = ['profile_update'];
