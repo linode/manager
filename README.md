@@ -7,7 +7,7 @@
 <p align="center">
   <a href="https://travis-ci.org/linode/manager"><img src="https://travis-ci.org/linode/manager.svg?branch=master" alt="Build status" /></a>
   <a href="https://coveralls.io/github/linode/manager?branch=master"><img src="https://coveralls.io/repos/github/linode/manager/badge.svg?branch=master" alt="Code coverage" /></a>
-  [![lerna](https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg)](https://lerna.js.org/)
+  <a href="https://lerna.js.org/" alt="maintained with lerna"><img src="https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg" /></a>
 </p>
 
 This repository is the home for all things related to front-end development at Linode.
