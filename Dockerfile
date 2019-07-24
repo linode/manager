@@ -18,6 +18,6 @@ WORKDIR /src/packages/manager
 COPY packages/manager .
 WORKDIR /src
 
-CMD lerna run serve --scope linode-manager && ls
+CMD lerna run serve --scope linode-manager
 
 ENTRYPOINT ["lerna", "run"]
