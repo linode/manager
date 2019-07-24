@@ -25,7 +25,7 @@ import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
 /** @todo: Uncomment when we deploy with LD */
 // import VATBanner from 'src/components/VATBanner';
-// import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
+import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
@@ -50,6 +50,8 @@ import ErrorState from 'src/components/ErrorState';
 import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
 import { addNotificationsToLinodes } from 'src/store/linodes/linodes.actions';
 import { formatDate } from 'src/utilities/formatDate';
+
+import IdentifyUser from './IdentifyUser';
 
 shim(); // allows for .finally() usage
 
@@ -335,6 +337,7 @@ export class App extends React.Component<CombinedProps, State> {
       accountError,
       linodesLoading,
       domainsLoading,
+      userId,
       volumesLoading,
       bucketsLoading,
       nodeBalancersLoading
@@ -374,6 +377,8 @@ export class App extends React.Component<CombinedProps, State> {
         <a href="#main-content" className="visually-hidden">
           Skip to main content
         </a>
+        {/** Update the LD client with the user's id as soon as we know it */}
+        <IdentifyUser userID={userId} />
         <DataLoadedListener
           markAppAsLoaded={this.props.markAppAsDoneLoading}
           linodesLoadingOrErrorExists={
@@ -626,9 +631,8 @@ export default compose(
   connected,
   styled,
   withDocumentTitleProvider,
-  withSnackbar
-  /** @todo: Uncomment when we deploy with LD */
-  // withFeatureFlagProvider
+  withSnackbar,
+  withFeatureFlagProvider
 )(App);
 
 export const hasOauthError = (
