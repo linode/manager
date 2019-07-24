@@ -2,38 +2,38 @@
 
 ## Unit Tests
 
-The unit tests for Linode manager are written in Typescript using the [Jest](https://facebook.github.io/jest/) testing framework. Unit tests end with the `.test.tsx` file extension and can be found throughout the codebase.
+The unit tests for Linode Cloud Manager are written in Typescript using the [Jest](https://facebook.github.io/jest/) testing framework. Unit tests end with the `.test.tsx` file extension and can be found throughout the codebase.
 
 To run tests:
 
 ```
-yarn && yarn test
+yarn && lerna bootstrap --scope linode-manager && lerna run test --stream --scope linode-manager
 ```
 
 Or you can run the tests in watch mode with:
 
 ```
-yarn && yarn test --watch
+yarn && lerna bootstrap --scope linode-manager && lerna run test --stream --scope linode-manager -- --watch
 ```
 
 To Run a specific file or files in a directory:
 
 ```
-yarn test myFile.test.tsx
-yarn test src/some-folder
+lerna run test --stream --scope linode-manager -- myFile.test.tsx
+lerna run test --stream --scope linode-manager -- src/some-folder
 ```
 
 Jest includes pattern matching out of the box, so you can also do things like run all tests whose filename
 contains "Linode" with
 
 ```
-yarn test linode
+lerna run test --stream --scope linode-manager -- linode
 ```
 
 To run a test in debug mode, add a `debugger` breakpoint inside one of the test cases, then run
 
 ```
-yarn test:debug
+lerna run test:debug --stream --scope linode-manager
 ```
 
 Test execution will stop at the debugger statement, and you will be able to use Chrome's normal debugger to step through
@@ -41,15 +41,15 @@ the tests (open `chrome://inspect/#devices` in Chrome).
 
 ## End-to-End Tests
 
-End-to-end Testing of the Linode Manager can be done locally by running Selenium & WebdriverIO tests
+End-to-end Testing of the Linode Cloud Manager can be done locally by running Selenium & WebdriverIO tests
 alongside the local development environment, or by running multiple containers via docker-compose.
 
-The Manager application has a suite of automated browser tests that live in the `e2e/specs`
+The Cloud Manager application has a suite of automated browser tests that live in the `packages/manager/e2e/specs`
 directory. These browser tests are written in Node.js using the [WebdriverIO](https://webdriver.io)
-selenium framework. The configuration files for the WDIO test runner can be found in `e2e/config`.
+selenium framework. The configuration files for the WDIO test runner can be found in `packages/manager/e2e/config`.
 
 Prior to running the tests, you must set `MANAGER_USER=` and `MANAGER_PASS` env variables in your
-`.env` file. These credentials will be used to login prior to each test.
+`packages/manager/.env` file. These credentials will be used to login prior to each test.
 
 
 ##### Dependencies
@@ -65,29 +65,38 @@ brew cask install java
 * Yarn  (`brew install yarn`)
 
 #### Run Suite
+```
+## Starts the local development environment
 
-     yarn && yarn start  # Starts the local development environment
+yarn && lerna bootstrap --scope linode-manager && lerna run start --stream --scope linode-manager
 
-     ## New shell
+## New shell
+## Starts selenium (Must be running to execute tests)
 
-     yarn selenium  # Starts selenium (Must be running to execute tests)
+lerna run selenium --scope linode-manager --stream
 
-     ## New shell
+## New shell
+## Executes specs matching e2e/specs/**/*.spec.js
 
-     yarn e2e  # Executes specs matching e2e/specs/**/*.spec.js
+lerna run e2e --scope linode-manager --stream
+```
 
 ### Command Line Arguments
 
-The `yarn e2e` command accepts a number of helpful command line arguments that facilitate
+The `lerna run e2e` command accepts a number of helpful command line arguments that facilitate
 writing and running tests locally.
 
 Running an individual spec file:
 
-    yarn e2e --file [/path/to/test.spec.js]
+```
+lerna run e2e --scope linode-manager --stream -- --file [/path/to/test.spec.js]
+```
 
 Running E2E suite in a non-default browser
 
-    yarn e2e --browser [chrome,firefox,headlessChrome,safari]
+```
+lerna run e2e --scope linode-manager --stream -- --browser [chrome,firefox,headlessChrome,safari]
+```
 
 #### Run Suite in Docker Local Dev Environment
 
@@ -101,17 +110,19 @@ Running E2E suite in a non-default browser
 In order to run the tests via docker-compose, you will need to update your OAuth Client Redirect URL
 to: `https://manager-local:3000/oauth/callback`. The recommendation is to generate a new OAuth
 client in the [Manager](https://cloud.linode.com), set the redirect url to the above, and set the
-`REACT_APP_CLIENT_ID=` to the new OAuth Client ID in the `.env` file. You must also set
-`MANAGER_USER=` and `MANAGER_PASS` env variables in your `.env` file. These credentials will be used
+`REACT_APP_CLIENT_ID=` to the new OAuth Client ID in the `packages/manager/.env` file. You must also set
+`MANAGER_USER=` and `MANAGER_PASS` env variables in your `packages/manager/.env` file. These credentials will be used
 to login prior to each test.
 
 ##### Running the Suite
 
-    docker-compose -f integration-test.yml up --build --exit-code-from manager-e2e
+```
+docker-compose -f integration-test.yml up --build --exit-code-from manager-e2e
 
-    # OR if Yarn is installed:
+# OR if Yarn is installed:
 
-    yarn docker:e2e
+yarn docker:e2e
+```
 
 
 # Testing React Storybook Components
@@ -126,27 +137,39 @@ live in `src/components/ComponentName/ComponentName.spec.js`. The WDIO config li
 
 #### Run Suite
 
-     yarn storybook  # Starts storybook
+```
+# Starts storybook
 
-     ## New shell
+lerna run storybook --scope linode-manager --stream
 
-     yarn selenium  # Starts selenium (Must be running to execute tests)
+## New shell
+## Starts selenium (Must be running to execute tests)
 
-     ## New shell
+lerna run seleniun --scope linode-manager --stream
 
-     yarn storybook:e2e  # Executes specs matching src/components/**/*.spec.js
+## New shell
+## Executes specs matching src/components/**/*.spec.js
+
+lerna run storybook:e2e --scope linode-manager --stream
+```
 
 #### Run a Single Test
+```
+# Executes spec matching src/components/StoryName/StoryName.spec.js
 
-    yarn storybook:e2e --story StoryName # Executes spec matching src/components/StoryName/StoryName.spec.js
+lerna run storybook:e2e --scope linode-manager --stream -- --story StoryName
+```
 
 #### Run a Test in Non-Headless Chrome
 
-    yarn selenium
+```
+lerna run seleniun --scope linode-manager --stream
 
-    ## New Shell
+## New Shell
+## The --debug flag spawns a visible chrome session
 
-    yarn storybook:e2e --debug --story StoryName # The --debug flag spawns a visible chrome session
+lerna run storybook:e2e --scope linode-manager --stream -- --debug --story StoryName
+```
 
 #### Run Suite in Docker Environment
 
@@ -156,12 +179,13 @@ live in `src/components/ComponentName/ComponentName.spec.js`. The WDIO config li
 
 ##### Running the Suite
 
-    docker-compose -f integration-test.yml up --build --exit-code-from manager-e2e
+```
+docker-compose -f integration-test.yml up --build --exit-code-from manager-e2e
 
-    # OR if Yarn is installed:
+# OR if Yarn is installed:
 
-    yarn docker:e2e
-
+yarn docker:e2e
+```
 
 # Accessibility Testing
 
@@ -173,7 +197,13 @@ The axe-core accessibility testing script has been integrated into the webdriver
 
 #### Run Suite
 
-     yarn && yarn start # Starts the local development environment
-     yarn axe
+```
+# Starts the local development environment
+
+yarn && lerna bootstrap --scope linode-manager && lerna run start --stream --scope linode-manager
+
+
+lerna run axe --stream --scope linode-manager
+```
 
 The test results will be saved as a JSON file with Critical accessibility violations appearing at the top of the list.
