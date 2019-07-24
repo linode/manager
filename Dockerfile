@@ -15,7 +15,8 @@ COPY packages/manager/patches ./packages/manager/patches
 RUN lerna bootstrap
 
 WORKDIR /src/packages/manager
-COPY ./packages/manager .
+COPY packages/manager .
+WORKDIR /src
 
 ENTRYPOINT ["lerna", "run"]
 CMD lerna run serve --scope linode-manager
