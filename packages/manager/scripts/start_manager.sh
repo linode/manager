@@ -1,5 +1,5 @@
 #!/bin/bash
 
-yarn build
+lerna run build --scope linode-manager
 
-yarn serve
+lerna run serve --scope linode-manager
