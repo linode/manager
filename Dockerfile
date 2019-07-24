@@ -6,9 +6,11 @@ RUN yarn global add lerna
 WORKDIR /src
 
 # Install Deps
-COPY packages/manager/package.json .
-COPY packages/manager/yarn.lock .
-COPY packages/manager/patches patches
+COPY lerna.json .
+COPY package.json .
+COPY packages/manager/package.json ./packages/manager/package.json
+COPY packages/manager/yarn.lock ./packages/manager/yarn.lock
+COPY packages/manager/patches ./packages/manager/patches
 
 RUN lerna bootstrap
 
