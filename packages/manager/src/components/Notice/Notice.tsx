@@ -85,6 +85,9 @@ const styles = (theme: Theme) => {
       fontFamily: 'LatoWebBold', // we keep this bold at all times
       '& p': {
         fontSize: '1rem'
+      },
+      '& span': {
+        fontSize: '1rem'
       }
     },
     error: {

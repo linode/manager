@@ -75,8 +75,8 @@ Axios.interceptors.request.use(
     return {
       ...config,
       headers: {
-        ...config.headers,
-        ...(token && { Authorization: `${token}` })
+        ...(token && { Authorization: `${token}` }),
+        ...config.headers
       }
     };
   }

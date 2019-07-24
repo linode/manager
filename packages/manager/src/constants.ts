@@ -29,6 +29,7 @@ export const LAUNCH_DARKLY_API_KEY =
   (isProduction
     ? process.env.REACT_APP_LAUNCH_DARKLY_ID_PRODUCTION
     : process.env.REACT_APP_LAUNCH_DARKLY_ID_DEV) || '';
+export const STATUS_PAGE_ID = process.env.REACT_APP_STATUS_PAGE_ID;
 
 /** optional variables */
 export const SENTRY_URL = process.env.REACT_APP_SENTRY_URL;

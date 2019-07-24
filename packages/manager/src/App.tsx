@@ -51,6 +51,8 @@ import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
 import { addNotificationsToLinodes } from 'src/store/linodes/linodes.actions';
 import { formatDate } from 'src/utilities/formatDate';
 
+import StatusPageBanner from 'src/features/Banners/StatusPage';
+
 shim(); // allows for .finally() usage
 
 const Account = DefaultLoader({
@@ -422,6 +424,7 @@ export class App extends React.Component<CombinedProps, State> {
               />
               {/* @todo: Uncomment when we deploy with LD */}
               {/* <VATBanner /> */}
+              <StatusPageBanner howManyIncidentsToShow={3} />
               <div className={classes.wrapper} id="main-content">
                 <Grid container spacing={0} className={classes.grid}>
                   <Grid item className={classes.switchWrapper}>
