@@ -61,7 +61,7 @@ const styles = (theme: Theme) => {
     pointer: {
       '&:hover, &:focus': {
         backgroundColor: theme.palette.primary.main,
-        '& $title, & $content': {
+        '& $title, & $content, & $imageContent': {
           color: 'white'
         }
       },
