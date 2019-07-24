@@ -14,14 +14,14 @@ describe('Help Icon Component Suite', () => {
 
     it('should display icon on the page', () => {
         executeInAllStories(component, childStories, () => {
-            browser.waitForVisible(helpButton);
+            $(helpButton).waitForDisplayed();
         });
     });
 
     it('should display popover text on Mouse Over', () => {
         executeInAllStories(component, childStories, () => {
-            browser.waitForVisible(helpButton);
-            browser.moveToObject(helpButton);
+            $(helpButton).waitForDisplayed();
+            $(helpButton).click();
             expect($(helpButton).getAttribute('aria-describedby')).not.toBeNull();
             expect($(popoverText).getText()).toBe('There is some help text! Yada, yada, yada...');
         });
@@ -29,7 +29,7 @@ describe('Help Icon Component Suite', () => {
 
     it('should hide popover text on Mouse Out', () => {
         executeInAllStories(component, childStories, () => {
-            browser.waitForVisible(helpButton);
+            $(helpButton).waitForDisplayed();
             expect($(helpButton).getAttribute('aria-describedby')).toBeNull();
         });
     });
