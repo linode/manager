@@ -11,7 +11,7 @@ You can assume that as long as you are `cd`ed into the root of this project, any
 
 ## Starting All Projects
 
-If your intention is to start a development server for all projects, you have a few different options. First, we recommend checking out the [creating an oauth client](./CREATE_CLIENT.md) and [creating an .env file for Cloud Manager](./CLOUD) docs, as you'll most likely need an Oauth Client and `.env` file for projects such as the Cloud Manager.
+If your intention is to start a development server for all projects, you have a few different options. First, we recommend checking out the [creating an OAuth client](./CREATE_CLIENT.md) and [creating an .env file for Cloud Manager](./CLOUD.md) docs, as you'll most likely need an OAuth Client and `.env` file for projects such as the Cloud Manager.
 
 To start all projects:
 
