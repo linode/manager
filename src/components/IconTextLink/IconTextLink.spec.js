@@ -16,20 +16,24 @@ describe('Icon Text Link Suite', () => {
         $(iconTextLinkTitle).waitForDisplayed();
 
         const iconTextLinks = $$(iconTextLinkTitle);
-        iconTextLinks.forEach(e => expect(e.isDisplayed()).toBe(true));
+        iconTextLinks.forEach(e => expect(e.isDisplayed())
+          .withContext(`Icon titles should be displayed`).toBe(true));
     });
 
     it('should display IconTextLink with link text', () => {
         const iconTextLinks = $$(iconTextLinkTitle);
 
-        iconTextLinks.forEach(e => expect(e.getTagName()).toBe('button'));
-        iconTextLinks.forEach(e => expect(e.getText()).toMatch(/([A-Z])/ig));
+        iconTextLinks.forEach(e => expect(e.getTagName())
+          .withContext(`Incorrect tag name`).toBe('button'));
+        iconTextLinks.forEach(e => expect(e.getText())
+          .withContext(`should be any text`).toMatch(/([A-Z])/ig));
     });
 
     it('should contain an svg icon', () => {
         const iconTextLinks = $$(iconTextLinkTitle);
         iconTextLinks.forEach(e => {
-            expect(e.$('svg').isDisplayed()).toBe(true);
+            expect(e.$('svg')
+              .withContext(`Icon image should be displayed`).isDisplayed()).toBe(true);
         });
     });
 
@@ -38,7 +42,8 @@ describe('Icon Text Link Suite', () => {
         iconTextLinks[0].click();
 
         const alertMsg = browser.getAlertText();
-        expect(alertMsg).toBe('thanks for clicking!');
+        expect(alertMsg)
+          .withContext(`Incorrect alert message`).toBe('thanks for clicking!');
     });
 
     it('should dismiss alert on click', () => {
@@ -49,7 +54,8 @@ describe('Icon Text Link Suite', () => {
         } catch (err) {
             alertDisplays = false;
         }
-        expect(alertDisplays).toBe(false);
+        expect(alertDisplays)
+          .withContext(`Alert should be dismissed`).toBe(false);
     });
 
     it('should show a disabled IconTextLink', () => {
@@ -58,6 +64,7 @@ describe('Icon Text Link Suite', () => {
         const iconTextLinks = $$(iconTextLinkTitle);
         const disabledLinks = iconTextLinks.map(e => e.getAttribute('class').includes('disabled'));
 
-        expect(disabledLinks).toContain(true);
+        expect(disabledLinks)
+          .withContext(`Links should be disabled`).toContain(true);
     });
 });
