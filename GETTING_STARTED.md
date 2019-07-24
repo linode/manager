@@ -1,89 +1,40 @@
-# Running Cloud Manager Locally
+# Contributing to Linode UI
 
-Keep in mind these instructions assume you already have an account with Linode.com. If you do not have an account, [please create one here.](https://login.linode.com/signup)
+This document explains the instructions for setting up Linode UI locally, step-by-step. 
 
-## Creating a Client ID
+## Preface
 
-The first step in getting the Manager running locally is to create an OAuth Client.
-[You can create one here.](https://cloud.linode.com/profile/clients) On this screen, click _Create an OAuth App_
+This repository uses [Lerna](https://lerna.js.org/), a solution to transform JavaScript-based repositories
+into one, combined monorepo. This is useful because it allows us to maintain multiple different projects in one place, with shared dependencies.
 
-![Screen Shot 2019-04-10 at 2 47 57 PM](https://user-images.githubusercontent.com/7387001/55906071-69899f80-5ba1-11e9-85cd-bfd1a5e90eb8.png)
+You can assume that as long as you are `cd`ed into the root of this project, any [Lerna commands](https://github.com/lerna/lerna/tree/master/commands) are fair game. Feel free to start any individual package or multiple. but please keep in mind that if you plan on running the Cloud Manager locally, you'll want to start all projects.
 
-Once the drawer opens up, open the values below and click _Submit_
+## Starting All Projects
 
-<img width="477" alt="Screen Shot 2019-04-11 at 10 18 01 AM" src="https://user-images.githubusercontent.com/7387001/55964735-3992d880-5c43-11e9-9975-4b22c52b3115.png">
+If your intention is to start a development server for all projects, you have a few different options. First, we recommend checking out the [creating an oauth client](./CREATE_CLIENT.md) and [creating an .env file for Cloud Manager](./CLOUD) docs, as you'll most likely need an Oauth Client and `.env` file for projects such as the Cloud Manager.
 
-Finally, keep the client ID in the table row handy. You'll need it later:
+To start all projects:
 
-![Screen Shot 2019-04-10 at 3 04 02 PM](https://user-images.githubusercontent.com/7387001/55906313-fc2a3e80-5ba1-11e9-8f8a-6323649c301d.png)
+While in the root...
+1. Run `yarn` to install all root dependencies.
+2. Run `lerna bootstrap` to install all package dependencies.
+3. Run `lerna run start` to start a development server for all projects
+   * additionally, you can add a `--stream` flag to this command to see the output of the development server.
 
+Alternatively, you can run `yarn up` which runs all previous commands.
 
-## Creating an `.env` file
+## Starting a Single Project
 
-Please refer to the [`.env.example` file](.env.example) in this directory. This will get you started in creating you own `.env` file so you can run the Manager.
+Starting a single project is similar to the previous instructions with the exception of adding a `--scope` flag to to the command. So for example, starting the Cloud Manager project looks like:
 
-Here are a list of all the required and optional environment variables the Manager leverages:
+1. Run `yarn` to install all root dependencies.
+2. Run `lerna bootstrap` to install all package dependencies.
+3. Run `lerna run start --scope linode-manager` to start a development server for all projects
+   * additionally, you can add a `--stream` flag to this command to see the output of the development server.
+   * `linode-manager` is the name located in `packages/manager/package.json`
 
-### Required Variables
+## Okay. I've got my development server running. So how do I contribute?
 
-`REACT_APP_APP_ROOT`: The root location where you will be running the app
-* e.g. `http://localhost:3000`
+Please see our [contributing](./CONTRIBUTING.md) and [code conventions](./CODE_CONVENTIONS.md) guides for instructions on how to get started with contributing to this project.
 
-`REACT_APP_LOGIN_ROOT`: The root location where users will authenticate
-* e.g. `https://login.linode.com`
-
-`REACT_APP_API_ROOT`: The root location where API requests will be made
-* e.g. `https://api.linode.com/v4`
-
-`REACT_APP_LISH_ROOT`: The root location of LISH, Linode's web-based console
-* e.g. `webconsole.linode.com`
-
-`REACT_APP_CLIENT_ID`: The Client ID you created above in the first step
-
-
-### Optional Variables
-
-`REACT_APP_ALGOLIA_APPLICATION_ID`: The ID that matches with the Algolia index
-
-`REACT_APP_SEARCH_KEY`: The search key that matches with the Algolia index
-
-`REACT_APP_SENTRY_URL`: The URL to a configured Sentry environment
-
-`REACT_APP_GA_ID`: The ID that matches with a configured Google Analytics property
-
-`REACT_APP_GTM_ID`: The ID that matches with a configured Google Tag Manager property
-
-`REACT_APP_ACCESS_TOKEN`: Access Token that overrides the token received from the Login service.
-e.g `Bearer 1232313` or `Admin 1231423`
-
-`REACT_APP_DISABLE_EVENT_THROTTLE`: <Boolean> Whether the app should poll the `/events` endpoint at provided intervals
-
-`REACT_APP_LOG_PERFORMANCE_METRICS`: Set to `'true'` to log performance metrics to the console. Only works in development mode (i.e. while running `yarn start`).
-
-### Testing Variables
-
-These are environment variables that can be used for automated testing processes
-
-`MANAGER_USER`: Username of the account on which end-to-end tests should run
-
-`MANAGER_PASS`: Password of the account on which end-to-end tests should run
-
-`MANAGER_OAUTH`: OAuth Token of the account on which end-to-end tests should run
-
-## Running the App
-
-Running the app requires a working [Node environment](https://nodejs.org/en/) to be installed. We recommend you
-install some version greater than `8.11.2`
-
-We are also utilizing [Yarn](https://www.google.com/search?q=yarn&oq=yarn&aqs=chrome..69i57j69i60l2j69i61j69i59l2.520j0j7&sourceid=chrome&ie=UTF-8) in this project, so be sure to install the latest stable version.
-
-Once these dependencies are installed, run the following command
-
-`yarn && yarn start`
-
-alternatively, with Docker
-
-`yarn && yarn docker:local`
-
-At this point, the app should load on `localhost:3000` and you should be prompted to login and then can start browsing the app.
 
