@@ -171,9 +171,18 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     if (props.lastUpdated === 0) {
       props.requestKubernetesClusters();
     } else {
-      const clusterID = props.match.params.clusterID;
-      props.requestClusterForStore(+clusterID);
+      const clusterID = +props.match.params.clusterID;
+      props.requestClusterForStore(clusterID);
     }
+
+    const interval = setInterval(
+      () => props.requestNodePools(+props.match.params.clusterID),
+      10000
+    );
+
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
   if (clustersLoadError) {
