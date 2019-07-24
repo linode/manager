@@ -108,7 +108,9 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
   };
 
   handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    this.setState({ cvv: e.target.value });
+    // All characters except numbers
+    const regex = /(([\D]))/;
+    this.setState({ cvv: e.target.value.replace(regex, '') });
   };
 
   submitForm = () => {
@@ -281,9 +283,6 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
                     onChange={this.handleCVVChange}
                     errorText={hasErrorFor('cvv')}
                     placeholder="000"
-                    inputProps={{
-                      maxLength: 4
-                    }}
                     className={classes.cardCVV}
                   />
                 </Grid>

@@ -245,8 +245,11 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     this.setState({ usd: e.target.value || '' });
   };
 
-  handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.setState({ cvv: e.target.value || '' });
+  handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // All characters except numbers
+    const regex = /(([\D]))/;
+    this.setState({ cvv: e.target.value.replace(regex, '') || '' });
+  };
 
   confirmCardPayment = () => {
     const { usd, cvv } = this.state;
@@ -501,6 +504,10 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
                   value={this.state.cvv}
                   type="text"
                   placeholder={`000`}
+                  inputProps={{
+                    maxLength: 4,
+                    minLength: 3
+                  }}
                 />
               )}
             </Grid>
