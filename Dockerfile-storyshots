@@ -1,6 +1,6 @@
 FROM node:8.11.3-stretch
 
-WORKDIR /packages/manager/src
+WORKDIR /packages/manager
 
 RUN apt-get update
 RUN apt-get install -y apt-transport-https
