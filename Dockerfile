@@ -13,8 +13,7 @@ COPY packages/manager/yarn.lock ./packages/manager/yarn.lock
 COPY packages/manager/patches ./packages/manager/patches
 
 # solves for https://github.com/npm/npm/issues/19479
-RUN yarn config set unsafe-perm true
-RUN lerna bootstrap
+RUN yarn config set unsafe-perm true && lerna bootstrap
 
 WORKDIR /src/packages/manager
 COPY packages/manager .
