@@ -198,6 +198,7 @@ interface State {
   menuOpen: boolean;
   welcomeBanner: boolean;
   hasError: boolean;
+  flagsLoaded: boolean;
 }
 
 type CombinedProps = Props &
@@ -214,7 +215,12 @@ export class App extends React.Component<CombinedProps, State> {
   state: State = {
     menuOpen: false,
     welcomeBanner: false,
-    hasError: false
+    hasError: false,
+    flagsLoaded: false
+  };
+
+  setFlagsLoaded = () => {
+    this.setState({ flagsLoaded: true });
   };
 
   maybeAddNotificationsToLinodes = (additionalCondition: boolean = true) => {
@@ -378,9 +384,10 @@ export class App extends React.Component<CombinedProps, State> {
           Skip to main content
         </a>
         {/** Update the LD client with the user's id as soon as we know it */}
-        <IdentifyUser userID={userId} />
+        <IdentifyUser userID={userId} setFlagsLoaded={this.setFlagsLoaded} />
         <DataLoadedListener
           markAppAsLoaded={this.props.markAppAsDoneLoading}
+          flagsHaveLoaded={this.state.flagsLoaded}
           linodesLoadingOrErrorExists={
             linodesLoading === false || !!linodesError
           }

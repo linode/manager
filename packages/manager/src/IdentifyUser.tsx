@@ -4,6 +4,7 @@ import { useLDClient } from 'src/containers/withFeatureFlagProvider.container';
 
 interface Props {
   userID?: number;
+  setFlagsLoaded: () => void;
 }
 
 /**
@@ -14,13 +15,21 @@ interface Props {
  */
 
 export const IdentifyUser: React.FC<Props> = props => {
-  const { userID } = props;
+  const { setFlagsLoaded, userID } = props;
   const client = useLDClient();
   React.useEffect(() => {
     if (client && userID) {
-      client.identify({
-        key: md5(String(userID))
-      });
+      client
+        .identify({
+          key: md5(String(userID))
+        })
+        .then(() => setFlagsLoaded())
+        /**
+         * We could handle this in other ways, but for now don't let a
+         * LD bung-up block the app from loading.
+         */
+
+        .catch(() => setFlagsLoaded());
     }
   }, [client, userID]);
 
