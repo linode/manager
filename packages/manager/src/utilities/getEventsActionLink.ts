@@ -1,4 +1,5 @@
 import { path } from 'ramda';
+import { nonClickEvents } from 'src/constants';
 import {
   EntityType,
   getEntityByIDFromStore
@@ -12,6 +13,7 @@ export default (
 ) => {
   const type = path(['type'], entity);
   const id = path(['id'], entity);
+  const label = path(['label'], entity);
 
   if (['user_ssh_key_add', 'user_ssh_key_delete'].includes(action)) {
     return (e: React.MouseEvent<HTMLElement>) => {
@@ -35,6 +37,14 @@ export default (
     return;
   }
 
+  /**
+   * Some events have entities etc. but we don't want them to
+   * link anywhere.
+   */
+  if (nonClickEvents.includes(action)) {
+    return;
+  }
+
   /** We require these bits of information to provide a link. */
   if (!type || !id) {
     return;
@@ -42,9 +52,13 @@ export default (
 
   switch (type) {
     case 'linode':
+      const link =
+        action === 'linode_addip'
+          ? `/linodes/${id}/networking`
+          : `/linodes/${id}`;
       return (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
-        onClick(`/linodes/${id}`);
+        onClick(link);
       };
 
     case 'ticket':
@@ -94,6 +108,12 @@ export default (
     case 'community_like':
       return () => {
         window.open(entity!.url, '_blank');
+      };
+
+    case 'user':
+      return (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
+        onClick(`/account/users/${label}/profile`);
       };
 
     default:

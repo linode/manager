@@ -235,3 +235,10 @@ export const MBpsIntraDC = 75;
  * MBps rate for intra DC migrations (AKA Cross-Datacenter migrations )
  */
 export const MBpsInterDC = 1.5;
+
+/**
+ * Events that have entities or otherwise would
+ * be calculated as "clickable" in menus, but for which
+ * there is no sensible destination.
+ */
+export const nonClickEvents = ['profile_update', 'ipaddress_update'];

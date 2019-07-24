@@ -12,6 +12,19 @@ type Event = ExtendedEvent;
 /** We use the epoch on our initial request to get all of the users events. */
 export const epoch = new Date(`1970-01-01T00:00:00.000`).getTime();
 
+export const isRelevantDeletionEvent = (action: Linode.EventAction) => {
+  /**
+   * These events point to a Linode, not a disk/config/etc.,
+   * but the Linode most likely still exists so we shouldn't mark
+   * all events related to that Linode as _deleted.
+   */
+  const ignoredDeletionEvents = ['linode_config_delete', 'disk_delete'];
+  if (ignoredDeletionEvents.includes(action)) {
+    return true;
+  }
+  return !action.includes(`_delete`);
+};
+
 /**
  * Safely find an entity in a list of entities returning the index.
  * Will return -1 if the index is not found.
@@ -28,13 +41,12 @@ export const setDeletedEvents = (events: Event[]) => {
   /** Create a list of deletion events. */
   const deletions = events.reduce((result: Event[], event) => {
     const { entity, action, status } = event;
-
     if (!entity) {
       return result;
     }
 
     if (
-      !action.includes(`_delete`) ||
+      isRelevantDeletionEvent(action) ||
       !['finished', 'notification'].includes(status)
     ) {
       return result;
