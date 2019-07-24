@@ -26,7 +26,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    entrypoint: ["/src/packages/manager/src/scripts/start_manager.sh"]
+    entrypoint: ["/src/packages/manager/scripts/start_manager.sh"]
     depends_on:
       - chrome
   manager-e2e:
