@@ -46,7 +46,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - /src/packages/manager/e2e/test-results:/src/e2e/test-results
-    entrypoint: ["/src/packages/manager/scripts/wait-for-it.sh", "-t", "500", "-s", "manager-local:3000", "--", "yarn", "e2e", "--log"]
+    entrypoint: ["/src/packages/manager/scripts/wait-for-it.sh", "-t", "500", "-s", "manager-local:3000", "--", "lerna", "run", "e2e", "--", "--log"]
     depends_on:
       - manager-local
       - mongodb
