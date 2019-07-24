@@ -1,6 +1,6 @@
 FROM node:8.11.3-stretch
 
-WORKDIR /packages/manager
+WORKDIR /src
 
 RUN apt-get update
 RUN apt-get install -y apt-transport-https
@@ -13,12 +13,12 @@ RUN apt-get install -yq gconf-service libasound2 libatk1.0-0 libc6 libcairo2 lib
   ca-certificates fonts-liberation libappindicator1 libnss3 lsb-release xdg-utils wget
 
 # Install Deps
-COPY package.json .
-COPY yarn.lock .
+COPY packages/manager/package.json .
+COPY packages/manager/yarn.lock .
 
 # Install Deps
 RUN yarn
 
-COPY . .
+COPY ./packages/manager .
 
 ENTRYPOINT ["yarn", "storyshots"]

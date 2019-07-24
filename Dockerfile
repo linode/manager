@@ -1,14 +1,14 @@
 FROM node:8.11.2-stretch
 
-WORKDIR /packages/manager
+WORKDIR /src
 
 # Install Deps
-COPY package.json .
-COPY yarn.lock .
-COPY patches patches
+COPY packages/manger/package.json .
+COPY packages/manger/yarn.lock .
+COPY packages/manger/patches patches
 
 RUN yarn
 
-COPY . .
+COPY ./packages/manager .
 
 ENTRYPOINT ["yarn"]
