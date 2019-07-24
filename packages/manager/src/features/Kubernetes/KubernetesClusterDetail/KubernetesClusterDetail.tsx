@@ -195,7 +195,11 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     Bluebird.map(pools, thisPool => {
       if (thisPool.queuedForAddition) {
         // This pool doesn't exist and needs to be added.
-        return props.createNodePool({ clusterID: cluster.id, ...thisPool });
+        return props.createNodePool({
+          clusterID: cluster.id,
+          count: thisPool.count,
+          type: thisPool.type
+        });
       } else if (thisPool.queuedForDeletion) {
         // Marked for deletion
         return props.deleteNodePool({
