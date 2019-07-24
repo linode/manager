@@ -2,5 +2,5 @@ node_modules
 dist
 build
 localStorage.json
-e2e/test-results
+**/e2e/test-results
 junit.xml

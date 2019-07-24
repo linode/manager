@@ -1,6 +1,6 @@
 FROM node:8.11.2-stretch
 
-WORKDIR /src
+WORKDIR /packages/manager/src
 
 # Install Deps
 COPY package.json .
