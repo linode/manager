@@ -189,7 +189,7 @@ yarn docker:e2e
 
 # Accessibility Testing
 
-The axe-core accessibility testing script has been integrated into the webdriverIO-based testing framework to enable automated accessibility testing. At present, the script merely navigates to all routes described in `e2e/constants.js`, loads the page and runs the accessibility tests.
+The axe-core accessibility testing script has been integrated into the webdriverIO-based testing framework to enable automated accessibility testing. At present, the script merely navigates to all routes described in `packages/managere2e/constants.js`, loads the page and runs the accessibility tests.
 
 ##### Dependencies
 
