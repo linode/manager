@@ -12,6 +12,7 @@ COPY packages/manager/package.json ./packages/manager/package.json
 COPY packages/manager/yarn.lock ./packages/manager/yarn.lock
 COPY packages/manager/patches ./packages/manager/patches
 
+RUN lerna run config -- set unsafe-perm true
 RUN lerna bootstrap
 
 WORKDIR /src/packages/manager
