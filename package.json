@@ -12,6 +12,7 @@
     }
   },
   "scripts": {
+    "start": "yarn && lerna bootstrap && lerna run start --stream --scope linode-manager -- --color",
     "docker:e2e": "docker-compose -f integration-test.yml up --exit-code-from manager-e2e",
     "docker:test": "docker build -f Dockerfile . -t 'manager' && docker run -it --rm -v $(pwd)/src:/src/src manager test",
     "docker:local": "docker build -f Dockerfile . -t 'manager' && docker run -it --rm -p 3000:3000 -v $(pwd)/src:/src/src manager start",
