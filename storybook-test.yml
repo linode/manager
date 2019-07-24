@@ -26,8 +26,8 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./packages/manager/src/components:/src/src/components
-      - ./packages/manager/storybook-test-results:/src/storybook-test-results
+      - /src/src/components:/src/src/components
+      - /src/storybook-test-results:/src/storybook-test-results
       - /etc/passwd:/etc/passwd
       - /etc/group:/etc/group
     entrypoint: ["/src/scripts/storybook_entrypoint.sh"]
