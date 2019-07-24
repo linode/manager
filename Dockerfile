@@ -5,7 +5,7 @@ WORKDIR /src
 # Install Deps
 COPY packages/manager/package.json .
 COPY packages/manager/yarn.lock .
-COPY packages/manager/patches .
+COPY packages/manager/patches patches
 
 RUN yarn
 
