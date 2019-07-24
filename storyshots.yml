@@ -5,8 +5,8 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./packages/manager/src/components:/src/src/components
-    entrypoint: ["./packages/manager/scripts/storybook_static.sh"]
+      - /src/src/components:/src/src/components
+    entrypoint: ["/src/src/scripts/storybook_static.sh"]
   manager-storyshots:
     environment:
       - UPDATE=${UPDATE}
@@ -14,7 +14,7 @@ services:
         context: .
         dockerfile: Dockerfile-storyshots
     volumes:
-      - ./packages/manager/src/components:/src/src/components
+      - /src/src/components:/src/src/components
     depends_on:
       - manager-storybook
-    entrypoint: ["./packages/manager/scripts/storyshots_entrypoint.sh"]
+    entrypoint: ["/src/scripts/storyshots_entrypoint.sh"]
