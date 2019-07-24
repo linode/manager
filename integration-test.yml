@@ -26,7 +26,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    entrypoint: ["./packages/manager/src/scripts/start_manager.sh"]
+    entrypoint: ["/src/packages/manager/src/scripts/start_manager.sh"]
     depends_on:
       - chrome
   manager-e2e:
@@ -45,8 +45,8 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./packages/manager/e2e/test-results:/src/e2e/test-results
-    entrypoint: ["./packages/manager/scripts/wait-for-it.sh", "-t", "500", "-s", "manager-local:3000", "--", "yarn", "e2e", "--log"]
+      - /src/packages/manager/e2e/test-results:/src/e2e/test-results
+    entrypoint: ["/src/packages/manager/scripts/wait-for-it.sh", "-t", "500", "-s", "manager-local:3000", "--", "yarn", "e2e", "--log"]
     depends_on:
       - manager-local
       - mongodb

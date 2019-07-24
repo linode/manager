@@ -29,8 +29,8 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - ./packages/manager/e2e/test-results:/src/e2e/test-results
-    entrypoint: ["./packages/manager/scripts/wait-for-it.sh", "-t", "250", "-s", "selenium:4444", "--", "yarn","e2e", "--log"]
+      - /src/packages/manager/e2e/test-results:/src/e2e/test-results
+    entrypoint: ["/src/packages/manager/scripts/wait-for-it.sh", "-t", "250", "-s", "selenium:4444", "--", "yarn","e2e", "--log"]
     depends_on:
       - chrome
       - mongodb
