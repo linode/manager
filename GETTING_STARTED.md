@@ -36,7 +36,7 @@ Starting a single project is similar to the previous instructions with the excep
 ## Helper Scripts
 
 * `yarn clean` is an alias that will remove both top-level and package-level `node_modules`.
-  * Please note - this also bypasses the confirmation lerna gives by default to delete package-level `node_modules`
+  * Please note - this also bypasses the confirmation Lerna gives by default to delete package-level `node_modules`
 * `yarn test` is an alias that will run a test suite in the Cloud Manager project
   * `yarn test packages/manager/src/App.test.tsx` for example
 
