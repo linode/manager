@@ -243,3 +243,11 @@ export const sendRevokeAccessKeyEvent = () => {
     action: 'Revoke Access Key'
   });
 };
+
+export const createDomainEvent = (action: string, label?: string) => {
+  sendEvent({
+    category: 'Create Domain',
+    action,
+    label
+  });
+};

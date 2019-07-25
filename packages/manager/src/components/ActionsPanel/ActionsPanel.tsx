@@ -16,8 +16,8 @@ const styles = (theme: Theme) =>
     root: {
       paddingTop: theme.spacing(2),
       paddingBottom: theme.spacing(1),
-      '& > button': {
-        marginBottom: theme.spacing(1)
+      '& > *': {
+        marginTop: theme.spacing(1)
       },
       '& > :first-child': {
         marginRight: theme.spacing(1)
