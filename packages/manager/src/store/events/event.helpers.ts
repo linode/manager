@@ -13,6 +13,37 @@ type Event = ExtendedEvent;
 export const epoch = new Date(`1970-01-01T00:00:00.000`).getTime();
 
 /**
+ * isRelevantDeletionEvent
+ *
+ * Returns `true` if the event:
+ *   a) has _delete in its action (so it's a deletion event)
+ *   b) is not a special case (see below).
+ *   c) the event indicates a completed deletion action (its status is finished or notification)
+ *
+ * If these conditions are met, the entity that the event is attached to
+ * is assumed to no longer exist in the database.
+ *
+ * @param action
+ */
+export const isRelevantDeletionEvent = (
+  action: Linode.EventAction,
+  status: Linode.EventStatus
+) => {
+  /**
+   * These events point to a Linode, not a disk/config/etc.,
+   * but the Linode most likely still exists so we shouldn't mark
+   * all events related to that Linode as _deleted.
+   */
+  const ignoredDeletionEvents = ['linode_config_delete', 'disk_delete'];
+  if (ignoredDeletionEvents.includes(action)) {
+    return false;
+  }
+  return (
+    action.includes(`_delete`) && ['finished', 'notification'].includes(status)
+  );
+};
+
+/**
  * Safely find an entity in a list of entities returning the index.
  * Will return -1 if the index is not found.
  *
@@ -28,18 +59,24 @@ export const setDeletedEvents = (events: Event[]) => {
   /** Create a list of deletion events. */
   const deletions = events.reduce((result: Event[], event) => {
     const { entity, action, status } = event;
-
     if (!entity) {
       return result;
     }
 
-    if (
-      !action.includes(`_delete`) ||
-      !['finished', 'notification'].includes(status)
-    ) {
+    if (!isRelevantDeletionEvent(action, status)) {
+      /**
+       * This is either a deletion event that hasn't finished
+       * (so the entity still exists) or it's something like
+       * disk_delete, where the entity itself (the Linode)
+       * has not been deleted.
+       */
       return result;
     }
-
+    /**
+     * If we get all the way down here, we have an event
+     * which indicates that an entity has been deleted;
+     * add it to the list of deletion events.
+     */
     return [event, ...result];
   }, []);
 

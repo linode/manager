@@ -3,7 +3,7 @@ import { cleanup, render } from 'react-testing-library';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { VolumesActionMenu } from './VolumesActionMenu';
 
-import { wrapWithTheme } from 'src/utilities/testHelpers';
+import { includesActions, wrapWithTheme } from 'src/utilities/testHelpers';
 
 jest.mock('src/components/ActionMenu/ActionMenu');
 
@@ -26,12 +26,6 @@ const props = {
   volumeId: 12345,
   volumeTags: ['abc', 'def'],
   ...reactRouterProps
-};
-
-const includesActions = (actions: string[], query: any) => {
-  for (const action of actions) {
-    expect(query(action)).toBeInTheDocument();
-  }
 };
 
 afterEach(cleanup);

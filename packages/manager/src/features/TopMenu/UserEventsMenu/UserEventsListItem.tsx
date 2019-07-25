@@ -17,7 +17,8 @@ type ClassNames =
   | 'unread'
   | 'linkItem'
   | 'pointer'
-  | 'noLink';
+  | 'noLink'
+  | 'helperText';
 
 const styles = (theme: Theme) => {
   const {
@@ -46,6 +47,10 @@ const styles = (theme: Theme) => {
     content: {
       ...theme.typography.body1
     },
+    helperText: {
+      ...theme.typography.body1,
+      marginBottom: theme.spacing(1)
+    },
     unread: {},
     warning: {
       borderLeftColor: status.warningDark
@@ -56,7 +61,7 @@ const styles = (theme: Theme) => {
     pointer: {
       '&:hover, &:focus': {
         backgroundColor: theme.palette.primary.main,
-        '& $title, & $content': {
+        '& $title, & $content, & $helperText': {
           color: 'white'
         }
       },
@@ -81,6 +86,7 @@ export interface Props {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   className?: any;
   linkPath: string | undefined;
+  helperText?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -96,7 +102,8 @@ class UserEventsListItem extends React.Component<CombinedProps> {
       error,
       onClick,
       linkPath,
-      className
+      className,
+      helperText
     } = this.props;
 
     const listItem = (
@@ -115,17 +122,36 @@ class UserEventsListItem extends React.Component<CombinedProps> {
         onClick={onClick}
         role="menuitem"
       >
-        <Link
-          to={linkPath ? linkPath : '/'}
-          href="javascript:void(0)"
-          onClick={onClick}
-          className={classes.linkItem}
-        >
-          <Typography variant="h3" className={classes.title}>
-            {title}
-          </Typography>
-          {content && <div className={classes.content}>{content}</div>}
-        </Link>
+        {onClick ? (
+          <Link
+            to={linkPath ? linkPath : '/'}
+            href="javascript:void(0)"
+            onClick={onClick}
+            className={classes.linkItem}
+          >
+            <Typography variant="h3" className={classes.title}>
+              {title}
+            </Typography>
+            {helperText && (
+              <Typography variant="body1" className={classes.helperText}>
+                {helperText}
+              </Typography>
+            )}
+            {content && <div className={classes.content}>{content}</div>}
+          </Link>
+        ) : (
+          <div className={classes.linkItem}>
+            <Typography variant="h3" className={classes.title}>
+              {title}
+            </Typography>
+            {helperText && (
+              <Typography variant="body1" className={classes.helperText}>
+                {helperText}
+              </Typography>
+            )}
+            {content && <div className={classes.content}>{content}</div>}
+          </div>
+        )}
       </ListItem>
     );
 
