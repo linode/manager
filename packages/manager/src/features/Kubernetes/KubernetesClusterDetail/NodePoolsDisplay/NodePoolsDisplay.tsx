@@ -61,6 +61,14 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
+const successMsg = (
+  <Typography variant="body1">
+    Your node pools are being updated. You can run{' '}
+    <code>kubectl get nodes -o wide</code> to check the current status of your
+    cluster's nodes.
+  </Typography>
+);
+
 export const NodePoolsDisplay: React.FunctionComponent<
   CombinedProps
 > = props => {
@@ -103,7 +111,7 @@ export const NodePoolsDisplay: React.FunctionComponent<
         </Grid>
         {submissionSuccess && (
           <Grid item xs={12}>
-            <Notice success text="Your node pools are being updated." />
+            <Notice success text={successMsg} />
           </Grid>
         )}
         {submissionError && submissionError.length > 0 && (
