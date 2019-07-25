@@ -35,15 +35,21 @@ export const UserEventsList: React.StatelessComponent<
           const success = event.status !== 'failed' && !event.seen;
           const error = event.status === 'failed';
 
-          const onClick = (e: any) => {
-            closeMenu(e);
-          };
-
           const linkPath = createLinkHandlerForNotification(
             event.action,
             event.entity,
             event._deleted
           );
+
+          /**
+           * Events without a link path either refer to a deleted
+           * entity or else don't have an entity/anywhere to point.
+           */
+          const onClick = linkPath
+            ? (e: any) => {
+                closeMenu(e);
+              }
+            : undefined;
 
           return title
             ? [...result, { title, content, success, error, onClick, linkPath }]

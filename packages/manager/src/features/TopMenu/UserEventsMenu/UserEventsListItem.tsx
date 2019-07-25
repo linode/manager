@@ -115,17 +115,26 @@ class UserEventsListItem extends React.Component<CombinedProps> {
         onClick={onClick}
         role="menuitem"
       >
-        <Link
-          to={linkPath ? linkPath : '/'}
-          href="javascript:void(0)"
-          onClick={onClick}
-          className={classes.linkItem}
-        >
-          <Typography variant="h3" className={classes.title}>
-            {title}
-          </Typography>
-          {content && <div className={classes.content}>{content}</div>}
-        </Link>
+        {onClick ? (
+          <Link
+            to={linkPath ? linkPath : '/'}
+            href="javascript:void(0)"
+            onClick={onClick}
+            className={classes.linkItem}
+          >
+            <Typography variant="h3" className={classes.title}>
+              {title}
+            </Typography>
+            {content && <div className={classes.content}>{content}</div>}
+          </Link>
+        ) : (
+          <div className={classes.linkItem}>
+            <Typography variant="h3" className={classes.title}>
+              {title}
+            </Typography>
+            {content && <div className={classes.content}>{content}</div>}
+          </div>
+        )}
       </ListItem>
     );
 
