@@ -1,25 +1,26 @@
 <h1 align="center">
   <img src="https://www.linode.com/media/images/logos/diagonal/light/linode-logo_diagonal_light_medium.png" width="200" />
   <br />
-  The Linode Manager
+  Linode UI
 </h1>
 
 <p align="center">
   <a href="https://travis-ci.org/linode/manager"><img src="https://travis-ci.org/linode/manager.svg?branch=master" alt="Build status" /></a>
   <a href="https://coveralls.io/github/linode/manager?branch=master"><img src="https://coveralls.io/repos/github/linode/manager/badge.svg?branch=master" alt="Code coverage" /></a>
-  <img src="https://img.shields.io/badge/badges-many-brightgreen.svg" alt="much badges" />
+  <a href="https://lerna.js.org/" alt="maintained with lerna"><img src="https://img.shields.io/badge/maintained%20with-lerna-cc00ff.svg" /></a>
 </p>
 
-This is the new Linode Manager. It provides a web interface for managing your Linode account. 
-Currently this software is *early-access* and is available at [cloud.linode.com](https://cloud.linode.com).
+This repository is the home for all things related to front-end development at Linode.
 
-## Running the App
+## Running Projects Within the Repository
 
-To get started running the app locally, please [see the _Getting Started_ documentation.](GETTING_STARTED.md)
+To get started running Linode UI projects locally, please [see the _Getting Started_ documentation.](GETTING_STARTED.md)
 
 ## Contributing
 
-Read the [contributing guidelines](CONTRIBUTING.md) to get help in making your first PR.
+If you already have your development environment set up, please read the [contributing guidelines](CONTRIBUTING.md) to get help in making your first PR.
+
+Additionally, you can read our [code conventions](./CODE_CONVENTIONS.md) and [Cloud Manager testing conventions](./TESTING.md) docs for instructions on how write code inline with what we expect.
 
 ## Reaching Out
 
@@ -33,7 +34,7 @@ action upon feedback.
 
 ## License
 
-The Linode Manager's code is distributed under the terms of the [BSD 3-clause
+All code located in this repository is distributed under the terms of the [BSD 3-clause
 license](LICENSE). The assets are
 not licensed for any purpose without prior written approval from Linode, unless
 otherwise noted.

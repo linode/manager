@@ -1,4 +1,4 @@
-# Code Style
+# Code Conventions
 
 This document aims to give general guidelines of how code is written and structured in the Cloud Manager project.
 
