@@ -12,7 +12,7 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - /src/src/components:/src/src/components
+      - ./src/components:/src/src/components
     entrypoint: yarn storybook
     depends_on:
       - selenium
@@ -26,11 +26,11 @@ services:
       context: .
       dockerfile: Dockerfile
     volumes:
-      - /src/src/components:/src/src/components
-      - /src/storybook-test-results:/src/storybook-test-results
+      - ./src/components:/src/src/components
+      - ./storybook-test-results:/src/storybook-test-results
       - /etc/passwd:/etc/passwd
       - /etc/group:/etc/group
-    entrypoint: ["/src/scripts/storybook_entrypoint.sh"]
+    entrypoint: ["./scripts/storybook_entrypoint.sh"]
     depends_on:
       - manager-storybook
     networks:
