@@ -34,6 +34,12 @@ export const UserEventsList: React.StatelessComponent<
 
           const success = event.status !== 'failed' && !event.seen;
           const error = event.status === 'failed';
+          const failedImage =
+            event.action === 'disk_imagize' && event.status === 'failed';
+
+          const helperText = failedImage
+            ? 'This likely happened because your compressed disk content was larger than the 2048 MB limit, or you attempted to imagize a raw or custom formatted disk.'
+            : '';
 
           const linkPath = createLinkHandlerForNotification(
             event.action,
@@ -52,7 +58,18 @@ export const UserEventsList: React.StatelessComponent<
             : undefined;
 
           return title
-            ? [...result, { title, content, success, error, onClick, linkPath }]
+            ? [
+                ...result,
+                {
+                  title,
+                  content,
+                  success,
+                  error,
+                  onClick,
+                  linkPath,
+                  helperText
+                }
+              ]
             : result;
         }, [])
         .map((reducedProps: UserEventsListItemProps, key: number) => (

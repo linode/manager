@@ -62,6 +62,18 @@ export default (
     return;
   }
 
+  /**
+   * Images and their events are the bane of our existence.
+   * If these events ever start returning the ID of the actual
+   * Image, we can link to it. But linking to the Linode that
+   * the imagized disk was imagized from, which is what we
+   * would do by default, is too confusing. Just don't link.
+   */
+
+  if (action === 'disk_imagize') {
+    return;
+  }
+
   switch (type) {
     case 'linode':
       const link =
