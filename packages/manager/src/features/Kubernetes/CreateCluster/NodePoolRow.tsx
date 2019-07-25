@@ -78,14 +78,11 @@ export interface NodeStatus {
 }
 
 export const getNodeStatus = (linodes: Linode.PoolNodeResponse[]) => {
-  return linodes.reduce(
-    (accum, thisLinode) => {
-      return produce(accum, draft => {
-        draft[thisLinode.status]++;
-      });
-    },
-    { ready: 0, not_ready: 0 }
-  );
+  return produce({ ready: 0, not_ready: 0 }, draft => {
+    linodes.forEach(thisLinode => {
+      draft[thisLinode.status]++;
+    });
+  });
 };
 
 export const getStatusString = (
