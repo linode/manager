@@ -10,6 +10,15 @@ export default (
   const id = path(['id'], entity);
   const label = path(['label'], entity);
 
+  if (['disk_delete', 'linode_config_delete'].includes(action)) {
+    /**
+     * Special cases that are handled here above the deletion logic;
+     * although these are deletion events, they refer to a Linode,
+     * which still exists; we can therefore provide a link target.
+     */
+    return `/linodes/${id}/advanced`;
+  }
+
   if (['user_ssh_key_add', 'user_ssh_key_delete'].includes(action)) {
     return `/profile/keys`;
   }
