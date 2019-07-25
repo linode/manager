@@ -135,6 +135,7 @@ type ClassNames =
   | 'appFrame'
   | 'content'
   | 'wrapper'
+  | 'fdafd'
   | 'grid'
   | 'switchWrapper';
 
