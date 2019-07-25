@@ -74,7 +74,7 @@ const RenderData: React.StatelessComponent<{
           {paginatedData.map(
             ({ label, from, to, quantity, unit_price, amount, tax, total }) => (
               <TableRow key={`${label}-${from}-${to}`}>
-                <TableCell parentColumn="Description" data-qa-descrition>
+                <TableCell parentColumn="Description" data-qa-description>
                   {label}
                 </TableCell>
                 <TableCell parentColumn="From" data-qa-from>

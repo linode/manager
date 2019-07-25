@@ -38,8 +38,14 @@ export const renderWithTheme = (ui: any) => {
   );
 };
 
-export const includesActions = (actions: string[], query: any) => {
+export const includesActions = (
+  actions: string[],
+  query: any,
+  includes = true
+) => {
   for (const action of actions) {
-    expect(query(action)).toBeInTheDocument();
+    includes
+      ? expect(query(action)).toBeInTheDocument()
+      : expect(query(action)).not.toBeInTheDocument();
   }
 };
