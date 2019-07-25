@@ -128,7 +128,7 @@ const addLeftHeader = (
   addLine('Philadelphia, PA 19106');
   addLine('USA');
   if (isInEU) {
-    addLine(`Tax ID: ${LINODE_EU_TAX_ID}`);
+    addLine(`Linode Tax ID: ${LINODE_EU_TAX_ID}`);
   }
 };
 
