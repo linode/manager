@@ -1,8 +1,8 @@
-# Contributing to the Linode Cloud Manager
+# Contributing to Linode UI
 
-Contributing to the Cloud Manager just involves sending a Pull Request.
+Contributing to Linode UI just involves sending a Pull Request.
 
-The following buzzwords are involved in this project:
+The following buzzwords are involved in this project, so please familiarize yourself with them before contributing:
 
 * [React.js](https://facebook.github.io/react/)
 * [Redux](http://redux.js.org/)
@@ -12,20 +12,33 @@ The following buzzwords are involved in this project:
 * [Yarn](https://yarnpkg.com/)
 * [WebdriverIO](https://webdriver.io/)
 
+## Requirements
+
+In order to contribute to Linode UI, we recommend the following minimum version numbers:
+
+1. Git v2.19.1
+2. Node v8.11.2
+3. Yarn 1.16.0
+
+You must also have [Lerna](https://lerna.js.org/) installed globally, so please run the following to install the package to your local machine:
+
+```
+yarn global add lerna
+```
+
 ## Development
 
 ### Coding Style
 
-The manager is written in ES6, with some ES7 in use as well. A general guideline
-for the coding style is "imitate the code that's already there". When in doubt,
+The JavaScript code located in this project is written in ES6, with some ES7 in use as well. A general guideline for the coding style is "imitate the code that's already there". When in doubt,
 apply the [Airbnb style guide](https://github.com/airbnb/javascript) or just let
 the linter do its thing.
 
 If you're interested in learning how we write code and want to follow our guidelines, please
-see our [code style documentation.](CODE_STYLE.md)
+see our [code convention documentation.](CODE_CONVENTIONS.md).
 
 ### Testing
-This project uses [Jest](https://facebook.github.io/jest/docs/en/api.html) for unit testing, snapshot testing, assertions, and mocking.
+Some projects, such as the Cloud Manager, use [Jest](https://facebook.github.io/jest/docs/en/api.html) for unit testing, snapshot testing, assertions, and mocking.
 
 End-to-end tests are written using WebdriverIO.
 
@@ -35,7 +48,7 @@ For everything related to writing and running tests, [please see the documentati
 
 ### Creating and Committing to a New Branch
 
-When creating a new feature, you should attempt to create a descriptive branch name. All branch names must be prefixed with `M3`, which stands for Manager 3, as this is the third iteration of this product.
+When creating a new feature, you should attempt to create a descriptive branch name. All branch names must be prefixed with `M3`, which stands for Manager 3, as this is the third iteration of the Cloud Manager.
 
 For example `M3-my-cool-feature`
 

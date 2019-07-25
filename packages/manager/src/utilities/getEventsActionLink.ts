@@ -1,4 +1,5 @@
 import { path } from 'ramda';
+import { nonClickEvents } from 'src/constants';
 import {
   EntityType,
   getEntityByIDFromStore
@@ -12,6 +13,19 @@ export default (
 ) => {
   const type = path(['type'], entity);
   const id = path(['id'], entity);
+  const label = path(['label'], entity);
+
+  if (['disk_delete', 'linode_config_delete'].includes(action)) {
+    /**
+     * Special cases that are handled here above the deletion logic;
+     * although these are deletion events, they refer to a Linode,
+     * which still exists; we can therefore provide a link target.
+     */
+    return (e: React.MouseEvent<HTMLElement>) => {
+      e.preventDefault();
+      onClick(`/linodes/${id}/advanced`);
+    };
+  }
 
   if (['user_ssh_key_add', 'user_ssh_key_delete'].includes(action)) {
     return (e: React.MouseEvent<HTMLElement>) => {
@@ -35,16 +49,40 @@ export default (
     return;
   }
 
+  /**
+   * Some events have entities etc. but we don't want them to
+   * link anywhere.
+   */
+  if (nonClickEvents.includes(action)) {
+    return;
+  }
+
   /** We require these bits of information to provide a link. */
   if (!type || !id) {
     return;
   }
 
+  /**
+   * Images and their events are the bane of our existence.
+   * If these events ever start returning the ID of the actual
+   * Image, we can link to it. But linking to the Linode that
+   * the imagized disk was imagized from, which is what we
+   * would do by default, is too confusing. Just don't link.
+   */
+
+  if (action === 'disk_imagize') {
+    return;
+  }
+
   switch (type) {
     case 'linode':
+      const link =
+        action === 'linode_addip'
+          ? `/linodes/${id}/networking`
+          : `/linodes/${id}`;
       return (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
-        onClick(`/linodes/${id}`);
+        onClick(link);
       };
 
     case 'ticket':
@@ -94,6 +132,12 @@ export default (
     case 'community_like':
       return () => {
         window.open(entity!.url, '_blank');
+      };
+
+    case 'user':
+      return (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
+        onClick(`/account/users/${label}/profile`);
       };
 
     default:

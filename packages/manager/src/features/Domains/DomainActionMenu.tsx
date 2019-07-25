@@ -13,7 +13,7 @@ interface Props {
 
 type CombinedProps = RouteComponentProps<any> & Props;
 
-class LinodeActionMenu extends React.Component<CombinedProps> {
+export class DomainActionMenu extends React.Component<CombinedProps> {
   goToDomain = () => {
     this.props.history.push(`/domains/${this.props.id}`);
   };
@@ -103,4 +103,4 @@ class LinodeActionMenu extends React.Component<CombinedProps> {
   }
 }
 
-export default withRouter(LinodeActionMenu);
+export default withRouter(DomainActionMenu);
