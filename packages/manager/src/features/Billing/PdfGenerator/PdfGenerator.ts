@@ -3,6 +3,7 @@ import { pathOr, splitEvery } from 'ramda';
 import formatDate from 'src/utilities/formatDate';
 import LinodeLogo from './LinodeLogo';
 
+import { EU_COUNTRIES, LINODE_EU_TAX_ID } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 
 const leftMargin = 15; // space that needs to be applied to every parent element
@@ -91,7 +92,8 @@ const formatDescription = (desc?: string) => {
   }
 
   const [entityLabel, entityID] = descChunks[1].split(' ');
-  return `${descChunks[0]}\r\n${truncateLabel(entityLabel)}\r\n${entityID}`;
+  const cleanedType = descChunks[0].replace(/\(pending upgrade\)/, '');
+  return `${cleanedType}\r\n${truncateLabel(entityLabel)}\r\n${entityID}`;
 };
 
 const addLeftHeader = (
@@ -99,7 +101,8 @@ const addLeftHeader = (
   page: number,
   pages: number,
   date: string | null,
-  type: string
+  type: string,
+  isInEU: boolean
 ) => {
   const addLine = (text: string, fontSize = 9) => {
     doc.text(text, leftMargin, currentLine, { charSpace: 0.75 });
@@ -124,6 +127,9 @@ const addLeftHeader = (
   addLine('249 Arch St.');
   addLine('Philadelphia, PA 19106');
   addLine('USA');
+  if (isInEU) {
+    addLine(`Linode Tax ID: ${LINODE_EU_TAX_ID}`);
+  }
 };
 
 const addRightHeader = (doc: jsPDF, account: Linode.Account) => {
@@ -347,7 +353,14 @@ export const printInvoice = (
     // Create a separate page for each set of invoice items
     itemsChunks.forEach((itemsChunk, index) => {
       doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
-      addLeftHeader(doc, index + 1, itemsChunks.length, date, 'Invoice');
+      addLeftHeader(
+        doc,
+        index + 1,
+        itemsChunks.length,
+        date,
+        'Invoice',
+        EU_COUNTRIES.includes(account.country)
+      );
       addRightHeader(doc, account);
 
       /** only show tax ID if there is one provided */
@@ -478,7 +491,14 @@ export const printPayment = (
     };
 
     doc.addImage(LinodeLogo, 'JPEG', 150, 5, 120, 50);
-    addLeftHeader(doc, 1, 1, date, 'Payment');
+    addLeftHeader(
+      doc,
+      1,
+      1,
+      date,
+      'Payment',
+      EU_COUNTRIES.includes(account.country)
+    );
     addRightHeader(doc, account);
     addTitle(doc, { text: `Receipt for Payment #${payment.id}` });
     addTable();
