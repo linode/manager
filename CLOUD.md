@@ -2,11 +2,11 @@
 
 ## Creating an `.env` file
 
-Please refer to the [`.env.example` file](./packages/manager/.env.example) in this directory. This will get you started in creating you own `.env` file so you can run the Manager.
+Please refer to the [`.env.example` file](./packages/manager/.env.example) in this directory. This will get you started in creating your own `.env` file so you can run the Manager.
 
-You're `.env` file should be located in the `packages/manager` directory before your local development server is started.
+Your `.env` file should be located in the `packages/manager` directory before your local development server is started.
 
-Here are a list of all the required and optional environment variables the Manager leverages:
+Here are a list of all the required and optional environment variables the Manager uses:
 
 ### Required Variables
 
@@ -27,9 +27,9 @@ Here are a list of all the required and optional environment variables the Manag
 
 ### Optional Variables
 
-`REACT_APP_ALGOLIA_APPLICATION_ID`: The ID that matches with the Algolia index
+`REACT_APP_ALGOLIA_APPLICATION_ID`: Client ID for Linode's Algolia account
 
-`REACT_APP_SEARCH_KEY`: The search key that matches with the Algolia index
+`REACT_APP_SEARCH_KEY`: API key for Linode's Algolia account
 
 `REACT_APP_SENTRY_URL`: The URL to a configured Sentry environment
 
