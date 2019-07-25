@@ -29,6 +29,7 @@ it('renders without crashing.', () => {
             }}
             classes={{
               appFrame: '',
+              aaa: '',
               content: '',
               hidden: '',
               wrapper: '',
