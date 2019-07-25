@@ -135,12 +135,13 @@ type ClassNames =
   | 'appFrame'
   | 'content'
   | 'wrapper'
-  | 'fdafd'
+  | 'aaa'
   | 'grid'
   | 'switchWrapper';
 
 const styles = (theme: Theme) =>
   createStyles({
+    aaa: {},
     appFrame: {
       position: 'relative',
       display: 'flex',
