@@ -51,6 +51,7 @@ interface Props {
   pools: PoolNodeWithPrice[];
   poolsForEdit: PoolNodeWithPrice[];
   types: ExtendedType[];
+  loading: boolean;
   toggleEditing: () => void;
   updatePool: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
   deletePool: (poolID: number) => void;
@@ -67,6 +68,7 @@ export const NodePoolsDisplay: React.FunctionComponent<
     classes,
     deletePool,
     editing,
+    loading,
     pools,
     poolsForEdit,
     resetForm,
@@ -113,13 +115,18 @@ export const NodePoolsDisplay: React.FunctionComponent<
           {editing ? (
             <NodePoolDisplayTable
               editable
+              loading={loading}
               pools={poolsForEdit}
               types={types}
               handleDelete={deletePool}
               updatePool={updatePool}
             />
           ) : (
-            <NodePoolDisplayTable pools={pools} types={types} />
+            <NodePoolDisplayTable
+              pools={pools}
+              types={types}
+              loading={loading}
+            />
           )}
         </Grid>
         <Grid item xs={12}>
