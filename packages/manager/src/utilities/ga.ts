@@ -330,3 +330,11 @@ export const sendObjectsQueuedForUploadEvent = (numObjects: number) => {
     label: `${numObjects} objects`
   });
 };
+
+export const createDomainEvent = (action: string, label?: string) => {
+  sendEvent({
+    category: 'Create Domain',
+    action,
+    label
+  });
+}
