@@ -226,6 +226,8 @@ export const EU_COUNTRIES = [
   'GB' // United Kingdom
 ];
 
+export const LINODE_EU_TAX_ID = 'EU372008859';
+
 /**
  * MBps rate for intra DC migrations (AKA Mutations)
  */
