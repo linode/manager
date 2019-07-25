@@ -33,6 +33,13 @@ Starting a single project is similar to the previous instructions with the excep
    * additionally, you can add a `--stream` flag to this command to see the output of the development server.
    * `linode-manager` is the name located in `packages/manager/package.json`
 
+## Helper Scripts
+
+* `yarn clean` is an alias that will remove both top-level and package-level `node_modules`.
+  * Please note - this also bypasses the confirmation lerna gives by default to delete package-level `node_modules`
+* `yarn test` is an alias that will run a test suite in the Cloud Manager project
+  * `yarn test packages/manager/src/App.test.tsx` for example
+
 ## Okay. I've got my development server running. So how do I contribute?
 
 Please see our [contributing](./CONTRIBUTING.md) and [code conventions](./CODE_CONVENTIONS.md) guides for instructions on how to get started with contributing to this project.
