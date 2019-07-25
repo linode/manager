@@ -37,6 +37,10 @@ export const UserEventsList: React.StatelessComponent<
           const failedImage =
             event.action === 'disk_imagize' && event.status === 'failed';
 
+          const helperText = failedImage
+            ? 'This likely happened because your compressed disk content was larger than the 2048 MB limit, or you attempted to imagize a raw or custom formatted disk.'
+            : '';
+
           const onClick = (e: any) => {
             closeMenu(e);
           };
@@ -57,7 +61,7 @@ export const UserEventsList: React.StatelessComponent<
                   error,
                   onClick,
                   linkPath,
-                  failedImage
+                  helperText
                 }
               ]
             : result;

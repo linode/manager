@@ -18,7 +18,7 @@ type ClassNames =
   | 'linkItem'
   | 'pointer'
   | 'noLink'
-  | 'imageContent';
+  | 'helperText';
 
 const styles = (theme: Theme) => {
   const {
@@ -47,7 +47,7 @@ const styles = (theme: Theme) => {
     content: {
       ...theme.typography.body1
     },
-    imageContent: {
+    helperText: {
       ...theme.typography.body1,
       marginBottom: theme.spacing(1)
     },
@@ -61,7 +61,7 @@ const styles = (theme: Theme) => {
     pointer: {
       '&:hover, &:focus': {
         backgroundColor: theme.palette.primary.main,
-        '& $title, & $content, & $imageContent': {
+        '& $title, & $content, & $helperText': {
           color: 'white'
         }
       },
@@ -86,7 +86,7 @@ export interface Props {
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   className?: any;
   linkPath: string | undefined;
-  failedImage?: boolean;
+  helperText?: string;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -103,7 +103,7 @@ class UserEventsListItem extends React.Component<CombinedProps> {
       onClick,
       linkPath,
       className,
-      failedImage
+      helperText
     } = this.props;
 
     const listItem = (
@@ -122,30 +122,22 @@ class UserEventsListItem extends React.Component<CombinedProps> {
         onClick={onClick}
         role="menuitem"
       >
-        {failedImage ? (
-          <div className={classes.linkItem}>
-            <Typography variant="h3" className={classes.title}>
-              {title}
+        <Link
+          to={linkPath ? linkPath : '/'}
+          href="javascript:void(0)"
+          onClick={onClick}
+          className={classes.linkItem}
+        >
+          <Typography variant="h3" className={classes.title}>
+            {title}
+          </Typography>
+          {helperText && (
+            <Typography variant="body1" className={classes.helperText}>
+              {helperText}
             </Typography>
-            <Typography variant="body1" className={classes.imageContent}>
-              Linode Images cannot be created if you are using raw disks or
-              disks that have been formatted using custom filesystems.
-            </Typography>
-            {content && <div className={classes.content}>{content}</div>}
-          </div>
-        ) : (
-          <Link
-            to={linkPath ? linkPath : '/'}
-            href="javascript:void(0)"
-            onClick={onClick}
-            className={classes.linkItem}
-          >
-            <Typography variant="h3" className={classes.title}>
-              {title}
-            </Typography>
-            {content && <div className={classes.content}>{content}</div>}
-          </Link>
-        )}
+          )}
+          {content && <div className={classes.content}>{content}</div>}
+        </Link>
       </ListItem>
     );
 
