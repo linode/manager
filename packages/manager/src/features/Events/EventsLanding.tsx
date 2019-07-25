@@ -339,7 +339,7 @@ export const renderTableBody = (
   error?: string,
   events?: Linode.Event[]
 ) => {
-  const filteredEvents = removeBlacklistedEvents(events);
+  const filteredEvents = removeBlacklistedEvents(events, ['profile_update']);
 
   if (loading) {
     return <TableRowLoading colSpan={12} data-qa-events-table-loading />;

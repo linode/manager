@@ -41,15 +41,21 @@ export const UserEventsList: React.StatelessComponent<
             ? 'This likely happened because your compressed disk content was larger than the 2048 MB limit, or you attempted to imagize a raw or custom formatted disk.'
             : '';
 
-          const onClick = (e: any) => {
-            closeMenu(e);
-          };
-
           const linkPath = createLinkHandlerForNotification(
             event.action,
             event.entity,
             event._deleted
           );
+
+          /**
+           * Events without a link path either refer to a deleted
+           * entity or else don't have an entity/anywhere to point.
+           */
+          const onClick = linkPath
+            ? (e: any) => {
+                closeMenu(e);
+              }
+            : undefined;
 
           return title
             ? [

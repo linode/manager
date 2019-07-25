@@ -1,4 +1,5 @@
 import { path } from 'ramda';
+import { nonClickEvents } from 'src/constants';
 
 export default (
   action: Linode.EventAction,
@@ -7,6 +8,16 @@ export default (
 ) => {
   const type = path(['type'], entity);
   const id = path(['id'], entity);
+  const label = path(['label'], entity);
+
+  if (['disk_delete', 'linode_config_delete'].includes(action)) {
+    /**
+     * Special cases that are handled here above the deletion logic;
+     * although these are deletion events, they refer to a Linode,
+     * which still exists; we can therefore provide a link target.
+     */
+    return `/linodes/${id}/advanced`;
+  }
 
   if (['user_ssh_key_add', 'user_ssh_key_delete'].includes(action)) {
     return `/profile/keys`;
@@ -14,6 +25,18 @@ export default (
 
   if (['account_settings_update'].includes(action)) {
     return `/account/settings`;
+  }
+
+  if (action === 'linode_addip') {
+    return `/linodes/${id}/networking`;
+  }
+
+  /**
+   * Some events have entities etc. but we don't want them to
+   * link anywhere.
+   */
+  if (nonClickEvents.includes(action)) {
+    return;
   }
 
   /**
@@ -59,6 +82,9 @@ export default (
 
     case 'community_like':
       return entity!.url;
+
+    case 'user':
+      return `/account/users/${label}/profile`;
 
     default:
       return;
