@@ -9,6 +9,7 @@ export interface ExtendedPoolNode {
   count: number;
   type: string;
   clusterID?: number;
+  linodes?: Linode.PoolNodeResponse[];
 }
 export interface ExtendedCluster extends Linode.KubernetesCluster {
   node_pools: PoolNodeWithPrice[];
