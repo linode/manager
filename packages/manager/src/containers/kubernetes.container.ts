@@ -23,6 +23,7 @@ import {
 import {
   createNodePool as _createNodePool,
   deleteNodePool as _deleteNodePool,
+  requestNodePoolsForCluster as _requestNodePools,
   updateNodePool as _updateNodePool
 } from 'src/store/kubernetes/nodePools.requests';
 import { EntityError } from 'src/store/types';
@@ -37,6 +38,7 @@ export interface KubernetesProps {
 export interface DispatchProps {
   requestKubernetesClusters: () => void;
   requestClusterForStore: (clusterID: number) => void;
+  requestNodePools: (clusterID: number) => void;
   updateCluster: (
     params: UpdateClusterParams
   ) => Promise<Linode.KubernetesCluster>;
@@ -64,7 +66,9 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   deleteCluster: (params: DeleteClusterParams) =>
     dispatch(_deleteCluster(params)),
   setKubernetesErrors: (newErrors: EntityError) =>
-    dispatch(_setErrors(newErrors))
+    dispatch(_setErrors(newErrors)),
+  requestNodePools: (clusterID: number) =>
+    dispatch(_requestNodePools({ clusterID }))
 });
 
 export default <TInner extends {}, TOuter extends {}>(
