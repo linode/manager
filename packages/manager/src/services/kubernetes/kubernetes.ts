@@ -94,3 +94,27 @@ export const getKubeConfig = (clusterId: number) =>
     setMethod('GET'),
     setURL(`${BETA_API_ROOT}/lke/clusters/${clusterId}/kubeconfig`)
   ).then(response => response.data);
+
+/** getKubernetesVersions
+ *
+ * Returns a paginated list of available Kubernetes versions.
+ *
+ */
+
+export const getKubernetesVersions = () =>
+  Request<Page<Linode.KubernetesVersion>>(
+    setMethod('GET'),
+    setURL(`${BETA_API_ROOT}/lke/versions`)
+  ).then(response => response.data);
+
+/** getKubernetesVersion
+ *
+ * Returns a single Kubernetes version by ID.
+ *
+ */
+
+export const getKubernetesVersion = (versionID: string) =>
+  Request<Linode.KubernetesVersion>(
+    setMethod('GET'),
+    setURL(`${BETA_API_ROOT}/lke/versions/${versionID}`)
+  ).then(response => response.data);

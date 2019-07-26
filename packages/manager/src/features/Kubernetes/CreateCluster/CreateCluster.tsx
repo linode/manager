@@ -23,13 +23,17 @@ import { dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { WithRegionsProps } from 'src/features/linodes/LinodesCreate/types';
-import { createKubernetesCluster } from 'src/services/kubernetes';
+import {
+  createKubernetesCluster,
+  getKubernetesVersions
+} from 'src/services/kubernetes';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
+import { getAll } from 'src/utilities/getAll';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { getTagsAsStrings } from 'src/utilities/tagUtils';
 
 import KubeCheckoutBar from '.././KubeCheckoutBar';
-import { getMonthlyPrice, KubernetesVersionOptions } from '.././kubeUtils';
+import { getMonthlyPrice } from '.././kubeUtils';
 import { PoolNodeWithPrice } from '.././types';
 import NodePoolPanel from './NodePoolPanel';
 
@@ -62,12 +66,21 @@ interface State {
   version?: Item<string>;
   errors?: Linode.ApiFieldError[];
   submitting: boolean;
+  versionOptions: Item<string>[];
 }
 
 type CombinedProps = RouteComponentProps<{}> &
   WithStyles<ClassNames> &
   WithRegionsProps &
   WithTypesProps;
+
+/**
+ * It's very unlikely there will ever be more than one page of
+ * active/available K8s versions. API paginates the response
+ * though to match convention, so to be safe we're following
+ * our own convention.
+ */
+const getAllVersions = getAll<Linode.KubernetesVersion>(getKubernetesVersions);
 
 export class CreateCluster extends React.Component<CombinedProps, State> {
   state: State = {
@@ -79,8 +92,31 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     tags: [],
     version: undefined,
     errors: undefined,
-    submitting: false
+    submitting: false,
+    versionOptions: []
   };
+
+  componentDidMount() {
+    getAllVersions()
+      .then(response => {
+        this.setState({
+          versionOptions: response.data.map(eachVersion => ({
+            value: eachVersion.id,
+            label: eachVersion.id
+          }))
+        });
+        console.log(response);
+      })
+      .catch(error => {
+        this.setState({
+          errors: getAPIErrorOrDefault(
+            error,
+            'Unable to load Kubernetes versions.',
+            'version'
+          )
+        });
+      });
+  }
 
   createCluster = () => {
     const { selectedRegion, nodePools, label, tags, version } = this.state;
@@ -184,7 +220,8 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       nodePools,
       tags,
       submitting,
-      version
+      version,
+      versionOptions
     } = this.state;
 
     const errorMap = getErrorMap(
@@ -275,7 +312,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
                   label="Version"
                   value={version || null}
                   errorText={errorMap.version}
-                  options={KubernetesVersionOptions}
+                  options={versionOptions}
                   placeholder={'Select a Kubernetes version'}
                   onChange={(selected: Item<string>) =>
                     this.setState({ version: selected })
