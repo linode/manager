@@ -171,9 +171,18 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     if (props.lastUpdated === 0) {
       props.requestKubernetesClusters();
     } else {
-      const clusterID = props.match.params.clusterID;
-      props.requestClusterForStore(+clusterID);
+      const clusterID = +props.match.params.clusterID;
+      props.requestClusterForStore(clusterID);
     }
+
+    const interval = setInterval(
+      () => props.requestNodePools(+props.match.params.clusterID),
+      10000
+    );
+
+    return () => {
+      clearInterval(interval);
+    };
   }, []);
 
   if (clustersLoadError) {
@@ -195,7 +204,11 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     Bluebird.map(pools, thisPool => {
       if (thisPool.queuedForAddition) {
         // This pool doesn't exist and needs to be added.
-        return props.createNodePool({ clusterID: cluster.id, ...thisPool });
+        return props.createNodePool({
+          clusterID: cluster.id,
+          count: thisPool.count,
+          type: thisPool.type
+        });
       } else if (thisPool.queuedForDeletion) {
         // Marked for deletion
         return props.deleteNodePool({

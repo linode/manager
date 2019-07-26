@@ -1,4 +1,5 @@
 import * as classNames from 'classnames';
+import produce from 'immer';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
@@ -71,6 +72,30 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
+export interface NodeStatus {
+  ready: number;
+  not_ready: number;
+}
+
+export const getNodeStatus = (linodes: Linode.PoolNodeResponse[]) => {
+  return produce<NodeStatus, NodeStatus>({ ready: 0, not_ready: 0 }, draft => {
+    linodes.forEach(thisLinode => {
+      draft[thisLinode.status]++;
+    });
+  });
+};
+
+export const getStatusString = (
+  count: number,
+  linodes?: Linode.PoolNodeResponse[]
+) => {
+  if (!linodes || linodes.length === 0) {
+    return String(count);
+  }
+  const status = getNodeStatus(linodes);
+  return `${count} (${status.ready} up, ${status.not_ready} down)`;
+};
+
 export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
   const { classes, editable, pool, idx, deletePool, type, updatePool } = props;
 
@@ -117,7 +142,7 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
             }
           />
         ) : (
-          <Typography>{pool.count}</Typography>
+          <Typography>{getStatusString(pool.count, pool.linodes)}</Typography>
         )}
       </TableCell>
       <TableCell parentColumn="Pricing">
