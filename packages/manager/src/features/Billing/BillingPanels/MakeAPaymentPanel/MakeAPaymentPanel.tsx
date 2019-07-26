@@ -507,10 +507,6 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
                   value={this.state.cvv}
                   type="text"
                   placeholder={`000`}
-                  inputProps={{
-                    maxLength: 4,
-                    minLength: 3
-                  }}
                 />
               )}
             </Grid>
