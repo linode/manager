@@ -2,6 +2,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 
 import Button from 'src/components/Button';
+import CopyTooltip from 'src/components/CopyTooltip';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
@@ -19,7 +20,14 @@ import NodePoolDisplayTable from '../../CreateCluster/NodePoolDisplayTable';
 import { getTotalClusterPrice } from '../../kubeUtils';
 import { PoolNodeWithPrice } from '../../types';
 
-type ClassNames = 'root' | 'button' | 'pricing' | 'ctaOuter' | 'displayTable';
+type ClassNames =
+  | 'root'
+  | 'button'
+  | 'pricing'
+  | 'ctaOuter'
+  | 'displayTable'
+  | 'code'
+  | 'footer';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
@@ -40,6 +48,12 @@ const styles = (theme: Theme) =>
     },
     displayTable: {
       width: '100%'
+    },
+    code: {
+      padding: theme.spacing(1)
+    },
+    footer: {
+      marginTop: theme.spacing(2)
     }
   });
 
@@ -61,13 +75,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const successMsg = (
-  <Typography variant="body1">
-    Your node pools are being updated. You can run{' '}
-    <code>kubectl get nodes -o wide</code> to check the current status of your
-    cluster's nodes.
-  </Typography>
-);
+const command = 'kubectl get nodes -o wide';
 
 export const NodePoolsDisplay: React.FunctionComponent<
   CombinedProps
@@ -111,7 +119,7 @@ export const NodePoolsDisplay: React.FunctionComponent<
         </Grid>
         {submissionSuccess && (
           <Grid item xs={12}>
-            <Notice success text={successMsg} />
+            <Notice success text={'Your node pools are being updated.'} />
           </Grid>
         )}
         {submissionError && submissionError.length > 0 && (
@@ -163,6 +171,14 @@ export const NodePoolsDisplay: React.FunctionComponent<
               Clear Changes
             </Button>
           </Grid>
+        </Grid>
+        <Grid item className={classes.footer}>
+          <Typography>
+            You can run
+            <code className={classes.code}>{command}</code>
+            <CopyTooltip text={command} />
+            for more detailed information about the nodes in your cluster.
+          </Typography>
         </Grid>
       </Grid>
     </Paper>
