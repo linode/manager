@@ -1,3 +1,4 @@
+import produce from 'immer';
 import { Reducer } from 'redux';
 import { EntityError, EntityState } from 'src/store/types';
 import updateOrAdd from 'src/utilities/updateOrAdd';
@@ -56,55 +57,44 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     };
   }
 
+  if (isType(action, requestNodePoolsActions.started)) {
+    return produce(state, draft => {
+      draft.loading = true;
+    });
+  }
+
   if (isType(action, requestNodePoolsActions.failed)) {
     const { error } = action.payload;
 
-    return {
-      ...state,
-      loading: false,
-      error: {
-        ...state.error,
-        read: error
-      }
-    };
+    return produce(state, draft => {
+      (draft.loading = false), (draft.error!.read = error);
+    });
   }
 
   if (isType(action, createNodePoolActions.done)) {
     const { result } = action.payload;
 
-    return {
-      ...state,
-      entities: [...state.entities, result],
-      results: [...state.results, result.id],
-      error: {
-        ...state.error,
-        create: undefined
-      }
-    };
+    return produce(state, draft => {
+      draft.entities.push(result),
+        draft.results.push(result.id),
+        (draft.error!.create = undefined);
+    });
   }
 
   if (isType(action, createNodePoolActions.failed)) {
     const { error } = action.payload;
 
-    return {
-      ...state,
-      error: {
-        ...state.error,
-        create: error
-      }
-    };
+    return produce(state, draft => {
+      draft.error!.create = error;
+    });
   }
 
   if (isType(action, updateNodePoolActions.failed)) {
     const { error } = action.payload;
 
-    return {
-      ...state,
-      error: {
-        ...state.error,
-        update: error
-      }
-    };
+    return produce(state, draft => {
+      draft.error!.update = error;
+    });
   }
 
   if (isType(action, updateNodePoolActions.done)) {
@@ -112,11 +102,10 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
     const update = updateOrAdd(result, state.entities);
 
-    return {
-      ...state,
-      entities: update,
-      results: update.map(c => c.id)
-    };
+    return produce(state, draft => {
+      draft.entities = update;
+      draft.results = update.map(c => c.id);
+    });
   }
 
   if (isType(action, deleteNodePoolActions.done)) {
@@ -128,31 +117,25 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       thisPool => thisPool.id !== nodePoolID
     );
 
-    return {
-      ...state,
-      entities: updatedPools,
-      results: updatedPools.map(p => p.id)
-    };
+    return produce(state, draft => {
+      draft.entities = updatedPools;
+      draft.results = updatedPools.map(p => p.id);
+    });
   }
 
   if (isType(action, deleteNodePoolActions.failed)) {
     const { error } = action.payload;
 
-    return {
-      ...state,
-      error: {
-        ...state.error,
-        delete: error
-      }
-    };
+    return produce(state, draft => {
+      draft.error!.delete = error;
+    });
   }
 
   if (isType(action, setErrors)) {
     const error = action.payload;
-    return {
-      ...state,
-      error
-    };
+    return produce(state, draft => {
+      draft.error = error;
+    });
   }
   return state;
 };

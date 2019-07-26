@@ -2,7 +2,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 
 import Button from 'src/components/Button';
-import CopyTooltip from 'src/components/CopyTooltip';
+// import CopyTooltip from 'src/components/CopyTooltip';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
@@ -75,7 +75,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const command = 'kubectl get nodes -o wide';
+// const command = 'kubectl get nodes -o wide';
 
 export const NodePoolsDisplay: React.FunctionComponent<
   CombinedProps
@@ -172,14 +172,14 @@ export const NodePoolsDisplay: React.FunctionComponent<
             </Button>
           </Grid>
         </Grid>
-        <Grid item className={classes.footer}>
+        {/* <Grid item className={classes.footer}>
           <Typography>
             You can run
             <code className={classes.code}>{command}</code>
             <CopyTooltip text={command} />
             for more detailed information about the nodes in your cluster.
           </Typography>
-        </Grid>
+        </Grid> */}
       </Grid>
     </Paper>
   );
