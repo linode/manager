@@ -161,7 +161,6 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
                 className={classes.statusHelpIcon}
                 tooltipPosition="right-start"
                 interactive
-                leaveDelay
               />
             </>
           )}
