@@ -518,7 +518,7 @@ const withCluster = KubeContainer<
       clustersLoading,
       clustersLoadError: clustersError.read,
       clusterDeleteError: clustersError.delete,
-      nodePoolsLoading
+      nodePoolsLoading: nodePoolsLoading && lastUpdated === 0
     };
   }
 );
