@@ -106,6 +106,28 @@ export const dcDisplayNames = {
   'ap-west': 'Mumbai, IN'
 };
 
+export const extendedDCDisplayNames = {
+  'us-east-1a': 'US East: Newark, NJ',
+  'us-south-1a': 'US Central: Dallas, TX',
+  'us-west-1a': 'US West: Fremont, CA',
+  'us-southeast-1a': 'US South: Atlanta, GA',
+  'eu-central-1a': 'EU East: Frankfurt, DE',
+  'eu-west-1a': 'EU West: London, UK',
+  'ap-northeast-1a': 'Asia-Pacific Northeast: Tokyo, JP',
+  'ap-northeast-1b': 'Asia-Pacific Northeast: Tokyo, JP',
+  'us-central': 'Dallas, TX',
+  'us-west': 'US West: Fremont, CA',
+  'us-southeast': 'US South: Atlanta, GA',
+  'us-east': 'US East: Newark, NJ',
+  'eu-west': 'EU West: London, UK',
+  'ap-south': 'Asia-Pacific South: Singapore, SG',
+  'eu-central': 'EU East: Frankfurt, DE',
+  'ap-northeast': 'Asia-Pacific Northeast: Tokyo 2, JP',
+  'ca-central': 'Canada: Toronto, ON',
+  'ca-east': 'Canada: Toronto, ON', // @todo Fallback for old Toronto ID; remove once DB has been updated.
+  'ap-west': 'Asia-Pacific West: Mumbai, IN'
+};
+
 export const dcDisplayCountry = {
   'us-east-1a': 'US',
   'us-south-1a': 'US',
