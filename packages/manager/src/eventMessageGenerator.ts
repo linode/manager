@@ -207,6 +207,18 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     finished: e => `Linode ${e.entity!.label} has been migrated.`
   },
   // This event type isn't currently being displayed, but I added a message here just in case.
+  linode_migrate_datacenter_create: {
+    notification: e =>
+      `Migration for Linode ${e.entity!.label} has been initiated.`
+  },
+  // These are the same as the messages for `linode_migrate`.
+  linode_migrate_datacenter: {
+    scheduled: e => `Linode ${e.entity!.label} is scheduled for migration.`,
+    started: e => `Linode ${e.entity!.label} is being migrated.`,
+    failed: e => `Migration failed for Linode ${e.entity!.label}.`,
+    finished: e => `Linode ${e.entity!.label} has been migrated.`
+  },
+  // This event type isn't currently being displayed, but I added a message here just in case.
   linode_mutate_create: {
     notification: e =>
       `Upgrade for Linode ${e.entity!.label} has been initiated.`
@@ -376,6 +388,12 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   stackscript_revise: {
     notification: e => `StackScript ${e.entity!.label} has been revised.`
+  },
+  tag_create: {
+    notification: e => `Tag ${e.entity!.label} has been created.`
+  },
+  tag_delete: {
+    notification: e => `Tag ${e.entity!.label} has been deleted.`
   },
   tfa_disabled: {
     notification: e => `Two-factor authentication has been disabled.`
