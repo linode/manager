@@ -59,7 +59,7 @@ type CombinedProps = StateProps;
 const SplashScreen: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  return !props.appIsLoading ? (
+  return props.appIsLoading ? (
     <>
       <div
         className={classNames({
