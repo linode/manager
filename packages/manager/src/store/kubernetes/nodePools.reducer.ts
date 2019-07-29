@@ -33,8 +33,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
   return produce(state, draft => {
     if (isType(action, requestNodePoolsActions.done)) {
       const { result } = action.payload;
-
-      // If there's nothing to add, return the state unchanged.
+      // If this condition is false we don't have to update the state
       if (result.length !== 0) {
         /**
          * This action payload is the current node pools for a single
