@@ -56,7 +56,7 @@ export const EventRow: React.StatelessComponent<CombinedProps> = props => {
 
   const rowProps = {
     created: event.created,
-    linkTarget,
+    linkTarget: linkTarget.onClick,
     message: eventMessageGenerator(event),
     status: pathOr(undefined, ['status'], entity),
     type,

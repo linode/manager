@@ -82,6 +82,7 @@ export interface Props {
   success?: boolean;
   warning?: boolean;
   error?: boolean;
+  linkPath?: string;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   className?: any;
   helperText?: string;
@@ -97,6 +98,7 @@ class UserEventsListItem extends React.Component<CombinedProps> {
       content,
       warning,
       success,
+      linkPath,
       error,
       onClick,
       className,
@@ -120,7 +122,7 @@ class UserEventsListItem extends React.Component<CombinedProps> {
         role="menuitem"
       >
         {onClick ? (
-          <a onClick={onClick} className={classes.linkItem}>
+          <a onClick={onClick} className={classes.linkItem} href={linkPath}>
             <Typography variant="h3" className={classes.title}>
               {title}
             </Typography>

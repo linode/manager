@@ -5,12 +5,28 @@ import {
   getEntityByIDFromStore
 } from 'src/utilities/getEntityByIDFromStore';
 
+const emptyHandler = { href: undefined, onClick: undefined };
+export interface EventHandler {
+  onClick?: (e: React.MouseEvent<HTMLElement>) => void;
+  href?: string;
+}
+
+const generateOnClick = (url: string, fn: (e: any) => void) => {
+  return (e: React.MouseEvent<HTMLElement>) => {
+    e.preventDefault();
+    fn(url);
+  };
+};
+
 export default (
   action: Linode.EventAction,
   entity: null | Linode.Entity,
   deleted: undefined | string | boolean,
   onClick: (path: string) => void
-) => {
+): EventHandler => {
+  let href: string;
+  let _onClick: (e: React.MouseEvent<HTMLElement>) => void;
+
   const type = path(['type'], entity);
   const id = path(['id'], entity);
   const label = path(['label'], entity);
@@ -21,24 +37,21 @@ export default (
      * although these are deletion events, they refer to a Linode,
      * which still exists; we can therefore provide a link target.
      */
-    return (e: React.MouseEvent<HTMLElement>) => {
-      e.preventDefault();
-      onClick(`/linodes/${id}/advanced`);
-    };
+    href = `/linodes/${id}/advanced`;
+    _onClick = generateOnClick(href, onClick);
+    return { href, onClick: _onClick };
   }
 
   if (['user_ssh_key_add', 'user_ssh_key_delete'].includes(action)) {
-    return (e: React.MouseEvent<HTMLElement>) => {
-      e.preventDefault();
-      onClick(`/profile/keys`);
-    };
+    href = `/profile/keys`;
+    _onClick = generateOnClick(href, onClick);
+    return { href, onClick: _onClick };
   }
 
   if (['account_settings_update'].includes(action)) {
-    return (e: React.MouseEvent<HTMLElement>) => {
-      e.preventDefault();
-      onClick(`/account/settings`);
-    };
+    href = `/account/settings`;
+    _onClick = generateOnClick(href, onClick);
+    return { href, onClick: _onClick };
   }
 
   /**
@@ -46,7 +59,7 @@ export default (
    * we don't want a clickable action.
    */
   if (action.includes('_delete') || deleted) {
-    return;
+    return emptyHandler;
   }
 
   /**
@@ -54,12 +67,12 @@ export default (
    * link anywhere.
    */
   if (nonClickEvents.includes(action)) {
-    return;
+    return emptyHandler;
   }
 
   /** We require these bits of information to provide a link. */
   if (!type || !id) {
-    return;
+    return emptyHandler;
   }
 
   /**
@@ -71,77 +84,70 @@ export default (
    */
 
   if (action === 'disk_imagize') {
-    return;
+    return emptyHandler;
   }
 
   switch (type) {
     case 'linode':
-      const link =
+      href =
         action === 'linode_addip'
           ? `/linodes/${id}/networking`
           : `/linodes/${id}`;
-      return (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault();
-        onClick(link);
-      };
+      _onClick = generateOnClick(href, onClick);
+      return { href, onClick: _onClick };
 
     case 'ticket':
-      return (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault();
-        onClick(`/support/tickets/${id}`);
-      };
+      href = `/support/tickets/${id}`;
+      _onClick = generateOnClick(href, onClick);
+      return { href, onClick: _onClick };
 
     case 'domain':
-      return (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault();
-        onClick(`/domains/${id}`);
-      };
+      href = `/domains/${id}`;
+      _onClick = generateOnClick(href, onClick);
+      return { href, onClick: _onClick };
 
     case 'volume':
-      return (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault();
-        onClick(`/volumes`);
-      };
+      href = `/volumes`;
+      _onClick = generateOnClick(href, onClick);
+      return { href, onClick: _onClick };
 
     case 'stackscript':
-      return (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault();
-        onClick(`/stackscripts/${id}`);
-      };
+      href = `/stackscripts/${id}`;
+      _onClick = generateOnClick(href, onClick);
+      return { href, onClick: _onClick };
 
     case 'nodebalancer':
       switch (action) {
         case 'nodebalancer_config_create':
-          return (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
-            onClick(`/nodebalancers/${id}/configurations`);
-          };
+          href = `/nodebalancers/${id}/configurations`;
+          _onClick = generateOnClick(href, onClick);
+          return { href, onClick: _onClick };
 
         default:
-          return (e: React.MouseEvent<HTMLElement>) => {
-            e.preventDefault();
-            onClick(`/nodebalancers/${id}/summary`);
-          };
+          href = `/nodebalancers/${id}/summary`;
+          _onClick = generateOnClick(href, onClick);
+          return { href, onClick: _onClick };
       }
 
     case 'community_question':
-      return () => {
+      _onClick = () => {
         window.open(entity!.url, '_blank');
       };
+      return { href: entity!.url, onClick: _onClick };
 
     case 'community_like':
-      return () => {
+      _onClick = () => {
         window.open(entity!.url, '_blank');
       };
+      return { href: entity!.url, onClick: _onClick };
 
     case 'user':
-      return (e: React.MouseEvent<HTMLElement>) => {
-        e.preventDefault();
-        onClick(`/account/users/${label}/profile`);
-      };
+      href = `/account/users/${label}/profile`;
+      _onClick = generateOnClick(href, onClick);
+      return { href, onClick: _onClick };
 
     default:
-      return;
+      return emptyHandler;
   }
 };
 

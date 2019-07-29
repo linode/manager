@@ -41,7 +41,7 @@ export const UserEventsList: React.StatelessComponent<
             ? 'This likely happened because your disk content was larger than the 2048 MB limit, or you attempted to imagize a raw or custom formatted disk.'
             : '';
 
-          const onClick = getEventsActionLink(
+          const { href, onClick } = getEventsActionLink(
             event.action,
             event.entity,
             event._deleted,
@@ -60,6 +60,7 @@ export const UserEventsList: React.StatelessComponent<
                   success,
                   error,
                   onClick,
+                  linkPath: href,
                   helperText
                 }
               ]
