@@ -334,6 +334,18 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: e =>
       `A node on NodeBalancer ${e.entity!.label} has been updated.`
   },
+  oauth_client_create: {
+    notification: e => `OAuth App ${e.entity!.label} has been created.`
+  },
+  oauth_client_update: {
+    notification: e => `OAuth App ${e.entity!.label} has been updated.`
+  },
+  oauth_client_secret_reset: {
+    notification: e => `Secret for OAuth App ${e.entity!.label} has been reset.`
+  },
+  oauth_client_delete: {
+    notification: e => `OAuth App ${e.entity!.label} has been deleted.`
+  },
   password_reset: {
     scheduled: e => `A password reset is scheduled for ${e.entity!.label}.`,
     started: e => `The password for ${e.entity!.label} is being reset.`,
@@ -388,6 +400,16 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: e =>
       `File has been successfully uploaded to support ticket ${e.entity!.label}`
   },
+  token_create: {
+    notification: e => `Token ${e.entity!.label} has been created.`
+  },
+  token_update: {
+    notification: e => `Token ${e.entity!.label} has been updated.`
+  },
+  token_delete: {
+    notification: e => `Token ${e.entity!.label} has been revoked.`
+  },
+
   volume_attach: {
     // @todo Once we have better events, display the name of the attached Linode
     // in these messages.
