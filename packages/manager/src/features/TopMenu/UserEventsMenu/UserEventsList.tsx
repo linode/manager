@@ -45,8 +45,11 @@ export const UserEventsList: React.StatelessComponent<
             event.action,
             event.entity,
             event._deleted,
-            (path: string) => {
-              props.history.push(path);
+            (path?: string) => {
+              if (path) {
+                // Don't push external links to history
+                props.history.push(path);
+              }
               closeMenu(path);
             }
           );

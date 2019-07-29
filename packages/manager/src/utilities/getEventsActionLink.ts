@@ -11,7 +11,7 @@ export interface EventHandler {
   href?: string;
 }
 
-const generateOnClick = (url: string, fn: (e: any) => void) => {
+const generateOnClick = (url: string, fn: (e?: string) => void) => {
   return (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     fn(url);
@@ -22,7 +22,7 @@ export default (
   action: Linode.EventAction,
   entity: null | Linode.Entity,
   deleted: undefined | string | boolean,
-  onClick: (path: string) => void
+  onClick: (path?: string) => void
 ): EventHandler => {
   let href: string;
   let _onClick: (e: React.MouseEvent<HTMLElement>) => void;
@@ -133,6 +133,7 @@ export default (
       _onClick = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
         window.open(entity!.url, '_blank');
+        onClick();
       };
       return { href: entity!.url, onClick: _onClick };
 
@@ -140,6 +141,7 @@ export default (
       _onClick = (e: React.MouseEvent<HTMLElement>) => {
         e.preventDefault();
         window.open(entity!.url, '_blank');
+        onClick();
       };
       return { href: entity!.url, onClick: _onClick };
 
