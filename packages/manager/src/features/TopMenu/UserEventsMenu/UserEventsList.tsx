@@ -53,7 +53,6 @@ export const UserEventsList: React.StatelessComponent<
            */
           const onClick = linkPath
             ? (e: any) => {
-                console.log('closing menu!');
                 closeMenu(e);
               }
             : undefined;
