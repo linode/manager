@@ -191,7 +191,11 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     return <ErrorState errorText="Unable to load cluster data." />;
   }
 
-  if ((clustersLoading && lastUpdated !== 0) || typesLoading) {
+  if (
+    (clustersLoading && lastUpdated !== 0) ||
+    nodePoolsLoading ||
+    typesLoading
+  ) {
     return <CircleProgress />;
   }
   if (cluster === null) {
