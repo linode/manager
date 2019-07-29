@@ -364,6 +364,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     return cluster.label;
   };
 
+  console.log(nodePoolsLoading);
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment={`Kubernetes Cluster ${'label'}`} />
@@ -518,7 +520,7 @@ const withCluster = KubeContainer<
       clustersLoading,
       clustersLoadError: clustersError.read,
       clusterDeleteError: clustersError.delete,
-      nodePoolsLoading: nodePoolsLoading && lastUpdated === 0
+      nodePoolsLoading
     };
   }
 );

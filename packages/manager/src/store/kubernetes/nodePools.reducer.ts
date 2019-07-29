@@ -48,8 +48,9 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
         draft.entities = newPools;
         draft.results = newPools.map(p => p.id);
-        draft.loading = false;
       }
+      draft.loading = false;
+      draft.lastUpdated = Date.now();
     }
 
     if (isType(action, requestNodePoolsActions.started)) {
@@ -66,9 +67,9 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     if (isType(action, createNodePoolActions.done)) {
       const { result } = action.payload;
 
-      draft.entities.push(result),
-        draft.results.push(result.id),
-        (draft.error!.create = undefined);
+      draft.entities.push(result);
+      draft.results.push(result.id);
+      draft.error!.create = undefined;
     }
 
     if (isType(action, createNodePoolActions.failed)) {

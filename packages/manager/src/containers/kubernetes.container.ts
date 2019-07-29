@@ -94,7 +94,9 @@ export default <TInner extends {}, TOuter extends {}>(
       const clustersLoading = state.__resources.kubernetes.loading;
       const clustersError = state.__resources.kubernetes.error || {};
       const lastUpdated = state.__resources.kubernetes.lastUpdated;
-      const nodePoolsLoading = state.__resources.nodePools.loading;
+      const nodePoolsLoading =
+        state.__resources.nodePools.loading &&
+        state.__resources.nodePools.lastUpdated === 0;
 
       return mapKubernetesToProps(
         ownProps,
