@@ -33,6 +33,7 @@ export interface KubernetesProps {
   clustersLoading: boolean;
   clustersError: EntityError;
   lastUpdated?: number;
+  nodePoolsLoading?: boolean;
 }
 
 export interface DispatchProps {
