@@ -1,6 +1,5 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import ListItem from 'src/components/core/ListItem';
 import {
   createStyles,
@@ -85,7 +84,6 @@ export interface Props {
   error?: boolean;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
   className?: any;
-  linkPath: string | undefined;
   helperText?: string;
 }
 
@@ -101,7 +99,6 @@ class UserEventsListItem extends React.Component<CombinedProps> {
       success,
       error,
       onClick,
-      linkPath,
       className,
       helperText
     } = this.props;
@@ -123,12 +120,7 @@ class UserEventsListItem extends React.Component<CombinedProps> {
         role="menuitem"
       >
         {onClick ? (
-          <Link
-            to={linkPath ? linkPath : '/'}
-            href="javascript:void(0)"
-            onClick={onClick}
-            className={classes.linkItem}
-          >
+          <a onClick={onClick} className={classes.linkItem}>
             <Typography variant="h3" className={classes.title}>
               {title}
             </Typography>
@@ -138,7 +130,7 @@ class UserEventsListItem extends React.Component<CombinedProps> {
               </Typography>
             )}
             {content && <div className={classes.content}>{content}</div>}
-          </Link>
+          </a>
         ) : (
           <div className={classes.linkItem}>
             <Typography variant="h3" className={classes.title}>
