@@ -30,114 +30,90 @@ export const defaultState: State = {
  * Reducer
  */
 const reducer: Reducer<State> = (state = defaultState, action) => {
-  if (isType(action, requestNodePoolsActions.done)) {
-    const { result } = action.payload;
+  return produce(state, draft => {
+    if (isType(action, requestNodePoolsActions.done)) {
+      const { result } = action.payload;
 
-    // If there's nothing to add, return the state unchanged.
-    if (result.length === 0) {
-      return state;
+      // If there's nothing to add, return the state unchanged.
+      if (result.length !== 0) {
+        /**
+         * This action payload is the current node pools for a single
+         * cluster. We need to add them to state, but make sure
+         * that we don't re-add existing ones for that cluster.
+         */
+        const clusterID = result[0].clusterID;
+        const filteredPools = state.entities.filter(
+          thisPool => thisPool.clusterID !== clusterID
+        );
+        const newPools = [...filteredPools, ...result];
+
+        draft.entities = newPools;
+        draft.results = newPools.map(p => p.id);
+        draft.loading = false;
+      }
     }
 
-    /**
-     * This action payload is the current node pools for a single
-     * cluster. We need to add them to state, but make sure
-     * that we don't re-add existing ones for that cluster.
-     */
-    const clusterID = result[0].clusterID;
-    const filteredPools = state.entities.filter(
-      thisPool => thisPool.clusterID !== clusterID
-    );
-    const newPools = [...filteredPools, ...result];
-
-    return {
-      ...state,
-      entities: newPools,
-      results: newPools.map(p => p.id),
-      loading: false
-    };
-  }
-
-  if (isType(action, requestNodePoolsActions.started)) {
-    return produce(state, draft => {
+    if (isType(action, requestNodePoolsActions.started)) {
       draft.loading = true;
-    });
-  }
+    }
 
-  if (isType(action, requestNodePoolsActions.failed)) {
-    const { error } = action.payload;
+    if (isType(action, requestNodePoolsActions.failed)) {
+      const { error } = action.payload;
 
-    return produce(state, draft => {
-      (draft.loading = false), (draft.error!.read = error);
-    });
-  }
+      draft.loading = false;
+      draft.error!.read = error;
+    }
 
-  if (isType(action, createNodePoolActions.done)) {
-    const { result } = action.payload;
+    if (isType(action, createNodePoolActions.done)) {
+      const { result } = action.payload;
 
-    return produce(state, draft => {
       draft.entities.push(result),
         draft.results.push(result.id),
         (draft.error!.create = undefined);
-    });
-  }
+    }
 
-  if (isType(action, createNodePoolActions.failed)) {
-    const { error } = action.payload;
-
-    return produce(state, draft => {
+    if (isType(action, createNodePoolActions.failed)) {
+      const { error } = action.payload;
       draft.error!.create = error;
-    });
-  }
+    }
 
-  if (isType(action, updateNodePoolActions.failed)) {
-    const { error } = action.payload;
-
-    return produce(state, draft => {
+    if (isType(action, updateNodePoolActions.failed)) {
+      const { error } = action.payload;
       draft.error!.update = error;
-    });
-  }
+    }
 
-  if (isType(action, updateNodePoolActions.done)) {
-    const { result } = action.payload;
+    if (isType(action, updateNodePoolActions.done)) {
+      const { result } = action.payload;
 
-    const update = updateOrAdd(result, state.entities);
+      const update = updateOrAdd(result, state.entities);
 
-    return produce(state, draft => {
       draft.entities = update;
       draft.results = update.map(c => c.id);
-    });
-  }
+    }
 
-  if (isType(action, deleteNodePoolActions.done)) {
-    const {
-      params: { nodePoolID }
-    } = action.payload;
+    if (isType(action, deleteNodePoolActions.done)) {
+      const {
+        params: { nodePoolID }
+      } = action.payload;
 
-    const updatedPools = state.entities.filter(
-      thisPool => thisPool.id !== nodePoolID
-    );
+      const updatedPools = state.entities.filter(
+        thisPool => thisPool.id !== nodePoolID
+      );
 
-    return produce(state, draft => {
       draft.entities = updatedPools;
       draft.results = updatedPools.map(p => p.id);
-    });
-  }
+    }
 
-  if (isType(action, deleteNodePoolActions.failed)) {
-    const { error } = action.payload;
-
-    return produce(state, draft => {
+    if (isType(action, deleteNodePoolActions.failed)) {
+      const { error } = action.payload;
       draft.error!.delete = error;
-    });
-  }
+    }
 
-  if (isType(action, setErrors)) {
-    const error = action.payload;
-    return produce(state, draft => {
+    if (isType(action, setErrors)) {
+      const error = action.payload;
       draft.error = error;
-    });
-  }
-  return state;
+    }
+  });
 };
 
 export default reducer;
