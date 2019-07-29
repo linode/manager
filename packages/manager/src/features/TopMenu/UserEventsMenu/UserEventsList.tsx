@@ -38,10 +38,10 @@ export const UserEventsList: React.StatelessComponent<
             event.action === 'disk_imagize' && event.status === 'failed';
 
           const helperText = failedImage
-            ? 'This likely happened because your compressed disk content was larger than the 2048 MB limit, or you attempted to imagize a raw or custom formatted disk.'
+            ? 'This likely happened because your disk content was larger than the 2048 MB limit, or you attempted to imagize a raw or custom formatted disk.'
             : '';
 
-          const linkPath = createLinkHandlerForNotification(
+          const _linkPath = createLinkHandlerForNotification(
             event.action,
             event.entity,
             event._deleted
@@ -51,11 +51,27 @@ export const UserEventsList: React.StatelessComponent<
            * Events without a link path either refer to a deleted
            * entity or else don't have an entity/anywhere to point.
            */
-          const onClick = linkPath
-            ? (e: any) => {
-                closeMenu(e);
-              }
+          const onClick = _linkPath
+            ? /**
+               * @todo hack alert: This is a temporary fix for a regression where community posts/likes,
+               * which are the only events that have an external link target, were not linking correctly.
+               * The root of the problem is that getEventsActionLinkStrings assumes that all events will
+               * link to a path within the Manager, and so is used to pass a url string to <Link to= .../>
+               */
+              _linkPath.match(/community/i)
+              ? (e: any) => {
+                  window.open(_linkPath, '_blank');
+                  closeMenu(e);
+                }
+              : (e: any) => {
+                  closeMenu(e);
+                }
             : undefined;
+
+          const linkPath =
+            _linkPath && _linkPath.match(/community/i)
+              ? props.location.pathname
+              : _linkPath;
 
           return title
             ? [
