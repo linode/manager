@@ -130,13 +130,15 @@ export default (
       }
 
     case 'community_question':
-      _onClick = () => {
+      _onClick = (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
         window.open(entity!.url, '_blank');
       };
       return { href: entity!.url, onClick: _onClick };
 
     case 'community_like':
-      _onClick = () => {
+      _onClick = (e: React.MouseEvent<HTMLElement>) => {
+        e.preventDefault();
         window.open(entity!.url, '_blank');
       };
       return { href: entity!.url, onClick: _onClick };
