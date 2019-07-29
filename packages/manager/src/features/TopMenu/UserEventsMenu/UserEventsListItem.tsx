@@ -1,6 +1,5 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import ListItem from 'src/components/core/ListItem';
 import {
   createStyles,
@@ -9,6 +8,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import { Link } from 'src/components/Link';
 
 type ClassNames =
   | 'root'
