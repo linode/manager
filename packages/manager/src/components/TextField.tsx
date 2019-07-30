@@ -186,6 +186,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
       expand,
       small,
       tiny,
+      inputProps,
       InputProps,
       InputLabelProps,
       SelectProps,
@@ -227,7 +228,8 @@ class LinodeTextField extends React.Component<CombinedProps> {
             shrink: true
           }}
           inputProps={{
-            'data-testid': 'textfield-input'
+            'data-testid': 'textfield-input',
+            ...inputProps
           }}
           InputProps={{
             disableUnderline: true,
