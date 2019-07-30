@@ -69,20 +69,18 @@ export const makePayment = (data: { usd: string; cvv?: string }) => {
    * BUT if CVV is included in the payload, APIv4 will send an error that CVV must
    * have 3-4 characters.
    *
-   * So for example this payload will result in an error
+   * Both of these examples will pass:
    *
    * {
    *   usd: 5,
    *   cvv: ''
    * }
    *
-   * but this is good
-   *
    * {
    *   usd: 5
    * }
    */
-  if (!data.cvv) {
+  if (!data.cvv || data.cvv === '') {
     delete data.cvv;
   }
 

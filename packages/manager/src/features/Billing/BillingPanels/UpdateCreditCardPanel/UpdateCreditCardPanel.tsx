@@ -78,7 +78,7 @@ interface State {
   card_number: string;
   expiry_month: number;
   expiry_year: number;
-  cvv?: string;
+  cvv: string;
 }
 
 type CombinedProps = AccountContextProps & WithStyles<ClassNames>;
@@ -88,7 +88,8 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
     card_number: '',
     expiry_month: 1,
     expiry_year: UpdateCreditCardPanel.currentYear,
-    submitting: false
+    submitting: false,
+    cvv: ''
   };
 
   static currentYear = new Date().getFullYear();
