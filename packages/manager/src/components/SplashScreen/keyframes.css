@@ -1,56 +1,253 @@
-/* Keyframes for the general loading icon animation */
-
-@keyframes moveupSmall {
-  0%,
-  60%,
-  100% {
-    transform: rotateX(50deg) rotateY(0deg) rotateZ(45deg) translateZ(0);
+@-webkit-keyframes cube1 {
+  0% {
+    -webkit-transform: translateY(-200px);
+    transform: translateY(-200px);
   }
-  25% {
-    transform: rotateX(50deg) rotateY(0deg) rotateZ(45deg) translateZ(0.5em);
-  }
-}
-
-@keyframes movedownSmall {
-  0%,
-  60%,
-  100% {
-    transform: rotateX(50deg) rotateY(0deg) rotateZ(45deg) translateZ(0);
-  }
-  25% {
-    transform: rotateX(50deg) rotateY(0deg) rotateZ(45deg) translateZ(-0.5em);
-  }
-}
-
-@keyframes moveupLarge {
-  0%,
-  60%,
-  100% {
-    transform: rotateX(50deg) rotateY(0deg) rotateZ(45deg) translateZ(0);
-  }
-  25% {
-    transform: rotateX(50deg) rotateY(0deg) rotateZ(45deg) translateZ(1.5em);
-  }
-}
-
-@keyframes movedownLarge {
-  0%,
-  60%,
-  100% {
-    transform: rotateX(50deg) rotateY(0deg) rotateZ(45deg) translateZ(0);
-  }
-  25% {
-    transform: rotateX(50deg) rotateY(0deg) rotateZ(45deg) translateZ(-1.5em);
-  }
-}
-
-@keyframes moveupLogo {
-  0%,
-  60%,
-  100% {
-    transform: translateY(1em);
-  }
-  25% {
+  100%,
+  70% {
+    -webkit-transform: translateY(0);
     transform: translateY(0);
+  }
+  85% {
+    -webkit-transform: translateY(-15px);
+    transform: translateY(-15px);
+  }
+}
+@keyframes cube1 {
+  0% {
+    -webkit-transform: translateY(-200px);
+    transform: translateY(-200px);
+  }
+  100%,
+  70% {
+    -webkit-transform: translateY(0);
+    transform: translateY(0);
+  }
+  85% {
+    -webkit-transform: translateY(-15px);
+    transform: translateY(-15px);
+  }
+}
+@-webkit-keyframes cube2 {
+  0% {
+    -webkit-transform: translate(17px, -400px);
+    transform: translate(17px, -400px);
+  }
+  100%,
+  70% {
+    -webkit-transform: translate(17px, 81px);
+    transform: translate(17px, 81px);
+  }
+  85% {
+    -webkit-transform: translate(17px, 66px);
+    transform: translate(17px, 66px);
+  }
+}
+@keyframes cube2 {
+  0% {
+    -webkit-transform: translate(17px, -400px);
+    transform: translate(17px, -400px);
+  }
+  100%,
+  70% {
+    -webkit-transform: translate(17px, 81px);
+    transform: translate(17px, 81px);
+  }
+  85% {
+    -webkit-transform: translate(17px, 66px);
+    transform: translate(17px, 66px);
+  }
+}
+@-webkit-keyframes cube3 {
+  0% {
+    -webkit-transform: translate(32px, -500px);
+    transform: translate(32px, -500px);
+  }
+  100%,
+  70% {
+    -webkit-transform: translate(32px, 148px);
+    transform: translate(32px, 148px);
+  }
+  85% {
+    -webkit-transform: translate(32px, 133px);
+    transform: translate(32px, 133px);
+  }
+}
+@keyframes cube3 {
+  0% {
+    -webkit-transform: translate(32px, -500px);
+    transform: translate(32px, -500px);
+  }
+  100%,
+  70% {
+    -webkit-transform: translate(32px, 148px);
+    transform: translate(32px, 148px);
+  }
+  85% {
+    -webkit-transform: translate(32px, 133px);
+    transform: translate(32px, 133px);
+  }
+}
+@-webkit-keyframes cube4 {
+  0% {
+    -webkit-transform: translate(93px, -500px);
+    transform: translate(93px, -500px);
+  }
+  100%,
+  70% {
+    -webkit-transform: translate(93px, 117px);
+    transform: translate(93px, 117px);
+  }
+  85% {
+    -webkit-transform: translate(93px, 102px);
+    transform: translate(93px, 102px);
+  }
+}
+@keyframes cube4 {
+  0% {
+    -webkit-transform: translate(93px, -500px);
+    transform: translate(93px, -500px);
+  }
+  100%,
+  70% {
+    -webkit-transform: translate(93px, 117px);
+    transform: translate(93px, 117px);
+  }
+  85% {
+    -webkit-transform: translate(93px, 102px);
+    transform: translate(93px, 102px);
+  }
+}
+@-webkit-keyframes cube5 {
+  0% {
+    -webkit-transform: translate(142px, -400px);
+    transform: translate(142px, -400px);
+  }
+  100%,
+  70% {
+    -webkit-transform: translate(142px, 90px);
+    transform: translate(142px, 90px);
+  }
+  85% {
+    -webkit-transform: translate(142px, 75px);
+    transform: translate(142px, 75px);
+  }
+}
+@keyframes cube5 {
+  0% {
+    -webkit-transform: translate(142px, -400px);
+    transform: translate(142px, -400px);
+  }
+  100%,
+  70% {
+    -webkit-transform: translate(142px, 90px);
+    transform: translate(142px, 90px);
+  }
+  85% {
+    -webkit-transform: translate(142px, 75px);
+    transform: translate(142px, 75px);
+  }
+}
+
+@keyframes ball-beat {
+  50% {
+    opacity: 0.2;
+    transform: scale(0.75);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+.linode-loader {
+  width: 100px;
+  height: 120px;
+}
+
+.cube1 {
+  -webkit-animation: cube1 0.5s ease-in-out forwards 1s;
+  animation: cube1 0.5s ease-in-out forwards 1s;
+  transform: translate(0, -200px);
+}
+.cube2 {
+  -webkit-animation: cube2 0.5s ease-in-out forwards 0.5s;
+  animation: cube2 0.5s ease-in-out forwards 0.5s;
+  transform: translate(17px, -400px);
+}
+.cube3 {
+  -webkit-animation: cube3 0.5s ease-in-out forwards;
+  animation: cube3 0.5s ease-in-out forwards;
+  transform: translate(32px, -500px);
+}
+.cube4 {
+  -webkit-animation: cube4 0.5s ease-in-out forwards 1.5s;
+  animation: cube4 0.5s ease-in-out forwards 1.5s;
+  transform: translate(93px, -500px);
+}
+.cube5 {
+  -webkit-animation: cube5 0.5s ease-in-out forwards 2s;
+  animation: cube5 0.5s ease-in-out forwards 2s;
+  transform: translate(142px, -400px);
+}
+
+.la-ball-beat {
+  opacity: 0;
+  animation: fade-in 0.25s linear 2.5s forwards;
+}
+
+.la-ball-beat,
+.la-ball-beat > div {
+  position: relative;
+  box-sizing: border-box;
+  margin-top: 8px;
+  margin-left: 8px;
+}
+.la-ball-beat {
+  display: block;
+  font-size: 0;
+  color: #fff;
+}
+.la-ball-beat.la-dark {
+  color: #333;
+}
+.la-ball-beat > div {
+  display: inline-block;
+  float: none;
+  background-color: currentColor;
+  border: 0 solid currentColor;
+}
+.la-ball-beat {
+  width: 54px;
+  height: 18px;
+}
+.la-ball-beat > div {
+  width: 10px;
+  height: 10px;
+  margin: 4px;
+  border-radius: 100%;
+  animation: ball-beat 0.7s -0.15s infinite linear;
+}
+.la-ball-beat > div:nth-child(2n-1) {
+  animation-delay: -0.5s;
+}
+
+@media (min-width: 960px) {
+  .linode-loader {
+    width: 209px;
+    height: 251px;
+  }
+  .la-ball-beat {
+    margin-top: 24px;
+    margin-left: 47px;
   }
 }
