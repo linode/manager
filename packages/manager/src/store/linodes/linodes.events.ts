@@ -207,5 +207,7 @@ const eventsWithRelevantNotifications: Linode.EventAction[] = [
   'linode_resize_create',
   'linode_migrate',
   'linode_mutate',
-  'linode_mutate_create'
+  'linode_mutate_create',
+  'linode_migrate_datacenter_create',
+  'linode_migrate_datacenter'
 ];

@@ -14,5 +14,6 @@ export const removeBlacklistedEvents = (
 // we want to display, because it will be updated via other events with the same ID.
 const blackListedEvents: Linode.EventAction[] = [
   'linode_mutate_create', // This event occurs when an upgrade is first initiated.
-  'linode_resize_create' // This event occurs when a resize is first initiated.
+  'linode_resize_create', // This event occurs when a resize is first initiated.
+  'linode_migrate_datacenter_create' // This event occurs when a cross DC migration is first initiated.
 ];
