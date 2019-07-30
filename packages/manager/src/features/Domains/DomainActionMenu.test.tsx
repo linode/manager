@@ -1,5 +1,5 @@
+import { cleanup } from '@testing-library/react';
 import * as React from 'react';
-import { cleanup } from 'react-testing-library';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { DomainActionMenu } from './DomainActionMenu';
 

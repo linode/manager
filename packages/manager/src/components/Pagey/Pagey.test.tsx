@@ -95,7 +95,7 @@ describe('Paginator 2: Pagement Day', () => {
        * the following page, not the current page.
        */
       const mockRequest = jest
-        .fn(() => Promise.resolve())
+        .fn(() => Promise.resolve({}))
         .mockImplementationOnce(() =>
           Promise.resolve({
             data: [101],
@@ -123,7 +123,10 @@ describe('Paginator 2: Pagement Day', () => {
       wrapper.update();
 
       /** We need to check that the second call to our request function is for the preceeding page. */
-      expect(mockRequest.mock.calls[1][1]).toEqual({ page: 5, page_size: 25 });
+      expect((mockRequest.mock.calls as any)[1][1]).toEqual({
+        page: 5,
+        page_size: 25
+      });
     });
   });
 
