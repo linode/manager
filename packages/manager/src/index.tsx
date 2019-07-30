@@ -1,5 +1,4 @@
 import 'font-logos/assets/font-logos.css';
-import { createBrowserHistory } from 'history';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -21,7 +20,6 @@ import Logout from 'src/layouts/Logout';
 import store from 'src/store';
 import 'src/utilities/createImageBitmap';
 import 'src/utilities/request';
-import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 import './index.css';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
 
@@ -53,16 +51,6 @@ initAnalytics(
   }
 );
 initTagManager(GTM_ID);
-
-/**
- * Send pageviews unless blacklisted.
- */
-createBrowserHistory().listen(({ pathname }) => {
-  /** https://palantir.github.io/tslint/rules/strict-boolean-expressions/ */
-  if ((window as any).ga && isPathOneOf(['/oauth'], pathname) === false) {
-    (window as any).ga('send', 'pageview');
-  }
-});
 
 const renderNullAuth = () => <span>null auth route</span>;
 
