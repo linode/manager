@@ -374,9 +374,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<
       >
         <Grid item xs={12} className={classes.titleWrapper}>
           <Breadcrumb
-            labelOptions={{
-              linkTo: `/kubernetes`
-            }}
             onEditHandlers={{
               editableTextTitle: cluster.label,
               onEdit: handleLabelChange,
