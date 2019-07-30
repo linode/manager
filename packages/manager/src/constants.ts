@@ -115,7 +115,7 @@ export const extendedDCDisplayNames = {
   'eu-west-1a': 'EU West: London, UK',
   'ap-northeast-1a': 'Asia-Pacific Northeast: Tokyo, JP',
   'ap-northeast-1b': 'Asia-Pacific Northeast: Tokyo, JP',
-  'us-central': 'Dallas, TX',
+  'us-central': 'US Central: Dallas, TX',
   'us-west': 'US West: Fremont, CA',
   'us-southeast': 'US South: Atlanta, GA',
   'us-east': 'US East: Newark, NJ',
