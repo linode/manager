@@ -28,7 +28,7 @@ describe('Disks', () => {
     });
   });
 
-  xit('fires the handle event when clicked', () => {
+  it('fires the handle event when clicked', () => {
     const { getByTestId } = render(wrapWithTheme(<Disks {...props} />));
     disks.forEach(eachDisk => {
       const checkbox = getByTestId(`checkbox-${eachDisk.id}`).parentNode;
@@ -37,7 +37,7 @@ describe('Disks', () => {
     });
   });
 
-  xit('renders an empty state when no configs', () => {
+  it('renders an empty state when no configs', () => {
     const { getByText, getByTestId } = render(
       wrapWithTheme(<Disks {...props} disks={[]} />)
     );
@@ -45,7 +45,7 @@ describe('Disks', () => {
     expect(getByText('No items to display.')).toBeDefined();
   });
 
-  xit('checks the disk if the associated config is selected', () => {
+  it('checks the disk if the associated config is selected', () => {
     const { getByTestId } = render(
       wrapWithTheme(<Disks {...props} selectedConfigIds={[9859511]} />)
     );
