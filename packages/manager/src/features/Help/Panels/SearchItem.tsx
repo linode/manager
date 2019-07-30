@@ -1,8 +1,9 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import Option, { OptionProps } from 'react-select/lib/components/Option';
+import { OptionProps } from 'react-select/lib/components/Option';
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
 import Typography from 'src/components/core/Typography';
+import Option from 'src/components/EnhancedSelect/components/Option';
 
 interface Props extends OptionProps<any> {
   data: {
@@ -35,7 +36,8 @@ const SearchItem: React.StatelessComponent<Props> = props => {
         [classes.algoliaRoot]: true,
         [classes.selectedMenuItem]: isFocused
       })}
-      data-qa-search-result={source}
+      value={data.label}
+      attrs={{ ['data-qa-search-result']: source }}
       {...props}
     >
       {isFinal ? (
