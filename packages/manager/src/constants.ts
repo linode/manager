@@ -106,6 +106,7 @@ export const dcDisplayNames = {
   'ap-west': 'Mumbai, IN'
 };
 
+// @todo no longer in use; remove if current design is approved.
 export const extendedDCDisplayNames = {
   'us-east-1a': 'US East: Newark, NJ',
   'us-south-1a': 'US Central: Dallas, TX',
@@ -124,7 +125,7 @@ export const extendedDCDisplayNames = {
   'eu-central': 'EU East: Frankfurt, DE',
   'ap-northeast': 'Asia-Pacific Northeast: Tokyo 2, JP',
   'ca-central': 'Canada: Toronto, ON',
-  'ca-east': 'Canada: Toronto, ON', // @todo Fallback for old Toronto ID; remove once DB has been updated.
+  'ca-east': 'Canada: Toronto, ON',
   'ap-west': 'Asia-Pacific West: Mumbai, IN'
 };
 

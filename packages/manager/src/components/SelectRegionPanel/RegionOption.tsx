@@ -26,6 +26,7 @@ interface RegionOptionProps extends OptionProps<string> {
   data: {
     data: {
       flag: () => any;
+      country: string;
     };
   };
 }

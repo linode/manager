@@ -18,7 +18,6 @@ import {
 import Typography from 'src/components/core/Typography';
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import { extendedDCDisplayNames } from 'src/constants';
 
 import RegionOption from './RegionOption';
 
@@ -94,18 +93,15 @@ export const getRegionOptions = (regions: ExtendedRegion[]) => {
           label: thisGroup,
           options: groupedRegions[thisGroup]
             .map(thisRegion => ({
-              label: pathOr(
-                thisRegion.display,
-                [thisRegion.id],
-                extendedDCDisplayNames
-              ),
+              label: thisRegion.display,
               value: thisRegion.id,
               data: {
                 flag: pathOr(
                   () => null,
                   [thisRegion.country.toLocaleLowerCase()],
                   flags
-                )
+                ),
+                country: thisRegion.country
               }
             }))
             .sort(sortRegions)
@@ -128,6 +124,14 @@ export const getSelectedRegionById = (
 };
 
 const sortRegions = (region1: Item<string>, region2: Item<string>) => {
+  // By country desc so USA is on top
+  if (region1.data.country > region2.data.country) {
+    return -1;
+  }
+  if (region1.data.country < region2.data.country) {
+    return 1;
+  }
+  // Alphabetically by display name, which is the city
   if (region1.label < region2.label) {
     return -1;
   }
