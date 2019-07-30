@@ -5,10 +5,8 @@ import { compose } from 'recompose';
 import { makeStyles } from 'src/components/core/styles';
 import { MapState } from 'src/store/types';
 
-import Logo from 'src/assets/logo/logo-footer.svg';
+import Logo from 'src/assets/logo/logo-animated.svg';
 import './keyframes.css';
-
-const tileSize = 100;
 
 const useStyles = makeStyles({
   root: {
@@ -27,30 +25,7 @@ const useStyles = makeStyles({
     transform: 'rotateX(50deg) rotateY(0deg) rotateZ(45deg)'
   },
   logo: {
-    position: 'relative',
-    width: 80,
-    top: -120
-  },
-  layer1: {
-    width: tileSize,
-    height: tileSize,
-    background: '#00B258',
-    marginTop: '2rem',
-    animation:
-      'movedownLarge 1.7s cubic-bezier(0.39, 0.575, 0.565, 1) 0.85s infinite normal'
-  },
-  layer2: {
-    width: tileSize,
-    height: tileSize,
-    background: '#32363C',
-    marginTop: '1rem'
-  },
-  layer3: {
-    width: tileSize,
-    height: tileSize,
-    background: '#3683DC',
-    animation:
-      'moveupLarge 1.7s cubic-bezier(0.39, 0.575, 0.565, 1) infinite normal'
+    position: 'relative'
   }
 });
 
@@ -68,25 +43,12 @@ const SplashScreen: React.FC<CombinedProps> = props => {
       >
         <div className={classes.logo}>
           <Logo />
+          <div className="la-ball-beat la-dark">
+            <div />
+            <div />
+            <div />
+          </div>
         </div>
-        <div
-          className={classNames({
-            [classes.layer]: true,
-            [classes.layer1]: true
-          })}
-        />
-        <div
-          className={classNames({
-            [classes.layer]: true,
-            [classes.layer2]: true
-          })}
-        />
-        <div
-          className={classNames({
-            [classes.layer]: true,
-            [classes.layer3]: true
-          })}
-        />
       </div>
     </>
   ) : null;
