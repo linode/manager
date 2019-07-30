@@ -5,7 +5,7 @@ import { compose } from 'recompose';
 import Download from 'src/assets/icons/download.svg';
 import View from 'src/assets/icons/view.svg';
 import Button from 'src/components/Button';
-import Grid from 'src/components/core/Grid';
+// import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -21,7 +21,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import KubeConfigDrawer from './KubeConfigDrawer';
 
-type ClassNames = 'root' | 'item' | 'button' | 'icon' | 'buttonOuter';
+type ClassNames = 'root' | 'item' | 'button' | 'icon';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -36,24 +36,16 @@ const styles = (theme: Theme) =>
     },
     button: {
       position: 'relative',
-      padding: '13px 14px', // fix this
-      fontSize: 14
-      // paddingRight: `calc(${theme.spacing(3)}px + 24px)`,
-      // [theme.breakpoints.down('sm')]: {
-      //   padding: '6px 34px 7px 11px'
-      // }
+      padding: theme.spacing(2) - 2,
+      fontSize: '0.9rem',
+      marginRight: 12,
+      [theme.breakpoints.down('sm')]: {
+        marginBottom: theme.spacing(4),
+        marginRight: 0
+      }
     },
     icon: {
-      marginLeft: 11
-      // position: 'absolute',
-      // right: -30,
-      // marginLeft: theme.spacing(1) / 2
-    },
-    buttonOuter: {
-      flexDirection: 'row',
-      [theme.breakpoints.down('md')]: {
-        flexDirection: 'column'
-      }
+      marginLeft: theme.spacing(1) + 3
     }
   });
 
@@ -134,28 +126,28 @@ export const KubeConfigPanel: React.FC<CombinedProps> = props => {
           <Typography variant="h2">Kubeconfig</Typography>
         </Paper>
         <Paper className={classes.item}>
-          <Grid container className={classes.buttonOuter} xs={12}>
-            <Grid item xs={12} lg={6}>
-              <Button
-                className={classes.button}
-                buttonType="primary"
-                onClick={downloadKubeConfig}
-              >
-                Download
-                <Download className={classes.icon} />
-              </Button>
-            </Grid>
-            <Grid item xs={12} lg={6}>
-              <Button
-                className={classes.button}
-                buttonType="secondary"
-                onClick={handleOpenDrawer}
-              >
-                View
-                <View className={classes.icon} />
-              </Button>
-            </Grid>
-          </Grid>
+          {/* <Grid container direction="row" justify="space-between" xs={12}>
+            <Grid item xs={12} lg={6}> */}
+          <Button
+            className={classes.button}
+            buttonType="primary"
+            onClick={downloadKubeConfig}
+          >
+            Download
+            <Download className={classes.icon} />
+          </Button>
+          {/* </Grid>
+            <Grid item xs={12} lg={6}> */}
+          <Button
+            className={classes.button}
+            buttonType="secondary"
+            onClick={handleOpenDrawer}
+          >
+            View
+            <View className={classes.icon} />
+          </Button>
+          {/* </Grid>
+          </Grid> */}
         </Paper>
       </Paper>
       <KubeConfigDrawer
