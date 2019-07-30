@@ -108,6 +108,8 @@ namespace Linode {
     | 'linode_reboot'
     | 'linode_resize'
     | 'linode_resize_create'
+    | 'linode_migrate_datacenter_create'
+    | 'linode_migrate_datacenter'
     | 'linode_mutate'
     | 'linode_mutate_create'
     | 'linode_rebuild'

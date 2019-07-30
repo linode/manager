@@ -21,7 +21,8 @@ export const transitionAction = [
   'disk_imagize',
   'disk_duplicate',
   'linode_mutate',
-  'linode_clone'
+  'linode_clone',
+  'linode_migrate_datacenter'
 ];
 
 export const linodeInTransition = (
@@ -46,12 +47,18 @@ export const transitionText = (
 ): string => {
   // `linode_mutate` is a special case, because we want to display
   // "Upgrading" instead of "Mutate".
+
+  // @todo @tdt: use a map instead (event_type to display name)
   if (recentEvent && recentEvent.action === 'linode_mutate') {
     return 'Upgrading';
   }
 
   if (recentEvent && recentEvent.action === 'linode_clone') {
     return 'Cloning';
+  }
+
+  if (recentEvent && recentEvent.action === 'linode_migrate_datacenter') {
+    return 'Migrating';
   }
 
   let event;
