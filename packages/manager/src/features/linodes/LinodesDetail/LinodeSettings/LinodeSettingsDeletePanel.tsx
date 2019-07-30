@@ -8,6 +8,7 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
+import TextField from 'src/components/TextField';
 import { resetEventsPolling } from 'src/events';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import {
@@ -16,6 +17,23 @@ import {
 } from 'src/store/linodes/linode.containers';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
+
+type ClassNames = 'root' | 'confirmationCopy';
+
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    confirmationCopy: {
+      marginTop: theme.spacing(1)
+    }
+  });
+
 interface Props {
   linodeId: number;
   linodeLabel: string;
@@ -23,17 +41,20 @@ interface Props {
 
 interface State {
   open: boolean;
+  confirmationText: string;
   errors?: Linode.ApiFieldError[];
 }
 
 type CombinedProps = Props &
   ContextProps &
   LinodeActionsProps &
-  RouteComponentProps<{}>;
+  RouteComponentProps<{}> &
+  WithStyles<ClassNames>;
 
 class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
   state: State = {
-    open: false
+    open: false,
+    confirmationText: ''
   };
 
   deleteLinode = () => {
@@ -59,7 +80,7 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
   };
 
   closeDeleteDialog = () => {
-    this.setState({ open: false });
+    this.setState({ open: false, confirmationText: '' });
   };
 
   render() {
@@ -94,6 +115,16 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
             Are you sure you want to delete your Linode? This will result in
             permanent data loss.
           </Typography>
+          <Typography className={this.props.classes.confirmationCopy}>
+            To confirm deletion, type the name of the Linode (
+            {this.props.linodeLabel}) in the field below:
+          </Typography>
+          <TextField
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              this.setState({ confirmationText: e.target.value })
+            }
+            expand
+          />
         </ConfirmationDialog>
       </React.Fragment>
     );
@@ -109,6 +140,7 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
         Cancel
       </Button>
       <Button
+        disabled={this.state.confirmationText !== this.props.linodeLabel}
         buttonType="secondary"
         destructive
         onClick={this.deleteLinode}
@@ -134,7 +166,8 @@ const enhanced = compose<CombinedProps, Props>(
   errorBoundary,
   linodeContext,
   withRouter,
-  withLinodeActions
+  withLinodeActions,
+  withStyles(styles)
 );
 
 export default enhanced(LinodeSettingsDeletePanel) as React.ComponentType<
