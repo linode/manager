@@ -6,6 +6,8 @@ import store from 'src/store';
 import { App } from './App';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
 
+import { reactRouterProps } from 'src/__data__/reactRouterProps';
+
 import { hasOauthError } from './App';
 
 it('renders without crashing.', () => {
@@ -14,6 +16,7 @@ it('renders without crashing.', () => {
       <LinodeThemeWrapper>
         <StaticRouter location="/" context={{}}>
           <App
+            {...reactRouterProps}
             linodes={[]}
             notifications={[]}
             profileError={undefined}
