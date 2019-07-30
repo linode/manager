@@ -20,5 +20,6 @@
     "docker:local": "docker build -f Dockerfile . -t 'manager' && docker run -it --rm -p 3000:3000 -v $(pwd)/packages/manager/src:/src/src manager start",
     "docker:storybook": "docker build -f Dockerfile . -t 'storybook' && docker run -it --rm -p 6006:6006 -v $(pwd)/packages/manager/src:/src/src storybook storybook",
     "docker:storybook:test": "docker-compose -f packages/manager/storybook-test.yml up --build --exit-code-from storybook-test"
-  }
+  },
+  "version": "0.66.0"
 }
