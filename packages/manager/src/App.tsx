@@ -4,7 +4,14 @@ import { shim } from 'promise.prototype.finally';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { Redirect, Route, RouteProps, Switch } from 'react-router-dom';
+import {
+  Redirect,
+  Route,
+  RouteComponentProps,
+  RouteProps,
+  Switch,
+  withRouter
+} from 'react-router-dom';
 import { Action, compose } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { Subscription } from 'rxjs/Subscription';
@@ -204,6 +211,7 @@ interface State {
 type CombinedProps = Props &
   DispatchProps &
   StateProps &
+  RouteComponentProps &
   WithStyles<ClassNames> &
   WithSnackbarProps;
 
@@ -262,7 +270,15 @@ export class App extends React.Component<CombinedProps, State> {
   }
 
   componentDidMount() {
-    // this.props.markAppAsDoneLoading();
+    /**
+     * Send pageviews unless blacklisted.
+     */
+    this.props.history.listen(({ pathname }) => {
+      if ((window as any).ga) {
+        (window as any).ga('send', 'pageview', pathname);
+        (window as any).ga(`linodecom.send`, 'pageview', pathname);
+      }
+    });
 
     /** try and add notifications to the Linodes object if that data exists */
     this.maybeAddNotificationsToLinodes();
@@ -639,7 +655,8 @@ export default compose(
   styled,
   withDocumentTitleProvider,
   withSnackbar,
-  withFeatureFlagProvider
+  withFeatureFlagProvider,
+  withRouter
 )(App);
 
 export const hasOauthError = (
