@@ -364,7 +364,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
 
   return (
     <React.Fragment>
-      <DocumentTitleSegment segment={`Kubernetes Cluster ${'label'}`} />
+      <DocumentTitleSegment segment={`Kubernetes Cluster ${cluster.label}`} />
       <Grid
         container
         justify="space-between"
@@ -374,12 +374,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<
       >
         <Grid item xs={12} className={classes.titleWrapper}>
           <Breadcrumb
-            labelOptions={{
-              linkTo: `/kubernetes`
-            }}
-            labelTitle={cluster.label}
             onEditHandlers={{
-              editableTextTitle: 'any',
+              editableTextTitle: cluster.label,
               onEdit: handleLabelChange,
               onCancel: resetEditableLabel
             }}
