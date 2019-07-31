@@ -367,13 +367,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   profile_update: {
     notification: e => `Your profile has been updated.`
   },
-  // payment_submitted: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  payment_submitted: {
+    notification: e => `A payment was successfully submitted.`
+  },
   stackscript_create: {
     notification: e => `StackScript ${e.entity!.label} has been created.`
   },
@@ -477,6 +473,12 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   user_ssh_key_delete: {
     notification: e => `An SSH key has been removed from your profile.`
+  },
+  user_create: {
+    notification: e => `User ${e.entity!.label} has been created.`
+  },
+  user_delete: {
+    notification: e => `User ${e.entity!.label} has been deleted.`
   },
   user_update: {
     notification: e => `User ${e.entity!.label} has been updated.`
