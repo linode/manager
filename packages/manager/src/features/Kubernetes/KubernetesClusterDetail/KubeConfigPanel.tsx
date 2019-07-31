@@ -5,7 +5,6 @@ import { compose } from 'recompose';
 import Download from 'src/assets/icons/download.svg';
 import View from 'src/assets/icons/view.svg';
 import Button from 'src/components/Button';
-// import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -21,7 +20,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import KubeConfigDrawer from './KubeConfigDrawer';
 
-type ClassNames = 'root' | 'item' | 'button' | 'icon';
+type ClassNames = 'root' | 'item' | 'button' | 'icon' | 'buttonSecondary';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -31,16 +30,26 @@ const styles = (theme: Theme) =>
     },
     item: {
       paddingBottom: theme.spacing(2),
-      display: 'flex',
-      flexFlow: 'row nowrap'
+      [theme.breakpoints.up('lg')]: {
+        display: 'flex',
+        flexFlow: 'row nowrap'
+      }
     },
     button: {
-      position: 'relative',
       padding: theme.spacing(2) - 2,
+      display: 'block',
       fontSize: '0.9rem',
       marginRight: 12,
-      [theme.breakpoints.down('sm')]: {
-        marginBottom: theme.spacing(4),
+      minWidth: 124,
+      [theme.breakpoints.down('md')]: {
+        marginBottom: theme.spacing(2),
+        marginRight: 0
+      }
+    },
+    buttonSecondary: {
+      minWidth: 88,
+      [theme.breakpoints.down('md')]: {
+        marginBottom: 0,
         marginRight: 0
       }
     },
@@ -126,8 +135,6 @@ export const KubeConfigPanel: React.FC<CombinedProps> = props => {
           <Typography variant="h2">Kubeconfig</Typography>
         </Paper>
         <Paper className={classes.item}>
-          {/* <Grid container direction="row" justify="space-between" xs={12}>
-            <Grid item xs={12} lg={6}> */}
           <Button
             className={classes.button}
             buttonType="primary"
@@ -136,18 +143,14 @@ export const KubeConfigPanel: React.FC<CombinedProps> = props => {
             Download
             <Download className={classes.icon} />
           </Button>
-          {/* </Grid>
-            <Grid item xs={12} lg={6}> */}
           <Button
-            className={classes.button}
+            className={`${classes.button} ${classes.buttonSecondary}`}
             buttonType="secondary"
             onClick={handleOpenDrawer}
           >
             View
             <View className={classes.icon} />
           </Button>
-          {/* </Grid>
-          </Grid> */}
         </Paper>
       </Paper>
       <KubeConfigDrawer
