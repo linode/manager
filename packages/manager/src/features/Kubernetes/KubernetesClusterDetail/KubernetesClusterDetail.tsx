@@ -202,6 +202,43 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     return null;
   }
 
+  /**
+   * These three handlers update the local pools state in the event of an error. If an update
+   * is fully successful, we'll exit editing mode, the table will show
+   * the current Redux state of the cluster, and none of this will matter.
+   *
+   * If, however, some requests fail while others succeed, we want to show
+   * error messages for actions that failed while updating the local form
+   * state for actions that succeeded (so that e.g. a pending node that has been added no longer has the
+   * "pending node" styles).
+   */
+  const handleError = (
+    pool: PoolNodeWithPrice,
+    error: Linode.ApiFieldError[]
+  ) => {
+    const poolIdx = pools.findIndex(thisPool => (thisPool.id = pool.id));
+    updatePool(poolIdx, { ...pool, _error: error });
+    return Promise.reject(error);
+  };
+
+  const handleAddSuccess = (pool: PoolNodeWithPrice) => {
+    const poolIdx = pools.findIndex(thisPool => (thisPool.id = pool.id));
+    updatePool(poolIdx, {
+      ...pool,
+      queuedForAddition: false,
+      queuedForDeletion: false
+    });
+  };
+
+  const handleSuccess = (pool: PoolNodeWithPrice) => {
+    const poolIdx = pools.findIndex(thisPool => thisPool.id === pool.id);
+    if (poolIdx) {
+      updatePools(prevPools => {
+        return remove(poolIdx, 1, prevPools);
+      });
+    }
+  };
+
   const submitForm = () => {
     /** Fasten your seat belts... */
     setSubmitting(true);
@@ -210,27 +247,35 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     Bluebird.map(pools, thisPool => {
       if (thisPool.queuedForAddition) {
         // This pool doesn't exist and needs to be added.
-        return props.createNodePool({
-          clusterID: cluster.id,
-          count: thisPool.count,
-          type: thisPool.type
-        });
+        return props
+          .createNodePool({
+            clusterID: cluster.id,
+            count: thisPool.count,
+            type: thisPool.type
+          })
+          .then(() => handleAddSuccess(thisPool))
+          .catch(e => handleError(thisPool, e));
       } else if (thisPool.queuedForDeletion) {
         // Marked for deletion
-        return props.deleteNodePool({
-          clusterID: cluster.id,
-          nodePoolID: thisPool.id
-        });
+        return props
+          .deleteNodePool({
+            clusterID: cluster.id,
+            nodePoolID: thisPool.id
+          })
+          .then(() => handleSuccess(thisPool))
+          .catch(e => handleError(thisPool, e));
       } else if (!contains(thisPool, cluster.node_pools)) {
         /** @todo contains() is deprecated in the next version of Ramda (0.26+). Replace with includes() if we ever upgrade. */
 
         // User has adjusted the count for this pool. Needs to be pushed through to the API.
-        return props.updateNodePool({
-          clusterID: cluster.id,
-          nodePoolID: thisPool.id,
-          count: thisPool.count,
-          type: thisPool.type
-        });
+        return props
+          .updateNodePool({
+            clusterID: cluster.id,
+            nodePoolID: thisPool.id,
+            count: thisPool.count,
+            type: thisPool.type
+          })
+          .catch(e => handleError(thisPool, e));
       } else {
         // Nothing has changed about this node, so don't make any requests.
         return;
@@ -249,7 +294,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<
           )
         );
         setSubmitting(false);
-        setEditing(false);
       });
   };
 
