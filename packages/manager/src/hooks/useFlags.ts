@@ -1,4 +1,5 @@
 import { useFlags } from 'launchdarkly-react-client-sdk';
+import { FlagSet } from 'src/featureFlags';
 export { useLDClient } from 'launchdarkly-react-client-sdk';
 
 /**
@@ -12,4 +13,4 @@ export { useLDClient } from 'launchdarkly-react-client-sdk';
  *
  * const flags = useFlags();
  */
-export default useFlags;
+export default useFlags as () => FlagSet;

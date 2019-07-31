@@ -459,7 +459,7 @@ export class App extends React.Component<CombinedProps, State> {
                       <Redirect path="/volumes*" to="/volumes" />
                       <Route path="/nodebalancers" component={NodeBalancers} />
                       <Route path="/domains" component={Domains} />
-                      <Route exact path="/managed" component={Managed} />
+                      <Route path="/managed" component={Managed} />
                       <Route exact path="/longview" component={Longview} />
                       <Route exact strict path="/images" component={Images} />
                       <Redirect path="/images*" to="/images" />
