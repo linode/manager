@@ -39,16 +39,19 @@ const DownloadCSV: React.FC<CombinedProps> = props => {
  * See M3-3022 for more info.
  */
 export const cleanCSVData = (data: any): any => {
+  /** safety check because typeof null === 'object' */
   if (data === null) {
     return null;
   }
 
+  /** if it's an array, recursively clean each element in the array */
   if (Array.isArray(data)) {
     return data.map(eachValue => {
       return cleanCSVData(eachValue);
     });
   }
 
+  /** if it's an object, recursively sanitize each key value pair */
   if (typeof data === 'object') {
     return Object.keys(data).reduce((acc, eachKey) => {
       acc[eachKey] = cleanCSVData(data[eachKey]);
@@ -56,13 +59,14 @@ export const cleanCSVData = (data: any): any => {
     }, {});
   }
 
+  /** if it's a boolean or number, no need to sanitize */
   if (typeof data === 'boolean' || typeof data === 'number') {
     return data;
   }
 
   /**
    * fairly confident this should be typecast as a string by now
-   * basically, just get rid of operator symbols
+   * basically, just wrap each operator symbol in a double quote
    */
   return (data as string).replace(/[-|+|=]/g, match => `"${match}"`);
 };

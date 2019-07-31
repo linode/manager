@@ -1,7 +1,7 @@
 import { cleanCSVData } from './DownloadCSV';
 
 describe('should prevent CSV injection attacks', () => {
-  it('should remove all math signs from an array of values', () => {
+  it('should wrap all math signs in double quotes from an array of values', () => {
     expect(cleanCSVData(['+123', '=123', '-123'])).toEqual([
       '"+"123',
       '"="123',
@@ -9,7 +9,7 @@ describe('should prevent CSV injection attacks', () => {
     ]);
   });
 
-  it('should recursively remove all math signs from 2D arrays', () => {
+  it('should recursively wrap all math signs in double quotes from 2D arrays', () => {
     expect(cleanCSVData([['+123'], ['=123'], ['-123']])).toEqual([
       ['"+"123'],
       ['"="123'],
@@ -17,7 +17,7 @@ describe('should prevent CSV injection attacks', () => {
     ]);
   });
 
-  it('should clean values of objects', () => {
+  it('should wrap values of objects in double quotes', () => {
     expect(
       cleanCSVData([
         {
