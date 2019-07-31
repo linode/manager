@@ -11,6 +11,7 @@ const props = {
   types: extendedTypes,
   pools: nodePoolRequests,
   editable: true,
+  loading: false,
   handleDelete: jest.fn(),
   handleChange: jest.fn(),
   updatePool: jest.fn()
