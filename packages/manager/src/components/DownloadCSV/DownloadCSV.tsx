@@ -64,7 +64,7 @@ export const cleanCSVData = (data: any): any => {
    * fairly confident this should be typecast as a string by now
    * basically, just get rid of operator symbols
    */
-  return (data as string).replace(/[-|+|=]/g, '');
+  return (data as string).replace(/[-|+|=]/g, match => `"${match}"`);
 };
 
 export default compose<CombinedProps, Props>(React.memo)(DownloadCSV);
