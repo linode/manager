@@ -117,6 +117,7 @@ interface KubernetesContainerProps {
   clustersLoadError?: Linode.ApiFieldError[];
   clusterDeleteError?: Linode.ApiFieldError[];
   lastUpdated: number;
+  nodePoolsLoading: boolean;
 }
 
 type CombinedProps = WithTypesProps &
@@ -136,6 +137,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     clustersLoading,
     lastUpdated,
     location,
+    nodePoolsLoading,
     typesData,
     typesError,
     typesLoading
@@ -189,7 +191,11 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     return <ErrorState errorText="Unable to load cluster data." />;
   }
 
-  if ((clustersLoading && lastUpdated !== 0) || typesLoading) {
+  if (
+    (clustersLoading && lastUpdated !== 0) ||
+    nodePoolsLoading ||
+    typesLoading
+  ) {
     return <CircleProgress />;
   }
   if (cluster === null) {
@@ -441,6 +447,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
               pools={cluster.node_pools}
               poolsForEdit={pools}
               types={typesData || []}
+              loading={nodePoolsLoading}
             />
           </Grid>
           <Grid item xs={12}>
@@ -492,18 +499,29 @@ const styled = withStyles(styles);
 const withCluster = KubeContainer<
   {},
   WithTypesProps & RouteComponentProps<{ clusterID: string }>
->((ownProps, clustersLoading, lastUpdated, clustersError, clustersData) => {
-  const cluster =
-    clustersData.find(c => +c.id === +ownProps.match.params.clusterID) || null;
-  return {
-    ...ownProps,
-    cluster,
-    lastUpdated,
+>(
+  (
+    ownProps,
     clustersLoading,
-    clustersLoadError: clustersError.read,
-    clusterDeleteError: clustersError.delete
-  };
-});
+    lastUpdated,
+    clustersError,
+    clustersData,
+    nodePoolsLoading
+  ) => {
+    const cluster =
+      clustersData.find(c => +c.id === +ownProps.match.params.clusterID) ||
+      null;
+    return {
+      ...ownProps,
+      cluster,
+      lastUpdated,
+      clustersLoading,
+      clustersLoadError: clustersError.read,
+      clusterDeleteError: clustersError.delete,
+      nodePoolsLoading
+    };
+  }
+);
 
 const enhanced = compose<CombinedProps, {}>(
   styled,
