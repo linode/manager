@@ -478,6 +478,12 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   user_ssh_key_delete: {
     notification: e => `An SSH key has been removed from your profile.`
   },
+  user_create: {
+    notification: e => `User ${e.entity!.label} has been created.`
+  },
+  user_delete: {
+    notification: e => `User ${e.entity!.label} has been deleted.`
+  },
   user_update: {
     notification: e => `User ${e.entity!.label} has been updated.`
   }
