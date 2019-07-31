@@ -18,7 +18,7 @@ import 'showdown-highlightjs-extension';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
-type ClassNames = 'root' | 'icon' | 'tooltip';
+type ClassNames = 'root' | 'icon' | 'tooltip' | 'iconLink';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -27,9 +27,12 @@ const styles = (theme: Theme) =>
       color: '#3683dc'
     },
     tooltip: {
-      position: 'fixed',
-      right: theme.spacing(4),
-      marginTop: theme.spacing(0.5)
+      '& svg': {
+        color: '#3683dc'
+      }
+    },
+    iconLink: {
+      marginRight: theme.spacing(1)
     }
   });
 
@@ -81,13 +84,17 @@ export const KubeConfigDrawer: React.FC<CombinedProps> = props => {
             <Typography variant="h3">{clusterLabel}</Typography>
           </Grid>
           <Grid item>
-            <a onClick={() => downloadFile('kubeconfig.yaml', kubeConfig)}>
+            <a
+              onClick={() => downloadFile('kubeconfig.yaml', kubeConfig)}
+              className={classes.iconLink}
+              href="#"
+            >
               <Download className={classes.icon} />
             </a>
+            <CopyTooltip className={classes.tooltip} text={kubeConfig} />
           </Grid>
         </Grid>
         <div>
-          <CopyTooltip className={classes.tooltip} text={kubeConfig} />
           <div dangerouslySetInnerHTML={{ __html: sanitizeHTML(html) }} />
         </div>
       </DrawerContent>
