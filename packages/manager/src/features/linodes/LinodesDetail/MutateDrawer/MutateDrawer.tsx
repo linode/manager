@@ -6,8 +6,6 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 
-import { MBpsIntraDC } from 'src/constants';
-
 interface MutateInfo {
   vcpus: number | null;
   memory: number | null;
@@ -31,7 +29,6 @@ interface ExtendedUpgradeInfo {
 }
 
 interface Props {
-  disks: Linode.Disk[];
   open: boolean;
   handleClose: () => void;
   initMutation: () => void;
@@ -40,6 +37,7 @@ interface Props {
   linodeId: number;
   loading: boolean;
   error: string;
+  estimatedTimeToUpgradeInMins: number;
 }
 
 interface State {
@@ -95,14 +93,15 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { open, handleClose, loading, error, disks } = this.props;
+    const {
+      open,
+      handleClose,
+      loading,
+      error,
+      estimatedTimeToUpgradeInMins
+    } = this.props;
 
     const { extendedUpgradeInfo } = this.state;
-
-    const usedDiskSpace = addUsedDiskSpace(disks);
-    const estimatedTimeToUpgradeInMins = Math.ceil(
-      usedDiskSpace / MBpsIntraDC / 60
-    );
 
     return (
       <Drawer open={open} onClose={handleClose} title="Free Upgrade Available">
@@ -154,9 +153,12 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
         <Typography variant="body1" style={{ marginTop: 16 }}>
           After the migration completes, you can take advantage of the new
           resources by resizing your disk images. We estimate this upgrade
-          process will take {estimatedTimeToUpgradeInMins}
-          {estimatedTimeToUpgradeInMins === 1 ? ` minute` : ` minutes`}, but
-          that may vary based on host and network load.
+          process will take{' '}
+          <strong>
+            {estimatedTimeToUpgradeInMins}
+            {estimatedTimeToUpgradeInMins === 1 ? ` minute` : ` minutes`}
+          </strong>
+          , but that may vary based on host and network load.
         </Typography>
         <ActionsPanel style={{ marginTop: 32 }}>
           <Button
@@ -182,12 +184,5 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
     );
   }
 }
-
-/**
- * add all the used disk space together
- */
-export const addUsedDiskSpace = (disks: Linode.Disk[]) => {
-  return disks.reduce((accum, eachDisk) => eachDisk.size + accum, 0);
-};
 
 export default MutateDrawer;

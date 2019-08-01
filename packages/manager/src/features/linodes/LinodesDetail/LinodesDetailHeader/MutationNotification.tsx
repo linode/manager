@@ -26,6 +26,8 @@ import withMutationDrawerState, {
   MutationDrawerProps
 } from './mutationDrawerState';
 
+import { MBpsIntraDC } from 'src/constants';
+
 type ClassNames = 'pendingMutationLink';
 
 const styles = (theme: Theme) =>
@@ -110,11 +112,19 @@ const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
     return null;
   }
 
+  const usedDiskSpace = addUsedDiskSpace(props.disks);
+  const estimatedTimeToUpgradeInMins = Math.ceil(
+    usedDiskSpace / MBpsIntraDC / 60
+  );
+
   return (
     <>
       <Notice important warning>
-        This Linode has a free upgrade available. To learn more about this
-        upgrade and what it includes,&nbsp;
+        You have an pending upgrade. The estimated time to complete this upgrade
+        is
+        {` ` + estimatedTimeToUpgradeInMins}
+        {estimatedTimeToUpgradeInMins === 1 ? ` minute` : ` minutes`}. To learn
+        more,&nbsp;
         <span
           className={classes.pendingMutationLink}
           onClick={openMutationDrawer}
@@ -123,7 +133,7 @@ const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
         </span>
       </Notice>
       <MutateDrawer
-        disks={props.disks}
+        estimatedTimeToUpgradeInMins={estimatedTimeToUpgradeInMins}
         linodeId={linodeId}
         open={mutationDrawerOpen}
         loading={mutationDrawerLoading}
@@ -151,6 +161,13 @@ const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
       />
     </>
   );
+};
+
+/**
+ * add all the used disk space together
+ */
+export const addUsedDiskSpace = (disks: Linode.Disk[]) => {
+  return disks.reduce((accum, eachDisk) => eachDisk.size + accum, 0);
 };
 
 const styled = withStyles(styles);
