@@ -40,6 +40,10 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   community_like: {
     notification: e => e.entity!.label
   },
+  community_mention: {
+    notification: e =>
+      `You have been mentioned in a community post: ${e.entity!.label}`
+  },
   credit_card_updated: {
     notification: e => `Credit card information has been updated.`
   },
@@ -228,7 +232,8 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for an upgrade.`,
     started: e => `Linode ${e.entity!.label} is being upgraded.`,
     failed: e => `Linode ${e.entity!.label} could not be upgraded.`,
-    finished: e => `Linode ${e.entity!.label} has been upgraded.`
+    finished: e => `Linode ${e.entity!.label} has been upgraded.`,
+    notification: e => `Linode ${e.entity!.label} is being upgraded.`
   },
   linode_reboot: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for a reboot.`,
