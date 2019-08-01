@@ -26,6 +26,10 @@ import { openForCreating as openVolumeDrawerForCreating } from 'src/store/volume
 import { isKubernetesEnabled } from 'src/utilities/accountCapabilities';
 import AddNewMenuItem, { MenuItems } from './AddNewMenuItem';
 
+import withLDConsumer, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
+
 type CSSClasses =
   | 'wrapper'
   | 'menu'
@@ -87,6 +91,7 @@ type CombinedProps = Props &
   WithStyles<CSSClasses> &
   RouteComponentProps<{}> &
   DispatchProps &
+  FeatureFlagConsumerProps &
   StateProps;
 
 const styled = withStyles(styles);
@@ -139,6 +144,20 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
         ItemIcon: DomainIcon
       }
     ];
+
+    if (this.props.flags.oneClickLocation === 'createmenu') {
+      items.push({
+        title: 'One-Click App',
+        onClick: e => {
+          this.props.history.push('/linodes/create?type=One-Click');
+          this.handleClose();
+          e.preventDefault();
+        },
+        body: 'Provision an already configured One-Click App.',
+        ItemIcon: LinodeIcon,
+        attr: { 'data-qa-one-click-add-new': true }
+      });
+    }
 
     if (isKubernetesEnabled(this.props.accountCapabilities)) {
       items.push({
@@ -245,5 +264,6 @@ const connected = connect(
 export default compose<CombinedProps, {}>(
   connected,
   withRouter,
+  withLDConsumer,
   styled
 )(AddNewMenu);
