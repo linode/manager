@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import * as React from 'react';
 import Option, { OptionProps } from 'react-select/lib/components/Option';
+import { Item } from 'src/components/EnhancedSelect/Select';
 
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
@@ -15,20 +16,19 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
+export interface RegionItem extends Item<string> {
+  flag: () => JSX.Element | null;
+  country: string;
+}
 interface RegionOptionProps extends OptionProps<string> {
-  option: {
-    data: {
-      flag: () => JSX.Element | null;
-      country: string;
-    };
-  };
+  data: RegionItem;
 }
 
 type CombinedProps = RegionOptionProps;
 
 export const RegionOption: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const { option, label } = props;
+  const { data, label } = props;
   return (
     <Option
       className={classNames({
@@ -38,7 +38,7 @@ export const RegionOption: React.FC<CombinedProps> = props => {
       {...props}
     >
       <Grid container direction="row" alignItems="center" justify="flex-start">
-        <Grid item>{option.data.flag && option.data.flag()}</Grid>
+        <Grid item>{data.flag && data.flag()}</Grid>
         <Grid item>{label}</Grid>
       </Grid>
     </Option>

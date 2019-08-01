@@ -16,10 +16,10 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
+import Select, { GroupType } from 'src/components/EnhancedSelect/Select';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 
-import RegionOption from './RegionOption';
+import RegionOption, { RegionItem } from './RegionOption';
 
 const flags = {
   us: () => <US width="32" height="24" viewBox="0 0 720 480" />,
@@ -95,14 +95,12 @@ export const getRegionOptions = (regions: ExtendedRegion[]) => {
             .map(thisRegion => ({
               label: thisRegion.display,
               value: thisRegion.id,
-              data: {
-                flag: pathOr(
-                  () => null,
-                  [thisRegion.country.toLocaleLowerCase()],
-                  flags
-                ),
-                country: thisRegion.country
-              }
+              flag: pathOr(
+                () => null,
+                [thisRegion.country.toLocaleLowerCase()],
+                flags
+              ),
+              country: thisRegion.country
             }))
             .sort(sortRegions)
         }
@@ -123,12 +121,12 @@ export const getSelectedRegionById = (
   return regions.find(thisRegion => regionID === thisRegion.value);
 };
 
-const sortRegions = (region1: Item<string>, region2: Item<string>) => {
+const sortRegions = (region1: RegionItem, region2: RegionItem) => {
   // By country desc so USA is on top
-  if (region1.data.country > region2.data.country) {
+  if (region1.country > region2.country) {
     return -1;
   }
-  if (region1.data.country < region2.data.country) {
+  if (region1.country < region2.country) {
     return 1;
   }
   // Alphabetically by display name, which is the city
@@ -181,9 +179,7 @@ const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = props => {
           disabled={disabled}
           placeholder="Regions"
           options={options}
-          onChange={(selection: Item<string>) =>
-            handleSelection(selection.value)
-          }
+          onChange={(selection: RegionItem) => handleSelection(selection.value)}
           components={{ Option: RegionOption }}
           styleOverrides={selectStyles}
         />
