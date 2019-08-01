@@ -1,7 +1,7 @@
+import { render } from '@testing-library/react';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
-import { render } from 'react-testing-library';
 import { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import store from 'src/store';
