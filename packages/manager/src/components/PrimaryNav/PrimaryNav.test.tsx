@@ -45,6 +45,7 @@ describe('PrimaryNav', () => {
           })}
           toggleSpacing={jest.fn()}
           closeMenu={jest.fn()}
+          flags={{}}
           toggleTheme={jest.fn()}
           hasAccountAccess={false}
           isManagedAccount={false}
@@ -111,6 +112,7 @@ describe('PrimaryNav', () => {
           })}
           toggleSpacing={jest.fn()}
           closeMenu={jest.fn()}
+          flags={{}}
           toggleTheme={jest.fn()}
           hasAccountAccess={true}
           isManagedAccount={false}
@@ -141,6 +143,7 @@ describe('PrimaryNav', () => {
           })}
           toggleSpacing={jest.fn()}
           closeMenu={jest.fn()}
+          flags={{}}
           toggleTheme={jest.fn()}
           hasAccountAccess={false}
           isManagedAccount={true}
@@ -171,6 +174,7 @@ describe('PrimaryNav', () => {
           })}
           toggleSpacing={jest.fn()}
           closeMenu={jest.fn()}
+          flags={{}}
           toggleTheme={jest.fn()}
           hasAccountAccess={false}
           isManagedAccount={true}

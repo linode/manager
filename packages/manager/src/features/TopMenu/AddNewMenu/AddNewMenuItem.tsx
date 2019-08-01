@@ -66,6 +66,7 @@ export interface MenuItems {
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
   body: string;
   ItemIcon: React.ComponentClass<any>;
+  attr?: { [key: string]: any };
 }
 
 interface Props extends MenuItems {
@@ -81,7 +82,7 @@ type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
 class AddNewMenuItem extends React.Component<PropsWithStyles, State> {
   render() {
-    const { classes, title, onClick, body, ItemIcon } = this.props;
+    const { classes, title, onClick, body, ItemIcon, attr } = this.props;
 
     return (
       <React.Fragment>
@@ -92,6 +93,7 @@ class AddNewMenuItem extends React.Component<PropsWithStyles, State> {
           button
           component="li"
           aria-label={`Create ${title}`}
+          {...attr}
         >
           <div className={classes.iconWrapper}>
             <ItemIcon />
