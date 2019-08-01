@@ -17,11 +17,13 @@ import DefaultLoader from 'src/components/DefaultLoader';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import Grid from 'src/components/Grid';
 import TabLink from 'src/components/TabLink';
 import withFeatureFlagConsumer, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
 import ManagedPlaceholder from './ManagedPlaceholder';
+import SupportWidget from './SupportWidget';
 
 const Monitors = DefaultLoader({
   loader: () => import('./Monitors')
@@ -89,7 +91,20 @@ export class ManagedLanding extends React.Component<CombinedProps, {}> {
                 labelTitle="Managed"
                 removeCrumbX={1}
               />
-              <DocumentationButton href="https://www.linode.com/docs/platform/linode-managed/" />
+              <Grid
+                container
+                direction="row"
+                justify="flex-end"
+                alignItems="center"
+                xs={8}
+              >
+                <Grid item>
+                  <SupportWidget />
+                </Grid>
+                <Grid item>
+                  <DocumentationButton href="https://www.linode.com/docs/platform/linode-managed/" />
+                </Grid>
+              </Grid>
             </Box>
             <AppBar position="static" color="default">
               <Tabs
