@@ -120,7 +120,7 @@ const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
   return (
     <>
       <Notice important warning>
-        You have an pending upgrade. The estimated time to complete this upgrade
+        You have a pending upgrade. The estimated time to complete this upgrade
         is
         {` ` + estimatedTimeToUpgradeInMins}
         {estimatedTimeToUpgradeInMins === 1 ? ` minute` : ` minutes`}. To learn
