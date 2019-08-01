@@ -93,6 +93,7 @@ export class ManagedLanding extends React.Component<CombinedProps, {}> {
               />
               <Grid
                 container
+                item
                 direction="row"
                 justify="flex-end"
                 alignItems="center"
