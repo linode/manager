@@ -21,7 +21,7 @@ export type State = EntityState<ExtendedNodePool, EntityError>;
 export const defaultState: State = {
   results: [],
   entities: [],
-  loading: true,
+  loading: false,
   lastUpdated: 0,
   error: {}
 };
