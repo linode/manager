@@ -164,16 +164,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   const [deleting, setDeleting] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    /**
-     * Eventually the clusters request will probably be made from App.tsx
-     * (to facilitate searching), but for now if a user navigates directly
-     * to this url without going through KubernetesLanding the clusters won't have
-     * been requested yet.
-     */
-    if (props.lastUpdated === 0) {
-      props.requestKubernetesClusters();
-    } else {
-      const clusterID = +props.match.params.clusterID;
+    const clusterID = +props.match.params.clusterID;
+    if (clusterID) {
       props.requestClusterForStore(clusterID);
     }
 
@@ -192,7 +184,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   }
 
   if (
-    (clustersLoading && lastUpdated !== 0) ||
+    (clustersLoading && lastUpdated === 0) ||
     nodePoolsLoading ||
     typesLoading
   ) {

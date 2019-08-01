@@ -76,6 +76,7 @@ const withKubernetes = KubernetesContainer(
     clusters,
     clustersError,
     clustersLoading,
+    lastUpdated,
     nodePoolsLoading
   })
 );
