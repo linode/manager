@@ -192,9 +192,7 @@ const styles = (theme: Theme) =>
     },
     hidden: {
       display: 'none',
-      maxHeight: '100vh',
-      maxWidth: '100vw',
-      overflowY: 'hidden'
+      overflow: 'hidden'
     }
   });
 
