@@ -11,6 +11,7 @@ import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import KubernetesIcon from 'src/assets/addnewmenu/kubernetes.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
+import OneClickIcon from 'src/assets/addnewmenu/oneclick.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import Button from 'src/components/Button';
 import Menu from 'src/components/core/Menu';
@@ -154,7 +155,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
           e.preventDefault();
         },
         body: 'Provision an already configured One-Click App.',
-        ItemIcon: LinodeIcon,
+        ItemIcon: OneClickIcon,
         attr: { 'data-qa-one-click-add-new': true }
       });
     }
