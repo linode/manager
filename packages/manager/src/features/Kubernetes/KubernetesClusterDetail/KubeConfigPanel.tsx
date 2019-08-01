@@ -20,7 +20,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import KubeConfigDrawer from './KubeConfigDrawer';
 
-type ClassNames = 'root' | 'item' | 'button' | 'icon';
+type ClassNames = 'root' | 'item' | 'button' | 'icon' | 'buttonSecondary';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -30,14 +30,31 @@ const styles = (theme: Theme) =>
     },
     item: {
       paddingBottom: theme.spacing(2),
-      display: 'flex',
-      flexFlow: 'row nowrap'
+      [theme.breakpoints.up('lg')]: {
+        display: 'flex',
+        flexFlow: 'row nowrap'
+      }
     },
     button: {
-      marginRight: theme.spacing(3)
+      padding: theme.spacing(2) - 2,
+      display: 'block',
+      fontSize: '0.9rem',
+      marginRight: 12,
+      minWidth: 124,
+      [theme.breakpoints.down('md')]: {
+        marginBottom: theme.spacing(2),
+        marginRight: 0
+      }
+    },
+    buttonSecondary: {
+      minWidth: 88,
+      [theme.breakpoints.down('md')]: {
+        marginBottom: 0,
+        marginRight: 0
+      }
     },
     icon: {
-      marginLeft: theme.spacing(2)
+      marginLeft: theme.spacing(1) + 3
     }
   });
 
@@ -127,7 +144,7 @@ export const KubeConfigPanel: React.FC<CombinedProps> = props => {
             <Download className={classes.icon} />
           </Button>
           <Button
-            className={classes.button}
+            className={`${classes.button} ${classes.buttonSecondary}`}
             buttonType="secondary"
             onClick={handleOpenDrawer}
           >
