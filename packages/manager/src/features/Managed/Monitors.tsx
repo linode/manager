@@ -1,3 +1,14 @@
 import * as React from 'react';
 
-export default () => <h1>Monitors</h1>;
+import MonitorTable from './MonitorTable';
+
+import { monitors } from 'src/__data__/serviceMonitors';
+
+export const Monitors: React.FC<{}> = (props) => {
+return (
+  <MonitorTable monitors={monitors} />
+ )
+}
+
+
+export default Monitors;
