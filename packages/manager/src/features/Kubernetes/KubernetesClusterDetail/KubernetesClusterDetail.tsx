@@ -209,20 +209,20 @@ export const KubernetesClusterDetail: React.FunctionComponent<
    *
    * If, however, some requests fail while others succeed, we want to show
    * error messages for actions that failed while updating the local form
-   * state for actions that succeeded (so that e.g. a pending node that has been added no longer has the
-   * "pending node" styles).
+   * state for actions that succeeded (so that e.g. a pending pool that has been added no longer has the
+   * "pending pool" styles).
    */
   const handleError = (
     pool: PoolNodeWithPrice,
     error: Linode.ApiFieldError[]
   ) => {
-    const poolIdx = pools.findIndex(thisPool => (thisPool.id = pool.id));
+    const poolIdx = pools.findIndex(thisPool => (thisPool.id === pool.id));
     updatePool(poolIdx, { ...pool, _error: error });
     return Promise.reject(error);
   };
 
   const handleAddSuccess = (pool: PoolNodeWithPrice) => {
-    const poolIdx = pools.findIndex(thisPool => (thisPool.id = pool.id));
+    const poolIdx = pools.findIndex(thisPool => (thisPool.id === pool.id));
     updatePool(poolIdx, {
       ...pool,
       queuedForAddition: false,
@@ -246,14 +246,14 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     setSuccess(false);
     Bluebird.map(pools, thisPool => {
       if (thisPool.queuedForAddition) {
-        // This pool doesn't exist and needs to be added.
+        // This pool doesn't exist and needs to be created through the API.
         return props
           .createNodePool({
             clusterID: cluster.id,
             count: thisPool.count,
             type: thisPool.type
           })
-          .then(() => handleAddSuccess(thisPool))
+          // .then(() => handleAddSuccess(thisPool))
           .catch(e => handleError(thisPool, e));
       } else if (thisPool.queuedForDeletion) {
         // Marked for deletion
@@ -262,7 +262,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
             clusterID: cluster.id,
             nodePoolID: thisPool.id
           })
-          .then(() => handleSuccess(thisPool))
+          // .then(() => handleSuccess(thisPool))
           .catch(e => handleError(thisPool, e));
       } else if (!contains(thisPool, cluster.node_pools)) {
         /** @todo contains() is deprecated in the next version of Ramda (0.26+). Replace with includes() if we ever upgrade. */
@@ -367,7 +367,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<
         } else {
           /**
            * This is a "real" node that we don't want users to accidentally delete. Mark it for deletion
-           * (it will be handled on form submission).
+           * (it will be handled on form submission). If the user has already marked this for deletion
+           * and clicks on "Remove Delete", remove the queuedForDeletion tag.
            */
           const withMarker = {
             ...poolToDelete,
