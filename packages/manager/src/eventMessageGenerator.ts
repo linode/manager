@@ -42,7 +42,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   community_mention: {
     notification: e =>
-      `You have been mentioned in a community post: ${e.entity!.label}`
+      `You have been mentioned in a Community post: ${e.entity!.label}`
   },
   credit_card_updated: {
     notification: e => `Credit card information has been updated.`
