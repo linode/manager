@@ -3,6 +3,7 @@ import * as React from 'react';
 import { OptionProps } from 'react-select/lib/components/Option';
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
 import Typography from 'src/components/core/Typography';
+import Option from 'src/components/EnhancedSelect/components/Option';
 
 interface Props extends OptionProps<any> {
   data: {
@@ -23,7 +24,6 @@ const SearchItem: React.StatelessComponent<Props> = props => {
 
   const {
     data,
-    innerProps,
     isFocused,
     selectProps: { classes }
   } = props;
@@ -31,13 +31,14 @@ const SearchItem: React.StatelessComponent<Props> = props => {
   const isFinal = source === 'finalLink';
 
   return (
-    <div
+    <Option
       className={classNames({
         [classes.algoliaRoot]: true,
         [classes.selectedMenuItem]: isFocused
       })}
-      data-qa-search-result={source}
-      {...innerProps}
+      value={data.label}
+      attrs={{ ['data-qa-search-result']: source }}
+      {...props}
     >
       {isFinal ? (
         <div className={classes.finalLink}>
@@ -55,7 +56,7 @@ const SearchItem: React.StatelessComponent<Props> = props => {
           <Typography className={classes.source}>{source}</Typography>
         </>
       )}
-    </div>
+    </Option>
   );
 };
 
