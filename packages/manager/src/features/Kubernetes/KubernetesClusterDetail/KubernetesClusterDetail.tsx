@@ -102,7 +102,8 @@ const styles = (theme: Theme) =>
     },
     sectionSideBar: {
       [theme.breakpoints.up('md')]: {
-        order: 2
+        order: 2,
+        display: 'inline-block'
       }
     },
     tagSection: {
@@ -388,21 +389,21 @@ export const KubernetesClusterDetail: React.FunctionComponent<
         <Grid
           container
           item
-          direction="column"
+          direction="row"
           className={classes.sectionSideBar}
           xs={12}
           md={3}
         >
-          <Grid item className={classes.button}>
+          <Grid item xs={12} className={classes.button}>
             <KubeConfigPanel
               clusterID={cluster.id}
               clusterLabel={cluster.label}
             />
           </Grid>
-          <Grid item className={classes.section}>
+          <Grid item xs={12} className={classes.section}>
             <KubeSummaryPanel cluster={cluster} />
           </Grid>
-          <Grid item className={classes.tagSection}>
+          <Grid item xs={12} className={classes.tagSection}>
             <Paper className={classes.tagSectionInner}>
               <Typography
                 variant="h2"
