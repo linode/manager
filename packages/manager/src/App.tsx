@@ -191,7 +191,8 @@ const styles = (theme: Theme) =>
       }
     },
     hidden: {
-      display: 'none'
+      display: 'none',
+      overflow: 'hidden'
     }
   });
 
