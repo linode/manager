@@ -143,9 +143,14 @@ export const executePaypalPayment = (data: ExecutePayload) =>
  * existing information.
  *
  */
-export const saveCreditCard = (data: SaveCreditCardData) =>
-  Request<{}>(
+export const saveCreditCard = (data: SaveCreditCardData) => {
+  if (!data.cvv || data.cvv === '') {
+    delete data.cvv;
+  }
+
+  return Request<{}>(
     setURL(`${API_ROOT}/account/credit-card`),
     setMethod('POST'),
     setData(data, CreditCardSchema)
   ).then(response => response.data);
+};
