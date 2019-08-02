@@ -9,11 +9,11 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-// import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 
+import ActionMenu from './MonitorActionMenu';
 
 type ClassNames = 'root' | 'label' | 'monitorDescription' | 'monitorRow';
 
@@ -33,7 +33,7 @@ const styles = (theme: Theme) =>
       '&:before': {
         display: 'none'
       }
-    },
+    }
   });
 
 interface Props {
@@ -43,18 +43,18 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const statusIconMap: Record<Linode.MonitorStatus, any> = {
-  'ok': Good,
-  'problem': Bad,
-  'disabled': Disabled,
-  'pending': Good // @todo need an icon for this
-}
+  ok: Good,
+  problem: Bad,
+  disabled: Disabled,
+  pending: Good // @todo need an icon for this
+};
 
 export const statusTextMap: Record<Linode.MonitorStatus, string> = {
-  'ok': 'Verified',
-  'problem': 'Failed',
-  'pending': 'Pending',
-  'disabled': 'Disabled'
-}
+  ok: 'Verified',
+  problem: 'Failed',
+  pending: 'Pending',
+  disabled: 'Disabled'
+};
 
 export const monitorRow: React.FunctionComponent<CombinedProps> = props => {
   const { classes, monitor } = props;
@@ -64,7 +64,6 @@ export const monitorRow: React.FunctionComponent<CombinedProps> = props => {
       key={monitor.id}
       data-qa-monitor-cell={monitor.id}
       data-testid={'monitor-row'}
-      rowLink={`/kubernetes/monitors/${monitor.id}`}
       className={classes.monitorRow}
     >
       <TableCell
@@ -87,11 +86,9 @@ export const monitorRow: React.FunctionComponent<CombinedProps> = props => {
       <TableCell parentColumn="Resource" data-qa-monitor-resource>
         {monitor.address}
       </TableCell>
-      {/* <TableCell>
-        <ActionMenu
-          
-        />
-      </TableCell> */}
+      <TableCell>
+        <ActionMenu status={monitor.status} />
+      </TableCell>
     </TableRow>
   );
 };

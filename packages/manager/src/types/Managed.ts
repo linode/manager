@@ -5,14 +5,14 @@ namespace Linode {
     created: string;
     updated: string;
     status: MonitorStatus;
-    service_type: ServiceType; 
+    service_type: ServiceType;
     timeout: number;
     region: string | null;
-    credentials: any[]; // @todo wtf is this
+    credentials: any[]; // @todo
     address: string;
     body: string;
     notes: string;
-    consultation_group: string // deprecated but still returned by API
+    consultation_group: string; // deprecated but still returned by API
   }
 
   export type MonitorStatus = 'pending' | 'disabled' | 'ok' | 'problem';
