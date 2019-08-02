@@ -4,7 +4,14 @@ import { shim } from 'promise.prototype.finally';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { Redirect, Route, RouteProps, Switch } from 'react-router-dom';
+import {
+  Redirect,
+  Route,
+  RouteComponentProps,
+  RouteProps,
+  Switch,
+  withRouter
+} from 'react-router-dom';
 import { Action, compose } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { Subscription } from 'rxjs/Subscription';
@@ -25,7 +32,7 @@ import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
 /** @todo: Uncomment when we deploy with LD */
 // import VATBanner from 'src/components/VATBanner';
-// import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
+import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
@@ -50,6 +57,8 @@ import ErrorState from 'src/components/ErrorState';
 import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
 import { addNotificationsToLinodes } from 'src/store/linodes/linodes.actions';
 import { formatDate } from 'src/utilities/formatDate';
+
+import IdentifyUser from './IdentifyUser';
 
 shim(); // allows for .finally() usage
 
@@ -182,7 +191,8 @@ const styles = (theme: Theme) =>
       }
     },
     hidden: {
-      display: 'none'
+      display: 'none',
+      overflow: 'hidden'
     }
   });
 
@@ -196,11 +206,13 @@ interface State {
   menuOpen: boolean;
   welcomeBanner: boolean;
   hasError: boolean;
+  flagsLoaded: boolean;
 }
 
 type CombinedProps = Props &
   DispatchProps &
   StateProps &
+  RouteComponentProps &
   WithStyles<ClassNames> &
   WithSnackbarProps;
 
@@ -212,7 +224,12 @@ export class App extends React.Component<CombinedProps, State> {
   state: State = {
     menuOpen: false,
     welcomeBanner: false,
-    hasError: false
+    hasError: false,
+    flagsLoaded: false
+  };
+
+  setFlagsLoaded = () => {
+    this.setState({ flagsLoaded: true });
   };
 
   maybeAddNotificationsToLinodes = (additionalCondition: boolean = true) => {
@@ -254,7 +271,15 @@ export class App extends React.Component<CombinedProps, State> {
   }
 
   componentDidMount() {
-    // this.props.markAppAsDoneLoading();
+    /**
+     * Send pageviews unless blacklisted.
+     */
+    this.props.history.listen(({ pathname }) => {
+      if ((window as any).ga) {
+        (window as any).ga('send', 'pageview', pathname);
+        (window as any).ga(`linodecom.send`, 'pageview', pathname);
+      }
+    });
 
     /** try and add notifications to the Linodes object if that data exists */
     this.maybeAddNotificationsToLinodes();
@@ -335,6 +360,7 @@ export class App extends React.Component<CombinedProps, State> {
       accountError,
       linodesLoading,
       domainsLoading,
+      userId,
       volumesLoading,
       bucketsLoading,
       nodeBalancersLoading
@@ -374,8 +400,11 @@ export class App extends React.Component<CombinedProps, State> {
         <a href="#main-content" className="visually-hidden">
           Skip to main content
         </a>
+        {/** Update the LD client with the user's id as soon as we know it */}
+        <IdentifyUser userID={userId} setFlagsLoaded={this.setFlagsLoaded} />
         <DataLoadedListener
           markAppAsLoaded={this.props.markAppAsDoneLoading}
+          flagsHaveLoaded={this.state.flagsLoaded}
           linodesLoadingOrErrorExists={
             linodesLoading === false || !!linodesError
           }
@@ -431,7 +460,7 @@ export class App extends React.Component<CombinedProps, State> {
                       <Redirect path="/volumes*" to="/volumes" />
                       <Route path="/nodebalancers" component={NodeBalancers} />
                       <Route path="/domains" component={Domains} />
-                      <Route exact path="/managed" component={Managed} />
+                      <Route path="/managed" component={Managed} />
                       <Route exact path="/longview" component={Longview} />
                       <Route exact strict path="/images" component={Images} />
                       <Redirect path="/images*" to="/images" />
@@ -626,9 +655,9 @@ export default compose(
   connected,
   styled,
   withDocumentTitleProvider,
-  withSnackbar
-  /** @todo: Uncomment when we deploy with LD */
-  // withFeatureFlagProvider
+  withSnackbar,
+  withFeatureFlagProvider,
+  withRouter
 )(App);
 
 export const hasOauthError = (

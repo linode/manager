@@ -191,6 +191,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           <NodePoolDisplayTable
             small
             editable
+            loading={false} // When creating we never need to load node pools from the API
             pools={pools || []}
             types={types}
             handleDelete={(poolIdx: number) => deleteNodePool!(poolIdx)}

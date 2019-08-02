@@ -17,6 +17,7 @@ interface Props {
   domainsLoadingOrErrorExists: boolean;
   markAppAsLoaded: () => void;
   appIsLoaded: boolean;
+  flagsHaveLoaded: boolean;
 }
 
 const DataLoadedListener: React.FC<Props> = props => {
@@ -29,7 +30,8 @@ const DataLoadedListener: React.FC<Props> = props => {
         props.volumesLoadingOrErrorExists,
         props.nodeBalancersLoadingOrErrorExists,
         props.bucketsLoadingOrErrorExists,
-        props.domainsLoadingOrErrorExists
+        props.domainsLoadingOrErrorExists,
+        props.flagsHaveLoaded
       ) &&
       !props.appIsLoaded
     ) {
@@ -49,9 +51,15 @@ const shouldMarkAppAsDone = (
   volumesLoadingOrErrorExists: boolean,
   nodeBalancersLoadingOrErrorExists: boolean,
   bucketsLoadingOrErrorExists: boolean,
-  domainsLoadingOrErrorExists: boolean
+  domainsLoadingOrErrorExists: boolean,
+  flagsHaveLoaded: boolean
 ): boolean => {
   const pathname = window.location.pathname;
+
+  if (!flagsHaveLoaded) {
+    // We're still waiting for feature flags. Don't load the app.
+    return false;
+  }
 
   /**
    * if we're not on a route that we recognize,

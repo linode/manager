@@ -1,5 +1,5 @@
+import { cleanup, render } from '@testing-library/react';
 import * as React from 'react';
-import { cleanup, render } from 'react-testing-library';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { CombinedProps, SummaryPanel } from './SummaryPanel';

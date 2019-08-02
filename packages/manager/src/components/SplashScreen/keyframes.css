@@ -1,69 +1,105 @@
-/* Keyframes for the general loading icon animation */
-
-@keyframes moveupSmall {
-  0%, 60%, 100% {
-    transform: 
-      rotateX(50deg)
-      rotateY(0deg)
-      rotateZ(45deg)
-      translateZ(0);
+@keyframes ball-beat {
+  50% {
+    opacity: 0.2;
+    transform: scale(0.75);
   }
-  25% {
-    transform:
-      rotateX(50deg)
-      rotateY(0deg)
-      rotateZ(45deg)
-      translateZ(0.5em);
+  100% {
+    opacity: 1;
+    transform: scale(1);
   }
 }
 
-@keyframes movedownSmall {
-  0%, 60%, 100% {
-    transform: 
-      rotateX(50deg)
-      rotateY(0deg)
-      rotateZ(45deg)
-      translateZ(0);
+@keyframes fade-in {
+  0% {
+    opacity: 0.25;
   }
-  25% {
-    transform:
-      rotateX(50deg)
-      rotateY(0deg)
-      rotateZ(45deg)
-      translateZ(-0.5em);
+  100% {
+    opacity: 1;
   }
 }
 
-@keyframes moveupLarge {
-  0%, 60%, 100% {
-    transform: 
-      rotateX(50deg)
-      rotateY(0deg)
-      rotateZ(45deg)
-      translateZ(0);
-  }
-  25% {
-    transform:
-      rotateX(50deg)
-      rotateY(0deg)
-      rotateZ(45deg)
-      translateZ(1.5em);
-  }
+.linode-loader {
+  width: 100px;
+  height: 120px;
 }
 
-@keyframes movedownLarge {
-  0%, 60%, 100% {
-    transform: 
-      rotateX(50deg)
-      rotateY(0deg)
-      rotateZ(45deg)
-      translateZ(0);
+.cube1,
+.cube2,
+.cube3,
+.cube4,
+.cube5 {
+  opacity: 0.25;
+}
+
+.cube1 {
+  transform: translateY(0);
+  animation: fade-in 0.5s ease-in-out forwards;
+}
+.cube2 {
+  transform: translate(17px, 81px);
+  animation: fade-in 0.5s ease-in-out forwards 0.25s;
+}
+.cube3 {
+  transform: translate(32px, 148px);
+  animation: fade-in 0.5s ease-in-out forwards 0.5s;
+}
+.cube4 {
+  transform: translate(93px, 117px);
+  animation: fade-in 0.5s ease-in-out forwards 0.75s;
+}
+.cube5 {
+  transform: translate(142px, 90px);
+  animation: fade-in 0.5s ease-in-out forwards 1s;
+}
+
+.la-ball-beat {
+  opacity: 0;
+  animation: fade-in 0.25s linear 1.5s forwards;
+}
+
+.la-ball-beat,
+.la-ball-beat > div {
+  position: relative;
+  box-sizing: border-box;
+  margin-top: 8px;
+  margin-left: 8px;
+}
+.la-ball-beat {
+  display: block;
+  font-size: 0;
+  color: #fff;
+}
+.la-ball-beat.la-dark {
+  color: #333;
+}
+.la-ball-beat > div {
+  display: inline-block;
+  float: none;
+  background-color: currentColor;
+  border: 0 solid currentColor;
+}
+.la-ball-beat {
+  width: 54px;
+  height: 18px;
+}
+.la-ball-beat > div {
+  width: 10px;
+  height: 10px;
+  margin: 4px;
+  border-radius: 100%;
+  animation: ball-beat 0.7s -0.15s infinite linear;
+}
+.la-ball-beat > div:nth-child(2n-1) {
+  animation-delay: -0.5s;
+}
+
+@media (min-width: 960px) {
+  .linode-loader {
+    width: 209px;
+    height: 251px;
   }
-  25% {
-    transform:
-      rotateX(50deg)
-      rotateY(0deg)
-      rotateZ(45deg)
-      translateZ(-1.5em);
+  .la-ball-beat {
+    margin-top: 24px;
+    margin-left: 47px;
   }
 }

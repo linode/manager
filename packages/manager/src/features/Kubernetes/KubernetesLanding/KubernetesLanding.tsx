@@ -20,6 +20,8 @@ export const KubernetesLanding: React.FunctionComponent<
     clusters,
     clustersError,
     clustersLoading,
+    nodePoolsLoading,
+    lastUpdated,
     deleteCluster,
     requestKubernetesClusters,
     setKubernetesErrors
@@ -43,7 +45,7 @@ export const KubernetesLanding: React.FunctionComponent<
     );
   }
 
-  if (clustersLoading) {
+  if ((clustersLoading && lastUpdated === 0) || nodePoolsLoading) {
     return <CircleProgress />;
   }
 
@@ -62,11 +64,20 @@ export const KubernetesLanding: React.FunctionComponent<
 };
 
 const withKubernetes = KubernetesContainer(
-  (ownProps, clustersLoading, lastUpdated, clustersError, clusters) => ({
+  (
+    ownProps,
+    clustersLoading,
+    lastUpdated,
+    clustersError,
+    clusters,
+    nodePoolsLoading
+  ) => ({
     ...ownProps,
     clusters,
     clustersError,
-    clustersLoading
+    clustersLoading,
+    lastUpdated,
+    nodePoolsLoading
   })
 );
 

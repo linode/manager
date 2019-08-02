@@ -2,6 +2,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 
 import Button from 'src/components/Button';
+// import CopyTooltip from 'src/components/CopyTooltip';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
@@ -19,7 +20,14 @@ import NodePoolDisplayTable from '../../CreateCluster/NodePoolDisplayTable';
 import { getTotalClusterPrice } from '../../kubeUtils';
 import { PoolNodeWithPrice } from '../../types';
 
-type ClassNames = 'root' | 'button' | 'pricing' | 'ctaOuter' | 'displayTable';
+type ClassNames =
+  | 'root'
+  | 'button'
+  | 'pricing'
+  | 'ctaOuter'
+  | 'displayTable'
+  | 'code'
+  | 'footer';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
@@ -40,6 +48,12 @@ const styles = (theme: Theme) =>
     },
     displayTable: {
       width: '100%'
+    },
+    code: {
+      padding: theme.spacing(1)
+    },
+    footer: {
+      marginTop: theme.spacing(2)
     }
   });
 
@@ -51,6 +65,7 @@ interface Props {
   pools: PoolNodeWithPrice[];
   poolsForEdit: PoolNodeWithPrice[];
   types: ExtendedType[];
+  loading: boolean;
   toggleEditing: () => void;
   updatePool: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
   deletePool: (poolID: number) => void;
@@ -60,6 +75,8 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
+// const command = 'kubectl get nodes -o wide';
+
 export const NodePoolsDisplay: React.FunctionComponent<
   CombinedProps
 > = props => {
@@ -67,6 +84,7 @@ export const NodePoolsDisplay: React.FunctionComponent<
     classes,
     deletePool,
     editing,
+    loading,
     pools,
     poolsForEdit,
     resetForm,
@@ -101,7 +119,7 @@ export const NodePoolsDisplay: React.FunctionComponent<
         </Grid>
         {submissionSuccess && (
           <Grid item xs={12}>
-            <Notice success text="Your node pools are being updated." />
+            <Notice success text={'Your node pools are being updated.'} />
           </Grid>
         )}
         {submissionError && submissionError.length > 0 && (
@@ -113,13 +131,18 @@ export const NodePoolsDisplay: React.FunctionComponent<
           {editing ? (
             <NodePoolDisplayTable
               editable
+              loading={loading}
               pools={poolsForEdit}
               types={types}
               handleDelete={deletePool}
               updatePool={updatePool}
             />
           ) : (
-            <NodePoolDisplayTable pools={pools} types={types} />
+            <NodePoolDisplayTable
+              pools={pools}
+              types={types}
+              loading={loading}
+            />
           )}
         </Grid>
         <Grid item xs={12}>
@@ -149,6 +172,14 @@ export const NodePoolsDisplay: React.FunctionComponent<
             </Button>
           </Grid>
         </Grid>
+        {/* <Grid item className={classes.footer}>
+          <Typography>
+            You can run
+            <code className={classes.code}>{command}</code>
+            <CopyTooltip text={command} />
+            for more detailed information about the nodes in your cluster.
+          </Typography>
+        </Grid> */}
       </Grid>
     </Paper>
   );
