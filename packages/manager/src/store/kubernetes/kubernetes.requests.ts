@@ -27,16 +27,15 @@ export const requestKubernetesClusters: ThunkActionCreator<
 
   return getAllClusters()
     .then(({ data }) => {
-      dispatch(
-        requestClustersActions.done({
-          result: data
-        })
-      );
       let i = 0;
       for (; i < data.length; i++) {
         dispatch(requestNodePoolsForCluster({ clusterID: data[i].id }));
       }
-      return data;
+      return dispatch(
+        requestClustersActions.done({
+          result: data
+        })
+      );
     })
     .catch(error => {
       dispatch(requestClustersActions.failed({ error }));
@@ -47,6 +46,7 @@ export const requestKubernetesClusters: ThunkActionCreator<
 type RequestClusterForStoreThunk = ThunkActionCreator<void>;
 export const requestClusterForStore: RequestClusterForStoreThunk = clusterID => dispatch => {
   getKubernetesCluster(clusterID).then(cluster => {
+    dispatch(requestNodePoolsForCluster({ clusterID }));
     return dispatch(upsertCluster(cluster));
   });
 };

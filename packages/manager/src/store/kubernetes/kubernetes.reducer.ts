@@ -19,7 +19,7 @@ export type State = EntityState<Linode.KubernetesCluster, EntityError>;
 export const defaultState: State = {
   results: [],
   entities: [],
-  loading: true,
+  loading: false,
   lastUpdated: 0,
   error: {}
 };

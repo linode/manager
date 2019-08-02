@@ -16,8 +16,10 @@ const useStyles = makeStyles({
     alignItems: 'center',
     height: '100vh',
     width: '100vw',
-    position: 'absolute',
-    zIndex: 100
+    position: 'fixed',
+    zIndex: 100,
+    top: 0,
+    left: 0
   },
   layer: {
     position: 'absolute',
