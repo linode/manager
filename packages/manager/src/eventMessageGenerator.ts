@@ -1,4 +1,5 @@
 import { path } from 'ramda';
+import { isProduction } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 
 type EventMessageCreator = (e: Linode.Event) => string;
@@ -38,6 +39,10 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   community_like: {
     notification: e => e.entity!.label
+  },
+  community_mention: {
+    notification: e =>
+      `You have been mentioned in a Community post: ${e.entity!.label}`
   },
   credit_card_updated: {
     notification: e => `Credit card information has been updated.`
@@ -227,7 +232,8 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for an upgrade.`,
     started: e => `Linode ${e.entity!.label} is being upgraded.`,
     failed: e => `Linode ${e.entity!.label} could not be upgraded.`,
-    finished: e => `Linode ${e.entity!.label} has been upgraded.`
+    finished: e => `Linode ${e.entity!.label} has been upgraded.`,
+    notification: e => `Linode ${e.entity!.label} is being upgraded.`
   },
   linode_reboot: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for a reboot.`,
@@ -493,12 +499,15 @@ export default (e: Linode.Event): string => {
 
   /** we couldn't find the event in our list above */
   if (!fn) {
-    /**
-     * always report to Sentry that we've got an event type we're not accounting for
-     */
-    reportException(`Unknown API Event Received`, {
-      event: e
-    });
+    /** log unknown events to the console */
+    if (!isProduction) {
+      /* tslint:disable */
+      console.error('============================================');
+      console.error('Unknown API Event Received');
+      console.log(e);
+      console.error('============================================');
+      /* tslint:enable */
+    }
 
     /** finally return some default fallback text */
     return `${e.action}${e.entity ? ` on ${e.entity.label}` : ''}`;
