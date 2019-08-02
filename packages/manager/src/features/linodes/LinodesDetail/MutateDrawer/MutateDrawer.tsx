@@ -155,8 +155,10 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
           resources by resizing your disk images. We estimate this upgrade
           process will take{' '}
           <strong>
-            {estimatedTimeToUpgradeInMins}
-            {estimatedTimeToUpgradeInMins === 1 ? ` minute` : ` minutes`}
+            {estimatedTimeToUpgradeInMins < 1
+              ? '< 1'
+              : estimatedTimeToUpgradeInMins}
+            {estimatedTimeToUpgradeInMins < 1 ? ` minute` : ` minutes`}
           </strong>
           , but that may vary based on host and network load.
         </Typography>

@@ -122,8 +122,11 @@ const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
       <Notice important warning>
         You have a pending upgrade. The estimated time to complete this upgrade
         is
-        {` ` + estimatedTimeToUpgradeInMins}
-        {estimatedTimeToUpgradeInMins === 1 ? ` minute` : ` minutes`}. To learn
+        {` ` +
+          (estimatedTimeToUpgradeInMins < 1
+            ? '< 1'
+            : estimatedTimeToUpgradeInMins)}
+        {estimatedTimeToUpgradeInMins < 1 ? ` minute` : ` minutes`}. To learn
         more,&nbsp;
         <span
           className={classes.pendingMutationLink}
