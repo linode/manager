@@ -29,6 +29,16 @@ const AddNewLink: React.StatelessComponent<CombinedProps> = props => {
     ...remaningPropsAsTooltipProps
   } = props;
 
+  const baseProps = {
+    SideIcon: PlusSquare,
+    onClick,
+    title: label,
+    text: label,
+    disabled,
+    left,
+    className
+  };
+
   if (!!disabled && !!disabledReason) {
     return (
       <Tooltip
@@ -43,35 +53,13 @@ const AddNewLink: React.StatelessComponent<CombinedProps> = props => {
           {/* 
             wrapping in div because the child of tooltip needs to be able to hold a ref 
           */}
-          <IconTextLink
-            SideIcon={PlusSquare}
-            onClick={onClick}
-            title={label}
-            text={label}
-            disabled={disabled}
-            left={left}
-            className={className}
-          >
-            {display || label}
-          </IconTextLink>
+          <IconTextLink {...baseProps}>{display || label}</IconTextLink>
         </div>
       </Tooltip>
     );
   }
 
-  return (
-    <IconTextLink
-      SideIcon={PlusSquare}
-      onClick={onClick}
-      title={label}
-      text={label}
-      disabled={disabled}
-      left={left}
-      className={className}
-    >
-      {display || label}
-    </IconTextLink>
-  );
+  return <IconTextLink {...baseProps}>{display || label}</IconTextLink>;
 };
 
 export default AddNewLink;
