@@ -15,7 +15,12 @@ import TableRow from 'src/components/TableRow';
 
 import ActionMenu from './MonitorActionMenu';
 
-type ClassNames = 'root' | 'label' | 'monitorDescription' | 'monitorRow';
+type ClassNames =
+  | 'root'
+  | 'label'
+  | 'monitorDescription'
+  | 'monitorRow'
+  | 'errorStatus';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -33,6 +38,9 @@ const styles = (theme: Theme) =>
       '&:before': {
         display: 'none'
       }
+    },
+    errorStatus: {
+      color: theme.color.red
     }
   });
 
@@ -81,10 +89,14 @@ export const monitorRow: React.FunctionComponent<CombinedProps> = props => {
         </Grid>
       </TableCell>
       <TableCell parentColumn="Status" data-qa-monitor-status>
-        {statusTextMap[monitor.status]}
+        <Typography
+          className={monitor.status === 'problem' ? classes.errorStatus : ''}
+        >
+          {statusTextMap[monitor.status]}
+        </Typography>
       </TableCell>
       <TableCell parentColumn="Resource" data-qa-monitor-resource>
-        {monitor.address}
+        <Typography>{monitor.address}</Typography>
       </TableCell>
       <TableCell>
         <ActionMenu status={monitor.status} />
