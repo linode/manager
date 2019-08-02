@@ -79,7 +79,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
                           direction={order}
                           handleClick={handleOrderChange}
                           className={classes.labelHeader}
-                          data-qa-kubernetes-clusters-name-header
+                          data-qa-monitor-label-header
                         >
                           Monitor
                         </TableSortCell>
@@ -88,7 +88,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
                           label={'status'}
                           direction={order}
                           handleClick={handleOrderChange}
-                          data-qa-kubernetes-clusters-version-header
+                          data-qa-monitor-status-header
                         >
                           Status
                         </TableSortCell>
@@ -97,7 +97,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
                           label={'resource'}
                           direction={order}
                           handleClick={handleOrderChange}
-                          data-qa-kubernetes-clusters-created-header
+                          data-qa-monitor-resource-header
                         >
                           Resource
                         </TableSortCell>
