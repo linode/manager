@@ -6,7 +6,7 @@ import { API_ROOT } from 'src/constants';
 
 import CloseTicketLink from './CloseTicketLink';
 
-const mockFn = jest.fn(() => Promise.resolve());
+const mockFn = jest.fn((config: AxiosRequestConfig) => Promise.resolve(config));
 const success = jest.fn(() => Promise.resolve());
 const ticketId = 12345;
 

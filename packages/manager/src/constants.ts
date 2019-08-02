@@ -26,9 +26,7 @@ export const ALGOLIA_APPLICATION_ID =
 export const ALGOLIA_SEARCH_KEY =
   process.env.REACT_APP_ALGOLIA_SEARCH_KEY || '';
 export const LAUNCH_DARKLY_API_KEY =
-  (isProduction
-    ? process.env.REACT_APP_LAUNCH_DARKLY_ID_PRODUCTION
-    : process.env.REACT_APP_LAUNCH_DARKLY_ID_DEV) || '';
+  process.env.REACT_APP_LAUNCH_DARKLY_ID || '';
 
 /** optional variables */
 export const SENTRY_URL = process.env.REACT_APP_SENTRY_URL;

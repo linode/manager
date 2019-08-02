@@ -102,7 +102,8 @@ const styles = (theme: Theme) =>
     },
     sectionSideBar: {
       [theme.breakpoints.up('md')]: {
-        order: 2
+        order: 2,
+        display: 'inline-block'
       }
     },
     tagSection: {
@@ -117,6 +118,7 @@ interface KubernetesContainerProps {
   clustersLoadError?: Linode.ApiFieldError[];
   clusterDeleteError?: Linode.ApiFieldError[];
   lastUpdated: number;
+  nodePoolsLoading: boolean;
 }
 
 type CombinedProps = WithTypesProps &
@@ -136,6 +138,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     clustersLoading,
     lastUpdated,
     location,
+    nodePoolsLoading,
     typesData,
     typesError,
     typesLoading
@@ -162,16 +165,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   const [deleting, setDeleting] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    /**
-     * Eventually the clusters request will probably be made from App.tsx
-     * (to facilitate searching), but for now if a user navigates directly
-     * to this url without going through KubernetesLanding the clusters won't have
-     * been requested yet.
-     */
-    if (props.lastUpdated === 0) {
-      props.requestKubernetesClusters();
-    } else {
-      const clusterID = +props.match.params.clusterID;
+    const clusterID = +props.match.params.clusterID;
+    if (clusterID) {
       props.requestClusterForStore(clusterID);
     }
 
@@ -189,7 +184,11 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     return <ErrorState errorText="Unable to load cluster data." />;
   }
 
-  if ((clustersLoading && lastUpdated !== 0) || typesLoading) {
+  if (
+    (clustersLoading && lastUpdated === 0) ||
+    nodePoolsLoading ||
+    typesLoading
+  ) {
     return <CircleProgress />;
   }
   if (cluster === null) {
@@ -364,7 +363,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
 
   return (
     <React.Fragment>
-      <DocumentTitleSegment segment={`Kubernetes Cluster ${'label'}`} />
+      <DocumentTitleSegment segment={`Kubernetes Cluster ${cluster.label}`} />
       <Grid
         container
         justify="space-between"
@@ -374,12 +373,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<
       >
         <Grid item xs={12} className={classes.titleWrapper}>
           <Breadcrumb
-            labelOptions={{
-              linkTo: `/kubernetes`
-            }}
-            labelTitle={cluster.label}
             onEditHandlers={{
-              editableTextTitle: 'any',
+              editableTextTitle: cluster.label,
               onEdit: handleLabelChange,
               onCancel: resetEditableLabel
             }}
@@ -394,21 +389,21 @@ export const KubernetesClusterDetail: React.FunctionComponent<
         <Grid
           container
           item
-          direction="column"
+          direction="row"
           className={classes.sectionSideBar}
           xs={12}
           md={3}
         >
-          <Grid item className={classes.button}>
+          <Grid item xs={12} className={classes.button}>
             <KubeConfigPanel
               clusterID={cluster.id}
               clusterLabel={cluster.label}
             />
           </Grid>
-          <Grid item className={classes.section}>
+          <Grid item xs={12} className={classes.section}>
             <KubeSummaryPanel cluster={cluster} />
           </Grid>
-          <Grid item className={classes.tagSection}>
+          <Grid item xs={12} className={classes.tagSection}>
             <Paper className={classes.tagSectionInner}>
               <Typography
                 variant="h2"
@@ -445,6 +440,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
               pools={cluster.node_pools}
               poolsForEdit={pools}
               types={typesData || []}
+              loading={nodePoolsLoading}
             />
           </Grid>
           <Grid item xs={12}>
@@ -496,18 +492,29 @@ const styled = withStyles(styles);
 const withCluster = KubeContainer<
   {},
   WithTypesProps & RouteComponentProps<{ clusterID: string }>
->((ownProps, clustersLoading, lastUpdated, clustersError, clustersData) => {
-  const cluster =
-    clustersData.find(c => +c.id === +ownProps.match.params.clusterID) || null;
-  return {
-    ...ownProps,
-    cluster,
-    lastUpdated,
+>(
+  (
+    ownProps,
     clustersLoading,
-    clustersLoadError: clustersError.read,
-    clusterDeleteError: clustersError.delete
-  };
-});
+    lastUpdated,
+    clustersError,
+    clustersData,
+    nodePoolsLoading
+  ) => {
+    const cluster =
+      clustersData.find(c => +c.id === +ownProps.match.params.clusterID) ||
+      null;
+    return {
+      ...ownProps,
+      cluster,
+      lastUpdated,
+      clustersLoading,
+      clustersLoadError: clustersError.read,
+      clusterDeleteError: clustersError.delete,
+      nodePoolsLoading
+    };
+  }
+);
 
 const enhanced = compose<CombinedProps, {}>(
   styled,

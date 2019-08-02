@@ -1,5 +1,5 @@
+import { cleanup, render } from '@testing-library/react';
 import * as React from 'react';
-import { cleanup, render } from 'react-testing-library';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { VolumesActionMenu } from './VolumesActionMenu';
 

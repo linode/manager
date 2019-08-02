@@ -1,5 +1,5 @@
+import { render } from '@testing-library/react';
 import * as React from 'react';
-import { render } from 'react-testing-library';
 import { domains } from 'src/__data__/domains';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme } from 'src/utilities/testHelpers';

@@ -13,7 +13,7 @@ export const clusterLabelSchema = string()
    */
   .matches(
     /^[a-zA-Z0-9-]+$/,
-    'Cluster labels cannot contain special characters or underscores.'
+    'Cluster labels cannot contain special characters, spaces, or underscores.'
   )
   .min(3, 'Length must be between 3 and 32 characters.')
   .max(32, 'Length must be between 3 and 32 characters.');

@@ -1,4 +1,4 @@
-FROM node:8.11.2-stretch
+FROM node:10
 
 WORKDIR /src
 

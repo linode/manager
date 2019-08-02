@@ -207,6 +207,18 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     finished: e => `Linode ${e.entity!.label} has been migrated.`
   },
   // This event type isn't currently being displayed, but I added a message here just in case.
+  linode_migrate_datacenter_create: {
+    notification: e =>
+      `Migration for Linode ${e.entity!.label} has been initiated.`
+  },
+  // These are the same as the messages for `linode_migrate`.
+  linode_migrate_datacenter: {
+    scheduled: e => `Linode ${e.entity!.label} is scheduled for migration.`,
+    started: e => `Linode ${e.entity!.label} is being migrated.`,
+    failed: e => `Migration failed for Linode ${e.entity!.label}.`,
+    finished: e => `Linode ${e.entity!.label} has been migrated.`
+  },
+  // This event type isn't currently being displayed, but I added a message here just in case.
   linode_mutate_create: {
     notification: e =>
       `Upgrade for Linode ${e.entity!.label} has been initiated.`
@@ -334,6 +346,18 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: e =>
       `A node on NodeBalancer ${e.entity!.label} has been updated.`
   },
+  oauth_client_create: {
+    notification: e => `OAuth App ${e.entity!.label} has been created.`
+  },
+  oauth_client_update: {
+    notification: e => `OAuth App ${e.entity!.label} has been updated.`
+  },
+  oauth_client_secret_reset: {
+    notification: e => `Secret for OAuth App ${e.entity!.label} has been reset.`
+  },
+  oauth_client_delete: {
+    notification: e => `OAuth App ${e.entity!.label} has been deleted.`
+  },
   password_reset: {
     scheduled: e => `A password reset is scheduled for ${e.entity!.label}.`,
     started: e => `The password for ${e.entity!.label} is being reset.`,
@@ -343,13 +367,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   profile_update: {
     notification: e => `Your profile has been updated.`
   },
-  // payment_submitted: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  payment_submitted: {
+    notification: e => `A payment was successfully submitted.`
+  },
   stackscript_create: {
     notification: e => `StackScript ${e.entity!.label} has been created.`
   },
@@ -364,6 +384,12 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   stackscript_revise: {
     notification: e => `StackScript ${e.entity!.label} has been revised.`
+  },
+  tag_create: {
+    notification: e => `Tag ${e.entity!.label} has been created.`
+  },
+  tag_delete: {
+    notification: e => `Tag ${e.entity!.label} has been deleted.`
   },
   tfa_disabled: {
     notification: e => `Two-factor authentication has been disabled.`
@@ -388,6 +414,16 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: e =>
       `File has been successfully uploaded to support ticket ${e.entity!.label}`
   },
+  token_create: {
+    notification: e => `Token ${e.entity!.label} has been created.`
+  },
+  token_update: {
+    notification: e => `Token ${e.entity!.label} has been updated.`
+  },
+  token_delete: {
+    notification: e => `Token ${e.entity!.label} has been revoked.`
+  },
+
   volume_attach: {
     // @todo Once we have better events, display the name of the attached Linode
     // in these messages.
@@ -437,6 +473,12 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   user_ssh_key_delete: {
     notification: e => `An SSH key has been removed from your profile.`
+  },
+  user_create: {
+    notification: e => `User ${e.entity!.label} has been created.`
+  },
+  user_delete: {
+    notification: e => `User ${e.entity!.label} has been deleted.`
   },
   user_update: {
     notification: e => `User ${e.entity!.label} has been updated.`
