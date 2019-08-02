@@ -10,6 +10,10 @@ export default (
   const id = path(['id'], entity);
   const label = path(['label'], entity);
 
+  if (action.match(/community/gi)) {
+    return entity!.url;
+  }
+
   if (['disk_delete', 'linode_config_delete'].includes(action)) {
     /**
      * Special cases that are handled here above the deletion logic;
@@ -88,12 +92,6 @@ export default (
         default:
           return `/nodebalancers/${id}/summary`;
       }
-
-    case 'community_question':
-      return entity!.url;
-
-    case 'community_like':
-      return entity!.url;
 
     case 'user':
       return `/account/users/${label}/profile`;
