@@ -71,6 +71,8 @@ export const cleanCSVData = (data: any): any => {
   if (`${data}`.match(/[-|+|=]/g)) {
     return `"${data}"`;
   }
+
+  return data;
 };
 
 export default compose<CombinedProps, Props>(React.memo)(DownloadCSV);
