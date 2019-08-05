@@ -49,7 +49,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  expiration: string;
+  expiration?: string;
 }
 
 export type CombinedProps = Props & WithStyles<ClassNames>;
@@ -60,10 +60,16 @@ export const expiresInDays = (time: string) => {
 
 export const PromotionsBanner: React.FC<CombinedProps> = props => {
   const { classes, expiration } = props;
+
+  if (!expiration) {
+    return null;
+  }
+
   const days = expiresInDays(expiration);
   if (days >= PROMOTIONAL_TIME_BOUNDARY) {
     return null;
   }
+
   return (
     <Paper className={classes.root}>
       <div className={classes.cash}>
