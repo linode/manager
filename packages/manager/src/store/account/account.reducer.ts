@@ -8,6 +8,9 @@ import {
   updateAccountActions
 } from './account.actions';
 
+// Mock promotions data until API is ready
+import { activePromotions } from 'src/__data__/account';
+
 /**
  * State
  */
@@ -31,7 +34,12 @@ const reducer: Reducer<State> = (state: State = defaultState, action) => {
   if (isType(action, profileRequestSuccess)) {
     const { payload } = action;
 
-    return { ...state, loading: false, data: payload, lastUpdated: Date.now() };
+    return {
+      ...state,
+      loading: false,
+      data: { ...payload, active_promotions: activePromotions },
+      lastUpdated: Date.now()
+    };
   }
 
   if (isType(action, profileRequestFail)) {

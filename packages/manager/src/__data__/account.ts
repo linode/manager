@@ -1,3 +1,11 @@
+export const activePromotions: Linode.ActivePromotions = {
+  description: 'Get $10 off your Linodes',
+  expire_dt: '2019-08-10T13:52:21',
+  credit_remaining: 500,
+  this_month_credit_remaining: 10,
+  label: 'monthly_linode_10_50'
+};
+
 export const account: Linode.Account = {
   active_since: 'hello world',
   address_2: 'apt b2',
@@ -17,7 +25,8 @@ export const account: Linode.Account = {
   balance_uninvoiced: 0,
   city: 'philadelphia',
   phone: '2151231234',
-  company: 'mmckenna'
+  company: 'mmckenna',
+  active_promotions: activePromotions
   // [BETA]
   // @todo: Uncomment this when it becomes generally available
   // capabilities: ['Linodes', 'NodeBalancers', 'Block Storage']
