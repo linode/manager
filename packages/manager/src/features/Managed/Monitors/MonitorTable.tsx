@@ -1,5 +1,4 @@
 import * as React from 'react';
-import 'rxjs/add/operator/filter';
 import AddNewLink from 'src/components/AddNewLink';
 import Paper from 'src/components/core/Paper';
 import {

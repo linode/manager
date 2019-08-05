@@ -1,7 +1,4 @@
 import * as React from 'react';
-import Disabled from 'src/assets/icons/monitor-disabled.svg';
-import Bad from 'src/assets/icons/monitor-failed.svg';
-import Good from 'src/assets/icons/monitor-ok.svg';
 import {
   createStyles,
   Theme,
@@ -14,6 +11,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 
 import ActionMenu from './MonitorActionMenu';
+import { statusIconMap, statusTextMap } from './monitorMaps';
 
 type ClassNames =
   | 'root'
@@ -49,20 +47,6 @@ interface Props {
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
-
-export const statusIconMap: Record<Linode.MonitorStatus, any> = {
-  ok: Good,
-  problem: Bad,
-  disabled: Disabled,
-  pending: Good // @todo need an icon for this
-};
-
-export const statusTextMap: Record<Linode.MonitorStatus, string> = {
-  ok: 'Verified',
-  problem: 'Failed',
-  pending: 'Pending',
-  disabled: 'Disabled'
-};
 
 export const monitorRow: React.FunctionComponent<CombinedProps> = props => {
   const { classes, monitor } = props;
