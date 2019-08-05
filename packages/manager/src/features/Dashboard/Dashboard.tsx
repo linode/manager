@@ -45,7 +45,7 @@ const styles = (theme: Theme) =>
 
 interface StateProps {
   accountBackups: boolean;
-  activePromotions: Linode.ActivePromotions;
+  promotionExpiry?: string;
   linodesWithoutBackups: Linode.Linode[];
   managed: boolean;
   backupError?: Error;
@@ -71,7 +71,7 @@ type CombinedProps = StateProps &
 export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
   const {
     accountBackups,
-    activePromotions,
+    promotionExpiry,
     actions: { openBackupDrawer, openImportDrawer },
     backupError,
     linodesWithoutBackups,
@@ -98,9 +98,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
           </Typography>
         </Grid>
         <Grid item xs={12} md={7}>
-          {flags.promos && (
-            <PromotionsBanner expiration={activePromotions.expire_dt} />
-          )}
+          {flags.promos && <PromotionsBanner expiration={promotionExpiry} />}
           <LinodesDashboardCard />
           <VolumesDashboardCard />
           <NodeBalancersDashboardCard />
@@ -140,9 +138,8 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
       ['__resources', 'accountSettings', 'data', 'backups_enabled'],
       state
     ),
-    activePromotions: pathOr(
-      {},
-      ['__resources', 'account', 'data', 'active_promotions'],
+    promotionExpiry: path(
+      ['__resources', 'account', 'data', 'active_promotions', 'expire_dt'],
       state
     ),
     userTimezone: pathOr('', ['data', 'timezone'], state.__resources.profile),
