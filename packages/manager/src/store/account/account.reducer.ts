@@ -9,7 +9,7 @@ import {
 } from './account.actions';
 
 // Mock promotions data until API is ready
-import { activePromotions } from 'src/__data__/account';
+import { account } from 'src/__data__/account';
 
 /**
  * State
@@ -32,12 +32,12 @@ const reducer: Reducer<State> = (state: State = defaultState, action) => {
   }
 
   if (isType(action, profileRequestSuccess)) {
-    const { payload } = action;
+    // const { payload } = action;
 
     return {
       ...state,
       loading: false,
-      data: { ...payload, active_promotions: activePromotions },
+      data: account,
       lastUpdated: Date.now()
     };
   }
