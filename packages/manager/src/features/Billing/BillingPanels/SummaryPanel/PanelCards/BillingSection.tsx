@@ -55,10 +55,7 @@ export const BillingSection: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      <div
-        className={`${classes.section} ${classes.balance}`}
-        data-qa-current-balance
-      >
+      <div className={`${classes.section} ${classes.balance}`}>
         <Typography>
           <strong>{header}</strong>
         </Typography>
@@ -70,7 +67,7 @@ export const BillingSection: React.FC<CombinedProps> = props => {
           })}
         >
           <Currency quantity={value} />
-          {showNegativeAsCredit && value < 0 && ` (credit)`}
+          {showNegativeAsCredit && (balance && balance < 0) && ` (credit)`}
         </Typography>
       </div>
     </>
