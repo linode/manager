@@ -1,5 +1,6 @@
 import { cleanup, render } from '@testing-library/react';
 import * as React from 'react';
+import { activePromotions } from 'src/__data__/account';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { CombinedProps, SummaryPanel } from './SummaryPanel';
@@ -28,7 +29,8 @@ describe('SummaryPanel', () => {
       country: '',
       balance: 0,
       balance_uninvoiced: 0,
-      active_since: '2018-05-17T18:22:50'
+      active_since: '2018-05-17T18:22:50',
+      active_promotions: activePromotions
       // [BETA]
       // @todo: Uncomment this when it becomes generally available
       // capabilities: ['Linodes', 'NodeBalancers', 'Block Storage']
