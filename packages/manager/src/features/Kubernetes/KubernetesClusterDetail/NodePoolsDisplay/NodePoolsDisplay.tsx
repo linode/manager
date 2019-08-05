@@ -2,7 +2,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 
 import Button from 'src/components/Button';
-// import CopyTooltip from 'src/components/CopyTooltip';
+import CopyTooltip from 'src/components/CopyTooltip';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
@@ -27,7 +27,9 @@ type ClassNames =
   | 'ctaOuter'
   | 'displayTable'
   | 'code'
-  | 'footer';
+  | 'footer'
+  | 'footerText'
+  | 'copyTooltip';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
@@ -50,10 +52,17 @@ const styles = (theme: Theme) =>
       width: '100%'
     },
     code: {
-      padding: theme.spacing(1)
+      padding: `0 0 0 ${theme.spacing(1)}px`
     },
     footer: {
+      display: 'flex',
       marginTop: theme.spacing(2)
+    },
+    footerText: {
+      display: 'flex'
+    },
+    copyTooltip: {
+      margin: '-4px 0'
     }
   });
 
@@ -75,7 +84,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-// const command = 'kubectl get nodes -o wide';
+const command = 'kubectl get nodes -o wide';
 
 export const NodePoolsDisplay: React.FunctionComponent<
   CombinedProps
@@ -172,14 +181,14 @@ export const NodePoolsDisplay: React.FunctionComponent<
             </Button>
           </Grid>
         </Grid>
-        {/* <Grid item className={classes.footer}>
-          <Typography>
+        <Grid item className={classes.footer} xs={12}>
+          <Typography className={classes.footerText}>
             You can run
             <code className={classes.code}>{command}</code>
-            <CopyTooltip text={command} />
+            <CopyTooltip text={command} className={classes.copyTooltip} />
             for more detailed information about the nodes in your cluster.
           </Typography>
-        </Grid> */}
+        </Grid>
       </Grid>
     </Paper>
   );
