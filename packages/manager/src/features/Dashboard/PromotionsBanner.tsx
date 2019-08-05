@@ -23,25 +23,28 @@ import DateTimeDisplay from 'src/components/DateTimeDisplay';
  */
 const PROMOTIONAL_TIME_BOUNDARY = Infinity;
 
-type ClassNames = 'root' | 'cash' | 'text';
+type ClassNames = 'root' | 'cash' | 'text' | 'link';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
       marginBottom: theme.spacing(2),
       padding: theme.spacing(2),
+      display: 'flex',
+      alignItems: 'center',
       borderLeft: `32px solid ${theme.color.green}`
     },
     cash: {
       color: theme.color.white,
       position: 'absolute',
-      left: 13,
-      '& .icon': {
-        marginTop: 20
-      }
+      left: theme.spacing(1) + 5,
+      '& .icon': {}
     },
     text: {
-      paddingTop: theme.spacing(1)
+      padding: `${theme.spacing(2) - 2}px 0`
+    },
+    link: {
+      fontSize: 14
     }
   });
 
@@ -66,18 +69,20 @@ export const PromotionsBanner: React.FC<CombinedProps> = props => {
       <div className={classes.cash}>
         <AttachMoney className={'icon'} />
       </div>
-      <Typography variant="h2">
-        You have promotional credits expiring in {days} days.
-      </Typography>
-      <Typography variant="body1" className={classes.text}>
-        Charges will begin to accrue on {` `}
-        <DateTimeDisplay value={expiration} format={'MMMM Do, YYYY'} />
-        {` `}
-        unless you cancel any related services.
-      </Typography>
-      <Link to="account/billing" className={classes.text}>
-        See billing for details.
-      </Link>
+      <div>
+        <Typography variant="h2">
+          You have promotional credits expiring in {days} days.
+        </Typography>
+        <Typography variant="body1" className={classes.text}>
+          Charges will begin to accrue on {` `}
+          <DateTimeDisplay value={expiration} format={'MMMM Do, YYYY'} />
+          {` `}
+          unless you cancel any related services.
+        </Typography>
+        <Link to="account/billing" className={classes.link}>
+          See billing for details.
+        </Link>
+      </div>
     </Paper>
   );
 };
