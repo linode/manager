@@ -78,8 +78,12 @@ const styles = (theme: Theme) =>
     chart: {
       position: 'relative',
       width: 'calc(100vw - 80px)',
-      paddingLeft: theme.spacing(4),
+      marginLeft: theme.spacing(1),
+      paddingLeft: theme.spacing(3),
       [theme.breakpoints.up('md')]: {
+        width: 'calc(75vw - 310px)'
+      },
+      [theme.breakpoints.up('lg')]: {
         width: 'calc(80vw - 310px)'
       },
       [theme.breakpoints.up('xl')]: {
