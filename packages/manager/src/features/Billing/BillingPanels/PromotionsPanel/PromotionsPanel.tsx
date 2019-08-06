@@ -1,7 +1,9 @@
 import * as React from 'react';
+import ExpansionPanel from 'src/components/ExpansionPanel';
+import useFlags from 'src/hooks/useFlags';
 
 interface Props {
-  promotions: Linode.ActivePromotions;
+  promotions: Linode.ActivePromotions[];
 }
 
 export type CombinedProps = Props;

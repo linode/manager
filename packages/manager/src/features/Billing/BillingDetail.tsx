@@ -140,7 +140,7 @@ export class BillingDetail extends React.Component<CombinedProps, State> {
               <UpdateContactInformationPanel />
               <UpdateCreditCardPanel />
               <MakeAPaymentPanel />
-              <PromotionsPanel />
+              <PromotionsPanel promotions={[]} />
               <RecentInvoicesPanel />
               <RecentPaymentsPanel />
             </Grid>

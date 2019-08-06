@@ -1,16 +1,16 @@
 import * as React from 'react';
 
-import { makeStyles, Theme } from 'src/components/core/styles';
-import ExpansionPanel from 'src/components/ExpansionPanel';
-import useFlags from 'src/hooks/useFlags';
+// import { makeStyles, Theme } from 'src/components/core/styles';
 
-const useStyles = (theme: Theme) =>
-  makeStyles({
-    root: {}
-  });
+// const useStyles = makeStyles((theme: Theme) => ({
+//   root: {}
+// }));
 
-interface Props {}
+// interface Props {}
 
-export const PromotionDisplay: React.FC<Props> = props => {};
+export const PromotionDisplay: React.FC<{}> = props => {
+  // const classes = useStyles();
+  return <div>Hi</div>;
+};
 
 export default PromotionDisplay;
