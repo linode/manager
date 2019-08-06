@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import Promotion from 'src/assets/icons/promotion.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
@@ -31,8 +32,10 @@ export const PromotionDisplay: React.FC<Props> = props => {
       alignItems="center"
       className={classes.root}
     >
-      <Grid item xs={1}>
-        Icon
+      <Grid container item xs={1} justify="center">
+        <Grid item>
+          <Promotion />
+        </Grid>
       </Grid>
       <Grid container direction="column" item xs={8}>
         <Grid item>
