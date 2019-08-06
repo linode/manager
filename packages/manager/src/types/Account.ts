@@ -24,7 +24,7 @@ namespace Linode {
     city: string;
     phone: string;
     company: string;
-    active_promotions: ActivePromotions;
+    active_promotions: ActivePromotions[];
     // [BETA]
     // @todo: Uncomment this when it becomes generally available
     // capabilities: AccountCapability[];
@@ -51,6 +51,7 @@ namespace Linode {
     expire_dt: string;
     credit_remaining: number;
     this_month_credit_remaining: number;
+    credit_monthly_cap: number;
   }
 
   interface CreditCard {

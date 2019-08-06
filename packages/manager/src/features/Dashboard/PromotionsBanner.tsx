@@ -49,7 +49,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  expiration?: string;
+  nearestExpiry?: string;
 }
 
 export type CombinedProps = Props & WithStyles<ClassNames>;
@@ -59,13 +59,13 @@ export const expiresInDays = (time: string) => {
 };
 
 export const PromotionsBanner: React.FC<CombinedProps> = props => {
-  const { classes, expiration } = props;
+  const { classes, nearestExpiry } = props;
 
-  if (!expiration) {
+  if (!nearestExpiry) {
     return null;
   }
 
-  const days = expiresInDays(expiration);
+  const days = expiresInDays(nearestExpiry);
   if (days >= PROMOTIONAL_TIME_BOUNDARY) {
     return null;
   }
@@ -81,7 +81,7 @@ export const PromotionsBanner: React.FC<CombinedProps> = props => {
         </Typography>
         <Typography variant="body1" className={classes.text}>
           Charges will begin to accrue on {` `}
-          <DateTimeDisplay value={expiration} format={'MMMM Do, YYYY'} />
+          <DateTimeDisplay value={nearestExpiry} format={'MMMM Do, YYYY'} />
           {` `}
           unless you cancel any related services.
         </Typography>
