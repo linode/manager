@@ -12,6 +12,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
@@ -29,7 +30,14 @@ type ClassNames =
   | 'code'
   | 'footer'
   | 'footerText'
-  | 'copyTooltip';
+  | 'copyTooltip'
+  | 'codeOuter'
+  | 'tooltipCode'
+  | 'statusHelpIcon'
+  | 'nodePoolHeader'
+  | 'nodePoolHeaderOuter'
+  | 'tooltipCopyTooltip';
+
 const styles = (theme: Theme) =>
   createStyles({
     root: {
@@ -63,6 +71,24 @@ const styles = (theme: Theme) =>
     },
     copyTooltip: {
       margin: '-4px 0'
+    },
+    codeOuter: {
+      display: 'flex'
+    },
+    tooltipCode: {
+      display: 'block',
+      width: '100%'
+    },
+    statusHelpIcon: {},
+    nodePoolHeader: {
+      display: 'inline-block'
+    },
+    nodePoolHeaderOuter: {
+      display: 'flex',
+      alignItems: 'center'
+    },
+    tooltipCopyTooltip: {
+      maxHeight: 24
     }
   });
 
@@ -106,6 +132,19 @@ export const NodePoolsDisplay: React.FunctionComponent<
     updatePool
   } = props;
 
+  const TooltipText = () => {
+    return (
+      <>
+        For more detailed information about the nodes in your cluster, run the
+        following command:
+        <div className={classes.codeOuter}>
+          <code className={classes.tooltipCode}>{command}</code>
+          <CopyTooltip text={command} className={classes.tooltipCopyTooltip} />
+        </div>
+      </>
+    );
+  };
+
   return (
     <Paper className={classes.root}>
       <Grid container direction="column">
@@ -117,8 +156,16 @@ export const NodePoolsDisplay: React.FunctionComponent<
           alignItems="center"
           xs={12}
         >
-          <Grid item>
-            <Typography variant="h2">Node Pools</Typography>
+          <Grid item className={classes.nodePoolHeaderOuter}>
+            <Typography variant="h2" className={classes.nodePoolHeader}>
+              Node Pools
+            </Typography>
+            <HelpIcon
+              text={<TooltipText />}
+              className={classes.statusHelpIcon}
+              tooltipPosition="right-start"
+              interactive
+            />
           </Grid>
           <Grid item>
             <Button buttonType="secondary" onClick={toggleEditing}>
