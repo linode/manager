@@ -39,8 +39,7 @@ const flags = {
 };
 
 export const selectStyles = {
-  // @Bailly this matches the comps but I'm not sure how I feel about it.
-  menuList: (base: any) => ({ ...base, maxHeight: `700px !important` })
+  menuList: (base: any) => ({ ...base, maxHeight: `60vh !important` })
 };
 
 export interface ExtendedRegion extends Linode.Region {
