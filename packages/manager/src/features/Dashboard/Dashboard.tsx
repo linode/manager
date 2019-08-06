@@ -45,7 +45,7 @@ const styles = (theme: Theme) =>
 
 interface StateProps {
   accountBackups: boolean;
-  promotionExpiry?: string;
+  activePromotions: Linode.ActivePromotions[];
   linodesWithoutBackups: Linode.Linode[];
   managed: boolean;
   backupError?: Error;
@@ -71,7 +71,7 @@ type CombinedProps = StateProps &
 export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
   const {
     accountBackups,
-    promotionExpiry,
+    activePromotions,
     actions: { openBackupDrawer, openImportDrawer },
     backupError,
     linodesWithoutBackups,
@@ -79,6 +79,10 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
     entitiesWithGroupsToImport
   } = props;
   const flags = useFlags();
+
+  // temporary hack to just use the first active promotion for the promo banner,
+  // or undefined if the array of promotions is empty.
+  const nearestExpiry = path<string>([0, 'expire_dt'], activePromotions);
 
   return (
     <React.Fragment>
@@ -98,7 +102,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
           </Typography>
         </Grid>
         <Grid item xs={12} md={7}>
-          {flags.promos && <PromotionsBanner expiration={promotionExpiry} />}
+          {flags.promos && <PromotionsBanner nearestExpiry={nearestExpiry} />}
           <LinodesDashboardCard />
           <VolumesDashboardCard />
           <NodeBalancersDashboardCard />
@@ -138,8 +142,9 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
       ['__resources', 'accountSettings', 'data', 'backups_enabled'],
       state
     ),
-    promotionExpiry: path(
-      ['__resources', 'account', 'data', 'active_promotions', 'expire_dt'],
+    activePromotions: pathOr(
+      [],
+      ['__resources', 'account', 'data', 'active_promotions'],
       state
     ),
     userTimezone: pathOr('', ['data', 'timezone'], state.__resources.profile),
