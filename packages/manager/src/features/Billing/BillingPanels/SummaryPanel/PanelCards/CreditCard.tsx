@@ -12,7 +12,20 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   root: {
     display: 'flex',
-    justifyContent: 'space-between'
+    [theme.breakpoints.up('md')]: {
+      justifyContent: 'space-between'
+    }
+  },
+  label: {
+    [theme.breakpoints.only('sm')]: {
+      minWidth: 150
+    }
+  },
+  result: {
+    marginLeft: theme.spacing(1),
+    [theme.breakpoints.up('md')]: {
+      textAlign: 'right'
+    }
   }
 }));
 
@@ -29,15 +42,21 @@ export const CreditCard: React.FC<CombinedProps> = props => {
   return (
     <>
       <div className={`${classes.section} ${classes.root}`} data-qa-contact-cc>
-        <strong>Credit Card: </strong>
-        {lastFour ? `Ending in ${lastFour}` : 'None'}
+        <div className={classes.label}>
+          <strong>Credit Card: </strong>
+        </div>
+        <div className={classes.result}>
+          {lastFour ? `Ending in ${lastFour}` : 'None'}
+        </div>
       </div>
       <div
         className={`${classes.section} ${classes.root}`}
         data-qa-contact-cc-exp-date
       >
-        <strong>Expiration Date: </strong>
-        <div>
+        <div className={classes.label}>
+          <strong>Expiration Date: </strong>
+        </div>
+        <div className={classes.result}>
           {expiry ? `${expiry} ` : 'None'}
           {expiry && isCreditCardExpired(expiry) && (
             <span className={classes.expired}>(Expired)</span>

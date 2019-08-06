@@ -9,9 +9,19 @@ import styled from 'src/containers/SummaryPanels.styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...styled(theme),
+  label: {
+    [theme.breakpoints.only('sm')]: {
+      minWidth: 150
+    }
+  },
+  results: {
+    marginLeft: theme.spacing(1)
+  },
   balance: {
     display: 'flex',
-    justifyContent: 'space-between'
+    [theme.breakpoints.up('md')]: {
+      justifyContent: 'space-between'
+    }
   },
   positive: {
     color: theme.color.green
@@ -56,12 +66,13 @@ export const BillingSection: React.FC<CombinedProps> = props => {
   return (
     <>
       <div className={`${classes.section} ${classes.balance}`}>
-        <Typography>
+        <Typography className={classes.label}>
           <strong>{header}</strong>
         </Typography>
         <Typography
           component={'span'}
           className={classNames({
+            [classes.results]: true,
             [classes.negative]: !isPositive && textColor !== false,
             [classes.positive]: isPositive && textColor !== false
           })}
