@@ -1,4 +1,3 @@
-import * as moment from 'moment';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -13,6 +12,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import { expiresInDays } from 'src/utilities/promoUtils';
 
 /**
  * We may want to only display this component
@@ -54,10 +54,6 @@ interface Props {
 
 export type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const expiresInDays = (time: string) => {
-  return moment(time).diff(moment(), 'days');
-};
-
 export const PromotionsBanner: React.FC<CombinedProps> = props => {
   const { classes, nearestExpiry } = props;
 
@@ -66,7 +62,7 @@ export const PromotionsBanner: React.FC<CombinedProps> = props => {
   }
 
   const days = expiresInDays(nearestExpiry);
-  if (days >= PROMOTIONAL_TIME_BOUNDARY) {
+  if (!days || days >= PROMOTIONAL_TIME_BOUNDARY) {
     return null;
   }
 
