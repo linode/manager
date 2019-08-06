@@ -20,9 +20,7 @@ jest.mock('src/utilities/getVersionString', () => ({
 }));
 
 // So TypeScript won't complain...
-const mockedGetVersionString = getVersionString as jest.Mock<
-  typeof getVersionString
->;
+const mockedGetVersionString = getVersionString as jest.Mock<string, any>;
 
 let wrapper: ShallowWrapper<CombinedProps, State, SupportTicketDrawer>;
 

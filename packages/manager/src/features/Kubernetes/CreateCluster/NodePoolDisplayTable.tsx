@@ -62,6 +62,7 @@ export const NodePoolDisplayTable: React.FunctionComponent<
     types,
     updatePool
   } = props;
+
   return (
     <Table
       tableClass={classNames({

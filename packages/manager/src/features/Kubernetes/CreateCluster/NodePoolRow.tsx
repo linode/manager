@@ -94,8 +94,11 @@ export const getStatusString = (
   count: number,
   linodes?: Linode.PoolNodeResponse[]
 ) => {
+  if (!count) {
+    return '';
+  }
   if (!linodes || linodes.length === 0) {
-    return String(count);
+    return `${count} (0 up, ${count} down)`;
   }
   const status = getNodeStatus(linodes);
   return `${count} (${status.ready} up, ${status.not_ready} down)`;

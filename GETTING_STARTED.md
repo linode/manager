@@ -17,8 +17,8 @@ To start all projects:
 
 While in the root...
 1. Run `yarn` to install all root dependencies.
-2. Run `lerna bootstrap` to install all package dependencies.
-3. Run `lerna run start` to start a development server for all projects
+2. Run `npx lerna bootstrap` to install all package dependencies.
+3. Run `npx lerna run start` to start a development server for all projects
    * additionally, you can add a `--stream` flag to this command to see the output of the development server.
 
 Alternatively, you can run `yarn up` which runs all previous commands.
@@ -28,8 +28,8 @@ Alternatively, you can run `yarn up` which runs all previous commands.
 Starting a single project is similar to the previous instructions with the exception of adding a `--scope` flag to to the command. So for example, starting the Cloud Manager project looks like:
 
 1. Run `yarn` to install all root dependencies.
-2. Run `lerna bootstrap` to install all package dependencies.
-3. Run `lerna run start --scope linode-manager` to start a development server for all projects
+2. Run `npx lerna bootstrap` to install all package dependencies.
+3. Run `npx lerna run start --scope linode-manager` to start a development server for all projects
    * additionally, you can add a `--stream` flag to this command to see the output of the development server.
    * `linode-manager` is the name located in `packages/manager/package.json`
 

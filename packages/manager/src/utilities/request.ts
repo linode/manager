@@ -7,8 +7,6 @@ import { interceptGPUErrors } from 'src/utilities/interceptGPUError';
 import store from 'src/store';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
 
-import { reportException } from 'src/exceptionReporting';
-
 const handleSuccess = (response: AxiosResponse) => {
   if (!!response.headers['x-maintenance-mode']) {
     store.dispatch(handleLogout());
@@ -56,19 +54,6 @@ export const handleError = (error: AxiosError) => {
     ['response', 'data', 'errors'],
     error
   );
-
-  /**
-   * if for some reason the API is 500ing or some strange error came down
-   * report it to sentry for more investigation
-   */
-  if (errors[0].reason === DEFAULT_ERROR_MESSAGE) {
-    reportException('APIv4 gave us an error shape we were not expecting', {
-      raw_error: error,
-      what_was_shown_to_user: errors,
-      payload: error.config.data,
-      status: error.response ? error.response.status : undefined
-    });
-  }
 
   /** AxiosError contains the original POST data as stringified JSON */
   let requestData;
