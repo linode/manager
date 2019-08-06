@@ -53,7 +53,7 @@ const BillingInformation: React.FC<CombinedProps> = props => {
           data-qa-balance
         />
 
-        {flags.promos && (
+        {flags.promos && promoCredit && (
           <>
             <BillingSection
               header="Promotional Credit:&nbsp;"
