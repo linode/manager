@@ -6,6 +6,7 @@ import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
 
 import styled from 'src/containers/SummaryPanels.styles';
+import useFlags from 'src/hooks/useFlags';
 
 import BillingSection from './BillingSection';
 import CreditCard from './CreditCard';
@@ -29,6 +30,7 @@ type CombinedProps = Props;
 
 const BillingInformation: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const flags = useFlags();
 
   const { balance, balanceUninvoiced, lastFour, expiry, promoCredit } = props;
   const credit = promoCredit || 0;
@@ -51,17 +53,21 @@ const BillingInformation: React.FC<CombinedProps> = props => {
           data-qa-balance
         />
 
-        <BillingSection
-          header="Promotional Credit:&nbsp;"
-          credit={credit}
-          data-qa-promotional-credit
-        />
+        {flags.promos && (
+          <>
+            <BillingSection
+              header="Promotional Credit:&nbsp;"
+              credit={credit}
+              data-qa-promotional-credit
+            />
 
-        <BillingSection
-          header="Amount Due:&nbsp;"
-          balance={Math.max(0, balance - credit)}
-          data-qa-amount-due
-        />
+            <BillingSection
+              header="Amount Due:&nbsp;"
+              balance={Math.max(0, balance - credit)}
+              data-qa-amount-due
+            />
+          </>
+        )}
       </div>
 
       <div className={classes.billingGroup}>

@@ -44,6 +44,12 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
       return null;
     }
 
+    // Have to safe access since this isn't returned from production API yet
+    const promoCredit = path<number>(
+      ['active_promotions', 'this_month_credit_remaining'],
+      account
+    );
+
     return (
       <React.Fragment>
         <ContactInfo
@@ -66,7 +72,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
           balanceUninvoiced={account.balance_uninvoiced}
           expiry={account.credit_card.expiry}
           lastFour={account.credit_card.last_four}
-          promoCredit={account.active_promotions.this_month_credit_remaining}
+          promoCredit={promoCredit}
         />
       </React.Fragment>
     );
