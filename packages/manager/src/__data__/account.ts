@@ -3,7 +3,8 @@ export const activePromotions: Linode.ActivePromotions = {
   expire_dt: '2019-08-10T13:52:21',
   credit_remaining: 500,
   this_month_credit_remaining: 10,
-  label: 'monthly_linode_10_50'
+  label: 'monthly_linode_10_50',
+  credit_monthly_cap: 0
 };
 
 export const account: Linode.Account = {

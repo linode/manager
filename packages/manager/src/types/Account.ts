@@ -50,6 +50,7 @@ namespace Linode {
     description: string;
     expire_dt: string;
     credit_remaining: number;
+    credit_monthly_cap: number;
     this_month_credit_remaining: number;
   }
 
