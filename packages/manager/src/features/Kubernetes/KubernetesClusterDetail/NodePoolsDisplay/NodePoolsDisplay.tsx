@@ -165,6 +165,7 @@ export const NodePoolsDisplay: React.FunctionComponent<
               className={classes.statusHelpIcon}
               tooltipPosition="right-start"
               interactive
+              customClassName="lke-tooltip"
             />
           </Grid>
           <Grid item>

@@ -8,6 +8,7 @@ interface Props {
   className?: string;
   interactive?: boolean;
   leaveDelay?: boolean;
+  customClassName?: string;
   tooltipPosition?:
     | 'bottom'
     | 'bottom-end'
@@ -26,7 +27,14 @@ interface Props {
 type CombinedProps = Props;
 
 const HelpIcon: React.StatelessComponent<CombinedProps> = props => {
-  const { text, className, tooltipPosition, interactive, leaveDelay } = props;
+  const {
+    text,
+    className,
+    tooltipPosition,
+    interactive,
+    leaveDelay,
+    customClassName
+  } = props;
 
   return (
     <React.Fragment>
@@ -38,6 +46,7 @@ const HelpIcon: React.StatelessComponent<CombinedProps> = props => {
         leaveDelay={leaveDelay ? 3000 : undefined}
         interactive={interactive && interactive}
         placement={tooltipPosition ? tooltipPosition : 'bottom'}
+        classes={{ tooltip: customClassName }}
       >
         <IconButton className={className} data-qa-help-button>
           <HelpOutline />
