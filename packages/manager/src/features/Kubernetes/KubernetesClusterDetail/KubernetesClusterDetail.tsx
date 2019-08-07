@@ -1,5 +1,5 @@
 import * as Bluebird from 'bluebird';
-import { contains, path, remove, update } from 'ramda';
+import { contains, equals, path, remove, update } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -233,6 +233,11 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   };
 
   const submitForm = () => {
+    /** If the user hasn't made any input, there's nothing to submit. */
+    if (equals(pools, cluster.node_pools)) {
+      setEditing(false);
+      return;
+    }
     /** Fasten your seat belts... */
     setSubmitting(true);
     setErrors(undefined);
