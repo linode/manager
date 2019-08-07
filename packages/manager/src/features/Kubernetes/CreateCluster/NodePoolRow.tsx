@@ -145,6 +145,8 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
           <TextField
             small
             tiny
+            min={0}
+            max={100}
             errorText={errorMap.count}
             type="number"
             className={classes.editableCount}
