@@ -3,15 +3,15 @@ import { getAll } from 'src/utilities/getAll';
 import { ThunkActionCreator } from '../types';
 import { requestServicesActions } from './managed.actions';
 
-const getAllServices = (clusterID: number) =>
-  getAll<Linode.ManagedServiceMonitor>(() => getServices(clusterID));
+const getAllServices = () =>
+  getAll<Linode.ManagedServiceMonitor>(() => getServices());
 
 export const requestManagedServices: ThunkActionCreator<
   Promise<Linode.KubeNodePoolResponse[]>
-> = ({ clusterID }) => dispatch => {
+> = () => dispatch => {
   dispatch(requestServicesActions.started());
 
-  return getAllServices(clusterID)()
+  return getAllServices()()
     .then(services => {
       return dispatch(
         requestServicesActions.done({
