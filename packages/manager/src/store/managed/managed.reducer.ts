@@ -1,7 +1,9 @@
 import produce from 'immer';
 import { Reducer } from 'redux';
-import { EntityError, EntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
+
+import { EntityError, EntityState } from 'src/store/types';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { requestServicesActions } from './managed.actions';
 
 /**
@@ -40,7 +42,10 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       const { error } = action.payload;
 
       draft.loading = false;
-      draft.error!.read = error;
+      draft.error!.read = getAPIErrorOrDefault(
+        error,
+        'Error loading your Monitors.'
+      );
     }
     return draft;
   });

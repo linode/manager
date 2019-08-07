@@ -27,7 +27,7 @@ export const MonitorTableContent: React.FC<CombinedProps> = props => {
     return (
       <TableRowEmpty
         colSpan={12}
-        message={"You don't have any Service Monitors on your account."}
+        message={"You don't have any Monitors on your account."}
       />
     );
   }
