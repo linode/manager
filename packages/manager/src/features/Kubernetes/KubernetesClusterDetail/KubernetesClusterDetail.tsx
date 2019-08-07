@@ -209,13 +209,13 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     pool: PoolNodeWithPrice,
     error: Linode.ApiFieldError[]
   ) => {
-    const poolIdx = pools.findIndex(thisPool => (thisPool.id === pool.id));
+    const poolIdx = pools.findIndex(thisPool => thisPool.id === pool.id);
     updatePool(poolIdx, { ...pool, _error: error });
     return Promise.reject(error);
   };
 
   const handleAddSuccess = (pool: PoolNodeWithPrice) => {
-    const poolIdx = pools.findIndex(thisPool => (thisPool.id === pool.id));
+    const poolIdx = pools.findIndex(thisPool => thisPool.id === pool.id);
     updatePool(poolIdx, {
       ...pool,
       queuedForAddition: false,
@@ -223,7 +223,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     });
   };
 
-  const handleSuccess = (pool: PoolNodeWithPrice) => {
+  const handleDeleteSuccess = (pool: PoolNodeWithPrice) => {
     const poolIdx = pools.findIndex(thisPool => thisPool.id === pool.id);
     if (poolIdx) {
       updatePools(prevPools => {
@@ -246,7 +246,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
             count: thisPool.count,
             type: thisPool.type
           })
-          // .then(() => handleAddSuccess(thisPool))
+          .then(() => handleAddSuccess(thisPool))
           .catch(e => handleError(thisPool, e));
       } else if (thisPool.queuedForDeletion) {
         // Marked for deletion
@@ -255,7 +255,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
             clusterID: cluster.id,
             nodePoolID: thisPool.id
           })
-          // .then(() => handleSuccess(thisPool))
+          .then(() => handleDeleteSuccess(thisPool))
           .catch(e => handleError(thisPool, e));
       } else if (!contains(thisPool, cluster.node_pools)) {
         /** @todo contains() is deprecated in the next version of Ramda (0.26+). Replace with includes() if we ever upgrade. */
