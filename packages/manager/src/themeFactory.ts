@@ -1372,7 +1372,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
             fontSize: '.9rem'
           },
           '&.lke-tooltip': {
-            maxWidth: 220
+            maxWidth: 225
           }
         }
       }

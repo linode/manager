@@ -88,7 +88,8 @@ const styles = (theme: Theme) =>
       alignItems: 'center'
     },
     tooltipCopyTooltip: {
-      maxHeight: 24
+      maxHeight: 24,
+      marginLeft: 2
     }
   });
 
