@@ -98,13 +98,6 @@ const styles = (theme: Theme) =>
     }
   });
 
-/* Need to override the default RS filtering; otherwise entities whose label
- * doesn't match the search term will be automatically filtered, meaning that
- * searching by tag won't work. */
-const filterResults = (option: Item, inputValue: string) => {
-  return true;
-};
-
 interface State {
   inputValue: string;
 }
@@ -138,8 +131,8 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     const { inputValue } = this.state;
     const options = [...docs, ...community];
     return [
-      ...options,
-      { value: 'search', label: inputValue, data: { source: 'finalLink' } }
+      { value: 'search', label: inputValue, data: { source: 'finalLink' } },
+      ...options
     ];
   };
 
@@ -215,7 +208,6 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
               [classes.enhancedSelectWrapperCompact]: spacingMode === 'compact'
             })}
             styleOverrides={selectStyles}
-            filterOption={filterResults}
             value={false}
           />
         </div>
