@@ -1370,6 +1370,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           [breakpoints.up('sm')]: {
             padding: '8px 10px',
             fontSize: '.9rem'
+          },
+          '&.lke-tooltip': {
+            maxWidth: 220
           }
         }
       }
