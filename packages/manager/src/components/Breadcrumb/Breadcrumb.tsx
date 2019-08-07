@@ -24,8 +24,7 @@ type ClassNames =
   | 'labelSubtitle'
   | 'editableContainer'
   | 'prefixComponentWrapper'
-  | 'slash'
-  | 'firstSlash';
+  | 'slash';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -45,8 +44,6 @@ const styles = (theme: Theme) =>
     },
     crumb: {
       whiteSpace: 'nowrap',
-      marginLeft: theme.spacing(1),
-      marginRight: theme.spacing(1),
       textTransform: 'capitalize',
       ...theme.typography.h1
     },
@@ -70,25 +67,25 @@ const styles = (theme: Theme) =>
       margin: '4px 0 0 10px'
     },
     editableContainer: {
+      marginLeft: -theme.spacing(1),
       marginTop: -10,
       [theme.breakpoints.up('lg')]: {
         marginTop: -9
       }
     },
     prefixComponentWrapper: {
-      marginLeft: theme.spacing(1),
       '& svg, & img': {
         position: 'relative',
-        marginRight: 4,
+        marginRight: 8,
         marginLeft: 4,
         top: -2
       }
     },
     slash: {
-      fontSize: 24
-    },
-    firstSlash: {
-      marginTop: 6
+      fontSize: 24,
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      color: theme.color.grey1
     }
   });
 
@@ -274,15 +271,6 @@ export class Breadcrumb extends React.Component<CombinedProps> {
     return (
       <div className={`${classes.root} ${className}`}>
         <div className={classes.preContainer}>
-          <Typography
-            component="span"
-            className={classNames({
-              [classes.slash]: true,
-              [classes.firstSlash]: true
-            })}
-          >
-            /
-          </Typography>
           <Crumbs />
         </div>
         {labelOptions &&
