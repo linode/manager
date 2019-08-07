@@ -8,7 +8,14 @@ import formatDate from 'src/utilities/formatDate';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    height: '6em'
+    '&:not(:first-child)': {
+      marginTop: theme.spacing(2),
+      paddingTop: theme.spacing(1),
+      borderTop: `1px solid ${theme.palette.divider}`
+    }
+  },
+  container: {
+    flex: 1
   },
   expires: {
     color: '#10A632'
@@ -32,27 +39,21 @@ export const PromotionDisplay: React.FC<Props> = props => {
       alignItems="center"
       className={classes.root}
     >
-      <Grid container item xs={1} justify="center">
+      <Grid item>
         <Grid item>
           <Promotion />
         </Grid>
       </Grid>
-      <Grid container direction="column" item xs={8}>
-        <Grid item>
-          <Typography variant="subtitle1">
-            <strong>{header}</strong>
-          </Typography>
-        </Grid>
-        <Grid item>
-          <Typography>{description}</Typography>
-        </Grid>
+      <Grid item className={classes.container}>
+        <Typography variant="subtitle2">
+          <strong>{header}</strong>
+        </Typography>
+        <Typography>{description}</Typography>
       </Grid>
-      <Grid container item xs={3} justify="flex-end">
-        <Grid>
-          <Typography className={classes.expires}>
-            <em>Expires {formatDate(expiry, { format: 'D-MMM-YYYY' })}</em>
-          </Typography>
-        </Grid>
+      <Grid item justify="flex-end">
+        <Typography className={classes.expires}>
+          <em>Expires {formatDate(expiry, { format: 'D-MMM-YYYY' })}</em>
+        </Typography>
       </Grid>
     </Grid>
   );

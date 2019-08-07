@@ -1,6 +1,7 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import withAccount from 'src/containers/account.container';
@@ -8,6 +9,12 @@ import useFlags from 'src/hooks/useFlags';
 import { expiresInDays } from 'src/utilities/promoUtils';
 
 import PromotionDisplay from './PromotionDisplay';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  promoNotice: {
+    fontFamily: theme.font.normal
+  }
+}));
 
 interface StateProps {
   accountLoading: boolean;
@@ -20,6 +27,7 @@ export type CombinedProps = StateProps;
 
 export const PromotionsPanel: React.FC<StateProps> = props => {
   const { promotions } = props;
+  const classes = useStyles();
   const flags = useFlags();
 
   if (!flags.promos) {
@@ -30,7 +38,7 @@ export const PromotionsPanel: React.FC<StateProps> = props => {
   const header = days ? (
     <span>
       {'Promotions & Credits '}{' '}
-      <em style={{ color: '#10a632' }}>
+      <em style={{ color: '#10a632' }} className={classes.promoNotice}>
         &#8212; You have promotional credits expiring in {days} days.
       </em>
     </span>
