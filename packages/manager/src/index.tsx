@@ -117,3 +117,7 @@ ReactDOM.render(
   </React.Fragment>,
   document.getElementById('root') as HTMLElement
 );
+
+if (module.hot && !isProduction) {
+  module.hot.accept();
+}
