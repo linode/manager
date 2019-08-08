@@ -14,8 +14,8 @@ class NodeBalancers extends Page {
     get selectOption() { return $('[data-qa-option]'); }
 
     get regionSection() { return $('[data-qa-tp="Region"]'); }
-    get regionTabs() { return $$('[data-qa-tab]'); }
-    get regionCards() { return $$('[data-qa-tp="Region"] [data-qa-selection-card]'); }
+    get regionSelect() { return $('[data-qa-enhanced-select="Regions"] input'); }
+    get regionError() { return $('#select-a-region-helper-text'); }
 
     get connectionThrottleSection() { return $('[data-qa-throttle-section]'); }
     get connectionThrottle() { return $('[data-qa-connection-throttle] input'); }
@@ -63,9 +63,10 @@ class NodeBalancers extends Page {
             expect(this.placeholderButton.getTagName()).toBe('button');
         } else {
             this.createHeader.waitForVisible();
+            console.log('checking that region section is visible');
             expect(this.regionSection.isVisible()).toBe(true);
-            expect(this.regionTabs.length).toBeGreaterThan(0);
-            expect(this.regionCards.length).toBeGreaterThan(0);
+            console.log('checking that region select is visible');
+            expect(this.regionSelect.isVisible()).toBe(true);
 
             // expect(this.connectionThrottleSection.isVisible()).toBe(true);
             // expect(this.connectionThrottle.isVisible()).toBe(true);
@@ -91,17 +92,21 @@ class NodeBalancers extends Page {
 
     configElemsDisplay() {
         this.configTitle.waitForVisible(constants.wait.normal);
-
+        console.log('Checking for NodeBalancer Configurations in the config title');
         expect(this.configTitle.getText()).toBe('NodeBalancer Configurations');
-
+        console.log('Checking if the port input is visible')
         expect(this.port.isVisible()).toBe(true);
+        console.log('Checking if the protocol select input is visible')
         expect(this.protocolSelect.isVisible()).toBe(true);
+        console.log('Checking if the algorithm select dropdown contains Round Robin');
         expect(this.algorithmSelect.getText()).toContain('Round Robin');
         // expect(this.sessionStickinessHeader.waitForText()).toBe(true);
+        console.log('Checking if the session stickiness select dropdown contains Table');
         expect(this.sessionStickiness.getText()).toContain('Table');
-
+        console.log('Checking if the active checks input is visible');
         expect(this.activeChecksHeader.isVisible()).toBe(true);
         // expect(this.activeCheckTimeout.getValue()).toBe('3');
+        console.log('Checking if the active check type contains None');
         expect(this.activeCheckType.getText()).toContain('None');
         // expect(this.activeCheckInterval.getValue()).toBe('5');
 

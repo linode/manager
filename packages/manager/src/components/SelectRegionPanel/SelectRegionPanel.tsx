@@ -164,7 +164,9 @@ const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = props => {
   return (
     <>
       <Paper className={classes.root}>
-        <Typography variant="h2">Region</Typography>
+        <Typography variant="h2" data-qa-tp="Region">
+          Region
+        </Typography>
         {copy && (
           <Typography variant="body1">
             {copy}

@@ -1,6 +1,7 @@
 import classNames from 'classnames';
 import * as React from 'react';
-import Option, { OptionProps } from 'react-select/lib/components/Option';
+import { OptionProps } from 'react-select/lib/components/Option';
+import Option from 'src/components/EnhancedSelect/components/Option';
 import { Item } from 'src/components/EnhancedSelect/Select';
 
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -35,6 +36,8 @@ export const RegionOption: React.FC<CombinedProps> = props => {
         [classes.root]: true,
         [classes.focused]: props.isFocused
       })}
+      value={data.value}
+      attrs={{ ['data-qa-region-select-item']: data.value }}
       {...props}
     >
       <Grid container direction="row" alignItems="center" justify="flex-start">
