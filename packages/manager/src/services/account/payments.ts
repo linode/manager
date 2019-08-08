@@ -80,7 +80,7 @@ export const makePayment = (data: { usd: string; cvv?: string }) => {
    *   usd: 5
    * }
    */
-  if (!data.cvv || data.cvv === '') {
+  if (!data.cvv) {
     delete data.cvv;
   }
 
@@ -144,7 +144,7 @@ export const executePaypalPayment = (data: ExecutePayload) =>
  *
  */
 export const saveCreditCard = (data: SaveCreditCardData) => {
-  if (!data.cvv || data.cvv === '') {
+  if (!data.cvv) {
     delete data.cvv;
   }
 
