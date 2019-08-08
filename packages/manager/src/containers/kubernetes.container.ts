@@ -37,15 +37,15 @@ export interface KubernetesProps {
 }
 
 export interface DispatchProps {
-  requestKubernetesClusters: () => void;
+  requestKubernetesClusters: () => Promise<any>;
   requestClusterForStore: (clusterID: number) => void;
-  requestNodePools: (clusterID: number) => void;
+  requestNodePools: (clusterID: number) => Promise<any>;
   updateCluster: (
     params: UpdateClusterParams
   ) => Promise<Linode.KubernetesCluster>;
-  createNodePool: (params: CreateNodePoolParams) => void;
-  updateNodePool: (params: UpdateNodePoolParams) => void;
-  deleteNodePool: (params: DeleteNodePoolParams) => void;
+  createNodePool: (params: CreateNodePoolParams) => Promise<any>;
+  updateNodePool: (params: UpdateNodePoolParams) => Promise<any>;
+  deleteNodePool: (params: DeleteNodePoolParams) => Promise<any>;
   deleteCluster: (params: DeleteClusterParams) => Promise<any>;
   setKubernetesErrors: (newErrors: EntityError) => void;
 }
