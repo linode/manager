@@ -32,12 +32,12 @@ export const Monitors: React.FC<CombinedProps> = props => {
 
 const enhanced = compose<CombinedProps, {}>(
   withManagedServices(
-    (ownProps, managedLoading, lastUpdated, managedError, monitors) => ({
+    (ownProps, managedLoading, lastUpdated, monitors, managedError) => ({
       ...ownProps,
       managedLoading,
       lastUpdated,
-      managedError,
-      monitors
+      monitors,
+      managedError
     })
   )
 );

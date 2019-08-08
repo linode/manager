@@ -6,10 +6,10 @@ import { requestManagedServices as _requestManagedServices } from 'src/store/man
 import { EntityError } from 'src/store/types';
 
 export interface ManagedProps {
-  monitors?: Linode.ManagedServiceMonitor[];
+  monitors: Linode.ManagedServiceMonitor[];
   managedLoading: boolean;
   managedError: EntityError;
-  lastUpdated?: number;
+  lastUpdated: number;
 }
 
 export interface DispatchProps {
@@ -27,13 +27,13 @@ export default <TInner extends {}, TOuter extends {}>(
     ownProps: TOuter,
     managedLoading: boolean,
     lastUpdated: number,
-    managedError?: EntityError,
-    services?: Linode.ManagedServiceMonitor[]
+    monitors: Linode.ManagedServiceMonitor[],
+    managedError?: EntityError
   ) => TInner
 ) =>
   connect(
     (state: ApplicationState, ownProps: TOuter) => {
-      const services = state.__resources.managed.entities;
+      const monitors = state.__resources.managed.entities;
       const managedLoading = state.__resources.managed.loading;
       const managedError = state.__resources.managed.error;
       const lastUpdated = state.__resources.managed.lastUpdated;
@@ -42,8 +42,8 @@ export default <TInner extends {}, TOuter extends {}>(
         ownProps,
         managedLoading,
         lastUpdated,
-        managedError,
-        services
+        monitors,
+        managedError
       );
     },
     mapDispatchToProps

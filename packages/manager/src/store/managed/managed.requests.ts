@@ -1,26 +1,13 @@
 import { getServices } from 'src/services/managed';
 import { getAll } from 'src/utilities/getAll';
-import { ThunkActionCreator } from '../types';
+import { createRequestThunk } from '../store.helpers';
 import { requestServicesActions } from './managed.actions';
 
-const getAllServices = () =>
-  getAll<Linode.ManagedServiceMonitor>(() => getServices());
+const _getAll = getAll(getServices);
 
-export const requestManagedServices: ThunkActionCreator<
-  Promise<Linode.KubeNodePoolResponse[]>
-> = () => dispatch => {
-  dispatch(requestServicesActions.started());
+const getAllServices = () => _getAll().then(({ data }) => data);
 
-  return getAllServices()()
-    .then(services => {
-      return dispatch(
-        requestServicesActions.done({
-          result: services.data
-        })
-      );
-    })
-    .catch(error => {
-      dispatch(requestServicesActions.failed({ error }));
-      return error;
-    });
-};
+export const requestManagedServices = createRequestThunk(
+  requestServicesActions,
+  getAllServices
+);
