@@ -205,7 +205,6 @@ class NodeBalancers extends Page {
     }) {
         this.label.waitForVisible(constants.wait.normal);
         this.label.setValue(nodeBalancerConfig.label);
-        this.regionCards[nodeBalancerConfig.regionIndex].click();
         this.port.setValue(nodeBalancerConfig.port);
         this.selectMenuOption(this.protocolSelect.$('div'), nodeBalancerConfig.protocol);
         this.selectMenuOption(this.algorithmSelect.$('div'), nodeBalancerConfig.algorithm);
@@ -214,7 +213,8 @@ class NodeBalancers extends Page {
 
         /** start backend ip selection */
         /** click the newark region because that's where our Linode is located */
-        $('[data-qa-select-card-subheading="Newark, NJ"]').click()
+        NodeBalancers.regionSelect.setValue('us-east');
+        browser.keys("\uE007");
 
         /** set the value of the IP Address field */
         const privateIP = linodeConfig.ipv4.find(eachIP => eachIP.match(/192.168/))
