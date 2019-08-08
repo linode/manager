@@ -148,6 +148,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
               onClick={() =>
                 this.printPayment(account.data as Linode.Account, item)
               }
+              className="secondaryLink"
             >
               Download PDF
             </a>
