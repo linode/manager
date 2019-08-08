@@ -58,7 +58,7 @@ const styles = (theme: Theme) =>
       }
     },
     tiny: {
-      width: '3em'
+      width: '3.6em'
     }
   });
 
@@ -70,6 +70,7 @@ interface BaseProps {
   className?: any;
   expand?: boolean;
   small?: boolean;
+  // Currently only used for LKE node pool inputs
   tiny?: boolean;
   /**
    * number amounts allowed in textfield

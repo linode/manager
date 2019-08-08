@@ -81,8 +81,13 @@ interface State {
   userDeleteError?: boolean;
 }
 
+interface Props {
+  isRestrictedUser: boolean;
+}
+
 type CombinedProps = WithStyles<ClassNames> &
   WithSnackbarProps &
+  Props &
   PaginationProps<Linode.User> &
   RouteComponentProps<{}>;
 
@@ -238,7 +243,16 @@ class UsersLanding extends React.Component<CombinedProps, State> {
           <Grid item>
             <Grid container alignItems="flex-end">
               <Grid item>
-                <AddNewLink onClick={this.openForCreate} label="Add a User" />
+                <AddNewLink
+                  disabled={this.props.isRestrictedUser}
+                  disabledReason={
+                    this.props.isRestrictedUser
+                      ? 'You cannot create other users as a restricted user.'
+                      : undefined
+                  }
+                  onClick={this.openForCreate}
+                  label="Add a User"
+                />
               </Grid>
             </Grid>
           </Grid>
@@ -336,7 +350,7 @@ const paginated = Pagey((ownProps, params, filters) =>
   )
 );
 
-export default compose<CombinedProps, {}>(
+export default compose<CombinedProps, Props>(
   withRouter,
   setDocs(UsersLanding.docs),
   styled,
