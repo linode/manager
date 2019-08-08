@@ -52,6 +52,10 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       );
     }
 
+    if (isType(action, requestServicesActions.started)) {
+      draft.error!.update = undefined;
+    }
+
     if (isType(action, disableServiceMonitorActions.done)) {
       const { result } = action.payload;
       draft.entities = updateOrAdd(result, state.entities);
