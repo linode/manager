@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Currency from 'src/components/Currency';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Notice from 'src/components/Notice';
@@ -11,6 +12,18 @@ import createMailto from 'src/features/Footer/createMailto';
 import { getInvoiceItems } from 'src/services/account';
 import { getAll } from 'src/utilities/getAll';
 
+const useStyles = makeStyles((theme: Theme) => ({
+  linkContainer: {
+    '& [role="progressbar"]': {
+      width: '14px !important',
+      height: '14px !important',
+      padding: 0,
+      position: 'relative',
+      left: '20%'
+    }
+  }
+}));
+
 interface Props {
   invoice: Linode.Invoice;
   account: Linode.Account;
@@ -20,6 +33,7 @@ type CombinedProps = Props;
 
 const RecentInvoicesRow: React.FC<CombinedProps> = props => {
   const { account, invoice } = props;
+  const classes = useStyles();
 
   const [pdfError, setPDFError] = React.useState<Error | undefined>(undefined);
   const [isGeneratingPDF, setGeneratingPDF] = React.useState<boolean>(false);
@@ -56,7 +70,9 @@ const RecentInvoicesRow: React.FC<CombinedProps> = props => {
   return (
     <TableRow
       key={`invoice-${invoice.id}`}
-      rowLink={`/account/billing/invoices/${invoice.id}`}
+      rowLink={
+        !isGeneratingPDF ? `/account/billing/invoices/${invoice.id}` : undefined
+      }
       data-qa-invoice
     >
       <TableCell parentColumn="Date Created" data-qa-invoice-date>
@@ -70,15 +86,21 @@ const RecentInvoicesRow: React.FC<CombinedProps> = props => {
       </TableCell>
       <TableCell>
         {account && (
-          <Button
-            style={{
-              padding: 0
-            }}
-            onClick={e => _printInvoice(e, account as Linode.Account, invoice)}
-            loading={isGeneratingPDF}
-          >
-            Download PDF
-          </Button>
+          <div className={classes.linkContainer}>
+            {!isGeneratingPDF ? (
+              <a
+                href="#"
+                onClick={e =>
+                  _printInvoice(e, account as Linode.Account, invoice)
+                }
+                className="secondaryLink"
+              >
+                Download PDF
+              </a>
+            ) : (
+              <CircleProgress mini />
+            )}
+          </div>
         )}
         {pdfError && (
           <Notice
