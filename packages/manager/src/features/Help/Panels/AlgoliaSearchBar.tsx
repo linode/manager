@@ -156,6 +156,9 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     }
     const { history } = this.props;
     const { inputValue } = this.state;
+    if (!inputValue) {
+      return;
+    }
     const href = pathOr('', ['data', 'href'], selected);
     if (selected.value === 'search') {
       const link = this.getLinkTarget(inputValue);
@@ -167,6 +170,9 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
 
   handleSubmit = () => {
     const { inputValue } = this.state;
+    if (!inputValue) {
+      return;
+    }
     const { history } = this.props;
     const link = this.getLinkTarget(inputValue);
     history.push(link);
