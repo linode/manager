@@ -15,6 +15,7 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import { getErrorMap } from 'src/utilities/errorUtils';
 
 import NodePoolDisplayTable from '../../CreateCluster/NodePoolDisplayTable';
 import { getTotalClusterPrice } from '../../kubeUtils';
@@ -97,6 +98,8 @@ export const NodePoolsDisplay: React.FunctionComponent<
     updatePool
   } = props;
 
+  const errorMap = getErrorMap(['count'], submissionError);
+
   return (
     <Paper className={classes.root}>
       <Grid container direction="column">
@@ -122,9 +125,14 @@ export const NodePoolsDisplay: React.FunctionComponent<
             <Notice success text={'Your node pools are being updated.'} />
           </Grid>
         )}
-        {submissionError && submissionError.length > 0 && (
+        {submissionError && (
           <Grid item xs={12}>
-            <Notice error text={submissionError[0].reason} />
+            <Notice
+              error
+              text={
+                errorMap.none || 'Some of your updates could not be completed.'
+              }
+            />
           </Grid>
         )}
         <Grid item xs={12} className={classes.displayTable}>

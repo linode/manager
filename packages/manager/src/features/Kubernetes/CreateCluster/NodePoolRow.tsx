@@ -17,11 +17,13 @@ import TableRow from 'src/components/TableRow';
 import TextField from 'src/components/TextField';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { displayTypeForKubePoolNode } from 'src/features/linodes/presentation';
+import { getErrorMap } from 'src/utilities/errorUtils';
 import { PoolNodeWithPrice } from '.././types';
 
 type ClassNames =
   | 'root'
   | 'link'
+  | 'error'
   | 'toDelete'
   | 'toAdd'
   | 'disabled'
@@ -60,6 +62,9 @@ const styles = (theme: Theme) =>
         alignItems: 'flex-end'
       }
     },
+    error: {
+      border: `2px solid ${theme.color.red}`
+     },
     priceTableCell: {
       // prevents position shift as price grows/shrinks
       minWidth: 130
@@ -127,8 +132,16 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
     ? classes.toDelete
     : ''; // Normal node
 
+  const errorMap = getErrorMap(['count'], pool._error || []);
+
   return (
-    <TableRow data-testid={'node-pool-table-row'} className={statusClass}>
+    <TableRow
+      data-testid={'node-pool-table-row'}
+      className={classNames({
+        [statusClass]: true,
+        [classes.error]: Boolean(errorMap.none)
+      })}
+    >
       <TableCell parentColumn="Plan">
         <Typography>{typeLabel}</Typography>
       </TableCell>
@@ -137,15 +150,16 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
           <TextField
             small
             tiny
+            min={0}
+            max={100}
+            errorText={errorMap.count}
             type="number"
             className={classes.editableCount}
-            min={1}
-            max={100}
             value={pool.count}
             onChange={e =>
               handleUpdate(idx, {
                 ...pool,
-                count: Math.max(+e.target.value, 1)
+                count: +e.target.value
               })
             }
           />
