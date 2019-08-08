@@ -16,6 +16,7 @@ import { Requestable } from 'src/requestableContext';
 import { getAccountInfo } from 'src/services/account';
 import composeState from 'src/utilities/composeState';
 import MakeAPaymentPanel from './BillingPanels/MakeAPaymentPanel';
+import PromotionsPanel from './BillingPanels/PromotionsPanel';
 import RecentInvoicesPanel from './BillingPanels/RecentInvoicesPanel';
 import RecentPaymentsPanel from './BillingPanels/RecentPaymentsPanel';
 import SummaryPanel from './BillingPanels/SummaryPanel';
@@ -139,6 +140,7 @@ export class BillingDetail extends React.Component<CombinedProps, State> {
               <UpdateContactInformationPanel />
               <UpdateCreditCardPanel />
               <MakeAPaymentPanel />
+              <PromotionsPanel />
               <RecentInvoicesPanel />
               <RecentPaymentsPanel />
             </Grid>
