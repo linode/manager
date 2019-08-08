@@ -27,7 +27,8 @@ type ClassNames =
   | 'disabled'
   | 'removeButton'
   | 'removeButtonWrapper'
-  | 'editableCount';
+  | 'editableCount'
+  | 'priceTableCell';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -58,6 +59,10 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.down('sm')]: {
         alignItems: 'flex-end'
       }
+    },
+    priceTableCell: {
+      // prevents position shift as price grows/shrinks
+      minWidth: 130
     }
   });
 
@@ -148,7 +153,7 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
           <Typography>{getStatusString(pool.count, pool.linodes)}</Typography>
         )}
       </TableCell>
-      <TableCell parentColumn="Pricing">
+      <TableCell parentColumn="Pricing" className={classes.priceTableCell}>
         <Typography>{`${displayPrice(pool.totalMonthlyPrice)}/mo`}</Typography>
       </TableCell>
       <TableCell className={classes.removeButtonWrapper}>
