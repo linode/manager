@@ -50,7 +50,7 @@ export const PromotionDisplay: React.FC<Props> = props => {
         </Typography>
         <Typography>{description}</Typography>
       </Grid>
-      <Grid item justify="flex-end">
+      <Grid item>
         <Typography className={classes.expires}>
           <em>Expires {formatDate(expiry, { format: 'D-MMM-YYYY' })}</em>
         </Typography>
