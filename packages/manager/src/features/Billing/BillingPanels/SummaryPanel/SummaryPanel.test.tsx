@@ -13,7 +13,7 @@ describe('SummaryPanel', () => {
     profileError: undefined,
     profileLoading: false,
     isRestricted: false,
-    data: {
+    account: {
       company: '',
       first_name: '',
       last_name: '',
@@ -49,10 +49,10 @@ describe('SummaryPanel', () => {
       wrapWithTheme(
         <SummaryPanel
           {...baseProps}
-          data={{
-            ...baseProps.data!,
+          account={{
+            ...baseProps.account!,
             credit_card: {
-              ...baseProps.data!.credit_card,
+              ...baseProps.account!.credit_card,
               expiry: '02/4000'
             }
           }}

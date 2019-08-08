@@ -5,16 +5,16 @@ import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
 
+import withAccount from 'src/containers/account.container';
 import withProfile from 'src/containers/profile.container';
-import { withAccount } from '../../context';
 
 import BillingInfo from './PanelCards/BillingInformation';
 import ContactInfo from './PanelCards/ContactInformation';
 
 interface AccountContextProps {
-  errors?: Linode.ApiFieldError[];
+  accountError?: Linode.ApiFieldError[];
   lastUpdated: number;
-  data?: Linode.Account;
+  account?: Linode.Account;
   accountLoading: boolean;
 }
 
@@ -23,9 +23,9 @@ export type CombinedProps = AccountContextProps & Profile;
 export class SummaryPanel extends React.Component<CombinedProps, {}> {
   render() {
     const {
-      data,
+      account,
+      accountError,
       accountLoading,
-      errors,
       username,
       profileError,
       profileLoading,
@@ -36,50 +36,49 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
       return <CircleProgress noTopMargin />;
     }
 
-    if (errors || profileError) {
+    if (accountError || profileError) {
       return <ErrorState compact errorText="Unable to load account details." />;
     }
 
-    if (!data || !username) {
+    if (!account || !username) {
       return null;
     }
+
+    // Have to safe access since this isn't returned from production API yet
+    // For now, safe to assume only one active promo will exist on an account
+    const promoCredit = path<number>(
+      ['active_promotions', 0, 'this_month_credit_remaining'],
+      account
+    );
 
     return (
       <React.Fragment>
         <ContactInfo
           username={username}
-          company={data.company}
-          firstName={data.first_name}
-          lastName={data.last_name}
-          address1={data.address_1}
-          address2={data.address_2}
-          email={data.email}
-          phone={data.phone}
-          city={data.city}
-          state={data.state}
-          zip={data.zip}
-          activeSince={data.active_since}
+          company={account.company}
+          firstName={account.first_name}
+          lastName={account.last_name}
+          address1={account.address_1}
+          address2={account.address_2}
+          email={account.email}
+          phone={account.phone}
+          city={account.city}
+          state={account.state}
+          zip={account.zip}
+          activeSince={account.active_since}
           isRestrictedUser={isRestricted}
         />
         <BillingInfo
-          balance={data.balance}
-          balanceUninvoiced={data.balance_uninvoiced}
-          expiry={data.credit_card.expiry}
-          lastFour={data.credit_card.last_four}
+          balance={account.balance}
+          balanceUninvoiced={account.balance_uninvoiced}
+          expiry={account.credit_card.expiry}
+          lastFour={account.credit_card.last_four}
+          promoCredit={promoCredit}
         />
       </React.Fragment>
     );
   }
 }
-
-const accountContext = withAccount(
-  ({ data, errors, loading, lastUpdated }) => ({
-    accountLoading: loading,
-    errors,
-    lastUpdated,
-    data
-  })
-);
 
 interface Profile {
   profileLoading: boolean;
@@ -89,7 +88,14 @@ interface Profile {
 }
 
 const enhanced = compose<CombinedProps, {}>(
-  accountContext,
+  withAccount(
+    (ownProps, accountLoading, lastUpdated, accountError, account) => ({
+      accountLoading,
+      lastUpdated,
+      accountError: accountError.read,
+      account
+    })
+  ),
   withProfile<Profile, {}>((ownProps, profile) => ({
     username: path(['username'], profile.data),
     profileError: path(['read'], profile.error),
