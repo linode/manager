@@ -7,8 +7,8 @@ interface Props {
   text: string | JSX.Element;
   className?: string;
   interactive?: boolean;
+  classes?: any;
   leaveDelay?: boolean;
-  customClassName?: string;
   tooltipPosition?:
     | 'bottom'
     | 'bottom-end'
@@ -33,7 +33,7 @@ const HelpIcon: React.StatelessComponent<CombinedProps> = props => {
     tooltipPosition,
     interactive,
     leaveDelay,
-    customClassName
+    classes
   } = props;
 
   return (
@@ -46,7 +46,7 @@ const HelpIcon: React.StatelessComponent<CombinedProps> = props => {
         leaveDelay={leaveDelay ? 3000 : undefined}
         interactive={interactive && interactive}
         placement={tooltipPosition ? tooltipPosition : 'bottom'}
-        classes={{ tooltip: customClassName }}
+        classes={classes}
       >
         <IconButton className={className} data-qa-help-button>
           <HelpOutline />

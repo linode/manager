@@ -27,16 +27,14 @@ type ClassNames =
   | 'pricing'
   | 'ctaOuter'
   | 'displayTable'
-  | 'code'
-  | 'footer'
-  | 'footerText'
-  | 'copyTooltip'
   | 'codeOuter'
   | 'tooltipCode'
   | 'statusHelpIcon'
   | 'nodePoolHeader'
   | 'nodePoolHeaderOuter'
-  | 'tooltipCopyTooltip';
+  | 'tooltipOuter'
+  | 'code'
+  | 'copyTooltip';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -59,23 +57,10 @@ const styles = (theme: Theme) =>
     displayTable: {
       width: '100%'
     },
-    code: {
-      padding: `0 0 0 ${theme.spacing(1)}px`
-    },
-    footer: {
-      display: 'flex',
-      marginTop: theme.spacing(2)
-    },
-    footerText: {
-      display: 'flex'
-    },
-    copyTooltip: {
-      margin: '-4px 0'
-    },
     codeOuter: {
       display: 'flex'
     },
-    tooltipCode: {
+    code: {
       display: 'block',
       width: '100%'
     },
@@ -87,9 +72,12 @@ const styles = (theme: Theme) =>
       display: 'flex',
       alignItems: 'center'
     },
-    tooltipCopyTooltip: {
+    copyTooltip: {
       maxHeight: 24,
       marginLeft: 2
+    },
+    tooltipOuter: {
+      maxWidth: 225
     }
   });
 
@@ -139,8 +127,8 @@ export const NodePoolsDisplay: React.FunctionComponent<
         For more detailed information about the nodes in your cluster, run the
         following command:
         <div className={classes.codeOuter}>
-          <code className={classes.tooltipCode}>{command}</code>
-          <CopyTooltip text={command} className={classes.tooltipCopyTooltip} />
+          <code className={classes.code}>{command}</code>
+          <CopyTooltip text={command} className={classes.copyTooltip} />
         </div>
       </>
     );
@@ -166,7 +154,7 @@ export const NodePoolsDisplay: React.FunctionComponent<
               className={classes.statusHelpIcon}
               tooltipPosition="right-start"
               interactive
-              customClassName="lke-tooltip"
+              classes={{ tooltip: classes.tooltipOuter }}
             />
           </Grid>
           <Grid item>
@@ -229,14 +217,6 @@ export const NodePoolsDisplay: React.FunctionComponent<
               Clear Changes
             </Button>
           </Grid>
-        </Grid>
-        <Grid item className={classes.footer} xs={12}>
-          <Typography className={classes.footerText}>
-            You can run
-            <code className={classes.code}>{command}</code>
-            <CopyTooltip text={command} className={classes.copyTooltip} />
-            for more detailed information about the nodes in your cluster.
-          </Typography>
         </Grid>
       </Grid>
     </Paper>
