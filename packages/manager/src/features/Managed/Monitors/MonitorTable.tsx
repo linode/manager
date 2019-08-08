@@ -19,7 +19,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
 
-import MonitorRow from './MonitorRow';
+import MonitorTableContent from './MonitorTableContent';
 
 type ClassNames = 'labelHeader';
 
@@ -32,12 +32,14 @@ const styles = (theme: Theme) =>
 
 interface Props {
   monitors: Linode.ManagedServiceMonitor[];
+  loading: boolean;
+  error?: Linode.ApiFieldError[];
 }
 
 export type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const MonitorTable: React.FC<CombinedProps> = props => {
-  const { classes, monitors } = props;
+  const { classes, error, loading, monitors } = props;
   return (
     <>
       <DocumentTitleSegment segment="Service Monitors" />
@@ -104,17 +106,11 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
                       </TableRow>
                     </TableHead>
                     <TableBody>
-                      {data.map(
-                        (
-                          monitor: Linode.ManagedServiceMonitor,
-                          idx: number
-                        ) => (
-                          <MonitorRow
-                            key={`service-monitor-row-${idx}`}
-                            monitor={monitor}
-                          />
-                        )
-                      )}
+                      <MonitorTableContent
+                        monitors={data}
+                        loading={loading}
+                        error={error}
+                      />
                     </TableBody>
                   </Table>
                 </Paper>
