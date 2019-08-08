@@ -62,7 +62,7 @@ const styles = (theme: Theme) =>
       }
     },
     error: {
-      border: '2px solid red'
+      border: `2px solid ${theme.color.red}`
     }
   });
 
