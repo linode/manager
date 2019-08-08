@@ -41,6 +41,7 @@ interface PrimaryLink {
   href: string;
   key: string;
   attr?: { [key: string]: any };
+  onClick?: (e: React.ChangeEvent<any>) => void;
 }
 
 export type ClassNames =
@@ -337,7 +338,10 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
         display: 'One-Click Apps',
         href: '/linodes/create?type=One-Click',
         key: 'one-click',
-        attr: { 'data-qa-one-click-nav-btn': true }
+        attr: { 'data-qa-one-click-nav-btn': true },
+        onClick: () => {
+          this.props.ldClient.track('one-click-nav-click');
+        }
       });
     }
 
@@ -428,7 +432,12 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           role="menuitem"
           to={primaryLink.href}
           href="javascript:void(0)"
-          onClick={this.props.closeMenu}
+          onClick={(e: React.ChangeEvent<any>) => {
+            this.props.closeMenu();
+            if (primaryLink.onClick) {
+              primaryLink.onClick(e);
+            }
+          }}
           data-qa-nav-item={primaryLink.key}
           {...primaryLink.attr}
           className={classNames({

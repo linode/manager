@@ -151,6 +151,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
         title: 'One-Click App',
         onClick: e => {
           this.props.history.push('/linodes/create?type=One-Click');
+          this.props.ldClient.track('one-click-add-new-button');
           this.handleClose();
           e.preventDefault();
         },
