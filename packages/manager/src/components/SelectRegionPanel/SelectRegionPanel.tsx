@@ -47,7 +47,13 @@ type ClassNames = 'root';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      marginTop: theme.spacing(3)
+      marginTop: theme.spacing(3),
+      '& svg': {
+        '& g': {
+          // Super hacky fix for Firefox rendering of some flag icons that had a clip-path property.
+          clipPath: 'none !important' as 'none'
+        }
+      }
     }
   });
 

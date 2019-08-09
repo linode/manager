@@ -38,14 +38,10 @@ const themes = { light, dark };
 type CombinedProps = Props & PreferencesActionsProps;
 
 const LinodeThemeWrapper: React.FC<CombinedProps> = props => {
-  React.useEffect(() => {
+  const toggleTheme = (value: ThemeChoice) => {
     setTimeout(() => {
       document.body.classList.remove('no-transition');
     }, 500);
-  });
-
-  const toggleTheme = (value: ThemeChoice) => {
-    document.body.classList.add('no-transition');
     /** send to GA */
     sendThemeToggleEvent(value);
   };
