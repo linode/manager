@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Redirect } from 'react-router-dom';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
@@ -38,6 +39,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const CancelLanding: React.FC<{}> = () => {
   const classes = useStyles();
+
+  if (!location.search) {
+    return <Redirect to="/" />;
+  }
 
   return (
     <div className={classes.root}>
