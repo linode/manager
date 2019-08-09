@@ -1,10 +1,16 @@
 // These flags should correspond with active features flags in LD
+
+interface VATBanner {
+  link: string;
+  preference_key: string;
+  text: string;
+}
+
 interface Flags {
   managed: boolean;
-  buttonColor: string;
   objectStorage: boolean;
-  vatBanner: string[];
   promos: boolean;
+  vatBanner: VATBanner;
 }
 
 /**
