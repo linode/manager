@@ -30,8 +30,7 @@ import Grid from 'src/components/Grid';
 import LandingLoading from 'src/components/LandingLoading';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
-/** @todo: Uncomment when we deploy with LD */
-// import VATBanner from 'src/components/VATBanner';
+import VATBanner from 'src/components/VATBanner/VATBanner2';
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
@@ -355,6 +354,7 @@ export class App extends React.Component<CombinedProps, State> {
       settingsError,
       bucketsError,
       nodeBalancersError,
+      accountData,
       accountCapabilities,
       accountLoading,
       accountError,
@@ -401,7 +401,12 @@ export class App extends React.Component<CombinedProps, State> {
           Skip to main content
         </a>
         {/** Update the LD client with the user's id as soon as we know it */}
-        <IdentifyUser userID={userId} setFlagsLoaded={this.setFlagsLoaded} />
+        <IdentifyUser
+          userID={userId}
+          setFlagsLoaded={this.setFlagsLoaded}
+          accountError={accountError}
+          accountCountry={accountData ? accountData.country : undefined}
+        />
         <DataLoadedListener
           markAppAsLoaded={this.props.markAppAsDoneLoading}
           flagsHaveLoaded={this.state.flagsLoaded}
@@ -450,7 +455,7 @@ export class App extends React.Component<CombinedProps, State> {
                 username={this.props.username}
               />
               {/* @todo: Uncomment when we deploy with LD */}
-              {/* <VATBanner /> */}
+              <VATBanner />
               <div className={classes.wrapper} id="main-content">
                 <Grid container spacing={0} className={classes.grid}>
                   <Grid item className={classes.switchWrapper}>
@@ -579,6 +584,7 @@ interface StateProps {
   types?: string[];
   regions?: Linode.Region[];
   userId?: number;
+  accountData?: Linode.Account;
   username: string;
   documentation: Linode.Doc[];
   isLoggedInAsCustomer: boolean;
@@ -622,6 +628,7 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   bucketsError: state.__resources.buckets.error,
   userId: path(['data', 'uid'], state.__resources.profile),
   username: pathOr('', ['data', 'username'], state.__resources.profile),
+  accountData: state.__resources.account.data,
   documentation: state.documentation,
   isLoggedInAsCustomer: pathOr(
     false,
