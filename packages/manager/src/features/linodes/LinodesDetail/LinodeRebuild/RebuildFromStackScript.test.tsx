@@ -27,6 +27,7 @@ const props: CombinedProps = {
   },
   linodeId: 1234,
   imagesData: images,
+  requestKeys: jest.fn(),
   imagesLoading: false,
   userSSHKeys: [],
   closeSnackbar: jest.fn(),

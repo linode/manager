@@ -1,12 +1,13 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { PrimaryNav } from './PrimaryNav';
+import { light } from 'src/themes';
+import { ClassNames, PrimaryNav } from './PrimaryNav';
 
 const findLinkIn = (w: ShallowWrapper) => (s: string) => {
   return w.find(`[data-qa-nav-item="${s}"]`);
 };
-const mockClasses = {
+const mockClasses: Record<ClassNames, string> = {
   active: '',
   activeLink: '',
   arrow: '',
@@ -39,7 +40,10 @@ describe('PrimaryNav', () => {
       wrapper = shallow(
         <PrimaryNav
           classes={mockClasses}
-          theme={{ spacing: [] }}
+          theme={light({
+            spacingOverride: 4
+          })}
+          toggleSpacing={jest.fn()}
           closeMenu={jest.fn()}
           toggleTheme={jest.fn()}
           hasAccountAccess={false}
@@ -102,7 +106,10 @@ describe('PrimaryNav', () => {
       wrapper = shallow(
         <PrimaryNav
           classes={mockClasses}
-          theme={{ spacing: [] }}
+          theme={light({
+            spacingOverride: 4
+          })}
+          toggleSpacing={jest.fn()}
           closeMenu={jest.fn()}
           toggleTheme={jest.fn()}
           hasAccountAccess={true}
@@ -129,7 +136,10 @@ describe('PrimaryNav', () => {
       wrapper = shallow(
         <PrimaryNav
           classes={mockClasses}
-          theme={{ spacing: [] }}
+          theme={light({
+            spacingOverride: 4
+          })}
+          toggleSpacing={jest.fn()}
           closeMenu={jest.fn()}
           toggleTheme={jest.fn()}
           hasAccountAccess={false}
@@ -156,7 +166,10 @@ describe('PrimaryNav', () => {
       wrapper = shallow(
         <PrimaryNav
           classes={mockClasses}
-          theme={{ spacing: [] }}
+          theme={light({
+            spacingOverride: 4
+          })}
+          toggleSpacing={jest.fn()}
           closeMenu={jest.fn()}
           toggleTheme={jest.fn()}
           hasAccountAccess={false}

@@ -36,7 +36,7 @@ interface PrimaryLink {
   key: string;
 }
 
-type ClassNames =
+export type ClassNames =
   | 'menuGrid'
   | 'fadeContainer'
   | 'logoItem'
