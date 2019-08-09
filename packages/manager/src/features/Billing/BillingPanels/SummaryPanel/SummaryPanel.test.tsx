@@ -25,7 +25,7 @@ describe('SummaryPanel', () => {
       city: '',
       state: '',
       zip: '',
-      credit_card: { expiry: '02/2012', last_four: '1234' },
+      credit_card: { expiry: '02/2012', last_four: '1234', cvv: '123' },
       tax_id: '',
       country: '',
       balance: 0,
