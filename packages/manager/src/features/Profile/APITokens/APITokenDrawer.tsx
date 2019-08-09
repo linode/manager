@@ -144,7 +144,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
   };
 
   /* NB: Upon updating React, port this to getDerivedStateFromProps */
-  componentWillReceiveProps(nextProps: CombinedProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: CombinedProps) {
     if (
       /* If we are about to display a new token */
       this.props.id !== nextProps.id

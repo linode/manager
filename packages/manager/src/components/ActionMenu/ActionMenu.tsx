@@ -94,7 +94,7 @@ export class ActionMenu extends React.Component<CombinedProps, State> {
     this.generateActions(createActions);
   }
 
-  componentWillReceiveProps(nextProps: Props) {
+  UNSAFE_componentWillReceiveProps(nextProps: Props) {
     const { createActions } = nextProps;
     this.generateActions(createActions);
   }

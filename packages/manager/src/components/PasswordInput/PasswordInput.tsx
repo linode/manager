@@ -55,7 +55,7 @@ class PasswordInput extends React.Component<CombinedProps, State> {
     strength: maybeStrength(this.props.value)
   };
 
-  componentWillReceiveProps(nextProps: CombinedProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: CombinedProps) {
     const { value } = nextProps;
     this.setState({ strength: maybeStrength(value) });
   }

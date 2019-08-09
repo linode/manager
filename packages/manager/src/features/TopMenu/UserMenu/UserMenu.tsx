@@ -144,7 +144,7 @@ export class UserMenu extends React.Component<CombinedProps, State> {
     });
   }
 
-  componentWillReceiveProps(nextProps: StateProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: StateProps) {
     /** 2018-09-06: Should this be in componentDidUpdate? */
     const { userEmail: currentUserEmail } = this.props;
     const { userEmail } = nextProps;

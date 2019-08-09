@@ -51,7 +51,7 @@ class ViewRangeDrawer extends React.Component<CombinedProps, State> {
     rdns: 'RDNS'
   };
 
-  componentWillReceiveProps(nextProps: CombinedProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: CombinedProps) {
     this.setState({
       rdns: nextProps.rdns,
       address: nextProps.address,

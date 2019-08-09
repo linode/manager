@@ -29,7 +29,7 @@ class CreateIPv4Drawer extends React.Component<CombinedProps, State> {
     forPublic: this.props.forPublic
   };
 
-  componentWillReceiveProps(nextProps: CombinedProps) {
+  UNSAFE_componentWillReceiveProps(nextProps: CombinedProps) {
     this.setState({
       errors: undefined,
       forPublic: nextProps.forPublic
