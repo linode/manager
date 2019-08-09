@@ -43,7 +43,7 @@ export const enableServiceMonitor = (serviceID: number) =>
 /**
  * deleteServiceMonitor
  *
- * Enables monitoring of a Managed Service that is currently disabled.
+ * Disables a Managed Service and removes it from your account.
  */
 export const deleteServiceMonitor = (serviceID: number) =>
   Request<Linode.ManagedServiceMonitor>(
