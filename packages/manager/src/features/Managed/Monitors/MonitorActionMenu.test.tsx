@@ -1,7 +1,7 @@
 import { cleanup, render } from '@testing-library/react';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import ActionMenu from './MonitorActionMenu';
+import { MonitorActionMenu as ActionMenu } from './MonitorActionMenu';
 
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 

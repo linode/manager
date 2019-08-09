@@ -4,7 +4,11 @@ import { isType } from 'typescript-fsa';
 
 import { EntityError, EntityState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { requestServicesActions } from './managed.actions';
+import updateOrAdd from 'src/utilities/updateOrAdd';
+import {
+  disableServiceMonitorActions,
+  requestServicesActions
+} from './managed.actions';
 
 /**
  * State
@@ -47,6 +51,21 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
         'Error loading your Monitors.'
       );
     }
+
+    if (isType(action, requestServicesActions.started)) {
+      draft.error!.update = undefined;
+    }
+
+    if (isType(action, disableServiceMonitorActions.done)) {
+      const { result } = action.payload;
+      draft.entities = updateOrAdd(result, state.entities);
+    }
+
+    if (isType(action, disableServiceMonitorActions.failed)) {
+      const { error } = action.payload;
+      draft.error!.update = error;
+    }
+
     return draft;
   });
 };

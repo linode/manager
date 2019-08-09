@@ -2,7 +2,10 @@ import { connect, MapDispatchToProps } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { ApplicationState } from 'src/store';
-import { requestManagedServices as _requestManagedServices } from 'src/store/managed/managed.requests';
+import {
+  disableServiceMonitor as _disableServiceMonitor,
+  requestManagedServices as _requestManagedServices
+} from 'src/store/managed/managed.requests';
 import { EntityError } from 'src/store/types';
 
 export interface ManagedProps {
@@ -14,12 +17,15 @@ export interface ManagedProps {
 
 export interface DispatchProps {
   requestManagedServices: () => Promise<any>;
+  disableServiceMonitor: (monitorID: number) => Promise<any>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => ({
-  requestManagedServices: () => dispatch(_requestManagedServices())
+  requestManagedServices: () => dispatch(_requestManagedServices()),
+  disableServiceMonitor: (monitorID: number) =>
+    dispatch(_disableServiceMonitor({ monitorID }))
 });
 
 export default <TInner extends {}, TOuter extends {}>(

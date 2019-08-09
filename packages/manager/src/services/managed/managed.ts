@@ -17,3 +17,20 @@ export const getServices = (params?: any, filters?: any) =>
     setXFilter(filters),
     setURL(`${API_ROOT}/managed/services`)
   ).then(response => response.data);
+
+/**
+ * disableServiceMonitor
+ *
+ * Temporarily disables monitoring of a Managed Service.
+ */
+export const disableServiceMonitor = (
+  serviceID: number,
+  params?: any,
+  filters?: any
+) =>
+  Request<Linode.ManagedServiceMonitor>(
+    setMethod('POST'),
+    setParams(params),
+    setXFilter(filters),
+    setURL(`${API_ROOT}/managed/services/${serviceID}/disable`)
+  ).then(response => response.data);
