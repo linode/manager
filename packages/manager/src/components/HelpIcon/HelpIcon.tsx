@@ -1,9 +1,10 @@
 import HelpOutline from '@material-ui/icons/HelpOutline';
 import * as React from 'react';
 import IconButton from 'src/components/core/IconButton';
-import Tooltip from 'src/components/core/Tooltip';
+import Tooltip, { TooltipProps } from 'src/components/core/Tooltip';
 
-interface Props {
+interface Props
+  extends Omit<TooltipProps, 'leaveDelay' | 'title' | 'children'> {
   text: string | JSX.Element;
   className?: string;
   interactive?: boolean;
