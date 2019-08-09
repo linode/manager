@@ -50,7 +50,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     WebkitBoxOrient: 'vertical',
     overflow: 'hidden',
     wordBreak: 'break-all',
-    fontFamily: '"Ubuntu Mono", monospace, sans-serif'
+    fontFamily: '"Ubuntu Mono", monospace, sans-serif',
+    color: theme.color.grey1,
+    fontSize: '0.9rem'
   },
   copyToClipboard: {
     [theme.breakpoints.up('md')]: {
