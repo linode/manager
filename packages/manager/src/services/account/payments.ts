@@ -31,6 +31,7 @@ interface SaveCreditCardData {
   card_number: string;
   expiry_year: number;
   expiry_month: number;
+  cvv?: string;
 }
 
 /**
@@ -68,14 +69,12 @@ export const makePayment = (data: { usd: string; cvv?: string }) => {
    * BUT if CVV is included in the payload, APIv4 will send an error that CVV must
    * have 3-4 characters.
    *
-   * So for example this payload will result in an error
+   * Both of these examples will pass:
    *
    * {
    *   usd: 5,
    *   cvv: ''
    * }
-   *
-   * but this is good
    *
    * {
    *   usd: 5
@@ -144,9 +143,14 @@ export const executePaypalPayment = (data: ExecutePayload) =>
  * existing information.
  *
  */
-export const saveCreditCard = (data: SaveCreditCardData) =>
-  Request<{}>(
+export const saveCreditCard = (data: SaveCreditCardData) => {
+  if (!data.cvv) {
+    delete data.cvv;
+  }
+
+  return Request<{}>(
     setURL(`${API_ROOT}/account/credit-card`),
     setMethod('POST'),
     setData(data, CreditCardSchema)
   ).then(response => response.data);
+};
