@@ -4,6 +4,7 @@ import * as React from 'react';
 import { StackScriptUpdate } from './StackScriptUpdate';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
+import { stackScripts } from 'src/__data__/stackScripts';
 
 import { images } from 'src/__data__/images';
 
@@ -12,8 +13,6 @@ describe('StackScriptUpdate', () => {
     <StackScriptUpdate
       {...reactRouterProps}
       classes={{
-        titleWrapper: '',
-        root: '',
         backButton: '',
         createTitle: ''
       }}
@@ -21,6 +20,10 @@ describe('StackScriptUpdate', () => {
       imagesData={images}
       imagesError={undefined}
       imagesLoading={false}
+      userCannotModifyStackScript={false}
+      setDocs={jest.fn()}
+      clearDocs={jest.fn()}
+      stackScript={{ response: stackScripts[0] }}
     />
   );
 

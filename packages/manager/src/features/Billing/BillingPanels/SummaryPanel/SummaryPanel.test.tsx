@@ -2,11 +2,13 @@ import { cleanup, render } from '@testing-library/react';
 import * as React from 'react';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
+import { history } from 'src/__data__/reactRouterProps';
 import { CombinedProps, SummaryPanel } from './SummaryPanel';
 
 describe('SummaryPanel', () => {
   const baseProps: CombinedProps = {
     accountLoading: false,
+    history,
     lastUpdated: 10,
     username: 'helloworld',
     profileError: undefined,
