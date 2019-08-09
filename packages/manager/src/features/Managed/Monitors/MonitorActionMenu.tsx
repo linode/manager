@@ -46,6 +46,7 @@ export class MonitorActionMenu extends React.Component<CombinedProps, {}> {
                   .catch(e => {
                     handleError('Error enabling this service Monitor.', e);
                   });
+                closeMenu();
               }
             }
           : {
@@ -75,6 +76,7 @@ export class MonitorActionMenu extends React.Component<CombinedProps, {}> {
               .catch(e => {
                 handleError('Error deleting this Service Monitor.', e);
               });
+            closeMenu();
           }
         }
       ];
