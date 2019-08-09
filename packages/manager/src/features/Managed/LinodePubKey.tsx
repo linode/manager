@@ -36,6 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   icon: {
     marginRight: theme.spacing(1),
+    marginBottom: theme.spacing(1) - 2,
     stroke: theme.color.offBlack
   },
   sshKey: {
