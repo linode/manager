@@ -361,6 +361,7 @@ export class App extends React.Component<CombinedProps, State> {
       linodesLoading,
       domainsLoading,
       userId,
+      username,
       volumesLoading,
       bucketsLoading,
       nodeBalancersLoading
@@ -403,6 +404,7 @@ export class App extends React.Component<CombinedProps, State> {
         {/** Update the LD client with the user's id as soon as we know it */}
         <IdentifyUser
           userID={userId}
+          username={username}
           setFlagsLoaded={this.setFlagsLoaded}
           accountError={accountError}
           accountCountry={accountData ? accountData.country : undefined}

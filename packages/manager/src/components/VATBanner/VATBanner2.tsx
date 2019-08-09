@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-// import { makeStyles } from 'src/components/core/styles'
+import { makeStyles } from 'src/components/core/styles';
 
-// import useFlags from 'src/hooks/useFlags'
+import useFlags from 'src/hooks/useFlags';
 
-// const useStyles = makeStyles({
-//   root: {}
-// })
+const useStyles = makeStyles({
+  root: {}
+});
 
 interface Props {
   hello?: string;
@@ -15,13 +15,11 @@ interface Props {
 type CombinedProps = Props;
 
 const VATBanner: React.FC<CombinedProps> = props => {
-  // const classes = useStyles();
+  const classes = useStyles();
 
-  // const flags = useFlags();
+  const flags = useFlags();
 
-  // console.log(flags)
-
-  return <div>hello world</div>;
+  return <div className={classes.root}>{flags && flags.buttonColor}</div>;
 };
 
 export default compose<CombinedProps, Props>(React.memo)(VATBanner);

@@ -6,6 +6,7 @@ interface Props {
   accountCountry?: string;
   accountError?: Linode.ApiFieldError[];
   userID?: number;
+  username?: string;
   setFlagsLoaded: () => void;
 }
 
@@ -17,7 +18,13 @@ interface Props {
  */
 
 export const IdentifyUser: React.FC<Props> = props => {
-  const { setFlagsLoaded, userID, accountCountry, accountError } = props;
+  const {
+    setFlagsLoaded,
+    userID,
+    accountCountry,
+    accountError,
+    username
+  } = props;
   const client = useLDClient();
   React.useEffect(() => {
     /**
@@ -31,12 +38,13 @@ export const IdentifyUser: React.FC<Props> = props => {
       ? 'Unknown'
       : accountCountry;
 
-    if (client && userID && country) {
+    if (client && userID && country && username) {
       client
         .identify({
           key: md5(String(userID)),
+          country,
           custom: {
-            country
+            username
           }
         })
         .then(() => setFlagsLoaded())
@@ -47,7 +55,7 @@ export const IdentifyUser: React.FC<Props> = props => {
 
         .catch(() => setFlagsLoaded());
     }
-  }, [client, userID, accountCountry]);
+  }, [client, userID, accountCountry, username]);
 
   return null;
 };
