@@ -83,7 +83,7 @@ export const monitorRow: React.FunctionComponent<CombinedProps> = props => {
         <Typography>{monitor.address}</Typography>
       </TableCell>
       <TableCell>
-        <ActionMenu status={monitor.status} />
+        <ActionMenu status={monitor.status} monitorID={monitor.id} />
       </TableCell>
     </TableRow>
   );
