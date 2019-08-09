@@ -1,4 +1,4 @@
-import { assoc, clone, map, path, pathOr } from 'ramda';
+import { assoc, clone, equals, map, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
@@ -90,7 +90,8 @@ export default (Component: React.ComponentType<any>) => {
                   const keys = user.ssh_keys;
                   const isSelected = this.isUserSelected(
                     user.username,
-                    oldKeys
+                    oldKeys,
+                    keys
                   );
 
                   return [
@@ -160,11 +161,29 @@ export default (Component: React.ComponentType<any>) => {
         this.toggleSSHUserKeys(username, result)
     });
 
-    isUserSelected = (username: string, keys: UserSSHKeyObject[]) => {
+    isUserSelected = (
+      username: string,
+      keys: UserSSHKeyObject[],
+      newKeys?: string[]
+    ) => {
+      /**
+       * In most cases, we're just seeing if the current user was selected before
+       * the current update (since the update is coming from the API, which doesn't track
+       * this). However, if we're requesting the keys again because a new key has just been
+       * added, we want to select the user who added the key by default. In this case,
+       * pass the new list of keys for the target user and see if it's different from the
+       * previous list. If it's different, a user has added a key (deletions or updates don't
+       * affect this HOC in any way).
+       *
+       * The above paragraph doesn't make much sense, and points to a deeper problem in how
+       * we manage SSH key state. @todo #TDT replace this HOC.
+       */
       const currentUserKeys = keys.find(
         thisKey => thisKey.username === username
       );
-      return currentUserKeys ? currentUserKeys.selected : false;
+      return currentUserKeys
+        ? currentUserKeys.selected || !equals(currentUserKeys.keys, newKeys)
+        : false;
     };
   }
 
