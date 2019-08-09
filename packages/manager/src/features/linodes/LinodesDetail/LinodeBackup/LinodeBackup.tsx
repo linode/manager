@@ -757,7 +757,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         >
           Cancel Backups
         </Button>
-        <Typography variant="body2" data-qa-cancel-desc>
+        <Typography variant="body1" data-qa-cancel-desc>
           Please note that when you cancel backups associated with this Linode,
           this will remove all existing backups.
         </Typography>
