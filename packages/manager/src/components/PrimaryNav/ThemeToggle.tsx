@@ -55,6 +55,11 @@ export class ThemeToggle extends React.Component<CombinedProps> {
     const { classes, toggleTheme, theme } = this.props;
     const { name: themeName } = theme;
 
+    const toggle = () => {
+      toggleTheme();
+      onClickHandler();
+    };
+
     return (
       <div className={classes.switchWrapper}>
         <span
@@ -66,8 +71,7 @@ export class ThemeToggle extends React.Component<CombinedProps> {
           Light
         </span>
         <Toggle
-          onChange={toggleTheme}
-          onClick={() => onClickHandler()}
+          onChange={toggle}
           checked={themeName !== 'lightTheme'}
           className={classNames({
             [classes.toggle]: true,
