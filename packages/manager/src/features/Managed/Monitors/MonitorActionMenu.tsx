@@ -18,32 +18,65 @@ export type CombinedProps = Props & DispatchProps & WithSnackbarProps;
 export class MonitorActionMenu extends React.Component<CombinedProps, {}> {
   createActions = () => {
     const {
+      deleteServiceMonitor,
       disableServiceMonitor,
+      enableServiceMonitor,
       enqueueSnackbar,
       monitorID,
       status
     } = this.props;
+
+    const handleError = (message: string, error: Linode.ApiFieldError[]) => {
+      const errMessage = getAPIErrorOrDefault(error, message);
+      enqueueSnackbar(errMessage[0].reason, { variant: 'error' });
+    };
 
     return (closeMenu: Function): Action[] => {
       const actions = [
         status === 'disabled'
           ? {
               title: 'Enable',
-              onClick: () => closeMenu()
+              onClick: () => {
+                enableServiceMonitor(monitorID)
+                  .then(_ => {
+                    enqueueSnackbar('Monitor enabled successfully.', {
+                      variant: 'success'
+                    });
+                  })
+                  .catch(e => {
+                    handleError('Error enabling this service Monitor.', e);
+                  });
+              }
             }
           : {
               title: 'Disable',
               onClick: () => {
-                disableServiceMonitor(monitorID).catch(e => {
-                  const errMessage = getAPIErrorOrDefault(
-                    e,
-                    'Error disabling this service Monitor.'
-                  );
-                  enqueueSnackbar(errMessage[0].reason, { variant: 'error' });
-                });
+                disableServiceMonitor(monitorID)
+                  .then(_ => {
+                    enqueueSnackbar('Monitor disabled successfully.', {
+                      variant: 'success'
+                    });
+                  })
+                  .catch(e => {
+                    handleError('Error disabling this Service Monitor.', e);
+                  });
                 closeMenu();
               }
-            }
+            },
+        {
+          title: 'Delete',
+          onClick: () => {
+            deleteServiceMonitor(monitorID)
+              .then(_ => {
+                enqueueSnackbar('Monitor deleted successfully.', {
+                  variant: 'success'
+                });
+              })
+              .catch(e => {
+                handleError('Error deleting this Service Monitor.', e);
+              });
+          }
+        }
       ];
       return actions;
     };
