@@ -116,6 +116,7 @@ const LinodePubKey: React.FC<{}> = props => {
             </Grid>
           </Hidden>
           <Grid item xs={6} md={3} lg={2} className={classes.copyToClipboard}>
+            {/* @todo: Should we include an indication that the key was successfully copied? */}
             <Button buttonType="secondary" onClick={() => copy(pubKey)}>
               Copy to clipboard
             </Button>
