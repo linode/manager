@@ -6,7 +6,7 @@ import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 import Typography from 'src/components/core/Typography';
-import LastCrumb from './FinalCrumb';
+import FinalCrumb from './FinalCrumb';
 import FinalCrumbPrefix from './FinalCrumbPrefix';
 
 import { EditableProps, LabelProps } from './types';
@@ -127,11 +127,19 @@ const Crumbs: React.FC<CombinedProps> = props => {
         the final crumb has the possibility of being a link, editable text
         or just static text
       */}
-      <LastCrumb
+      <FinalCrumb
         crumb={labelTitle || lastCrumb}
         labelOptions={labelOptions}
         onEditHandlers={onEditHandlers}
       />
+
+      {/* 
+        for appending some SVG or other element after the final crumb.
+        See support ticket detail as an example
+      */}
+      {labelOptions &&
+        labelOptions.suffixComponent &&
+        labelOptions.suffixComponent}
     </>
   );
 };

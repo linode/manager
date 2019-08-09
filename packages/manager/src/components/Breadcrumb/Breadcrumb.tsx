@@ -60,9 +60,6 @@ export const Breadcrumb: React.FC<CombinedProps> = props => {
           labelOptions={labelOptions}
         />
       </div>
-      {labelOptions &&
-        labelOptions.suffixComponent &&
-        labelOptions.suffixComponent}
     </div>
   );
 };
