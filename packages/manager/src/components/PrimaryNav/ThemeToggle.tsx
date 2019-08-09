@@ -44,12 +44,21 @@ interface Props {
   toggleTheme: () => void;
 }
 
+const onClickHandler = () => {
+  document.body.classList.add('no-transition');
+};
+
 type CombinedProps = Props & WithStyles<ClassNames> & WithTheme;
 
 export class ThemeToggle extends React.Component<CombinedProps> {
   render() {
     const { classes, toggleTheme, theme } = this.props;
     const { name: themeName } = theme;
+
+    const toggle = () => {
+      toggleTheme();
+      onClickHandler();
+    };
 
     return (
       <div className={classes.switchWrapper}>
@@ -62,7 +71,7 @@ export class ThemeToggle extends React.Component<CombinedProps> {
           Light
         </span>
         <Toggle
-          onChange={toggleTheme}
+          onChange={toggle}
           checked={themeName !== 'lightTheme'}
           className={classNames({
             [classes.toggle]: true,

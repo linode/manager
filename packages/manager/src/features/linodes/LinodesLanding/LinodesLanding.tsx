@@ -3,7 +3,6 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { parse, stringify } from 'qs';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
-import { CSVLink } from 'react-csv';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -48,6 +47,8 @@ import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 
 import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
 import DeleteDialog from './DeleteDialog';
+
+import CSVLink from 'src/components/DownloadCSV';
 
 interface State {
   powerDialogOpen: boolean;
