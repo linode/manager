@@ -1,12 +1,17 @@
 import { monitors } from 'src/__data__/serviceMonitors';
 
 import {
+  deleteServiceMonitorActions,
   disableServiceMonitorActions,
+  enableServiceMonitorActions,
   requestServicesActions
 } from './managed.actions';
 import reducer, { defaultState } from './managed.reducer';
 
 const mockError = [{ reason: 'no reason' }];
+
+const addEntities = (entities: Linode.ManagedServiceMonitor[]) =>
+  reducer(defaultState, requestServicesActions.done({ result: entities }));
 
 describe('Managed services reducer', () => {
   it('should handle an initiated request for services', () => {
@@ -40,10 +45,7 @@ describe('Managed services reducer', () => {
       ...monitors[0],
       status: 'disabled' as Linode.MonitorStatus
     };
-    const withEntities = reducer(
-      defaultState,
-      requestServicesActions.done({ result: monitors })
-    );
+    const withEntities = addEntities(monitors);
     const newState = reducer(
       withEntities,
       disableServiceMonitorActions.done({
@@ -65,5 +67,52 @@ describe('Managed services reducer', () => {
       })
     );
     expect(newState.error).toHaveProperty('update', mockError);
+  });
+
+  it('should handle a delete action successfully', () => {
+    const withEntities = addEntities(monitors);
+    const deletedState = reducer(
+      withEntities,
+      deleteServiceMonitorActions.done({
+        params: { monitorID: monitors[0].id },
+        result: {}
+      })
+    );
+    expect(deletedState.results).toHaveLength(monitors.length - 1);
+  });
+
+  it('should handle a failed delete action', () => {
+    const withEntities = addEntities(monitors);
+    const newState = reducer(
+      withEntities,
+      deleteServiceMonitorActions.failed({
+        error: mockError,
+        params: { monitorID: 12345 }
+      })
+    );
+    expect(newState.error!.delete).toEqual(mockError);
+  });
+
+  it('should handle an enable action', () => {
+    const withEntities = addEntities([{ ...monitors[0], status: 'disabled' }]);
+    const enabledState = reducer(
+      withEntities,
+      enableServiceMonitorActions.done({
+        params: { monitorID: monitors[0].id },
+        result: monitors[0]
+      })
+    );
+    expect(enabledState.entities[0]).toHaveProperty('status', 'pending');
+  });
+
+  it('should handle a failed enable action', () => {
+    const newState = reducer(
+      defaultState,
+      enableServiceMonitorActions.failed({
+        error: mockError,
+        params: { monitorID: 12345 }
+      })
+    );
+    expect(newState.error!.update).toEqual(mockError);
   });
 });
