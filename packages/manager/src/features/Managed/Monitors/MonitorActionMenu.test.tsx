@@ -16,6 +16,8 @@ const props: CombinedProps = {
   status: 'disabled',
   monitorID: 1,
   requestManagedServices: jest.fn(),
+  enableServiceMonitor: jest.fn(),
+  deleteServiceMonitor: jest.fn(),
   disableServiceMonitor: jest.fn(),
   ...reactRouterProps
 };
