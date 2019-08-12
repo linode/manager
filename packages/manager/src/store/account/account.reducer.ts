@@ -8,9 +8,6 @@ import {
   updateAccountActions
 } from './account.actions';
 
-// Mock promotions data until API is ready
-import { account } from 'src/__data__/account';
-
 /**
  * State
  */
@@ -32,12 +29,12 @@ const reducer: Reducer<State> = (state: State = defaultState, action) => {
   }
 
   if (isType(action, profileRequestSuccess)) {
-    // const { payload } = action;
+    const { payload } = action;
 
     return {
       ...state,
       loading: false,
-      data: account,
+      data: payload,
       lastUpdated: Date.now()
     };
   }
