@@ -21,7 +21,7 @@ import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 
 import RegionOption, { RegionItem } from './RegionOption';
 
-const flags = {
+export const flags = {
   us: () => <US width="32" height="24" viewBox="0 0 720 480" />,
   sg: () => <SG width="32" height="24" viewBox="0 0 640 480" />,
   jp: () => (

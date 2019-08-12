@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
@@ -48,7 +49,7 @@ const CautionNotice: React.FC<CombinedProps> = props => {
       <ul>
         <li>
           You'll be assigned new IPv4 and IPv6 addresses, which will be
-          accessible once your migration is complete
+          accessible once your migration is complete.
         </li>
         <li>
           Any existing backups with the Linode Backup Service will not be
@@ -57,15 +58,21 @@ const CautionNotice: React.FC<CombinedProps> = props => {
         </li>
         <li>
           Any DNS records (including Reverse DNS) will need to be updated. You
-          can use the DNS Manager or Configure Your Linode for Reverse DNS
-          (rDNS).
+          can use the <Link to="/domains">DNS Manager</Link> or{' '}
+          <a
+            href="https://linode.com/docs/networking/dns/configure-your-linode-for-reverse-dns/"
+            target="_blank"
+          >
+            Configure Your Linode for Reverse DNS (rDNS).
+          </a>
         </li>
         <li>Your Linode will be powered off.</li>
         {props.linodeVolumes && (
           <React.Fragment>
             <li>
               Block Storage can't be migrated to other regions. The following
-              volumes will be detached from this Linode:
+              {props.linodeVolumes.length > 1 ? ' volumes' : ' volume'} will be
+              detached from this Linode:
             </li>
             <ul className={classes.volumes}>
               {props.linodeVolumes.map(eachVolume => {
