@@ -34,8 +34,7 @@ import TicketAttachmentList from '../TicketAttachmentList';
 import AttachmentError from './AttachmentError';
 import Reply from './TabbedReply';
 
-type ClassNames =
-  | 'root'
+export type ClassNames =
   | 'title'
   | 'breadcrumbs'
   | 'backButton'
@@ -49,7 +48,6 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
     title: {
       display: 'flex',
       alignItems: 'center'

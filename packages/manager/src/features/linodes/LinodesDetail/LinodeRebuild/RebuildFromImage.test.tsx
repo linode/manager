@@ -22,6 +22,8 @@ const props: CombinedProps = {
   userSSHKeys: [],
   closeSnackbar: jest.fn(),
   enqueueSnackbar: jest.fn(),
+  permissions: 'read_write',
+  requestKeys: jest.fn(),
   ...reactRouterProps
 };
 

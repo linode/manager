@@ -21,11 +21,10 @@ import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import SupportTicketDrawer from './SupportTicketDrawer';
 import TicketList from './TicketList';
 
-type ClassNames = 'root' | 'title';
+type ClassNames = 'title';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
     title: {
       marginBottom: theme.spacing(2)
     }
@@ -193,7 +192,6 @@ export class SupportTicketsLanding extends React.PureComponent<
             onChange={this.handleChange}
             indicatorColor="primary"
             textColor="primary"
-            className={classes.root}
             variant="scrollable"
             scrollButtons="on"
           >

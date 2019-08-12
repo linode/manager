@@ -1,3 +1,12 @@
 import * as React from 'react';
+import LinodePubKey from './LinodePubKey';
 
-export default () => <h1>SSH Access</h1>;
+const SSHAcess: React.FC<{}> = props => {
+  return (
+    <React.Fragment>
+      <LinodePubKey />
+    </React.Fragment>
+  );
+};
+
+export default SSHAcess;

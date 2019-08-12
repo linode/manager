@@ -15,22 +15,29 @@ describe.skip('NodeBalancers', () => {
         <LinodeThemeWrapper theme="dark" spacing="normal">
           <NodeBalancersLanding
             {...reactRouterProps}
-            groupByTag={false}
-            toggleGroupByTag={jest.fn()}
             nodeBalancersLoading={false}
             nodeBalancersError={undefined}
             nodeBalancersData={[]}
             nodeBalancersCount={0}
+            nodeBalancerActions={{
+              updateNodeBalancer: jest.fn(),
+              createNodeBalancer: jest.fn(),
+              deleteNodeBalancer: jest.fn(),
+              getAllNodeBalancers: jest.fn(),
+              getAllNodeBalancersWithConfigs: jest.fn()
+            }}
+            setDocs={jest.fn()}
+            clearDocs={jest.fn()}
             classes={{
               root: '',
               title: '',
               nameCell: '',
-              icon: '',
               nodeStatus: '',
               transferred: '',
               ports: '',
               ip: '',
-              tagGroup: ''
+              tagGroup: '',
+              titleWrapper: ''
             }}
           />
         </LinodeThemeWrapper>

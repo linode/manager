@@ -1,6 +1,5 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-import { clearDocs, setDocs } from 'src/store/documentation';
 
 import { images } from 'src/__data__/images';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
@@ -9,9 +8,8 @@ import { StackScriptsLanding } from './StackScriptsLanding';
 describe('StackScripts Landing', () => {
   const component = shallow(
     <StackScriptsLanding
-      images={{ response: images }}
-      setDocs={setDocs}
-      clearDocs={clearDocs}
+      imagesData={images}
+      imagesLoading={false}
       classes={{ root: '', title: '' }}
       {...reactRouterProps}
     />

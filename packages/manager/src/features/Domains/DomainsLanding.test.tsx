@@ -11,11 +11,15 @@ const props: CombinedProps = {
   domainsError: {},
   howManyLinodesOnAccount: 0,
   shouldGroupDomains: true,
-  domainActions: {
-    createDomain: jest.fn(),
-    updateDomain: jest.fn(),
-    deleteDomain: jest.fn()
-  },
+  createDomain: jest.fn(),
+  updateDomain: jest.fn(),
+  deleteDomain: jest.fn(),
+  linodesLoading: false,
+  openForCloning: jest.fn(),
+  openForCreating: jest.fn(),
+  openForEditing: jest.fn(),
+  enqueueSnackbar: jest.fn(),
+  closeSnackbar: jest.fn(),
   classes: {
     domain: '',
     dnsWarning: '',
