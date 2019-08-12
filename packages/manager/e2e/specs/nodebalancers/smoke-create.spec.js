@@ -39,14 +39,12 @@ describe('Nodebalancer - Create Suite', () => {
     it('should fail to create without selecting a region', () => {
         const noticeMsg = 'Region is required.';
         browser.jsClick('[data-qa-deploy-linode]');
-        NodeBalancers.waitForNotice(noticeMsg);
+        expect(NodeBalancers.regionError.getText()).toMatch(noticeMsg);
     });
 
     it('should fail to create without choosing a backend ip', () => {
         const labelError = 'Label is required.';
         const addressError = 'IP address is required.';
-
-        NodeBalancers.regionCards[0].click();
         browser.jsClick('[data-qa-deploy-linode]');
 
         const backendLabelError = $('[data-qa-backend-ip-label] > p')
@@ -58,9 +56,10 @@ describe('Nodebalancer - Create Suite', () => {
 
     it('should create a nodebalancer with a valid backend ip', () => {
         NodeBalancers.backendIpLabel.addValue(linode.label);
-
-        /** click the newark region because that's where our Linode is located */
-        $('[data-qa-select-card-subheading="Newark, NJ"]').click()
+        /** Select the newark region because that's where our Linode is located */
+        NodeBalancers.regionSelect.waitForVisible();
+        NodeBalancers.regionSelect.setValue('us-east');
+        browser.keys("\uE007");
 
         /** set the value of the IP Address field */
         const privateIP = linode.ipv4.find(eachIP => eachIP.match(/192.168/))
