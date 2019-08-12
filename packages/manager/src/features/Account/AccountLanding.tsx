@@ -1,3 +1,4 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import {
   matchPath,
@@ -7,6 +8,7 @@ import {
   Switch,
   withRouter
 } from 'react-router-dom';
+import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
 import Tab from 'src/components/core/Tab';
@@ -15,8 +17,11 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import TabLink from 'src/components/TabLink';
 
 import DefaultLoader from 'src/components/DefaultLoader';
+import withProfile, {
+  ProfileActionsProps
+} from 'src/containers/profile.container';
 
-type Props = RouteComponentProps<{}>;
+type Props = RouteComponentProps<{}> & ProfileActionsProps & StateProps;
 
 const GlobalSettings = DefaultLoader({
   loader: () => import('./GlobalSettings')
@@ -92,7 +97,17 @@ class AccountLanding extends React.Component<Props> {
         </AppBar>
         <Switch>
           <Route exact strict path={`${url}/billing`} component={Billing} />
-          <Route exact strict path={`${url}/users`} component={Users} />
+          <Route
+            exact
+            strict
+            path={`${url}/users`}
+            render={props => (
+              <Users
+                {...props}
+                isRestrictedUser={this.props.isRestrictedUser}
+              />
+            )}
+          />
           <Route
             exact
             strict
@@ -107,4 +122,13 @@ class AccountLanding extends React.Component<Props> {
   }
 }
 
-export default withRouter(AccountLanding);
+interface StateProps {
+  isRestrictedUser: boolean;
+}
+
+export default compose<Props, {}>(
+  withRouter,
+  withProfile<StateProps, {}>((ownProps, { data }) => ({
+    isRestrictedUser: pathOr(false, ['restricted'], data)
+  }))
+)(AccountLanding);

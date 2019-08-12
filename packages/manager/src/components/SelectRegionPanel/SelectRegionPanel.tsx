@@ -5,21 +5,21 @@ import IN from 'flag-icon-css/flags/4x3/in.svg';
 import JP from 'flag-icon-css/flags/4x3/jp.svg';
 import SG from 'flag-icon-css/flags/4x3/sg.svg';
 import US from 'flag-icon-css/flags/4x3/us.svg';
-import { isEmpty } from 'ramda';
+import { groupBy, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+import Paper from 'src/components/core/Paper';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import Grid from 'src/components/Grid';
+import Typography from 'src/components/core/Typography';
+import Select, { GroupType } from 'src/components/EnhancedSelect/Select';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import SelectionCard from 'src/components/SelectionCard';
-import TabbedPanel from 'src/components/TabbedPanel';
-import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
-import { ContinentKey, dcContinent } from 'src/constants';
+
+import RegionOption, { RegionItem } from './RegionOption';
 
 const flags = {
   us: () => <US width="32" height="24" viewBox="0 0 720 480" />,
@@ -38,6 +38,10 @@ const flags = {
   in: () => <IN width="32" height="24" viewBox="0 0 640 480" />
 };
 
+export const selectStyles = {
+  menuList: (base: any) => ({ ...base, maxHeight: `60vh !important` })
+};
+
 export interface ExtendedRegion extends Linode.Region {
   display: string;
 }
@@ -47,7 +51,14 @@ type ClassNames = 'root';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      marginTop: theme.spacing(3)
+      marginTop: theme.spacing(3),
+      padding: theme.spacing(3),
+      '& svg': {
+        '& g': {
+          // Super hacky fix for Firefox rendering of some flag icons that had a clip-path property.
+          clipPath: 'none !important' as 'none'
+        }
+      }
     }
   });
 
@@ -60,108 +71,129 @@ interface Props {
   disabled?: boolean;
 }
 
-const getNARegions = (regions: ExtendedRegion[]) =>
-  regions.filter(r => /(us|ca)/.test(r.country));
-
-const getEURegions = (regions: ExtendedRegion[]) =>
-  regions.filter(r => /(de|uk)/.test(r.country));
-
-const getASRegions = (regions: ExtendedRegion[]) =>
-  regions.filter(r => /(jp|sg|in)/.test(r.country));
-
-const renderCard = (
-  handleSelection: Function,
-  selectedID?: string,
-  disabled?: boolean
-) => (region: ExtendedRegion, idx: number) => (
-  <SelectionCard
-    key={idx}
-    checked={region.id === String(selectedID)}
-    onClick={e => handleSelection(region.id)}
-    renderIcon={() => flags[region.country]()}
-    heading={region.country.toUpperCase()}
-    subheadings={[region.display]}
-    disabled={disabled}
-    variant="check"
-  />
-);
-
-class SelectRegionPanel extends React.Component<
-  Props & WithStyles<ClassNames>
-> {
-  createTabs = () => {
-    const { regions, disabled, selectedID, handleSelection } = this.props;
-    const tabs: Tab[] = [];
-    const na = getNARegions(regions);
-    const eu = getEURegions(regions);
-    const as = getASRegions(regions);
-
-    if (!isEmpty(na)) {
-      tabs.push({
-        title: 'North America',
-        render: () => {
-          return (
-            <Grid container spacing={2}>
-              {na.map(renderCard(handleSelection, selectedID, disabled))}
-            </Grid>
-          );
+export const getRegionOptions = (regions: ExtendedRegion[]) => {
+  const groupedRegions = groupBy<ExtendedRegion>(thisRegion => {
+    if (thisRegion.country.match(/(us|ca)/)) {
+      return 'North America';
+    }
+    if (thisRegion.country.match(/(de|uk)/)) {
+      return 'Europe';
+    }
+    if (thisRegion.country.match(/(jp|sg|in)/)) {
+      return 'Asia';
+    }
+    return 'Other';
+  }, regions);
+  return ['North America', 'Europe', 'Asia', 'Other'].reduce(
+    (accum, thisGroup) => {
+      if (
+        !groupedRegions[thisGroup] ||
+        groupedRegions[thisGroup].length === 0
+      ) {
+        return accum;
+      }
+      return [
+        ...accum,
+        {
+          label: thisGroup,
+          options: groupedRegions[thisGroup]
+            .map(thisRegion => ({
+              label: thisRegion.display,
+              value: thisRegion.id,
+              flag: pathOr(
+                () => null,
+                [thisRegion.country.toLocaleLowerCase()],
+                flags
+              ),
+              country: thisRegion.country
+            }))
+            .sort(sortRegions)
         }
-      });
-    }
+      ];
+    },
+    []
+  );
+};
 
-    if (!isEmpty(eu)) {
-      tabs.push({
-        title: 'Europe',
-        render: () => {
-          return (
-            <Grid container spacing={2}>
-              {eu.map(renderCard(handleSelection, selectedID, disabled))}
-            </Grid>
-          );
-        }
-      });
-    }
+export const getSelectedRegionById = (
+  regionID: string,
+  options: GroupType[]
+) => {
+  const regions = options.reduce(
+    (accum, thisGroup) => [...accum, ...thisGroup.options],
+    []
+  );
+  return regions.find(thisRegion => regionID === thisRegion.value);
+};
 
-    if (!isEmpty(as)) {
-      tabs.push({
-        title: 'Asia',
-        render: () => {
-          return (
-            <Grid container>
-              {as.map(renderCard(handleSelection, selectedID, disabled))}
-            </Grid>
-          );
-        }
-      });
-    }
-
-    return tabs;
-  };
-
-  render() {
-    if (this.props.regions.length === 0) {
-      return null;
-    }
-
-    // Determine initial tag selection based on which
-    // continent the selected region is in.
-    const tabOrder: ContinentKey[] = ['NA', 'EU', 'AS'];
-    const selectedContinent = dcContinent[this.props.selectedID || ''];
-    const initialTab = tabOrder.indexOf(selectedContinent || 'NA');
-
-    return (
-      <TabbedPanel
-        rootClass={this.props.classes.root}
-        error={this.props.error}
-        header="Region"
-        copy={this.props.copy}
-        tabs={this.createTabs()}
-        initTab={initialTab}
-        key={initialTab}
-      />
-    );
+const sortRegions = (region1: RegionItem, region2: RegionItem) => {
+  // By country desc so USA is on top
+  if (region1.country > region2.country) {
+    return -1;
   }
-}
+  if (region1.country < region2.country) {
+    return 1;
+  }
+  // Alphabetically by display name, which is the city
+  if (region1.label < region2.label) {
+    return -1;
+  }
+  if (region1.label > region2.label) {
+    return 1;
+  }
+  return 0;
+};
+
+const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = props => {
+  const {
+    classes,
+    copy,
+    disabled,
+    error,
+    handleSelection,
+    regions,
+    selectedID
+  } = props;
+
+  if (props.regions.length === 0) {
+    return null;
+  }
+
+  const options = getRegionOptions(regions);
+
+  return (
+    <>
+      <Paper className={classes.root}>
+        <Typography variant="h2" data-qa-tp="Region">
+          Region
+        </Typography>
+        {copy && (
+          <Typography variant="body1">
+            {copy}
+            {` `}
+            <a target="_blank" href="https://www.linode.com/speedtest">
+              Use our speedtest page
+            </a>
+            {` `}
+            to find the best region for your current location.
+          </Typography>
+        )}
+        <Select
+          isClearable={false}
+          value={getSelectedRegionById(selectedID || '', options)}
+          label="Select a region"
+          errorText={error}
+          disabled={disabled}
+          placeholder="Regions"
+          options={options}
+          onChange={(selection: RegionItem) => handleSelection(selection.value)}
+          components={{ Option: RegionOption }}
+          styleOverrides={selectStyles}
+        />
+      </Paper>
+    </>
+  );
+};
 
 const styled = withStyles(styles);
 

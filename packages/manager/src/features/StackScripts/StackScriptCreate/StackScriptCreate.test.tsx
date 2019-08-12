@@ -12,15 +12,15 @@ describe('StackScriptCreate', () => {
     <StackScriptCreate
       {...reactRouterProps}
       classes={{
-        titleWrapper: '',
-        root: '',
         backButton: '',
         createTitle: ''
       }}
       imagesData={images}
       imagesLoading={false}
       username="someguy"
-      images={{ response: images }}
+      setDocs={jest.fn()}
+      clearDocs={jest.fn()}
+      userCannotCreateStackScripts={false}
     />
   );
   xit('should render a title that reads "Create New StackScript', () => {

@@ -7,33 +7,33 @@ The unit tests for Linode Cloud Manager are written in Typescript using the [Jes
 To run tests:
 
 ```
-yarn && lerna bootstrap --scope linode-manager && lerna run test --stream --scope linode-manager
+yarn && npx lerna bootstrap --scope linode-manager && npx lerna run test --stream --scope linode-manager
 ```
 
 Or you can run the tests in watch mode with:
 
 ```
-yarn && lerna bootstrap --scope linode-manager && lerna run test --stream --scope linode-manager -- --watch
+yarn && npx lerna bootstrap --scope linode-manager && npx lerna run test --stream --scope linode-manager -- --watch
 ```
 
 To Run a specific file or files in a directory:
 
 ```
-lerna run test --stream --scope linode-manager -- myFile.test.tsx
-lerna run test --stream --scope linode-manager -- src/some-folder
+npx lerna run test --stream --scope linode-manager -- myFile.test.tsx
+npx lerna run test --stream --scope linode-manager -- src/some-folder
 ```
 
 Jest includes pattern matching out of the box, so you can also do things like run all tests whose filename
 contains "Linode" with
 
 ```
-lerna run test --stream --scope linode-manager -- linode
+npx lerna run test --stream --scope linode-manager -- linode
 ```
 
 To run a test in debug mode, add a `debugger` breakpoint inside one of the test cases, then run
 
 ```
-lerna run test:debug --stream --scope linode-manager
+npx lerna run test:debug --stream --scope linode-manager
 ```
 
 Test execution will stop at the debugger statement, and you will be able to use Chrome's normal debugger to step through
@@ -68,34 +68,34 @@ brew cask install java
 ```
 ## Starts the local development environment
 
-yarn && lerna bootstrap --scope linode-manager && lerna run start --stream --scope linode-manager
+yarn && npx lerna bootstrap --scope linode-manager && npx lerna run start --stream --scope linode-manager
 
 ## New shell
 ## Starts selenium (Must be running to execute tests)
 
-lerna run selenium --scope linode-manager --stream
+npx lerna run selenium --scope linode-manager --stream
 
 ## New shell
 ## Executes specs matching e2e/specs/**/*.spec.js
 
-lerna run e2e --scope linode-manager --stream
+npx lerna run e2e --scope linode-manager --stream
 ```
 
 ### Command Line Arguments
 
-The `lerna run e2e` command accepts a number of helpful command line arguments that facilitate
+The `npx lerna run e2e` command accepts a number of helpful command line arguments that facilitate
 writing and running tests locally.
 
 Running an individual spec file:
 
 ```
-lerna run e2e --scope linode-manager --stream -- --file [/path/to/test.spec.js]
+npx lerna run e2e --scope linode-manager --stream -- --file [/path/to/test.spec.js]
 ```
 
 Running E2E suite in a non-default browser
 
 ```
-lerna run e2e --scope linode-manager --stream -- --browser [chrome,firefox,headlessChrome,safari]
+npx lerna run e2e --scope linode-manager --stream -- --browser [chrome,firefox,headlessChrome,safari]
 ```
 
 #### Run Suite in Docker Local Dev Environment
@@ -140,35 +140,35 @@ live in `src/components/ComponentName/ComponentName.spec.js`. The WDIO config li
 ```
 # Starts storybook
 
-lerna run storybook --scope linode-manager --stream
+npx lerna run storybook --scope linode-manager --stream
 
 ## New shell
 ## Starts selenium (Must be running to execute tests)
 
-lerna run seleniun --scope linode-manager --stream
+npx lerna run seleniun --scope linode-manager --stream
 
 ## New shell
 ## Executes specs matching src/components/**/*.spec.js
 
-lerna run storybook:e2e --scope linode-manager --stream
+npx lerna run storybook:e2e --scope linode-manager --stream
 ```
 
 #### Run a Single Test
 ```
 # Executes spec matching src/components/StoryName/StoryName.spec.js
 
-lerna run storybook:e2e --scope linode-manager --stream -- --story StoryName
+npx lerna run storybook:e2e --scope linode-manager --stream -- --story StoryName
 ```
 
 #### Run a Test in Non-Headless Chrome
 
 ```
-lerna run seleniun --scope linode-manager --stream
+npx lerna run seleniun --scope linode-manager --stream
 
 ## New Shell
 ## The --debug flag spawns a visible chrome session
 
-lerna run storybook:e2e --scope linode-manager --stream -- --debug --story StoryName
+npx lerna run storybook:e2e --scope linode-manager --stream -- --debug --story StoryName
 ```
 
 #### Run Suite in Docker Environment
@@ -200,10 +200,10 @@ The axe-core accessibility testing script has been integrated into the webdriver
 ```
 # Starts the local development environment
 
-yarn && lerna bootstrap --scope linode-manager && lerna run start --stream --scope linode-manager
+yarn && npx lerna bootstrap --scope linode-manager && npx lerna run start --stream --scope linode-manager
 
 
-lerna run axe --stream --scope linode-manager
+npx lerna run axe --stream --scope linode-manager
 ```
 
 The test results will be saved as a JSON file with Critical accessibility violations appearing at the top of the list.

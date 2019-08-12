@@ -33,18 +33,19 @@ export interface KubernetesProps {
   clustersLoading: boolean;
   clustersError: EntityError;
   lastUpdated?: number;
+  nodePoolsLoading?: boolean;
 }
 
 export interface DispatchProps {
-  requestKubernetesClusters: () => void;
+  requestKubernetesClusters: () => Promise<any>;
   requestClusterForStore: (clusterID: number) => void;
-  requestNodePools: (clusterID: number) => void;
+  requestNodePools: (clusterID: number) => Promise<any>;
   updateCluster: (
     params: UpdateClusterParams
   ) => Promise<Linode.KubernetesCluster>;
-  createNodePool: (params: CreateNodePoolParams) => void;
-  updateNodePool: (params: UpdateNodePoolParams) => void;
-  deleteNodePool: (params: DeleteNodePoolParams) => void;
+  createNodePool: (params: CreateNodePoolParams) => Promise<any>;
+  updateNodePool: (params: UpdateNodePoolParams) => Promise<any>;
+  deleteNodePool: (params: DeleteNodePoolParams) => Promise<any>;
   deleteCluster: (params: DeleteClusterParams) => Promise<any>;
   setKubernetesErrors: (newErrors: EntityError) => void;
 }
@@ -77,7 +78,8 @@ export default <TInner extends {}, TOuter extends {}>(
     clustersLoading: boolean,
     lastUpdated: number,
     clustersError: EntityError,
-    clusters: Linode.KubernetesCluster[]
+    clusters: Linode.KubernetesCluster[],
+    nodePoolsLoading: boolean
   ) => TInner
 ) =>
   connect(
@@ -93,13 +95,17 @@ export default <TInner extends {}, TOuter extends {}>(
       const clustersLoading = state.__resources.kubernetes.loading;
       const clustersError = state.__resources.kubernetes.error || {};
       const lastUpdated = state.__resources.kubernetes.lastUpdated;
+      const nodePoolsLoading =
+        state.__resources.nodePools.loading &&
+        state.__resources.nodePools.entities.length === 0;
 
       return mapKubernetesToProps(
         ownProps,
         clustersLoading,
         lastUpdated,
         clustersError,
-        clusters
+        clusters,
+        nodePoolsLoading
       );
     },
     mapDispatchToProps

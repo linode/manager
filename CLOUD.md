@@ -58,7 +58,7 @@ These are environment variables that can be used for automated testing processes
 
 Once you have a working `.env` file, you can run the following in the root of the project:
 
-`yarn && lerna bootstrap --scope linode-manager && lerna run start --stream --scope linode-manager`
+`yarn && npx lerna bootstrap --scope linode-manager && npx lerna run start --stream --scope linode-manager`
 
 alternatively, with Docker
 

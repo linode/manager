@@ -12,26 +12,30 @@ import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { searchbarResult1 } from 'src/__data__/searchResults';
 import Typography from 'src/components/core/Typography';
 
-import { SearchLanding } from './SearchLanding';
+import { CombinedProps as Props, SearchLanding } from './SearchLanding';
 import { emptyResults } from './utils';
 
 const classes = {
-  root: '',
-  title: ''
+  emptyResultWrapper: '',
+  emptyResult: '',
+  errorIcon: '',
+  headline: ''
 };
 
-const props = {
+const props: Props = {
   classes,
-  entities: emptyResults,
+  entities: [],
   entitiesLoading: false,
-  searchResults: emptyResults,
+  searchResultsByEntity: emptyResults,
+  combinedResults: [],
   search: jest.fn(),
   errors: {
     hasErrors: false,
     linodes: false,
     domains: false,
     nodebalancers: false,
-    images: false
+    images: false,
+    volumes: false
   },
   ...reactRouterProps
 };
@@ -84,14 +88,14 @@ describe.skip('Component', () => {
       '?query=two%20words',
       props
     );
-    const _component = shallow(<div {...newProps} />);
-    // const _component = shallow(<SearchLanding {...newProps} />)
+    // const _component = shallow(<div {...newProps} />);
+    const _component = shallow(<SearchLanding {...newProps} />);
     expect(_component.state()).toHaveProperty('query', 'two words');
   });
   it('should handle blank or unusual queries without crashing', () => {
     const newProps = assocPath(['location', 'search'], '?query=', props);
-    const _component = shallow(<div {...newProps} />);
-    // const _component = shallow(<SearchLanding {...newProps} />);
+    // const _component = shallow(<div {...newProps} />);
+    const _component = shallow(<SearchLanding {...newProps} />);
     expect(_component).toBeDefined();
     expect(_component.state()).toHaveProperty('query', '');
   });

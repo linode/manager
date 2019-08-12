@@ -13,6 +13,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
+import TableRowLoading from 'src/components/TableRowLoading';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { PoolNodeWithPrice } from '.././types';
 import NodePoolRow from './NodePoolRow';
@@ -39,6 +40,7 @@ const styles = (theme: Theme) =>
 interface Props {
   pools: PoolNodeWithPrice[];
   types: ExtendedType[];
+  loading: boolean;
   handleDelete?: (poolIdx: number) => void;
   updatePool?: (poolIdx: number, updatedPool: PoolNodeWithPrice) => void;
   small?: boolean;
@@ -54,11 +56,13 @@ export const NodePoolDisplayTable: React.FunctionComponent<
     classes,
     editable,
     handleDelete,
+    loading,
     pools,
     small,
     types,
     updatePool
   } = props;
+
   return (
     <Table
       tableClass={classNames({
@@ -76,7 +80,9 @@ export const NodePoolDisplayTable: React.FunctionComponent<
         </TableRow>
       </TableHead>
       <TableBody>
-        {pools.length === 0 ? (
+        {loading ? (
+          <TableRowLoading colSpan={12} />
+        ) : pools.length === 0 ? (
           <TableRowEmptyState
             colSpan={12}
             message={"You haven't added any node pools yet."}

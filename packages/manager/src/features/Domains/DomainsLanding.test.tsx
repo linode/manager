@@ -1,5 +1,5 @@
+import { render } from '@testing-library/react';
 import * as React from 'react';
-import { render } from 'react-testing-library';
 import { domains } from 'src/__data__/domains';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
@@ -11,11 +11,15 @@ const props: CombinedProps = {
   domainsError: {},
   howManyLinodesOnAccount: 0,
   shouldGroupDomains: true,
-  domainActions: {
-    createDomain: jest.fn(),
-    updateDomain: jest.fn(),
-    deleteDomain: jest.fn()
-  },
+  createDomain: jest.fn(),
+  updateDomain: jest.fn(),
+  deleteDomain: jest.fn(),
+  linodesLoading: false,
+  openForCloning: jest.fn(),
+  openForCreating: jest.fn(),
+  openForEditing: jest.fn(),
+  enqueueSnackbar: jest.fn(),
+  closeSnackbar: jest.fn(),
   classes: {
     domain: '',
     dnsWarning: '',
