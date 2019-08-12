@@ -13,6 +13,8 @@ interface DataSet {
   // the data returned from /linodes/:linodeID/stats and
   // /nodebalancers/:nodebalancer/stats
   // the first number will be a UTC data and the second will be the amount per second
+  fill?: boolean;
+  backgroundColor?: string;
   data: [number, number][];
 }
 
@@ -87,7 +89,6 @@ const chartOptions: any = {
 };
 
 const lineOptions: ChartData<any> = {
-  backgroundColor: 'rgba(0, 0, 0, 0)',
   borderWidth: 1,
   borderJoinStyle: 'miter',
   lineTension: 0,
@@ -140,7 +141,9 @@ class LineGraph extends React.Component<CombinedProps, {}> {
       return {
         label: dataSet.label,
         borderColor: dataSet.borderColor,
+        backgroundColor: dataSet.backgroundColor,
         data: timeData,
+        fill: dataSet.fill,
         ...lineOptions
       };
     });
