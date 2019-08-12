@@ -26,6 +26,7 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
+      maxWidth: 600,
       '& *': {
         height: 'auto',
         border: 'none',
@@ -34,9 +35,39 @@ const styles = (theme: Theme) =>
       '& td:first-child': {
         backgroundColor: 'transparent !important'
       },
+      '& .data': {
+        minWidth: 100
+      },
+      [theme.breakpoints.down('lg')]: {
+        '& th, & td': {
+          padding: '4px !important'
+        }
+      },
       [theme.breakpoints.down('sm')]: {
+        maxWidth: '100%',
         '& td': {
-          justifyContent: 'normal'
+          justifyContent: 'normal',
+          minHeight: 'auto'
+        }
+      },
+      [theme.breakpoints.only('xs')]: {
+        '& tr:not(:first-child) td': {
+          '&:first-child': {
+            marginTop: theme.spacing(2)
+          }
+        }
+      },
+      [theme.breakpoints.only('sm')]: {
+        '& tr:not(:nth-last-child(n+3)) td:first-child': {
+          marginTop: theme.spacing(2)
+        },
+        '& tbody': {
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between'
+        },
+        '& tr': {
+          flexBasis: '45%'
         }
       }
     },
