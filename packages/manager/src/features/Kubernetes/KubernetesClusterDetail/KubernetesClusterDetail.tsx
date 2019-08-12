@@ -1,5 +1,5 @@
 import * as Bluebird from 'bluebird';
-import { contains, path, remove, update } from 'ramda';
+import { contains, equals, path, remove, update } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -195,35 +195,85 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     return null;
   }
 
+  /**
+   * These three handlers update the local pools state in the event of an error. If an update
+   * is fully successful, we'll exit editing mode, the table will show
+   * the current Redux state of the cluster, and none of this will matter.
+   *
+   * If, however, some requests fail while others succeed, we want to show
+   * error messages for actions that failed while updating the local form
+   * state for actions that succeeded (so that e.g. a pending pool that has been added no longer has the
+   * "pending pool" styles).
+   */
+  const handleError = (
+    pool: PoolNodeWithPrice,
+    error: Linode.ApiFieldError[]
+  ) => {
+    const poolIdx = pools.findIndex(thisPool => thisPool.id === pool.id);
+    updatePool(poolIdx, { ...pool, _error: error });
+    return Promise.reject(error);
+  };
+
+  const handleAddSuccess = (pool: PoolNodeWithPrice) => {
+    const poolIdx = pools.findIndex(thisPool => thisPool.id === pool.id);
+    updatePool(poolIdx, {
+      ...pool,
+      queuedForAddition: false,
+      queuedForDeletion: false
+    });
+  };
+
+  const handleDeleteSuccess = (pool: PoolNodeWithPrice) => {
+    const poolIdx = pools.findIndex(thisPool => thisPool.id === pool.id);
+    if (poolIdx) {
+      updatePools(prevPools => {
+        return remove(poolIdx, 1, prevPools);
+      });
+    }
+  };
+
   const submitForm = () => {
+    /** If the user hasn't made any input, there's nothing to submit. */
+    if (equals(pools, cluster.node_pools)) {
+      setEditing(false);
+      return;
+    }
     /** Fasten your seat belts... */
     setSubmitting(true);
     setErrors(undefined);
     setSuccess(false);
     Bluebird.map(pools, thisPool => {
       if (thisPool.queuedForAddition) {
-        // This pool doesn't exist and needs to be added.
-        return props.createNodePool({
-          clusterID: cluster.id,
-          count: thisPool.count,
-          type: thisPool.type
-        });
+        // This pool doesn't exist and needs to be created through the API.
+        return props
+          .createNodePool({
+            clusterID: cluster.id,
+            count: thisPool.count,
+            type: thisPool.type
+          })
+          .then(() => handleAddSuccess(thisPool))
+          .catch(e => handleError(thisPool, e));
       } else if (thisPool.queuedForDeletion) {
         // Marked for deletion
-        return props.deleteNodePool({
-          clusterID: cluster.id,
-          nodePoolID: thisPool.id
-        });
+        return props
+          .deleteNodePool({
+            clusterID: cluster.id,
+            nodePoolID: thisPool.id
+          })
+          .then(() => handleDeleteSuccess(thisPool))
+          .catch(e => handleError(thisPool, e));
       } else if (!contains(thisPool, cluster.node_pools)) {
         /** @todo contains() is deprecated in the next version of Ramda (0.26+). Replace with includes() if we ever upgrade. */
 
         // User has adjusted the count for this pool. Needs to be pushed through to the API.
-        return props.updateNodePool({
-          clusterID: cluster.id,
-          nodePoolID: thisPool.id,
-          count: thisPool.count,
-          type: thisPool.type
-        });
+        return props
+          .updateNodePool({
+            clusterID: cluster.id,
+            nodePoolID: thisPool.id,
+            count: thisPool.count,
+            type: thisPool.type
+          })
+          .catch(e => handleError(thisPool, e));
       } else {
         // Nothing has changed about this node, so don't make any requests.
         return;
@@ -242,7 +292,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<
           )
         );
         setSubmitting(false);
-        setEditing(false);
       });
   };
 
@@ -316,7 +365,8 @@ export const KubernetesClusterDetail: React.FunctionComponent<
         } else {
           /**
            * This is a "real" node that we don't want users to accidentally delete. Mark it for deletion
-           * (it will be handled on form submission).
+           * (it will be handled on form submission). If the user has already marked this for deletion
+           * and clicks on "Remove Delete", remove the queuedForDeletion tag.
            */
           const withMarker = {
             ...poolToDelete,

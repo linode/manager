@@ -3,7 +3,7 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
-interface Props {
+export interface Props {
   onShowConfig: (volumeLabel: string, volumePath: string) => void;
   onEdit: (volumeId: number, volumeLabel: string, volumeTags: string[]) => void;
   onResize: (volumeId: number, volumeSize: number, volumeLabel: string) => void;
@@ -32,7 +32,7 @@ interface Props {
   size: number;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
+export type CombinedProps = Props & RouteComponentProps<{}>;
 
 export class VolumesActionMenu extends React.Component<CombinedProps> {
   handleShowConfig = () => {

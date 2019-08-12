@@ -9,6 +9,12 @@ const props: CombinedProps = {
   linodeLabel: 'testLinode',
   linodeRegion: 'us-east',
   linodeType: 'g6-standard-1',
+  openDeleteDialog: jest.fn(),
+  readOnly: false,
+  typesLoading: false,
+  regionsData: [],
+  regionsLoading: false,
+  openPowerActionDialog: jest.fn(),
   linodeBackups: {
     schedule: {
       window: null,
@@ -17,8 +23,6 @@ const props: CombinedProps = {
   },
   linodeStatus: '',
   noImage: false,
-  openConfigDrawer: jest.fn(),
-  toggleConfirmation: jest.fn(),
   ...reactRouterProps
 };
 

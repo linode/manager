@@ -17,8 +17,7 @@ const props: BreadCrumbProps = {
     labelSubtitle: '',
     editableContainer: '',
     prefixComponentWrapper: '',
-    slash: '',
-    firstSlash: ''
+    slash: ''
   },
   pathname: '/linodes/9872893679817/test/lastcrumb'
 };

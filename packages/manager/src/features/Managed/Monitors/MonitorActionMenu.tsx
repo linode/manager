@@ -1,14 +1,28 @@
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
+import { compose } from 'recompose';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import withManagedServices, {
+  DispatchProps
+} from 'src/containers/managedServices.container';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
+  monitorID: number;
   status: Linode.MonitorStatus;
 }
 
-export class MonitorActionMenu extends React.Component<Props, {}> {
+export type CombinedProps = Props & DispatchProps & WithSnackbarProps;
+
+export class MonitorActionMenu extends React.Component<CombinedProps, {}> {
   createActions = () => {
-    const { status } = this.props;
+    const {
+      disableServiceMonitor,
+      enqueueSnackbar,
+      monitorID,
+      status
+    } = this.props;
 
     return (closeMenu: Function): Action[] => {
       const actions = [
@@ -19,7 +33,16 @@ export class MonitorActionMenu extends React.Component<Props, {}> {
             }
           : {
               title: 'Disable',
-              onClick: () => closeMenu()
+              onClick: () => {
+                disableServiceMonitor(monitorID).catch(e => {
+                  const errMessage = getAPIErrorOrDefault(
+                    e,
+                    'Error disabling this service Monitor.'
+                  );
+                  enqueueSnackbar(errMessage[0].reason, { variant: 'error' });
+                });
+                closeMenu();
+              }
             }
       ];
       return actions;
@@ -31,4 +54,10 @@ export class MonitorActionMenu extends React.Component<Props, {}> {
   }
 }
 
-export default MonitorActionMenu;
+const enhanced = compose<CombinedProps, Props>(
+  // This is just a quick way to get access to managed Redux actions
+  withManagedServices(() => ({})),
+  withSnackbar
+);
+
+export default enhanced(MonitorActionMenu);

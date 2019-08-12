@@ -1,5 +1,6 @@
 import { lensPath, set, view } from 'ramda';
 import * as React from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import {
   createStyles,
@@ -53,7 +54,10 @@ interface State {
   account: Requestable<Linode.Account>;
 }
 
-type CombinedProps = SetDocsProps & PreloadedProps & WithStyles<ClassNames>;
+type CombinedProps = SetDocsProps &
+  PreloadedProps &
+  WithStyles<ClassNames> &
+  RouteComponentProps<{}>;
 
 const account = (path: string) => lensPath(['account', path]);
 
@@ -133,8 +137,11 @@ export class BillingDetail extends React.Component<CombinedProps, State> {
             Billing
           </Typography>
           <Grid container>
-            <Grid item xs={12} md={4} lg={3} className={classes.sidebar}>
-              <SummaryPanel data-qa-summary-panel />
+            <Grid item xs={12} md={3} className={classes.sidebar}>
+              <SummaryPanel
+                data-qa-summary-panel
+                history={this.props.history}
+              />
             </Grid>
             <Grid item xs={12} md={8} lg={9} className={classes.main}>
               <UpdateContactInformationPanel />

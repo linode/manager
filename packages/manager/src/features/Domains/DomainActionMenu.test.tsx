@@ -11,7 +11,7 @@ const props = {
   onClone: jest.fn(),
   onRemove: jest.fn(),
   onEdit: jest.fn(),
-  type: 'master',
+  type: 'master' as 'master' | 'slave',
   domain: '',
   id: 1234456,
   ...reactRouterProps
