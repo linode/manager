@@ -30,7 +30,7 @@ import Grid from 'src/components/Grid';
 import LandingLoading from 'src/components/LandingLoading';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
-import VATBanner from 'src/components/VATBanner';
+import TaxBanner from 'src/components/TaxBanner';
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
@@ -408,6 +408,7 @@ export class App extends React.Component<CombinedProps, State> {
           setFlagsLoaded={this.setFlagsLoaded}
           accountError={accountError}
           accountCountry={accountData ? accountData.country : undefined}
+          taxID={accountData ? accountData.tax_id : undefined}
         />
         <DataLoadedListener
           markAppAsLoaded={this.props.markAppAsDoneLoading}
@@ -458,7 +459,7 @@ export class App extends React.Component<CombinedProps, State> {
               />
               {/* @todo: Uncomment when we deploy with LD */}
               <div className={classes.wrapper} id="main-content">
-                <VATBanner />
+                <TaxBanner />
                 <Grid container spacing={0} className={classes.grid}>
                   <Grid item className={classes.switchWrapper}>
                     <Switch>
