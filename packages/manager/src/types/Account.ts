@@ -48,6 +48,7 @@ namespace Linode {
   export interface ActivePromotions {
     label: string;
     description: string;
+    summary: string;
     expire_dt: string;
     credit_remaining: number;
     this_month_credit_remaining: number;

@@ -58,7 +58,7 @@ export const PromotionsPanel: React.FC<StateProps> = props => {
             key={`promotion-display-${idx}`}
             description={thisPromotion.description}
             expiry={thisPromotion.expire_dt}
-            header={'$50 credit per month for 3 months'}
+            summary={thisPromotion.summary}
           />
         ))
       )}
