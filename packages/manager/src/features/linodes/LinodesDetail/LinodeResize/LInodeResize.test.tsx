@@ -27,9 +27,14 @@ describe('LinodeResize', () => {
         root: '',
         title: '',
         subTitle: '',
-        currentPlanContainer: ''
+        currentPlanContainer: '',
+        checkbox: '',
+        resizeTitle: '',
+        toolTip: ''
       }}
       linodeId={12}
+      permissions={{} as any}
+      updateLinode={jest.fn()}
       linodeType={null}
       currentTypesData={mockTypes}
       deprecatedTypesData={mockTypes}
@@ -51,9 +56,14 @@ describe('LinodeResize', () => {
                 root: '',
                 title: '',
                 subTitle: '',
-                currentPlanContainer: ''
+                currentPlanContainer: '',
+                checkbox: '',
+                resizeTitle: '',
+                toolTip: ''
               }}
               linodeId={12}
+              permissions={{} as any}
+              updateLinode={jest.fn()}
               linodeType={null}
               currentTypesData={mockTypes}
               deprecatedTypesData={mockTypes}
@@ -82,17 +92,21 @@ describe('LinodeResize', () => {
                 <LinodeResize
                   closeSnackbar={jest.fn()}
                   enqueueSnackbar={jest.fn()}
-                  requestNotifications={jest.fn()}
                   linodeDisks={[]}
                   {...reactRouterProps}
                   classes={{
                     root: '',
                     title: '',
                     subTitle: '',
-                    currentPlanContainer: ''
+                    currentPlanContainer: '',
+                    checkbox: '',
+                    resizeTitle: '',
+                    toolTip: ''
                   }}
                   linodeId={12}
                   linodeType={null}
+                  permissions={{} as any}
+                  updateLinode={jest.fn()}
                   currentTypesData={mockTypes}
                   deprecatedTypesData={mockTypes}
                   linodeLabel=""
@@ -128,9 +142,14 @@ describe('LinodeResize', () => {
                     root: '',
                     title: '',
                     subTitle: '',
-                    currentPlanContainer: ''
+                    currentPlanContainer: '',
+                    checkbox: '',
+                    resizeTitle: '',
+                    toolTip: ''
                   }}
                   linodeId={12}
+                  permissions={{} as any}
+                  updateLinode={jest.fn()}
                   linodeType={'_something_unexpected_'}
                   currentTypesData={mockTypes}
                   deprecatedTypesData={mockTypes}

@@ -1,5 +1,6 @@
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import CircleProgress from 'src/components/CircleProgress';
@@ -18,7 +19,9 @@ interface AccountContextProps {
   accountLoading: boolean;
 }
 
-export type CombinedProps = AccountContextProps & Profile;
+interface Props extends Pick<RouteComponentProps, 'history'> {}
+
+export type CombinedProps = AccountContextProps & Profile & Props;
 
 export class SummaryPanel extends React.Component<CombinedProps, {}> {
   render() {
@@ -60,6 +63,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
           zip={data.zip}
           activeSince={data.active_since}
           isRestrictedUser={isRestricted}
+          history={this.props.history}
         />
         <BillingInfo
           balance={data.balance}
@@ -88,7 +92,7 @@ interface Profile {
   isRestricted: boolean;
 }
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, Props>(
   accountContext,
   withProfile<Profile, {}>((ownProps, profile) => ({
     username: path(['username'], profile.data),
@@ -98,4 +102,4 @@ const enhanced = compose<CombinedProps, {}>(
   }))
 );
 
-export default enhanced(SummaryPanel) as React.ComponentType<{}>;
+export default enhanced(SummaryPanel) as React.ComponentType<Props>;

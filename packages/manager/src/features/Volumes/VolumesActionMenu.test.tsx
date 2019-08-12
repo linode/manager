@@ -1,13 +1,13 @@
 import { cleanup, render } from '@testing-library/react';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
-import { VolumesActionMenu } from './VolumesActionMenu';
+import { CombinedProps as Props, VolumesActionMenu } from './VolumesActionMenu';
 
 import { includesActions, wrapWithTheme } from 'src/utilities/testHelpers';
 
 jest.mock('src/components/ActionMenu/ActionMenu');
 
-const props = {
+const props: Props = {
   onAttach: jest.fn(),
   onShowConfig: jest.fn(),
   onClone: jest.fn(),
@@ -20,11 +20,11 @@ const props = {
   attached: false,
   regionID: '',
   size: 50,
-  volumeID: 123,
   poweredOff: false,
   filesystemPath: '',
   volumeId: 12345,
   volumeTags: ['abc', 'def'],
+  volumeLabel: '',
   ...reactRouterProps
 };
 

@@ -13,7 +13,7 @@ interface Props {
   status: Linode.MonitorStatus;
 }
 
-type CombinedProps = Props & DispatchProps & WithSnackbarProps;
+export type CombinedProps = Props & DispatchProps & WithSnackbarProps;
 
 export class MonitorActionMenu extends React.Component<CombinedProps, {}> {
   createActions = () => {

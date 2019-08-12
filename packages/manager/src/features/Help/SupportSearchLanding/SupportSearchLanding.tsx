@@ -77,7 +77,7 @@ interface State {
   query: string;
 }
 
-type CombinedProps = AlgoliaProps &
+export type CombinedProps = AlgoliaProps &
   WithStyles<ClassNames> &
   RouteComponentProps<{}>;
 

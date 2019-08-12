@@ -13,5 +13,12 @@ const classes = {
   username: ''
 };
 it('renders without crashing', () => {
-  shallow(<UserMenu classes={classes} {...reactRouterProps} />);
+  shallow(
+    <UserMenu
+      classes={classes}
+      userEmail=""
+      username=""
+      {...reactRouterProps}
+    />
+  );
 });

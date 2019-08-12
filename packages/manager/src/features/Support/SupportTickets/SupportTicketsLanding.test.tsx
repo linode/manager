@@ -8,10 +8,7 @@ import {
 
 describe('Support Tickets Landing', () => {
   const component = shallow(
-    <SupportTicketsLanding
-      classes={{ root: '', title: '', titleWrapper: '' }}
-      {...reactRouterProps}
-    />
+    <SupportTicketsLanding classes={{ title: '' }} {...reactRouterProps} />
   );
 
   it('title of page should read "Customer Support"', () => {

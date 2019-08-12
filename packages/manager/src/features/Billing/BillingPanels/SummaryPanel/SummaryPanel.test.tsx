@@ -2,11 +2,13 @@ import { cleanup, render } from '@testing-library/react';
 import * as React from 'react';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
+import { history } from 'src/__data__/reactRouterProps';
 import { CombinedProps, SummaryPanel } from './SummaryPanel';
 
 describe('SummaryPanel', () => {
   const baseProps: CombinedProps = {
     accountLoading: false,
+    history,
     lastUpdated: 10,
     username: 'helloworld',
     profileError: undefined,
@@ -23,7 +25,7 @@ describe('SummaryPanel', () => {
       city: '',
       state: '',
       zip: '',
-      credit_card: { expiry: '02/2012', last_four: '1234' },
+      credit_card: { expiry: '02/2012', last_four: '1234', cvv: '123' },
       tax_id: '',
       country: '',
       balance: 0,
