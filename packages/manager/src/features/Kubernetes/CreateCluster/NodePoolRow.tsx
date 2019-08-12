@@ -64,7 +64,7 @@ const styles = (theme: Theme) =>
     },
     error: {
       border: `2px solid ${theme.color.red}`
-     },
+    },
     priceTableCell: {
       // prevents position shift as price grows/shrinks
       minWidth: 130
