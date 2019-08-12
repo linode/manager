@@ -1,10 +1,12 @@
 import {
+  createServiceMonitor as _create,
   disableServiceMonitor as _disable,
   getServices
 } from 'src/services/managed';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import {
+  createServiceMonitorActions,
   disableServiceMonitorActions,
   MonitorPayload,
   requestServicesActions
@@ -23,4 +25,9 @@ export const requestManagedServices = createRequestThunk(
 export const disableServiceMonitor = createRequestThunk(
   disableServiceMonitorActions,
   disableService
+);
+
+export const createServiceMonitor = createRequestThunk(
+  createServiceMonitorActions,
+  _create
 );

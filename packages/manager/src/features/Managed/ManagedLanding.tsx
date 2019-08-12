@@ -20,6 +20,9 @@ import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import TabLink from 'src/components/TabLink';
+import withManaged, {
+  DispatchProps
+} from 'src/containers/managedServices.container';
 import withFeatureFlagConsumer, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
@@ -47,7 +50,9 @@ const MonitorDrawer = DefaultLoader({
   loader: () => import('./MonitorDrawer')
 });
 
-export type CombinedProps = RouteComponentProps<{}> & FeatureFlagConsumerProps;
+export type CombinedProps = RouteComponentProps<{}> &
+  FeatureFlagConsumerProps &
+  DispatchProps;
 
 export type FormikProps = FormikBag<CombinedProps, ManagedServicePayload>;
 
@@ -81,10 +86,21 @@ export class ManagedLanding extends React.Component<CombinedProps, {}> {
     return Boolean(matchPath(p, { path: this.props.location.pathname }));
   };
 
-  submitMonitorForm = (values: any, { setSubmitting, setErrors, setStatus }: FormikProps) => {
+  submitMonitorForm = (
+    values: ManagedServicePayload,
+    { setSubmitting, setErrors, setStatus }: FormikProps
+  ) => {
+    const { createServiceMonitor } = this.props;
     console.log(values);
-    setSubmitting(false);
-  }
+    createServiceMonitor({ ...values, timeout: +values.timeout })
+      .then(response => {
+        setSubmitting(false);
+      })
+      .catch(error => {
+        setErrors(error);
+        setSubmitting(false);
+      });
+  };
 
   render() {
     return (
@@ -186,8 +202,9 @@ export class ManagedLanding extends React.Component<CombinedProps, {}> {
   }
 }
 
-const enhanced = compose<{}, {}>(
+const enhanced = compose<CombinedProps, {}>(
   setDocs(ManagedLanding.docs),
+  withManaged(() => ({})),
   withFeatureFlagConsumer,
   withRouter
 );

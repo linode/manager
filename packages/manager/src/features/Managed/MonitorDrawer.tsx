@@ -15,7 +15,6 @@ import {
 } from 'src/services/managed';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
   smallInput: {
     width: '12em',
     marginRight: theme.spacing(1)

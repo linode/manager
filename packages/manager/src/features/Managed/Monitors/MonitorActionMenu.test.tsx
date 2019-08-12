@@ -15,6 +15,7 @@ const props: CombinedProps = {
   closeSnackbar: jest.fn(),
   status: 'disabled',
   monitorID: 1,
+  createServiceMonitor: jest.fn(),
   requestManagedServices: jest.fn(),
   disableServiceMonitor: jest.fn(),
   ...reactRouterProps
