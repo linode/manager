@@ -1,12 +1,14 @@
 import HelpOutline from '@material-ui/icons/HelpOutline';
 import * as React from 'react';
 import IconButton from 'src/components/core/IconButton';
-import Tooltip from 'src/components/core/Tooltip';
+import Tooltip, { TooltipProps } from 'src/components/core/Tooltip';
 
-interface Props {
+interface Props
+  extends Omit<TooltipProps, 'leaveDelay' | 'title' | 'children'> {
   text: string | JSX.Element;
   className?: string;
   interactive?: boolean;
+  classes?: any;
   leaveDelay?: boolean;
   tooltipPosition?:
     | 'bottom'
@@ -26,7 +28,14 @@ interface Props {
 type CombinedProps = Props;
 
 const HelpIcon: React.StatelessComponent<CombinedProps> = props => {
-  const { text, className, tooltipPosition, interactive, leaveDelay } = props;
+  const {
+    text,
+    className,
+    tooltipPosition,
+    interactive,
+    leaveDelay,
+    classes
+  } = props;
 
   return (
     <React.Fragment>
@@ -38,6 +47,7 @@ const HelpIcon: React.StatelessComponent<CombinedProps> = props => {
         leaveDelay={leaveDelay ? 3000 : undefined}
         interactive={interactive && interactive}
         placement={tooltipPosition ? tooltipPosition : 'bottom'}
+        classes={classes}
       >
         <IconButton className={className} data-qa-help-button>
           <HelpOutline />
