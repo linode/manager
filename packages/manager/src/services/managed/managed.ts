@@ -14,7 +14,7 @@ export interface ManagedServicePayload {
   notes?: string;
   body?: string;
   consultation_group?: string;
-  credentials?: any[]; // @todo type  
+  credentials?: number[]; 
 }
 
 /**
