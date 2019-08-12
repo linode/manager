@@ -4,6 +4,43 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.67.0] - 2019-08-12
+
+### Added:
+- Ability to close account from Cloud Manager
+- Managed SSH Access: Linode Public Key component
+- Disable Managed service monitor
+- Display list of Managed service monitors
+- Adding tooltip display variant + styles
+- Breadcrumb enhancements
+- Tooltip for cluster command on Kubernetes detail page
+- Managed service monitor list
+- Add SupportWidget to Managed landing 
+- Adjustments to view config drawer
+- Adjustments to buttons
+- Optional CVV field when updating credit card information
+
+### Changed:
+- Region selection in create workflow
+- Improve error handling for LKE node pools
+- LKE form element UI adjustments
+- Make search link the first option in Algolia search bar
+- Add Logic to CSV Link to Prevent CSV Injections 
+- Add Mutation Time to Banner
+- Disable Add User Button for Restricted Users 
+- Select user by default after adding an SSH key using the AccessPanel
+- Add max-width to main content
+- Handling for new event types 
+- Improve link styles for PDF downloads in account
+- Enable hot reload for local development
+
+### Fixed:
+- Charts display issue
+- Issue with css transitions on theme switch
+- Firefox issue with flag icons
+- Broken error key scrolling in Get Help search bar 
+
+
 ## [v0.66.0] - 2019-07-30
 
 ### Added:
