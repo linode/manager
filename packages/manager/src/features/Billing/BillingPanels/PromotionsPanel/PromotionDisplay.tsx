@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   description: string;
-  summary: string;
+  summary?: string;
   expiry: string;
 }
 
@@ -45,9 +45,11 @@ export const PromotionDisplay: React.FC<Props> = props => {
         </Grid>
       </Grid>
       <Grid item className={classes.container}>
-        <Typography variant="subtitle2">
-          <strong>{summary}</strong>
-        </Typography>
+        {summary && (
+          <Typography variant="subtitle2">
+            <strong>{summary}</strong>
+          </Typography>
+        )}
         <Typography>{description}</Typography>
       </Grid>
       <Grid item>
