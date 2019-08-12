@@ -1237,7 +1237,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           }
         },
         head: {
-          fontSize: '.9rem'
+          fontSize: '.9rem',
+          lineHeight: 1.1
         },
         body: {
           fontSize: '.9rem'
