@@ -117,6 +117,7 @@ export class CardBase extends React.Component<CombinedProps> {
         container
         alignItems="center"
         justify="space-between"
+        wrap="nowrap"
         className={`${classes.innerGrid} innerGrid`}
       >
         {renderIcon && (
