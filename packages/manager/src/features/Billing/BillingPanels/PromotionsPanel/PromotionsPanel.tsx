@@ -20,7 +20,7 @@ interface StateProps {
   accountLoading: boolean;
   accountError?: Linode.ApiFieldError[];
   accountUpdated: number;
-  promotions: Linode.ActivePromotions[];
+  promotions: Linode.ActivePromotion[];
 }
 
 export type CombinedProps = StateProps;

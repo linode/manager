@@ -45,7 +45,7 @@ const styles = (theme: Theme) =>
 
 interface StateProps {
   accountBackups: boolean;
-  activePromotions: Linode.ActivePromotions[];
+  activePromotions: Linode.ActivePromotion[];
   linodesWithoutBackups: Linode.Linode[];
   managed: boolean;
   backupError?: Error;

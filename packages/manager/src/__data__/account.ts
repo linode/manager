@@ -1,4 +1,4 @@
-export const activePromotions: Linode.ActivePromotions[] = [
+export const activePromotions: Linode.ActivePromotion[] = [
   {
     description: 'Get $10 off your Linodes',
     expire_dt: '2019-08-20T13:52:21',
@@ -6,7 +6,8 @@ export const activePromotions: Linode.ActivePromotions[] = [
     this_month_credit_remaining: 10,
     label: 'monthly_linode_10_50',
     summary: '$50 off each month for 5 months',
-    credit_monthly_cap: 0
+    credit_monthly_cap: 0,
+    image_url: 'https://my-image.com/image'
   }
 ];
 

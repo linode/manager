@@ -24,7 +24,7 @@ namespace Linode {
     city: string;
     phone: string;
     company: string;
-    active_promotions: ActivePromotions[];
+    active_promotions: ActivePromotion[];
     // [BETA]
     // @todo: Uncomment this when it becomes generally available
     // capabilities: AccountCapability[];
@@ -45,7 +45,7 @@ namespace Linode {
     backups_enabled: boolean;
   }
 
-  export interface ActivePromotions {
+  export interface ActivePromotion {
     label: string;
     description: string;
     summary: string;
@@ -53,6 +53,7 @@ namespace Linode {
     credit_remaining: number;
     this_month_credit_remaining: number;
     credit_monthly_cap: number;
+    image_url: string;
   }
 
   interface CreditCard {
