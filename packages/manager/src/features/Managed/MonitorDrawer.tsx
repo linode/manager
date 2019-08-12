@@ -4,33 +4,30 @@ import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import {
-  makeStyles,
-  Theme,
-} from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
-import Grid from 'src/components/Grid';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { createServiceMonitorSchema, ManagedServicePayload } from 'src/services/managed';
+import {
+  createServiceMonitorSchema,
+  ManagedServicePayload
+} from 'src/services/managed';
 
-const useStyles = makeStyles((theme: Theme) =>
-  ({
-    root: {},
-    smallInput: {
-      width: '12em',
-      marginRight: theme.spacing(1)
-    },
-    actionPanel: {
-      marginTop: theme.spacing(2)
-    },
-    box: {
-      display: 'flex',
-      flexFlow: 'row nowrap',
-    }
-  }));
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {},
+  smallInput: {
+    width: '12em',
+    marginRight: theme.spacing(1)
+  },
+  actionPanel: {
+    marginTop: theme.spacing(2)
+  },
+  box: {
+    display: 'flex',
+    flexFlow: 'row nowrap'
+  }
+}));
 
 export interface Props {
   mode: 'create' | 'edit';
@@ -50,7 +47,7 @@ export const modes = {
 
 const titleMap = {
   [modes.CREATING]: 'Add a Monitor',
-  [modes.EDITING]: 'Edit a Monitor',
+  [modes.EDITING]: 'Edit a Monitor'
 };
 
 const typeOptions: Item<Linode.ServiceType>[] = [
@@ -69,27 +66,31 @@ const credentialOptions: Item<string>[] = [
     value: 'none',
     label: 'None required'
   }
-]
+];
 
-const getValueFromItem = (value: string, options: Item<Linode.ServiceType>[]) => {
+const getValueFromItem = (
+  value: string,
+  options: Item<Linode.ServiceType>[]
+) => {
   return options.find(thisOption => thisOption.value === value);
-}
+};
 
-const MonitorDrawer: React.FC<CombinedProps> = (props) => {
+const MonitorDrawer: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const {
-    mode,
-    open,
-    onClose,
-    onSubmit,
-    successMsg,
-  } = props;
+  const { mode, open, onClose, onSubmit } = props;
 
   return (
     <Drawer title={titleMap[mode]} open={open} onClose={onClose}>
       <Formik
-        initialValues={{ label: '', consultation_group: '', service_type: 'url', address: '', body: '', timeout: 10 }}
+        initialValues={{
+          label: '',
+          consultation_group: '',
+          service_type: 'url',
+          address: '',
+          body: '',
+          timeout: 10
+        }}
         validationSchema={createServiceMonitorSchema}
         validateOnChange={false}
         validateOnBlur={false}
@@ -132,39 +133,40 @@ const MonitorDrawer: React.FC<CombinedProps> = (props) => {
                 onBlur={handleBlur}
               />
               <div className={classes.box}>
-                  <Select
-                    className={classes.smallInput}
-                    name="service_type"
-                    label="Monitor Type"
-                    isClearable={false}
-                    data-qa-add-label
-                    options={typeOptions}
-                    value={getValueFromItem(values.service_type, typeOptions)}
-                    errorText={errors.service_type}
-                    onChange={(item: Item<Linode.ServiceType>) => setFieldValue('service_type', item.value)}
-                    onBlur={handleBlur}
-                  />
-                  <TextField
-                    className={classes.smallInput}
-                    name="timeout"
-                    label="Response Timeout (Seconds)"
-                    data-qa-add-label
-                    value={values.timeout}
-                    error={!!errors.timeout}
-                    errorText={errors.timeout}
-                    onChange={handleChange}
-                    onBlur={handleBlur}
-                  />
+                <Select
+                  className={classes.smallInput}
+                  name="service_type"
+                  label="Monitor Type"
+                  isClearable={false}
+                  data-qa-add-label
+                  options={typeOptions}
+                  value={getValueFromItem(values.service_type, typeOptions)}
+                  errorText={errors.service_type}
+                  onChange={(item: Item<Linode.ServiceType>) =>
+                    setFieldValue('service_type', item.value)
+                  }
+                  onBlur={handleBlur}
+                />
+                <TextField
+                  className={classes.smallInput}
+                  name="timeout"
+                  label="Response Timeout (Seconds)"
+                  data-qa-add-label
+                  value={values.timeout}
+                  error={!!errors.timeout}
+                  errorText={errors.timeout}
+                  onChange={handleChange}
+                  onBlur={handleBlur}
+                />
               </div>
-              
-              
+
               <TextField
                 name="address"
                 label="URL"
                 data-qa-add-label
                 value={values.address}
                 error={!!errors.address}
-                errorText={errors.address} 
+                errorText={errors.address}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -195,9 +197,11 @@ const MonitorDrawer: React.FC<CombinedProps> = (props) => {
                 label="Credentials"
                 data-qa-add-label
                 options={credentialOptions}
-                value={'none'}
+                value={credentialOptions[0]}
                 errorText={errors.credentials}
-                onChange={(item: Item<Linode.ServiceType>) => setFieldValue('credentials', item.value)}
+                onChange={(item: Item<Linode.ServiceType>) =>
+                  setFieldValue('credentials', item.value)
+                }
                 onBlur={handleBlur}
               />
               <ActionsPanel>
@@ -224,8 +228,6 @@ const MonitorDrawer: React.FC<CombinedProps> = (props) => {
       </Formik>
     </Drawer>
   );
-}
+};
 
-export default compose<CombinedProps, Props>(
-  withRouter,
-)(MonitorDrawer);
+export default compose<CombinedProps, Props>(withRouter)(MonitorDrawer);
