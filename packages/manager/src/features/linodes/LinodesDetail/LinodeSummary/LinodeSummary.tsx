@@ -348,7 +348,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             showToday={rangeSelection === '24'}
             data={[
               {
-                borderColor: '#428ade',
+                borderColor: 'rgba(54, 131, 220, 1)',
+                backgroundColor: 'rgba(54, 131, 220, .5)',
                 data,
                 label: 'CPU %'
               }
@@ -424,22 +425,26 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             showToday={rangeSelection === '24'}
             data={[
               {
-                borderColor: '#3683dc',
+                borderColor: 'rgba(54, 131, 220, 1)',
+                backgroundColor: 'rgba(54, 131, 220, .5)',
                 data: v4Data.publicIn,
                 label: 'Public Traffic In'
               },
               {
-                borderColor: '#01b159',
+                borderColor: 'rgba(1, 177, 89, 1)',
+                backgroundColor: 'rgba(1, 177, 89, .5)',
                 data: v4Data.publicOut,
                 label: 'Public Traffic Out'
               },
               {
-                borderColor: '#d01e1e',
+                borderColor: 'rgba(204, 1, 153, 1)',
+                backgroundColor: 'rgba(204, 1, 153, .5)',
                 data: v4Data.privateIn,
                 label: 'Private Traffic In'
               },
               {
-                borderColor: '#ffd100',
+                borderColor: 'rgba(255, 209, 0, 1)',
+                backgroundColor: 'rgba(255, 209, 0, .5)',
                 data: v4Data.privateOut,
                 label: 'Private Traffic Out'
               }
@@ -459,7 +464,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                   },
                   {
                     legendTitle: 'Private Inbound',
-                    legendColor: 'red',
+                    legendColor: 'purple',
                     data: getMetrics(v4Data.privateIn),
                     format
                   }
@@ -534,22 +539,26 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             showToday={rangeSelection === '24'}
             data={[
               {
-                borderColor: '#3683dc',
+                borderColor: 'rgba(54, 131, 220, 1)',
+                backgroundColor: 'rgba(54, 131, 220, .5)',
                 data: data.publicIn,
                 label: 'Public Traffic In'
               },
               {
-                borderColor: '#01b159',
+                borderColor: 'rgba(1, 177, 89, 1)',
+                backgroundColor: 'rgba(1, 177, 89, .5)',
                 data: data.publicOut,
                 label: 'Public Traffic Out'
               },
               {
-                borderColor: '#d01e1e',
+                borderColor: 'rgba(204, 1, 153, 1)',
+                backgroundColor: 'rgba(204, 1, 153, .5)',
                 data: data.privateIn,
                 label: 'Private Traffic In'
               },
               {
-                borderColor: '#ffd100',
+                borderColor: 'rgba(255, 209, 0, 1)',
+                backgroundColor: 'rgba(255, 209, 0, .5)',
                 data: data.privateOut,
                 label: 'Private Traffic Out'
               }
@@ -569,7 +578,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                   },
                   {
                     legendTitle: 'Private Inbound',
-                    legendColor: 'red',
+                    legendColor: 'purple',
                     data: getMetrics(data.privateIn),
                     format
                   }
@@ -632,12 +641,14 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             showToday={rangeSelection === '24'}
             data={[
               {
-                borderColor: '#ffd100',
+                borderColor: 'rgba(255, 209, 0, 1)',
+                backgroundColor: 'rgba(255, 209, 0, .5)',
                 data: data.io,
                 label: 'Disk I/O'
               },
               {
-                borderColor: '#d01e1e',
+                borderColor: 'rgba(204, 1, 153, 1)',
+                backgroundColor: 'rgba(204, 1, 153, .5)',
                 data: data.swap,
                 label: 'Swap I/O'
               }
@@ -663,7 +674,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                 rows={[
                   {
                     legendTitle: 'Swap Rate',
-                    legendColor: 'red',
+                    legendColor: 'purple',
                     data: getMetrics(data.swap),
                     format
                   }
