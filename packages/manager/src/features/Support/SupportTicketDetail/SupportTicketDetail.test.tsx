@@ -1,14 +1,12 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
-import { SupportTicketDetail } from './SupportTicketDetail';
+import { ClassNames, SupportTicketDetail } from './SupportTicketDetail';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { supportTicket } from 'src/__data__/supportTicket';
 
-const classes = {
-  root: '',
+const classes: Record<ClassNames, string> = {
   title: '',
-  titleWrapper: '',
   backButton: '',
   listParent: '',
   label: '',
@@ -17,10 +15,7 @@ const classes = {
   open: '',
   ticketLabel: '',
   closed: '',
-  attachmentPaperWrapper: '',
-  attachmentPaper: '',
-  attachmentRow: '',
-  attachmentIcon: ''
+  breadcrumbs: ''
 };
 
 describe('Support Ticket Detail', () => {

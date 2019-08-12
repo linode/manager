@@ -1,5 +1,5 @@
+import { cleanup, fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
-import { cleanup, fireEvent, render } from 'react-testing-library';
 
 import { extendedTypes } from 'src/__data__/ExtendedType';
 import { nodePoolRequests } from 'src/__data__/nodePools';
@@ -11,6 +11,7 @@ const props = {
   types: extendedTypes,
   pools: nodePoolRequests,
   editable: true,
+  loading: false,
   handleDelete: jest.fn(),
   handleChange: jest.fn(),
   updatePool: jest.fn()

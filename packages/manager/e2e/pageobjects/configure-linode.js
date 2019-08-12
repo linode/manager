@@ -110,12 +110,8 @@ class ConfigureLinode extends Page {
   get selectRegionHeader() {
     return $('[data-qa-tp="Region"]');
   }
-  get regionTabs() {
-    return $$('[data-qa-tp="Region"] [data-qa-tab]');
-  }
-  get regions() {
-    return $$('[data-qa-tp="Region"] [data-qa-selection-card]');
-  }
+
+  get regionSelect() { return $('[data-qa-enhanced-select="Regions"] input'); }
 
   get planHeader() {
     return $('[data-qa-tp="Linode Plan"]');
@@ -199,9 +195,7 @@ class ConfigureLinode extends Page {
     this.selectStackScriptPanel.waitForVisible(constants.wait.normal);
     expect(stackScriptTab.isVisible()).toBe(true);
     expect(stackScriptTab.getAttribute('aria-selected')).toBe('true');
-
-    expect(this.regionTabs.length).toBeGreaterThan(0);
-    expect(this.regions.length).toBeGreaterThan(0);
+    expect(this.regionSelect).toBeVisible();
     expect(this.selectRegionHeader.isVisible()).toBe(true);
 
     expect(this.planHeader.isVisible()).toBe(true);
@@ -252,7 +246,7 @@ class ConfigureLinode extends Page {
 
   baseDisplay() {
     expect(this.createHeader.waitForVisible(constants.wait.normal)).toBe(true);
-
+    
     expect(this.createFromDistribution.isVisible()).toBe(true);
     expect(this.createFromOneClick.isVisible()).toBe(true);
     expect(this.createFromMyImage.isVisible()).toBe(true);
@@ -261,15 +255,13 @@ class ConfigureLinode extends Page {
     this.imageTabs.forEach(tab => expect(tab.isVisible()).toBe(true));
     this.images.forEach(i => expect(i.isVisible()).toBe(true));
     expect(this.showOlderImages.isVisible()).toBe(true);
-
-    expect(this.selectRegionHeader.isVisible()).toBe(true);
-    this.regionTabs.forEach(tab => expect(tab.isVisible()).toBe(true));
-    this.regions.forEach(r => expect(r.isVisible()).toBe(true));
-
+    console.log('checking region')
+    expect(this.regionSelect.isVisible()).toBe(true);
+    console.log('checking plan options')
     expect(this.planHeader.isVisible()).toBe(true);
     this.planTabs.forEach(tab => expect(tab.isVisible()).toBe(true));
     this.plans.forEach(p => expect(p.isVisible()).toBe(true));
-
+    console.log('checking label')
     expect(this.labelHeader.isVisible()).toBe(true);
     expect(this.label.isVisible()).toBe(true);
 
@@ -284,7 +276,9 @@ class ConfigureLinode extends Page {
   // Configure a basic linode, selecting all the default options
   generic(label = `Test-Linode${new Date().getTime()}`) {
     this.images[0].click();
-    this.regions[0].click();
+    this.regionSelect.setValue('us-east');
+    browser.keys("\uE007");
+
     this.plans[0].click();
     this.label.setValue(label);
     this.password.setValue(`SomeTimeStamp${new Date().getTime()}`);
@@ -292,10 +286,8 @@ class ConfigureLinode extends Page {
 
   selectRegion(region) {
     this.generic();
-    browser.click(`[data-qa-tp="Region"] [data-qa-tab="${region}"]`);
-
-    // Select first available location in region
-    this.regions[0].click();
+    this.regionSelect.setValue(region);
+    browser.keys("\uE007");
   }
 
   selectImage(imageName) {

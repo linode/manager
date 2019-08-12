@@ -23,7 +23,11 @@ const props = {
 };
 
 const component = shallow(
-  <BackupsDashboardCard {...props} {...reactRouterProps} />
+  <BackupsDashboardCard
+    {...props}
+    {...reactRouterProps}
+    accountBackups={false}
+  />
 );
 
 describe('Backups dashboard card', () => {

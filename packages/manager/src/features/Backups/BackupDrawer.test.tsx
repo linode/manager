@@ -1,6 +1,6 @@
-import 'jest-dom/extend-expect';
+import '@testing-library/jest-dom/extend-expect';
+import { fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
-import { fireEvent, render } from 'react-testing-library';
 
 import { linode1, linode2, linode3 } from 'src/__data__/linodes';
 import * as types from 'src/__data__/types';

@@ -1,5 +1,5 @@
+import { cleanup, fireEvent } from '@testing-library/react';
 import * as React from 'react';
-import { cleanup, fireEvent } from 'react-testing-library';
 
 import { node1, node2 } from 'src/__data__/nodePools';
 import { renderWithTheme } from 'src/utilities/testHelpers';

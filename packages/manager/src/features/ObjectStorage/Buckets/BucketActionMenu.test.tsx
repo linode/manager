@@ -1,5 +1,5 @@
+import { cleanup, fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
-import { cleanup, fireEvent, render } from 'react-testing-library';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { BucketActionMenu } from './BucketActionMenu';
 

@@ -37,6 +37,10 @@ const OAuthCallbackPage = DefaultLoader({
   loader: () => import('src/layouts/OAuth')
 });
 
+const Cancel = DefaultLoader({
+  loader: () => import('src/features/CancelLanding')
+});
+
 /*
  * Initialize Analytic and Google Tag Manager
  */
@@ -83,6 +87,12 @@ const renderApp = (props: RouteProps) => (
   </React.Fragment>
 );
 
+const renderCancel = () => (
+  <LinodeThemeWrapper>
+    <Cancel />
+  </LinodeThemeWrapper>
+);
+
 const renderAuthentication = () => (
   <Switch>
     <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
@@ -90,6 +100,7 @@ const renderAuthentication = () => (
     {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
     <Route exact path="/nullauth" render={renderNullAuth} />
     <Route exact path="/logout" component={Logout} />
+    <Route exact path="/cancel" render={renderCancel} />
     <AuthenticationWrapper>
       <Switch>
         <Route path="/linodes/:linodeId/lish" render={renderLish} />
@@ -117,3 +128,7 @@ ReactDOM.render(
   </React.Fragment>,
   document.getElementById('root') as HTMLElement
 );
+
+if (module.hot && !isProduction) {
+  module.hot.accept();
+}

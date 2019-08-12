@@ -42,7 +42,7 @@ interface Props {
 export default class Paginate extends React.Component<Props, State> {
   state: State = {
     page: this.props.page || 1,
-    pageSize: storage.pageSize.get()
+    pageSize: storage.pageSize.get() || 25
   };
 
   handlePageChange = (page: number) => {
