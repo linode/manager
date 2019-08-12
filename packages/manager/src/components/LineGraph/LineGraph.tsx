@@ -13,7 +13,7 @@ interface DataSet {
   // the data returned from /linodes/:linodeID/stats and
   // /nodebalancers/:nodebalancer/stats
   // the first number will be a UTC data and the second will be the amount per second
-  fill?: boolean;
+  fill?: boolean | string;
   backgroundColor?: string;
   data: [number, number][];
 }
