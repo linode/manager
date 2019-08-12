@@ -1,7 +1,13 @@
 // These flags should correspond with active features flags in LD
 
-interface VATBanner {
+export interface Link {
   link: string;
+  text_to_replace: string;
+  type: 'internal' | 'external';
+}
+
+interface VATBanner {
+  links: Record<string, Link>;
   preference_key: string;
   text: string;
 }
