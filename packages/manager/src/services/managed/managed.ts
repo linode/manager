@@ -1,9 +1,13 @@
 import { API_ROOT } from 'src/constants';
-import Request, { setMethod, setParams, setURL, setXFilter } from '../index';
+import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
 
 // Payload types
 
 type Page<T> = Linode.ResourcePage<T>;
+
+export interface ManagedServicePayload {
+  label: string;
+}
 
 /**
  * getServices
@@ -33,4 +37,16 @@ export const disableServiceMonitor = (
     setParams(params),
     setXFilter(filters),
     setURL(`${API_ROOT}/managed/services/${serviceID}/disable`)
+  ).then(response => response.data);
+
+/**
+ * createServiceMonitor
+ *
+ * Creates a Managed Service Monitor
+ */
+export const createServiceMonitor = (data: ManagedServicePayload) =>
+  Request<Linode.ManagedServiceMonitor>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/managed/services`),
+    setData(data)
   ).then(response => response.data);

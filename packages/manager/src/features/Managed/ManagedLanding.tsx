@@ -1,3 +1,4 @@
+import { FormikBag } from 'formik';
 import * as React from 'react';
 import {
   matchPath,
@@ -36,11 +37,18 @@ const SSHAccess = DefaultLoader({
 const Credentials = DefaultLoader({
   loader: () => import('./Credentials')
 });
+
 const Contacts = DefaultLoader({
   loader: () => import('./Contacts')
 });
 
+const MonitorDrawer = DefaultLoader({
+  loader: () => import('./MonitorDrawer')
+});
+
 export type CombinedProps = RouteComponentProps<{}> & FeatureFlagConsumerProps;
+
+export type FormikProps = FormikBag<any, any>;
 
 export class ManagedLanding extends React.Component<CombinedProps, {}> {
   static docs: Linode.Doc[] = [
@@ -71,6 +79,11 @@ export class ManagedLanding extends React.Component<CombinedProps, {}> {
   matches = (p: string) => {
     return Boolean(matchPath(p, { path: this.props.location.pathname }));
   };
+
+  submitMonitorForm = (values: any, { setSubmitting, setErrors, setStatus }: FormikProps) => {
+    console.log(values);
+    setSubmitting(false);
+  }
 
   render() {
     return (
@@ -159,6 +172,12 @@ export class ManagedLanding extends React.Component<CombinedProps, {}> {
               />
               <Redirect to={`${this.props.match.path}/monitors`} />
             </Switch>
+            <MonitorDrawer
+              open={true}
+              onClose={() => null}
+              onSubmit={this.submitMonitorForm}
+              mode="create"
+            />
           </React.Fragment>
         )}
       </React.Fragment>
