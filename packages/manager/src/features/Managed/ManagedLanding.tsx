@@ -23,6 +23,7 @@ import TabLink from 'src/components/TabLink';
 import withFeatureFlagConsumer, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
+import { ManagedServicePayload } from 'src/services/managed';
 import ManagedPlaceholder from './ManagedPlaceholder';
 import SupportWidget from './SupportWidget';
 
@@ -48,7 +49,7 @@ const MonitorDrawer = DefaultLoader({
 
 export type CombinedProps = RouteComponentProps<{}> & FeatureFlagConsumerProps;
 
-export type FormikProps = FormikBag<any, any>;
+export type FormikProps = FormikBag<CombinedProps, ManagedServicePayload>;
 
 export class ManagedLanding extends React.Component<CombinedProps, {}> {
   static docs: Linode.Doc[] = [

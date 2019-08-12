@@ -1,5 +1,6 @@
 import { API_ROOT } from 'src/constants';
 import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../index';
+import { createServiceMonitorSchema } from './managed.schema';
 
 // Payload types
 
@@ -7,6 +8,13 @@ type Page<T> = Linode.ResourcePage<T>;
 
 export interface ManagedServicePayload {
   label: string;
+  service_type: Linode.ServiceType;
+  address: string;
+  timeout: number;
+  notes?: string;
+  body?: string;
+  consultation_group?: string;
+  credentials?: any[]; // @todo type  
 }
 
 /**
@@ -48,5 +56,5 @@ export const createServiceMonitor = (data: ManagedServicePayload) =>
   Request<Linode.ManagedServiceMonitor>(
     setMethod('POST'),
     setURL(`${API_ROOT}/managed/services`),
-    setData(data)
+    setData(data, createServiceMonitorSchema)
   ).then(response => response.data);

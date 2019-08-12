@@ -60,8 +60,6 @@ const MonitorDrawer: React.FC<CombinedProps> = (props) => {
     successMsg,
   } = props;
 
-  
-
   return (
     <Drawer title={titleMap[mode]} open={open} onClose={onClose}>
       <Formik
