@@ -155,6 +155,18 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
           ...readOnlyProps
         },
         {
+          title: 'Migrate',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            sendLinodeActionMenuItemEvent('Migrate');
+            push({
+              pathname: `/linodes/${linodeId}/migrate`
+            });
+            e.preventDefault();
+            e.stopPropagation();
+          },
+          ...readOnlyProps
+        },
+        {
           title: 'Resize',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
             sendLinodeActionMenuItemEvent('Navigate to Resize Page');
