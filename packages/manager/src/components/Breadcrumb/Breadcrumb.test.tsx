@@ -5,20 +5,6 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { Breadcrumb, CombinedProps as BreadCrumbProps } from './Breadcrumb';
 
 const props: BreadCrumbProps = {
-  classes: {
-    root: '',
-    preContainer: '',
-    crumbsWrapper: '',
-    crumb: '',
-    noCap: '',
-    crumbLink: '',
-    labelWrapper: '',
-    labelText: '',
-    labelSubtitle: '',
-    editableContainer: '',
-    prefixComponentWrapper: '',
-    slash: ''
-  },
   pathname: '/linodes/9872893679817/test/lastcrumb'
 };
 
