@@ -95,12 +95,7 @@ const styles = (theme: Theme) =>
       color: '#777',
       backgroundColor: theme.bg.offWhiteDT,
       border: `1px solid ${theme.color.border3}`,
-      fontSize: 14,
-      [theme.breakpoints.down('md')]: {
-        '& > div': {
-          marginBottom: theme.spacing(2)
-        }
-      }
+      fontSize: 14
     },
     graphTitle: {},
     graphSelectTitle: {
@@ -358,7 +353,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         </div>
         <div className={classes.bottomLegend}>
           <Grid container>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12}>
               <MetricsDisplay
                 rows={[
                   {
@@ -453,7 +448,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         </div>
         <div className={classes.bottomLegend}>
           <Grid container>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12}>
               <MetricsDisplay
                 rows={[
                   {
@@ -467,13 +462,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                     legendColor: 'purple',
                     data: getMetrics(v4Data.privateIn),
                     format
-                  }
-                ]}
-              />
-            </Grid>
-            <Grid item xs={12} lg={6}>
-              <MetricsDisplay
-                rows={[
+                  },
                   {
                     legendTitle: 'Public Outbound',
                     legendColor: 'green',
@@ -567,7 +556,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         </div>
         <div className={classes.bottomLegend}>
           <Grid container>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12}>
               <MetricsDisplay
                 rows={[
                   {
@@ -581,13 +570,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                     legendColor: 'purple',
                     data: getMetrics(data.privateIn),
                     format
-                  }
-                ]}
-              />
-            </Grid>
-            <Grid item xs={12} lg={6}>
-              <MetricsDisplay
-                rows={[
+                  },
                   {
                     legendTitle: 'Public Outbound',
                     legendColor: 'green',
@@ -657,7 +640,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         </div>
         <div className={classes.bottomLegend}>
           <Grid container>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12}>
               <MetricsDisplay
                 rows={[
                   {
@@ -665,13 +648,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                     legendColor: 'yellow',
                     data: getMetrics(data.io),
                     format
-                  }
-                ]}
-              />
-            </Grid>
-            <Grid item xs={12} lg={6}>
-              <MetricsDisplay
-                rows={[
+                  },
                   {
                     legendTitle: 'Swap Rate',
                     legendColor: 'purple',
@@ -849,13 +826,13 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
 }));
 
 const enhanced = compose<CombinedProps, {}>(
-  styled,
   withTypes,
   linodeContext,
   withImages((ownProps, imagesData) => ({
     ...ownProps,
     imagesData
-  }))
+  })),
+  styled
 );
 
 export default enhanced(LinodeSummary);
