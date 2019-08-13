@@ -62,7 +62,6 @@ export const BillingSection: React.FC<CombinedProps> = props => {
    */
   const value = balance || (credit && -credit) || 0;
   const isPositive = balance ? balance < 0 : credit ? credit > 0 : true;
-
   return (
     <>
       <div className={`${classes.section} ${classes.balance}`}>
@@ -78,7 +77,7 @@ export const BillingSection: React.FC<CombinedProps> = props => {
           })}
         >
           <Currency quantity={value} />
-          {showNegativeAsCredit && (balance && balance < 0) && ` (credit)`}
+          {showNegativeAsCredit && (balance && balance < 0) ? ` (credit)` : ''}
         </Typography>
       </div>
     </>

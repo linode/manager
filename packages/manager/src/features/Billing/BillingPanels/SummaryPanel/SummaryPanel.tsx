@@ -49,7 +49,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
 
     // Have to safe access since this isn't returned from production API yet
     // For now, safe to assume only one active promo will exist on an account
-    const promoCredit = path<number>(
+    const promoCredit = path<string>(
       ['active_promotions', 0, 'this_month_credit_remaining'],
       account
     );

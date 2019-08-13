@@ -23,7 +23,7 @@ interface Props {
   balance: number;
   expiry: string;
   lastFour: string;
-  promoCredit?: number;
+  promoCredit?: string;
 }
 
 type CombinedProps = Props;
@@ -33,8 +33,7 @@ const BillingInformation: React.FC<CombinedProps> = props => {
   const flags = useFlags();
 
   const { balance, balanceUninvoiced, lastFour, expiry, promoCredit } = props;
-  const credit = promoCredit || 0;
-
+  const credit = promoCredit ? +promoCredit : 0;
   return (
     <Paper className={classes.summarySection} data-qa-billing-summary>
       <Typography variant="h3" className={classes.title}>
