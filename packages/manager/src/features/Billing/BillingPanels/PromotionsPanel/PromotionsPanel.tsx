@@ -1,17 +1,14 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
-import ErrorState from 'src/components/ErrorState';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import withAccount from 'src/containers/account.container';
 import useFlags from 'src/hooks/useFlags';
 import { pluralize } from 'src/utilities/pluralize';
 import { expiresInDays } from 'src/utilities/promoUtils';
 
-import PromotionDisplay from './PromotionDisplay';
+import PanelContent from './PanelContent';
 
 const useStyles = makeStyles((theme: Theme) => ({
   promoNotice: {
@@ -52,24 +49,11 @@ export const PromotionsPanel: React.FC<StateProps> = props => {
 
   return (
     <ExpansionPanel heading={header}>
-      {accountLoading && accountUpdated === 0 ? (
-        <CircleProgress />
-      ) : accountError ? (
-        <ErrorState errorText="Unable to load your promotions and credit information." />
-      ) : promotions.length === 0 ? (
-        <Typography variant="body1">
-          You don't have any active promotions on your account.
-        </Typography>
-      ) : (
-        promotions.map((thisPromotion, idx) => (
-          <PromotionDisplay
-            key={`promotion-display-${idx}`}
-            description={thisPromotion.description}
-            expiry={thisPromotion.expire_dt}
-            summary={thisPromotion.summary}
-          />
-        ))
-      )}
+      <PanelContent
+        error={Boolean(accountError)}
+        loading={accountLoading && accountUpdated === 0}
+        promotions={promotions}
+      />
     </ExpansionPanel>
   );
 };
