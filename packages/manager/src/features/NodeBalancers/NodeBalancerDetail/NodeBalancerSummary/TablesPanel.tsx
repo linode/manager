@@ -74,12 +74,7 @@ const styles = (theme: Theme) =>
       color: '#777',
       backgroundColor: theme.bg.offWhiteDT,
       border: `1px solid ${theme.color.border3}`,
-      fontSize: 14,
-      [theme.breakpoints.down('md')]: {
-        '& > div': {
-          marginBottom: theme.spacing(2)
-        }
-      }
+      fontSize: 14
     },
     graphControls: {
       display: 'flex',
@@ -269,7 +264,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
           </div>
           <div className={classes.bottomLegend}>
             <Grid container>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <MetricsDisplay
                   rows={[
                     {
@@ -385,8 +380,8 @@ const withTimezone = connect((state: ApplicationState, ownProps) => ({
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
-  styled,
-  withTimezone
+  withTimezone,
+  styled
 );
 
 export default enhanced(TablesPanel);
