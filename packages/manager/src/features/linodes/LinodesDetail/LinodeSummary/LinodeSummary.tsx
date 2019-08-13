@@ -77,22 +77,11 @@ const styles = (theme: Theme) =>
     },
     chart: {
       position: 'relative',
-      width: 'calc(100vw - 80px)',
-      marginLeft: theme.spacing(1),
-      paddingLeft: theme.spacing(3),
-      [theme.breakpoints.up('md')]: {
-        width: 'calc(75vw - 310px)'
-      },
-      [theme.breakpoints.up('lg')]: {
-        width: 'calc(80vw - 310px)'
-      },
-      [theme.breakpoints.up('xl')]: {
-        width: 'calc(80vw - 370px)'
-      }
+      paddingLeft: theme.spacing(4)
     },
     leftLegend: {
       position: 'absolute',
-      left: -18,
+      left: -8,
       bottom: 48,
       transform: 'rotate(-90deg)',
       color: '#777',
