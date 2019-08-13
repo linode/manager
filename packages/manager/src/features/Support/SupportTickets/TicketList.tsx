@@ -1,8 +1,15 @@
 import { compose } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
+import { OrderByProps } from 'src/components/OrderBy';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
@@ -11,6 +18,7 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import TableSortCell from 'src/components/TableSortCell';
 import TicketRow from './TicketRow';
 import { getTicketsPage } from './ticketUtils';
 
@@ -19,7 +27,34 @@ interface Props extends PaginationProps<Linode.SupportTicket> {
   newTicket?: Linode.SupportTicket;
 }
 
-type CombinedProps = Props;
+type ClassNames =
+  | 'root'
+  | 'cellSubject'
+  | 'cellCreated'
+  | 'cellUpdated'
+  | 'cellUpdatedBy';
+
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    cellSubject: {
+      width: '33%',
+      minWidth: 175
+    },
+    cellCreated: {
+      width: '15%'
+    },
+    cellUpdated: {
+      width: '15%'
+    },
+    cellUpdatedBy: {
+      width: '10%'
+    }
+  });
+
+type CombinedProps = Props &
+  Omit<OrderByProps, 'data'> &
+  WithStyles<ClassNames>;
 
 export class TicketList extends React.Component<CombinedProps, {}> {
   mounted: boolean = false;
@@ -66,12 +101,22 @@ export class TicketList extends React.Component<CombinedProps, {}> {
   };
 
   renderTickets = (tickets: Linode.SupportTicket[]) =>
-    tickets.map((ticket, idx) => (
-      <TicketRow key={`ticket-row-${idx}`} ticket={ticket} />
-    ));
+    tickets.map((ticket, idx) => {
+      return <TicketRow key={`ticket-row-${idx}`} ticket={ticket} />;
+    });
 
   render() {
-    const { count, page, pageSize } = this.props;
+    const {
+      order,
+      orderBy,
+      handleOrderChange,
+      count,
+      page,
+      pageSize,
+      classes
+    } = this.props;
+
+    const isActive = (label: string) => label === orderBy;
 
     return (
       <React.Fragment>
@@ -79,25 +124,54 @@ export class TicketList extends React.Component<CombinedProps, {}> {
           <Table aria-label="List of Tickets">
             <TableHead>
               <TableRow>
-                <TableCell
+                <TableSortCell
+                  label="subject"
+                  direction={order}
+                  active={isActive('subject')}
+                  handleClick={handleOrderChange}
                   data-qa-support-subject-header
-                  style={{ minWidth: 200 }}
+                  className={classes.cellSubject}
                 >
                   Subject
-                </TableCell>
+                </TableSortCell>
                 <TableCell data-qa-support-id-header>Ticket ID</TableCell>
                 <TableCell data-qa-support-regarding-header>
                   Regarding
                 </TableCell>
-                <TableCell data-qa-support-date-header noWrap>
+                <TableSortCell
+                  label="dateCreated"
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  active={isActive('dateCreated')}
+                  data-qa-support-date-header
+                  noWrap
+                  className={classes.cellCreated}
+                >
                   Date Created
-                </TableCell>
-                <TableCell data-qa-support-updated-header noWrap>
+                </TableSortCell>
+                <TableSortCell
+                  label="lastUpdated"
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  active={isActive('lastUpdated')}
+                  data-qa-support-updated-header
+                  noWrap
+                  className={classes.cellUpdated}
+                >
                   Last Updated
-                </TableCell>
-                <TableCell data-qa-support-updated-header noWrap>
+                </TableSortCell>
+                <TableSortCell
+                  label="updatedBy"
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  active={isActive('updatedBy')}
+                  data-qa-support-updated-by-header
+                  noWrap
+                  className={classes.cellUpdatedBy}
+                >
                   Updated By
-                </TableCell>
+                </TableSortCell>
+
                 <TableCell />
               </TableRow>
             </TableHead>
@@ -118,6 +192,8 @@ export class TicketList extends React.Component<CombinedProps, {}> {
   }
 }
 
+const styled = withStyles(styles);
+
 const updatedRequest = (ownProps: Props, params: any, filters: any) => {
   return getTicketsPage(params, filters, ownProps.filterStatus).then(
     response => response
@@ -126,4 +202,7 @@ const updatedRequest = (ownProps: Props, params: any, filters: any) => {
 
 const paginated = Pagey(updatedRequest);
 
-export default compose(paginated)(TicketList);
+export default compose(
+  paginated,
+  styled
+)(TicketList);

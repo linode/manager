@@ -17,7 +17,8 @@ type ClassNames = 'root' | 'initialIcon' | 'noWrap';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      color: theme.palette.text.primary
+      color: theme.palette.text.primary,
+      minHeight: 20
     },
     initialIcon: {
       margin: '2px 4px 0 4px'
