@@ -1,7 +1,7 @@
 export const activePromotions: Linode.ActivePromotion[] = [
   {
     description: 'Get $10 off your Linodes',
-    expire_dt: '2019-08-20T13:52:21',
+    expire_dt: '2019-08-14T23:52:21',
     credit_remaining: '500.00',
     this_month_credit_remaining: '10.00',
     label: 'monthly_linode_10_50',

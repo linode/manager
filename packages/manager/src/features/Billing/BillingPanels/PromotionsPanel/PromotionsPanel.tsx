@@ -1,11 +1,14 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+import CircleProgress from 'src/components/CircleProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import ErrorState from 'src/components/ErrorState';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import withAccount from 'src/containers/account.container';
 import useFlags from 'src/hooks/useFlags';
+import { pluralize } from 'src/utilities/pluralize';
 import { expiresInDays } from 'src/utilities/promoUtils';
 
 import PromotionDisplay from './PromotionDisplay';
@@ -26,7 +29,7 @@ interface StateProps {
 export type CombinedProps = StateProps;
 
 export const PromotionsPanel: React.FC<StateProps> = props => {
-  const { promotions } = props;
+  const { accountError, accountLoading, accountUpdated, promotions } = props;
   const classes = useStyles();
   const flags = useFlags();
 
@@ -39,7 +42,8 @@ export const PromotionsPanel: React.FC<StateProps> = props => {
     <span>
       {'Promotions & Credits '}{' '}
       <em style={{ color: '#10a632' }} className={classes.promoNotice}>
-        &#8212; You have promotional credits expiring in {days} days.
+        &#8212; You have promotional credits expiring in{' '}
+        {pluralize('day', 'days', days)}.
       </em>
     </span>
   ) : (
@@ -48,7 +52,11 @@ export const PromotionsPanel: React.FC<StateProps> = props => {
 
   return (
     <ExpansionPanel heading={header}>
-      {promotions.length === 0 ? (
+      {accountLoading && accountUpdated === 0 ? (
+        <CircleProgress />
+      ) : accountError ? (
+        <ErrorState errorText="Unable to load your promotions and credit information." />
+      ) : promotions.length === 0 ? (
         <Typography variant="body1">
           You don't have any active promotions on your account.
         </Typography>

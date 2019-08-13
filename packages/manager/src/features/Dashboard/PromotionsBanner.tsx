@@ -12,6 +12,7 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
+import { pluralize } from 'src/utilities/pluralize';
 import { expiresInDays } from 'src/utilities/promoUtils';
 
 /**
@@ -73,7 +74,8 @@ export const PromotionsBanner: React.FC<CombinedProps> = props => {
       </div>
       <div>
         <Typography variant="h2">
-          You have promotional credits expiring in {days} days.
+          You have promotional credits expiring in{' '}
+          {pluralize('day', 'days', days)}.
         </Typography>
         <Typography variant="body1" className={classes.text}>
           Charges will begin to accrue on {` `}
