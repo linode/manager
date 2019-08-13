@@ -26,7 +26,9 @@ class DeleteIPActions extends React.PureComponent<CombinedProps> {
     const { handleCancel, loading } = this.props;
     return (
       <ActionsPanel>
-        <Button onClick={handleCancel}>Cancel</Button>
+        <Button onClick={handleCancel} buttonType="cancel">
+          Cancel
+        </Button>
         <Button
           buttonType="secondary"
           destructive

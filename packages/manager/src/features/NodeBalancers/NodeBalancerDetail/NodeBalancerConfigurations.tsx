@@ -1067,7 +1067,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     <ActionsPanel style={{ padding: 0 }}>
       <Button
         onClick={onClose}
-        buttonType="secondary"
+        buttonType="cancel"
         className="cancel"
         data-qa-cancel-cancel
       >
