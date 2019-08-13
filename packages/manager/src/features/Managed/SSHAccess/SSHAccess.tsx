@@ -1,11 +1,15 @@
 import * as React from 'react';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import LinodePubKey from './LinodePubKey';
+import SSHAccessTable from './SSHAccessTable';
 
 const SSHAcess: React.FC<{}> = props => {
   return (
-    <React.Fragment>
+    <>
+      <DocumentTitleSegment segment="SSH Access" />
       <LinodePubKey />
-    </React.Fragment>
+      <SSHAccessTable />
+    </>
   );
 };
 
