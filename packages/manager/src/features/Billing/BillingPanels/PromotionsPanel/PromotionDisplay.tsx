@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     flex: 1
   },
   expires: {
-    color: '#10A632'
+    color: theme.color.green
   }
 }));
 

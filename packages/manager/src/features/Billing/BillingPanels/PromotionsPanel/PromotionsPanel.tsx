@@ -12,7 +12,8 @@ import PanelContent from './PanelContent';
 
 const useStyles = makeStyles((theme: Theme) => ({
   promoNotice: {
-    fontFamily: theme.font.normal
+    fontFamily: theme.font.normal,
+    color: theme.color.green
   }
 }));
 
@@ -38,7 +39,7 @@ export const PromotionsPanel: React.FC<StateProps> = props => {
   const header = days ? (
     <span>
       {'Promotions & Credits '}{' '}
-      <em style={{ color: '#10a632' }} className={classes.promoNotice}>
+      <em className={classes.promoNotice}>
         &#8212; You have promotional credits expiring in{' '}
         {pluralize('day', 'days', days)}.
       </em>

@@ -15,7 +15,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   results: {
-    marginLeft: theme.spacing(1)
+    marginLeft: theme.spacing(1),
+    textAlign: 'right'
   },
   balance: {
     display: 'flex',
