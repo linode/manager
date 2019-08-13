@@ -15,7 +15,7 @@ install:
 before_script:
 - lerna run --stream --scope linode-manager storybook &
 script:
-- lerna run build --stream --scope linode-manager
+- lerna run build
 - lerna run --stream --scope linode-manager test -- --coverage --maxWorkers=2
 - lerna run --stream --scope linode-manager storybook:e2e 
 - 'pkill -f selenium-standalone || :'
