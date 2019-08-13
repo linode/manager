@@ -50,3 +50,16 @@ export const deleteServiceMonitor = (serviceID: number) =>
     setMethod('DELETE'),
     setURL(`${API_ROOT}/managed/services/${serviceID}`)
   ).then(response => response.data);
+
+/**
+ * getLinodeSettings
+ *
+ * Returns a paginated list of Managed Settings for your Linodes. There will be one entry per Linode on your Account.
+ */
+export const getLinodeSettings = (params?: any, filters?: any) =>
+  Request<Page<Linode.ManagedLinodeSetting>>(
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
+    setURL(`${API_ROOT}/managed/linode-settings`)
+  ).then(response => response.data);

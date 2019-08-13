@@ -18,4 +18,18 @@ namespace Linode {
   export type MonitorStatus = 'pending' | 'disabled' | 'ok' | 'problem';
 
   export type ServiceType = 'url' | 'tcp';
+
+  export interface ManagedLinodeSetting {
+    id: number;
+    label: string;
+    group: string;
+    ssh: ManagedSSHSetting;
+  }
+
+  export interface ManagedSSHSetting {
+    access: boolean;
+    user: string;
+    ip: string;
+    port: number;
+  }
 }
