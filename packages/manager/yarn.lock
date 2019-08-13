@@ -6227,6 +6227,11 @@ cosmiconfig@^5.1.0:
     js-yaml "^3.13.1"
     parse-json "^4.0.0"
 
+country-region-data@^1.4.5:
+  version "1.4.5"
+  resolved "https://registry.yarnpkg.com/country-region-data/-/country-region-data-1.4.5.tgz#a4c6638c4fab3200a43d915a6e86c03c209cd85f"
+  integrity sha512-2x5o8u7xE5Eec2+3s0fPQye+p/eDiqB2cgubmgmUVddq9rpPIKQjzebuGtlDchr6FKq0VNS02C5C3jP8AB4RKw==
+
 coveralls@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/coveralls/-/coveralls-3.0.2.tgz#f5a0bcd90ca4e64e088b710fa8dda640aea4884f"
