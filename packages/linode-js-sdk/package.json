@@ -2,27 +2,51 @@
   "name": "linode-js-sdk",
   "version": "1.0.0",
   "description": "JavaScript wrapper around the Linode APIv4",
-  "main": "index.js",
+  "main": "index.ts",
   "author": "Linode",
   "license": "MIT",
   "private": false,
   "dependencies": {
     "axios": "^0.19.0",
-    "ramda": "^0.26.1",
+    "ramda": "^0.25.0",
     "yup": "^0.27.0"
   },
   "scripts": {
-    "build": "tsc",
+    "start": "tsc --emitDeclarationOnly && babel src --out-dir lib --extensions '.ts,.tsx' --watch",
+    "build": "tsc --emitDeclarationOnly && babel src --out-dir lib --extensions '.ts,.tsx'",
+    "test": "jest --config jestconfig.json",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
-    "lint": "tslint -p tsconfig.json"
+    "lint": "tslint -p tsconfig.json",
+    "typecheck": "tsc --noEmit true"
   },
   "files": [
     "lib/**/*"
   ],
+  "moduleFileExtensions": [
+    "js",
+    "json",
+    "jsx",
+    "node",
+    "mjs"
+  ],
+  "transform": {
+    "^.+\\.mjs$": "babel-jest"
+  },
   "devDependencies": {
-    "@types/ramda": "^0.26.19",
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/plugin-transform-modules-commonjs": "^7.5.0",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-typescript": "^7.3.3",
+    "@types/jest": "^24.0.17",
+    "@types/ramda": "0.25.16",
     "@types/yup": "^0.26.22",
+    "babel-jest": "^24.8.0",
+    "jest": "^24.8.0",
     "prettier": "^1.18.2",
+    "ts-jest": "^24.0.2",
     "tslint": "^5.18.0",
     "tslint-config-prettier": "^1.18.0",
     "typescript": "^3.5.3"

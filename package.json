@@ -12,7 +12,8 @@
     }
   },
   "scripts": {
-    "up": "yarn && lerna bootstrap && lerna run start --stream --scope linode-manager -- --color",
+    "up": "yarn && lerna bootstrap && lerna run start --parallel",
+    "install:all": "yarn && lerna bootstrap",
     "clean": "rm -rf node_modules && lerna clean --yes",
     "test": "lerna run test --stream --scope linode-manager -- --color",
     "docker:e2e": "docker-compose -f integration-test.yml up --exit-code-from manager-e2e",

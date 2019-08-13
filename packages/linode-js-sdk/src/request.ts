@@ -3,6 +3,10 @@ import { compose, isEmpty, isNil, lensPath, not, omit, set, when } from 'ramda';
 import { ObjectSchema, ValidationError } from 'yup';
 import { APIError } from './types'
 
+export const baseRequest = Axios.create({
+  baseURL: 'https://api.linode.com/v4'
+})
+
 const L = {
   url: lensPath(['url']),
   method: lensPath(['method']),
@@ -109,7 +113,7 @@ const reduceRequestConfig = (...fns: Function[]): any =>
   fns.reduceRight((result, fn) => fn(result), {});
 
 /** Generator */
-export default <T>(...fns: Function[]): AxiosPromise<T> => {
+export const requestGenerator = <T>(...fns: Function[]): AxiosPromise<T> => {
   const config = reduceRequestConfig(...fns);
   if (config.validationErrors) {
     return Promise.reject(
@@ -117,7 +121,7 @@ export default <T>(...fns: Function[]): AxiosPromise<T> => {
     );
   }
 
-  return Axios(config);
+  return baseRequest(config)
 
   /*
    * If in the future, we want to hook into every single
@@ -238,8 +242,10 @@ export const CancellableRequest = <T>(
   return {
     cancel: source.cancel,
     request: () =>
-      Axios({ ...config, cancelToken: source.token }).then(
+      baseRequest({ ...config, cancelToken: source.token }).then(
         response => response.data
       )
   };
 };
+
+export default requestGenerator

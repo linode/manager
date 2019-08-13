@@ -1,11 +1,13 @@
 {
   "compilerOptions": {
-    "target": "es5",
+    "target": "esnext",
     "module": "commonjs",
     "declaration": true,
     "outDir": "./lib",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
     "strict": true
   },
   "include": ["src"],
-  "exclude": ["node_modules", "**/__tests__/*"]
+  "exclude": ["node_modules/**/*", "**/__tests__/*"]
 }
