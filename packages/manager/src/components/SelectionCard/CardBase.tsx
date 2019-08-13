@@ -51,7 +51,8 @@ const styles = (theme: Theme) =>
     heading: {
       fontFamily: theme.font.bold,
       fontSize: '1rem',
-      color: theme.color.headline
+      color: theme.color.headline,
+      wordBreak: 'break-word'
     },
     subheading: {
       fontSize: '0.875rem',
