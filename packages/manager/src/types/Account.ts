@@ -49,7 +49,7 @@ namespace Linode {
     label: string;
     description: string;
     summary: string;
-    expire_dt: string;
+    expire_dt: string | null;
     credit_remaining: string;
     this_month_credit_remaining: string;
     credit_monthly_cap: string;

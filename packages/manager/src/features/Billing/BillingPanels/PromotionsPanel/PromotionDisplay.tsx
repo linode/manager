@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   description: string;
   summary?: string;
-  expiry: string;
+  expiry: string | null;
 }
 
 export const PromotionDisplay: React.FC<Props> = props => {
@@ -54,7 +54,11 @@ export const PromotionDisplay: React.FC<Props> = props => {
       </Grid>
       <Grid item>
         <Typography className={classes.expires}>
-          <em>Expires {formatDate(expiry, { format: 'D-MMM-YYYY' })}</em>
+          {expiry ? (
+            <em>Expires {formatDate(expiry, { format: 'D-MMM-YYYY' })}</em>
+          ) : (
+            <em>Does not expire</em>
+          )}
         </Typography>
       </Grid>
     </Grid>
