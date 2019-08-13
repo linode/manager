@@ -1,0 +1,30 @@
+{
+  "name": "linode-js-sdk",
+  "version": "1.0.0",
+  "description": "JavaScript wrapper around the Linode APIv4",
+  "main": "index.js",
+  "author": "Linode",
+  "license": "MIT",
+  "private": false,
+  "dependencies": {
+    "axios": "^0.19.0",
+    "ramda": "^0.26.1",
+    "yup": "^0.27.0"
+  },
+  "scripts": {
+    "build": "tsc",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json"
+  },
+  "files": [
+    "lib/**/*"
+  ],
+  "devDependencies": {
+    "@types/ramda": "^0.26.19",
+    "@types/yup": "^0.26.22",
+    "prettier": "^1.18.2",
+    "tslint": "^5.18.0",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.5.3"
+  }
+}
