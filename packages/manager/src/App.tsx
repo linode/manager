@@ -457,7 +457,6 @@ export class App extends React.Component<CombinedProps, State> {
                 isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
                 username={this.props.username}
               />
-              {/* @todo: Uncomment when we deploy with LD */}
               <div className={classes.wrapper} id="main-content">
                 <TaxBanner location={this.props.location} />
                 <Grid container spacing={0} className={classes.grid}>
