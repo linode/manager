@@ -1,7 +1,7 @@
 import { cleanup, render } from '@testing-library/react';
 import * as React from 'react';
 import { MemoryRouter } from 'react-router-dom';
-import { generateHTMLFromString, wrapStringInLink } from './TaxBanner';
+import { generateHTMLFromString, wrapStringInLink } from './utilities';
 
 afterEach(cleanup);
 

@@ -459,7 +459,7 @@ export class App extends React.Component<CombinedProps, State> {
               />
               {/* @todo: Uncomment when we deploy with LD */}
               <div className={classes.wrapper} id="main-content">
-                <TaxBanner />
+                <TaxBanner location={this.props.location} />
                 <Grid container spacing={0} className={classes.grid}>
                   <Grid item className={classes.switchWrapper}>
                     <Switch>

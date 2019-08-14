@@ -1,22 +1,15 @@
 // These flags should correspond with active features flags in LD
 
-export interface Link {
-  link: string;
-  text_to_replace: string;
-  type: 'internal' | 'external';
-}
-
-interface VATBanner {
-  links: Record<string, Link>;
-  preference_key: string;
-  text: string;
+interface TaxBanner {
+  tax_name: string;
+  date: string;
 }
 
 interface Flags {
   managed: boolean;
   objectStorage: boolean;
   promos: boolean;
-  vatBanner: VATBanner;
+  vatBanner: TaxBanner;
 }
 
 /**
