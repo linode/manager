@@ -64,9 +64,11 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
     undefined
   );
   const [selectedLabel, setLabel] = React.useState<string>('');
+  const [isDeleting, setDeleting] = React.useState<boolean>(false);
 
   const handleOpenDialog = (id: number, label: string) => {
     setDeleteError(undefined);
+    setDeleting(false);
     setDialog(true);
     setLabel(label);
     setMonitor(id);
@@ -76,6 +78,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
     if (!selectedMonitor) {
       return;
     }
+    setDeleting(true);
     deleteServiceMonitor(selectedMonitor)
       .then(_ => {
         setDialog(false);
@@ -84,6 +87,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
         });
       })
       .catch(err => {
+        setDeleting(false);
         setDeleteError(err[0].reason);
       });
   };
@@ -182,6 +186,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
         onClose={() => setDialog(false)}
         open={dialogOpen}
         error={deleteError}
+        loading={isDeleting}
       />
     </>
   );

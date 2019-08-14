@@ -11,13 +11,14 @@ interface Props {
   onClose: () => void;
   onDelete: () => void;
   label: string;
+  loading: boolean;
 }
 
 type CombinedProps = Props;
 
 class DestructiveMonitorDialog extends React.PureComponent<CombinedProps, {}> {
   renderActions = () => {
-    const { onClose, onDelete } = this.props;
+    const { onClose, onDelete, loading } = this.props;
     return (
       <ActionsPanel style={{ padding: 0 }}>
         <Button buttonType="cancel" onClick={onClose} data-qa-cancel>
@@ -27,6 +28,7 @@ class DestructiveMonitorDialog extends React.PureComponent<CombinedProps, {}> {
           buttonType="secondary"
           destructive
           onClick={onDelete}
+          loading={loading}
           data-qa-confirm
         >
           Delete
