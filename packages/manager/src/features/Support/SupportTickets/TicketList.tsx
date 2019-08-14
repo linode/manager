@@ -131,16 +131,12 @@ export class TicketList extends React.Component<CombinedProps, {}> {
           <Table aria-label="List of Tickets">
             <TableHead>
               <TableRow>
-                <TableSortCell
-                  label="subject"
-                  direction={order}
-                  active={isActive('subject')}
-                  handleClick={handleOrderChange}
+                <TableCell
                   data-qa-support-subject-header
                   className={classes.cellSubject}
                 >
                   Subject
-                </TableSortCell>
+                </TableCell>
                 <TableCell data-qa-support-id-header>Ticket ID</TableCell>
                 <TableCell
                   data-qa-support-regarding-header
@@ -149,10 +145,10 @@ export class TicketList extends React.Component<CombinedProps, {}> {
                   Regarding
                 </TableCell>
                 <TableSortCell
-                  label="dateCreated"
+                  label="opened"
                   direction={order}
                   handleClick={handleOrderChange}
-                  active={isActive('dateCreated')}
+                  active={isActive('opened')}
                   data-qa-support-date-header
                   noWrap
                   className={classes.cellCreated}
@@ -160,27 +156,23 @@ export class TicketList extends React.Component<CombinedProps, {}> {
                   Date Created
                 </TableSortCell>
                 <TableSortCell
-                  label="lastUpdated"
+                  label="updated"
                   direction={order}
                   handleClick={handleOrderChange}
-                  active={isActive('lastUpdated')}
+                  active={isActive('updated')}
                   data-qa-support-updated-header
                   noWrap
                   className={classes.cellUpdated}
                 >
                   Last Updated
                 </TableSortCell>
-                <TableSortCell
-                  label="updatedBy"
-                  direction={order}
-                  handleClick={handleOrderChange}
-                  active={isActive('updatedBy')}
+                <TableCell
                   data-qa-support-updated-by-header
                   noWrap
                   className={classes.cellUpdatedBy}
                 >
                   Updated By
-                </TableSortCell>
+                </TableCell>
               </TableRow>
             </TableHead>
             <TableBody>{this.renderContent()}</TableBody>

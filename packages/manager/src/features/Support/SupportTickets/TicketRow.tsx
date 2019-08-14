@@ -1,17 +1,32 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import { ISO_FORMAT } from 'src/constants';
-
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import { ISO_FORMAT } from 'src/constants';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 
 interface Props {
   ticket: Linode.SupportTicket;
 }
+
+type ClassNames = 'summary';
+
+const styles = (theme: Theme) =>
+  createStyles({
+    summary: {
+      lineHeight: 1.1
+    }
+  });
+
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 const renderEntityLink = (ticket: Linode.SupportTicket) => {
   const target = getLinkTargets(ticket.entity);
@@ -31,17 +46,20 @@ const renderEntityLink = (ticket: Linode.SupportTicket) => {
   null;
 };
 
-const TicketRow: React.StatelessComponent<Props> = props => {
-  const { ticket } = props;
+const TicketRow: React.StatelessComponent<CombinedProps> = props => {
+  const { ticket, classes } = props;
   return (
     <TableRow
       data-qa-support-ticket={ticket.id}
       key={`ticket-${ticket.id}`}
       rowLink={`/support/tickets/${ticket.id}`}
+      data-testid="ticket-row"
     >
       <TableCell parentColumn="Subject" data-qa-support-subject>
         <Link to={`/support/tickets/${ticket.id}`}>
-          <Typography variant="h3">{ticket.summary}</Typography>
+          <Typography variant="h3" className={classes.summary}>
+            {ticket.summary}
+          </Typography>
         </Link>
       </TableCell>
       <TableCell parentColumn="Ticket ID" data-qa-support-id>
@@ -63,4 +81,6 @@ const TicketRow: React.StatelessComponent<Props> = props => {
   );
 };
 
-export default TicketRow;
+const styled = withStyles(styles);
+
+export default styled(TicketRow);
