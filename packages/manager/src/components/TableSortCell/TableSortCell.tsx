@@ -21,7 +21,7 @@ const styles = (theme: Theme) =>
       minHeight: 20
     },
     initialIcon: {
-      margin: '2px 4px 0 4px'
+      margin: '2px 4px 0 5px'
     },
     noWrap: {
       whiteSpace: 'nowrap'

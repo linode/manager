@@ -59,7 +59,6 @@ const TicketRow: React.StatelessComponent<Props> = props => {
       <TableCell parentColumn="Updated By" data-qa-support-updated-by>
         {ticket.updated_by}
       </TableCell>
-      <TableCell />
     </TableRow>
   );
 };
