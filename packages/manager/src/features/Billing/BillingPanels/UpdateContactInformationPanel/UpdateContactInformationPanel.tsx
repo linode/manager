@@ -23,7 +23,7 @@ import composeState from 'src/utilities/composeState';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import { Country, Region } from './countryRegionData';
+import { Country, Region } from './types';
 
 type ClassNames = 'root' | 'mainFormContainer' | 'stateZip';
 
