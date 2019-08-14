@@ -46,7 +46,7 @@ export const shouldRenderHively = (
     if (username === 'Linode') {
       return false;
     }
-    const lastUpdated = moment(updated);
+    const lastUpdated = moment(updated, 'YYYY-MM-DD HH:mm:ss');
     if (!lastUpdated.isValid()) {
       return true;
     }
