@@ -23,7 +23,7 @@ export interface ExtendedRegion extends Linode.Region {
 interface Props extends Omit<BaseSelectProps, 'onChange'> {
   regions: ExtendedRegion[];
   handleSelection: (id: string) => void;
-  selectedID?: string;
+  selectedID: string | null;
 }
 
 export const flags = {

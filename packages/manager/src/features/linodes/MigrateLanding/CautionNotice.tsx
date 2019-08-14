@@ -34,6 +34,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   linodeVolumes?: Linode.Volume[];
+  hasConfirmed: boolean;
+  setConfirmed: (value: boolean) => void;
+  error?: string;
 }
 
 type CombinedProps = Props;
@@ -82,7 +85,13 @@ const CautionNotice: React.FC<CombinedProps> = props => {
           </React.Fragment>
         )}
       </ul>
-      <Checkbox text="Accept" className={classes.checkbox} />
+      {props.error && <Notice error text={props.error} />}
+      <Checkbox
+        text="Accept"
+        className={classes.checkbox}
+        onChange={() => props.setConfirmed(!props.hasConfirmed)}
+        checked={props.hasConfirmed}
+      />
     </Notice>
   );
 };

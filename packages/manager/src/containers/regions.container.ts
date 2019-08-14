@@ -5,30 +5,39 @@ export interface DefaultProps {
   regionsData: Linode.Region[];
   regionsError?: Linode.ApiFieldError[];
   regionsLoading: boolean;
+  regionsLastUpdated: number;
 }
 
 const defaultMap: (p: InjectedProps) => DefaultProps = ({
   data,
   error,
-  loading
+  loading,
+  lastUpdated
 }) => ({
   regionsData: data,
   regionsError: error,
-  regionsLoading: loading
+  regionsLoading: loading,
+  regionsLastUpdated: lastUpdated
 });
 
 interface InjectedProps {
   data: Linode.Region[];
   error?: Linode.ApiFieldError[];
   loading: boolean;
+  lastUpdated: number;
 }
 
 const mapStateToPropsFactory = <MappedProps>(
   updater: (v: InjectedProps) => MappedProps
 ) => (state: ApplicationState): MappedProps => {
-  const { entities: data, loading, error } = state.__resources.regions;
+  const {
+    entities: data,
+    loading,
+    error,
+    lastUpdated
+  } = state.__resources.regions;
 
-  return updater({ data, loading, error });
+  return updater({ data, loading, error, lastUpdated });
 };
 
 const regionsContainer = <MappedProps>(
