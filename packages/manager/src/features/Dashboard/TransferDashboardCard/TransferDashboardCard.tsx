@@ -28,7 +28,7 @@ const styles = (theme: Theme) =>
       padding: `${theme.spacing(4)}px ${theme.spacing(3)}px`
     },
     card: {
-      marginTop: 24,
+      marginTop: -8,
       [theme.breakpoints.down('sm')]: {
         marginTop: 0
       }

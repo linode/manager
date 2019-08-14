@@ -31,7 +31,12 @@ const reducer: Reducer<State> = (state: State = defaultState, action) => {
   if (isType(action, profileRequestSuccess)) {
     const { payload } = action;
 
-    return { ...state, loading: false, data: payload, lastUpdated: Date.now() };
+    return {
+      ...state,
+      loading: false,
+      data: payload,
+      lastUpdated: Date.now()
+    };
   }
 
   if (isType(action, profileRequestFail)) {

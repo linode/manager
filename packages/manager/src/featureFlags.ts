@@ -4,6 +4,7 @@ interface Flags {
   buttonColor: string;
   objectStorage: boolean;
   vatBanner: string[];
+  promos: boolean;
 }
 
 /**

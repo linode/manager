@@ -320,7 +320,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
       />
       {linodeInTransition(linodeStatus, recentEvent) && <LinodeBusyStatus />}
       <Grid container className={classes.root}>
-        <Grid item xs={12} md={9}>
+        <Grid item xs={12} md={8} lg={9}>
           <Paper className={classes.paper}>
             <Typography
               role="header"
@@ -391,7 +391,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
             />
           </Paper>
         </Grid>
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={4} lg={3}>
           <Details
             currentLinodeId={linodeId}
             selectedConfigs={attachAssociatedDisksToConfigs(

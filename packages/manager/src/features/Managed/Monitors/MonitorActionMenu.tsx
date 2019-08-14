@@ -37,7 +37,7 @@ export class MonitorActionMenu extends React.Component<CombinedProps, {}> {
                 disableServiceMonitor(monitorID).catch(e => {
                   const errMessage = getAPIErrorOrDefault(
                     e,
-                    'Error disabling this service Monitor.'
+                    'Error disabling this Service Monitor.'
                   );
                   enqueueSnackbar(errMessage[0].reason, { variant: 'error' });
                 });
