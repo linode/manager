@@ -100,7 +100,7 @@ const enhanced = compose<CombinedProps, {}>(
       account
     })
   ),
-  withProfile<Profile, {}>((ownProps, profile) => ({
+  withProfile<Profile, Props>((ownProps, profile) => ({
     username: path(['username'], profile.data),
     profileError: path(['read'], profile.error),
     profileLoading: profile.loading,
