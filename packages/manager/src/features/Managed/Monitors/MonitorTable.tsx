@@ -66,6 +66,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
   const [selectedLabel, setLabel] = React.useState<string>('');
 
   const handleOpenDialog = (id: number, label: string) => {
+    setDeleteError(undefined);
     setDialog(true);
     setLabel(label);
     setMonitor(id);
