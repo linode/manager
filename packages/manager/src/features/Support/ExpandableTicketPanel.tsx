@@ -75,7 +75,8 @@ const styles = (theme: Theme) =>
       color: theme.color.headline
     },
     paper: {
-      padding: theme.spacing(3)
+      padding: theme.spacing(1),
+      backgroundColor: 'transparent'
     },
     avatarCol: {
       minWidth: 60
@@ -85,7 +86,7 @@ const styles = (theme: Theme) =>
       paddingRight: `${theme.spacing(4)}px !important`
     },
     isCurrentUser: {
-      backgroundColor: theme.color.grey2
+      // backgroundColor: theme.color.grey2
     },
     hivelyLink: {
       textDecoration: 'none',
@@ -303,30 +304,30 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
           justify="space-between"
           alignItems="flex-start"
         >
-          <Grid item xs={11} sm={5} md={3} className={classes.userCol}>
-            <Grid container wrap="nowrap">
-              <Grid item style={{ paddingLeft: 0 }}>
-                {renderAvatar(data.gravatarUrl)}
-              </Grid>
+          <Grid item xs={12} className={classes.userCol}>
+            <Grid container wrap="nowrap" alignItems="center">
+              <Grid item>{renderAvatar(data.gravatarUrl)}</Grid>
               <Grid item>
-                <Typography className={classes.userName}>
+                <Typography className={classes.userName} component="span">
                   {data.username}
                 </Typography>
                 {data.from_linode && (
                   <Typography variant="body1">Linode Expert</Typography>
                 )}
-                <Typography variant="body1" style={{ marginTop: 8 }}>
+                <Typography variant="body1" component="span">
+                  {' '}
+                  commented on{' '}
                   <DateTimeDisplay value={data.date} humanizeCutoff={'month'} />
                 </Typography>
+                <TicketDetailBody
+                  open={open}
+                  dangerouslySetInnerHTML={{
+                    __html: data.description
+                  }}
+                />
               </Grid>
             </Grid>
           </Grid>
-          <TicketDetailBody
-            open={open}
-            dangerouslySetInnerHTML={{
-              __html: data.description
-            }}
-          />
         </Grid>
         {shouldRenderHively(data.from_linode, data.updated, data.username) &&
           renderHively(data.username, data.ticket_id, data.reply_id)}
