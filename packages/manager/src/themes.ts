@@ -237,8 +237,7 @@ export const dark = (options: ThemeOverrides) =>
             minWidth: 100,
             '& svg': {
               width: 22,
-              height: 22,
-              animation: '$rotate 2s linear infinite'
+              height: 22
             }
           }
         }
