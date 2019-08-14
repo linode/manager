@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface UseAPIData<T> {
-  data: T[];
+  data: T;
   loading: boolean;
   lastUpdated: number;
   error?: Linode.ApiFieldError[];
@@ -15,26 +15,26 @@ interface UseAPIData<T> {
  * Hook that executes a given request function and appropriately sets
  * `data`, `loading`, `lastUpdated`, and `error`.
  *
- * Type param `T` must include a `data` property (e.g. APIResponsePage, GetAllData).
- *
  * Defaults to making the request on first render. This is controlled
  * with the `deps` argument.
  *
  * EXAMPLE USAGE:
  *
- * const { data, loading, lastUpdated, error } = useAPIData<Page<Linode.Domain.Record>>(
- *  getDomainRecords
+ * const { data, loading, lastUpdated, error } = useAPIData<Linode.Account>(
+ *  getAccountInfo
  * );
  *
  * @param request The request function to execute when `deps` change.
+ * @param defaultData Value to use for `data` before request is made.
  * @param deps The dependencies this hook relies on. Defaults to an empty array
  * (so the request will happen ONCE, after the component first renders).
  */
-export const useAPIData = <T extends { data: any }>(
+export const useAPIRequest = <T extends {}>(
   request: () => Promise<T>,
+  initialData: T,
   deps: any[] = []
 ): UseAPIData<T> => {
-  const [data, setData] = useState<T[]>([]);
+  const [data, setData] = useState<T>(initialData);
   const [error, setError] = useState<Linode.ApiFieldError[] | undefined>(
     undefined
   );
@@ -44,10 +44,10 @@ export const useAPIData = <T extends { data: any }>(
   useEffect(() => {
     setLoading(true);
     request()
-      .then(res => {
+      .then(responseData => {
         setLoading(false);
         setLastUpdated(Date.now());
-        setData(res.data);
+        setData(responseData);
       })
       .catch(err => {
         setLoading(false);

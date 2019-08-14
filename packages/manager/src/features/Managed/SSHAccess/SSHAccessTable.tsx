@@ -10,9 +10,9 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
-import { useAPIData } from 'src/hooks/useAPIData';
+import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { getLinodeSettings } from 'src/services/managed';
-import { getAll, GetAllData } from 'src/utilities/getAll';
+import { getAll } from 'src/utilities/getAll';
 import SSHAccessTableContent from './SSHAccessTableContent';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -27,15 +27,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-const request = getAll<Linode.ManagedLinodeSetting>(getLinodeSettings);
-type RequestType = GetAllData<Linode.ManagedLinodeSetting[]>;
+const request = () =>
+  getAll<Linode.ManagedLinodeSetting>(getLinodeSettings)().then(
+    res => res.data
+  );
 
 const SSHAccessTable: React.FC<{}> = () => {
   const classes = useStyles();
 
-  const { data, loading, lastUpdated, error } = useAPIData<RequestType>(
-    request
-  );
+  const { data, loading, lastUpdated, error } = useAPIRequest<
+    Linode.ManagedLinodeSetting[]
+  >(request, []);
 
   return (
     <>
