@@ -74,12 +74,7 @@ const styles = (theme: Theme) =>
       color: '#777',
       backgroundColor: theme.bg.offWhiteDT,
       border: `1px solid ${theme.color.border3}`,
-      fontSize: 14,
-      [theme.breakpoints.down('md')]: {
-        '& > div': {
-          marginBottom: theme.spacing(2)
-        }
-      }
+      fontSize: 14
     },
     graphControls: {
       display: 'flex',
@@ -260,7 +255,8 @@ class TablesPanel extends React.Component<CombinedProps, State> {
               data={[
                 {
                   label: 'Connections',
-                  borderColor: '#990066',
+                  borderColor: 'rgba(204, 1, 153, 1)',
+                  backgroundColor: 'rgba(204, 1, 153, .5)',
                   data
                 }
               ]}
@@ -268,12 +264,12 @@ class TablesPanel extends React.Component<CombinedProps, State> {
           </div>
           <div className={classes.bottomLegend}>
             <Grid container>
-              <Grid item xs={12} sm={6}>
+              <Grid item xs={12}>
                 <MetricsDisplay
                   rows={[
                     {
                       legendTitle: 'Connections',
-                      legendColor: 'blue',
+                      legendColor: 'purple',
                       data: metrics,
                       format: formatNumber
                     }
@@ -316,12 +312,14 @@ class TablesPanel extends React.Component<CombinedProps, State> {
               data={[
                 {
                   label: 'Traffic In',
-                  borderColor: '#3683dc',
+                  borderColor: 'rgba(54, 131, 220, 1)',
+                  backgroundColor: 'rgba(54, 131, 220, .5)',
                   data: trafficIn
                 },
                 {
                   label: 'Traffic Out',
-                  borderColor: '#01b159',
+                  borderColor: 'rgba(1, 177, 89, 1)',
+                  backgroundColor: 'rgba(1, 177, 89, .5)',
                   data: trafficOut
                 }
               ]}
@@ -382,8 +380,8 @@ const withTimezone = connect((state: ApplicationState, ownProps) => ({
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
-  styled,
-  withTimezone
+  withTimezone,
+  styled
 );
 
 export default enhanced(TablesPanel);
