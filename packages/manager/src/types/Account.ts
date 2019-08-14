@@ -46,7 +46,6 @@ namespace Linode {
   }
 
   export interface ActivePromotion {
-    label: string;
     description: string;
     summary: string;
     expire_dt: string | null;
