@@ -8,7 +8,7 @@
   "private": false,
   "dependencies": {
     "axios": "^0.19.0",
-    "ramda": "^0.25.0",
+    "ramda": "^0.26.1",
     "yup": "^0.27.0"
   },
   "scripts": {
@@ -22,16 +22,6 @@
   "files": [
     "lib/**/*"
   ],
-  "moduleFileExtensions": [
-    "js",
-    "json",
-    "jsx",
-    "node",
-    "mjs"
-  ],
-  "transform": {
-    "^.+\\.mjs$": "babel-jest"
-  },
   "devDependencies": {
     "@babel/cli": "^7.5.5",
     "@babel/core": "^7.5.5",
@@ -42,9 +32,8 @@
     "@babel/preset-typescript": "^7.3.3",
     "@types/jest": "^24.0.17",
     "@types/node": "^12.7.1",
-    "@types/ramda": "0.25.16",
+    "@types/ramda": "^0.26.19",
     "@types/yup": "^0.26.22",
-    "babel-jest": "^24.8.0",
     "jest": "^24.8.0",
     "prettier": "^1.18.2",
     "ts-jest": "^24.0.2",

@@ -283,6 +283,7 @@
     "moduleNameMapper": {
       "\\.svg$": "<rootDir>/src/components/NullComponent",
       "^react-native$": "react-native-web",
+      "ramda": "ramda/src/index.js",
       "^src/(.*)": "<rootDir>/src/$1"
     },
     "moduleFileExtensions": [
