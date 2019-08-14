@@ -4,7 +4,6 @@ export const activePromotions: Linode.ActivePromotion[] = [
     expire_dt: '2019-08-14T23:52:21',
     credit_remaining: '500.00',
     this_month_credit_remaining: '10.00',
-    label: 'monthly_linode_10_50',
     summary: '$50 off each month for 5 months',
     credit_monthly_cap: '50',
     image_url: 'https://my-image.com/image'
