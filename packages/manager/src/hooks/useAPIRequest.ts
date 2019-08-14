@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-interface UseAPIData<T> {
+interface UseAPIRequest<T> {
   data: T;
   loading: boolean;
   lastUpdated: number;
@@ -10,7 +10,7 @@ interface UseAPIData<T> {
 
 /**
  *
- * useAPIData()
+ * useAPIRequest()
  *
  * Hook that executes a given request function and appropriately sets
  * `data`, `loading`, `lastUpdated`, and `error`.
@@ -33,7 +33,7 @@ export const useAPIRequest = <T extends {}>(
   request: () => Promise<T>,
   initialData: T,
   deps: any[] = []
-): UseAPIData<T> => {
+): UseAPIRequest<T> => {
   const [data, setData] = useState<T>(initialData);
   const [error, setError] = useState<Linode.ApiFieldError[] | undefined>(
     undefined
