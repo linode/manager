@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface UseAPIRequest<T> {
   data: T;
@@ -69,7 +68,7 @@ export const useAPIRequest = <T>(
       })
       .catch(err => {
         setLoading(false);
-        setError(getAPIErrorOrDefault(err));
+        setError(err);
       });
   }, deps);
 
