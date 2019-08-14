@@ -91,7 +91,7 @@ interface Profile {
   isRestricted: boolean;
 }
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, Props>(
   withAccount(
     (ownProps, accountLoading, lastUpdated, accountError, account) => ({
       accountLoading,
@@ -100,7 +100,7 @@ const enhanced = compose<CombinedProps, {}>(
       account
     })
   ),
-  withProfile<Profile, Props>((ownProps, profile) => ({
+  withProfile<Profile, {}>((ownProps, profile) => ({
     username: path(['username'], profile.data),
     profileError: path(['read'], profile.error),
     profileLoading: profile.loading,
