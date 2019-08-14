@@ -234,7 +234,12 @@ const Notice: React.StatelessComponent<CombinedProps> = props => {
       <div className={classes.inner}>{c}</div>
       {dismissible && (
         <Grid item className={classes.closeIcon}>
-          <Close onClick={onClose} />
+          <Close
+            style={{
+              cursor: 'pointer'
+            }}
+            onClick={onClose}
+          />
         </Grid>
       )}
     </Grid>

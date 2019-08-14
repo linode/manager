@@ -3,7 +3,11 @@ import * as React from 'react';
 import { useLDClient } from 'src/containers/withFeatureFlagProvider.container';
 
 interface Props {
+  accountCountry?: string;
+  accountError?: Linode.ApiFieldError[];
   userID?: number;
+  username?: string;
+  taxID?: string;
   setFlagsLoaded: () => void;
 }
 
@@ -15,13 +19,38 @@ interface Props {
  */
 
 export const IdentifyUser: React.FC<Props> = props => {
-  const { setFlagsLoaded, userID } = props;
+  const {
+    setFlagsLoaded,
+    userID,
+    accountCountry,
+    accountError,
+    username,
+    taxID
+  } = props;
   const client = useLDClient();
   React.useEffect(() => {
-    if (client && userID) {
+    /**
+     * returns unknown if:
+     * 1. We have an error from the API (will happen if you're a restricted user)
+     * 2. The user has not set a country yet
+     */
+    const country = accountError
+      ? 'Unknown'
+      : accountCountry === ''
+      ? 'Unknown'
+      : accountCountry;
+
+    const _taxID = accountError ? 'Unknown' : taxID === '' ? 'Unknown' : taxID;
+
+    if (client && userID && country && username && _taxID) {
       client
         .identify({
-          key: md5(String(userID))
+          key: md5(String(userID)),
+          country,
+          custom: {
+            username,
+            taxID: _taxID
+          }
         })
         .then(() => setFlagsLoaded())
         /**
@@ -31,7 +60,7 @@ export const IdentifyUser: React.FC<Props> = props => {
 
         .catch(() => setFlagsLoaded());
     }
-  }, [client, userID]);
+  }, [client, userID, accountCountry, username, taxID]);
 
   return null;
 };
