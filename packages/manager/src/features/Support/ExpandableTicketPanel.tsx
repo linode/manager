@@ -1,13 +1,10 @@
-import * as classNames from 'classnames';
-import * as moment from 'moment';
+// import * as classNames from 'classnames';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { Converter } from 'showdown';
 import 'showdown-highlightjs-extension';
 import UserIcon from 'src/assets/icons/user.svg';
-import Divider from 'src/components/core/Divider';
-import Paper from 'src/components/core/Paper';
 import {
   createStyles,
   Theme,
@@ -19,6 +16,7 @@ import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
+import { Hively, shouldRenderHively } from './Hively';
 import TicketDetailBody from './TicketDetailText';
 
 type ClassNames =
@@ -26,9 +24,8 @@ type ClassNames =
   | 'userWrapper'
   | 'leftIcon'
   | 'userName'
-  | 'paper'
+  | 'content'
   | 'avatarCol'
-  | 'userCol'
   | 'isCurrentUser'
   | 'hivelyContainer'
   | 'hivelyLink'
@@ -48,6 +45,7 @@ const styles = (theme: Theme) =>
     root: {
       width: '100%',
       padding: theme.spacing(2),
+      marginBottom: theme.spacing(2),
       position: 'relative',
       '& p': {
         margin: 0,
@@ -69,43 +67,22 @@ const styles = (theme: Theme) =>
       borderRadius: '50%',
       color: theme.palette.text.primary
     },
+    content: {
+      width: '100%',
+      padding: theme.spacing(2),
+      backgroundColor: theme.color.white,
+      border: `1px solid ${theme.palette.divider}`
+    },
     userName: {
       whiteSpace: 'nowrap',
       fontFamily: 'LatoWebBold', // we keep this bold at all times
       color: theme.color.headline
     },
-    paper: {
-      padding: theme.spacing(1),
-      backgroundColor: 'transparent'
-    },
     avatarCol: {
       minWidth: 60
     },
-    userCol: {
-      minWidth: 200,
-      paddingRight: `${theme.spacing(4)}px !important`
-    },
     isCurrentUser: {
       // backgroundColor: theme.color.grey2
-    },
-    hivelyLink: {
-      textDecoration: 'none',
-      color: theme.color.black,
-      marginRight: theme.spacing(2)
-    },
-    hivelyImage: {
-      width: '25px',
-      margin: 3
-    },
-    hivelyContainer: {
-      display: 'flex',
-      flexFlow: 'row nowrap',
-      alignItems: 'center',
-      marginTop: theme.spacing(3)
-    },
-    hivelyLinkIcon: {
-      display: 'inline-block',
-      marginRight: theme.spacing(1)
     }
   });
 
@@ -132,36 +109,10 @@ interface Data {
   updated: string;
 }
 
-export const shouldRenderHively = (
-  fromLinode: boolean,
-  updated: string,
-  username?: string
-) => {
-  /* Render Hively only for replies marked as from_linode,
-   * and are on tickets less than 7 days old,
-   * and when the user is not "Linode"
-   * Defaults to showing Hively if there are any errors parsing dates
-   * or the date is invalid.
-   */
-  try {
-    if (username === 'Linode') {
-      return false;
-    }
-    const lastUpdated = moment(updated);
-    if (!lastUpdated.isValid()) {
-      return true;
-    }
-    const diff = moment.duration(moment().diff(lastUpdated));
-    return fromLinode && diff <= moment.duration(7, 'days');
-  } catch {
-    return true;
-  }
-};
-
 export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
   const {
     classes,
-    isCurrentUser,
+    // isCurrentUser,
     parentTicket,
     ticket,
     open,
@@ -216,60 +167,6 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
     }
   }, []);
 
-  const renderHively = (
-    linodeUsername: string,
-    ticketId: string,
-    replyId: string
-  ) => {
-    const href = `https://secure.teamhively.com/ratings/add/account/587/source/hs/ext/${linodeUsername}/ticket/${ticketId}-${replyId}/rating/`;
-    return (
-      <div className={classes.hivelyContainer}>
-        <Divider />
-        <a className={classes.hivelyLink} href={href + '3'} target="_blank">
-          How did I do?
-        </a>
-        <span>
-          <a
-            href={href + '3'}
-            target="_blank"
-            className={classes.hivelyLinkIcon}
-          >
-            <img
-              className={classes.hivelyImage}
-              src={
-                'https://secure.teamhively.com/system/smileys/icons/000/000/541/px_25/icon_positive.png'
-              }
-            />
-          </a>
-          <a
-            href={href + '2'}
-            target="_blank"
-            className={classes.hivelyLinkIcon}
-          >
-            <img
-              className={classes.hivelyImage}
-              src={
-                'https://secure.teamhively.com/system/smileys/icons/000/000/542/px_25/icon_indifferent.png'
-              }
-            />
-          </a>
-          <a
-            href={href + '1'}
-            target="_blank"
-            className={classes.hivelyLinkIcon}
-          >
-            <img
-              className={classes.hivelyImage}
-              src={
-                'https://secure.teamhively.com/system/smileys/icons/000/000/543/px_25/icon_negative.png'
-              }
-            />
-          </a>
-        </span>
-      </div>
-    );
-  };
-
   const renderAvatar = (url: string) => {
     return url !== 'not found' ? (
       <div className={classes.userWrapper}>
@@ -292,46 +189,44 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
 
   return (
     <Grid item className={classes.root}>
-      <Paper
-        className={classNames({
-          [classes.paper]: true,
-          [classes.isCurrentUser]: isCurrentUser
-        })}
+      <Grid
+        container
+        direction="row"
+        justify="space-between"
+        alignItems="flex-start"
       >
-        <Grid
-          container
-          direction="row"
-          justify="space-between"
-          alignItems="flex-start"
-        >
-          <Grid item xs={12} className={classes.userCol}>
-            <Grid container wrap="nowrap" alignItems="center">
-              <Grid item>{renderAvatar(data.gravatarUrl)}</Grid>
-              <Grid item>
-                <Typography className={classes.userName} component="span">
-                  {data.username}
-                </Typography>
-                {data.from_linode && (
-                  <Typography variant="body1">Linode Expert</Typography>
-                )}
-                <Typography variant="body1" component="span">
-                  {' '}
-                  commented on{' '}
-                  <DateTimeDisplay value={data.date} humanizeCutoff={'month'} />
-                </Typography>
-                <TicketDetailBody
-                  open={open}
-                  dangerouslySetInnerHTML={{
-                    __html: data.description
-                  }}
-                />
-              </Grid>
+        <Grid item xs={12}>
+          <Grid container wrap="nowrap" alignItems="center">
+            <Grid item>{renderAvatar(data.gravatarUrl)}</Grid>
+            <Grid item className={classes.content}>
+              <Typography className={classes.userName} component="span">
+                {data.username}
+              </Typography>
+              {data.from_linode && (
+                <Typography variant="body1">Linode Expert</Typography>
+              )}
+              <Typography variant="body1" component="span">
+                {' '}
+                commented on{' '}
+                <DateTimeDisplay value={data.date} humanizeCutoff={'month'} />
+              </Typography>
+              <TicketDetailBody
+                open={open}
+                dangerouslySetInnerHTML={{
+                  __html: data.description
+                }}
+              />
             </Grid>
           </Grid>
         </Grid>
-        {shouldRenderHively(data.from_linode, data.updated, data.username) &&
-          renderHively(data.username, data.ticket_id, data.reply_id)}
-      </Paper>
+      </Grid>
+      {shouldRenderHively(data.from_linode, data.updated, data.username) && (
+        <Hively
+          linodeUsername={data.username}
+          ticketId={data.ticket_id}
+          replyId={data.reply_id}
+        />
+      )}
     </Grid>
   );
 };
