@@ -1,4 +1,6 @@
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
+import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import Paper from 'src/components/core/Paper';
 import {
@@ -18,7 +20,11 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
+import withManagedServices, {
+  DispatchProps
+} from 'src/containers/managedServices.container';
 
+import MonitorDialog from './MonitorDialog';
 import MonitorTableContent from './MonitorTableContent';
 
 type ClassNames = 'labelHeader';
@@ -36,10 +42,56 @@ interface Props {
   error?: Linode.ApiFieldError[];
 }
 
-export type CombinedProps = Props & WithStyles<ClassNames>;
+export type CombinedProps = Props &
+  WithStyles<ClassNames> &
+  DispatchProps &
+  WithSnackbarProps;
 
 export const MonitorTable: React.FC<CombinedProps> = props => {
-  const { classes, error, loading, monitors } = props;
+  const {
+    classes,
+    deleteServiceMonitor,
+    enqueueSnackbar,
+    error,
+    loading,
+    monitors
+  } = props;
+  const [dialogOpen, setDialog] = React.useState<boolean>(false);
+  const [deleteError, setDeleteError] = React.useState<string | undefined>(
+    undefined
+  );
+  const [selectedMonitor, setMonitor] = React.useState<number | undefined>(
+    undefined
+  );
+  const [selectedLabel, setLabel] = React.useState<string>('');
+  const [isDeleting, setDeleting] = React.useState<boolean>(false);
+
+  const handleOpenDialog = (id: number, label: string) => {
+    setDeleteError(undefined);
+    setDeleting(false);
+    setDialog(true);
+    setLabel(label);
+    setMonitor(id);
+  };
+
+  const handleDelete = () => {
+    if (!selectedMonitor) {
+      return;
+    }
+    setDeleting(true);
+    deleteServiceMonitor(selectedMonitor)
+      .then(_ => {
+        setDialog(false);
+        enqueueSnackbar('Successfully deleted Service Monitor', {
+          variant: 'success'
+        });
+      })
+      .catch(err => {
+        setDeleting(false);
+        setDeleteError(err[0].reason);
+      });
+  };
+
   return (
     <>
       <DocumentTitleSegment segment="Service Monitors" />
@@ -110,6 +162,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
                         monitors={data}
                         loading={loading}
                         error={error}
+                        openDialog={handleOpenDialog}
                       />
                     </TableBody>
                   </Table>
@@ -127,9 +180,22 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
           </Paginate>
         )}
       </OrderBy>
+      <MonitorDialog
+        label={selectedLabel}
+        onDelete={handleDelete}
+        onClose={() => setDialog(false)}
+        open={dialogOpen}
+        error={deleteError}
+        loading={isDeleting}
+      />
     </>
   );
 };
 
 const styled = withStyles(styles);
-export default styled(MonitorTable);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withManagedServices(() => ({})),
+  withSnackbar
+);
+export default enhanced(MonitorTable);

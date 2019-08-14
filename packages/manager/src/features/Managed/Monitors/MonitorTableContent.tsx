@@ -8,13 +8,14 @@ import MonitorRow from './MonitorRow';
 interface Props {
   monitors: Linode.ManagedServiceMonitor[];
   loading: boolean;
+  openDialog: (id: number, label: string) => void;
   error?: Linode.ApiFieldError[];
 }
 
 export type CombinedProps = Props;
 
 export const MonitorTableContent: React.FC<CombinedProps> = props => {
-  const { error, loading, monitors } = props;
+  const { error, loading, monitors, openDialog } = props;
   if (loading) {
     return <TableRowLoading colSpan={12} />;
   }
@@ -35,7 +36,11 @@ export const MonitorTableContent: React.FC<CombinedProps> = props => {
   return (
     <>
       {monitors.map((monitor: Linode.ManagedServiceMonitor, idx: number) => (
-        <MonitorRow key={`service-monitor-row-${idx}`} monitor={monitor} />
+        <MonitorRow
+          key={`service-monitor-row-${idx}`}
+          monitor={monitor}
+          openDialog={openDialog}
+        />
       ))}
     </>
   );

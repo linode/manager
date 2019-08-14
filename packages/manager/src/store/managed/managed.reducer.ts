@@ -6,7 +6,9 @@ import { EntityError, EntityState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import updateOrAdd from 'src/utilities/updateOrAdd';
 import {
+  deleteServiceMonitorActions,
   disableServiceMonitorActions,
+  enableServiceMonitorActions,
   requestServicesActions
 } from './managed.actions';
 
@@ -52,18 +54,45 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       );
     }
 
-    if (isType(action, requestServicesActions.started)) {
+    if (
+      isType(action, disableServiceMonitorActions.started) ||
+      isType(action, enableServiceMonitorActions.started)
+    ) {
       draft.error!.update = undefined;
     }
 
-    if (isType(action, disableServiceMonitorActions.done)) {
+    if (
+      isType(action, disableServiceMonitorActions.done) ||
+      isType(action, enableServiceMonitorActions.done)
+    ) {
       const { result } = action.payload;
       draft.entities = updateOrAdd(result, state.entities);
+      draft.results = draft.entities.map(m => m.id);
     }
 
-    if (isType(action, disableServiceMonitorActions.failed)) {
+    if (
+      isType(action, disableServiceMonitorActions.failed) ||
+      isType(action, enableServiceMonitorActions.failed)
+    ) {
       const { error } = action.payload;
       draft.error!.update = error;
+    }
+
+    if (isType(action, deleteServiceMonitorActions.started)) {
+      draft.error!.delete = undefined;
+    }
+
+    if (isType(action, deleteServiceMonitorActions.done)) {
+      const { params: monitor } = action.payload;
+      draft.entities = state.entities.filter(
+        thisMonitor => thisMonitor.id !== monitor.monitorID
+      );
+      draft.results = draft.entities.map(m => m.id);
+    }
+
+    if (isType(action, deleteServiceMonitorActions.failed)) {
+      const { error } = action.payload;
+      draft.error!.delete = error;
     }
 
     return draft;

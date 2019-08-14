@@ -23,14 +23,30 @@ export const getServices = (params?: any, filters?: any) =>
  *
  * Temporarily disables monitoring of a Managed Service.
  */
-export const disableServiceMonitor = (
-  serviceID: number,
-  params?: any,
-  filters?: any
-) =>
+export const disableServiceMonitor = (serviceID: number) =>
   Request<Linode.ManagedServiceMonitor>(
     setMethod('POST'),
-    setParams(params),
-    setXFilter(filters),
     setURL(`${API_ROOT}/managed/services/${serviceID}/disable`)
+  ).then(response => response.data);
+
+/**
+ * enableServiceMonitor
+ *
+ * Enables monitoring of a Managed Service that is currently disabled.
+ */
+export const enableServiceMonitor = (serviceID: number) =>
+  Request<Linode.ManagedServiceMonitor>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/managed/services/${serviceID}/enable`)
+  ).then(response => response.data);
+
+/**
+ * deleteServiceMonitor
+ *
+ * Disables a Managed Service and removes it from your account.
+ */
+export const deleteServiceMonitor = (serviceID: number) =>
+  Request<Linode.ManagedServiceMonitor>(
+    setMethod('DELETE'),
+    setURL(`${API_ROOT}/managed/services/${serviceID}`)
   ).then(response => response.data);
