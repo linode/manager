@@ -124,6 +124,7 @@ const styles = (theme: Theme) =>
       display: 'flex',
       justifyContent: 'flex-end',
       color: theme.palette.primary.main,
+      maxWidth: 40,
       '& .circle': {
         transition: theme.transitions.create('fill')
       },
