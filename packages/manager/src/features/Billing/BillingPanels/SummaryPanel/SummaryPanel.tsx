@@ -91,7 +91,7 @@ interface Profile {
   isRestricted: boolean;
 }
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, Props>(
   withAccount(
     (ownProps, accountLoading, lastUpdated, accountError, account) => ({
       accountLoading,
