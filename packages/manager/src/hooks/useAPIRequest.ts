@@ -20,16 +20,34 @@ interface UseAPIRequest<T> {
  *
  * EXAMPLE USAGE:
  *
- * const { data, loading, lastUpdated, error } = useAPIData<Linode.Account>(
- *  getAccountInfo
+ * Get account info:
+ *
+ * ```typescript
+ * const { data, loading, lastUpdated, error } = useAPIData<Linode.Account | null>(
+ *  getAccountInfo,
+ *  null // Initial value of `data`
  * );
+ * ```
+ *
+ * Get Linodes:
+ *
+ * We'd like to resolve `response.data` from the request, so we can deal with Linode.Linode[]
+ * instead of Linode.ResourcePage<Linode.Linode>.
+ *
+ * ```typescript
+ * const { data, loading, lastUpdated, error } = useAPIData<Linode.Linode[]>(
+ *  () => getLinodes().then(linodes => linodes.data) // resolve `data` from request
+ *  [], // Initial value of `data`
+ *  [props.someProp] // Run the request when `props.someProp` changes
+ * );
+ * ```
  *
  * @param request The request function to execute when `deps` change.
  * @param defaultData Value to use for `data` before request is made.
  * @param deps The dependencies this hook relies on. Defaults to an empty array
  * (so the request will happen ONCE, after the component first renders).
  */
-export const useAPIRequest = <T extends {}>(
+export const useAPIRequest = <T>(
   request: () => Promise<T>,
   initialData: T,
   deps: any[] = []
