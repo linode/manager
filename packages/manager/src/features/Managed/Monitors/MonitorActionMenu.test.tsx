@@ -14,6 +14,8 @@ const props: CombinedProps = {
   enqueueSnackbar: jest.fn(),
   closeSnackbar: jest.fn(),
   status: 'disabled',
+  label: 'this-monitor',
+  openDialog: jest.fn(),
   monitorID: 1,
   requestManagedServices: jest.fn(),
   enableServiceMonitor: jest.fn(),

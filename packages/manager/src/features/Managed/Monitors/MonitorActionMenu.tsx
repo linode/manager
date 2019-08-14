@@ -11,6 +11,8 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 interface Props {
   monitorID: number;
   status: Linode.MonitorStatus;
+  label: string;
+  openDialog: (id: number, label: string) => void;
 }
 
 export type CombinedProps = Props & DispatchProps & WithSnackbarProps;
@@ -18,11 +20,12 @@ export type CombinedProps = Props & DispatchProps & WithSnackbarProps;
 export class MonitorActionMenu extends React.Component<CombinedProps, {}> {
   createActions = () => {
     const {
-      deleteServiceMonitor,
       disableServiceMonitor,
       enableServiceMonitor,
       enqueueSnackbar,
+      label,
       monitorID,
+      openDialog,
       status
     } = this.props;
 
@@ -67,15 +70,7 @@ export class MonitorActionMenu extends React.Component<CombinedProps, {}> {
         {
           title: 'Delete',
           onClick: () => {
-            deleteServiceMonitor(monitorID)
-              .then(_ => {
-                enqueueSnackbar('Monitor deleted successfully.', {
-                  variant: 'success'
-                });
-              })
-              .catch(e => {
-                handleError('Error deleting this Service Monitor.', e);
-              });
+            openDialog(monitorID, label);
             closeMenu();
           }
         }
