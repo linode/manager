@@ -4,7 +4,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 
 import Paper from 'src/components/core/Paper';
 import Typography from 'src/components/core/Typography';
-import { flags } from 'src/components/SelectRegionPanel';
+import { flags } from 'src/components/EnhancedSelect/variants/RegionSelect';
 
 import {
   formatRegion,
