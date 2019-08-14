@@ -139,7 +139,7 @@ interface ActionsProps {
 const Actions: React.FC<ActionsProps> = props => {
   return (
     <ActionsPanel>
-      <Button onClick={props.onClose} buttonType="secondary">
+      <Button onClick={props.onClose} buttonType="cancel">
         Cancel
       </Button>
       <Button

@@ -15,19 +15,20 @@ const styles = (theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       marginTop: theme.spacing(3),
-      [theme.breakpoints.down('sm')]: {
-        justifyContent: 'space-between'
+      [theme.breakpoints.down('xs')]: {
+        flexDirection: 'column',
+        alignItems: 'flex-start'
       }
     },
     text: {
-      color: theme.color.black,
+      whiteSpace: 'nowrap',
       [theme.breakpoints.up('sm')]: {
         marginLeft: theme.spacing(3)
       }
     },
     heading: {
       fontSize: '0.9rem',
-      color: theme.palette.text.primary
+      whiteSpace: 'nowrap'
     }
   });
 
@@ -47,13 +48,13 @@ export const TotalTraffic = (props: CombinedProps) => {
         Total Traffic
       </Typography>
       <Typography variant="body2" className={classes.text}>
-        In: {inTraffic}
+        <strong>In:</strong> {inTraffic}
       </Typography>
       <Typography variant="body2" className={classes.text}>
-        Out: {outTraffic}
+        <strong>Out:</strong> {outTraffic}
       </Typography>
       <Typography variant="body2" className={classes.text}>
-        Combined: {combinedTraffic}
+        <strong>Combined:</strong> {combinedTraffic}
       </Typography>
     </div>
   );

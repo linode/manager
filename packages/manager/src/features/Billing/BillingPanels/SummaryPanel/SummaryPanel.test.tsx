@@ -1,5 +1,6 @@
 import { cleanup, render } from '@testing-library/react';
 import * as React from 'react';
+import { activePromotions } from 'src/__data__/account';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { history } from 'src/__data__/reactRouterProps';
@@ -14,7 +15,7 @@ describe('SummaryPanel', () => {
     profileError: undefined,
     profileLoading: false,
     isRestricted: false,
-    data: {
+    account: {
       company: '',
       first_name: '',
       last_name: '',
@@ -25,12 +26,13 @@ describe('SummaryPanel', () => {
       city: '',
       state: '',
       zip: '',
-      credit_card: { expiry: '02/2012', last_four: '1234' },
+      credit_card: { expiry: '02/2012', last_four: '1234', cvv: '123' },
       tax_id: '',
       country: '',
       balance: 0,
       balance_uninvoiced: 0,
-      active_since: '2018-05-17T18:22:50'
+      active_since: '2018-05-17T18:22:50',
+      active_promotions: activePromotions
       // [BETA]
       // @todo: Uncomment this when it becomes generally available
       // capabilities: ['Linodes', 'NodeBalancers', 'Block Storage']
@@ -49,10 +51,10 @@ describe('SummaryPanel', () => {
       wrapWithTheme(
         <SummaryPanel
           {...baseProps}
-          data={{
-            ...baseProps.data!,
+          account={{
+            ...baseProps.account!,
             credit_card: {
-              ...baseProps.data!.credit_card,
+              ...baseProps.account!.credit_card,
               expiry: '02/4000'
             }
           }}

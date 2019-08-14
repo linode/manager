@@ -2,7 +2,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 
 import Button from 'src/components/Button';
-// import CopyTooltip from 'src/components/CopyTooltip';
+import CopyTooltip from 'src/components/CopyTooltip';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
@@ -12,6 +12,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
@@ -27,8 +28,15 @@ type ClassNames =
   | 'pricing'
   | 'ctaOuter'
   | 'displayTable'
+  | 'codeOuter'
+  | 'tooltipCode'
+  | 'statusHelpIcon'
+  | 'nodePoolHeader'
+  | 'nodePoolHeaderOuter'
+  | 'tooltipOuter'
   | 'code'
-  | 'footer';
+  | 'copyTooltip';
+
 const styles = (theme: Theme) =>
   createStyles({
     root: {
@@ -50,11 +58,27 @@ const styles = (theme: Theme) =>
     displayTable: {
       width: '100%'
     },
-    code: {
-      padding: theme.spacing(1)
+    codeOuter: {
+      display: 'flex'
     },
-    footer: {
-      marginTop: theme.spacing(2)
+    code: {
+      display: 'block',
+      width: '100%'
+    },
+    statusHelpIcon: {},
+    nodePoolHeader: {
+      display: 'inline-block'
+    },
+    nodePoolHeaderOuter: {
+      display: 'flex',
+      alignItems: 'center'
+    },
+    copyTooltip: {
+      maxHeight: 24,
+      marginLeft: 2
+    },
+    tooltipOuter: {
+      maxWidth: 225
     }
   });
 
@@ -76,7 +100,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-// const command = 'kubectl get nodes -o wide';
+const command = 'kubectl get nodes -o wide';
 
 export const NodePoolsDisplay: React.FunctionComponent<
   CombinedProps
@@ -98,6 +122,18 @@ export const NodePoolsDisplay: React.FunctionComponent<
     updatePool
   } = props;
 
+  const TooltipText = () => {
+    return (
+      <>
+        For more detailed information about the nodes in your cluster, run the
+        following command:
+        <div className={classes.codeOuter}>
+          <code className={classes.code}>{command}</code>
+          <CopyTooltip text={command} className={classes.copyTooltip} />
+        </div>
+      </>
+    );
+  };
   const errorMap = getErrorMap(['count'], submissionError);
 
   return (
@@ -111,8 +147,17 @@ export const NodePoolsDisplay: React.FunctionComponent<
           alignItems="center"
           xs={12}
         >
-          <Grid item>
-            <Typography variant="h2">Node Pools</Typography>
+          <Grid item className={classes.nodePoolHeaderOuter}>
+            <Typography variant="h2" className={classes.nodePoolHeader}>
+              Node Pools
+            </Typography>
+            <HelpIcon
+              text={<TooltipText />}
+              className={classes.statusHelpIcon}
+              tooltipPosition="right-start"
+              interactive
+              classes={{ tooltip: classes.tooltipOuter }}
+            />
           </Grid>
           <Grid item>
             <Button buttonType="secondary" onClick={toggleEditing}>
@@ -180,14 +225,6 @@ export const NodePoolsDisplay: React.FunctionComponent<
             </Button>
           </Grid>
         </Grid>
-        {/* <Grid item className={classes.footer}>
-          <Typography>
-            You can run
-            <code className={classes.code}>{command}</code>
-            <CopyTooltip text={command} />
-            for more detailed information about the nodes in your cluster.
-          </Typography>
-        </Grid> */}
       </Grid>
     </Paper>
   );

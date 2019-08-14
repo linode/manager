@@ -215,7 +215,11 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       label: '#555',
       disabledText: '#c9cacb',
       kubeLabel: '#272b31',
-      primaryNavText: '#c9cacb'
+      primaryNavText: '#c9cacb',
+      graphBlue: 'rgba(54, 131, 220, .5)',
+      graphYellow: 'rgba(255, 209, 0, .5)',
+      graphPurple: 'rgba(204, 1, 153, .5)',
+      graphGreen: 'rgba(1, 177, 89, .5)'
     },
     font: {
       normal: primaryFonts.normal,
@@ -280,7 +284,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       },
       body2: {
         fontSize: '0.875rem',
-        lineHeight: '1.2rem'
+        lineHeight: '1.2rem',
+        color: primaryColors.text
       },
       caption: {
         fontSize: '0.625rem',
@@ -1236,7 +1241,8 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           }
         },
         head: {
-          fontSize: '.9rem'
+          fontSize: '.9rem',
+          lineHeight: 1.1
         },
         body: {
           fontSize: '.9rem'
