@@ -19,6 +19,7 @@ import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 export interface ExtendedType extends Linode.LinodeType {
   heading: string;
@@ -101,8 +102,8 @@ export class SelectPlanPanel extends React.Component<
         <TableCell>${type.price.monthly}</TableCell>
         <TableCell>${type.price.hourly}</TableCell>
         <TableCell>{type.vcpus}</TableCell>
-        <TableCell>Disk{type.disk}</TableCell>
-        <TableCell>Mem {type.memory}</TableCell>
+        <TableCell>{convertMegabytesTo(type.disk, true)}</TableCell>
+        <TableCell>{convertMegabytesTo(type.memory, true)}</TableCell>
       </TableRow>
     );
   };
@@ -164,10 +165,12 @@ export class SelectPlanPanel extends React.Component<
                 Standard instances are good for medium-duty workloads and are a
                 good mix of performance, resources, and price.
               </Typography>
-              <Table isResponsive={false} border spacingBottom={16}>
-                {tableHeader}
-                <TableBody>{standards.map(this.renderRow)}</TableBody>
-              </Table>
+              <Grid container spacing={2}>
+                <Table isResponsive={false} border spacingBottom={16}>
+                  {tableHeader}
+                  <TableBody>{standards.map(this.renderRow)}</TableBody>
+                </Table>
+              </Grid>
             </>
           );
         },
