@@ -102,7 +102,6 @@ export const TicketAttachmentList: React.StatelessComponent<
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
-  styled,
   withStateHandlers(
     { showMoreAttachments: false },
     {
@@ -110,7 +109,8 @@ const enhanced = compose<CombinedProps, Props>(
         showMoreAttachments: !showMoreAttachments
       })
     }
-  )
+  ),
+  styled
 )(TicketAttachmentList);
 
 export default enhanced;
