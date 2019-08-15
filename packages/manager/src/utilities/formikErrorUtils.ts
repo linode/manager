@@ -1,3 +1,4 @@
+import { getAPIErrorOrDefault } from './errorUtils';
 import isNilOrEmpty from './isNilOrEmpty';
 
 export const handleFieldErrors = (
@@ -24,7 +25,9 @@ export const handleGeneralErrors = (
     return callback(defaultMessage);
   }
 
-  const generalError = apiErrors
+  const _apiErrors = getAPIErrorOrDefault(apiErrors, defaultMessage);
+
+  const generalError = _apiErrors
     .reduce(
       (result, { field, reason }) => (field ? result : [...result, reason]),
       []

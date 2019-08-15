@@ -114,7 +114,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
         setDrawerOpen(false);
       })
       .catch(e => {
-        const defaultMessage = `Unable to clone this volume at this time. Please try again later.`;
+        const defaultMessage = `Unable to create this Monitor. Please try again later.`;
         const mapErrorToStatus = (generalError: string) =>
           setStatus({ generalError });
 

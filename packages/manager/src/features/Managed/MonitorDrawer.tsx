@@ -116,7 +116,12 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
         }) => (
           <>
             {status && (
-              <Notice key={status} text={status} error data-qa-error />
+              <Notice
+                key={status}
+                text={status.generalError}
+                error
+                data-qa-error
+              />
             )}
 
             <form onSubmit={handleSubmit}>
@@ -134,7 +139,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
               <TextField
                 name="consultation_group"
                 label="Contact Group"
-                data-qa-add-label
+                data-qa-add-consultation-group
                 value={values.consultation_group}
                 error={!!errors.consultation_group}
                 errorText={errors.consultation_group}
@@ -149,7 +154,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                   name="service_type"
                   label="Monitor Type"
                   isClearable={false}
-                  data-qa-add-label
+                  data-qa-add-service-type
                   options={typeOptions}
                   value={getValueFromItem(values.service_type, typeOptions)}
                   errorText={errors.service_type}
@@ -162,7 +167,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                   className={classes.smallInput}
                   name="timeout"
                   label="Response Timeout (Seconds)"
-                  data-qa-add-label
+                  data-qa-add-timeout
                   value={values.timeout}
                   error={!!errors.timeout}
                   errorText={errors.timeout}
@@ -174,7 +179,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
               <TextField
                 name="address"
                 label="URL"
-                data-qa-add-label
+                data-qa-add-address
                 value={values.address}
                 error={!!errors.address}
                 errorText={errors.address}
@@ -185,7 +190,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
               <TextField
                 name="body"
                 label="Response Body Match"
-                data-qa-add-label
+                data-qa-add-body
                 value={values.body}
                 error={!!errors.body}
                 tooltipText={helperText.body}
@@ -197,7 +202,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                 multiline
                 name="notes"
                 label="Instructions / Notes"
-                data-qa-add-label
+                data-qa-add-notes
                 value={values.notes}
                 error={!!errors.notes}
                 errorText={errors.notes}
@@ -208,7 +213,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                 name="credentials"
                 isClearable={false}
                 label="Credentials"
-                data-qa-add-label
+                data-qa-add-credentials
                 options={credentialOptions}
                 value={credentialOptions[0]}
                 errorText={errors.credentials}
