@@ -37,7 +37,10 @@ const styles = (theme: Theme) =>
       padding: 0
     },
     replyContainer: {
-      maxWidth: 600
+      marginLeft: `calc(40px + ${theme.spacing(2)}px)`,
+      [theme.breakpoints.up('md')]: {
+        maxWidth: `calc(66.66% + ${theme.spacing(3)}px)`
+      }
     },
     expPanelSummary: {
       backgroundColor: theme.bg.offWhite,

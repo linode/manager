@@ -73,7 +73,6 @@ const styles = (theme: Theme) =>
     },
     labelIcon: {
       paddingRight: 0,
-
       '& svg': {
         width: 40,
         height: 40
@@ -279,7 +278,10 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
         </Grid>
         <Grid item className="p0">
           {target !== null ? (
-            <Link to={target} className="secondaryLink">
+            <Link
+              to={target}
+              className={`${classes.ticketLabel} secondaryLink`}
+            >
               {entity.label}
             </Link>
           ) : (
