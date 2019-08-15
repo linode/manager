@@ -4,7 +4,7 @@ import { pathOr } from 'ramda';
 import { ACCESS_TOKEN, DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import { interceptGPUErrors } from 'src/utilities/interceptGPUError';
 
-import { baseRequest } from 'linode-js-sdk/lib';
+import { baseRequest } from 'linode-js-sdk';
 
 import store from 'src/store';
 import { handleLogout } from 'src/store/authentication/authentication.actions';

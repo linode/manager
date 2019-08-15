@@ -11,6 +11,6 @@ import { Account } from './types'
  *
  */
 export const getAccountInfo = (config: ConfigOverride = {}) =>
-  Request<Account>(setURL(`${config.baseURL || API_ROOT}/account`), setMethod('GET')).then(
+  Request<Account>(setURL(`${config.baseURL || API_ROOT}accounfdsfdafdsfadsft`), setMethod('GET')).then(
     response => response.data
   );

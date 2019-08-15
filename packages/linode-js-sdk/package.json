@@ -2,7 +2,8 @@
   "name": "linode-js-sdk",
   "version": "1.0.0",
   "description": "JavaScript wrapper around the Linode APIv4",
-  "main": "index.ts",
+  "main": "./index.js",
+  "types": "./index.d.ts",
   "author": "Linode",
   "license": "MIT",
   "private": false,
@@ -12,15 +13,16 @@
     "yup": "^0.27.0"
   },
   "scripts": {
-    "start": "tsc --emitDeclarationOnly && babel src --out-dir lib --extensions '.ts,.tsx' --watch",
-    "build": "tsc --emitDeclarationOnly && babel src --out-dir lib --extensions '.ts,.tsx'",
+    "start": "tsc && babel src --out-dir lib --extensions '.ts,.tsx' --watch & webpack --watch --config webpack.dev.config.js",
+    "build": "tsc && babel src --out-dir lib --extensions '.ts,.tsx' && webpack",
     "test": "jest --config jestconfig.json",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "typecheck": "tsc --noEmit true"
   },
   "files": [
-    "lib/**/*"
+    "index.js",
+    "index.d.ts"
   ],
   "devDependencies": {
     "@babel/cli": "^7.5.5",
@@ -35,10 +37,14 @@
     "@types/ramda": "^0.26.19",
     "@types/yup": "^0.26.22",
     "jest": "^24.8.0",
+    "npm-dts-webpack-plugin": "^1.1.9",
     "prettier": "^1.18.2",
     "ts-jest": "^24.0.2",
     "tslint": "^5.18.0",
     "tslint-config-prettier": "^1.18.0",
-    "typescript": "^3.5.3"
+    "typescript": "^3.5.3",
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.6",
+    "webpack-dev-server": "^3.8.0"
   }
 }
