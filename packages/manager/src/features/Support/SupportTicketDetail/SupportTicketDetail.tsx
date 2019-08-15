@@ -65,7 +65,7 @@ const styles = (theme: Theme) =>
       padding: 0
     },
     label: {
-      marginBottom: theme.spacing(1)
+      marginLeft: `calc(40px + ${theme.spacing(1)}px)`
     },
     ticketLabel: {
       position: 'relative',
@@ -73,6 +73,11 @@ const styles = (theme: Theme) =>
     },
     labelIcon: {
       paddingRight: 0,
+
+      '& svg': {
+        width: 40,
+        height: 40
+      },
       '& .outerCircle': {
         fill: theme.bg.offWhiteDT,
         stroke: theme.bg.main
@@ -272,7 +277,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
         <Grid item className={classes.labelIcon}>
           {icon}
         </Grid>
-        <Grid item>
+        <Grid item className="p0">
           {target !== null ? (
             <Link to={target} className="secondaryLink">
               {entity.label}
