@@ -127,7 +127,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
             <form onSubmit={handleSubmit}>
               <TextField
                 name="label"
-                label="Label"
+                label="Monitor Label"
                 data-qa-add-label
                 value={values.label}
                 error={!!errors.label}
@@ -232,7 +232,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                   loading={isSubmitting}
                   data-qa-submit
                 >
-                  Submit
+                  Add
                 </Button>
                 <Button
                   onClick={onClose}
