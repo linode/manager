@@ -39,7 +39,7 @@ export const SSHAccessActionMenu: React.FC<CombinedProps> = props => {
                 })
                 .catch(err => {
                   handleError(
-                    'Error disabling SSH access for this Linode.',
+                    'Error disabling SSH Access for this Linode.',
                     err
                   );
                 });
@@ -60,7 +60,7 @@ export const SSHAccessActionMenu: React.FC<CombinedProps> = props => {
                 })
                 .catch(err => {
                   handleError(
-                    'Error enabling SSH access for this Linode.',
+                    'Error enabling SSH Access for this Linode.',
                     err
                   );
                 });
