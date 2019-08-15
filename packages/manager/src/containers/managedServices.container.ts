@@ -5,7 +5,9 @@ import { ManagedServicePayload } from 'src/services/managed';
 import { ApplicationState } from 'src/store';
 import {
   createServiceMonitor as _createServiceMonitor,
+  deleteServiceMonitor as _deleteServiceMonitor,
   disableServiceMonitor as _disableServiceMonitor,
+  enableServiceMonitor as _enableServiceMonitor,
   requestManagedServices as _requestManagedServices
 } from 'src/store/managed/managed.requests';
 import { EntityError } from 'src/store/types';
@@ -21,6 +23,8 @@ export interface DispatchProps {
   requestManagedServices: () => Promise<any>;
   disableServiceMonitor: (monitorID: number) => Promise<any>;
   createServiceMonitor: (params: ManagedServicePayload) => Promise<any>;
+  enableServiceMonitor: (monitorID: number) => Promise<any>;
+  deleteServiceMonitor: (monitorID: number) => Promise<any>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
@@ -30,7 +34,11 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
     dispatch(_createServiceMonitor(params)),
   requestManagedServices: () => dispatch(_requestManagedServices()),
   disableServiceMonitor: (monitorID: number) =>
-    dispatch(_disableServiceMonitor({ monitorID }))
+    dispatch(_disableServiceMonitor({ monitorID })),
+  deleteServiceMonitor: (monitorID: number) =>
+    dispatch(_deleteServiceMonitor({ monitorID })),
+  enableServiceMonitor: (monitorID: number) =>
+    dispatch(_enableServiceMonitor({ monitorID }))
 });
 
 export default <TInner extends {}, TOuter extends {}>(

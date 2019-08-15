@@ -25,3 +25,15 @@ export const createServiceMonitorActions = actionCreator.async<
   Linode.ManagedServiceMonitor,
   Linode.ApiFieldError[]
 >('create');
+
+export const enableServiceMonitorActions = actionCreator.async<
+  MonitorPayload,
+  Linode.ManagedServiceMonitor,
+  Linode.ApiFieldError[]
+>('enable');
+
+export const deleteServiceMonitorActions = actionCreator.async<
+  MonitorPayload,
+  {},
+  Linode.ApiFieldError[]
+>('delete');

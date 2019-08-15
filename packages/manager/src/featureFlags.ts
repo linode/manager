@@ -1,9 +1,15 @@
 // These flags should correspond with active features flags in LD
+
+interface TaxBanner {
+  tax_name: string;
+  date: string;
+}
+
 interface Flags {
   managed: boolean;
-  buttonColor: string;
   objectStorage: boolean;
-  vatBanner: string[];
+  promos: boolean;
+  vatBanner: TaxBanner;
 }
 
 /**

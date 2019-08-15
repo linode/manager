@@ -14,6 +14,7 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import TagImportDrawer from 'src/features/TagImport';
+import useFlags from 'src/hooks/useFlags';
 import { handleOpen } from 'src/store/backupDrawer';
 import getEntitiesWithGroupsToImport, {
   emptyGroupedEntities,
@@ -29,6 +30,7 @@ import DomainsDashboardCard from './DomainsDashboardCard';
 import ImportGroupsCard from './GroupImportCard';
 import LinodesDashboardCard from './LinodesDashboardCard';
 import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
+import PromotionsBanner from './PromotionsBanner';
 import TransferDashboardCard from './TransferDashboardCard';
 import VolumesDashboardCard from './VolumesDashboardCard';
 
@@ -43,6 +45,7 @@ const styles = (theme: Theme) =>
 
 interface StateProps {
   accountBackups: boolean;
+  activePromotions: Linode.ActivePromotion[];
   linodesWithoutBackups: Linode.Linode[];
   managed: boolean;
   backupError?: Error;
@@ -68,12 +71,18 @@ type CombinedProps = StateProps &
 export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
   const {
     accountBackups,
+    activePromotions,
     actions: { openBackupDrawer, openImportDrawer },
     backupError,
     linodesWithoutBackups,
     managed,
     entitiesWithGroupsToImport
   } = props;
+  const flags = useFlags();
+
+  // temporary hack to just use the first active promotion for the promo banner,
+  // or undefined if the array of promotions is empty.
+  const nearestExpiry = path<string>([0, 'expire_dt'], activePromotions);
 
   return (
     <React.Fragment>
@@ -93,6 +102,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
           </Typography>
         </Grid>
         <Grid item xs={12} md={7}>
+          {flags.promos && <PromotionsBanner nearestExpiry={nearestExpiry} />}
           <LinodesDashboardCard />
           <VolumesDashboardCard />
           <NodeBalancersDashboardCard />
@@ -130,6 +140,11 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
     accountBackups: pathOr(
       false,
       ['__resources', 'accountSettings', 'data', 'backups_enabled'],
+      state
+    ),
+    activePromotions: pathOr(
+      [],
+      ['__resources', 'account', 'data', 'active_promotions'],
       state
     ),
     userTimezone: pathOr('', ['data', 'timezone'], state.__resources.profile),
