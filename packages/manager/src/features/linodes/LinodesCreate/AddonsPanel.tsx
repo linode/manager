@@ -72,9 +72,9 @@ const styles = (theme: Theme) =>
     },
     caption: {
       marginTop: -8,
-      paddingLeft: theme.spacing(2) + 23, // 39,
+      paddingLeft: theme.spacing(2) + 18, // 34,
       [theme.breakpoints.up('md')]: {
-        paddingLeft: theme.spacing(4) + 23 // 55
+        paddingLeft: theme.spacing(4) + 18 // 50
       }
     }
   });
