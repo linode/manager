@@ -4,6 +4,7 @@ import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
+import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
@@ -35,11 +36,22 @@ export const CredentialList: React.FC<Props> = props => {
         style={{ paddingBottom: 0 }}
       >
         <Grid item>
+          <Typography
+            variant="body1"
+            style={{ fontSize: '1.1em', lineHeight: '1.2em' }}
+          >
+            Please share any credentials our support team may need when
+            responding to a service issue. Credentials are stored encrypted and
+            all decryption attempts are logged. You can revoke credentials at
+            any time by deleting them.
+          </Typography>
+        </Grid>
+        <Grid item>
           <Grid container alignItems="flex-end">
             <Grid item className="pt0">
               <AddNewLink
                 onClick={() => null}
-                label="Add a Credential"
+                label="Add Credentials"
                 disabled
               />
             </Grid>
