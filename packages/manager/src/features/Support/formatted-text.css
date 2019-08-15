@@ -8,11 +8,12 @@
 }
 
 .formatted-text li {
-  margin: 8px 0;
+  margin: 4px 0;
 }
 
 .formatted-text p {
-  margin: 8px 0 0;
+  white-space: pre-line;
+  margin: 16px 0 0;
 }
 
 .formatted-text p:first-child {
