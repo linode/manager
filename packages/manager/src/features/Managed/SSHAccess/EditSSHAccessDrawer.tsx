@@ -12,13 +12,14 @@ type CombinedProps = Props;
 const EditSSHAccessDrawer: React.FC<CombinedProps> = props => {
   const { isOpen, closeDrawer, linodeSetting } = props;
 
-  const drawerTitle = linodeSetting
+  const title = linodeSetting
     ? `Edit SSH Access for ${linodeSetting.label}`
     : 'Edit SSH Access';
 
   return (
-    <Drawer title={drawerTitle} open={isOpen} onClose={closeDrawer}>
-      SSH Access Drawer
+    <Drawer title={title} open={isOpen} onClose={closeDrawer}>
+      {/* FORM GOES HERE */}
+      <pre>{JSON.stringify(linodeSetting, null, 2)}</pre>
     </Drawer>
   );
 };
