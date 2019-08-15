@@ -37,9 +37,16 @@ const request = () =>
 const SSHAccessTable: React.FC<{}> = () => {
   const classes = useStyles();
 
-  const { data, loading, lastUpdated, update, error } = useAPIRequest<
+  const { data, loading, lastUpdated, transformData, error } = useAPIRequest<
     Linode.ManagedLinodeSetting[]
   >(request, []);
+
+  const updateOne = (linodeSetting: Linode.ManagedLinodeSetting) => {
+    transformData(draft => {
+      const idx = draft.findIndex(l => l.id === linodeSetting.id);
+      draft[idx] = linodeSetting;
+    });
+  };
 
   const [selectedLinodeId, setSelectedLinodeId] = React.useState<number>(0);
 
@@ -120,7 +127,7 @@ const SSHAccessTable: React.FC<{}> = () => {
                             linodeSettings={paginatedData}
                             loading={loading}
                             lastUpdated={lastUpdated}
-                            requestSettings={update}
+                            updateOne={updateOne}
                             openDrawer={(linodeId: number) => {
                               setSelectedLinodeId(linodeId);
                               drawer.open();

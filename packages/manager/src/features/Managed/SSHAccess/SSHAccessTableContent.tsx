@@ -9,7 +9,7 @@ interface Props {
   linodeSettings: Linode.ManagedLinodeSetting[];
   loading: boolean;
   lastUpdated: number;
-  requestSettings: () => void;
+  updateOne: (linodeSetting: Linode.ManagedLinodeSetting) => void;
   openDrawer: (linodeId: number) => void;
   error?: Linode.ApiFieldError[];
 }
@@ -21,8 +21,8 @@ export const SSHAccessTableContent: React.FC<CombinedProps> = props => {
     error,
     loading,
     lastUpdated,
+    updateOne,
     linodeSettings,
-    requestSettings,
     openDrawer
   } = props;
 
@@ -50,7 +50,7 @@ export const SSHAccessTableContent: React.FC<CombinedProps> = props => {
         (linodeSetting: Linode.ManagedLinodeSetting, idx: number) => (
           <SSHAccessRow
             key={`linode-setting-row-${idx}`}
-            requestSettings={requestSettings}
+            updateOne={updateOne}
             linodeSetting={linodeSetting}
             openDrawer={openDrawer}
           />

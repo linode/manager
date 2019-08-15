@@ -11,12 +11,12 @@ jest.mock('src/components/ActionMenu/ActionMenu');
 const mockOpenDrawer = jest.fn();
 
 const props: CombinedProps = {
-  enqueueSnackbar: jest.fn(),
-  closeSnackbar: jest.fn(),
   linodeId: 1,
   isEnabled: true,
-  requestSettings: jest.fn(),
-  openDrawer: mockOpenDrawer
+  updateOne: jest.fn(),
+  openDrawer: mockOpenDrawer,
+  enqueueSnackbar: jest.fn(),
+  closeSnackbar: jest.fn()
 };
 
 afterEach(cleanup);
@@ -27,7 +27,7 @@ describe('SSH Access Action Menu', () => {
     includesActions(['Edit'], queryByText);
   });
 
-  it('should include Enable if access on the Linode is disabled', () => {
+  it('should include Enable if access to the Linode is disabled', () => {
     const { queryByText } = render(
       wrapWithTheme(<ActionMenu {...props} isEnabled={false} />)
     );
@@ -35,7 +35,7 @@ describe('SSH Access Action Menu', () => {
     expect(queryByText('Disable')).not.toBeInTheDocument();
   });
 
-  it('should include Disable if access on the Linode is enabled', () => {
+  it('should include Disable if access to the Linode is enabled', () => {
     const { queryByText } = render(
       wrapWithTheme(<ActionMenu {...props} isEnabled={true} />)
     );

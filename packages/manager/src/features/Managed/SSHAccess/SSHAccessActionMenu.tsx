@@ -8,44 +8,65 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 interface Props {
   linodeId: number;
   isEnabled: boolean;
-  requestSettings: () => void;
+  updateOne: (linodeSetting: Linode.ManagedLinodeSetting) => void;
   openDrawer: (linodeId: number) => void;
 }
 
 export type CombinedProps = Props & WithSnackbarProps;
 
 export const SSHAccessActionMenu: React.FC<CombinedProps> = props => {
-  const {
-    isEnabled,
-    linodeId,
-    enqueueSnackbar,
-    requestSettings,
-    openDrawer
-  } = props;
+  const { linodeId, isEnabled, updateOne, openDrawer, enqueueSnackbar } = props;
+
+  const handleError = (message: string, error: Linode.ApiFieldError[]) => {
+    const errMessage = getAPIErrorOrDefault(error, message);
+    enqueueSnackbar(errMessage[0].reason, { variant: 'error' });
+  };
 
   const createActions = (closeMenu: Function): Action[] => {
     const actions = [
-      {
-        title: isEnabled ? 'Disable' : 'Enable',
-        onClick: () => {
-          updateLinodeSettings(linodeId, {
-            ssh: { access: isEnabled }
-            // @todo: When API oddity is fixed, use the following instead:
-            // ssh: { access: isEnabled ? false : true }
-          })
-            .then(() => requestSettings())
-            .catch(err => {
-              const errMessage = getAPIErrorOrDefault(
-                err,
-                `Error ${
-                  isEnabled ? 'disabling' : 'enabling'
-                } SSH access for this Linode.`
-              );
-              enqueueSnackbar(errMessage[0].reason, { variant: 'error' });
-            });
-          closeMenu();
-        }
-      },
+      isEnabled
+        ? {
+            title: 'Disable',
+            onClick: () => {
+              updateLinodeSettings(linodeId, {
+                ssh: { access: true }
+              })
+                .then(updatedLinodeSetting => {
+                  updateOne(updatedLinodeSetting);
+                  enqueueSnackbar('SSH Access disabled successfully.', {
+                    variant: 'success'
+                  });
+                })
+                .catch(err => {
+                  handleError(
+                    'Error disabling SSH access for this Linode.',
+                    err
+                  );
+                });
+              closeMenu();
+            }
+          }
+        : {
+            title: 'Enable',
+            onClick: () => {
+              updateLinodeSettings(linodeId, {
+                ssh: { access: false }
+              })
+                .then(updatedLinodeSetting => {
+                  updateOne(updatedLinodeSetting);
+                  enqueueSnackbar('SSH Access enabled successfully.', {
+                    variant: 'success'
+                  });
+                })
+                .catch(err => {
+                  handleError(
+                    'Error enabling SSH access for this Linode.',
+                    err
+                  );
+                });
+              closeMenu();
+            }
+          },
       {
         title: 'Edit',
         onClick: () => {

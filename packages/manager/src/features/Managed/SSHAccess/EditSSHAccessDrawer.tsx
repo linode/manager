@@ -2,9 +2,9 @@ import * as React from 'react';
 import Drawer from 'src/components/Drawer';
 
 interface Props {
-  linodeSetting?: Linode.ManagedLinodeSetting;
   isOpen: boolean;
   closeDrawer: () => void;
+  linodeSetting?: Linode.ManagedLinodeSetting;
 }
 
 type CombinedProps = Props;

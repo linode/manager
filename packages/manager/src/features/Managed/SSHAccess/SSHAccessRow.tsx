@@ -5,12 +5,12 @@ import ActionMenu from './SSHAccessActionMenu';
 
 interface Props {
   linodeSetting: Linode.ManagedLinodeSetting;
-  requestSettings: () => void;
+  updateOne: (linodeSetting: Linode.ManagedLinodeSetting) => void;
   openDrawer: (linodeId: number) => void;
 }
 
 export const SSHAccessRow: React.FunctionComponent<Props> = props => {
-  const { linodeSetting, requestSettings, openDrawer } = props;
+  const { linodeSetting, updateOne, openDrawer } = props;
 
   /**
    * NOTE: Currently the following API oddity exists in production:
@@ -48,7 +48,7 @@ export const SSHAccessRow: React.FunctionComponent<Props> = props => {
         <ActionMenu
           linodeId={linodeSetting.id}
           isEnabled={isAccessEnabled}
-          requestSettings={requestSettings}
+          updateOne={updateOne}
           openDrawer={openDrawer}
         />
       </TableCell>
