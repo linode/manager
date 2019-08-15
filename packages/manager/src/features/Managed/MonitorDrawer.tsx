@@ -67,6 +67,15 @@ const credentialOptions: Item<string>[] = [
   }
 ];
 
+const helperText = {
+  consultation_group:
+    "If we need help along the way, we'll contact someone from this group.",
+  url: 'The URL to request.',
+  body: 'Response must contain this string or an alert will be triggered.',
+  credentials:
+    'Any additional credentials required for incident response or routine maintenance.'
+};
+
 const getValueFromItem = (
   value: string,
   options: Item<Linode.ServiceType>[]
@@ -121,6 +130,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
+
               <TextField
                 name="consultation_group"
                 label="Contact Group"
@@ -130,7 +140,9 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                 errorText={errors.consultation_group}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                tooltipText={helperText.consultation_group}
               />
+
               <div className={classes.box}>
                 <Select
                   className={classes.smallInput}
@@ -166,6 +178,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                 value={values.address}
                 error={!!errors.address}
                 errorText={errors.address}
+                tooltipText={helperText.url}
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
@@ -175,6 +188,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                 data-qa-add-label
                 value={values.body}
                 error={!!errors.body}
+                tooltipText={helperText.body}
                 errorText={errors.body}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -198,6 +212,9 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                 options={credentialOptions}
                 value={credentialOptions[0]}
                 errorText={errors.credentials}
+                textFieldProps={{
+                  tooltipText: helperText.credentials
+                }}
                 onChange={(item: Item<Linode.ServiceType>) =>
                   setFieldValue('credentials', item.value)
                 }
