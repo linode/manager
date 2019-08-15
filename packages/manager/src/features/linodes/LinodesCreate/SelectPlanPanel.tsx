@@ -143,7 +143,7 @@ export class SelectPlanPanel extends React.Component<
                 performance isn't critical.
               </Typography>
               <Grid container spacing={2}>
-                <Table isResponsive={false} border spacingBottom={16}>
+                <Table isResponsive={true} border spacingBottom={16}>
                   {tableHeader}
                   <TableBody>{nanodes.map(this.renderRow)}</TableBody>
                 </Table>
@@ -166,7 +166,7 @@ export class SelectPlanPanel extends React.Component<
                 good mix of performance, resources, and price.
               </Typography>
               <Grid container spacing={2}>
-                <Table isResponsive={false} border spacingBottom={16}>
+                <Table isResponsive={true} border spacingBottom={16}>
                   {tableHeader}
                   <TableBody>{standards.map(this.renderRow)}</TableBody>
                 </Table>
@@ -189,7 +189,7 @@ export class SelectPlanPanel extends React.Component<
                 consistent performance is important.
               </Typography>
               <Grid container spacing={2}>
-                <Table isResponsive={false} border spacingBottom={16}>
+                <Table isResponsive={true} border spacingBottom={16}>
                   {tableHeader}
                   <TableBody>{dedicated.map(this.renderRow)}</TableBody>
                 </Table>
@@ -213,7 +213,7 @@ export class SelectPlanPanel extends React.Component<
                 databases.
               </Typography>
               <Grid container spacing={2}>
-                <Table isResponsive={false} border spacingBottom={16}>
+                <Table isResponsive={true} border spacingBottom={16}>
                   {tableHeader}
                   <TableBody>{highmem.map(this.renderRow)}</TableBody>
                 </Table>
@@ -252,7 +252,7 @@ export class SelectPlanPanel extends React.Component<
                 transcoding.
               </Typography>
               <Grid container spacing={2}>
-                <Table isResponsive={false} border spacingBottom={16}>
+                <Table isResponsive={true} border spacingBottom={16}>
                   {tableHeader}
                   <TableBody>{gpu.map(this.renderRow)}</TableBody>
                 </Table>
