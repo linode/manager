@@ -30,6 +30,7 @@ interface Props extends PaginationProps<Linode.SupportTicket> {
 type ClassNames =
   | 'root'
   | 'cellSubject'
+  | 'cellId'
   | 'cellRegarding'
   | 'cellCreated'
   | 'cellUpdated'
@@ -39,8 +40,11 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     cellSubject: {
-      width: '33%',
+      width: '35%',
       minWidth: 175
+    },
+    cellId: {
+      width: '10%'
     },
     cellRegarding: {
       width: '15%'
@@ -137,7 +141,9 @@ export class TicketList extends React.Component<CombinedProps, {}> {
                 >
                   Subject
                 </TableCell>
-                <TableCell data-qa-support-id-header>Ticket ID</TableCell>
+                <TableCell data-qa-support-id-header className={classes.cellId}>
+                  Ticket ID
+                </TableCell>
                 <TableCell
                   data-qa-support-regarding-header
                   className={classes.cellRegarding}

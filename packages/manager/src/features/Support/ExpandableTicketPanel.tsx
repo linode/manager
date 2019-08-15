@@ -25,6 +25,7 @@ type ClassNames =
   | 'leftIcon'
   | 'userName'
   | 'content'
+  | 'header'
   | 'avatarCol'
   | 'isCurrentUser'
   | 'hivelyContainer'
@@ -59,7 +60,10 @@ const styles = (theme: Theme) =>
       justifyContent: 'center',
       borderRadius: '50%',
       width: 40,
-      height: 40
+      height: 40,
+      marginRight: theme.spacing(1),
+      position: 'relative',
+      top: -4
     },
     leftIcon: {
       width: '100%',
@@ -69,9 +73,18 @@ const styles = (theme: Theme) =>
     },
     content: {
       width: '100%',
+      maxWidth: '66.66%',
+      marginTop: theme.spacing(1),
       padding: theme.spacing(2),
       backgroundColor: theme.color.white,
-      border: `1px solid ${theme.palette.divider}`
+      border: `1px solid ${theme.color.grey3}`,
+      borderRadius: theme.shape.borderRadius
+    },
+    header: {
+      padding: `0 ${theme.spacing(1)}px`,
+      backgroundColor: theme.color.grey2,
+      borderTopLeftRadius: theme.shape.borderRadius,
+      borderTopRightRadius: theme.shape.borderRadius
     },
     userName: {
       whiteSpace: 'nowrap',
@@ -196,37 +209,51 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
         alignItems="flex-start"
       >
         <Grid item xs={12}>
-          <Grid container wrap="nowrap" alignItems="center">
+          <Grid container wrap="nowrap">
             <Grid item>{renderAvatar(data.gravatarUrl)}</Grid>
-            <Grid item className={classes.content}>
-              <Typography className={classes.userName} component="span">
-                {data.username}
-              </Typography>
-              {data.from_linode && (
-                <Typography variant="body1">Linode Expert</Typography>
-              )}
-              <Typography variant="body1" component="span">
-                {' '}
-                commented on{' '}
-                <DateTimeDisplay value={data.date} humanizeCutoff={'month'} />
-              </Typography>
+            <Grid item className={`${classes.content}`}>
+              <Grid container className={classes.header}>
+                <Grid item>
+                  <Typography className={classes.userName} component="span">
+                    {data.username}
+                  </Typography>
+                  {data.from_linode && (
+                    <Typography component="span" variant="body1">
+                      {' '}
+                      <em>Linode Expert</em>
+                    </Typography>
+                  )}
+                  <Typography variant="body1" component="span">
+                    {' '}
+                    commented on{' '}
+                    <DateTimeDisplay
+                      value={data.date}
+                      humanizeCutoff={'month'}
+                    />
+                  </Typography>
+                </Grid>
+              </Grid>
               <TicketDetailBody
                 open={open}
                 dangerouslySetInnerHTML={{
                   __html: data.description
                 }}
               />
+              {!shouldRenderHively(
+                data.from_linode,
+                data.updated,
+                data.username
+              ) && (
+                <Hively
+                  linodeUsername={data.username}
+                  ticketId={data.ticket_id}
+                  replyId={data.reply_id}
+                />
+              )}
             </Grid>
           </Grid>
         </Grid>
       </Grid>
-      {shouldRenderHively(data.from_linode, data.updated, data.username) && (
-        <Hively
-          linodeUsername={data.username}
-          ticketId={data.ticket_id}
-          replyId={data.reply_id}
-        />
-      )}
     </Grid>
   );
 };

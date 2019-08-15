@@ -83,6 +83,7 @@ const styles = (theme: Theme) =>
     },
     listParent: {},
     status: {
+      marginTop: 5,
       marginLeft: theme.spacing(1),
       color: theme.color.white
     },
@@ -468,6 +469,6 @@ export const connected = connect(mapStateToProps);
 
 export default compose<any, any, any, any>(
   setDocs(SupportTicketDetail.docs),
-  styled,
-  connected
+  connected,
+  styled
 )(SupportTicketDetail);

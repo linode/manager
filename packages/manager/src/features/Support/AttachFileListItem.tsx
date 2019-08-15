@@ -29,9 +29,7 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
-    attachmentsContainer: {
-      maxWidth: 800
-    },
+    attachmentsContainer: {},
     attachmentField: {
       marginTop: 0,
       width: 415,
