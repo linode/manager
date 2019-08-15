@@ -30,7 +30,7 @@ export const formatRegion = (region: string) => {
 
 export const getHumanReadableCountry = (regionSlug: string) => {
   if (regionSlug.match(/(us)/gim)) {
-    return 'North America';
+    return 'United States';
   }
   if (regionSlug.match(/(ca)/gim)) {
     return 'Canada';
