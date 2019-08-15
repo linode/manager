@@ -1,4 +1,3 @@
-import { FormikBag } from 'formik';
 import * as React from 'react';
 import {
   matchPath,
@@ -20,13 +19,9 @@ import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import TabLink from 'src/components/TabLink';
-import withManaged, {
-  DispatchProps
-} from 'src/containers/managedServices.container';
 import withFeatureFlagConsumer, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
-import { ManagedServicePayload } from 'src/services/managed';
 import ManagedPlaceholder from './ManagedPlaceholder';
 import SupportWidget from './SupportWidget';
 
@@ -46,15 +41,7 @@ const Contacts = DefaultLoader({
   loader: () => import('./Contacts')
 });
 
-const MonitorDrawer = DefaultLoader({
-  loader: () => import('./MonitorDrawer')
-});
-
-export type CombinedProps = RouteComponentProps<{}> &
-  FeatureFlagConsumerProps &
-  DispatchProps;
-
-export type FormikProps = FormikBag<CombinedProps, ManagedServicePayload>;
+export type CombinedProps = RouteComponentProps<{}> & FeatureFlagConsumerProps;
 
 export class ManagedLanding extends React.Component<CombinedProps, {}> {
   static docs: Linode.Doc[] = [
@@ -84,22 +71,6 @@ export class ManagedLanding extends React.Component<CombinedProps, {}> {
 
   matches = (p: string) => {
     return Boolean(matchPath(p, { path: this.props.location.pathname }));
-  };
-
-  submitMonitorForm = (
-    values: ManagedServicePayload,
-    { setSubmitting, setErrors, setStatus }: FormikProps
-  ) => {
-    const { createServiceMonitor } = this.props;
-    console.log(values);
-    createServiceMonitor({ ...values, timeout: +values.timeout })
-      .then(response => {
-        setSubmitting(false);
-      })
-      .catch(error => {
-        setErrors(error);
-        setSubmitting(false);
-      });
   };
 
   render() {
@@ -189,12 +160,6 @@ export class ManagedLanding extends React.Component<CombinedProps, {}> {
               />
               <Redirect to={`${this.props.match.path}/monitors`} />
             </Switch>
-            <MonitorDrawer
-              open={true}
-              onClose={() => null}
-              onSubmit={this.submitMonitorForm}
-              mode="create"
-            />
           </React.Fragment>
         )}
       </React.Fragment>
@@ -204,7 +169,6 @@ export class ManagedLanding extends React.Component<CombinedProps, {}> {
 
 const enhanced = compose<CombinedProps, {}>(
   setDocs(ManagedLanding.docs),
-  withManaged(() => ({})),
   withFeatureFlagConsumer,
   withRouter
 );
