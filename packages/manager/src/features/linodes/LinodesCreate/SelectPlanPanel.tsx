@@ -1,19 +1,24 @@
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+import CheckBox from 'src/components/CheckBox';
 import {
   createStyles,
   Theme,
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
+import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
-import SelectionCard from 'src/components/SelectionCard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 
 export interface ExtendedType extends Linode.LinodeType {
   heading: string;
@@ -65,7 +70,7 @@ export class SelectPlanPanel extends React.Component<
 > {
   onSelect = (id: string) => () => this.props.onSelect(id);
 
-  renderCard = (type: ExtendedType) => {
+  renderRow = (type: ExtendedType) => {
     const { selectedID, currentPlanHeading, disabled } = this.props;
     const selectedDiskSize = this.props.selectedDiskSize
       ? this.props.selectedDiskSize
@@ -83,16 +88,22 @@ export class SelectPlanPanel extends React.Component<
     }
 
     return (
-      <SelectionCard
-        key={type.id}
-        checked={type.id === String(selectedID)}
-        onClick={this.onSelect(type.id)}
-        heading={type.heading}
-        subheadings={type.subHeadings}
-        disabled={planTooSmall || isSamePlan || disabled}
-        tooltip={tooltip}
-        variant="check"
-      />
+      <TableRow key={type.id}>
+        <TableCell>
+          <CheckBox
+            checked={type.id === String(selectedID)}
+            onChange={this.onSelect(type.id)}
+            disabled={planTooSmall || isSamePlan || disabled}
+            toolTipText={tooltip}
+          />
+        </TableCell>
+        <TableCell>{type.heading}</TableCell>
+        <TableCell>${type.price.monthly}</TableCell>
+        <TableCell>${type.price.hourly}</TableCell>
+        <TableCell>{type.vcpus}</TableCell>
+        <TableCell>Disk{type.disk}</TableCell>
+        <TableCell>Mem {type.memory}</TableCell>
+      </TableRow>
     );
   };
 
@@ -107,6 +118,20 @@ export class SelectPlanPanel extends React.Component<
 
     const tabOrder: Linode.LinodeTypeClass[] = [];
 
+    const tableHeader = (
+      <TableHead>
+        <TableRow>
+          <TableCell />
+          <TableCell>Linode Plan</TableCell>
+          <TableCell>Monthly</TableCell>
+          <TableCell>Hourly</TableCell>
+          <TableCell>CPUs</TableCell>
+          <TableCell>Storage</TableCell>
+          <TableCell>Ram</TableCell>
+        </TableRow>
+      </TableHead>
+    );
+
     if (!isEmpty(nanodes)) {
       tabs.push({
         render: () => {
@@ -117,7 +142,10 @@ export class SelectPlanPanel extends React.Component<
                 performance isn't critical.
               </Typography>
               <Grid container spacing={2}>
-                {nanodes.map(this.renderCard)}
+                <Table isResponsive={false} border spacingBottom={16}>
+                  {tableHeader}
+                  <TableBody>{nanodes.map(this.renderRow)}</TableBody>
+                </Table>
               </Grid>
             </>
           );
@@ -136,9 +164,10 @@ export class SelectPlanPanel extends React.Component<
                 Standard instances are good for medium-duty workloads and are a
                 good mix of performance, resources, and price.
               </Typography>
-              <Grid container spacing={2}>
-                {standards.map(this.renderCard)}
-              </Grid>
+              <Table isResponsive={false} border spacingBottom={16}>
+                {tableHeader}
+                <TableBody>{standards.map(this.renderRow)}</TableBody>
+              </Table>
             </>
           );
         },
@@ -157,7 +186,10 @@ export class SelectPlanPanel extends React.Component<
                 consistent performance is important.
               </Typography>
               <Grid container spacing={2}>
-                {dedicated.map(this.renderCard)}
+                <Table isResponsive={false} border spacingBottom={16}>
+                  {tableHeader}
+                  <TableBody>{dedicated.map(this.renderRow)}</TableBody>
+                </Table>
               </Grid>
             </>
           );
@@ -178,7 +210,10 @@ export class SelectPlanPanel extends React.Component<
                 databases.
               </Typography>
               <Grid container spacing={2}>
-                {highmem.map(this.renderCard)}
+                <Table isResponsive={false} border spacingBottom={16}>
+                  {tableHeader}
+                  <TableBody>{highmem.map(this.renderRow)}</TableBody>
+                </Table>
               </Grid>
             </>
           );
@@ -214,7 +249,10 @@ export class SelectPlanPanel extends React.Component<
                 transcoding.
               </Typography>
               <Grid container spacing={2}>
-                {gpu.map(this.renderCard)}
+                <Table isResponsive={false} border spacingBottom={16}>
+                  {tableHeader}
+                  <TableBody>{gpu.map(this.renderRow)}</TableBody>
+                </Table>
               </Grid>
             </>
           );
