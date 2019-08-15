@@ -48,7 +48,9 @@ const SSHAccessTable: React.FC<{}> = () => {
     });
   };
 
-  const [selectedLinodeId, setSelectedLinodeId] = React.useState<number>(0);
+  const [selectedLinodeId, setSelectedLinodeId] = React.useState<number | null>(
+    null
+  );
 
   const drawer = useOpenClose();
 

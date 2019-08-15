@@ -18,12 +18,12 @@ export type CombinedProps = Props;
 
 export const SSHAccessTableContent: React.FC<CombinedProps> = props => {
   const {
-    error,
+    linodeSettings,
     loading,
     lastUpdated,
     updateOne,
-    linodeSettings,
-    openDrawer
+    openDrawer,
+    error
   } = props;
 
   if (loading && lastUpdated === 0) {
