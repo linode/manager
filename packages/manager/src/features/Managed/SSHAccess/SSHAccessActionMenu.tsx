@@ -7,7 +7,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
   linodeId: number;
-  access: boolean;
+  isEnabled: boolean;
   requestSettings: () => void;
   openDrawer: (linodeId: number) => void;
 }
@@ -16,7 +16,7 @@ export type CombinedProps = Props & WithSnackbarProps;
 
 export const SSHAccessActionMenu: React.FC<CombinedProps> = props => {
   const {
-    access,
+    isEnabled,
     linodeId,
     enqueueSnackbar,
     requestSettings,
@@ -25,24 +25,20 @@ export const SSHAccessActionMenu: React.FC<CombinedProps> = props => {
 
   const createActions = (closeMenu: Function): Action[] => {
     const actions = [
-      /**
-       * Reminder of API oddity:
-       * When linodeSetting.ssh.access === true, access is DISABLED
-       * When linodeSetting.ssh.access === false, access is ENABLED
-       * @todo: Change this if/when API is fixed.
-       */
       {
-        title: access ? 'Enable' : 'Disable',
+        title: isEnabled ? 'Disable' : 'Enable',
         onClick: () => {
           updateLinodeSettings(linodeId, {
-            ssh: { access: !access }
+            ssh: { access: isEnabled }
+            // @todo: When API oddity is fixed, use the following instead:
+            // ssh: { access: isEnabled ? false : true }
           })
             .then(() => requestSettings())
             .catch(err => {
               const errMessage = getAPIErrorOrDefault(
                 err,
                 `Error ${
-                  access ? 'enabling' : 'disabling'
+                  isEnabled ? 'disabling' : 'enabling'
                 } SSH access for this Linode.`
               );
               enqueueSnackbar(errMessage[0].reason, { variant: 'error' });

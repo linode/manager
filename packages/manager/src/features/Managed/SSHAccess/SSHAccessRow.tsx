@@ -12,6 +12,17 @@ interface Props {
 export const SSHAccessRow: React.FunctionComponent<Props> = props => {
   const { linodeSetting, requestSettings, openDrawer } = props;
 
+  /**
+   * NOTE: Currently the following API exists in production:
+   *
+   * When linodeSetting.ssh.access == true, access is DISABLED
+   * When linodeSetting.ssh.access == false, access is ENABLED
+   *
+   * If/when this bug is fixed, the following definition should be used:
+   * const isAccessEnabled = linodeSetting.ssh.access;
+   */
+  const isAccessEnabled = !linodeSetting.ssh.access;
+
   return (
     <TableRow
       key={linodeSetting.id}
@@ -22,9 +33,7 @@ export const SSHAccessRow: React.FunctionComponent<Props> = props => {
         {linodeSetting.label}
       </TableCell>
       <TableCell parentColumn="SSH Access" data-qa-managed-ssh-access>
-        {/* NOTE: There's currently an API oddity where `ssh.access: true` means access is DISABLED.
-        If/when this bug is fixed, this logic should be adjusted too. */}
-        {!linodeSetting.ssh.access ? 'Enabled' : 'Disabled'}
+        {isAccessEnabled ? 'Enabled' : 'Disabled'}
       </TableCell>
       <TableCell parentColumn="User" data-qa-managed-user>
         {linodeSetting.ssh.user ? linodeSetting.ssh.user : 'root'}
@@ -38,7 +47,7 @@ export const SSHAccessRow: React.FunctionComponent<Props> = props => {
       <TableCell>
         <ActionMenu
           linodeId={linodeSetting.id}
-          access={linodeSetting.ssh.access}
+          isEnabled={isAccessEnabled}
           requestSettings={requestSettings}
           openDrawer={openDrawer}
         />
