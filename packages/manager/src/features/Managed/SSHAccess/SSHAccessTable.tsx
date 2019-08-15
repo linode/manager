@@ -41,16 +41,9 @@ const SSHAccessTable: React.FC<{}> = () => {
     Linode.ManagedLinodeSetting[]
   >(request, []);
 
-  const [linodeIdForEditing, setLinodeIdForEditing] = React.useState<number>(0);
+  const [selectedLinodeId, setSelectedLinodeId] = React.useState<number>(0);
 
-  const { isOpen, open, close } = useOpenClose();
-
-  const openDrawer = (linodeId: number) => {
-    setLinodeIdForEditing(linodeId);
-    open();
-  };
-
-  const linodeSetting = data.find(l => l.id === linodeIdForEditing);
+  const drawer = useOpenClose();
 
   return (
     <>
@@ -128,7 +121,10 @@ const SSHAccessTable: React.FC<{}> = () => {
                             loading={loading}
                             lastUpdated={lastUpdated}
                             requestSettings={update}
-                            openDrawer={openDrawer}
+                            openDrawer={(linodeId: number) => {
+                              setSelectedLinodeId(linodeId);
+                              drawer.open();
+                            }}
                             error={error}
                           />
                         </TableBody>
@@ -150,9 +146,9 @@ const SSHAccessTable: React.FC<{}> = () => {
         }}
       </OrderBy>
       <EditSSHAccessDrawer
-        isOpen={isOpen}
-        linodeSetting={linodeSetting}
-        closeDrawer={close}
+        isOpen={drawer.isOpen}
+        closeDrawer={drawer.close}
+        linodeSetting={data.find(l => l.id === selectedLinodeId)}
       />
     </>
   );
