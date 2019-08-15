@@ -4,6 +4,7 @@ interface UseAPIRequest<T> {
   data: T;
   loading: boolean;
   lastUpdated: number;
+  update: () => void;
   error?: Linode.ApiFieldError[];
 }
 
@@ -58,7 +59,7 @@ export const useAPIRequest = <T>(
   const [loading, setLoading] = useState<boolean>(false);
   const [lastUpdated, setLastUpdated] = useState<number>(0);
 
-  useEffect(() => {
+  const _request = () => {
     setLoading(true);
     request()
       .then(responseData => {
@@ -70,7 +71,9 @@ export const useAPIRequest = <T>(
         setLoading(false);
         setError(err);
       });
-  }, deps);
+  };
 
-  return { data, loading, lastUpdated, error };
+  useEffect(() => _request(), deps);
+
+  return { data, loading, lastUpdated, error, update: _request };
 };
