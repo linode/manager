@@ -7,10 +7,13 @@ import withVolumesRequests, {
 } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/events';
 import { ResizeVolumeSchema } from 'src/services/volumes/volumes.schema';
+import {
+  handleFieldErrors,
+  handleGeneralErrors
+} from 'src/utilities/formikErrorUtils';
 import NoticePanel from './NoticePanel';
 import PricePanel from './PricePanel';
 import SizeField from './SizeField';
-import { handleFieldErrors, handleGeneralErrors } from './utils';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
 interface Props {

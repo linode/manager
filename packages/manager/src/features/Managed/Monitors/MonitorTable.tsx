@@ -25,6 +25,10 @@ import withManagedServices, {
   DispatchProps
 } from 'src/containers/managedServices.container';
 import { ManagedServicePayload } from 'src/services/managed';
+import {
+  handleFieldErrors,
+  handleGeneralErrors
+} from 'src/utilities/formikErrorUtils';
 
 import MonitorDrawer from '../MonitorDrawer';
 import MonitorDialog from './MonitorDialog';
@@ -110,7 +114,13 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
         setDrawerOpen(false);
       })
       .catch(e => {
-        setErrors(e);
+        const defaultMessage = `Unable to clone this volume at this time. Please try again later.`;
+        const mapErrorToStatus = (generalError: string) =>
+          setStatus({ generalError });
+
+        setSubmitting(false);
+        handleFieldErrors(setErrors, e);
+        handleGeneralErrors(mapErrorToStatus, e, defaultMessage);
         setSubmitting(false);
       });
   };

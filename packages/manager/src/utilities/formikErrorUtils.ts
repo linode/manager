@@ -1,9 +1,4 @@
-import { isEmpty, isNil } from 'ramda';
-
-export const isNilOrEmpty = (v: any) => isNil(v) || isEmpty(v);
-
-export const maybeCastToNumber = (v: string | number) =>
-  isNilOrEmpty(v) ? undefined : Number(v);
+import isNilOrEmpty from './isNilOrEmpty';
 
 export const handleFieldErrors = (
   callback: Function,

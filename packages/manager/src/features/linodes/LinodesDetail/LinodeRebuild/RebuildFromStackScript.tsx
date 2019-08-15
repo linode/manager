@@ -30,15 +30,14 @@ import {
   getMineAndAccountStackScripts
 } from 'src/features/StackScripts/stackScriptUtils';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
-// @todo: Extract these utils out of Volumes
-import {
-  handleFieldErrors,
-  handleGeneralErrors
-} from 'src/features/Volumes/VolumeDrawer/utils';
 import { useStackScript } from 'src/hooks/useStackScript';
 import { rebuildLinode } from 'src/services/linodes';
 import { RebuildLinodeFromStackScriptSchema } from 'src/services/linodes/linode.schema';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import {
+  handleFieldErrors,
+  handleGeneralErrors
+} from 'src/utilities/formikErrorUtils';
 import { filterPublicImages } from 'src/utilities/images';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinodeDetailContext } from '../linodeDetailContext';
