@@ -129,11 +129,11 @@ export const AttachFileListItem: React.StatelessComponent<
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
-  styled,
   withHandlers({
     onClick: (props: Props) => () => {
       props.removeFile(props.fileIdx);
     }
-  })
+  }),
+  styled
 )(AttachFileListItem);
 export default enhanced;
