@@ -4,6 +4,23 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.68.0] - 2019-08-15
+
+### Added:
+- Support for promotion codes and expiring credits
+- SSH Access Key Table for Managed
+- Delete monitor action to MonitorActionMenu
+- GST notification for users in Australia and India
+
+### Fixed:
+- CSS animations in JSS
+- NodeBalancer connection grid display
+- Long titles broken on image names
+- Button types for cancel actions
+- Issue with entity labels not being able to be updated when an event was in-progress
+- Billing form state resets when changing country selection
+- One-click cards display on large breakpoints
+
 ## [v0.67.0] - 2019-08-12
 
 ### Added:
