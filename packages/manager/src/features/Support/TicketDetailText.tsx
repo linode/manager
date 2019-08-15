@@ -30,7 +30,11 @@ const styles = (theme: Theme) =>
       top: -41,
       right: 0,
       left: 'auto',
+      '& svg': {
+        stroke: theme.color.grey1
+      },
       '& .border': {
+        stroke: theme.color.grey1,
         fill: 'white'
       }
     },
