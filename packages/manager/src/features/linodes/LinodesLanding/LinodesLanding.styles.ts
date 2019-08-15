@@ -5,7 +5,12 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 
-type ClassNames = 'title' | 'tagGroup' | 'CSVlinkContainer' | 'CSVlink';
+type ClassNames =
+  | 'title'
+  | 'tagGroup'
+  | 'CSVlinkContainer'
+  | 'CSVlink'
+  | 'addNewLink';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -24,6 +29,10 @@ const styles = (theme: Theme) =>
     },
     CSVlinkContainer: {
       marginTop: theme.spacing(1)
+    },
+    addNewLink: {
+      marginBottom: -3,
+      marginLeft: 15
     }
   });
 
