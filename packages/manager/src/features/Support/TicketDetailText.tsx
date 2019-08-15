@@ -18,7 +18,10 @@ type ClassNames = 'root' | 'formattedText' | 'expCol' | 'expButton' | 'toggle';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
+    root: {
+      marginTop: theme.spacing(1),
+      padding: `${theme.spacing(2)}px ${theme.spacing(1)}px`
+    },
     expCol: {
       display: 'flex',
       justifyContent: 'flex-end'
@@ -75,7 +78,7 @@ const TicketDetailText: React.FC<CombinedProps> = props => {
   const ticketReplyBody = panelOpen ? ticketBody : truncatedText;
 
   return (
-    <React.Fragment>
+    <Grid container className={classes.root}>
       <Grid
         item
         xs={truncatedText !== ticketBody ? 11 : 12}
@@ -114,7 +117,7 @@ const TicketDetailText: React.FC<CombinedProps> = props => {
           </IconButton>
         </Grid>
       )}
-    </React.Fragment>
+    </Grid>
   );
 };
 

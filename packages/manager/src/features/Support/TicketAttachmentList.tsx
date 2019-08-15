@@ -18,8 +18,12 @@ type ClassNames = 'root' | 'attachmentPaperWrapper';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
+    root: {
+      marginLeft: `calc(40px + ${theme.spacing(1)}px)`,
+      maxWidth: `calc(66.66% + ${theme.spacing(4)}px)`
+    },
     attachmentPaperWrapper: {
+      width: '100%',
       overflowX: 'auto'
     }
   });
@@ -62,11 +66,9 @@ export const TicketAttachmentList: React.StatelessComponent<
   const icons = addIconsToAttachments(attachments);
 
   return (
-    <Grid item xs={12} container justify="flex-start" className="px0">
-      <Grid item xs={12}>
+    <Grid item container justify="flex-start" className={classes.root}>
+      <Grid item className={classes.attachmentPaperWrapper}>
         <Typography variant="h3">Attachments</Typography>
-      </Grid>
-      <Grid item xs={12} className={classes.attachmentPaperWrapper}>
         <TicketAttachmentRow
           attachments={slice(0, 5, attachments)}
           icons={icons}

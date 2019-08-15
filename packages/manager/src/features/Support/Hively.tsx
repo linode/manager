@@ -2,8 +2,17 @@ import * as moment from 'moment';
 import * as React from 'react';
 import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  hivelyContainer: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+    margin: `${theme.spacing(3)}px ${theme.spacing(1)}px 0`,
+    paddingTop: theme.spacing(1),
+    borderTop: `1px solid ${theme.color.grey3}`
+  },
   hivelyLink: {
     textDecoration: 'none',
     color: theme.color.black,
@@ -12,12 +21,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   hivelyImage: {
     width: '25px',
     margin: 3
-  },
-  hivelyContainer: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center',
-    marginTop: theme.spacing(3)
   },
   hivelyLinkIcon: {
     display: 'inline-block',
@@ -65,9 +68,11 @@ export const Hively: React.FC<Props> = props => {
   return (
     <div className={classes.hivelyContainer}>
       <Divider />
-      <a className={classes.hivelyLink} href={href + '3'} target="_blank">
-        How did I do?
-      </a>
+      <Typography component="span">
+        <a className={classes.hivelyLink} href={href + '3'} target="_blank">
+          How did I do?
+        </a>
+      </Typography>
       <span>
         <a href={href + '3'} target="_blank" className={classes.hivelyLinkIcon}>
           <img
