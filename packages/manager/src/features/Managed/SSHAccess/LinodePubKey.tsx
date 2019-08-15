@@ -10,6 +10,8 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 // @todo: is this URL correct? Are there new docs being written?
 const DOC_URL =
@@ -70,19 +72,21 @@ const useStyles = makeStyles((theme: Theme) => ({
 const LinodePubKey: React.FC<{}> = props => {
   const classes = useStyles();
 
-  const [pubKey, pubKeyError] = useLinodePubKey();
+  const { data: pubKey, loading, error } = useAPIRequest<string>(
+    getLinodePubKey,
+    ''
+  );
 
-  // ERROR state
-  if (pubKeyError) {
+  if (error) {
+    const errorMessage = getErrorStringOrDefault(error);
     return (
       <Paper className={classes.errorState}>
-        <ErrorState cozy errorText={pubKeyError} />
+        <ErrorState cozy errorText={errorMessage} />
       </Paper>
     );
   }
 
-  // LOADING state
-  if (!pubKey) {
+  if (loading) {
     return (
       <Paper className={`${classes.root} ${classes.loadingState}`}>
         <CircleProgress mini className={classes.spinner} />
@@ -146,23 +150,3 @@ const MOCKgetLinodePubKey = (): Promise<string> => {
 };
 
 const getLinodePubKey = MOCKgetLinodePubKey;
-
-// I abstracted this hook away from the component, since we may want to re-use it somewhere else.
-const useLinodePubKey = () => {
-  const [pubKey, setPubKey] = React.useState<string>('');
-  const [pubKeyError, setPubKeyError] = React.useState<string>('');
-
-  React.useEffect(() => {
-    // Get the pub key when the component first renders.
-    getLinodePubKey()
-      .then(key => {
-        setPubKey(key);
-      })
-      .catch(err => {
-        // Eventually do some actual error handling.
-        setPubKeyError(err);
-      });
-  }, []);
-
-  return [pubKey, pubKeyError];
-};
