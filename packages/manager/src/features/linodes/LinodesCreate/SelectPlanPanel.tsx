@@ -98,12 +98,16 @@ export class SelectPlanPanel extends React.Component<
             toolTipText={tooltip}
           />
         </TableCell>
-        <TableCell>{type.heading}</TableCell>
-        <TableCell>${type.price.monthly}</TableCell>
-        <TableCell>${type.price.hourly}</TableCell>
-        <TableCell>{type.vcpus}</TableCell>
-        <TableCell>{convertMegabytesTo(type.disk, true)}</TableCell>
-        <TableCell>{convertMegabytesTo(type.memory, true)}</TableCell>
+        <TableCell parentColumn="Linode Plan">{type.heading}</TableCell>
+        <TableCell parentColumn="Monthly">${type.price.monthly}</TableCell>
+        <TableCell parentColumn="Hourly">${type.price.hourly}</TableCell>
+        <TableCell parentColumn="CPUs">{type.vcpus}</TableCell>
+        <TableCell parentColumn="Storage">
+          {convertMegabytesTo(type.disk, true)}
+        </TableCell>
+        <TableCell parentColumn="Ram">
+          {convertMegabytesTo(type.memory, true)}
+        </TableCell>
       </TableRow>
     );
   };
