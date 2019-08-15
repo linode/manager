@@ -1,20 +1,24 @@
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { compose } from 'recompose';
+
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+
 import { withLinodeDetailContext } from '../LinodesDetail/linodeDetailContext';
 import LinodeControls from '../LinodesDetail/LinodesDetailHeader/LinodeControls';
 import MutationNotification from '../LinodesDetail/LinodesDetailHeader/MutationNotification';
 import Notifications from '../LinodesDetail/LinodesDetailHeader/Notifications';
 import LinodeBusyStatus from '../LinodesDetail/LinodeSummary/LinodeBusyStatus';
-import { linodeInTransition } from '../transitions';
 
-import Typography from 'src/components/core/Typography';
 import { displayType } from 'src/features/linodes/presentation';
 import { ApplicationState } from 'src/store';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
+import { linodeInTransition } from '../transitions';
+
 import CautionNotice from './CautionNotice';
+import ConfigureForm from './ConfigureForm';
 
 const useStyles = makeStyles((theme: Theme) => ({
   details: {
@@ -31,6 +35,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
     label,
     disks,
     linodeId,
+    region,
     linodeStatus,
     linodeEvents,
     linodeSpecs,
@@ -76,6 +81,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
         {newLabel}
       </Typography>
       <CautionNotice linodeVolumes={props.linodeVolumes} />
+      <ConfigureForm currentRegion={region} />
     </React.Fragment>
   );
 };

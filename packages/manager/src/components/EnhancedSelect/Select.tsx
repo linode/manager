@@ -5,7 +5,6 @@ import CreatableSelect, {
   Props as CreatableSelectProps
 } from 'react-select/lib/Creatable';
 import { Props as SelectProps } from 'react-select/lib/Select';
-import { StylesConfig } from 'react-select/lib/styles';
 import { withStyles, WithStyles } from 'src/components/core/styles';
 import { Props as TextFieldProps } from 'src/components/TextField';
 /* TODO will be refactoring enhanced select to be an abstraction.
@@ -43,40 +42,8 @@ interface ActionMeta {
   action: string;
 }
 
-interface ActionMeta {
-  action: string;
-}
-
 export interface NoOptionsMessageProps {
   inputValue: string;
-}
-
-export interface EnhancedSelectProps {
-  options?: Item[] | GroupType[];
-  className?: string;
-  components?: any;
-  disabled?: boolean;
-  isClearable?: boolean;
-  isMulti?: boolean;
-  isLoading?: boolean;
-  variant?: 'creatable';
-  value?: Item | Item[] | null;
-  label?: string;
-  placeholder?: string;
-  errorText?: string;
-  styleOverrides?: StylesConfig;
-  onChange: (selected: Item | Item[] | null, actionMeta: ActionMeta) => void;
-  createNew?: (inputValue: string) => void;
-  onInputChange?: (inputValue: string, actionMeta: ActionMeta) => void;
-  loadOptions?: (inputValue: string) => Promise<Item | Item[]> | undefined;
-  filterOption?: (option: Item, inputValue: string) => boolean | null;
-  medium?: boolean;
-  small?: boolean;
-  guidance?: string | React.ReactNode;
-  noMarginTop?: boolean;
-  inline?: boolean;
-  hideLabel?: boolean;
-  errorGroup?: string;
 }
 
 // Material-UI versions of several React-Select components.
@@ -93,19 +60,41 @@ const _components = {
   LoadingIndicator
 };
 
-type CombinedProps = EnhancedSelectProps &
-  WithStyles<ClassNames> &
-  BaseSelectProps &
-  CreatableProps;
+type CombinedProps = WithStyles<ClassNames> & BaseSelectProps & CreatableProps;
 
-interface BaseSelectProps extends SelectProps<any> {
-  classes: any;
+export interface BaseSelectProps
+  extends Omit<SelectProps<any>, 'onChange' | 'value'> {
+  classes?: any;
   /*
    textFieldProps isn't native to react-select
    but we're using the MUI select element so any props that
    can be passed to the MUI TextField element can be passed here
   */
   textFieldProps?: TextFieldProps;
+  /**
+   * errorText and label both passed to textFieldProps
+   * @todo consider just putting this under textFieldProps
+   */
+  errorText?: string;
+  label?: string;
+  /** alias for isDisabled */
+  disabled?: boolean;
+  variant?: 'creatable';
+  /** retyped this */
+  value?: Item | Item[] | null;
+  /** making this required */
+  onChange: (selected: Item | Item[] | null, actionMeta: ActionMeta) => void;
+  /** alias for onCreateOption */
+  createNew?: (inputValue: string) => void;
+  loadOptions?: (inputValue: string) => Promise<Item | Item[]> | undefined;
+  /** the rest are props we've added ourselves */
+  medium?: boolean;
+  small?: boolean;
+  noMarginTop?: boolean;
+  inline?: boolean;
+  hideLabel?: boolean;
+  errorGroup?: string;
+  guidance?: string | React.ReactNode;
 }
 
 interface CreatableProps extends CreatableSelectProps<any> {}
@@ -129,7 +118,6 @@ class Select extends React.PureComponent<CombinedProps, {}> {
       onChange,
       onInputChange,
       options,
-      styleOverrides,
       value,
       variant,
       noOptionsMessage,
@@ -158,7 +146,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
      * The components passed in as props will be merged with the overrides we are already using, with the passed components
      * taking precedence.
      */
-    const combinedComponents = { ..._components, ...components };
+    const combinedComponents: any = { ..._components, ...components };
 
     // If async, pass loadOptions instead of options. A Select can't be both Creatable and Async.
     // (AsyncCreatable exists, but we have not adapted it.)
@@ -182,7 +170,6 @@ class Select extends React.PureComponent<CombinedProps, {}> {
           [classes.root]: true
         })}
         classNamePrefix="react-select"
-        styles={styleOverrides}
         /*
           textFieldProps isn't native to react-select
           but we're using the MUI select element so any props that
@@ -192,6 +179,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
           ...textFieldProps,
           label,
           errorText,
+          errorGroup,
           disabled,
           InputLabelProps: {
             shrink: true
