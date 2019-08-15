@@ -1,4 +1,4 @@
-export const convertMegabytesTo = (data: number) => {
+export const convertMegabytesTo = (data: number, removeDecimals?: boolean) => {
   // API v4 always returns nodebalancer transfer in MB, so we want to clean it up if it's too
   // big or too small
   const gb = 1073741824;
@@ -7,7 +7,9 @@ export const convertMegabytesTo = (data: number) => {
   const totalToBytes = data * 1024 * 1024; // convert the MB to Bytes
   if (totalToBytes >= gb) {
     // convert bytes to GB
-    return `${Math.max(Math.ceil(totalToBytes / gb)).toFixed(2)} GB`;
+    return removeDecimals
+      ? `${Math.max(Math.ceil(totalToBytes / gb))} GB`
+      : `${Math.max(Math.ceil(totalToBytes / gb)).toFixed(2)} GB`;
   }
   if (totalToBytes >= mb) {
     // convert bytes to MB
