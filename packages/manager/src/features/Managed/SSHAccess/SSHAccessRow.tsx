@@ -13,7 +13,7 @@ export const SSHAccessRow: React.FunctionComponent<Props> = props => {
   const { linodeSetting, requestSettings, openDrawer } = props;
 
   /**
-   * NOTE: Currently the following API exists in production:
+   * NOTE: Currently the following API oddity exists in production:
    *
    * When linodeSetting.ssh.access == true, access is DISABLED
    * When linodeSetting.ssh.access == false, access is ENABLED
