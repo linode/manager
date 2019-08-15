@@ -27,3 +27,19 @@ export const formatRegion = (region: string) => {
   // const country = dcDisplayCountry[region];
   // return `${country || ''} ${city || ''}`;
 };
+
+export const getHumanReadableCountry = (regionSlug: string) => {
+  if (regionSlug.match(/(us)/gim)) {
+    return 'North America';
+  }
+  if (regionSlug.match(/(ca)/gim)) {
+    return 'Canada';
+  }
+  if (regionSlug.match(/(de|uk)/gim)) {
+    return 'Europe';
+  }
+  if (regionSlug.match(/(jp|sg|in)/gim)) {
+    return 'Asia';
+  }
+  return 'Other';
+};
