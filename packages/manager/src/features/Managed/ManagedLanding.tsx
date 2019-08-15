@@ -25,6 +25,9 @@ import withFeatureFlagConsumer, {
 import ManagedPlaceholder from './ManagedPlaceholder';
 import SupportWidget from './SupportWidget';
 
+// dummy credential data
+import { credentials } from 'src/__data__/managedCredentials';
+
 const Monitors = DefaultLoader({
   loader: () => import('./Monitors')
 });
@@ -36,6 +39,7 @@ const SSHAccess = DefaultLoader({
 const Credentials = DefaultLoader({
   loader: () => import('./Credentials')
 });
+
 const Contacts = DefaultLoader({
   loader: () => import('./Contacts')
 });
@@ -149,7 +153,9 @@ export class ManagedLanding extends React.Component<CombinedProps, {}> {
                 exact
                 strict
                 path={`${this.props.match.path}/credentials`}
-                component={Credentials}
+                render={() => (
+                  <Credentials loading={false} credentials={credentials} />
+                )}
               />
               <Route
                 exact

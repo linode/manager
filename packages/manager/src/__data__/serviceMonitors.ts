@@ -1,3 +1,5 @@
+import { credentials } from './managedCredentials';
+
 export const monitors: Linode.ManagedServiceMonitor[] = [
   {
     consultation_group: '',
@@ -10,7 +12,7 @@ export const monitors: Linode.ManagedServiceMonitor[] = [
     service_type: 'url',
     notes: '',
     id: 1224,
-    credentials: [],
+    credentials,
     address: 'http://www.example.com',
     body: ''
   },
@@ -40,7 +42,7 @@ export const monitors: Linode.ManagedServiceMonitor[] = [
     service_type: 'url',
     notes: '',
     id: 3456,
-    credentials: [],
+    credentials,
     address: 'http://www.example.com',
     body: ''
   },
@@ -55,7 +57,7 @@ export const monitors: Linode.ManagedServiceMonitor[] = [
     service_type: 'url',
     notes: '',
     id: 3456,
-    credentials: [],
+    credentials,
     address: 'http://www.example.com',
     body: ''
   }
