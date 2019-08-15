@@ -103,3 +103,9 @@
 .formatted-text span.hljs-strong {
   font-weight: bold;
 }
+
+.formatted-text .version {
+  display: block;
+  margin-top: 32px;
+  color: #aaa;
+}

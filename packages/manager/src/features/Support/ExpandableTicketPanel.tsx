@@ -69,12 +69,15 @@ const styles = (theme: Theme) =>
     },
     content: {
       width: '100%',
-      maxWidth: '66.66%',
       marginTop: theme.spacing(1),
+      marginRight: theme.spacing(1),
       padding: theme.spacing(2),
       backgroundColor: theme.color.white,
       border: `1px solid ${theme.color.grey3}`,
-      borderRadius: theme.shape.borderRadius
+      borderRadius: theme.shape.borderRadius,
+      [theme.breakpoints.up('md')]: {
+        maxWidth: '66.66%'
+      }
     },
     header: {
       padding: `0 ${theme.spacing(1)}px`,
@@ -91,9 +94,7 @@ const styles = (theme: Theme) =>
     avatarCol: {
       minWidth: 60
     },
-    isCurrentUser: {
-      // backgroundColor: theme.color.grey2
-    }
+    isCurrentUser: {}
   });
 
 interface Props {
