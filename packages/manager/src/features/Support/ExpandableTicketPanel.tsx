@@ -47,11 +47,7 @@ const styles = (theme: Theme) =>
       width: '100%',
       padding: theme.spacing(2),
       marginBottom: theme.spacing(2),
-      position: 'relative',
-      '& p': {
-        margin: 0,
-        padding: 0
-      }
+      position: 'relative'
     },
     userWrapper: {
       marginTop: theme.spacing(1) / 2,
@@ -83,6 +79,7 @@ const styles = (theme: Theme) =>
     header: {
       padding: `0 ${theme.spacing(1)}px`,
       backgroundColor: theme.color.grey2,
+      borderBottom: `1px solid ${theme.color.grey3}`,
       borderTopLeftRadius: theme.shape.borderRadius,
       borderTopRightRadius: theme.shape.borderRadius
     },
@@ -239,7 +236,7 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
                   __html: data.description
                 }}
               />
-              {!shouldRenderHively(
+              {shouldRenderHively(
                 data.from_linode,
                 data.updated,
                 data.username
