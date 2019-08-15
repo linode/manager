@@ -8,7 +8,7 @@ namespace Linode {
     service_type: ServiceType;
     timeout: number;
     region: string | null;
-    credentials: any[]; // @todo
+    credentials: ManagedCredential[]; // @todo
     address: string;
     body: string;
     notes: string;
@@ -31,5 +31,11 @@ namespace Linode {
     user: string;
     ip: string;
     port: number;
+  }
+
+  export interface ManagedCredential {
+    id: number;
+    last_decrypted: string | null;
+    label: string;
   }
 }
