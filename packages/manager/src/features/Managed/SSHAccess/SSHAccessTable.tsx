@@ -11,8 +11,10 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import useOpenClose from 'src/hooks/useOpenClose';
 import { getLinodeSettings } from 'src/services/managed';
 import { getAll } from 'src/utilities/getAll';
+import EditSSHAccessDrawer from './EditSSHAccessDrawer';
 import SSHAccessTableContent from './SSHAccessTableContent';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -35,9 +37,20 @@ const request = () =>
 const SSHAccessTable: React.FC<{}> = () => {
   const classes = useStyles();
 
-  const { data, loading, lastUpdated, error } = useAPIRequest<
+  const { data, loading, lastUpdated, update, error } = useAPIRequest<
     Linode.ManagedLinodeSetting[]
   >(request, []);
+
+  const [linodeIdForEditing, setLinodeIdForEditing] = React.useState<number>(0);
+
+  const { isOpen, open, close } = useOpenClose();
+
+  const openDrawer = (linodeId: number) => {
+    setLinodeIdForEditing(linodeId);
+    open();
+  };
+
+  const linodeSetting = data.find(l => l.id === linodeIdForEditing);
 
   return (
     <>
@@ -105,6 +118,7 @@ const SSHAccessTable: React.FC<{}> = () => {
                             >
                               Port
                             </TableSortCell>
+                            {/* Empty TableCell for action menu */}
                             <TableCell />
                           </TableRow>
                         </TableHead>
@@ -113,6 +127,8 @@ const SSHAccessTable: React.FC<{}> = () => {
                             linodeSettings={paginatedData}
                             loading={loading}
                             lastUpdated={lastUpdated}
+                            requestSettings={update}
+                            openDrawer={openDrawer}
                             error={error}
                           />
                         </TableBody>
@@ -133,6 +149,11 @@ const SSHAccessTable: React.FC<{}> = () => {
           );
         }}
       </OrderBy>
+      <EditSSHAccessDrawer
+        isOpen={isOpen}
+        linodeSetting={linodeSetting}
+        closeDrawer={close}
+      />
     </>
   );
 };

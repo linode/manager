@@ -1,13 +1,16 @@
 import * as React from 'react';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import ActionMenu from './SSHAccessActionMenu';
 
 interface Props {
   linodeSetting: Linode.ManagedLinodeSetting;
+  requestSettings: () => void;
+  openDrawer: (linodeId: number) => void;
 }
 
 export const SSHAccessRow: React.FunctionComponent<Props> = props => {
-  const { linodeSetting } = props;
+  const { linodeSetting, requestSettings, openDrawer } = props;
 
   return (
     <TableRow
@@ -32,7 +35,14 @@ export const SSHAccessRow: React.FunctionComponent<Props> = props => {
       <TableCell parentColumn="Port" data-qa-managed-port>
         {linodeSetting.ssh.port ? linodeSetting.ssh.port : 22}
       </TableCell>
-      {/* @todo: action menu */}
+      <TableCell>
+        <ActionMenu
+          linodeId={linodeSetting.id}
+          access={linodeSetting.ssh.access}
+          requestSettings={requestSettings}
+          openDrawer={openDrawer}
+        />
+      </TableCell>
     </TableRow>
   );
 };
