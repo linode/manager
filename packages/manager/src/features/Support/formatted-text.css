@@ -1,0 +1,104 @@
+.formatted-text {
+  line-height: 1.2;
+  font-size: 0.9rem;
+}
+
+.formatted-text ul {
+  margin: 16px 0;
+}
+
+.formatted-text li {
+  margin: 8px 0;
+}
+
+.formatted-text p {
+  margin: 8px 0 0;
+}
+
+.formatted-text p:first-child {
+  margin-top: 0;
+}
+
+.formatted-text pre {
+  background-color: #eee;
+  padding: 8px;
+  font-size: 1rem;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.formatted-text span.hljs-comment,
+.formatted-text span.hljs-quote {
+  color: #655f6d;
+}
+
+.formatted-text span.hljs-variable,
+.formatted-text span.hljs-template-variable,
+.formatted-text span.hljs-attribute,
+.formatted-text span.hljs-tag,
+.formatted-text span.hljs-name,
+.formatted-text span.hljs-regexp .formatted-text span.hljs-link,
+.formatted-text span.hljs-selector-id,
+.formatted-text span.hljs-selector-class {
+  color: #be4678;
+}
+
+.formatted-text span.hljs-attr {
+  color: #2466b3;
+}
+
+.formatted-text span.hljs-meta,
+.formatted-text span.hljs-built_in,
+.formatted-text span.hljs-butonin-name,
+.formatted-text span.hljs-literal,
+.formatted-text span.hljs-type,
+.formatted-text span.hljs-params {
+  color: #aa573c;
+}
+
+.formatted-text span.hljs-number,
+.formatted-text span.hljs-string,
+.formatted-text span.hljs-symbol,
+.formatted-text span.hljs-bullet {
+  color: black;
+}
+.formatted-text span.hljs-title,
+.formatted-text span.hljs-section {
+  color: #576ddb;
+}
+
+.formatted-text span.hljs-keyword,
+.formatted-text span.hljs-selector-tag {
+  color: #955ae7;
+}
+
+.formatted-text span.hljs-deletion,
+.formatted-text span.hljs-addition {
+  color: #19171c;
+  display: inline-block;
+  width: 100%;
+}
+
+.formatted-text span.hljs-deletion {
+  background-color: #be4678;
+}
+
+.formatted-text span.hljs-addition {
+  background-color: #2a9292;
+}
+
+.formatted-text span.hljs {
+  display: block;
+  overflow-x: auto;
+  background: #efecf4;
+  color: #585260;
+  padding: 0.5;
+}
+
+.formatted-text span.hljs-emphasis {
+  font-style: italic;
+}
+
+.formatted-text span.hljs-strong {
+  font-weight: bold;
+}
