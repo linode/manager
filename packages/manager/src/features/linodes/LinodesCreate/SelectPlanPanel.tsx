@@ -26,7 +26,7 @@ export interface ExtendedType extends Linode.LinodeType {
   subHeadings: [string, string];
 }
 
-type ClassNames = 'root' | 'copy';
+type ClassNames = 'root' | 'copy' | 'table';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -36,6 +36,11 @@ const styles = (theme: Theme) =>
     copy: {
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(3)
+    },
+    table: {
+      [theme.breakpoints.down('md')]: {
+        width: '100%'
+      }
     }
   });
 
@@ -98,16 +103,12 @@ export class SelectPlanPanel extends React.Component<
             toolTipText={tooltip}
           />
         </TableCell>
-        <TableCell parentColumn="Linode Plan">{type.heading}</TableCell>
-        <TableCell parentColumn="Monthly">${type.price.monthly}</TableCell>
-        <TableCell parentColumn="Hourly">${type.price.hourly}</TableCell>
-        <TableCell parentColumn="CPUs">{type.vcpus}</TableCell>
-        <TableCell parentColumn="Storage">
-          {convertMegabytesTo(type.disk, true)}
-        </TableCell>
-        <TableCell parentColumn="Ram">
-          {convertMegabytesTo(type.memory, true)}
-        </TableCell>
+        <TableCell>{type.heading}</TableCell>
+        <TableCell>${type.price.monthly}</TableCell>
+        <TableCell>${type.price.hourly}</TableCell>
+        <TableCell>{type.vcpus}</TableCell>
+        <TableCell>{convertMegabytesTo(type.disk, true)}</TableCell>
+        <TableCell>{convertMegabytesTo(type.memory, true)}</TableCell>
       </TableRow>
     );
   };
@@ -147,7 +148,12 @@ export class SelectPlanPanel extends React.Component<
                 performance isn't critical.
               </Typography>
               <Grid container spacing={2}>
-                <Table isResponsive={true} border spacingBottom={16}>
+                <Table
+                  isResponsive={false}
+                  border
+                  spacingBottom={16}
+                  className={classes.table}
+                >
                   {tableHeader}
                   <TableBody>{nanodes.map(this.renderRow)}</TableBody>
                 </Table>
@@ -170,7 +176,12 @@ export class SelectPlanPanel extends React.Component<
                 good mix of performance, resources, and price.
               </Typography>
               <Grid container spacing={2}>
-                <Table isResponsive={true} border spacingBottom={16}>
+                <Table
+                  isResponsive={false}
+                  border
+                  spacingBottom={16}
+                  className={classes.table}
+                >
                   {tableHeader}
                   <TableBody>{standards.map(this.renderRow)}</TableBody>
                 </Table>
@@ -193,7 +204,12 @@ export class SelectPlanPanel extends React.Component<
                 consistent performance is important.
               </Typography>
               <Grid container spacing={2}>
-                <Table isResponsive={true} border spacingBottom={16}>
+                <Table
+                  isResponsive={false}
+                  border
+                  spacingBottom={16}
+                  className={classes.table}
+                >
                   {tableHeader}
                   <TableBody>{dedicated.map(this.renderRow)}</TableBody>
                 </Table>
@@ -217,7 +233,12 @@ export class SelectPlanPanel extends React.Component<
                 databases.
               </Typography>
               <Grid container spacing={2}>
-                <Table isResponsive={true} border spacingBottom={16}>
+                <Table
+                  isResponsive={false}
+                  border
+                  spacingBottom={16}
+                  className={classes.table}
+                >
                   {tableHeader}
                   <TableBody>{highmem.map(this.renderRow)}</TableBody>
                 </Table>
@@ -256,7 +277,12 @@ export class SelectPlanPanel extends React.Component<
                 transcoding.
               </Typography>
               <Grid container spacing={2}>
-                <Table isResponsive={true} border spacingBottom={16}>
+                <Table
+                  isResponsive={false}
+                  border
+                  spacingBottom={16}
+                  className={classes.table}
+                >
                   {tableHeader}
                   <TableBody>{gpu.map(this.renderRow)}</TableBody>
                 </Table>
