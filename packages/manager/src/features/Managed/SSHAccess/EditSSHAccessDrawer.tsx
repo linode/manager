@@ -98,8 +98,12 @@ const EditSSHAccessDrawer: React.FC<CombinedProps> = props => {
     <Drawer title={title} open={isOpen} onClose={closeDrawer}>
       {!linodeSetting ? null : (
         <>
+          {/* We're intentionally not validating with Formik, because we want to allow "Port" to
+          be transformed before submit. I tried a few different things that were unsatisfactory, and
+          since the services library validates the request anyway, this is what I went with. */}
           <Formik
             initialValues={{
+              // These values are nested this way to mach the API request/response.
               ssh: {
                 access: linodeSetting.ssh.access,
                 user: linodeSetting.ssh.user,
@@ -125,7 +129,7 @@ const EditSSHAccessDrawer: React.FC<CombinedProps> = props => {
 
               // API oddity: IP errors come back as {field: 'ip'} instead of {field: 'ssh.ip'} liked we'd expect.
               // tslint:disable-next-line
-              const ipError = errors['ssh.user'] || errors['ip'];
+              const ipError = errors['ssh.ip'] || errors['ip'];
 
               const portError = errors['ssh.port'];
 

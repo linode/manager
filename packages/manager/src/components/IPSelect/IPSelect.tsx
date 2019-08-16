@@ -31,7 +31,7 @@ const IPSelect: React.FC<CombinedProps> = props => {
 
   const ips: string[] = [];
 
-  // If we have a Linode (from Redux) matching the given ID, use it's IPv4 address(es)
+  // If we have a Linode (from Redux) matching the given ID, use it's IPv4 address(es).
   if (linode) {
     ips.push(...linode.ipv4);
 
@@ -75,7 +75,7 @@ const enhanced = compose<CombinedProps, Props>(
   withLinodes<WithLinodesProps, Props>(
     (ownProps, linodesData, linodesLoading, linodesError) => ({
       ...ownProps,
-      // Find the Linode in Redux that corresponds with the given ID
+      // Find the Linode in Redux that corresponds with the given ID.
       linode: linodesData.find(linode => linode.id === ownProps.linodeId),
       linodesLoading,
       linodesError
