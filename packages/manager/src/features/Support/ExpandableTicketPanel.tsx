@@ -46,6 +46,7 @@ const styles = (theme: Theme) =>
     root: {
       width: '100%',
       padding: theme.spacing(2),
+      paddingTop: 0,
       marginBottom: theme.spacing(2),
       position: 'relative'
     },
@@ -74,10 +75,7 @@ const styles = (theme: Theme) =>
       padding: theme.spacing(2),
       backgroundColor: theme.color.white,
       border: `1px solid ${theme.color.grey3}`,
-      borderRadius: theme.shape.borderRadius,
-      [theme.breakpoints.up('md')]: {
-        maxWidth: '66.66%'
-      }
+      borderRadius: theme.shape.borderRadius
     },
     header: {
       padding: `0 ${theme.spacing(1)}px`,

@@ -19,13 +19,13 @@ type ClassNames = 'root' | 'attachmentPaperWrapper';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      marginLeft: `calc(40px + ${theme.spacing(1)}px)`,
+      marginLeft: `calc(40px + ${theme.spacing(3)}px)`,
       [theme.breakpoints.up('md')]: {
-        maxWidth: `calc(66.66% + ${theme.spacing(4)}px)`
+        maxWidth: 600
       }
     },
     attachmentPaperWrapper: {
-      width: '100%',
+      // width: '100%',
       overflowX: 'auto'
     }
   });
