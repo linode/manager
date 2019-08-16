@@ -1,4 +1,4 @@
-import { getAccountInfo } from 'linode-js-sdk';
+import { getAccountInfo } from 'linode-js-sdk/lib/account';
 
 import { updateAccountInfo } from 'src/services/account';
 import { ThunkActionCreator } from 'src/store/types';
