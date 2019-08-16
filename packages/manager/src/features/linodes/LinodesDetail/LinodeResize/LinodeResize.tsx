@@ -7,6 +7,7 @@ import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import CheckBox from 'src/components/CheckBox';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -14,9 +15,14 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import TableBody from 'src/components/core/TableBody';
+import TableHead from 'src/components/core/TableHead';
+import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import SelectionCard from 'src/components/SelectionCard';
+import Grid from 'src/components/Grid';
+import Table from 'src/components/Table';
+import TableCell from 'src/components/TableCell';
 import { resetEventsPolling } from 'src/events';
 import SelectPlanPanel, {
   ExtendedType
@@ -28,6 +34,7 @@ import { resizeLinode } from 'src/services/linodes';
 import { ApplicationState } from 'src/store';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import LinodePermissionsError from '../LinodePermissionsError';
 
 import Checkbox from 'src/components/CheckBox';
@@ -39,8 +46,8 @@ type ClassNames =
   | 'subTitle'
   | 'toolTip'
   | 'currentPlanContainer'
-  | 'checkbox'
-  | 'resizeTitle';
+  | 'resizeTitle'
+  | 'checkbox';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -67,13 +74,8 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(1)
     },
     currentPlanContainer: {
-      '& .selectionCard': {
-        padding: `0 ${theme.spacing(1)}px 0 0`,
-        cursor: 'not-allowed',
-        '& > div, &:focus > div': {
-          backgroundColor: theme.bg.main,
-          borderColor: theme.color.border2
-        }
+      '& input[type=checkbox]': {
+        cursor: 'not-allowed'
       }
     }
   });
@@ -215,15 +217,6 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         : 'Unknown Plan'
       : 'No Assigned Plan';
 
-    const currentPlanSubHeadings = linodeType
-      ? type
-        ? [
-            `$${type.price.monthly}/mo ($${type.price.hourly}/hr)`,
-            typeLabelDetails(type.memory, type.disk, type.vcpus)
-          ]
-        : []
-      : [];
-
     const [
       diskToResize,
       _shouldEnableAutoResizeDiskOption
@@ -264,16 +257,44 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             >
               Current Plan
             </Typography>
-            {
-              <SelectionCard
-                data-qa-current-plan
-                checked={false}
-                heading={currentPlanHeading}
-                subheadings={currentPlanSubHeadings}
-                disabled={disabled}
-                variant="check"
-              />
-            }
+            {type && (
+              <Grid container>
+                <Grid item xs={12} lg={8}>
+                  <Table border>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell />
+                        <TableCell>Linode Plan</TableCell>
+                        <TableCell>Monthly</TableCell>
+                        <TableCell>Hourly</TableCell>
+                        <TableCell>CPUs</TableCell>
+                        <TableCell>Storage</TableCell>
+                        <TableCell>Ram</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow key={type.id} data-qa-current-plan>
+                        <TableCell>
+                          <CheckBox checked={false} disabled={true} />
+                        </TableCell>
+                        <TableCell data-qa-select-card-heading>
+                          {currentPlanHeading}
+                        </TableCell>
+                        <TableCell>${type.price.monthly}</TableCell>
+                        <TableCell>${type.price.hourly}</TableCell>
+                        <TableCell>{type.vcpus}</TableCell>
+                        <TableCell>
+                          {convertMegabytesTo(type.disk, true)}
+                        </TableCell>
+                        <TableCell>
+                          {convertMegabytesTo(type.memory, true)}
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </Grid>
+              </Grid>
+            )}
           </div>
         </Paper>
         <SelectPlanPanel

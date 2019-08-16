@@ -28,9 +28,9 @@ describe('LinodeResize', () => {
         title: '',
         subTitle: '',
         currentPlanContainer: '',
-        checkbox: '',
         resizeTitle: '',
-        toolTip: ''
+        toolTip: '',
+        checkbox: ''
       }}
       linodeId={12}
       permissions={{} as any}
@@ -42,7 +42,7 @@ describe('LinodeResize', () => {
     />
   );
 
-  it('should render the currently selected plan as a card', () => {
+  it('should render the currently selected plan as a table', () => {
     const componentWithTheme = mount(
       <Provider store={store}>
         <LinodeThemeWrapper theme="dark" spacing="normal">
@@ -74,16 +74,16 @@ describe('LinodeResize', () => {
       </Provider>
     );
 
-    const currentSelectionCard = componentWithTheme.find(
-      'div [data-qa-select-card-heading="No Assigned Plan"]'
+    const currentSelection = componentWithTheme.find(
+      'td [data-qa-select-card-heading="No Assigned Plan"]'
     );
 
-    expect(currentSelectionCard.exists()).toBeTruthy();
-    expect(currentSelectionCard.length).toEqual(1);
+    expect(currentSelection.exists()).toBeTruthy();
+    expect(currentSelection.length).toEqual(1);
   });
 
   describe('when linodeType is null', () => {
-    describe('current plan card', () => {
+    describe('current plan', () => {
       it('should have a heading of No Assigned Plan', () => {
         const componentWithTheme = mount(
           <Provider store={store}>
@@ -116,18 +116,18 @@ describe('LinodeResize', () => {
           </Provider>
         );
 
-        const currentSelectionCard = componentWithTheme.find(
-          'div [data-qa-select-card-heading="No Assigned Plan"]'
+        const currentSelection = componentWithTheme.find(
+          'td [data-qa-select-card-heading="No Assigned Plan"]'
         );
 
-        expect(currentSelectionCard.exists()).toBeTruthy();
-        expect(currentSelectionCard.length).toEqual(1);
+        expect(currentSelection.exists()).toBeTruthy();
+        expect(currentSelection.length).toEqual(1);
       });
     });
   });
 
   describe('when linodeType is unexpected', () => {
-    describe('current plan card', () => {
+    describe('current plan', () => {
       it('should have a heading of Unknown Plan', () => {
         const componentWithTheme = mount(
           <Provider store={store}>
@@ -160,12 +160,12 @@ describe('LinodeResize', () => {
           </Provider>
         );
 
-        const currentSelectionCard = componentWithTheme.find(
-          'div [data-qa-select-card-heading="Unknown Plan"]'
+        const currentSelection = componentWithTheme.find(
+          'td [data-qa-select-card-heading="Unknown Plan"]'
         );
 
-        expect(currentSelectionCard.exists()).toBeTruthy();
-        expect(currentSelectionCard.length).toEqual(1);
+        expect(currentSelection.exists()).toBeTruthy();
+        expect(currentSelection.length).toEqual(1);
       });
     });
   });
