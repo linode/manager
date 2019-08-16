@@ -32,11 +32,15 @@ export const ImageSelect: React.FC<Props> = props => {
   const classes = useStyles();
   const [selectedVendor, setSelectedVendor] = React.useState<string>('');
 
-  const handleSelectVendor = (_selected: Item<string>) => {
+  const handleSelectVendor = (_selected: Item<string> | null) => {
+    if (_selected === null) {
+      handleSelectImage(null);
+      return setSelectedVendor('');
+    }
     setSelectedVendor(_selected.value);
   };
 
-  const _handleSelectImage = (_selected: Item<string>) => {
+  const _handleSelectImage = (_selected: Item<string> | null) => {
     if (_selected === null) {
       return handleSelectImage('');
     }
