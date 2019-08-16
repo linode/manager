@@ -40,6 +40,9 @@ const styles = (theme: Theme) =>
     table: {
       [theme.breakpoints.down('md')]: {
         width: '100%'
+      },
+      [theme.breakpoints.up('lg')]: {
+        minWidth: '70%'
       }
     }
   });
