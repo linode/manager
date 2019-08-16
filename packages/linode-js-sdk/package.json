@@ -14,7 +14,7 @@
     "yup": "^0.27.0"
   },
   "scripts": {
-    "start": "tsc && babel src --out-dir lib --extensions '.ts,.tsx' --watch",
+    "start": "concurrently \"tsc -w\" \"babel src --watch --out-dir lib --extensions '.ts,.tsx'\" -n 'tsc,babel' -k",
     "build": "tsc && babel src --out-dir lib --extensions '.ts,.tsx' && webpack",
     "test": "jest --config jestconfig.json",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
@@ -37,6 +37,7 @@
     "@types/node": "^12.7.1",
     "@types/ramda": "^0.26.19",
     "@types/yup": "^0.26.22",
+    "concurrently": "^4.1.1",
     "jest": "^24.8.0",
     "npm-dts-webpack-plugin": "^1.1.9",
     "prettier": "^1.18.2",
