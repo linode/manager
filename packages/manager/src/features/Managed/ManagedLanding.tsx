@@ -4,8 +4,7 @@ import {
   Redirect,
   Route,
   RouteComponentProps,
-  Switch,
-  withRouter
+  Switch
 } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
@@ -19,10 +18,8 @@ import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import TabLink from 'src/components/TabLink';
-import withFeatureFlagConsumer, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import useFlags from 'src/hooks/useFlags';
 import { getCredentials } from 'src/services/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
@@ -45,7 +42,7 @@ const Contacts = DefaultLoader({
   loader: () => import('./Contacts')
 });
 
-export type CombinedProps = RouteComponentProps<{}> & FeatureFlagConsumerProps;
+export type CombinedProps = RouteComponentProps<{}>;
 
 const docs: Linode.Doc[] = [
   {
@@ -89,11 +86,13 @@ export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
 
+  const flags = useFlags();
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Managed" />
       {/* If the feature isn't enabled, just display the placeholder */}
-      {!props.flags.managed ? (
+      {!flags.managed ? (
         <ManagedPlaceholder />
       ) : (
         <React.Fragment>
@@ -187,10 +186,6 @@ export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
   );
 };
 
-const enhanced = compose<CombinedProps, {}>(
-  setDocs(docs),
-  withFeatureFlagConsumer,
-  withRouter
-);
+const enhanced = compose<CombinedProps, {}>(setDocs(docs));
 
 export default enhanced(ManagedLanding);
