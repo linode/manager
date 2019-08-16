@@ -1,7 +1,7 @@
 import { API_ROOT } from '../constants';
 import Request, { setMethod, setURL } from '../request';
-import { ConfigOverride } from '../types'
-import { Account } from './types'
+import { ConfigOverride } from '../types';
+import { Account } from './types';
 
 /**
  * getAccountInfo
@@ -11,6 +11,4 @@ import { Account } from './types'
  *
  */
 export const getAccountInfo = (config: ConfigOverride = {}) =>
-  Request<Account>(setURL(`${config.baseURL || API_ROOT}/account`), setMethod('GET')).then(
-    response => response.data
-  );
+  Request<Account>(setURL(`${config.baseURL || API_ROOT}/account`), setMethod('GET')).then(response => response.data);

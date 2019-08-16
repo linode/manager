@@ -19,12 +19,15 @@
     "test": "jest --config jestconfig.json",
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
-    "typecheck": "tsc --noEmit true"
+    "typecheck": "tsc --noEmit true --emitDeclarationOnly false",
+    "prepublish": "yarn typecheck && yarn format && yarn build",
+    "precommit": "yarn typecheck && yarn format"
   },
   "files": [
     "index.js",
     "index.d.ts",
-    "lib/*/**"
+    "lib/*/**",
+    "package.json"
   ],
   "devDependencies": {
     "@babel/cli": "^7.5.5",

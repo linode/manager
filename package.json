@@ -7,7 +7,7 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lerna run precommit --stream --scope linode-manager",
+      "pre-commit": "lerna run precommit --stream",
       "pre-push": "lerna run prepush --stream --scope linode-manager"
     }
   },
