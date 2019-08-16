@@ -38,7 +38,7 @@
     "js-cookie": "^2.2.0",
     "jspdf": "^1.5.3",
     "launchdarkly-react-client-sdk": "^2.11.0",
-    "linode-js-sdk": "^1.0.0",
+    "linode-js-sdk": "^0.2.0",
     "logic-query-parser": "^0.0.5",
     "md5": "^2.2.1",
     "memoizee": "^0.4.14",

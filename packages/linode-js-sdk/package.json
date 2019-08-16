@@ -1,6 +1,6 @@
 {
   "name": "linode-js-sdk",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "JavaScript wrapper around the Linode APIv4",
   "author": "Linode",
   "license": "MIT",
