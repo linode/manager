@@ -17,6 +17,7 @@ import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import DocsSidebar from 'src/components/DocsSidebar';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
+import ImageSelect from 'src/components/ImageSelect';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
@@ -25,7 +26,6 @@ import { AppDetailDrawer } from 'src/features/OneClickApps';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import AddonsPanel from '../AddonsPanel';
 import SelectAppPanel from '../SelectAppPanel';
-import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel from '../SelectPlanPanel';
 
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
@@ -261,10 +261,18 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
           {!userCannotCreateLinode &&
           compatibleImages &&
           compatibleImages.length > 0 ? (
-            <SelectImagePanel
+            // <SelectImagePanel
+            //   images={compatibleImages}
+            //   handleSelection={updateImageID}
+            //   updateFor={[selectedImageID, compatibleImages, errors]}
+            //   selectedImageID={selectedImageID}
+            //   error={hasErrorFor('image')}
+            //   variant="public"
+            // />
+            <ImageSelect
+              title="Select an Image"
               images={compatibleImages}
-              handleSelection={updateImageID}
-              updateFor={[selectedImageID, compatibleImages, errors]}
+              handleSelectImage={updateImageID}
               selectedImageID={selectedImageID}
               error={hasErrorFor('image')}
               variant="public"
