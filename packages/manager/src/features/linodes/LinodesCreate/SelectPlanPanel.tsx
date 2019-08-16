@@ -10,7 +10,6 @@ import {
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
@@ -21,6 +20,7 @@ import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 export interface ExtendedType extends Linode.LinodeType {
@@ -94,12 +94,17 @@ export class SelectPlanPanel extends React.Component<
       <React.Fragment>
         {/* Displays Table Row for larger screens */}
         <Hidden smDown>
-          <TableRow key={type.id} onClick={this.onSelect(type.id)}>
+          <TableRow
+            key={type.id}
+            onClick={this.onSelect(type.id)}
+            rowLink={this.onSelect ? this.onSelect(type.id) : undefined}
+          >
             <TableCell>
               <Radio
                 checked={type.id === String(selectedID)}
                 onChange={this.onSelect(type.id)}
                 disabled={planTooSmall || isSamePlan || disabled}
+                id={type.id}
               />
             </TableCell>
             <TableCell>{type.heading}</TableCell>
