@@ -26,7 +26,7 @@ export interface ExtendedType extends Linode.LinodeType {
   subHeadings: [string, string];
 }
 
-type ClassNames = 'root' | 'copy' | 'table';
+type ClassNames = 'root' | 'copy';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -36,14 +36,6 @@ const styles = (theme: Theme) =>
     copy: {
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(3)
-    },
-    table: {
-      [theme.breakpoints.down('md')]: {
-        width: '100%'
-      },
-      [theme.breakpoints.up('lg')]: {
-        minWidth: '70%'
-      }
     }
   });
 
@@ -150,16 +142,13 @@ export class SelectPlanPanel extends React.Component<
                 Nanode instances are good for low-duty workloads, where
                 performance isn't critical.
               </Typography>
-              <Grid container spacing={2}>
-                <Table
-                  isResponsive={false}
-                  border
-                  spacingBottom={16}
-                  className={classes.table}
-                >
-                  {tableHeader}
-                  <TableBody>{nanodes.map(this.renderRow)}</TableBody>
-                </Table>
+              <Grid container>
+                <Grid item xs={12} lg={8}>
+                  <Table isResponsive={false} border spacingBottom={16}>
+                    {tableHeader}
+                    <TableBody>{nanodes.map(this.renderRow)}</TableBody>
+                  </Table>
+                </Grid>
               </Grid>
             </>
           );
@@ -178,16 +167,13 @@ export class SelectPlanPanel extends React.Component<
                 Standard instances are good for medium-duty workloads and are a
                 good mix of performance, resources, and price.
               </Typography>
-              <Grid container spacing={2}>
-                <Table
-                  isResponsive={false}
-                  border
-                  spacingBottom={16}
-                  className={classes.table}
-                >
-                  {tableHeader}
-                  <TableBody>{standards.map(this.renderRow)}</TableBody>
-                </Table>
+              <Grid container>
+                <Grid item xs={12} lg={8}>
+                  <Table isResponsive={false} border spacingBottom={16}>
+                    {tableHeader}
+                    <TableBody>{standards.map(this.renderRow)}</TableBody>
+                  </Table>
+                </Grid>
               </Grid>
             </>
           );
@@ -206,16 +192,13 @@ export class SelectPlanPanel extends React.Component<
                 Dedicated CPU instances are good for full-duty workloads where
                 consistent performance is important.
               </Typography>
-              <Grid container spacing={2}>
-                <Table
-                  isResponsive={false}
-                  border
-                  spacingBottom={16}
-                  className={classes.table}
-                >
-                  {tableHeader}
-                  <TableBody>{dedicated.map(this.renderRow)}</TableBody>
-                </Table>
+              <Grid container>
+                <Grid item xs={12} lg={8}>
+                  <Table isResponsive={false} border spacingBottom={16}>
+                    {tableHeader}
+                    <TableBody>{dedicated.map(this.renderRow)}</TableBody>
+                  </Table>
+                </Grid>
               </Grid>
             </>
           );
@@ -235,16 +218,13 @@ export class SelectPlanPanel extends React.Component<
                 good for memory hungry use cases like caching and in-memory
                 databases.
               </Typography>
-              <Grid container spacing={2}>
-                <Table
-                  isResponsive={false}
-                  border
-                  spacingBottom={16}
-                  className={classes.table}
-                >
-                  {tableHeader}
-                  <TableBody>{highmem.map(this.renderRow)}</TableBody>
-                </Table>
+              <Grid container>
+                <Grid item xs={12} lg={8}>
+                  <Table isResponsive={false} border spacingBottom={16}>
+                    {tableHeader}
+                    <TableBody>{highmem.map(this.renderRow)}</TableBody>
+                  </Table>
+                </Grid>
               </Grid>
             </>
           );
@@ -279,16 +259,13 @@ export class SelectPlanPanel extends React.Component<
                 applications such as machine learning, AI, and video
                 transcoding.
               </Typography>
-              <Grid container spacing={2}>
-                <Table
-                  isResponsive={false}
-                  border
-                  spacingBottom={16}
-                  className={classes.table}
-                >
-                  {tableHeader}
-                  <TableBody>{gpu.map(this.renderRow)}</TableBody>
-                </Table>
+              <Grid container>
+                <Grid item xs={12} lg={9}>
+                  <Table isResponsive={false} border spacingBottom={16}>
+                    {tableHeader}
+                    <TableBody>{gpu.map(this.renderRow)}</TableBody>
+                  </Table>
+                </Grid>
               </Grid>
             </>
           );
