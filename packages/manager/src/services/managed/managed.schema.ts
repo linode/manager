@@ -20,13 +20,15 @@ export const createServiceMonitorSchema = object().shape({
     .max(100, 'Body must be 100 characters or less.')
 });
 
+export const sshSettingSchema = object().shape({
+  access: boolean(),
+  user: string().max(32, 'User must be 32 characters or less.'),
+  ip: string(),
+  port: number()
+    .min(1, 'Port must be between 1 and 65535.')
+    .max(65535, 'Port must be between 1 and 65535.')
+});
+
 export const updateManagedLinodeSchema = object({
-  ssh: object({
-    access: boolean(),
-    user: string().max(32),
-    ip: string(),
-    port: number()
-      .min(1)
-      .max(65535)
-  })
+  ssh: sshSettingSchema
 });
