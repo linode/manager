@@ -1,7 +1,5 @@
 import { Formik } from 'formik';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -37,7 +35,7 @@ export interface Props {
   onSubmit: (values: ManagedServicePayload, formikProps: any) => void;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
+type CombinedProps = Props;
 
 export const modes = {
   CREATING: 'create',
@@ -251,4 +249,4 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, Props>(withRouter)(MonitorDrawer);
+export default MonitorDrawer;

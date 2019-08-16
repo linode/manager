@@ -4,8 +4,7 @@ import {
   Redirect,
   Route,
   RouteComponentProps,
-  Switch,
-  withRouter
+  Switch
 } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
@@ -169,8 +168,7 @@ export class ManagedLanding extends React.Component<CombinedProps, {}> {
 
 const enhanced = compose<CombinedProps, {}>(
   setDocs(ManagedLanding.docs),
-  withFeatureFlagConsumer,
-  withRouter
+  withFeatureFlagConsumer
 );
 
 export default enhanced(ManagedLanding);
