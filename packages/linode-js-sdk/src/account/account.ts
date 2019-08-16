@@ -10,5 +10,9 @@ import { Account } from './types';
  * including contact and billing info.
  *
  */
-export const getAccountInfo = (config: ConfigOverride = {}) =>
-  Request<Account>(setURL(`${config.baseURL || API_ROOT}/account`), setMethod('GET')).then(response => response.data);
+export const getAccountInfo = (config: ConfigOverride = {}) => {
+  return Request<Account>(
+    setURL(`${config.baseURL || API_ROOT}/account`),
+    setMethod('GET'),
+  ).then(response => response.data);
+};

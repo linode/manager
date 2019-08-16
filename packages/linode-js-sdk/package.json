@@ -20,8 +20,8 @@
     "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
     "lint": "tslint -p tsconfig.json",
     "typecheck": "tsc --noEmit true --emitDeclarationOnly false",
-    "prepublish": "yarn typecheck && yarn format && yarn build",
-    "precommit": "yarn typecheck && yarn format"
+    "prepublish": "yarn lint && yarn typecheck && yarn format && yarn build",
+    "precommit": "yarn lint && yarn typecheck && yarn format"
   },
   "files": [
     "index.js",

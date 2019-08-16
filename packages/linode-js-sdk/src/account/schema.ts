@@ -33,7 +33,9 @@ export const updateOAuthClientSchema = object({
 });
 
 export const StagePaypalPaymentSchema = object({
-  cancel_url: string().required('You must provide a URL to redirect on cancel.'),
+  cancel_url: string().required(
+    'You must provide a URL to redirect on cancel.',
+  ),
   redirect_url: string().required('You must provide a redirect URL.'),
   usd: string().required('USD payment amount is required.'),
 });
@@ -70,7 +72,9 @@ export const CreateUserSchema = object({
   email: string()
     .required('Email address is required.')
     .email('Must be a valid email address.'),
-  restricted: boolean().required('You must indicate if this user should have restricted access.'),
+  restricted: boolean().required(
+    'You must indicate if this user should have restricted access.',
+  ),
 });
 
 export const UpdateUserSchema = object({
@@ -83,7 +87,10 @@ export const UpdateUserSchema = object({
 
 const GrantSchema = object({
   id: number().required('ID is required.'),
-  permissions: mixed().oneOf([null, 'read_only', 'read_write'], 'Permissions must be null, read_only, or read_write.'),
+  permissions: mixed().oneOf(
+    [null, 'read_only', 'read_write'],
+    'Permissions must be null, read_only, or read_write.',
+  ),
 });
 
 export const UpdateGrantSchema = object({

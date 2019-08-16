@@ -26,12 +26,15 @@ const isNotEmpty = compose(
 export const setURL = (url: string) => set(L.url, url);
 
 /** METHOD */
-export const setMethod = (method: 'GET' | 'POST' | 'PUT' | 'DELETE') => set(L.method, method);
+export const setMethod = (method: 'GET' | 'POST' | 'PUT' | 'DELETE') =>
+  set(L.method, method);
 
 /** Param */
-export const setParams = (params: any = {}) => when(() => isNotEmpty(params), set(L.params, params));
+export const setParams = (params: any = {}) =>
+  when(() => isNotEmpty(params), set(L.params, params));
 
-export const setHeaders = (headers: any = {}) => when(() => isNotEmpty(headers), set(L.headers, headers));
+export const setHeaders = (headers: any = {}) =>
+  when(() => isNotEmpty(headers), set(L.headers, headers));
 
 /**
  * Validate and set data in the request configuration object.
@@ -54,7 +57,10 @@ export const setData = <T extends {}>(
     return set(L.data, data);
   }
 
-  const updatedData = typeof postValidationTransform === 'function' ? postValidationTransform(data) : data;
+  const updatedData =
+    typeof postValidationTransform === 'function'
+      ? postValidationTransform(data)
+      : data;
 
   try {
     schema.validateSync(data, { abortEarly: false });
@@ -62,7 +68,10 @@ export const setData = <T extends {}>(
   } catch (error) {
     return compose(
       set(L.data, updatedData),
-      set(L.validationErrors, convertYupToLinodeErrors(error)) as () => APIError[],
+      set(
+        L.validationErrors,
+        convertYupToLinodeErrors(error),
+      ) as () => APIError[],
     );
   }
 };
@@ -71,7 +80,9 @@ export const setData = <T extends {}>(
  * Attempt to convert a Yup error to our pattern. The only magic here is the recursive call
  * to itself since we have nested structures (think NodeBalancers).
  */
-const convertYupToLinodeErrors = (validationError: ValidationError): APIError[] => {
+const convertYupToLinodeErrors = (
+  validationError: ValidationError,
+): APIError[] => {
   const { inner } = validationError;
 
   /** If aggregate errors */
@@ -86,15 +97,20 @@ const convertYupToLinodeErrors = (validationError: ValidationError): APIError[] 
   return [mapYupToLinodeAPIError(validationError)];
 };
 
-const mapYupToLinodeAPIError = ({ message, path }: ValidationError): APIError => ({
+const mapYupToLinodeAPIError = ({
+  message,
+  path,
+}: ValidationError): APIError => ({
   reason: message,
   ...(path && { field: path }),
 });
 
 /** X-Filter */
-export const setXFilter = (xFilter: any) => when(() => isNotEmpty(xFilter), set(L.xFilter, JSON.stringify(xFilter)));
+export const setXFilter = (xFilter: any) =>
+  when(() => isNotEmpty(xFilter), set(L.xFilter, JSON.stringify(xFilter)));
 
-const reduceRequestConfig = (...fns: Function[]): any => fns.reduceRight((result, fn) => fn(result), {});
+const reduceRequestConfig = (...fns: Function[]): any =>
+  fns.reduceRight((result, fn) => fn(result), {});
 
 /** Generator */
 export const requestGenerator = <T>(...fns: Function[]): AxiosPromise<T> => {
@@ -190,9 +206,10 @@ const createError = (message: string, response: AxiosResponse) => {
  * Helper method to easily generate APIFieldError[] for a number of fields and a general error.
  */
 export const mockAPIFieldErrors = (fields: string[]): APIError[] => {
-  return fields.reduce((result, field) => [...result, { field, reason: `${field} is incorrect.` }], [
-    { reason: 'A general error has occurred.' },
-  ]);
+  return fields.reduce(
+    (result, field) => [...result, { field, reason: `${field} is incorrect.` }],
+    [{ reason: 'A general error has occurred.' }],
+  );
 };
 
 /**
@@ -203,7 +220,9 @@ interface CancellableRequest<T> {
   cancel: () => void;
 }
 
-export const CancellableRequest = <T>(...fns: Function[]): CancellableRequest<T> => {
+export const CancellableRequest = <T>(
+  ...fns: Function[]
+): CancellableRequest<T> => {
   const config = reduceRequestConfig(...fns);
   const source = Axios.CancelToken.source();
 
@@ -220,7 +239,10 @@ export const CancellableRequest = <T>(...fns: Function[]): CancellableRequest<T>
 
   return {
     cancel: source.cancel,
-    request: () => baseRequest({ ...config, cancelToken: source.token }).then(response => response.data),
+    request: () =>
+      baseRequest({ ...config, cancelToken: source.token }).then(
+        response => response.data,
+      ),
   };
 };
 
