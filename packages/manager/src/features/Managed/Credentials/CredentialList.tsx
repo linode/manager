@@ -1,6 +1,7 @@
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import Paper from 'src/components/core/Paper';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
@@ -16,6 +17,13 @@ import TableSortCell from 'src/components/TableSortCell';
 
 import CredentialTableContent from './CredentialTableContent';
 
+const useStyles = makeStyles((theme: Theme) => ({
+  subHeader: {
+    marginTop: theme.spacing(2),
+    marginBottom: theme.spacing(2)
+  }
+}));
+
 interface Props {
   error?: Linode.ApiFieldError[];
   credentials: Linode.ManagedCredential[];
@@ -23,6 +31,7 @@ interface Props {
 }
 
 export const CredentialList: React.FC<Props> = props => {
+  const classes = useStyles();
   const { credentials, error, loading } = props;
 
   return (
@@ -33,17 +42,13 @@ export const CredentialList: React.FC<Props> = props => {
         justify="flex-end"
         alignItems="flex-end"
         updateFor={[credentials, error, loading]}
-        style={{ paddingBottom: 0 }}
       >
-        <Grid item>
-          <Typography
-            variant="body1"
-            style={{ fontSize: '1.1em', lineHeight: '1.2em' }}
-          >
+        <Grid item xs={12}>
+          <Typography variant="subtitle1" className={classes.subHeader}>
             Please share any credentials our support team may need when
-            responding to a service issue. Credentials are stored encrypted and
-            all decryption attempts are logged. You can revoke credentials at
-            any time by deleting them.
+            responding to a service issue.
+            <br /> Credentials are stored encrypted and all decryption attempts
+            are logged. You can revoke credentials at any time by deleting them.
           </Typography>
         </Grid>
         <Grid item>
