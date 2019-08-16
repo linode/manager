@@ -1,5 +1,12 @@
 import { API_ROOT } from 'src/constants';
-import Request, { setMethod, setParams, setURL, setXFilter } from '../index';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter
+} from '../index';
+import { updateManagedLinodeSchema } from './managed.schema';
 
 // Payload types
 
@@ -62,4 +69,20 @@ export const getLinodeSettings = (params?: any, filters?: any) =>
     setParams(params),
     setXFilter(filters),
     setURL(`${API_ROOT}/managed/linode-settings`)
+  ).then(response => response.data);
+
+/**
+ * updateLinodeSettings
+ *
+ * Updates a single Linode's Managed settings.
+ *
+ */
+export const updateLinodeSettings = (
+  linodeId: number,
+  data: { ssh: Partial<Linode.ManagedSSHSetting> }
+) =>
+  Request<Linode.ManagedLinodeSetting>(
+    setURL(`${API_ROOT}/managed/linode-settings/${linodeId}`),
+    setMethod('PUT'),
+    setData(data, updateManagedLinodeSchema)
   ).then(response => response.data);
