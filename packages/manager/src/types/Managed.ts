@@ -38,4 +38,16 @@ namespace Linode {
     last_decrypted: string | null;
     label: string;
   }
+
+  export interface ManagedContact {
+    id: number;
+    name: string;
+    email: string;
+    phone: {
+      primary: string | null;
+      secondary: string | null;
+    };
+    group: string;
+    updated: string;
+  }
 }
