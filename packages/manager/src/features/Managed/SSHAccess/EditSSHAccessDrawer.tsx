@@ -16,7 +16,7 @@ import {
   handleGeneralErrors
 } from 'src/features/Volumes/VolumeDrawer/utils';
 import { updateLinodeSettings } from 'src/services/managed';
-import { removePrefixLength } from 'src/utilities/ipUtils';
+import { privateIPRegex, removePrefixLength } from 'src/utilities/ipUtils';
 
 const DEFAULTS = {
   user: 'root',
@@ -176,11 +176,16 @@ const EditSSHAccessDrawer: React.FC<CombinedProps> = props => {
                               label: 'Any',
                               value: 'any'
                             },
-                            // Remove the prefix length from each option.
-                            ...options.map(option => ({
-                              label: removePrefixLength(option.value),
-                              value: removePrefixLength(option.value)
-                            }))
+                            ...options
+                              // Remove Private IPs
+                              .filter(
+                                option => !privateIPRegex.test(option.value)
+                              )
+                              // Remove the prefix length from each option.
+                              .map(option => ({
+                                label: removePrefixLength(option.value),
+                                value: removePrefixLength(option.value)
+                              }))
                           ]}
                           handleChange={(selectedIp: string) =>
                             setFieldValue('ssh.ip', selectedIp)
