@@ -39,7 +39,7 @@ const Credentials = DefaultLoader({
 });
 
 const Contacts = DefaultLoader({
-  loader: () => import('./Contacts/Contacts')
+  loader: () => import('./Contacts')
 });
 
 export type CombinedProps = RouteComponentProps<{}>;

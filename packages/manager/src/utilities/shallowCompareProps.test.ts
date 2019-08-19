@@ -13,7 +13,7 @@ describe('shallowCompareProps', () => {
     c: [3, 4]
   };
 
-  it('should return `true` if the given props are shallowly equal', () => {
+  it('should return `true` if the given props are shallowly equal.', () => {
     const nextProps: MockProps = {
       a: 1,
       b: 2,
@@ -29,7 +29,7 @@ describe('shallowCompareProps', () => {
     expect(result2).toBe(true);
   });
 
-  it('should return `false`` if the given props are NOT shallowly equal', () => {
+  it('should return `false`` if the given props are NOT shallowly equal.', () => {
     const nextProps: MockProps = {
       a: 10,
       b: 20,

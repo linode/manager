@@ -43,6 +43,8 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
+// We need to "Get All" on this request in order to handle Groups
+// as a quasi-independent entity.
 const request = () =>
   getAll<Linode.ManagedContact>(getManagedContacts)().then(res => res.data);
 
@@ -71,6 +73,7 @@ const Contacts: React.FC<{}> = () => {
   const contactDrawer = useOpenClose();
   const groupDrawer = useOpenClose();
 
+  // Refs for handling "scrollTo" on Paginated components.
   const groupsTableRef = React.createRef();
   const contactsTableRef = React.createRef();
 
@@ -89,7 +92,7 @@ const Contacts: React.FC<{}> = () => {
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           // Array of group names to generate table from.
           const allGroups = pluck('group')(orderedData);
-          // Only keep unique values and remove `null`s
+          // Only keep unique values and remove `null`s.
           const uniqueGroups = uniq(allGroups).filter(group => !!group);
 
           return (

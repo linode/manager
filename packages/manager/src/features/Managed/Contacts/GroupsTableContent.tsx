@@ -42,7 +42,7 @@ export const GroupsTableContent: React.FC<CombinedProps> = props => {
     return (
       <TableRowEmpty
         colSpan={12}
-        message={"You don't have any Groups on your account."}
+        message={"You don't have any Contact Groups on your account."}
       />
     );
   }

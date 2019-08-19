@@ -1,3 +1,9 @@
+/**
+ * Specify props to shallowly compare.
+ *
+ * @param prevProps
+ * @param nextProps
+ */
 export const shallowCompareProps = <T extends {}>(
   props: (keyof T)[],
   prevProps: T,
