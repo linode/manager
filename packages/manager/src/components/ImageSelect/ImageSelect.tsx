@@ -127,9 +127,14 @@ export const ImageSelect: React.FC<Props> = props => {
             <Grid item xs={6}>
               <Select
                 label="Version"
+                isClearable={imageOptions.length > 1}
                 options={imageOptions}
                 onChange={_handleSelectImage}
-                value={getItemFromID(imageOptions, selectedImageID)}
+                value={
+                  imageOptions.length === 1
+                    ? imageOptions[0]
+                    : getItemFromID(imageOptions, selectedImageID)
+                }
               />
             </Grid>
           )}
