@@ -7,6 +7,8 @@ import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect';
 import Grid from 'src/components/Grid';
 
+import ImageOption from './ImageOption';
+
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginTop: theme.spacing(3),
@@ -77,6 +79,7 @@ export const ImageSelect: React.FC<Props> = props => {
               options={vendors}
               onChange={handleSelectVendor}
               value={getItemFromID(vendors, selectedVendor)}
+              components={{ Option: ImageOption }}
             />
           </Grid>
           {Boolean(selectedVendor) && (

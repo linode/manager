@@ -167,7 +167,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
             disabled={userCannotCreateLinode}
           /> */}
           <ImageSelect
-            title="Choose a Distribution"
+            title={imagePanelTitle || 'Choose an Image'}
             images={images}
             handleSelectImage={this.props.updateImageID}
             selectedImageID={this.props.selectedImageID}
