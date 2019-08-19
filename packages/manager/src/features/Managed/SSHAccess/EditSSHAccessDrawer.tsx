@@ -10,12 +10,11 @@ import IPSelect from 'src/components/IPSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
-// @todo: Extract these utils out of Volumes
+import { updateLinodeSettings } from 'src/services/managed';
 import {
   handleFieldErrors,
   handleGeneralErrors
-} from 'src/features/Volumes/VolumeDrawer/utils';
-import { updateLinodeSettings } from 'src/services/managed';
+} from 'src/utilities/formikErrorUtils';
 import { privateIPRegex, removePrefixLength } from 'src/utilities/ipUtils';
 
 const DEFAULTS = {
