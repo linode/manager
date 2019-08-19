@@ -7,7 +7,7 @@ import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import CheckBox from 'src/components/CheckBox';
+import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -21,6 +21,8 @@ import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import Radio from 'src/components/Radio';
+import SelectionCard from 'src/components/SelectionCard';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import { resetEventsPolling } from 'src/events';
@@ -74,7 +76,7 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(1)
     },
     currentPlanContainer: {
-      '& input[type=checkbox]': {
+      '& input[type=radio]': {
         cursor: 'not-allowed'
       }
     }
@@ -217,6 +219,15 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         : 'Unknown Plan'
       : 'No Assigned Plan';
 
+    const currentPlanSubHeadings = linodeType
+      ? type
+        ? [
+            `$${type.price.monthly}/mo ($${type.price.hourly}/hr)`,
+            typeLabelDetails(type.memory, type.disk, type.vcpus)
+          ]
+        : []
+      : [];
+
     const [
       diskToResize,
       _shouldEnableAutoResizeDiskOption
@@ -259,40 +270,59 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             </Typography>
             {type && (
               <Grid container>
-                <Grid item xs={12} lg={8}>
-                  <Table border>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell />
-                        <TableCell>Linode Plan</TableCell>
-                        <TableCell>Monthly</TableCell>
-                        <TableCell>Hourly</TableCell>
-                        <TableCell>CPUs</TableCell>
-                        <TableCell>Storage</TableCell>
-                        <TableCell>Ram</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableRow key={type.id} data-qa-current-plan>
-                        <TableCell>
-                          <CheckBox checked={false} disabled={true} />
-                        </TableCell>
-                        <TableCell data-qa-select-card-heading>
-                          {currentPlanHeading}
-                        </TableCell>
-                        <TableCell>${type.price.monthly}</TableCell>
-                        <TableCell>${type.price.hourly}</TableCell>
-                        <TableCell>{type.vcpus}</TableCell>
-                        <TableCell>
-                          {convertMegabytesTo(type.disk, true)}
-                        </TableCell>
-                        <TableCell>
-                          {convertMegabytesTo(type.memory, true)}
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </Grid>
+                <Hidden smDown>
+                  <Grid item xs={12} lg={8}>
+                    <Table border>
+                      <TableHead>
+                        <TableRow>
+                          <TableCell />
+                          <TableCell>Linode Plan</TableCell>
+                          <TableCell>Monthly</TableCell>
+                          <TableCell>Hourly</TableCell>
+                          <TableCell>CPUs</TableCell>
+                          <TableCell>Storage</TableCell>
+                          <TableCell>Ram</TableCell>
+                        </TableRow>
+                      </TableHead>
+                      <TableBody>
+                        <TableRow key={type.id} data-qa-current-plan>
+                          <TableCell>
+                            <Radio
+                              checked={false}
+                              disabled={true}
+                              id={type.id}
+                            />
+                          </TableCell>
+                          <TableCell
+                            data-qa-select-card-heading={currentPlanHeading}
+                          >
+                            {currentPlanHeading}
+                          </TableCell>
+                          <TableCell>${type.price.monthly}</TableCell>
+                          <TableCell>${type.price.hourly}</TableCell>
+                          <TableCell>{type.vcpus}</TableCell>
+                          <TableCell>
+                            {convertMegabytesTo(type.disk, true)}
+                          </TableCell>
+                          <TableCell>
+                            {convertMegabytesTo(type.memory, true)}
+                          </TableCell>
+                        </TableRow>
+                      </TableBody>
+                    </Table>
+                  </Grid>
+                </Hidden>
+                {/* Displays SelectionCard for small screens */}
+                <Hidden mdUp>
+                  <SelectionCard
+                    data-qa-current-plan
+                    checked={false}
+                    heading={currentPlanHeading}
+                    subheadings={currentPlanSubHeadings}
+                    disabled={disabled}
+                    variant="check"
+                  />
+                </Hidden>
               </Grid>
             )}
           </div>

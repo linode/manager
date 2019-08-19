@@ -85,7 +85,7 @@ describe('LinodeResize', () => {
     );
 
     const currentSelection = componentWithTheme.find(
-      'td [data-qa-select-card-heading="No Assigned Plan"]'
+      'div [data-qa-select-card-heading="No Assigned Plan"]'
     );
 
     expect(currentSelection.exists()).toBeTruthy();
@@ -127,7 +127,7 @@ describe('LinodeResize', () => {
         );
 
         const currentSelection = componentWithTheme.find(
-          'td [data-qa-select-card-heading="No Assigned Plan"]'
+          'div [data-qa-select-card-heading="No Assigned Plan"]'
         );
 
         expect(currentSelection.exists()).toBeTruthy();
@@ -171,7 +171,7 @@ describe('LinodeResize', () => {
         );
 
         const currentSelection = componentWithTheme.find(
-          'td [data-qa-select-card-heading="Unknown Plan"]'
+          'div [data-qa-select-card-heading="Unknown Plan"]'
         );
 
         expect(currentSelection.exists()).toBeTruthy();
