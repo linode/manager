@@ -1,9 +1,12 @@
+import { equals } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import TableRowEmpty from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import SSHAccessRow from './ContactsAccessRow';
+import { shallowCompareProps } from 'src/utilities/shallowCompareProps';
+import ContactsRow from './ContactsRow';
 
 interface Props {
   contacts: Linode.ManagedContact[];
@@ -16,7 +19,7 @@ interface Props {
 
 export type CombinedProps = Props;
 
-export const ContactsTable: React.FC<CombinedProps> = props => {
+export const ContactsTableContent: React.FC<CombinedProps> = props => {
   const {
     contacts,
     loading,
@@ -47,7 +50,7 @@ export const ContactsTable: React.FC<CombinedProps> = props => {
   return (
     <>
       {contacts.map((contact: Linode.ManagedContact, idx: number) => (
-        <SSHAccessRow
+        <ContactsRow
           key={`managed-contact-row-${idx}`}
           updateOne={updateOne}
           contact={contact}
@@ -58,4 +61,21 @@ export const ContactsTable: React.FC<CombinedProps> = props => {
   );
 };
 
-export default ContactsTable;
+const memoized = (component: React.FC<CombinedProps>) =>
+  React.memo(
+    component,
+    (prevProps, nextProps) =>
+      // This is to prevent a slow-down that occurs
+      // when opening the GroupDrawer or ContactsDrawer
+      // when there are a large number of contacts.
+      equals(prevProps.contacts, nextProps.contacts) &&
+      shallowCompareProps<CombinedProps>(
+        ['lastUpdated', 'loading', 'error'],
+        prevProps,
+        nextProps
+      )
+  );
+
+const enhanced = compose<CombinedProps, Props>(memoized);
+
+export default enhanced(ContactsTableContent);
