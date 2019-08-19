@@ -63,10 +63,32 @@ export const sortByImageVersion = (a: Item<string>, b: Item<string>) => {
   }
 };
 
+const getVendorFromImageID = (
+  imageID: string | undefined,
+  images: Linode.Image[]
+) => {
+  const image = images.find(thisImage => thisImage.id === imageID);
+  return image ? image.vendor || '' : '';
+};
+
 export const ImageSelect: React.FC<Props> = props => {
   const { handleSelectImage, images, selectedImageID, title } = props;
   const classes = useStyles();
   const [selectedVendor, setSelectedVendor] = React.useState<string>('');
+
+  React.useEffect(() => {
+    /**
+     * If an image is selected (for example we usually pre-select Debian 9)
+     * we set the selected image's vendor as the selected vendor. If there is no
+     * selected image ID, we don't want to do this (for example when the user clears
+     * the selected version manually, in which case we want to show a blank version select).
+     */
+    if (props.selectedImageID) {
+      setSelectedVendor(
+        getVendorFromImageID(props.selectedImageID, props.images)
+      );
+    }
+  }, [images, selectedImageID]);
 
   const handleSelectVendor = (_selected: Item<string> | null) => {
     if (_selected === null) {
