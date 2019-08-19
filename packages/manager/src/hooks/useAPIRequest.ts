@@ -1,11 +1,16 @@
+import produce from 'immer';
 import { useEffect, useState } from 'react';
 
 interface UseAPIRequest<T> {
   data: T;
   loading: boolean;
   lastUpdated: number;
+  update: () => void;
+  transformData: (fn: (data: T) => void) => void;
   error?: Linode.ApiFieldError[];
 }
+
+// @todo: write a README for this hook.
 
 /**
  *
@@ -58,7 +63,7 @@ export const useAPIRequest = <T>(
   const [loading, setLoading] = useState<boolean>(false);
   const [lastUpdated, setLastUpdated] = useState<number>(0);
 
-  useEffect(() => {
+  const _request = () => {
     setLoading(true);
     request()
       .then(responseData => {
@@ -70,7 +75,13 @@ export const useAPIRequest = <T>(
         setLoading(false);
         setError(err);
       });
-  }, deps);
+  };
 
-  return { data, loading, lastUpdated, error };
+  useEffect(() => _request(), deps);
+
+  const transformData = (fn: (data: T) => void) => {
+    setData(produce<T, T>(data, fn));
+  };
+
+  return { data, loading, lastUpdated, error, update: _request, transformData };
 };

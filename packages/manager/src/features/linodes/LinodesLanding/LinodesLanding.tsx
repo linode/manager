@@ -8,6 +8,7 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+import AddNewLink from 'src/components/AddNewLink';
 import Breadcrumb from 'src/components/Breadcrumb';
 import CircleProgress from 'src/components/CircleProgress';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -303,6 +304,14 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                   status={linodeViewPreference}
                                 />
                               </Hidden>
+
+                              <AddNewLink
+                                onClick={e => {
+                                  this.props.history.push('/linodes/create');
+                                }}
+                                label="Add a Linode"
+                                className={classes.addNewLink}
+                              />
                             </Grid>
                             <Grid item xs={12}>
                               <OrderBy
