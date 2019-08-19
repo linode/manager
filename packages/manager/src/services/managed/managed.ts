@@ -72,6 +72,19 @@ export const getLinodeSettings = (params?: any, filters?: any) =>
   ).then(response => response.data);
 
 /**
+ * getCredentials
+ *
+ * Returns a paginated list of Managed Credentials for your account.
+ */
+export const getCredentials = (params?: any, filters?: any) =>
+  Request<Page<Linode.ManagedCredential>>(
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
+    setURL(`${API_ROOT}/managed/credentials`)
+  ).then(response => response.data);
+
+/**
  * updateLinodeSettings
  *
  * Updates a single Linode's Managed settings.
