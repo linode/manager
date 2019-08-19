@@ -10,7 +10,7 @@ import ImageOption from './ImageOption';
 interface Props {
   selectedImageID?: string;
   disabled: boolean;
-  handleSelectImage: (selection: string | null) => void;
+  handleSelectImage: (selection?: string) => void;
   images: Linode.Image[];
   error?: string;
 }
@@ -25,6 +25,14 @@ export const PrivateImages: React.FC<Props> = props => {
       : `fl-tux`
   }));
 
+  const _handleSelect = (selected: Item<string>) => {
+    if (selected === null) {
+      handleSelectImage('');
+    } else {
+      handleSelectImage(selected.value);
+    }
+  };
+
   return (
     <Grid item xs={12}>
       <Select
@@ -34,7 +42,7 @@ export const PrivateImages: React.FC<Props> = props => {
         placeholder="Select an Image"
         isClearable
         options={imageOptions}
-        onChange={(selected: Item<string>) => handleSelectImage(selected.value)}
+        onChange={_handleSelect}
         value={
           imageOptions.length === 1
             ? imageOptions[0]

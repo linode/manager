@@ -13,7 +13,7 @@ import ImageOption from './ImageOption';
 interface Props {
   selectedImageID?: string;
   disabled: boolean;
-  handleSelectImage: (selection: string | null) => void;
+  handleSelectImage: (selection?: string) => void;
   images: Linode.Image[];
   error?: string;
 }
@@ -78,7 +78,7 @@ export const PublicImages: React.FC<Props> = props => {
 
   const handleSelectVendor = (_selected: Item<string> | null) => {
     if (_selected === null) {
-      handleSelectImage(null);
+      handleSelectImage();
       setSelectedVendor('');
     } else {
       setSelectedVendor(_selected.value);
@@ -124,33 +124,39 @@ export const PublicImages: React.FC<Props> = props => {
     : [];
 
   return (
-    <>
-      {error && <Notice error text={error} />}
-      <Grid item xs={6}>
-        <Select
-          disabled={disabled}
-          label="Distributions"
-          placeholder="Distributions"
-          options={vendors}
-          onChange={handleSelectVendor}
-          value={getItemFromID(vendors, selectedVendor)}
-          components={{ Option: ImageOption, SingleValue }}
-        />
+    <Grid container item direction="column">
+      <Grid item>
+        {error && (
+          <Notice spacingTop={8} spacingBottom={0} error text={error} />
+        )}
       </Grid>
-      {Boolean(selectedVendor) && (
+      <Grid container item direction="row">
         <Grid item xs={6}>
           <Select
             disabled={disabled}
-            label="Version"
-            placeholder="Select a version"
-            isClearable={imageOptions.length > 1}
-            options={imageOptions}
-            onChange={_handleSelectImage}
-            value={getItemFromID(imageOptions, selectedImageID)}
+            label="Distributions"
+            placeholder="Distributions"
+            options={vendors}
+            onChange={handleSelectVendor}
+            value={getItemFromID(vendors, selectedVendor)}
+            components={{ Option: ImageOption, SingleValue }}
           />
         </Grid>
-      )}
-    </>
+        {Boolean(selectedVendor) && (
+          <Grid item xs={6}>
+            <Select
+              disabled={disabled}
+              label="Version"
+              placeholder="Select a version"
+              isClearable={imageOptions.length > 1}
+              options={imageOptions}
+              onChange={_handleSelectImage}
+              value={getItemFromID(imageOptions, selectedImageID)}
+            />
+          </Grid>
+        )}
+      </Grid>
+    </Grid>
   );
 };
 

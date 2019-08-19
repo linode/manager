@@ -22,7 +22,7 @@ interface Props {
   error?: string;
   variant?: 'public' | 'private' | 'all'; // @todo no one uses "all", either use or remove
   disabled?: boolean;
-  handleSelectImage: (selection: string | null) => void;
+  handleSelectImage: (selection?: string) => void;
 }
 
 export const ImageSelect: React.FC<Props> = props => {
