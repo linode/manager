@@ -4,6 +4,7 @@ import * as React from 'react';
 import Select, { Item } from 'src/components/EnhancedSelect';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import Grid from 'src/components/Grid';
+import Notice from 'src/components/Notice';
 import { getItemFromID } from 'src/utilities/getItemByID';
 
 import { distroIcons } from './icons';
@@ -11,8 +12,10 @@ import ImageOption from './ImageOption';
 
 interface Props {
   selectedImageID?: string;
+  disabled: boolean;
   handleSelectImage: (selection: string | null) => void;
   images: Linode.Image[];
+  error?: string;
 }
 
 const getVendorFromImageID = (
@@ -56,7 +59,7 @@ export const sortByImageVersion = (a: Item<string>, b: Item<string>) => {
 };
 
 export const PublicImages: React.FC<Props> = props => {
-  const { handleSelectImage, images, selectedImageID } = props;
+  const { disabled, error, handleSelectImage, images, selectedImageID } = props;
   const [selectedVendor, setSelectedVendor] = React.useState<string>('');
 
   React.useEffect(() => {
@@ -122,8 +125,10 @@ export const PublicImages: React.FC<Props> = props => {
 
   return (
     <>
+      {error && <Notice error text={error} />}
       <Grid item xs={6}>
         <Select
+          disabled={disabled}
           label="Distributions"
           placeholder="Distributions"
           options={vendors}
@@ -135,6 +140,7 @@ export const PublicImages: React.FC<Props> = props => {
       {Boolean(selectedVendor) && (
         <Grid item xs={6}>
           <Select
+            disabled={disabled}
             label="Version"
             placeholder="Select a version"
             isClearable={imageOptions.length > 1}

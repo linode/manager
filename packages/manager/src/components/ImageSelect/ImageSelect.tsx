@@ -20,12 +20,21 @@ interface Props {
   selectedImageID?: string;
   images: Linode.Image[];
   error?: string;
-  variant: any;
+  variant?: 'public' | 'private' | 'all'; // @todo no one uses "all", either use or remove
+  disabled?: boolean;
   handleSelectImage: (selection: string | null) => void;
 }
 
 export const ImageSelect: React.FC<Props> = props => {
-  const { handleSelectImage, images, selectedImageID, title, variant } = props;
+  const {
+    disabled,
+    error,
+    handleSelectImage,
+    images,
+    selectedImageID,
+    title,
+    variant
+  } = props;
   const classes = useStyles();
 
   return (
@@ -38,12 +47,16 @@ export const ImageSelect: React.FC<Props> = props => {
           {variant === 'public' ? (
             <PublicImages
               images={images.filter(thisImage => thisImage.is_public)}
+              disabled={Boolean(disabled)}
               handleSelectImage={handleSelectImage}
               selectedImageID={selectedImageID}
+              error={error}
             />
           ) : (
             <PrivateImages
+              error={error}
               images={images.filter(thisImage => !thisImage.is_public)}
+              disabled={Boolean(disabled)}
               handleSelectImage={handleSelectImage}
               selectedImageID={selectedImageID}
             />

@@ -154,18 +154,6 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
             <Notice error spacingTop={8} text={hasErrorFor.none} />
           )}
           <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
-          {/* <SelectImagePanel
-            variant={variant}
-            data-qa-select-image-panel
-            title={imagePanelTitle}
-            images={images}
-            handleSelection={this.props.updateImageID}
-            selectedImageID={this.props.selectedImageID}
-            updateFor={[this.props.selectedImageID, errors]}
-            initTab={0}
-            error={hasErrorFor.image}
-            disabled={userCannotCreateLinode}
-          /> */}
           <ImageSelect
             title={imagePanelTitle || 'Choose an Image'}
             images={images}
@@ -173,6 +161,8 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
             selectedImageID={this.props.selectedImageID}
             error={hasErrorFor.image}
             variant={variant}
+            disabled={userCannotCreateLinode}
+            data-qa-select-image-panel
           />
           <SelectRegionPanel
             error={hasErrorFor.region}

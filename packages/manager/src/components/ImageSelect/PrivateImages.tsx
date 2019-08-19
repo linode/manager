@@ -9,12 +9,14 @@ import ImageOption from './ImageOption';
 
 interface Props {
   selectedImageID?: string;
+  disabled: boolean;
   handleSelectImage: (selection: string | null) => void;
   images: Linode.Image[];
+  error?: string;
 }
 
 export const PrivateImages: React.FC<Props> = props => {
-  const { images, handleSelectImage, selectedImageID } = props;
+  const { disabled, error, images, handleSelectImage, selectedImageID } = props;
   const imageOptions = images.map(thisImage => ({
     label: thisImage.label,
     value: thisImage.id,
@@ -27,6 +29,9 @@ export const PrivateImages: React.FC<Props> = props => {
     <Grid item xs={12}>
       <Select
         label="Image"
+        disabled={disabled}
+        errorText={error}
+        placeholder="Select an Image"
         isClearable
         options={imageOptions}
         onChange={(selected: Item<string>) => handleSelectImage(selected.value)}

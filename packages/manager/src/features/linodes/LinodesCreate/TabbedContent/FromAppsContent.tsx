@@ -261,14 +261,6 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
           {!userCannotCreateLinode &&
           compatibleImages &&
           compatibleImages.length > 0 ? (
-            // <SelectImagePanel
-            //   images={compatibleImages}
-            //   handleSelection={updateImageID}
-            //   updateFor={[selectedImageID, compatibleImages, errors]}
-            //   selectedImageID={selectedImageID}
-            //   error={hasErrorFor('image')}
-            //   variant="public"
-            // />
             <ImageSelect
               title="Select an Image"
               images={compatibleImages}
