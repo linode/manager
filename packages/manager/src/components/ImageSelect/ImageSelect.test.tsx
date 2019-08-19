@@ -1,4 +1,4 @@
-import { sortByImageVersion } from './ImageSelect';
+import { sortByImageVersion } from './PublicImages';
 
 const debianItems = [
   {

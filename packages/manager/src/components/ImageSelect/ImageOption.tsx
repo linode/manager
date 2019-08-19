@@ -31,6 +31,10 @@ type CombinedProps = ImageOptionProps;
 export const ImageOption: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const { data, label } = props;
+  const iconClass = distroIcons[data.label]
+    ? `fl-${distroIcons[data.label as string]}`
+    : 'fl-tux';
+
   return (
     <Option
       className={classNames({
@@ -43,11 +47,7 @@ export const ImageOption: React.FC<CombinedProps> = props => {
     >
       <Grid container direction="row" alignItems="center" justify="flex-start">
         <Grid item>
-          <span
-            className={`fl-${distroIcons[data.label as string]} ${
-              classes.icon
-            }`}
-          />
+          <span className={`${iconClass} ${classes.icon}`} />
         </Grid>
         <Grid item>{label}</Grid>
       </Grid>

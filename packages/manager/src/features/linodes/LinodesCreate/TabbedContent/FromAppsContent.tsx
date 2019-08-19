@@ -275,6 +275,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
               handleSelectImage={updateImageID}
               selectedImageID={selectedImageID}
               error={hasErrorFor('image')}
+              variant="public"
             />
           ) : (
             <Paper className={classes.emptyImagePanel}>
