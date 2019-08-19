@@ -7,6 +7,8 @@ import { Item } from 'src/components/EnhancedSelect/Select';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 
+import { distroIcons } from './icons';
+
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: theme.spacing(1)
@@ -14,6 +16,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   focused: {
     backgroundColor: theme.palette.primary.main,
     color: 'white'
+  },
+  icon: {
+    fontSize: '1.8em'
   }
 }));
 
@@ -22,19 +27,6 @@ interface ImageOptionProps extends OptionProps<string> {
 }
 
 type CombinedProps = ImageOptionProps;
-
-const distroIcons = {
-  Alpine: 'alpine',
-  Arch: 'archlinux',
-  CentOS: 'centos',
-  CoreOS: 'coreos',
-  Debian: 'debian',
-  Fedora: 'fedora',
-  Gentoo: 'gentoo',
-  openSUSE: 'opensuse',
-  Slackware: 'slackware',
-  Ubuntu: 'ubuntu'
-};
 
 export const ImageOption: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -51,7 +43,11 @@ export const ImageOption: React.FC<CombinedProps> = props => {
     >
       <Grid container direction="row" alignItems="center" justify="flex-start">
         <Grid item>
-          <span className={`fl-${distroIcons[data.label as string]}`} />
+          <span
+            className={`fl-${distroIcons[data.label as string]} ${
+              classes.icon
+            }`}
+          />
         </Grid>
         <Grid item>{label}</Grid>
       </Grid>

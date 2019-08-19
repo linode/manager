@@ -5,8 +5,10 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Select, { Item } from 'src/components/EnhancedSelect';
+import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import Grid from 'src/components/Grid';
 
+import { distroIcons } from './icons';
 import ImageOption from './ImageOption';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -56,7 +58,12 @@ export const ImageSelect: React.FC<Props> = props => {
   const vendors = uniq(
     images.map(thisImage => ({
       value: thisImage.vendor || 'None',
-      label: thisImage.vendor || 'No Vendor'
+      label: thisImage.vendor || 'No Vendor',
+      // This is applied to the input display in the custom SingleValue component
+      // (displays the icon when a vendor has been selected)
+      className: thisImage.vendor
+        ? `fl-${distroIcons[thisImage.vendor]}`
+        : undefined
     }))
   );
   const imageOptions = groupedImages[selectedVendor]
@@ -79,7 +86,7 @@ export const ImageSelect: React.FC<Props> = props => {
               options={vendors}
               onChange={handleSelectVendor}
               value={getItemFromID(vendors, selectedVendor)}
-              components={{ Option: ImageOption }}
+              components={{ Option: ImageOption, SingleValue }}
             />
           </Grid>
           {Boolean(selectedVendor) && (
