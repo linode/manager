@@ -29,14 +29,9 @@ COPY --chown=node:node packages/linode-js-sdk/yarn.lock ./packages/linode-js-sdk
 # Runs "yarn install" for all child packages
 RUN npx lerna bootstrap
 
-
 # Copy the rest of the files that don't require installation
-# and build the JS SDK because Cloud Manager relies on the build files.
 COPY --chown=node:node packages/linode-js-sdk  ./packages/linode-js-sdk/
 
 COPY --chown=node:node packages/manager ./packages/manager
-
-# Now we want to run `yarn start` from the Cloud Manager dir
-WORKDIR /home/node/app/packages/manager
 
 ENTRYPOINT ["yarn"]
