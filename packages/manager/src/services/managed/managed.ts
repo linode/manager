@@ -6,11 +6,26 @@ import Request, {
   setURL,
   setXFilter
 } from '../index';
-import { updateManagedLinodeSchema } from './managed.schema';
+
+import {
+  createServiceMonitorSchema,
+  updateManagedLinodeSchema
+} from './managed.schema';
 
 // Payload types
 
 type Page<T> = Linode.ResourcePage<T>;
+
+export interface ManagedServicePayload {
+  label: string;
+  service_type: Linode.ServiceType;
+  address: string;
+  timeout: number;
+  notes?: string;
+  body?: string;
+  consultation_group?: string;
+  credentials?: number[];
+}
 
 /**
  * getServices
@@ -69,6 +84,18 @@ export const getLinodeSettings = (params?: any, filters?: any) =>
     setParams(params),
     setXFilter(filters),
     setURL(`${API_ROOT}/managed/linode-settings`)
+  ).then(response => response.data);
+
+/**
+ * createServiceMonitor
+ *
+ * Creates a Managed Service Monitor
+ */
+export const createServiceMonitor = (data: ManagedServicePayload) =>
+  Request<Linode.ManagedServiceMonitor>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/managed/services`),
+    setData(data, createServiceMonitorSchema)
   ).then(response => response.data);
 
 /**

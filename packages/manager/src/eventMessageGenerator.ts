@@ -309,20 +309,12 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   //   finished: e => ``,
   //   notification: e => ``,
   // },
-  // managed_service_create: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // managed_service_delete: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  managed_service_create: {
+    notification: e => `Managed service ${e.entity!.label} has been created.`
+  },
+  managed_service_delete: {
+    notification: e => `Managed service ${e.entity!.label} has been deleted.`
+  },
   nodebalancer_config_create: {
     notification: e =>
       `A config on NodeBalancer ${e.entity!.label} has been created.`

@@ -23,7 +23,13 @@ import { CreateVolumeSchema } from 'src/services/volumes/volumes.schema.ts';
 import { MapState } from 'src/store/types';
 import { Origin as VolumeDrawerOrigin } from 'src/store/volumeDrawer';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import {
+  handleFieldErrors,
+  handleGeneralErrors
+} from 'src/utilities/formikErrorUtils';
 import { sendCreateVolumeEvent } from 'src/utilities/ga';
+import isNilOrEmpty from 'src/utilities/isNilOrEmpty';
+import maybeCastToNumber from 'src/utilities/maybeCastToNumber';
 import ConfigSelect from './ConfigSelect';
 import LabelField from './LabelField';
 import LinodeSelect from './LinodeSelect';
@@ -31,12 +37,6 @@ import NoticePanel from './NoticePanel';
 import PricePanel from './PricePanel';
 import RegionSelect from './RegionSelect';
 import SizeField from './SizeField';
-import {
-  handleFieldErrors,
-  handleGeneralErrors,
-  isNilOrEmpty,
-  maybeCastToNumber
-} from './utils';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
 type ClassNames = 'copy';

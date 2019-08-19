@@ -7,10 +7,13 @@ import withVolumesRequests, {
 } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/events';
 import { CloneVolumeSchema } from 'src/services/volumes/volumes.schema';
+import {
+  handleFieldErrors,
+  handleGeneralErrors
+} from 'src/utilities/formikErrorUtils';
 import LabelField from './LabelField';
 import NoticePanel from './NoticePanel';
 import PricePanel from './PricePanel';
-import { handleFieldErrors, handleGeneralErrors } from './utils';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
 interface Props {

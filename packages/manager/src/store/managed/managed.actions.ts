@@ -2,6 +2,8 @@ import actionCreatorFactory from 'typescript-fsa';
 
 export const actionCreator = actionCreatorFactory(`@@manager/managed`);
 
+import { ManagedServicePayload } from 'src/services/managed';
+
 export interface MonitorPayload {
   monitorID: number;
 }
@@ -17,6 +19,12 @@ export const disableServiceMonitorActions = actionCreator.async<
   Linode.ManagedServiceMonitor,
   Linode.ApiFieldError[]
 >('disable');
+
+export const createServiceMonitorActions = actionCreator.async<
+  ManagedServicePayload,
+  Linode.ManagedServiceMonitor,
+  Linode.ApiFieldError[]
+>('create');
 
 export const enableServiceMonitorActions = actionCreator.async<
   MonitorPayload,
