@@ -107,7 +107,9 @@ export class SelectPlanPanel extends React.Component<
                 id={type.id}
               />
             </TableCell>
-            <TableCell>{type.heading}</TableCell>
+            <TableCell data-qa-select-card-heading={type.heading}>
+              {type.heading}
+            </TableCell>
             <TableCell>${type.price.monthly}</TableCell>
             <TableCell>${type.price.hourly}</TableCell>
             <TableCell>{type.vcpus}</TableCell>
