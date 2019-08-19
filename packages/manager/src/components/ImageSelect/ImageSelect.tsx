@@ -31,6 +31,38 @@ const getItemFromID = (items: Item<string>[], id?: string) => {
   return items.find(thisItem => thisItem.value === id);
 };
 
+export const sortByImageVersion = (a: Item<string>, b: Item<string>) => {
+  /**
+   * Images are labeled e.g. 'Debian 10', and we want newer versions
+   * shown at the top of the options list.
+   */
+  try {
+    const versionA = Number(a.label.split(' ')[1]);
+    const versionB = Number(b.label.split(' ')[1]);
+
+    if (isNaN(versionA) || isNaN(versionB)) {
+      throw new Error('No version number found');
+    }
+
+    if (versionA > versionB) {
+      return -1;
+    }
+    if (versionA < versionB) {
+      return 1;
+    }
+    return 0;
+  } catch {
+    // If we can't find a version number, sort alphabetically by label
+    if (a.label < b.label) {
+      return -1;
+    }
+    if (a.label > b.label) {
+      return 1;
+    }
+    return 0;
+  }
+};
+
 export const ImageSelect: React.FC<Props> = props => {
   const { handleSelectImage, images, selectedImageID, title } = props;
   const classes = useStyles();
@@ -67,10 +99,12 @@ export const ImageSelect: React.FC<Props> = props => {
     }))
   );
   const imageOptions = groupedImages[selectedVendor]
-    ? groupedImages[selectedVendor].map(thisImage => ({
-        value: thisImage.id,
-        label: thisImage.label
-      }))
+    ? groupedImages[selectedVendor]
+        .map(thisImage => ({
+          value: thisImage.id,
+          label: thisImage.label
+        }))
+        .sort(sortByImageVersion)
     : [];
 
   return (
