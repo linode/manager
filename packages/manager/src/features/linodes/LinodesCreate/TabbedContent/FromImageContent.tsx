@@ -172,7 +172,6 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
             handleSelectImage={this.props.updateImageID}
             selectedImageID={this.props.selectedImageID}
             error={hasErrorFor.image}
-            variant="public"
           />
           <SelectRegionPanel
             error={hasErrorFor.region}

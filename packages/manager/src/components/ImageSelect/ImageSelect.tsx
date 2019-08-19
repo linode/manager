@@ -21,7 +21,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   title: string;
   selectedImageID?: string;
-  variant: 'public' | 'private';
   images: Linode.Image[];
   error?: string;
   handleSelectImage: (selection: any) => void;
@@ -90,6 +89,9 @@ export const ImageSelect: React.FC<Props> = props => {
     }
   }, [images, selectedImageID]);
 
+  // This component only works with public Images
+  const publicImages = images.filter(thisImage => thisImage.is_public);
+
   const handleSelectVendor = (_selected: Item<string> | null) => {
     if (_selected === null) {
       handleSelectImage(null);
@@ -107,10 +109,10 @@ export const ImageSelect: React.FC<Props> = props => {
 
   const groupedImages = groupBy((eachImage: Linode.Image) => {
     return eachImage.vendor || 'No Vendor';
-  }, images);
+  }, publicImages);
 
   const vendors = uniq(
-    images.map(thisImage => ({
+    publicImages.map(thisImage => ({
       value: thisImage.vendor || 'None',
       label: thisImage.vendor || 'No Vendor',
       // This is applied to the input display in the custom SingleValue component
