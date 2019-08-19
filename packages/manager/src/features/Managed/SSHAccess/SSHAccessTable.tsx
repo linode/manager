@@ -11,8 +11,10 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import useOpenClose from 'src/hooks/useOpenClose';
 import { getLinodeSettings } from 'src/services/managed';
 import { getAll } from 'src/utilities/getAll';
+import EditSSHAccessDrawer from './EditSSHAccessDrawer';
 import SSHAccessTableContent from './SSHAccessTableContent';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -35,9 +37,22 @@ const request = () =>
 const SSHAccessTable: React.FC<{}> = () => {
   const classes = useStyles();
 
-  const { data, loading, lastUpdated, error } = useAPIRequest<
+  const { data, loading, lastUpdated, transformData, error } = useAPIRequest<
     Linode.ManagedLinodeSetting[]
   >(request, []);
+
+  const updateOne = (linodeSetting: Linode.ManagedLinodeSetting) => {
+    transformData(draft => {
+      const idx = draft.findIndex(l => l.id === linodeSetting.id);
+      draft[idx] = linodeSetting;
+    });
+  };
+
+  const [selectedLinodeId, setSelectedLinodeId] = React.useState<number | null>(
+    null
+  );
+
+  const drawer = useOpenClose();
 
   return (
     <>
@@ -105,6 +120,7 @@ const SSHAccessTable: React.FC<{}> = () => {
                             >
                               Port
                             </TableSortCell>
+                            {/* Empty TableCell for action menu */}
                             <TableCell />
                           </TableRow>
                         </TableHead>
@@ -113,6 +129,11 @@ const SSHAccessTable: React.FC<{}> = () => {
                             linodeSettings={paginatedData}
                             loading={loading}
                             lastUpdated={lastUpdated}
+                            updateOne={updateOne}
+                            openDrawer={(linodeId: number) => {
+                              setSelectedLinodeId(linodeId);
+                              drawer.open();
+                            }}
                             error={error}
                           />
                         </TableBody>
@@ -133,6 +154,11 @@ const SSHAccessTable: React.FC<{}> = () => {
           );
         }}
       </OrderBy>
+      <EditSSHAccessDrawer
+        isOpen={drawer.isOpen}
+        closeDrawer={drawer.close}
+        linodeSetting={data.find(l => l.id === selectedLinodeId)}
+      />
     </>
   );
 };
