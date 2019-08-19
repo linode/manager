@@ -9,14 +9,7 @@ import { getItemFromID } from 'src/utilities/getItemByID';
 
 import { distroIcons } from './icons';
 import ImageOption from './ImageOption';
-
-interface Props {
-  selectedImageID?: string;
-  disabled: boolean;
-  handleSelectImage: (selection?: string) => void;
-  images: Linode.Image[];
-  error?: string;
-}
+import { ImageProps as Props } from './ImageSelect';
 
 const getVendorFromImageID = (
   imageID: string | undefined,
@@ -135,7 +128,7 @@ export const PublicImages: React.FC<Props> = props => {
           <Select
             disabled={disabled}
             label="Distributions"
-            placeholder="Distributions"
+            placeholder="Choose a distribution"
             options={vendors}
             onChange={handleSelectVendor}
             value={getItemFromID(vendors, selectedVendor)}

@@ -25,6 +25,14 @@ interface Props {
   handleSelectImage: (selection?: string) => void;
 }
 
+export interface ImageProps {
+  selectedImageID?: string;
+  disabled: boolean;
+  handleSelectImage: (selection?: string) => void;
+  images: Linode.Image[];
+  error?: string;
+}
+
 export const ImageSelect: React.FC<Props> = props => {
   const {
     disabled,

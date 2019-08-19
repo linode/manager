@@ -6,14 +6,7 @@ import { getItemFromID } from 'src/utilities/getItemByID';
 
 import { distroIcons } from './icons';
 import ImageOption from './ImageOption';
-
-interface Props {
-  selectedImageID?: string;
-  disabled: boolean;
-  handleSelectImage: (selection?: string) => void;
-  images: Linode.Image[];
-  error?: string;
-}
+import { ImageProps as Props } from './ImageSelect';
 
 export const PrivateImages: React.FC<Props> = props => {
   const { disabled, error, images, handleSelectImage, selectedImageID } = props;
