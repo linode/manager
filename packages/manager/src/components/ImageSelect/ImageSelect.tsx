@@ -3,7 +3,6 @@ import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { Item } from 'src/components/EnhancedSelect';
 import Grid from 'src/components/Grid';
 
 import PrivateImages from './PrivateImages';
@@ -22,19 +21,12 @@ interface Props {
   images: Linode.Image[];
   error?: string;
   variant: any;
-  handleSelectImage: (selection: any) => void;
+  handleSelectImage: (selection: string | null) => void;
 }
 
 export const ImageSelect: React.FC<Props> = props => {
   const { handleSelectImage, images, selectedImageID, title, variant } = props;
   const classes = useStyles();
-
-  const _handleSelectImage = (_selected: Item<string> | null) => {
-    if (_selected === null) {
-      return handleSelectImage('');
-    }
-    handleSelectImage(_selected.value);
-  };
 
   return (
     <>
@@ -46,13 +38,13 @@ export const ImageSelect: React.FC<Props> = props => {
           {variant === 'public' ? (
             <PublicImages
               images={images.filter(thisImage => thisImage.is_public)}
-              handleSelectImage={_handleSelectImage}
+              handleSelectImage={handleSelectImage}
               selectedImageID={selectedImageID}
             />
           ) : (
             <PrivateImages
               images={images.filter(thisImage => !thisImage.is_public)}
-              handleSelectImage={_handleSelectImage}
+              handleSelectImage={handleSelectImage}
               selectedImageID={selectedImageID}
             />
           )}

@@ -11,7 +11,7 @@ import ImageOption from './ImageOption';
 
 interface Props {
   selectedImageID?: string;
-  handleSelectImage: any;
+  handleSelectImage: (selection: string | null) => void;
   images: Linode.Image[];
 }
 
@@ -76,9 +76,23 @@ export const PublicImages: React.FC<Props> = props => {
   const handleSelectVendor = (_selected: Item<string> | null) => {
     if (_selected === null) {
       handleSelectImage(null);
-      return setSelectedVendor('');
+      setSelectedVendor('');
+    } else {
+      setSelectedVendor(_selected.value);
+      const newOptions = images.filter(
+        thisImage => thisImage.vendor === _selected.value
+      );
+      newOptions.length === 1
+        ? handleSelectImage(newOptions[0].id)
+        : handleSelectImage('');
     }
-    setSelectedVendor(_selected.value);
+  };
+
+  const _handleSelectImage = (_selected: Item<string> | null) => {
+    if (_selected === null) {
+      return handleSelectImage('');
+    }
+    handleSelectImage(_selected.value);
   };
 
   const vendors = uniq(
@@ -111,6 +125,7 @@ export const PublicImages: React.FC<Props> = props => {
       <Grid item xs={6}>
         <Select
           label="Distributions"
+          placeholder="Distributions"
           options={vendors}
           onChange={handleSelectVendor}
           value={getItemFromID(vendors, selectedVendor)}
@@ -121,14 +136,11 @@ export const PublicImages: React.FC<Props> = props => {
         <Grid item xs={6}>
           <Select
             label="Version"
+            placeholder="Select a version"
             isClearable={imageOptions.length > 1}
             options={imageOptions}
-            onChange={handleSelectImage}
-            value={
-              imageOptions.length === 1
-                ? imageOptions[0]
-                : getItemFromID(imageOptions, selectedImageID)
-            }
+            onChange={_handleSelectImage}
+            value={getItemFromID(imageOptions, selectedImageID)}
           />
         </Grid>
       )}

@@ -1,5 +1,5 @@
 import * as React from 'react';
-import Select from 'src/components/EnhancedSelect';
+import Select, { Item } from 'src/components/EnhancedSelect';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import Grid from 'src/components/Grid';
 import { getItemFromID } from 'src/utilities/getItemByID';
@@ -9,7 +9,7 @@ import ImageOption from './ImageOption';
 
 interface Props {
   selectedImageID?: string;
-  handleSelectImage: any;
+  handleSelectImage: (selection: string | null) => void;
   images: Linode.Image[];
 }
 
@@ -29,7 +29,7 @@ export const PrivateImages: React.FC<Props> = props => {
         label="Image"
         isClearable
         options={imageOptions}
-        onChange={handleSelectImage}
+        onChange={(selected: Item<string>) => handleSelectImage(selected.value)}
         value={
           imageOptions.length === 1
             ? imageOptions[0]
