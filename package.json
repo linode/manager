@@ -18,9 +18,9 @@
     "clean": "rm -rf node_modules && lerna clean --yes",
     "test": "lerna run test --stream --scope linode-manager -- --color",
     "docker:e2e": "docker-compose -f integration-test.yml up --exit-code-from manager-e2e",
-    "docker:test": "docker build -f Dockerfile . -t 'manager' && docker run -it --rm -v $(pwd)/packages/manager/src:/src/src manager test",
-    "docker:local": "docker build -f Dockerfile . -t 'manager' && docker run -it --rm -p 3000:3000 -v $(pwd):/src manager up",
-    "docker:storybook": "docker build -f Dockerfile . -t 'storybook' && docker run -it --rm -p 6006:6006 -v $(pwd)/packages/manager/src:/src/src storybook storybook",
+    "docker:test": "docker build -f Dockerfile . -t 'manager' && docker run -it --rm -v $(pwd):/home/node/app manager test",
+    "docker:local": "docker build -f Dockerfile . -t 'manager' && docker run -it --rm -p 3000:3000 -v $(pwd):/home/node/app manager up",
+    "docker:storybook": "docker build -f Dockerfile . -t 'storybook' && docker run -it --rm -p 6006:6006 -v $(pwd):/home/node/app storybook storybook",
     "docker:storybook:test": "docker-compose -f packages/manager/storybook-test.yml up --build --exit-code-from storybook-test"
   }
 }
