@@ -10,12 +10,15 @@ import { resetEventsPolling } from 'src/events';
 import { attachVolume } from 'src/services/volumes';
 import { MapState } from 'src/store/types';
 import { openForCreating } from 'src/store/volumeDrawer';
+import {
+  handleFieldErrors,
+  handleGeneralErrors
+} from 'src/utilities/formikErrorUtils';
 import { number, object } from 'yup';
 import ConfigSelect from './ConfigSelect';
 import { modes } from './modes';
 import ModeSelection from './ModeSelection';
 import NoticePanel from './NoticePanel';
-import { handleFieldErrors, handleGeneralErrors } from './utils';
 import VolumesActionsPanel from './VolumesActionsPanel';
 import VolumeSelect from './VolumeSelect';
 

@@ -20,13 +20,12 @@ import { resetEventsPolling } from 'src/events';
 import userSSHKeyHoc, {
   UserSSHKeyProps
 } from 'src/features/linodes/userSSHKeyHoc';
-// @todo: Extract these utils out of Volumes
+import { rebuildLinode, RebuildRequest } from 'src/services/linodes';
+import { RebuildLinodeSchema } from 'src/services/linodes/linode.schema';
 import {
   handleFieldErrors,
   handleGeneralErrors
-} from 'src/features/Volumes/VolumeDrawer/utils';
-import { rebuildLinode, RebuildRequest } from 'src/services/linodes';
-import { RebuildLinodeSchema } from 'src/services/linodes/linode.schema';
+} from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import { RebuildDialog } from './RebuildDialog';

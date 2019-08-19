@@ -1,3 +1,4 @@
+import { FormikBag } from 'formik';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -23,7 +24,13 @@ import TableSortCell from 'src/components/TableSortCell';
 import withManagedServices, {
   DispatchProps
 } from 'src/containers/managedServices.container';
+import { ManagedServicePayload } from 'src/services/managed';
+import {
+  handleFieldErrors,
+  handleGeneralErrors
+} from 'src/utilities/formikErrorUtils';
 
+import MonitorDrawer from '../MonitorDrawer';
 import MonitorDialog from './MonitorDialog';
 import MonitorTableContent from './MonitorTableContent';
 
@@ -41,6 +48,8 @@ interface Props {
   loading: boolean;
   error?: Linode.ApiFieldError[];
 }
+
+export type FormikProps = FormikBag<CombinedProps, ManagedServicePayload>;
 
 export type CombinedProps = Props &
   WithStyles<ClassNames> &
@@ -65,6 +74,8 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
   );
   const [selectedLabel, setLabel] = React.useState<string>('');
   const [isDeleting, setDeleting] = React.useState<boolean>(false);
+
+  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
 
   const handleOpenDialog = (id: number, label: string) => {
     setDeleteError(undefined);
@@ -92,6 +103,28 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
       });
   };
 
+  const submitMonitorForm = (
+    values: ManagedServicePayload,
+    { setSubmitting, setErrors, setStatus }: FormikProps
+  ) => {
+    const { createServiceMonitor } = props;
+    createServiceMonitor({ ...values, timeout: +values.timeout })
+      .then(response => {
+        setSubmitting(false);
+        setDrawerOpen(false);
+      })
+      .catch(e => {
+        const defaultMessage = `Unable to create this Monitor. Please try again later.`;
+        const mapErrorToStatus = (generalError: string) =>
+          setStatus({ generalError });
+
+        setSubmitting(false);
+        handleFieldErrors(setErrors, e);
+        handleGeneralErrors(mapErrorToStatus, e, defaultMessage);
+        setSubmitting(false);
+      });
+  };
+
   return (
     <>
       <DocumentTitleSegment segment="Service Monitors" />
@@ -105,7 +138,10 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
         <Grid item>
           <Grid container alignItems="flex-end">
             <Grid item className="pt0">
-              <AddNewLink onClick={() => null} label="Add a Monitor" disabled />
+              <AddNewLink
+                onClick={() => setDrawerOpen(true)}
+                label="Add a Monitor"
+              />
             </Grid>
           </Grid>
         </Grid>
@@ -187,6 +223,12 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
         open={dialogOpen}
         error={deleteError}
         loading={isDeleting}
+      />
+      <MonitorDrawer
+        open={drawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        onSubmit={submitMonitorForm}
+        mode="create"
       />
     </>
   );
