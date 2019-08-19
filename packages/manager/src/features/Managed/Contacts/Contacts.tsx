@@ -1,8 +1,11 @@
+import { pluck, uniq } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
+import RootRef from 'src/components/core/RootRef';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
+import Typography from 'src/components/core/Typography';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -16,13 +19,24 @@ import { getManagedContacts } from 'src/services/managed';
 import { getAll } from 'src/utilities/getAll';
 import ContactDrawer from './ContactsDrawer';
 import ContactTableContact from './ContactsTableContent';
+import GroupDrawer from './GroupDrawer';
+import GroupsTableContent from './GroupsTableContent';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(4),
+    marginTop: theme.spacing(1),
     '&:before': {
       display: 'none'
     }
+  },
+  copy: {
+    marginTop: theme.spacing(1)
+  },
+  groupsTable: {
+    marginTop: theme.spacing(3)
+  },
+  contactsTable: {
+    marginTop: theme.spacing(4)
   },
   name: {
     width: '20%'
@@ -32,7 +46,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const request = () =>
   getAll<Linode.ManagedContact>(getManagedContacts)().then(res => res.data);
 
-const SSHAccessTable: React.FC<{}> = () => {
+const Contacts: React.FC<{}> = () => {
   const classes = useStyles();
 
   const { data, loading, lastUpdated, transformData, error } = useAPIRequest<
@@ -50,14 +64,36 @@ const SSHAccessTable: React.FC<{}> = () => {
     number | null
   >(null);
 
-  const drawer = useOpenClose();
+  const [selectedGroupName, setSelectedGroupName] = React.useState<
+    string | null
+  >(null);
+
+  const contactDrawer = useOpenClose();
+  const groupDrawer = useOpenClose();
+
+  const groupsTableRef = React.createRef();
+  const contactsTableRef = React.createRef();
 
   return (
     <>
+      <Typography variant="subtitle1" className={classes.copy}>
+        You can assign contact groups to monitors so we know who to talk to in
+        the event of a support issue. Create contacts and assign them to a
+        group, then assign the group to the appropriate monitor(s).
+      </Typography>
+      {/* The "Groups" table works by ordering ALL contacts, then taking a list of
+      unique group names and paginating on that. The <GroupsTableContent /> component
+      receives ALL contacts, and uses each value from the group name list to generate
+      the rows. */}
       <OrderBy data={data}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
+          // Array of group names to generate table from.
+          const allGroups = pluck('group')(orderedData);
+          // Only keep unique values and remove `null`s
+          const uniqueGroups = uniq(allGroups).filter(group => !!group);
+
           return (
-            <Paginate data={orderedData}>
+            <Paginate data={uniqueGroups} scrollToRef={groupsTableRef}>
               {({
                 count,
                 data: paginatedData,
@@ -67,7 +103,75 @@ const SSHAccessTable: React.FC<{}> = () => {
                 pageSize
               }) => {
                 return (
-                  <>
+                  <div className={classes.groupsTable}>
+                    <RootRef rootRef={groupsTableRef}>
+                      <Typography variant="h2">Groups</Typography>
+                    </RootRef>
+                    <Paper className={classes.root}>
+                      <Table aria-label="List of Your Managed Contact Groups">
+                        <TableHead>
+                          <TableRow>
+                            <TableSortCell
+                              active={orderBy === 'group'}
+                              label={'group'}
+                              direction={order}
+                              handleClick={handleOrderChange}
+                              className={classes.name}
+                            >
+                              Group Name
+                            </TableSortCell>
+                            <TableCell>Contacts</TableCell>
+                            {/* Empty TableCell for action menu */}
+                            <TableCell />
+                          </TableRow>
+                        </TableHead>
+                        <TableBody>
+                          <GroupsTableContent
+                            groupNames={paginatedData}
+                            contacts={data}
+                            loading={loading}
+                            lastUpdated={lastUpdated}
+                            error={error}
+                            openDrawer={(groupName: string) => {
+                              setSelectedGroupName(groupName);
+                              groupDrawer.open();
+                            }}
+                          />
+                        </TableBody>
+                      </Table>
+                    </Paper>
+                    <PaginationFooter
+                      count={count}
+                      handlePageChange={handlePageChange}
+                      handleSizeChange={handlePageSizeChange}
+                      page={page}
+                      pageSize={pageSize}
+                      eventCategory="managed contact groups"
+                    />
+                  </div>
+                );
+              }}
+            </Paginate>
+          );
+        }}
+      </OrderBy>
+      <OrderBy data={data}>
+        {({ data: orderedData, handleOrderChange, order, orderBy }) => {
+          return (
+            <Paginate data={orderedData} scrollToRef={contactsTableRef}>
+              {({
+                count,
+                data: paginatedData,
+                handlePageChange,
+                handlePageSizeChange,
+                page,
+                pageSize
+              }) => {
+                return (
+                  <div className={classes.contactsTable}>
+                    <RootRef rootRef={contactsTableRef}>
+                      <Typography variant="h2">Contacts</Typography>
+                    </RootRef>
                     <Paper className={classes.root}>
                       <Table aria-label="List of Your Managed Contacts">
                         <TableHead>
@@ -125,7 +229,7 @@ const SSHAccessTable: React.FC<{}> = () => {
                             updateOne={updateOne}
                             openDrawer={(contactId: number) => {
                               setSelectedContactId(contactId);
-                              drawer.open();
+                              contactDrawer.open();
                             }}
                             error={error}
                           />
@@ -140,20 +244,26 @@ const SSHAccessTable: React.FC<{}> = () => {
                       pageSize={pageSize}
                       eventCategory="managed contacts"
                     />
-                  </>
+                  </div>
                 );
               }}
             </Paginate>
           );
         }}
       </OrderBy>
+      <GroupDrawer
+        isOpen={groupDrawer.isOpen}
+        closeDrawer={groupDrawer.close}
+        groupName={selectedGroupName || ''}
+        contacts={data}
+      />
       <ContactDrawer
-        isOpen={drawer.isOpen}
-        closeDrawer={drawer.close}
+        isOpen={contactDrawer.isOpen}
+        closeDrawer={contactDrawer.close}
         contact={data.find(l => l.id === selectedContactId)}
       />
     </>
   );
 };
 
-export default SSHAccessTable;
+export default Contacts;
