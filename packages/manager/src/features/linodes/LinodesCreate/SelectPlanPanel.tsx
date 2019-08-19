@@ -1,7 +1,7 @@
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-import CheckBox from 'src/components/CheckBox';
+import Hidden from 'src/components/core/Hidden';
 import {
   createStyles,
   Theme,
@@ -10,15 +10,17 @@ import {
 } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
+import Radio from 'src/components/Radio';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+import SelectionCard from 'src/components/SelectionCard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 
 export interface ExtendedType extends Linode.LinodeType {
@@ -71,7 +73,7 @@ export class SelectPlanPanel extends React.Component<
 > {
   onSelect = (id: string) => () => this.props.onSelect(id);
 
-  renderRow = (type: ExtendedType) => {
+  renderSelection = (type: ExtendedType) => {
     const { selectedID, currentPlanHeading, disabled } = this.props;
     const selectedDiskSize = this.props.selectedDiskSize
       ? this.props.selectedDiskSize
@@ -89,36 +91,50 @@ export class SelectPlanPanel extends React.Component<
     }
 
     return (
-      <TableRow key={type.id}>
-        <TableCell>
-          <CheckBox
+      <React.Fragment>
+        {/* Displays Table Row for larger screens */}
+        <Hidden smDown>
+          <TableRow
+            key={type.id}
+            onClick={this.onSelect(type.id)}
+            rowLink={this.onSelect ? this.onSelect(type.id) : undefined}
+          >
+            <TableCell>
+              <Radio
+                checked={type.id === String(selectedID)}
+                onChange={this.onSelect(type.id)}
+                disabled={planTooSmall || isSamePlan || disabled}
+                id={type.id}
+              />
+            </TableCell>
+            <TableCell data-qa-select-card-heading={type.heading}>
+              {type.heading}
+            </TableCell>
+            <TableCell>${type.price.monthly}</TableCell>
+            <TableCell>${type.price.hourly}</TableCell>
+            <TableCell>{type.vcpus}</TableCell>
+            <TableCell>{convertMegabytesTo(type.disk, true)}</TableCell>
+            <TableCell>{convertMegabytesTo(type.memory, true)}</TableCell>
+          </TableRow>
+        </Hidden>
+        {/* Displays SelectionCard for small screens */}
+        <Hidden mdUp>
+          <SelectionCard
+            key={type.id}
             checked={type.id === String(selectedID)}
-            onChange={this.onSelect(type.id)}
+            onClick={this.onSelect(type.id)}
+            heading={type.heading}
+            subheadings={type.subHeadings}
             disabled={planTooSmall || isSamePlan || disabled}
-            toolTipText={tooltip}
+            tooltip={tooltip}
+            variant="check"
           />
-        </TableCell>
-        <TableCell>{type.heading}</TableCell>
-        <TableCell>${type.price.monthly}</TableCell>
-        <TableCell>${type.price.hourly}</TableCell>
-        <TableCell>{type.vcpus}</TableCell>
-        <TableCell>{convertMegabytesTo(type.disk, true)}</TableCell>
-        <TableCell>{convertMegabytesTo(type.memory, true)}</TableCell>
-      </TableRow>
+        </Hidden>
+      </React.Fragment>
     );
   };
 
-  createTabs = (): [Tab[], Linode.LinodeTypeClass[]] => {
-    const { classes, types } = this.props;
-    const tabs: Tab[] = [];
-    const nanodes = getNanodes(types);
-    const standards = getStandard(types);
-    const highmem = getHighMem(types);
-    const dedicated = getDedicated(types);
-    const gpu = getGPU(types);
-
-    const tabOrder: Linode.LinodeTypeClass[] = [];
-
+  renderPlanContainer = (plans: ExtendedType[]) => {
     const tableHeader = (
       <TableHead>
         <TableRow>
@@ -133,6 +149,32 @@ export class SelectPlanPanel extends React.Component<
       </TableHead>
     );
 
+    return (
+      <Grid container>
+        <Hidden mdUp>{plans.map(this.renderSelection)}</Hidden>
+        <Hidden smDown>
+          <Grid item xs={12} lg={8}>
+            <Table isResponsive={false} border spacingBottom={16}>
+              {tableHeader}
+              <TableBody>{plans.map(this.renderSelection)}</TableBody>
+            </Table>
+          </Grid>
+        </Hidden>
+      </Grid>
+    );
+  };
+
+  createTabs = (): [Tab[], Linode.LinodeTypeClass[]] => {
+    const { classes, types } = this.props;
+    const tabs: Tab[] = [];
+    const nanodes = getNanodes(types);
+    const standards = getStandard(types);
+    const highmem = getHighMem(types);
+    const dedicated = getDedicated(types);
+    const gpu = getGPU(types);
+
+    const tabOrder: Linode.LinodeTypeClass[] = [];
+
     if (!isEmpty(nanodes)) {
       tabs.push({
         render: () => {
@@ -142,14 +184,7 @@ export class SelectPlanPanel extends React.Component<
                 Nanode instances are good for low-duty workloads, where
                 performance isn't critical.
               </Typography>
-              <Grid container>
-                <Grid item xs={12} lg={8}>
-                  <Table isResponsive={false} border spacingBottom={16}>
-                    {tableHeader}
-                    <TableBody>{nanodes.map(this.renderRow)}</TableBody>
-                  </Table>
-                </Grid>
-              </Grid>
+              {this.renderPlanContainer(nanodes)}
             </>
           );
         },
@@ -167,14 +202,7 @@ export class SelectPlanPanel extends React.Component<
                 Standard instances are good for medium-duty workloads and are a
                 good mix of performance, resources, and price.
               </Typography>
-              <Grid container>
-                <Grid item xs={12} lg={8}>
-                  <Table isResponsive={false} border spacingBottom={16}>
-                    {tableHeader}
-                    <TableBody>{standards.map(this.renderRow)}</TableBody>
-                  </Table>
-                </Grid>
-              </Grid>
+              {this.renderPlanContainer(standards)}
             </>
           );
         },
@@ -192,14 +220,7 @@ export class SelectPlanPanel extends React.Component<
                 Dedicated CPU instances are good for full-duty workloads where
                 consistent performance is important.
               </Typography>
-              <Grid container>
-                <Grid item xs={12} lg={8}>
-                  <Table isResponsive={false} border spacingBottom={16}>
-                    {tableHeader}
-                    <TableBody>{dedicated.map(this.renderRow)}</TableBody>
-                  </Table>
-                </Grid>
-              </Grid>
+              {this.renderPlanContainer(dedicated)}
             </>
           );
         },
@@ -218,14 +239,7 @@ export class SelectPlanPanel extends React.Component<
                 good for memory hungry use cases like caching and in-memory
                 databases.
               </Typography>
-              <Grid container>
-                <Grid item xs={12} lg={8}>
-                  <Table isResponsive={false} border spacingBottom={16}>
-                    {tableHeader}
-                    <TableBody>{highmem.map(this.renderRow)}</TableBody>
-                  </Table>
-                </Grid>
-              </Grid>
+              {this.renderPlanContainer(highmem)}
             </>
           );
         },
@@ -259,14 +273,7 @@ export class SelectPlanPanel extends React.Component<
                 applications such as machine learning, AI, and video
                 transcoding.
               </Typography>
-              <Grid container>
-                <Grid item xs={12} lg={9}>
-                  <Table isResponsive={false} border spacingBottom={16}>
-                    {tableHeader}
-                    <TableBody>{gpu.map(this.renderRow)}</TableBody>
-                  </Table>
-                </Grid>
-              </Grid>
+              {this.renderPlanContainer(gpu)}
             </>
           );
         },
