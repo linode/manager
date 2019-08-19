@@ -33,7 +33,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  linodeVolumes?: Linode.Volume[];
+  linodeVolumes: Linode.Volume[];
   hasConfirmed: boolean;
   setConfirmed: (value: boolean) => void;
   error?: string;
@@ -43,6 +43,8 @@ type CombinedProps = Props;
 
 const CautionNotice: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+
+  const amountOfAttachedVolumes = props.linodeVolumes.length;
 
   return (
     <Notice warning className={classes.root} spacingTop={24}>
@@ -70,20 +72,21 @@ const CautionNotice: React.FC<CombinedProps> = props => {
           </a>
         </li>
         <li>Your Linode will be powered off.</li>
-        {props.linodeVolumes && (
-          <React.Fragment>
-            <li>
-              Block Storage can't be migrated to other regions. The following
-              {props.linodeVolumes.length > 1 ? ' volumes' : ' volume'} will be
+        <li>
+          Block Storage can't be migrated to other regions.
+          {amountOfAttachedVolumes > 0 && (
+            <React.Fragment>
+              The following
+              {amountOfAttachedVolumes > 1 ? ' volumes' : ' volume'} will be
               detached from this Linode:
-            </li>
-            <ul className={classes.volumes}>
-              {props.linodeVolumes.map(eachVolume => {
-                return <li key={eachVolume.id}>{eachVolume.label}</li>;
-              })}
-            </ul>
-          </React.Fragment>
-        )}
+              <ul className={classes.volumes}>
+                {props.linodeVolumes.map(eachVolume => {
+                  return <li key={eachVolume.id}>{eachVolume.label}</li>;
+                })}
+              </ul>
+            </React.Fragment>
+          )}
+        </li>
       </ul>
       {props.error && <Notice error text={props.error} />}
       <Checkbox

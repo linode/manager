@@ -139,6 +139,11 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
     return null;
   }
 
+  const disabledText = getDisabledReason(
+    props.recentEvents,
+    props.linodeStatus
+  );
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Migrate" />
@@ -178,16 +183,14 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
       />
       <div className={classes.actionWrapper}>
         <Button
-          disabled={linodeStatus !== 'offline'}
+          disabled={!!disabledText}
           buttonType="primary"
           onClick={handleMigrate}
           loading={isLoading}
         >
           Enter Migration Queue
         </Button>
-        {linodeStatus !== 'offline' && (
-          <HelpIcon text="Your Linode must be shutdown first." />
-        )}
+        {!!disabledText && <HelpIcon text={disabledText} />}
       </div>
     </React.Fragment>
   );
@@ -203,6 +206,7 @@ interface LinodeContextProps {
   type: string | null;
   image: Linode.Image;
   linodeVolumes: Linode.Volume[];
+  recentEvents: Linode.Event[];
 }
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
@@ -214,7 +218,8 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeSpecs: linode.specs,
   linodeStatus: linode.status,
   linodeEvents: linode._events,
-  linodeVolumes: linode._volumes
+  linodeVolumes: linode._volumes,
+  recentEvents: linode._events
 }));
 
 interface WithTypesAndImages {
@@ -239,3 +244,20 @@ export default compose<CombinedProps, {}>(
   linodeContext,
   React.memo
 )(MigrateLanding);
+
+const getDisabledReason = (events: Linode.Event[], linodeStatus: string) => {
+  if (events[0]) {
+    if (
+      events[0].action === 'linode_migrate_datacenter' &&
+      events[0].percent_complete !== 100
+    ) {
+      return `Your Linode is currently being migrated.`;
+    }
+  }
+
+  if (linodeStatus !== 'offline') {
+    return 'Your Linode must be shut down first.';
+  }
+
+  return '';
+};

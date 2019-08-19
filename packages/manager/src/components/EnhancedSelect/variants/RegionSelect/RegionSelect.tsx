@@ -38,6 +38,7 @@ export const flags = {
     />
   ),
   uk: () => <UK width="32" height="24" viewBox="0 0 640 480" />,
+  eu: () => <UK width="32" height="24" viewBox="0 0 640 480" />,
   de: () => <DE width="32" height="24" viewBox="0 0 720 480" />,
   ca: () => <CA width="32" height="24" viewBox="0 0 640 480" />,
   in: () => <IN width="32" height="24" viewBox="0 0 640 480" />
@@ -62,7 +63,7 @@ export const getRegionOptions = (regions: ExtendedRegion[]) => {
     if (thisRegion.country.match(/(us|ca)/)) {
       return 'North America';
     }
-    if (thisRegion.country.match(/(de|uk)/)) {
+    if (thisRegion.country.match(/(de|uk|eu)/)) {
       return 'Europe';
     }
     if (thisRegion.country.match(/(jp|sg|in)/)) {
