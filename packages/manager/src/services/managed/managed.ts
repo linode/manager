@@ -6,7 +6,11 @@ import Request, {
   setURL,
   setXFilter
 } from '../index';
-import { createServiceMonitorSchema } from './managed.schema';
+
+import {
+  createServiceMonitorSchema,
+  updateManagedLinodeSchema
+} from './managed.schema';
 
 // Payload types
 
@@ -92,4 +96,33 @@ export const createServiceMonitor = (data: ManagedServicePayload) =>
     setMethod('POST'),
     setURL(`${API_ROOT}/managed/services`),
     setData(data, createServiceMonitorSchema)
+  ).then(response => response.data);
+
+/**
+ * getCredentials
+ *
+ * Returns a paginated list of Managed Credentials for your account.
+ */
+export const getCredentials = (params?: any, filters?: any) =>
+  Request<Page<Linode.ManagedCredential>>(
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
+    setURL(`${API_ROOT}/managed/credentials`)
+  ).then(response => response.data);
+
+/**
+ * updateLinodeSettings
+ *
+ * Updates a single Linode's Managed settings.
+ *
+ */
+export const updateLinodeSettings = (
+  linodeId: number,
+  data: { ssh: Partial<Linode.ManagedSSHSetting> }
+) =>
+  Request<Linode.ManagedLinodeSetting>(
+    setURL(`${API_ROOT}/managed/linode-settings/${linodeId}`),
+    setMethod('PUT'),
+    setData(data, updateManagedLinodeSchema)
   ).then(response => response.data);
