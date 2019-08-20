@@ -45,8 +45,7 @@ export const GroupsTableContent: React.FC<CombinedProps> = props => {
       {groups.map((group, idx) => (
         <GroupsRow
           key={`managed-contact-row-${idx}`}
-          groupName={group.groupName}
-          contacts={group.contactNames}
+          group={group}
           openDrawer={openDrawer}
         />
       ))}
