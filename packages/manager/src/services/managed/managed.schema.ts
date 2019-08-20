@@ -33,7 +33,7 @@ export const updateManagedLinodeSchema = object({
 
 export const createCredentialSchema = object().shape({
   label: string()
-    .required()
+    .required('Label is required.')
     .min(2, 'Label must be between 2 and 75 characters.')
     .max(75, 'Label must be between 2 and 75 characters.'),
   username: string()

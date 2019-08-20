@@ -52,8 +52,7 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
           handleChange,
           handleBlur,
           handleSubmit,
-          isSubmitting,
-          setFieldValue
+          isSubmitting
         }) => (
           <>
             {status && (
@@ -91,7 +90,7 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
               <TextField
                 name="password"
                 label="Password / Passphrase"
-                data-qa-add-address
+                data-qa-add-password
                 value={values.password}
                 error={!!errors.password}
                 errorText={errors.password}
