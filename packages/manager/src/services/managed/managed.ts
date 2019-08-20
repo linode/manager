@@ -124,7 +124,7 @@ export const getCredentials = (params?: any, filters?: any) =>
  * Creates a Managed Credential
  */
 export const createCredential = (data: CredentialPayload) =>
-  Request<Linode.ManagedServiceMonitor>(
+  Request<Linode.ManagedCredential>(
     setMethod('POST'),
     setURL(`${API_ROOT}/managed/credentials`),
     setData(data, createCredentialSchema)
