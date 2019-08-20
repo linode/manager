@@ -26,6 +26,7 @@ import withManagedServices, {
 } from 'src/containers/managedServices.container';
 import { useDialog } from 'src/hooks/useDialog';
 import { ManagedServicePayload } from 'src/services/managed';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors
@@ -66,41 +67,32 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
     loading,
     monitors
   } = props;
-  const [dialogOpen, setDialog] = React.useState<boolean>(false);
-  const [deleteError, setDeleteError] = React.useState<string | undefined>(
-    undefined
-  );
-  const [selectedMonitor, setMonitor] = React.useState<number | undefined>(
-    undefined
-  );
-  const [selectedLabel, setLabel] = React.useState<string>('');
-  const [isDeleting, setDeleting] = React.useState<boolean>(false);
+
+  const {
+    dialog,
+    openDialog,
+    closeDialog,
+    submitDialog,
+    handleError
+  } = useDialog<number>(deleteServiceMonitor);
 
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
 
-  const handleOpenDialog = (id: number, label: string) => {
-    setDeleteError(undefined);
-    setDeleting(false);
-    setDialog(true);
-    setLabel(label);
-    setMonitor(id);
-  };
-
   const handleDelete = () => {
-    if (!selectedMonitor) {
+    if (!dialog.entityID) {
       return;
     }
-    setDeleting(true);
-    deleteServiceMonitor(selectedMonitor)
+    submitDialog(dialog.entityID)
       .then(_ => {
-        setDialog(false);
         enqueueSnackbar('Successfully deleted Service Monitor', {
           variant: 'success'
         });
       })
       .catch(err => {
-        setDeleting(false);
-        setDeleteError(err[0].reason);
+        handleError(
+          getAPIErrorOrDefault(err, 'Error deleting this Service Monitor.')[0]
+            .reason
+        );
       });
   };
 
@@ -199,7 +191,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
                         monitors={data}
                         loading={loading}
                         error={error}
-                        openDialog={handleOpenDialog}
+                        openDialog={openDialog}
                       />
                     </TableBody>
                   </Table>
@@ -218,12 +210,12 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
         )}
       </OrderBy>
       <MonitorDialog
-        label={selectedLabel}
+        label={dialog.entityLabel || ''}
         onDelete={handleDelete}
-        onClose={() => setDialog(false)}
-        open={dialogOpen}
-        error={deleteError}
-        loading={isDeleting}
+        onClose={closeDialog}
+        open={dialog.isOpen}
+        error={dialog.error}
+        loading={dialog.isLoading}
       />
       <MonitorDrawer
         open={drawerOpen}
