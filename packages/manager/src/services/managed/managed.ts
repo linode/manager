@@ -8,6 +8,7 @@ import Request, {
 } from '../index';
 
 import {
+  createCredentialSchema,
   createServiceMonitorSchema,
   updateManagedLinodeSchema
 } from './managed.schema';
@@ -25,6 +26,12 @@ export interface ManagedServicePayload {
   body?: string;
   consultation_group?: string;
   credentials?: number[];
+}
+
+export interface CredentialPayload {
+  label: string;
+  password?: string;
+  username?: string;
 }
 
 /**
@@ -120,6 +127,18 @@ export const deleteCredential = (credentialID: number) =>
   Request<{}>(
     setMethod('POST'),
     setURL(`${API_ROOT}/managed/credentials/${credentialID}/revoke`)
+  ).then(response => response.data);
+
+/*
+ * createCredential
+ *
+ * Creates a Managed Credential
+ */
+export const createCredential = (data: CredentialPayload) =>
+  Request<Linode.ManagedCredential>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/managed/credentials`),
+    setData(data, createCredentialSchema)
   ).then(response => response.data);
 
 /**

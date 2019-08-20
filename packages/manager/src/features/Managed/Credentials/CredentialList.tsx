@@ -1,3 +1,4 @@
+import { FormikBag } from 'formik';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
@@ -16,10 +17,19 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
 import { useDialog } from 'src/hooks/useDialog';
-import { deleteCredential } from 'src/services/managed';
+import {
+  createCredential,
+  CredentialPayload,
+  deleteCredential
+} from 'src/services/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import {
+  handleFieldErrors,
+  handleGeneralErrors
+} from 'src/utilities/formikErrorUtils';
 
 import { default as CredentialDialog } from '../Monitors/MonitorDialog';
+import CredentialDrawer from './CredentialDrawer';
 import CredentialTableContent from './CredentialTableContent';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -38,9 +48,13 @@ interface Props {
 
 type CombinedProps = Props & WithSnackbarProps;
 
+export type FormikProps = FormikBag<Props, CredentialPayload>;
+
 export const CredentialList: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const { credentials, enqueueSnackbar, error, loading, update } = props;
+  const [isDrawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+
   const {
     dialog,
     openDialog,
@@ -64,6 +78,28 @@ export const CredentialList: React.FC<CombinedProps> = props => {
       );
   };
 
+  const submitForm = (
+    values: CredentialPayload,
+    { setSubmitting, setErrors, setStatus }: FormikProps
+  ) => {
+    createCredential(values)
+      .then(_ => {
+        setSubmitting(false);
+        setDrawerOpen(false);
+        update();
+      })
+      .catch(e => {
+        const defaultMessage = `Unable to create this Credential. Please try again later.`;
+        const mapErrorToStatus = (generalError: string) =>
+          setStatus({ generalError });
+
+        setSubmitting(false);
+        handleFieldErrors(setErrors, e);
+        handleGeneralErrors(mapErrorToStatus, e, defaultMessage);
+        setSubmitting(false);
+      });
+  };
+
   return (
     <>
       <DocumentTitleSegment segment="Credentials" />
@@ -85,9 +121,8 @@ export const CredentialList: React.FC<CombinedProps> = props => {
           <Grid container alignItems="flex-end">
             <Grid item className="pt0">
               <AddNewLink
-                onClick={() => null}
+                onClick={() => setDrawerOpen(true)}
                 label="Add Credentials"
-                disabled
               />
             </Grid>
           </Grid>
@@ -160,6 +195,12 @@ export const CredentialList: React.FC<CombinedProps> = props => {
         error={dialog.error}
         onClose={closeDialog}
         onDelete={handleDelete}
+      />
+      <CredentialDrawer
+        open={isDrawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        onSubmit={submitForm}
+        mode="create"
       />
     </>
   );

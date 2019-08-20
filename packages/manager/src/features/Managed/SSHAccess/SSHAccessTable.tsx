@@ -25,7 +25,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   linode: {
-    width: '40%'
+    width: '30%'
+  },
+  access: {
+    width: '15%'
+  },
+  ip: {
+    width: '20%'
   }
 }));
 
@@ -85,6 +91,7 @@ const SSHAccessTable: React.FC<{}> = () => {
                               Linode
                             </TableSortCell>
                             <TableSortCell
+                              className={classes.access}
                               active={orderBy === 'ssh:access'}
                               label={'ssh:access'}
                               direction={order}
@@ -103,6 +110,7 @@ const SSHAccessTable: React.FC<{}> = () => {
                               User
                             </TableSortCell>
                             <TableSortCell
+                              className={classes.ip}
                               active={orderBy === 'ssh:ip'}
                               label={'ssh:ip'}
                               direction={order}
@@ -158,6 +166,7 @@ const SSHAccessTable: React.FC<{}> = () => {
         isOpen={drawer.isOpen}
         closeDrawer={drawer.close}
         linodeSetting={data.find(l => l.id === selectedLinodeId)}
+        updateOne={updateOne}
       />
     </>
   );
