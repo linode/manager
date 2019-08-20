@@ -1,6 +1,7 @@
 import * as React from 'react';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import { truncateAndJoinList } from 'src/utilities/stringUtils';
 import ActionMenu from './GroupsActionMenu';
 
 interface Props {
@@ -15,7 +16,9 @@ export const GroupsRow: React.FunctionComponent<Props> = props => {
   return (
     <TableRow key={groupName}>
       <TableCell parentColumn="Group Name">{groupName}</TableCell>
-      <TableCell parentColumn="Contacts">{contacts.join(', ')}</TableCell>
+      <TableCell parentColumn="Contacts">
+        {truncateAndJoinList(contacts, 20)}
+      </TableCell>
       <TableCell>
         <ActionMenu groupName={groupName} openDrawer={openDrawer} />
       </TableCell>
