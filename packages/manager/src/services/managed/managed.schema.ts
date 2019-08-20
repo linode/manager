@@ -45,3 +45,19 @@ export const createCredentialSchema = object().shape({
     .notRequired()
     .max(5000, 'Password must be 5000 characters or less.')
 });
+
+export const createContactSchema = object().shape({
+  name: string()
+    .required('Name is required.')
+    .min(2, 'Name must be between 2 and 64 characters.')
+    .max(64, 'Name must be between 2 and 64 characters.'),
+  email: string().required('E-mail is required.'),
+  phone: object().shape({
+    primary: string().notRequired(),
+    secondary: string().notRequired()
+  }),
+  group: string()
+    .notRequired()
+    .min(2, 'Group must be between 2 and 50 characters.')
+    .max(50, 'Group must be between 2 and 50 characters.')
+});

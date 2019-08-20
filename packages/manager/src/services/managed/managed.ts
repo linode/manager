@@ -34,6 +34,13 @@ export interface CredentialPayload {
   username?: string;
 }
 
+export interface ContactPayload {
+  name: string;
+  email: string;
+  phone?: Linode.ManagedContactPhone;
+  group?: string;
+}
+
 /**
  * getServices
  *
@@ -168,4 +175,16 @@ export const getManagedContacts = (params?: any, filters?: any) =>
     setParams(params),
     setXFilter(filters),
     setURL(`${API_ROOT}/managed/contacts`)
+  ).then(response => response.data);
+
+/**
+ * createContact
+ *
+ * Creates a Managed Contact
+ */
+export const createContact = (data: ContactPayload) =>
+  Request<Linode.ManagedContact>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/managed/contacts`),
+    setData(data, createCredentialSchema)
   ).then(response => response.data);
