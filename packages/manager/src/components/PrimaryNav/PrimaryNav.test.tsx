@@ -1,5 +1,6 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
+import ldClient from 'src/__data__/ldClient';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { light } from 'src/themes';
 import { ClassNames, PrimaryNav } from './PrimaryNav';
@@ -46,6 +47,7 @@ describe('PrimaryNav', () => {
           toggleSpacing={jest.fn()}
           closeMenu={jest.fn()}
           flags={{}}
+          ldClient={ldClient}
           toggleTheme={jest.fn()}
           hasAccountAccess={false}
           isManagedAccount={false}
@@ -113,6 +115,7 @@ describe('PrimaryNav', () => {
           toggleSpacing={jest.fn()}
           closeMenu={jest.fn()}
           flags={{}}
+          ldClient={ldClient}
           toggleTheme={jest.fn()}
           hasAccountAccess={true}
           isManagedAccount={false}
@@ -144,6 +147,7 @@ describe('PrimaryNav', () => {
           toggleSpacing={jest.fn()}
           closeMenu={jest.fn()}
           flags={{}}
+          ldClient={ldClient}
           toggleTheme={jest.fn()}
           hasAccountAccess={false}
           isManagedAccount={true}
@@ -175,6 +179,7 @@ describe('PrimaryNav', () => {
           toggleSpacing={jest.fn()}
           closeMenu={jest.fn()}
           flags={{}}
+          ldClient={ldClient}
           toggleTheme={jest.fn()}
           hasAccountAccess={false}
           isManagedAccount={true}
