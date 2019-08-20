@@ -9,6 +9,8 @@ import { baseRequest } from 'linode-js-sdk/lib/request';
 import store from 'src/store';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
 
+import { API_ROOT } from 'src/constants';
+
 const handleSuccess: <T extends AxiosResponse<any>>(
   response: T
 ) => T | T = response => {
@@ -79,8 +81,18 @@ baseRequest.interceptors.request.use(config => {
   /** Will end up being "Admin: 1234" or "Bearer 1234" */
   const token = ACCESS_TOKEN || pathOr('', ['authentication', 'token'], state);
 
+  let finalUrl = '';
+
+  /**
+   * override the base URL with the one we have defined in the .env file
+   */
+  if (config.url && config.baseURL) {
+    finalUrl = config.url.replace(config.baseURL, API_ROOT);
+  }
+
   return {
     ...config,
+    url: finalUrl || config.url,
     headers: {
       ...config.headers,
       ...(token && { Authorization: `${token}` })
