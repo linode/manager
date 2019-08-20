@@ -1,12 +1,19 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-import MonitorOK from 'src/assets/icons/monitor-ok.svg';
+import { compose } from 'recompose';
+import CircleProgress from 'src/components/CircleProgress';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
+import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
+import ManagedContainer, {
+  DispatchProps
+} from 'src/containers/managedServices.container';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import DashboardCard from '../DashboardCard';
+import Healthy from './Healthy';
+import Unhealthy from './Unhealthy';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -25,8 +32,32 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-export const ManagedDashboardCard: React.FC<{}> = props => {
+interface StateProps {
+  monitors: Linode.ManagedServiceMonitor[];
+  loading: boolean;
+  error?: Linode.ApiFieldError[];
+  updated: number;
+}
+
+type CombinedProps = StateProps & DispatchProps;
+
+export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const { error, loading, monitors, updated } = props;
+
+  React.useEffect(() => {
+    props.requestManagedServices();
+
+    const interval = setInterval(props.requestManagedServices, 5000);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, []);
+
+  if (!loading && monitors.length === 0) {
+    return null;
+  }
   return (
     <DashboardCard
       title="Managed Services"
@@ -42,26 +73,67 @@ export const ManagedDashboardCard: React.FC<{}> = props => {
           justify="center"
           alignItems="center"
         >
-          <Grid item xs={1} className={classes.icon}>
-            <MonitorOK height={45} width={45} />
-          </Grid>
-          <Grid container item direction="column" justify="space-around">
-            <Grid item className={classes.text}>
-              <Typography variant="subtitle1">
-                <strong>All Managed service monitors are verified.</strong>
-              </Typography>
-            </Grid>
-            <Grid item className={classes.text}>
-              <Typography>
-                <Link to="/managed/monitors">View your Managed services</Link>{' '}
-                for details.
-              </Typography>
-            </Grid>
-          </Grid>
+          <Content
+            error={error}
+            loading={loading}
+            monitors={monitors}
+            updated={updated}
+          />
         </Grid>
       </Paper>
     </DashboardCard>
   );
 };
 
-export default ManagedDashboardCard;
+const Content: React.FC<StateProps> = props => {
+  const { error, loading, monitors, updated } = props;
+  if (error) {
+    const errorString = getAPIErrorOrDefault(
+      error,
+      'Error loading your Managed service information.'
+    )[0].reason;
+    return <ErrorState errorText={errorString} compact />;
+  }
+
+  if (loading && updated === 0) {
+    return <CircleProgress mini />;
+  }
+
+  const failedMonitors = getFailedMonitors(monitors);
+  if (failedMonitors.length > 0) {
+    return <Unhealthy monitorsDown={failedMonitors.length} />;
+  }
+
+  return <Healthy />;
+};
+
+const withManaged = ManagedContainer(
+  (ownProps, managedLoading, lastUpdated, monitors, managedError) => ({
+    ...ownProps,
+    loading: managedLoading,
+    updated: lastUpdated,
+    monitors,
+    error: managedError!.read
+  })
+);
+
+const getFailedMonitors = (monitors: Linode.ManagedServiceMonitor[]) => {
+  /**
+   * This assumes that a status of "failed" is the only
+   * error state; but if all a user's monitors are pending
+   * or disabled, they'll all pass the test here and the
+   * user will get a message saying that all monitors are
+   * verified. Need to discuss.
+   */
+  return monitors.reduce((accum, thisMonitor) => {
+    if (thisMonitor.status === 'problem') {
+      return [...accum, thisMonitor.id];
+    } else {
+      return accum;
+    }
+  }, []);
+};
+
+const enhanced = compose<CombinedProps, {}>(withManaged);
+
+export default enhanced(ManagedDashboardCard);
