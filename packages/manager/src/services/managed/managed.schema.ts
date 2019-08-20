@@ -30,3 +30,16 @@ export const updateManagedLinodeSchema = object({
       .max(65535)
   })
 });
+
+export const createCredentialSchema = object().shape({
+  label: string()
+    .required('Label is required.')
+    .min(2, 'Label must be between 2 and 75 characters.')
+    .max(75, 'Label must be between 2 and 75 characters.'),
+  username: string()
+    .notRequired()
+    .max(5000, 'Username must be 5000 characters or less.'),
+  password: string()
+    .notRequired()
+    .max(5000, 'Password must be 5000 characters or less.')
+});

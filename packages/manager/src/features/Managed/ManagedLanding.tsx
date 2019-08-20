@@ -58,11 +58,15 @@ const getAllCredentials = () =>
   );
 
 export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
-  const { data, error, loading, lastUpdated } = useAPIRequest<
-    Linode.ManagedCredential[]
-  >(getAllCredentials, []);
-  const credentialsError = error
-    ? getAPIErrorOrDefault(error, 'Error retrieving your credentials.')
+  const credentials = useAPIRequest<Linode.ManagedCredential[]>(
+    getAllCredentials,
+    []
+  );
+  const credentialsError = credentials.error
+    ? getAPIErrorOrDefault(
+        credentials.error,
+        'Error retrieving your credentials.'
+      )
     : undefined;
 
   const tabs = [
@@ -166,9 +170,10 @@ export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
               path={`${props.match.path}/credentials`}
               render={() => (
                 <Credentials
-                  loading={loading && lastUpdated === 0}
+                  loading={credentials.loading && credentials.lastUpdated === 0}
                   error={credentialsError}
-                  credentials={data}
+                  credentials={credentials.data}
+                  update={credentials.update}
                 />
               )}
             />
