@@ -20,15 +20,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: theme.spacing(3),
     marginTop: '0 !important'
   },
-  icon: {
-    margin: theme.spacing(2)
-  },
   paper: {
     marginTop: theme.spacing()
-  },
-  text: {
-    paddingBottom: '2px !important',
-    paddingTop: '2px !important'
   }
 }));
 
