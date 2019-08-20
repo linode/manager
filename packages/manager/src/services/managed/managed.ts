@@ -68,7 +68,7 @@ export const enableServiceMonitor = (serviceID: number) =>
  * Disables a Managed Service and removes it from your account.
  */
 export const deleteServiceMonitor = (serviceID: number) =>
-  Request<Linode.ManagedServiceMonitor>(
+  Request<{}>(
     setMethod('DELETE'),
     setURL(`${API_ROOT}/managed/services/${serviceID}`)
   ).then(response => response.data);
@@ -109,6 +109,17 @@ export const getCredentials = (params?: any, filters?: any) =>
     setParams(params),
     setXFilter(filters),
     setURL(`${API_ROOT}/managed/credentials`)
+  ).then(response => response.data);
+
+/**
+ * deleteCredential
+ *
+ * Disables a Managed Credential and removes it from your account.
+ */
+export const deleteCredential = (credentialID: number) =>
+  Request<{}>(
+    setMethod('DELETE'),
+    setURL(`${API_ROOT}/managed/credentials/${credentialID}`)
   ).then(response => response.data);
 
 /**

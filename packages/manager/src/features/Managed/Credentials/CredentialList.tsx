@@ -15,6 +15,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
 
+import { default as CredentialDialog } from '../Monitors/MonitorDialog';
 import CredentialTableContent from './CredentialTableContent';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -123,6 +124,14 @@ export const CredentialList: React.FC<Props> = props => {
           </Paginate>
         )}
       </OrderBy>
+      <CredentialDialog
+        open={true}
+        label={'This dialog'}
+        loading={false}
+        error={undefined}
+        onClose={() => null}
+        onDelete={() => null}
+      />
     </>
   );
 };
