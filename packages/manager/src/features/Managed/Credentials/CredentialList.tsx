@@ -1,4 +1,5 @@
 import { FormikBag } from 'formik';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import Paper from 'src/components/core/Paper';
@@ -15,12 +16,19 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
-import { createCredential, CredentialPayload } from 'src/services/managed';
+import { useDialog } from 'src/hooks/useDialog';
+import {
+  createCredential,
+  CredentialPayload,
+  deleteCredential
+} from 'src/services/managed';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
 
+import { default as CredentialDialog } from '../Monitors/MonitorDialog';
 import CredentialDrawer from './CredentialDrawer';
 import CredentialTableContent from './CredentialTableContent';
 
@@ -38,12 +46,37 @@ interface Props {
   update: () => void;
 }
 
+type CombinedProps = Props & WithSnackbarProps;
+
 export type FormikProps = FormikBag<Props, CredentialPayload>;
 
-export const CredentialList: React.FC<Props> = props => {
+export const CredentialList: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const { credentials, error, loading, update } = props;
+  const { credentials, enqueueSnackbar, error, loading, update } = props;
   const [isDrawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+
+  const {
+    dialog,
+    openDialog,
+    closeDialog,
+    submitDialog,
+    handleError
+  } = useDialog<number>(deleteCredential);
+
+  const handleDelete = () => {
+    submitDialog(dialog.entityID)
+      .then(() => {
+        update();
+        enqueueSnackbar('Credential deleted successfully.', {
+          variant: 'success'
+        });
+      })
+      .catch(e =>
+        handleError(
+          getAPIErrorOrDefault(e, 'Error deleting this credential.')[0].reason
+        )
+      );
+  };
 
   const submitForm = (
     values: CredentialPayload,
@@ -137,7 +170,7 @@ export const CredentialList: React.FC<Props> = props => {
                         credentials={data}
                         loading={loading}
                         error={error}
-                        openDialog={() => null}
+                        openDialog={openDialog}
                       />
                     </TableBody>
                   </Table>
@@ -155,6 +188,14 @@ export const CredentialList: React.FC<Props> = props => {
           </Paginate>
         )}
       </OrderBy>
+      <CredentialDialog
+        open={dialog.isOpen}
+        label={dialog.entityLabel || ''}
+        loading={dialog.isLoading}
+        error={dialog.error}
+        onClose={closeDialog}
+        onDelete={handleDelete}
+      />
       <CredentialDrawer
         open={isDrawerOpen}
         onClose={() => setDrawerOpen(false)}
@@ -165,4 +206,4 @@ export const CredentialList: React.FC<Props> = props => {
   );
 };
 
-export default CredentialList;
+export default withSnackbar(CredentialList);
