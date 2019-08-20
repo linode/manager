@@ -26,7 +26,6 @@ import { linodeInTransition } from '../transitions';
 
 import CautionNotice from './CautionNotice';
 import ConfigureForm from './ConfigureForm';
-import MigrationImminentNotice from './MigrationImminentNotice';
 
 import { scheduleOrQueueMigration } from 'src/services/linodes/linodeActions.ts';
 
@@ -177,10 +176,14 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
       <Typography className={classes.details} variant="h2">
         {newLabel}
       </Typography>
-      <MigrationImminentNotice
+      {/*
+         commenting out for now because we need further clarification from
+         stakeholders about whether or not we want to prevent multiple cross-datacenter migrations.
+         */}
+      {/* <MigrationImminentNotice
         linodeID={props.linodeId}
         notifications={notifications}
-      />
+      /> */}
       <CautionNotice
         linodeVolumes={props.linodeVolumes}
         setConfirmed={setConfirmed}
@@ -211,7 +214,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
 
 interface LinodeContextProps {
   linodeId: number;
-  region: string;
+  region: { region: string; countryCode: string };
   label: string;
   linodeStatus: Linode.LinodeStatus;
   linodeSpecs: Linode.LinodeSpecs;
@@ -224,7 +227,10 @@ interface LinodeContextProps {
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id,
-  region: linode.region,
+  region: {
+    region: linode.region,
+    countryCode: getCountryCodeFromSlug(linode.region)
+  },
   type: linode.type,
   label: linode.label,
   image: linode.image,
@@ -275,21 +281,54 @@ const getDisabledReason = (
     }
   }
 
-  if (
-    !!notifications.find(eachNotification => {
-      return (
-        eachNotification.label.match(/migrat/i) &&
-        eachNotification.entity &&
-        eachNotification.entity.id === linodeID
-      );
-    })
-  ) {
-    return 'Your Linode is already scheduled for a migration';
-  }
+  /**
+   * commenting this out for now because we need further clarification
+   * from stakeholders about if we want people to overwrite existing migrations.
+   */
+
+  // if (
+  //   !!notifications.find(eachNotification => {
+  //     return (
+  //       eachNotification.label.match(/migrat/i) &&
+  //       eachNotification.entity &&
+  //       eachNotification.entity.id === linodeID
+  //     );
+  //   })
+  // ) {
+  //   return 'Your Linode is already scheduled for a migration';
+  // }
 
   if (linodeStatus !== 'offline') {
     return 'Your Linode must be shut down first.';
   }
 
   return '';
+};
+
+const getCountryCodeFromSlug = (regionSlug: string) => {
+  if (regionSlug.match(/ap-north/i)) {
+    return 'jp';
+  }
+
+  if (regionSlug.match(/ap-south/i)) {
+    return 'sg';
+  }
+
+  if (regionSlug.match(/eu-cent/i)) {
+    return 'de';
+  }
+
+  if (regionSlug.match(/eu/i)) {
+    return 'uk';
+  }
+
+  if (regionSlug.match(/ap-west/i)) {
+    return 'in';
+  }
+
+  if (regionSlug.match(/ca-cent/i)) {
+    return 'ca';
+  }
+
+  return 'us';
 };

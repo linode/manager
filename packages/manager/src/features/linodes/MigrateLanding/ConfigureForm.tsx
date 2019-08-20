@@ -1,3 +1,4 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -38,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  currentRegion: string;
+  currentRegion: { region: string; countryCode: string };
   allRegions: Linode.Region[];
   handleSelectRegion: (id: string) => void;
   selectedRegion: string | null;
@@ -55,15 +56,15 @@ const ConfigureForm: React.FC<CombinedProps> = props => {
       <Typography variant="h3">Configure Migration</Typography>
       <Typography>Current Region:</Typography>
       <div className={classes.currentRegion}>
-        {flags[props.currentRegion.substr(0, 2)]()}
+        {pathOr(() => null, [props.currentRegion.countryCode], flags)()}
         <Typography>{`${getHumanReadableCountry(
-          props.currentRegion
-        )}: ${formatRegion(props.currentRegion)}`}</Typography>
+          props.currentRegion.region
+        )}: ${formatRegion(props.currentRegion.region)}`}</Typography>
       </div>
       <RegionSelect
         className={classes.select}
         regions={props.allRegions
-          .filter(eachRegion => eachRegion.id !== props.currentRegion)
+          .filter(eachRegion => eachRegion.id !== props.currentRegion.region)
           .map(eachRegion => ({
             ...eachRegion,
             display: dcDisplayNames[eachRegion.id]
