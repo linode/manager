@@ -121,7 +121,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
     linodeSpecs.memory,
     linodeSpecs.disk,
     linodeSpecs.vcpus,
-    image.id,
+    image ? image.id : null,
     images
   );
 
