@@ -1,3 +1,4 @@
+import { FormikBag } from 'formik';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import Paper from 'src/components/core/Paper';
@@ -14,7 +15,13 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
+import { createCredential, CredentialPayload } from 'src/services/managed';
+import {
+  handleFieldErrors,
+  handleGeneralErrors
+} from 'src/utilities/formikErrorUtils';
 
+import CredentialDrawer from './CredentialDrawer';
 import CredentialTableContent from './CredentialTableContent';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -28,11 +35,37 @@ interface Props {
   error?: Linode.ApiFieldError[];
   credentials: Linode.ManagedCredential[];
   loading: boolean;
+  update: () => void;
 }
+
+export type FormikProps = FormikBag<Props, CredentialPayload>;
 
 export const CredentialList: React.FC<Props> = props => {
   const classes = useStyles();
-  const { credentials, error, loading } = props;
+  const { credentials, error, loading, update } = props;
+  const [isDrawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+
+  const submitForm = (
+    values: CredentialPayload,
+    { setSubmitting, setErrors, setStatus }: FormikProps
+  ) => {
+    createCredential(values)
+      .then(_ => {
+        setSubmitting(false);
+        setDrawerOpen(false);
+        update();
+      })
+      .catch(e => {
+        const defaultMessage = `Unable to create this Monitor. Please try again later.`;
+        const mapErrorToStatus = (generalError: string) =>
+          setStatus({ generalError });
+
+        setSubmitting(false);
+        handleFieldErrors(setErrors, e);
+        handleGeneralErrors(mapErrorToStatus, e, defaultMessage);
+        setSubmitting(false);
+      });
+  };
 
   return (
     <>
@@ -55,9 +88,8 @@ export const CredentialList: React.FC<Props> = props => {
           <Grid container alignItems="flex-end">
             <Grid item className="pt0">
               <AddNewLink
-                onClick={() => null}
+                onClick={() => setDrawerOpen(true)}
                 label="Add Credentials"
-                disabled
               />
             </Grid>
           </Grid>
@@ -123,6 +155,12 @@ export const CredentialList: React.FC<Props> = props => {
           </Paginate>
         )}
       </OrderBy>
+      <CredentialDrawer
+        open={isDrawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        onSubmit={submitForm}
+        mode="create"
+      />
     </>
   );
 };

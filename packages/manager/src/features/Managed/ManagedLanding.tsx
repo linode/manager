@@ -58,7 +58,7 @@ const getAllCredentials = () =>
   );
 
 export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
-  const { data, error, loading, lastUpdated } = useAPIRequest<
+  const { data, error, loading, lastUpdated, update } = useAPIRequest<
     Linode.ManagedCredential[]
   >(getAllCredentials, []);
   const credentialsError = error
@@ -169,6 +169,7 @@ export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
                   loading={loading && lastUpdated === 0}
                   error={credentialsError}
                   credentials={data}
+                  update={update}
                 />
               )}
             />
