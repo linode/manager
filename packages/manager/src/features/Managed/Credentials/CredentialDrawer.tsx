@@ -1,5 +1,7 @@
 import { Formik } from 'formik';
 import * as React from 'react';
+import { string } from 'yup';
+
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
@@ -29,6 +31,15 @@ const titleMap = {
   [modes.EDITING]: 'Edit a Credential'
 };
 
+/**
+ * The API does not require a password, but we would like
+ * to require it in our UI. This extends the validation
+ * schema declared in services/managed.
+ */
+const clientCredentialSchema = createCredentialSchema.shape({
+  password: string().required('Password is required.')
+});
+
 const CredentialDrawer: React.FC<CombinedProps> = props => {
   const { mode, open, onClose, onSubmit } = props;
 
@@ -40,7 +51,7 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
           password: '',
           username: ''
         }}
-        validationSchema={createCredentialSchema}
+        validationSchema={clientCredentialSchema}
         validateOnChange={false}
         validateOnBlur={false}
         onSubmit={onSubmit}
