@@ -3,6 +3,7 @@ import { compose } from 'recompose';
 
 import { Props as TextFieldProps } from 'src/components/TextField';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
+import { privateIPRegex } from 'src/utilities/ipUtils';
 
 interface Props {
   selectedRegion?: string;
@@ -15,8 +16,6 @@ interface Props {
 }
 
 type CombinedProps = Props;
-
-const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
 
 const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
   const [selectedLinode, setSelectedLinode] = React.useState<number | null>(
