@@ -47,7 +47,7 @@ namespace Linode {
       primary: string | null;
       secondary: string | null;
     };
-    group: string;
+    group: string | null;
     updated: string;
   }
 }

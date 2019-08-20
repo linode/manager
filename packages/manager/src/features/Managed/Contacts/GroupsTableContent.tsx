@@ -6,11 +6,11 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { shallowCompareProps } from 'src/utilities/shallowCompareProps';
+import { ManagedContactGroup } from './common';
 import GroupsRow from './GroupsRow';
 
 interface Props {
-  groupNames: string[];
-  contacts: Linode.ManagedContact[];
+  groups: ManagedContactGroup[];
   loading: boolean;
   lastUpdated: number;
   error?: Linode.ApiFieldError[];
@@ -20,14 +20,7 @@ interface Props {
 export type CombinedProps = Props;
 
 export const GroupsTableContent: React.FC<CombinedProps> = props => {
-  const {
-    groupNames,
-    contacts,
-    loading,
-    lastUpdated,
-    error,
-    openDrawer
-  } = props;
+  const { groups, loading, lastUpdated, error, openDrawer } = props;
 
   if (loading && lastUpdated === 0) {
     return <TableRowLoading colSpan={12} />;
@@ -38,7 +31,7 @@ export const GroupsTableContent: React.FC<CombinedProps> = props => {
     return <TableRowError colSpan={12} message={errorMessage} />;
   }
 
-  if (groupNames.length === 0 && lastUpdated !== 0) {
+  if (groups.length === 0 && lastUpdated !== 0) {
     return (
       <TableRowEmpty
         colSpan={12}
@@ -49,15 +42,11 @@ export const GroupsTableContent: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      {groupNames.map((groupName, idx) => (
+      {groups.map((group, idx) => (
         <GroupsRow
           key={`managed-contact-row-${idx}`}
-          groupName={groupName}
-          contacts={contacts
-            // Find the contacts that belong to this group
-            .filter(contact => contact.group === groupName)
-            // <GroupsRow /> needs the `name`s only
-            .map(contact => contact.name)}
+          groupName={group.groupName}
+          contacts={group.contactNames}
           openDrawer={openDrawer}
         />
       ))}
@@ -71,10 +60,7 @@ const memoized = (component: React.FC<CombinedProps>) =>
       // This is to prevent a slow-down that occurs
       // when opening the GroupDrawer or ContactsDrawer
       // when there are a large number of contacts.
-      equals(prevProps.contacts, nextProps.contacts) &&
-      // JSON.stringify is faster than Ramda equals() on flat lists.
-      JSON.stringify(prevProps.groupNames) ===
-        JSON.stringify(nextProps.groupNames) &&
+      equals(prevProps.groups, nextProps.groups) &&
       shallowCompareProps<CombinedProps>(
         ['lastUpdated', 'loading', 'error'],
         prevProps,

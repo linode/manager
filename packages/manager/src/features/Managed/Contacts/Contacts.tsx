@@ -1,4 +1,3 @@
-import { pluck, uniq } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import RootRef from 'src/components/core/RootRef';
@@ -14,6 +13,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 import useOpenClose from 'src/hooks/useOpenClose';
+import { ManagedContactGroup } from './common';
 import ContactDrawer from './ContactsDrawer';
 import ContactTableContact from './ContactsTableContent';
 import GroupDrawer from './GroupDrawer';
@@ -75,6 +75,8 @@ const Contacts: React.FC<Props> = props => {
   const groupsTableRef = React.createRef();
   const contactsTableRef = React.createRef();
 
+  const groups = generateGroupsFromContacts(contacts);
+
   return (
     <>
       <Typography variant="subtitle1" className={classes.copy}>
@@ -86,15 +88,15 @@ const Contacts: React.FC<Props> = props => {
       unique group names and paginating on that. The <GroupsTableContent /> component
       receives ALL contacts, and uses each value from the group name list to generate
       the rows. */}
-      <OrderBy data={contacts}>
+      <OrderBy data={groups}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
-          // Array of group names to generate table from.
-          const allGroups = pluck('group')(orderedData);
-          // Only keep unique values and remove `null`s.
-          const uniqueGroups = uniq(allGroups).filter(group => !!group);
+          // // Array of group names to generate table from.
+          // const allGroups = pluck('group')(orderedData);
+          // // Only keep unique values and remove `null`s.
+          // const uniqueGroups = uniq(allGroups).filter(group => !!group);
 
           return (
-            <Paginate data={uniqueGroups} scrollToRef={groupsTableRef}>
+            <Paginate data={orderedData} scrollToRef={groupsTableRef}>
               {({
                 count,
                 data: paginatedData,
@@ -113,8 +115,8 @@ const Contacts: React.FC<Props> = props => {
                         <TableHead>
                           <TableRow>
                             <TableSortCell
-                              active={orderBy === 'group'}
-                              label={'group'}
+                              active={orderBy === 'groupName'}
+                              label={'groupName'}
                               direction={order}
                               handleClick={handleOrderChange}
                               className={classes.name}
@@ -128,8 +130,7 @@ const Contacts: React.FC<Props> = props => {
                         </TableHead>
                         <TableBody>
                           <GroupsTableContent
-                            groupNames={paginatedData}
-                            contacts={contacts}
+                            groups={paginatedData}
                             loading={loading}
                             lastUpdated={lastUpdated}
                             error={error}
@@ -268,3 +269,38 @@ const Contacts: React.FC<Props> = props => {
 };
 
 export default Contacts;
+
+/**
+ * Generate groups from a list of Managed Contacts.
+ *
+ * @param contacts: Linode.ManagedContact[]
+ * A list of contacts to generate groups from.
+ */
+export const generateGroupsFromContacts = (
+  contacts: Linode.ManagedContact[]
+): ManagedContactGroup[] => {
+  const groups: ManagedContactGroup[] = [];
+
+  contacts.forEach(contact => {
+    // If the contact doesn't have a group, don't do anything. Otherwise we'd have `null` groups.
+    if (typeof contact.group !== 'string') {
+      return;
+    }
+
+    // Have we tracked this group yet?
+    const idx = groups.findIndex(group => group.groupName === contact.group);
+
+    // If not, add a new group.
+    if (idx === -1) {
+      groups.push({
+        groupName: contact.group,
+        contactNames: [contact.name]
+      });
+    } else {
+      // If we've already tracked the group, just add this contact's name.
+      groups[idx].contactNames.push(contact.name);
+    }
+  });
+
+  return groups;
+};
