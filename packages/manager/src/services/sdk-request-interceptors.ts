@@ -1,11 +1,15 @@
-import Axios, { AxiosError, AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { pathOr } from 'ramda';
 
 import { ACCESS_TOKEN, DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import { interceptGPUErrors } from 'src/utilities/interceptGPUError';
 
+import { baseRequest } from 'linode-js-sdk/lib/request';
+
 import store from 'src/store';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
+
+import { API_ROOT } from 'src/constants';
 
 const handleSuccess: <T extends AxiosResponse<any>>(
   response: T
@@ -72,13 +76,23 @@ export const handleError = (error: AxiosError) => {
   return Promise.reject(interceptedErrors);
 };
 
-Axios.interceptors.request.use(config => {
+baseRequest.interceptors.request.use(config => {
   const state = store.getState();
   /** Will end up being "Admin: 1234" or "Bearer 1234" */
   const token = ACCESS_TOKEN || pathOr('', ['authentication', 'token'], state);
 
+  let finalUrl = '';
+
+  /**
+   * override the base URL with the one we have defined in the .env file
+   */
+  if (config.url && config.baseURL) {
+    finalUrl = config.url.replace(config.baseURL, API_ROOT);
+  }
+
   return {
     ...config,
+    url: finalUrl || config.url,
     headers: {
       ...config.headers,
       ...(token && { Authorization: `${token}` })
@@ -92,4 +106,4 @@ Interceptor that initiates re-authentication if:
   * The API is in Maintenance mode
 Also rejects non-error responses if the API is in Maintenance mode
 */
-Axios.interceptors.response.use(handleSuccess, handleError);
+baseRequest.interceptors.response.use(handleSuccess, handleError);

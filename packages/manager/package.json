@@ -38,6 +38,7 @@
     "js-cookie": "^2.2.0",
     "jspdf": "^1.5.3",
     "launchdarkly-react-client-sdk": "^2.11.0",
+    "linode-js-sdk": "^0.2.0",
     "logic-query-parser": "^0.0.5",
     "md5": "^2.2.1",
     "memoizee": "^0.4.14",
@@ -273,7 +274,8 @@
     "transform": {
       "^.+\\.tsx?$": "<rootDir>/config/jest/typescriptTransform.js",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+      "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js",
+      "^.+\\.mjs$": "babel-jest"
     },
     "transformIgnorePatterns": [
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|ts|tsx)$"
@@ -281,6 +283,7 @@
     "moduleNameMapper": {
       "\\.svg$": "<rootDir>/src/components/NullComponent",
       "^react-native$": "react-native-web",
+      "ramda": "ramda/src/index.js",
       "^src/(.*)": "<rootDir>/src/$1"
     },
     "moduleFileExtensions": [
