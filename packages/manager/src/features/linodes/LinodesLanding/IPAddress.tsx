@@ -9,6 +9,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import ShowMore from 'src/components/ShowMore';
+import { privateIPRegex } from 'src/utilities/ipUtils';
 
 type CSSClasses =
   | 'root'
@@ -104,8 +105,6 @@ interface Props {
   showMore?: boolean;
   showAll?: boolean;
 }
-
-const privateIPRegex = /^10\.|^172\.1[6-9]\.|^172\.2[0-9]\.|^172\.3[0-1]\.|^192\.168\.|^fd/;
 
 export const sortIPAddress = (ip1: string, ip2: string) =>
   (privateIPRegex.test(ip1) ? 1 : -1) - (privateIPRegex.test(ip2) ? 1 : -1);
