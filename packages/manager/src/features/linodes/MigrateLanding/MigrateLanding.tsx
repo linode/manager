@@ -305,7 +305,7 @@ const getDisabledReason = (
   return '';
 };
 
-const getCountryCodeFromSlug = (regionSlug: string) => {
+export const getCountryCodeFromSlug = (regionSlug: string) => {
   if (regionSlug.match(/ap-north/i)) {
     return 'jp';
   }
