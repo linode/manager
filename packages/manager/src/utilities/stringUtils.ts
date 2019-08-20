@@ -7,8 +7,10 @@
  * truncateAndJoinList(['a', 'b', 'c']) == 'a, b, c';
  * ```
  *
- * @param strList A list of strings to join and possibly truncate.
- * @param max The max number of elements to display.
+ * @param strList
+ * A list of strings to join and possibly truncate.
+ * @param max
+ * The max number of elements to display.
  */
 
 export const truncateAndJoinList = (strList: string[], max = 100) => {
