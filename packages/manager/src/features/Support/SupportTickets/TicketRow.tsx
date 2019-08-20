@@ -17,11 +17,14 @@ interface Props {
   ticket: Linode.SupportTicket;
 }
 
-type ClassNames = 'summary';
+type ClassNames = 'summary' | 'regarding';
 
 const styles = (theme: Theme) =>
   createStyles({
     summary: {
+      lineHeight: 1.1
+    },
+    regarding: {
       lineHeight: 1.1
     }
   });
@@ -65,7 +68,11 @@ const TicketRow: React.StatelessComponent<CombinedProps> = props => {
       <TableCell parentColumn="Ticket ID" data-qa-support-id>
         {ticket.id}
       </TableCell>
-      <TableCell parentColumn="Regarding" data-qa-support-entity>
+      <TableCell
+        parentColumn="Regarding"
+        data-qa-support-entity
+        className={classes.regarding}
+      >
         {renderEntityLink(ticket)}
       </TableCell>
       <TableCell parentColumn="Date Created" data-qa-support-date>

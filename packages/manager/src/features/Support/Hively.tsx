@@ -11,7 +11,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     margin: `${theme.spacing(3)}px ${theme.spacing(1)}px 0`,
     paddingTop: theme.spacing(1),
-    borderTop: `1px solid ${theme.color.grey3}`
+    borderTop: `1px solid ${theme.color.grey2}`
   },
   hivelyLink: {
     textDecoration: 'none',
