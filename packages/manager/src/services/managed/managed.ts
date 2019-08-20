@@ -145,3 +145,16 @@ export const updateLinodeSettings = (
     setMethod('PUT'),
     setData(data, updateManagedLinodeSchema)
   ).then(response => response.data);
+
+/**
+ * getManagedContacts
+ *
+ * Returns a paginated list of Managed Contacts on your Account.
+ */
+export const getManagedContacts = (params?: any, filters?: any) =>
+  Request<Page<Linode.ManagedContact>>(
+    setMethod('GET'),
+    setParams(params),
+    setXFilter(filters),
+    setURL(`${API_ROOT}/managed/contacts`)
+  ).then(response => response.data);

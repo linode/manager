@@ -20,7 +20,7 @@ import Grid from 'src/components/Grid';
 import TabLink from 'src/components/TabLink';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import useFlags from 'src/hooks/useFlags';
-import { getCredentials } from 'src/services/managed';
+import { getCredentials, getManagedContacts } from 'src/services/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import ManagedPlaceholder from './ManagedPlaceholder';
@@ -57,11 +57,19 @@ const getAllCredentials = () =>
     response => response.data
   );
 
+// We need to "Get All" on this request in order to handle Groups
+// as a quasi-independent entity.
+const getAllContacts = () =>
+  getAll<Linode.ManagedContact>(getManagedContacts)().then(res => res.data);
+
 export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
   const credentials = useAPIRequest<Linode.ManagedCredential[]>(
     getAllCredentials,
     []
   );
+
+  const contacts = useAPIRequest<Linode.ManagedContact[]>(getAllContacts, []);
+
   const credentialsError = credentials.error
     ? getAPIErrorOrDefault(
         credentials.error,
@@ -181,7 +189,15 @@ export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
               exact
               strict
               path={`${props.match.path}/contacts`}
-              component={Contacts}
+              render={() => (
+                <Contacts
+                  contacts={contacts.data}
+                  loading={contacts.loading && contacts.lastUpdated === 0}
+                  error={contacts.error}
+                  lastUpdated={contacts.lastUpdated}
+                  transformData={contacts.transformData}
+                />
+              )}
             />
             <Redirect to={`${props.match.path}/monitors`} />
           </Switch>
