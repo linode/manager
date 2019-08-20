@@ -4,8 +4,8 @@ import { compose } from 'recompose';
 import TableRowEmpty from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { shallowCompareProps } from 'src/utilities/shallowCompareProps';
 import ContactsRow from './ContactsRow';
 
 interface Props {
@@ -69,7 +69,7 @@ const memoized = (component: React.FC<CombinedProps>) =>
       // when opening the GroupDrawer or ContactsDrawer
       // when there are a large number of contacts.
       equals(prevProps.contacts, nextProps.contacts) &&
-      shallowCompareProps<CombinedProps>(
+      arePropsEqual<CombinedProps>(
         ['lastUpdated', 'loading', 'error'],
         prevProps,
         nextProps

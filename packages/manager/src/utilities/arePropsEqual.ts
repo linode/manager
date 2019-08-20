@@ -4,7 +4,7 @@
  * @param prevProps
  * @param nextProps
  */
-export const shallowCompareProps = <T extends {}>(
+export const arePropsEqual = <T extends {}>(
   props: (keyof T)[],
   prevProps: T,
   nextProps: T

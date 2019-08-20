@@ -1,4 +1,4 @@
-import { shallowCompareProps } from './shallowCompareProps';
+import { arePropsEqual } from './arePropsEqual';
 
 interface MockProps {
   a: number;
@@ -19,12 +19,8 @@ describe('shallowCompareProps', () => {
       b: 2,
       c: [3, 4]
     };
-    const result1 = shallowCompareProps<MockProps>(['a'], prevProps, nextProps);
-    const result2 = shallowCompareProps<MockProps>(
-      ['a', 'b'],
-      prevProps,
-      nextProps
-    );
+    const result1 = arePropsEqual<MockProps>(['a'], prevProps, nextProps);
+    const result2 = arePropsEqual<MockProps>(['a', 'b'], prevProps, nextProps);
     expect(result1).toBe(true);
     expect(result2).toBe(true);
   });
@@ -35,13 +31,9 @@ describe('shallowCompareProps', () => {
       b: 20,
       c: [3, 4]
     };
-    const result1 = shallowCompareProps<MockProps>(['a'], prevProps, nextProps);
-    const result2 = shallowCompareProps<MockProps>(
-      ['a', 'b'],
-      prevProps,
-      nextProps
-    );
-    const result3 = shallowCompareProps<MockProps>(['c'], prevProps, nextProps);
+    const result1 = arePropsEqual<MockProps>(['a'], prevProps, nextProps);
+    const result2 = arePropsEqual<MockProps>(['a', 'b'], prevProps, nextProps);
+    const result3 = arePropsEqual<MockProps>(['c'], prevProps, nextProps);
     expect(result1).toBe(false);
     expect(result2).toBe(false);
     expect(result3).toBe(false);
