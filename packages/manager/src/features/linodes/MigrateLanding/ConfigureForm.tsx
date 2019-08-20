@@ -62,10 +62,12 @@ const ConfigureForm: React.FC<CombinedProps> = props => {
       </div>
       <RegionSelect
         className={classes.select}
-        regions={props.allRegions.map(eachRegion => ({
-          ...eachRegion,
-          display: dcDisplayNames[eachRegion.id]
-        }))}
+        regions={props.allRegions
+          .filter(eachRegion => eachRegion.id !== props.currentRegion)
+          .map(eachRegion => ({
+            ...eachRegion,
+            display: dcDisplayNames[eachRegion.id]
+          }))}
         handleSelection={props.handleSelectRegion}
         selectedID={props.selectedRegion}
         errorText={props.errorText}

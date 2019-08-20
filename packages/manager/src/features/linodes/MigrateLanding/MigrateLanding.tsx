@@ -26,6 +26,7 @@ import { linodeInTransition } from '../transitions';
 
 import CautionNotice from './CautionNotice';
 import ConfigureForm from './ConfigureForm';
+import MigrationImminentNotice from './MigrationImminentNotice';
 
 import { scheduleOrQueueMigration } from 'src/services/linodes/linodeActions.ts';
 
@@ -73,7 +74,8 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
     regionsData,
     regionsError,
     regionsLoading,
-    regionsLastUpdated
+    regionsLastUpdated,
+    notifications
   } = props;
 
   React.useEffect(() => {
@@ -114,7 +116,9 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
       });
   };
 
-  const recentEvent = linodeEvents[0];
+  const firstEventWithProgress = (linodeEvents || []).find(
+    eachEvent => typeof eachEvent.percent_complete === 'number'
+  );
 
   const newLabel = getLinodeDescription(
     displayType(type, types || []),
@@ -141,7 +145,9 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
 
   const disabledText = getDisabledReason(
     props.recentEvents,
-    props.linodeStatus
+    props.linodeStatus,
+    props.linodeId,
+    notifications
   );
 
   return (
@@ -161,13 +167,20 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
               },
               noCap: true
             }
-          ]
+          ],
+          onEditHandlers: undefined
         }}
       />
-      {linodeInTransition(linodeStatus, recentEvent) && <LinodeBusyStatus />}
+      {linodeInTransition(linodeStatus, firstEventWithProgress) && (
+        <LinodeBusyStatus />
+      )}
       <Typography className={classes.details} variant="h2">
         {newLabel}
       </Typography>
+      <MigrationImminentNotice
+        linodeID={props.linodeId}
+        notifications={notifications}
+      />
       <CautionNotice
         linodeVolumes={props.linodeVolumes}
         setConfirmed={setConfirmed}
@@ -225,6 +238,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 interface WithTypesAndImages {
   types: Linode.LinodeType[];
   images: Linode.Image[];
+  notifications: Linode.Notification[];
 }
 
 const mapStateToProps: MapStateToProps<
@@ -233,19 +247,25 @@ const mapStateToProps: MapStateToProps<
   ApplicationState
 > = (state, ownProps) => ({
   types: state.__resources.types.entities,
-  images: state.__resources.images.entities
+  images: state.__resources.images.entities,
+  notifications: state.__resources.notifications.data || []
 });
 
-const withTypes = connect(mapStateToProps);
+const withReduxState = connect(mapStateToProps);
 
 export default compose<CombinedProps, {}>(
-  withTypes,
+  withReduxState,
   withRegions(),
   linodeContext,
   React.memo
 )(MigrateLanding);
 
-const getDisabledReason = (events: Linode.Event[], linodeStatus: string) => {
+const getDisabledReason = (
+  events: Linode.Event[],
+  linodeStatus: string,
+  linodeID: number,
+  notifications: Linode.Notification[]
+) => {
   if (events[0]) {
     if (
       events[0].action === 'linode_migrate_datacenter' &&
@@ -253,6 +273,18 @@ const getDisabledReason = (events: Linode.Event[], linodeStatus: string) => {
     ) {
       return `Your Linode is currently being migrated.`;
     }
+  }
+
+  if (
+    !!notifications.find(eachNotification => {
+      return (
+        eachNotification.label.match(/migrat/i) &&
+        eachNotification.entity &&
+        eachNotification.entity.id === linodeID
+      );
+    })
+  ) {
+    return 'Your Linode is already scheduled for a migration';
   }
 
   if (linodeStatus !== 'offline') {
