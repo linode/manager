@@ -8,6 +8,45 @@ export interface DialogState {
   error?: string;
 }
 
+/**
+ * useDialog Hook
+ *
+ * Created to reuse shared logic for confirmation dialogs.
+ * Handles basic shared actions such as setting loading state on
+ * submit, opening and closing the dialog, etc.
+ *
+ * If the action being confirmed is complex, you'll likely need to expand this
+ * hook or write custom logic.
+ *
+ * @example
+ *
+ * const myRequest = (id: string) => Promise<any>;
+ *
+ * const {
+ *  dialog,
+ *  openDialog,
+ *  closeDialog,
+ *  submitDialog,
+ *  handleError
+ * } = useDialog<string>(myRequest);
+ *
+ *
+ * @returns
+ *
+ * dialog object: contains state variables for the dialog
+ * open, close handlers: Opening the dialog requires the label
+ * and the ID of the entity that the action is going to target.
+ *
+ * submit handler: Handles updating loading/error states and making
+ * the API request. Returns promises so the consumer can chain additional
+ * logic on top of these handlers.
+ *
+ * error handler: Set the dialog error directly. Exposed so that consumers
+ * can specify a default error message.
+ *
+ * @param request
+ */
+
 export const useDialog = <T>(
   request: (params?: T) => Promise<any>
 ): {
@@ -32,6 +71,11 @@ export const useDialog = <T>(
         return response;
       })
       .catch((e: Linode.ApiFieldError[]) => {
+        /**
+         * This sets the error to whatever the API returns.
+         * Consumers can use the exposed handleError method
+         * directly if they want to override this with a custom message.
+         */
         handleError(e[0].reason);
         return Promise.reject(e);
       });
