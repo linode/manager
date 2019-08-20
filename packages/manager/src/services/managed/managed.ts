@@ -118,8 +118,8 @@ export const getCredentials = (params?: any, filters?: any) =>
  */
 export const deleteCredential = (credentialID: number) =>
   Request<{}>(
-    setMethod('DELETE'),
-    setURL(`${API_ROOT}/managed/credentials/${credentialID}`)
+    setMethod('POST'),
+    setURL(`${API_ROOT}/managed/credentials/${credentialID}/revoke`)
   ).then(response => response.data);
 
 /**

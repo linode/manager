@@ -24,6 +24,7 @@ import TableSortCell from 'src/components/TableSortCell';
 import withManagedServices, {
   DispatchProps
 } from 'src/containers/managedServices.container';
+import { useDialog } from 'src/hooks/useDialog';
 import { ManagedServicePayload } from 'src/services/managed';
 import {
   handleFieldErrors,
