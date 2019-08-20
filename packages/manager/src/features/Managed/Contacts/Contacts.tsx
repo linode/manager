@@ -13,10 +13,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
-import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import useOpenClose from 'src/hooks/useOpenClose';
-import { getManagedContacts } from 'src/services/managed';
-import { getAll } from 'src/utilities/getAll';
 import ContactDrawer from './ContactsDrawer';
 import ContactTableContact from './ContactsTableContent';
 import GroupDrawer from './GroupDrawer';
@@ -43,17 +40,18 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-// We need to "Get All" on this request in order to handle Groups
-// as a quasi-independent entity.
-const request = () =>
-  getAll<Linode.ManagedContact>(getManagedContacts)().then(res => res.data);
+interface Props {
+  contacts: Linode.ManagedContact[];
+  loading: boolean;
+  error?: Linode.ApiFieldError[];
+  lastUpdated: number;
+  transformData: (fn: (contacts: Linode.ManagedContact[]) => void) => void;
+}
 
-const Contacts: React.FC<{}> = () => {
+const Contacts: React.FC<Props> = props => {
   const classes = useStyles();
 
-  const { data, loading, lastUpdated, transformData, error } = useAPIRequest<
-    Linode.ManagedContact[]
-  >(request, []);
+  const { contacts, loading, error, lastUpdated, transformData } = props;
 
   const updateOne = (contact: Linode.ManagedContact) => {
     transformData(draft => {
@@ -88,7 +86,7 @@ const Contacts: React.FC<{}> = () => {
       unique group names and paginating on that. The <GroupsTableContent /> component
       receives ALL contacts, and uses each value from the group name list to generate
       the rows. */}
-      <OrderBy data={data}>
+      <OrderBy data={contacts}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           // Array of group names to generate table from.
           const allGroups = pluck('group')(orderedData);
@@ -131,7 +129,7 @@ const Contacts: React.FC<{}> = () => {
                         <TableBody>
                           <GroupsTableContent
                             groupNames={paginatedData}
-                            contacts={data}
+                            contacts={contacts}
                             loading={loading}
                             lastUpdated={lastUpdated}
                             error={error}
@@ -158,7 +156,7 @@ const Contacts: React.FC<{}> = () => {
           );
         }}
       </OrderBy>
-      <OrderBy data={data}>
+      <OrderBy data={contacts}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           return (
             <Paginate data={orderedData} scrollToRef={contactsTableRef}>
@@ -258,12 +256,12 @@ const Contacts: React.FC<{}> = () => {
         isOpen={groupDrawer.isOpen}
         closeDrawer={groupDrawer.close}
         groupName={selectedGroupName || ''}
-        contacts={data}
+        contacts={contacts}
       />
       <ContactDrawer
         isOpen={contactDrawer.isOpen}
         closeDrawer={contactDrawer.close}
-        contact={data.find(l => l.id === selectedContactId)}
+        contact={contacts.find(contact => contact.id === selectedContactId)}
       />
     </>
   );
