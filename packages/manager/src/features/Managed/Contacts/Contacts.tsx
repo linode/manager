@@ -84,17 +84,8 @@ const Contacts: React.FC<Props> = props => {
         the event of a support issue. Create contacts and assign them to a
         group, then assign the group to the appropriate monitor(s).
       </Typography>
-      {/* The "Groups" table works by ordering ALL contacts, then taking a list of
-      unique group names and paginating on that. The <GroupsTableContent /> component
-      receives ALL contacts, and uses each value from the group name list to generate
-      the rows. */}
       <OrderBy data={groups}>
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
-          // // Array of group names to generate table from.
-          // const allGroups = pluck('group')(orderedData);
-          // // Only keep unique values and remove `null`s.
-          // const uniqueGroups = uniq(allGroups).filter(group => !!group);
-
           return (
             <Paginate data={orderedData} scrollToRef={groupsTableRef}>
               {({
