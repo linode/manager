@@ -56,7 +56,7 @@ export const CredentialList: React.FC<Props> = props => {
         update();
       })
       .catch(e => {
-        const defaultMessage = `Unable to create this Monitor. Please try again later.`;
+        const defaultMessage = `Unable to create this Credential. Please try again later.`;
         const mapErrorToStatus = (generalError: string) =>
           setStatus({ generalError });
 
