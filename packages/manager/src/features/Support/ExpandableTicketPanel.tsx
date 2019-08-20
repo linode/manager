@@ -24,8 +24,10 @@ type ClassNames =
   | 'userWrapper'
   | 'leftIcon'
   | 'userName'
+  | 'expert'
   | 'content'
   | 'header'
+  | 'headerInner'
   | 'avatarCol'
   | 'isCurrentUser'
   | 'hivelyContainer'
@@ -60,7 +62,7 @@ const styles = (theme: Theme) =>
       height: 40,
       marginRight: theme.spacing(1),
       position: 'relative',
-      top: -4
+      top: -2
     },
     leftIcon: {
       width: '100%',
@@ -74,23 +76,31 @@ const styles = (theme: Theme) =>
       marginRight: theme.spacing(1),
       padding: theme.spacing(2),
       backgroundColor: theme.color.white,
-      border: `1px solid ${theme.color.grey3}`,
+      border: `1px solid ${theme.color.grey2}`,
       borderRadius: theme.shape.borderRadius
     },
     header: {
       padding: `0 ${theme.spacing(1)}px`,
+      minHeight: 40,
       backgroundColor: theme.color.grey2,
-      borderBottom: `1px solid ${theme.color.grey3}`,
       borderTopLeftRadius: theme.shape.borderRadius,
       borderTopRightRadius: theme.shape.borderRadius
+    },
+    headerInner: {
+      display: 'flex',
+      alignItems: 'center'
     },
     userName: {
       whiteSpace: 'nowrap',
       fontFamily: 'LatoWebBold', // we keep this bold at all times
-      color: theme.color.headline
+      color: theme.color.headline,
+      marginRight: 4
     },
     avatarCol: {
       minWidth: 60
+    },
+    expert: {
+      marginRight: 4
     },
     isCurrentUser: {}
   });
@@ -209,22 +219,24 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
             <Grid item>{renderAvatar(data.gravatarUrl)}</Grid>
             <Grid item className={`${classes.content}`}>
               <Grid container className={classes.header}>
-                <Grid item>
+                <Grid item className={classes.headerInner}>
                   <Typography className={classes.userName} component="span">
                     {data.username}
                   </Typography>
                   {data.from_linode && (
-                    <Typography component="span" variant="body1">
-                      {' '}
+                    <Typography
+                      component="span"
+                      variant="body1"
+                      className={classes.expert}
+                    >
                       <em>Linode Expert</em>
                     </Typography>
                   )}
                   <Typography variant="body1" component="span">
-                    {' '}
-                    commented on{' '}
+                    commented{' '}
                     <DateTimeDisplay
                       value={data.date}
-                      humanizeCutoff={'month'}
+                      humanizeCutoff={'never'}
                     />
                   </Typography>
                 </Grid>

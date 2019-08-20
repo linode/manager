@@ -27,7 +27,7 @@ const styles = (theme: Theme) =>
       0
     `,
       overflowX: 'auto',
-      border: `1px solid ${theme.color.grey3}`
+      border: `1px solid ${theme.color.grey2}`
     },
     attachmentRow: {
       borderBottom: `1px solid ${theme.palette.divider}`,

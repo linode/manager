@@ -27,7 +27,7 @@ const styles = (theme: Theme) =>
     },
     expButton: {
       position: 'absolute',
-      top: -41,
+      top: -43,
       right: 0,
       left: 'auto',
       '& svg': {

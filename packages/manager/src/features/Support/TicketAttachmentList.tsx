@@ -25,7 +25,6 @@ const styles = (theme: Theme) =>
       }
     },
     attachmentPaperWrapper: {
-      // width: '100%',
       overflowX: 'auto'
     }
   });
