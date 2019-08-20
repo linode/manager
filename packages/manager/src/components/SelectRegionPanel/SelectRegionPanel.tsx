@@ -76,7 +76,7 @@ const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = props => {
           disabled={disabled}
           handleSelection={handleSelection}
           regions={regions}
-          selectedID={selectedID}
+          selectedID={selectedID || null}
         />
       </Paper>
     </>

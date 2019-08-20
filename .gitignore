@@ -1,6 +1,8 @@
 # production
 dist
 build
+# temporary lol
+linode-js-sdk
 
 # editor configuration
 .vscode
