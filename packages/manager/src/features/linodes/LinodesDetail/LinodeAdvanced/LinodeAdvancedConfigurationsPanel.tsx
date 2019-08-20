@@ -79,7 +79,7 @@ class LinodeAdvancedConfigurationsPanel extends React.PureComponent<
               <Link
                 to={`/linodes/${linodeID}/migrate`}
                 onClick={() =>
-                  sendMigrationNavigationEvent(`/linodes/${linodeID}/migrate`)
+                  sendMigrationNavigationEvent(`/advanced`)
                 }
               >
                 {' '}
