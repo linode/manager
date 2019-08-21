@@ -13,6 +13,9 @@ lib
 # misc
 .DS_Store
 
+# local restart script with keys
+restart.sh
+
 # dotenv environment variables file
 .env
 .env.local
