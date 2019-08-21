@@ -84,7 +84,7 @@ const Contacts: React.FC<Props> = props => {
         the event of a support issue. Create contacts and assign them to a
         group, then assign the group to the appropriate monitor(s).
       </Typography>
-      <OrderBy data={groups}>
+      <OrderBy data={groups} orderBy="groupName" order="asc">
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           return (
             <Paginate data={orderedData} scrollToRef={groupsTableRef}>
@@ -148,7 +148,7 @@ const Contacts: React.FC<Props> = props => {
           );
         }}
       </OrderBy>
-      <OrderBy data={contacts}>
+      <OrderBy data={contacts} orderBy="name" order="asc">
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           return (
             <Paginate data={orderedData} scrollToRef={contactsTableRef}>
