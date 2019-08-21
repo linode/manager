@@ -43,7 +43,6 @@ const styles = (theme: Theme) =>
 interface Props {
   domain: string;
   id: number;
-  tags: string[];
   status: string;
   type: 'master' | 'slave';
   onRemove: (domain: string, domainId: number) => void;
