@@ -98,7 +98,7 @@ export const ObjectStorageLanding: React.FunctionComponent<
         <DocumentationButton
           href={
             props.location.pathname.match(/access/i)
-              ? 'https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/?origin_team=T1F52D865#object-storage-key-pair'
+              ? 'https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-key-pair'
               : 'https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/'
           }
         />
