@@ -46,7 +46,10 @@ const styles = (theme: Theme) =>
       position: 'relative',
       top: -1,
       marginRight: 4,
-      color: theme.palette.primary.main
+      color: theme.palette.primary.main,
+      [theme.breakpoints.down('sm')]: {
+        visibility: 'hidden'
+      }
     }
   });
 
