@@ -38,7 +38,7 @@ const styles = (theme: Theme) =>
       },
       '& .border': {
         stroke: theme.color.grey1,
-        fill: 'white'
+        fill: theme.color.white
       }
     },
     toggle: {
