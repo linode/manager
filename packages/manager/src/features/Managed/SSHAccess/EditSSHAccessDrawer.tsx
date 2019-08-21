@@ -16,11 +16,7 @@ import {
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
 import { privateIPRegex, removePrefixLength } from 'src/utilities/ipUtils';
-
-const DEFAULTS = {
-  user: 'root',
-  port: 22
-};
+import { DEFAULTS } from './common';
 
 const useStyles = makeStyles((theme: Theme) => ({
   ip: {
@@ -67,14 +63,15 @@ const EditSSHAccessDrawer: React.FC<CombinedProps> = props => {
       return;
     }
 
-    // If the user has cleared this field, replace it with the default.
+    // If the user has blanked out these fields, exchange in the defaults
+    // for `user` and `port`. We could also choose to NOT send these to
+    // the API to update, but this effectively achieves the same thing.
+    const user = values.ssh.user !== '' ? values.ssh.user : DEFAULTS.user;
     const port =
-      !values.ssh.port && values.ssh.port !== 0
-        ? DEFAULTS.port
-        : values.ssh.port;
+      String(values.ssh.port) !== '' ? values.ssh.port : DEFAULTS.port;
 
     updateLinodeSettings(linodeSetting.id, {
-      ssh: { ...values.ssh, port }
+      ssh: { ...values.ssh, user, port }
     })
       .then(updatedLinodeSetting => {
         setSubmitting(false);
