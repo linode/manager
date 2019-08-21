@@ -65,7 +65,8 @@ const styles = (theme: Theme) =>
       padding: 0
     },
     label: {
-      marginLeft: `calc(40px + ${theme.spacing(3)}px)`
+      marginLeft: `calc(40px + ${theme.spacing(3)}px)`,
+      width: `calc(100% - (40px + ${theme.spacing(5)}px))`
     },
     ticketLabel: {
       position: 'relative',
