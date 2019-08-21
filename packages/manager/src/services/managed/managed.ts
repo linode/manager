@@ -192,6 +192,19 @@ export const createCredential = (data: CredentialPayload) =>
   ).then(response => response.data);
 
 /**
+ * getSSHKey
+ *
+ * Returns the unique SSH public key assigned to your Linode account's Managed service.
+ * If you add this public key to a Linode on your account, Linode special forces will be
+ * able to log in to the Linode with this key when attempting to resolve issues.
+ */
+export const getSSHPubKey = () =>
+  Request<Linode.ManagedSSHPubKey>(
+    setMethod('GET'),
+    setURL(`${API_ROOT}/managed/credentials/sshkey`)
+  ).then(response => response.data);
+
+/**
  * updateLinodeSettings
  *
  * Updates a single Linode's Managed settings.
