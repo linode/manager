@@ -13,13 +13,13 @@
   },
   "scripts": {
     "up": "yarn && lerna bootstrap && lerna run start --parallel",
-    "up:manager": "yarn && lerna bootstrap && lerna run build --stream --scope=linode-js-sdk && lerna run start --stream --scope=linode-manager",
+    "up:manager": "lerna run build --stream --scope=linode-js-sdk && lerna run start --stream --scope=linode-manager",
     "install:all": "yarn && lerna bootstrap",
     "clean": "rm -rf node_modules && lerna clean --yes",
     "test": "lerna run test --stream --scope linode-manager -- --color",
     "docker:e2e": "docker-compose -f integration-test.yml up --exit-code-from manager-e2e",
     "docker:test": "docker build -f Dockerfile . -t 'manager' && docker run -it --rm -v $(pwd)/packages/manager/src:/home/node/app/packages/manager/src -v $(pwd)/packages/linode-js-sdk/src:/home/node/app/packages/linode-js-sdk/src manager test",
-    "docker:local": "docker build -f Dockerfile . -t 'manager' && docker run -it --rm -p 3000:3000 -v $(pwd)/packages/manager/src:/home/node/app/packages/manager/src -v $(pwd)/packages/linode-js-sdk/src:/home/node/app/packages/linode-js-sdk/src manager up",
+    "docker:local": "docker build -f Dockerfile . -t 'manager' && docker run -it --rm -p 3000:3000 -v $(pwd)/packages/manager/src:/home/node/app/packages/manager/src -v $(pwd)/packages/linode-js-sdk/src:/home/node/app/packages/linode-js-sdk/src manager up:manager",
     "docker:storybook": "docker build -f Dockerfile . -t 'storybook' && docker run -it --rm -p 6006:6006 -v $(pwd)/packages/manager/src:/home/node/app/packages/manager/src -v $(pwd)/packages/linode-js-sdk/src:/home/node/app/packages/linode-js-sdk/src storybook storybook",
     "docker:storybook:test": "docker-compose -f packages/manager/storybook-test.yml up --build --exit-code-from storybook-test"
   }
