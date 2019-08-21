@@ -7,12 +7,18 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
 export const useStyles = makeStyles((theme: Theme) => ({
-  icon: {
-    margin: theme.spacing(2)
+  root: {
+    padding: `${theme.spacing(3) - 4}px`
   },
-  text: {
-    paddingBottom: '2px !important',
-    paddingTop: '2px !important'
+  container: {
+    flex: 1
+  },
+  icon: {
+    width: 48,
+    height: 48
+  },
+  header: {
+    marginBottom: 11
   }
 }));
 
@@ -20,16 +26,23 @@ export const Healthy: React.FC<{}> = _ => {
   const classes = useStyles();
   return (
     <>
-      <Grid item xs={1} className={classes.icon}>
-        <MonitorOK height={45} width={45} />
-      </Grid>
-      <Grid container item direction="column" justify="space-around">
-        <Grid item className={classes.text}>
-          <Typography variant="subtitle1">
-            <strong>All Managed Service Monitors are verified.</strong>
-          </Typography>
+      <Grid
+        container
+        direction="row"
+        alignItems="center"
+        className={classes.root}
+        spacing={0}
+        xs={12}
+      >
+        <Grid item>
+          <Grid item xs={12} className={classes.icon}>
+            <MonitorOK width={48} height={48} />
+          </Grid>
         </Grid>
-        <Grid item className={classes.text}>
+        <Grid item className={classes.container}>
+          <Typography variant="h3" className={classes.header}>
+            All Managed Service Monitors are verified.
+          </Typography>
           <Typography>
             <Link to="/managed/monitors">View your Managed Services</Link> for
             details.
