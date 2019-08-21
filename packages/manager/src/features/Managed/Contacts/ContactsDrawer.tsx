@@ -125,12 +125,7 @@ const ContactsDrawer: React.FC<CombinedProps> = props => {
           return (
             <>
               {status && (
-                <Notice
-                  key={status}
-                  text={status.generalError}
-                  error
-                  data-qa-error
-                />
+                <Notice key={status} text={status.generalError} error />
               )}
 
               <form onSubmit={handleSubmit}>
