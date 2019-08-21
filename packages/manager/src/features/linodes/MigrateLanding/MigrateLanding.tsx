@@ -73,7 +73,8 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
     regionsData,
     regionsError,
     regionsLoading,
-    regionsLastUpdated
+    regionsLastUpdated,
+    notifications
   } = props;
 
   React.useEffect(() => {
@@ -114,7 +115,9 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
       });
   };
 
-  const recentEvent = linodeEvents[0];
+  const firstEventWithProgress = (linodeEvents || []).find(
+    eachEvent => typeof eachEvent.percent_complete === 'number'
+  );
 
   const newLabel = getLinodeDescription(
     displayType(type, types || []),
@@ -141,7 +144,9 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
 
   const disabledText = getDisabledReason(
     props.recentEvents,
-    props.linodeStatus
+    props.linodeStatus,
+    props.linodeId,
+    notifications
   );
 
   return (
@@ -161,13 +166,24 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
               },
               noCap: true
             }
-          ]
+          ],
+          onEditHandlers: undefined
         }}
       />
-      {linodeInTransition(linodeStatus, recentEvent) && <LinodeBusyStatus />}
+      {linodeInTransition(linodeStatus, firstEventWithProgress) && (
+        <LinodeBusyStatus />
+      )}
       <Typography className={classes.details} variant="h2">
         {newLabel}
       </Typography>
+      {/*
+         commenting out for now because we need further clarification from
+         stakeholders about whether or not we want to prevent multiple cross-datacenter migrations.
+         */}
+      {/* <MigrationImminentNotice
+        linodeID={props.linodeId}
+        notifications={notifications}
+      /> */}
       <CautionNotice
         linodeVolumes={props.linodeVolumes}
         setConfirmed={setConfirmed}
@@ -198,7 +214,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
 
 interface LinodeContextProps {
   linodeId: number;
-  region: string;
+  region: { region: string; countryCode: string };
   label: string;
   linodeStatus: Linode.LinodeStatus;
   linodeSpecs: Linode.LinodeSpecs;
@@ -211,7 +227,10 @@ interface LinodeContextProps {
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id,
-  region: linode.region,
+  region: {
+    region: linode.region,
+    countryCode: getCountryCodeFromSlug(linode.region)
+  },
   type: linode.type,
   label: linode.label,
   image: linode.image,
@@ -225,6 +244,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 interface WithTypesAndImages {
   types: Linode.LinodeType[];
   images: Linode.Image[];
+  notifications: Linode.Notification[];
 }
 
 const mapStateToProps: MapStateToProps<
@@ -233,19 +253,25 @@ const mapStateToProps: MapStateToProps<
   ApplicationState
 > = (state, ownProps) => ({
   types: state.__resources.types.entities,
-  images: state.__resources.images.entities
+  images: state.__resources.images.entities,
+  notifications: state.__resources.notifications.data || []
 });
 
-const withTypes = connect(mapStateToProps);
+const withReduxState = connect(mapStateToProps);
 
 export default compose<CombinedProps, {}>(
-  withTypes,
+  withReduxState,
   withRegions(),
   linodeContext,
   React.memo
 )(MigrateLanding);
 
-const getDisabledReason = (events: Linode.Event[], linodeStatus: string) => {
+const getDisabledReason = (
+  events: Linode.Event[],
+  linodeStatus: string,
+  linodeID: number,
+  notifications: Linode.Notification[]
+) => {
   if (events[0]) {
     if (
       events[0].action === 'linode_migrate_datacenter' &&
@@ -255,9 +281,54 @@ const getDisabledReason = (events: Linode.Event[], linodeStatus: string) => {
     }
   }
 
+  /**
+   * commenting this out for now because we need further clarification
+   * from stakeholders about if we want people to overwrite existing migrations.
+   */
+
+  // if (
+  //   !!notifications.find(eachNotification => {
+  //     return (
+  //       eachNotification.label.match(/migrat/i) &&
+  //       eachNotification.entity &&
+  //       eachNotification.entity.id === linodeID
+  //     );
+  //   })
+  // ) {
+  //   return 'Your Linode is already scheduled for a migration';
+  // }
+
   if (linodeStatus !== 'offline') {
     return 'Your Linode must be shut down first.';
   }
 
   return '';
+};
+
+export const getCountryCodeFromSlug = (regionSlug: string) => {
+  if (regionSlug.match(/ap-north/i)) {
+    return 'jp';
+  }
+
+  if (regionSlug.match(/ap-south/i)) {
+    return 'sg';
+  }
+
+  if (regionSlug.match(/eu-cent/i)) {
+    return 'de';
+  }
+
+  if (regionSlug.match(/eu/i)) {
+    return 'uk';
+  }
+
+  if (regionSlug.match(/ap-west/i)) {
+    return 'in';
+  }
+
+  if (regionSlug.match(/ca-cent/i)) {
+    return 'ca';
+  }
+
+  return 'us';
 };

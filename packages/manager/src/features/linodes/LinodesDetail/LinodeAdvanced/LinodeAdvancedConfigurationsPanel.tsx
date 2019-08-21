@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
@@ -14,11 +15,18 @@ import LinodeConfigs from './LinodeConfigs';
 import LinodeDisks from './LinodeDisks';
 import LinodeDiskSpace from './LinodeDiskSpace';
 
-type ClassNames = 'root' | 'title' | 'paper' | 'main' | 'sidebar';
+import { sendMigrationNavigationEvent } from 'src/utilities/ga';
+
+type ClassNames =
+  | 'root'
+  | 'title'
+  | 'paper'
+  | 'migrationHeader'
+  | 'migrationCopy'
+  | 'sidebar';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
     title: {
       marginBottom: theme.spacing(2)
     },
@@ -27,7 +35,12 @@ const styles = (theme: Theme) =>
       paddingTop: theme.spacing(1),
       marginBottom: theme.spacing(3)
     },
-    main: {},
+    migrationHeader: {
+      paddingTop: theme.spacing()
+    },
+    migrationCopy: {
+      marginTop: theme.spacing()
+    },
     sidebar: {
       marginTop: -theme.spacing(2),
       [theme.breakpoints.up('md')]: {
@@ -42,11 +55,11 @@ class LinodeAdvancedConfigurationsPanel extends React.PureComponent<
   CombinedProps
 > {
   render() {
-    const { classes, disks, linodeTotalDisk } = this.props;
+    const { classes, disks, linodeTotalDisk, linodeID } = this.props;
 
     return (
       <Grid container>
-        <Grid item xs={12} md={7} lg={9} className={classes.main}>
+        <Grid item xs={12} md={7} lg={9}>
           <Typography variant="h2" className={classes.title}>
             Advanced Configurations
           </Typography>
@@ -55,6 +68,24 @@ class LinodeAdvancedConfigurationsPanel extends React.PureComponent<
           </Paper>
           <Paper className={classes.paper}>
             <LinodeDisks />
+          </Paper>
+          <Paper className={classes.paper}>
+            <Typography variant="h3" className={classes.migrationHeader}>
+              Configure a Migration
+            </Typography>
+            <Typography className={classes.migrationCopy}>
+              Migrating your Linode across datacenters is as simple as a few
+              clicks.
+              <Link
+                to={`/linodes/${linodeID}/migrate`}
+                onClick={() =>
+                  sendMigrationNavigationEvent(`/advanced`)
+                }
+              >
+                {' '}
+                Click here to get started migrating your Linode.
+              </Link>
+            </Typography>
           </Paper>
         </Grid>
         <Grid item xs={12} md={5} lg={3} className={classes.sidebar}>
@@ -70,11 +101,13 @@ class LinodeAdvancedConfigurationsPanel extends React.PureComponent<
 interface LinodeContextProps {
   linodeTotalDisk: number;
   disks: Linode.Disk[];
+  linodeID: number;
 }
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeTotalDisk: linode.specs.disk,
-  disks: linode._disks
+  disks: linode._disks,
+  linodeID: linode.id
 }));
 
 const styled = withStyles(styles);
