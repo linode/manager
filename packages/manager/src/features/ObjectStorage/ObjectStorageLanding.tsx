@@ -5,8 +5,7 @@ import {
   Redirect,
   Route,
   RouteComponentProps,
-  Switch,
-  withRouter
+  Switch
 } from 'react-router-dom';
 import { compose } from 'recompose';
 import { Action } from 'redux';
@@ -96,7 +95,13 @@ export const ObjectStorageLanding: React.FunctionComponent<
           labelTitle="Object Storage"
           removeCrumbX={1}
         />
-        <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/" />
+        <DocumentationButton
+          href={
+            props.location.pathname.match(/access/i)
+              ? 'https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/?origin_team=T1F52D865#object-storage-key-pair'
+              : 'https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/'
+          }
+        />
       </Box>
       <AppBar position="static" color="default">
         <Tabs
@@ -166,8 +171,5 @@ export const connected = connect(
   mapDispatchToProps
 );
 
-const enhanced = compose<CombinedProps, {}>(
-  connected,
-  withRouter
-);
+const enhanced = compose<CombinedProps, {}>(connected);
 export default enhanced(ObjectStorageLanding);
