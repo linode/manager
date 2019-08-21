@@ -25,6 +25,7 @@ describe('Region Select', () => {
       value=""
       regionsData={regionsData}
       regionsLoading={false}
+      regionsLastUpdated={0}
     />
   );
 

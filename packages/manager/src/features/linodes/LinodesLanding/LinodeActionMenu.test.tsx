@@ -13,6 +13,7 @@ const props: CombinedProps = {
   readOnly: false,
   typesLoading: false,
   regionsData: [],
+  regionsLastUpdated: 0,
   regionsLoading: false,
   openPowerActionDialog: jest.fn(),
   linodeBackups: {

@@ -208,8 +208,12 @@ export const startMutation = (linodeID: number) => {
  *
  * @param linodeId { number } The id of the Linode to be migrated.
  */
-export const scheduleOrQueueMigration = (linodeID: number) =>
+export const scheduleOrQueueMigration = (
+  linodeID: number,
+  payload?: { region: string }
+) =>
   Request<{}>(
     setURL(`${API_ROOT}/linode/instances/${linodeID}/migrate`),
+    setData(payload),
     setMethod('POST')
   );
