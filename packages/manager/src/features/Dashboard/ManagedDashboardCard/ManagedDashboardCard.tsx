@@ -39,9 +39,13 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
   const { error, loading, monitors, updated } = props;
 
   React.useEffect(() => {
-    props.requestManagedServices();
+    // Rely on Redux error handling.
+    props.requestManagedServices().catch(_ => null);
 
-    const interval = setInterval(props.requestManagedServices, 5000);
+    const interval = setInterval(
+      () => props.requestManagedServices().catch(_ => null),
+      10000
+    );
 
     return () => {
       clearInterval(interval);
