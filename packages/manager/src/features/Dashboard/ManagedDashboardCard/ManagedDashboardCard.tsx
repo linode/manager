@@ -48,9 +48,10 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
     };
   }, []);
 
-  if (!loading && monitors.length === 0) {
+  if (!loading && monitors.length === 0 && updated === 0) {
     return null;
   }
+
   return (
     <DashboardCard
       title="Managed Services"
@@ -80,7 +81,11 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
 
 const Content: React.FC<StateProps> = props => {
   const { error, loading, monitors, updated } = props;
-  if (error) {
+  /**
+   * Don't show error state if we've successfully retrieved
+   * monitor data but then a subsequent poll fails
+   */
+  if (error && monitors.length === 0) {
     const errorString = getAPIErrorOrDefault(
       error,
       'Error loading your Managed service information.'
