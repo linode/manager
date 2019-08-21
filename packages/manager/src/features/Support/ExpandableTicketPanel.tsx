@@ -28,7 +28,6 @@ type ClassNames =
   | 'content'
   | 'header'
   | 'headerInner'
-  | 'avatarCol'
   | 'isCurrentUser'
   | 'hivelyContainer'
   | 'hivelyLink'
@@ -47,8 +46,7 @@ const styles = (theme: Theme) =>
     },
     root: {
       width: '100%',
-      padding: theme.spacing(2),
-      paddingTop: 0,
+      padding: 0,
       marginBottom: theme.spacing(2),
       position: 'relative'
     },
@@ -58,11 +56,16 @@ const styles = (theme: Theme) =>
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: '50%',
-      width: 40,
-      height: 40,
-      marginRight: theme.spacing(1),
+      width: 32,
+      height: 32,
+
       position: 'relative',
-      top: -2
+      top: -2,
+      [theme.breakpoints.up('sm')]: {
+        marginRight: theme.spacing(1),
+        width: 40,
+        height: 40
+      }
     },
     leftIcon: {
       width: '100%',
@@ -88,6 +91,7 @@ const styles = (theme: Theme) =>
     },
     headerInner: {
       display: 'flex',
+      flexWrap: 'wrap',
       alignItems: 'center'
     },
     userName: {
@@ -96,11 +100,9 @@ const styles = (theme: Theme) =>
       color: theme.color.headline,
       marginRight: 4
     },
-    avatarCol: {
-      minWidth: 60
-    },
     expert: {
-      marginRight: 4
+      marginRight: 4,
+      whiteSpace: 'nowrap'
     },
     isCurrentUser: {}
   });

@@ -30,14 +30,24 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2)
+      paddingLeft: theme.spacing(1),
+      paddingRight: theme.spacing(1),
+      [theme.breakpoints.up('sm')]: {
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(2)
+      }
     },
     inner: {
-      padding: theme.spacing(1)
+      padding: 0,
+      [theme.breakpoints.up('sm')]: {
+        padding: theme.spacing(1)
+      }
     },
     replyContainer: {
-      paddingLeft: `calc(40px + ${theme.spacing(2)}px)`
+      paddingLeft: 32,
+      [theme.breakpoints.up('sm')]: {
+        paddingLeft: 40
+      }
     },
     expPanelSummary: {
       backgroundColor: theme.bg.offWhite,

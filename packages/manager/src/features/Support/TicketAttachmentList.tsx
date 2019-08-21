@@ -19,7 +19,10 @@ type ClassNames = 'root' | 'attachmentPaperWrapper';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      marginLeft: `calc(40px + ${theme.spacing(3)}px)`,
+      marginLeft: 32,
+      [theme.breakpoints.up('sm')]: {
+        marginLeft: `calc(40px + ${theme.spacing(1)}px)`
+      },
       [theme.breakpoints.up('md')]: {
         maxWidth: 600
       }
