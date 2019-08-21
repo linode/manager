@@ -62,6 +62,8 @@ const ContactsDrawer: React.FC<CombinedProps> = props => {
     // Conditionally build request based on the mode of the drawer.
     let createOrUpdate: () => Promise<Linode.ManagedContact>;
 
+    // If the user hasn't selected a group, it will be an empty string.
+    // Remove it from the payload so it passes length validation.
     const payload = { ...values };
     if (payload.group === '') {
       delete payload.group;
