@@ -1,7 +1,6 @@
 import { Image } from 'linode-js-sdk/lib/images';
+import { clone } from 'ramda';
 import { Reducer } from 'redux';
-import { EntityState } from 'src/store/types';
-import updateOrAdd from 'src/utilities/updateOrAdd';
 import { isType } from 'typescript-fsa';
 import {
   addOrUpdateImage,
@@ -14,14 +13,25 @@ import {
 /**
  * State
  */
-export type State = EntityState<Image>;
+
+export interface State {
+  error?: Partial<{
+    read: Linode.ApiFieldError[];
+    create: Linode.ApiFieldError[];
+    delete: Linode.ApiFieldError[];
+    update: Linode.ApiFieldError[];
+  }>;
+  data: Record<string, Image>;
+  results: number;
+  lastUpdated: number;
+  loading: boolean;
+}
 
 export const defaultState: State = {
-  entities: [],
-  results: [],
-  error: undefined,
   loading: true,
-  lastUpdated: 0
+  lastUpdated: 0,
+  results: 0,
+  data: {}
 };
 
 /**
@@ -42,8 +52,11 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       ...state,
       loading: false,
       lastUpdated: Date.now(),
-      entities: payload,
-      results: payload.map(t => t.id)
+      data: payload.data.reduce((acc, eachImage) => {
+        acc[eachImage.id] = eachImage;
+        return acc;
+      }, {}),
+      results: payload.results
     };
   }
 
@@ -53,7 +66,9 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return {
       ...state,
       loading: false,
-      error: payload
+      error: {
+        read: payload
+      }
     };
   }
 
@@ -65,22 +80,29 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
      * ![Hard to work](https://media.giphy.com/media/juSraIEmIN5eg/giphy.gif)
      */
     const id = typeof payload === 'string' ? payload : `private/${payload}`;
-    const updated = state.entities.filter(image => image.id !== id);
+
+    const dataClone = clone(state.data!);
+    delete dataClone[id];
 
     return {
       ...state,
-      entities: updated,
-      results: updated.map(i => i.id)
+      data: dataClone,
+      results: Object.keys(dataClone).length,
+      lastUpdated: Date.now()
     };
   }
 
   if (isType(action, addOrUpdateImage)) {
     const { payload } = action;
-    const updated = updateOrAdd(payload, state.entities);
+
+    const dataClone = clone(state.data!);
+    dataClone[payload.id] = payload;
+
     return {
       ...state,
-      entities: updated,
-      results: updated.map(i => i.id)
+      data: dataClone,
+      results: Object.keys(dataClone).length,
+      lastUpdated: Date.now()
     };
   }
 

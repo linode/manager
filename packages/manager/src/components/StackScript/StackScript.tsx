@@ -99,7 +99,7 @@ export class StackScript extends React.Component<CombinedProps> {
 
     const compatibleImages =
       images.reduce((acc: any[], image: string) => {
-        const imageObj = imagesData.find(i => i.id === image);
+        const imageObj = imagesData[image];
 
         if (imageObj) {
           acc.push(
@@ -183,7 +183,7 @@ export class StackScript extends React.Component<CombinedProps> {
 const styled = withStyles(styles);
 
 interface WithImagesProps {
-  imagesData: Image[];
+  imagesData: Record<string, Image>;
   imagesLoading: boolean;
 }
 
@@ -191,7 +191,13 @@ const enhanced = compose<CombinedProps, Props>(
   styled,
   withImages((ownProps, imagesData, imagesLoading) => ({
     ...ownProps,
-    imagesData: imagesData.filter(i => i.is_public === true),
+    imagesData: Object.keys(imagesData).reduce((acc, eachKey) => {
+      if (imagesData[eachKey].is_public) {
+        acc[eachKey] = imagesData[eachKey];
+      }
+
+      return acc;
+    }, {}),
     imagesLoading
   }))
 );

@@ -102,7 +102,7 @@ interface Props {
 }
 
 interface WithImagesProps {
-  imagesData: Image[];
+  imagesData: Record<string, Image>;
 }
 
 type CombinedProps = Props &
@@ -185,7 +185,13 @@ const enhanced = compose<CombinedProps, Props>(
   withDisplayType,
   withImages((ownProps, imagesData, imagesLoading) => ({
     ...ownProps,
-    imagesData: imagesData.filter(i => i.is_public === true)
+    imagesData: Object.keys(imagesData).reduce((acc, eachKey) => {
+      if (imagesData[eachKey].is_public) {
+        acc[eachKey] = imagesData[eachKey];
+      }
+
+      return acc;
+    }, {})
   })),
   styled
 );

@@ -33,7 +33,7 @@ interface State {
 
 interface Props {
   currentUser: string;
-  publicImages: Image[];
+  publicImages: Record<string, Image>;
   request: (
     username: string,
     params?: any,

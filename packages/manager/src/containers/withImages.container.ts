@@ -7,7 +7,7 @@ const isEmpty = (error?: Linode.ApiFieldError[]) => {
 };
 
 export interface WithImages {
-  images: Image[];
+  images: Record<string, Image>;
   imagesLoading: boolean;
   imageError?: string;
 }
@@ -15,16 +15,18 @@ export interface WithImages {
 export default <TInner extends {}, TOuter extends {}>(
   mapImagesToProps: (
     ownProps: TOuter,
-    images: Image[],
+    images: Record<string, Image>,
     imagesLoading: boolean,
     imageError?: string
   ) => TInner
 ) =>
   connect((state: ApplicationState, ownProps: TOuter) => {
-    const images = state.__resources.images.entities;
+    const images = state.__resources.images.data;
     const imagesLoading = state.__resources.images.loading;
     const { error } = state.__resources.images;
-    const imageError = isEmpty(error) ? error![0].reason : undefined; // @todo use updated error handling utils after they're merged
+    const imageError = isEmpty(error ? error.read : undefined)
+      ? error!.read![0].reason
+      : undefined; // @todo use updated error handling utils after they're merged
 
     return mapImagesToProps(ownProps, images, imagesLoading, imageError);
   });

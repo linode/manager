@@ -85,7 +85,7 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
             <CircleProgress />
           ) : (
             <Grid item xs={12}>
-              <StackScriptPanel publicImages={imagesData} noHeader={true} />
+              <StackScriptPanel publicImages={imagesData} />
             </Grid>
           )}
         </Grid>
@@ -97,7 +97,7 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
 const styled = withStyles(styles);
 
 interface WithImagesProps {
-  imagesData: Image[];
+  imagesData: Record<string, Image>;
   imagesLoading: boolean;
   imagesError?: Linode.ApiFieldError[];
 }
@@ -105,7 +105,13 @@ interface WithImagesProps {
 export default compose<CombinedProps, {}>(
   withImagesContainer((ownProps, imagesData, imagesLoading, imagesError) => ({
     ...ownProps,
-    imagesData: imagesData.filter(i => i.is_public === true),
+    imagesData: Object.keys(imagesData).reduce((acc, eachKey) => {
+      if (imagesData[eachKey].is_public) {
+        acc[eachKey] = imagesData[eachKey];
+      }
+
+      return acc;
+    }, {}),
     imagesLoading,
     imagesError
   })),
