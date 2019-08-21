@@ -134,9 +134,12 @@ export const getCredentials = (params?: any, filters?: any) =>
  * updateCredential
  *
  * Update the label on a Managed Credential on your account.
- * Other fields (password and username) cannot be changed. (MAYBE? this is confusing)
+ * Other fields (password and username) cannot be changed.
  */
-export const updateCredential = (credentialID: number, data: UpdateCredentialPayload) =>
+export const updateCredential = (
+  credentialID: number,
+  data: UpdateCredentialPayload
+) =>
   Request<Page<Linode.ManagedCredential>>(
     setMethod('PUT'),
     setData(data, updateCredentialSchema),
@@ -146,15 +149,17 @@ export const updateCredential = (credentialID: number, data: UpdateCredentialPay
 /**
  * updatePassword
  *
- * Update the label on a Managed Credential on your account.
- * Other fields (password and username) cannot be changed. (MAYBE? this is confusing)
+ * Update the username and/or password on a Managed Credential on your account.
  */
-export const updatePassword = (credentialID: number, data: UpdatePasswordPayload) =>
-Request<Page<Linode.ManagedCredential>>(
-  setMethod('POST'),
-  setData(data, updatePasswordSchema),
-  setURL(`${API_ROOT}/managed/credentials/${credentialID}/update`)
-).then(response => response.data);
+export const updatePassword = (
+  credentialID: number,
+  data: UpdatePasswordPayload
+) =>
+  Request<Page<Linode.ManagedCredential>>(
+    setMethod('POST'),
+    setData(data, updatePasswordSchema),
+    setURL(`${API_ROOT}/managed/credentials/${credentialID}/update`)
+  ).then(response => response.data);
 
 /**
  * deleteCredential
