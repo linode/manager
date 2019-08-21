@@ -73,7 +73,7 @@ const CautionNotice: React.FC<CombinedProps> = props => {
         </li>
         <li>Your Linode will be powered off.</li>
         <li>
-          Block Storage can't be migrated to other regions.
+          Block Storage can't be migrated to other regions.{' '}
           {amountOfAttachedVolumes > 0 && (
             <React.Fragment>
               The following
