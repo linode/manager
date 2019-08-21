@@ -10,7 +10,9 @@ import Request, {
 import {
   createCredentialSchema,
   createServiceMonitorSchema,
-  updateManagedLinodeSchema
+  updateCredentialSchema,
+  updateManagedLinodeSchema,
+  updatePasswordSchema
 } from './managed.schema';
 
 // Payload types
@@ -30,6 +32,16 @@ export interface ManagedServicePayload {
 
 export interface CredentialPayload {
   label: string;
+  password?: string;
+  username?: string;
+}
+
+export interface UpdateCredentialPayload {
+  // Not using a Partial<> bc this is the only possible field to update
+  label: string;
+}
+
+export interface UpdatePasswordPayload {
   password?: string;
   username?: string;
 }
@@ -117,6 +129,32 @@ export const getCredentials = (params?: any, filters?: any) =>
     setXFilter(filters),
     setURL(`${API_ROOT}/managed/credentials`)
   ).then(response => response.data);
+
+/**
+ * updateCredential
+ *
+ * Update the label on a Managed Credential on your account.
+ * Other fields (password and username) cannot be changed. (MAYBE? this is confusing)
+ */
+export const updateCredential = (credentialID: number, data: UpdateCredentialPayload) =>
+  Request<Page<Linode.ManagedCredential>>(
+    setMethod('PUT'),
+    setData(data, updateCredentialSchema),
+    setURL(`${API_ROOT}/managed/credentials/${credentialID}`)
+  ).then(response => response.data);
+
+/**
+ * updatePassword
+ *
+ * Update the label on a Managed Credential on your account.
+ * Other fields (password and username) cannot be changed. (MAYBE? this is confusing)
+ */
+export const updatePassword = (credentialID: number, data: UpdatePasswordPayload) =>
+Request<Page<Linode.ManagedCredential>>(
+  setMethod('POST'),
+  setData(data, updatePasswordSchema),
+  setURL(`${API_ROOT}/managed/credentials/${credentialID}/update`)
+).then(response => response.data);
 
 /**
  * deleteCredential
