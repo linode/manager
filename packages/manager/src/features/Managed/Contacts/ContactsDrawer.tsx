@@ -118,7 +118,6 @@ const ContactsDrawer: React.FC<CombinedProps> = props => {
           isSubmitting,
           setFieldValue
         }) => {
-          console.log(values);
           const primaryPhoneError = pathOr('', ['phone', 'primary'], errors);
           // prettier-ignore
           const secondaryPhoneError = pathOr('', ['phone', 'secondary'], errors);
@@ -138,7 +137,6 @@ const ContactsDrawer: React.FC<CombinedProps> = props => {
                 <TextField
                   name="name"
                   label="Name"
-                  data-qa-add-label
                   value={values.name}
                   error={!!errors.name}
                   errorText={errors.name}
@@ -149,7 +147,6 @@ const ContactsDrawer: React.FC<CombinedProps> = props => {
                 <TextField
                   name="email"
                   label="E-mail"
-                  data-qa-add-username
                   value={values.email}
                   error={!!errors.email}
                   errorText={errors.email}
@@ -162,7 +159,6 @@ const ContactsDrawer: React.FC<CombinedProps> = props => {
                     <TextField
                       name="phone.primary"
                       label="Primary Phone (optional)"
-                      data-qa-add-password
                       value={pathOr('', ['phone', 'primary'], values)}
                       error={!!primaryPhoneError}
                       errorText={primaryPhoneError}
@@ -174,7 +170,6 @@ const ContactsDrawer: React.FC<CombinedProps> = props => {
                     <TextField
                       name="phone.secondary"
                       label="Secondary Phone (optional)"
-                      data-qa-add-password
                       value={pathOr('', ['phone', 'secondary'], values)}
                       error={!!secondaryPhoneError}
                       errorText={secondaryPhoneError}
@@ -213,7 +208,6 @@ const ContactsDrawer: React.FC<CombinedProps> = props => {
                     buttonType="primary"
                     onClick={() => handleSubmit()}
                     loading={isSubmitting}
-                    data-qa-submit
                   >
                     Save
                   </Button>
