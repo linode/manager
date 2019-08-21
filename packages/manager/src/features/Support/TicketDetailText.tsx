@@ -23,7 +23,10 @@ const styles = (theme: Theme) =>
     root: {
       marginTop: theme.spacing(1),
       padding: `${theme.spacing(2)}px ${theme.spacing(1)}px`,
-      position: 'relative'
+      position: 'relative',
+      '& pre': {
+        backgroundColor: theme.bg.tableHeader
+      }
     },
     expButton: {
       position: 'absolute',
