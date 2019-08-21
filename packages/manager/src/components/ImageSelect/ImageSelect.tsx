@@ -47,7 +47,7 @@ export const ImageSelect: React.FC<Props> = props => {
 
   return (
     <>
-      <Paper className={classes.root}>
+      <Paper className={classes.root} data-qa-select-image-panel>
         <Typography variant="h2" data-qa-tp={title}>
           {title}
         </Typography>
