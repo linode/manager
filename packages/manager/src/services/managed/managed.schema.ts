@@ -51,13 +51,22 @@ export const createContactSchema = object().shape({
     .required('Name is required.')
     .min(2, 'Name must be between 2 and 64 characters.')
     .max(64, 'Name must be between 2 and 64 characters.'),
-  email: string().required('E-mail is required.'),
+  email: string()
+    .required('E-mail is required.')
+    .min(6, 'E-mail must be between 6 and 100 characters')
+    .max(100, 'E-mail must be between 6 and 100 characters')
+    .email('Invalid e-mail address'),
   phone: object().shape({
-    primary: string().notRequired(),
-    secondary: string().notRequired()
+    primary: string()
+      .notRequired()
+      .nullable(true),
+    secondary: string()
+      .notRequired()
+      .nullable(true)
   }),
   group: string()
     .notRequired()
+    .nullable(true)
     .min(2, 'Group must be between 2 and 50 characters.')
     .max(50, 'Group must be between 2 and 50 characters.')
 });

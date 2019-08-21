@@ -66,6 +66,7 @@ const EditSSHAccessDrawer: React.FC<CombinedProps> = props => {
     if (!linodeSetting) {
       return;
     }
+    setStatus(undefined);
 
     // If the user has blanked out these fields, exchange in the defaults
     // for `user` and `port`. We could also choose to NOT send these to
@@ -88,7 +89,6 @@ const EditSSHAccessDrawer: React.FC<CombinedProps> = props => {
         const mapErrorToStatus = (generalError: string) =>
           setStatus({ generalError });
 
-        setSubmitting(false);
         handleFieldErrors(setErrors, err);
         handleGeneralErrors(mapErrorToStatus, err, defaultMessage);
       });
