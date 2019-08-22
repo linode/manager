@@ -14,6 +14,7 @@ interface Props {
   lastUpdated: number;
   updateOrAdd: (contact: Linode.ManagedContact) => void;
   openDrawer: (linodeId: number) => void;
+  openDialog: (contactId: number) => void;
   error?: Linode.ApiFieldError[];
 }
 
@@ -26,6 +27,7 @@ export const ContactsTableContent: React.FC<CombinedProps> = props => {
     lastUpdated,
     updateOrAdd,
     openDrawer,
+    openDialog,
     error
   } = props;
 
@@ -55,6 +57,7 @@ export const ContactsTableContent: React.FC<CombinedProps> = props => {
           updateOrAdd={updateOrAdd}
           contact={contact}
           openDrawer={openDrawer}
+          openDialog={openDialog}
         />
       ))}
     </>

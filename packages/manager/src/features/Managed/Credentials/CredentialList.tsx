@@ -8,6 +8,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
+import DeletionDialog from 'src/components/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
@@ -28,7 +29,6 @@ import {
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
 
-import { default as CredentialDialog } from '../Monitors/MonitorDialog';
 import CredentialDrawer from './CredentialDrawer';
 import CredentialTableContent from './CredentialTableContent';
 
@@ -188,7 +188,7 @@ export const CredentialList: React.FC<CombinedProps> = props => {
           </Paginate>
         )}
       </OrderBy>
-      <CredentialDialog
+      <DeletionDialog
         open={dialog.isOpen}
         label={dialog.entityLabel || ''}
         loading={dialog.isLoading}
