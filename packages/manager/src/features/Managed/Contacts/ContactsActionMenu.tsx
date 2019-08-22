@@ -3,7 +3,7 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   contactId: number;
-  updateOne: (contact: Linode.ManagedContact) => void;
+  updateOrAdd: (contact: Linode.ManagedContact) => void;
   openDrawer: (contactId: number) => void;
 }
 

@@ -12,7 +12,7 @@ interface Props {
   contacts: Linode.ManagedContact[];
   loading: boolean;
   lastUpdated: number;
-  updateOne: (contact: Linode.ManagedContact) => void;
+  updateOrAdd: (contact: Linode.ManagedContact) => void;
   openDrawer: (linodeId: number) => void;
   error?: Linode.ApiFieldError[];
 }
@@ -24,7 +24,7 @@ export const ContactsTableContent: React.FC<CombinedProps> = props => {
     contacts,
     loading,
     lastUpdated,
-    updateOne,
+    updateOrAdd,
     openDrawer,
     error
   } = props;
@@ -52,7 +52,7 @@ export const ContactsTableContent: React.FC<CombinedProps> = props => {
       {contacts.map((contact: Linode.ManagedContact, idx: number) => (
         <ContactsRow
           key={`managed-contact-row-${idx}`}
-          updateOne={updateOne}
+          updateOrAdd={updateOrAdd}
           contact={contact}
           openDrawer={openDrawer}
         />
