@@ -4,7 +4,7 @@ import Notice from './Notice';
 
 storiesOf('Notice', module).add('All Notices', () => (
   <React.Fragment>
-    <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
+    <div style={{ padding: 8, backgroundColor: '#f4f4f4' }}>
       <Notice error text="This is an error notice" />
       <Notice warning text="This is a warning notice" />
       <Notice success text="This is a success notice" />

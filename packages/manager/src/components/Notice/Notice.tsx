@@ -45,7 +45,6 @@ const styles = (theme: Theme) => {
       }
     },
     root: {
-      position: 'relative',
       marginBottom: theme.spacing(2),
       padding: '4px 16px',
       maxWidth: '100%',
@@ -65,7 +64,7 @@ const styles = (theme: Theme) => {
     icon: {
       color: 'white',
       position: 'absolute',
-      left: -25
+      left: theme.spacing(1) + 7
     },
     closeIcon: {
       paddingLeft: theme.spacing(1)
@@ -228,9 +227,11 @@ const Notice: React.StatelessComponent<CombinedProps> = props => {
         </Grid>
       )}
       {important &&
-        ((success && <Check className={classes.icon} />) ||
-          (warning && <Warning className={classes.icon} />) ||
-          (error && <Error className={classes.icon} />))}
+        ((success && <Check className={classes.icon} data-qa-success-img />) ||
+          (warning && (
+            <Warning className={classes.icon} data-qa-warning-img />
+          )) ||
+          (error && <Error className={classes.icon} data-qa-error-img />))}
       <div className={classes.inner}>{c}</div>
       {dismissible && (
         <Grid item className={classes.closeIcon}>
