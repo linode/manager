@@ -36,13 +36,13 @@ export const SSHAccessRow: React.FunctionComponent<Props> = props => {
         {isAccessEnabled ? 'Enabled' : 'Disabled'}
       </TableCell>
       <TableCell parentColumn="User" data-qa-managed-user>
-        {linodeSetting.ssh.user ? linodeSetting.ssh.user : 'root'}
+        {linodeSetting.ssh.user}
       </TableCell>
       <TableCell parentColumn="IP" data-qa-managed-ip>
         {linodeSetting.ssh.ip === 'any' ? 'Any' : linodeSetting.ssh.ip}
       </TableCell>
       <TableCell parentColumn="Port" data-qa-managed-port>
-        {linodeSetting.ssh.port ? linodeSetting.ssh.port : 22}
+        {linodeSetting.ssh.port}
       </TableCell>
       <TableCell>
         <ActionMenu
