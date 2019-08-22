@@ -193,6 +193,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
       SelectProps,
       value,
       dataAttrs,
+      label,
       ...textFieldProps
     } = this.props;
 
@@ -216,6 +217,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
         <TextField
           {...textFieldProps}
           {...dataAttrs}
+          label={!!this.props.required ? `${label} (required)` : label}
           fullWidth
           /*
             let us explicitly pass an empty string to the input
@@ -226,6 +228,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
           onChange={this.handleChange}
           InputLabelProps={{
             ...InputLabelProps,
+            required: false,
             shrink: true
           }}
           inputProps={{
