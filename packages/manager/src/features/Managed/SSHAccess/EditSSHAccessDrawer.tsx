@@ -4,6 +4,7 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Grid from 'src/components/Grid';
 import IPSelect from 'src/components/IPSelect';
@@ -28,6 +29,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('sm')]: {
       paddingTop: '0px !important'
     }
+  },
+  helperText: {
+    marginBottom: theme.spacing(1) + 2
   }
 }));
 
@@ -136,6 +140,16 @@ const EditSSHAccessDrawer: React.FC<CombinedProps> = props => {
                   )}
 
                   <form>
+                    <Typography
+                      variant="body1"
+                      className={classes.helperText}
+                      data-qa-volume-size-help
+                    >
+                      We’ll use the default settings for User Account (
+                      {DEFAULTS.user}) and Port ({DEFAULTS.port}) if you leave
+                      those fields empty.
+                    </Typography>
+
                     <FormControlLabel
                       control={
                         <Toggle
