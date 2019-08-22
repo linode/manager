@@ -8,6 +8,7 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
+import DeletionDialog from 'src/components/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
@@ -20,8 +21,6 @@ import { useDialog } from 'src/hooks/useDialog';
 import useOpenClose from 'src/hooks/useOpenClose';
 import { deleteContact } from 'src/services/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-// @todo: Make this a generic component
-import { default as ContactDialog } from '../Monitors/MonitorDialog';
 import { ManagedContactGroup, Mode } from './common';
 import ContactDrawer from './ContactsDrawer';
 import ContactTableContact from './ContactsTableContent';
@@ -323,7 +322,7 @@ const Contacts: React.FC<CombinedProps> = props => {
             );
           }}
         </OrderBy>
-        <ContactDialog
+        <DeletionDialog
           open={dialog.isOpen}
           label={dialog.entityLabel || ''}
           loading={dialog.isLoading}
