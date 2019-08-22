@@ -149,8 +149,8 @@ export const CredentialList: React.FC<CombinedProps> = props => {
       // User has input a new password or username. Update through /update.
       promises.push(
         updatePassword(editID, {
-          password: values.password,
-          username: values.username
+          password: values.password || undefined,
+          username: values.username || undefined
         })
       );
     }

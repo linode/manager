@@ -57,5 +57,5 @@ export const updateCredentialSchema = object().shape({
 
 export const updatePasswordSchema = object().shape({
   username: credentialUsername,
-  password: credentialPassword
+  password: credentialPassword.required('Password is required.')
 });
