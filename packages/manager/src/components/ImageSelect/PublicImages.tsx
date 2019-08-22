@@ -25,17 +25,27 @@ export const sortByImageVersion = (a: Item<string>, b: Item<string>) => {
    * shown at the top of the options list.
    */
   try {
-    const versionA = Number(a.label.split(' ')[1]);
-    const versionB = Number(b.label.split(' ')[1]);
+    const versionA = a.label.split(' ')[1];
+    const versionB = b.label.split(' ')[1];
+    const [majorA, minorA] = versionA.split('.').map(Number);
+    const [majorB, minorB] = versionB.split('.').map(Number);
 
-    if (isNaN(versionA) || isNaN(versionB)) {
+    if (isNaN(+versionA) || isNaN(+versionB)) {
       throw new Error('No version number found');
     }
 
-    if (versionA > versionB) {
+    if (majorA > majorB) {
       return -1;
     }
-    if (versionA < versionB) {
+    if (majorA < majorB) {
+      return 1;
+    }
+
+    if (minorA > minorB) {
+      return -1;
+    }
+
+    if (minorA < minorB) {
       return 1;
     }
     return 0;
