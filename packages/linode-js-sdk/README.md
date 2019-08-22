@@ -67,6 +67,45 @@ getAccount()
 
 ## Contributing
 
+~~~~~ FOR INTERNAL CONTRIBUTORS. REVISE THIS LATER ~~~~~~
+
+Migrating service functions over from Cloud Manager to the JavaScript SDK is relatively straightforward, and involves a few steps.
+
+1. Find a service function you want to move. All of these are location in `/pacakges/manager/src/services`. For example:
+
+```js
+/** packages/manager/src/services/account/account.ts */
+
+/**
+ * updateAccountInfo
+ *
+ * Update your contact or billing information.
+ *
+ */
+export const updateAccountInfo = (data: Partial<Linode.Account>) =>
+  Request<Linode.Account>(
+    setURL(`${API_ROOT}/account`),
+    setMethod('PUT'),
+    setData(data, updateAccountSchema)
+  ).then(response => response.data);
+```
+
+2. Since this is an account function, we need to move it to `packages/linode-js-sdk/src/account/account.ts`
+
+3. We also need to make sure that both the Yup Schema and the Type Interfaces are moved over as well.
+   * The type definition `Linode.Account` will need to be moved to `packages/linode-js-sdk/src/account/types.ts`
+   * The Yup Schema will need to move to `packages/linode-js-sdk/src/account/account.schema.ts`
+  
+4. The final step is removing all this code from Cloud Manager.
+  * Most of the interfaces for the Linode namespace are located in the `types` directory. In this case, `Linode.Account` is located at `packages/manager/src/types/Account.ts`.
+  * The schema should be located in the same directory as the service directory for the function you are moving.
+
+After these steps are completed, you'll want to start both the Cloud Manager and Linode JS SDK projects and make sure there are no type errors and that everything is compiling correctly.
+
 ## TypeScript
 
 This library comes with TypeScript definitions so no need to write your own or find them elsewhere online. Just import the functions as normal and they should play nicely with TypeScript!
+
+## Licence
+
+Hello world
