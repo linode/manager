@@ -26,7 +26,7 @@ Along with the contributing guidelines, you can read our [code conventions](./CO
 
 ### I want to contribute to the JavaScript SDK :sunglasses:
 
-Amazing! Please check out the documentation in the [SDK directory](./packages/linode-js-sd/README.md)
+Amazing! Please check out the documentation in the [SDK directory](./packages/linode-js-sdk/README.md)
 
 ## Reaching Out
 

@@ -71,7 +71,7 @@ getAccount()
 
 Migrating service functions over from Cloud Manager to the JavaScript SDK is relatively straightforward, and involves a few steps.
 
-1. Find a service function you want to move. All of these are location in `/pacakges/manager/src/services`. For example:
+1. Find a service function you want to move. All of these are located in `/pacakges/manager/src/services`. For example:
 
 ```js
 /** packages/manager/src/services/account/account.ts */
@@ -97,8 +97,8 @@ export const updateAccountInfo = (data: Partial<Linode.Account>) =>
    * The Yup Schema will need to move to `packages/linode-js-sdk/src/account/account.schema.ts`
   
 4. The final step is removing all this code from Cloud Manager.
-  * Most of the interfaces for the Linode namespace are located in the `types` directory. In this case, `Linode.Account` is located at `packages/manager/src/types/Account.ts`.
-  * The schema should be located in the same directory as the service directory for the function you are moving.
+   * Most of the interfaces for the Linode namespace are located in the `types` directory. In this case, `Linode.Account` is located at `packages/manager/src/types/Account.ts`.
+   * The schema should be located in the same directory as the service directory for the function you are moving.
 
 After these steps are completed, you'll want to start both the Cloud Manager and Linode JS SDK projects and make sure there are no type errors and that everything is compiling correctly.
 
