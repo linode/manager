@@ -2,6 +2,7 @@ import { Form, Formik } from 'formik';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
+import FormHelperText from 'src/components/core/FormHelperText';
 import {
   createStyles,
   Theme,
@@ -35,9 +36,11 @@ import LabelField from './LabelField';
 import LinodeSelect from './LinodeSelect';
 import NoticePanel from './NoticePanel';
 import PricePanel from './PricePanel';
-import RegionSelect from './RegionSelect';
 import SizeField from './SizeField';
 import VolumesActionsPanel from './VolumesActionsPanel';
+
+import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
+import { dcDisplayNames } from 'src/constants';
 
 type ClassNames = 'copy';
 
@@ -50,6 +53,7 @@ const styles = (theme: Theme) =>
 
 interface Props {
   onClose: () => void;
+  regions: Linode.Region[];
   onSuccess: (
     volumeLabel: string,
     volumePath: string,
@@ -189,14 +193,35 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
             />
 
             <RegionSelect
-              error={touched.region ? errors.region : undefined}
+              errorText={touched.region ? errors.region : undefined}
+              regions={props.regions
+                .filter(eachRegion =>
+                  eachRegion.capabilities.some(eachCape =>
+                    eachCape.match(/block/i)
+                  )
+                )
+                .map(eachRegion => ({
+                  ...eachRegion,
+                  display: dcDisplayNames[eachRegion.id]
+                }))}
               name="region"
               onBlur={handleBlur}
-              onChange={value => setFieldValue('region', value)}
-              value={values.region}
-              shouldOnlyDisplayRegionsWithBlockStorage={true}
+              selectedID={values.region}
+              handleSelection={value => setFieldValue('region', value)}
               disabled={disabled}
+              styles={{
+                /** altering styles for mobile-view */
+                menuList: (base: any) => ({
+                  ...base,
+                  maxHeight: `250px !important`
+                })
+              }}
             />
+
+            <FormHelperText data-qa-volume-region>
+              The datacenter where the new volume should be created. Only
+              regions supporting block storage are displayed.
+            </FormHelperText>
 
             <LinodeSelect
               error={linodeError}

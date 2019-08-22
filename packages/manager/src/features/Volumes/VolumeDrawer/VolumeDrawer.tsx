@@ -48,6 +48,7 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
           <CreateVolumeForm
             onClose={actions.closeDrawer}
             onSuccess={actions.openForConfig}
+            regions={this.props.regions}
           />
         )}
         {mode === modes.EDITING &&
@@ -174,6 +175,7 @@ interface StateProps {
   linodeRegion?: string;
   message?: string;
   readOnly?: boolean;
+  regions: Linode.Region[];
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => {
@@ -202,6 +204,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
 
   return {
     drawerTitle: titleFromState(state.volumeDrawer),
+    regions: state.__resources.regions.entities,
     isOpen: mode !== modes.CLOSED,
     linodeId,
     linodeLabel,
