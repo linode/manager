@@ -200,3 +200,14 @@ export const updateContact = (contactId: number, data: ContactPayload) =>
     setURL(`${API_ROOT}/managed/contacts/${contactId}`),
     setData(data, createContactSchema)
   ).then(response => response.data);
+
+/**
+ * deleteContact
+ *
+ * Deletes a Managed Contact
+ */
+export const deleteContact = (contactId: number) =>
+  Request<{}>(
+    setMethod('DELETE'),
+    setURL(`${API_ROOT}/managed/contacts/${contactId}`)
+  ).then(response => response.data);

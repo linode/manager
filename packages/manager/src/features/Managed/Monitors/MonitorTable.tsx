@@ -13,6 +13,7 @@ import {
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
+import DeletionDialog from 'src/components/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
@@ -33,7 +34,6 @@ import {
 } from 'src/utilities/formikErrorUtils';
 
 import MonitorDrawer from '../MonitorDrawer';
-import MonitorDialog from './MonitorDialog';
 import MonitorTableContent from './MonitorTableContent';
 
 type ClassNames = 'labelHeader';
@@ -209,7 +209,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
           </Paginate>
         )}
       </OrderBy>
-      <MonitorDialog
+      <DeletionDialog
         label={dialog.entityLabel || ''}
         onDelete={handleDelete}
         onClose={closeDialog}
