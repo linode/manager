@@ -4,13 +4,14 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 interface Props {
   contactId: number;
   updateOrAdd: (contact: Linode.ManagedContact) => void;
+  openDialog: (id: number) => void;
   openDrawer: (contactId: number) => void;
 }
 
 export type CombinedProps = Props;
 
 export const ContactsActionMenu: React.FC<CombinedProps> = props => {
-  const { contactId, openDrawer } = props;
+  const { contactId, openDrawer, openDialog } = props;
 
   const createActions = (closeMenu: Function): Action[] => {
     const actions = [
@@ -24,7 +25,8 @@ export const ContactsActionMenu: React.FC<CombinedProps> = props => {
       {
         title: 'Delete',
         onClick: () => {
-          alert('delete contact');
+          openDialog(contactId);
+          closeMenu();
         }
       }
     ];

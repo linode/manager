@@ -1,3 +1,4 @@
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
 import Box from 'src/components/core/Box';
@@ -15,7 +16,12 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
+import { useDialog } from 'src/hooks/useDialog';
 import useOpenClose from 'src/hooks/useOpenClose';
+import { deleteContact } from 'src/services/managed';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+// @todo: Make this a generic component
+import { default as ContactDialog } from '../Monitors/MonitorDialog';
 import { ManagedContactGroup, Mode } from './common';
 import ContactDrawer from './ContactsDrawer';
 import ContactTableContact from './ContactsTableContent';
@@ -49,12 +55,23 @@ interface Props {
   error?: Linode.ApiFieldError[];
   lastUpdated: number;
   transformData: (fn: (contacts: Linode.ManagedContact[]) => void) => void;
+  update: () => void;
 }
 
-const Contacts: React.FC<Props> = props => {
+type CombinedProps = Props & WithSnackbarProps;
+
+const Contacts: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const { contacts, loading, error, lastUpdated, transformData } = props;
+  const {
+    contacts,
+    loading,
+    error,
+    lastUpdated,
+    transformData,
+    update,
+    enqueueSnackbar
+  } = props;
 
   const updateOrAdd = (contact: Linode.ManagedContact) => {
     transformData(draft => {
@@ -80,6 +97,29 @@ const Contacts: React.FC<Props> = props => {
   const [contactDrawerMode, setContactDrawerMode] = React.useState<Mode>(
     'create'
   );
+
+  const {
+    dialog,
+    openDialog,
+    closeDialog,
+    submitDialog,
+    handleError
+  } = useDialog<number>(deleteContact);
+
+  const handleDelete = () => {
+    submitDialog(dialog.entityID)
+      .then(() => {
+        update();
+        enqueueSnackbar('Contact deleted successfully.', {
+          variant: 'success'
+        });
+      })
+      .catch(e =>
+        handleError(
+          getAPIErrorOrDefault(e, 'Error deleting this contact.')[0].reason
+        )
+      );
+  };
 
   const contactDrawer = useOpenClose();
   const groupDrawer = useOpenClose();
@@ -254,6 +294,15 @@ const Contacts: React.FC<Props> = props => {
                                 setContactDrawerMode('edit');
                                 contactDrawer.open();
                               }}
+                              openDialog={(contactId: number) => {
+                                const selectedContact = contacts.find(
+                                  thisContact => thisContact.id === contactId
+                                );
+                                const label = selectedContact
+                                  ? selectedContact.name
+                                  : '';
+                                openDialog(contactId, label);
+                              }}
                               error={error}
                             />
                           </TableBody>
@@ -274,6 +323,14 @@ const Contacts: React.FC<Props> = props => {
             );
           }}
         </OrderBy>
+        <ContactDialog
+          open={dialog.isOpen}
+          label={dialog.entityLabel || ''}
+          loading={dialog.isLoading}
+          error={dialog.error}
+          onClose={closeDialog}
+          onDelete={handleDelete}
+        />
       </div>
       <GroupDrawer
         isOpen={groupDrawer.isOpen}
@@ -293,7 +350,7 @@ const Contacts: React.FC<Props> = props => {
   );
 };
 
-export default Contacts;
+export default withSnackbar(Contacts);
 
 /**
  * Generate groups from a list of Managed Contacts.
