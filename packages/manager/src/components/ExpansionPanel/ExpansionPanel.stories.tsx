@@ -59,10 +59,7 @@ class AsyncContentExample extends React.Component {
 storiesOf('ExpansionPanel', module)
   .add('Interactive', () => (
     <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
-      <ExpansionPanel heading="Why is Linode the best?">
-        <p>Customer service!</p>
-      </ExpansionPanel>
-      <ExpansionPanel heading="Why is Linode the best?">
+      <ExpansionPanel heading="The best Linode department is?">
         <p>Customer service!</p>
       </ExpansionPanel>
     </div>
@@ -76,27 +73,13 @@ storiesOf('ExpansionPanel', module)
       >
         <p>Customer service!</p>
       </ExpansionPanel>
-      <ExpansionPanel
-        success="You did it!"
-        heading="Why is Linode the best?"
-        actions={renderActions}
-      >
-        <p>Customer service!</p>
-      </ExpansionPanel>
     </div>
   ))
   .add('Warning!', () => (
     <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
       <ExpansionPanel
         warning="Careful now..."
-        heading="Why is Linode the best?"
-        actions={renderActions}
-      >
-        <p>Customer service!</p>
-      </ExpansionPanel>
-      <ExpansionPanel
-        warning="Careful now..."
-        heading="Why is Linode the best?"
+        heading="This is a warning"
         actions={renderActions}
       >
         <p>Customer service!</p>
@@ -107,14 +90,7 @@ storiesOf('ExpansionPanel', module)
     <div style={{ padding: 20, backgroundColor: '#f4f4f4' }}>
       <ExpansionPanel
         error="Oh no! Something broke!"
-        heading="Why is Linode the best?"
-        actions={renderActions}
-      >
-        <p>Customer service!</p>
-      </ExpansionPanel>
-      <ExpansionPanel
-        error="Oh no! Something broke!"
-        heading="Why is Linode the best?"
+        heading="Creating a new linode"
         actions={renderActions}
       >
         <p>Customer service!</p>
