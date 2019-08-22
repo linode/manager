@@ -1,5 +1,7 @@
 import * as React from 'react';
-import { SingleValueProps } from 'react-select/lib/components/SingleValue';
+import SingleValue, {
+  SingleValueProps
+} from 'react-select/lib/components/SingleValue';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -7,11 +9,12 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
-    position: 'absolute'
+    paddingLeft: `30px !important`
   },
   icon: {
     marginRight: theme.spacing(1),
-    fontSize: '1.8em'
+    fontSize: '1.8em',
+    position: 'absolute'
   }
 }));
 
@@ -21,16 +24,17 @@ type CombinedProps = Props;
 
 const _SingleValue: React.StatelessComponent<CombinedProps> = props => {
   const classes = useStyles();
-  const { innerProps, ...rest } = props;
   return (
-    <div
-      data-qa-react-select-single-value
-      className={classes.root}
-      {...innerProps}
-    >
+    <>
+      <SingleValue
+        data-qa-react-select-single-value
+        {...props}
+        className={classes.root}
+      >
+        {props.children}
+      </SingleValue>
       <span className={`${props.data.className} ${classes.icon}`} />
-      <div {...rest}>{props.children}</div>
-    </div>
+    </>
   );
 };
 
