@@ -140,11 +140,7 @@ const EditSSHAccessDrawer: React.FC<CombinedProps> = props => {
                   )}
 
                   <form>
-                    <Typography
-                      variant="body1"
-                      className={classes.helperText}
-                      data-qa-volume-size-help
-                    >
+                    <Typography variant="body1" className={classes.helperText}>
                       We’ll use the default settings for User Account (
                       {DEFAULTS.user}) and Port ({DEFAULTS.port}) if you leave
                       those fields empty.
