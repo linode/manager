@@ -85,7 +85,7 @@ export const CredentialList: React.FC<CombinedProps> = props => {
   };
 
   const handleSuccess = (cb: any) => {
-    cb(false);
+    cb();
     setDrawerOpen(false);
     update();
   };
@@ -111,7 +111,7 @@ export const CredentialList: React.FC<CombinedProps> = props => {
     { setSubmitting, setErrors, setStatus }: FormikProps
   ) => {
     createCredential(values)
-      .then(() => handleSuccess(setSubmitting))
+      .then(() => handleSuccess(() => setSubmitting(false)))
       .catch(e => {
         _handleError(
           e,
@@ -147,19 +147,24 @@ export const CredentialList: React.FC<CombinedProps> = props => {
 
     if (values.password || values.username) {
       // User has input a new password or username. Update through /update.
-      promises.push(updatePassword(editID, { password: values.password }));
+      promises.push(
+        updatePassword(editID, {
+          password: values.password,
+          username: values.username
+        })
+      );
     }
 
     if (promises.length === 0) {
       // Nothing changed, let's get out of here while we still can.
-      setDrawerOpen(false);
+      handleDrawerClose();
       setSubmitting(false);
       return;
     }
 
     Promise.all(promises)
       .then(() => {
-        handleSuccess(setSubmitting);
+        handleSuccess(() => setSubmitting(false));
         enqueueSnackbar('Credential updated successfully', {
           variant: 'success'
         });
