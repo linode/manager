@@ -1,7 +1,9 @@
+import { getAccountInfo } from 'linode-js-sdk/lib/account';
 import { lensPath, set, view } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
+
 import {
   createStyles,
   Theme,
@@ -14,7 +16,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { AccountsAndPasswords, BillingAndPayments } from 'src/documentation';
 import { Requestable } from 'src/requestableContext';
-import { getAccountInfo } from 'src/services/account';
 import composeState from 'src/utilities/composeState';
 import MakeAPaymentPanel from './BillingPanels/MakeAPaymentPanel';
 import PromotionsPanel from './BillingPanels/PromotionsPanel';
