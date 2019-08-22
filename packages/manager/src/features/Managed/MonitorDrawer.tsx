@@ -31,6 +31,7 @@ export interface Props {
   open: boolean;
   label?: string;
   successMsg?: string;
+  monitor?: Linode.ManagedServiceMonitor;
   onClose: () => void;
   onSubmit: (values: ManagedServicePayload, formikProps: any) => void;
 }
@@ -44,7 +45,7 @@ export const modes = {
 
 const titleMap = {
   [modes.CREATING]: 'Add a Monitor',
-  [modes.EDITING]: 'Edit a Monitor'
+  [modes.EDITING]: 'Edit Monitor'
 };
 
 const typeOptions: Item<Linode.ServiceType>[] = [
@@ -81,22 +82,26 @@ const getValueFromItem = (
   return options.find(thisOption => thisOption.value === value);
 };
 
+const emptyInitialValues = {
+  label: '',
+  consultation_group: '',
+  service_type: 'url',
+  address: '',
+  body: '',
+  timeout: 10
+} as ManagedServicePayload;
+
 const MonitorDrawer: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const { mode, open, onClose, onSubmit } = props;
+  const { mode, monitor, open, onClose, onSubmit } = props;
+
+  const initialValues = {...emptyInitialValues, ...monitor};
 
   return (
     <Drawer title={titleMap[mode]} open={open} onClose={onClose}>
       <Formik
-        initialValues={{
-          label: '',
-          consultation_group: '',
-          service_type: 'url',
-          address: '',
-          body: '',
-          timeout: 10
-        }}
+        initialValues={initialValues}
         validationSchema={createServiceMonitorSchema}
         validateOnChange={false}
         validateOnBlur={false}

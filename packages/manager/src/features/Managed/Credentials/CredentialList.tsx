@@ -66,10 +66,10 @@ export const CredentialList: React.FC<CombinedProps> = props => {
   const handleDelete = () => {
     submitDialog(dialog.entityID)
       .then(() => {
-        update();
         enqueueSnackbar('Credential deleted successfully.', {
           variant: 'success'
         });
+        update();
       })
       .catch(e =>
         handleError(

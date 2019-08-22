@@ -106,6 +106,18 @@ export const createServiceMonitor = (data: ManagedServicePayload) =>
   ).then(response => response.data);
 
 /**
+ * updateServiceMonitor
+ *
+ * Creates a Managed Service Monitor
+ */
+export const updateServiceMonitor = (monitorID: number, data: ManagedServicePayload) =>
+Request<Linode.ManagedServiceMonitor>(
+  setMethod('PUT'),
+  setURL(`${API_ROOT}/managed/services/${monitorID}`),
+  setData(data, createServiceMonitorSchema)
+).then(response => response.data);
+
+/**
  * getCredentials
  *
  * Returns a paginated list of Managed Credentials for your account.

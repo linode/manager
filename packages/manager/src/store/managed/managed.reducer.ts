@@ -10,6 +10,7 @@ import {
   deleteServiceMonitorActions,
   disableServiceMonitorActions,
   enableServiceMonitorActions,
+  updateServiceMonitorActions,
   requestServicesActions
 } from './managed.actions';
 
@@ -109,6 +110,22 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     if (isType(action, deleteServiceMonitorActions.failed)) {
       const { error } = action.payload;
       draft.error!.delete = error;
+    }
+
+    if (isType(action, updateServiceMonitorActions.started)) {
+      draft.error!.update = undefined;
+    }
+
+    if (isType(action, updateServiceMonitorActions.done)) {
+      const { result } = action.payload;
+      draft.entities = updateOrAdd(result, state.entities);
+      draft.results = draft.entities.map(m => m.id);
+      draft.lastUpdated = Date.now();
+    }
+    
+    if (isType(action, updateServiceMonitorActions.failed)) {
+      const { error } = action.payload;
+      draft.error!.update = error;
     }
 
     return draft;

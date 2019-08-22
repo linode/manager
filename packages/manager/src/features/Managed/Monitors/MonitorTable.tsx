@@ -51,6 +51,7 @@ interface Props {
   error?: Linode.ApiFieldError[];
 }
 
+export type Modes = 'create' | 'edit';
 export type FormikProps = FormikBag<CombinedProps, ManagedServicePayload>;
 
 export type CombinedProps = Props &
@@ -77,6 +78,20 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
   } = useDialog<number>(deleteServiceMonitor);
 
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+  const [drawerMode, setDrawerMode] = React.useState<Modes>('create');
+  const [editID, setEditID] = React.useState<number>(0);
+
+  const handleDrawerClose = () => {
+    setEditID(0);
+    setDrawerMode('create');
+    setDrawerOpen(false);
+  }
+
+  const handleDrawerOpen = (id: number, mode: Modes) => {
+    setEditID(id);
+    setDrawerMode(mode);
+    setDrawerOpen(true);
+  }
 
   const handleDelete = () => {
     if (!dialog.entityID) {
@@ -100,6 +115,8 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
     values: ManagedServicePayload,
     { setSubmitting, setErrors, setStatus }: FormikProps
   ) => {
+    console.log(values);
+    return;
     const { createServiceMonitor } = props;
     createServiceMonitor({ ...values, timeout: +values.timeout })
       .then(response => {
@@ -192,6 +209,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
                         loading={loading}
                         error={error}
                         openDialog={openDialog}
+                        openDrawer={handleDrawerOpen}
                       />
                     </TableBody>
                   </Table>
@@ -219,9 +237,10 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
       />
       <MonitorDrawer
         open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
+        onClose={handleDrawerClose}
         onSubmit={submitMonitorForm}
-        mode="create"
+        mode={drawerMode}
+        monitor={monitors.find(m => m.id === editID)}
       />
     </>
   );
