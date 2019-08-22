@@ -40,7 +40,7 @@ import SizeField from './SizeField';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
-import { dcDisplayNames, regionsWithoutBlockStorage } from 'src/constants';
+import { dcDisplayNames } from 'src/constants';
 
 type ClassNames = 'copy';
 
@@ -195,11 +195,10 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
             <RegionSelect
               errorText={touched.region ? errors.region : undefined}
               regions={props.regions
-                .filter(
-                  eachRegion =>
-                    !regionsWithoutBlockStorage.some(
-                      regionToBeRemoved => regionToBeRemoved === eachRegion.id
-                    )
+                .filter(eachRegion =>
+                  eachRegion.capabilities.some(eachCape =>
+                    eachCape.match(/block/i)
+                  )
                 )
                 .map(eachRegion => ({
                   ...eachRegion,
