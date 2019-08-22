@@ -43,11 +43,13 @@ namespace Linode {
     id: number;
     name: string;
     email: string;
-    phone: {
-      primary: string | null;
-      secondary: string | null;
-    };
+    phone: ManagedContactPhone;
     group: string | null;
     updated: string;
+  }
+
+  export interface ManagedContactPhone {
+    primary: string | null;
+    secondary: string | null;
   }
 }

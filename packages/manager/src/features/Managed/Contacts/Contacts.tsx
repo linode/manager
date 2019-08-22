@@ -1,10 +1,13 @@
 import * as React from 'react';
+import AddNewLink from 'src/components/AddNewLink';
+import Box from 'src/components/core/Box';
 import Paper from 'src/components/core/Paper';
 import RootRef from 'src/components/core/RootRef';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
@@ -13,7 +16,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 import useOpenClose from 'src/hooks/useOpenClose';
-import { ManagedContactGroup } from './common';
+import { ManagedContactGroup, Mode } from './common';
 import ContactDrawer from './ContactsDrawer';
 import ContactTableContact from './ContactsTableContent';
 import GroupDrawer from './GroupDrawer';
@@ -53,10 +56,16 @@ const Contacts: React.FC<Props> = props => {
 
   const { contacts, loading, error, lastUpdated, transformData } = props;
 
-  const updateOne = (contact: Linode.ManagedContact) => {
+  const updateOrAdd = (contact: Linode.ManagedContact) => {
     transformData(draft => {
       const idx = draft.findIndex(l => l.id === contact.id);
-      draft[idx] = contact;
+      // Add the contact if we don't already have it.
+      if (idx === -1) {
+        draft.push(contact);
+      } else {
+        // Otherwise just update it.
+        draft[idx] = contact;
+      }
     });
   };
 
@@ -67,6 +76,10 @@ const Contacts: React.FC<Props> = props => {
   const [selectedGroupName, setSelectedGroupName] = React.useState<
     string | null
   >(null);
+
+  const [contactDrawerMode, setContactDrawerMode] = React.useState<Mode>(
+    'create'
+  );
 
   const contactDrawer = useOpenClose();
   const groupDrawer = useOpenClose();
@@ -79,12 +92,13 @@ const Contacts: React.FC<Props> = props => {
 
   return (
     <>
+      <DocumentTitleSegment segment="Contacts" />
       <Typography variant="subtitle1" className={classes.copy}>
         You can assign contact groups to monitors so we know who to talk to in
         the event of a support issue. Create contacts and assign them to a
         group, then assign the group to the appropriate monitor(s).
       </Typography>
-      <OrderBy data={groups}>
+      <OrderBy data={groups} orderBy="groupName" order="asc">
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           return (
             <Paginate data={orderedData} scrollToRef={groupsTableRef}>
@@ -148,102 +162,119 @@ const Contacts: React.FC<Props> = props => {
           );
         }}
       </OrderBy>
-      <OrderBy data={contacts}>
-        {({ data: orderedData, handleOrderChange, order, orderBy }) => {
-          return (
-            <Paginate data={orderedData} scrollToRef={contactsTableRef}>
-              {({
-                count,
-                data: paginatedData,
-                handlePageChange,
-                handlePageSizeChange,
-                page,
-                pageSize
-              }) => {
-                return (
-                  <div className={classes.contactsTable}>
-                    <RootRef rootRef={contactsTableRef}>
-                      <Typography variant="h2">Contacts</Typography>
-                    </RootRef>
-                    <Paper className={classes.root}>
-                      <Table aria-label="List of Your Managed Contacts">
-                        <TableHead>
-                          <TableRow>
-                            <TableSortCell
-                              active={orderBy === 'name'}
-                              label={'name'}
-                              direction={order}
-                              handleClick={handleOrderChange}
-                              className={classes.name}
-                            >
-                              Name
-                            </TableSortCell>
-                            <TableSortCell
-                              active={orderBy === 'group'}
-                              label={'group'}
-                              direction={order}
-                              handleClick={handleOrderChange}
-                            >
-                              Group
-                            </TableSortCell>
-                            <TableSortCell
-                              active={orderBy === 'email'}
-                              label={'email'}
-                              direction={order}
-                              handleClick={handleOrderChange}
-                            >
-                              E-mail
-                            </TableSortCell>
-                            <TableSortCell
-                              active={orderBy === 'phone:primary'}
-                              label={'phone:primary'}
-                              direction={order}
-                              handleClick={handleOrderChange}
-                            >
-                              Primary Phone
-                            </TableSortCell>
-                            <TableSortCell
-                              active={orderBy === 'phone:secondary'}
-                              label={'phone:secondary'}
-                              direction={order}
-                              handleClick={handleOrderChange}
-                            >
-                              Secondary Phone
-                            </TableSortCell>
-                            {/* Empty TableCell for action menu */}
-                            <TableCell />
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          <ContactTableContact
-                            contacts={paginatedData}
-                            loading={loading}
-                            lastUpdated={lastUpdated}
-                            updateOne={updateOne}
-                            openDrawer={(contactId: number) => {
-                              setSelectedContactId(contactId);
-                              contactDrawer.open();
-                            }}
-                            error={error}
-                          />
-                        </TableBody>
-                      </Table>
-                    </Paper>
-                    <PaginationFooter
-                      count={count}
-                      handlePageChange={handlePageChange}
-                      handleSizeChange={handlePageSizeChange}
-                      page={page}
-                      pageSize={pageSize}
-                      eventCategory="managed contacts"
-                    />
-                  </div>
-                );
+      <div className={classes.contactsTable}>
+        <RootRef rootRef={contactsTableRef}>
+          <Box
+            display="flex"
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography variant="h2">Contacts</Typography>
+            <AddNewLink
+              onClick={() => {
+                setContactDrawerMode('create');
+                contactDrawer.open();
               }}
-            </Paginate>
-          );
-        }}
-      </OrderBy>
+              label="Add a Contact"
+            />
+          </Box>
+        </RootRef>
+        <OrderBy data={contacts} orderBy="name" order="asc">
+          {({ data: orderedData, handleOrderChange, order, orderBy }) => {
+            return (
+              <Paginate data={orderedData} scrollToRef={contactsTableRef}>
+                {({
+                  count,
+                  data: paginatedData,
+                  handlePageChange,
+                  handlePageSizeChange,
+                  page,
+                  pageSize
+                }) => {
+                  return (
+                    <>
+                      <Paper className={classes.root}>
+                        <Table aria-label="List of Your Managed Contacts">
+                          <TableHead>
+                            <TableRow>
+                              <TableSortCell
+                                active={orderBy === 'name'}
+                                label={'name'}
+                                direction={order}
+                                handleClick={handleOrderChange}
+                                className={classes.name}
+                              >
+                                Name
+                              </TableSortCell>
+                              <TableSortCell
+                                active={orderBy === 'group'}
+                                label={'group'}
+                                direction={order}
+                                handleClick={handleOrderChange}
+                              >
+                                Group
+                              </TableSortCell>
+                              <TableSortCell
+                                active={orderBy === 'email'}
+                                label={'email'}
+                                direction={order}
+                                handleClick={handleOrderChange}
+                              >
+                                E-mail
+                              </TableSortCell>
+                              <TableSortCell
+                                active={orderBy === 'phone:primary'}
+                                label={'phone:primary'}
+                                direction={order}
+                                handleClick={handleOrderChange}
+                              >
+                                Primary Phone
+                              </TableSortCell>
+                              <TableSortCell
+                                active={orderBy === 'phone:secondary'}
+                                label={'phone:secondary'}
+                                direction={order}
+                                handleClick={handleOrderChange}
+                              >
+                                Secondary Phone
+                              </TableSortCell>
+                              {/* Empty TableCell for action menu */}
+                              <TableCell />
+                            </TableRow>
+                          </TableHead>
+                          <TableBody>
+                            <ContactTableContact
+                              contacts={paginatedData}
+                              loading={loading}
+                              lastUpdated={lastUpdated}
+                              updateOrAdd={updateOrAdd}
+                              openDrawer={(contactId: number) => {
+                                setSelectedContactId(contactId);
+                                setContactDrawerMode('edit');
+                                contactDrawer.open();
+                              }}
+                              error={error}
+                            />
+                          </TableBody>
+                        </Table>
+                      </Paper>
+                      <PaginationFooter
+                        count={count}
+                        handlePageChange={handlePageChange}
+                        handleSizeChange={handlePageSizeChange}
+                        page={page}
+                        pageSize={pageSize}
+                        eventCategory="managed contacts"
+                      />
+                    </>
+                  );
+                }}
+              </Paginate>
+            );
+          }}
+        </OrderBy>
+      </div>
       <GroupDrawer
         isOpen={groupDrawer.isOpen}
         closeDrawer={groupDrawer.close}
@@ -251,9 +282,12 @@ const Contacts: React.FC<Props> = props => {
         contacts={contacts}
       />
       <ContactDrawer
+        mode={contactDrawerMode}
         isOpen={contactDrawer.isOpen}
         closeDrawer={contactDrawer.close}
+        updateOrAdd={updateOrAdd}
         contact={contacts.find(contact => contact.id === selectedContactId)}
+        groups={groups}
       />
     </>
   );
