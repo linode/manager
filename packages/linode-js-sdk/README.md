@@ -67,7 +67,7 @@ getAccount()
 
 ## Contributing
 
-~~~~~ FOR INTERNAL CONTRIBUTORS. REVISE THIS LATER ~~~~~~
+//////// FOR INTERNAL CONTRIBUTORS. REVISE THIS LATER /////////
 
 Migrating service functions over from Cloud Manager to the JavaScript SDK is relatively straightforward, and involves a few steps.
 

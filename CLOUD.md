@@ -4,7 +4,7 @@
 
 Please refer to the [`.env.example` file](./packages/manager/.env.example) in this directory. This will get you started in creating your own `.env` file so you can run the Manager.
 
-:rotating_light: Your `.env` file should be located in the `packages/manager` directory before your local development server is started. :rotating_light:
+:rotating_light: Your `.env` file should be located in the `packages/manager` directory before your local development server is started.
 
 Here are a list of all the required and optional environment variables the Manager uses:
 
