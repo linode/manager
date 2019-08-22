@@ -4,7 +4,7 @@
 
 Please refer to the [`.env.example` file](./packages/manager/.env.example) in this directory. This will get you started in creating your own `.env` file so you can run the Manager.
 
-Your `.env` file should be located in the `packages/manager` directory before your local development server is started.
+:rotating_light: Your `.env` file should be located in the `packages/manager` directory before your local development server is started. :rotating_light:
 
 Here are a list of all the required and optional environment variables the Manager uses:
 
@@ -58,7 +58,7 @@ These are environment variables that can be used for automated testing processes
 
 Once you have a working `.env` file, you can run the following in the root of the project:
 
-`yarn && npx lerna bootstrap --scope linode-manager && npx lerna run start --stream --scope linode-manager`
+`yarn up` or `yarn up:manager`
 
 alternatively, with Docker
 

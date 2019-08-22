@@ -20,7 +20,13 @@ To get started running Linode UI projects locally, please [see the _Getting Star
 
 If you already have your development environment set up, please read the [contributing guidelines](CONTRIBUTING.md) to get help in making your first PR.
 
-Additionally, you can read our [code conventions](./CODE_CONVENTIONS.md) and [Cloud Manager testing conventions](./TESTING.md) docs for instructions on how write code inline with what we expect.
+### I want to contribute to Cloud Manager :heart_eyes:
+
+Along with the contributing guidelines, you can read our [code conventions](./CODE_CONVENTIONS.md) and [Cloud Manager testing conventions](./TESTING.md) docs for instructions on how write code inline with what we expect.
+
+### I want to contribute to the JavaScript SDK :sunglasses:
+
+Amazing! Please check out the documentation in the [SDK directory](./packages/linode-js-sd/README.md)
 
 ## Reaching Out
 

@@ -1,6 +1,18 @@
 {
   "name": "linode-js-sdk",
   "version": "0.2.0",
+  "homepage": "https://github.com/linode/manager/tree/develop/packages/linode-js-sdk",
+  "bugs": {
+    "url": "https://github.com/linode/manager/issues",
+    "email": "feedback@linode.com"
+  },
+  "repository": {
+    "type": "git",
+    "directory": "https://github.com/linode/manager/tree/develop/packages/linode-js-sdk"
+  },
+  "engines": {
+    "node": ">= 10.16.0"
+  },
   "description": "JavaScript wrapper around the Linode APIv4",
   "author": "Linode",
   "license": "MIT",
@@ -27,7 +39,8 @@
     "index.js",
     "index.d.ts",
     "lib/*",
-    "package.json"
+    "package.json",
+    "README.md"
   ],
   "devDependencies": {
     "@babel/cli": "^7.5.5",
