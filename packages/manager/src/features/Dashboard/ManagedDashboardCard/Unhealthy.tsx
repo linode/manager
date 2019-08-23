@@ -21,7 +21,6 @@ export const Unhealthy: React.FC<Props> = props => {
         alignItems="center"
         className={classes.root}
         spacing={0}
-        xs={12}
       >
         <Grid item>
           <Grid item xs={12} className={classes.icon}>
