@@ -29,6 +29,7 @@ import BlogDashboardCard from './BlogDashboardCard';
 import DomainsDashboardCard from './DomainsDashboardCard';
 import ImportGroupsCard from './GroupImportCard';
 import LinodesDashboardCard from './LinodesDashboardCard';
+import ManagedDashboardCard from './ManagedDashboardCard';
 import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
 import PromotionsBanner from './PromotionsBanner';
 import TransferDashboardCard from './TransferDashboardCard';
@@ -103,6 +104,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
         </Grid>
         <Grid item xs={12} md={7}>
           {flags.promos && <PromotionsBanner nearestExpiry={nearestExpiry} />}
+          <ManagedDashboardCard />
           <LinodesDashboardCard />
           <VolumesDashboardCard />
           <NodeBalancersDashboardCard />
