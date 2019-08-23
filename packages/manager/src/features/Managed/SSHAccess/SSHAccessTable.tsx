@@ -1,3 +1,4 @@
+import produce from 'immer';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -14,6 +15,7 @@ import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import useOpenClose from 'src/hooks/useOpenClose';
 import { getLinodeSettings } from 'src/services/managed';
 import { getAll } from 'src/utilities/getAll';
+import { DEFAULTS } from './common';
 import EditSSHAccessDrawer from './EditSSHAccessDrawer';
 import SSHAccessTableContent from './SSHAccessTableContent';
 
@@ -60,9 +62,24 @@ const SSHAccessTable: React.FC<{}> = () => {
 
   const drawer = useOpenClose();
 
+  // For all intents and purposes, the default `user` is "root", and the default `port` is 22.
+  // Surprisingly, these are returned as `null` from the API. We want to display the defaults
+  // to the user, though, so we normalize the data here by exchanging `null` for the defaults.
+  const normalizedData: Linode.ManagedLinodeSetting[] = produce(data, draft => {
+    data.forEach((linodeSetting, idx) => {
+      if (linodeSetting.ssh.user === null) {
+        draft[idx].ssh.user = DEFAULTS.user;
+      }
+
+      if (linodeSetting.ssh.port === null) {
+        draft[idx].ssh.port = DEFAULTS.port;
+      }
+    });
+  });
+
   return (
     <>
-      <OrderBy data={data}>
+      <OrderBy data={data} orderBy="label" order="asc">
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           return (
             <Paginate data={orderedData}>
@@ -165,7 +182,7 @@ const SSHAccessTable: React.FC<{}> = () => {
       <EditSSHAccessDrawer
         isOpen={drawer.isOpen}
         closeDrawer={drawer.close}
-        linodeSetting={data.find(l => l.id === selectedLinodeId)}
+        linodeSetting={normalizedData.find(l => l.id === selectedLinodeId)}
         updateOne={updateOne}
       />
     </>

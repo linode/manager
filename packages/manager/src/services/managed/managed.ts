@@ -6,8 +6,8 @@ import Request, {
   setURL,
   setXFilter
 } from '../index';
-
 import {
+  createContactSchema,
   createCredentialSchema,
   createServiceMonitorSchema,
   updateCredentialSchema,
@@ -44,6 +44,13 @@ export interface UpdateCredentialPayload {
 export interface UpdatePasswordPayload {
   password?: string;
   username?: string;
+}
+
+export interface ContactPayload {
+  name: string;
+  email: string;
+  phone?: Linode.ManagedContactPhone;
+  group?: string;
 }
 
 /**
@@ -211,4 +218,39 @@ export const getManagedContacts = (params?: any, filters?: any) =>
     setParams(params),
     setXFilter(filters),
     setURL(`${API_ROOT}/managed/contacts`)
+  ).then(response => response.data);
+
+/**
+ * createContact
+ *
+ * Creates a Managed Contact
+ */
+export const createContact = (data: ContactPayload) =>
+  Request<Linode.ManagedContact>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/managed/contacts`),
+    setData(data, createContactSchema)
+  ).then(response => response.data);
+
+/**
+ * updateContact
+ *
+ * Updates a Managed Contact
+ */
+export const updateContact = (contactId: number, data: ContactPayload) =>
+  Request<Linode.ManagedContact>(
+    setMethod('PUT'),
+    setURL(`${API_ROOT}/managed/contacts/${contactId}`),
+    setData(data, createContactSchema)
+  ).then(response => response.data);
+
+/**
+ * deleteContact
+ *
+ * Deletes a Managed Contact
+ */
+export const deleteContact = (contactId: number) =>
+  Request<{}>(
+    setMethod('DELETE'),
+    setURL(`${API_ROOT}/managed/contacts/${contactId}`)
   ).then(response => response.data);

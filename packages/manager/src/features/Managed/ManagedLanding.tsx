@@ -196,6 +196,7 @@ export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
                   error={contacts.error}
                   lastUpdated={contacts.lastUpdated}
                   transformData={contacts.transformData}
+                  update={contacts.update}
                 />
               )}
             />

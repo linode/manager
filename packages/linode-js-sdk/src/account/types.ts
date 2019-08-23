@@ -36,3 +36,9 @@ export interface Account {
   // @todo: Uncomment this when it becomes generally available
   // capabilities: AccountCapability[];
 }
+
+export interface NetworkUtilization {
+  billable: number;
+  used: number;
+  quota: number;
+}

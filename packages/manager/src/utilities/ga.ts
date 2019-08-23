@@ -243,3 +243,13 @@ export const sendRevokeAccessKeyEvent = () => {
     action: 'Revoke Access Key'
   });
 };
+
+/**
+ * meant to be sent to GA upon navigating to `/linodes/${linodeID}/migrate`
+ */
+export const sendMigrationNavigationEvent = (pathNavigatedFrom: string) => {
+  sendEvent({
+    category: 'Migration Navigation',
+    action: `From ${pathNavigatedFrom}`
+  });
+};

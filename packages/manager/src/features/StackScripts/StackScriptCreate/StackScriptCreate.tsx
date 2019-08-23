@@ -153,6 +153,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     if (!this.mounted) {
       return;
     }
+
     this.setState({ isSubmitting: true });
 
     createStackScript(payload)
@@ -173,10 +174,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         this.setState(
           () => ({
             isSubmitting: false,
-            errors:
-              error.response &&
-              error.response.data &&
-              error.response.data.errors
+            errors: error
           }),
           () => {
             scrollErrorIntoView();

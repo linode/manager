@@ -1,4 +1,4 @@
-import { ExtendedRegion } from 'src/components/SelectRegionPanel';
+import { ExtendedRegion } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { Tag } from 'src/components/TagsInput';
 import { State as userSSHKeysProps } from 'src/features/linodes/userSSHKeyHoc';
 import { CreateLinodeRequest } from 'src/services/linodes';

@@ -46,13 +46,13 @@ export class TicketList extends React.Component<CombinedProps, {}> {
     const { data: tickets, error, loading } = this.props;
 
     if (loading) {
-      return <TableRowLoading colSpan={12} />;
+      return <TableRowLoading colSpan={8} />;
     }
 
     if (error) {
       return (
         <TableRowError
-          colSpan={6}
+          colSpan={8}
           message="We were unable to load your support tickets."
         />
       );
@@ -61,7 +61,7 @@ export class TicketList extends React.Component<CombinedProps, {}> {
     return tickets && tickets.length > 0 ? (
       this.renderTickets(tickets)
     ) : (
-      <TableRowEmptyState colSpan={6} />
+      <TableRowEmptyState colSpan={8} />
     );
   };
 

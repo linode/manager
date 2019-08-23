@@ -5,12 +5,13 @@ import ActionMenu from './ContactsActionMenu';
 
 interface Props {
   contact: Linode.ManagedContact;
-  updateOne: (contact: Linode.ManagedContact) => void;
+  updateOrAdd: (contact: Linode.ManagedContact) => void;
   openDrawer: (linodeId: number) => void;
+  openDialog: (contactId: number) => void;
 }
 
 export const ContactsRow: React.FunctionComponent<Props> = props => {
-  const { contact, updateOne, openDrawer } = props;
+  const { contact, updateOrAdd, openDrawer, openDialog } = props;
 
   return (
     <TableRow key={contact.id}>
@@ -26,8 +27,9 @@ export const ContactsRow: React.FunctionComponent<Props> = props => {
       <TableCell>
         <ActionMenu
           contactId={contact.id}
-          updateOne={updateOne}
+          updateOrAdd={updateOrAdd}
           openDrawer={openDrawer}
+          openDialog={openDialog}
         />
       </TableCell>
     </TableRow>

@@ -16,7 +16,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-class DestructiveMonitorDialog extends React.PureComponent<CombinedProps, {}> {
+class DeletionDialog extends React.PureComponent<CombinedProps, {}> {
   renderActions = () => {
     const { onClose, onDelete, loading } = this.props;
     return (
@@ -54,4 +54,4 @@ class DestructiveMonitorDialog extends React.PureComponent<CombinedProps, {}> {
   }
 }
 
-export default DestructiveMonitorDialog;
+export default DeletionDialog;
