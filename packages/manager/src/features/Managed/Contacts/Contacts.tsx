@@ -97,8 +97,6 @@ const Contacts: React.FC<CombinedProps> = props => {
     'create'
   );
 
-  const [groupDrawerMode, setGroupDrawerMode] = React.useState<Mode>('create');
-
   const {
     dialog,
     openDialog,
@@ -150,7 +148,7 @@ const Contacts: React.FC<CombinedProps> = props => {
             <Typography variant="h2">Groups</Typography>
             <AddNewLink
               onClick={() => {
-                setGroupDrawerMode('create');
+                setSelectedGroupName(null);
                 groupDrawer.open();
               }}
               label="Add a Group"
@@ -350,12 +348,11 @@ const Contacts: React.FC<CombinedProps> = props => {
         />
       </div>
       <GroupDrawer
-        mode={groupDrawerMode}
         isOpen={groupDrawer.isOpen}
         closeDrawer={groupDrawer.close}
-        groups={groups}
         contacts={contacts}
         update={update}
+        selectedGroupName={selectedGroupName || ''}
       />
       <ContactDrawer
         mode={contactDrawerMode}
