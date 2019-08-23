@@ -1,18 +1,17 @@
 import { Formik } from 'formik';
 import * as React from 'react';
-import { string } from 'yup';
 
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import {
-  createCredentialSchema,
-  CredentialPayload
-} from 'src/services/managed';
+import { CredentialPayload } from 'src/services/managed';
+
+import { creationSchema, updateSchema } from './credential.schema';
 
 export interface Props {
+  credential?: Linode.ManagedCredential;
   mode: 'create' | 'edit';
   open: boolean;
   onClose: () => void;
@@ -31,27 +30,18 @@ const titleMap = {
   [modes.EDITING]: 'Edit a Credential'
 };
 
-/**
- * The API does not require a password, but we would like
- * to require it in our UI. This extends the validation
- * schema declared in services/managed.
- */
-const clientCredentialSchema = createCredentialSchema.shape({
-  password: string().required('Password is required.')
-});
-
 const CredentialDrawer: React.FC<CombinedProps> = props => {
-  const { mode, open, onClose, onSubmit } = props;
+  const { credential, mode, open, onClose, onSubmit } = props;
 
   return (
     <Drawer title={titleMap[mode]} open={open} onClose={onClose}>
       <Formik
         initialValues={{
-          label: '',
+          label: credential ? credential.label : '',
           password: '',
           username: ''
         }}
-        validationSchema={clientCredentialSchema}
+        validationSchema={mode === 'create' ? creationSchema : updateSchema}
         validateOnChange={false}
         validateOnBlur={false}
         onSubmit={onSubmit}
