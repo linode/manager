@@ -9,13 +9,14 @@ interface Props {
   credentials: Linode.ManagedCredential[];
   loading: boolean;
   openDialog: (id: number, label: string) => void;
+  openForEdit: (id: number) => void;
   error?: Linode.ApiFieldError[];
 }
 
 export type CombinedProps = Props;
 
 export const CredentialTableContent: React.FC<CombinedProps> = props => {
-  const { error, loading, credentials, openDialog } = props;
+  const { error, loading, credentials, openDialog, openForEdit } = props;
   if (loading) {
     return <TableRowLoading colSpan={12} />;
   }
@@ -40,6 +41,7 @@ export const CredentialTableContent: React.FC<CombinedProps> = props => {
           key={`managed-credential-row-${idx}`}
           credential={credential}
           openDialog={openDialog}
+          openForEdit={openForEdit}
         />
       ))}
     </>

@@ -29,12 +29,13 @@ const useStyles = makeStyles((theme: Theme) =>
 interface Props {
   credential: Linode.ManagedCredential;
   openDialog: (id: number, label: string) => void;
+  openForEdit: (id: number) => void;
 }
 
 type CombinedProps = Props;
 
 export const CredentialRow: React.FunctionComponent<CombinedProps> = props => {
-  const { credential, openDialog } = props;
+  const { credential, openDialog, openForEdit } = props;
   const classes = useStyles();
 
   return (
@@ -60,6 +61,7 @@ export const CredentialRow: React.FunctionComponent<CombinedProps> = props => {
         <ActionMenu
           credentialID={credential.id}
           openDialog={openDialog}
+          openForEdit={openForEdit}
           label={credential.label}
         />
       </TableCell>
