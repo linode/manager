@@ -79,7 +79,7 @@ const SSHAccessTable: React.FC<{}> = () => {
 
   return (
     <>
-      <OrderBy data={data} orderBy="label" order="asc">
+      <OrderBy data={normalizedData} orderBy="label" order="asc">
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           return (
             <Paginate data={orderedData}>
