@@ -89,8 +89,8 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
         VolumeDetail.selectRegion('us-east');
         browser.pause(500);
         expect(getLinodeOptions()).toEqual([linodeEast.linodeLabel]);
+        browser.debug();
         VolumeDetail.selectRegion('us-central');
-        browser.pause(500);
         expect(getLinodeOptions()).toEqual([linodeCentral.linodeLabel]);
     });
 

@@ -16,7 +16,7 @@ import { Metrics } from 'src/utilities/statMetrics';
 type ClassNames =
   | 'root'
   | 'legend'
-  | 'red'
+  | 'purple'
   | 'yellow'
   | 'blue'
   | 'green'
@@ -26,6 +26,7 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
+      maxWidth: 600,
       '& *': {
         height: 'auto',
         border: 'none',
@@ -34,33 +35,63 @@ const styles = (theme: Theme) =>
       '& td:first-child': {
         backgroundColor: 'transparent !important'
       },
+      '& .data': {
+        minWidth: 100
+      },
+      [theme.breakpoints.down('lg')]: {
+        '& th, & td': {
+          padding: '4px !important'
+        }
+      },
       [theme.breakpoints.down('sm')]: {
+        maxWidth: '100%',
         '& td': {
-          justifyContent: 'normal'
+          justifyContent: 'normal',
+          minHeight: 'auto'
+        }
+      },
+      [theme.breakpoints.only('xs')]: {
+        '& tr:not(:first-child) td': {
+          '&:first-child': {
+            marginTop: theme.spacing(2)
+          }
+        }
+      },
+      [theme.breakpoints.only('sm')]: {
+        '& tr:not(:nth-last-child(n+3)) td:first-child': {
+          marginTop: theme.spacing(2)
+        },
+        '& tbody': {
+          display: 'flex',
+          flexWrap: 'wrap',
+          justifyContent: 'space-between'
+        },
+        '& tr': {
+          flexBasis: '45%'
         }
       }
     },
     tableHeadInner: {
       paddingBottom: 4
     },
-    red: {
+    purple: {
       '&:before': {
-        backgroundColor: theme.color.red
+        backgroundColor: theme.color.graphPurple
       }
     },
     yellow: {
       '&:before': {
-        backgroundColor: theme.color.yellow
+        backgroundColor: theme.color.graphYellow
       }
     },
     blue: {
       '&:before': {
-        backgroundColor: theme.palette.primary.main
+        backgroundColor: theme.color.graphBlue
       }
     },
     green: {
       '&:before': {
-        backgroundColor: theme.color.green
+        backgroundColor: theme.color.graphGreen
       }
     },
     legend: {
@@ -89,7 +120,7 @@ interface MetricsDisplayProps {
 }
 
 interface MetricsDisplayRow {
-  legendColor: 'yellow' | 'red' | 'blue' | 'green';
+  legendColor: 'yellow' | 'purple' | 'blue' | 'green';
   legendTitle: string;
   format: (n: number) => string;
   data: Metrics;

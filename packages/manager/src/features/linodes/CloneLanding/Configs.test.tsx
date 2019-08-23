@@ -1,5 +1,5 @@
+import { cleanup, fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
-import { cleanup, fireEvent, render } from 'react-testing-library';
 import { linodeConfigs } from 'src/__data__/linodeConfigs';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { Configs, Props } from './Configs';

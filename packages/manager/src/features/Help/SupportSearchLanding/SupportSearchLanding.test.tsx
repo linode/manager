@@ -4,7 +4,7 @@ import * as React from 'react';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import Typography from 'src/components/core/Typography';
-import { SupportSearchLanding } from './SupportSearchLanding';
+import { CombinedProps, SupportSearchLanding } from './SupportSearchLanding';
 
 const classes = {
   root: '',
@@ -16,10 +16,10 @@ const classes = {
   searchIcon: ''
 };
 
-const props = {
+const props: CombinedProps = {
   classes,
   searchAlgolia: jest.fn(),
-  searchResults: [],
+  searchResults: [[], []],
   searchEnabled: true,
   ...reactRouterProps
 };

@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
@@ -10,7 +11,7 @@ import TextField from 'src/components/TextField';
 
 import { cancelAccount } from 'src/services/account';
 
-interface Props {
+interface Props extends Pick<RouteComponentProps, 'history'> {
   open: boolean;
   closeDialog: () => void;
   username: string;
@@ -83,7 +84,7 @@ const CancelAccountDialog: React.FC<CombinedProps> = props => {
       .then(response => {
         setCancelling(false);
         /** shoot the user off to survey monkey to answer some questions */
-        window.location.assign(response.survey_link);
+        props.history.push(`/cancel?link=${response.survey_link}`);
       })
       .catch((e: Linode.ApiFieldError[]) => {
         setCancelling(false);
@@ -148,7 +149,7 @@ interface ActionsProps {
 const Actions: React.FC<ActionsProps> = props => {
   return (
     <ActionsPanel>
-      <Button onClick={props.onClose} buttonType="secondary">
+      <Button onClick={props.onClose} buttonType="cancel">
         Cancel
       </Button>
       <Button

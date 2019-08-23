@@ -1,4 +1,3 @@
-import { pathOr } from 'ramda';
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
 import { EntityError, RequestableData } from '../types';
@@ -24,8 +23,6 @@ const reducer: Reducer<State> = (
   action: Action<Linode.Profile>
 ) => {
   if (isType(action, getProfileActions.started)) {
-    const {} = action.payload;
-
     /** only set loading if we don't have any data */
     const loading = state.data ? false : true;
 
@@ -59,7 +56,6 @@ const reducer: Reducer<State> = (
     return {
       ...state,
       loading: true
-      // error: undefined
     };
   }
 
@@ -70,11 +66,6 @@ const reducer: Reducer<State> = (
       lastUpdated: Date.now(),
       error: undefined,
       data: {
-        /**
-         * update what changed
-         * but ensure our _preferences_ key exists
-         */
-        preferences: pathOr({}, ['preferences'], state.data),
         /**
          * we can assume state.data is defined because
          * you can't update data without getting it first
@@ -89,7 +80,6 @@ const reducer: Reducer<State> = (
     return {
       ...state,
       loading: false,
-      data: undefined,
       lastUpdated: Date.now(),
       error: {
         update: action.payload.error

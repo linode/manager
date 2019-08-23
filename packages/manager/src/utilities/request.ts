@@ -1,4 +1,4 @@
-import Axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from 'axios';
+import Axios, { AxiosError, AxiosResponse } from 'axios';
 import { pathOr } from 'ramda';
 
 import { ACCESS_TOKEN, DEFAULT_ERROR_MESSAGE } from 'src/constants';
@@ -7,7 +7,9 @@ import { interceptGPUErrors } from 'src/utilities/interceptGPUError';
 import store from 'src/store';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
 
-const handleSuccess = (response: AxiosResponse) => {
+const handleSuccess: <T extends AxiosResponse<any>>(
+  response: T
+) => T | T = response => {
   if (!!response.headers['x-maintenance-mode']) {
     store.dispatch(handleLogout());
     Promise.reject(response);
@@ -29,9 +31,14 @@ export const handleError = (error: AxiosError) => {
   }
 
   if (error.response && error.response.status === 403) {
+    const action =
+      !error.config.method ||
+      (error.config.method && error.config.method.match(/get/i))
+        ? 'view this feature'
+        : 'take this action';
     return Promise.reject([
       {
-        reason: 'You are not authorized to view this feature.'
+        reason: `You are not authorized to ${action}.`
       }
     ]);
   }
@@ -65,22 +72,19 @@ export const handleError = (error: AxiosError) => {
   return Promise.reject(interceptedErrors);
 };
 
-Axios.interceptors.request.use(
-  (config: AxiosRequestConfig): AxiosRequestConfig => {
-    const state = store.getState();
-    /** Will end up being "Admin: 1234" or "Bearer 1234" */
-    const token =
-      ACCESS_TOKEN || pathOr('', ['authentication', 'token'], state);
+Axios.interceptors.request.use(config => {
+  const state = store.getState();
+  /** Will end up being "Admin: 1234" or "Bearer 1234" */
+  const token = ACCESS_TOKEN || pathOr('', ['authentication', 'token'], state);
 
-    return {
-      ...config,
-      headers: {
-        ...config.headers,
-        ...(token && { Authorization: `${token}` })
-      }
-    };
-  }
-);
+  return {
+    ...config,
+    headers: {
+      ...config.headers,
+      ...(token && { Authorization: `${token}` })
+    }
+  };
+});
 
 /*
 Interceptor that initiates re-authentication if:

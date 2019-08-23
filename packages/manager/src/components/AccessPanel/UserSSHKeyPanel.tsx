@@ -29,6 +29,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import { truncateAndJoinList } from 'src/utilities/stringUtils';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -70,18 +71,6 @@ interface Props {
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
-
-export const getSSHKeyString = (keys: string[]) => {
-  /**
-   * Rather than display an insanely long list of keys,
-   * display the first 100 and if necessary "...and X more"
-   */
-  const count = keys.length;
-  return count > MAX_SSH_KEYS_DISPLAY
-    ? keys.slice(0, MAX_SSH_KEYS_DISPLAY).join(', ') +
-        `...and ${count - MAX_SSH_KEYS_DISPLAY} more`
-    : keys.join(', ');
-};
 
 const UserSSHKeyPanel: React.FunctionComponent<CombinedProps> = props => {
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
@@ -158,7 +147,9 @@ const UserSSHKeyPanel: React.FunctionComponent<CombinedProps> = props => {
                       {username}
                     </div>
                   </TableCell>
-                  <TableCell>{getSSHKeyString(keys)}</TableCell>
+                  <TableCell>
+                    {truncateAndJoinList(keys, MAX_SSH_KEYS_DISPLAY)}
+                  </TableCell>
                 </TableRow>
               )
             )

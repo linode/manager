@@ -21,8 +21,7 @@ type CSSClasses =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      margin: 8,
-      marginRight: -8
+      margin: 8
     },
     button: {
       borderWidth: 1,

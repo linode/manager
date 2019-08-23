@@ -58,7 +58,7 @@ const styles = (theme: Theme) =>
       }
     },
     tiny: {
-      width: '3em'
+      width: '3.6em'
     }
   });
 
@@ -70,6 +70,7 @@ interface BaseProps {
   className?: any;
   expand?: boolean;
   small?: boolean;
+  // Currently only used for LKE node pool inputs
   tiny?: boolean;
   /**
    * number amounts allowed in textfield
@@ -186,11 +187,13 @@ class LinodeTextField extends React.Component<CombinedProps> {
       expand,
       small,
       tiny,
+      inputProps,
       InputProps,
       InputLabelProps,
       SelectProps,
       value,
       dataAttrs,
+      label,
       ...textFieldProps
     } = this.props;
 
@@ -214,6 +217,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
         <TextField
           {...textFieldProps}
           {...dataAttrs}
+          label={!!this.props.required ? `${label} (required)` : label}
           fullWidth
           /*
             let us explicitly pass an empty string to the input
@@ -224,10 +228,12 @@ class LinodeTextField extends React.Component<CombinedProps> {
           onChange={this.handleChange}
           InputLabelProps={{
             ...InputLabelProps,
+            required: false,
             shrink: true
           }}
           inputProps={{
-            'data-testid': 'textfield-input'
+            'data-testid': 'textfield-input',
+            ...inputProps
           }}
           InputProps={{
             disableUnderline: true,

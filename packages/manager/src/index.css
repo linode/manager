@@ -108,6 +108,17 @@ body.searchOverlay #main-content {
   height: 100%;
 }
 
+#main-content {
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+@media (min-width: 1600px) {
+  #main-content {
+    padding-top: 40px;
+  }
+}
+
 .visually-hidden {
   /* https://snook.ca/archives/html_and_css/hiding-content-for-accessibility */
   position: absolute !important;

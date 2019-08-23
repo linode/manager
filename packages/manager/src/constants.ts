@@ -26,9 +26,7 @@ export const ALGOLIA_APPLICATION_ID =
 export const ALGOLIA_SEARCH_KEY =
   process.env.REACT_APP_ALGOLIA_SEARCH_KEY || '';
 export const LAUNCH_DARKLY_API_KEY =
-  (isProduction
-    ? process.env.REACT_APP_LAUNCH_DARKLY_ID_PRODUCTION
-    : process.env.REACT_APP_LAUNCH_DARKLY_ID_DEV) || '';
+  process.env.REACT_APP_LAUNCH_DARKLY_ID || '';
 
 /** optional variables */
 export const SENTRY_URL = process.env.REACT_APP_SENTRY_URL;
@@ -106,6 +104,29 @@ export const dcDisplayNames = {
   'ca-central': 'Toronto, ON',
   'ca-east': 'Toronto, ON', // @todo Fallback for old Toronto ID; remove once DB has been updated.
   'ap-west': 'Mumbai, IN'
+};
+
+// @todo no longer in use; remove if current design is approved.
+export const extendedDCDisplayNames = {
+  'us-east-1a': 'US East: Newark, NJ',
+  'us-south-1a': 'US Central: Dallas, TX',
+  'us-west-1a': 'US West: Fremont, CA',
+  'us-southeast-1a': 'US South: Atlanta, GA',
+  'eu-central-1a': 'EU East: Frankfurt, DE',
+  'eu-west-1a': 'EU West: London, UK',
+  'ap-northeast-1a': 'Asia-Pacific Northeast: Tokyo, JP',
+  'ap-northeast-1b': 'Asia-Pacific Northeast: Tokyo, JP',
+  'us-central': 'US Central: Dallas, TX',
+  'us-west': 'US West: Fremont, CA',
+  'us-southeast': 'US South: Atlanta, GA',
+  'us-east': 'US East: Newark, NJ',
+  'eu-west': 'EU West: London, UK',
+  'ap-south': 'Asia-Pacific South: Singapore, SG',
+  'eu-central': 'EU East: Frankfurt, DE',
+  'ap-northeast': 'Asia-Pacific Northeast: Tokyo 2, JP',
+  'ca-central': 'Canada: Toronto, ON',
+  'ca-east': 'Canada: Toronto, ON',
+  'ap-west': 'Asia-Pacific West: Mumbai, IN'
 };
 
 export const dcDisplayCountry = {

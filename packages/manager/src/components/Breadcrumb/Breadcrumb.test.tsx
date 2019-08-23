@@ -1,25 +1,10 @@
+import { cleanup, render } from '@testing-library/react';
 import * as React from 'react';
-import { cleanup, render } from 'react-testing-library';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { Breadcrumb, CombinedProps as BreadCrumbProps } from './Breadcrumb';
 
 const props: BreadCrumbProps = {
-  classes: {
-    root: '',
-    preContainer: '',
-    crumbsWrapper: '',
-    crumb: '',
-    noCap: '',
-    crumbLink: '',
-    labelWrapper: '',
-    labelText: '',
-    labelSubtitle: '',
-    editableContainer: '',
-    prefixComponentWrapper: '',
-    slash: '',
-    firstSlash: ''
-  },
   pathname: '/linodes/9872893679817/test/lastcrumb'
 };
 

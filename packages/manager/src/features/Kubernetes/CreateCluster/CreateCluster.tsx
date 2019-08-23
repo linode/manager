@@ -229,6 +229,12 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       errors
     );
 
+    const _region = regionsData
+      ? regionsData.find(thisRegion => thisRegion.id === selectedRegion)
+      : undefined;
+
+    const regionDisplay = _region ? _region.display : undefined;
+
     if (typesError || regionsError) {
       /**
        * This information is necessary to create a Cluster.
@@ -249,6 +255,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
             {errorMap.none && <Notice text={errorMap.none} error />}
             <SelectRegionPanel
               error={errorMap.region}
+              copy={'Determine the best location for your cluster.'}
               regions={regionsData || []}
               selectedID={selectedRegion}
               handleSelection={(regionID: string) =>
@@ -330,7 +337,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
           <Grid item className={`${classes.sidebar} mlSidebar`}>
             <KubeCheckoutBar
               label={label || ''}
-              region={selectedRegion}
+              region={regionDisplay}
               pools={nodePools}
               createCluster={this.createCluster}
               submitting={submitting}

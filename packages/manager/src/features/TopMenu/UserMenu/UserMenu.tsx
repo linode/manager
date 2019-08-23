@@ -94,7 +94,7 @@ const styles = (theme: Theme) =>
     }
   });
 
-type CombinedProps = StateProps & WithStyles<CSSClasses>;
+export type CombinedProps = StateProps & WithStyles<CSSClasses>;
 
 interface State {
   anchorEl?: HTMLElement;

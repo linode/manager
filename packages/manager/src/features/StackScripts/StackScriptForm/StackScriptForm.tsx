@@ -2,9 +2,7 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
-import FormControl from 'src/components/core/FormControl';
 import InputAdornment from 'src/components/core/InputAdornment';
-import InputLabel from 'src/components/core/InputLabel';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -197,29 +195,20 @@ export class StackScriptForm extends React.Component<CombinedProps> {
                 disabled={disabled}
                 data-qa-stackscript-description
               />
-              <FormControl fullWidth>
-                <InputLabel
-                  htmlFor="image"
-                  disableAnimation
-                  shrink={true}
-                  disabled={disabled}
-                  required
-                >
-                  Target Images
-                </InputLabel>
-                <ImageSelect
-                  images={images.available}
-                  onSelect={onSelectChange}
-                  value={selectedImages}
-                  isMulti
-                  imageFieldError={hasErrorFor('images')}
-                  helperText={
-                    'Select which images are compatible with this StackScript.'
-                  }
-                  disabled={disabled}
-                  data-qa-stackscript-target-select
-                />
-              </FormControl>
+              <ImageSelect
+                images={images.available}
+                onSelect={onSelectChange}
+                required
+                value={selectedImages}
+                isMulti
+                label="Target Images"
+                imageFieldError={hasErrorFor('images')}
+                helperText={
+                  'Select which images are compatible with this StackScript.'
+                }
+                disabled={disabled}
+                data-qa-stackscript-target-select
+              />
             </Grid>
             <Grid item className={classes.gridWithTips}>
               <Notice className={classes.tips}>

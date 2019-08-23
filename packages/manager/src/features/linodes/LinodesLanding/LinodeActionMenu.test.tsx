@@ -9,6 +9,13 @@ const props: CombinedProps = {
   linodeLabel: 'testLinode',
   linodeRegion: 'us-east',
   linodeType: 'g6-standard-1',
+  openDeleteDialog: jest.fn(),
+  readOnly: false,
+  typesLoading: false,
+  regionsData: [],
+  regionsLastUpdated: 0,
+  regionsLoading: false,
+  openPowerActionDialog: jest.fn(),
   linodeBackups: {
     schedule: {
       window: null,
@@ -17,8 +24,6 @@ const props: CombinedProps = {
   },
   linodeStatus: '',
   noImage: false,
-  openConfigDrawer: jest.fn(),
-  toggleConfirmation: jest.fn(),
   ...reactRouterProps
 };
 
@@ -36,7 +41,7 @@ describe('LinodeActionMenu', () => {
     it('includes `regionID` param if valid region', () => {
       wrapper.setProps({
         linodeRegion: 'us-east',
-        regionsData: [{ id: 'us-east', country: 'us' }]
+        regionsData: [{ id: 'us-east', country: 'us', capabilities: [] }]
       });
       expect(wrapper.instance().buildQueryStringForLinodeClone()).toMatch(
         'regionID=us-east'

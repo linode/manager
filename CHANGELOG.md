@@ -4,6 +4,88 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.68.0] - 2019-08-15
+
+### Added:
+- Support for promotion codes and expiring credits
+- SSH Access Key Table for Managed
+- Delete monitor action to MonitorActionMenu
+- GST notification for users in Australia and India
+
+### Fixed:
+- CSS animations in JSS
+- NodeBalancer connection grid display
+- Long titles broken on image names
+- Button types for cancel actions
+- Issue with entity labels not being able to be updated when an event was in-progress
+- Billing form state resets when changing country selection
+- One-click cards display on large breakpoints
+
+## [v0.67.0] - 2019-08-12
+
+### Added:
+- Ability to close account from Cloud Manager
+- Managed SSH Access: Linode Public Key component
+- Disable Managed service monitor
+- Display list of Managed service monitors
+- Adding tooltip display variant + styles
+- Breadcrumb enhancements
+- Tooltip for cluster command on Kubernetes detail page
+- Managed service monitor list
+- Add SupportWidget to Managed landing 
+- Adjustments to view config drawer
+- Adjustments to buttons
+- Optional CVV field when updating credit card information
+
+### Changed:
+- Region selection in create workflow
+- Improve error handling for LKE node pools
+- LKE form element UI adjustments
+- Make search link the first option in Algolia search bar
+- Add Logic to CSV Link to Prevent CSV Injections 
+- Add Mutation Time to Banner
+- Disable Add User Button for Restricted Users 
+- Select user by default after adding an SSH key using the AccessPanel
+- Add max-width to main content
+- Handling for new event types 
+- Improve link styles for PDF downloads in account
+- Enable hot reload for local development
+
+### Fixed:
+- Charts display issue
+- Issue with css transitions on theme switch
+- Firefox issue with flag icons
+- Broken error key scrolling in Get Help search bar 
+
+
+## [v0.66.0] - 2019-07-30
+
+### Added:
+- Public Cloud manager codebase is now officially a monorepo, leveraging Lerna
+- New splash screen on initial app load
+- Linodes list status column
+- Show Linode tax ID on invoices for users in EU
+- Unauthorized messaging for tokens and users
+- User preferences for Domains group-by-tag
+- User preferences for NodeBalancers group-by-tag
+- User preferences for Linode view
+- Tooltips for zone-related actions
+
+### Changed:
+- Abstract Link component so that it can handle external links
+- Better helper text for failed image creation
+- Make SSH key-fetching conditional on whether user is restricted
+- Error handling for adding SSH keys in creation workflow
+
+### Fixed:
+- Events regressions and add handling for new event types
+- IP Transfer panel refreshing when a long-running event was occurring
+- Issue with empty data set render blocking the app
+- Issue with power control not showing “Busy” status when Linode was busy
+- Configs view crashing after Linode rebuild
+- Clone config/disk not updating when number of disks changed
+
+
 ## [v0.65.0] - 2019-07-17
 
 ### Added:

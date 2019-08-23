@@ -245,8 +245,14 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
     this.setState({ usd: e.target.value || '' });
   };
 
-  handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) =>
-    this.setState({ cvv: e.target.value || '' });
+  handleCVVChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // All characters except numbers
+    const regex = /(([\D]))/;
+
+    // Prevents more than 4 characters from being submitted
+    const cvv = e.target.value.slice(0, 4);
+    this.setState({ cvv: cvv.replace(regex, '') });
+  };
 
   confirmCardPayment = () => {
     const { usd, cvv } = this.state;

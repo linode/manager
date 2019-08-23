@@ -32,11 +32,10 @@ import { MapState } from 'src/store/types';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-type ClassNames = 'root' | 'backButton' | 'createTitle';
+type ClassNames = 'backButton' | 'createTitle';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
     backButton: {
       margin: '5px 0 0 -16px',
       '& svg': {
@@ -154,6 +153,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     if (!this.mounted) {
       return;
     }
+
     this.setState({ isSubmitting: true });
 
     createStackScript(payload)
@@ -174,10 +174,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
         this.setState(
           () => ({
             isSubmitting: false,
-            errors:
-              error.response &&
-              error.response.data &&
-              error.response.data.errors
+            errors: error
           }),
           () => {
             scrollErrorIntoView();
