@@ -105,7 +105,6 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
             label: eachVersion.id
           }))
         });
-        console.log(response);
       })
       .catch(error => {
         this.setState({
