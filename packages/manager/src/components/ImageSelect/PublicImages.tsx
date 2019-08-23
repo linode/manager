@@ -19,46 +19,18 @@ const getVendorFromImageID = (
   return image ? image.vendor || '' : '';
 };
 
-export const sortByImageVersion = (a: Item<string>, b: Item<string>) => {
-  /**
-   * Images are labeled e.g. 'Debian 10', and we want newer versions
-   * shown at the top of the options list.
-   */
-  try {
-    const versionA = a.label.split(' ')[1];
-    const versionB = b.label.split(' ')[1];
-    const [majorA, minorA] = versionA.split('.').map(Number);
-    const [majorB, minorB] = versionB.split('.').map(Number);
+interface ImageItem extends Item<string> {
+  created: string;
+}
 
-    if (isNaN(+versionA) || isNaN(+versionB)) {
-      throw new Error('No version number found');
-    }
-
-    if (majorA > majorB) {
-      return -1;
-    }
-    if (majorA < majorB) {
-      return 1;
-    }
-
-    if (minorA > minorB) {
-      return -1;
-    }
-
-    if (minorA < minorB) {
-      return 1;
-    }
-    return 0;
-  } catch {
-    // If we can't find a version number, sort alphabetically by label
-    if (a.label < b.label) {
-      return -1;
-    }
-    if (a.label > b.label) {
-      return 1;
-    }
-    return 0;
+export const sortByImageVersion = (a: ImageItem, b: ImageItem) => {
+  if (a.created < b.created) {
+    return 1;
   }
+  if (a.created > b.created) {
+    return -1;
+  }
+  return 0;
 };
 
 export const PublicImages: React.FC<Props> = props => {
@@ -79,7 +51,7 @@ export const PublicImages: React.FC<Props> = props => {
     }
   }, [images, selectedImageID]);
 
-  const handleSelectVendor = (_selected: Item<string> | null) => {
+  const handleSelectVendor = (_selected: ImageItem | null) => {
     if (_selected === null) {
       handleSelectImage();
       setSelectedVendor('');
@@ -94,7 +66,7 @@ export const PublicImages: React.FC<Props> = props => {
     }
   };
 
-  const _handleSelectImage = (_selected: Item<string> | null) => {
+  const _handleSelectImage = (_selected: ImageItem | null) => {
     if (_selected === null) {
       return handleSelectImage('');
     }
@@ -121,7 +93,8 @@ export const PublicImages: React.FC<Props> = props => {
     ? groupedImages[selectedVendor]
         .map(thisImage => ({
           value: thisImage.id,
-          label: thisImage.label
+          label: thisImage.label,
+          created: thisImage.created
         }))
         .sort(sortByImageVersion)
     : [];
