@@ -11,8 +11,8 @@ describe('Checkbox Component Suite', () => {
     });
 
     it('should display checkboxes on interactive story', () => {
-        const checkboxes = $$('[data-qa-checked]'); 
-        checkboxes.forEach(e => expect(e.isVisible()).toBe(true));
+        const checkboxes = $$('[data-qa-checked]');
+        checkboxes.forEach(e => expect(e.isDisplayed()).toBe(true));
     });
 
     it('should check on click', () => {
@@ -21,27 +21,31 @@ describe('Checkbox Component Suite', () => {
         enabledCheckboxes.forEach(e => e.click());
 
         const updatedCheckboxValues = $$('[data-qa-checked="true"]');
-        
-        expect(updatedCheckboxValues.length).toBe(initialChecked.length + enabledCheckboxes.length);
+
+        expect(updatedCheckboxValues.length)
+          .withContext(`Incorrect amount of updated checkboxes`).toBe(initialChecked.length + enabledCheckboxes.length);
     });
 
     it('should uncheck on click', () => {
         const enabledAndChecked = $$('[data-qa-checked="true"]').filter(e => !e.getAttribute('class').includes('disabled'));
 
         enabledAndChecked.forEach(e => e.click());
-        
+
         const updatedCheckboxValues = $$('[data-qa-checked="true"]').filter(e => !e.getAttribute('class').includes('disabled'));
 
-        expect(updatedCheckboxValues).toEqual([]);
+        expect(updatedCheckboxValues)
+          .withContext(`Incorrect checkbox value`).toEqual([]);
     });
 
     it('should display different variants of checkboxes', () => {
         const checkboxes = $$('[data-qa-checked]');
 
         const variants = checkboxes.map(e => e.getAttribute('variant'));
-        
-        expect(variants).toContain('warning');
-        expect(variants).toContain('error');
+
+        expect(variants)
+          .withContext(`Incorrect variant`).toContain('warning');
+        expect(variants)
+          .withContext(`Incorrect variant`).toContain('error');
     });
 
     it('should not update values of disabled checked boxes', () => {
@@ -49,22 +53,24 @@ describe('Checkbox Component Suite', () => {
 
         // Click on all checked disabled boxes
         // Use jsClickAll to avoid other element would receive click error
-        
+
         browser.jsClickAll('[data-qa-checked="true"]:disabled');
 
         const afterClick = $$('[data-qa-checked="true"]').filter(e => e.getAttribute('class').includes('disabled'));
-        expect(afterClick.length).toBe(checkedDisabledBoxes.length);
+        expect(afterClick.length)
+          .withContext(`Incorrect value for disabled checkbox`).toBe(checkedDisabledBoxes.length);
     });
 
     it('should not update the values of disabled unchecked boxes', () => {
         const disabledUnchecked = $$('[data-qa-checked="false"]').filter(e => e.getAttribute('class').includes('disabled'));
-        
+
         // Click on all unchecked disabled boxes
         // Use jsClickAll to avoid other element would receive click error
         browser.jsClickAll('[data-qa-checked="false"]:disabled');
 
         const afterClick = $$('[data-qa-checked="false"]').filter(e => e.getAttribute('class').includes('disabled'));
 
-        expect(afterClick.length).toBe(afterClick.length);
+        expect(afterClick.length)
+          .withContext(`Incorrect value for disabled checkbox`).toBe(afterClick.length);
     });
 });

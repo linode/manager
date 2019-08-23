@@ -191,6 +191,18 @@ exports.browserCommands = () => {
         }, timeout);
     });
 
+    //This has been added as there are react issues with the element.setValue and element.clearValue
+    browser.addCommand('setNewValue', function(selector, value) {
+        let elValue;
+
+        do {
+          $(selector).doubleClick();
+          browser.keys("Delete");
+          elValue = $(selector).getValue()
+        } while (elValue != '');
+        $(selector).setValue(value);
+  });
+
     browser.addCommand('deleteAll', function async(token) {
         return deleteAll(token).then(() => {});
     });

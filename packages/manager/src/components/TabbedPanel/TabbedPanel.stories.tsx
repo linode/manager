@@ -12,7 +12,7 @@ storiesOf('TabbedPanel', module).add('default', () => {
     >
       <Grid item xs={10}>
         <TabbedPanel
-          someOtherProp={42}
+          someOtherProp={'This is some other prop'}
           header="Tabbed Panel"
           copy="This is an example of a tabbed panel."
           tabs={[
