@@ -10,7 +10,7 @@ type CombinedProps = Props;
 const MultiValueRemove: React.StatelessComponent<CombinedProps> = props => {
   return (
     <reactSelectComponents.MultiValueRemove {...props}>
-      <Close />
+      <Close data-qa-select-remove />
     </reactSelectComponents.MultiValueRemove>
   );
 };

@@ -7,29 +7,33 @@ describe('Breadcrumb Suite', () => {
     const link = '[data-qa-link="true"]';
     const staticText = '[data-qa-label-text="true"]';
     const editableText = '[data-qa-editable-text="true"]';
-    const editableTextInput = `${editableText} input`;
+    const editableTextInput = '[data-testid="textfield-input"]'
     const editButton = '[data-qa-edit-button="true"]';
     const saveEditButton = '[data-qa-save-edit="true"]';
     const cancelButton = '[data-qa-cancel-edit="true"]';
     const editBtnMessage = 'edit button should not be displayed'
 
     it('There should be a link in each Breadcrumb story', () => {
-        executeInAllStories(component, childStories, () => {
-            $(link).waitForDisplayed(constants.wait.normal);
-            expect($(link).getAttribute('href'))
-              .withContext(`href link should not be missing`).not.toBeNull();
-            expect($$(link)[2].getAttribute('href'))
-              .withContext('Url should be').toEqual(`${browser.options.baseUrl}/linodes/9872893679817/test`)
-        });
+      executeInAllStories(component, childStories, () => {
+        $(link).waitForDisplayed(constants.wait.normal);
+        expect($(link).getAttribute('href'))
+          .withContext(`href link should not be missing`)
+          .not.toBeNull();
+        expect($$(link)[2].getAttribute('href'))
+          .withContext('Url should be')
+          .toEqual(`${browser.options.baseUrl}/linodes/9872893679817/test`)
+      });
     });
 
     describe('Static text and links', () => {
       it('Static text is not editable, and does not contain link', () => {
         navigateToStory(component, childStories[0]);
         expect($(editButton).isDisplayed())
-          .withContext(`${editBtnMessage}`).toBe(false);
+          .withContext(`${editBtnMessage}`)
+          .toBe(false);
         expect($(staticText).$('..').$('..').getAttribute('href'))
-          .withContext(`href link should be blank`).toBeNull();
+          .withContext(`href link should be blank`)
+          .toBeNull();
       });
 
       it('Static text is not editable, and does contain link', () => {
@@ -46,47 +50,52 @@ describe('Breadcrumb Suite', () => {
         navigateToStory(component, childStories[2]);
         $(editableText).click()
         expect($(editButton).isDisplayed())
-          .withContext(`edit button should be visible`).toBe(true);
+          .withContext(`edit button should be visible`)
+          .toBe(true);
         expect($(editableText).$('..').getAttribute('href'))
-          .withContext(`href link should be blank`).toBeNull();
+          .withContext(`href link should be blank`)
+          .toBeNull();
       });
 
       it('Only clicking the edit icon displays the edit input field', () => {
-          executeInAllStories(component, [childStories[2]], () => {
-            $(editableText).waitForDisplayed(true);
-            $(editableText).click();
-            expect($(editableTextInput).isDisplayed())
-              .withContext(`text field should not be displayed`).toBe(false);
-            $(editButton).click();
-            $(editableTextInput).waitForDisplayed(constants.wait.short);
-          });
+        executeInAllStories(component, [childStories[2]], () => {
+          $(editableText).waitForDisplayed(true);
+          $(editableText).click();
+          expect($(editableTextInput).isDisplayed())
+            .withContext(`text field should not be displayed`)
+            .toBe(false);
+          $(editButton).click();
+          $(editableTextInput).waitForDisplayed(constants.wait.short);
+        });
       });
 
       it('Text input field should have a save and close button', () => {
-          navigateToStory(component, childStories[2]);
-          $(editableText).waitForDisplayed(constants.wait.short);
-          $(editableText).click();
-          $(editButton).click();
-          expect($(editableTextInput).isDisplayed())
-            .withContext(`editable text field should displayed`).toBe(true);
-          expect($(saveEditButton).isDisplayed())
-            .withContext(`save edit button should be displayed`).toBe(true);
-          expect($(cancelButton).isDisplayed())
-            .withContext(`cancel button should be displayed`).toBe(true);
-          $('body').click();
+        navigateToStory(component, childStories[2]);
+        $(editableText).waitForDisplayed(constants.wait.short);
+        $(editableText).click();
+        $(editButton).click();
+        $(editableTextInput).waitForDisplayed()
+        expect($(saveEditButton).isDisplayed())
+          .withContext(`save edit button should be displayed`)
+          .toBe(true);
+        expect($(cancelButton).isDisplayed())
+          .withContext(`cancel button should be displayed`)
+          .toBe(true);
+        $('body').click();
       });
 
       it('Clicking the cancel button clears the text input', () => {
-          navigateToStory(component, childStories[2]);
-          $(editableText).waitForDisplayed(constants.wait.short);
-          const originalValue = $(editableText).getText();
-          $(editableText).click();
-          $(editButton).click();
-          $(editableTextInput).waitForDisplayed(constants.wait.short);
-          $(editableTextInput).setValue('test clear');
-          $(cancelButton).click();
-          expect($(editableText).getText())
-            .withContext(`text should not be changed on cancel`).toEqual(originalValue);
+        navigateToStory(component, childStories[2]);
+        $(editableText).waitForDisplayed(constants.wait.short);
+        const originalValue = $(editableText).getText();
+        $(editableText).click();
+        $(editButton).click();
+        $(editableTextInput).waitForDisplayed(constants.wait.short);
+        $(editableTextInput).setValue('test clear');
+        $(cancelButton).click();
+        expect($(editableText).getText())
+          .withContext(`text should not be changed on cancel`)
+          .toEqual(originalValue);
       });
 
       it('Clicking the save button saves the text input', () => {
@@ -96,10 +105,11 @@ describe('Breadcrumb Suite', () => {
           $(editableText).click();
           $(editButton).click();
           $(editableTextInput).waitForDisplayed(constants.wait.short);
-          $(editableTextInput).setValue(updatedText);
+          browser.setNewValue(editableTextInput, updatedText);
           $(saveEditButton).click();
           expect($(editableText).getText())
-            .withContext(`text should have been updated`).toEqual(updatedText);
+            .withContext(`text should have been updated`)
+            .toEqual(updatedText);
       });
 
       it('Clicking out of the editable input without saving does not save the text input', () => {
@@ -112,7 +122,8 @@ describe('Breadcrumb Suite', () => {
           $(editableTextInput).setValue('test do not save input');
           $('body').click();
           expect($(editableText).getText())
-            .withContext(`text should not have been saved`).toEqual(originalText);
+            .withContext(`text should not have been saved`)
+            .toEqual(originalText);
       });
     })
 });
