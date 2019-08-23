@@ -298,10 +298,6 @@ const getDisabledReason = (
   //   return 'Your Linode is already scheduled for a migration';
   // }
 
-  if (linodeStatus !== 'offline') {
-    return 'Your Linode must be shut down first.';
-  }
-
   return '';
 };
 
