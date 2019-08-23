@@ -1,152 +1,186 @@
 const { constants } = require('../../../e2e/constants');
-const { navigateToStory, executeInAllStories } = require('../../../e2e/utils/storybook');
+const { navigateToStory } = require('../../../e2e/utils/storybook');
 
 describe('Expansion Panel Suite', () => {
-    const component = 'ExpansionPanel';
-    const childStories = [
-        'Interactive',
-        'Success!',
-        'Warning!',
-        'Error!',
-        'Asynchronous Content',
-    ];
+  const component = 'ExpansionPanel';
+  const childStories = [
+      'Interactive',
+      'Success!',
+      'Warning!',
+      'Error!',
+      'Asynchronous Content',
+  ];
 
-    const panel = '[data-qa-panel]';
-    const panelSubheading = '[data-qa-panel-subheading]';
-    const gridItem = '[data-qa-grid-item]';
-    const notice = '[data-qa-notice]';
-    let childElements;
+  const panel = '[data-qa-panel]';
+  const panelSubheading = '[data-qa-panel-subheading]';
+  const gridItem = '[data-qa-grid-item]';
+  const notice = '[data-qa-notice]';
+  const saveButton = '[data-qa-save]';
+  const cancelButton = '[data-qa-cancel]';
+  let childElements;
 
-    function assertNotice() {
-        const noticeMsg = $(notice);
-        expect(noticeMsg.isVisible()).toBe(true);
-        expect(noticeMsg.getText()).toMatch(/([a-z])/ig);
-    }
+  function assertNotice(noticeTxt) {
+    const noticeMsg = $(notice);
+    noticeMsg.waitForExist();
+    expect(noticeMsg.isDisplayed())
+      .withContext(`notice message was not displayed`).toBe(true);
+    expect(noticeMsg.getText())
+      .withContext(`Incorrect text found`).toMatch(noticeTxt);
+  }
 
-    function expandAssertGridItem(opposite=false) {
-        browser.click('[data-qa-panel-summary]');
-        browser.waitForVisible(gridItem, 5000, opposite)
-    }
+  function expandAssertGridItem(visible=true,opposite=false) {
+    $('[data-qa-panel-summary]').click();
+    $(gridItem).waitForDisplayed(constants.wait.short, opposite)
+    expect($(gridItem).isDisplayed())
+      .withContext(`grid item display should be ${visible}`)
+      .toBe(visible);
+  };
 
-    function panelDisplays() {
-        browser.waitForVisible(panel, constants.wait.normal);
+  function panelDisplays(panelMsg) {
+    $(panel).waitForDisplayed(constants.wait.normal);
+    expect($(panelSubheading).getText())
+      .withContext(`Incorrect text found`).toEqual(panelMsg);
+    expect($(panel).isDisplayed())
+      .withContext(`Expansion panel should be displayed`).toBe(true)
+  }
 
-        const expansionPanel = $(panel);
-        const expansionPanelText = $(panelSubheading);
-        expect(expansionPanel.isVisible()).toBe(true);
-        expect(expansionPanelText.getText()).toMatch(/([a-z])/ig);
-    }
+  function checkButtons() {
+    expect($$('button').length)
+      .withContext(`should be two buttons`)
+      .toBe(2);
+    const saveBtn = $(saveButton);
+    const cancelBtn = $(cancelButton);
+    browser.pause(100);
 
-    describe('Interactive Suite', () => {
-        beforeAll(() => {
-            navigateToStory(component, childStories[0]);
-            panelDisplays();
-        });
+    expect(cancelBtn.isDisplayed())
+      .withContext(`cancel button should be displayed`)
+      .toBe(true);
+    expect(cancelBtn.getText())
+      .withContext(`incorrect cancel button text`)
+      .toBe('Cancel');
+    expect(saveBtn.isDisplayed())
+      .withContext(`should be displayed`)
+      .toBe(true);
+    expect(saveBtn.getText())
+      .withContext(`incorrect save button text`)
+      .toBe('Save');
 
-        it('should expand and display message text', () => {
-            expandAssertGridItem();
-        });
+  }
 
-        it('should collapse on click', () => {
-            expandAssertGridItem(true);
-        });
+  describe('Interactive Suite', () => {
+    beforeEach(() => {
+      navigateToStory(component, childStories[0]);
+      panelDisplays('The best Linode department is?');
     });
 
-    describe('Success Suite', () => {
-        beforeAll(() => {
-            navigateToStory(component, childStories[1]);
-            panelDisplays();
-        });
-
-        it('should expand on click and display message text', () => {
-            expandAssertGridItem();
-        });
-
-        it('should display success notice message', () => {
-           assertNotice(); 
-        });
-
-        it('should display save and cancel buttons', () => {
-            const buttons = $$('button');
-            const visibleButtons = buttons.filter(b => b.isVisible() && !!b.getText());
-            expect(visibleButtons.length).toBe(2);
-        });
-
-        it('shoulds collapse on click', () => {
-            expandAssertGridItem(true);
-        });
+    it('should expand and display message text', () => {
+      expandAssertGridItem();
     });
 
-    describe('Warning Suite', () => {
-        beforeAll(() => {
-            navigateToStory(component, childStories[2]);
-            panelDisplays();
-        });
+    it('should collapse on click', () => {
+      expandAssertGridItem();
+      expandAssertGridItem(false,true);
+    });
+  });
 
-        it('should expand on click and display message text', () => {
-            expandAssertGridItem();
-        });
-
-        it('should display warning notice message', () => {
-            assertNotice();
-        });
-
-        it('should display save and cancel buttons', () => {
-            const buttons = $$('button');
-            const visibleButtons = buttons.filter(b => b.isVisible() && !!b.getText());
-            expect(visibleButtons.length).toBe(2);
-        });
-
-        it('should collapse on click', () => {
-            expandAssertGridItem(true);
-        });
+  describe('Success Suite', () => {
+    beforeEach(() => {
+      navigateToStory(component, childStories[1]);
+      panelDisplays(`Why is Linode the best?`);
     });
 
-    describe('Error Suite', () => {
-        beforeAll(() => {
-            navigateToStory(component, childStories[3]);
-            panelDisplays();
-        });
-
-        it('should expand on click and display message text', () => {
-            expandAssertGridItem();
-        });
-
-        it('should display error notice message', () => {
-            assertNotice();
-        });
-
-        it('should display save and cancel buttons', () => {
-            const buttons = $$('button');
-            const visibleButtons = buttons.filter(b => b.isVisible() && !!b.getText());
-            expect(visibleButtons.length).toBe(2);
-        });
-
-        it('should collapse on click', () => {
-            expandAssertGridItem(true);
-        });
+    it('should expand on click and display message text', () => {
+      expandAssertGridItem();
     });
 
-    describe('Asynchronous Content Suite', () => {
-        beforeAll(() => {
-            navigateToStory(component, childStories[4]);
-            panelDisplays();
-        });
-
-        it('should expand on click and display loading text', () => {
-            const loadingMsg = 'Loading...';
-            expandAssertGridItem();
-            
-            browser.waitUntil(function() {
-                return browser.getText(gridItem).includes(loadingMsg);
-            }, constants.wait.normal);
-        });
-
-        it('should display message after loaded', () => {
-            const loadedMsg = 'Your patience has been rewarded';
-            browser.waitUntil(function() {
-                return browser.getText(gridItem).includes(loadedMsg);
-            }, constants.wait.normal);
-        });
+    it('should display success notice message', () => {
+      expandAssertGridItem();
+      assertNotice('You did it!');
     });
+
+    it('should display save and cancel buttons', () => {
+      expandAssertGridItem();
+      checkButtons();
+    });
+
+    it('should collapse on click', () => {
+      expandAssertGridItem();
+      expandAssertGridItem(false, true);
+    });
+  });
+
+  describe('Warning Suite', () => {
+    beforeEach(() => {
+      navigateToStory(component, childStories[2]);
+      panelDisplays('This is a warning');
+    });
+
+    it('should expand on click and display message text', () => {
+      expandAssertGridItem();
+    });
+
+    it('should display warning notice message', () => {
+      expandAssertGridItem();
+      assertNotice('Careful now...');
+    });
+
+    it('should display save and cancel buttons', () => {
+      expandAssertGridItem();
+      checkButtons();
+    });
+
+    it('should collapse on click', () => {
+      expandAssertGridItem();
+      expandAssertGridItem(false, true);
+    });
+  });
+
+  describe('Error Suite', () => {
+    beforeEach(() => {
+      navigateToStory(component, childStories[3]);
+      panelDisplays('Creating a new linode');
+    });
+
+    it('should expand on click and display message text', () => {
+      expandAssertGridItem();
+    });
+
+    it('should display error notice message', () => {
+      expandAssertGridItem();
+      assertNotice('Oh no! Something broke!');
+    });
+
+    it('should display save and cancel buttons', () => {
+      expandAssertGridItem();
+      checkButtons();
+    });
+
+    it('should collapse on click', () => {
+      expandAssertGridItem();
+      expandAssertGridItem(false, true);
+    });
+  });
+
+  describe('Asynchronous Content Suite', () => {
+    beforeEach(() => {
+      navigateToStory(component, childStories[4]);
+      panelDisplays('Open to Reveal Asynchronously Loaded Content');
+    });
+
+    it('should expand on click and display loading text', () => {
+      const loadingMsg = 'Loading...';
+      expandAssertGridItem();
+      browser.waitUntil(function() {
+          return $(gridItem).getText().includes(loadingMsg);
+      }, constants.wait.normal);
+    });
+
+    it('should display message after loaded', () => {
+      expandAssertGridItem();
+      const loadedMsg = 'Your patience has been rewarded';
+      browser.waitUntil(function() {
+          return $(gridItem).getText().includes(loadedMsg);
+      }, constants.wait.normal);
+    });
+  });
 });

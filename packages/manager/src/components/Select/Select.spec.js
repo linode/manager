@@ -8,28 +8,36 @@ describe('Select Suite', () => {
 
   beforeAll(() => {
     navigateToStory(component, childStories[0]);
-    browser.waitForVisible('[data-qa-select]');
+    $('[data-qa-select]').waitForDisplayed();
   });
 
-  it('should display two select boxes with labels, action text and chevron', () => {
+  it('should display select boxes with labels, action text and chevron', () => {
     selectBoxes = $$(select);
     selectBoxes.forEach(s => {
-      expect(s.isVisible()).toBe(true);
+      expect(s.isDisplayed())
+        .withContext(`Select box should be displayed`)
+        .toBe(true);
       expect(
         s
           .$('..')
           .$('..')
           .$('label')
-          .isVisible()
-      ).toBe(true);
+          .isDisplayed()
+      )
+        .withContext(`Select label should be displayed`)
+        .toBe(true);
       expect(
         s
           .$('..')
           .$('..')
           .$('p')
-          .isVisible()
-      ).toBe(true);
-      expect(s.$('svg').isVisible()).toBe(true);
+          .isDisplayed()
+      )
+        .withContext(`paragraph should be displayed`)
+        .toBe(true);
+      expect(s.$('svg').isDisplayed())
+        .withContext(`Select chevron should be displayed`)
+        .toBe(true);
     });
   });
 
@@ -37,21 +45,27 @@ describe('Select Suite', () => {
     enabledSelects = selectBoxes.filter(
       s => !s.getAttribute('class').includes('disabled')
     );
-    expect(enabledSelects.length).toEqual(2);
+    expect(enabledSelects.length)
+    .withContext(`Should be 2 enabled selects`)
+    .toEqual(2);
   });
 
   it('should display one disabled select', () => {
     const disabledSelects = selectBoxes.filter(s =>
       s.getAttribute('class').includes('disabled')
     );
-    expect(disabledSelects.length).toEqual(1);
+    expect(disabledSelects.length)
+    .withContext(`Should be 1 disabled select`)
+    .toEqual(1);
   });
 
   it('should display placeholder text in disabled select', () => {
     const disabledSelects = selectBoxes.filter(s =>
       s.getAttribute('class').includes('disabled')
     );
-    expect(disabledSelects[0].getText()).toMatch(/\w/gi);
+    expect(disabledSelects[0].getText())
+      .withContext(`Should have words`)
+      .toMatch(/\w/g);
   });
 
   it('should display options on click', () => {
@@ -64,13 +78,17 @@ describe('Select Suite', () => {
     enabledSelects[0].click();
 
     selectOptions = $(`#menu-${selectTitle}`).$$('li');
-    selectOptions.forEach(opt => expect(opt.isVisible()).toBe(true));
+    selectOptions.forEach(opt => expect(opt.isDisplayed())
+      .withContext(`Option should be displayed`)
+      .toBe(true));
   });
 
   it('should update select value on selection', () => {
     const optionName = selectOptions[1].getText();
     selectOptions[1].click();
     const selectValue = enabledSelects[0].getText();
-    expect(selectValue).toBe(optionName);
+    expect(selectValue)
+      .withContext(`Incorrect option selected`)
+      .toBe(optionName);
   });
 });
