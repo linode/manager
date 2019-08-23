@@ -9,7 +9,14 @@ import ImageOption from './ImageOption';
 import { ImageProps as Props } from './ImageSelect';
 
 export const PrivateImages: React.FC<Props> = props => {
-  const { disabled, error, images, handleSelectImage, selectedImageID } = props;
+  const {
+    disabled,
+    error,
+    images,
+    handleSelectImage,
+    selectedImageID,
+    ...reactSelectProps
+  } = props;
   const imageOptions = images.map(thisImage => ({
     label: thisImage.label,
     value: thisImage.id,
@@ -33,7 +40,6 @@ export const PrivateImages: React.FC<Props> = props => {
         disabled={disabled}
         errorText={error}
         placeholder="Select an Image"
-        isClearable
         options={imageOptions}
         onChange={_handleSelect}
         value={
@@ -42,6 +48,7 @@ export const PrivateImages: React.FC<Props> = props => {
             : getItemFromID(imageOptions, selectedImageID)
         }
         components={{ Option: ImageOption, SingleValue }}
+        {...reactSelectProps}
       />
     </Grid>
   );

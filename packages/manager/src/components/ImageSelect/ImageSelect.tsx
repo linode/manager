@@ -1,8 +1,9 @@
 import * as React from 'react';
-
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
+
 import Grid from 'src/components/Grid';
 
 import PrivateImages from './PrivateImages';
@@ -25,7 +26,8 @@ interface Props {
   handleSelectImage: (selection?: string) => void;
 }
 
-export interface ImageProps {
+export interface ImageProps
+  extends Omit<BaseSelectProps, 'onChange' | 'variant'> {
   selectedImageID?: string;
   disabled: boolean;
   handleSelectImage: (selection?: string) => void;

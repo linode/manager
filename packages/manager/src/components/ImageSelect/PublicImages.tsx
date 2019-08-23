@@ -34,7 +34,14 @@ export const sortByImageVersion = (a: ImageItem, b: ImageItem) => {
 };
 
 export const PublicImages: React.FC<Props> = props => {
-  const { disabled, error, handleSelectImage, images, selectedImageID } = props;
+  const {
+    disabled,
+    error,
+    handleSelectImage,
+    images,
+    selectedImageID,
+    ...reactSelectProps
+  } = props;
   const [selectedVendor, setSelectedVendor] = React.useState<string>('');
 
   React.useEffect(() => {
@@ -116,6 +123,7 @@ export const PublicImages: React.FC<Props> = props => {
             onChange={handleSelectVendor}
             value={getItemFromID(vendors, selectedVendor)}
             components={{ Option: ImageOption, SingleValue }}
+            {...reactSelectProps}
           />
         </Grid>
         {Boolean(selectedVendor) && (
@@ -128,6 +136,7 @@ export const PublicImages: React.FC<Props> = props => {
               options={imageOptions}
               onChange={_handleSelectImage}
               value={getItemFromID(imageOptions, selectedImageID)}
+              {...reactSelectProps}
             />
           </Grid>
         )}
