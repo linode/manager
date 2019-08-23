@@ -39,6 +39,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       draft.results = result.map(s => s.id);
       draft.loading = false;
       draft.lastUpdated = Date.now();
+      draft.error!.read = undefined;
     }
 
     if (isType(action, requestServicesActions.started)) {
