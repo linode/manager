@@ -57,12 +57,6 @@
   color: #aa573c;
 }
 
-.formatted-text span.hljs-number,
-.formatted-text span.hljs-string,
-.formatted-text span.hljs-symbol,
-.formatted-text span.hljs-bullet {
-  color: black;
-}
 .formatted-text span.hljs-title,
 .formatted-text span.hljs-section {
   color: #576ddb;
@@ -75,7 +69,6 @@
 
 .formatted-text span.hljs-deletion,
 .formatted-text span.hljs-addition {
-  color: #19171c;
   display: inline-block;
   width: 100%;
 }
@@ -91,8 +84,6 @@
 .formatted-text span.hljs {
   display: block;
   overflow-x: auto;
-  background: #efecf4;
-  color: #585260;
   padding: 0.5;
 }
 

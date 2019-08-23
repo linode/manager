@@ -26,6 +26,22 @@ const styles = (theme: Theme) =>
       position: 'relative',
       '& pre': {
         backgroundColor: theme.bg.tableHeader
+      },
+      [`& span.hljs-number,
+        & span.hljs-string,
+        & span.hljs-symbol,
+        & span.hljs-bullet
+      `]: {
+        color: theme.palette.text.primary
+      },
+      [`& span.hljs-deletion,
+        & span.hljs-addition
+      `]: {
+        color: theme.color.black
+      },
+      '& span.hljs': {
+        background: theme.color.grey2,
+        color: theme.color.label
       }
     },
     expButton: {

@@ -58,7 +58,6 @@ const styles = (theme: Theme) =>
       borderRadius: '50%',
       width: 32,
       height: 32,
-
       position: 'relative',
       top: -2,
       [theme.breakpoints.up('sm')]: {
