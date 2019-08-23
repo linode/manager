@@ -97,6 +97,8 @@ const Contacts: React.FC<CombinedProps> = props => {
     'create'
   );
 
+  const [groupDrawerMode, setGroupDrawerMode] = React.useState<Mode>('create');
+
   const {
     dialog,
     openDialog,
@@ -137,6 +139,25 @@ const Contacts: React.FC<CombinedProps> = props => {
         the event of a support issue. Create contacts and assign them to a
         group, then assign the group to the appropriate monitor(s).
       </Typography>
+      <div className={classes.groupsTable}>
+        <RootRef rootRef={contactsTableRef}>
+          <Box
+            display="flex"
+            flexDirection="row"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Typography variant="h2">Groups</Typography>
+            <AddNewLink
+              onClick={() => {
+                setGroupDrawerMode('create');
+                groupDrawer.open();
+              }}
+              label="Add a Group"
+            />
+          </Box>
+        </RootRef>
+      </div>
       <OrderBy data={groups} orderBy="groupName" order="asc">
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           return (
@@ -150,10 +171,7 @@ const Contacts: React.FC<CombinedProps> = props => {
                 pageSize
               }) => {
                 return (
-                  <div className={classes.groupsTable}>
-                    <RootRef rootRef={groupsTableRef}>
-                      <Typography variant="h2">Groups</Typography>
-                    </RootRef>
+                  <>
                     <Paper className={classes.root}>
                       <Table aria-label="List of Your Managed Contact Groups">
                         <TableHead>
@@ -194,7 +212,7 @@ const Contacts: React.FC<CombinedProps> = props => {
                       pageSize={pageSize}
                       eventCategory="managed contact groups"
                     />
-                  </div>
+                  </>
                 );
               }}
             </Paginate>
@@ -332,10 +350,12 @@ const Contacts: React.FC<CombinedProps> = props => {
         />
       </div>
       <GroupDrawer
+        mode={groupDrawerMode}
         isOpen={groupDrawer.isOpen}
         closeDrawer={groupDrawer.close}
-        groupName={selectedGroupName || ''}
+        groups={groups}
         contacts={contacts}
+        update={update}
       />
       <ContactDrawer
         mode={contactDrawerMode}

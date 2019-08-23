@@ -84,3 +84,8 @@ export const createContactSchema = object().shape({
     .min(2, 'Group must be between 2 and 50 characters.')
     .max(50, 'Group must be between 2 and 50 characters.')
 });
+
+export const updateContactSchema = createContactSchema.shape({
+  name: string().notRequired(),
+  email: string().notRequired()
+});

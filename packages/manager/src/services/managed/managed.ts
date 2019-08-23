@@ -10,6 +10,7 @@ import {
   createContactSchema,
   createCredentialSchema,
   createServiceMonitorSchema,
+  updateContactSchema,
   updateCredentialSchema,
   updateManagedLinodeSchema,
   updatePasswordSchema
@@ -237,11 +238,14 @@ export const createContact = (data: ContactPayload) =>
  *
  * Updates a Managed Contact
  */
-export const updateContact = (contactId: number, data: ContactPayload) =>
+export const updateContact = (
+  contactId: number,
+  data: Partial<ContactPayload>
+) =>
   Request<Linode.ManagedContact>(
     setMethod('PUT'),
     setURL(`${API_ROOT}/managed/contacts/${contactId}`),
-    setData(data, createContactSchema)
+    setData(data, updateContactSchema)
   ).then(response => response.data);
 
 /**
