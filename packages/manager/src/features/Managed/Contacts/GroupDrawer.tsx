@@ -1,4 +1,3 @@
-import * as Bluebird from 'bluebird';
 import { Formik, FormikActions } from 'formik';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -37,67 +36,63 @@ interface Props {
   contacts: Linode.ManagedContact[];
   group?: ManagedContactGroup;
 }
-
-// interface Accumulator {
-//   success:
-// }
-
-interface ContactError {
-  contactId: number;
-  errorText: string;
-}
-
 type CombinedProps = Props;
 
 const GroupDrawer: React.FC<CombinedProps> = props => {
   const { isOpen, closeDrawer, mode, contacts, group, update } = props;
 
-  const [contactErrors, setContactErrors] = React.useState<ContactError[]>([]);
+  // Errors for individual contacts are handled outside of Formik.
+  const [contactErrors, setContactErrors] = React.useState<number[]>([]);
 
   const isEditing = mode === 'edit' && group;
 
-  const onSubmit = (
+  const onSubmit = async (
     values: GroupForm,
     { setSubmitting, setStatus }: FormikActions<GroupForm>
   ) => {
-    setStatus(undefined);
-    setContactErrors([]);
+    const { contactIds } = values;
 
-    const accumulator = (accum: any, thisContactId: number) =>
-      updateContact(thisContactId, { group: values.name })
-        .then(res => {
-          return {
-            ...accum,
-            success: [...accum.success, res]
-          };
-        })
-        .catch(error => {
-          return {
-            ...accum,
-            errors: [...accum.errors, { contactId: thisContactId, error }]
-          };
-        });
+    // Update the `group` of each contact.
+    const promises = contactIds.map(id =>
+      // Handle any errors with `.catch()` so that `Promise.all()` resolves
+      // and we can determine which contacts failed to update.
+      updateContact(id, { group: values.name }).catch(_ => null)
+    );
 
-    Bluebird.reduce(values.contactIds, accumulator, {
-      success: [],
-      errors: []
-    }).then(res => {
+    try {
+      setStatus(undefined);
+      setContactErrors([]);
+
+      // Since errors on individual errors are caught, this should always resolve.
+      const resolved = await Promise.all(promises);
+
       setSubmitting(false);
 
+      // If an element at a given index of `resolved` is null, that means that
+      // request failed. Match it up to `contactIds` to set an error for that contact.
+      const errors: number[] = [];
+      for (let i = 0; i < resolved.length; i++) {
+        if (!resolved[i]) {
+          errors.push(contactIds[i]);
+        }
+      }
+
       // If all requests were unsuccessful, display a general error.
-      if (res.errors.length === values.contactIds.length) {
+      if (errors.length === contactIds.length) {
         return setStatus('Unable to create Group.');
       }
 
-      // If a subset of requests were successful, display a <Notice /> for each.
-      if (res.errors.length > 0) {
-        return setContactErrors(res.errors);
+      // If a subset of requests were successful, display an error for each.
+      if (errors.length > 0) {
+        return setContactErrors(errors);
       }
 
       // Otherwise, we're all good. Refresh the data and close the drawer.
       update();
       closeDrawer();
-    });
+    } catch (err) {
+      setStatus('Unable to create Group.');
+    }
   };
 
   return (
@@ -132,16 +127,12 @@ const GroupDrawer: React.FC<CombinedProps> = props => {
               {status && <Notice key={status} text={status} error />}
 
               {/* Errors for individual contacts */}
-              {contactErrors.map(thisContactError => {
+              {contactErrors.map(id => {
                 const foundContact = contacts.find(
-                  thisContact => thisContact.id === thisContactError.contactId
+                  thisContact => thisContact.id === id
                 );
                 return foundContact ? (
-                  <Grid
-                    key={thisContactError.contactId}
-                    item
-                    data-qa-import-error
-                  >
+                  <Grid key={id} item data-qa-import-error>
                     <Notice error spacingBottom={0}>
                       Error adding group to {foundContact.name}.
                     </Notice>
