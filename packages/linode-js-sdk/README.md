@@ -16,7 +16,7 @@ or with yarn
 $ yarn add linode-js-sdk
 ```
 
-or to use a CDN
+or with a CDN
 
 ```js
 <script src="https://unpkg.com/linode-js-sdk/index.js"></script>
@@ -26,7 +26,7 @@ or to use a CDN
 
 The first step in using the SDK is to authenticate your requests, either with an OAuth Token or Personal Access Token (PAT). Please [see the Linode API docs](https://developers-linode.netlify.com/api/v4/#access-and-authentication) in order to either get an OAuth Token or PAT so that you can authenticate your requests.
 
-Once you have your token, authenticating involves adding headers to each request. This library is build [from the Axios HTTP Client](https://github.com/axios/axios), so most features that are built into Axios are fair game here. Here's an example of how to authenticate all of your requests.
+Once you have your token, authenticating involves adding headers to each request. This library is built on top of [the Axios HTTP Client](https://github.com/axios/axios), so most features that are built into Axios are fair game here. Here's an example of how to authenticate all of your requests.
 
 ```js
 /** request.js */
@@ -65,9 +65,9 @@ getAccount()
   })
 ```
 
-## Contributing
+## Contributing (To Be Revised for the Public)
 
-//////// FOR INTERNAL CONTRIBUTORS. REVISE THIS LATER /////////
+The main goal right now is to abstract out all interactions with the API from Cloud Manager and move them into this package. This library will act as a single source for both Cloud Manager and the general public.
 
 Migrating service functions over from Cloud Manager to the JavaScript SDK is relatively straightforward, and involves a few steps.
 
