@@ -66,7 +66,9 @@ const styled = withStyles(styles);
 const memoized = (component: React.FC<CombinedProps>) =>
   React.memo<CombinedProps>(component, (prevProps, nextProps) => {
     return (
-      prevProps.error === nextProps.error && prevProps.value === nextProps.value
+      prevProps.error === nextProps.error &&
+      prevProps.value === nextProps.value &&
+      prevProps.innerClass === nextProps.innerClass
     );
   });
 

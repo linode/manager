@@ -65,7 +65,12 @@ const styles = (theme: Theme) =>
       padding: 0
     },
     label: {
-      marginBottom: theme.spacing(1)
+      marginLeft: 32,
+      width: `calc(100% - (32px + ${theme.spacing(7)}px))`,
+      [theme.breakpoints.up('sm')]: {
+        marginLeft: `calc(40px + ${theme.spacing(1)}px)`,
+        width: `calc(100% - (40px + ${theme.spacing(7)}px))`
+      }
     },
     ticketLabel: {
       position: 'relative',
@@ -73,6 +78,10 @@ const styles = (theme: Theme) =>
     },
     labelIcon: {
       paddingRight: 0,
+      '& svg': {
+        width: 40,
+        height: 40
+      },
       '& .outerCircle': {
         fill: theme.bg.offWhiteDT,
         stroke: theme.bg.main
@@ -83,6 +92,7 @@ const styles = (theme: Theme) =>
     },
     listParent: {},
     status: {
+      marginTop: 5,
       marginLeft: theme.spacing(1),
       color: theme.color.white
     },
@@ -271,9 +281,12 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
         <Grid item className={classes.labelIcon}>
           {icon}
         </Grid>
-        <Grid item>
+        <Grid item className="p0">
           {target !== null ? (
-            <Link to={target} className="secondaryLink">
+            <Link
+              to={target}
+              className={`${classes.ticketLabel} secondaryLink`}
+            >
               {entity.label}
             </Link>
           ) : (
@@ -405,26 +418,29 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
         )}
 
         <Grid container className={classes.listParent}>
-          {/* If the ticket isn't blank, display it, followed by replies (if any). */}
-          {ticket.description && (
-            <ExpandableTicketPanel
-              key={ticket.id}
-              ticket={ticket}
-              isCurrentUser={profileUsername === ticket.opened_by}
-            />
-          )}
-          {replies && this.renderReplies(replies)}
-          <TicketAttachmentList attachments={ticket.attachments} />
-          {/* If the ticket is open, allow users to reply to it. */}
-          {['open', 'new'].includes(ticket.status) && (
-            <Reply
-              ticketId={ticket.id}
-              closable={ticket.closable}
-              onSuccess={this.onCreateReplySuccess}
-              reloadAttachments={this.reloadAttachments}
-              closeTicketSuccess={this.closeTicketSuccess}
-            />
-          )}
+          <Grid item xs={12}>
+            {/* If the ticket isn't blank, display it, followed by replies (if any). */}
+            {ticket.description && (
+              <ExpandableTicketPanel
+                key={ticket.id}
+                ticket={ticket}
+                isCurrentUser={profileUsername === ticket.opened_by}
+              />
+            )}
+            {replies && this.renderReplies(replies)}
+            <TicketAttachmentList attachments={ticket.attachments} />
+            {/* If the ticket is open, allow users to reply to it. */}
+            {['open', 'new'].includes(ticket.status) && (
+              <Reply
+                ticketId={ticket.id}
+                closable={ticket.closable}
+                onSuccess={this.onCreateReplySuccess}
+                reloadAttachments={this.reloadAttachments}
+                closeTicketSuccess={this.closeTicketSuccess}
+              />
+            )}
+          </Grid>
+          <Grid item xs={12} />
         </Grid>
       </React.Fragment>
     );
@@ -468,6 +484,6 @@ export const connected = connect(mapStateToProps);
 
 export default compose<any, any, any, any>(
   setDocs(SupportTicketDetail.docs),
-  styled,
-  connected
+  connected,
+  styled
 )(SupportTicketDetail);

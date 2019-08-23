@@ -17,9 +17,10 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(1)
     },
     example: {
+      backgroundColor: theme.bg.white,
       margin: `${theme.spacing(2)}px 0`,
-      padding: theme.spacing(2),
-      border: `1px solid ${theme.color.border2}`
+      padding: theme.spacing(2)
+      // border: `1px solid ${theme.color.border2}`
     }
   });
 
