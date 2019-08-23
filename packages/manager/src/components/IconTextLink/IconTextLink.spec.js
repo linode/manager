@@ -52,6 +52,7 @@ describe('Icon Text Link Suite', () => {
     let alertDisplays = true;
     browser.dismissAlert();
     try {
+      console.log(`expecting to get a an error for dismissed alert`)
       browser.getAlertText();
     } catch (err) {
       alertDisplays = false;

@@ -15,20 +15,26 @@ describe('Expansion Panel Suite', () => {
   const panelSubheading = '[data-qa-panel-subheading]';
   const gridItem = '[data-qa-grid-item]';
   const notice = '[data-qa-notice]';
+  const saveButton = '[data-qa-save]';
+  const cancelButton = '[data-qa-cancel]';
   let childElements;
 
   function assertNotice(noticeTxt) {
     const noticeMsg = $(notice);
+    noticeMsg.waitForExist();
     expect(noticeMsg.isDisplayed())
       .withContext(`notice message was not displayed`).toBe(true);
     expect(noticeMsg.getText())
       .withContext(`Incorrect text found`).toMatch(noticeTxt);
   }
 
-  function expandAssertGridItem(opposite=false) {
+  function expandAssertGridItem(visible=true,opposite=false) {
     $('[data-qa-panel-summary]').click();
-    $(gridItem).waitForDisplayed(5000, opposite)
-  }
+    $(gridItem).waitForDisplayed(constants.wait.short, opposite)
+    expect($(gridItem).isDisplayed())
+      .withContext(`grid item display should be ${visible}`)
+      .toBe(visible);
+  };
 
   function panelDisplays(panelMsg) {
     $(panel).waitForDisplayed(constants.wait.normal);
@@ -36,6 +42,29 @@ describe('Expansion Panel Suite', () => {
       .withContext(`Incorrect text found`).toEqual(panelMsg);
     expect($(panel).isDisplayed())
       .withContext(`Expansion panel should be displayed`).toBe(true)
+  }
+
+  function checkButtons() {
+    expect($$('button').length)
+      .withContext(`should be two buttons`)
+      .toBe(2);
+    const saveBtn = $(saveButton);
+    const cancelBtn = $(cancelButton);
+    browser.pause(100);
+
+    expect(cancelBtn.isDisplayed())
+      .withContext(`cancel button should be displayed`)
+      .toBe(true);
+    expect(cancelBtn.getText())
+      .withContext(`incorrect cancel button text`)
+      .toBe('Cancel');
+    expect(saveBtn.isDisplayed())
+      .withContext(`should be displayed`)
+      .toBe(true);
+    expect(saveBtn.getText())
+      .withContext(`incorrect save button text`)
+      .toBe('Save');
+
   }
 
   describe('Interactive Suite', () => {
@@ -49,7 +78,8 @@ describe('Expansion Panel Suite', () => {
     });
 
     it('should collapse on click', () => {
-      expandAssertGridItem(true);
+      expandAssertGridItem();
+      expandAssertGridItem(false,true);
     });
   });
 
@@ -70,13 +100,12 @@ describe('Expansion Panel Suite', () => {
 
     it('should display save and cancel buttons', () => {
       expandAssertGridItem();
-      const buttons = $$('button');
-      const visibleButtons = buttons.filter(b => b.isDisplayed() && !!b.getText());
-      expect(visibleButtons.length).toBe(2);
+      checkButtons();
     });
 
     it('should collapse on click', () => {
-      expandAssertGridItem(true);
+      expandAssertGridItem();
+      expandAssertGridItem(false, true);
     });
   });
 
@@ -97,13 +126,12 @@ describe('Expansion Panel Suite', () => {
 
     it('should display save and cancel buttons', () => {
       expandAssertGridItem();
-      const buttons = $$('button');
-      const visibleButtons = buttons.filter(b => b.isDisplayed() && !!b.getText());
-      expect(visibleButtons.length).toBe(2);
+      checkButtons();
     });
 
     it('should collapse on click', () => {
-      expandAssertGridItem(true);
+      expandAssertGridItem();
+      expandAssertGridItem(false, true);
     });
   });
 
@@ -124,14 +152,12 @@ describe('Expansion Panel Suite', () => {
 
     it('should display save and cancel buttons', () => {
       expandAssertGridItem();
-      const buttons = $$('button');
-      const visibleButtons = buttons.filter(b => b.isDisplayed() && !!b.getText());
-      expect(visibleButtons.length).toBe(2);
+      checkButtons();
     });
 
     it('should collapse on click', () => {
       expandAssertGridItem();
-      expandAssertGridItem(true);
+      expandAssertGridItem(false, true);
     });
   });
 

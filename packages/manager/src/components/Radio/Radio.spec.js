@@ -27,6 +27,8 @@ describe('Radio Suite', () => {
     const enabledRadios = $$(radio).filter(r => !r.getAttribute('class').includes('Mui-disabled'));
     enabledRadios.forEach(r => {
       r.click();
+
+      $('.Mui-checked circle#a').waitForExist(undefined);
       expect(r.getAttribute('class').includes('Mui-checked'))
         .withContext(`radio button should be enabled`)
         .toBe(true);
@@ -50,4 +52,20 @@ describe('Radio Suite', () => {
         .toBe('label');
     });
   });
+
+  it('should have correct colors', () => {
+    const warningColor = 'rgb(255,208,2)';
+    const errorColor = 'rgb(205,34,39)';
+
+    navigateToStory(component, childStories[0]);
+
+    //check the color of warning notice circle
+    expect($('[variant=warning] circle').getCSSProperty('stroke').value)
+      .withContext(`Warning notice color should be ${warningColor}`)
+      .toBe(warningColor);
+    //check the color of the error notice circle
+    expect($('[variant=error] circle').getCSSProperty('stroke').value)
+      .withContext(`Error notice color should be ${errorColor}`)
+      .toBe(errorColor);
+  })
 });
