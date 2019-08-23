@@ -37,6 +37,7 @@ const ActionPanel: React.StatelessComponent<CombinedProps> = props => {
 
   return (
     <div
+      data-qa-buttons
       className={classNames({
         [classes.root]: true,
         ...(className && { [className]: true }),

@@ -16,7 +16,7 @@ describe('Debounced Search Suite', () => {
     const emptyResult = 'You selected:';
     const validQuery = 'keyboard';
 
-    beforeAll(() => {
+    beforeEach(() => {
       navigateToStory(component, childStories[0]);
     });
 
@@ -42,7 +42,27 @@ describe('Debounced Search Suite', () => {
     it('should display options on a valid search query', () => {
       // Add the value twice to fix test flakiness when running the entire functional test suite
       $(enhancedSelectInput).setValue(validQuery);
-      $(optionSelector, constants.wait.normal).waitForDisplayed();
+      $(enhancedSelectInput).setValue(validQuery);
+
+      browser.waitUntil(() => {
+        $(optionSelector).isDisplayed() === true;
+        return $(optionSelector).isDisplayed();
+      }, constants.wait.normal);
+
+
+      expect($(optionSelector).isDisplayed())
+        .withContext(`select option not displayed`)
+        .toBe(true);
+
+      browser.waitUntil(() => {
+        $(optionSelector).isDisplayed() === true;
+        return $(optionSelector).isDisplayed();
+      }, constants.wait.normal);
+
+
+      expect($(optionSelector).isDisplayed())
+        .withContext(`select option not displayed`)
+        .toBe(true);
 
       selectOptions = $$(optionSelector);
       expect(selectOptions.length)
@@ -70,7 +90,7 @@ describe('Debounced Search Suite', () => {
     const validQuery = 'apples';
     const mainList = '[data-qa-listOfItems]'
 
-    beforeAll(() => {
+    beforeEach(() => {
       navigateToStory(component, childStories[1]);
     });
 
@@ -103,7 +123,6 @@ describe('Debounced Search Suite', () => {
 
     it('should display a single option on query of a single matching list item', () => {
       searchTextfield = '[data-qa-debounced-search] input';
-      $(searchTextfield).clearValue()
       $(searchTextfield).setValue(validQuery)
       browser.waitUntil(() => {
         displayedListItems = $$(listItemSelector);

@@ -49,7 +49,7 @@ describe('Editable Text', () => {
 
     it('should edit the text field with save button', () => {
         setUpEditField();
-        $(editField).$('input').setValue(newLabel);
+        browser.setNewValue(`${editField} input`, newLabel);
         $(saveEdit).click();
         //check that the edit field value is set correctly
         expect($(editableTextField).getText())
@@ -58,7 +58,7 @@ describe('Editable Text', () => {
 
     it('should edit the text field with the enter key', () => {
         setUpEditField();
-        $(editField).$('input').setValue(newLabel);
+        browser.setNewValue(`${editField} input`, newLabel);
         browser.keys('\uE007');
         //check that the edit field value is set correctly
         expect($(editableTextField).getText())
@@ -69,7 +69,7 @@ describe('Editable Text', () => {
         originalLabel = $(editableTextField).getText();
         setUpEditField()
         $(cancelEdit).waitForDisplayed();
-        $(editField).$('input').setValue('sadfgertg');
+        browser.setNewValue(`${editField} input`, 'sadfgertg');
         $(cancelEdit).click();
         // Should contain the new label from the prior test
         expect($(editableTextField).getText())
@@ -79,6 +79,7 @@ describe('Editable Text', () => {
     function setUpEditField(){
         $(editableTextField).click();
         //Edit text button should be displayed after clicking editable text
+        $(editableTextButton).waitForDisplayed(1000);
         expect($(editableTextButton).isDisplayed())
           .withContext(`Edit text ${shouldString} displayed`).toBe(true);
         $(editableTextButton).click();

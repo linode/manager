@@ -45,15 +45,17 @@ describe('Access Panel Suite', () => {
     });
 
     it('password strength indicator updates on input', () => {
-      const passwords = [{password: 'password', strength: 'Weak'},
-        {password: '12345test!', strength: 'Fair'},
-        {password: '9]%3%7?98+n[', strength: 'Good'}
+      const passwords = [
+        { password: 'password', strength: 'Weak' },
+        { password: '12345test!', strength: 'Fair' },
+        { password: '9]%3%7?98+n[', strength: 'Good' }
       ];
 
       passwords.forEach((passwordEntry) => {
-        $(passwordInput).setValue(passwordEntry.password);
+        browser.setNewValue(passwordInput, passwordEntry.password);
         expect($(passwordstrength).getText())
-          .withContext(`Incorrect strength value`).toEqual(`Strength: ${passwordEntry.strength}`);
+          .withContext(`Incorrect strength value`)
+          .toEqual(`Strength: ${passwordEntry.strength}`);
       });
     });
   });

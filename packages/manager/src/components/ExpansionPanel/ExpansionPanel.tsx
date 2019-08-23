@@ -124,8 +124,9 @@ class EExpansionPanel extends React.Component<CombinedProps> {
         <ExpansionPanelDetails {...detailProps} data-qa-panel-details>
           <Grid container>
             {notice && (
-              <Grid item xs={12} data-qa-notice>
+              <Grid item xs={12}>
                 <Notice
+                  data-qa-notice
                   text={notice}
                   {...success && { success: true }}
                   {...warning && { warning: true }}

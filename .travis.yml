@@ -1,4 +1,5 @@
 sudo: required
+dist: bionic
 language: node_js
 node_js:
   - 10.16.0
@@ -17,7 +18,7 @@ before_script:
 script:
 - lerna run build
 - lerna run --stream --scope linode-manager test -- --coverage --maxWorkers=2
-- lerna run --stream --scope linode-manager storybook:e2e 
+- lerna run --stream --scope linode-manager storybook:e2e
 - 'pkill -f selenium-standalone || :'
 - pkill -f storybook
 env:
