@@ -40,7 +40,5 @@ action upon feedback.
 
 ## License
 
-All code located in this repository is distributed under the terms of the [BSD 3-clause
-license](LICENSE). The assets are
-not licensed for any purpose without prior written approval from Linode, unless
-otherwise noted.
+All code located in this repository is distributed under the terms of the [APLv2
+license](LICENSE).

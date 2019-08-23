@@ -105,7 +105,3 @@ After these steps are completed, you'll want to start both the Cloud Manager and
 ## TypeScript
 
 This library comes with TypeScript definitions so no need to write your own or find them elsewhere online. Just import the functions as normal and they should play nicely with TypeScript!
-
-## Licence
-
-Hello world
