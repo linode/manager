@@ -8,9 +8,12 @@ import withVolumesRequest, {
 } from 'src/containers/volumesRequests.container';
 import { updateVolumes$ } from 'src/features/Volumes/WithEvents';
 import { UpdateVolumeSchema } from 'src/services/volumes/volumes.schema';
+import {
+  handleFieldErrors,
+  handleGeneralErrors
+} from 'src/utilities/formikErrorUtils';
 import LabelField from './LabelField';
 import NoticePanel from './NoticePanel';
-import { handleFieldErrors, handleGeneralErrors } from './utils';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
 interface Props {

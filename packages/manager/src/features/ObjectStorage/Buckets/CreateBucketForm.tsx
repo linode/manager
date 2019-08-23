@@ -13,14 +13,13 @@ import bucketContainer from 'src/containers/bucket.container';
 import bucketRequestsContainer, {
   BucketsRequests
 } from 'src/containers/bucketRequests.container';
-// @todo: Extract these utils out of Volumes
-import {
-  handleFieldErrors,
-  handleGeneralErrors
-} from 'src/features/Volumes/VolumeDrawer/utils';
 // @todo: Extract ActionPanel out of Volumes
 import BucketsActionPanel from 'src/features/Volumes/VolumeDrawer/VolumesActionsPanel';
 import { CreateBucketSchema } from 'src/services/objectStorage/buckets.schema';
+import {
+  handleFieldErrors,
+  handleGeneralErrors
+} from 'src/utilities/formikErrorUtils';
 import { sendCreateBucketEvent } from 'src/utilities/ga';
 import ClusterSelect from './ClusterSelect';
 

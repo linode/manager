@@ -77,18 +77,11 @@ const styles = (theme: Theme) =>
     },
     chart: {
       position: 'relative',
-      width: 'calc(100vw - 80px)',
-      paddingLeft: theme.spacing(4),
-      [theme.breakpoints.up('md')]: {
-        width: 'calc(80vw - 310px)'
-      },
-      [theme.breakpoints.up('xl')]: {
-        width: 'calc(80vw - 370px)'
-      }
+      paddingLeft: theme.spacing(4)
     },
     leftLegend: {
       position: 'absolute',
-      left: -18,
+      left: -8,
       bottom: 48,
       transform: 'rotate(-90deg)',
       color: '#777',
@@ -102,12 +95,7 @@ const styles = (theme: Theme) =>
       color: '#777',
       backgroundColor: theme.bg.offWhiteDT,
       border: `1px solid ${theme.color.border3}`,
-      fontSize: 14,
-      [theme.breakpoints.down('md')]: {
-        '& > div': {
-          marginBottom: theme.spacing(2)
-        }
-      }
+      fontSize: 14
     },
     graphTitle: {},
     graphSelectTitle: {
@@ -355,7 +343,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             showToday={rangeSelection === '24'}
             data={[
               {
-                borderColor: '#428ade',
+                borderColor: 'rgba(54, 131, 220, 1)',
+                backgroundColor: 'rgba(54, 131, 220, .5)',
                 data,
                 label: 'CPU %'
               }
@@ -364,7 +353,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         </div>
         <div className={classes.bottomLegend}>
           <Grid container>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12}>
               <MetricsDisplay
                 rows={[
                   {
@@ -431,22 +420,26 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             showToday={rangeSelection === '24'}
             data={[
               {
-                borderColor: '#3683dc',
+                borderColor: 'rgba(54, 131, 220, 1)',
+                backgroundColor: 'rgba(54, 131, 220, .5)',
                 data: v4Data.publicIn,
                 label: 'Public Traffic In'
               },
               {
-                borderColor: '#01b159',
+                borderColor: 'rgba(1, 177, 89, 1)',
+                backgroundColor: 'rgba(1, 177, 89, .5)',
                 data: v4Data.publicOut,
                 label: 'Public Traffic Out'
               },
               {
-                borderColor: '#d01e1e',
+                borderColor: 'rgba(204, 1, 153, 1)',
+                backgroundColor: 'rgba(204, 1, 153, .5)',
                 data: v4Data.privateIn,
                 label: 'Private Traffic In'
               },
               {
-                borderColor: '#ffd100',
+                borderColor: 'rgba(255, 209, 0, 1)',
+                backgroundColor: 'rgba(255, 209, 0, .5)',
                 data: v4Data.privateOut,
                 label: 'Private Traffic Out'
               }
@@ -455,7 +448,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         </div>
         <div className={classes.bottomLegend}>
           <Grid container>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12}>
               <MetricsDisplay
                 rows={[
                   {
@@ -466,16 +459,10 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                   },
                   {
                     legendTitle: 'Private Inbound',
-                    legendColor: 'red',
+                    legendColor: 'purple',
                     data: getMetrics(v4Data.privateIn),
                     format
-                  }
-                ]}
-              />
-            </Grid>
-            <Grid item xs={12} lg={6}>
-              <MetricsDisplay
-                rows={[
+                  },
                   {
                     legendTitle: 'Public Outbound',
                     legendColor: 'green',
@@ -541,22 +528,26 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             showToday={rangeSelection === '24'}
             data={[
               {
-                borderColor: '#3683dc',
+                borderColor: 'rgba(54, 131, 220, 1)',
+                backgroundColor: 'rgba(54, 131, 220, .5)',
                 data: data.publicIn,
                 label: 'Public Traffic In'
               },
               {
-                borderColor: '#01b159',
+                borderColor: 'rgba(1, 177, 89, 1)',
+                backgroundColor: 'rgba(1, 177, 89, .5)',
                 data: data.publicOut,
                 label: 'Public Traffic Out'
               },
               {
-                borderColor: '#d01e1e',
+                borderColor: 'rgba(204, 1, 153, 1)',
+                backgroundColor: 'rgba(204, 1, 153, .5)',
                 data: data.privateIn,
                 label: 'Private Traffic In'
               },
               {
-                borderColor: '#ffd100',
+                borderColor: 'rgba(255, 209, 0, 1)',
+                backgroundColor: 'rgba(255, 209, 0, .5)',
                 data: data.privateOut,
                 label: 'Private Traffic Out'
               }
@@ -565,7 +556,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         </div>
         <div className={classes.bottomLegend}>
           <Grid container>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12}>
               <MetricsDisplay
                 rows={[
                   {
@@ -576,16 +567,10 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                   },
                   {
                     legendTitle: 'Private Inbound',
-                    legendColor: 'red',
+                    legendColor: 'purple',
                     data: getMetrics(data.privateIn),
                     format
-                  }
-                ]}
-              />
-            </Grid>
-            <Grid item xs={12} lg={6}>
-              <MetricsDisplay
-                rows={[
+                  },
                   {
                     legendTitle: 'Public Outbound',
                     legendColor: 'green',
@@ -639,12 +624,14 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             showToday={rangeSelection === '24'}
             data={[
               {
-                borderColor: '#ffd100',
+                borderColor: 'rgba(255, 209, 0, 1)',
+                backgroundColor: 'rgba(255, 209, 0, .5)',
                 data: data.io,
                 label: 'Disk I/O'
               },
               {
-                borderColor: '#d01e1e',
+                borderColor: 'rgba(204, 1, 153, 1)',
+                backgroundColor: 'rgba(204, 1, 153, .5)',
                 data: data.swap,
                 label: 'Swap I/O'
               }
@@ -653,7 +640,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         </div>
         <div className={classes.bottomLegend}>
           <Grid container>
-            <Grid item xs={12} lg={6}>
+            <Grid item xs={12}>
               <MetricsDisplay
                 rows={[
                   {
@@ -661,16 +648,10 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
                     legendColor: 'yellow',
                     data: getMetrics(data.io),
                     format
-                  }
-                ]}
-              />
-            </Grid>
-            <Grid item xs={12} lg={6}>
-              <MetricsDisplay
-                rows={[
+                  },
                   {
                     legendTitle: 'Swap Rate',
-                    legendColor: 'red',
+                    legendColor: 'purple',
                     data: getMetrics(data.swap),
                     format
                   }
@@ -721,10 +702,10 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
         <DocumentTitleSegment segment={`${linode.label} - Summary`} />
 
         <Grid container>
-          <Grid item xs={12} md={3} className={classes.sidebar}>
+          <Grid item xs={12} md={4} lg={3} className={classes.sidebar}>
             <SummaryPanel />
           </Grid>
-          <Grid item xs={12} md={9} className={classes.main}>
+          <Grid item xs={12} md={8} lg={9} className={classes.main}>
             <Grid
               container
               justify="space-between"
@@ -845,13 +826,13 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
 }));
 
 const enhanced = compose<CombinedProps, {}>(
-  styled,
   withTypes,
   linodeContext,
   withImages((ownProps, imagesData) => ({
     ...ownProps,
     imagesData
-  }))
+  })),
+  styled
 );
 
 export default enhanced(LinodeSummary);

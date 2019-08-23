@@ -25,7 +25,7 @@ export type GetFromEntity = (
   filters?: any
 ) => Promise<APIResponsePage<any>>;
 
-interface GetAllData<T> {
+export interface GetAllData<T> {
   data: T;
   results: number;
 }

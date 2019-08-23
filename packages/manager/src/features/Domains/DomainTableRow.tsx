@@ -9,16 +9,13 @@ import {
 import Typography from 'src/components/core/Typography';
 import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
-import {} from 'src/components/StatusIndicator';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import Tags from 'src/components/Tags';
 import ActionMenu from './DomainActionMenu';
 
 type ClassNames =
   | 'domain'
   | 'labelStatusWrapper'
-  | 'tagWrapper'
   | 'domainRow'
   | 'domainCellContainer';
 
@@ -40,19 +37,12 @@ const styles = (theme: Theme) =>
       flexFlow: 'row nowrap',
       alignItems: 'center',
       wordBreak: 'break-all'
-    },
-    tagWrapper: {
-      marginTop: theme.spacing(1) / 2,
-      '& [class*="MuiChip"]': {
-        cursor: 'pointer'
-      }
     }
   });
 
 interface Props {
   domain: string;
   id: number;
-  tags: string[];
   status: string;
   type: 'master' | 'slave';
   onRemove: (domain: string, domainId: number) => void;
@@ -82,7 +72,6 @@ class DomainTableRow extends React.Component<CombinedProps> {
       classes,
       domain,
       id,
-      tags,
       type,
       status,
       onClone,
@@ -124,9 +113,6 @@ class DomainTableRow extends React.Component<CombinedProps> {
                     {domain}
                   </Typography>
                 )}
-              </div>
-              <div className={classes.tagWrapper}>
-                <Tags tags={tags} />
               </div>
             </Grid>
           </Grid>

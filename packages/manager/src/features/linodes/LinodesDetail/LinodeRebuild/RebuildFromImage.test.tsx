@@ -1,10 +1,10 @@
-import * as React from 'react';
 import {
   cleanup,
   fireEvent,
   render,
   waitForElement
-} from 'react-testing-library';
+} from '@testing-library/react';
+import * as React from 'react';
 import { images } from 'src/__data__/images';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
@@ -22,6 +22,8 @@ const props: CombinedProps = {
   userSSHKeys: [],
   closeSnackbar: jest.fn(),
   enqueueSnackbar: jest.fn(),
+  permissions: 'read_write',
+  requestKeys: jest.fn(),
   ...reactRouterProps
 };
 

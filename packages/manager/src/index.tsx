@@ -1,5 +1,4 @@
 import 'font-logos/assets/font-logos.css';
-import { createBrowserHistory } from 'history';
 import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import { Provider } from 'react-redux';
@@ -18,10 +17,10 @@ import { GA_ID, GA_ID_2, GTM_ID, isProduction } from 'src/constants';
 import 'src/exceptionReporting';
 import LoginAsCustomerCallback from 'src/layouts/LoginAsCustomerCallback';
 import Logout from 'src/layouts/Logout';
+import 'src/services/sdk-request-interceptors';
 import store from 'src/store';
 import 'src/utilities/createImageBitmap';
 import 'src/utilities/request';
-import isPathOneOf from 'src/utilities/routing/isPathOneOf';
 import './index.css';
 import LinodeThemeWrapper from './LinodeThemeWrapper';
 
@@ -39,6 +38,10 @@ const OAuthCallbackPage = DefaultLoader({
   loader: () => import('src/layouts/OAuth')
 });
 
+const Cancel = DefaultLoader({
+  loader: () => import('src/features/CancelLanding')
+});
+
 /*
  * Initialize Analytic and Google Tag Manager
  */
@@ -53,16 +56,6 @@ initAnalytics(
   }
 );
 initTagManager(GTM_ID);
-
-/**
- * Send pageviews unless blacklisted.
- */
-createBrowserHistory().listen(({ pathname }) => {
-  /** https://palantir.github.io/tslint/rules/strict-boolean-expressions/ */
-  if ((window as any).ga && isPathOneOf(['/oauth'], pathname) === false) {
-    (window as any).ga('send', 'pageview');
-  }
-});
 
 const renderNullAuth = () => <span>null auth route</span>;
 
@@ -95,6 +88,12 @@ const renderApp = (props: RouteProps) => (
   </React.Fragment>
 );
 
+const renderCancel = () => (
+  <LinodeThemeWrapper>
+    <Cancel />
+  </LinodeThemeWrapper>
+);
+
 const renderAuthentication = () => (
   <Switch>
     <Route exact path="/oauth/callback" component={OAuthCallbackPage} />
@@ -102,6 +101,7 @@ const renderAuthentication = () => (
     {/* A place to go that prevents the app from loading while refreshing OAuth tokens */}
     <Route exact path="/nullauth" render={renderNullAuth} />
     <Route exact path="/logout" component={Logout} />
+    <Route exact path="/cancel" render={renderCancel} />
     <AuthenticationWrapper>
       <Switch>
         <Route path="/linodes/:linodeId/lish" render={renderLish} />
@@ -129,3 +129,7 @@ ReactDOM.render(
   </React.Fragment>,
   document.getElementById('root') as HTMLElement
 );
+
+if (module.hot && !isProduction) {
+  module.hot.accept();
+}

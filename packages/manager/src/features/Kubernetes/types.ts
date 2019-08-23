@@ -2,6 +2,7 @@ export interface PoolNodeWithPrice extends ExtendedPoolNode {
   totalMonthlyPrice: number;
   queuedForDeletion?: boolean;
   queuedForAddition?: boolean;
+  _error?: Linode.ApiFieldError[];
 }
 
 export interface ExtendedPoolNode {

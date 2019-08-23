@@ -98,13 +98,6 @@ const styles = (theme: Theme) =>
     }
   });
 
-/* Need to override the default RS filtering; otherwise entities whose label
- * doesn't match the search term will be automatically filtered, meaning that
- * searching by tag won't work. */
-const filterResults = (option: Item, inputValue: string) => {
-  return true;
-};
-
 interface State {
   inputValue: string;
 }
@@ -138,8 +131,8 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     const { inputValue } = this.state;
     const options = [...docs, ...community];
     return [
-      ...options,
-      { value: 'search', label: inputValue, data: { source: 'finalLink' } }
+      { value: 'search', label: inputValue, data: { source: 'finalLink' } },
+      ...options
     ];
   };
 
@@ -163,6 +156,9 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
     }
     const { history } = this.props;
     const { inputValue } = this.state;
+    if (!inputValue) {
+      return;
+    }
     const href = pathOr('', ['data', 'href'], selected);
     if (selected.value === 'search') {
       const link = this.getLinkTarget(inputValue);
@@ -174,6 +170,9 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
 
   handleSubmit = () => {
     const { inputValue } = this.state;
+    if (!inputValue) {
+      return;
+    }
     const { history } = this.props;
     const link = this.getLinkTarget(inputValue);
     history.push(link);
@@ -206,7 +205,9 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
             isClearable={false}
             inputValue={inputValue}
             options={options}
-            components={{ Option: SearchItem, DropdownIndicator: () => null }}
+            components={
+              { Option: SearchItem, DropdownIndicator: () => null } as any
+            }
             onChange={this.handleSelect}
             onInputChange={this.onInputValueChange}
             placeholder="Search for answers..."
@@ -214,8 +215,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
               [classes.enhancedSelectWrapper]: true,
               [classes.enhancedSelectWrapperCompact]: spacingMode === 'compact'
             })}
-            styleOverrides={selectStyles}
-            filterOption={filterResults}
+            styles={selectStyles}
             value={false}
           />
         </div>

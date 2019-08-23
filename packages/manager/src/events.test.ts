@@ -1,4 +1,4 @@
-import Axios from 'axios';
+import Axios, { AxiosResponse } from 'axios';
 import {
   eventRequestDeadline,
   INTERVAL,
@@ -36,7 +36,7 @@ describe('events module', () => {
                   }
                 ]
               }
-            });
+            } as AxiosResponse);
           })
       );
       requestEvents();

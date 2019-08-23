@@ -22,7 +22,7 @@ class Managed extends React.Component<Props> {
 
     return (
       <Switch>
-        <Route component={ManagedLanding} path={path} exact />
+        <Route component={ManagedLanding} path={path} />
       </Switch>
     );
   }

@@ -51,7 +51,8 @@ const styles = (theme: Theme) =>
     heading: {
       fontFamily: theme.font.bold,
       fontSize: '1rem',
-      color: theme.color.headline
+      color: theme.color.headline,
+      wordBreak: 'break-word'
     },
     subheading: {
       fontSize: '0.875rem',
@@ -117,6 +118,7 @@ export class CardBase extends React.Component<CombinedProps> {
         container
         alignItems="center"
         justify="space-between"
+        wrap="nowrap"
         className={`${classes.innerGrid} innerGrid`}
       >
         {renderIcon && (

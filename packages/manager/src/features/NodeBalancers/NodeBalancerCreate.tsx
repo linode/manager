@@ -32,9 +32,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
-import SelectRegionPanel, {
-  ExtendedRegion
-} from 'src/components/SelectRegionPanel';
+import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { Tag } from 'src/components/TagsInput';
 import { dcDisplayCountry, dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
@@ -58,6 +56,8 @@ import {
   NodeBalancerConfigFieldsWithStatus,
   transformConfigsForRequest
 } from './utils';
+
+import { ExtendedRegion } from 'src/components/EnhancedSelect/variants/RegionSelect';
 
 type ClassNames = 'root' | 'main' | 'sidebar' | 'title';
 

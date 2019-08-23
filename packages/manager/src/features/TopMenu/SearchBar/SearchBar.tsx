@@ -194,7 +194,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
                 : 'Search for Linodes, Volumes, NodeBalancers, Domains, Tags...'
             }
             components={{ Control, Option }}
-            styleOverrides={selectStyles}
+            styles={selectStyles}
             openMenuOnFocus={false}
             openMenuOnClick={false}
             filterOption={this.filterResults}

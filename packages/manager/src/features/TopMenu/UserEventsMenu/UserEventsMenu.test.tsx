@@ -1,5 +1,5 @@
+import { cleanup, fireEvent } from '@testing-library/react';
 import * as React from 'react';
-import { cleanup, fireEvent } from 'react-testing-library';
 import store from 'src/store';
 
 import { events } from 'src/__data__/events';

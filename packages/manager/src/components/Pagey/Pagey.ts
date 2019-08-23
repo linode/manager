@@ -65,7 +65,7 @@ export default (requestFn: PaginatedRequest) => (
       loading: true,
       isSorting: false,
       page: 1,
-      pageSize: storage.pageSize.get(),
+      pageSize: storage.pageSize.get() || 25,
       error: undefined,
       orderBy: undefined,
       order: asc,

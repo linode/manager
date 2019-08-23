@@ -256,17 +256,15 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
     }
     this.composeState([
       set(L.entity_type, e.value),
-      set(L.entity_id, undefined),
+      set(L.entity_id, null),
       set(L.inputValue, ''),
       set(L.data, []),
       set(L.errors, undefined)
     ]);
   };
 
-  handleEntityIDChange = (selected: Item) => {
-    if (selected) {
-      this.setState(set(L.entity_id, selected.value));
-    }
+  handleEntityIDChange = (selected: Item | null) => {
+    this.setState(set(L.entity_id, selected ? selected.value : null));
   };
 
   getHasNoEntitiesMessage = (): string => {
@@ -453,9 +451,14 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
       { label: 'None/General', value: 'general' }
     ];
 
-    const defaultTopic = topicOptions.find(eachTopic => {
+    const selectedTopic = topicOptions.find(eachTopic => {
       return eachTopic.value === ticket.entity_type;
     });
+
+    const selectedEntity =
+      data.find(
+        thisEntity => thisEntity.value === this.state.ticket.entity_id
+      ) || null;
 
     return (
       <Drawer
@@ -475,7 +478,7 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         <Select
           options={topicOptions}
           label="What is this regarding?"
-          defaultValue={defaultTopic}
+          value={selectedTopic}
           onChange={this.handleEntityTypeChange}
           data-qa-ticket-entity-type
           placeholder="Choose a Product"
@@ -486,7 +489,7 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
           <>
             <Select
               options={data}
-              defaultValue={ticket.entity_id}
+              value={selectedEntity}
               disabled={data.length === 0}
               errorText={inputError}
               placeholder={`Select a ${entityIdtoNameMap[ticket.entity_type]}`}
@@ -505,7 +508,8 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         )}
 
         <TextField
-          label="Summary"
+          label="Title"
+          placeholder="Enter a title for your ticket."
           required
           value={ticket.summary}
           onChange={this.handleSummaryInputChange}
@@ -513,6 +517,7 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
           data-qa-ticket-summary
         />
         <TabbedReply
+          required
           error={descriptionError}
           handleChange={this.handleDescriptionInputChange}
           value={ticket.description}

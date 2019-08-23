@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
@@ -22,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface Props {
+interface Props extends Pick<RouteComponentProps, 'history'> {
   company: string;
   lastName: string;
   firstName: string;
@@ -57,8 +58,8 @@ const ContactInformation: React.FC<CombinedProps> = props => {
     email,
     username,
     phone,
-    activeSince
-    // isRestrictedUser
+    activeSince,
+    isRestrictedUser
   } = props;
 
   return (
@@ -100,19 +101,20 @@ const ContactInformation: React.FC<CombinedProps> = props => {
           <strong>Active Since:&nbsp;</strong>
           <DateTimeDisplay value={activeSince} format="MMMM D, YYYY" />
         </div>
-        {/* {!isRestrictedUser && (
+        {!isRestrictedUser && (
           <Typography
             onClick={() => toggleModal(true)}
             className={classes.cancel}
           >
             <strong>Close Account</strong>
           </Typography>
-        )} */}
+        )}
       </Paper>
       <Dialog
         username={username}
         closeDialog={() => toggleModal(false)}
         open={modalOpen}
+        history={props.history}
       />
     </React.Fragment>
   );

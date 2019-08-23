@@ -1,6 +1,6 @@
 import * as moment from 'moment';
 
-import { shouldRenderHively } from './ExpandableTicketPanel';
+import { shouldRenderHively } from './Hively';
 
 const recent = moment()
   .subtract(6, 'days')

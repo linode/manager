@@ -121,7 +121,6 @@ const RenderData: React.StatelessComponent<RenderDataProps> = props => {
           onClone={onClone}
           onEdit={onEdit}
           onRemove={onRemove}
-          tags={domain.tags}
           type={domain.type}
           status={domain.status}
         />

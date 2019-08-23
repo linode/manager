@@ -23,7 +23,6 @@ import Error from 'src/assets/icons/error.svg';
 import './searchLanding.css';
 
 type ClassNames =
-  | 'root'
   | 'headline'
   | 'emptyResultWrapper'
   | 'emptyResult'
@@ -31,7 +30,6 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
     headline: {
       marginBottom: 10
     },
@@ -72,7 +70,7 @@ interface State {
   query: string;
 }
 
-type CombinedProps = SearchProps &
+export type CombinedProps = SearchProps &
   RouteComponentProps<{}> &
   WithStyles<ClassNames>;
 

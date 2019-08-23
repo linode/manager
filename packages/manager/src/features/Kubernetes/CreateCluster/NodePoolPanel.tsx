@@ -140,7 +140,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
      * Add pool and reset form state.
      */
     addNodePool({
-      id: 0,
+      id: Math.random(),
       type: selectedType,
       count: nodeCount,
       totalMonthlyPrice: getMonthlyPrice(selectedType, nodeCount, types)
@@ -171,11 +171,11 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
         <TextField
           tiny
           type="number"
-          min={1}
+          min={0}
           max={100}
           value={nodeCount}
           onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            updateNodeCount(Math.max(+e.target.value, 1))
+            updateNodeCount(Math.max(+e.target.value, 0))
           }
           errorText={countError}
         />
@@ -191,6 +191,7 @@ const Panel: React.FunctionComponent<CombinedProps> = props => {
           <NodePoolDisplayTable
             small
             editable
+            loading={false} // When creating we never need to load node pools from the API
             pools={pools || []}
             types={types}
             handleDelete={(poolIdx: number) => deleteNodePool!(poolIdx)}

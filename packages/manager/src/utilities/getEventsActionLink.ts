@@ -15,6 +15,12 @@ export default (
   const id = path(['id'], entity);
   const label = path(['label'], entity);
 
+  if (action.match(/community/gi)) {
+    return () => {
+      window.open(entity!.url, '_blank');
+    };
+  }
+
   if (['disk_delete', 'linode_config_delete'].includes(action)) {
     /**
      * Special cases that are handled here above the deletion logic;
@@ -123,16 +129,6 @@ export default (
             onClick(`/nodebalancers/${id}/summary`);
           };
       }
-
-    case 'community_question':
-      return () => {
-        window.open(entity!.url, '_blank');
-      };
-
-    case 'community_like':
-      return () => {
-        window.open(entity!.url, '_blank');
-      };
 
     case 'user':
       return (e: React.MouseEvent<HTMLElement>) => {

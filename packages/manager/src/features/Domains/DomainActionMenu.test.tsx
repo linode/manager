@@ -1,5 +1,5 @@
+import { cleanup } from '@testing-library/react';
 import * as React from 'react';
-import { cleanup } from 'react-testing-library';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { DomainActionMenu } from './DomainActionMenu';
 
@@ -11,7 +11,7 @@ const props = {
   onClone: jest.fn(),
   onRemove: jest.fn(),
   onEdit: jest.fn(),
-  type: 'master',
+  type: 'master' as 'master' | 'slave',
   domain: '',
   id: 1234456,
   ...reactRouterProps

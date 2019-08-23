@@ -15,7 +15,8 @@ describe('ListLinodes', () => {
     title: '',
     tagGroup: '',
     CSVlinkContainer: '',
-    CSVlink: ''
+    CSVlink: '',
+    addNewLink: ''
   };
 
   it('renders without error', () => {

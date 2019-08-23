@@ -110,7 +110,7 @@ interface Props {
   label: string;
   status: Linode.LinodeStatus;
   disabled?: boolean;
-  recentEvent?: Linode.Event;
+  linodeEvents?: Linode.Event[];
   linodeConfigs: Linode.Config[];
 }
 
@@ -165,7 +165,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
       status,
       classes,
       disabled,
-      recentEvent,
+      linodeEvents,
       linodeConfigs
     } = this.props;
     const {
@@ -174,7 +174,11 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
 
     const hasNoConfigs = linodeConfigs.length === 0;
 
-    const isBusy = linodeInTransition(status, recentEvent);
+    const firstEventWithPercent = (linodeEvents || []).find(
+      eachEvent => typeof eachEvent.percent_complete === 'number'
+    );
+
+    const isBusy = linodeInTransition(status, firstEventWithPercent);
     const isRunning = !isBusy && status === 'running';
     const isOffline = !isBusy && status === 'offline';
     const buttonText = () => {

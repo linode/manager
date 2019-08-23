@@ -198,6 +198,9 @@ export class EditableText extends React.Component<FinalProps, State> {
           this.setState({ isEditing: false });
         })
         .catch(e => e);
+    } else {
+      /** otherwise, we've just submitted the form with no value change */
+      this.setState({ isEditing: false });
     }
   };
 

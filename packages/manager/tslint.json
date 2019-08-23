@@ -35,5 +35,8 @@
     "prefer-for-of": {"severity": "warning"},
     "trailing-comma": { "severity": "warning" },
     "variable-name": false
+  },
+  "linterOptions": {
+    "exclude": ["*.json", "**/*.json"]
   }
 }
