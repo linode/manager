@@ -1,3 +1,4 @@
+import { Grant } from 'linode-js-sdk/lib/account'
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -79,7 +80,7 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
 
     if (volumeGrants) {
       const allowedVolumeGrants = volumeGrants.reduce(
-        (acc: number[], volume: Linode.Grant) => {
+        (acc: number[], volume: Grant) => {
           if (volume.permissions === 'read_write') {
             acc.push(volume.id);
           }
@@ -186,7 +187,7 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
 }
 
 interface StateProps {
-  volumeGrants?: Linode.Grant[];
+  volumeGrants?: Grant[];
 }
 
 const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
