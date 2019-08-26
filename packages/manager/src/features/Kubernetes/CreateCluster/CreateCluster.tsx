@@ -111,7 +111,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
           errors: getAPIErrorOrDefault(
             error,
             'Unable to load Kubernetes versions.',
-            'version'
+            'versionLoad'
           )
         });
       });
@@ -224,7 +224,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     } = this.state;
 
     const errorMap = getErrorMap(
-      ['region', 'node_pools', 'label', 'tags', 'version'],
+      ['region', 'node_pools', 'label', 'tags', 'version', 'versionLoad'],
       errors
     );
 
@@ -234,7 +234,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
 
     const regionDisplay = _region ? _region.display : undefined;
 
-    if (typesError || regionsError || errorMap.version) {
+    if (typesError || regionsError || errorMap.versionLoad) {
       /**
        * This information is necessary to create a Cluster.
        * Otherwise, show an error state.
