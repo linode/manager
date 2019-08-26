@@ -1,3 +1,4 @@
+import moment from 'moment';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -6,8 +7,6 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Checkbox from 'src/components/CheckBox';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-
-import { generateMigrationTimeString } from 'src/utilities/minute-conversion';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -92,7 +91,8 @@ const CautionNotice: React.FC<CombinedProps> = props => {
         </li>
         <li>
           When this migration begins, we estimate it will take approximately{' '}
-          {generateMigrationTimeString(props.migrationTimeInMins)} to complete.
+          {moment.duration(props.migrationTimeInMins, 'minutes').humanize()} to
+          complete.
         </li>
       </ul>
       {props.error && <Notice error text={props.error} />}
