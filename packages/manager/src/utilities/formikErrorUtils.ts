@@ -5,6 +5,12 @@ export const handleFieldErrors = (
   callback: Function,
   fieldErrors: Linode.ApiFieldError[]
 ) => {
+  if (!fieldErrors) {
+    // Not sure what to return here, but there's a hot reloading
+    // bug that crashes the app in this function sometimes.
+    return;
+  }
+
   const mappedFieldErrors = fieldErrors.reduce(
     (result, { field, reason }) =>
       field ? { ...result, [field]: reason } : result,
