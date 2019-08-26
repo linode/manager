@@ -12,41 +12,22 @@ interface Props {
 const VATBanner: React.FC<Props> = props => {
   const flags = useFlags();
 
-  const [shouldShowBanner, setBannerVisibility] = React.useState<boolean>(
-    false
-  );
-
-  React.useEffect(() => {
-    const isBillingPage = props.location.pathname.match(/account[/]billing/);
-
-    /** only change banner visibility if it isn't already set */
-    if (shouldShowBanner && isBillingPage) {
-      setBannerVisibility(false);
-    }
-
-    if (!shouldShowBanner && !isBillingPage) {
-      setBannerVisibility(true);
-    }
-  });
+  const isBillingPage = props.location.pathname.match(/account[/]billing/);
 
   {
     /* 
     launch darkly is responsible for determining who and who doesn't see this banner
     based on country information we send to the service in IdentifyUser.tsx
-
+    
     As of Aug 14, 2019, this is the payload this component expects from LD
-
+    
     {} || {
       tax_name: string;
       date: string;
     }
   */
   }
-  if (
-    shouldShowBanner &&
-    flags.vatBanner &&
-    !!Object.keys(flags.vatBanner).length
-  ) {
+  if (flags.vatBanner && !!Object.keys(flags.vatBanner).length) {
     const { tax_name, date } = flags.vatBanner!;
 
     const taxNameToUpperCase = tax_name.toUpperCase();
@@ -71,10 +52,16 @@ const VATBanner: React.FC<Props> = props => {
                 target="_blank"
               >
                 Tax Information Guide.
-              </a>{' '}
-              To ensure the correct {taxNameToUpperCase} is applied, please
-              verify your <Link to="/account/billing">contact information</Link>{' '}
-              is up to date.
+              </a>
+              {!isBillingPage && (
+                <React.Fragment>
+                  {' '}
+                  To ensure the correct {taxNameToUpperCase} is applied, please
+                  verify your{' '}
+                  <Link to="/account/billing">contact information</Link> is up
+                  to date.
+                </React.Fragment>
+              )}
             </Notice>
           );
         }}
