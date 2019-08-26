@@ -1,3 +1,4 @@
+import moment from 'moment';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -37,6 +38,7 @@ interface Props {
   hasConfirmed: boolean;
   setConfirmed: (value: boolean) => void;
   error?: string;
+  migrationTimeInMins: number;
 }
 
 type CombinedProps = Props;
@@ -86,6 +88,11 @@ const CautionNotice: React.FC<CombinedProps> = props => {
               </ul>
             </React.Fragment>
           )}
+        </li>
+        <li>
+          When this migration begins, we estimate it will take approximately{' '}
+          {moment.duration(props.migrationTimeInMins, 'minutes').humanize()} to
+          complete.
         </li>
       </ul>
       {props.error && <Notice error text={props.error} />}
