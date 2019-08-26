@@ -137,6 +137,7 @@ const SelectRegionPanel: React.FC<Props> = props => {
     handleSelection,
     regions,
     selectedID,
+    styles,
     ...restOfReactSelectProps
   } = props;
 
@@ -155,7 +156,7 @@ const SelectRegionPanel: React.FC<Props> = props => {
         options={options}
         onChange={(selection: RegionItem) => handleSelection(selection.value)}
         components={{ Option: RegionOption }}
-        styles={selectStyles}
+        styles={styles || selectStyles}
         {...restOfReactSelectProps}
       />
     </div>

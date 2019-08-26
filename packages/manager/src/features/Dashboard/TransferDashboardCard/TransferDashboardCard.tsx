@@ -1,3 +1,4 @@
+import { getNetworkUtilization } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
 import CircleProgress from 'src/components/CircleProgress';
@@ -10,7 +11,6 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
-import { getNetworkUtilization } from 'src/services/account';
 import DashboardCard from '../DashboardCard';
 
 export type ClassNames =

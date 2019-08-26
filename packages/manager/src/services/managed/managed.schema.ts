@@ -33,15 +33,54 @@ export const updateManagedLinodeSchema = object({
   ssh: sshSettingSchema
 });
 
+export const credentialLabel = string()
+  .min(2, 'Label must be between 2 and 75 characters.')
+  .max(75, 'Label must be between 2 and 75 characters.');
+
+export const credentialPassword = string()
+  .notRequired()
+  .max(5000, 'Password must be 5000 characters or less.');
+
+export const credentialUsername = string()
+  .notRequired()
+  .max(5000, 'Username must be 5000 characters or less.');
+
 export const createCredentialSchema = object().shape({
-  label: string()
-    .required('Label is required.')
-    .min(2, 'Label must be between 2 and 75 characters.')
-    .max(75, 'Label must be between 2 and 75 characters.'),
-  username: string()
+  label: credentialLabel.required('Label is required.'),
+  username: credentialUsername,
+  password: credentialPassword
+});
+
+export const updateCredentialSchema = object().shape({
+  label: credentialLabel.required('Label is required.')
+});
+
+export const updatePasswordSchema = object().shape({
+  username: credentialUsername,
+  password: credentialPassword.required('Password is required.')
+});
+
+export const createContactSchema = object().shape({
+  name: string()
+    .required('Name is required.')
+    .min(2, 'Name must be between 2 and 64 characters.')
+    .max(64, 'Name must be between 2 and 64 characters.'),
+  email: string()
+    .required('E-mail is required.')
+    .min(6, 'E-mail must be between 6 and 100 characters')
+    .max(100, 'E-mail must be between 6 and 100 characters')
+    .email('Invalid e-mail address'),
+  phone: object().shape({
+    primary: string()
+      .notRequired()
+      .nullable(true),
+    secondary: string()
+      .notRequired()
+      .nullable(true)
+  }),
+  group: string()
     .notRequired()
-    .max(5000, 'Username must be 5000 characters or less.'),
-  password: string()
-    .notRequired()
-    .max(5000, 'Password must be 5000 characters or less.')
+    .nullable(true)
+    .min(2, 'Group must be between 2 and 50 characters.')
+    .max(50, 'Group must be between 2 and 50 characters.')
 });

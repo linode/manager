@@ -8,16 +8,24 @@ interface Props {
   credentialID: number;
   label: string;
   openDialog: (id: number, label: string) => void;
+  openForEdit: (id: number) => void;
 }
 
 export type CombinedProps = Props & WithSnackbarProps;
 
 export class CredentialActionMenu extends React.Component<CombinedProps, {}> {
   createActions = () => {
-    const { label, credentialID, openDialog } = this.props;
+    const { label, credentialID, openDialog, openForEdit } = this.props;
 
     return (closeMenu: Function): Action[] => {
       const actions = [
+        {
+          title: 'Edit',
+          onClick: () => { 
+            openForEdit(credentialID);
+            closeMenu()
+          }
+        },
         {
           title: 'Delete',
           onClick: () => {

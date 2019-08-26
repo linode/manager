@@ -217,10 +217,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
         this.setState(
           () => ({
             isSubmitting: false,
-            errors:
-              error.response &&
-              error.response.data &&
-              error.response.data.errors
+            errors: error
           }),
           () => {
             scrollErrorIntoView();

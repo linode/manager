@@ -30,7 +30,6 @@ import Grid from 'src/components/Grid';
 import LandingLoading from 'src/components/LandingLoading';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
-import TaxBanner from 'src/components/TaxBanner';
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
@@ -458,7 +457,6 @@ export class App extends React.Component<CombinedProps, State> {
                 username={this.props.username}
               />
               <div className={classes.wrapper} id="main-content">
-                <TaxBanner location={this.props.location} />
                 <Grid container spacing={0} className={classes.grid}>
                   <Grid item className={classes.switchWrapper}>
                     <Switch>

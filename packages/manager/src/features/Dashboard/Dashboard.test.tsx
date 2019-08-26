@@ -1,6 +1,7 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { activePromotions } from 'src/__data__/account';
+import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { light } from 'src/themes';
 import { Dashboard } from './Dashboard';
 
@@ -22,7 +23,7 @@ const props = {
   theme: light({ spacingOverride: 8 })
 };
 
-const component = shallow(<Dashboard {...props} />);
+const component = shallow(<Dashboard {...props} {...reactRouterProps} />);
 
 describe('Dashboard view', () => {
   describe('Backups CTA card', () => {

@@ -1,13 +1,10 @@
-import * as classNames from 'classnames';
-import * as moment from 'moment';
+// import * as classNames from 'classnames';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { Converter } from 'showdown';
 import 'showdown-highlightjs-extension';
 import UserIcon from 'src/assets/icons/user.svg';
-import Divider from 'src/components/core/Divider';
-import Paper from 'src/components/core/Paper';
 import {
   createStyles,
   Theme,
@@ -19,6 +16,7 @@ import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 
 import { sanitizeHTML } from 'src/utilities/sanitize-html';
+import { Hively, shouldRenderHively } from './Hively';
 import TicketDetailBody from './TicketDetailText';
 
 type ClassNames =
@@ -26,9 +24,10 @@ type ClassNames =
   | 'userWrapper'
   | 'leftIcon'
   | 'userName'
-  | 'paper'
-  | 'avatarCol'
-  | 'userCol'
+  | 'expert'
+  | 'content'
+  | 'header'
+  | 'headerInner'
   | 'isCurrentUser'
   | 'hivelyContainer'
   | 'hivelyLink'
@@ -47,12 +46,9 @@ const styles = (theme: Theme) =>
     },
     root: {
       width: '100%',
-      padding: theme.spacing(2),
-      position: 'relative',
-      '& p': {
-        margin: 0,
-        padding: 0
-      }
+      padding: 0,
+      marginBottom: theme.spacing(2),
+      position: 'relative'
     },
     userWrapper: {
       marginTop: theme.spacing(1) / 2,
@@ -60,8 +56,15 @@ const styles = (theme: Theme) =>
       alignItems: 'center',
       justifyContent: 'center',
       borderRadius: '50%',
-      width: 40,
-      height: 40
+      width: 32,
+      height: 32,
+      position: 'relative',
+      top: -2,
+      [theme.breakpoints.up('sm')]: {
+        marginRight: theme.spacing(1),
+        width: 40,
+        height: 40
+      }
     },
     leftIcon: {
       width: '100%',
@@ -69,43 +72,38 @@ const styles = (theme: Theme) =>
       borderRadius: '50%',
       color: theme.palette.text.primary
     },
+    content: {
+      width: '100%',
+      marginTop: theme.spacing(1),
+      marginRight: theme.spacing(1),
+      padding: theme.spacing(2),
+      backgroundColor: theme.color.white,
+      border: `1px solid ${theme.color.grey2}`,
+      borderRadius: theme.shape.borderRadius
+    },
+    header: {
+      padding: `0 ${theme.spacing(1)}px`,
+      minHeight: 40,
+      backgroundColor: theme.color.grey2,
+      borderTopLeftRadius: theme.shape.borderRadius,
+      borderTopRightRadius: theme.shape.borderRadius
+    },
+    headerInner: {
+      display: 'flex',
+      flexWrap: 'wrap',
+      alignItems: 'center'
+    },
     userName: {
       whiteSpace: 'nowrap',
       fontFamily: 'LatoWebBold', // we keep this bold at all times
-      color: theme.color.headline
+      color: theme.color.headline,
+      marginRight: 4
     },
-    paper: {
-      padding: theme.spacing(3)
+    expert: {
+      marginRight: 4,
+      whiteSpace: 'nowrap'
     },
-    avatarCol: {
-      minWidth: 60
-    },
-    userCol: {
-      minWidth: 200,
-      paddingRight: `${theme.spacing(4)}px !important`
-    },
-    isCurrentUser: {
-      backgroundColor: theme.color.grey2
-    },
-    hivelyLink: {
-      textDecoration: 'none',
-      color: theme.color.black,
-      marginRight: theme.spacing(2)
-    },
-    hivelyImage: {
-      width: '25px',
-      margin: 3
-    },
-    hivelyContainer: {
-      display: 'flex',
-      flexFlow: 'row nowrap',
-      alignItems: 'center',
-      marginTop: theme.spacing(3)
-    },
-    hivelyLinkIcon: {
-      display: 'inline-block',
-      marginRight: theme.spacing(1)
-    }
+    isCurrentUser: {}
   });
 
 interface Props {
@@ -131,36 +129,10 @@ interface Data {
   updated: string;
 }
 
-export const shouldRenderHively = (
-  fromLinode: boolean,
-  updated: string,
-  username?: string
-) => {
-  /* Render Hively only for replies marked as from_linode,
-   * and are on tickets less than 7 days old,
-   * and when the user is not "Linode"
-   * Defaults to showing Hively if there are any errors parsing dates
-   * or the date is invalid.
-   */
-  try {
-    if (username === 'Linode') {
-      return false;
-    }
-    const lastUpdated = moment(updated);
-    if (!lastUpdated.isValid()) {
-      return true;
-    }
-    const diff = moment.duration(moment().diff(lastUpdated));
-    return fromLinode && diff <= moment.duration(7, 'days');
-  } catch {
-    return true;
-  }
-};
-
 export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
   const {
     classes,
-    isCurrentUser,
+    // isCurrentUser,
     parentTicket,
     ticket,
     open,
@@ -215,60 +187,6 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
     }
   }, []);
 
-  const renderHively = (
-    linodeUsername: string,
-    ticketId: string,
-    replyId: string
-  ) => {
-    const href = `https://secure.teamhively.com/ratings/add/account/587/source/hs/ext/${linodeUsername}/ticket/${ticketId}-${replyId}/rating/`;
-    return (
-      <div className={classes.hivelyContainer}>
-        <Divider />
-        <a className={classes.hivelyLink} href={href + '3'} target="_blank">
-          How did I do?
-        </a>
-        <span>
-          <a
-            href={href + '3'}
-            target="_blank"
-            className={classes.hivelyLinkIcon}
-          >
-            <img
-              className={classes.hivelyImage}
-              src={
-                'https://secure.teamhively.com/system/smileys/icons/000/000/541/px_25/icon_positive.png'
-              }
-            />
-          </a>
-          <a
-            href={href + '2'}
-            target="_blank"
-            className={classes.hivelyLinkIcon}
-          >
-            <img
-              className={classes.hivelyImage}
-              src={
-                'https://secure.teamhively.com/system/smileys/icons/000/000/542/px_25/icon_indifferent.png'
-              }
-            />
-          </a>
-          <a
-            href={href + '1'}
-            target="_blank"
-            className={classes.hivelyLinkIcon}
-          >
-            <img
-              className={classes.hivelyImage}
-              src={
-                'https://secure.teamhively.com/system/smileys/icons/000/000/543/px_25/icon_negative.png'
-              }
-            />
-          </a>
-        </span>
-      </div>
-    );
-  };
-
   const renderAvatar = (url: string) => {
     return url !== 'not found' ? (
       <div className={classes.userWrapper}>
@@ -291,46 +209,60 @@ export const ExpandableTicketPanel: React.FC<CombinedProps> = props => {
 
   return (
     <Grid item className={classes.root}>
-      <Paper
-        className={classNames({
-          [classes.paper]: true,
-          [classes.isCurrentUser]: isCurrentUser
-        })}
+      <Grid
+        container
+        direction="row"
+        justify="space-between"
+        alignItems="flex-start"
       >
-        <Grid
-          container
-          direction="row"
-          justify="space-between"
-          alignItems="flex-start"
-        >
-          <Grid item xs={11} sm={5} md={3} className={classes.userCol}>
-            <Grid container wrap="nowrap">
-              <Grid item style={{ paddingLeft: 0 }}>
-                {renderAvatar(data.gravatarUrl)}
+        <Grid item xs={12}>
+          <Grid container wrap="nowrap">
+            <Grid item>{renderAvatar(data.gravatarUrl)}</Grid>
+            <Grid item className={`${classes.content}`}>
+              <Grid container className={classes.header}>
+                <Grid item className={classes.headerInner}>
+                  <Typography className={classes.userName} component="span">
+                    {data.username}
+                  </Typography>
+                  {data.from_linode && (
+                    <Typography
+                      component="span"
+                      variant="body1"
+                      className={classes.expert}
+                    >
+                      <em>Linode Expert</em>
+                    </Typography>
+                  )}
+                  <Typography variant="body1" component="span">
+                    commented{' '}
+                    <DateTimeDisplay
+                      value={data.date}
+                      humanizeCutoff={'never'}
+                    />
+                  </Typography>
+                </Grid>
               </Grid>
-              <Grid item>
-                <Typography className={classes.userName}>
-                  {data.username}
-                </Typography>
-                {data.from_linode && (
-                  <Typography variant="body1">Linode Expert</Typography>
-                )}
-                <Typography variant="body1" style={{ marginTop: 8 }}>
-                  <DateTimeDisplay value={data.date} humanizeCutoff={'month'} />
-                </Typography>
-              </Grid>
+              <TicketDetailBody
+                open={open}
+                dangerouslySetInnerHTML={{
+                  __html: data.description
+                }}
+              />
+              {shouldRenderHively(
+                data.from_linode,
+                data.updated,
+                data.username
+              ) && (
+                <Hively
+                  linodeUsername={data.username}
+                  ticketId={data.ticket_id}
+                  replyId={data.reply_id}
+                />
+              )}
             </Grid>
           </Grid>
-          <TicketDetailBody
-            open={open}
-            dangerouslySetInnerHTML={{
-              __html: data.description
-            }}
-          />
         </Grid>
-        {shouldRenderHively(data.from_linode, data.updated, data.username) &&
-          renderHively(data.username, data.ticket_id, data.reply_id)}
-      </Paper>
+      </Grid>
     </Grid>
   );
 };

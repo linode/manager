@@ -1,6 +1,7 @@
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
 import {
@@ -29,12 +30,14 @@ import BlogDashboardCard from './BlogDashboardCard';
 import DomainsDashboardCard from './DomainsDashboardCard';
 import ImportGroupsCard from './GroupImportCard';
 import LinodesDashboardCard from './LinodesDashboardCard';
+import ManagedDashboardCard from './ManagedDashboardCard';
 import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
 import PromotionsBanner from './PromotionsBanner';
 import TransferDashboardCard from './TransferDashboardCard';
 import VolumesDashboardCard from './VolumesDashboardCard';
 
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
+import TaxBanner from 'src/components/TaxBanner';
 
 type ClassNames = 'root';
 
@@ -66,7 +69,8 @@ interface DispatchProps {
 type CombinedProps = StateProps &
   DispatchProps &
   WithStyles<ClassNames> &
-  WithTheme;
+  WithTheme &
+  RouteComponentProps<{}>;
 
 export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
   const {
@@ -76,8 +80,10 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
     backupError,
     linodesWithoutBackups,
     managed,
-    entitiesWithGroupsToImport
+    entitiesWithGroupsToImport,
+    location
   } = props;
+
   const flags = useFlags();
 
   // temporary hack to just use the first active promotion for the promo banner,
@@ -95,6 +101,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
       )}
       <Grid container spacing={3}>
         <AbuseTicketBanner />
+        <TaxBanner location={location} />
         <DocumentTitleSegment segment="Dashboard" />
         <Grid item xs={12}>
           <Typography variant="h1" data-qa-dashboard-header>
@@ -103,6 +110,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
         </Grid>
         <Grid item xs={12} md={7}>
           {flags.promos && <PromotionsBanner nearestExpiry={nearestExpiry} />}
+          <ManagedDashboardCard />
           <LinodesDashboardCard />
           <VolumesDashboardCard />
           <NodeBalancersDashboardCard />

@@ -6,11 +6,13 @@ import Request, {
   setURL,
   setXFilter
 } from '../index';
-
 import {
+  createContactSchema,
   createCredentialSchema,
   createServiceMonitorSchema,
-  updateManagedLinodeSchema
+  updateCredentialSchema,
+  updateManagedLinodeSchema,
+  updatePasswordSchema
 } from './managed.schema';
 
 // Payload types
@@ -32,6 +34,23 @@ export interface CredentialPayload {
   label: string;
   password?: string;
   username?: string;
+}
+
+export interface UpdateCredentialPayload {
+  // Not using a Partial<> bc this is the only possible field to update
+  label: string;
+}
+
+export interface UpdatePasswordPayload {
+  password?: string;
+  username?: string;
+}
+
+export interface ContactPayload {
+  name: string;
+  email: string;
+  phone?: Linode.ManagedContactPhone;
+  group?: string;
 }
 
 /**
@@ -131,6 +150,37 @@ export const getCredentials = (params?: any, filters?: any) =>
   ).then(response => response.data);
 
 /**
+ * updateCredential
+ *
+ * Update the label on a Managed Credential on your account.
+ * Other fields (password and username) cannot be changed.
+ */
+export const updateCredential = (
+  credentialID: number,
+  data: UpdateCredentialPayload
+) =>
+  Request<Page<Linode.ManagedCredential>>(
+    setMethod('PUT'),
+    setData(data, updateCredentialSchema),
+    setURL(`${API_ROOT}/managed/credentials/${credentialID}`)
+  ).then(response => response.data);
+
+/**
+ * updatePassword
+ *
+ * Update the username and/or password on a Managed Credential on your account.
+ */
+export const updatePassword = (
+  credentialID: number,
+  data: UpdatePasswordPayload
+) =>
+  Request<Page<Linode.ManagedCredential>>(
+    setMethod('POST'),
+    setData(data, updatePasswordSchema),
+    setURL(`${API_ROOT}/managed/credentials/${credentialID}/update`)
+  ).then(response => response.data);
+
+/**
  * deleteCredential
  *
  * Disables a Managed Credential and removes it from your account.
@@ -180,4 +230,39 @@ export const getManagedContacts = (params?: any, filters?: any) =>
     setParams(params),
     setXFilter(filters),
     setURL(`${API_ROOT}/managed/contacts`)
+  ).then(response => response.data);
+
+/**
+ * createContact
+ *
+ * Creates a Managed Contact
+ */
+export const createContact = (data: ContactPayload) =>
+  Request<Linode.ManagedContact>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/managed/contacts`),
+    setData(data, createContactSchema)
+  ).then(response => response.data);
+
+/**
+ * updateContact
+ *
+ * Updates a Managed Contact
+ */
+export const updateContact = (contactId: number, data: ContactPayload) =>
+  Request<Linode.ManagedContact>(
+    setMethod('PUT'),
+    setURL(`${API_ROOT}/managed/contacts/${contactId}`),
+    setData(data, createContactSchema)
+  ).then(response => response.data);
+
+/**
+ * deleteContact
+ *
+ * Deletes a Managed Contact
+ */
+export const deleteContact = (contactId: number) =>
+  Request<{}>(
+    setMethod('DELETE'),
+    setURL(`${API_ROOT}/managed/contacts/${contactId}`)
   ).then(response => response.data);

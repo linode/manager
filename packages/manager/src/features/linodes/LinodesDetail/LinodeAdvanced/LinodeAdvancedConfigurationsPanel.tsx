@@ -74,16 +74,13 @@ class LinodeAdvancedConfigurationsPanel extends React.PureComponent<
               Configure a Migration
             </Typography>
             <Typography className={classes.migrationCopy}>
-              Migrating your Linode across datacenters is as simple as a few
-              clicks.
+              You can migrate your Linode across datacenters automatically.
               <Link
                 to={`/linodes/${linodeID}/migrate`}
-                onClick={() =>
-                  sendMigrationNavigationEvent(`/advanced`)
-                }
+                onClick={() => sendMigrationNavigationEvent(`/advanced`)}
               >
                 {' '}
-                Click here to get started migrating your Linode.
+                Click here to get started.
               </Link>
             </Typography>
           </Paper>
