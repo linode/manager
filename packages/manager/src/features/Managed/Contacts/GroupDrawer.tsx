@@ -81,7 +81,7 @@ const GroupDrawer: React.FC<CombinedProps> = props => {
       // Match it up to `contactIds` to set an error for that individual contact.
       const errors: number[] = [];
       for (let i = 0; i < resolved.length; i++) {
-        if (!resolved[i]) {
+        if (resolved[i] === null) {
           errors.push(contactIds[i]);
         }
       }
