@@ -1,14 +1,7 @@
-import { API_ROOT } from 'src/constants';
-import Request, {
-  setMethod,
-  setParams,
-  setURL,
-  setXFilter
-} from 'src/services';
-
-type Page<T> = Linode.ResourcePage<T>;
-type Event = Linode.Event;
-type Notification = Linode.Notification;
+import { API_ROOT } from '../constants';
+import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
+import { ResourcePage } from '../types'
+import { Event, Notification } from './types';
 
 /**
  * getEvents
@@ -17,7 +10,7 @@ type Notification = Linode.Notification;
  *
  */
 export const getEvents = (params: any = {}, filter: any = {}) =>
-  Request<Page<Event>>(
+  Request<ResourcePage<Event>>(
     setURL(`${API_ROOT}/account/events`),
     setMethod('GET'),
     setXFilter(filter),
@@ -70,7 +63,7 @@ export const markEventRead = (eventId: number) =>
  *
  */
 export const getNotifications = () =>
-  Request<Page<Notification>>(
+  Request<ResourcePage<Notification>>(
     setURL(`${API_ROOT}/account/notifications`),
     setMethod('GET')
   ).then(response => response.data);

@@ -1,25 +1,11 @@
-import { API_ROOT } from 'src/constants';
-import Request, {
-  setData,
-  setMethod,
-  setParams,
-  setURL,
-  setXFilter
-} from 'src/services';
-
+import { API_ROOT } from '../constants';
+import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../request';
+import { ResourcePage } from '../types'
 import {
   createOAuthClientSchema,
   updateOAuthClientSchema
-} from './account.schema';
-
-type OAuthClient = Linode.OAuthClient;
-type Page<T> = Linode.ResourcePage<T>;
-
-export interface OAuthClientRequest {
-  label: string;
-  redirect_uri: string;
-  public?: boolean;
-}
+} from './account.schema'
+import { OAuthClient, OAuthClientRequest } from './types';
 
 /**
  * getOAuthClients
@@ -28,7 +14,7 @@ export interface OAuthClientRequest {
  *
  */
 export const getOAuthClients = (params?: any, filter?: any) =>
-  Request<Page<OAuthClient>>(
+  Request<ResourcePage<OAuthClient>>(
     setURL(`${API_ROOT}/account/oauth-clients`),
     setMethod('GET'),
     setParams(params),

@@ -1,12 +1,8 @@
-import { API_ROOT } from 'src/constants';
-import Request, {
-  setMethod,
-  setParams,
-  setURL,
-  setXFilter
-} from 'src/services';
+import { API_ROOT } from '../constants';
+import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
+import { ResourcePage } from '../types'
+import { Invoice, InvoiceItem } from './types';
 
-type Page<T> = Linode.ResourcePage<T>;
 
 /**
  * getInvoices
@@ -15,7 +11,7 @@ type Page<T> = Linode.ResourcePage<T>;
  *
  */
 export const getInvoices = (params?: any, filter?: any) =>
-  Request<Page<Linode.Invoice>>(
+  Request<ResourcePage<Invoice>>(
     setURL(`${API_ROOT}/account/invoices`),
     setMethod('GET'),
     setParams(params),
@@ -31,7 +27,7 @@ export const getInvoices = (params?: any, filter?: any) =>
  *
  */
 export const getInvoice = (invoiceId: number) =>
-  Request<Linode.Invoice>(
+  Request<Invoice>(
     setURL(`${API_ROOT}/account/invoices/${invoiceId}`),
     setMethod('GET')
   ).then(response => response.data);
@@ -50,7 +46,7 @@ export const getInvoiceItems = (
   params?: any,
   filter?: any
 ) =>
-  Request<Page<Linode.InvoiceItem>>(
+  Request<ResourcePage<InvoiceItem>>(
     setURL(`${API_ROOT}/account/invoices/${invoiceId}/items`),
     setMethod('GET'),
     setParams(params),

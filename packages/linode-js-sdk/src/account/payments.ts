@@ -1,38 +1,13 @@
-import { API_ROOT } from 'src/constants';
-import Request, {
-  setData,
-  setMethod,
-  setParams,
-  setURL,
-  setXFilter
-} from 'src/services';
-
+import { API_ROOT } from '../constants';
+import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../request';
+import { ResourcePage } from '../types'
 import {
   CreditCardSchema,
   ExecutePaypalPaymentSchema,
   PaymentSchema,
   StagePaypalPaymentSchema
-} from './account.schema';
-
-type Page<T> = Linode.ResourcePage<T>;
-
-interface Paypal {
-  cancel_url: string;
-  redirect_url: string;
-  usd: string;
-}
-
-interface ExecutePayload {
-  payer_id: string;
-  payment_id: string;
-}
-
-interface SaveCreditCardData {
-  card_number: string;
-  expiry_year: number;
-  expiry_month: number;
-  cvv?: string;
-}
+} from './account.schema'
+import { ExecutePayload, Payment, Paypal, SaveCreditCardData } from './types';
 
 /**
  * getPayments
@@ -42,7 +17,7 @@ interface SaveCreditCardData {
  *
  */
 export const getPayments = (params?: any, filter?: any) =>
-  Request<Page<Linode.Payment>>(
+  Request<ResourcePage<Payment>>(
     setURL(`${API_ROOT}/account/payments`),
     setMethod('GET'),
     setParams(params),
@@ -84,7 +59,7 @@ export const makePayment = (data: { usd: string; cvv?: string }) => {
     delete data.cvv;
   }
 
-  return Request<Linode.Payment>(
+  return Request<Payment>(
     setURL(`${API_ROOT}/account/payments`),
     setMethod('POST'),
     setData(data, PaymentSchema)
