@@ -115,25 +115,36 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
     values: ManagedServicePayload,
     { setSubmitting, setErrors, setStatus }: FormikProps
   ) => {
-    console.log(values);
-    setSubmitting(false);
-    return;
-    const { createServiceMonitor } = props;
-    createServiceMonitor({ ...values, timeout: +values.timeout })
-      .then(response => {
-        setSubmitting(false);
-        setDrawerOpen(false);
-      })
-      .catch(e => {
-        const defaultMessage = `Unable to create this Monitor. Please try again later.`;
-        const mapErrorToStatus = (generalError: string) =>
-          setStatus({ generalError });
+    const { createServiceMonitor, updateServiceMonitor } = props;
+    const _success = () => {
+      setSubmitting(false);
+      setDrawerOpen(false);
+    };
 
-        setSubmitting(false);
-        handleFieldErrors(setErrors, e);
-        handleGeneralErrors(mapErrorToStatus, e, defaultMessage);
-        setSubmitting(false);
-      });
+    const _error = (e: Linode.ApiFieldError[]) => {
+      const defaultMessage = `Unable to ${
+        drawerMode === 'create' ? 'create' : 'update'
+      } this Monitor. Please try again later.`;
+      const mapErrorToStatus = (generalError: string) =>
+        setStatus({ generalError });
+
+      setSubmitting(false);
+      handleFieldErrors(setErrors, e || []); // the || is a safety check
+      handleGeneralErrors(mapErrorToStatus, e, defaultMessage);
+      setSubmitting(false);
+    };
+
+    drawerMode === 'create'
+      ? createServiceMonitor({ ...values, timeout: +values.timeout })
+          .then(_success)
+          .catch(_error)
+      : updateServiceMonitor({
+          ...values,
+          monitorID: editID,
+          timeout: +values.timeout
+        })
+          .then(_success)
+          .catch(_error);
   };
 
   return (
