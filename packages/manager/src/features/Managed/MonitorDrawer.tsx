@@ -1,4 +1,5 @@
 import { Formik } from 'formik';
+import { pickBy } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -96,7 +97,17 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
 
   const { mode, monitor, open, onClose, onSubmit } = props;
 
-  const initialValues = {...emptyInitialValues, ...monitor};
+  /**
+   * We only care about the fields in the form. Previously unfilled optional
+   * values such as `notes` come back from the API as null, so remove those
+   * as well.
+   */
+  const _monitor = pickBy(
+    (val, key) => val !== null && Object.keys(emptyInitialValues).includes(key),
+    monitor
+  ) as ManagedServicePayload;
+
+  const initialValues = { ...emptyInitialValues, ..._monitor };
 
   return (
     <Drawer title={titleMap[mode]} open={open} onClose={onClose}>

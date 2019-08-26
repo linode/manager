@@ -85,13 +85,13 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
     setEditID(0);
     setDrawerMode('create');
     setDrawerOpen(false);
-  }
+  };
 
   const handleDrawerOpen = (id: number, mode: Modes) => {
     setEditID(id);
     setDrawerMode(mode);
     setDrawerOpen(true);
-  }
+  };
 
   const handleDelete = () => {
     if (!dialog.entityID) {
@@ -116,6 +116,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
     { setSubmitting, setErrors, setStatus }: FormikProps
   ) => {
     console.log(values);
+    setSubmitting(false);
     return;
     const { createServiceMonitor } = props;
     createServiceMonitor({ ...values, timeout: +values.timeout })

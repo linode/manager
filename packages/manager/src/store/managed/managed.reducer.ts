@@ -10,8 +10,8 @@ import {
   deleteServiceMonitorActions,
   disableServiceMonitorActions,
   enableServiceMonitorActions,
-  updateServiceMonitorActions,
-  requestServicesActions
+  requestServicesActions,
+  updateServiceMonitorActions
 } from './managed.actions';
 
 /**
@@ -123,7 +123,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       draft.results = draft.entities.map(m => m.id);
       draft.lastUpdated = Date.now();
     }
-    
+
     if (isType(action, updateServiceMonitorActions.failed)) {
       const { error } = action.payload;
       draft.error!.update = error;
