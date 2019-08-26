@@ -49,19 +49,7 @@ export const BillingSection: React.FC<CombinedProps> = props => {
   const { balance, credit, header, showNegativeAsCredit, textColor } = props;
   const classes = useStyles();
 
-  /**
-   * There's a bit of opposite day going on here:
-   * As far as the API is concerned, balance due and credit available
-   * are both positive. Negative balance is possible and indicates an
-   * account credit. However, when displaying to the user, we want
-   * to show a positive credit as negative (with green coloring),
-   * but a negative balance also as negative (with green coloring).
-   *
-   * `value` calculated below is exactly the amount we will show to the user;
-   * whether that counts as youOweMoney (red) or youDon'tOweMoney (green)
-   * is determined by the `isPositive` calculation.
-   */
-  const value = balance || (credit && -credit) || 0;
+  const value = balance || credit || 0;
   const isPositive = balance ? balance < 0 : credit ? credit > 0 : true;
   return (
     <>
@@ -77,7 +65,16 @@ export const BillingSection: React.FC<CombinedProps> = props => {
             [classes.positive]: isPositive && textColor !== false
           })}
         >
-          <Currency quantity={value} />
+          {/** Show credits in parenthesis for users that can't see the color coding */}
+          {isPositive && !showNegativeAsCredit ? (
+            <>
+              {'('}
+              <Currency quantity={value} />
+              {')'}
+            </>
+          ) : (
+            <Currency quantity={value} />
+          )}
           {showNegativeAsCredit && (balance && balance < 0) ? ` (credit)` : ''}
         </Typography>
       </div>

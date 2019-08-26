@@ -34,9 +34,9 @@ describe('BillingSection component', () => {
     expect(queryAllByText('-$10.00 (credit)')).toHaveLength(1);
   });
 
-  it('should display a positive credit as negative', () => {
+  it('should display a positive credit in parenthesis', () => {
     const { queryAllByText } = renderComponent({ credit: 10.0 });
-    expect(queryAllByText('-$10.00')).toHaveLength(1);
+    expect(queryAllByText('($10.00)')).toHaveLength(1);
     expect(queryAllByText('(credit)')).toHaveLength(0);
   });
 

@@ -46,37 +46,39 @@ const BillingInformation: React.FC<CombinedProps> = props => {
 
       <div className={classes.billingGroup}>
         <BillingSection
-          header="Current Balance:&nbsp;"
+          header="Amount Due:&nbsp;"
           balance={balance}
           showNegativeAsCredit
           data-qa-balance
         />
-
-        {flags.promos && promoCredit && (
-          <>
-            <BillingSection
-              header="Promotional Credit:&nbsp;"
-              credit={credit}
-              data-qa-promotional-credit
-            />
-
-            <BillingSection
-              header="Amount Due:&nbsp;"
-              balance={Math.max(0, balance - credit)}
-              data-qa-amount-due
-            />
-          </>
-        )}
       </div>
 
       <div className={classes.billingGroup}>
         {balanceUninvoiced !== undefined && (
-          <BillingSection
-            header="Uninvoiced Balance:&nbsp;"
-            balance={balanceUninvoiced}
-            textColor={false}
-            data-qa-uninvoiced-balance
-          />
+          <>
+            <BillingSection
+              header="Uninvoiced Balance:&nbsp;"
+              balance={balanceUninvoiced}
+              textColor={false}
+              data-qa-uninvoiced-balance
+            />
+
+            {flags.promos && promoCredit && (
+              <>
+                <BillingSection
+                  header="Promotional Credit:&nbsp;"
+                  credit={credit}
+                  data-qa-promotional-credit
+                />
+
+                <BillingSection
+                  header="Adjusted Uninvoiced Balance:&nbsp;"
+                  balance={Math.max(0, balanceUninvoiced - credit)}
+                  data-qa-amount-due
+                />
+              </>
+            )}
+          </>
         )}
       </div>
     </Paper>
