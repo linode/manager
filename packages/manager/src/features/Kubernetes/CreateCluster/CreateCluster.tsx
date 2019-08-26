@@ -234,7 +234,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
 
     const regionDisplay = _region ? _region.display : undefined;
 
-    if (typesError || regionsError) {
+    if (typesError || regionsError || errorMap.version) {
       /**
        * This information is necessary to create a Cluster.
        * Otherwise, show an error state.
