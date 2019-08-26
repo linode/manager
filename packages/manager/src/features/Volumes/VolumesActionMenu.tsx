@@ -18,7 +18,8 @@ export interface Props {
   onDetach: (
     volumeId: number,
     volumeLabel: string,
-    linodeLabel: string
+    linodeLabel: string,
+    poweredOff: boolean
   ) => void;
   poweredOff: boolean;
   onDelete: (volumeId: number, volumeLabel: string) => void;
@@ -61,8 +62,14 @@ export class VolumesActionMenu extends React.Component<CombinedProps> {
   };
 
   handleDetach = () => {
-    const { volumeId, onDetach, volumeLabel, linodeLabel } = this.props;
-    onDetach(volumeId, volumeLabel, linodeLabel);
+    const {
+      volumeId,
+      onDetach,
+      volumeLabel,
+      linodeLabel,
+      poweredOff
+    } = this.props;
+    onDetach(volumeId, volumeLabel, linodeLabel, poweredOff);
   };
 
   handleDelete = () => {
