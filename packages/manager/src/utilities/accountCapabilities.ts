@@ -1,3 +1,5 @@
+import { AccountCapability } from 'linode-js-sdk/lib/account'
+
 import { curry } from 'ramda';
 
 import {
@@ -23,9 +25,9 @@ import {
 
 const isFeatureEnabled = curry(
   (
-    featureName: Linode.AccountCapability,
+    featureName: AccountCapability,
     environmentVar: boolean,
-    capabilities: Linode.AccountCapability[]
+    capabilities: AccountCapability[]
   ) => {
     return environmentVar || capabilities.indexOf(featureName) > -1;
   }

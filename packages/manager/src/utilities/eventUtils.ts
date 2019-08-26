@@ -1,6 +1,8 @@
+import { Event, EventAction } from 'linode-js-sdk/lib/account'
+
 // Removes events we don't want to display.
 export const removeBlacklistedEvents = (
-  events: Linode.Event[] = [],
+  events: Event[] = [],
   blacklist: string[] = []
 ) => {
   const _blacklist = [...blackListedEvents, ...blacklist];
@@ -12,7 +14,7 @@ export const removeBlacklistedEvents = (
 // get a `linode_mutate_create` event from the API. Moments later, we get back
 // ANOTHER event, `linode_mutate`, with a status of `scheduled`. That's the event
 // we want to display, because it will be updated via other events with the same ID.
-const blackListedEvents: Linode.EventAction[] = [
+const blackListedEvents: EventAction[] = [
   'linode_mutate_create', // This event occurs when an upgrade is first initiated.
   'linode_resize_create', // This event occurs when a resize is first initiated.
   'linode_migrate_datacenter_create' // This event occurs when a cross DC migration is first initiated.

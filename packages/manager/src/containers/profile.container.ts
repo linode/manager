@@ -1,3 +1,4 @@
+import { Profile } from 'linode-js-sdk/lib/profile'
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 
@@ -10,8 +11,8 @@ import {
 import { ThunkDispatch } from 'src/store/types';
 
 export interface ProfileActionsProps {
-  getProfile: () => Promise<Linode.Profile>;
-  updateProfile: (params: Partial<Linode.Profile>) => Promise<Linode.Profile>;
+  getProfile: () => Promise<Profile>;
+  updateProfile: (params: Partial<Profile>) => Promise<Profile>;
 }
 
 export default <TInner extends {}, TOuter extends {}>(
@@ -23,7 +24,7 @@ export default <TInner extends {}, TOuter extends {}>(
     },
     (dispatch: ThunkDispatch) => ({
       getProfile: () => dispatch(requestProfile()),
-      updateProfile: (payload: Partial<Linode.Profile>) =>
+      updateProfile: (payload: Partial<Profile>) =>
         dispatch(updateProfile(payload))
     })
   );
