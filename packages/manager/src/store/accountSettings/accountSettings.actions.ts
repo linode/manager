@@ -1,3 +1,5 @@
+import { AccountSettings } from 'linode-js-sdk/lib/account'
+
 // TYPES
 export interface Action {
   type: string;
@@ -22,12 +24,12 @@ export const handleError: ActionCreator = (error: Linode.ApiFieldError[]) => ({
   error
 });
 
-export const handleSuccess: ActionCreator = (data: Linode.AccountSettings) => ({
+export const handleSuccess: ActionCreator = (data: AccountSettings) => ({
   type: SUCCESS,
   data
 });
 
-export const handleUpdate: ActionCreator = (data: Linode.AccountSettings) => ({
+export const handleUpdate: ActionCreator = (data: AccountSettings) => ({
   type: UPDATE,
   data
 });

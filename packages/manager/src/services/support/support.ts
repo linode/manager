@@ -1,3 +1,4 @@
+import { SupportTicket } from "linode-js-sdk/lib/account";
 import { createReplySchema, createSupportTicketSchema } from './support.schema';
 
 import { API_ROOT } from 'src/constants';
@@ -11,7 +12,6 @@ import Request, {
 } from '../index';
 
 type Page<T> = Linode.ResourcePage<T>;
-type SupportTicket = Linode.SupportTicket;
 
 export interface ReplyRequest {
   ticket_id: number;

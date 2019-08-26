@@ -15,6 +15,13 @@ namespace Linode {
 
   export type Hypervisor = 'kvm' | 'zen';
 
+  export interface ResourcePage<T> {
+    data: T[];
+    page: number;
+    pages: number;
+    results: number;
+  }
+
   export interface LinodeSpecs {
     disk: number;
     memory: number;

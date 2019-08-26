@@ -1,3 +1,4 @@
+import { getEvents } from "linode-js-sdk/lib/account";
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { compose as rCompose, concat, uniq } from 'ramda';
 import * as React from 'react';
@@ -23,7 +24,6 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import withPerfMetrics, {
   Props as WithPerfMetricsProps
 } from 'src/components/withPerfMetrics';
-import { getEvents } from 'src/services/account';
 import { ApplicationState } from 'src/store';
 import { setDeletedEvents } from 'src/store/events/event.helpers';
 import areEntitiesLoading from 'src/store/selectors/entitiesLoading';

@@ -1,7 +1,7 @@
 import * as Bluebird from 'bluebird';
+import { updateAccountSettings } from 'linode-js-sdk/lib/account'
 import { isEmpty, pathOr } from 'ramda';
 import { Reducer } from 'redux';
-import { updateAccountSettings } from 'src/services/account';
 import { enableBackups } from 'src/services/linodes';
 import { handleUpdate } from 'src/store/accountSettings/accountSettings.actions';
 import { updateMultipleLinodes } from 'src/store/linodes/linodes.actions';

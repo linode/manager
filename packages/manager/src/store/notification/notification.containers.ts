@@ -1,3 +1,4 @@
+import { Notification } from 'linode-js-sdk/lib/account';
 import { connect } from 'react-redux';
 import { ApplicationState } from '..';
 import { ThunkActionCreator } from '../types';
@@ -5,7 +6,7 @@ import { State } from './notification.reducer';
 import { requestNotifications } from './notification.requests';
 
 interface Actions {
-  requestNotifications: ThunkActionCreator<Promise<Linode.Notification[]>>;
+  requestNotifications: ThunkActionCreator<Promise<Notification[]>>;
 }
 
 const actions: Actions = {
@@ -13,7 +14,7 @@ const actions: Actions = {
 };
 
 export interface WithNotifications {
-  notifications: Linode.Notification[];
+  notifications: Notification[];
   notificationsError: Linode.ApiFieldError[];
   notificationsLastUpdated: number;
   notificationsLoading: boolean;

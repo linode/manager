@@ -1,9 +1,10 @@
+import { Notification } from 'linode-js-sdk/lib/account'
 import { linode1 } from 'src/__data__/linodes';
 import { addNotificationsToLinodes } from './linodes.helpers';
 
 const maintenanceNotification: (
   linodeID: number
-) => Linode.Notification[] = linodeID => [
+) => Notification[] = linodeID => [
   {
     label: 'reboot',
     message: 'This Linode is in Danger! Ahhhhh',
