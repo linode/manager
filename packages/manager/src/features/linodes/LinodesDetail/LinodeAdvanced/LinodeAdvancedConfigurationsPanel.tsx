@@ -1,5 +1,5 @@
 import * as React from 'react';
-// import { Link } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
 import {
@@ -15,7 +15,7 @@ import LinodeConfigs from './LinodeConfigs';
 import LinodeDisks from './LinodeDisks';
 import LinodeDiskSpace from './LinodeDiskSpace';
 
-// import { sendMigrationNavigationEvent } from 'src/utilities/ga';
+import { sendMigrationNavigationEvent } from 'src/utilities/ga';
 
 type ClassNames =
   | 'root'
@@ -55,7 +55,7 @@ class LinodeAdvancedConfigurationsPanel extends React.PureComponent<
   CombinedProps
 > {
   render() {
-    const { classes, disks, linodeTotalDisk } = this.props;
+    const { classes, disks, linodeTotalDisk, linodeID } = this.props;
 
     return (
       <Grid container>
@@ -69,7 +69,7 @@ class LinodeAdvancedConfigurationsPanel extends React.PureComponent<
           <Paper className={classes.paper}>
             <LinodeDisks />
           </Paper>
-          {/* <Paper className={classes.paper}>
+          <Paper className={classes.paper}>
             <Typography variant="h3" className={classes.migrationHeader}>
               Configure a Migration
             </Typography>
@@ -77,15 +77,13 @@ class LinodeAdvancedConfigurationsPanel extends React.PureComponent<
               You can migrate your Linode across datacenters automatically.
               <Link
                 to={`/linodes/${linodeID}/migrate`}
-                onClick={() =>
-                  sendMigrationNavigationEvent(`/advanced`)
-                }
+                onClick={() => sendMigrationNavigationEvent(`/advanced`)}
               >
                 {' '}
                 Click here to get started.
               </Link>
             </Typography>
-          </Paper> */}
+          </Paper>
         </Grid>
         <Grid item xs={12} md={5} lg={3} className={classes.sidebar}>
           <Paper className={classes.paper}>

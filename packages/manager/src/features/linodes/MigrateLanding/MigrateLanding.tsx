@@ -33,6 +33,9 @@ import withRegions, {
   DefaultProps as RegionProps
 } from 'src/containers/regions.container';
 
+import { MBpsInterDC } from 'src/constants';
+import { addUsedDiskSpace } from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
+
 const useStyles = makeStyles((theme: Theme) => ({
   details: {
     marginTop: theme.spacing(2)
@@ -149,6 +152,11 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
     notifications
   );
 
+  /** how long will this take to migrate when the migration starts */
+  const migrationTimeInMinutes = Math.ceil(
+    addUsedDiskSpace(props.linodeDisks) / MBpsInterDC / 60
+  );
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Migrate" />
@@ -189,6 +197,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
         setConfirmed={setConfirmed}
         hasConfirmed={hasConfirmed}
         error={acceptError}
+        migrationTimeInMins={migrationTimeInMinutes}
       />
       <ConfigureForm
         currentRegion={region}
@@ -223,6 +232,7 @@ interface LinodeContextProps {
   image: Linode.Image;
   linodeVolumes: Linode.Volume[];
   recentEvents: Linode.Event[];
+  linodeDisks: Linode.Disk[];
 }
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
@@ -238,7 +248,8 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeStatus: linode.status,
   linodeEvents: linode._events,
   linodeVolumes: linode._volumes,
-  recentEvents: linode._events
+  recentEvents: linode._events,
+  linodeDisks: linode._disks
 }));
 
 interface WithTypesAndImages {

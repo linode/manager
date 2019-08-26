@@ -7,6 +7,8 @@ import Checkbox from 'src/components/CheckBox';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 
+import { generateMigrationTimeString } from 'src/utilities/minute-conversion';
+
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     backgroundColor: theme.bg.white,
@@ -37,6 +39,7 @@ interface Props {
   hasConfirmed: boolean;
   setConfirmed: (value: boolean) => void;
   error?: string;
+  migrationTimeInMins: number;
 }
 
 type CombinedProps = Props;
@@ -86,6 +89,10 @@ const CautionNotice: React.FC<CombinedProps> = props => {
               </ul>
             </React.Fragment>
           )}
+        </li>
+        <li>
+          When this migration begins, we estimate it will take approximately{' '}
+          {generateMigrationTimeString(props.migrationTimeInMins)} to complete.
         </li>
       </ul>
       {props.error && <Notice error text={props.error} />}

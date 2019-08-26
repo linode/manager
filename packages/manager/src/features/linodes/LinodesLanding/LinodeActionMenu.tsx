@@ -25,7 +25,7 @@ import { MapState } from 'src/store/types';
 
 import { Action as BootAction } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 
-// import { sendMigrationNavigationEvent } from 'src/utilities/ga';
+import { sendMigrationNavigationEvent } from 'src/utilities/ga';
 
 export interface Props {
   linodeId: number;
@@ -156,19 +156,19 @@ export class LinodeActionMenu extends React.Component<CombinedProps, State> {
           },
           ...readOnlyProps
         },
-        // {
-        //   title: 'Migrate',
-        //   onClick: (e: React.MouseEvent<HTMLElement>) => {
-        //     sendMigrationNavigationEvent('/linodes');
-        //     sendLinodeActionMenuItemEvent('Migrate');
-        //     push({
-        //       pathname: `/linodes/${linodeId}/migrate`
-        //     });
-        //     e.preventDefault();
-        //     e.stopPropagation();
-        //   },
-        //   ...readOnlyProps
-        // },
+        {
+          title: 'Migrate',
+          onClick: (e: React.MouseEvent<HTMLElement>) => {
+            sendMigrationNavigationEvent('/linodes');
+            sendLinodeActionMenuItemEvent('Migrate');
+            push({
+              pathname: `/linodes/${linodeId}/migrate`
+            });
+            e.preventDefault();
+            e.stopPropagation();
+          },
+          ...readOnlyProps
+        },
         {
           title: 'Resize',
           onClick: (e: React.MouseEvent<HTMLElement>) => {
