@@ -26,7 +26,7 @@ describe('Toast Notification Suite', () => {
       .withContext(`incorrect variant color`)
       .toBe(color);
     $('[title="Dismiss Notification"]').click();
-    $(toastColor).waitForDisplayed(constants.wait.short, true);
+    $(toastColor).waitForDisplayed(constants.wait.normal, true);
   }
 
   beforeAll(() => {
@@ -62,14 +62,6 @@ describe('Toast Notification Suite', () => {
     checkToastColor('error', 'rgba(205,34,39,1)');
     //info
     checkToastColor('info', 'rgba(54,131,220,1)');
-  });
-
-  it('Toast notification disappears after 4 seconds', () => {
-    notificationButton(variants[0]).click();
-    browser.pause(4500);
-    expect($(toast).isDisplayed())
-      .withContext(`toast message is still displayed after 4 seconds`)
-      .toBe(false);
   });
 
   it('No more than 3 notifications display at once', () => {
