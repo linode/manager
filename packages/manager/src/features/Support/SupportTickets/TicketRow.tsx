@@ -1,3 +1,4 @@
+import { SupportTicket } from "linode-js-sdk/lib/account";
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -14,7 +15,7 @@ import { ISO_FORMAT } from 'src/constants';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 
 interface Props {
-  ticket: Linode.SupportTicket;
+  ticket: SupportTicket;
 }
 
 type ClassNames = 'summary' | 'regarding';
@@ -31,7 +32,7 @@ const styles = (theme: Theme) =>
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const renderEntityLink = (ticket: Linode.SupportTicket) => {
+const renderEntityLink = (ticket: SupportTicket) => {
   const target = getLinkTargets(ticket.entity);
   return ticket.entity ? (
     target !== null ? (

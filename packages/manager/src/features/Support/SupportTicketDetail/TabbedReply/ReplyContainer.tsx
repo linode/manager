@@ -1,3 +1,4 @@
+import { SupportReply } from "linode-js-sdk/lib/account";
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -74,7 +75,7 @@ const styles = (theme: Theme) =>
 
 interface Props {
   closable: boolean;
-  onSuccess: (newReply: Linode.SupportReply) => void;
+  onSuccess: (newReply: SupportReply) => void;
   reloadAttachments: () => void;
   ticketId: number;
   closeTicketSuccess: () => void;

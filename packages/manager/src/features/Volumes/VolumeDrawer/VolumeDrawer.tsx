@@ -1,3 +1,4 @@
+import { Grant } from "linode-js-sdk/lib/account";
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -199,7 +200,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     state
   );
   const volumePermissions = volumesPermissions.find(
-    (v: Linode.Grant) => v.id === volumeId
+    (v: Grant) => v.id === volumeId
   );
 
   return {

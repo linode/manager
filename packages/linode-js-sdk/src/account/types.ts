@@ -314,3 +314,13 @@ export interface SaveCreditCardData {
   expiry_month: number;
   cvv?: string;
 }
+
+export interface SupportReply {
+  created: string;
+  created_by: string;
+  gravatar_id: string;
+  description: string;
+  id: number;
+  from_linode: boolean;
+  gravatarUrl: string | undefined;
+}

@@ -1,3 +1,12 @@
+import {
+  getGrants,
+  Grant,
+  Grants,
+  GrantLevel,
+  GrantType,
+  updateGrants,
+  updateUser
+} from 'linode-js-sdk/lib/account'
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -25,7 +34,6 @@ import SelectionCard from 'src/components/SelectionCard';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import Toggle from 'src/components/Toggle';
-import { getGrants, updateGrants, updateUser } from 'src/services/account';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -120,8 +128,8 @@ interface State {
   saving: {
     [key: string]: boolean;
   };
-  grants?: Linode.Grants;
-  originalGrants?: Linode.Grants /* used to implement cancel functionality */;
+  grants?: Grants;
+  originalGrants?: Grants /* used to implement cancel functionality */;
   restricted?: boolean;
   errors?: Linode.ApiFieldError[];
   success?: Success;
@@ -233,7 +241,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         )
       );
       updateGrants(username, { global: grants.global } as Partial<
-        Linode.Grants
+        Grants
       >)
         .then(grantsResponse => {
           this.setState(
@@ -287,7 +295,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
       )
     );
     const requestPayload = omit(['global'], grants);
-    updateGrants(username, requestPayload as Partial<Linode.Grants>)
+    updateGrants(username, requestPayload as Partial<Grants>)
       .then(grantsResponse => {
         /* build array of update fns */
         let updateFns = this.entityPerms.map(entity => {
@@ -539,19 +547,19 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     );
   };
 
-  entityIsAll = (entity: string, value: Linode.GrantLevel): boolean => {
+  entityIsAll = (entity: string, value: GrantLevel): boolean => {
     const { grants } = this.state;
     if (!(grants && grants[entity])) {
       return false;
     }
-    return grants[entity].reduce((acc: boolean, grant: Linode.Grant) => {
+    return grants[entity].reduce((acc: boolean, grant: Grant) => {
       return acc && grant.permissions === value;
     }, true);
   };
 
   entitySetAllTo = (
-    entity: Linode.GrantType,
-    value: Linode.GrantLevel
+    entity: GrantType,
+    value: GrantLevel
   ) => () => {
     const { grants } = this.state;
     if (!(grants && grants[entity])) {
@@ -571,7 +579,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
   setGrantTo = (
     entity: string,
     idx: number,
-    value: Linode.GrantLevel
+    value: GrantLevel
   ) => () => {
     const { grants } = this.state;
     if (!(grants && grants[entity])) {
@@ -580,7 +588,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     this.setState(set(lensPath(['grants', entity, idx, 'permissions']), value));
   };
 
-  renderEntitySection = (entity: Linode.GrantType) => {
+  renderEntitySection = (entity: GrantType) => {
     const { classes } = this.props;
     const { grants } = this.state;
     if (!(grants && grants[entity] && grants[entity].length)) {
@@ -701,8 +709,8 @@ class UserPermissions extends React.Component<CombinedProps, State> {
 
   setAllEntitiesTo = (e: Item) => {
     const value = e.value === 'null' ? null : e.value;
-    this.entityPerms.map((entity: Linode.GrantType) =>
-      this.entitySetAllTo(entity, value as Linode.GrantLevel)()
+    this.entityPerms.map((entity: GrantType) =>
+      this.entitySetAllTo(entity, value as GrantLevel)()
     );
     this.setState({
       setAllPerm: e.value as 'null' | 'read_only' | 'read_write'
@@ -752,7 +760,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
         </Grid>
         <div className={classes.section}>
           {grants &&
-            this.entityPerms.map((entity: Linode.GrantType) => {
+            this.entityPerms.map((entity: GrantType) => {
               return this.renderEntitySection(entity);
             })}
         </div>

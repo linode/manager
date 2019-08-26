@@ -1,5 +1,6 @@
 import * as Bluebird from 'bluebird';
 import * as classNames from 'classnames';
+import { SupportReply, SupportTicket } from "linode-js-sdk/lib/account";
 import { compose, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -115,8 +116,8 @@ interface State {
   loading: boolean;
   errors?: Linode.ApiFieldError[];
   attachmentErrors: AttachmentError[];
-  replies?: Linode.SupportReply[];
-  ticket?: Linode.SupportTicket;
+  replies?: SupportReply[];
+  ticket?: SupportTicket;
   ticketCloseSuccess: boolean;
 }
 
@@ -179,7 +180,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
   };
 
   reloadAttachments = () => {
-    this.loadTicket().then((ticket: Linode.SupportTicket) => {
+    this.loadTicket().then((ticket: SupportTicket) => {
       this.setState({
         ticket: {
           ...this.state.ticket!,
@@ -196,8 +197,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
   };
 
   handleJoinedPromise = (
-    ticketResponse: Linode.SupportTicket,
-    replyResponse: Linode.SupportReply[]
+    ticketResponse: SupportTicket,
+    replyResponse: SupportReply[]
   ) => {
     /** Gets a unique list of gravatar IDs */
     const uniqueGravatarIDs = replyResponse.reduce(reduceToUniqueGravatarIDs, [
@@ -235,7 +236,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     });
   };
 
-  onCreateReplySuccess = (newReply: Linode.SupportReply) => {
+  onCreateReplySuccess = (newReply: SupportReply) => {
     const replies = pathOr([], ['replies'], this.state);
     getGravatarUrlFromHash(newReply.gravatar_id).then(url => {
       newReply.gravatarUrl = url;
@@ -299,11 +300,11 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     );
   };
 
-  renderReplies = (replies: Linode.SupportReply[]) => {
+  renderReplies = (replies: SupportReply[]) => {
     const { ticket } = this.state;
     return replies
       .filter(reply => reply.description.trim() !== '')
-      .map((reply: Linode.SupportReply, idx: number) => {
+      .map((reply: SupportReply, idx: number) => {
         return (
           <ExpandableTicketPanel
             key={idx}
@@ -449,7 +450,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
 
 const reduceToUniqueGravatarIDs = (
   acc: string[],
-  reply: Linode.SupportReply
+  reply: SupportReply
 ) => {
   const { gravatar_id } = reply;
 
@@ -474,7 +475,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 });
 
 const matchGravatarURLToReply = (gravatarMap: { [key: string]: string }) => (
-  reply: Linode.SupportReply
+  reply: SupportReply
 ) => ({
   ...reply,
   gravatarUrl: pathOr('not found', [reply.gravatar_id], gravatarMap)

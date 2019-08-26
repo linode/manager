@@ -1,3 +1,4 @@
+import { Entity, Event } from "linode-js-sdk/lib/account";
 import { compose, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -28,6 +29,10 @@ import {
   isInProgressEvent
 } from 'src/store/events/event.helpers';
 import DashboardCard from '../DashboardCard';
+
+interface EntityEvent extends Omit<Event, 'entity'> {
+  entity: Entity
+}
 
 type ClassNames =
   | 'root'
@@ -223,7 +228,7 @@ const withUpdatingDomains = connect(
   }
 );
 
-const mergeEvents = (events: Linode.Event[]) => (domains: Linode.Domain[]) =>
+const mergeEvents = (events: Event[]) => (domains: Linode.Domain[]) =>
   events.reduce((updatedDomains, event) => {
     if (isWantedEvent(event)) {
       return updatedDomains.map(domain =>
@@ -236,7 +241,7 @@ const mergeEvents = (events: Linode.Event[]) => (domains: Linode.Domain[]) =>
     return updatedDomains;
   }, domains);
 
-const isWantedEvent = (e: Linode.Event): e is Linode.EntityEvent => {
+const isWantedEvent = (e: Event): e is EntityEvent => {
   if (!isInProgressEvent(e)) {
     return false;
   }

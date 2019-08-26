@@ -43,16 +43,7 @@ namespace Linode {
     page?: number;
     page_size?: number;
   }
-
-  export interface SupportReply {
-    created: string;
-    created_by: string;
-    gravatar_id: string;
-    description: string;
-    id: number;
-    from_linode: boolean;
-    gravatarUrl: string | undefined;
-  }
+  
   export interface SSHKey {
     created: string;
     id: number;
