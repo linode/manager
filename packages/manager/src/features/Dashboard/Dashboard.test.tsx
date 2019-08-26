@@ -1,13 +1,12 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-import { activePromotions } from 'src/__data__/account';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { light } from 'src/themes';
 import { Dashboard } from './Dashboard';
 
 const props = {
   accountBackups: false,
-  activePromotions,
+  notifications: [],
   userTimezone: 'GMT',
   userTimezoneLoading: false,
   someLinodesHaveScheduledMaintenance: true,

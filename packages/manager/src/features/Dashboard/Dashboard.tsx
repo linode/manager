@@ -48,11 +48,11 @@ const styles = (theme: Theme) =>
 
 interface StateProps {
   accountBackups: boolean;
-  activePromotions: Linode.ActivePromotion[];
   linodesWithoutBackups: Linode.Linode[];
   managed: boolean;
   backupError?: Error;
   entitiesWithGroupsToImport: GroupedEntitiesForImport;
+  notifications: Linode.Notification[];
   userTimezone: string;
   userTimezoneLoading: boolean;
   userTimezoneError?: Linode.ApiFieldError[];
@@ -75,20 +75,16 @@ type CombinedProps = StateProps &
 export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
   const {
     accountBackups,
-    activePromotions,
     actions: { openBackupDrawer, openImportDrawer },
     backupError,
     linodesWithoutBackups,
     managed,
+    notifications,
     entitiesWithGroupsToImport,
     location
   } = props;
 
   const flags = useFlags();
-
-  // temporary hack to just use the first active promotion for the promo banner,
-  // or undefined if the array of promotions is empty.
-  const nearestExpiry = path<string>([0, 'expire_dt'], activePromotions);
 
   return (
     <React.Fragment>
@@ -109,7 +105,13 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
           </Typography>
         </Grid>
         <Grid item xs={12} md={7}>
-          {flags.promos && <PromotionsBanner nearestExpiry={nearestExpiry} />}
+          {flags.promos && (
+            <PromotionsBanner
+              notifications={notifications.filter(
+                thisNotification => thisNotification.type === 'promotion'
+              )}
+            />
+          )}
           <ManagedDashboardCard />
           <LinodesDashboardCard />
           <VolumesDashboardCard />
@@ -150,11 +152,7 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
       ['__resources', 'accountSettings', 'data', 'backups_enabled'],
       state
     ),
-    activePromotions: pathOr(
-      [],
-      ['__resources', 'account', 'data', 'active_promotions'],
-      state
-    ),
+    notifications: pathOr([], ['data'], state.__resources.notifications),
     userTimezone: pathOr('', ['data', 'timezone'], state.__resources.profile),
     userTimezoneLoading: state.__resources.profile.loading,
     userTimezoneError: path(['read'], state.__resources.profile.error),
