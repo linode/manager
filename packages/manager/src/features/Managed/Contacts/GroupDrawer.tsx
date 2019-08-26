@@ -91,13 +91,16 @@ const GroupDrawer: React.FC<CombinedProps> = props => {
         return setStatus(`Unable to ${isEditMode ? 'edit' : 'create'} group.`);
       }
 
+      // Go ahead and refresh the data. Even if there are partial failures,
+      // we want up-to-date group/contact tables.
+      update();
+
       // If a subset of requests were successful, display an error for each.
       if (errors.length > 0) {
         return setContactErrors(errors);
       }
 
-      // Otherwise, we're all good. Refresh the data and close the drawer.
-      update();
+      // Otherwise, we're all good. Close the drawer.
       closeDrawer();
     } catch (_) {
       // Since errors on individual requests are caught, this should never happen.
