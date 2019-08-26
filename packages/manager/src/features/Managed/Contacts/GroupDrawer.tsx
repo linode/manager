@@ -144,7 +144,7 @@ const GroupDrawer: React.FC<CombinedProps> = props => {
               {/* Errors for individual contacts */}
               {contactErrors.map(id =>
                 contactMap[id] ? (
-                  <Grid key={id} item data-qa-import-error>
+                  <Grid key={id} item>
                     <Notice error spacingBottom={0}>
                       Error adding group to {contactMap[id].name}.
                     </Notice>

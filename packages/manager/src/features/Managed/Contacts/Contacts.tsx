@@ -138,7 +138,7 @@ const Contacts: React.FC<CombinedProps> = props => {
         group, then assign the group to the appropriate monitor(s).
       </Typography>
       <div className={classes.groupsTable}>
-        <RootRef rootRef={contactsTableRef}>
+        <RootRef rootRef={groupsTableRef}>
           <Box
             display="flex"
             flexDirection="row"
