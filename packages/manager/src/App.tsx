@@ -630,17 +630,13 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   linodes: state.__resources.linodes.entities,
   linodesError: path(['read'], state.__resources.linodes.error),
   domainsError: state.__resources.domains.error.read,
-  imagesError: state.__resources.images.error
-    ? state.__resources.images.error.read
-    : undefined,
+  imagesError: path(['read'], state.__resources.images.error),
   notifications: state.__resources.notifications.data,
   notificationsError: state.__resources.notifications.error,
   settingsError: state.__resources.accountSettings.error,
   typesError: state.__resources.types.error,
   regionsError: state.__resources.regions.error,
-  volumesError: state.__resources.volumes.error
-    ? state.__resources.volumes.error.read
-    : undefined,
+  volumesError: path(['read'], state.__resources.volumes.error),
   bucketsError: state.__resources.buckets.error,
   userId: path(['data', 'uid'], state.__resources.profile),
   username: pathOr('', ['data', 'username'], state.__resources.profile),
