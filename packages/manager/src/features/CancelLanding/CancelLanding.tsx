@@ -49,8 +49,8 @@ const CancelLanding: React.FC<{}> = () => {
       <Logo className={classes.logo} />
       <Typography variant="h1">It's been our pleasure to serve you.</Typography>
       <Typography>
-        Your account is closed. We hope you'll consider Linode for future cloud
-        hosting needs.
+        Your account is closed. We hope you'll consider Linode for your future
+        cloud hosting needs.
       </Typography>
       <Typography>
         Would you mind taking a brief survey? It will help us understand why
