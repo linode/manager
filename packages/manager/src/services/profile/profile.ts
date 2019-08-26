@@ -1,6 +1,6 @@
-import { ResourcePage } from 'linode-js-sdk/lib/types'
-import { Grants } from 'linode-js-sdk/lib/account'
-import { Profile } from 'linode-js-sdk/lib/profile'
+import { Grants } from 'linode-js-sdk/lib/account';
+import { Profile } from 'linode-js-sdk/lib/profile';
+import { ResourcePage } from 'linode-js-sdk/lib/types';
 import { API_ROOT } from 'src/constants';
 
 import Request, {
@@ -63,10 +63,9 @@ export const listGrants = () =>
  *
  */
 export const getMyGrants = () =>
-  Request<Grants>(
-    setURL(`${API_ROOT}/profile/grants`),
-    setMethod('GET')
-  ).then(response => response.data);
+  Request<Grants>(setURL(`${API_ROOT}/profile/grants`), setMethod('GET')).then(
+    response => response.data
+  );
 
 /**
  * getTrustedDevices

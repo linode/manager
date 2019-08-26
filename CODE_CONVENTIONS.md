@@ -557,7 +557,7 @@ So the first step is to wrap your base component in the HOC and tell Pagey what 
 
 ```js
 import { Pagey, PaginationProps } from 'src/components/Pagey';
-import { getInvoices } from 'src/services/account'
+import { getInvoices } from 'linode-js-sdk/lib/account'
 
 interface OtherProps {
   someText: string;

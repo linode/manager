@@ -1,4 +1,4 @@
-import { Grants } from '../account/types'
+import { Grants } from '../account/types';
 
 export interface Referrals {
   code: string;

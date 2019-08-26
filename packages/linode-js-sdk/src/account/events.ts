@@ -1,6 +1,6 @@
 import { API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
-import { ResourcePage } from '../types'
+import { ResourcePage } from '../types';
 import { Event, Notification } from './types';
 
 /**
@@ -14,7 +14,7 @@ export const getEvents = (params: any = {}, filter: any = {}) =>
     setURL(`${API_ROOT}/account/events`),
     setMethod('GET'),
     setXFilter(filter),
-    setParams(params)
+    setParams(params),
   ).then(response => response.data);
 
 /**
@@ -26,7 +26,7 @@ export const getEvents = (params: any = {}, filter: any = {}) =>
 export const getEvent = (eventId: number) =>
   Request<Event>(
     setURL(`${API_ROOT}/account/events/${eventId}`),
-    setMethod('GET')
+    setMethod('GET'),
   );
 
 /**
@@ -39,7 +39,7 @@ export const getEvent = (eventId: number) =>
 export const markEventSeen = (eventId: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/account/events/${eventId}/seen`),
-    setMethod('POST')
+    setMethod('POST'),
   );
 
 /**
@@ -53,7 +53,7 @@ export const markEventSeen = (eventId: number) =>
 export const markEventRead = (eventId: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/account/events/${eventId}/read`),
-    setMethod('POST')
+    setMethod('POST'),
   );
 
 /**
@@ -65,5 +65,5 @@ export const markEventRead = (eventId: number) =>
 export const getNotifications = () =>
   Request<ResourcePage<Notification>>(
     setURL(`${API_ROOT}/account/notifications`),
-    setMethod('GET')
+    setMethod('GET'),
   ).then(response => response.data);

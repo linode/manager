@@ -1,8 +1,7 @@
 import { API_ROOT } from '../constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
-import { ResourcePage } from '../types'
+import { ResourcePage } from '../types';
 import { Invoice, InvoiceItem } from './types';
-
 
 /**
  * getInvoices
@@ -15,7 +14,7 @@ export const getInvoices = (params?: any, filter?: any) =>
     setURL(`${API_ROOT}/account/invoices`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   ).then(response => response.data);
 
 /**
@@ -29,7 +28,7 @@ export const getInvoices = (params?: any, filter?: any) =>
 export const getInvoice = (invoiceId: number) =>
   Request<Invoice>(
     setURL(`${API_ROOT}/account/invoices/${invoiceId}`),
-    setMethod('GET')
+    setMethod('GET'),
   ).then(response => response.data);
 
 /**
@@ -44,11 +43,11 @@ export const getInvoice = (invoiceId: number) =>
 export const getInvoiceItems = (
   invoiceId: number,
   params?: any,
-  filter?: any
+  filter?: any,
 ) =>
   Request<ResourcePage<InvoiceItem>>(
     setURL(`${API_ROOT}/account/invoices/${invoiceId}/items`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   ).then(response => response.data);

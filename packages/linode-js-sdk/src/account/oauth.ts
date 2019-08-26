@@ -1,10 +1,16 @@
 import { API_ROOT } from '../constants';
-import Request, { setData, setMethod, setParams, setURL, setXFilter } from '../request';
-import { ResourcePage } from '../types'
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter,
+} from '../request';
+import { ResourcePage } from '../types';
 import {
   createOAuthClientSchema,
-  updateOAuthClientSchema
-} from './account.schema'
+  updateOAuthClientSchema,
+} from './account.schema';
 import { OAuthClient, OAuthClientRequest } from './types';
 
 /**
@@ -18,7 +24,7 @@ export const getOAuthClients = (params?: any, filter?: any) =>
     setURL(`${API_ROOT}/account/oauth-clients`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter)
+    setXFilter(filter),
   ).then(response => response.data);
 
 /**
@@ -32,7 +38,7 @@ export const getOAuthClients = (params?: any, filter?: any) =>
 export const getOAuthClient = (clientId: number) =>
   Request<string>(
     setURL(`${API_ROOT}/account/oauth-clients/${clientId}`),
-    setMethod('GET')
+    setMethod('GET'),
   ).then(response => response.data);
 
 /**
@@ -49,7 +55,7 @@ export const createOAuthClient = (data: OAuthClientRequest) =>
   Request<OAuthClient & { secret: string }>(
     setURL(`${API_ROOT}/account/oauth-clients`),
     setMethod('POST'),
-    setData(data, createOAuthClientSchema)
+    setData(data, createOAuthClientSchema),
   ).then(response => response.data);
 
 /**
@@ -65,7 +71,7 @@ export const createOAuthClient = (data: OAuthClientRequest) =>
 export const resetOAuthClientSecret = (clientId: number | string) =>
   Request<OAuthClient & { secret: string }>(
     setURL(`${API_ROOT}/account/oauth-clients/${clientId}/reset-secret`),
-    setMethod('POST')
+    setMethod('POST'),
   ).then(response => response.data);
 
 /**
@@ -77,12 +83,12 @@ export const resetOAuthClientSecret = (clientId: number | string) =>
  */
 export const updateOAuthClient = (
   clientId: string,
-  data: Partial<OAuthClientRequest>
+  data: Partial<OAuthClientRequest>,
 ) =>
   Request<OAuthClient>(
     setURL(`${API_ROOT}/account/oauth-clients/${clientId}`),
     setMethod('PUT'),
-    setData(data, updateOAuthClientSchema)
+    setData(data, updateOAuthClientSchema),
   ).then(response => response.data);
 
 /**
@@ -100,5 +106,5 @@ export const updateOAuthClient = (
 export const deleteOAuthClient = (clientId: number | string) =>
   Request<{}>(
     setURL(`${API_ROOT}/account/oauth-clients/${clientId}`),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   );

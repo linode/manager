@@ -1,3 +1,4 @@
+import { Account } from 'linode-js-sdk/lib/account';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -9,7 +10,7 @@ import {
 import { EntityError } from 'src/store/types';
 
 export interface AccountProps {
-  account?: Linode.Account;
+  account?: Account;
   accountLoading: boolean;
   accountError: EntityError;
   lastUpdated?: number;
@@ -17,15 +18,14 @@ export interface AccountProps {
 
 export interface DispatchProps {
   requestAccount: () => void;
-  updateAccount: (data: Partial<Linode.Account>) => Promise<any>;
+  updateAccount: (data: Partial<Account>) => Promise<any>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => ({
   requestAccount: () => dispatch(requestAccount()),
-  updateAccount: (data: Partial<Linode.Account>) =>
-    dispatch(updateAccount(data))
+  updateAccount: (data: Partial<Account>) => dispatch(updateAccount(data))
 });
 
 export default <TInner extends {}, TOuter extends {}>(
@@ -34,7 +34,7 @@ export default <TInner extends {}, TOuter extends {}>(
     accountLoading: boolean,
     lastUpdated: number,
     accountError: EntityError,
-    account?: Linode.Account
+    account?: Account
   ) => TInner
 ) =>
   connect(

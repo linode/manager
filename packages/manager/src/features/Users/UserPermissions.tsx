@@ -1,12 +1,12 @@
 import {
   getGrants,
   Grant,
-  Grants,
   GrantLevel,
+  Grants,
   GrantType,
   updateGrants,
   updateUser
-} from 'linode-js-sdk/lib/account'
+} from 'linode-js-sdk/lib/account';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -240,9 +240,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
           set(lensPath(['saving', 'global']), true)
         )
       );
-      updateGrants(username, { global: grants.global } as Partial<
-        Grants
-      >)
+      updateGrants(username, { global: grants.global } as Partial<Grants>)
         .then(grantsResponse => {
           this.setState(
             compose(
@@ -557,10 +555,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     }, true);
   };
 
-  entitySetAllTo = (
-    entity: GrantType,
-    value: GrantLevel
-  ) => () => {
+  entitySetAllTo = (entity: GrantType, value: GrantLevel) => () => {
     const { grants } = this.state;
     if (!(grants && grants[entity])) {
       return;
@@ -576,11 +571,7 @@ class UserPermissions extends React.Component<CombinedProps, State> {
     }
   };
 
-  setGrantTo = (
-    entity: string,
-    idx: number,
-    value: GrantLevel
-  ) => () => {
+  setGrantTo = (entity: string, idx: number, value: GrantLevel) => () => {
     const { grants } = this.state;
     if (!(grants && grants[entity])) {
       return;

@@ -1,10 +1,11 @@
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
 import {
+  Account,
   getInvoice,
   getInvoiceItems,
   Invoice,
   InvoiceItem
-} from 'linode-js-sdk/lib/account'
+} from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
@@ -122,11 +123,7 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  printInvoice(
-    account: Account,
-    invoice: Invoice,
-    items: InvoiceItem[]
-  ) {
+  printInvoice(account: Account, invoice: Invoice, items: InvoiceItem[]) {
     const result = printInvoice(account, invoice, items);
     this.setState({
       pdfGenerationError: result.status === 'error' ? result.error : undefined

@@ -1,3 +1,4 @@
+import { Grant } from 'linode-js-sdk/lib/account';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -108,7 +109,7 @@ const styled = withStyles(styles);
 
 interface StateProps {
   isRestrictedUser: boolean;
-  stackScriptGrants: Linode.Grant[];
+  stackScriptGrants: Grant[];
   userCannotAddLinodes: boolean;
 }
 
