@@ -1,6 +1,7 @@
 import * as React from 'react';
 import {
   matchPath,
+  Redirect,
   Route,
   RouteComponentProps,
   Switch,
@@ -47,6 +48,8 @@ export const ObjectStorageLanding: React.FunctionComponent<
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
 
+  const url = props.match.url;
+
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Object Storage" />
@@ -90,18 +93,14 @@ export const ObjectStorageLanding: React.FunctionComponent<
         </Tabs>
       </AppBar>
       <Switch>
+        <Route exact strict path={`${url}/buckets`} component={BucketLanding} />
         <Route
           exact
           strict
-          path={`${props.match.url}/buckets`}
-          component={BucketLanding}
-        />
-        <Route
-          exact
-          strict
-          path={`${props.match.url}/access-keys`}
+          path={`${url}/access-keys`}
           component={AccessKeyLanding}
         />
+        <Redirect to={`${url}/buckets`} />
       </Switch>
     </React.Fragment>
   );
