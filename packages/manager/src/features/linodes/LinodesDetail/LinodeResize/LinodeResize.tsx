@@ -271,7 +271,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             {type && (
               <Grid container>
                 <Hidden smDown>
-                  <Grid item xs={12} lg={8}>
+                  <Grid item xs={12} lg={10}>
                     <Table border>
                       <TableHead>
                         <TableRow>
