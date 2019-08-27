@@ -79,7 +79,8 @@ export type Variant =
   | 'domain'
   | 'stackscript'
   | 'kube'
-  | 'bucket';
+  | 'bucket'
+  | 'object';
 
 interface Props {
   variant: Variant;
@@ -100,7 +101,9 @@ const iconMap = {
   domain: DomainIcon,
   stackscript: StackScriptIcon,
   kube: KubeIcon,
-  bucket: BucketIcon
+  bucket: BucketIcon,
+  // @todo: What is the real Object icon?
+  object: BucketIcon
 };
 
 const getIcon = (variant: Variant) => {

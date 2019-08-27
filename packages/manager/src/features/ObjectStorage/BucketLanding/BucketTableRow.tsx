@@ -54,7 +54,7 @@ export const BucketTableRow: React.StatelessComponent<
   return (
     <TableRow
       key={label}
-      rowLink={`/object-storage/buckets/${region}/${label}`}
+      rowLink={`/object-storage/buckets/${cluster}/${label}`}
       data-qa-bucket-cell={label}
       className={`${classes.bucketRow} ${'fade-in-table'}`}
     >
