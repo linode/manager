@@ -104,7 +104,8 @@ interface Props {
   handleDetach: (
     volumeId: number,
     volumeLabel: string,
-    linodeLabel: string
+    linodeLabel: string,
+    poweredOff: boolean
   ) => void;
   handleDelete: (volumeId: number, volumeLabel: string) => void;
 }

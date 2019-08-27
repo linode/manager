@@ -2,8 +2,24 @@ import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
+
+type ClassNames = 'warningCopy';
+
+const styles = (theme: Theme) =>
+  createStyles({
+    warningCopy: {
+      color: theme.color.red,
+      marginBottom: theme.spacing(2)
+    }
+  });
 
 interface Props {
   open: boolean;
@@ -14,9 +30,10 @@ interface Props {
   onDelete: () => void;
   volumeLabel: string;
   linodeLabel: string;
+  poweredOff: boolean;
 }
 
-type CombinedProps = Props;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
   renderActions = () => {
@@ -48,7 +65,14 @@ class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
   };
 
   render() {
-    const { error, volumeLabel: label, linodeLabel } = this.props;
+    const {
+      classes,
+      error,
+      volumeLabel: label,
+      linodeLabel,
+      poweredOff,
+      mode
+    } = this.props;
     const title = {
       detach: `Detach ${label ? label : 'Volume'}?`,
       delete: `Delete ${label ? label : 'Volume'}?`
@@ -62,8 +86,19 @@ class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
         actions={this.renderActions}
       >
         {error && <Notice error text={error} />}
+
+        {/* In 'detach' mode, show a warning if the Linode is powered on. */}
+        {mode === 'detach' && !poweredOff && (
+          <Typography className={classes.warningCopy}>
+            <strong>Warning:</strong> This operation could cause data loss.
+            Please power off the Linode first or make sure it isn't currently
+            writing to the volume before continuing. If this volume is currently
+            mounted, detaching it could cause your Linode to restart.
+          </Typography>
+        )}
+
         <Typography>
-          Are you sure you want to {this.props.mode} this Volume
+          Are you sure you want to {mode} this Volume
           {`${linodeLabel ? ` from ${linodeLabel}?` : '?'}`}
         </Typography>
       </ConfirmationDialog>
@@ -71,4 +106,4 @@ class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
   }
 }
 
-export default DestructiveVolumeDialog;
+export default withStyles(styles)(DestructiveVolumeDialog);
