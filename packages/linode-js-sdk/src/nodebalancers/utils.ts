@@ -1,3 +1,5 @@
+import { NodeBalancerConfigNode2 } from './types';
+
 export const combineConfigNodeAddressAndPort = (data: any) => ({
   ...data,
   nodes: data.nodes.map((n: any) => ({
@@ -21,7 +23,7 @@ export const combineNodeBalancerConfigNodeAddressAndPort = (data: any) => ({
   }))
 });
 
-export const mergeAddressAndPort = (node: Linode.NodeBalancerConfigNode) => ({
+export const mergeAddressAndPort = (node: NodeBalancerConfigNode2) => ({
   ...node,
   address: `${node.address}:${node.port}`
 });

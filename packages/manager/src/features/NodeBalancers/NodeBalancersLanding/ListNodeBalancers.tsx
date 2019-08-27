@@ -1,3 +1,4 @@
+import { NodeBalancerWithConfigs } from 'linode-js-sdk/lib/nodebalancers';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import {
@@ -37,7 +38,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  data: Linode.NodeBalancerWithConfigs[];
+  data: NodeBalancerWithConfigs[];
   orderBy: string;
   order: 'asc' | 'desc';
   handleOrderChange: (orderBy: string, order?: 'asc' | 'desc') => void;

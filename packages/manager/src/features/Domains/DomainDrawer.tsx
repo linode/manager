@@ -3,6 +3,7 @@ import {
   createDomainRecord,
   Domain
 } from 'linode-js-sdk/lib/domains';
+import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { Lens, lensPath, over, path, pathOr, set, view } from 'ramda';
 import * as React from 'react';
@@ -80,7 +81,7 @@ interface State {
   masterIPsCount: number;
   defaultRecordsSetting: DefaultRecordsType;
   selectedDefaultLinode?: Linode.Linode;
-  selectedDefaultNodeBalancer?: Linode.NodeBalancer;
+  selectedDefaultNodeBalancer?: NodeBalancer;
 }
 
 type CombinedProps = WithStyles<ClassNames> &
@@ -804,7 +805,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
   updateSelectedLinode = (linode: Linode.Linode) =>
     this.setState({ selectedDefaultLinode: linode });
 
-  updateSelectedNodeBalancer = (nodebalancer: Linode.NodeBalancer) =>
+  updateSelectedNodeBalancer = (nodebalancer: NodeBalancer) =>
     this.setState({ selectedDefaultNodeBalancer: nodebalancer });
 
   updateTags = (selected: Tag[]) => {

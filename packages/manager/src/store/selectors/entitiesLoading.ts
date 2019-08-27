@@ -1,4 +1,5 @@
 import { Domain } from 'linode-js-sdk/lib/domains';
+import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';
@@ -36,7 +37,7 @@ export default createSelector<
   State,
   Resource<Linode.Linode[], EntityError>,
   Resource<Volume[]>,
-  Resource<Linode.NodeBalancer[][]>,
+  Resource<NodeBalancer[][]>,
   RequestableDataWithEntityError<Domain[]>,
   Resource<Linode.Image[]>,
   Resource<Linode.LinodeType[]>,

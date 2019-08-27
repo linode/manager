@@ -2,7 +2,7 @@ import {
   CreateNodeBalancerConfig,
   NodeBalancerConfig,
   UpdateNodeBalancerConfig
-} from 'src/services/nodebalancers';
+} from 'linode-js-sdk/lib/nodebalancers';
 import { actionCreatorFactory } from 'typescript-fsa';
 import { BalancerParams } from '../nodeBalancer/nodeBalancer.actions';
 

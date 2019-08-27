@@ -1,29 +1,22 @@
-import { API_ROOT } from 'src/constants';
-
+import { API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
   setXFilter
-} from '../index';
-
+} from '../request';
+import { ResourcePage as Page } from '../types';
 import {
   NodeBalancerSchema,
   UpdateNodeBalancerSchema
 } from './nodebalancers.schema';
+import {
+  CreateNodeBalancerPayload,
+  NodeBalancer,
+  NodeBalancerStats
+} from './types';
 import { combineNodeBalancerConfigNodeAddressAndPort } from './utils';
-
-type Page<T> = Linode.ResourcePage<T>;
-type NodeBalancer = Linode.NodeBalancer;
-type NodeBalancerStats = Linode.NodeBalancerStats;
-
-export interface CreateNodeBalancerPayload {
-  region?: string;
-  label?: string;
-  client_conn_throttle?: number;
-  configs: any;
-}
 
 /**
  * getNodeBalancers
