@@ -25,11 +25,11 @@ import { requestClusters as _requestClusters } from 'src/store/clusters/clusters
 import { MapState } from 'src/store/types';
 
 const BucketLanding = DefaultLoader({
-  loader: () => import('./BucketList/BucketLanding')
+  loader: () => import('./BucketLanding/BucketLanding')
 });
 
 const AccessKeyLanding = DefaultLoader({
-  loader: () => import('./AccessKeys/AccessKeyLanding')
+  loader: () => import('./AccessKeyLanding/AccessKeyLanding')
 });
 
 type CombinedProps = StateProps & DispatchProps & RouteComponentProps<{}>;
