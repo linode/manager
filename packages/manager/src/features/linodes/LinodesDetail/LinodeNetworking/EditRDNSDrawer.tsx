@@ -1,3 +1,4 @@
+import { updateIP } from 'linode-js-sdk/lib/networking';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -5,7 +6,6 @@ import FormHelperText from 'src/components/core/FormHelperText';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import TextField from 'src/components/TextField';
-import { updateIP } from 'src/services/networking';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';

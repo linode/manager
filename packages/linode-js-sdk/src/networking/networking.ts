@@ -1,4 +1,4 @@
-import { API_ROOT } from 'src/constants';
+import { API_ROOT } from '../constants';
 
 import Request, {
   setData,
@@ -6,15 +6,15 @@ import Request, {
   setParams,
   setURL,
   setXFilter
-} from '../index';
+} from '../request';
+import { ResourcePage as Page } from '../types';
 import {
   allocateIPSchema,
   assignAddressesSchema,
   shareAddressesSchema,
   updateIPSchema
 } from './networking.schema';
-
-type Page<T> = Linode.ResourcePage<T>;
+import { IPAddress, IPRange } from './types';
 
 /**
  * Returns a paginated list of IP Addresses on your Account, excluding private
@@ -22,7 +22,7 @@ type Page<T> = Linode.ResourcePage<T>;
  *
  */
 export const getIPs = (params?: any, filters?: any) =>
-  Request<Page<Linode.IPAddress>>(
+  Request<Page<IPAddress>>(
     setURL(`${API_ROOT}/networking/ips`),
     setMethod('GET'),
     setParams(params),
@@ -35,7 +35,7 @@ export const getIPs = (params?: any, filters?: any) =>
  * @param address { string } The address to operate on.
  */
 export const getIP = (address: string) =>
-  Request<Linode.IPAddress>(
+  Request<IPAddress>(
     setURL(`${API_ROOT}/networking/ips/${address}`),
     setMethod('GET')
   ).then(response => response.data);
@@ -51,7 +51,7 @@ export const getIP = (address: string) =>
  * explicitly set.
  */
 export const updateIP = (address: string, rdns: string | null = null) =>
-  Request<Linode.IPAddress>(
+  Request<IPAddress>(
     setURL(`${API_ROOT}/networking/ips/${address}`),
     setData({ rdns }, updateIPSchema),
     setMethod('PUT')
@@ -71,7 +71,7 @@ export const updateIP = (address: string, rdns: string | null = null) =>
  *  that this address will be allocated to.
  */
 export const allocateIp = (payload: any) =>
-  Request<Linode.IPAddress>(
+  Request<IPAddress>(
     setURL(`${API_ROOT}/networking/ips/`),
     setData(payload, allocateIPSchema),
     setMethod('POST')
@@ -122,7 +122,7 @@ export const shareAddresses = (payload: any) =>
  *
  */
 export const getIPv6Pools = (params?: any) =>
-  Request<Page<Linode.IPRange>>(
+  Request<Page<IPRange>>(
     setURL(`${API_ROOT}/networking/ipv6/pools`),
     setMethod('GET'),
     setParams(params)
@@ -133,7 +133,7 @@ export const getIPv6Pools = (params?: any) =>
  *
  */
 export const getIPv6Ranges = (params?: any) =>
-  Request<Page<Linode.IPRange>>(
+  Request<Page<IPRange>>(
     setURL(`${API_ROOT}/networking/ipv6/ranges`),
     setMethod('GET'),
     setParams(params)
