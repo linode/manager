@@ -1,3 +1,4 @@
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import { createSelector } from 'reselect';
 import { displayType } from 'src/features/linodes/presentation';
 import { SearchableItem } from 'src/features/Search/search.interfaces';
@@ -53,7 +54,7 @@ const formatLinode = (
   }
 });
 
-const volumeToSearchableItem = (volume: Linode.Volume): SearchableItem => ({
+const volumeToSearchableItem = (volume: Volume): SearchableItem => ({
   label: volume.label,
   value: volume.id,
   entityType: 'volume',
@@ -128,7 +129,7 @@ const typesSelector = (state: State) => state.types.entities;
 export default createSelector<
   State,
   Linode.Linode[],
-  Linode.Volume[],
+  Volume[],
   Linode.Image[],
   Linode.Domain[],
   Linode.NodeBalancer[],

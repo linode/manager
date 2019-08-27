@@ -1,3 +1,4 @@
+import { Event } from 'linode-js-sdk/lib/account';
 import getEventMessage, { eventMessageCreators } from './eventMessageGenerator';
 
 describe('getEventMessage', () => {
@@ -6,7 +7,7 @@ describe('getEventMessage', () => {
       action: '__unknown__',
       status: 'started'
     };
-    const result = getEventMessage(mockEvent as Linode.Event);
+    const result = getEventMessage(mockEvent as Event);
 
     expect(result).toBe('__unknown__');
   });
@@ -17,7 +18,7 @@ describe('getEventMessage', () => {
       status: 'scheduled',
       entity: null
     };
-    const result = getEventMessage(mockEvent as Linode.Event);
+    const result = getEventMessage(mockEvent as Event);
 
     expect(result).toBe('');
   });
@@ -33,7 +34,7 @@ describe('getEventMessage', () => {
     eventMessageCreators.linode_reboot.scheduled = jest.fn();
 
     /** Invoke the function. */
-    getEventMessage(mockEvent as Linode.Event);
+    getEventMessage(mockEvent as Event);
 
     /** Check that the mocked creator was called w/ the mock event. */
     expect(eventMessageCreators.linode_reboot.scheduled).toHaveBeenCalledWith(

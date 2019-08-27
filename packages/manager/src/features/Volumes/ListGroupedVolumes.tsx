@@ -1,3 +1,4 @@
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import { compose } from 'ramda';
 import * as React from 'react';
 import {
@@ -94,7 +95,7 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
 
   return (
     <TableWrapper {...tableWrapperProps}>
-      {groupedVolumes.map(([tag, volumes]: [string, Linode.Volume[]]) => {
+      {groupedVolumes.map(([tag, volumes]: [string, Volume[]]) => {
         return (
           <React.Fragment key={tag}>
             <Paginate data={volumes} pageSize={DEFAULT_PAGE_SIZE}>

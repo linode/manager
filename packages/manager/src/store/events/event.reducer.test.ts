@@ -1,3 +1,4 @@
+import { Event } from 'linode-js-sdk/lib/account';
 import * as moment from 'moment';
 import { addEvents } from './event.actions';
 import reducer, { defaultState } from './event.reducer';
@@ -14,7 +15,7 @@ describe('events.reducer', () => {
       });
 
       describe('with events', () => {
-        const events: Linode.Event[] = [
+        const events: Event[] = [
           {
             id: 18029572,
             time_remaining: 0,

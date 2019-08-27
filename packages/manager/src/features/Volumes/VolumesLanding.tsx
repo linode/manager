@@ -1,3 +1,5 @@
+import { Event } from 'linode-js-sdk/lib/account';
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
@@ -133,7 +135,7 @@ interface WithLinodesProps {
   linodesLoading: boolean;
   linodesError?: Linode.ApiFieldError[];
 }
-export interface ExtendedVolume extends Linode.Volume {
+export interface ExtendedVolume extends Volume {
   linodeLabel?: string;
   linodeStatus?: string;
 }
@@ -143,7 +145,7 @@ interface Props {
   linodeLabel?: string;
   linodeRegion?: string;
   linodeConfigs?: Linode.Config[];
-  recentEvent?: Linode.Event;
+  recentEvent?: Event;
   readOnly?: boolean;
   removeBreadCrumb?: boolean;
 }
@@ -628,9 +630,9 @@ const documented = setDocs(VolumesLanding.docs);
 const styled = withStyles(styles);
 
 const addAttachedLinodeInfoToVolume = (
-  volume: Linode.Volume,
+  volume: Volume,
   linodes: Linode.Linode[]
-): Linode.Volume | ExtendedVolume => {
+): Volume | ExtendedVolume => {
   if (!volume.linode_id) {
     return volume;
   }
@@ -646,10 +648,7 @@ const addAttachedLinodeInfoToVolume = (
   }
 };
 
-const addRecentEventToVolume = (
-  volume: Linode.Volume,
-  events: Linode.Event[]
-) => {
+const addRecentEventToVolume = (volume: Volume, events: Event[]) => {
   // We're filtering out events without entities in the reducer, so we can assume these
   // all have an entity attached.
   const recentEvent = events.find(event => event.entity!.id === volume.id);
@@ -660,7 +659,7 @@ const addRecentEventToVolume = (
   }
 };
 
-const filterVolumeEvents = (event: Linode.Event): boolean => {
+const filterVolumeEvents = (event: Event): boolean => {
   return (
     !event._initial && Boolean(event.entity) && event.entity!.type === 'volume'
   );

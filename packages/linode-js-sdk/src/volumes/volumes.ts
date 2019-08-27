@@ -1,41 +1,25 @@
-import { API_ROOT } from 'src/constants';
+import { API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
-  setXFilter
-} from '../index';
+  setXFilter,
+} from '../request';
+import { ResourcePage as Page } from '../types';
+import {
+  AttachVolumePayload,
+  CloneVolumePayload,
+  ResizeVolumePayload,
+  Volume,
+  VolumeRequestPayload,
+} from './types';
 import {
   CloneVolumeSchema,
   CreateVolumeSchema,
   ResizeVolumeSchema,
-  UpdateVolumeSchema
+  UpdateVolumeSchema,
 } from './volumes.schema';
-
-type Page<T> = Linode.ResourcePage<T>;
-type Volume = Linode.Volume;
-
-export interface VolumeRequestPayload {
-  label: string;
-  size?: number;
-  region?: string;
-  linode_id?: number;
-  config_id?: number;
-  tags?: string[];
-}
-
-export interface AttachVolumePayload {
-  linode_id: number;
-  config_id?: number;
-}
-export interface CloneVolumePayload {
-  label: string;
-}
-
-export interface ResizeVolumePayload {
-  size: number;
-}
 
 /**
  * getVolume
@@ -47,7 +31,7 @@ export interface ResizeVolumePayload {
 export const getVolume = (volumeId: number) =>
   Request<Volume>(
     setURL(`${API_ROOT}/volumes/${volumeId}`),
-    setMethod('GET')
+    setMethod('GET'),
   ).then(response => response.data);
 
 /**
@@ -61,7 +45,7 @@ export const getVolumes = (params?: any, filters?: any) =>
     setURL(`${API_ROOT}/volumes`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters)
+    setXFilter(filters),
   ).then(response => response.data);
 
 /**
@@ -81,7 +65,7 @@ export const attachVolume = (volumeId: number, payload: AttachVolumePayload) =>
   Request<Volume>(
     setURL(`${API_ROOT}/volumes/${volumeId}/attach`),
     setMethod('POST'),
-    setData(payload)
+    setData(payload),
   ).then(response => response.data);
 
 /**
@@ -95,7 +79,7 @@ export const attachVolume = (volumeId: number, payload: AttachVolumePayload) =>
 export const detachVolume = (volumeId: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/volumes/${volumeId}/detach`),
-    setMethod('POST')
+    setMethod('POST'),
   ).then(response => response.data);
 
 /**
@@ -110,7 +94,7 @@ export const detachVolume = (volumeId: number) =>
 export const deleteVolume = (volumeId: number) =>
   Request<{}>(
     setURL(`${API_ROOT}/volumes/${volumeId}`),
-    setMethod('DELETE')
+    setMethod('DELETE'),
   ).then(response => response.data);
 
 /**
@@ -128,7 +112,7 @@ export const cloneVolume = (volumeId: number, data: CloneVolumePayload) =>
   Request<Volume>(
     setURL(`${API_ROOT}/volumes/${volumeId}/clone`),
     setMethod('POST'),
-    setData(data, CloneVolumeSchema)
+    setData(data, CloneVolumeSchema),
   ).then(response => response.data);
 
 /**
@@ -149,7 +133,7 @@ export const resizeVolume = (volumeId: number, data: ResizeVolumePayload) =>
      * Unless we require the old size, we wont be able to validate. We know 10 is the
      * absolute min so it's safe to set here.
      */
-    setData(data, ResizeVolumeSchema(10))
+    setData(data, ResizeVolumeSchema(10)),
   ).then(response => response.data);
 
 export interface UpdateVolumeRequest {
@@ -170,7 +154,7 @@ export const updateVolume = (volumeId: number, data: UpdateVolumeRequest) =>
   Request<Volume>(
     setURL(`${API_ROOT}/volumes/${volumeId}`),
     setMethod('PUT'),
-    setData(data, UpdateVolumeSchema)
+    setData(data, UpdateVolumeSchema),
   ).then(response => response.data);
 
 /**
@@ -187,5 +171,5 @@ export const createVolume = (data: VolumeRequestPayload) =>
   Request<Volume>(
     setURL(`${API_ROOT}/volumes`),
     setMethod('POST'),
-    setData(data, CreateVolumeSchema)
+    setData(data, CreateVolumeSchema),
   ).then(response => response.data);

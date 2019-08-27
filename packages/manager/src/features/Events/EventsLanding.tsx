@@ -1,4 +1,4 @@
-import { getEvents } from "linode-js-sdk/lib/account";
+import { Event, getEvents } from 'linode-js-sdk/lib/account';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { compose as rCompose, concat, uniq } from 'ramda';
 import * as React from 'react';
@@ -69,8 +69,8 @@ type CombinedProps = Props &
   WithStyles<ClassNames> &
   WithPerfMetricsProps;
 
-const appendToEvents = (oldEvents: Linode.Event[], newEvents: Linode.Event[]) =>
-  rCompose<Linode.Event[], Linode.Event[], Linode.Event[], Linode.Event[]>(
+const appendToEvents = (oldEvents: Event[], newEvents: Event[]) =>
+  rCompose<Event[], Event[], Event[], Event[]>(
     uniq, // Ensure no duplicates
     concat(oldEvents), // Attach the new events
     setDeletedEvents // Add a _deleted entry for each new event
@@ -79,14 +79,14 @@ const appendToEvents = (oldEvents: Linode.Event[], newEvents: Linode.Event[]) =>
 export interface ReducerState {
   inProgressEvents: Record<number, number>;
   eventsFromRedux: ExtendedEvent[];
-  reactStateEvents: Linode.Event[];
+  reactStateEvents: Event[];
   mostRecentEventTime: string;
 }
 
 interface Payload {
   inProgressEvents: Record<number, number>;
   eventsFromRedux: ExtendedEvent[];
-  reactStateEvents: Linode.Event[];
+  reactStateEvents: Event[];
   mostRecentEventTime: string;
   entityId?: number;
 }
@@ -211,9 +211,7 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
       });
   };
 
-  const handleEventsRequestSuccess = (
-    response: Linode.ResourcePage<Linode.Event>
-  ) => {
+  const handleEventsRequestSuccess = (response: Linode.ResourcePage<Event>) => {
     setCurrentPage(currentPage + 1);
     setLoadMoreEvents(true);
     /** append our events to component state */
@@ -337,7 +335,7 @@ export const renderTableBody = (
   errorMessage = 'There was an error retrieving the events on your account.',
   entityId?: number,
   error?: string,
-  events?: Linode.Event[]
+  events?: Event[]
 ) => {
   const filteredEvents = removeBlacklistedEvents(events, ['profile_update']);
 
