@@ -18,8 +18,7 @@ To start all projects:
 While in the root...
 1. Run `yarn` to install all root dependencies.
 2. Run `npx lerna bootstrap` to install all package dependencies.
-3. Run `npx lerna run start` to start a development server for all projects
-   * additionally, you can add a `--stream` flag to this command to see the output of the development server.
+3. Run `npx lerna run start --parallel` to start a development server for all projects
 
 Alternatively, you can run `yarn up` which runs all previous commands.
 
@@ -29,9 +28,8 @@ Starting a single project is similar to the previous instructions with the excep
 
 1. Run `yarn` to install all root dependencies.
 2. Run `npx lerna bootstrap` to install all package dependencies.
-3. Run `npx lerna run start --scope linode-manager` to start a development server for all projects
-   * additionally, you can add a `--stream` flag to this command to see the output of the development server.
-   * `linode-manager` is the name located in `packages/manager/package.json`
+3. Run `npx lerna run start --scope linode-js-sdk` to start a development server for the JavaScript SDK
+   * `linode-js-sdk` is the name located in `packages/linode-js-sdk/package.json`
 
 ## Helper Scripts
 
