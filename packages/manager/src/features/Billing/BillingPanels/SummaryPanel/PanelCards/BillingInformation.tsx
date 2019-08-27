@@ -43,40 +43,48 @@ const BillingInformation: React.FC<CombinedProps> = props => {
       <div className={classes.billingGroup}>
         <CreditCard lastFour={lastFour} expiry={expiry} />
       </div>
-
       <div className={classes.billingGroup}>
+        {balance < 0 && (
+          <BillingSection
+            header="Current Balance:&nbsp;"
+            balance={balance}
+            data-qa-balance
+          />
+        )}
         <BillingSection
-          header="Current Balance:&nbsp;"
-          balance={balance}
-          showNegativeAsCredit
+          header="Amount Due:&nbsp;"
+          balance={Math.max(balance, 0)}
           data-qa-balance
         />
-
-        {flags.promos && promoCredit && (
-          <>
-            <BillingSection
-              header="Promotional Credit:&nbsp;"
-              credit={credit}
-              data-qa-promotional-credit
-            />
-
-            <BillingSection
-              header="Amount Due:&nbsp;"
-              balance={Math.max(0, balance - credit)}
-              data-qa-amount-due
-            />
-          </>
-        )}
       </div>
 
       <div className={classes.billingGroup}>
         {balanceUninvoiced !== undefined && (
-          <BillingSection
-            header="Uninvoiced Balance:&nbsp;"
-            balance={balanceUninvoiced}
-            textColor={false}
-            data-qa-uninvoiced-balance
-          />
+          <>
+            <BillingSection
+              header="Uninvoiced Balance:&nbsp;"
+              balance={balanceUninvoiced}
+              textColor={false}
+              data-qa-uninvoiced-balance
+            />
+
+            {flags.promos && promoCredit && (
+              <>
+                <BillingSection
+                  header="Promotional Credit:&nbsp;"
+                  credit={credit}
+                  data-qa-promotional-credit
+                />
+
+                <BillingSection
+                  header="Adjusted Uninvoiced Balance:&nbsp;"
+                  balance={Math.max(0, balanceUninvoiced - credit)}
+                  textColor={false}
+                  data-qa-amount-due
+                />
+              </>
+            )}
+          </>
         )}
       </div>
     </Paper>

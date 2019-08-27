@@ -29,7 +29,12 @@ import {
   Origin as VolumeDrawerOrigin
 } from 'src/store/volumeDrawer';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
+import {
+  handleFieldErrors,
+  handleGeneralErrors
+} from 'src/utilities/formikErrorUtils';
 import { sendCreateVolumeEvent } from 'src/utilities/ga';
+import maybeCastToNumber from 'src/utilities/maybeCastToNumber';
 import ConfigSelect from './ConfigSelect';
 import LabelField from './LabelField';
 import { modes } from './modes';
@@ -37,11 +42,6 @@ import ModeSelection from './ModeSelection';
 import NoticePanel from './NoticePanel';
 import PricePanel from './PricePanel';
 import SizeField from './SizeField';
-import {
-  handleFieldErrors,
-  handleGeneralErrors,
-  maybeCastToNumber
-} from './utils';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
 type ClassNames = 'root' | 'textWrapper';

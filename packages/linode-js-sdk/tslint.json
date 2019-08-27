@@ -1,0 +1,11 @@
+{
+  "extends": [
+    "tslint:recommended",
+    "tslint-config-prettier"
+  ],
+  "rules": {
+    "interface-name": false,
+    "object-literal-sort-keys": false,
+    "ban-types": false
+  }
+}

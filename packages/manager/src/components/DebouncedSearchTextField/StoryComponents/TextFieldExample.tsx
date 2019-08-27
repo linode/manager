@@ -42,7 +42,7 @@ class Example extends React.Component<Props, State> {
           onSearch={this.handleSearch}
           isSearching={this.state.isSearching}
         />
-        <ul>
+        <ul data-qa-listOfItems>
           {this.state.list.map((eachThing: string) => {
             return (
               <li key={eachThing} data-qa-list-item>

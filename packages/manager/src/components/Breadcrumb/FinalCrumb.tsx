@@ -9,9 +9,9 @@ import { EditableProps, LabelProps } from './types';
 
 const useStyles = makeStyles((theme: Theme) => ({
   crumb: {
-    whiteSpace: 'nowrap',
-    textTransform: 'capitalize',
-    ...theme.typography.h1
+    ...theme.typography.h1,
+    lineHeight: 1.2,
+    textTransform: 'capitalize'
   },
   noCap: {
     textTransform: 'initial'
@@ -28,9 +28,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   labelText: {
     padding: `2px 10px`
-  },
-  labelSubtitle: {
-    margin: '4px 0 0 10px'
   },
   editableContainer: {
     marginLeft: -theme.spacing(1),
@@ -90,11 +87,7 @@ const FinalCrumb: React.FC<CombinedProps> = props => {
           {crumb}
         </Typography>
         {labelOptions && labelOptions.subtitle && (
-          <Typography
-            variant="body1"
-            className={classes.labelSubtitle}
-            data-qa-label-subtitle
-          >
+          <Typography variant="body1" data-qa-label-subtitle>
             {labelOptions.subtitle}
           </Typography>
         )}

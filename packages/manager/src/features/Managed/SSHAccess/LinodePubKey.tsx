@@ -11,6 +11,7 @@ import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import { getSSHPubKey } from 'src/services/managed';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 // @todo: is this URL correct? Are there new docs being written?
@@ -72,9 +73,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 const LinodePubKey: React.FC<{}> = props => {
   const classes = useStyles();
 
-  const { data: pubKey, loading, error } = useAPIRequest<string>(
-    getLinodePubKey,
-    ''
+  const { data, loading, error } = useAPIRequest<Linode.ManagedSSHPubKey>(
+    getSSHPubKey,
+    { ssh_key: '' }
   );
 
   if (error) {
@@ -115,7 +116,7 @@ const LinodePubKey: React.FC<{}> = props => {
           <Hidden xsDown>
             <Grid item xs={6} lg={7}>
               <Typography variant="subtitle1" className={classes.sshKey}>
-                {pubKey}
+                {data.ssh_key}
                 {/* See NOTE A. If that CSS is removed, we can use the following instead: */}
                 {/* pubKey.slice(0, 160)} . . . */}
               </Typography>
@@ -123,7 +124,7 @@ const LinodePubKey: React.FC<{}> = props => {
           </Hidden>
           <Grid item xs={6} md={3} lg={2} className={classes.copyToClipboard}>
             {/* @todo: Should we include an indication that the key was successfully copied? */}
-            <Button buttonType="secondary" onClick={() => copy(pubKey)}>
+            <Button buttonType="secondary" onClick={() => copy(data.ssh_key)}>
               Copy to clipboard
             </Button>
           </Grid>
@@ -134,19 +135,3 @@ const LinodePubKey: React.FC<{}> = props => {
 };
 
 export default LinodePubKey;
-
-// This is not yet available from the API, so we'll mock request for now.
-const MOCKgetLinodePubKey = (): Promise<string> => {
-  const FAKE_KEY =
-    'ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQClZXcb/PS8sb7Lj61QeZk8oKjFwUhRzu5fGc5jSSgER1DGz+bb2TpoUUK7HETXz1Tc1WLM67CLmiVa7fELTi0Jty+/8mY+C07WAL43DGMWMVmt8H6nPfQUB2kuR+Tse5XzohI0tiMZDhr3R2yRmfJyRxogY5vqa4WdJxwGIbvyEt5wW8yXUgQUXvFy5oj7s/EQLbeFWvQmpY07XqLjtj5IIMmwrTFZ8sdVeqCJYCp23kWH/Wo3+k++knIKC954B3RhHuj7SeRpAAGLyMLAkxwXa58gdjmhiUpgXQ4Br/5OtCVNpGASxGuu6P48vZck1ZPpM00QnnyfZK3fgYCD4Glp managedservices@linode';
-  return new Promise((resolve, reject) => {
-    // Simulate a network request.
-    setTimeout(() => {
-      // reject("Error getting Linode's Public Key");
-      // ^^^^ Uncomment to simulate error
-      resolve(FAKE_KEY);
-    }, 200);
-  });
-};
-
-const getLinodePubKey = MOCKgetLinodePubKey;

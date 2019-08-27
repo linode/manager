@@ -5,8 +5,7 @@ import {
   Redirect,
   Route,
   RouteComponentProps,
-  Switch,
-  withRouter
+  Switch
 } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
@@ -20,6 +19,8 @@ import DefaultLoader from 'src/components/DefaultLoader';
 import withProfile, {
   ProfileActionsProps
 } from 'src/containers/profile.container';
+
+import TaxBanner from 'src/components/TaxBanner';
 
 type Props = RouteComponentProps<{}> & ProfileActionsProps & StateProps;
 
@@ -57,6 +58,7 @@ class AccountLanding extends React.Component<Props> {
       match: { url },
       location
     } = this.props;
+
     const matches = (p: string) => {
       return Boolean(matchPath(p, { path: this.props.location.pathname }));
     };
@@ -64,6 +66,7 @@ class AccountLanding extends React.Component<Props> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Account Settings" />
+        <TaxBanner location={location} />
         <Breadcrumb
           pathname={location.pathname}
           labelTitle="Account"
@@ -127,7 +130,6 @@ interface StateProps {
 }
 
 export default compose<Props, {}>(
-  withRouter,
   withProfile<StateProps, {}>((ownProps, { data }) => ({
     isRestrictedUser: pathOr(false, ['restricted'], data)
   }))

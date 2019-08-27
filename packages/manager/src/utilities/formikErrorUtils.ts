@@ -1,9 +1,5 @@
-import { isEmpty, isNil } from 'ramda';
-
-export const isNilOrEmpty = (v: any) => isNil(v) || isEmpty(v);
-
-export const maybeCastToNumber = (v: string | number) =>
-  isNilOrEmpty(v) ? undefined : Number(v);
+import { getAPIErrorOrDefault } from './errorUtils';
+import isNilOrEmpty from './isNilOrEmpty';
 
 export const handleFieldErrors = (
   callback: Function,
@@ -29,7 +25,9 @@ export const handleGeneralErrors = (
     return callback(defaultMessage);
   }
 
-  const generalError = apiErrors
+  const _apiErrors = getAPIErrorOrDefault(apiErrors, defaultMessage);
+
+  const generalError = _apiErrors
     .reduce(
       (result, { field, reason }) => (field ? result : [...result, reason]),
       []

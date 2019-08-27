@@ -11,14 +11,18 @@ type CombinedProps = LinodeContext;
 
 const LinodeDetailHeader: React.StatelessComponent<CombinedProps> = props => {
   const { linodeEvents, linodeStatus, linodeDisks } = props;
-  const recentEvent = linodeEvents[0];
+  const firstEventWithProgress = (linodeEvents || []).find(
+    eachEvent => typeof eachEvent.percent_complete === 'number'
+  );
 
   return (
     <React.Fragment>
       <MutationNotification disks={linodeDisks} />
       <Notifications />
       <LinodeControls />
-      {linodeInTransition(linodeStatus, recentEvent) && <LinodeBusyStatus />}
+      {linodeInTransition(linodeStatus, firstEventWithProgress) && (
+        <LinodeBusyStatus />
+      )}
     </React.Fragment>
   );
 };

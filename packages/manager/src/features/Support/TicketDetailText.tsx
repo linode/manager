@@ -14,32 +14,61 @@ import IconButton from 'src/components/IconButton';
 
 import truncateText from 'src/utilities/truncateText';
 
-type ClassNames = 'root' | 'formattedText' | 'expCol' | 'expButton' | 'toggle';
+import './formatted-text.css';
+
+type ClassNames = 'root' | 'expButton' | 'toggle' | 'buttonText';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
-    expCol: {
-      display: 'flex',
-      justifyContent: 'flex-end'
+    root: {
+      marginTop: theme.spacing(1),
+      padding: `${theme.spacing(2)}px ${theme.spacing(1)}px`,
+      position: 'relative',
+      '& pre': {
+        backgroundColor: theme.bg.tableHeader
+      },
+      [`& span.hljs-number,
+        & span.hljs-string,
+        & span.hljs-symbol,
+        & span.hljs-bullet
+      `]: {
+        color: theme.palette.text.primary
+      },
+      [`& span.hljs-deletion,
+        & span.hljs-addition
+      `]: {
+        color: theme.color.black
+      },
+      '& span.hljs': {
+        background: theme.color.grey2,
+        color: theme.color.label
+      }
     },
     expButton: {
-      position: 'relative',
-      top: -theme.spacing(1),
-      left: theme.spacing(1),
-      [theme.breakpoints.down('sm')]: {
-        position: 'absolute',
-        top: 16,
-        right: 16,
-        left: 'auto'
+      position: 'absolute',
+      top: -43,
+      right: 0,
+      left: 'auto',
+      '& svg': {
+        stroke: theme.color.grey1
+      },
+      '& .border': {
+        stroke: theme.color.grey1,
+        fill: theme.color.white
       }
     },
     toggle: {
       height: 24,
       width: 24
     },
-    formattedText: {
-      whiteSpace: 'pre-line'
+    buttonText: {
+      position: 'relative',
+      top: -1,
+      marginRight: 4,
+      color: theme.palette.primary.main,
+      [theme.breakpoints.down('sm')]: {
+        visibility: 'hidden'
+      }
     }
   });
 
@@ -75,20 +104,16 @@ const TicketDetailText: React.FC<CombinedProps> = props => {
   const ticketReplyBody = panelOpen ? ticketBody : truncatedText;
 
   return (
-    <React.Fragment>
-      <Grid
-        item
-        xs={truncatedText !== ticketBody ? 11 : 12}
-        sm={truncatedText !== ticketBody ? 6 : 7}
-        md={truncatedText !== ticketBody ? 8 : 9}
-      >
+    <Grid container className={classes.root}>
+      <Grid item style={{ width: '100%' }}>
         {props.text ? (
-          <Typography className={classes.formattedText}>
+          <Typography className="formatted-text" component="div">
             {ticketReplyBody}
           </Typography>
         ) : (
           <Typography
-            className={classes.formattedText}
+            className="formatted-text"
+            component="div"
             dangerouslySetInnerHTML={{
               __html: ticketReplyBody
             }}
@@ -96,25 +121,29 @@ const TicketDetailText: React.FC<CombinedProps> = props => {
         )}
       </Grid>
       {truncatedText !== ticketBody && (
-        <Grid
-          item
-          xs={1}
+        <IconButton
+          className={classes.expButton}
+          aria-label="Expand full answer"
           onClick={() => togglePanel(!panelOpen)}
-          className={classes.expCol}
         >
-          <IconButton
-            className={classes.expButton}
-            aria-label="Expand full answer"
-          >
-            {panelOpen ? (
+          {panelOpen ? (
+            <>
+              <Typography component="span" className={classes.buttonText}>
+                Collapse
+              </Typography>
               <Collapse className={classes.toggle} />
-            ) : (
+            </>
+          ) : (
+            <>
+              <Typography component="span" className={classes.buttonText}>
+                Expand
+              </Typography>
               <Expand className={classes.toggle} />
-            )}
-          </IconButton>
-        </Grid>
+            </>
+          )}
+        </IconButton>
       )}
-    </React.Fragment>
+    </Grid>
   );
 };
 

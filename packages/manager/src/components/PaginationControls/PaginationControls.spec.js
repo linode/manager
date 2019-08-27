@@ -1,79 +1,189 @@
-// const { executeInAllStories } = require('../../../e2e/utils/storybook');
+const { navigateToStory } = require('../../../e2e/utils/storybook');
 
-// describe('Pagination Controls Suite', () => {
-//     const component = 'Pagination Controls';
-//     const childStories = [
-//         'With even range.',
-//         'With odd range.',
-//     ]
-//     const previous = '[data-qa-previous-page]';
-//     const jumpToPage = page => `[data-qa-page-to="${page}"]`;
-//     const next = '[data-qa-next-page]';
+describe('Pagination Controls Suite', () => {
+  const component = 'Pagination Controls';
+  const childStories = [
+    'Interactive example'
+  ]
+  const previous = '[data-qa-page-previous]';
+  const jumpToPage = page => `[data-qa-page-to="${page}"]`;
+  const next = '[data-qa-page-next="true"]';
+  const trailingEllip = '[data-testid="trailing-ellipsis"]';
+  const leadingEllip = '[data-testid="leading-ellipsis"]'
 
-//     it.skip('should display pagination controls in each story', () => {
-//         executeInAllStories(component, childStories, () => {
-//             browser.waitForVisible(next);
+  beforeEach(() =>
+    navigateToStory(component, childStories[0])
+  )
 
-//             const prevPageElem = $(previous);
-//             const nextPageElem = $(next);
-//             const availablePages = $$('[data-qa-page-to]');
+  it('should display pagination controls', () => {
+    $(next).waitForDisplayed();
 
-//             expect(prevPageElem.isVisible()).toBe(true);
-//             expect(nextPageElem.isVisible()).toBe(true);
-//             expect(availablePages.length).toBeGreaterThan(1);
-//         });
-//     });
+    const prevPageElem = $(previous);
+    const nextPageElem = $(next);
+    const availablePages = $$('[data-qa-page-to]');
 
-//     it.skip('should default to page one', () => {
-//         executeInAllStories(component, childStories, () => {
-//             browser.waitForVisible(next);
-//             const activePage = $$('[data-qa-page-to]').filter(e => e.getAttribute('class').includes('active'));
+    expect(prevPageElem.isDisplayed())
+      .withContext(`Previous page arrow should be displayed`)
+      .toBe(true);
+    expect(nextPageElem.isDisplayed())
+      .withContext(`Next page arrow should be displayed`)
+      .toBe(true);
+    expect(availablePages.length)
+      .withContext(`should be more than one page available`)
+      .toBeGreaterThan(1);
+  });
 
-//             expect(activePage.length).toBe(1);
-//             expect(activePage[0].getAttribute('data-qa-page-to')).toBe('1');
-//         });
-//     });
+  it('active elements are disabled', () => {
+    expect($(previous).getAttribute('aria-label'))
+      .withContext(`Incorrect aria label value`)
+      .toEqual('Previous Page')
+    expect($(previous).getAttribute('class').includes('disabled'))
+      .withContext('Disabled class missing')
+      .toBe(true)
+    expect($(`${previous} svg`).isDisplayed())
+      .withContext(`back arrow icon should be displayed`)
+      .toBe(true)
+  })
 
-//     it.skip('should page forward through all', () => {
-//         executeInAllStories(component, childStories, () => {
-//             browser.waitForVisible(next);
-//             let currentPage = 1;
+  it('should default to page one', () => {
+    $(next).waitForDisplayed();
+    const activePage = $$('[data-qa-page-to]').filter(e => e.getAttribute('class').includes('disabled'));
 
-//             const canPage = (nextOrPrevious) => {
-//                 return !browser.getAttribute(nextOrPrevious, 'class').includes('disabled');
-//             }
+    expect(activePage.length)
+      .withContext(`Should only be one active page`)
+      .toBe(1);
+    expect(activePage[0].getAttribute('data-qa-page-to'))
+      .withContext(`Incorrect default page number`)
+      .toBe('1');
+  });
 
-//             while(canPage(next)) {
-//                 browser.click(next);
-//                 const activePages = $$('[data-qa-page-to]').filter(e => e.getAttribute('class').includes('active'));
-//                 const newPageNumber = parseInt(activePages[0].getAttribute('data-qa-page-to'));
+  describe('Pagination navigation ', () => {
+    it('should page forward through all', () => {
+      $(next).waitForDisplayed();
+      let currentPage = 1;
 
-//                 expect(newPageNumber).toBe(currentPage + 1);
-//                 currentPage++;
-//             }
-//         });
+      const canPage = (nextOrPrevious) => {
+        return !$(nextOrPrevious).getAttribute('class').includes('disabled');
+      }
 
-//     });
+      while(canPage(next)) {
+        $(next).click();
+        const activePages = $$('[data-qa-page-to]').filter(e => e.getAttribute('class').includes('disabled'));
+        const newPageNumber = parseInt(activePages[0].getAttribute('data-qa-page-to'));
 
-//     it.skip('should page enable previous button after paging forward', () => {
-//         executeInAllStories(component, childStories, () => {
-//             browser.waitForVisible(next);
+        expect(newPageNumber)
+          .withContext(`Incorrect page number`)
+          .toBe(currentPage + 1);
+        currentPage++;
+      }
+    });
 
-//             let previousDisabled = browser.getAttribute(previous, 'class').includes('disabled');
-//             expect(previousDisabled).toBe(true);
+    it('should page backward through all', () => {
+      $(previous).waitForDisplayed();
+      $('[data-qa-page-to="10"]').click();
+      let currentPage = 10;
 
-//             browser.click(next);
+      const canPage = (nextOrPrevious) => {
+        return !$(nextOrPrevious).getAttribute('class').includes('disabled');
+      }
 
-//             previousDisabled = browser.getAttribute(previous, 'class').includes('disabled');
-//             expect(previousDisabled).toBe(false);
-//         });
-//     });
+      while(canPage(previous)) {
+        $(previous).click();
+        const activePages = $$('[data-qa-page-to]').filter(e => e.getAttribute('class').includes('disabled'));
+        const newPageNumber = parseInt(activePages[0].getAttribute('data-qa-page-to'));
 
-//     it.skip('should page backward', () => {
-//         const currentPage = $$('[data-qa-page-to]').filter(e => e.getAttribute('class').includes('active'))[0].getAttribute('data-qa-page-to');
-//         browser.click(previous);
+        expect(newPageNumber)
+        .withContext(`Incorrect page number`)
+        .toBe(currentPage - 1);
+        currentPage--;
+      }
+    });
 
-//         const prevPage = parseInt($$('[data-qa-page-to]').filter(e => e.getAttribute('class').includes('active'))[0].getAttribute('data-qa-page-to'));
-//         expect(prevPage).toBe(1);
-//     });
-// });
+    it('should page enable previous button after paging forward', () => {
+      $(next).waitForDisplayed();
+
+      let previousDisabled = $(previous).getAttribute('class').includes('disabled');
+      expect(previousDisabled)
+        .withContext(`Previous button should be disabled`)
+        .toBe(true);
+
+      $(next).click();
+
+      previousDisabled = $(previous).getAttribute('class').includes('disabled');
+      expect(previousDisabled)
+        .withContext(`Previous button should be enabled`)
+        .toBe(false);
+    });
+
+    it('should page backward', () => {
+      $(next).click();
+
+      const currentPage = $$('[data-qa-page-to]').filter(e => e.getAttribute('class').includes('disabled'))[0].getAttribute('data-qa-page-to');
+      $(previous).click();
+
+      const prevPage = parseInt($$('[data-qa-page-to]').filter(e => e.getAttribute('class').includes('disabled'))[0].getAttribute('data-qa-page-to'));
+      expect(prevPage)
+        .withContext(`Should only be one disabled button`)
+        .toBe(1);
+    });
+  })
+
+  describe('Ellipsis checks ', () => {
+
+    it('should have one trailing ellipsis', () => {
+      expect($(trailingEllip).isDisplayed())
+        .withContext(`trailing ellipsis is not displayed`)
+        .toBe(true)
+      expect($$(trailingEllip).length)
+        .withContext(`Should only be one trailing ellipsis`)
+        .toEqual(1)
+      expect($(leadingEllip).isDisplayed())
+        .withContext(`Leading Ellipsis should not be displayed`)
+        .toBe(false);
+      expect($$(leadingEllip).length)
+        .withContext(`Should only be one trailing ellipsis`)
+        .toEqual(0)
+    })
+
+    it('should have a leading and trailing ellipsis', () => {
+      $('[data-qa-page-to="5"]').waitForDisplayed();
+      $('[data-qa-page-to="5"]').click();
+
+      expect($(trailingEllip).isDisplayed())
+        .withContext(`Trailing Ellipsis is not displayed`)
+        .toBe(true);
+      expect($(leadingEllip).isDisplayed())
+        .withContext(`Leading Ellipsis is not displayed`)
+        .toBe(true);
+
+      $('[data-qa-page-to="6"]').click();
+
+      expect($(trailingEllip).isDisplayed())
+        .withContext(`Trailing Ellipsis is not displayed`)
+        .toBe(true);
+      expect($(leadingEllip).isDisplayed())
+        .withContext(`Leading Ellipsis is not displayed`)
+        .toBe(true);
+    })
+
+    it('should have one leading ellipsis', () => {
+      $('[data-qa-page-to="5"]').waitForDisplayed();
+      $('[data-qa-page-to="5"]').click();
+
+      $('[data-qa-page-to="7"]').click();
+
+      expect($(trailingEllip).isDisplayed())
+        .withContext(`trailing ellipsis is displayed`)
+        .toBe(false)
+      expect($$(trailingEllip).length)
+        .withContext(`Should only be one trailing ellipsis`)
+        .toEqual(0)
+      expect($(leadingEllip).isDisplayed())
+        .withContext(`Leading Ellipsis should not be displayed`)
+        .toBe(true);
+      expect($$(leadingEllip).length)
+        .withContext(`Should only be one trailing ellipsis`)
+        .toEqual(1)
+    })
+  })
+});

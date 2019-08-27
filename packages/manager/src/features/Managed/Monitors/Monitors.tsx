@@ -17,6 +17,7 @@ export const Monitors: React.FC<CombinedProps> = props => {
     monitors,
     requestManagedServices
   } = props;
+
   React.useEffect(() => {
     requestManagedServices().catch(_ => null); // Errors handled in Redux state
   }, [requestManagedServices]);

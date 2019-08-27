@@ -1,4 +1,5 @@
 sudo: required
+dist: bionic
 language: node_js
 node_js:
   - 10.16.0
@@ -11,13 +12,13 @@ before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev 
   build-essential g++ google-chrome-stable curl
 install:
 - yarn global add lerna
-- lerna bootstrap --scope linode-manager
+- lerna bootstrap
 before_script:
 - lerna run --stream --scope linode-manager storybook &
 script:
-- lerna run build --stream --scope linode-manager
+- lerna run build
 - lerna run --stream --scope linode-manager test -- --coverage --maxWorkers=2
-- lerna run --stream --scope linode-manager storybook:e2e 
+- lerna run --stream --scope linode-manager storybook:e2e
 - 'pkill -f selenium-standalone || :'
 - pkill -f storybook
 env:

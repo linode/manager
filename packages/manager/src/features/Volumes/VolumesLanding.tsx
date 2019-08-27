@@ -190,6 +190,7 @@ interface State {
     volumeLabel: string;
     volumeId?: number;
     linodeLabel: string;
+    poweredOff?: boolean;
     error?: string;
   };
 }
@@ -258,7 +259,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   handleDetach = (
     volumeId: number,
     volumeLabel: string,
-    linodeLabel: string
+    linodeLabel: string,
+    poweredOff: boolean
   ) => {
     this.setState({
       destructiveDialog: {
@@ -267,6 +269,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         volumeId,
         volumeLabel,
         linodeLabel,
+        poweredOff,
         error: undefined
       }
     });
@@ -392,6 +395,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           error={this.state.destructiveDialog.error}
           volumeLabel={this.state.destructiveDialog.volumeLabel}
           linodeLabel={this.state.destructiveDialog.linodeLabel}
+          poweredOff={this.state.destructiveDialog.poweredOff || false}
           mode={this.state.destructiveDialog.mode}
           onClose={this.closeDestructiveDialog}
           onDetach={this.detachVolume}

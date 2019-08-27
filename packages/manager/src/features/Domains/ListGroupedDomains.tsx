@@ -130,7 +130,6 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
                           onClone={onClone}
                           onEdit={onEdit}
                           onRemove={onRemove}
-                          tags={domain.tags}
                           type={domain.type}
                           status={domain.status}
                         />

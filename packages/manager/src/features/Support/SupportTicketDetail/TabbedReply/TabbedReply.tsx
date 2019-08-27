@@ -16,6 +16,7 @@ interface Props {
   rootClass?: string;
   innerClass?: string;
   isReply?: boolean;
+  required?: boolean;
 }
 
 const styles = (theme: Theme) =>
@@ -31,9 +32,11 @@ type CombinedProps = Props & ReplyProps & WithStyles<ClassNames>;
 const TabbedReply: React.FC<CombinedProps> = props => {
   const { innerClass, rootClass, classes, value, error, ...rest } = props;
 
+  const title = props.isReply ? 'Reply' : 'Description';
+
   const tabs: Tab[] = [
     {
-      title: props.isReply ? 'Reply' : 'Description',
+      title: props.required ? `${title} (required)` : title,
       render: () => {
         return <Reply {...rest} value={value} error={error} />;
       }
@@ -63,7 +66,9 @@ const styled = withStyles(styles);
 const memoized = (component: React.FC<CombinedProps>) =>
   React.memo<CombinedProps>(component, (prevProps, nextProps) => {
     return (
-      prevProps.error === nextProps.error && prevProps.value === nextProps.value
+      prevProps.error === nextProps.error &&
+      prevProps.value === nextProps.value &&
+      prevProps.innerClass === nextProps.innerClass
     );
   });
 

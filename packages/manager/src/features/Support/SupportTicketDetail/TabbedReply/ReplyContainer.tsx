@@ -31,13 +31,23 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       paddingLeft: theme.spacing(1),
-      paddingRight: theme.spacing(1)
+      paddingRight: theme.spacing(1),
+      [theme.breakpoints.up('sm')]: {
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(2)
+      }
     },
     inner: {
-      padding: 0
+      padding: 0,
+      [theme.breakpoints.up('sm')]: {
+        padding: theme.spacing(1)
+      }
     },
     replyContainer: {
-      maxWidth: 600
+      paddingLeft: 32,
+      [theme.breakpoints.up('sm')]: {
+        paddingLeft: 40
+      }
     },
     expPanelSummary: {
       backgroundColor: theme.bg.offWhite,
@@ -152,45 +162,38 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
   const errorMap = getErrorMap(['description'], errors);
 
   return (
-    <Grid container>
-      <Grid item xs={12} className={classes.replyContainer}>
-        {errorMap.none && (
-          <Notice
-            error
-            spacingBottom={8}
-            spacingTop={16}
-            text={errorMap.none}
-          />
-        )}
-        <TabbedReply
-          error={errorMap.description}
-          handleChange={setValue}
-          innerClass={classes.inner}
-          isReply
-          value={value}
+    <Grid item className={classes.replyContainer}>
+      {errorMap.none && (
+        <Notice error spacingBottom={8} spacingTop={16} text={errorMap.none} />
+      )}
+      <TabbedReply
+        error={errorMap.description}
+        handleChange={setValue}
+        innerClass={classes.inner}
+        isReply
+        value={value}
+      />
+      <Grid className={classes.root} item>
+        <ExpansionPanel
+          heading="Formatting Tips"
+          detailProps={{ className: classes.expPanelSummary }}
+        >
+          <Reference isReply rootClass={classes.referenceRoot} />
+        </ExpansionPanel>
+      </Grid>
+      <Grid className={classes.root} item>
+        <AttachFileForm
+          files={files}
+          updateFiles={(filesToAttach: FileAttachment[]) =>
+            setFiles(filesToAttach)
+          }
         />
-        <Grid className={classes.root} item>
-          <ExpansionPanel
-            heading="Formatting Tips"
-            detailProps={{ className: classes.expPanelSummary }}
-          >
-            <Reference isReply rootClass={classes.referenceRoot} />
-          </ExpansionPanel>
-        </Grid>
-        <Grid className={classes.root} item>
-          <AttachFileForm
-            files={files}
-            updateFiles={(filesToAttach: FileAttachment[]) =>
-              setFiles(filesToAttach)
-            }
-          />
-          <ReplyActions
-            isSubmitting={isSubmitting}
-            value={value}
-            submitForm={submitForm}
-            {...rest}
-          />
-        </Grid>
+        <ReplyActions
+          isSubmitting={isSubmitting}
+          value={value}
+          submitForm={submitForm}
+          {...rest}
+        />
       </Grid>
     </Grid>
   );

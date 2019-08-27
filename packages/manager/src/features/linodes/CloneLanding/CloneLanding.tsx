@@ -287,7 +287,9 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
 
   const errorMap = getErrorMap(['disk_size'], state.errors);
 
-  const recentEvent = linodeEvents[0];
+  const firstEventWithProgress = (linodeEvents || []).find(
+    eachEvent => typeof eachEvent.percent_complete === 'number'
+  );
 
   const selectedLinode = linodesData.find(
     eachLinode => eachLinode.id === state.selectedLinodeId
@@ -318,7 +320,9 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
           onEditHandlers: undefined
         }}
       />
-      {linodeInTransition(linodeStatus, recentEvent) && <LinodeBusyStatus />}
+      {linodeInTransition(linodeStatus, firstEventWithProgress) && (
+        <LinodeBusyStatus />
+      )}
       <Grid container className={classes.root}>
         <Grid item xs={12} md={8} lg={9}>
           <Paper className={classes.paper}>

@@ -508,7 +508,8 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         )}
 
         <TextField
-          label="Summary"
+          label="Title"
+          placeholder="Enter a title for your ticket."
           required
           value={ticket.summary}
           onChange={this.handleSummaryInputChange}
@@ -516,6 +517,7 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
           data-qa-ticket-summary
         />
         <TabbedReply
+          required
           error={descriptionError}
           handleChange={this.handleDescriptionInputChange}
           value={ticket.description}

@@ -4,5 +4,6 @@ export const expiresInDays = (time: string) => {
   if (!time) {
     return null;
   }
-  return moment(time).diff(moment(), 'days');
+  // Adding a day here to match how the API calculates this.
+  return moment(time).diff(moment(), 'days') + 1;
 };

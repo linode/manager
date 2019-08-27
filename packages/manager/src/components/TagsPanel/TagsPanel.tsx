@@ -415,9 +415,10 @@ class TagsPanel extends React.Component<CombinedProps, State> {
               disableFocusRipple
               disableRipple
               disabled={loading || disabled}
+              data-qa-add-tag-btn
             >
               <AddCircle data-qa-add-tag />
-              <Typography>Add New Tag</Typography>
+              <Typography data-qa-tag-p>Add New Tag</Typography>
             </Button>
           </div>
         )}

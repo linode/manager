@@ -213,6 +213,6 @@ export class SupportTicketsLanding extends React.PureComponent<
 const styled = withStyles(styles);
 
 export default compose<any, any, any>(
-  styled,
-  withRouter
+  withRouter,
+  styled
 )(SupportTicketsLanding);

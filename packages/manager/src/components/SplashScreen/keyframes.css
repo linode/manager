@@ -11,9 +11,11 @@
 
 @keyframes fade-in {
   0% {
+    will-change: opacity;
     opacity: 0.25;
   }
   100% {
+    will-change: unset;
     opacity: 1;
   }
 }
@@ -28,28 +30,7 @@
 .cube3,
 .cube4,
 .cube5 {
-  opacity: 0.25;
-}
-
-.cube1 {
-  transform: translateY(0);
-  animation: fade-in 0.5s ease-in-out forwards;
-}
-.cube2 {
-  transform: translate(17px, 81px);
-  animation: fade-in 0.5s ease-in-out forwards 0.25s;
-}
-.cube3 {
-  transform: translate(32px, 148px);
-  animation: fade-in 0.5s ease-in-out forwards 0.5s;
-}
-.cube4 {
-  transform: translate(93px, 117px);
-  animation: fade-in 0.5s ease-in-out forwards 0.75s;
-}
-.cube5 {
-  transform: translate(142px, 90px);
-  animation: fade-in 0.5s ease-in-out forwards 1s;
+  will-change: opacity;
 }
 
 .la-ball-beat {

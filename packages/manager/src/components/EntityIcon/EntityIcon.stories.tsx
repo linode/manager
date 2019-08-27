@@ -14,7 +14,13 @@ storiesOf('Entity Icon', module).add('Icons', () => (
       <EntityIcon variant="linode" status="offline" />
     </div>
     <div>
-      <EntityIcon variant="linode" status="offline" loading />
+      <EntityIcon variant="linode" status="loading" loading />
+    </div>
+    <div>
+      <EntityIcon variant="domain" status="active" />
+    </div>
+    <div>
+      <EntityIcon variant="domain" status="disabled" />
     </div>
   </div>
 ));
