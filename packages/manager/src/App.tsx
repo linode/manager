@@ -43,7 +43,7 @@ import { ApplicationState } from 'src/store';
 import composeState from 'src/utilities/composeState';
 import { notifications } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
-import BucketDrawer from './features/ObjectStorage/Buckets/BucketDrawer';
+import BucketDrawer from './features/ObjectStorage/BucketList/BucketDrawer';
 import { MapState } from './store/types';
 import {
   isKubernetesEnabled as _isKubernetesEnabled,

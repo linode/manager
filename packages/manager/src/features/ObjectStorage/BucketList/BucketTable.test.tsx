@@ -1,11 +1,11 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { buckets } from 'src/__data__/buckets';
-import { ListBuckets } from './ListBuckets';
+import { BucketTable } from './BucketTable';
 
-describe('ListBuckets', () => {
+describe('BucketTable', () => {
   const wrapper = shallow(
-    <ListBuckets
+    <BucketTable
       classes={{ root: '', label: '', confirmationCopy: '' }}
       data={buckets}
       orderBy="label"

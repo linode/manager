@@ -15,7 +15,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
-import BucketTableRow from './BucketTableRow';
+import BucketTableRow from '../BucketTableRow';
 
 type ClassNames = 'root' | 'label' | 'confirmationCopy';
 
@@ -37,7 +37,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const ListBuckets: React.StatelessComponent<CombinedProps> = props => {
+export const BucketTable: React.StatelessComponent<CombinedProps> = props => {
   const {
     data,
     orderBy,
@@ -156,4 +156,4 @@ const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(styled);
 
-export default enhanced(ListBuckets);
+export default enhanced(BucketTable);
