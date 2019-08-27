@@ -43,11 +43,17 @@ const BillingInformation: React.FC<CombinedProps> = props => {
       <div className={classes.billingGroup}>
         <CreditCard lastFour={lastFour} expiry={expiry} />
       </div>
-
       <div className={classes.billingGroup}>
+        {balance < 0 && (
+          <BillingSection
+            header="Current Balance:&nbsp;"
+            balance={balance}
+            data-qa-balance
+          />
+        )}
         <BillingSection
           header="Amount Due:&nbsp;"
-          balance={balance}
+          balance={Math.max(balance, 0)}
           data-qa-balance
         />
       </div>
