@@ -47,9 +47,12 @@ namespace Linode {
     group: string | null;
     updated: string;
   }
-
   export interface ManagedContactPhone {
     primary: string | null;
     secondary: string | null;
+  }
+
+  export interface ManagedSSHPubKey {
+    ssh_key: string;
   }
 }
