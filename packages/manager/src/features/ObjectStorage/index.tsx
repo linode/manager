@@ -16,15 +16,13 @@ export const ObjectStorage: React.FC<CombinedProps> = props => {
   const path = props.match.path;
 
   return (
-    <>
-      <Switch>
-        <Route
-          path={`${path}/buckets/:clusterId/:bucketName`}
-          component={BucketDetail}
-        />
-        <Route component={ObjectStorageLanding} path={path} />
-      </Switch>
-    </>
+    <Switch>
+      <Route
+        path={`${path}/buckets/:clusterId/:bucketName`}
+        component={BucketDetail}
+      />
+      <Route component={ObjectStorageLanding} path={path} />
+    </Switch>
   );
 };
 
