@@ -99,7 +99,7 @@ const ContactInformation: React.FC<CombinedProps> = props => {
         </div>
         <div className={classes.section}>
           <strong>Active Since:&nbsp;</strong>
-          <DateTimeDisplay value={activeSince} format="MMMM D, YYYY" />
+          <DateTimeDisplay value={activeSince} format="D MMM YYYY" />
         </div>
         {!isRestrictedUser && (
           <Typography
