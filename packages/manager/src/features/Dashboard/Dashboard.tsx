@@ -112,7 +112,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
               )}
             />
           )}
-          <ManagedDashboardCard />
+          {flags.managed && managed && <ManagedDashboardCard />}
           <LinodesDashboardCard />
           <VolumesDashboardCard />
           <NodeBalancersDashboardCard />
