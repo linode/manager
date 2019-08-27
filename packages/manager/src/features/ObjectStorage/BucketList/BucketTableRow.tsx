@@ -1,5 +1,4 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
 import {
   createStyles,
   Theme,
@@ -55,27 +54,26 @@ export const BucketTableRow: React.StatelessComponent<
   return (
     <TableRow
       key={label}
+      rowLink={`/object-storage/buckets/${region}/${label}`}
       data-qa-bucket-cell={label}
       className={`${classes.bucketRow} ${'fade-in-table'}`}
     >
       <TableCell parentColumn="Name">
-        <Link to={`/object-storage/buckets/${region}/${label}`}>
-          <Grid container alignItems="center">
-            <Grid item>
-              <EntityIcon variant="bucket" />
-            </Grid>
-            <Grid item>
-              <div className={classes.labelStatusWrapper}>
-                <Typography variant="h3" data-qa-label>
-                  {label}
-                </Typography>
-              </div>
-              <Typography variant="body2" data-qa-hostname>
-                {hostname}
-              </Typography>
-            </Grid>
+        <Grid container alignItems="center">
+          <Grid item>
+            <EntityIcon variant="bucket" />
           </Grid>
-        </Link>
+          <Grid item>
+            <div className={classes.labelStatusWrapper}>
+              <Typography variant="h3" data-qa-label>
+                {label}
+              </Typography>
+            </div>
+            <Typography variant="body2" data-qa-hostname>
+              {hostname}
+            </Typography>
+          </Grid>
+        </Grid>
       </TableCell>
       <TableCell parentColumn="Objects">
         <Grid>
