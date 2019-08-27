@@ -89,7 +89,8 @@ const emptyInitialValues = {
   service_type: 'url',
   address: '',
   body: '',
-  timeout: 10
+  timeout: 10,
+  notes: ''
 } as ManagedServicePayload;
 
 const MonitorDrawer: React.FC<CombinedProps> = props => {
