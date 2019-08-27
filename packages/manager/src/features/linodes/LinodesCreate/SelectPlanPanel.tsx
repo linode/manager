@@ -12,6 +12,7 @@ import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
@@ -101,14 +102,17 @@ export class SelectPlanPanel extends React.Component<
           >
             <TableCell>
               <Radio
-                checked={type.id === String(selectedID)}
+                checked={isSamePlan ? true : type.id === String(selectedID)}
                 onChange={this.onSelect(type.id)}
                 disabled={planTooSmall || isSamePlan || disabled}
                 id={type.id}
               />
             </TableCell>
             <TableCell data-qa-select-card-heading={type.heading}>
-              {type.heading}
+              {type.heading}{' '}
+              {tooltip && (
+                <HelpIcon text={tooltip} tooltipPosition="right-end" />
+              )}
             </TableCell>
             <TableCell>${type.price.monthly}</TableCell>
             <TableCell>${type.price.hourly}</TableCell>
