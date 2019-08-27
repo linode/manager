@@ -15,7 +15,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
-import BucketTableRow from '../BucketTableRow';
+import BucketTableRow from './BucketTableRow';
 
 type ClassNames = 'root' | 'label' | 'confirmationCopy';
 
