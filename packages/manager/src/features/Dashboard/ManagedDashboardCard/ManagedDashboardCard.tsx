@@ -52,7 +52,7 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
     };
   }, []);
 
-  if (!loading && monitors.length === 0 && updated === 0) {
+  if (!loading && !error && monitors.length === 0 && updated === 0) {
     return null;
   }
 
