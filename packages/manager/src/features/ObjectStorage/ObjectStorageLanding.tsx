@@ -43,6 +43,14 @@ export const ObjectStorageLanding: React.FunctionComponent<
     { title: 'Access Keys', routeName: `${props.match.url}/access-keys` }
   ];
 
+  const handleTabChange = (
+    _: React.ChangeEvent<HTMLDivElement>,
+    value: number
+  ) => {
+    const routeName = tabs[value].routeName;
+    props.history.push(`${routeName}`);
+  };
+
   React.useEffect(() => {
     const {
       bucketsLastUpdated,
@@ -70,19 +78,10 @@ export const ObjectStorageLanding: React.FunctionComponent<
     }
   }, []);
 
-  const handleTabChange = (
-    _: React.ChangeEvent<HTMLDivElement>,
-    value: number
-  ) => {
-    const routeName = tabs[value].routeName;
-    props.history.push(`${routeName}`);
-  };
-
+  const url = props.match.url;
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
-
-  const url = props.match.url;
 
   return (
     <React.Fragment>
