@@ -22,7 +22,6 @@ import OrderBy from 'src/components/OrderBy';
 import { PaginationProps } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
 import Toggle from 'src/components/Toggle';
-import { regionsWithoutBlockStorage } from 'src/constants';
 import _withEvents, { EventsProps } from 'src/containers/events.container';
 import withVolumes, {
   Props as WithVolumesProps
@@ -53,6 +52,11 @@ import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 import ErrorState from 'src/components/ErrorState';
 import Loading from 'src/components/LandingLoading';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
+
+import withRegions, {
+  DefaultProps as RegionProps
+} from 'src/containers/regions.container';
+import { doesRegionSupportBlockStorage } from 'src/utilities/doesRegionSupportBlockStorage';
 
 type ClassNames =
   | 'root'
@@ -207,7 +211,8 @@ type CombinedProps = Props &
   RouteProps &
   WithSnackbarProps &
   WithMappedVolumesProps &
-  WithStyles<ClassNames>;
+  WithStyles<ClassNames> &
+  RegionProps;
 
 class VolumesLanding extends React.Component<CombinedProps, State> {
   state: State = {
@@ -297,6 +302,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       readOnly,
       removeBreadCrumb
     } = this.props;
+    // console.log(this.props.regionsLoading)
 
     if (volumesLoading) {
       return <Loading shouldDelay />;
@@ -411,9 +417,12 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   };
 
   renderEmpty = () => {
-    const { linodeConfigs, linodeRegion, readOnly } = this.props;
+    const { linodeConfigs, linodeRegion, readOnly, regionsData } = this.props;
 
-    if (regionsWithoutBlockStorage.some(region => region === linodeRegion)) {
+    if (
+      linodeRegion &&
+      !doesRegionSupportBlockStorage(linodeRegion, regionsData)
+    ) {
       return (
         <React.Fragment>
           <DocumentTitleSegment segment="Volumes" />
@@ -705,6 +714,7 @@ export default compose<CombinedProps, Props>(
       };
     }
   ),
+  withRegions(),
   withSnackbar
 )(VolumesLanding);
 
