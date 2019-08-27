@@ -32,7 +32,7 @@ const AccessKeyLanding = DefaultLoader({
   loader: () => import('./AccessKeys/AccessKeyLanding')
 });
 
-type CombinedProps = RouteComponentProps<{}> & StateProps & DispatchProps;
+type CombinedProps = StateProps & DispatchProps & RouteComponentProps<{}>;
 
 export const ObjectStorageLanding: React.FunctionComponent<
   CombinedProps
@@ -170,5 +170,4 @@ export const connected = connect(
 );
 
 const enhanced = compose<CombinedProps, {}>(connected);
-
 export default enhanced(ObjectStorageLanding);
