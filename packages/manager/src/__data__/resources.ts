@@ -1,3 +1,4 @@
+import { Domain } from 'linode-js-sdk/lib/domains';
 import { domains, linodes } from 'src/__data__';
 
 export default {
@@ -22,7 +23,7 @@ export default {
   domains: {
     loading: false,
     lastUpdated: 0,
-    results: [domains.map((domain: Linode.Domain) => domain.id)],
+    results: [domains.map((domain: Domain) => domain.id)],
     entities: domains
   },
   images: {

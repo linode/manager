@@ -1,3 +1,4 @@
+import { Domain } from 'linode-js-sdk/lib/domains';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { createSelector } from 'reselect';
 import { displayType } from 'src/features/linodes/presentation';
@@ -12,7 +13,7 @@ export const getLinodeIps = (linode: Linode.Linode): string[] => {
   return ipv4.concat([ipv6]);
 };
 
-export const getDomainIps = (domain: Linode.Domain): string[] => {
+export const getDomainIps = (domain: Domain): string[] => {
   return domain.master_ips;
 };
 
@@ -88,7 +89,7 @@ const imageToSearchableItem = (image: Linode.Image): SearchableItem => ({
   }
 });
 
-const domainToSearchableItem = (domain: Linode.Domain): SearchableItem => ({
+const domainToSearchableItem = (domain: Domain): SearchableItem => ({
   label: domain.domain,
   value: domain.id,
   entityType: 'domain',
@@ -131,7 +132,7 @@ export default createSelector<
   Linode.Linode[],
   Volume[],
   Linode.Image[],
-  Linode.Domain[],
+  Domain[],
   Linode.NodeBalancer[],
   Linode.LinodeType[],
   SearchableItem[]
