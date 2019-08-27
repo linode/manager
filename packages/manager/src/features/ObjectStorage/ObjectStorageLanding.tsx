@@ -1,12 +1,15 @@
 import * as React from 'react';
+import { connect, MapDispatchToProps } from 'react-redux';
 import {
   matchPath,
   Redirect,
   Route,
   RouteComponentProps,
-  Switch,
-  withRouter
+  Switch
 } from 'react-router-dom';
+import { compose } from 'recompose';
+import { Action } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 import Breadcrumb from 'src/components/Breadcrumb';
 import AppBar from 'src/components/core/AppBar';
 import Box from 'src/components/core/Box';
@@ -16,6 +19,10 @@ import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import TabLink from 'src/components/TabLink';
+import { ApplicationState } from 'src/store';
+import { getAllBuckets } from 'src/store/bucket/bucket.requests';
+import { requestClusters as _requestClusters } from 'src/store/clusters/clusters.actions';
+import { MapState } from 'src/store/types';
 
 const BucketLanding = DefaultLoader({
   loader: () => import('./BucketList/BucketLanding')
@@ -25,7 +32,7 @@ const AccessKeyLanding = DefaultLoader({
   loader: () => import('./AccessKeys/AccessKeyLanding')
 });
 
-type CombinedProps = RouteComponentProps<{}>;
+type CombinedProps = RouteComponentProps<{}> & StateProps & DispatchProps;
 
 export const ObjectStorageLanding: React.FunctionComponent<
   CombinedProps
@@ -35,6 +42,33 @@ export const ObjectStorageLanding: React.FunctionComponent<
     { title: 'Buckets', routeName: `${props.match.url}/buckets` },
     { title: 'Access Keys', routeName: `${props.match.url}/access-keys` }
   ];
+
+  React.useEffect(() => {
+    const {
+      bucketsLastUpdated,
+      clustersLastUpdated,
+      requestBuckets,
+      requestClusters
+    } = props;
+
+    /**
+     * @todo: Move these requests to App.tsx like other entities when OBJ is generally available.
+     */
+
+    // Request buckets if we haven't already
+    if (bucketsLastUpdated === 0) {
+      requestBuckets().catch(err => {
+        /** We choose to do nothing, relying on the Redux error state. */
+      });
+    }
+
+    // Request clusters if we haven't already
+    if (clustersLastUpdated === 0) {
+      requestClusters().catch(err => {
+        /** We choose to do nothing, relying on the Redux error state. */
+      });
+    }
+  }, []);
 
   const handleTabChange = (
     _: React.ChangeEvent<HTMLDivElement>,
@@ -106,4 +140,35 @@ export const ObjectStorageLanding: React.FunctionComponent<
   );
 };
 
-export default withRouter(ObjectStorageLanding);
+interface StateProps {
+  bucketsLastUpdated: number;
+  clustersLastUpdated: number;
+}
+
+const mapStateToProps: MapState<StateProps, {}> = state => ({
+  bucketsLastUpdated: state.__resources.buckets.lastUpdated,
+  clustersLastUpdated: state.__resources.clusters.lastUpdated
+});
+
+interface DispatchProps {
+  requestBuckets: () => Promise<Linode.Bucket[]>;
+  requestClusters: () => Promise<Linode.Cluster[]>;
+}
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
+) => {
+  return {
+    requestBuckets: () => dispatch(getAllBuckets()),
+    requestClusters: () => dispatch(_requestClusters())
+  };
+};
+
+export const connected = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
+
+const enhanced = compose<CombinedProps, {}>(connected);
+
+export default enhanced(ObjectStorageLanding);
