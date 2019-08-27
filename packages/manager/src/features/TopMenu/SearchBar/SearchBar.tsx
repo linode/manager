@@ -1,5 +1,6 @@
 import Close from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
+import { Image } from 'linode-js-sdk/lib/images';
 import { take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -230,7 +231,7 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
 }));
 
 interface WithImagesProps {
-  imagesData: Linode.Image[];
+  imagesData: Image[];
   imagesLoading: boolean;
 }
 

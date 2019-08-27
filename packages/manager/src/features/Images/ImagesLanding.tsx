@@ -1,3 +1,4 @@
+import { deleteImage, Image } from 'linode-js-sdk/lib/images';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -33,7 +34,6 @@ import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
-import { deleteImage } from 'src/services/images';
 import { ApplicationState } from 'src/store';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow from './ImageRow';
@@ -466,7 +466,7 @@ const EmptyCopy = () => (
 );
 
 interface WithPrivateImages {
-  imagesData: Linode.Image[];
+  imagesData: Image[];
   imagesLoading: boolean;
   imagesError?: Linode.ApiFieldError[];
 }

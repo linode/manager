@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Chip from 'src/components/core/Chip';
@@ -74,7 +75,7 @@ export interface Props {
 }
 
 export interface State {
-  imagesList: Linode.Image[];
+  imagesList: Image[];
 }
 
 type CombinedProps = Props & WithImagesProps & WithStyles<CSSClasses>;
@@ -182,7 +183,7 @@ export class StackScript extends React.Component<CombinedProps> {
 const styled = withStyles(styles);
 
 interface WithImagesProps {
-  imagesData: Linode.Image[];
+  imagesData: Image[];
   imagesLoading: boolean;
 }
 
