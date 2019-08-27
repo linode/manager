@@ -2,14 +2,14 @@ import { API_ROOT } from '../constants';
 import Request, { setData, setMethod, setURL } from '../request';
 import {
   updateAccountSchema,
-  UpdateAccountSettingsSchema,
+  UpdateAccountSettingsSchema
 } from './account.schema';
 import {
   Account,
   AccountSettings,
   CancelAccount,
   CancelAccountPayload,
-  NetworkUtilization,
+  NetworkUtilization
 } from './types';
 
 /**
@@ -21,7 +21,7 @@ import {
  */
 export const getAccountInfo = () => {
   return Request<Account>(setURL(`${API_ROOT}/account`), setMethod('GET')).then(
-    response => response.data,
+    response => response.data
   );
 };
 
@@ -34,7 +34,7 @@ export const getAccountInfo = () => {
 export const getNetworkUtilization = () =>
   Request<NetworkUtilization>(
     setURL(`${API_ROOT}/account/transfer`),
-    setMethod('GET'),
+    setMethod('GET')
   ).then(response => response.data);
 
 /**
@@ -47,7 +47,7 @@ export const updateAccountInfo = (data: Partial<Account>) =>
   Request<Account>(
     setURL(`${API_ROOT}/account`),
     setMethod('PUT'),
-    setData(data, updateAccountSchema),
+    setData(data, updateAccountSchema)
   ).then(response => response.data);
 
 /**
@@ -59,7 +59,7 @@ export const updateAccountInfo = (data: Partial<Account>) =>
 export const getAccountSettings = () =>
   Request<AccountSettings>(
     setURL(`${API_ROOT}/account/settings`),
-    setMethod('GET'),
+    setMethod('GET')
   ).then(response => response.data);
 
 /**
@@ -72,7 +72,7 @@ export const updateAccountSettings = (data: Partial<AccountSettings>) =>
   Request<AccountSettings>(
     setURL(`${API_ROOT}/account/settings`),
     setMethod('PUT'),
-    setData(data, UpdateAccountSettingsSchema),
+    setData(data, UpdateAccountSettingsSchema)
   ).then(response => response.data);
 
 /**
@@ -84,6 +84,6 @@ export const cancelAccount = (data: CancelAccountPayload) => {
   return Request<CancelAccount>(
     setURL(`${API_ROOT}/account/cancel`),
     setMethod('POST'),
-    setData(data),
+    setData(data)
   ).then(response => response.data);
 };

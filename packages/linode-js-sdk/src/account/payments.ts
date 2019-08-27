@@ -4,14 +4,14 @@ import Request, {
   setMethod,
   setParams,
   setURL,
-  setXFilter,
+  setXFilter
 } from '../request';
 import { ResourcePage } from '../types';
 import {
   CreditCardSchema,
   ExecutePaypalPaymentSchema,
   PaymentSchema,
-  StagePaypalPaymentSchema,
+  StagePaypalPaymentSchema
 } from './account.schema';
 import { ExecutePayload, Payment, Paypal, SaveCreditCardData } from './types';
 
@@ -27,7 +27,7 @@ export const getPayments = (params?: any, filter?: any) =>
     setURL(`${API_ROOT}/account/payments`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filter),
+    setXFilter(filter)
   ).then(response => response.data);
 
 /**
@@ -68,7 +68,7 @@ export const makePayment = (data: { usd: string; cvv?: string }) => {
   return Request<Payment>(
     setURL(`${API_ROOT}/account/payments`),
     setMethod('POST'),
-    setData(data, PaymentSchema),
+    setData(data, PaymentSchema)
   ).then(response => response.data);
 };
 
@@ -94,7 +94,7 @@ export const stagePaypalPayment = (data: Paypal) =>
   Request<StagePaypalData>(
     setURL(`${API_ROOT}/account/payments/paypal`),
     setMethod('POST'),
-    setData(data, StagePaypalPaymentSchema),
+    setData(data, StagePaypalPaymentSchema)
   ).then(response => response.data);
 
 /**
@@ -113,7 +113,7 @@ export const executePaypalPayment = (data: ExecutePayload) =>
   Request<{}>(
     setURL(`${API_ROOT}/account/payments/paypal/execute`),
     setMethod('POST'),
-    setData(data, ExecutePaypalPaymentSchema),
+    setData(data, ExecutePaypalPaymentSchema)
   ).then(response => response.data);
 
 /**
@@ -132,6 +132,6 @@ export const saveCreditCard = (data: SaveCreditCardData) => {
   return Request<{}>(
     setURL(`${API_ROOT}/account/credit-card`),
     setMethod('POST'),
-    setData(data, CreditCardSchema),
+    setData(data, CreditCardSchema)
   ).then(response => response.data);
 };

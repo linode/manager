@@ -4,7 +4,7 @@ import Request, {
   setMethod,
   setParams,
   setURL,
-  setXFilter,
+  setXFilter
 } from '../request';
 import { ResourcePage } from '../types';
 import { CreateUserSchema, UpdateUserSchema } from './account.schema';
@@ -21,7 +21,7 @@ export const getUsers = (params?: any, filters?: any) =>
     setURL(`${API_ROOT}/account/users`),
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters),
+    setXFilter(filters)
   ).then(response => response.data);
 
 /**
@@ -36,7 +36,7 @@ export const getUsers = (params?: any, filters?: any) =>
 export const getUser = (username: string) =>
   Request<User>(
     setURL(`${API_ROOT}/account/users/${username}`),
-    setMethod('GET'),
+    setMethod('GET')
   ).then(response => response.data);
 
 /**
@@ -51,7 +51,7 @@ export const createUser = (data: Partial<User>) =>
   Request<User>(
     setURL(`${API_ROOT}/account/users`),
     setMethod('POST'),
-    setData(data, CreateUserSchema),
+    setData(data, CreateUserSchema)
   ).then(response => response.data);
 
 /**
@@ -68,7 +68,7 @@ export const updateUser = (username: string, data: Partial<User>) =>
   Request<User>(
     setURL(`${API_ROOT}/account/users/${username}`),
     setMethod('PUT'),
-    setData(data, UpdateUserSchema),
+    setData(data, UpdateUserSchema)
   ).then(response => response.data);
 
 /**
@@ -83,7 +83,7 @@ export const updateUser = (username: string, data: Partial<User>) =>
 export const deleteUser = (username: string) =>
   Request<{}>(
     setURL(`${API_ROOT}/account/users/${username}`),
-    setMethod('DELETE'),
+    setMethod('DELETE')
   ).then(response => response.data);
 
 /**
@@ -100,7 +100,7 @@ export const deleteUser = (username: string) =>
 export const getGrants = (username: string) =>
   Request<Grants>(
     setURL(`${API_ROOT}/account/users/${username}/grants`),
-    setMethod('GET'),
+    setMethod('GET')
   ).then(response => response.data);
 
 /**
@@ -119,5 +119,5 @@ export const updateGrants = (username: string, data: Partial<Grants>) =>
   Request<Grants>(
     setURL(`${API_ROOT}/account/users/${username}/grants`),
     setMethod('PUT'),
-    setData(data),
+    setData(data)
   ).then(response => response.data);
