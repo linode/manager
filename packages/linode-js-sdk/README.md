@@ -71,7 +71,7 @@ The main goal right now is to abstract out all interactions with the API from Cl
 
 Migrating service functions over from Cloud Manager to the JavaScript SDK is relatively straightforward, and involves a few steps.
 
-1. Find a service function you want to move. All of these are located in `/pacakges/manager/src/services`. For example:
+1. Find a service function you want to move. All of these are located in `/packages/manager/src/services`. For example:
 
 ```js
 /** packages/manager/src/services/account/account.ts */
