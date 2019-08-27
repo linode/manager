@@ -39,17 +39,16 @@ interface Props {
   header: string;
   balance?: number;
   credit?: number;
-  showNegativeAsCredit?: boolean;
   textColor?: boolean;
 }
 
 export type CombinedProps = Props;
 
 export const BillingSection: React.FC<CombinedProps> = props => {
-  const { balance, credit, header, showNegativeAsCredit, textColor } = props;
+  const { balance, credit, header, textColor } = props;
   const classes = useStyles();
 
-  const value = balance || credit || 0;
+  const value = Math.abs(balance || credit || 0);
   const isPositive = balance ? balance < 0 : credit ? credit > 0 : true;
   return (
     <>
@@ -66,7 +65,7 @@ export const BillingSection: React.FC<CombinedProps> = props => {
           })}
         >
           {/** Show credits in parenthesis for users that can't see the color coding */}
-          {isPositive && !showNegativeAsCredit ? (
+          {isPositive && value > 0 ? (
             <>
               {'('}
               <Currency quantity={value} />
@@ -75,7 +74,6 @@ export const BillingSection: React.FC<CombinedProps> = props => {
           ) : (
             <Currency quantity={value} />
           )}
-          {showNegativeAsCredit && (balance && balance < 0) ? ` (credit)` : ''}
         </Typography>
       </div>
     </>

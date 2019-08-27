@@ -48,7 +48,6 @@ const BillingInformation: React.FC<CombinedProps> = props => {
         <BillingSection
           header="Amount Due:&nbsp;"
           balance={balance}
-          showNegativeAsCredit
           data-qa-balance
         />
       </div>
@@ -74,6 +73,7 @@ const BillingInformation: React.FC<CombinedProps> = props => {
                 <BillingSection
                   header="Adjusted Uninvoiced Balance:&nbsp;"
                   balance={Math.max(0, balanceUninvoiced - credit)}
+                  textColor={false}
                   data-qa-amount-due
                 />
               </>

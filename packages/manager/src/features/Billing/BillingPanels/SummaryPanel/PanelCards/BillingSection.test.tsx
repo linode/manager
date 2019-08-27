@@ -23,28 +23,18 @@ describe('BillingSection component', () => {
   it('should render balance due as a positive number', () => {
     const { queryAllByText } = renderComponent({ balance: 10.0 });
     expect(queryAllByText('$10.00')).toHaveLength(1);
-    expect(queryAllByText('(credit)')).toHaveLength(0);
   });
 
-  it('should append (credit) to the balance if the balance is negative and showNegativeAsCredit is true', () => {
+  it('should show a negative balance as a credit (parenthesized positive number) if the balance is negative', () => {
     const { queryAllByText } = renderComponent({
       balance: -10.0,
       showNegativeAsCredit: true
     });
-    expect(queryAllByText('-$10.00 (credit)')).toHaveLength(1);
+    expect(queryAllByText('($10.00)')).toHaveLength(1);
   });
 
-  it('should display a positive credit in parenthesis', () => {
+  it('should display a positive credit in parentheses', () => {
     const { queryAllByText } = renderComponent({ credit: 10.0 });
     expect(queryAllByText('($10.00)')).toHaveLength(1);
-    expect(queryAllByText('(credit)')).toHaveLength(0);
-  });
-
-  it('should not append (credit) to credit values regardless of the value of showNegativeAsCredit', () => {
-    const { queryAllByText } = renderComponent({
-      credit: 10.0,
-      showNegativeAsCredit: true
-    });
-    expect(queryAllByText('(credit)')).toHaveLength(0);
   });
 });
