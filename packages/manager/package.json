@@ -38,6 +38,7 @@
     "js-cookie": "^2.2.0",
     "jspdf": "^1.5.3",
     "launchdarkly-react-client-sdk": "^2.11.0",
+    "linode-js-sdk": "^0.2.0",
     "logic-query-parser": "^0.0.5",
     "md5": "^2.2.1",
     "memoizee": "^0.4.14",
@@ -104,7 +105,7 @@
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
     "storybook": "start-storybook -p 6006 --ci",
     "storybook-static": "build-storybook -c .storybook -o .out",
-    "storybook:e2e": "./node_modules/.bin/wdio ./e2e/config/wdio.storybook.conf.js",
+    "storybook:e2e": "npx wdio ./e2e/config/wdio.storybook.conf.js",
     "storyshots": "docker-compose -f storyshots.yml up --build --exit-code-from manager-storyshots && docker-compose -f storyshots.yml down -v",
     "storyshots:update": "export UPDATE=-u && docker-compose -f storyshots.yml up --build --exit-code-from manager-storyshots && unset UPDATE && docker-compose -f storyshots.yml down -v",
     "storyshots:test": "npx jest --config ./.storybook/storyshots.jest.config.js src/components/Storyshots.test.tsx --env=jsdom",
@@ -181,6 +182,14 @@
     "@types/xml2js": "^0.4.3",
     "@types/yup": "^0.24.9",
     "@types/zxcvbn": "^4.4.0",
+    "@wdio/cli": "^5.10.10",
+    "@wdio/dot-reporter": "^5.9.3",
+    "@wdio/jasmine-framework": "^5.10.8",
+    "@wdio/junit-reporter": "^5.9.3",
+    "@wdio/local-runner": "^5.10.10",
+    "@wdio/selenium-standalone-service": "^5.9.3",
+    "@wdio/spec-reporter": "^5.9.3",
+    "@wdio/sync": "^5.10.8",
     "autoprefixer": "^9.4.8",
     "axe-core": "^3.1.1",
     "babel-core": "^7.0.0-bridge.0",
@@ -236,12 +245,7 @@
     "url-loader": "^1.1.2",
     "utility-types": "^2.1.0",
     "wdio-browserstack-service": "^0.1.16",
-    "wdio-dot-reporter": "0.0.9",
-    "wdio-jasmine-framework": "^0.3.8",
-    "wdio-junit-reporter": "^0.4.2",
-    "wdio-selenium-standalone-service": "^0.0.12",
-    "wdio-spec-reporter": "^0.1.5",
-    "webdriverio": "4.12.0",
+    "webdriverio": "^5.12.1",
     "webpack": "^4.29.5",
     "webpack-cli": "^3.2.1",
     "webpack-dev-server": "^3.2.0",
@@ -273,7 +277,8 @@
     "transform": {
       "^.+\\.tsx?$": "<rootDir>/config/jest/typescriptTransform.js",
       "^.+\\.css$": "<rootDir>/config/jest/cssTransform.js",
-      "^(?!.*\\.(js|jsx|mjs|css|json)$)": "<rootDir>/config/jest/fileTransform.js"
+      "^(?!.*\\.(js|jsx|css|json)$)": "<rootDir>/config/jest/fileTransform.js",
+      "^.+\\.mjs$": "babel-jest"
     },
     "transformIgnorePatterns": [
       "[/\\\\]node_modules[/\\\\].+\\.(js|jsx|mjs|ts|tsx)$"
@@ -281,6 +286,7 @@
     "moduleNameMapper": {
       "\\.svg$": "<rootDir>/src/components/NullComponent",
       "^react-native$": "react-native-web",
+      "ramda": "ramda/src/index.js",
       "^src/(.*)": "<rootDir>/src/$1"
     },
     "moduleFileExtensions": [

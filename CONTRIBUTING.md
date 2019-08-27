@@ -17,7 +17,7 @@ The following buzzwords are involved in this project, so please familiarize your
 In order to contribute to Linode UI, we recommend the following minimum version numbers:
 
 1. Git v2.19.1
-2. Node v8.11.2
+2. Node v10.16.0
 3. Yarn 1.16.0
 
 You must also have [Lerna](https://lerna.js.org/) installed globally, so please run the following to install the package to your local machine:

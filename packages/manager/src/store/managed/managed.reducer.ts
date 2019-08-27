@@ -6,6 +6,7 @@ import { EntityError, EntityState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import updateOrAdd from 'src/utilities/updateOrAdd';
 import {
+  createServiceMonitorActions,
   deleteServiceMonitorActions,
   disableServiceMonitorActions,
   enableServiceMonitorActions,
@@ -38,6 +39,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       draft.results = result.map(s => s.id);
       draft.loading = false;
       draft.lastUpdated = Date.now();
+      draft.error!.read = undefined;
     }
 
     if (isType(action, requestServicesActions.started)) {
@@ -76,6 +78,21 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     ) {
       const { error } = action.payload;
       draft.error!.update = error;
+    }
+
+    if (isType(action, createServiceMonitorActions.started)) {
+      draft.error!.create = undefined;
+    }
+
+    if (isType(action, createServiceMonitorActions.done)) {
+      const { result } = action.payload;
+      draft.entities.push(result);
+      draft.results.push(result.id);
+    }
+
+    if (isType(action, createServiceMonitorActions.failed)) {
+      const { error } = action.payload;
+      draft.error!.create = error;
     }
 
     if (isType(action, deleteServiceMonitorActions.started)) {

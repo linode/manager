@@ -29,4 +29,8 @@ namespace Linode {
   export interface KubeConfigResponse {
     kubeconfig: string;
   }
+
+  export interface KubernetesVersion {
+    id: string;
+  }
 }

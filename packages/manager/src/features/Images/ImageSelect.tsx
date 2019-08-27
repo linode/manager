@@ -40,6 +40,8 @@ interface Props {
   value?: Item | Item[];
   disabled?: boolean;
   onSelect: (selected: Item<any> | Item<any>[]) => void;
+  label?: string;
+  required?: boolean;
 }
 
 interface State {
@@ -84,7 +86,8 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
       isMulti,
       onSelect,
       value,
-      disabled
+      disabled,
+      required
     } = this.props;
     const { renderedImages } = this.state;
     return (
@@ -107,7 +110,10 @@ export class ImageSelect extends React.Component<CombinedProps, State> {
               onChange={onSelect}
               options={renderedImages as any}
               placeholder="Select an Image"
-              label="Image"
+              textFieldProps={{
+                required
+              }}
+              label={this.props.label || 'Image'}
             />
           </Grid>
           <Grid item xs={1}>

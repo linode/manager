@@ -71,11 +71,21 @@ storiesOf('Button', module)
   ))
   .add('Destructive', () => (
     <React.Fragment>
-      <Button destructive buttonType="primary" data-qa-button="primary">
+      <Button
+        destructive
+        buttonType="primary"
+        data-qa-button="primary"
+        data-qa-btn-type="destructive"
+      >
         Primary
       </Button>
       <Divider />
-      <Button destructive buttonType="secondary" data-qa-button="secondary">
+      <Button
+        disabled
+        destructive
+        buttonType="secondary"
+        data-qa-button="secondary"
+      >
         Secondary
       </Button>
       <Divider />
@@ -83,7 +93,13 @@ storiesOf('Button', module)
   ))
   .add('Loading Destructive', () => (
     <React.Fragment>
-      <Button loading destructive buttonType="primary" data-qa-button="primary">
+      <Button
+        loading
+        destructive
+        buttonType="primary"
+        data-qa-button="primary"
+        data-qa-btn-type="destructive"
+      >
         Primary
       </Button>
       <Divider />
@@ -92,6 +108,7 @@ storiesOf('Button', module)
         destructive
         buttonType="secondary"
         data-qa-button="secondary"
+        data-qa-btn-type="destructive"
       >
         Secondary
       </Button>

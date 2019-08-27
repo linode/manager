@@ -31,6 +31,10 @@ const LinodesDetailNavigation = DefaultLoader({
   loader: () => import('./LinodesDetailNavigation')
 });
 
+const MigrateLanding = DefaultLoader({
+  loader: () => import('../MigrateLanding')
+});
+
 interface MatchProps {
   linodeId?: string;
 }
@@ -75,6 +79,7 @@ const LinodeDetail: React.StatelessComponent<CombinedProps> = props => {
         have to reload all the configs, disks, etc. once we get to the CloneLanding page.
         */}
         <Route path={`${path}/clone`} component={CloneLanding} />
+        <Route path={`${path}/migrate`} component={MigrateLanding} />
         <Route
           render={() => (
             <React.Fragment>

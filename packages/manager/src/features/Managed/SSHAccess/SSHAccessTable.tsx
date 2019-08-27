@@ -1,3 +1,4 @@
+import produce from 'immer';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -11,8 +12,11 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
+import useOpenClose from 'src/hooks/useOpenClose';
 import { getLinodeSettings } from 'src/services/managed';
 import { getAll } from 'src/utilities/getAll';
+import { DEFAULTS } from './common';
+import EditSSHAccessDrawer from './EditSSHAccessDrawer';
 import SSHAccessTableContent from './SSHAccessTableContent';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -23,7 +27,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   linode: {
-    width: '40%'
+    width: '30%'
+  },
+  access: {
+    width: '15%'
+  },
+  ip: {
+    width: '20%'
   }
 }));
 
@@ -35,13 +45,41 @@ const request = () =>
 const SSHAccessTable: React.FC<{}> = () => {
   const classes = useStyles();
 
-  const { data, loading, lastUpdated, error } = useAPIRequest<
+  const { data, loading, lastUpdated, transformData, error } = useAPIRequest<
     Linode.ManagedLinodeSetting[]
   >(request, []);
 
+  const updateOne = (linodeSetting: Linode.ManagedLinodeSetting) => {
+    transformData(draft => {
+      const idx = draft.findIndex(l => l.id === linodeSetting.id);
+      draft[idx] = linodeSetting;
+    });
+  };
+
+  const [selectedLinodeId, setSelectedLinodeId] = React.useState<number | null>(
+    null
+  );
+
+  const drawer = useOpenClose();
+
+  // For all intents and purposes, the default `user` is "root", and the default `port` is 22.
+  // Surprisingly, these are returned as `null` from the API. We want to display the defaults
+  // to the user, though, so we normalize the data here by exchanging `null` for the defaults.
+  const normalizedData: Linode.ManagedLinodeSetting[] = produce(data, draft => {
+    data.forEach((linodeSetting, idx) => {
+      if (linodeSetting.ssh.user === null) {
+        draft[idx].ssh.user = DEFAULTS.user;
+      }
+
+      if (linodeSetting.ssh.port === null) {
+        draft[idx].ssh.port = DEFAULTS.port;
+      }
+    });
+  });
+
   return (
     <>
-      <OrderBy data={data}>
+      <OrderBy data={normalizedData} orderBy="label" order="asc">
         {({ data: orderedData, handleOrderChange, order, orderBy }) => {
           return (
             <Paginate data={orderedData}>
@@ -70,6 +108,7 @@ const SSHAccessTable: React.FC<{}> = () => {
                               Linode
                             </TableSortCell>
                             <TableSortCell
+                              className={classes.access}
                               active={orderBy === 'ssh:access'}
                               label={'ssh:access'}
                               direction={order}
@@ -88,6 +127,7 @@ const SSHAccessTable: React.FC<{}> = () => {
                               User
                             </TableSortCell>
                             <TableSortCell
+                              className={classes.ip}
                               active={orderBy === 'ssh:ip'}
                               label={'ssh:ip'}
                               direction={order}
@@ -105,6 +145,7 @@ const SSHAccessTable: React.FC<{}> = () => {
                             >
                               Port
                             </TableSortCell>
+                            {/* Empty TableCell for action menu */}
                             <TableCell />
                           </TableRow>
                         </TableHead>
@@ -113,6 +154,11 @@ const SSHAccessTable: React.FC<{}> = () => {
                             linodeSettings={paginatedData}
                             loading={loading}
                             lastUpdated={lastUpdated}
+                            updateOne={updateOne}
+                            openDrawer={(linodeId: number) => {
+                              setSelectedLinodeId(linodeId);
+                              drawer.open();
+                            }}
                             error={error}
                           />
                         </TableBody>
@@ -133,6 +179,12 @@ const SSHAccessTable: React.FC<{}> = () => {
           );
         }}
       </OrderBy>
+      <EditSSHAccessDrawer
+        isOpen={drawer.isOpen}
+        closeDrawer={drawer.close}
+        linodeSetting={normalizedData.find(l => l.id === selectedLinodeId)}
+        updateOne={updateOne}
+      />
     </>
   );
 };

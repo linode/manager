@@ -17,6 +17,7 @@ const props: CombinedProps = {
   label: 'this-monitor',
   openDialog: jest.fn(),
   monitorID: 1,
+  createServiceMonitor: jest.fn(),
   requestManagedServices: jest.fn(),
   enableServiceMonitor: jest.fn(),
   deleteServiceMonitor: jest.fn(),

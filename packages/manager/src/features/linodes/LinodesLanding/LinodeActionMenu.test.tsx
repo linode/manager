@@ -13,6 +13,7 @@ const props: CombinedProps = {
   readOnly: false,
   typesLoading: false,
   regionsData: [],
+  regionsLastUpdated: 0,
   regionsLoading: false,
   openPowerActionDialog: jest.fn(),
   linodeBackups: {
@@ -40,7 +41,7 @@ describe('LinodeActionMenu', () => {
     it('includes `regionID` param if valid region', () => {
       wrapper.setProps({
         linodeRegion: 'us-east',
-        regionsData: [{ id: 'us-east', country: 'us' }]
+        regionsData: [{ id: 'us-east', country: 'us', capabilities: [] }]
       });
       expect(wrapper.instance().buildQueryStringForLinodeClone()).toMatch(
         'regionID=us-east'

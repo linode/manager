@@ -11,18 +11,6 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import { pluralize } from 'src/utilities/pluralize';
-import { expiresInDays } from 'src/utilities/promoUtils';
-
-/**
- * We may want to only display this component
- * for credits that will be expiring in the near
- * future; setting a threshold here will hide
- * the banner for credits that aren't due to
- * expire.
- */
-const PROMOTIONAL_TIME_BOUNDARY = Infinity;
 
 type ClassNames = 'root' | 'cash' | 'text' | 'link';
 
@@ -50,22 +38,20 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  nearestExpiry?: string;
+  notifications: Linode.Notification[];
 }
 
 export type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const PromotionsBanner: React.FC<CombinedProps> = props => {
-  const { classes, nearestExpiry } = props;
+  const { classes, notifications } = props;
 
-  if (!nearestExpiry) {
+  if (notifications.length === 0) {
     return null;
   }
 
-  const days = expiresInDays(nearestExpiry);
-  if (!days || days >= PROMOTIONAL_TIME_BOUNDARY) {
-    return null;
-  }
+  // For now we only will have one promotion active at a time.
+  const thisNotification = notifications[0];
 
   return (
     <Paper className={classes.root}>
@@ -73,15 +59,9 @@ export const PromotionsBanner: React.FC<CombinedProps> = props => {
         <AttachMoney className={'icon'} />
       </div>
       <div>
-        <Typography variant="h2">
-          You have promotional credits expiring in{' '}
-          {pluralize('day', 'days', days)}.
-        </Typography>
+        <Typography variant="h2">{thisNotification.label}</Typography>
         <Typography variant="body1" className={classes.text}>
-          Charges will begin to accrue on {` `}
-          <DateTimeDisplay value={nearestExpiry} format={'MMMM Do, YYYY'} />
-          {` `}
-          unless you cancel any related services.
+          {thisNotification.message}
         </Typography>
         <Link to="account/billing" className={classes.link}>
           See billing for details.

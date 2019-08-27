@@ -1,8 +1,10 @@
 import { connect, MapDispatchToProps } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
+import { ManagedServicePayload } from 'src/services/managed';
 import { ApplicationState } from 'src/store';
 import {
+  createServiceMonitor as _createServiceMonitor,
   deleteServiceMonitor as _deleteServiceMonitor,
   disableServiceMonitor as _disableServiceMonitor,
   enableServiceMonitor as _enableServiceMonitor,
@@ -20,6 +22,7 @@ export interface ManagedProps {
 export interface DispatchProps {
   requestManagedServices: () => Promise<any>;
   disableServiceMonitor: (monitorID: number) => Promise<any>;
+  createServiceMonitor: (params: ManagedServicePayload) => Promise<any>;
   enableServiceMonitor: (monitorID: number) => Promise<any>;
   deleteServiceMonitor: (monitorID: number) => Promise<any>;
 }
@@ -27,6 +30,8 @@ export interface DispatchProps {
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => ({
+  createServiceMonitor: (params: ManagedServicePayload) =>
+    dispatch(_createServiceMonitor(params)),
   requestManagedServices: () => dispatch(_requestManagedServices()),
   disableServiceMonitor: (monitorID: number) =>
     dispatch(_disableServiceMonitor({ monitorID })),

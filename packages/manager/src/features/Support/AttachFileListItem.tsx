@@ -29,9 +29,7 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
-    attachmentsContainer: {
-      maxWidth: 800
-    },
+    attachmentsContainer: {},
     attachmentField: {
       marginTop: 0,
       width: 415,
@@ -131,11 +129,11 @@ export const AttachFileListItem: React.StatelessComponent<
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
-  styled,
   withHandlers({
     onClick: (props: Props) => () => {
       props.removeFile(props.fileIdx);
     }
-  })
+  }),
+  styled
 )(AttachFileListItem);
 export default enhanced;

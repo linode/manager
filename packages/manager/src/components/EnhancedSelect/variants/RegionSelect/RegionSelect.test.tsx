@@ -1,5 +1,5 @@
 import { extendedRegions } from 'src/__data__/regionsData';
-import { getRegionOptions, getSelectedRegionById } from './SelectRegionPanel';
+import { getRegionOptions, getSelectedRegionById } from './RegionSelect';
 
 const fakeRegion = { ...extendedRegions[0], country: 'NZ' };
 

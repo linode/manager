@@ -1,11 +1,5 @@
 import { ExtendedCluster, ExtendedPoolNode, PoolNodeWithPrice } from './types';
 
-// @todo don't hard code this
-export const KubernetesVersionOptions = ['1.13', '1.14'].map(version => ({
-  label: version,
-  value: version
-}));
-
 export const getMonthlyPrice = (
   type: string,
   count: number,
