@@ -54,6 +54,22 @@ export interface ContactPayload {
 }
 
 /**
+ * enableManaged
+ *
+ * This is an undocumented endpoint that enables the Managed feature
+ * on your account. This service is billed at $100/month/Linode.
+ *
+ * Should this live in /account?
+ *
+ */
+
+export const enableManaged = () =>
+  Request<{}>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/account/settings/managed-enable`)
+  );
+
+/**
  * getServices
  *
  * Returns a paginated list of Managed Services on your account.

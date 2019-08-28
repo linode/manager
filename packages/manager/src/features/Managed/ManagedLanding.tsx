@@ -23,6 +23,7 @@ import useFlags from 'src/hooks/useFlags';
 import { getCredentials, getManagedContacts } from 'src/services/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
+import EnableManagedPlaceholder from './EnableManagedPlaceholder';
 import ManagedPlaceholder from './ManagedPlaceholder';
 import SupportWidget from './SupportWidget';
 
@@ -99,111 +100,122 @@ export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
   };
 
   const flags = useFlags();
+  const isManaged = false;
+
+  /**
+   * Temporary logic since we currently have 3 states:
+   * 1. User is Managed but feature flag is off -> show existing placeholder to point them to Classic
+   * 2. User is not Managed -> show new placeholder to enable Managed
+   * 3. User is Managed & flag is on -> show ManagedLanding page
+   */
+
+  const renderContent = () => {
+    if (!flags.managed) {
+      return <ManagedPlaceholder />;
+    } else if (flags.managed && !isManaged) {
+      // Eventually we can rename this to ManagedPlaceholder and delete the existing one
+      return <EnableManagedPlaceholder />;
+    }
+    return (
+      <React.Fragment>
+        <Box display="flex" flexDirection="row" justifyContent="space-between">
+          <Breadcrumb
+            pathname={props.location.pathname}
+            labelTitle="Managed"
+            removeCrumbX={1}
+          />
+          <Grid
+            container
+            item
+            direction="row"
+            justify="flex-end"
+            alignItems="center"
+            xs={8}
+          >
+            <Grid item>
+              <SupportWidget />
+            </Grid>
+            <Grid item>
+              <DocumentationButton href="https://www.linode.com/docs/platform/linode-managed/" />
+            </Grid>
+          </Grid>
+        </Box>
+        <AppBar position="static" color="default">
+          <Tabs
+            value={tabs.findIndex(tab => matches(tab.routeName))}
+            onChange={handleTabChange}
+            indicatorColor="primary"
+            textColor="primary"
+            variant="scrollable"
+            scrollButtons="on"
+          >
+            {tabs.map(tab => (
+              <Tab
+                key={tab.title}
+                data-qa-tab={tab.title}
+                component={React.forwardRef((forwardedProps, ref) => (
+                  <TabLink
+                    to={tab.routeName}
+                    title={tab.title}
+                    {...forwardedProps}
+                    ref={ref}
+                  />
+                ))}
+              />
+            ))}
+          </Tabs>
+        </AppBar>
+        <Switch>
+          <Route
+            exact
+            strict
+            path={`${props.match.path}/monitors`}
+            component={Monitors}
+          />
+          <Route
+            exact
+            strict
+            path={`${props.match.path}/ssh-access`}
+            component={SSHAccess}
+          />
+          <Route
+            exact
+            strict
+            path={`${props.match.path}/credentials`}
+            render={() => (
+              <Credentials
+                loading={credentials.loading && credentials.lastUpdated === 0}
+                error={credentialsError}
+                credentials={credentials.data}
+                update={credentials.update}
+              />
+            )}
+          />
+          <Route
+            exact
+            strict
+            path={`${props.match.path}/contacts`}
+            render={() => (
+              <Contacts
+                contacts={contacts.data}
+                loading={contacts.loading && contacts.lastUpdated === 0}
+                error={contacts.error}
+                lastUpdated={contacts.lastUpdated}
+                transformData={contacts.transformData}
+                update={contacts.update}
+              />
+            )}
+          />
+          <Redirect to={`${props.match.path}/monitors`} />
+        </Switch>
+      </React.Fragment>
+    );
+  };
 
   return (
     <React.Fragment>
       <DocumentTitleSegment segment="Managed" />
-      {/* If the feature isn't enabled, just display the placeholder */}
-      {!flags.managed ? (
-        <ManagedPlaceholder />
-      ) : (
-        <React.Fragment>
-          <Box
-            display="flex"
-            flexDirection="row"
-            justifyContent="space-between"
-          >
-            <Breadcrumb
-              pathname={props.location.pathname}
-              labelTitle="Managed"
-              removeCrumbX={1}
-            />
-            <Grid
-              container
-              item
-              direction="row"
-              justify="flex-end"
-              alignItems="center"
-              xs={8}
-            >
-              <Grid item>
-                <SupportWidget />
-              </Grid>
-              <Grid item>
-                <DocumentationButton href="https://www.linode.com/docs/platform/linode-managed/" />
-              </Grid>
-            </Grid>
-          </Box>
-          <AppBar position="static" color="default">
-            <Tabs
-              value={tabs.findIndex(tab => matches(tab.routeName))}
-              onChange={handleTabChange}
-              indicatorColor="primary"
-              textColor="primary"
-              variant="scrollable"
-              scrollButtons="on"
-            >
-              {tabs.map(tab => (
-                <Tab
-                  key={tab.title}
-                  data-qa-tab={tab.title}
-                  component={React.forwardRef((forwardedProps, ref) => (
-                    <TabLink
-                      to={tab.routeName}
-                      title={tab.title}
-                      {...forwardedProps}
-                      ref={ref}
-                    />
-                  ))}
-                />
-              ))}
-            </Tabs>
-          </AppBar>
-          <Switch>
-            <Route
-              exact
-              strict
-              path={`${props.match.path}/monitors`}
-              component={Monitors}
-            />
-            <Route
-              exact
-              strict
-              path={`${props.match.path}/ssh-access`}
-              component={SSHAccess}
-            />
-            <Route
-              exact
-              strict
-              path={`${props.match.path}/credentials`}
-              render={() => (
-                <Credentials
-                  loading={credentials.loading && credentials.lastUpdated === 0}
-                  error={credentialsError}
-                  credentials={credentials.data}
-                  update={credentials.update}
-                />
-              )}
-            />
-            <Route
-              exact
-              strict
-              path={`${props.match.path}/contacts`}
-              render={() => (
-                <Contacts
-                  contacts={contacts.data}
-                  loading={contacts.loading && contacts.lastUpdated === 0}
-                  error={contacts.error}
-                  lastUpdated={contacts.lastUpdated}
-                  transformData={contacts.transformData}
-                  update={contacts.update}
-                />
-              )}
-            />
-            <Redirect to={`${props.match.path}/monitors`} />
-          </Switch>
-        </React.Fragment>
-      )}
+      {renderContent()}
     </React.Fragment>
   );
 };
