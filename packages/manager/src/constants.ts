@@ -270,4 +270,8 @@ export const MBpsInterDC = 1.5;
  */
 export const nonClickEvents = ['profile_update'];
 
-export const OBJ_HOST_NAME = 'linodeobjects.com';
+/**
+ * Root URL for Object Storage clusters and buckets.
+ * A bucket can be accessed at: {bucket}.{cluster}.OBJECT_STORAGE_ROOT
+ */
+export const OBJECT_STORAGE_ROOT = 'linodeobjects.com';

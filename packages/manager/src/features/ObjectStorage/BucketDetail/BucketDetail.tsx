@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+
 import Breadcrumb from 'src/components/Breadcrumb';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
@@ -13,6 +14,7 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+
 import { getBucketObjects } from 'src/services/objectStorage/buckets';
 import ObjectTableContent from './ObjectTableContent';
 
@@ -38,6 +40,7 @@ type CombinedProps = RouteComponentProps<{
   PaginationProps<Linode.Object>;
 
 const BucketDetail: React.FC<CombinedProps> = props => {
+  // Request objects when the component first renders.
   React.useEffect(() => {
     props.request();
   }, []);
@@ -50,6 +53,8 @@ const BucketDetail: React.FC<CombinedProps> = props => {
     <>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Breadcrumb
+          // The actual pathname doesn't match what we want in the Breadcrumb,
+          // so we create a custom one.
           pathname={`/object-storage/${bucketName}`}
           crumbOverrides={[
             {
@@ -59,13 +64,14 @@ const BucketDetail: React.FC<CombinedProps> = props => {
           ]}
           labelOptions={{ noCap: true }}
         />
+        {/* @todo: What should this link be? */}
         <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/" />
       </Box>
       <Divider className={classes.divider} />
       <Paper className={classes.objectTable}>
-        <Table aria-label="List of Bucket Objects">
+        <Table removeLabelonMobile aria-label="List of Bucket Objects">
           <TableHead>
-            <TableRow data-qa-table-head>
+            <TableRow>
               <TableCell className={classes.objectNameColumn}>Object</TableCell>
               <TableCell>Size</TableCell>
               <TableCell>Region</TableCell>
@@ -96,11 +102,11 @@ const BucketDetail: React.FC<CombinedProps> = props => {
 };
 
 const updatedRequest = (ownProps: CombinedProps, params: any, filters: any) => {
+  // In order to get objects for a bucket, we need the clusterId and the bucket
+  // name. We get these from the pathname (via react-router props).
   const { clusterId, bucketName } = ownProps.match.params;
 
-  return getBucketObjects(clusterId, bucketName, params, filters).then(
-    response => response
-  );
+  return getBucketObjects(clusterId, bucketName, params, filters);
 };
 
 const paginated = Pagey(updatedRequest);

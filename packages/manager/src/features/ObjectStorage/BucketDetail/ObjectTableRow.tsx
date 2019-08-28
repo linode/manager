@@ -1,4 +1,6 @@
 import * as React from 'react';
+
+import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
@@ -6,6 +8,7 @@ import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+
 import { formatObjectStorageCluster } from 'src/utilities/formatRegion';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { generateObjectUrl } from '../utilities';
@@ -50,7 +53,9 @@ const ObjectTableRow: React.FC<Props> = props => {
             <div className={classes.objectNameWrapper}>
               <Typography variant="h3">{objectName}</Typography>
             </div>
-            <a href={objectUrl.absolute}>{objectUrl.path}</a>
+            <Hidden smDown>
+              <a href={objectUrl.absolute}>{objectUrl.path}</a>
+            </Hidden>
           </Grid>
         </Grid>
       </TableCell>
