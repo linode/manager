@@ -8,13 +8,7 @@
     "esModuleInterop": true,
     "moduleResolution": "node",
     "strict": true,
-    "rootDir": "src",
     "baseUrl": ".",
-    "paths": {
-      "src/*": [
-        "src/*"
-      ]
-    }
   },
   "include": [
     "src"
