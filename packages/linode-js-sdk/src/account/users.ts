@@ -1,16 +1,14 @@
-import { API_ROOT } from 'src/constants';
+import { API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
   setXFilter
-} from 'src/services';
-
+} from '../request';
+import { ResourcePage } from '../types';
 import { CreateUserSchema, UpdateUserSchema } from './account.schema';
-
-type Page<T> = Linode.ResourcePage<T>;
-type User = Linode.User;
+import { Grants, User } from './types';
 
 /**
  * getUsers
@@ -19,7 +17,7 @@ type User = Linode.User;
  *
  */
 export const getUsers = (params?: any, filters?: any) =>
-  Request<Page<User>>(
+  Request<ResourcePage<User>>(
     setURL(`${API_ROOT}/account/users`),
     setMethod('GET'),
     setParams(params),
@@ -100,7 +98,7 @@ export const deleteUser = (username: string) =>
  *
  */
 export const getGrants = (username: string) =>
-  Request<Linode.Grants>(
+  Request<Grants>(
     setURL(`${API_ROOT}/account/users/${username}/grants`),
     setMethod('GET')
   ).then(response => response.data);
@@ -117,8 +115,8 @@ export const getGrants = (username: string) =>
  * @param data { object } the Grants object to update.
  *
  */
-export const updateGrants = (username: string, data: Partial<Linode.Grants>) =>
-  Request<Linode.Grants>(
+export const updateGrants = (username: string, data: Partial<Grants>) =>
+  Request<Grants>(
     setURL(`${API_ROOT}/account/users/${username}/grants`),
     setMethod('PUT'),
     setData(data)

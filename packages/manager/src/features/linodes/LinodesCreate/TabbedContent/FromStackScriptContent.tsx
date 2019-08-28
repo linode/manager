@@ -1,3 +1,4 @@
+import { Grant } from 'linode-js-sdk/lib/account';
 import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
@@ -64,7 +65,7 @@ interface Props {
     username: string,
     params?: any,
     filter?: any,
-    stackScriptGrants?: Linode.Grant[]
+    stackScriptGrants?: Grant[]
   ) => Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
   header: string;
   category: 'community' | 'account';

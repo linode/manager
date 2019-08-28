@@ -14,7 +14,7 @@ export const updateAccountSchema = object({
   phone: string().max(32, 'Phone number must be 32 characters or less.'),
   state: string().max(24, 'State must be 24 characters or less.'),
   tax_id: string().max(100, 'Tax ID must be 100 characters or less.'),
-  zip: string().max(16, 'Zip code must be 16 characters or less.'),
+  zip: string().max(16, 'Zip code must be 16 characters or less.')
 });
 
 export const createOAuthClientSchema = object({
@@ -22,31 +22,31 @@ export const createOAuthClientSchema = object({
     .required('Label is required.')
     .min(1, 'Label must be between 1 and 512 characters.')
     .max(512, 'Label must be between 1 and 512 characters.'),
-  redirect_uri: string().required('Redirect URI is required.'),
+  redirect_uri: string().required('Redirect URI is required.')
 });
 
 export const updateOAuthClientSchema = object({
   label: string()
     .min(1, 'Label must be between 1 and 512 characters.')
     .max(512, 'Label must be between 1 and 512 characters.'),
-  redirect_uri: string(),
+  redirect_uri: string()
 });
 
 export const StagePaypalPaymentSchema = object({
   cancel_url: string().required(
-    'You must provide a URL to redirect on cancel.',
+    'You must provide a URL to redirect on cancel.'
   ),
   redirect_url: string().required('You must provide a redirect URL.'),
-  usd: string().required('USD payment amount is required.'),
+  usd: string().required('USD payment amount is required.')
 });
 
 export const ExecutePaypalPaymentSchema = object({
   payer_id: string().required('You must provide a payer ID.'),
-  payment_id: string().required('You must provide a payment ID (from Paypal).'),
+  payment_id: string().required('You must provide a payment ID (from Paypal).')
 });
 
 export const PaymentSchema = object({
-  usd: string().required('USD payment amount is required.'),
+  usd: string().required('USD payment amount is required.')
 });
 
 export const CreditCardSchema = object({
@@ -61,7 +61,7 @@ export const CreditCardSchema = object({
   expiry_month: number()
     .required('Expiration month is required.')
     .min(1, 'Expiration month must be a number from 1 to 12.')
-    .max(12, 'Expiration month must be a number from 1 to 12.'),
+    .max(12, 'Expiration month must be a number from 1 to 12.')
 });
 
 export const CreateUserSchema = object({
@@ -73,8 +73,8 @@ export const CreateUserSchema = object({
     .required('Email address is required.')
     .email('Must be a valid email address.'),
   restricted: boolean().required(
-    'You must indicate if this user should have restricted access.',
-  ),
+    'You must indicate if this user should have restricted access.'
+  )
 });
 
 export const UpdateUserSchema = object({
@@ -82,15 +82,15 @@ export const UpdateUserSchema = object({
     .min(3, 'Username must be between 3 and 32 characters.')
     .max(32, 'Username must be between 3 and 32 characters.'),
   email: string().email('Must be a valid email address.'),
-  restricted: boolean(),
+  restricted: boolean()
 });
 
 const GrantSchema = object({
   id: number().required('ID is required.'),
   permissions: mixed().oneOf(
     [null, 'read_only', 'read_write'],
-    'Permissions must be null, read_only, or read_write.',
-  ),
+    'Permissions must be null, read_only, or read_write.'
+  )
 });
 
 export const UpdateGrantSchema = object({
@@ -101,11 +101,11 @@ export const UpdateGrantSchema = object({
   image: array().of(GrantSchema),
   longview: array().of(GrantSchema),
   stackscript: array().of(GrantSchema),
-  volume: array().of(GrantSchema),
+  volume: array().of(GrantSchema)
 });
 
 export const UpdateAccountSettingsSchema = object({
   network_helper: boolean(),
   backups_enabled: boolean(),
-  managed: boolean(),
+  managed: boolean()
 });

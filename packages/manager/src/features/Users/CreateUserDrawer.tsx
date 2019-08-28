@@ -1,3 +1,4 @@
+import { createUser, User } from "linode-js-sdk/lib/account";
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -7,14 +8,13 @@ import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
-import { createUser } from 'src/services/account';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  addUser: (user: Linode.User) => void;
+  addUser: (user: User) => void;
 }
 
 interface State {
@@ -57,7 +57,7 @@ class CreateUserDrawer extends React.Component<CombinedProps, State> {
     const { username, email, restricted } = this.state;
     this.setState({ errors: [], submitting: true });
     createUser({ username, email, restricted })
-      .then((user: Linode.User) => {
+      .then((user: User) => {
         this.setState({ submitting: false });
         onClose();
         if (!user.restricted) {

@@ -1,5 +1,7 @@
 import Settings from '@material-ui/icons/Settings';
 import * as classNames from 'classnames';
+import { AccountCapability, AccountSettings } from 'linode-js-sdk/lib/account';
+import { Profile } from 'linode-js-sdk/lib/profile';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -567,11 +569,11 @@ interface StateProps {
   hasAccountAccess: boolean;
   isManagedAccount: boolean;
   // isLongviewEnabled: boolean;
-  accountCapabilities: Linode.AccountCapability[];
+  accountCapabilities: AccountCapability[];
   accountLastUpdated: number;
 }
 
-const userHasAccountAccess = (profile: Linode.Profile) => {
+const userHasAccountAccess = (profile: Profile) => {
   if (profile.restricted === false) {
     return true;
   }
@@ -584,7 +586,7 @@ const userHasAccountAccess = (profile: Linode.Profile) => {
   return Boolean(grants.global.account_access);
 };
 
-const accountHasManaged = (account: Linode.AccountSettings) => account.managed;
+const accountHasManaged = (account: AccountSettings) => account.managed;
 
 // const accountHasLongviewSubscription = (account: Linode.AccountSettings) => Boolean(account.longview_subscription);
 

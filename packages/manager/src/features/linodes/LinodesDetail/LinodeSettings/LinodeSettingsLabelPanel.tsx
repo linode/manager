@@ -1,3 +1,4 @@
+import { GrantLevel } from 'linode-js-sdk/lib/account';
 import { lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
@@ -119,7 +120,7 @@ const errorBoundary = PanelErrorBoundary({ heading: 'Linode Label' });
 interface ContextProps {
   linodeLabel: string;
   updateLinode: UpdateLinode;
-  permissions: Linode.GrantLevel;
+  permissions: GrantLevel;
 }
 
 const linodeContext = withLinodeDetailContext<ContextProps>(

@@ -1,4 +1,5 @@
 import SettingsBackupRestore from '@material-ui/icons/SettingsBackupRestore';
+import { Profile } from 'linode-js-sdk/lib/profile';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -72,7 +73,7 @@ interface Props {
   clearState: () => void;
   twoFactor?: boolean;
   username?: string;
-  updateProfile: (profile: Partial<Linode.Profile>) => Promise<Linode.Profile>;
+  updateProfile: (profile: Partial<Profile>) => Promise<Profile>;
 }
 
 interface ConfirmDisable {

@@ -1,3 +1,5 @@
+import { SupportReply, SupportTicket } from 'linode-js-sdk/lib/account';
+import { ResourcePage } from 'linode-js-sdk/lib/types';
 import { createReplySchema, createSupportTicketSchema } from './support.schema';
 
 import { API_ROOT } from 'src/constants';
@@ -10,8 +12,7 @@ import Request, {
   setXFilter
 } from '../index';
 
-type Page<T> = Linode.ResourcePage<T>;
-type SupportTicket = Linode.SupportTicket;
+type Page<T> = ResourcePage<T>;
 
 export interface ReplyRequest {
   ticket_id: number;
@@ -79,7 +80,7 @@ export const getTicketReplies = (
   params?: any,
   filter?: any
 ) =>
-  Request<Page<Linode.SupportReply>>(
+  Request<Page<SupportReply>>(
     setURL(`${API_ROOT}/support/tickets/${ticketId}/replies`),
     setMethod('GET'),
     setParams(params),
@@ -131,7 +132,7 @@ export const closeSupportTicket = (ticketId: number) =>
  *
  */
 export const createReply = (data: ReplyRequest) =>
-  Request<Linode.SupportReply>(
+  Request<SupportReply>(
     setURL(`${API_ROOT}/support/tickets/${data.ticket_id}/replies`),
     setMethod('POST'),
     setData(data, createReplySchema)

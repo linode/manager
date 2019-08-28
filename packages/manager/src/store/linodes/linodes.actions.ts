@@ -1,3 +1,4 @@
+import { Notification } from 'linode-js-sdk/lib/account'
 import { CreateLinodeRequest } from 'src/services/linodes';
 import actionCreatorFactory from 'typescript-fsa';
 
@@ -11,7 +12,7 @@ that comes down the stream
 export const updateMultipleLinodes = actionCreator<Linode.Linode[]>(
   'update_multiple'
 );
-export const addNotificationsToLinodes = actionCreator<Linode.Notification[]>(
+export const addNotificationsToLinodes = actionCreator<Notification[]>(
   'add_notifications_to_all_linodes'
 );
 export const upsertLinode = actionCreator<Linode.Linode>(`upsert`);

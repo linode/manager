@@ -1,4 +1,6 @@
-export const mockNotification: Linode.Notification = {
+import { Notification } from 'linode-js-sdk/lib/account'
+
+export const mockNotification: Notification = {
   entity: {
     url: 'doesnt/matter/',
     type: 'linode',
@@ -14,7 +16,7 @@ export const mockNotification: Linode.Notification = {
   type: 'migration_pending'
 };
 
-export const abuseTicketNotification: Linode.Notification = {
+export const abuseTicketNotification: Notification = {
   type: 'ticket_abuse',
   body: null,
   severity: 'major',

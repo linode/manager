@@ -1,3 +1,4 @@
+import { Grant } from 'linode-js-sdk/lib/account';
 import {
   compose as ramdaCompose,
   isEmpty,
@@ -165,7 +166,7 @@ export const stripImageName = (image: string) => {
 
 interface StateProps {
   isRestrictedUser: boolean;
-  stackScriptGrants: Linode.Grant[];
+  stackScriptGrants: Grant[];
   userCannotAddLinodes: boolean;
 }
 

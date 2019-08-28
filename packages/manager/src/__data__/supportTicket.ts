@@ -1,4 +1,6 @@
-export const supportTicket: Linode.SupportTicket = {
+import { SupportTicket } from 'linode-js-sdk/lib/account'
+
+export const supportTicket: SupportTicket = {
   updated_by: 'test-account',
   closed: null,
   attachments: [],

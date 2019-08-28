@@ -1,3 +1,4 @@
+import { Profile } from "linode-js-sdk/lib/profile";
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -89,11 +90,11 @@ class ProfileSettings extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles);
 
 interface DispatchProps {
-  updateProfile: (p: Partial<Linode.Profile>) => Promise<Linode.Profile>;
+  updateProfile: (p: Partial<Profile>) => Promise<Profile>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-  updateProfile: (p: Linode.Profile) => dispatch(handleUpdateProfile(p) as any)
+  updateProfile: (p: Profile) => dispatch(handleUpdateProfile(p) as any)
 });
 
 interface StateProps {

@@ -1,3 +1,4 @@
+import { ResourcePage } from 'linode-js-sdk/lib/types'
 import { clone } from 'ramda';
 import * as React from 'react';
 import { storage } from 'src/utilities/storage';
@@ -22,7 +23,7 @@ export type PaginatedRequest<T = {}> = (
   ownProps?: any,
   p?: PaginationParams,
   f?: FilterParams
-) => Promise<Linode.ResourcePage<T>>;
+) => Promise<ResourcePage<T>>;
 
 export type HandleOrderChange = (key: string, order?: Order) => void;
 

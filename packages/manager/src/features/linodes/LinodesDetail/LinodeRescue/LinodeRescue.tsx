@@ -1,3 +1,4 @@
+import { GrantLevel } from 'linode-js-sdk/lib/account';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { assoc, clamp, pathOr } from 'ramda';
 import * as React from 'react';
@@ -57,7 +58,7 @@ interface ContextProps {
   linodeRegion?: string;
   linodeLabel: string;
   linodeDisks?: ExtendedDisk[];
-  permissions: Linode.GrantLevel;
+  permissions: GrantLevel;
 }
 
 interface StateProps {

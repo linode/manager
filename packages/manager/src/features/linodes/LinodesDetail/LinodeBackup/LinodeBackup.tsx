@@ -1,3 +1,4 @@
+import { GrantLevel } from 'linode-js-sdk/lib/account';
 import * as moment from 'moment-timezone';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path, pathOr, sortBy } from 'ramda';
@@ -134,7 +135,7 @@ interface ContextProps {
   backupsSchedule: Linode.LinodeBackupSchedule;
   linodeInTransition: boolean;
   linodeLabel: string;
-  permissions: Linode.GrantLevel;
+  permissions: GrantLevel;
 }
 
 interface PreloadedProps {
@@ -177,7 +178,7 @@ const evenize = (n: number): number => {
   return n % 2 === 0 ? n : n - 1;
 };
 
-const isReadOnly = (permissions: Linode.GrantLevel) => {
+const isReadOnly = (permissions: GrantLevel) => {
   return permissions === 'read_only';
 };
 

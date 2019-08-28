@@ -1,3 +1,5 @@
+
+import { Notification } from 'linode-js-sdk/lib/account'
 /**
  * _when_ is not guaranteed to exist if this is a maintenance notification
  *
@@ -20,7 +22,7 @@ export interface LinodeWithMaintenance extends Linode.Linode {
 }
 
 export const addNotificationsToLinodes = (
-  notifications: Linode.Notification[],
+  notifications: Notification[],
   linodes: Linode.Linode[]
 ): LinodeWithMaintenance[] => {
   const maintenanceNotifications = notifications.filter(eachNotification => {
@@ -37,17 +39,17 @@ export const addNotificationsToLinodes = (
 
     return foundNotification
       ? {
-          ...eachLinode,
-          maintenance: {
-            /**
-             * "when" and "until" are not guaranteed to exist
-             * if we have a maintenance notification
-             */
-            when: foundNotification.when,
-            until: foundNotification.until,
-            type: foundNotification.label as Type
-          }
+        ...eachLinode,
+        maintenance: {
+          /**
+           * "when" and "until" are not guaranteed to exist
+           * if we have a maintenance notification
+           */
+          when: foundNotification.when,
+          until: foundNotification.until,
+          type: foundNotification.label as Type
         }
+      }
       : eachLinode;
   });
 };

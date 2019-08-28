@@ -1,4 +1,4 @@
-import { getNotifications } from 'src/services/account';
+import { getNotifications, Notification } from 'linode-js-sdk/lib/account';
 import { ThunkActionCreator } from '../types';
 import {
   handleError,
@@ -7,7 +7,7 @@ import {
 } from './notification.actions';
 
 export const requestNotifications: ThunkActionCreator<
-  Promise<Linode.Notification[]>
+  Promise<Notification[]>
 > = () => dispatch => {
   dispatch(startRequest());
   return getNotifications()

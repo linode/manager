@@ -1,3 +1,4 @@
+import { AccountSettings } from 'linode-js-sdk/lib/account'
 import { RequestableData } from '../types';
 import {
   Action,
@@ -8,7 +9,7 @@ import {
   UPDATE_ERROR
 } from './accountSettings.actions';
 
-export type State = RequestableData<Linode.AccountSettings> & {
+export type State = RequestableData<AccountSettings> & {
   updateError?: Linode.ApiFieldError[];
 };
 

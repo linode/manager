@@ -1,3 +1,4 @@
+import { Entity as EventEntity, Event } from 'linode-js-sdk/lib/account';
 import {
   ActionCreator,
   MapStateToProps as _MapStateToProps
@@ -5,6 +6,10 @@ import {
 import { Action, Dispatch } from 'redux';
 import { ThunkAction, ThunkDispatch as _ThunkDispatch } from 'redux-thunk';
 import { ApplicationState } from 'src/store';
+
+interface EntityEvent extends Omit<Event, 'entity'> {
+  entity: EventEntity;
+}
 
 export type ThunkResult<T> = ThunkAction<
   T,
@@ -83,7 +88,7 @@ export interface RequestableRequiredData<D> extends RequestableData<D> {
 }
 
 export type EventHandler = (
-  event: Linode.EntityEvent,
+  event: EntityEvent,
   dispatch: Dispatch<any>,
   getState: () => ApplicationState
 ) => void;

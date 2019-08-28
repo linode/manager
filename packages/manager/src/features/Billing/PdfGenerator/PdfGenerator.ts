@@ -1,4 +1,10 @@
 import * as jsPDF from 'jspdf';
+import {
+  Account,
+  Invoice,
+  InvoiceItem,
+  Payment
+} from 'linode-js-sdk/lib/account';
 import { pathOr, splitEvery } from 'ramda';
 import formatDate from 'src/utilities/formatDate';
 import LinodeLogo from './LinodeLogo';
@@ -132,7 +138,7 @@ const addLeftHeader = (
   }
 };
 
-const addRightHeader = (doc: jsPDF, account: Linode.Account) => {
+const addRightHeader = (doc: jsPDF, account: Account) => {
   const {
     address_1,
     address_2,
@@ -215,9 +221,9 @@ interface PdfResult {
 }
 
 export const printInvoice = (
-  account: Linode.Account,
-  invoice: Linode.Invoice,
-  items: Linode.InvoiceItem[]
+  account: Account,
+  invoice: Invoice,
+  items: InvoiceItem[]
 ): PdfResult => {
   try {
     const itemsPerPage = 9;
@@ -233,7 +239,7 @@ export const printInvoice = (
       unit: 'px'
     });
 
-    const addTable = (itemsChunk: Linode.InvoiceItem[]) => {
+    const addTable = (itemsChunk: InvoiceItem[]) => {
       doc.setFontSize(10);
 
       const header = [
@@ -406,10 +412,7 @@ export const printInvoice = (
   }
 };
 
-export const printPayment = (
-  account: Linode.Account,
-  payment: Linode.Payment
-): PdfResult => {
+export const printPayment = (account: Account, payment: Payment): PdfResult => {
   try {
     const date = formatDate(payment.date, { format: 'YYYY-MM-DD' });
     const doc = new jsPDF({

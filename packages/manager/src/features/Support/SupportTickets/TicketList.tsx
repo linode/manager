@@ -1,3 +1,4 @@
+import { SupportTicket } from "linode-js-sdk/lib/account";
 import { compose } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
@@ -22,9 +23,9 @@ import TableSortCell from 'src/components/TableSortCell';
 import TicketRow from './TicketRow';
 import { getTicketsPage } from './ticketUtils';
 
-interface Props extends PaginationProps<Linode.SupportTicket> {
+interface Props extends PaginationProps<SupportTicket> {
   filterStatus: 'open' | 'closed';
-  newTicket?: Linode.SupportTicket;
+  newTicket?: SupportTicket;
 }
 
 type ClassNames =
@@ -111,7 +112,7 @@ export class TicketList extends React.Component<CombinedProps, {}> {
     );
   };
 
-  renderTickets = (tickets: Linode.SupportTicket[]) =>
+  renderTickets = (tickets: SupportTicket[]) =>
     tickets.map((ticket, idx) => {
       return <TicketRow key={`ticket-row-${idx}`} ticket={ticket} />;
     });

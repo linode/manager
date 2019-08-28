@@ -1,4 +1,5 @@
 import { Formik, FormikProps } from 'formik';
+import { GrantLevel } from 'linode-js-sdk/lib/account';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -51,7 +52,7 @@ interface WithImagesProps {
 
 interface ContextProps {
   linodeId: number;
-  permissions: Linode.GrantLevel;
+  permissions: GrantLevel;
 }
 
 export type CombinedProps = WithImagesProps &

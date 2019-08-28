@@ -1,3 +1,4 @@
+import { ActivePromotion } from 'linode-js-sdk/lib/account'
 import * as React from 'react';
 
 import CircleProgress from 'src/components/CircleProgress';
@@ -9,7 +10,7 @@ import PromotionDisplay from './PromotionDisplay';
 interface Props {
   error?: boolean;
   loading: boolean;
-  promotions: Linode.ActivePromotion[];
+  promotions: ActivePromotion[];
 }
 
 export type CombinedProps = Props;

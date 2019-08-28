@@ -1,3 +1,4 @@
+import { InvoiceItem } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -15,7 +16,7 @@ import PaginationFooter from 'src/components/PaginationFooter';
 interface Props {
   loading: boolean;
   errors?: Linode.ApiFieldError[];
-  items?: Linode.InvoiceItem[];
+  items?: InvoiceItem[];
 }
 
 const InvoiceTable: React.StatelessComponent<Props> = props => {
@@ -57,7 +58,7 @@ const renderUnitPrice = (v: null | number) => (v ? `$${v}` : null);
 const renderQuantity = (v: null | number) => (v ? v : null);
 
 const RenderData: React.StatelessComponent<{
-  items: Linode.InvoiceItem[];
+  items: InvoiceItem[];
 }> = props => {
   const { items } = props;
   return (

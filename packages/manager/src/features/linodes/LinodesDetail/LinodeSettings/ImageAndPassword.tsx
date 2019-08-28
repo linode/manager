@@ -1,3 +1,4 @@
+import { GrantLevel } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import { compose } from 'recompose';
 import AccessPanel, { UserSSHKeyObject } from 'src/components/AccessPanel';
@@ -8,7 +9,7 @@ import { withLinodeDetailContext } from '../linodeDetailContext';
 import LinodePermissionsError from '../LinodePermissionsError';
 
 interface ContextProps {
-  permissions: Linode.GrantLevel;
+  permissions: GrantLevel;
 }
 
 interface Props {

@@ -1,4 +1,5 @@
 import * as classnames from 'classnames';
+import { Account, AccountCapability } from 'linode-js-sdk/lib/account';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { shim } from 'promise.prototype.finally';
 import { path, pathOr } from 'ramda';
@@ -532,7 +533,7 @@ export class App extends React.Component<CombinedProps, State> {
 // whether or not the feature is enabled for this account.
 const getObjectStorageRoute = (
   accountLoading: boolean,
-  accountCapabilities: Linode.AccountCapability[],
+  accountCapabilities: AccountCapability[],
   accountError?: Error | Linode.ApiFieldError[]
 ) => {
   let component;
@@ -584,11 +585,11 @@ interface StateProps {
   types?: string[];
   regions?: Linode.Region[];
   userId?: number;
-  accountData?: Linode.Account;
+  accountData?: Account;
   username: string;
   documentation: Linode.Doc[];
   isLoggedInAsCustomer: boolean;
-  accountCapabilities: Linode.AccountCapability[];
+  accountCapabilities: AccountCapability[];
   linodesLoading: boolean;
   volumesLoading: boolean;
   domainsLoading: boolean;

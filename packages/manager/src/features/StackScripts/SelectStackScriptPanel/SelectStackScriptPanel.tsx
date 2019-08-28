@@ -1,3 +1,4 @@
+import { Grant } from "linode-js-sdk/lib/account";
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -96,7 +97,7 @@ interface Props extends RenderGuardProps {
     username: string,
     params?: any,
     filter?: any,
-    stackScriptGrants?: Linode.Grant[]
+    stackScriptGrants?: Grant[]
   ) => Promise<Linode.ResourcePage<any>>;
   category: string;
   header: string;

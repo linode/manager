@@ -1,8 +1,8 @@
+import { getUsers } from "linode-js-sdk/lib/account";
 import { assoc, clone, equals, map, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
-import { getUsers } from 'src/services/account';
 import { getSSHKeys } from 'src/services/profile';
 import { MapState } from 'src/store/types';
 import { getAll } from 'src/utilities/getAll';

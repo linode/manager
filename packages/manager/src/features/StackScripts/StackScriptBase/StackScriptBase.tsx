@@ -1,3 +1,4 @@
+import { Grant } from "linode-js-sdk/lib/account";
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -63,7 +64,7 @@ export interface State {
 }
 
 interface StoreProps {
-  stackScriptGrants?: Linode.Grant[];
+  stackScriptGrants?: Grant[];
   userCannotCreateStackScripts: boolean;
 }
 

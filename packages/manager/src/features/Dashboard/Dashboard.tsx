@@ -1,3 +1,4 @@
+import { Notification } from 'linode-js-sdk/lib/account';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -52,7 +53,7 @@ interface StateProps {
   managed: boolean;
   backupError?: Error;
   entitiesWithGroupsToImport: GroupedEntitiesForImport;
-  notifications: Linode.Notification[];
+  notifications: Notification[];
   userTimezone: string;
   userTimezoneLoading: boolean;
   userTimezoneError?: Linode.ApiFieldError[];

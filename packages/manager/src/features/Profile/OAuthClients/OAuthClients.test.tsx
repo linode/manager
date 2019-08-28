@@ -1,4 +1,5 @@
 import { shallow, ShallowWrapper } from 'enzyme';
+import { OAuthClient } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 
 import { pageyProps } from 'src/__data__/pageyProps';
@@ -8,7 +9,7 @@ import { clearDocs, setDocs } from 'src/store/documentation';
 import { OAuthClients } from './OAuthClients';
 
 describe('OAuth Clients', () => {
-  const mockData: Linode.OAuthClient[] = [
+  const mockData: OAuthClient[] = [
     {
       public: false,
       id: 'test1',

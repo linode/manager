@@ -1,8 +1,9 @@
+import { Grant } from "linode-js-sdk/lib/account";
 import { canUserModifyAccountStackScript } from './stackScriptUtils';
 
 describe('canUserModifyStackScript', () => {
   let isRestrictedUser = false;
-  const stackScriptGrants: Linode.Grant[] = [
+  const stackScriptGrants: Grant[] = [
     { id: 1, permissions: 'read_only', label: 'my_stackscript' },
     { id: 2, permissions: 'read_write', label: 'my__other_stackscript' }
   ];

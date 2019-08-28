@@ -1,8 +1,9 @@
+import { Event } from 'linode-js-sdk/lib/account'
 import { path } from 'ramda';
 import { isProduction } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 
-type EventMessageCreator = (e: Linode.Event) => string;
+type EventMessageCreator = (e: Event) => string;
 
 interface CreatorsForStatus {
   scheduled?: EventMessageCreator;
@@ -483,7 +484,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   }
 };
 
-export default (e: Linode.Event): string => {
+export default (e: Event): string => {
   const fn = path<EventMessageCreator>(
     [e.action, e.status],
     eventMessageCreators

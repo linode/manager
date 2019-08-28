@@ -1,3 +1,4 @@
+import { NetworkUtilization } from "linode-js-sdk/lib/account";
 import { API_ROOT } from 'src/constants';
 
 import Request, { setMethod, setParams, setURL, setXFilter } from '../index';
@@ -47,7 +48,7 @@ export const getLinodeStatsByDate = (
  * @param linodeId { number } The id of the Linode to retrieve network transfer information for.
  */
 export const getLinodeTransfer = (linodeId: number) =>
-  Request<Linode.NetworkUtilization>(
+  Request<NetworkUtilization>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/transfer`),
     setMethod('GET')
   ).then(response => response.data);

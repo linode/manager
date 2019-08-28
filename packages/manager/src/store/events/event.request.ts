@@ -1,8 +1,9 @@
-import * as moment from 'moment';
 import {
+  Event,
   getEvents as _getEvents,
   markEventSeen
-} from 'src/services/account/events';
+} from 'linode-js-sdk/lib/account'
+import * as moment from 'moment';
 import { dateFormat } from 'src/time';
 import { generatePollingFilter } from 'src/utilities/requestFilters';
 import { ThunkActionCreator } from '../types';
@@ -13,7 +14,7 @@ import { epoch } from './event.helpers';
  * Will send a filtered request for events which have been created after the most recent existing
  * event or the epoch if there are no stored events.
  */
-export const getEvents: ThunkActionCreator<Promise<Linode.Event[]>> = () => (
+export const getEvents: ThunkActionCreator<Promise<Event[]>> = () => (
   dispatch,
   getState
 ) => {

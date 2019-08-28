@@ -1,3 +1,5 @@
+import { Notification } from 'linode-js-sdk/lib/account'
+
 export interface Action {
   type: string;
   error?: Linode.ApiFieldError[];
@@ -20,12 +22,12 @@ export const handleError: ActionCreator = (error: Linode.ApiFieldError[]) => ({
   error
 });
 
-export const handleSuccess: ActionCreator = (data: Linode.Notification[]) => ({
+export const handleSuccess: ActionCreator = (data: Notification[]) => ({
   type: SUCCESS,
   data
 });
 
-export const handleUpdate: ActionCreator = (data: Linode.Notification[]) => ({
+export const handleUpdate: ActionCreator = (data: Notification[]) => ({
   type: UPDATE,
   data
 });
