@@ -1,3 +1,4 @@
+import { GrantLevel } from 'linode-js-sdk/lib/account';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -83,7 +84,7 @@ interface LinodeContextProps {
   linodeType: null | string;
   linodeStatus?: Linode.LinodeStatus;
   linodeLabel: string;
-  permissions: Linode.GrantLevel;
+  permissions: GrantLevel;
   linodeDisks: Linode.Disk[];
 }
 

@@ -1,3 +1,4 @@
+import { Account, getInvoiceItems, Invoice, InvoiceItem } from 'linode-js-sdk/lib/account'
 import * as React from 'react';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
@@ -9,7 +10,6 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import createMailto from 'src/features/Footer/createMailto';
-import { getInvoiceItems } from 'src/services/account';
 import { getAll } from 'src/utilities/getAll';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -25,8 +25,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  invoice: Linode.Invoice;
-  account: Linode.Account;
+  invoice: Invoice;
+  account: Account;
 }
 
 type CombinedProps = Props;
@@ -40,8 +40,8 @@ const RecentInvoicesRow: React.FC<CombinedProps> = props => {
 
   const _printInvoice = (
     event: React.MouseEvent<HTMLElement, MouseEvent>,
-    thisAccount: Linode.Account,
-    thisItem: Linode.Invoice
+    thisAccount: Account,
+    thisItem: Invoice
   ) => {
     event.preventDefault();
     event.stopPropagation();
@@ -49,7 +49,7 @@ const RecentInvoicesRow: React.FC<CombinedProps> = props => {
     setPDFError(undefined);
     setGeneratingPDF(true);
 
-    getAll<Linode.InvoiceItem>((params, filter) =>
+    getAll<InvoiceItem>((params, filter) =>
       getInvoiceItems(invoice.id, params, filter)
     )()
       .then(response => {
@@ -91,15 +91,15 @@ const RecentInvoicesRow: React.FC<CombinedProps> = props => {
               <a
                 href="#"
                 onClick={e =>
-                  _printInvoice(e, account as Linode.Account, invoice)
+                  _printInvoice(e, account as Account, invoice)
                 }
                 className="secondaryLink"
               >
                 Download PDF
               </a>
             ) : (
-              <CircleProgress mini />
-            )}
+                <CircleProgress mini />
+              )}
           </div>
         )}
         {pdfError && (

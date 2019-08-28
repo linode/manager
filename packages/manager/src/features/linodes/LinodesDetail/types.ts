@@ -1,3 +1,4 @@
+import { GrantLevel } from 'linode-js-sdk/lib/account';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 
 export interface ExtendedLinode extends LinodeWithMaintenance {
@@ -8,5 +9,5 @@ export interface ExtendedLinode extends LinodeWithMaintenance {
   _volumes: Linode.Volume[];
   _volumesError: Linode.ApiFieldError[];
   _type?: null | Linode.LinodeType;
-  _permissions: Linode.GrantLevel;
+  _permissions: GrantLevel;
 }

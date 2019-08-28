@@ -1,4 +1,5 @@
 import { Form, Formik } from 'formik';
+import { Grant } from 'linode-js-sdk/lib/account'
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -55,7 +56,7 @@ const AttachVolumeToLinodeForm: React.StatelessComponent<
     readOnly
   } = props;
   const linodeGrant = linodeGrants.filter(
-    (grant: Linode.Grant) => grant.id === linodeId
+    (grant: Grant) => grant.id === linodeId
   )[0];
   const disabled =
     readOnly || (linodeGrant && linodeGrant.permissions !== 'read_write');
@@ -180,7 +181,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
 });
 
 interface StateProps {
-  linodeGrants: Linode.Grant[];
+  linodeGrants: Grant[];
 }
 
 const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({

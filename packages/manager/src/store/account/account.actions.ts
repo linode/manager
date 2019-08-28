@@ -1,3 +1,4 @@
+import { Account } from 'linode-js-sdk/lib/account'
 import { actionCreatorFactory } from 'typescript-fsa';
 
 /**
@@ -7,13 +8,13 @@ export const actionCreator = actionCreatorFactory(`@@manager/account`);
 
 export const profileRequest = actionCreator('request');
 
-export const profileRequestSuccess = actionCreator<Linode.Account>('success');
+export const profileRequestSuccess = actionCreator<Account>('success');
 
 export const profileRequestFail = actionCreator<Linode.ApiFieldError[]>('fail');
 
-export type UpdateAccountParams = Partial<Linode.Account>;
+export type UpdateAccountParams = Partial<Account>;
 export const updateAccountActions = actionCreator.async<
   UpdateAccountParams,
-  Linode.Account,
+  Account,
   Linode.ApiFieldError[]
 >(`update`);

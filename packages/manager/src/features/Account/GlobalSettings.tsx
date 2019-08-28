@@ -1,3 +1,4 @@
+import { AccountSettings } from 'linode-js-sdk/lib/account';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
@@ -37,7 +38,7 @@ interface StateProps {
 
 interface DispatchProps {
   actions: {
-    updateAccount: (data: Partial<Linode.AccountSettings>) => void;
+    updateAccount: (data: Partial<AccountSettings>) => void;
     openImportDrawer: () => void;
     openBackupsDrawer: () => void;
   };
@@ -154,7 +155,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 ) => {
   return {
     actions: {
-      updateAccount: (data: Partial<Linode.AccountSettings>) =>
+      updateAccount: (data: Partial<AccountSettings>) =>
         dispatch(updateAccountSettings(data)),
       openBackupsDrawer: () => dispatch(handleOpen()),
       openImportDrawer: () => dispatch(openGroupDrawer())

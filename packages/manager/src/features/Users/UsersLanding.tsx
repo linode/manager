@@ -1,4 +1,9 @@
 import { map as mapPromise } from 'bluebird';
+import {
+  deleteUser,
+  getUsers,
+  User
+} from 'linode-js-sdk/lib/account'
 import * as memoize from 'memoizee';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
@@ -28,7 +33,6 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import { deleteUser, getUsers } from 'src/services/account';
 import { getGravatarUrl } from 'src/utilities/gravatar';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import CreateUserDrawer from './CreateUserDrawer';
@@ -88,7 +92,7 @@ interface Props {
 type CombinedProps = WithStyles<ClassNames> &
   WithSnackbarProps &
   Props &
-  PaginationProps<Linode.User> &
+  PaginationProps<User> &
   RouteComponentProps<{}>;
 
 class UsersLanding extends React.Component<CombinedProps, State> {
@@ -180,7 +184,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
     });
   };
 
-  renderUserRow = (user: Linode.User) => {
+  renderUserRow = (user: User) => {
     const { classes } = this.props;
     return (
       <TableRow
@@ -308,7 +312,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
   renderTableContent = (
     loading: boolean,
     error?: Linode.ApiFieldError[],
-    data?: Linode.User[]
+    data?: User[]
   ) => {
     if (loading) {
       return <TableRowLoading colSpan={4} />;

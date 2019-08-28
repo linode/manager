@@ -1,3 +1,4 @@
+import { Profile } from 'linode-js-sdk/lib/profile';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -35,13 +36,10 @@ interface State {
 }
 
 type CombinedProps = Props & {
-  profile?: Linode.Profile;
+  profile?: Profile;
 };
 
-const canEditLinode = (
-  profile: Linode.Profile | null,
-  linodeId: number
-): boolean => {
+const canEditLinode = (profile: Profile | null, linodeId: number): boolean => {
   return getPermissionsForLinode(profile, linodeId) === 'read_only';
 };
 export class RestoreToLinodeDrawer extends React.Component<

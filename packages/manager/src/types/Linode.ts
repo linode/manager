@@ -20,7 +20,7 @@ namespace Linode {
     tags: string[];
     /** Added by UI */
     recentEvent?: Linode.Event;
-    notifications?: Linode.Notification[];
+    notifications?: Notification[];
     notification?: string;
     mostRecentBackup: string | null;
   }
@@ -232,5 +232,30 @@ namespace Linode {
   export interface Stats {
     title: string;
     data: StatsData;
+  }
+
+  export type NotificationType =
+    | 'migration_scheduled'
+    | 'migration_pending'
+    | 'reboot_scheduled'
+    | 'outage'
+    | 'maintenance'
+    | 'payment_due'
+    | 'ticket_important'
+    | 'ticket_abuse'
+    | 'notice'
+    | 'promotion';
+
+  export type NotificationSeverity = 'minor' | 'major' | 'critical';
+
+  export interface Notification {
+    entity: null | Entity;
+    label: string;
+    message: string;
+    type: NotificationType;
+    severity: NotificationSeverity;
+    when: null | string;
+    until: null | string;
+    body: null | string;
   }
 }

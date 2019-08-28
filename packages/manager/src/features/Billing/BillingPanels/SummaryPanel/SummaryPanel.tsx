@@ -1,3 +1,4 @@
+import { Account } from 'linode-js-sdk/lib/account'
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -15,11 +16,11 @@ import ContactInfo from './PanelCards/ContactInformation';
 interface AccountContextProps {
   accountError?: Linode.ApiFieldError[];
   lastUpdated: number;
-  account?: Linode.Account;
+  account?: Account;
   accountLoading: boolean;
 }
 
-interface Props extends Pick<RouteComponentProps, 'history'> {}
+interface Props extends Pick<RouteComponentProps, 'history'> { }
 
 export type CombinedProps = AccountContextProps & Profile & Props;
 

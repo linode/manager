@@ -1,8 +1,9 @@
+import { Event } from 'linode-js-sdk/lib/account';
 import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';
 import inProgressEvents from './inProgressEvents';
 
-const findInProgressEvent = (e: Linode.Event[]) => (id: number) => {
+const findInProgressEvent = (e: Event[]) => (id: number) => {
   let idx = 0;
   const len = e.length;
   for (; idx < len; idx += 1) {
@@ -20,7 +21,7 @@ const findInProgressEvent = (e: Linode.Event[]) => (id: number) => {
 export default createSelector<
   ApplicationState,
   Linode.Linode[],
-  Linode.Event[],
+  Event[],
   Linode.Linode[]
 >(
   state => state.__resources.linodes.entities,
