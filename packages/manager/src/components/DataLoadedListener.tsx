@@ -114,7 +114,9 @@ const shouldMarkAppAsDone = (
     return true;
   }
 
-  if (pathname.match(/object/i) && !!bucketsLoadedOrErrorExists) {
+  // Object Storage endpoints will typically be a bit slower, so for these
+  // components, go ahead and render the app and reply on other loading states.
+  if (pathname.match(/object/i)) {
     return true;
   }
 
