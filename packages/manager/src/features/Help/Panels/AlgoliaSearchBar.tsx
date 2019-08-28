@@ -150,7 +150,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
       : '/support/search/';
   };
 
-  handleSelect = (selected: Item) => {
+  handleSelect = (selected: Item<string>) => {
     if (!selected) {
       return;
     }

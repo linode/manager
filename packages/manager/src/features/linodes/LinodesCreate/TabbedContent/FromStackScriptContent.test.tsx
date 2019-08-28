@@ -81,15 +81,13 @@ describe('FromImageContent', () => {
   });
 
   it('should not render SelectImage panel if no compatibleImages', () => {
-    expect(
-      component.find('WithTheme(WithRenderGuard(WithStyles(CreateFromImage)))')
-    ).toHaveLength(0);
+    expect(component.find('[data-qa-select-image-panel]')).toHaveLength(0);
   });
 
   it('should render SelectImage panel there are compatibleImages', () => {
-    expect(
-      componentWithUDFs.find('WithTheme(WithRenderGuard(CreateFromImage))')
-    ).toHaveLength(1);
+    expect(componentWithUDFs.find('[data-qa-select-image-panel]')).toHaveLength(
+      1
+    );
   });
 
   it('should render SelectRegion panel', () => {
