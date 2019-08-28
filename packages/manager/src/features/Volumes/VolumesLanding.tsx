@@ -302,7 +302,6 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       readOnly,
       removeBreadCrumb
     } = this.props;
-    // console.log(this.props.regionsLoading)
 
     if (volumesLoading) {
       return <Loading shouldDelay />;

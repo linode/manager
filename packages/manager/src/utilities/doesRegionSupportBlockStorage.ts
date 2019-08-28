@@ -8,7 +8,5 @@ export const doesRegionSupportBlockStorage = (
   if (!regionMetaData) {
     return false;
   }
-  return regionMetaData.capabilities.some(eachCapability => {
-    return !!eachCapability.match(/block/i);
-  });
+  return regionMetaData.capabilities.includes('Block Storage');
 };

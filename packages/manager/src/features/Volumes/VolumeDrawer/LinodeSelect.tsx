@@ -205,4 +205,6 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
   }
 }
 
-export default compose<CombinedProps, Props>(withRegions())(LinodeSelect);
+const enhanced = compose<CombinedProps, Props>(withRegions());
+
+export default enhanced(LinodeSelect);
