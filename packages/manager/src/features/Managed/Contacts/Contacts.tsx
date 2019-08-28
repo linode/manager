@@ -113,7 +113,7 @@ const Contacts: React.FC<CombinedProps> = props => {
 
   const contactDrawer = useOpenClose();
 
-  // Ref for handling "scrollTo" on Paginated components.
+  // Ref for handling "scrollTo" on Paginated component.
   const contactsTableRef = React.createRef();
 
   const groups = generateGroupsFromContacts(contacts);
