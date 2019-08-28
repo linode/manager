@@ -1,6 +1,6 @@
 import Settings from '@material-ui/icons/Settings';
 import * as classNames from 'classnames';
-import { AccountCapability, AccountSettings } from 'linode-js-sdk/lib/account';
+import { AccountCapability } from 'linode-js-sdk/lib/account';
 import { Profile } from 'linode-js-sdk/lib/profile';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -270,7 +270,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     // `account.capabilities`.
     if (
       prevProps.hasAccountAccess !== this.props.hasAccountAccess ||
-      prevProps.isManagedAccount !== this.props.isManagedAccount ||
       prevProps.accountLastUpdated !== this.props.accountLastUpdated
     ) {
       this.createMenuItems();
@@ -281,7 +280,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     const {
       hasAccountAccess,
       // isLongviewEnabled,
-      isManagedAccount,
       accountCapabilities
     } = this.props;
 
@@ -333,13 +331,14 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       });
     }
 
-    if (isManagedAccount) {
-      primaryLinks.push({
-        display: 'Managed',
-        href: '/managed',
-        key: 'managed'
-      });
-    }
+    // All users should now see Managed so they can sign up
+    // if (isManagedAccount) {
+    primaryLinks.push({
+      display: 'Managed',
+      href: '/managed',
+      key: 'managed'
+    });
+    // }
 
     // if(canAccessStackscripts){
     primaryLinks.push({
@@ -567,7 +566,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
 
 interface StateProps {
   hasAccountAccess: boolean;
-  isManagedAccount: boolean;
   // isLongviewEnabled: boolean;
   accountCapabilities: AccountCapability[];
   accountLastUpdated: number;
@@ -586,8 +584,6 @@ const userHasAccountAccess = (profile: Profile) => {
   return Boolean(grants.global.account_access);
 };
 
-const accountHasManaged = (account: AccountSettings) => account.managed;
-
 // const accountHasLongviewSubscription = (account: Linode.AccountSettings) => Boolean(account.longview_subscription);
 
 const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
@@ -598,7 +594,6 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
   if (!account || !profile) {
     return {
       hasAccountAccess: false,
-      isManagedAccount: false,
       // isLongviewEnabled: false,
       accountCapabilities: [],
       accountLastUpdated
@@ -607,7 +602,6 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
 
   return {
     hasAccountAccess: userHasAccountAccess(profile),
-    isManagedAccount: accountHasManaged(account),
     // isLongviewEnabled: accountHasLongviewSubscription(account),
     accountCapabilities: pathOr(
       [],
