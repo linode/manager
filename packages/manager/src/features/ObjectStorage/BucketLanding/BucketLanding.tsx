@@ -30,7 +30,7 @@ import useOpenClose from 'src/hooks/useOpenClose';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { sendDeleteBucketEvent } from 'src/utilities/ga';
 import { readableBytes } from 'src/utilities/unitConversions';
-import ListBuckets from './ListBuckets';
+import BucketTable from './BucketTable';
 
 type ClassNames = 'root' | 'confirmationCopy';
 
@@ -174,14 +174,14 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
       <Grid item xs={12}>
         <OrderBy data={bucketsData} order={'asc'} orderBy={'label'}>
           {({ data: orderedData, handleOrderChange, order, orderBy }) => {
-            const listBucketsProps = {
+            const bucketTableProps = {
               orderBy,
               order,
               handleOrderChange,
               handleClickRemove,
               data: orderedData
             };
-            return <ListBuckets {...listBucketsProps} />;
+            return <BucketTable {...bucketTableProps} />;
           }}
         </OrderBy>
       </Grid>
