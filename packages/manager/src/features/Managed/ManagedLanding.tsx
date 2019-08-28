@@ -100,7 +100,7 @@ export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
   };
 
   const flags = useFlags();
-  const isManaged = false;
+  const isManaged = true;
 
   /**
    * Temporary logic since we currently have 3 states:

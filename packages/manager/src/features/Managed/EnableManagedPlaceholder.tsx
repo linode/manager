@@ -5,10 +5,16 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import Placeholder from 'src/components/Placeholder';
+import withLinodes from 'src/containers/withLinodes.container';
+import { pluralize } from 'src/utilities/pluralize';
 
-// import { enableManaged } from 'src/services/managed';
+import { enableManaged } from 'src/services/managed';
 
-const ManagedPlaceholder: React.FC<{}> = props => {
+export interface StateProps {
+  linodeCount: number;
+}
+
+const ManagedPlaceholder: React.FC<StateProps> = props => {
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
@@ -18,9 +24,16 @@ const ManagedPlaceholder: React.FC<{}> = props => {
     setError(undefined);
   };
 
+  const handleError = (e: Linode.ApiFieldError[]) => {
+    setError(e[0].reason);
+    setLoading(false);
+  };
+
   const handleSubmit = () => {
     setLoading(true);
-    setTimeout(() => setLoading(false), 2000);
+    enableManaged()
+      .then(handleClose)
+      .catch(handleError);
   };
 
   const actions = () => (
@@ -55,16 +68,20 @@ const ManagedPlaceholder: React.FC<{}> = props => {
         open={isOpen}
         error={error}
         onClose={() => handleClose()}
-        title="Are you sure?"
+        title="Confirm Managed Enrollment"
         actions={actions}
       >
         <Typography>
           The Managed service is billed at $100 monthly per Linode on your
-          account. You currently have 4 Linodes for a cost of $400/month.
+          account. You currently have{' '}
+          {pluralize('Linode', 'Linodes', props.linodeCount)} for a cost of $
+          {`${props.linodeCount * 100}/month`}.
         </Typography>
       </ConfirmationDialog>
     </>
   );
 };
 
-export default ManagedPlaceholder;
+export default withLinodes((ownProps, entities, loading, error) => ({
+  linodeCount: entities.length
+}))(ManagedPlaceholder);
