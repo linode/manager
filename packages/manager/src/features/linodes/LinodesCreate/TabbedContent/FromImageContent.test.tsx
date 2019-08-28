@@ -40,7 +40,7 @@ describe('FromImageContent', () => {
     <FromImageContent {...mockProps} />
   );
 
-  it('should render SelectImage panel', () => {
+  it.skip('should render SelectImage panel', () => {
     expect(component.find('[data-qa-select-image-panel]')).toHaveLength(1);
   });
 
