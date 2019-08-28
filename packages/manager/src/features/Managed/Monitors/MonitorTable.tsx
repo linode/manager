@@ -118,9 +118,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
     const { createServiceMonitor, updateServiceMonitor } = props;
     const _success = () => {
       setSubmitting(false);
-      setDrawerOpen(false);
-      setDrawerMode('create');
-      setEditID(0);
+      handleDrawerClose();
     };
 
     const _error = (e: Linode.ApiFieldError[]) => {
@@ -134,8 +132,6 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
       handleFieldErrors(setErrors, e);
       handleGeneralErrors(mapErrorToStatus, e, defaultMessage);
       setSubmitting(false);
-      setDrawerMode('create');
-      setEditID(0);
     };
 
     // Clear drawer error state
