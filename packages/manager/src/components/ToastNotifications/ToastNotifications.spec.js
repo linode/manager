@@ -51,7 +51,7 @@ describe('Toast Notification Suite', () => {
     $(toast).waitForDisplayed(constants.wait.normal, true);
   });
 
-  it('Toast notifications have correct color', () => {
+  xit('Toast notifications have correct color', () => {
     //default
     checkToastColor('default', 'rgba(0,0,0,0)');
     //success
