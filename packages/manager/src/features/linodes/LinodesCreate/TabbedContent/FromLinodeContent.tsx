@@ -176,6 +176,7 @@ export class FromLinodeContent extends React.PureComponent<CombinedProps> {
                 changePrivateIP={this.props.togglePrivateIPEnabled}
                 updateFor={[privateIPEnabled, backupsEnabled, selectedTypeID]}
                 disabled={userCannotCreateLinode}
+                hidePrivateIP
               />
             </Grid>
             <Grid item className={`${classes.sidebar} mlSidebar`}>
