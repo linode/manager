@@ -7,8 +7,20 @@
     "outDir": "./lib",
     "esModuleInterop": true,
     "moduleResolution": "node",
-    "strict": true
+    "strict": true,
+    "rootDir": "src",
+    "baseUrl": ".",
+    "paths": {
+      "src/*": [
+        "src/*"
+      ]
+    }
   },
-  "include": ["src"],
-  "exclude": ["node_modules/**/*", "**/__tests__/*"]
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules/**/*",
+    "**/__tests__/*"
+  ]
 }
