@@ -1,23 +1,51 @@
+import { AccountSettings } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import ManagedIcon from 'src/assets/icons/managed.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
+import ExternalLink from 'src/components/ExternalLink';
 import Placeholder from 'src/components/Placeholder';
 import withLinodes from 'src/containers/withLinodes.container';
 import { pluralize } from 'src/utilities/pluralize';
 
 import { enableManaged } from 'src/services/managed';
 
+const copy = (
+  <>
+    <Typography>
+      Let us worry about your infrastructure, so you can get back to worrying
+      about your business. Linode Managed helps keep your systems up and running
+      with our team of Linode experts responding to monitoring events, so you
+      can sleep well. Linode Managed includes 24/7 monitoring and incident
+      responses, backups and Longview Pro. +$100/mo per Linode.{` `}
+    </Typography>
+    <Typography>
+      <ExternalLink
+        link="https://linode.com/managed"
+        text="Learn more about Managed."
+      />
+    </Typography>
+  </>
+);
+
 export interface StateProps {
   linodeCount: number;
 }
 
-const ManagedPlaceholder: React.FC<StateProps> = props => {
+export interface Props {
+  update: (data: Partial<AccountSettings>) => void;
+}
+
+export type CombinedProps = Props & StateProps;
+
+const ManagedPlaceholder: React.FC<CombinedProps> = props => {
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
   const [isLoading, setLoading] = React.useState<boolean>(false);
+
+  const { update } = props;
 
   const handleClose = () => {
     setOpen(false);
@@ -32,7 +60,10 @@ const ManagedPlaceholder: React.FC<StateProps> = props => {
   const handleSubmit = () => {
     setLoading(true);
     enableManaged()
-      .then(handleClose)
+      .then(() => {
+        handleClose();
+        update({ managed: true });
+      })
       .catch(handleError);
   };
 
@@ -58,10 +89,10 @@ const ManagedPlaceholder: React.FC<StateProps> = props => {
       <Placeholder
         icon={ManagedIcon}
         title="Linode Managed"
-        copy={`Linode Managed is an amazing feature.`}
+        copy={copy}
         buttonProps={{
           onClick: () => setOpen(true),
-          children: 'Add Managed to your Linode account.'
+          children: 'Upgrade to Managed now!'
         }}
       />
       <ConfirmationDialog

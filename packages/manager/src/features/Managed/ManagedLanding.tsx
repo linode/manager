@@ -1,3 +1,4 @@
+import { AccountSettings } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import {
   matchPath,
@@ -8,6 +9,7 @@ import {
 } from 'react-router-dom';
 import { compose } from 'recompose';
 import Breadcrumb from 'src/components/Breadcrumb';
+import CircleProgress from 'src/components/CircleProgress';
 import AppBar from 'src/components/core/AppBar';
 import Box from 'src/components/core/Box';
 import Tab from 'src/components/core/Tab';
@@ -16,8 +18,12 @@ import DefaultLoader from 'src/components/DefaultLoader';
 import setDocs from 'src/components/DocsSidebar/setDocs';
 import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
+import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import TabLink from 'src/components/TabLink';
+import withAccountSettings, {
+  DispatchProps as SettingsDispatchProps
+} from 'src/containers/accountSettings.container';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import useFlags from 'src/hooks/useFlags';
 import { getCredentials, getManagedContacts } from 'src/services/managed';
@@ -43,7 +49,16 @@ const Contacts = DefaultLoader({
   loader: () => import('./Contacts')
 });
 
-export type CombinedProps = RouteComponentProps<{}>;
+export interface StateProps {
+  accountSettings: AccountSettings;
+  accountSettingsLoading: boolean;
+  accountSettingsLastUpdated: number;
+  accountSettingsError?: Linode.ApiFieldError[];
+}
+
+export type CombinedProps = StateProps &
+  SettingsDispatchProps &
+  RouteComponentProps<{}>;
 
 const docs: Linode.Doc[] = [
   {
@@ -64,6 +79,13 @@ const getAllContacts = () =>
   getAll<Linode.ManagedContact>(getManagedContacts)().then(res => res.data);
 
 export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
+  const {
+    accountSettings,
+    accountSettingsError,
+    accountSettingsLastUpdated,
+    accountSettingsLoading
+  } = props;
+
   const credentials = useAPIRequest<Linode.ManagedCredential[]>(
     getAllCredentials,
     []
@@ -100,7 +122,7 @@ export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
   };
 
   const flags = useFlags();
-  const isManaged = true;
+  const isManaged = accountSettings && accountSettings.managed;
 
   /**
    * Temporary logic since we currently have 3 states:
@@ -110,11 +132,22 @@ export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
    */
 
   const renderContent = () => {
+    // Loading and error states
+    if (accountSettingsLoading && accountSettingsLastUpdated === 0) {
+      return <CircleProgress />;
+    }
+
+    if (accountSettingsError) {
+      return <ErrorState errorText={accountSettingsError[0].reason} />;
+    }
+
     if (!flags.managed) {
       return <ManagedPlaceholder />;
     } else if (flags.managed && !isManaged) {
       // Eventually we can rename this to ManagedPlaceholder and delete the existing one
-      return <EnableManagedPlaceholder />;
+      return (
+        <EnableManagedPlaceholder update={props.updateAccountSettingsInStore} />
+      );
     }
     return (
       <React.Fragment>
@@ -220,6 +253,23 @@ export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
   );
 };
 
-const enhanced = compose<CombinedProps, {}>(setDocs(docs));
+const enhanced = compose<CombinedProps, {}>(
+  setDocs(docs),
+  withAccountSettings(
+    (
+      ownProps,
+      accountSettingsLoading,
+      accountSettingsLastUpdated,
+      accountSettingsError,
+      accountSettings
+    ) => ({
+      ...ownProps,
+      accountSettings,
+      accountSettingsLoading,
+      accountSettingsError,
+      accountSettingsLastUpdated
+    })
+  )
+);
 
 export default enhanced(ManagedLanding);

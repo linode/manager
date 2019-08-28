@@ -1,4 +1,6 @@
-import { AccountSettings } from 'linode-js-sdk/lib/account'
+import produce from 'immer';
+import { AccountSettings } from 'linode-js-sdk/lib/account';
+import { isType } from 'typescript-fsa';
 import { RequestableData } from '../types';
 import {
   Action,
@@ -6,7 +8,8 @@ import {
   LOAD,
   SUCCESS,
   UPDATE,
-  UPDATE_ERROR
+  UPDATE_ERROR,
+  updateSettingsInStore
 } from './accountSettings.actions';
 
 export type State = RequestableData<AccountSettings> & {
@@ -23,7 +26,15 @@ export const defaultState: State = {
 };
 
 // REDUCER
+// @todo Update this to current patterns.
 export default (state: State = defaultState, action: Action) => {
+  if (isType(action, updateSettingsInStore)) {
+    const settings = action.payload;
+    return produce(state, draft => {
+      draft.data = { ...state.data!, ...settings }; // data shouldn't be initialized as undefined...
+    });
+  }
+
   switch (action.type) {
     case LOAD:
       return { ...state, loading: true };
