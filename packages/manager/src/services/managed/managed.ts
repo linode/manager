@@ -127,14 +127,17 @@ export const createServiceMonitor = (data: ManagedServicePayload) =>
 /**
  * updateServiceMonitor
  *
- * Creates a Managed Service Monitor
+ * Update a Managed Service Monitor
  */
-export const updateServiceMonitor = (monitorID: number, data: ManagedServicePayload) =>
-Request<Linode.ManagedServiceMonitor>(
-  setMethod('PUT'),
-  setURL(`${API_ROOT}/managed/services/${monitorID}`),
-  setData(data, createServiceMonitorSchema)
-).then(response => response.data);
+export const updateServiceMonitor = (
+  monitorID: number,
+  data: Partial<ManagedServicePayload>
+) =>
+  Request<Linode.ManagedServiceMonitor>(
+    setMethod('PUT'),
+    setURL(`${API_ROOT}/managed/services/${monitorID}`),
+    setData(data, createServiceMonitorSchema)
+  ).then(response => response.data);
 
 /**
  * getCredentials

@@ -1,7 +1,0 @@
-diff a/packages/manager/src/features/Managed/MonitorDrawer.tsx b/packages/manager/src/features/Managed/MonitorDrawer.tsx	(rejected hunks)
-@@ -100 +100,4 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
--  const _monitor = pickBy((val, key) => val !== null && Object.keys(emptyInitialValues).includes(key), monitor);
-+  const _monitor = pickBy(
-+    (val, key) => val !== null && Object.keys(emptyInitialValues).includes(key),
-+    monitor
-+  );
