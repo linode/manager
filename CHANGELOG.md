@@ -9,8 +9,6 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Added:
 - Inter-datacenter Migrations for Linodes
 - Warning text to detach volume dialog
-- Expiring credits details on Billing and Dashboard pages
-- Managed Services dashboard widget
 - Ability to add, edit, and delete Managed credentials
 - Ability to add, edit, and delete Managed contacts
 - Ability to add, update, and delete Managed service monitors
