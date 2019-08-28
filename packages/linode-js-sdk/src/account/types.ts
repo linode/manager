@@ -144,7 +144,8 @@ export type NotificationType =
   | 'payment_due'
   | 'ticket_important'
   | 'ticket_abuse'
-  | 'notice';
+  | 'notice'
+  | 'promotion';
 
 export type NotificationSeverity = 'minor' | 'major' | 'critical';
 

@@ -1,4 +1,4 @@
-import { ActivePromotion } from 'linode-js-sdk/lib/account';
+import { Notification } from 'linode-js-sdk/lib/account';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -49,12 +49,11 @@ const styles = (theme: Theme) =>
 
 interface StateProps {
   accountBackups: boolean;
-  activePromotions: ActivePromotion[];
   linodesWithoutBackups: Linode.Linode[];
   managed: boolean;
   backupError?: Error;
   entitiesWithGroupsToImport: GroupedEntitiesForImport;
-  notifications: Linode.Notification[];
+  notifications: Notification[];
   userTimezone: string;
   userTimezoneLoading: boolean;
   userTimezoneError?: Linode.ApiFieldError[];

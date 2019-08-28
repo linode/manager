@@ -243,7 +243,8 @@ namespace Linode {
     | 'payment_due'
     | 'ticket_important'
     | 'ticket_abuse'
-    | 'notice';
+    | 'notice'
+    | 'promotion';
 
   export type NotificationSeverity = 'minor' | 'major' | 'critical';
 
