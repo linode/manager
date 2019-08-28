@@ -1,6 +1,4 @@
 import * as React from 'react';
-// @todo: uncomment this Link import when a bucket landing page exists
-// import { Link } from 'react-router-dom';
 import {
   createStyles,
   Theme,
@@ -56,12 +54,11 @@ export const BucketTableRow: React.StatelessComponent<
   return (
     <TableRow
       key={label}
+      rowLink={`/object-storage/buckets/${region}/${label}`}
       data-qa-bucket-cell={label}
       className={`${classes.bucketRow} ${'fade-in-table'}`}
     >
       <TableCell parentColumn="Name">
-        {/* @todo: uncomment this <Link/> when a bucket landing page exists*/}
-        {/* <Link to={`/buckets/${label}`}> */}
         <Grid container alignItems="center">
           <Grid item>
             <EntityIcon variant="bucket" />
@@ -77,8 +74,6 @@ export const BucketTableRow: React.StatelessComponent<
             </Typography>
           </Grid>
         </Grid>
-        {/* @todo: uncomment this <Link/> when a bucket landing page exists*/}
-        {/* </Link> */}
       </TableCell>
       <TableCell parentColumn="Objects">
         <Grid>
