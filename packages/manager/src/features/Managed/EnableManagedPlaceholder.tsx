@@ -103,10 +103,10 @@ const ManagedPlaceholder: React.FC<CombinedProps> = props => {
         actions={actions}
       >
         <Typography>
-          The Managed service is billed at $100 monthly per Linode on your
-          account. You currently have{' '}
-          {pluralize('Linode', 'Linodes', props.linodeCount)} for a cost of $
-          {`${props.linodeCount * 100}/month`}.
+          Managed is billed at $100 monthly per Linode on your account. You
+          currently have{' '}
+          <strong>{pluralize('Linode', 'Linodes', props.linodeCount)}</strong>{' '}
+          for a cost of <strong>${`${props.linodeCount * 100}/month`}</strong>.
         </Typography>
       </ConfirmationDialog>
     </>

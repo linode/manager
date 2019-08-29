@@ -15,6 +15,7 @@ interface Props {
   nodeBalancersLoadingOrErrorExists: boolean;
   bucketsLoadingOrErrorExists: boolean;
   domainsLoadingOrErrorExists: boolean;
+  accountSettingsLoadingOrErrorExists: boolean;
   markAppAsLoaded: () => void;
   appIsLoaded: boolean;
   flagsHaveLoaded: boolean;
@@ -31,6 +32,7 @@ const DataLoadedListener: React.FC<Props> = props => {
         props.nodeBalancersLoadingOrErrorExists,
         props.bucketsLoadingOrErrorExists,
         props.domainsLoadingOrErrorExists,
+        props.accountSettingsLoadingOrErrorExists,
         props.flagsHaveLoaded
       ) &&
       !props.appIsLoaded
@@ -52,6 +54,7 @@ const shouldMarkAppAsDone = (
   nodeBalancersLoadingOrErrorExists: boolean,
   bucketsLoadingOrErrorExists: boolean,
   domainsLoadingOrErrorExists: boolean,
+  accountSettingsLoadingOrErrorExists: boolean,
   flagsHaveLoaded: boolean
 ): boolean => {
   const pathname = window.location.pathname;
@@ -73,7 +76,8 @@ const shouldMarkAppAsDone = (
       'nodebalancer',
       'object',
       'profile',
-      'account'
+      'account',
+      'managed'
     ].every(eachStr => {
       return !pathname.match(new RegExp(eachStr, 'i'));
     })
@@ -119,6 +123,10 @@ const shouldMarkAppAsDone = (
   }
 
   if (pathname.match(/account/i) && !!accountLoadingOrErrorExists) {
+    return true;
+  }
+
+  if (pathname.match(/managed/i) && !!accountSettingsLoadingOrErrorExists) {
     return true;
   }
 
