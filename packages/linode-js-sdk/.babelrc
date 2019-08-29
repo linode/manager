@@ -15,6 +15,7 @@
 				"extensions": [
 					".ts",
 					".tsx",
+					"d.ts",
 					".js",
 					".jsx",
 					".es",
