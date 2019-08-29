@@ -89,6 +89,7 @@ interface Props {
   changeBackups: () => void;
   changePrivateIP: () => void;
   disabled?: boolean;
+  hidePrivateIP?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -159,27 +160,34 @@ class AddonsPanel extends React.Component<CombinedProps> {
               </Typography>
             </Grid>
           </Grid>
-          <Grid container className={classes.divider}>
-            <Grid item xs={12}>
-              <Divider />
-            </Grid>
-          </Grid>
-          <Grid container>
-            <Grid item xs={12} className={classes.lastItem}>
-              <FormControlLabel
-                className={classes.label}
-                control={
-                  <CheckBox
-                    checked={this.props.privateIP}
-                    onChange={() => changePrivateIP()}
-                    data-qa-check-private-ip
-                    disabled={disabled}
+          {/** /v4/linodes/instances/clone does *not* support the private IP flag */
+          this.props.hidePrivateIP ? (
+            <React.Fragment />
+          ) : (
+            <React.Fragment>
+              <Grid container className={classes.divider}>
+                <Grid item xs={12}>
+                  <Divider />
+                </Grid>
+              </Grid>
+              <Grid container>
+                <Grid item xs={12} className={classes.lastItem}>
+                  <FormControlLabel
+                    className={classes.label}
+                    control={
+                      <CheckBox
+                        checked={this.props.privateIP}
+                        onChange={() => changePrivateIP()}
+                        data-qa-check-private-ip
+                        disabled={disabled}
+                      />
+                    }
+                    label="Private IP"
                   />
-                }
-                label="Private IP"
-              />
-            </Grid>
-          </Grid>
+                </Grid>
+              </Grid>
+            </React.Fragment>
+          )}
         </div>
       </Paper>
     );
