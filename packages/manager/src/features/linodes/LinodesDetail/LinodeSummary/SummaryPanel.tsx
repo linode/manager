@@ -1,3 +1,4 @@
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { compose } from 'recompose';
 import BackupStatus from 'src/components/BackupStatus';
@@ -154,7 +155,7 @@ interface LinodeContextProps {
   linodeRegion: string;
   linodeTags: string[];
   mostRecentBackup: string | null;
-  linodeVolumes: Linode.Volume[];
+  linodeVolumes: Volume[];
   linodeVolumesError?: Linode.ApiFieldError[];
   backupsEnabled: boolean;
   readOnly: boolean;

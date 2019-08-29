@@ -237,8 +237,7 @@ export const dark = (options: ThemeOverrides) =>
             minWidth: 100,
             '& svg': {
               width: 22,
-              height: 22,
-              animation: '$rotate 2s linear infinite'
+              height: 22
             }
           }
         }
@@ -420,90 +419,7 @@ export const dark = (options: ThemeOverrides) =>
       },
       MuiPaper: {
         root: {
-          backgroundColor: '#32363c',
-          '& pre': {
-            backgroundColor: '#181C21',
-            padding: '8px',
-            fontSize: '1rem'
-          },
-          '& span.hljs-comment, & span.hljs-quote': {
-            color: '#655f6d'
-          },
-          [`
-            & span.hljs-variable, 
-            & span.hljs-template-variable,
-            & span.hljs-attribute,
-            & span.hljs-tag,
-            & span.hljs-name,
-            & span.hljs-regexp
-            & span.hljs-link,
-            & span.hljs-selector-id,
-            & span.hljs-selector-class
-          `]: {
-            color: '#be4678'
-          },
-          [`
-            & span.hljs-meta,
-            & span.hljs-built_in,
-            & span.hljs-butonin-name,
-            & span.hljs-literal,
-            & span.hljs-type,
-            & span.hljs-params
-          `]: {
-            color: '#aa573c'
-          },
-          [`
-          & span.hljs-attr
-          `]: {
-            color: 'white'
-          },
-          [`
-            & span.hljs-number,
-            & span.hljs-string,
-            & span.hljs-symbol,
-            & span.hljs-bullet
-          `]: {
-            color: '#25ffff'
-          },
-          [`
-            & span.hljs-title,
-            & span.hljs-section
-          `]: {
-            color: '#576ddb'
-          },
-          [`
-            & span.hljs-keyword,
-            & span.hljs-selector-tag
-          `]: {
-            color: '#8c73af'
-          },
-          [`
-            & span.hljs-deletion,
-            & span.hljs-addition
-          `]: {
-            color: '#19171c',
-            display: 'inline-block',
-            width: '100%'
-          },
-          '& span.hljs-deletion': {
-            backgroundColor: '#be4678'
-          },
-          '& span.hljs-addition': {
-            backgroundColor: '#2a9292'
-          },
-          '& span.hljs': {
-            display: 'block',
-            overflowX: 'auto',
-            background: '#efecf4',
-            color: `#585260`,
-            padding: '0.5em'
-          },
-          '& span.hljs-emphasis': {
-            fontStyle: 'italic'
-          },
-          '& span.hljs-strong': {
-            fontWeight: 'bold'
-          }
+          backgroundColor: '#32363c'
         }
       },
       MuiPopover: {

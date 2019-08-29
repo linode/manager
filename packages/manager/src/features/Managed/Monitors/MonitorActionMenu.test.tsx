@@ -6,7 +6,7 @@ import {
   MonitorActionMenu as ActionMenu
 } from './MonitorActionMenu';
 
-import { wrapWithTheme } from 'src/utilities/testHelpers';
+import { includesActions, wrapWithTheme } from 'src/utilities/testHelpers';
 
 jest.mock('src/components/ActionMenu/ActionMenu');
 
@@ -14,8 +14,15 @@ const props: CombinedProps = {
   enqueueSnackbar: jest.fn(),
   closeSnackbar: jest.fn(),
   status: 'disabled',
+  label: 'this-monitor',
+  openDialog: jest.fn(),
   monitorID: 1,
+  openDrawer: jest.fn(),
+  updateServiceMonitor: jest.fn(),
+  createServiceMonitor: jest.fn(),
   requestManagedServices: jest.fn(),
+  enableServiceMonitor: jest.fn(),
+  deleteServiceMonitor: jest.fn(),
   disableServiceMonitor: jest.fn(),
   ...reactRouterProps
 };
@@ -23,6 +30,13 @@ const props: CombinedProps = {
 afterEach(cleanup);
 
 describe('Volume action menu', () => {
+  it('should include basic Monitor actions', () => {
+    const { queryByText } = render(
+      wrapWithTheme(<ActionMenu {...props} status={'disabled'} />)
+    );
+    includesActions(['Delete'], queryByText);
+  });
+
   it('should include Enable if the monitor is disabled', () => {
     const { queryByText } = render(
       wrapWithTheme(<ActionMenu {...props} status={'disabled'} />)

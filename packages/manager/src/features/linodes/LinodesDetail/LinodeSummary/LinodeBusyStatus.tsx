@@ -1,4 +1,4 @@
-import { head } from 'ramda';
+import { Event } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
@@ -29,19 +29,27 @@ const styles = (theme: Theme) =>
 
 interface LinodeDetailContextProps {
   status: string;
-  recentEvent?: Linode.Event;
+  linodeEvents?: Event[];
 }
 
 type CombinedProps = LinodeDetailContextProps & WithStyles<ClassNames>;
 
 const LinodeBusyStatus: React.StatelessComponent<CombinedProps> = props => {
-  const { classes, status, recentEvent } = props;
-  const value = (recentEvent && recentEvent.percent_complete) || 1;
+  const { classes, status, linodeEvents } = props;
+
+  const firstEventWithProgress = (linodeEvents || []).find(
+    eachEvent => typeof eachEvent.percent_complete === 'number'
+  );
+
+  const value = firstEventWithProgress
+    ? (firstEventWithProgress.percent_complete as number)
+    : 1;
+
   return (
     <Paper className={classes.root}>
       <div className={classes.status}>
         <Typography>
-          {transitionText(status, recentEvent)}: {value}%
+          {transitionText(status, firstEventWithProgress)}: {value}%
         </Typography>
       </div>
       <LinearProgress value={value} />
@@ -55,7 +63,7 @@ const enhanced = compose<CombinedProps, {}>(
   styled,
   withLinodeDetailContext(({ linode }) => ({
     status: linode.status,
-    recentEvent: head(linode._events)
+    linodeEvents: linode._events
   }))
 );
 

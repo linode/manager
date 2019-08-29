@@ -1,175 +1,103 @@
+import { AccountSettings } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
-import {
-  matchPath,
-  Redirect,
-  Route,
-  RouteComponentProps,
-  Switch,
-  withRouter
-} from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import Breadcrumb from 'src/components/Breadcrumb';
-import AppBar from 'src/components/core/AppBar';
-import Box from 'src/components/core/Box';
-import Tab from 'src/components/core/Tab';
-import Tabs from 'src/components/core/Tabs';
-import DefaultLoader from 'src/components/DefaultLoader';
+import CircleProgress from 'src/components/CircleProgress';
 import setDocs from 'src/components/DocsSidebar/setDocs';
-import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
-import TabLink from 'src/components/TabLink';
-import withFeatureFlagConsumer, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container';
+import ErrorState from 'src/components/ErrorState';
+import withAccountSettings, {
+  DispatchProps as SettingsDispatchProps
+} from 'src/containers/accountSettings.container';
+import useFlags from 'src/hooks/useFlags';
+import EnableManagedPlaceholder from './EnableManagedPlaceholder';
+import ManagedLandingContent from './ManagedLandingContent';
 import ManagedPlaceholder from './ManagedPlaceholder';
-import SupportWidget from './SupportWidget';
 
-const Monitors = DefaultLoader({
-  loader: () => import('./Monitors')
-});
-
-const SSHAccess = DefaultLoader({
-  loader: () => import('./SSHAccess')
-});
-
-const Credentials = DefaultLoader({
-  loader: () => import('./Credentials')
-});
-const Contacts = DefaultLoader({
-  loader: () => import('./Contacts')
-});
-
-export type CombinedProps = RouteComponentProps<{}> & FeatureFlagConsumerProps;
-
-export class ManagedLanding extends React.Component<CombinedProps, {}> {
-  static docs: Linode.Doc[] = [
-    {
-      title: 'Linode Managed',
-      src: 'https://linode.com/docs/platform/linode-managed/',
-      body: `How to configure service monitoring with Linode Managed.`
-    }
-  ];
-
-  tabs = [
-    /* NB: These must correspond to the routes inside the Switch */
-    { title: 'Monitors', routeName: `${this.props.match.url}/monitors` },
-    { title: 'SSH Access', routeName: `${this.props.match.url}/ssh-access` },
-    { title: 'Credentials', routeName: `${this.props.match.url}/credentials` },
-    { title: 'Contacts', routeName: `${this.props.match.url}/contacts` }
-  ];
-
-  handleTabChange = (
-    event: React.ChangeEvent<HTMLDivElement>,
-    value: number
-  ) => {
-    const { history } = this.props;
-    const routeName = this.tabs[value].routeName;
-    history.push(`${routeName}`);
-  };
-
-  matches = (p: string) => {
-    return Boolean(matchPath(p, { path: this.props.location.pathname }));
-  };
-
-  render() {
-    return (
-      <React.Fragment>
-        <DocumentTitleSegment segment="Managed" />
-        {/* If the feature isn't enabled, just display the placeholder */}
-        {!this.props.flags.managed ? (
-          <ManagedPlaceholder />
-        ) : (
-          <React.Fragment>
-            <Box
-              display="flex"
-              flexDirection="row"
-              justifyContent="space-between"
-            >
-              <Breadcrumb
-                pathname={this.props.location.pathname}
-                labelTitle="Managed"
-                removeCrumbX={1}
-              />
-              <Grid
-                container
-                item
-                direction="row"
-                justify="flex-end"
-                alignItems="center"
-                xs={8}
-              >
-                <Grid item>
-                  <SupportWidget />
-                </Grid>
-                <Grid item>
-                  <DocumentationButton href="https://www.linode.com/docs/platform/linode-managed/" />
-                </Grid>
-              </Grid>
-            </Box>
-            <AppBar position="static" color="default">
-              <Tabs
-                value={this.tabs.findIndex(tab => this.matches(tab.routeName))}
-                onChange={this.handleTabChange}
-                indicatorColor="primary"
-                textColor="primary"
-                variant="scrollable"
-                scrollButtons="on"
-              >
-                {this.tabs.map(tab => (
-                  <Tab
-                    key={tab.title}
-                    data-qa-tab={tab.title}
-                    component={React.forwardRef((forwardedProps, ref) => (
-                      <TabLink
-                        to={tab.routeName}
-                        title={tab.title}
-                        {...forwardedProps}
-                        ref={ref}
-                      />
-                    ))}
-                  />
-                ))}
-              </Tabs>
-            </AppBar>
-            <Switch>
-              <Route
-                exact
-                strict
-                path={`${this.props.match.path}/monitors`}
-                component={Monitors}
-              />
-              <Route
-                exact
-                strict
-                path={`${this.props.match.path}/ssh-access`}
-                component={SSHAccess}
-              />
-              <Route
-                exact
-                strict
-                path={`${this.props.match.path}/credentials`}
-                component={Credentials}
-              />
-              <Route
-                exact
-                strict
-                path={`${this.props.match.path}/contacts`}
-                component={Contacts}
-              />
-              <Redirect to={`${this.props.match.path}/monitors`} />
-            </Switch>
-          </React.Fragment>
-        )}
-      </React.Fragment>
-    );
-  }
+export interface StateProps {
+  accountSettings: AccountSettings;
+  accountSettingsLoading: boolean;
+  accountSettingsLastUpdated: number;
+  accountSettingsError?: Linode.ApiFieldError[];
 }
 
-const enhanced = compose<{}, {}>(
-  setDocs(ManagedLanding.docs),
-  withFeatureFlagConsumer,
-  withRouter
+export type CombinedProps = StateProps &
+  SettingsDispatchProps &
+  RouteComponentProps<{}>;
+
+const docs: Linode.Doc[] = [
+  {
+    title: 'Linode Managed',
+    src: 'https://linode.com/docs/platform/linode-managed/',
+    body: `How to configure service monitoring with Linode Managed.`
+  }
+];
+
+export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
+  const {
+    accountSettings,
+    accountSettingsError,
+    accountSettingsLastUpdated,
+    accountSettingsLoading,
+    ...routeComponentProps
+  } = props;
+
+  const flags = useFlags();
+  const isManaged = accountSettings && accountSettings.managed;
+
+  /**
+   * Temporary logic since we currently have 3 states:
+   * 1. User is Managed but feature flag is off -> show existing placeholder to point them to Classic
+   * 2. User is not Managed -> show new placeholder to enable Managed
+   * 3. User is Managed & flag is on -> show ManagedLanding page
+   */
+
+  const renderContent = () => {
+    // Loading and error states
+    if (accountSettingsLoading && accountSettingsLastUpdated === 0) {
+      return <CircleProgress />;
+    }
+
+    if (accountSettingsError) {
+      return <ErrorState errorText={accountSettingsError[0].reason} />;
+    }
+
+    if (!flags.managed) {
+      return <ManagedPlaceholder />;
+    } else if (flags.managed && !isManaged) {
+      // Eventually we can rename this to ManagedPlaceholder and delete the existing one
+      return (
+        <EnableManagedPlaceholder update={props.updateAccountSettingsInStore} />
+      );
+    }
+    return <ManagedLandingContent {...routeComponentProps} />;
+  };
+
+  return (
+    <React.Fragment>
+      <DocumentTitleSegment segment="Managed" />
+      {renderContent()}
+    </React.Fragment>
+  );
+};
+
+const enhanced = compose<CombinedProps, {}>(
+  setDocs(docs),
+  withAccountSettings(
+    (
+      ownProps,
+      accountSettingsLoading,
+      accountSettingsLastUpdated,
+      accountSettingsError,
+      accountSettings
+    ) => ({
+      ...ownProps,
+      accountSettings,
+      accountSettingsLoading,
+      accountSettingsError,
+      accountSettingsLastUpdated
+    })
+  )
 );
 
 export default enhanced(ManagedLanding);

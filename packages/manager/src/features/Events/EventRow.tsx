@@ -1,3 +1,4 @@
+import { Event } from 'linode-js-sdk/lib/account';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -31,7 +32,7 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface ExtendedEvent extends Linode.Event {
+interface ExtendedEvent extends Event {
   _deleted?: string;
 }
 

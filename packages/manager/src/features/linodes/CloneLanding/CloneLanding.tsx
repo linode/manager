@@ -1,3 +1,4 @@
+import { Event } from 'linode-js-sdk/lib/account';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -287,7 +288,9 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
 
   const errorMap = getErrorMap(['disk_size'], state.errors);
 
-  const recentEvent = linodeEvents[0];
+  const firstEventWithProgress = (linodeEvents || []).find(
+    eachEvent => typeof eachEvent.percent_complete === 'number'
+  );
 
   const selectedLinode = linodesData.find(
     eachLinode => eachLinode.id === state.selectedLinodeId
@@ -318,9 +321,11 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
           onEditHandlers: undefined
         }}
       />
-      {linodeInTransition(linodeStatus, recentEvent) && <LinodeBusyStatus />}
+      {linodeInTransition(linodeStatus, firstEventWithProgress) && (
+        <LinodeBusyStatus />
+      )}
       <Grid container className={classes.root}>
-        <Grid item xs={12} md={9}>
+        <Grid item xs={12} md={8} lg={9}>
           <Paper className={classes.paper}>
             <Typography
               role="header"
@@ -391,7 +396,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
             />
           </Paper>
         </Grid>
-        <Grid item xs={12} md={3}>
+        <Grid item xs={12} md={4} lg={3}>
           <Details
             currentLinodeId={linodeId}
             selectedConfigs={attachAssociatedDisksToConfigs(
@@ -441,7 +446,7 @@ interface LinodeContextProps {
   region: string;
   label: string;
   linodeStatus: Linode.LinodeStatus;
-  linodeEvents: Linode.Event[];
+  linodeEvents: Event[];
 }
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id,

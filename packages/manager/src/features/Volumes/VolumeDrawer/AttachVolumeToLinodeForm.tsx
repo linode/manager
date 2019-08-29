@@ -1,4 +1,6 @@
 import { Form, Formik } from 'formik';
+import { Grant } from 'linode-js-sdk/lib/account';
+import { attachVolume } from 'linode-js-sdk/lib/volumes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -7,15 +9,17 @@ import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/events';
-import { attachVolume } from 'src/services/volumes';
 import { MapState } from 'src/store/types';
 import { openForCreating } from 'src/store/volumeDrawer';
+import {
+  handleFieldErrors,
+  handleGeneralErrors
+} from 'src/utilities/formikErrorUtils';
 import { number, object } from 'yup';
 import ConfigSelect from './ConfigSelect';
 import { modes } from './modes';
 import ModeSelection from './ModeSelection';
 import NoticePanel from './NoticePanel';
-import { handleFieldErrors, handleGeneralErrors } from './utils';
 import VolumesActionsPanel from './VolumesActionsPanel';
 import VolumeSelect from './VolumeSelect';
 
@@ -52,7 +56,7 @@ const AttachVolumeToLinodeForm: React.StatelessComponent<
     readOnly
   } = props;
   const linodeGrant = linodeGrants.filter(
-    (grant: Linode.Grant) => grant.id === linodeId
+    (grant: Grant) => grant.id === linodeId
   )[0];
   const disabled =
     readOnly || (linodeGrant && linodeGrant.permissions !== 'read_write');
@@ -177,7 +181,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
 });
 
 interface StateProps {
-  linodeGrants: Linode.Grant[];
+  linodeGrants: Grant[];
 }
 
 const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({

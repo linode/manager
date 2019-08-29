@@ -1,4 +1,5 @@
 import { Formik, FormikProps } from 'formik';
+import { GrantLevel } from 'linode-js-sdk/lib/account';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -20,13 +21,12 @@ import { resetEventsPolling } from 'src/events';
 import userSSHKeyHoc, {
   UserSSHKeyProps
 } from 'src/features/linodes/userSSHKeyHoc';
-// @todo: Extract these utils out of Volumes
+import { rebuildLinode, RebuildRequest } from 'src/services/linodes';
+import { RebuildLinodeSchema } from 'src/services/linodes/linode.schema';
 import {
   handleFieldErrors,
   handleGeneralErrors
-} from 'src/features/Volumes/VolumeDrawer/utils';
-import { rebuildLinode, RebuildRequest } from 'src/services/linodes';
-import { RebuildLinodeSchema } from 'src/services/linodes/linode.schema';
+} from 'src/utilities/formikErrorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import { RebuildDialog } from './RebuildDialog';
@@ -52,7 +52,7 @@ interface WithImagesProps {
 
 interface ContextProps {
   linodeId: number;
-  permissions: Linode.GrantLevel;
+  permissions: GrantLevel;
 }
 
 export type CombinedProps = WithImagesProps &

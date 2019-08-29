@@ -1,11 +1,16 @@
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import _Option from 'react-select/lib/components/Option';
+import { compose } from 'recompose';
 import FormHelperText from 'src/components/core/FormHelperText';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { getLinodes } from 'src/services/linodes';
 import { doesRegionSupportBlockStorage } from 'src/utilities/doesRegionSupportBlockStorage';
 import { debounce } from 'throttle-debounce';
+
+import withRegions, {
+  DefaultProps as RegionProps
+} from 'src/containers/regions.container';
 
 export const regionSupportMessage =
   'This Linode is in a region that does not currently support Block Storage';
@@ -27,7 +32,7 @@ interface State {
   selectedLinodeId?: number;
 }
 
-type CombinedProps = Props;
+type CombinedProps = RegionProps & Props;
 
 export class LinodeSelect extends React.Component<CombinedProps, State> {
   mounted: boolean;
@@ -154,18 +159,19 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
   render() {
     const {
       error,
-      name,
       onBlur,
       shouldOnlyDisplayRegionsWithBlockStorage,
       onChange,
+      regionsData,
       ...rest
     } = this.props;
+
     const { loading, linodes, selectedLinodeId } = this.state;
 
     const options = shouldOnlyDisplayRegionsWithBlockStorage
       ? linodes.filter(linode => {
           const region = pathOr('', ['data', 'region'], linode);
-          return doesRegionSupportBlockStorage(region);
+          return doesRegionSupportBlockStorage(region, regionsData);
         })
       : linodes;
 
@@ -173,7 +179,6 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
       <>
         <EnhancedSelect
           onBlur={onBlur}
-          name={name}
           label="Linode"
           placeholder="Select a Linode"
           value={this.getSelectedLinode(selectedLinodeId)}
@@ -200,4 +205,6 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
   }
 }
 
-export default LinodeSelect;
+const enhanced = compose<CombinedProps, Props>(withRegions());
+
+export default enhanced(LinodeSelect);

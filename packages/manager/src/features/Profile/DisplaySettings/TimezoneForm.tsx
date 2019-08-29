@@ -1,3 +1,4 @@
+import { Profile } from "linode-js-sdk/lib/profile";
 import { lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import timezones from 'src/assets/timezones/timezones';
@@ -34,7 +35,7 @@ const styles = (theme: Theme) =>
 interface Props {
   timezone: string;
   loggedInAsCustomer: boolean;
-  updateProfile: (v: Partial<Linode.Profile>) => Promise<Linode.Profile>;
+  updateProfile: (v: Partial<Profile>) => Promise<Profile>;
   errors?: Linode.ApiFieldError[];
 }
 

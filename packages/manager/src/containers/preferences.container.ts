@@ -1,3 +1,5 @@
+import { Profile } from 'linode-js-sdk/lib/profile';
+
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 
@@ -28,7 +30,7 @@ export default <TInner extends {}, TOuter extends {}>(
     },
     (dispatch: ThunkDispatch) => ({
       getUserPreferences: () => dispatch(getUserPreferences()),
-      updateUserPreferences: (payload: Partial<Linode.Profile>) =>
+      updateUserPreferences: (payload: Partial<Profile>) =>
         dispatch(updateUserPreferences(payload))
     })
   );

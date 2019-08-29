@@ -1,6 +1,9 @@
 # production
 dist
 build
+lib
+**/linode-js-sdk/index.js
+**/linode-js-sdk/index.d.ts
 
 # editor configuration
 .vscode
@@ -8,6 +11,9 @@ build
 
 # misc
 .DS_Store
+
+# local restart script with keys
+restart.sh
 
 # dotenv environment variables file
 .env
@@ -99,3 +105,6 @@ localStorage.json
 
 # storybook static files
 .out
+
+# Vim users
+*.swp

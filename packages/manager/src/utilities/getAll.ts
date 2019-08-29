@@ -1,12 +1,12 @@
 import * as Bluebird from 'bluebird';
+import { Domain, getDomains } from 'linode-js-sdk/lib/domains';
+import { getVolumes, Volume } from 'linode-js-sdk/lib/volumes';
 import { range } from 'ramda';
 
 import { sendFetchAllEvent } from 'src/utilities/ga';
 
-import { getDomains } from 'src/services/domains';
 import { getLinodes } from 'src/services/linodes';
 import { getNodeBalancers } from 'src/services/nodebalancers';
-import { getVolumes } from 'src/services/volumes';
 
 export interface APIResponsePage<T> {
   page: number;
@@ -25,7 +25,7 @@ export type GetFromEntity = (
   filters?: any
 ) => Promise<APIResponsePage<any>>;
 
-interface GetAllData<T> {
+export interface GetAllData<T> {
   data: T;
   results: number;
 }
@@ -174,8 +174,8 @@ export const getAllFromEntity: (
 export type GetAllHandler = (
   linodes: Linode.Linode[],
   nodebalancers: Linode.NodeBalancer[],
-  volumes: Linode.Volume[],
-  domains: Linode.Domain[]
+  volumes: Volume[],
+  domains: Domain[]
 ) => any;
 
 /**
@@ -191,8 +191,8 @@ export const getAllEntities = (cb: GetAllHandler) =>
   Bluebird.join(
     getAll<Linode.Linode>(getLinodes)(),
     getAll<Linode.NodeBalancer>(getNodeBalancers)(),
-    getAll<Linode.Volume>(getVolumes)(),
-    getAll<Linode.Domain>(getDomains)(),
+    getAll<Volume>(getVolumes)(),
+    getAll<Domain>(getDomains)(),
     /** for some reason typescript thinks ...results is implicitly typed as 'any' */
     // @ts-ignore
     (...results) => {

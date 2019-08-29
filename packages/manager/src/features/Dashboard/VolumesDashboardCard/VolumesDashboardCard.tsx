@@ -1,3 +1,4 @@
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import { take } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -16,7 +17,7 @@ import VolumeDashboardRow from './VolumeDashboardRow';
 interface VolumeProps {
   volumesLoading: boolean;
   volumesError?: Linode.ApiFieldError[];
-  volumesData: Linode.Volume[];
+  volumesData: Volume[];
 }
 
 type CombinedProps = VolumeProps;

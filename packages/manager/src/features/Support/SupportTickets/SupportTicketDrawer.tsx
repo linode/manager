@@ -1,4 +1,6 @@
 import * as Bluebird from 'bluebird';
+import { getDomains } from 'linode-js-sdk/lib/domains';
+import { getVolumes } from 'linode-js-sdk/lib/volumes';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -17,11 +19,9 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
-import { getDomains } from 'src/services/domains';
 import { getLinodes } from 'src/services/linodes';
 import { getNodeBalancers } from 'src/services/nodebalancers';
 import { createSupportTicket, uploadAttachment } from 'src/services/support';
-import { getVolumes } from 'src/services/volumes';
 import composeState from 'src/utilities/composeState';
 import {
   getAPIErrorOrDefault,
@@ -508,7 +508,8 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         )}
 
         <TextField
-          label="Summary"
+          label="Title"
+          placeholder="Enter a title for your ticket."
           required
           value={ticket.summary}
           onChange={this.handleSummaryInputChange}
@@ -516,6 +517,7 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
           data-qa-ticket-summary
         />
         <TabbedReply
+          required
           error={descriptionError}
           handleChange={this.handleDescriptionInputChange}
           value={ticket.description}

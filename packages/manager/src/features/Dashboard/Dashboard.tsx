@@ -1,6 +1,8 @@
+import { Notification } from 'linode-js-sdk/lib/account';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
 import {
@@ -14,6 +16,7 @@ import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import TagImportDrawer from 'src/features/TagImport';
+import useFlags from 'src/hooks/useFlags';
 import { handleOpen } from 'src/store/backupDrawer';
 import getEntitiesWithGroupsToImport, {
   emptyGroupedEntities,
@@ -28,11 +31,14 @@ import BlogDashboardCard from './BlogDashboardCard';
 import DomainsDashboardCard from './DomainsDashboardCard';
 import ImportGroupsCard from './GroupImportCard';
 import LinodesDashboardCard from './LinodesDashboardCard';
+import ManagedDashboardCard from './ManagedDashboardCard';
 import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
+import PromotionsBanner from './PromotionsBanner';
 import TransferDashboardCard from './TransferDashboardCard';
 import VolumesDashboardCard from './VolumesDashboardCard';
 
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
+import TaxBanner from 'src/components/TaxBanner';
 
 type ClassNames = 'root';
 
@@ -47,6 +53,7 @@ interface StateProps {
   managed: boolean;
   backupError?: Error;
   entitiesWithGroupsToImport: GroupedEntitiesForImport;
+  notifications: Notification[];
   userTimezone: string;
   userTimezoneLoading: boolean;
   userTimezoneError?: Linode.ApiFieldError[];
@@ -63,7 +70,8 @@ interface DispatchProps {
 type CombinedProps = StateProps &
   DispatchProps &
   WithStyles<ClassNames> &
-  WithTheme;
+  WithTheme &
+  RouteComponentProps<{}>;
 
 export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
   const {
@@ -72,8 +80,12 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
     backupError,
     linodesWithoutBackups,
     managed,
-    entitiesWithGroupsToImport
+    notifications,
+    entitiesWithGroupsToImport,
+    location
   } = props;
+
+  const flags = useFlags();
 
   return (
     <React.Fragment>
@@ -86,6 +98,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
       )}
       <Grid container spacing={3}>
         <AbuseTicketBanner />
+        <TaxBanner location={location} />
         <DocumentTitleSegment segment="Dashboard" />
         <Grid item xs={12}>
           <Typography variant="h1" data-qa-dashboard-header>
@@ -93,6 +106,14 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
           </Typography>
         </Grid>
         <Grid item xs={12} md={7}>
+          {flags.promos && (
+            <PromotionsBanner
+              notifications={notifications.filter(
+                thisNotification => thisNotification.type === 'promotion'
+              )}
+            />
+          )}
+          {flags.managed && managed && <ManagedDashboardCard />}
           <LinodesDashboardCard />
           <VolumesDashboardCard />
           <NodeBalancersDashboardCard />
@@ -132,6 +153,7 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
       ['__resources', 'accountSettings', 'data', 'backups_enabled'],
       state
     ),
+    notifications: pathOr([], ['data'], state.__resources.notifications),
     userTimezone: pathOr('', ['data', 'timezone'], state.__resources.profile),
     userTimezoneLoading: state.__resources.profile.loading,
     userTimezoneError: path(['read'], state.__resources.profile.error),

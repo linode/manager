@@ -1,4 +1,5 @@
 import * as classnames from 'classnames';
+import { Account, AccountCapability } from 'linode-js-sdk/lib/account';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { shim } from 'promise.prototype.finally';
 import { path, pathOr } from 'ramda';
@@ -30,8 +31,6 @@ import Grid from 'src/components/Grid';
 import LandingLoading from 'src/components/LandingLoading';
 import NotFound from 'src/components/NotFound';
 import SideMenu from 'src/components/SideMenu';
-/** @todo: Uncomment when we deploy with LD */
-// import VATBanner from 'src/components/VATBanner';
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { events$ } from 'src/events';
 import BackupDrawer from 'src/features/Backups';
@@ -355,12 +354,16 @@ export class App extends React.Component<CombinedProps, State> {
       settingsError,
       bucketsError,
       nodeBalancersError,
+      accountData,
       accountCapabilities,
       accountLoading,
       accountError,
       linodesLoading,
       domainsLoading,
+      accountSettingsError,
+      accountSettingsLoading,
       userId,
+      username,
       volumesLoading,
       bucketsLoading,
       nodeBalancersLoading
@@ -401,28 +404,38 @@ export class App extends React.Component<CombinedProps, State> {
           Skip to main content
         </a>
         {/** Update the LD client with the user's id as soon as we know it */}
-        <IdentifyUser userID={userId} setFlagsLoaded={this.setFlagsLoaded} />
+        <IdentifyUser
+          userID={userId}
+          username={username}
+          setFlagsLoaded={this.setFlagsLoaded}
+          accountError={accountError}
+          accountCountry={accountData ? accountData.country : undefined}
+          taxID={accountData ? accountData.tax_id : undefined}
+        />
         <DataLoadedListener
           markAppAsLoaded={this.props.markAppAsDoneLoading}
           flagsHaveLoaded={this.state.flagsLoaded}
-          linodesLoadingOrErrorExists={
+          linodesLoadedOrErrorExists={
             linodesLoading === false || !!linodesError
           }
-          volumesLoadingOrErrorExists={
+          volumesLoadedOrErrorExists={
             volumesLoading === false || !!volumesError
           }
-          domainsLoadingOrErrorExists={
+          domainsLoadedOrErrorExists={
             domainsLoading === false || !!domainsError
           }
-          bucketsLoadingOrErrorExists={
+          bucketsLoadedOrErrorExists={
             bucketsLoading === false || !!bucketsError
           }
-          nodeBalancersLoadingOrErrorExists={
+          nodeBalancersLoadedOrErrorExists={
             nodeBalancersLoading === false || !!nodeBalancersError
           }
-          profileLoadingOrErrorExists={!!this.props.userId || !!profileError}
-          accountLoadingOrErrorExists={
-            !!this.props.accountCapabilities || !!accountError
+          profileLoadedOrErrorExists={!!this.props.userId || !!profileError}
+          accountLoadedOrErrorExists={
+            accountLoading === false || !!accountError
+          }
+          accountSettingsLoadedOrErrorExists={
+            accountSettingsLoading === false || !!accountSettingsError
           }
           appIsLoaded={!this.props.appIsLoading}
         />
@@ -449,8 +462,6 @@ export class App extends React.Component<CombinedProps, State> {
                 isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
                 username={this.props.username}
               />
-              {/* @todo: Uncomment when we deploy with LD */}
-              {/* <VATBanner /> */}
               <div className={classes.wrapper} id="main-content">
                 <Grid container spacing={0} className={classes.grid}>
                   <Grid item className={classes.switchWrapper}>
@@ -527,7 +538,7 @@ export class App extends React.Component<CombinedProps, State> {
 // whether or not the feature is enabled for this account.
 const getObjectStorageRoute = (
   accountLoading: boolean,
-  accountCapabilities: Linode.AccountCapability[],
+  accountCapabilities: AccountCapability[],
   accountError?: Error | Linode.ApiFieldError[]
 ) => {
   let component;
@@ -579,15 +590,18 @@ interface StateProps {
   types?: string[];
   regions?: Linode.Region[];
   userId?: number;
+  accountData?: Account;
   username: string;
   documentation: Linode.Doc[];
   isLoggedInAsCustomer: boolean;
-  accountCapabilities: Linode.AccountCapability[];
+  accountCapabilities: AccountCapability[];
   linodesLoading: boolean;
   volumesLoading: boolean;
   domainsLoading: boolean;
   bucketsLoading: boolean;
   accountLoading: boolean;
+  accountSettingsLoading: boolean;
+  accountSettingsError?: Linode.ApiFieldError[];
   nodeBalancersLoading: boolean;
   linodesError?: Linode.ApiFieldError[];
   volumesError?: Linode.ApiFieldError[];
@@ -622,6 +636,7 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   bucketsError: state.__resources.buckets.error,
   userId: path(['data', 'uid'], state.__resources.profile),
   username: pathOr('', ['data', 'username'], state.__resources.profile),
+  accountData: state.__resources.account.data,
   documentation: state.documentation,
   isLoggedInAsCustomer: pathOr(
     false,
@@ -631,6 +646,15 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   accountCapabilities: pathOr(
     [],
     ['__resources', 'account', 'data', 'capabilities'],
+    state
+  ),
+  accountSettingsLoading: pathOr(
+    true,
+    ['__resources', 'accountSettings', 'loading'],
+    state
+  ),
+  accountSettingsError: path(
+    ['__resources', 'accountSettings', 'error'],
     state
   ),
   linodesLoading: state.__resources.linodes.loading,

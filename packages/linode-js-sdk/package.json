@@ -1,0 +1,70 @@
+{
+  "name": "linode-js-sdk",
+  "version": "0.3.0-alpha.0",
+  "homepage": "https://github.com/linode/manager/tree/develop/packages/linode-js-sdk",
+  "bugs": {
+    "url": "https://github.com/linode/manager/issues",
+    "email": "feedback@linode.com"
+  },
+  "repository": {
+    "type": "git",
+    "directory": "https://github.com/linode/manager/tree/develop/packages/linode-js-sdk"
+  },
+  "engines": {
+    "node": ">= 10.16.0"
+  },
+  "description": "JavaScript wrapper around the Linode APIv4",
+  "author": "Linode",
+  "license": "MIT",
+  "private": false,
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "unpkg": "./index.js",
+  "dependencies": {
+    "axios": "^0.19.0",
+    "ramda": "^0.26.1",
+    "yup": "^0.27.0"
+  },
+  "scripts": {
+    "start": "concurrently \"tsc -w\" \"babel src --watch --out-dir lib --extensions '.ts,.tsx'\" -n 'tsc,babel' -k",
+    "build": "tsc && babel src --out-dir lib --extensions '.ts,.tsx' && webpack",
+    "test": "jest --config jestconfig.json",
+    "format": "prettier --write \"src/**/*.ts\" \"src/**/*.js\"",
+    "lint": "tslint -p tsconfig.json",
+    "typecheck": "tsc --noEmit true --emitDeclarationOnly false",
+    "prepublishOnly": "yarn lint && yarn typecheck && yarn format && yarn build",
+    "precommit": "yarn lint && yarn typecheck && yarn format"
+  },
+  "files": [
+    "index.js",
+    "index.d.ts",
+    "lib/*",
+    "package.json",
+    "README.md"
+  ],
+  "devDependencies": {
+    "@babel/cli": "^7.5.5",
+    "@babel/core": "^7.5.5",
+    "@babel/plugin-proposal-class-properties": "^7.5.5",
+    "@babel/plugin-proposal-object-rest-spread": "^7.5.5",
+    "@babel/plugin-transform-modules-commonjs": "^7.5.0",
+    "@babel/preset-env": "^7.5.5",
+    "@babel/preset-typescript": "^7.3.3",
+    "@types/jest": "^24.0.17",
+    "@types/node": "^12.7.1",
+    "@types/ramda": "^0.26.19",
+    "@types/yup": "^0.26.22",
+    "babel-plugin-module-resolver": "^3.2.0",
+    "concurrently": "^4.1.1",
+    "jest": "^24.8.0",
+    "npm-dts-webpack-plugin": "^1.1.10",
+    "prettier": "^1.18.2",
+    "ts-jest": "^24.0.2",
+    "tslint": "^5.18.0",
+    "tslint-config-prettier": "^1.18.0",
+    "typescript": "^3.5.3",
+    "webpack": "^4.39.2",
+    "webpack-cli": "^3.3.6",
+    "webpack-dev-server": "^3.8.0"
+  }
+}

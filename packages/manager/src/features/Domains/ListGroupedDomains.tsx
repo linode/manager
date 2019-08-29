@@ -1,3 +1,4 @@
+import { Domain } from 'linode-js-sdk/lib/domains';
 import { compose } from 'ramda';
 import * as React from 'react';
 import {
@@ -62,7 +63,7 @@ const styles = (theme: Theme) =>
     }
   });
 interface Props {
-  data: Linode.Domain[];
+  data: Domain[];
   orderBy: string;
   order: 'asc' | 'desc';
   handleOrderChange: (orderBy: string, order?: 'asc' | 'desc') => void;
@@ -93,7 +94,7 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
 
   return (
     <TableWrapper {...tableWrapperProps}>
-      {groupedDomains.map(([tag, domains]: [string, Linode.Domain[]]) => {
+      {groupedDomains.map(([tag, domains]: [string, Domain[]]) => {
         return (
           <React.Fragment key={tag}>
             <Paginate data={domains} pageSize={DEFAULT_PAGE_SIZE}>
@@ -130,7 +131,6 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
                           onClone={onClone}
                           onEdit={onEdit}
                           onRemove={onRemove}
-                          tags={domain.tags}
                           type={domain.type}
                           status={domain.status}
                         />

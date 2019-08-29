@@ -1,3 +1,4 @@
+import { Account } from "linode-js-sdk/lib/account";
 import { Reducer } from 'redux';
 import { RequestableDataWithEntityError } from 'src/store/types';
 import { isType } from 'typescript-fsa';
@@ -11,7 +12,7 @@ import {
 /**
  * State
  */
-export type State = RequestableDataWithEntityError<Linode.Account>;
+export type State = RequestableDataWithEntityError<Account>;
 
 export const defaultState: State = {
   loading: false,
@@ -31,7 +32,12 @@ const reducer: Reducer<State> = (state: State = defaultState, action) => {
   if (isType(action, profileRequestSuccess)) {
     const { payload } = action;
 
-    return { ...state, loading: false, data: payload, lastUpdated: Date.now() };
+    return {
+      ...state,
+      loading: false,
+      data: payload,
+      lastUpdated: Date.now()
+    };
   }
 
   if (isType(action, profileRequestFail)) {

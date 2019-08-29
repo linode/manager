@@ -1,4 +1,7 @@
+import { FormikBag } from 'formik';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
+import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import Paper from 'src/components/core/Paper';
 import {
@@ -10,6 +13,7 @@ import {
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import TableRow from 'src/components/core/TableRow';
+import DeletionDialog from 'src/components/DeletionDialog';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import OrderBy from 'src/components/OrderBy';
@@ -18,7 +22,18 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
+import withManagedServices, {
+  DispatchProps
+} from 'src/containers/managedServices.container';
+import { useDialog } from 'src/hooks/useDialog';
+import { ManagedServicePayload } from 'src/services/managed';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+import {
+  handleFieldErrors,
+  handleGeneralErrors
+} from 'src/utilities/formikErrorUtils';
 
+import MonitorDrawer from '../MonitorDrawer';
 import MonitorTableContent from './MonitorTableContent';
 
 type ClassNames = 'labelHeader';
@@ -36,10 +51,105 @@ interface Props {
   error?: Linode.ApiFieldError[];
 }
 
-export type CombinedProps = Props & WithStyles<ClassNames>;
+export type Modes = 'create' | 'edit';
+export type FormikProps = FormikBag<CombinedProps, ManagedServicePayload>;
+
+export type CombinedProps = Props &
+  WithStyles<ClassNames> &
+  DispatchProps &
+  WithSnackbarProps;
 
 export const MonitorTable: React.FC<CombinedProps> = props => {
-  const { classes, error, loading, monitors } = props;
+  const {
+    classes,
+    deleteServiceMonitor,
+    enqueueSnackbar,
+    error,
+    loading,
+    monitors
+  } = props;
+
+  const {
+    dialog,
+    openDialog,
+    closeDialog,
+    submitDialog,
+    handleError
+  } = useDialog<number>(deleteServiceMonitor);
+
+  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+  const [drawerMode, setDrawerMode] = React.useState<Modes>('create');
+  const [editID, setEditID] = React.useState<number>(0);
+
+  const handleDrawerClose = () => {
+    setEditID(0);
+    setDrawerMode('create');
+    setDrawerOpen(false);
+  };
+
+  const handleDrawerOpen = (id: number, mode: Modes) => {
+    setEditID(id);
+    setDrawerMode(mode);
+    setDrawerOpen(true);
+  };
+
+  const handleDelete = () => {
+    if (!dialog.entityID) {
+      return;
+    }
+    submitDialog(dialog.entityID)
+      .then(_ => {
+        enqueueSnackbar('Successfully deleted Service Monitor', {
+          variant: 'success'
+        });
+      })
+      .catch(err => {
+        handleError(
+          getAPIErrorOrDefault(err, 'Error deleting this Service Monitor.')[0]
+            .reason
+        );
+      });
+  };
+
+  const submitMonitorForm = (
+    values: ManagedServicePayload,
+    { setSubmitting, setErrors, setStatus }: FormikProps
+  ) => {
+    const { createServiceMonitor, updateServiceMonitor } = props;
+    const _success = () => {
+      setSubmitting(false);
+      handleDrawerClose();
+    };
+
+    const _error = (e: Linode.ApiFieldError[]) => {
+      const defaultMessage = `Unable to ${
+        drawerMode === 'create' ? 'create' : 'update'
+      } this Monitor. Please try again later.`;
+      const mapErrorToStatus = (generalError: string) =>
+        setStatus({ generalError });
+
+      setSubmitting(false);
+      handleFieldErrors(setErrors, e);
+      handleGeneralErrors(mapErrorToStatus, e, defaultMessage);
+      setSubmitting(false);
+    };
+
+    // Clear drawer error state
+    setStatus(undefined);
+
+    drawerMode === 'create'
+      ? createServiceMonitor({ ...values, timeout: +values.timeout })
+          .then(_success)
+          .catch(_error)
+      : updateServiceMonitor({
+          ...values,
+          monitorID: editID,
+          timeout: +values.timeout
+        })
+          .then(_success)
+          .catch(_error);
+  };
+
   return (
     <>
       <DocumentTitleSegment segment="Service Monitors" />
@@ -53,7 +163,10 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
         <Grid item>
           <Grid container alignItems="flex-end">
             <Grid item className="pt0">
-              <AddNewLink onClick={() => null} label="Add a Monitor" disabled />
+              <AddNewLink
+                onClick={() => setDrawerOpen(true)}
+                label="Add a Monitor"
+              />
             </Grid>
           </Grid>
         </Grid>
@@ -110,6 +223,8 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
                         monitors={data}
                         loading={loading}
                         error={error}
+                        openDialog={openDialog}
+                        openDrawer={handleDrawerOpen}
                       />
                     </TableBody>
                   </Table>
@@ -127,9 +242,29 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
           </Paginate>
         )}
       </OrderBy>
+      <DeletionDialog
+        label={dialog.entityLabel || ''}
+        onDelete={handleDelete}
+        onClose={closeDialog}
+        open={dialog.isOpen}
+        error={dialog.error}
+        loading={dialog.isLoading}
+      />
+      <MonitorDrawer
+        open={drawerOpen}
+        onClose={handleDrawerClose}
+        onSubmit={submitMonitorForm}
+        mode={drawerMode}
+        monitor={monitors.find(m => m.id === editID)}
+      />
     </>
   );
 };
 
 const styled = withStyles(styles);
-export default styled(MonitorTable);
+const enhanced = compose<CombinedProps, Props>(
+  styled,
+  withManagedServices(() => ({})),
+  withSnackbar
+);
+export default enhanced(MonitorTable);

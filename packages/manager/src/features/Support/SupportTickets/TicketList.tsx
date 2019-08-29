@@ -1,8 +1,16 @@
+import { SupportTicket } from "linode-js-sdk/lib/account";
 import { compose } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
+import { OrderByProps } from 'src/components/OrderBy';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
@@ -11,15 +19,54 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import TableSortCell from 'src/components/TableSortCell';
 import TicketRow from './TicketRow';
 import { getTicketsPage } from './ticketUtils';
 
-interface Props extends PaginationProps<Linode.SupportTicket> {
+interface Props extends PaginationProps<SupportTicket> {
   filterStatus: 'open' | 'closed';
-  newTicket?: Linode.SupportTicket;
+  newTicket?: SupportTicket;
 }
 
-type CombinedProps = Props;
+type ClassNames =
+  | 'root'
+  | 'cellSubject'
+  | 'cellId'
+  | 'cellRegarding'
+  | 'cellCreated'
+  | 'cellUpdated'
+  | 'cellUpdatedBy';
+
+const styles = (theme: Theme) =>
+  createStyles({
+    root: {},
+    cellSubject: {
+      width: '35%',
+      minWidth: 175
+    },
+    cellId: {
+      width: '10%'
+    },
+    cellRegarding: {
+      width: '15%'
+    },
+    cellCreated: {
+      width: '15%',
+      minWidth: 175
+    },
+    cellUpdated: {
+      width: '15%',
+      minWidth: 175
+    },
+    cellUpdatedBy: {
+      width: '10%',
+      minWidth: 120
+    }
+  });
+
+type CombinedProps = Props &
+  Omit<OrderByProps, 'data'> &
+  WithStyles<ClassNames>;
 
 export class TicketList extends React.Component<CombinedProps, {}> {
   mounted: boolean = false;
@@ -46,13 +93,13 @@ export class TicketList extends React.Component<CombinedProps, {}> {
     const { data: tickets, error, loading } = this.props;
 
     if (loading) {
-      return <TableRowLoading colSpan={12} />;
+      return <TableRowLoading colSpan={8} />;
     }
 
     if (error) {
       return (
         <TableRowError
-          colSpan={6}
+          colSpan={8}
           message="We were unable to load your support tickets."
         />
       );
@@ -61,17 +108,27 @@ export class TicketList extends React.Component<CombinedProps, {}> {
     return tickets && tickets.length > 0 ? (
       this.renderTickets(tickets)
     ) : (
-      <TableRowEmptyState colSpan={6} />
+      <TableRowEmptyState colSpan={8} />
     );
   };
 
-  renderTickets = (tickets: Linode.SupportTicket[]) =>
-    tickets.map((ticket, idx) => (
-      <TicketRow key={`ticket-row-${idx}`} ticket={ticket} />
-    ));
+  renderTickets = (tickets: SupportTicket[]) =>
+    tickets.map((ticket, idx) => {
+      return <TicketRow key={`ticket-row-${idx}`} ticket={ticket} />;
+    });
 
   render() {
-    const { count, page, pageSize } = this.props;
+    const {
+      order,
+      orderBy,
+      handleOrderChange,
+      count,
+      page,
+      pageSize,
+      classes
+    } = this.props;
+
+    const isActive = (label: string) => label === orderBy;
 
     return (
       <React.Fragment>
@@ -81,24 +138,48 @@ export class TicketList extends React.Component<CombinedProps, {}> {
               <TableRow>
                 <TableCell
                   data-qa-support-subject-header
-                  style={{ minWidth: 200 }}
+                  className={classes.cellSubject}
                 >
                   Subject
                 </TableCell>
-                <TableCell data-qa-support-id-header>Ticket ID</TableCell>
-                <TableCell data-qa-support-regarding-header>
+                <TableCell data-qa-support-id-header className={classes.cellId}>
+                  Ticket ID
+                </TableCell>
+                <TableCell
+                  data-qa-support-regarding-header
+                  className={classes.cellRegarding}
+                >
                   Regarding
                 </TableCell>
-                <TableCell data-qa-support-date-header noWrap>
+                <TableSortCell
+                  label="opened"
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  active={isActive('opened')}
+                  data-qa-support-date-header
+                  noWrap
+                  className={classes.cellCreated}
+                >
                   Date Created
-                </TableCell>
-                <TableCell data-qa-support-updated-header noWrap>
+                </TableSortCell>
+                <TableSortCell
+                  label="updated"
+                  direction={order}
+                  handleClick={handleOrderChange}
+                  active={isActive('updated')}
+                  data-qa-support-updated-header
+                  noWrap
+                  className={classes.cellUpdated}
+                >
                   Last Updated
-                </TableCell>
-                <TableCell data-qa-support-updated-header noWrap>
+                </TableSortCell>
+                <TableCell
+                  data-qa-support-updated-by-header
+                  noWrap
+                  className={classes.cellUpdatedBy}
+                >
                   Updated By
                 </TableCell>
-                <TableCell />
               </TableRow>
             </TableHead>
             <TableBody>{this.renderContent()}</TableBody>
@@ -118,6 +199,8 @@ export class TicketList extends React.Component<CombinedProps, {}> {
   }
 }
 
+const styled = withStyles(styles);
+
 const updatedRequest = (ownProps: Props, params: any, filters: any) => {
   return getTicketsPage(params, filters, ownProps.filterStatus).then(
     response => response
@@ -126,4 +209,7 @@ const updatedRequest = (ownProps: Props, params: any, filters: any) => {
 
 const paginated = Pagey(updatedRequest);
 
-export default compose(paginated)(TicketList);
+export default compose(
+  paginated,
+  styled
+)(TicketList);

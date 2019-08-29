@@ -1,3 +1,4 @@
+import { Account, saveCreditCard } from 'linode-js-sdk/lib/account'
 import { compose, range, take, takeLast } from 'ramda';
 import * as React from 'react';
 import NumberFormat from 'react-number-format';
@@ -17,7 +18,6 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { withAccount } from 'src/features/Billing/context';
-import { saveCreditCard } from 'src/services/account';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import isCreditCardExpired from 'src/utilities/isCreditCardExpired';
@@ -67,7 +67,7 @@ interface AccountContextProps {
   accountErrors: Linode.ApiFieldError[];
   expiry: string;
   last_four: string;
-  updateAccount: (update: (a: Linode.Account) => Linode.Account) => void;
+  updateAccount: (update: (a: Account) => Account) => void;
   cvv?: string;
 }
 

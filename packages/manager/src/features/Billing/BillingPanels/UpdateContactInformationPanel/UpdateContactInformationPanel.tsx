@@ -1,3 +1,5 @@
+import countryData from 'country-region-data';
+import { Account } from 'linode-js-sdk/lib/account'
 import { defaultTo, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -22,7 +24,7 @@ import composeState from 'src/utilities/composeState';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import CountryData, { Region } from './countryRegionData';
+import { Country, Region } from './types';
 
 type ClassNames = 'root' | 'mainFormContainer' | 'stateZip';
 
@@ -136,7 +138,7 @@ class UpdateContactInformationPanel extends React.Component<
 
   renderErrors = (e: Linode.ApiFieldError[]) => null;
 
-  renderForm = (account: Linode.Account) => {
+  renderForm = (account: Account) => {
     const { classes, accountError } = this.props;
     const { fields, success } = this.state;
 
@@ -160,14 +162,16 @@ class UpdateContactInformationPanel extends React.Component<
 
     const generalError = errorMap.none;
 
-    const countryResults = CountryData.map(country => {
-      return {
-        value: country.countryShortCode,
-        label: country.countryName
-      };
-    });
+    const countryResults: Item<string>[] = countryData.map(
+      (country: Country) => {
+        return {
+          value: country.countryShortCode,
+          label: country.countryName
+        };
+      }
+    );
 
-    const currentCountryResult = CountryData.filter(country =>
+    const currentCountryResult = countryData.filter((country: Country) =>
       fields.country
         ? country.countryShortCode === fields.country
         : country.countryShortCode === account.country
@@ -523,6 +527,7 @@ class UpdateContactInformationPanel extends React.Component<
   updateCountry = (selectedCountry: Item) => {
     this.setState({
       fields: {
+        ...this.state.fields,
         state: undefined
       }
     });

@@ -1,3 +1,4 @@
+import { Domain } from 'linode-js-sdk/lib/domains';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import {
@@ -27,7 +28,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  data: Linode.Domain[];
+  data: Domain[];
   orderBy: string;
   order: 'asc' | 'desc';
   handleOrderChange: (orderBy: string, order?: 'asc' | 'desc') => void;
@@ -102,7 +103,7 @@ const ListDomains: React.StatelessComponent<CombinedProps> = props => {
 };
 
 interface RenderDataProps {
-  data: Linode.Domain[];
+  data: Domain[];
   onRemove: (domain: string, domainId: number) => void;
   onClone: (domain: string, id: number) => void;
   onEdit: (domain: string, id: number) => void;
@@ -121,7 +122,6 @@ const RenderData: React.StatelessComponent<RenderDataProps> = props => {
           onClone={onClone}
           onEdit={onEdit}
           onRemove={onRemove}
-          tags={domain.tags}
           type={domain.type}
           status={domain.status}
         />

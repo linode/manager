@@ -1,4 +1,5 @@
-import { getAccountInfo, updateAccountInfo } from 'src/services/account';
+import { Account, getAccountInfo, updateAccountInfo } from 'linode-js-sdk/lib/account';
+
 import { ThunkActionCreator } from 'src/store/types';
 import { createRequestThunk } from '../store.helpers';
 import {
@@ -12,7 +13,7 @@ import {
  * Async
  */
 export const requestAccount: ThunkActionCreator<
-  Promise<Linode.Account>
+  Promise<Account>
 > = () => (dispatch, getStore) => {
   dispatch(profileRequest());
   return getAccountInfo()

@@ -2,25 +2,19 @@ exports.browserConf = {
     chrome: {
         browserName: 'chrome',
         maxInstances: 5,
-        acceptSslCerts: true,
         acceptInsecureCerts: true,
-        chromeOptions: {
+        'goog:chromeOptions': {
             args: [
             '--no-sandbox',
             '--disable-dev-shm-usage',
             '--window-size=1600,1080',
             '--user-agent=Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36 WebdriverIO',
             ]
-        },
-        'os': 'Windows',
-        'os_version': '10',
-        'browser': 'Chrome',
-        'browser_version': '68.0',
-        'resolution': '1440x900',
+        }
     },
     edge: {
         'browserName': 'edge',
-        'acceptSslCerts': true,
+        'acceptInsecureCerts': true,
         'os' : 'Windows',
         'os_version' : '10',
         'browserName' : 'Edge',
@@ -32,9 +26,8 @@ exports.browserConf = {
     headlessChrome: {
         browserName: 'chrome',
         maxInstances: 5,
-        acceptSslCerts: true,
         acceptInsecureCerts: true,
-        chromeOptions: {
+        'goog:chromeOptions': {
             args: [
                 '--headless','--no-sandbox','--disable-gpu',
                 'window-size=1920,1080','--allow-running-insecure-content',
@@ -54,7 +47,6 @@ exports.browserConf = {
             },
         }
     },
-
     firefoxNightly: {
         browserName: 'firefox',
         marionette: true,

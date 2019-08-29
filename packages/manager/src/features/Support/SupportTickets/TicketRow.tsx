@@ -1,19 +1,38 @@
+import { SupportTicket } from "linode-js-sdk/lib/account";
 import * as React from 'react';
 import { Link } from 'react-router-dom';
-
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
-import { ISO_FORMAT } from 'src/constants';
-
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import { ISO_FORMAT } from 'src/constants';
 import { getLinkTargets } from 'src/utilities/getEventsActionLink';
 
 interface Props {
-  ticket: Linode.SupportTicket;
+  ticket: SupportTicket;
 }
 
-const renderEntityLink = (ticket: Linode.SupportTicket) => {
+type ClassNames = 'summary' | 'regarding';
+
+const styles = (theme: Theme) =>
+  createStyles({
+    summary: {
+      lineHeight: 1.1
+    },
+    regarding: {
+      lineHeight: 1.1
+    }
+  });
+
+type CombinedProps = Props & WithStyles<ClassNames>;
+
+const renderEntityLink = (ticket: SupportTicket) => {
   const target = getLinkTargets(ticket.entity);
   return ticket.entity ? (
     target !== null ? (
@@ -31,23 +50,30 @@ const renderEntityLink = (ticket: Linode.SupportTicket) => {
   null;
 };
 
-const TicketRow: React.StatelessComponent<Props> = props => {
-  const { ticket } = props;
+const TicketRow: React.StatelessComponent<CombinedProps> = props => {
+  const { ticket, classes } = props;
   return (
     <TableRow
       data-qa-support-ticket={ticket.id}
       key={`ticket-${ticket.id}`}
       rowLink={`/support/tickets/${ticket.id}`}
+      data-testid="ticket-row"
     >
       <TableCell parentColumn="Subject" data-qa-support-subject>
         <Link to={`/support/tickets/${ticket.id}`}>
-          <Typography variant="h3">{ticket.summary}</Typography>
+          <Typography variant="h3" className={classes.summary}>
+            {ticket.summary}
+          </Typography>
         </Link>
       </TableCell>
       <TableCell parentColumn="Ticket ID" data-qa-support-id>
         {ticket.id}
       </TableCell>
-      <TableCell parentColumn="Regarding" data-qa-support-entity>
+      <TableCell
+        parentColumn="Regarding"
+        data-qa-support-entity
+        className={classes.regarding}
+      >
         {renderEntityLink(ticket)}
       </TableCell>
       <TableCell parentColumn="Date Created" data-qa-support-date>
@@ -59,9 +85,10 @@ const TicketRow: React.StatelessComponent<Props> = props => {
       <TableCell parentColumn="Updated By" data-qa-support-updated-by>
         {ticket.updated_by}
       </TableCell>
-      <TableCell />
     </TableRow>
   );
 };
 
-export default TicketRow;
+const styled = withStyles(styles);
+
+export default styled(TicketRow);

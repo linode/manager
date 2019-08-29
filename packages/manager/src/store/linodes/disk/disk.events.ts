@@ -1,3 +1,4 @@
+import { EventStatus } from 'linode-js-sdk/lib/account';
 import { Dispatch } from 'redux';
 import { EventHandler } from 'src/store/types';
 import { getAllLinodeDisks } from './disk.requests';
@@ -21,7 +22,7 @@ export default diskEventHandler;
 
 const handleDiskChange = (
   dispatch: Dispatch<any>,
-  status: Linode.EventStatus,
+  status: EventStatus,
   linodeId: number
 ) => {
   switch (status) {

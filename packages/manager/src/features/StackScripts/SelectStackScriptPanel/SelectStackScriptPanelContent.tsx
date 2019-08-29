@@ -1,3 +1,5 @@
+import { Grant } from 'linode-js-sdk/lib/account';
+import { ResourcePage } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import StackScriptBase, {
@@ -20,8 +22,8 @@ interface Props {
     username: string,
     params?: any,
     filter?: any,
-    stackScriptGrants?: Linode.Grant[]
-  ) => Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
+    stackScriptGrants?: Grant[]
+  ) => Promise<ResourcePage<Linode.StackScript.Response>>;
   category: string;
   disabled?: boolean;
 }

@@ -1,9 +1,10 @@
+import { Profile } from 'linode-js-sdk/lib/profile';
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
 import { EntityError, RequestableData } from '../types';
 import { getProfileActions, handleUpdateProfile } from './profile.actions';
 
-export type State = RequestableData<Linode.Profile, EntityError>;
+export type State = RequestableData<Profile, EntityError>;
 
 interface Action<T> {
   type: string;
@@ -20,7 +21,7 @@ export const defaultState: State = {
 
 const reducer: Reducer<State> = (
   state: State = defaultState,
-  action: Action<Linode.Profile>
+  action: Action<Profile>
 ) => {
   if (isType(action, getProfileActions.started)) {
     /** only set loading if we don't have any data */

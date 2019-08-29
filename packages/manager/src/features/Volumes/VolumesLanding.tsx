@@ -1,3 +1,5 @@
+import { Event } from 'linode-js-sdk/lib/account';
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
@@ -22,7 +24,6 @@ import OrderBy from 'src/components/OrderBy';
 import { PaginationProps } from 'src/components/Pagey';
 import Placeholder from 'src/components/Placeholder';
 import Toggle from 'src/components/Toggle';
-import { regionsWithoutBlockStorage } from 'src/constants';
 import _withEvents, { EventsProps } from 'src/containers/events.container';
 import withVolumes, {
   Props as WithVolumesProps
@@ -53,6 +54,11 @@ import VolumeAttachmentDrawer from './VolumeAttachmentDrawer';
 import ErrorState from 'src/components/ErrorState';
 import Loading from 'src/components/LandingLoading';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
+
+import withRegions, {
+  DefaultProps as RegionProps
+} from 'src/containers/regions.container';
+import { doesRegionSupportBlockStorage } from 'src/utilities/doesRegionSupportBlockStorage';
 
 type ClassNames =
   | 'root'
@@ -133,7 +139,7 @@ interface WithLinodesProps {
   linodesLoading: boolean;
   linodesError?: Linode.ApiFieldError[];
 }
-export interface ExtendedVolume extends Linode.Volume {
+export interface ExtendedVolume extends Volume {
   linodeLabel?: string;
   linodeStatus?: string;
 }
@@ -143,7 +149,7 @@ interface Props {
   linodeLabel?: string;
   linodeRegion?: string;
   linodeConfigs?: Linode.Config[];
-  recentEvent?: Linode.Event;
+  recentEvent?: Event;
   readOnly?: boolean;
   removeBreadCrumb?: boolean;
 }
@@ -190,6 +196,7 @@ interface State {
     volumeLabel: string;
     volumeId?: number;
     linodeLabel: string;
+    poweredOff?: boolean;
     error?: string;
   };
 }
@@ -206,7 +213,8 @@ type CombinedProps = Props &
   RouteProps &
   WithSnackbarProps &
   WithMappedVolumesProps &
-  WithStyles<ClassNames>;
+  WithStyles<ClassNames> &
+  RegionProps;
 
 class VolumesLanding extends React.Component<CombinedProps, State> {
   state: State = {
@@ -258,7 +266,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   handleDetach = (
     volumeId: number,
     volumeLabel: string,
-    linodeLabel: string
+    linodeLabel: string,
+    poweredOff: boolean
   ) => {
     this.setState({
       destructiveDialog: {
@@ -267,6 +276,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
         volumeId,
         volumeLabel,
         linodeLabel,
+        poweredOff,
         error: undefined
       }
     });
@@ -392,6 +402,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           error={this.state.destructiveDialog.error}
           volumeLabel={this.state.destructiveDialog.volumeLabel}
           linodeLabel={this.state.destructiveDialog.linodeLabel}
+          poweredOff={this.state.destructiveDialog.poweredOff || false}
           mode={this.state.destructiveDialog.mode}
           onClose={this.closeDestructiveDialog}
           onDetach={this.detachVolume}
@@ -407,9 +418,12 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
   };
 
   renderEmpty = () => {
-    const { linodeConfigs, linodeRegion, readOnly } = this.props;
+    const { linodeConfigs, linodeRegion, readOnly, regionsData } = this.props;
 
-    if (regionsWithoutBlockStorage.some(region => region === linodeRegion)) {
+    if (
+      linodeRegion &&
+      !doesRegionSupportBlockStorage(linodeRegion, regionsData)
+    ) {
       return (
         <React.Fragment>
           <DocumentTitleSegment segment="Volumes" />
@@ -624,9 +638,9 @@ const documented = setDocs(VolumesLanding.docs);
 const styled = withStyles(styles);
 
 const addAttachedLinodeInfoToVolume = (
-  volume: Linode.Volume,
+  volume: Volume,
   linodes: Linode.Linode[]
-): Linode.Volume | ExtendedVolume => {
+): Volume | ExtendedVolume => {
   if (!volume.linode_id) {
     return volume;
   }
@@ -642,10 +656,7 @@ const addAttachedLinodeInfoToVolume = (
   }
 };
 
-const addRecentEventToVolume = (
-  volume: Linode.Volume,
-  events: Linode.Event[]
-) => {
+const addRecentEventToVolume = (volume: Volume, events: Event[]) => {
   // We're filtering out events without entities in the reducer, so we can assume these
   // all have an entity attached.
   const recentEvent = events.find(event => event.entity!.id === volume.id);
@@ -656,7 +667,7 @@ const addRecentEventToVolume = (
   }
 };
 
-const filterVolumeEvents = (event: Linode.Event): boolean => {
+const filterVolumeEvents = (event: Event): boolean => {
   return (
     !event._initial && Boolean(event.entity) && event.entity!.type === 'volume'
   );
@@ -701,6 +712,7 @@ export default compose<CombinedProps, Props>(
       };
     }
   ),
+  withRegions(),
   withSnackbar
 )(VolumesLanding);
 

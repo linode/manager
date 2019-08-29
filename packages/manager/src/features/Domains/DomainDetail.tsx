@@ -1,3 +1,8 @@
+import {
+  Domain,
+  DomainRecord,
+  getDomainRecords
+} from 'linode-js-sdk/lib/domains';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -16,7 +21,6 @@ import summaryPanelStyles, {
   StyleProps
 } from 'src/containers/SummaryPanels.styles';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
-import { getDomainRecords } from 'src/services/domains';
 import { getAllWithArguments } from 'src/utilities/getAll';
 
 import Loading from 'src/components/LandingLoading';
@@ -58,7 +62,7 @@ const DomainDetail: React.FC<CombinedProps> = props => {
     }
   } = props;
 
-  const [records, updateRecords] = React.useState<Linode.DomainRecord[]>([]);
+  const [records, updateRecords] = React.useState<DomainRecord[]>([]);
   React.useEffect(() => {
     refreshDomainRecords();
   }, []);
@@ -74,7 +78,7 @@ const DomainDetail: React.FC<CombinedProps> = props => {
   };
 
   const refreshDomainRecords = () => {
-    getAllWithArguments<Linode.DomainRecord>(getDomainRecords)([+domainId!])
+    getAllWithArguments<DomainRecord>(getDomainRecords)([+domainId!])
       .then(({ data }) => {
         updateRecords(data);
       })
@@ -137,7 +141,7 @@ const reloaded = reloadableWithRouter<{}, { domainId?: number }>(
 );
 
 interface DomainProps extends Omit<StateProps, 'domainsData'> {
-  domain?: Linode.Domain;
+  domain?: Domain;
 }
 
 export default compose<CombinedProps, {}>(

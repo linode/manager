@@ -1,7 +1,9 @@
+import { Account, getAccountInfo } from 'linode-js-sdk/lib/account';
 import { lensPath, set, view } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
+
 import {
   createStyles,
   Theme,
@@ -14,9 +16,9 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { AccountsAndPasswords, BillingAndPayments } from 'src/documentation';
 import { Requestable } from 'src/requestableContext';
-import { getAccountInfo } from 'src/services/account';
 import composeState from 'src/utilities/composeState';
 import MakeAPaymentPanel from './BillingPanels/MakeAPaymentPanel';
+import PromotionsPanel from './BillingPanels/PromotionsPanel';
 import RecentInvoicesPanel from './BillingPanels/RecentInvoicesPanel';
 import RecentPaymentsPanel from './BillingPanels/RecentPaymentsPanel';
 import SummaryPanel from './BillingPanels/SummaryPanel';
@@ -46,11 +48,11 @@ const styles = (theme: Theme) =>
   });
 
 interface PreloadedProps {
-  account: { response: Linode.Account };
+  account: { response: Account };
 }
 
 interface State {
-  account: Requestable<Linode.Account>;
+  account: Requestable<Account>;
 }
 
 type CombinedProps = SetDocsProps &
@@ -102,8 +104,8 @@ export class BillingDetail extends React.Component<CombinedProps, State> {
       lastUpdated: 0,
       loading: true,
       request: this.getAccount,
-      update: (updater: (s: Linode.Account) => Linode.Account) => {
-        const data = view<State, Linode.Account>(L.account.data, this.state);
+      update: (updater: (s: Account) => Account) => {
+        const data = view<State, Account>(L.account.data, this.state);
 
         if (!data) {
           return;
@@ -136,16 +138,17 @@ export class BillingDetail extends React.Component<CombinedProps, State> {
             Billing
           </Typography>
           <Grid container>
-            <Grid item xs={12} md={3} className={classes.sidebar}>
+            <Grid item xs={12} md={4} lg={3} className={classes.sidebar}>
               <SummaryPanel
                 data-qa-summary-panel
                 history={this.props.history}
               />
             </Grid>
-            <Grid item xs={12} md={9} className={classes.main}>
+            <Grid item xs={12} md={8} lg={9} className={classes.main}>
               <UpdateContactInformationPanel />
               <UpdateCreditCardPanel />
               <MakeAPaymentPanel />
+              <PromotionsPanel />
               <RecentInvoicesPanel />
               <RecentPaymentsPanel />
             </Grid>

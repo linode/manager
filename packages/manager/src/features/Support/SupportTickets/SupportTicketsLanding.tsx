@@ -1,3 +1,4 @@
+import { SupportTicket } from "linode-js-sdk/lib/account";
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -39,7 +40,7 @@ interface State {
   value: number;
   drawerOpen: boolean;
   notice?: string;
-  newTicket?: Linode.SupportTicket;
+  newTicket?: SupportTicket;
   prefilledTitle?: string;
   prefilledDescription?: string;
 }
@@ -213,6 +214,6 @@ export class SupportTicketsLanding extends React.PureComponent<
 const styled = withStyles(styles);
 
 export default compose<any, any, any>(
-  styled,
-  withRouter
+  withRouter,
+  styled
 )(SupportTicketsLanding);

@@ -1,9 +1,14 @@
+import { AccountSettings } from 'linode-js-sdk/lib/account';
+import actionCreatorFactory from 'typescript-fsa';
+
 // TYPES
 export interface Action {
   type: string;
   error?: Linode.ApiFieldError[];
   data?: any;
 }
+
+export const actionCreator = actionCreatorFactory(`@@manager/account/settings`);
 
 type ActionCreator = (...args: any[]) => Action;
 
@@ -22,12 +27,12 @@ export const handleError: ActionCreator = (error: Linode.ApiFieldError[]) => ({
   error
 });
 
-export const handleSuccess: ActionCreator = (data: Linode.AccountSettings) => ({
+export const handleSuccess: ActionCreator = (data: AccountSettings) => ({
   type: SUCCESS,
   data
 });
 
-export const handleUpdate: ActionCreator = (data: Linode.AccountSettings) => ({
+export const handleUpdate: ActionCreator = (data: AccountSettings) => ({
   type: UPDATE,
   data
 });
@@ -38,3 +43,7 @@ export const handleUpdateError: ActionCreator = (
   type: UPDATE_ERROR,
   error
 });
+
+export const updateSettingsInStore = actionCreator<Partial<AccountSettings>>(
+  'update-store'
+);

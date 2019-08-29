@@ -1,4 +1,22 @@
-export const account: Linode.Account = {
+import {
+  Account,
+  AccountSettings,
+  ActivePromotion
+} from 'linode-js-sdk/lib/account';
+
+export const activePromotions: ActivePromotion[] = [
+  {
+    description: 'Get $10 off your Linodes',
+    expire_dt: '2019-08-30T23:52:21',
+    credit_remaining: '500.00',
+    this_month_credit_remaining: '10.00',
+    summary: '$50 off each month for 5 months',
+    credit_monthly_cap: '50',
+    image_url: 'https://my-image.com/image'
+  }
+];
+
+export const account: Account = {
   active_since: 'hello world',
   address_2: 'apt b2',
   email: 'mmckenna@linode.com',
@@ -14,17 +32,18 @@ export const account: Linode.Account = {
   address_1: '123 fake st',
   country: 'US',
   last_name: 'McKenna',
-  balance: 0.0,
-  balance_uninvoiced: 0,
+  balance: 70.0,
+  balance_uninvoiced: 10000,
   city: 'philadelphia',
   phone: '2151231234',
-  company: 'mmckenna'
+  company: 'mmckenna',
+  active_promotions: activePromotions
   // [BETA]
   // @todo: Uncomment this when it becomes generally available
   // capabilities: ['Linodes', 'NodeBalancers', 'Block Storage']
 };
 
-export const accountSettings: Linode.AccountSettings = {
+export const accountSettings: AccountSettings = {
   backups_enabled: true,
   managed: false,
   longview_subscription: null,

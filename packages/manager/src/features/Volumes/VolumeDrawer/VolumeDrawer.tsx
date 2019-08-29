@@ -1,3 +1,4 @@
+import { Grant } from "linode-js-sdk/lib/account";
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -48,6 +49,7 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
           <CreateVolumeForm
             onClose={actions.closeDrawer}
             onSuccess={actions.openForConfig}
+            regions={this.props.regions}
           />
         )}
         {mode === modes.EDITING &&
@@ -174,6 +176,7 @@ interface StateProps {
   linodeRegion?: string;
   message?: string;
   readOnly?: boolean;
+  regions: Linode.Region[];
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => {
@@ -197,11 +200,12 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     state
   );
   const volumePermissions = volumesPermissions.find(
-    (v: Linode.Grant) => v.id === volumeId
+    (v: Grant) => v.id === volumeId
   );
 
   return {
     drawerTitle: titleFromState(state.volumeDrawer),
+    regions: state.__resources.regions.entities,
     isOpen: mode !== modes.CLOSED,
     linodeId,
     linodeLabel,

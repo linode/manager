@@ -1,3 +1,6 @@
+import { Grants } from 'linode-js-sdk/lib/account';
+import { Profile } from 'linode-js-sdk/lib/profile';
+import { ResourcePage } from 'linode-js-sdk/lib/types';
 import { API_ROOT } from 'src/constants';
 
 import Request, {
@@ -8,8 +11,6 @@ import Request, {
   setXFilter
 } from '../index';
 import { updateProfileSchema } from './profile.schema';
-
-type Profile = Linode.Profile;
 
 /**
  * getProfile
@@ -47,7 +48,7 @@ export const updateProfile = (data: any) =>
  * This endpoint is unauthenticated.
  */
 export const listGrants = () =>
-  Request<Linode.Grants>(setURL(`${API_ROOT}/profile/grants`)).then(
+  Request<Grants>(setURL(`${API_ROOT}/profile/grants`)).then(
     response => response.data
   );
 
@@ -62,10 +63,9 @@ export const listGrants = () =>
  *
  */
 export const getMyGrants = () =>
-  Request<Linode.Grants>(
-    setURL(`${API_ROOT}/profile/grants`),
-    setMethod('GET')
-  ).then(response => response.data);
+  Request<Grants>(setURL(`${API_ROOT}/profile/grants`), setMethod('GET')).then(
+    response => response.data
+  );
 
 /**
  * getTrustedDevices
@@ -73,7 +73,7 @@ export const getMyGrants = () =>
  * Returns a paginated list of all trusted devices associated with the user's profile.
  */
 export const getTrustedDevices = (params: any, filter: any) =>
-  Request<Linode.ResourcePage<Linode.Device>>(
+  Request<ResourcePage<Linode.Device>>(
     setURL(`${API_ROOT}/profile/devices`),
     setMethod('GET'),
     setXFilter(filter),

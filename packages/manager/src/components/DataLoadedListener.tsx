@@ -8,13 +8,14 @@ import * as React from 'react';
 import { compose } from 'recompose';
 
 interface Props {
-  profileLoadingOrErrorExists: boolean;
-  accountLoadingOrErrorExists: boolean;
-  linodesLoadingOrErrorExists: boolean;
-  volumesLoadingOrErrorExists: boolean;
-  nodeBalancersLoadingOrErrorExists: boolean;
-  bucketsLoadingOrErrorExists: boolean;
-  domainsLoadingOrErrorExists: boolean;
+  profileLoadedOrErrorExists: boolean;
+  accountLoadedOrErrorExists: boolean;
+  linodesLoadedOrErrorExists: boolean;
+  volumesLoadedOrErrorExists: boolean;
+  nodeBalancersLoadedOrErrorExists: boolean;
+  bucketsLoadedOrErrorExists: boolean;
+  domainsLoadedOrErrorExists: boolean;
+  accountSettingsLoadedOrErrorExists: boolean;
   markAppAsLoaded: () => void;
   appIsLoaded: boolean;
   flagsHaveLoaded: boolean;
@@ -24,13 +25,14 @@ const DataLoadedListener: React.FC<Props> = props => {
   React.useEffect(() => {
     if (
       shouldMarkAppAsDone(
-        props.profileLoadingOrErrorExists,
-        props.accountLoadingOrErrorExists,
-        props.linodesLoadingOrErrorExists,
-        props.volumesLoadingOrErrorExists,
-        props.nodeBalancersLoadingOrErrorExists,
-        props.bucketsLoadingOrErrorExists,
-        props.domainsLoadingOrErrorExists,
+        props.profileLoadedOrErrorExists,
+        props.accountLoadedOrErrorExists,
+        props.linodesLoadedOrErrorExists,
+        props.volumesLoadedOrErrorExists,
+        props.nodeBalancersLoadedOrErrorExists,
+        props.bucketsLoadedOrErrorExists,
+        props.domainsLoadedOrErrorExists,
+        props.accountSettingsLoadedOrErrorExists,
         props.flagsHaveLoaded
       ) &&
       !props.appIsLoaded
@@ -45,13 +47,14 @@ const DataLoadedListener: React.FC<Props> = props => {
 export default compose<Props, Props>(React.memo)(DataLoadedListener);
 
 const shouldMarkAppAsDone = (
-  profileLoadingOrErrorExists: boolean,
-  accountLoadingOrErrorExists: boolean,
-  linodesLoadingOrErrorExists: boolean,
-  volumesLoadingOrErrorExists: boolean,
-  nodeBalancersLoadingOrErrorExists: boolean,
-  bucketsLoadingOrErrorExists: boolean,
-  domainsLoadingOrErrorExists: boolean,
+  profileLoadedOrErrorExists: boolean,
+  accountLoadedOrErrorExists: boolean,
+  linodesLoadedOrErrorExists: boolean,
+  volumesLoadedOrErrorExists: boolean,
+  nodeBalancersLoadedOrErrorExists: boolean,
+  bucketsLoadedOrErrorExists: boolean,
+  domainsLoadedOrErrorExists: boolean,
+  accountSettingsLoadedOrErrorExists: boolean,
   flagsHaveLoaded: boolean
 ): boolean => {
   const pathname = window.location.pathname;
@@ -73,7 +76,8 @@ const shouldMarkAppAsDone = (
       'nodebalancer',
       'object',
       'profile',
-      'account'
+      'account',
+      'managed'
     ].every(eachStr => {
       return !pathname.match(new RegExp(eachStr, 'i'));
     })
@@ -83,42 +87,46 @@ const shouldMarkAppAsDone = (
 
   if (
     pathname.match(/dashboard/i) &&
-    (linodesLoadingOrErrorExists &&
-      volumesLoadingOrErrorExists &&
-      nodeBalancersLoadingOrErrorExists &&
-      accountLoadingOrErrorExists &&
-      profileLoadingOrErrorExists &&
-      domainsLoadingOrErrorExists)
+    (linodesLoadedOrErrorExists &&
+      volumesLoadedOrErrorExists &&
+      nodeBalancersLoadedOrErrorExists &&
+      accountLoadedOrErrorExists &&
+      profileLoadedOrErrorExists &&
+      domainsLoadedOrErrorExists)
     /** not checking bucket data here for now */
   ) {
     return true;
   }
 
-  if (pathname.match(/linode/i) && !!linodesLoadingOrErrorExists) {
+  if (pathname.match(/linode/i) && !!linodesLoadedOrErrorExists) {
     return true;
   }
 
-  if (pathname.match(/volume/i) && !!volumesLoadingOrErrorExists) {
+  if (pathname.match(/volume/i) && !!volumesLoadedOrErrorExists) {
     return true;
   }
 
-  if (pathname.match(/nodebalancer/i) && !!nodeBalancersLoadingOrErrorExists) {
+  if (pathname.match(/nodebalancer/i) && !!nodeBalancersLoadedOrErrorExists) {
     return true;
   }
 
-  if (pathname.match(/domain/i) && !!domainsLoadingOrErrorExists) {
+  if (pathname.match(/domain/i) && !!domainsLoadedOrErrorExists) {
     return true;
   }
 
-  if (pathname.match(/object/i) && !!bucketsLoadingOrErrorExists) {
+  if (pathname.match(/object/i) && !!bucketsLoadedOrErrorExists) {
     return true;
   }
 
-  if (pathname.match(/profile/i) && !!profileLoadingOrErrorExists) {
+  if (pathname.match(/profile/i) && !!profileLoadedOrErrorExists) {
     return true;
   }
 
-  if (pathname.match(/account/i) && !!accountLoadingOrErrorExists) {
+  if (pathname.match(/account/i) && !!accountLoadedOrErrorExists) {
+    return true;
+  }
+
+  if (pathname.match(/managed/i) && !!accountSettingsLoadedOrErrorExists) {
     return true;
   }
 

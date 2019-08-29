@@ -20,13 +20,14 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     attachmentPaper: {
+      marginTop: 4,
       padding: `
       ${theme.spacing(1) + theme.spacing(1) / 2}px
       ${theme.spacing(3)}px
       0
     `,
       overflowX: 'auto',
-      width: 500
+      border: `1px solid ${theme.color.grey2}`
     },
     attachmentRow: {
       borderBottom: `1px solid ${theme.palette.divider}`,
@@ -54,26 +55,28 @@ export const TicketAttachmentRow: React.StatelessComponent<
 > = props => {
   const { attachments, classes, icons } = props;
   return (
-    <Paper className={classes.attachmentPaper}>
-      {attachments.map((attachment, idx) => {
-        return (
-          <Grid
-            container
-            wrap="nowrap"
-            key={idx}
-            className={classes.attachmentRow}
-            data-qa-attachment-row
-          >
-            <Grid item className={classes.attachmentIcon}>
-              {icons[idx]}
+    <Grid item>
+      <Paper className={classes.attachmentPaper}>
+        {attachments.map((attachment, idx) => {
+          return (
+            <Grid
+              container
+              wrap="nowrap"
+              key={idx}
+              className={classes.attachmentRow}
+              data-qa-attachment-row
+            >
+              <Grid item className={classes.attachmentIcon}>
+                {icons[idx]}
+              </Grid>
+              <Grid item>
+                <Typography component="span">{attachment}</Typography>
+              </Grid>
             </Grid>
-            <Grid item>
-              <Typography component="span">{attachment}</Typography>
-            </Grid>
-          </Grid>
-        );
-      })}
-    </Paper>
+          );
+        })}
+      </Paper>
+    </Grid>
   );
 };
 

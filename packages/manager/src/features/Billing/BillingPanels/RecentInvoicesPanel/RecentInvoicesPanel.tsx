@@ -1,3 +1,4 @@
+import { Account, getInvoices, Invoice } from 'linode-js-sdk/lib/account'
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -12,14 +13,13 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import { getInvoices } from 'src/services/account';
 import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { ThunkDispatch } from 'src/store/types';
 
 import RecentInvoiceRow from './RecentInvoicesRow';
 
-type CombinedProps = PaginationProps<Linode.Invoice> & StateProps;
+type CombinedProps = PaginationProps<Invoice> & StateProps;
 
 interface State {
   loading: boolean;
@@ -94,8 +94,8 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
         <RecentInvoiceRow key={index} invoice={eachInvoice} account={account} />
       ))
     ) : (
-      <TableRowEmptyState colSpan={4} />
-    );
+        <TableRowEmptyState colSpan={4} />
+      );
   };
 
   handleExpansion = (e: any, expanded: boolean) => {
@@ -107,7 +107,7 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
 }
 
 interface ReduxState {
-  account?: Linode.Account;
+  account?: Account;
   accountLoading: boolean;
   accountError?: Linode.ApiFieldError[] | Error;
 }

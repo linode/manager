@@ -1,3 +1,11 @@
+import {
+  createOAuthClient,
+  deleteOAuthClient,
+  getOAuthClients,
+  OAuthClient,
+  resetOAuthClientSecret,
+  updateOAuthClient,
+} from "linode-js-sdk/lib/account";
 import * as React from 'react';
 import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
@@ -23,13 +31,6 @@ import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { LinodeAPI } from 'src/documentation';
-import {
-  createOAuthClient,
-  deleteOAuthClient,
-  getOAuthClients,
-  resetOAuthClientSecret,
-  updateOAuthClient
-} from 'src/services/account';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import ActionMenu from './OAuthClientActionMenu';
@@ -47,7 +48,7 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface Props extends PaginationProps<Linode.OAuthClient> {}
+interface Props extends PaginationProps<OAuthClient> {}
 
 interface State {
   secretModalOpen: boolean;
@@ -304,7 +305,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
     );
   };
 
-  renderRows = (data: Linode.OAuthClient[]) => {
+  renderRows = (data: OAuthClient[]) => {
     return data.map(({ id, label, redirect_uri, public: isPublic, status }) => (
       <TableRow key={id} data-qa-table-row={label}>
         <TableCell parentColumn="Label" data-qa-oauth-label>

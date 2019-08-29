@@ -1,8 +1,9 @@
+import { Event } from 'linode-js-sdk/lib/account';
 import { path } from 'ramda';
 import { isProduction } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
 
-type EventMessageCreator = (e: Linode.Event) => string;
+type EventMessageCreator = (e: Event) => string;
 
 interface CreatorsForStatus {
   scheduled?: EventMessageCreator;
@@ -302,27 +303,15 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   //   finished: e => ``,
   //   notification: e => ``,
   // },
-  // managed_enabled: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // managed_service_create: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // managed_service_delete: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  managed_enabled: {
+    notification: e => `Managed has been activated on your account.`
+  },
+  managed_service_create: {
+    notification: e => `Managed service ${e.entity!.label} has been created.`
+  },
+  managed_service_delete: {
+    notification: e => `Managed service ${e.entity!.label} has been deleted.`
+  },
   nodebalancer_config_create: {
     notification: e =>
       `A config on NodeBalancer ${e.entity!.label} has been created.`
@@ -491,7 +480,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   }
 };
 
-export default (e: Linode.Event): string => {
+export default (e: Event): string => {
   const fn = path<EventMessageCreator>(
     [e.action, e.status],
     eventMessageCreators

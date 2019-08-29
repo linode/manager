@@ -1,4 +1,5 @@
 import { Form, Formik } from 'formik';
+import { CloneVolumeSchema } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Typography from 'src/components/core/Typography';
@@ -6,11 +7,13 @@ import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/events';
-import { CloneVolumeSchema } from 'src/services/volumes/volumes.schema';
+import {
+  handleFieldErrors,
+  handleGeneralErrors
+} from 'src/utilities/formikErrorUtils';
 import LabelField from './LabelField';
 import NoticePanel from './NoticePanel';
 import PricePanel from './PricePanel';
-import { handleFieldErrors, handleGeneralErrors } from './utils';
 import VolumesActionsPanel from './VolumesActionsPanel';
 
 interface Props {

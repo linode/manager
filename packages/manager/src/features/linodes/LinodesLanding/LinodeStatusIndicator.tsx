@@ -1,4 +1,5 @@
 import Cached from '@material-ui/icons/Cached';
+import { Event } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import {
   createStyles,
@@ -10,7 +11,7 @@ import { linodeInTransition } from 'src/features/linodes/transitions';
 
 interface Props {
   status: Linode.LinodeStatus | 'loading';
-  recentEvent?: Linode.Event;
+  recentEvent?: Event;
 }
 
 type CSSClasses = 'grey' | 'dot' | 'green' | 'red' | 'transition';

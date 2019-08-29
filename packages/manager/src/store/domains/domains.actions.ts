@@ -1,10 +1,11 @@
-import { Dispatch } from 'redux';
 import {
   CreateDomainPayload,
+  Domain,
   getDomain,
   getDomains,
   UpdateDomainPayload
-} from 'src/services/domains';
+} from 'linode-js-sdk/lib/domains';
+import { Dispatch } from 'redux';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import actionCreatorFactory from 'typescript-fsa';
@@ -24,24 +25,24 @@ const actionCreator = actionCreatorFactory(`@@manager/domains`);
 export const getDomainsRequest = actionCreator('request');
 
 export const getDomainsSuccess = actionCreator<{
-  data: Linode.Domain[];
+  data: Domain[];
   results: number;
 }>('success');
 
 export const getDomainsFailure = actionCreator<Linode.ApiFieldError[]>('fail');
 
-export const upsertDomain = actionCreator<Linode.Domain>('upsert');
+export const upsertDomain = actionCreator<Domain>('upsert');
 
 export const deleteDomain = actionCreator<number>('delete');
 
 export const createDomainActions = actionCreator.async<
   CreateDomainPayload,
-  Linode.Domain,
+  Domain,
   Linode.ApiFieldError[]
 >('create');
 export const updateDomainActions = actionCreator.async<
   UpdateDomainParams,
-  Linode.Domain,
+  Domain,
   Linode.ApiFieldError[]
 >('update');
 export const deleteDomainActions = actionCreator.async<
@@ -53,12 +54,12 @@ export const deleteDomainActions = actionCreator.async<
 /**
  * Async
  */
-export const requestDomains: ThunkActionCreator<
-  Promise<Linode.Domain[]>
-> = () => (dispatch: Dispatch<any>) => {
+export const requestDomains: ThunkActionCreator<Promise<Domain[]>> = () => (
+  dispatch: Dispatch<any>
+) => {
   dispatch(getDomainsRequest());
 
-  return getAll<Linode.Domain>(getDomains)()
+  return getAll<Domain>(getDomains)()
     .then(domains => {
       dispatch(getDomainsSuccess(domains));
       return domains;

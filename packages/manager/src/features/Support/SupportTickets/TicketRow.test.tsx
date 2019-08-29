@@ -1,13 +1,32 @@
-import { shallow } from 'enzyme';
+import { render } from '@testing-library/react';
 import * as React from 'react';
+import { wrapWithTheme } from 'src/utilities/testHelpers';
 
 import { supportTicket } from 'src/__data__/supportTicket';
 import TicketRow from './TicketRow';
 
-const component = shallow(<TicketRow ticket={supportTicket} />);
+window.matchMedia = jest.fn().mockImplementation(query => {
+  return {
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn()
+  };
+});
 
 describe('TicketList component', () => {
   it('should render', () => {
-    expect(component).toHaveLength(1);
+    const { getByTestId } = render(
+      wrapWithTheme(
+        <table>
+          <tbody>
+            <TicketRow ticket={supportTicket} />
+          </tbody>
+        </table>
+      )
+    );
+    const ticketRow = getByTestId('ticket-row');
+    expect(ticketRow).toBeInTheDocument();
   });
 });

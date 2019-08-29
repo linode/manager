@@ -1,0 +1,20 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "module": "umd",
+    "emitDeclarationOnly": true,
+    "declaration": true,
+    "outDir": "./lib",
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "strict": true,
+    "baseUrl": ".",
+  },
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "node_modules/**/*",
+    "**/__tests__/*"
+  ]
+}

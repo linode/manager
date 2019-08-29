@@ -4,6 +4,48 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.69.0] - 2019-08-28
+
+### Added:
+- Inter-datacenter Migrations for Linodes
+- Warning text to detach volume dialog
+- Ability to add, edit, and delete Managed credentials
+- Ability to add, edit, and delete Managed contacts
+- Ability to add, update, and delete Managed service monitors
+- Ability to update Managed SSH Access for Linodes
+- Button to navigate to Create Linode workflow from the Linodes landing page
+
+### Changed:
+- Use dynamic versions for Kubernetes create workflow
+- Remove tags from Domains landing table rows
+- Support Tickets refactor
+- Improve splash page loader animation
+- Required textfields now show “(required)” instead of an asterisk
+- Show tax banner on dashboard and account landing only
+- Region selection in both the Create Linode and Create Volume workflows
+- Object Storage documentation
+
+### Fixed:
+- Update copy in credentials table
+- StackScript error handling
+
+## [v0.68.0] - 2019-08-15
+
+### Added:
+- Support for promotion codes and expiring credits
+- SSH Access Key Table for Managed
+- Delete monitor action to MonitorActionMenu
+- GST notification for users in Australia and India
+
+### Fixed:
+- CSS animations in JSS
+- NodeBalancer connection grid display
+- Long titles broken on image names
+- Button types for cancel actions
+- Issue with entity labels not being able to be updated when an event was in-progress
+- Billing form state resets when changing country selection
+- One-click cards display on large breakpoints
+
 ## [v0.67.0] - 2019-08-12
 
 ### Added:

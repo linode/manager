@@ -1,3 +1,7 @@
+import { Account, AccountSettings } from 'linode-js-sdk/lib/account';
+import { Domain } from 'linode-js-sdk/lib/domains';
+import { Profile } from 'linode-js-sdk/lib/profile';
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
@@ -128,16 +132,16 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 
 interface DispatchProps {
   initSession: () => void;
-  requestAccount: () => Promise<Linode.Account>;
-  requestDomains: () => Promise<Linode.Domain[]>;
+  requestAccount: () => Promise<Account>;
+  requestDomains: () => Promise<Domain[]>;
   requestImages: () => Promise<Linode.Image[]>;
   requestLinodes: () => Promise<Linode.Linode[]>;
   requestNotifications: () => Promise<Linode.Notification[]>;
-  requestSettings: () => Promise<Linode.AccountSettings>;
+  requestSettings: () => Promise<AccountSettings>;
   requestTypes: () => Promise<Linode.LinodeType[]>;
   requestRegions: () => Promise<Linode.Region[]>;
-  requestVolumes: () => Promise<Linode.Volume[]>;
-  requestProfile: () => Promise<Linode.Profile>;
+  requestVolumes: () => Promise<Volume[]>;
+  requestProfile: () => Promise<Profile>;
   requestBuckets: () => Promise<Linode.Bucket[]>;
   requestClusters: () => Promise<Linode.Cluster[]>;
 }

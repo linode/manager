@@ -1,3 +1,4 @@
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import { API_ROOT } from 'src/constants';
 import Request, {
   setData,
@@ -68,7 +69,7 @@ export const getLinodeVolumes = (
   params: any = {},
   filter: any = {}
 ) =>
-  Request<Page<Linode.Volume>>(
+  Request<Page<Volume>>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/volumes`),
     setMethod('GET'),
     setXFilter(filter),

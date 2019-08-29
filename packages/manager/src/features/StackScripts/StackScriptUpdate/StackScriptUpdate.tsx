@@ -1,3 +1,4 @@
+import { Grant } from "linode-js-sdk/lib/account";
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -217,10 +218,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
         this.setState(
           () => ({
             isSubmitting: false,
-            errors:
-              error.response &&
-              error.response.data &&
-              error.response.data.errors
+            errors: error
           }),
           () => {
             scrollErrorIntoView();
@@ -396,7 +394,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
     state
   );
   const grantsForThisStackScript = stackScriptGrants.find(
-    (eachGrant: Linode.Grant) => eachGrant.id === Number(stackScriptID)
+    (eachGrant: Grant) => eachGrant.id === Number(stackScriptID)
   );
 
   return {

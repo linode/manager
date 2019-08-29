@@ -1,3 +1,4 @@
+import { Profile } from 'linode-js-sdk/lib/profile';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -31,7 +32,7 @@ const styles = (theme: Theme) =>
 interface Props {
   username: string;
   email: string;
-  updateProfile: (v: Partial<Linode.Profile>) => Promise<Linode.Profile>;
+  updateProfile: (v: Partial<Profile>) => Promise<Profile>;
   errors?: Linode.ApiFieldError[];
 }
 

@@ -1,3 +1,4 @@
+import { Entity, Event } from 'linode-js-sdk/lib/account';
 import { compose, path, pathOr, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -28,6 +29,10 @@ import {
 } from 'src/store/events/event.helpers';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 import DashboardCard from '../DashboardCard';
+
+interface EntityEvent extends Omit<Event, 'entitiy'> {
+  entity: Entity;
+}
 
 type ClassNames =
   | 'root'
@@ -204,7 +209,7 @@ const withUpdatingLinodes = connect((state: ApplicationState, ownProps: {}) => {
   };
 });
 
-const mergeEvents = (events: Linode.Event[]) => (linodes: Linode.Linode[]) =>
+const mergeEvents = (events: Event[]) => (linodes: Linode.Linode[]) =>
   events.reduce((updatedLinodes, event) => {
     if (isWantedEvent(event)) {
       return updatedLinodes.map(linode =>
@@ -217,7 +222,7 @@ const mergeEvents = (events: Linode.Event[]) => (linodes: Linode.Linode[]) =>
     return updatedLinodes;
   }, linodes);
 
-const isWantedEvent = (e: Linode.Event): e is Linode.EntityEvent => {
+const isWantedEvent = (e: Event): e is EntityEvent => {
   if (!isInProgressEvent(e)) {
     return false;
   }

@@ -215,7 +215,11 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       label: '#555',
       disabledText: '#c9cacb',
       kubeLabel: '#272b31',
-      primaryNavText: '#c9cacb'
+      primaryNavText: '#c9cacb',
+      graphBlue: 'rgba(54, 131, 220, .5)',
+      graphYellow: 'rgba(255, 209, 0, .5)',
+      graphPurple: 'rgba(204, 1, 153, .5)',
+      graphGreen: 'rgba(1, 177, 89, .5)'
     },
     font: {
       normal: primaryFonts.normal,
@@ -922,92 +926,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         selected: {}
       },
       MuiPaper: {
-        root: {
-          '& pre': {
-            backgroundColor: '#eee',
-            padding: '8px',
-            fontSize: '1rem',
-            overflowX: 'auto'
-          },
-          '& span.hljs-comment, & span.hljs-quote': {
-            color: '#655f6d'
-          },
-          [`
-            & span.hljs-variable, 
-            & span.hljs-template-variable,
-            & span.hljs-attribute,
-            & span.hljs-tag,
-            & span.hljs-name,
-            & span.hljs-regexp
-            & span.hljs-link,
-            & span.hljs-selector-id,
-            & span.hljs-selector-class
-          `]: {
-            color: '#be4678'
-          },
-          [`
-            & span.hljs-attr
-          `]: {
-            color: '#2466b3'
-          },
-          [`
-            & span.hljs-meta,
-            & span.hljs-built_in,
-            & span.hljs-butonin-name,
-            & span.hljs-literal,
-            & span.hljs-type,
-            & span.hljs-params
-          `]: {
-            color: '#aa573c'
-          },
-          [`
-            & span.hljs-number,
-            & span.hljs-string,
-            & span.hljs-symbol,
-            & span.hljs-bullet
-          `]: {
-            color: 'black'
-          },
-          [`
-            & span.hljs-title,
-            & span.hljs-section
-          `]: {
-            color: '#576ddb'
-          },
-          [`
-            & span.hljs-keyword,
-            & span.hljs-selector-tag
-          `]: {
-            color: '#955ae7'
-          },
-          [`
-            & span.hljs-deletion,
-            & span.hljs-addition
-          `]: {
-            color: '#19171c',
-            display: 'inline-block',
-            width: '100%'
-          },
-          '& span.hljs-deletion': {
-            backgroundColor: '#be4678'
-          },
-          '& span.hljs-addition': {
-            backgroundColor: '#2a9292'
-          },
-          '& span.hljs': {
-            display: 'block',
-            overflowX: 'auto',
-            background: '#efecf4',
-            color: `#585260`,
-            padding: 0.5
-          },
-          '& span.hljs-emphasis': {
-            fontStyle: 'italic'
-          },
-          '& span.hljs-strong': {
-            fontWeight: 'bold'
-          }
-        },
+        root: {},
         rounded: {
           borderRadius: 0
         }

@@ -1,5 +1,6 @@
 import * as Bluebird from 'bluebird';
 import * as classNames from 'classnames';
+import { SupportReply, SupportTicket } from "linode-js-sdk/lib/account";
 import { compose, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -65,7 +66,12 @@ const styles = (theme: Theme) =>
       padding: 0
     },
     label: {
-      marginBottom: theme.spacing(1)
+      marginLeft: 32,
+      width: `calc(100% - (32px + ${theme.spacing(7)}px))`,
+      [theme.breakpoints.up('sm')]: {
+        marginLeft: `calc(40px + ${theme.spacing(1)}px)`,
+        width: `calc(100% - (40px + ${theme.spacing(7)}px))`
+      }
     },
     ticketLabel: {
       position: 'relative',
@@ -73,6 +79,10 @@ const styles = (theme: Theme) =>
     },
     labelIcon: {
       paddingRight: 0,
+      '& svg': {
+        width: 40,
+        height: 40
+      },
       '& .outerCircle': {
         fill: theme.bg.offWhiteDT,
         stroke: theme.bg.main
@@ -83,6 +93,7 @@ const styles = (theme: Theme) =>
     },
     listParent: {},
     status: {
+      marginTop: 5,
       marginLeft: theme.spacing(1),
       color: theme.color.white
     },
@@ -105,8 +116,8 @@ interface State {
   loading: boolean;
   errors?: Linode.ApiFieldError[];
   attachmentErrors: AttachmentError[];
-  replies?: Linode.SupportReply[];
-  ticket?: Linode.SupportTicket;
+  replies?: SupportReply[];
+  ticket?: SupportTicket;
   ticketCloseSuccess: boolean;
 }
 
@@ -169,7 +180,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
   };
 
   reloadAttachments = () => {
-    this.loadTicket().then((ticket: Linode.SupportTicket) => {
+    this.loadTicket().then((ticket: SupportTicket) => {
       this.setState({
         ticket: {
           ...this.state.ticket!,
@@ -186,8 +197,8 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
   };
 
   handleJoinedPromise = (
-    ticketResponse: Linode.SupportTicket,
-    replyResponse: Linode.SupportReply[]
+    ticketResponse: SupportTicket,
+    replyResponse: SupportReply[]
   ) => {
     /** Gets a unique list of gravatar IDs */
     const uniqueGravatarIDs = replyResponse.reduce(reduceToUniqueGravatarIDs, [
@@ -225,7 +236,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     });
   };
 
-  onCreateReplySuccess = (newReply: Linode.SupportReply) => {
+  onCreateReplySuccess = (newReply: SupportReply) => {
     const replies = pathOr([], ['replies'], this.state);
     getGravatarUrlFromHash(newReply.gravatar_id).then(url => {
       newReply.gravatarUrl = url;
@@ -271,9 +282,12 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
         <Grid item className={classes.labelIcon}>
           {icon}
         </Grid>
-        <Grid item>
+        <Grid item className="p0">
           {target !== null ? (
-            <Link to={target} className="secondaryLink">
+            <Link
+              to={target}
+              className={`${classes.ticketLabel} secondaryLink`}
+            >
               {entity.label}
             </Link>
           ) : (
@@ -286,11 +300,11 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
     );
   };
 
-  renderReplies = (replies: Linode.SupportReply[]) => {
+  renderReplies = (replies: SupportReply[]) => {
     const { ticket } = this.state;
     return replies
       .filter(reply => reply.description.trim() !== '')
-      .map((reply: Linode.SupportReply, idx: number) => {
+      .map((reply: SupportReply, idx: number) => {
         return (
           <ExpandableTicketPanel
             key={idx}
@@ -405,26 +419,29 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
         )}
 
         <Grid container className={classes.listParent}>
-          {/* If the ticket isn't blank, display it, followed by replies (if any). */}
-          {ticket.description && (
-            <ExpandableTicketPanel
-              key={ticket.id}
-              ticket={ticket}
-              isCurrentUser={profileUsername === ticket.opened_by}
-            />
-          )}
-          {replies && this.renderReplies(replies)}
-          <TicketAttachmentList attachments={ticket.attachments} />
-          {/* If the ticket is open, allow users to reply to it. */}
-          {['open', 'new'].includes(ticket.status) && (
-            <Reply
-              ticketId={ticket.id}
-              closable={ticket.closable}
-              onSuccess={this.onCreateReplySuccess}
-              reloadAttachments={this.reloadAttachments}
-              closeTicketSuccess={this.closeTicketSuccess}
-            />
-          )}
+          <Grid item xs={12}>
+            {/* If the ticket isn't blank, display it, followed by replies (if any). */}
+            {ticket.description && (
+              <ExpandableTicketPanel
+                key={ticket.id}
+                ticket={ticket}
+                isCurrentUser={profileUsername === ticket.opened_by}
+              />
+            )}
+            {replies && this.renderReplies(replies)}
+            <TicketAttachmentList attachments={ticket.attachments} />
+            {/* If the ticket is open, allow users to reply to it. */}
+            {['open', 'new'].includes(ticket.status) && (
+              <Reply
+                ticketId={ticket.id}
+                closable={ticket.closable}
+                onSuccess={this.onCreateReplySuccess}
+                reloadAttachments={this.reloadAttachments}
+                closeTicketSuccess={this.closeTicketSuccess}
+              />
+            )}
+          </Grid>
+          <Grid item xs={12} />
         </Grid>
       </React.Fragment>
     );
@@ -433,7 +450,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
 
 const reduceToUniqueGravatarIDs = (
   acc: string[],
-  reply: Linode.SupportReply
+  reply: SupportReply
 ) => {
   const { gravatar_id } = reply;
 
@@ -458,7 +475,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 });
 
 const matchGravatarURLToReply = (gravatarMap: { [key: string]: string }) => (
-  reply: Linode.SupportReply
+  reply: SupportReply
 ) => ({
   ...reply,
   gravatarUrl: pathOr('not found', [reply.gravatar_id], gravatarMap)
@@ -468,6 +485,6 @@ export const connected = connect(mapStateToProps);
 
 export default compose<any, any, any, any>(
   setDocs(SupportTicketDetail.docs),
-  styled,
-  connected
+  connected,
+  styled
 )(SupportTicketDetail);

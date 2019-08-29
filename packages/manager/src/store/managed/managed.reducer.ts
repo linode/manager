@@ -6,8 +6,12 @@ import { EntityError, EntityState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import updateOrAdd from 'src/utilities/updateOrAdd';
 import {
+  createServiceMonitorActions,
+  deleteServiceMonitorActions,
   disableServiceMonitorActions,
-  requestServicesActions
+  enableServiceMonitorActions,
+  requestServicesActions,
+  updateServiceMonitorActions
 } from './managed.actions';
 
 /**
@@ -36,6 +40,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       draft.results = result.map(s => s.id);
       draft.loading = false;
       draft.lastUpdated = Date.now();
+      draft.error!.read = undefined;
     }
 
     if (isType(action, requestServicesActions.started)) {
@@ -52,16 +57,74 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       );
     }
 
-    if (isType(action, requestServicesActions.started)) {
+    if (
+      isType(action, disableServiceMonitorActions.started) ||
+      isType(action, enableServiceMonitorActions.started)
+    ) {
       draft.error!.update = undefined;
     }
 
-    if (isType(action, disableServiceMonitorActions.done)) {
+    if (
+      isType(action, disableServiceMonitorActions.done) ||
+      isType(action, enableServiceMonitorActions.done)
+    ) {
       const { result } = action.payload;
       draft.entities = updateOrAdd(result, state.entities);
+      draft.results = draft.entities.map(m => m.id);
     }
 
-    if (isType(action, disableServiceMonitorActions.failed)) {
+    if (
+      isType(action, disableServiceMonitorActions.failed) ||
+      isType(action, enableServiceMonitorActions.failed)
+    ) {
+      const { error } = action.payload;
+      draft.error!.update = error;
+    }
+
+    if (isType(action, createServiceMonitorActions.started)) {
+      draft.error!.create = undefined;
+    }
+
+    if (isType(action, createServiceMonitorActions.done)) {
+      const { result } = action.payload;
+      draft.entities.push(result);
+      draft.results.push(result.id);
+    }
+
+    if (isType(action, createServiceMonitorActions.failed)) {
+      const { error } = action.payload;
+      draft.error!.create = error;
+    }
+
+    if (isType(action, deleteServiceMonitorActions.started)) {
+      draft.error!.delete = undefined;
+    }
+
+    if (isType(action, deleteServiceMonitorActions.done)) {
+      const { params: monitor } = action.payload;
+      draft.entities = state.entities.filter(
+        thisMonitor => thisMonitor.id !== monitor.monitorID
+      );
+      draft.results = draft.entities.map(m => m.id);
+    }
+
+    if (isType(action, deleteServiceMonitorActions.failed)) {
+      const { error } = action.payload;
+      draft.error!.delete = error;
+    }
+
+    if (isType(action, updateServiceMonitorActions.started)) {
+      draft.error!.update = undefined;
+    }
+
+    if (isType(action, updateServiceMonitorActions.done)) {
+      const { result } = action.payload;
+      draft.entities = updateOrAdd(result, state.entities);
+      draft.results = draft.entities.map(m => m.id);
+      draft.lastUpdated = Date.now();
+    }
+
+    if (isType(action, updateServiceMonitorActions.failed)) {
       const { error } = action.payload;
       draft.error!.update = error;
     }

@@ -150,7 +150,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
       : '/support/search/';
   };
 
-  handleSelect = (selected: Item) => {
+  handleSelect = (selected: Item<string>) => {
     if (!selected) {
       return;
     }
@@ -205,7 +205,9 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
             isClearable={false}
             inputValue={inputValue}
             options={options}
-            components={{ Option: SearchItem, DropdownIndicator: () => null }}
+            components={
+              { Option: SearchItem, DropdownIndicator: () => null } as any
+            }
             onChange={this.handleSelect}
             onInputChange={this.onInputValueChange}
             placeholder="Search for answers..."
@@ -213,7 +215,7 @@ class AlgoliaSearchBar extends React.Component<CombinedProps, State> {
               [classes.enhancedSelectWrapper]: true,
               [classes.enhancedSelectWrapperCompact]: spacingMode === 'compact'
             })}
-            styleOverrides={selectStyles}
+            styles={selectStyles}
             value={false}
           />
         </div>
