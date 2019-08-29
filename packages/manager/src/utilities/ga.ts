@@ -1,5 +1,6 @@
+import { pathOr } from 'ramda';
 import { event } from 'react-ga';
-import { GA_ID, GA_ID_2 } from 'src/constants';
+import { dcDisplayNames, GA_ID, GA_ID_2 } from 'src/constants';
 
 interface AnalyticsEvent {
   category: string;
@@ -252,4 +253,37 @@ export const sendMigrationNavigationEvent = (pathNavigatedFrom: string) => {
     category: 'Migration Navigation',
     action: `From ${pathNavigatedFrom}`
   });
+};
+
+export const sendMigrationInitiatedEvent = (
+  sourceRegion: string,
+  destRegion: string,
+  usersCurrentHour: number
+) => {
+  const safeSourceRegion = pathOr(sourceRegion, [sourceRegion], dcDisplayNames);
+  const safeDestRegion = pathOr(destRegion, [destRegion], dcDisplayNames);
+
+  sendEvent({
+    category: 'Inter-DC Migration Requested',
+    action: `Initiation Time: ${generateTimeOfDay(usersCurrentHour)}`,
+    label: `${safeSourceRegion} to ${safeDestRegion}`
+  });
+};
+
+export const generateTimeOfDay = (currentHour: number) => {
+  let currentTimeOfDay = 'Other';
+
+  if (currentHour >= 0 && currentHour < 5) {
+    currentTimeOfDay = 'Early Morning';
+  } else if (currentHour >= 5 && currentHour < 12) {
+    currentTimeOfDay = 'Morning';
+  } else if (currentHour >= 12 && currentHour < 17) {
+    currentTimeOfDay = 'Midday';
+  } else if (currentHour >= 17 && currentHour < 20) {
+    currentTimeOfDay = 'Evening';
+  } else if (currentHour >= 20 && currentHour <= 24) {
+    currentTimeOfDay = 'Night';
+  }
+
+  return currentTimeOfDay;
 };

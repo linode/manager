@@ -37,6 +37,8 @@ import withRegions, {
 
 import { MBpsInterDC } from 'src/constants';
 import { addUsedDiskSpace } from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
+import { formatDate } from 'src/utilities/formatDate';
+import { sendMigrationInitiatedEvent } from 'src/utilities/ga';
 
 const useStyles = makeStyles((theme: Theme) => ({
   details: {
@@ -112,6 +114,13 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
       .then(() => {
         resetEventsPolling();
         setLoading(false);
+        sendMigrationInitiatedEvent(
+          region.region,
+          selectedRegion,
+          +formatDate(new Date().toISOString(), {
+            format: 'H'
+          })
+        );
         props.history.push(`/linodes/${linodeId}`);
       })
       .catch((e: Linode.ApiFieldError[]) => {
