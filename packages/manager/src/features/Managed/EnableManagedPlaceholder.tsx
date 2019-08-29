@@ -15,14 +15,14 @@ import { enableManaged } from 'src/services/managed';
 
 const copy = (
   <>
-    <Typography>
+    <Typography variant="subtitle1">
       Let us worry about your infrastructure, so you can get back to worrying
       about your business. Linode Managed helps keep your systems up and running
       with our team of Linode experts responding to monitoring events, so you
       can sleep well. Linode Managed includes 24/7 monitoring and incident
       responses, backups and Longview Pro. +$100/mo per Linode.{` `}
     </Typography>
-    <Typography>
+    <Typography variant="subtitle1" style={{ marginTop: 8 }}>
       <ExternalLink
         link="https://linode.com/managed"
         text="Learn more about Managed."
