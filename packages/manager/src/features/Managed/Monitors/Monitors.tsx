@@ -5,27 +5,20 @@ import withManagedServices, {
   DispatchProps,
   ManagedProps
 } from 'src/containers/managedServices.container';
+import useReduxLoad from 'src/hooks/useReduxLoad';
 import MonitorTable from './MonitorTable';
 
 type CombinedProps = ManagedProps & DispatchProps;
 
 export const Monitors: React.FC<CombinedProps> = props => {
-  const {
-    lastUpdated,
-    managedError,
-    managedLoading,
-    monitors,
-    requestManagedServices
-  } = props;
+  const { managedError, monitors } = props;
 
-  React.useEffect(() => {
-    requestManagedServices().catch(_ => null); // Errors handled in Redux state
-  }, [requestManagedServices]);
+  const { _loading } = useReduxLoad(['managed']);
 
   return (
     <MonitorTable
       monitors={monitors || []}
-      loading={managedLoading && lastUpdated === 0}
+      loading={_loading}
       error={managedError.read}
     />
   );

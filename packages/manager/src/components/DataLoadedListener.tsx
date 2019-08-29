@@ -107,7 +107,7 @@ const shouldMarkAppAsDone = (
   }
 
   if (pathname.match(/domain/i) && !!domainsLoadingOrErrorExists) {
-    return true;
+    return true; // This doesn't do anything as there's no action to request Domains
   }
 
   if (pathname.match(/object/i) && !!bucketsLoadingOrErrorExists) {
