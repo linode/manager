@@ -285,7 +285,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                   loading={isSubmitting}
                   data-qa-submit
                 >
-                  Add
+                  {mode === 'create' ? 'Add' : 'Update'}
                 </Button>
                 <Button
                   onClick={onClose}
