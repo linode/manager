@@ -47,9 +47,11 @@ describe('PrimaryNav', () => {
           closeMenu={jest.fn()}
           toggleTheme={jest.fn()}
           hasAccountAccess={false}
-          isManagedAccount={false}
           accountCapabilities={[]}
           accountLastUpdated={0}
+          isManagedAccount={true}
+          flags={{}}
+          ldClient={{}}
           {...reactRouterProps}
         />
       );
@@ -93,8 +95,8 @@ describe('PrimaryNav', () => {
       expect(findLinkInPrimaryNav('account')).toHaveLength(0);
     });
 
-    it('should note have a managed link', () => {
-      expect(findLinkInPrimaryNav('managed')).toHaveLength(0);
+    it('should have a managed link', () => {
+      expect(findLinkInPrimaryNav('managed')).toHaveLength(1);
     });
   });
 
@@ -113,9 +115,11 @@ describe('PrimaryNav', () => {
           closeMenu={jest.fn()}
           toggleTheme={jest.fn()}
           hasAccountAccess={true}
-          isManagedAccount={false}
           accountCapabilities={[]}
           accountLastUpdated={0}
+          isManagedAccount={true}
+          flags={{}}
+          ldClient={{}}
           {...reactRouterProps}
         />
       );
@@ -143,9 +147,11 @@ describe('PrimaryNav', () => {
           closeMenu={jest.fn()}
           toggleTheme={jest.fn()}
           hasAccountAccess={false}
-          isManagedAccount={true}
           accountCapabilities={[]}
           accountLastUpdated={0}
+          isManagedAccount={true}
+          flags={{}}
+          ldClient={{}}
           {...reactRouterProps}
         />
       );
@@ -173,7 +179,6 @@ describe('PrimaryNav', () => {
           closeMenu={jest.fn()}
           toggleTheme={jest.fn()}
           hasAccountAccess={false}
-          isManagedAccount={true}
           accountCapabilities={[
             'Linodes',
             'NodeBalancers',
@@ -181,6 +186,9 @@ describe('PrimaryNav', () => {
             'Object Storage'
           ]}
           accountLastUpdated={0}
+          isManagedAccount={true}
+          flags={{}}
+          ldClient={{}}
           {...reactRouterProps}
         />
       );
