@@ -26,6 +26,13 @@ export const createServiceMonitorActions = actionCreator.async<
   Linode.ApiFieldError[]
 >('create');
 
+export type UpdateServicePayload = MonitorPayload & ManagedServicePayload;
+export const updateServiceMonitorActions = actionCreator.async<
+  UpdateServicePayload,
+  Linode.ManagedServiceMonitor,
+  Linode.ApiFieldError[]
+>('update');
+
 export const enableServiceMonitorActions = actionCreator.async<
   MonitorPayload,
   Linode.ManagedServiceMonitor,
