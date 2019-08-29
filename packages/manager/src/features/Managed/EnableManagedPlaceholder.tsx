@@ -75,7 +75,7 @@ const ManagedPlaceholder: React.FC<CombinedProps> = props => {
         Cancel
       </Button>
       <Button
-        buttonType="secondary"
+        buttonType="primary"
         onClick={handleSubmit}
         data-qa-submit-managed-enrollment
         loading={isLoading}
