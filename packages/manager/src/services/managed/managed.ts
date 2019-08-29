@@ -56,7 +56,7 @@ export interface ContactPayload {
 /**
  * enableManaged
  *
- * This is an undocumented endpoint that enables the Managed feature
+ * Enables the Managed feature
  * on your account. This service is billed at $100/month/Linode.
  *
  * Should this live in /account?

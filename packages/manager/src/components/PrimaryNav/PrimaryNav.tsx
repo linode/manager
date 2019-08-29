@@ -21,6 +21,9 @@ import {
   WithTheme
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
+import withFeatureFlagConsumer, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
 import { MapState } from 'src/store/types';
 import { NORMAL_SPACING_UNIT } from 'src/themeFactory';
 import {
@@ -239,6 +242,7 @@ export type CombinedProps = Props &
   StateProps &
   WithTheme &
   WithStyles<ClassNames> &
+  FeatureFlagConsumerProps &
   RouteComponentProps<{}>;
 
 export class PrimaryNav extends React.Component<CombinedProps, State> {
@@ -270,7 +274,9 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     // `account.capabilities`.
     if (
       prevProps.hasAccountAccess !== this.props.hasAccountAccess ||
-      prevProps.accountLastUpdated !== this.props.accountLastUpdated
+      prevProps.accountLastUpdated !== this.props.accountLastUpdated ||
+      prevProps.isManagedAccount !== this.props.isManagedAccount ||
+      prevProps.flags !== this.props.flags
     ) {
       this.createMenuItems();
     }
@@ -332,13 +338,14 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     }
 
     // All users should now see Managed so they can sign up
-    // if (isManagedAccount) {
-    primaryLinks.push({
-      display: 'Managed',
-      href: '/managed',
-      key: 'managed'
-    });
-    // }
+    // (if the new Managed feature is toggled)
+    if (this.props.isManagedAccount || this.props.flags.managed) {
+      primaryLinks.push({
+        display: 'Managed',
+        href: '/managed',
+        key: 'managed'
+      });
+    }
 
     // if(canAccessStackscripts){
     primaryLinks.push({
@@ -367,19 +374,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     const { history, closeMenu } = this.props;
     history.push(href);
     closeMenu();
-  };
-
-  expandMenutItem = (e: React.MouseEvent<HTMLElement>) => {
-    const menuName = e.currentTarget.getAttribute('data-menu-name');
-    if (!menuName) {
-      return;
-    }
-    this.setState({
-      expandedMenus: {
-        ...this.state.expandedMenus,
-        [menuName]: !this.state.expandedMenus[menuName]
-      }
-    });
   };
 
   goToHelp = () => {
@@ -569,6 +563,7 @@ interface StateProps {
   // isLongviewEnabled: boolean;
   accountCapabilities: AccountCapability[];
   accountLastUpdated: number;
+  isManagedAccount: boolean;
 }
 
 const userHasAccountAccess = (profile: Profile) => {
@@ -596,7 +591,8 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
       hasAccountAccess: false,
       // isLongviewEnabled: false,
       accountCapabilities: [],
-      accountLastUpdated
+      accountLastUpdated,
+      isManagedAccount: false
     };
   }
 
@@ -608,7 +604,12 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
       ['__resources', 'account', 'data', 'capabilities'],
       state
     ),
-    accountLastUpdated
+    accountLastUpdated,
+    isManagedAccount: pathOr(
+      false,
+      ['__resources', 'accountSettings', 'data', 'managed'],
+      state
+    )
   };
 };
 
@@ -618,6 +619,7 @@ const styled = withStyles(styles, { withTheme: true });
 
 export default compose<CombinedProps, Props>(
   withRouter,
+  withFeatureFlagConsumer,
   connected,
   styled
 )(PrimaryNav);

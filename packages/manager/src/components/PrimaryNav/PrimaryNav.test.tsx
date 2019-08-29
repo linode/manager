@@ -49,6 +49,9 @@ describe('PrimaryNav', () => {
           hasAccountAccess={false}
           accountCapabilities={[]}
           accountLastUpdated={0}
+          isManagedAccount={true}
+          flags={{}}
+          ldClient={{}}
           {...reactRouterProps}
         />
       );
@@ -114,6 +117,9 @@ describe('PrimaryNav', () => {
           hasAccountAccess={true}
           accountCapabilities={[]}
           accountLastUpdated={0}
+          isManagedAccount={true}
+          flags={{}}
+          ldClient={{}}
           {...reactRouterProps}
         />
       );
@@ -143,6 +149,9 @@ describe('PrimaryNav', () => {
           hasAccountAccess={false}
           accountCapabilities={[]}
           accountLastUpdated={0}
+          isManagedAccount={true}
+          flags={{}}
+          ldClient={{}}
           {...reactRouterProps}
         />
       );
@@ -177,6 +186,9 @@ describe('PrimaryNav', () => {
             'Object Storage'
           ]}
           accountLastUpdated={0}
+          isManagedAccount={true}
+          flags={{}}
+          ldClient={{}}
           {...reactRouterProps}
         />
       );
