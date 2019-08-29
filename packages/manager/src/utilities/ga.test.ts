@@ -1,6 +1,6 @@
 import { generateTimeOfDay } from './ga';
 
-describe('Utilty Functions', () => {
+describe('Utility Functions', () => {
   it('should generate human-readable time of day', () => {
     expect(generateTimeOfDay(0)).toBe('Early Morning');
     expect(generateTimeOfDay(1)).toBe('Early Morning');
