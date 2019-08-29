@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -7,11 +8,22 @@ import withManagedServices, {
 } from 'src/containers/managedServices.container';
 import MonitorTable from './MonitorTable';
 
-type CombinedProps = ManagedProps & DispatchProps;
+interface Props {
+  credentials: Linode.ManagedCredential[];
+  groups: string[];
+  loading: boolean;
+  errorFromProps?: APIError[];
+}
+
+type CombinedProps = Props & ManagedProps & DispatchProps;
 
 export const Monitors: React.FC<CombinedProps> = props => {
   const {
+    credentials,
+    groups,
     lastUpdated,
+    loading,
+    errorFromProps,
     managedError,
     managedLoading,
     monitors,
@@ -25,13 +37,15 @@ export const Monitors: React.FC<CombinedProps> = props => {
   return (
     <MonitorTable
       monitors={monitors || []}
-      loading={managedLoading && lastUpdated === 0}
-      error={managedError.read}
+      credentials={credentials}
+      groups={groups}
+      loading={loading || (managedLoading && lastUpdated === 0)}
+      error={managedError.read || errorFromProps}
     />
   );
 };
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, Props>(
   withManagedServices(
     (ownProps, managedLoading, lastUpdated, monitors, managedError) => ({
       ...ownProps,

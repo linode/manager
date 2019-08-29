@@ -85,6 +85,14 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
 
+  const groups: string[] = [];
+  let i = 0;
+  for (i; i < contacts.data.length; i++) {
+    if (contacts.data[i].group !== null) {
+      groups.push(contacts.data[i].group as string);
+    }
+  }
+
   return (
     <React.Fragment>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
@@ -139,7 +147,17 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
           exact
           strict
           path={`${props.match.path}/monitors`}
-          component={Monitors}
+          render={() => (
+            <Monitors
+              credentials={credentials.data}
+              loading={
+                (credentials.loading && contacts.lastUpdated === 0) ||
+                (contacts.loading && contacts.lastUpdated === 0)
+              }
+              groups={groups}
+              errorFromProps={credentials.error || contacts.error || undefined}
+            />
+          )}
         />
         <Route
           exact
