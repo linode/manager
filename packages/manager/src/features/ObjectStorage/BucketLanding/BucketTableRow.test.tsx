@@ -9,8 +9,7 @@ describe('BucketTableRow', () => {
   const wrapper = shallow(
     <BucketTableRow
       classes={{
-        root: '',
-        labelStatusWrapper: '',
+        bucketNameWrapper: '',
         bucketRow: ''
       }}
       label="test-bucket-001"
