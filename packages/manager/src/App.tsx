@@ -415,27 +415,27 @@ export class App extends React.Component<CombinedProps, State> {
         <DataLoadedListener
           markAppAsLoaded={this.props.markAppAsDoneLoading}
           flagsHaveLoaded={this.state.flagsLoaded}
-          linodesLoadingOrErrorExists={
+          linodesLoadedOrErrorExists={
             linodesLoading === false || !!linodesError
           }
-          volumesLoadingOrErrorExists={
+          volumesLoadedOrErrorExists={
             volumesLoading === false || !!volumesError
           }
-          domainsLoadingOrErrorExists={
+          domainsLoadedOrErrorExists={
             domainsLoading === false || !!domainsError
           }
-          bucketsLoadingOrErrorExists={
+          bucketsLoadedOrErrorExists={
             bucketsLoading === false || !!bucketsError
           }
-          nodeBalancersLoadingOrErrorExists={
+          nodeBalancersLoadedOrErrorExists={
             nodeBalancersLoading === false || !!nodeBalancersError
           }
-          profileLoadingOrErrorExists={!!this.props.userId || !!profileError}
-          accountLoadingOrErrorExists={
-            !!this.props.accountCapabilities || !!accountError
+          profileLoadedOrErrorExists={!!this.props.userId || !!profileError}
+          accountLoadedOrErrorExists={
+            accountLoading === false || !!accountError
           }
-          accountSettingsLoadingOrErrorExists={
-            !!accountSettingsLoading === false || !!accountSettingsError
+          accountSettingsLoadedOrErrorExists={
+            accountSettingsLoading === false || !!accountSettingsError
           }
           appIsLoaded={!this.props.appIsLoading}
         />

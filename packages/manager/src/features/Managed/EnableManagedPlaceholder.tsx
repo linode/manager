@@ -1,4 +1,5 @@
 import { AccountSettings } from 'linode-js-sdk/lib/account';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import ManagedIcon from 'src/assets/icons/managed.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -52,13 +53,14 @@ const ManagedPlaceholder: React.FC<CombinedProps> = props => {
     setError(undefined);
   };
 
-  const handleError = (e: Linode.ApiFieldError[]) => {
+  const handleError = (e: APIError[]) => {
     setError(e[0].reason);
     setLoading(false);
   };
 
   const handleSubmit = () => {
     setLoading(true);
+    setError(undefined);
     enableManaged()
       .then(() => {
         handleClose();
@@ -74,7 +76,6 @@ const ManagedPlaceholder: React.FC<CombinedProps> = props => {
       </Button>
       <Button
         buttonType="secondary"
-        destructive
         onClick={handleSubmit}
         data-qa-submit-managed-enrollment
         loading={isLoading}
@@ -103,10 +104,13 @@ const ManagedPlaceholder: React.FC<CombinedProps> = props => {
         actions={actions}
       >
         <Typography>
-          Managed is billed at $100 monthly per Linode on your account. You
-          currently have{' '}
-          <strong>{pluralize('Linode', 'Linodes', props.linodeCount)}</strong>{' '}
-          for a cost of <strong>${`${props.linodeCount * 100}/month`}</strong>.
+          Linode Managed costs an additional $100/mo per Linode. {` `}
+          You currently have{` `}
+          <strong>
+            {pluralize('Linode', 'Linodes', props.linodeCount)}
+          </strong>{' '}
+          on your account. This will increase your projected monthly bill by{' '}
+          <strong>${`${props.linodeCount * 100}/month`}</strong>. Are you sure?{' '}
         </Typography>
       </ConfirmationDialog>
     </>

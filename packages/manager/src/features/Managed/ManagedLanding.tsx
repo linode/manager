@@ -88,10 +88,15 @@ export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
 
   const credentials = useAPIRequest<Linode.ManagedCredential[]>(
     getAllCredentials,
-    []
+    [],
+    [accountSettings]
   );
 
-  const contacts = useAPIRequest<Linode.ManagedContact[]>(getAllContacts, []);
+  const contacts = useAPIRequest<Linode.ManagedContact[]>(
+    getAllContacts,
+    [],
+    [accountSettings]
+  );
 
   const credentialsError = credentials.error
     ? getAPIErrorOrDefault(
