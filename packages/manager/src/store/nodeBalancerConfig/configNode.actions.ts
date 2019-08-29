@@ -22,18 +22,18 @@ export const requestNodeBalancerConfigNodesActions = actionCreator.async<
   Linode.ApiFieldError[]
 >(`get-all`);
 
-export type CreateNodeBalancerConfigParams = ConfigParams &
+export type CreateNodeBalancerConfigNodeParams = ConfigParams &
   CreateNodeBalancerConfigNode;
 export const createNodeBalancerConfigNodeActions = actionCreator.async<
-  CreateNodeBalancerConfigParams,
+  CreateNodeBalancerConfigNodeParams,
   Linode.NodeBalancerConfigNode,
   Linode.ApiFieldError[]
 >(`create`);
 
-export type UpdateNodeBalancerConfigParams = NodeParams &
+export type UpdateNodeBalancerConfigNodeParams = NodeParams &
   UpdateNodeBalancerConfigNode;
 export const updateNodeBalancerConfigNodeActions = actionCreator.async<
-  UpdateNodeBalancerConfigParams,
+  UpdateNodeBalancerConfigNodeParams,
   Linode.NodeBalancerConfigNode,
   Linode.ApiFieldError[]
 >(`update`);
