@@ -1,8 +1,7 @@
 import { shallow } from 'enzyme';
-import { pathOr } from 'ramda';
 import * as React from 'react';
+import { regions } from 'src/__data__/regionsData';
 import { Item } from 'src/components/EnhancedSelect/Select';
-import { doesRegionSupportBlockStorage } from 'src/utilities/doesRegionSupportBlockStorage';
 import { LinodeSelect } from './LinodeSelect';
 
 const linodes: Item[] = [
@@ -31,7 +30,15 @@ const linodes: Item[] = [
 
 describe('Linode Select', () => {
   const wrapper = shallow(
-    <LinodeSelect onChange={jest.fn()} name="" onBlur={jest.fn()} region="" />
+    <LinodeSelect
+      onChange={jest.fn()}
+      name=""
+      onBlur={jest.fn()}
+      region=""
+      regionsLoading={false}
+      regionsData={regions}
+      regionsLastUpdated={0}
+    />
   );
   it('renders', () => {
     expect(wrapper).toHaveLength(1);
@@ -39,20 +46,17 @@ describe('Linode Select', () => {
   it('renders all linodes by default', () => {
     wrapper.setState({ linodes });
     const { options } = wrapper.find('WithStyles(Select)').props() as any;
-    const regions = options
+    const regionItems = options
       .filter((option: Item) => option.data)
       .map((option: Item) => option.data.region);
     linodes.forEach(linode => {
-      expect(regions.includes(linode.data.region)).toBe(true);
+      expect(regionItems.includes(linode.data.region)).toBe(true);
     });
   });
   it('disables Linodes in regions that support block storage when prop specified', () => {
     wrapper.setState({ linodes });
     wrapper.setProps({ shouldOnlyDisplayRegionsWithBlockStorage: true });
     const { options } = wrapper.find('WithStyles(Select)').props() as any;
-    options.forEach((option: any) => {
-      const region = pathOr('', ['data', 'region'], option);
-      expect(doesRegionSupportBlockStorage(region)).toBe(true);
-    });
+    expect(options.length).toBe(2);
   });
 });
