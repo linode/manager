@@ -281,7 +281,7 @@ export const generateTimeOfDay = (currentHour: number) => {
     currentTimeOfDay = 'Midday';
   } else if (currentHour >= 17 && currentHour < 20) {
     currentTimeOfDay = 'Evening';
-  } else if (currentHour >= 20) {
+  } else if (currentHour >= 20 && currentHour <= 24) {
     currentTimeOfDay = 'Night';
   }
 

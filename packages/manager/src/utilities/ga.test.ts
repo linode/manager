@@ -27,5 +27,7 @@ describe('Utilty Functions', () => {
     expect(generateTimeOfDay(22)).toBe('Night');
     expect(generateTimeOfDay(23)).toBe('Night');
     expect(generateTimeOfDay(24)).toBe('Night');
+    expect(generateTimeOfDay(-1)).toBe('Other');
+    expect(generateTimeOfDay(25)).toBe('Other');
   });
 });
