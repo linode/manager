@@ -19,8 +19,19 @@ namespace Linode {
   export interface Cluster {
     region: string;
     status: string; // @todo: should be enum
-    id: string;
+    id: ClusterID;
     domain: string;
     static_site_domain: string;
   }
+
+  export interface Object {
+    size: number; // Size of object in bytes
+    owner: string;
+    etag: string;
+    last_modified: string; // Date
+    name: string;
+  }
+
+  // Enum containing IDs for each Cluster
+  export type ClusterID = 'us-east-1';
 }
