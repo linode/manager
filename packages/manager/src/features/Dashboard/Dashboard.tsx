@@ -92,7 +92,8 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
     'account',
     'accountSettings',
     'notifications',
-    'profile'
+    'profile',
+    'managed'
   ]);
 
   const flags = useFlags();
