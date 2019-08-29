@@ -1,4 +1,5 @@
 import { Form, Formik } from 'formik';
+import { CreateVolumeSchema } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -20,7 +21,6 @@ import {
   hasGrant,
   isRestrictedUser
 } from 'src/features/Profile/permissionsHelpers';
-import { CreateVolumeSchema } from 'src/services/volumes/volumes.schema.ts';
 import { MapState } from 'src/store/types';
 import { Origin as VolumeDrawerOrigin } from 'src/store/volumeDrawer';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';

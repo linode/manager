@@ -1,3 +1,4 @@
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import { connect } from 'react-redux';
 import {
   AttachVolumeParams,
@@ -18,13 +19,13 @@ import {
 } from 'src/store/volume/volume.requests';
 
 export interface VolumesRequests {
-  createVolume: (request: CreateVolumeRequest) => Promise<Linode.Volume>;
-  updateVolume: (params: UpdateVolumeParams) => Promise<Linode.Volume>;
+  createVolume: (request: CreateVolumeRequest) => Promise<Volume>;
+  updateVolume: (params: UpdateVolumeParams) => Promise<Volume>;
   deleteVolume: (volumeId: VolumeId) => Promise<{}>;
-  attachVolume: (params: AttachVolumeParams) => Promise<Linode.Volume>;
+  attachVolume: (params: AttachVolumeParams) => Promise<Volume>;
   detachVolume: (volumeId: VolumeId) => Promise<{}>;
-  cloneVolume: (params: CloneVolumeParams) => Promise<Linode.Volume>;
-  resizeVolume: (params: ResizeVolumeParams) => Promise<Linode.Volume>;
+  cloneVolume: (params: CloneVolumeParams) => Promise<Volume>;
+  resizeVolume: (params: ResizeVolumeParams) => Promise<Volume>;
 }
 
 export default connect(

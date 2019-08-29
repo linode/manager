@@ -1,5 +1,5 @@
-import { MAX_VOLUME_SIZE } from 'src/constants';
 import { array, number, object, string } from 'yup';
+import { MAX_VOLUME_SIZE } from '../constants';
 
 const createSizeValidation = (minSize: number = 10) =>
   number()

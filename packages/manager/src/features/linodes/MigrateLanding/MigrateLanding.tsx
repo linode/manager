@@ -1,3 +1,5 @@
+import { Event } from 'linode-js-sdk/lib/account';
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -227,11 +229,11 @@ interface LinodeContextProps {
   label: string;
   linodeStatus: Linode.LinodeStatus;
   linodeSpecs: Linode.LinodeSpecs;
-  linodeEvents: Linode.Event[];
+  linodeEvents: Event[];
   type: string | null;
   image: Linode.Image;
-  linodeVolumes: Linode.Volume[];
-  recentEvents: Linode.Event[];
+  linodeVolumes: Volume[];
+  recentEvents: Event[];
   linodeDisks: Linode.Disk[];
 }
 
@@ -278,7 +280,7 @@ export default compose<CombinedProps, {}>(
 )(MigrateLanding);
 
 const getDisabledReason = (
-  events: Linode.Event[],
+  events: Event[],
   linodeStatus: string,
   linodeID: number,
   notifications: Linode.Notification[]

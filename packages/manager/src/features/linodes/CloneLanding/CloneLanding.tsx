@@ -1,3 +1,4 @@
+import { Event } from 'linode-js-sdk/lib/account';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -445,7 +446,7 @@ interface LinodeContextProps {
   region: string;
   label: string;
   linodeStatus: Linode.LinodeStatus;
-  linodeEvents: Linode.Event[];
+  linodeEvents: Event[];
 }
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
   linodeId: linode.id,

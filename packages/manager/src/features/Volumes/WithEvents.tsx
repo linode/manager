@@ -1,3 +1,5 @@
+import { Event } from 'linode-js-sdk/lib/account';
+import { getVolume, Volume } from 'linode-js-sdk/lib/volumes';
 import { clone } from 'ramda';
 import * as React from 'react';
 import { Subject } from 'rxjs/Subject';
@@ -6,12 +8,11 @@ import { Subscription } from 'rxjs/Subscription';
 import { events$ } from 'src/events';
 
 import { getLinode } from 'src/services/linodes';
-import { getVolume } from 'src/services/volumes';
 
 export const updateVolumes$ = new Subject<boolean>();
 
 interface State {
-  volumes?: Linode.Volume[];
+  volumes?: Volume[];
 }
 
 export default () => (WrappedComponent: React.ComponentType<any>) => {
@@ -39,7 +40,7 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
             ].includes(event.action)
         )
         .merge(updateVolumes$)
-        .subscribe((event: Linode.Event) => {
+        .subscribe((event: Event) => {
           /**
            * This solves for one scenario - we're editing the Volume label
            * and we want to force a refresh after submitting the form
@@ -76,7 +77,7 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
            * the list of Volumes not calling getVolumes(), but instead requesting the Volume
            * that's in the middle of updating and insert it into our current list of Volumes
            */
-          getVolume(entityId).then((volume: Linode.Volume) => {
+          getVolume(entityId).then((volume: Volume) => {
             if (!this.mounted || !this.props.data) {
               return;
             }
@@ -90,7 +91,7 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
              */
             const targetIndex = (
               this.state.volumes || this.props.data
-            ).findIndex((eachVolume: Linode.Volume) => {
+            ).findIndex((eachVolume: Volume) => {
               return eachVolume.id === entityId;
             });
 
@@ -178,7 +179,7 @@ export default () => (WrappedComponent: React.ComponentType<any>) => {
   };
 };
 
-const maybeAddEvent = (e: boolean | Linode.Event, volume: Linode.Volume) => {
+const maybeAddEvent = (e: boolean | Event, volume: Volume) => {
   if (typeof e === 'boolean') {
     return {};
   }

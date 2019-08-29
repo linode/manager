@@ -1,4 +1,5 @@
 import * as Bluebird from 'bluebird';
+import { getVolumes, Volume } from 'linode-js-sdk/lib/volumes';
 import { range } from 'ramda';
 
 import { sendFetchAllEvent } from 'src/utilities/ga';
@@ -6,7 +7,6 @@ import { sendFetchAllEvent } from 'src/utilities/ga';
 import { getDomains } from 'src/services/domains';
 import { getLinodes } from 'src/services/linodes';
 import { getNodeBalancers } from 'src/services/nodebalancers';
-import { getVolumes } from 'src/services/volumes';
 
 export interface APIResponsePage<T> {
   page: number;
@@ -174,7 +174,7 @@ export const getAllFromEntity: (
 export type GetAllHandler = (
   linodes: Linode.Linode[],
   nodebalancers: Linode.NodeBalancer[],
-  volumes: Linode.Volume[],
+  volumes: Volume[],
   domains: Linode.Domain[]
 ) => any;
 
@@ -191,7 +191,7 @@ export const getAllEntities = (cb: GetAllHandler) =>
   Bluebird.join(
     getAll<Linode.Linode>(getLinodes)(),
     getAll<Linode.NodeBalancer>(getNodeBalancers)(),
-    getAll<Linode.Volume>(getVolumes)(),
+    getAll<Volume>(getVolumes)(),
     getAll<Linode.Domain>(getDomains)(),
     /** for some reason typescript thinks ...results is implicitly typed as 'any' */
     // @ts-ignore

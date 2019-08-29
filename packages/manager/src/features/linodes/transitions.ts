@@ -1,3 +1,4 @@
+import { Event } from 'linode-js-sdk/lib/account';
 import { capitalizeAllWords } from 'src/utilities/capitalize';
 
 export const transitionStatus = [
@@ -27,7 +28,7 @@ export const transitionAction = [
 
 export const linodeInTransition = (
   status: string,
-  recentEvent?: Linode.Event
+  recentEvent?: Event
 ): boolean => {
   if (!recentEvent) {
     return false;
@@ -41,10 +42,7 @@ export const linodeInTransition = (
   );
 };
 
-export const transitionText = (
-  status: string,
-  recentEvent?: Linode.Event
-): string => {
+export const transitionText = (status: string, recentEvent?: Event): string => {
   // `linode_mutate` is a special case, because we want to display
   // "Upgrading" instead of "Mutate".
 
