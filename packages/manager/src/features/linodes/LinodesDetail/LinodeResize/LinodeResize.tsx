@@ -268,63 +268,61 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             >
               Current Plan
             </Typography>
-            {type && (
-              <Grid container>
-                <Hidden smDown>
-                  <Grid item xs={12} lg={10}>
-                    <Table border>
-                      <TableHead>
-                        <TableRow>
-                          <TableCell />
-                          <TableCell>Linode Plan</TableCell>
-                          <TableCell>Monthly</TableCell>
-                          <TableCell>Hourly</TableCell>
-                          <TableCell>CPUs</TableCell>
-                          <TableCell>Storage</TableCell>
-                          <TableCell>Ram</TableCell>
-                        </TableRow>
-                      </TableHead>
-                      <TableBody>
-                        <TableRow key={type.id} data-qa-current-plan>
-                          <TableCell>
-                            <Radio
-                              checked={false}
-                              disabled={true}
-                              id={type.id}
-                            />
-                          </TableCell>
-                          <TableCell
-                            data-qa-select-card-heading={currentPlanHeading}
-                          >
-                            {currentPlanHeading}
-                          </TableCell>
-                          <TableCell>${type.price.monthly}</TableCell>
-                          <TableCell>${type.price.hourly}</TableCell>
-                          <TableCell>{type.vcpus}</TableCell>
-                          <TableCell>
-                            {convertMegabytesTo(type.disk, true)}
-                          </TableCell>
-                          <TableCell>
-                            {convertMegabytesTo(type.memory, true)}
-                          </TableCell>
-                        </TableRow>
-                      </TableBody>
-                    </Table>
-                  </Grid>
-                </Hidden>
-                {/* Displays SelectionCard for small screens */}
-                <Hidden mdUp>
-                  <SelectionCard
-                    data-qa-current-plan
-                    checked={false}
-                    heading={currentPlanHeading}
-                    subheadings={currentPlanSubHeadings}
-                    disabled={disabled}
-                    variant="check"
-                  />
-                </Hidden>
-              </Grid>
-            )}
+            <Grid container>
+              <Hidden smDown>
+                <Grid item xs={12} lg={10}>
+                  <Table border>
+                    <TableHead>
+                      <TableRow>
+                        <TableCell />
+                        <TableCell>Linode Plan</TableCell>
+                        <TableCell>Monthly</TableCell>
+                        <TableCell>Hourly</TableCell>
+                        <TableCell>CPUs</TableCell>
+                        <TableCell>Storage</TableCell>
+                        <TableCell>Ram</TableCell>
+                      </TableRow>
+                    </TableHead>
+                    <TableBody>
+                      <TableRow key={type && type.id} data-qa-current-plan>
+                        <TableCell>
+                          <Radio
+                            checked={false}
+                            disabled={true}
+                            id={type && type.id}
+                          />
+                        </TableCell>
+                        <TableCell
+                          data-qa-select-table-heading={currentPlanHeading}
+                        >
+                          {currentPlanHeading}
+                        </TableCell>
+                        <TableCell>${type && type.price.monthly}</TableCell>
+                        <TableCell>${type && type.price.hourly}</TableCell>
+                        <TableCell>{type && type.vcpus}</TableCell>
+                        <TableCell>
+                          {type && convertMegabytesTo(type.disk, true)}
+                        </TableCell>
+                        <TableCell>
+                          {type && convertMegabytesTo(type.memory, true)}
+                        </TableCell>
+                      </TableRow>
+                    </TableBody>
+                  </Table>
+                </Grid>
+              </Hidden>
+              {/* Displays SelectionCard for small screens */}
+              <Hidden mdUp>
+                <SelectionCard
+                  data-qa-current-plan
+                  checked={false}
+                  heading={currentPlanHeading}
+                  subheadings={currentPlanSubHeadings}
+                  disabled={disabled}
+                  variant="check"
+                />
+              </Hidden>
+            </Grid>
           </div>
         </Paper>
         <SelectPlanPanel
