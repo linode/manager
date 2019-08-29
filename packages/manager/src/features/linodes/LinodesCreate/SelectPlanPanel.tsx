@@ -108,7 +108,7 @@ export class SelectPlanPanel extends React.Component<
                 id={type.id}
               />
             </TableCell>
-            <TableCell data-qa-select-card-heading={type.heading}>
+            <TableCell>
               {type.heading}{' '}
               {tooltip && (
                 <HelpIcon text={tooltip} tooltipPosition="right-end" />
