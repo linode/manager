@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
-
 import Breadcrumb from 'src/components/Breadcrumb';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
@@ -9,12 +8,10 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import DocumentationButton from 'src/components/DocumentationButton';
-import Pagey, { PaginationProps } from 'src/components/Pagey';
-import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-
+import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { getBucketObjects } from 'src/services/objectStorage/buckets';
 import ObjectTableContent from './ObjectTableContent';
 
@@ -29,23 +26,23 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(4)
   },
   objectNameColumn: {
-    width: '40%'
+    width: '50%'
   }
 }));
 
 type CombinedProps = RouteComponentProps<{
   clusterId: Linode.ClusterID;
   bucketName: string;
-}> &
-  PaginationProps<Linode.Object>;
+}>;
 
 const BucketDetail: React.FC<CombinedProps> = props => {
-  // Request objects when the component first renders.
-  React.useEffect(() => {
-    props.request();
-  }, []);
-
   const { clusterId, bucketName } = props.match.params;
+
+  const { data, error, loading } = useAPIRequest<Linode.Object[]>(
+    () =>
+      getBucketObjects(clusterId, bucketName).then(response => response.data),
+    []
+  );
 
   const classes = useStyles();
 
@@ -82,33 +79,15 @@ const BucketDetail: React.FC<CombinedProps> = props => {
             <ObjectTableContent
               clusterId={clusterId}
               bucketName={bucketName}
-              data={props.data || []}
-              loading={props.loading}
-              error={props.error}
+              data={data}
+              loading={loading}
+              error={error}
             />
           </TableBody>
         </Table>
       </Paper>
-      <PaginationFooter
-        page={props.page}
-        count={props.count}
-        pageSize={props.pageSize}
-        handlePageChange={props.handlePageChange}
-        handleSizeChange={props.handlePageSizeChange}
-        eventCategory="bucket detail"
-      />
     </>
   );
 };
 
-const updatedRequest = (ownProps: CombinedProps, params: any, filters: any) => {
-  // In order to get objects for a bucket, we need the clusterId and the bucket
-  // name. We get these from the pathname (via react-router props).
-  const { clusterId, bucketName } = ownProps.match.params;
-
-  return getBucketObjects(clusterId, bucketName, params, filters);
-};
-
-const paginated = Pagey(updatedRequest);
-
-export default paginated(BucketDetail);
+export default BucketDetail;

@@ -1,5 +1,6 @@
 import * as React from 'react';
 
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import EntityIcon from 'src/components/EntityIcon';
@@ -11,6 +12,15 @@ import { formatObjectStorageCluster } from 'src/utilities/formatRegion';
 import { readableBytes } from 'src/utilities/unitConversions';
 // Keep this for when we display URL on hover
 // import { generateObjectUrl } from '../utilities';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  objectNameWrapper: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center',
+    wordBreak: 'break-all'
+  }
+}));
 
 interface Props {
   clusterId: Linode.ClusterID;
@@ -33,15 +43,19 @@ const ObjectTableRow: React.FC<Props> = props => {
   // Keep this for when we display URL on hover
   // const objectUrl = generateObjectUrl(clusterId, bucketName, objectName);
 
+  const classes = useStyles();
+
   return (
     <TableRow key={objectName}>
       <TableCell parentColumn="Object">
-        <Grid container alignItems="center">
-          <Grid item>
+        <Grid container wrap="nowrap" alignItems="center">
+          <Grid item className="py0">
             <EntityIcon variant="object" size={20} />
           </Grid>
           <Grid item>
-            <Typography variant="h3">{objectName}</Typography>
+            <div className={classes.objectNameWrapper}>
+              <Typography variant="h3">{objectName}</Typography>
+            </div>
           </Grid>
         </Grid>
       </TableCell>
