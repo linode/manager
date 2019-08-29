@@ -1,3 +1,4 @@
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import { defaultTo, flatten } from 'ramda';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
@@ -8,7 +9,7 @@ export interface ExtendedDisk extends Linode.Disk {
   _id: string;
 }
 
-export interface ExtendedVolume extends Linode.Volume {
+export interface ExtendedVolume extends Volume {
   _id: string;
 }
 

@@ -1,5 +1,6 @@
 import { Account, AccountSettings } from 'linode-js-sdk/lib/account';
 import { Profile } from 'linode-js-sdk/lib/profile';
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
@@ -138,7 +139,7 @@ interface DispatchProps {
   requestSettings: () => Promise<AccountSettings>;
   requestTypes: () => Promise<Linode.LinodeType[]>;
   requestRegions: () => Promise<Linode.Region[]>;
-  requestVolumes: () => Promise<Linode.Volume[]>;
+  requestVolumes: () => Promise<Volume[]>;
   requestProfile: () => Promise<Profile>;
   requestBuckets: () => Promise<Linode.Bucket[]>;
   requestClusters: () => Promise<Linode.Cluster[]>;

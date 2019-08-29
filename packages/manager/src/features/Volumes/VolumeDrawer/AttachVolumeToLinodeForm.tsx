@@ -1,5 +1,6 @@
 import { Form, Formik } from 'formik';
-import { Grant } from 'linode-js-sdk/lib/account'
+import { Grant } from 'linode-js-sdk/lib/account';
+import { attachVolume } from 'linode-js-sdk/lib/volumes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -8,7 +9,6 @@ import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/events';
-import { attachVolume } from 'src/services/volumes';
 import { MapState } from 'src/store/types';
 import { openForCreating } from 'src/store/volumeDrawer';
 import {

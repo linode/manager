@@ -1,3 +1,4 @@
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import { pathOr } from 'ramda';
 import { Reducer } from 'redux';
 import { MappedEntityState } from 'src/store/types';
@@ -21,12 +22,9 @@ import {
 import { EntityError } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-export type State = MappedEntityState<Linode.Volume, EntityError>;
+export type State = MappedEntityState<Volume, EntityError>;
 
-export const defaultState: State = createDefaultState<
-  Linode.Volume,
-  EntityError
->({
+export const defaultState: State = createDefaultState<Volume, EntityError>({
   error: {
     create: undefined,
     update: undefined,
@@ -41,11 +39,11 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
    **/
   if (isType(action, createVolumeActions.done)) {
     const { result } = action.payload;
-    return onCreateOrUpdate<Linode.Volume, EntityError>(result, state);
+    return onCreateOrUpdate<Volume, EntityError>(result, state);
   }
   if (isType(action, createVolumeActions.failed)) {
     const { error } = action.payload;
-    return onError<MappedEntityState<Linode.Volume, EntityError>, EntityError>(
+    return onError<MappedEntityState<Volume, EntityError>, EntityError>(
       {
         create: getAPIErrorOrDefault(error)
       },
@@ -58,11 +56,11 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
    **/
   if (isType(action, updateVolumeActions.done)) {
     const { result } = action.payload;
-    return onCreateOrUpdate<Linode.Volume, EntityError>(result, state);
+    return onCreateOrUpdate<Volume, EntityError>(result, state);
   }
   if (isType(action, updateVolumeActions.failed)) {
     const { error } = action.payload;
-    return onError<MappedEntityState<Linode.Volume, EntityError>, EntityError>(
+    return onError<MappedEntityState<Volume, EntityError>, EntityError>(
       {
         update: getAPIErrorOrDefault(error)
       },
@@ -75,11 +73,11 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
    **/
   if (isType(action, deleteVolumeActions.done)) {
     const { params } = action.payload;
-    return onDeleteSuccess<Linode.Volume, EntityError>(params.volumeId, state);
+    return onDeleteSuccess<Volume, EntityError>(params.volumeId, state);
   }
   if (isType(action, deleteVolumeActions.failed)) {
     const { error } = action.payload;
-    return onError<MappedEntityState<Linode.Volume, EntityError>, EntityError>(
+    return onError<MappedEntityState<Volume, EntityError>, EntityError>(
       {
         delete: getAPIErrorOrDefault(error)
       },
@@ -92,7 +90,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
    */
   if (isType(action, getOneVolumeActions.done)) {
     const { result } = action.payload;
-    return onCreateOrUpdate<Linode.Volume, EntityError>(result, state);
+    return onCreateOrUpdate<Volume, EntityError>(result, state);
   }
 
   /*
@@ -105,19 +103,19 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       action
     );
     if (shouldSetLoading) {
-      return onStart<MappedEntityState<Linode.Volume, EntityError>>(state);
+      return onStart<MappedEntityState<Volume, EntityError>>(state);
     }
   }
   if (isType(action, getAllVolumesActions.done)) {
     const { result } = action.payload;
-    return onGetAllSuccess<
-      Linode.Volume,
-      MappedEntityState<Linode.Volume, EntityError>
-    >(result, state);
+    return onGetAllSuccess<Volume, MappedEntityState<Volume, EntityError>>(
+      result,
+      state
+    );
   }
   if (isType(action, getAllVolumesActions.failed)) {
     const { error } = action.payload;
-    return onError<MappedEntityState<Linode.Volume, EntityError>, EntityError>(
+    return onError<MappedEntityState<Volume, EntityError>, EntityError>(
       {
         read: getAPIErrorOrDefault(error)
       },

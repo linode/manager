@@ -1,3 +1,4 @@
+import { Event } from 'linode-js-sdk/lib/account';
 import { equals } from 'ramda';
 
 /**
@@ -13,10 +14,10 @@ import { equals } from 'ramda';
  * ID doesn't already exist in the cache. This ensures that "has been created"
  * events will replace the "is scheduled to" events
  */
-export const filterUniqueEvents = (events: Linode.Event[]) => {
+export const filterUniqueEvents = (events: Event[]) => {
   return events.reduce((acc, event) => {
     const foundEventInAcc = acc.some(
-      (eachAccumEvent: Linode.Event) => eachAccumEvent.id === event.id
+      (eachAccumEvent: Event) => eachAccumEvent.id === event.id
     );
     return foundEventInAcc ? acc : [...acc, event];
   }, []);

@@ -222,7 +222,7 @@ const mergeEvents = (events: Event[]) => (linodes: Linode.Linode[]) =>
     return updatedLinodes;
   }, linodes);
 
-const isWantedEvent = (e: Linode.Event): e is EntityEvent => {
+const isWantedEvent = (e: Event): e is EntityEvent => {
   if (!isInProgressEvent(e)) {
     return false;
   }

@@ -1,6 +1,7 @@
+import { Event } from 'linode-js-sdk/lib/account';
 import * as moment from 'moment';
 
-let newLinodeEvents: (time: moment.Moment) => (event: Linode.Event) => boolean;
+let newLinodeEvents: (time: moment.Moment) => (event: Event) => boolean;
 
 const actionWhitelist = [
   'linode_boot',
@@ -24,7 +25,7 @@ const statusWhitelist = [
   'notification'
 ];
 
-newLinodeEvents = (time?: moment.Moment) => (e: Linode.Event): boolean => {
+newLinodeEvents = (time?: moment.Moment) => (e: Event): boolean => {
   return (
     e.entity !== null &&
     e.entity.type === 'linode' &&

@@ -1,3 +1,4 @@
+import { Event } from 'linode-js-sdk/lib/account';
 import * as moment from 'moment';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -10,7 +11,7 @@ import UserEventsListItem, {
 } from './UserEventsListItem';
 
 interface Props {
-  events?: Linode.Event[];
+  events?: Event[];
   closeMenu: (e: any) => void;
 }
 

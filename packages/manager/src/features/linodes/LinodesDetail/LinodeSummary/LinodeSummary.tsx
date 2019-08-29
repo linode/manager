@@ -1,3 +1,4 @@
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as moment from 'moment';
 import { map, pathOr } from 'ramda';
 import * as React from 'react';
@@ -140,7 +141,7 @@ interface LinodeContextProps {
   linodeCreated: string;
   linodeId: number;
   linodeData: Linode.Linode;
-  linodeVolumes: Linode.Volume[];
+  linodeVolumes: Volume[];
   linodeVolumesError?: Linode.ApiFieldError[];
 }
 

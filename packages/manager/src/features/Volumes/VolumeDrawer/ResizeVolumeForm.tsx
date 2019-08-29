@@ -1,4 +1,5 @@
 import { Form, Formik } from 'formik';
+import { ResizeVolumeSchema } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Notice from 'src/components/Notice';
@@ -6,7 +7,6 @@ import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/events';
-import { ResizeVolumeSchema } from 'src/services/volumes/volumes.schema';
 import {
   handleFieldErrors,
   handleGeneralErrors

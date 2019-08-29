@@ -1,4 +1,5 @@
 import * as Bluebird from 'bluebird';
+import { getVolumes } from 'linode-js-sdk/lib/volumes';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -21,7 +22,6 @@ import { getDomains } from 'src/services/domains';
 import { getLinodes } from 'src/services/linodes';
 import { getNodeBalancers } from 'src/services/nodebalancers';
 import { createSupportTicket, uploadAttachment } from 'src/services/support';
-import { getVolumes } from 'src/services/volumes';
 import composeState from 'src/utilities/composeState';
 import {
   getAPIErrorOrDefault,

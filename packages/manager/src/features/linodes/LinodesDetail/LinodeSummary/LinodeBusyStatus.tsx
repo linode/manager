@@ -1,3 +1,4 @@
+import { Event } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
@@ -28,7 +29,7 @@ const styles = (theme: Theme) =>
 
 interface LinodeDetailContextProps {
   status: string;
-  linodeEvents?: Linode.Event[];
+  linodeEvents?: Event[];
 }
 
 type CombinedProps = LinodeDetailContextProps & WithStyles<ClassNames>;

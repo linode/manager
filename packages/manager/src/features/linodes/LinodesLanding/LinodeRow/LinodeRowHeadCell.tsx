@@ -1,3 +1,4 @@
+import { Event } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -94,7 +95,7 @@ interface Props {
   mostRecentBackup: string | null;
   width?: number;
   loading: boolean;
-  recentEvent?: Linode.Event;
+  recentEvent?: Event;
   maintenance?: string | null;
 }
 

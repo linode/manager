@@ -449,12 +449,13 @@ If your data is being sourced from Redux state, it's safe to assume that the dat
 The first step in paginating things from Redux is to source the data
 
 ```js
+import { Volume } from 'linode-js-sdk/lib/volumes'
 import { connect } from 'react-redux'
 
 interface ReduxStateProps {
   loading: boolean;
   error?: Linode.ApiFieldError[];
-  data: Linode.Volume[];
+  data: Volume[];
 }
 
 const MyComponent: React.FC<ReduxStateProps> = (props) => {

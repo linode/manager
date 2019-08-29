@@ -1,3 +1,4 @@
+import { Event } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -291,7 +292,7 @@ export const RenderTitle: React.StatelessComponent<{
     flag: string;
   };
   linodeStatus: Linode.LinodeStatus;
-  recentEvent?: Linode.Event;
+  recentEvent?: Event;
   linodeLabel: string;
   linodeId: number;
   mutationAvailable: boolean;

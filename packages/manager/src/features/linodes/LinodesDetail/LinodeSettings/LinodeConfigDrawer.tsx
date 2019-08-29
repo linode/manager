@@ -3,6 +3,7 @@
  * should source it directly from there rather than making an additional request. OR We can source
  * it from there and make the (thunk) request to get the latest/greatest information.
  */
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -887,7 +888,7 @@ const enhanced = compose<CombinedProps, Props>(
     const { itemsById } = state.__resources.volumes;
 
     const volumes = Object.values(itemsById).reduce(
-      (result: Linode.Volume[], volume: Linode.Volume) => {
+      (result: Volume[], volume: Volume) => {
         /**
          * This is a combination of filter and map. Filter out irrelevant volumes, and update
          * volumes with the special _id property.

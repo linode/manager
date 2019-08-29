@@ -1,3 +1,4 @@
+import { Event } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import {
   createStyles,
@@ -35,7 +36,7 @@ const styles = (theme: Theme) =>
 interface Props {
   linodeId: number;
   linodeStatus: Linode.LinodeStatus;
-  linodeRecentEvent?: Linode.Event;
+  linodeRecentEvent?: Event;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;

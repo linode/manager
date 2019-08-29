@@ -1,41 +1,25 @@
-import { API_ROOT } from 'src/constants';
+import { API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
   setXFilter
-} from '../index';
+} from '../request';
+import { ResourcePage as Page } from '../types';
+import {
+  AttachVolumePayload,
+  CloneVolumePayload,
+  ResizeVolumePayload,
+  Volume,
+  VolumeRequestPayload
+} from './types';
 import {
   CloneVolumeSchema,
   CreateVolumeSchema,
   ResizeVolumeSchema,
   UpdateVolumeSchema
 } from './volumes.schema';
-
-type Page<T> = Linode.ResourcePage<T>;
-type Volume = Linode.Volume;
-
-export interface VolumeRequestPayload {
-  label: string;
-  size?: number;
-  region?: string;
-  linode_id?: number;
-  config_id?: number;
-  tags?: string[];
-}
-
-export interface AttachVolumePayload {
-  linode_id: number;
-  config_id?: number;
-}
-export interface CloneVolumePayload {
-  label: string;
-}
-
-export interface ResizeVolumePayload {
-  size: number;
-}
 
 /**
  * getVolume

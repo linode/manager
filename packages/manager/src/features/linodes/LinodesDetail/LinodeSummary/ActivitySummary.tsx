@@ -1,3 +1,4 @@
+import { Event } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
@@ -44,7 +45,7 @@ interface Props {
 interface State {
   loading: boolean;
   error?: string;
-  events: Linode.Event[];
+  events: Event[];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;

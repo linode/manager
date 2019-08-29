@@ -1,10 +1,11 @@
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { EntityError } from 'src/store/types';
 
 interface VolumesData {
   items: string[];
-  itemsById: Record<string, Linode.Volume>;
+  itemsById: Record<string, Volume>;
 }
 
 export interface Props {

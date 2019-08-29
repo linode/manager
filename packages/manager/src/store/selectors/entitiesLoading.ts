@@ -1,3 +1,4 @@
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';
 import { EntityError, RequestableDataWithEntityError } from 'src/store/types';
@@ -33,7 +34,7 @@ const isInitialLoad = (
 export default createSelector<
   State,
   Resource<Linode.Linode[], EntityError>,
-  Resource<Linode.Volume[]>,
+  Resource<Volume[]>,
   Resource<Linode.NodeBalancer[][]>,
   RequestableDataWithEntityError<Linode.Domain[]>,
   Resource<Linode.Image[]>,

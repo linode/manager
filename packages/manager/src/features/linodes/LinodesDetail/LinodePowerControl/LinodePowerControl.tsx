@@ -1,6 +1,7 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
 import * as classNames from 'classnames';
+import { Event } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Menu from 'src/components/core/Menu';
@@ -110,7 +111,7 @@ interface Props {
   label: string;
   status: Linode.LinodeStatus;
   disabled?: boolean;
-  linodeEvents?: Linode.Event[];
+  linodeEvents?: Event[];
   linodeConfigs: Linode.Config[];
 }
 

@@ -1,3 +1,4 @@
+import { Event } from 'linode-js-sdk/lib/account';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -112,7 +113,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-const progressFromEvent = (e?: Linode.Event) => {
+const progressFromEvent = (e?: Event) => {
   if (!e) {
     return undefined;
   }

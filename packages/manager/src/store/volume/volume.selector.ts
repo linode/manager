@@ -1,5 +1,7 @@
+import { Volume } from 'linode-js-sdk/lib/volumes';
+
 export const getVolumesForLinode = (
-  itemsById: Record<string, Linode.Volume>,
+  itemsById: Record<string, Volume>,
   linodeId: number
 ) =>
   Object.values(itemsById).filter(

@@ -1,4 +1,6 @@
-export const volumes: Linode.Volume[] = [
+import { Volume } from 'linode-js-sdk/lib/volumes';
+
+export const volumes: Volume[] = [
   {
     created: '2018-06-06T13:16:02',
     filesystem_path: '/dev/disk/by-id/scsi-0Linode_Volume_test',
