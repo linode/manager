@@ -54,6 +54,7 @@
     "@types/node": "^12.7.1",
     "@types/ramda": "^0.26.19",
     "@types/yup": "^0.26.22",
+    "babel-plugin-module-resolver": "^3.2.0",
     "concurrently": "^4.1.1",
     "jest": "^24.8.0",
     "npm-dts-webpack-plugin": "^1.1.10",
