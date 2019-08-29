@@ -9,6 +9,7 @@ import withManagedServices, {
   DispatchProps,
   ManagedProps
 } from 'src/containers/managedServices.container';
+import useReduxLoad from 'src/hooks/useReduxLoad';
 import MonitorTable from './MonitorTable';
 
 interface Props {
@@ -40,13 +41,15 @@ export const Monitors: React.FC<CombinedProps> = props => {
     requestManagedServices().catch(_ => null); // Errors handled in Redux state
   }, [requestManagedServices]);
 
+  const { _loading } = useReduxLoad(['managed']);
+
   return (
     <div id="tabpanel-monitors" role="tabpanel" aria-labelledby="tab-monitors">
       <MonitorTable
         monitors={monitors || []}
         credentials={credentials}
         groups={groups}
-        loading={loading || (managedLoading && managedLastUpdated === 0)}
+        loading={loading || _loading}
         error={managedError.read || errorFromProps}
         {...rest}
       />
