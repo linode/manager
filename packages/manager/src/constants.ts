@@ -151,6 +151,10 @@ export const dcDisplayCountry = {
   'ap-west': 'IN'
 };
 
+export const objectStorageClusterDisplay: Record<Linode.ClusterID, string> = {
+  'us-east-1': 'Newark, NJ'
+};
+
 export type ContinentKey = 'NA' | 'EU' | 'AS';
 export const dcContinent: Record<string, ContinentKey> = {
   'us-east-1a': 'NA',
@@ -265,3 +269,9 @@ export const MBpsInterDC = 1.5;
  * there is no sensible destination.
  */
 export const nonClickEvents = ['profile_update'];
+
+/**
+ * Root URL for Object Storage clusters and buckets.
+ * A bucket can be accessed at: {bucket}.{cluster}.OBJECT_STORAGE_ROOT
+ */
+export const OBJECT_STORAGE_ROOT = 'linodeobjects.com';

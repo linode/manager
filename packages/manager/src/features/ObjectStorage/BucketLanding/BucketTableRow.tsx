@@ -15,18 +15,18 @@ import { formatRegion } from 'src/utilities/formatRegion';
 import { readableBytes } from 'src/utilities/unitConversions';
 import BucketActionMenu from './BucketActionMenu';
 
-type ClassNames = 'root' | 'labelStatusWrapper' | 'bucketRow';
+type ClassNames = 'bucketNameWrapper' | 'bucketRow';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
     bucketRow: {
       backgroundColor: theme.bg.white
     },
-    labelStatusWrapper: {
+    bucketNameWrapper: {
       display: 'flex',
       flexFlow: 'row nowrap',
-      alignItems: 'center'
+      alignItems: 'center',
+      wordBreak: 'break-all'
     }
   });
 
@@ -54,17 +54,17 @@ export const BucketTableRow: React.StatelessComponent<
   return (
     <TableRow
       key={label}
-      rowLink={`/object-storage/buckets/${region}/${label}`}
+      rowLink={`/object-storage/buckets/${cluster}/${label}`}
       data-qa-bucket-cell={label}
       className={`${classes.bucketRow} ${'fade-in-table'}`}
     >
       <TableCell parentColumn="Name">
-        <Grid container alignItems="center">
-          <Grid item>
+        <Grid container wrap="nowrap" alignItems="center">
+          <Grid item className="py0">
             <EntityIcon variant="bucket" />
           </Grid>
           <Grid item>
-            <div className={classes.labelStatusWrapper}>
+            <div className={classes.bucketNameWrapper}>
               <Typography variant="h3" data-qa-label>
                 {label}
               </Typography>
