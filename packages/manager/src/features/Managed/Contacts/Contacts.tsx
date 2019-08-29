@@ -24,8 +24,6 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ManagedContactGroup, Mode } from './common';
 import ContactDrawer from './ContactsDrawer';
 import ContactTableContact from './ContactsTableContent';
-import GroupDrawer from './GroupDrawer';
-import GroupsTableContent from './GroupsTableContent';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -36,9 +34,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   copy: {
     marginTop: theme.spacing(1)
-  },
-  groupsTable: {
-    marginTop: theme.spacing(3)
   },
   contactsTable: {
     marginTop: theme.spacing(4)
@@ -89,10 +84,6 @@ const Contacts: React.FC<CombinedProps> = props => {
     number | null
   >(null);
 
-  const [selectedGroupName, setSelectedGroupName] = React.useState<
-    string | null
-  >(null);
-
   const [contactDrawerMode, setContactDrawerMode] = React.useState<Mode>(
     'create'
   );
@@ -121,10 +112,8 @@ const Contacts: React.FC<CombinedProps> = props => {
   };
 
   const contactDrawer = useOpenClose();
-  const groupDrawer = useOpenClose();
 
-  // Refs for handling "scrollTo" on Paginated components.
-  const groupsTableRef = React.createRef();
+  // Ref for handling "scrollTo" on Paginated component.
   const contactsTableRef = React.createRef();
 
   const groups = generateGroupsFromContacts(contacts);
@@ -137,70 +126,6 @@ const Contacts: React.FC<CombinedProps> = props => {
         the event of a support issue. Create contacts and assign them to a
         group, then assign the group to the appropriate monitor(s).
       </Typography>
-      <OrderBy data={groups} orderBy="groupName" order="asc">
-        {({ data: orderedData, handleOrderChange, order, orderBy }) => {
-          return (
-            <Paginate data={orderedData} scrollToRef={groupsTableRef}>
-              {({
-                count,
-                data: paginatedData,
-                handlePageChange,
-                handlePageSizeChange,
-                page,
-                pageSize
-              }) => {
-                return (
-                  <div className={classes.groupsTable}>
-                    <RootRef rootRef={groupsTableRef}>
-                      <Typography variant="h2">Groups</Typography>
-                    </RootRef>
-                    <Paper className={classes.root}>
-                      <Table aria-label="List of Your Managed Contact Groups">
-                        <TableHead>
-                          <TableRow>
-                            <TableSortCell
-                              active={orderBy === 'groupName'}
-                              label={'groupName'}
-                              direction={order}
-                              handleClick={handleOrderChange}
-                              className={classes.name}
-                            >
-                              Group Name
-                            </TableSortCell>
-                            <TableCell>Contacts</TableCell>
-                            {/* Empty TableCell for action menu */}
-                            <TableCell />
-                          </TableRow>
-                        </TableHead>
-                        <TableBody>
-                          <GroupsTableContent
-                            groups={paginatedData}
-                            loading={loading}
-                            lastUpdated={lastUpdated}
-                            error={error}
-                            openDrawer={(groupName: string) => {
-                              setSelectedGroupName(groupName);
-                              groupDrawer.open();
-                            }}
-                          />
-                        </TableBody>
-                      </Table>
-                    </Paper>
-                    <PaginationFooter
-                      count={count}
-                      handlePageChange={handlePageChange}
-                      handleSizeChange={handlePageSizeChange}
-                      page={page}
-                      pageSize={pageSize}
-                      eventCategory="managed contact groups"
-                    />
-                  </div>
-                );
-              }}
-            </Paginate>
-          );
-        }}
-      </OrderBy>
       <div className={classes.contactsTable}>
         <RootRef rootRef={contactsTableRef}>
           <Box
@@ -331,12 +256,6 @@ const Contacts: React.FC<CombinedProps> = props => {
           onDelete={handleDelete}
         />
       </div>
-      <GroupDrawer
-        isOpen={groupDrawer.isOpen}
-        closeDrawer={groupDrawer.close}
-        groupName={selectedGroupName || ''}
-        contacts={contacts}
-      />
       <ContactDrawer
         mode={contactDrawerMode}
         isOpen={contactDrawer.isOpen}
