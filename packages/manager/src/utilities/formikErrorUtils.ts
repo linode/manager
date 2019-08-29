@@ -3,7 +3,7 @@ import isNilOrEmpty from './isNilOrEmpty';
 
 export const handleFieldErrors = (
   callback: Function,
-  fieldErrors: Linode.ApiFieldError[]
+  fieldErrors: Linode.ApiFieldError[] = []
 ) => {
   const mappedFieldErrors = fieldErrors.reduce(
     (result, { field, reason }) =>

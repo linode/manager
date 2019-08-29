@@ -1,4 +1,5 @@
 import { Formik } from 'formik';
+import { pickBy } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -31,6 +32,7 @@ export interface Props {
   open: boolean;
   label?: string;
   successMsg?: string;
+  monitor?: Linode.ManagedServiceMonitor;
   onClose: () => void;
   onSubmit: (values: ManagedServicePayload, formikProps: any) => void;
 }
@@ -44,7 +46,7 @@ export const modes = {
 
 const titleMap = {
   [modes.CREATING]: 'Add a Monitor',
-  [modes.EDITING]: 'Edit a Monitor'
+  [modes.EDITING]: 'Edit Monitor'
 };
 
 const typeOptions: Item<Linode.ServiceType>[] = [
@@ -81,22 +83,37 @@ const getValueFromItem = (
   return options.find(thisOption => thisOption.value === value);
 };
 
+const emptyInitialValues = {
+  label: '',
+  consultation_group: '',
+  service_type: 'url',
+  address: '',
+  body: '',
+  timeout: 10,
+  notes: ''
+} as ManagedServicePayload;
+
 const MonitorDrawer: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const { mode, open, onClose, onSubmit } = props;
+  const { mode, monitor, open, onClose, onSubmit } = props;
+
+  /**
+   * We only care about the fields in the form. Previously unfilled optional
+   * values such as `notes` come back from the API as null, so remove those
+   * as well.
+   */
+  const _monitor = pickBy(
+    (val, key) => val !== null && Object.keys(emptyInitialValues).includes(key),
+    monitor
+  ) as ManagedServicePayload;
+
+  const initialValues = { ...emptyInitialValues, ..._monitor };
 
   return (
     <Drawer title={titleMap[mode]} open={open} onClose={onClose}>
       <Formik
-        initialValues={{
-          label: '',
-          consultation_group: '',
-          service_type: 'url',
-          address: '',
-          body: '',
-          timeout: 10
-        }}
+        initialValues={initialValues}
         validationSchema={createServiceMonitorSchema}
         validateOnChange={false}
         validateOnBlur={false}
