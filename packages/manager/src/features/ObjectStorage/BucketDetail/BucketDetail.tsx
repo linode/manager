@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(4)
   },
   objectNameColumn: {
-    width: '60%'
+    width: '40%'
   }
 }));
 

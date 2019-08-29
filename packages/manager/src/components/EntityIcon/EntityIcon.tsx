@@ -8,6 +8,7 @@ import KubeIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
 import LoadingIcon from 'src/assets/icons/entityIcons/loading.svg';
 import NodeBalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
+import ObjectIcon from 'src/assets/icons/entityIcons/object.svg';
 import StackScriptIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import {
@@ -102,8 +103,7 @@ const iconMap = {
   stackscript: StackScriptIcon,
   kube: KubeIcon,
   bucket: BucketIcon,
-  // @todo: What is the real Object icon?
-  object: BucketIcon
+  object: ObjectIcon
 };
 
 const getIcon = (variant: Variant) => {

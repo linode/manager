@@ -1,7 +1,5 @@
 import * as React from 'react';
 
-import Hidden from 'src/components/core/Hidden';
-import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import EntityIcon from 'src/components/EntityIcon';
@@ -11,15 +9,8 @@ import TableRow from 'src/components/TableRow';
 
 import { formatObjectStorageCluster } from 'src/utilities/formatRegion';
 import { readableBytes } from 'src/utilities/unitConversions';
-import { generateObjectUrl } from '../utilities';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  objectNameWrapper: {
-    display: 'flex',
-    flexFlow: 'row nowrap',
-    alignItems: 'center'
-  }
-}));
+// Keep this for when we display URL on hover
+// import { generateObjectUrl } from '../utilities';
 
 interface Props {
   clusterId: Linode.ClusterID;
@@ -30,32 +21,27 @@ interface Props {
 }
 
 const ObjectTableRow: React.FC<Props> = props => {
-  const classes = useStyles();
-
   const {
     clusterId,
-    bucketName,
+    // Keep this for when we display URL on hover
+    // bucketName,
     objectName,
     objectSize,
     objectLastModified
   } = props;
 
-  const objectUrl = generateObjectUrl(clusterId, bucketName, objectName);
+  // Keep this for when we display URL on hover
+  // const objectUrl = generateObjectUrl(clusterId, bucketName, objectName);
 
   return (
     <TableRow key={objectName}>
       <TableCell parentColumn="Object">
         <Grid container alignItems="center">
           <Grid item>
-            <EntityIcon variant="object" />
+            <EntityIcon variant="object" size={20} />
           </Grid>
           <Grid item>
-            <div className={classes.objectNameWrapper}>
-              <Typography variant="h3">{objectName}</Typography>
-            </div>
-            <Hidden smDown>
-              <a href={objectUrl.absolute}>{objectUrl.path}</a>
-            </Hidden>
+            <Typography variant="h3">{objectName}</Typography>
           </Grid>
         </Grid>
       </TableCell>
