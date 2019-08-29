@@ -17,6 +17,7 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import TagImportDrawer from 'src/features/TagImport';
 import useFlags from 'src/hooks/useFlags';
+import useReduxLoad from 'src/hooks/useReduxLoad';
 import { handleOpen } from 'src/store/backupDrawer';
 import getEntitiesWithGroupsToImport, {
   emptyGroupedEntities,
@@ -84,6 +85,15 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
     entitiesWithGroupsToImport,
     location
   } = props;
+
+  useReduxLoad([
+    'linodes',
+    'volumes',
+    'account',
+    'accountSettings',
+    'notifications',
+    'profile'
+  ]);
 
   const flags = useFlags();
 
