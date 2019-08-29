@@ -1,4 +1,5 @@
 import produce from 'immer';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { useEffect, useState } from 'react';
 
 interface UseAPIRequest<T> {
@@ -27,7 +28,7 @@ interface UseAPIRequest<T> {
  * Get account info:
  *
  * ```typescript
- * const { data, loading, lastUpdated, error } = useAPIData<Linode.Account | null>(
+ * const { data, loading, lastUpdated, error } = useAPIData<Account | null>(
  *  getAccountInfo,
  *  null // Initial value of `data`
  * );
@@ -57,14 +58,13 @@ export const useAPIRequest = <T>(
   deps: any[] = []
 ): UseAPIRequest<T> => {
   const [data, setData] = useState<T>(initialData);
-  const [error, setError] = useState<Linode.ApiFieldError[] | undefined>(
-    undefined
-  );
+  const [error, setError] = useState<APIError[] | undefined>(undefined);
   const [loading, setLoading] = useState<boolean>(false);
   const [lastUpdated, setLastUpdated] = useState<number>(0);
 
   const _request = () => {
     setLoading(true);
+    setError(undefined);
     request()
       .then(responseData => {
         setLoading(false);

@@ -1,4 +1,4 @@
-import { Event } from 'linode-js-sdk/lib/account'
+import { Event } from 'linode-js-sdk/lib/account';
 import { path } from 'ramda';
 import { isProduction } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
@@ -303,13 +303,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   //   finished: e => ``,
   //   notification: e => ``,
   // },
-  // managed_enabled: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  managed_enabled: {
+    notification: e => `Managed has been activated on your account.`
+  },
   managed_service_create: {
     notification: e => `Managed service ${e.entity!.label} has been created.`
   },
