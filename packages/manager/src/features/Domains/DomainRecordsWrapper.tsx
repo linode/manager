@@ -1,3 +1,4 @@
+import { Domain, DomainRecord } from 'linode-js-sdk/lib/domains';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
@@ -32,10 +33,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  domain: Linode.Domain;
-  records: Linode.DomainRecord[];
+  domain: Domain;
+  records: DomainRecord[];
   updateRecords: () => void;
-  handleUpdateTags: (tagList: string[]) => Promise<Linode.Domain>;
+  handleUpdateTags: (tagList: string[]) => Promise<Domain>;
 }
 
 type CombinedProps = Props & StyleProps;

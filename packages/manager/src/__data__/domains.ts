@@ -1,4 +1,6 @@
-export const domain1: Linode.Domain = {
+import { Domain, DomainRecord } from 'linode-js-sdk/lib/domains';
+
+export const domain1: Domain = {
   master_ips: [],
   domain: 'domain1.com',
   expire_sec: 0,
@@ -16,7 +18,7 @@ export const domain1: Linode.Domain = {
   zonefile: { rendered: '', status: 'current' }
 };
 
-export const domain2: Linode.Domain = {
+export const domain2: Domain = {
   master_ips: [],
   domain: 'domain2.com',
   expire_sec: 0,
@@ -34,7 +36,7 @@ export const domain2: Linode.Domain = {
   zonefile: { rendered: '', status: 'current' }
 };
 
-export const domain3: Linode.Domain = {
+export const domain3: Domain = {
   master_ips: [],
   domain: 'domain3.com',
   expire_sec: 0,
@@ -54,7 +56,7 @@ export const domain3: Linode.Domain = {
 
 export const domains = [domain1, domain2, domain3];
 
-export const domainRecord1: Linode.DomainRecord = {
+export const domainRecord1: DomainRecord = {
   id: 12938697,
   name: 'www',
   port: 0,
@@ -68,7 +70,7 @@ export const domainRecord1: Linode.DomainRecord = {
   weight: 0
 };
 
-export const domainRecord2: Linode.DomainRecord = {
+export const domainRecord2: DomainRecord = {
   id: 12938693,
   name: 'kibana',
   port: 0,
@@ -82,7 +84,7 @@ export const domainRecord2: Linode.DomainRecord = {
   weight: 0
 };
 
-export const domainRecord3: Linode.DomainRecord = {
+export const domainRecord3: DomainRecord = {
   id: 22938693,
   name: 'host',
   port: 0,

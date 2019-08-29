@@ -1,3 +1,4 @@
+import { Domain } from 'linode-js-sdk/lib/domains';
 import { domains, linodes } from 'src/__data__';
 import { entitiesWithGroupsToImport } from './getEntitiesWithGroupsToImport';
 
@@ -53,7 +54,7 @@ describe('Entities that have groups to import', () => {
     });
 
     it('ignores case', () => {
-      const domain: Linode.Domain = {
+      const domain: Domain = {
         master_ips: [],
         domain: 'testing.com',
         expire_sec: 0,

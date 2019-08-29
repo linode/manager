@@ -1,4 +1,5 @@
 import { Account, AccountSettings } from 'linode-js-sdk/lib/account';
+import { Domain } from 'linode-js-sdk/lib/domains';
 import { Profile } from 'linode-js-sdk/lib/profile';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
@@ -132,7 +133,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
 interface DispatchProps {
   initSession: () => void;
   requestAccount: () => Promise<Account>;
-  requestDomains: () => Promise<Linode.Domain[]>;
+  requestDomains: () => Promise<Domain[]>;
   requestImages: () => Promise<Linode.Image[]>;
   requestLinodes: () => Promise<Linode.Linode[]>;
   requestNotifications: () => Promise<Linode.Notification[]>;
