@@ -1,8 +1,9 @@
+import { DomainRecord } from 'linode-js-sdk/lib/domains';
 import { takeLast } from 'ramda';
 
 export const isValidDomainRecord = (
   hostname: string,
-  records: Linode.DomainRecord[]
+  records: DomainRecord[]
 ) => {
   return isUniqueHostname(hostname, records);
 };
@@ -23,15 +24,12 @@ export const isValidSOAEmail = (email: string, hostname: string) => {
   return strippedHostname !== emailDomain;
 };
 
-export const isUniqueHostname = (
-  hostname: string,
-  records: Linode.DomainRecord[]
-) => {
+export const isUniqueHostname = (hostname: string, records: DomainRecord[]) => {
   return !records.some(
     record => record.type === 'CNAME' && record.name === hostname
   );
 };
 
-export const isValidCNAME = (cname: string, records: Linode.DomainRecord[]) => {
+export const isValidCNAME = (cname: string, records: DomainRecord[]) => {
   return !records.some(thisRecord => thisRecord.name === cname);
 };

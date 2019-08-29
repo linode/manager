@@ -1,17 +1,17 @@
+import { Domain, importZone } from 'linode-js-sdk/lib/domains';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import LinodeTextField from 'src/components/TextField';
-import { importZone } from 'src/services/domains';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
 interface Props {
   open: boolean;
   onClose: () => void;
-  onSuccess: (domain: Linode.Domain) => void;
+  onSuccess: (domain: Domain) => void;
 }
 
 interface State {

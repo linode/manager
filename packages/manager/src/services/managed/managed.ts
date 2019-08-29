@@ -54,6 +54,22 @@ export interface ContactPayload {
 }
 
 /**
+ * enableManaged
+ *
+ * Enables the Managed feature
+ * on your account. This service is billed at $100/month/Linode.
+ *
+ * Should this live in /account?
+ *
+ */
+
+export const enableManaged = () =>
+  Request<{}>(
+    setMethod('POST'),
+    setURL(`${API_ROOT}/account/settings/managed-enable`)
+  );
+
+/**
  * getServices
  *
  * Returns a paginated list of Managed Services on your account.
@@ -121,6 +137,21 @@ export const createServiceMonitor = (data: ManagedServicePayload) =>
   Request<Linode.ManagedServiceMonitor>(
     setMethod('POST'),
     setURL(`${API_ROOT}/managed/services`),
+    setData(data, createServiceMonitorSchema)
+  ).then(response => response.data);
+
+/**
+ * updateServiceMonitor
+ *
+ * Update a Managed Service Monitor
+ */
+export const updateServiceMonitor = (
+  monitorID: number,
+  data: Partial<ManagedServicePayload>
+) =>
+  Request<Linode.ManagedServiceMonitor>(
+    setMethod('PUT'),
+    setURL(`${API_ROOT}/managed/services/${monitorID}`),
     setData(data, createServiceMonitorSchema)
   ).then(response => response.data);
 

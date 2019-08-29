@@ -1,11 +1,11 @@
-import { API_ROOT } from 'src/constants';
+import { API_ROOT } from '../constants';
 
-import Request, { setData, setMethod, setParams, setURL } from '../index';
+import Request, { setData, setMethod, setParams, setURL } from '../request';
 
 import { createRecordSchema, updateRecordSchema } from './records.schema';
 
-type Page<T> = Linode.ResourcePage<T>;
-type DomainRecord = Linode.DomainRecord;
+import { ResourcePage as Page } from '../types';
+import { DomainRecord } from './types';
 
 /**
  * Returns a paginated list of Records configured on a Domain in Linode's DNS Manager.

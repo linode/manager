@@ -51,6 +51,7 @@ interface Props {
   error?: Linode.ApiFieldError[];
 }
 
+export type Modes = 'create' | 'edit';
 export type FormikProps = FormikBag<CombinedProps, ManagedServicePayload>;
 
 export type CombinedProps = Props &
@@ -77,6 +78,20 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
   } = useDialog<number>(deleteServiceMonitor);
 
   const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+  const [drawerMode, setDrawerMode] = React.useState<Modes>('create');
+  const [editID, setEditID] = React.useState<number>(0);
+
+  const handleDrawerClose = () => {
+    setEditID(0);
+    setDrawerMode('create');
+    setDrawerOpen(false);
+  };
+
+  const handleDrawerOpen = (id: number, mode: Modes) => {
+    setEditID(id);
+    setDrawerMode(mode);
+    setDrawerOpen(true);
+  };
 
   const handleDelete = () => {
     if (!dialog.entityID) {
@@ -100,22 +115,39 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
     values: ManagedServicePayload,
     { setSubmitting, setErrors, setStatus }: FormikProps
   ) => {
-    const { createServiceMonitor } = props;
-    createServiceMonitor({ ...values, timeout: +values.timeout })
-      .then(response => {
-        setSubmitting(false);
-        setDrawerOpen(false);
-      })
-      .catch(e => {
-        const defaultMessage = `Unable to create this Monitor. Please try again later.`;
-        const mapErrorToStatus = (generalError: string) =>
-          setStatus({ generalError });
+    const { createServiceMonitor, updateServiceMonitor } = props;
+    const _success = () => {
+      setSubmitting(false);
+      handleDrawerClose();
+    };
 
-        setSubmitting(false);
-        handleFieldErrors(setErrors, e);
-        handleGeneralErrors(mapErrorToStatus, e, defaultMessage);
-        setSubmitting(false);
-      });
+    const _error = (e: Linode.ApiFieldError[]) => {
+      const defaultMessage = `Unable to ${
+        drawerMode === 'create' ? 'create' : 'update'
+      } this Monitor. Please try again later.`;
+      const mapErrorToStatus = (generalError: string) =>
+        setStatus({ generalError });
+
+      setSubmitting(false);
+      handleFieldErrors(setErrors, e);
+      handleGeneralErrors(mapErrorToStatus, e, defaultMessage);
+      setSubmitting(false);
+    };
+
+    // Clear drawer error state
+    setStatus(undefined);
+
+    drawerMode === 'create'
+      ? createServiceMonitor({ ...values, timeout: +values.timeout })
+          .then(_success)
+          .catch(_error)
+      : updateServiceMonitor({
+          ...values,
+          monitorID: editID,
+          timeout: +values.timeout
+        })
+          .then(_success)
+          .catch(_error);
   };
 
   return (
@@ -192,6 +224,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
                         loading={loading}
                         error={error}
                         openDialog={openDialog}
+                        openDrawer={handleDrawerOpen}
                       />
                     </TableBody>
                   </Table>
@@ -219,9 +252,10 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
       />
       <MonitorDrawer
         open={drawerOpen}
-        onClose={() => setDrawerOpen(false)}
+        onClose={handleDrawerClose}
         onSubmit={submitMonitorForm}
-        mode="create"
+        mode={drawerMode}
+        monitor={monitors.find(m => m.id === editID)}
       />
     </>
   );

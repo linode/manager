@@ -1,4 +1,5 @@
 import * as Bluebird from 'bluebird';
+import { getDomains } from 'linode-js-sdk/lib/domains';
 import { getVolumes } from 'linode-js-sdk/lib/volumes';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
@@ -18,7 +19,6 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
-import { getDomains } from 'src/services/domains';
 import { getLinodes } from 'src/services/linodes';
 import { getNodeBalancers } from 'src/services/nodebalancers';
 import { createSupportTicket, uploadAttachment } from 'src/services/support';
