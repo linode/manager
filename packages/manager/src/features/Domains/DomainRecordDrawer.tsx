@@ -1,4 +1,12 @@
 import {
+  createDomainRecord,
+  DomainRecord,
+  DomainType,
+  RecordType,
+  updateDomainRecord,
+  ZoneFile
+} from 'linode-js-sdk/lib/domains';
+import {
   cond,
   defaultTo,
   equals,
@@ -19,7 +27,6 @@ import {
   default as _TextField,
   Props as TextFieldProps
 } from 'src/components/TextField';
-import { createDomainRecord, updateDomainRecord } from 'src/services/domains';
 import {
   DomainActionsProps,
   withDomainActions
@@ -43,14 +50,14 @@ interface Props extends EditableRecordFields, EditableDomainFields {
   onClose: () => void;
   domainId: number;
   mode: 'create' | 'edit';
-  records: Linode.DomainRecord[];
+  records: DomainRecord[];
   updateRecords: () => void;
 
   /**
    * Used to populate fields on edits.
    */
   id?: number;
-  type: Linode.RecordType | Linode.DomainType;
+  type: RecordType | DomainType;
 }
 
 interface EditableSharedFields {
@@ -79,7 +86,7 @@ interface EditableDomainFields extends EditableSharedFields {
   retry_sec?: number;
   soa_email?: string;
   ttl_sec?: number;
-  zonefile?: Linode.ZoneFile;
+  zonefile?: ZoneFile;
 }
 
 interface State {
@@ -411,7 +418,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
         this.state.errors
       )('axfr_ips')}
       // Include some warnings and info from the API docs.
-      helperText={`Comma-separated list of IPs that may perform a zone transfer for this Domain. 
+      helperText={`Comma-separated list of IPs that may perform a zone transfer for this Domain.
         This is potentially dangerous, and should be left empty unless you intend to use it.`}
       rows="3"
       value={defaultTo(
@@ -537,7 +544,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
 
   filterDataByType = (
     fields: EditableRecordFields | EditableDomainFields,
-    t: Linode.RecordType | Linode.DomainType
+    t: RecordType | DomainType
   ): Partial<EditableRecordFields | EditableDomainFields> =>
     cond([
       [

@@ -1,3 +1,4 @@
+import { Domain } from 'linode-js-sdk/lib/domains';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -154,7 +155,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       }
     });
 
-  handleSuccess = (domain: Linode.Domain) => {
+  handleSuccess = (domain: Domain) => {
     if (domain.id) {
       return this.props.history.push(`/domains/${domain.id}`);
     }

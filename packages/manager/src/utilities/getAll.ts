@@ -1,10 +1,10 @@
 import * as Bluebird from 'bluebird';
+import { Domain, getDomains } from 'linode-js-sdk/lib/domains';
 import { getVolumes, Volume } from 'linode-js-sdk/lib/volumes';
 import { range } from 'ramda';
 
 import { sendFetchAllEvent } from 'src/utilities/ga';
 
-import { getDomains } from 'src/services/domains';
 import { getLinodes } from 'src/services/linodes';
 import { getNodeBalancers } from 'src/services/nodebalancers';
 
@@ -175,7 +175,7 @@ export type GetAllHandler = (
   linodes: Linode.Linode[],
   nodebalancers: Linode.NodeBalancer[],
   volumes: Volume[],
-  domains: Linode.Domain[]
+  domains: Domain[]
 ) => any;
 
 /**
@@ -192,7 +192,7 @@ export const getAllEntities = (cb: GetAllHandler) =>
     getAll<Linode.Linode>(getLinodes)(),
     getAll<Linode.NodeBalancer>(getNodeBalancers)(),
     getAll<Volume>(getVolumes)(),
-    getAll<Linode.Domain>(getDomains)(),
+    getAll<Domain>(getDomains)(),
     /** for some reason typescript thinks ...results is implicitly typed as 'any' */
     // @ts-ignore
     (...results) => {

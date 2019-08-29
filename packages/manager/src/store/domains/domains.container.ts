@@ -1,13 +1,13 @@
+import { CreateDomainPayload, Domain } from 'linode-js-sdk/lib/domains';
 import { connect } from 'react-redux';
-import { CreateDomainPayload } from 'src/services/domains';
 import { ThunkDispatch } from '../types';
 import { DomainId, UpdateDomainParams } from './domains.actions';
 import { createDomain, deleteDomain, updateDomain } from './domains.requests';
 
 export interface DomainActionsProps {
   domainActions: {
-    createDomain: (payload: CreateDomainPayload) => Promise<Linode.Domain>;
-    updateDomain: (params: UpdateDomainParams) => Promise<Linode.Domain>;
+    createDomain: (payload: CreateDomainPayload) => Promise<Domain>;
+    updateDomain: (params: UpdateDomainParams) => Promise<Domain>;
     deleteDomain: (domainId: DomainId) => Promise<{}>;
   };
 }

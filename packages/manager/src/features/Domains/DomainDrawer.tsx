@@ -1,3 +1,8 @@
+import {
+  cloneDomain,
+  createDomainRecord,
+  Domain
+} from 'linode-js-sdk/lib/domains';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { Lens, lensPath, over, path, pathOr, set, view } from 'ramda';
 import * as React from 'react';
@@ -26,7 +31,6 @@ import {
   hasGrant,
   isRestrictedUser
 } from 'src/features/Profile/permissionsHelpers';
-import { cloneDomain } from 'src/services/domains';
 import { ApplicationState } from 'src/store';
 import {
   CLONING,
@@ -45,7 +49,6 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { reportException } from 'src/exceptionReporting';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import NodeBalancerSelect from 'src/features/NodeBalancers/NodeBalancerSelect';
-import { createDomainRecord } from 'src/services/domains/records';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import { isValidSOAEmail } from './domainUtils';
@@ -583,7 +586,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     this.setState({ submitting: true });
     domainActions
       .createDomain(data)
-      .then((domainData: Linode.Domain) => {
+      .then((domainData: Domain) => {
         if (!this.mounted) {
           return;
         }
@@ -752,7 +755,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
     this.setState({ submitting: true });
     domainActions
       .updateDomain(data)
-      .then((domainData: Linode.Domain) => {
+      .then((domainData: Domain) => {
         if (!this.mounted) {
           return;
         }
@@ -837,7 +840,7 @@ interface StateProps {
   mode: typeof CLONING | typeof CREATING | typeof EDITING;
   open: boolean;
   domain?: string;
-  domainProps?: Linode.Domain;
+  domainProps?: Domain;
   id?: number;
   disabled: boolean;
 }
@@ -846,7 +849,7 @@ const mapStateToProps = (state: ApplicationState) => {
   const id = path(['domainDrawer', 'id'], state);
   const domainEntities = pathOr([], ['__resources', 'domains', 'data'], state);
   const domainProps = domainEntities.find(
-    (domain: Linode.Domain) => domain.id === path(['domainDrawer', 'id'], state)
+    (domain: Domain) => domain.id === path(['domainDrawer', 'id'], state)
   );
   return {
     mode: pathOr(CREATING, ['domainDrawer', 'mode'], state),

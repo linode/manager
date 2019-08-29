@@ -1,3 +1,4 @@
+import { Domain } from 'linode-js-sdk/lib/domains';
 import { Reducer } from 'redux';
 import { RequestableDataWithEntityError } from 'src/store/types';
 import updateOrAdd from 'src/utilities/updateOrAdd';
@@ -18,7 +19,7 @@ import { entitiesFromPayload } from './domains.helpers';
  * State
  */
 
-export type State = RequestableDataWithEntityError<Linode.Domain[]>;
+export type State = RequestableDataWithEntityError<Domain[]>;
 
 export const defaultState: State = {
   data: [],

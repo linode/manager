@@ -1,22 +1,19 @@
-import { API_ROOT } from 'src/constants';
+import { API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
   setXFilter
-} from '../index';
+} from '../request';
 import {
   createDomainSchema,
   importZoneSchema,
   updateDomainSchema
 } from './domains.schema';
 
-type Page<T> = Linode.ResourcePage<T>;
-type Domain = Linode.Domain;
-
-export type CreateDomainPayload = Partial<Linode.Domain>;
-export type UpdateDomainPayload = Partial<Linode.Domain>;
+import { ResourcePage as Page } from '../types';
+import { Domain } from './types';
 
 /**
  * Returns a paginated list of Domains.
@@ -46,7 +43,7 @@ export const getDomain = (domainId: number) =>
  *
  * @param data { object } Options for type, status, etc.
  */
-export const createDomain = (data: Partial<Linode.Domain>) =>
+export const createDomain = (data: Partial<Domain>) =>
   Request<Domain>(
     setData(data, createDomainSchema),
     setURL(`${API_ROOT}/domains`),
@@ -59,7 +56,7 @@ export const createDomain = (data: Partial<Linode.Domain>) =>
  * @param domainId { number } The ID of the Domain to access.
  * @param data { object } Options for type, status, etc.
  */
-export const updateDomain = (domainId: number, data: Partial<Linode.Domain>) =>
+export const updateDomain = (domainId: number, data: Partial<Domain>) =>
   Request<Domain>(
     setURL(`${API_ROOT}/domains/${domainId}`),
     setMethod('PUT'),

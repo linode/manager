@@ -1,3 +1,5 @@
+import { Domain } from 'linode-js-sdk/lib/domains';
+
 import { append, compose, has, when } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -23,9 +25,9 @@ interface DeleteData {
 }
 
 interface Props {
-  onEdit: (data: Linode.Domain | EditPayload) => void;
+  onEdit: (data: Domain | EditPayload) => void;
   deleteData?: DeleteData;
-  editPayload: Linode.Domain | EditPayload;
+  editPayload: Domain | EditPayload;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;
