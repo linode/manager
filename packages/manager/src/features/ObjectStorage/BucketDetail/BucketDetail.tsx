@@ -23,6 +23,7 @@ import TableRow from 'src/components/TableRow';
 import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
 import { getObjectList } from 'src/services/objectStorage/buckets';
 import { getQueryParam } from 'src/utilities/queryParams';
+import ObjectUpload from '../ObjectUpload';
 import { ExtendedObject, extendObject } from '../utilities';
 import BucketBreadcrumb from './BucketBreadcrumb';
 import ObjectTableContent from './ObjectTableContent';
@@ -203,7 +204,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
       allObjectsFetched
     } = this.state;
 
-    const { bucketName } = this.props.match.params;
+    const { bucketName, clusterId } = this.props.match.params;
     const prefix = getQueryParam(this.props.location.search, 'prefix');
 
     const numOfDisplayedObjects = this.state.data.filter(
@@ -233,6 +234,11 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
           prefix={prefix}
           history={this.props.history}
           bucketName={bucketName}
+        />
+        <ObjectUpload
+          clusterId={clusterId}
+          bucketName={bucketName}
+          fn={() => null}
         />
         <Paper className={classes.objectTable}>
           <Table removeLabelonMobile aria-label="List of Bucket Objects">

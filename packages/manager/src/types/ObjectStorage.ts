@@ -32,6 +32,10 @@ namespace Linode {
     name: string;
   }
 
+  export interface ObjectURL {
+    url: string;
+  }
+
   // Enum containing IDs for each Cluster
   export type ClusterID = 'us-east-1';
 }
