@@ -1,10 +1,10 @@
+import { closeSupportTicket } from 'linode-js-sdk/lib/support';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
-import { closeSupportTicket } from 'src/services/support';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import scrollTo from 'src/utilities/scrollTo';
 
