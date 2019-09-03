@@ -86,12 +86,16 @@ const styles = (theme: Theme) =>
     }
   });
 
+export interface ExtendedButtonProps extends ButtonProps {
+  target?: string;
+}
+
 export interface Props {
   icon?: React.ComponentType<any>;
   animate?: boolean;
   copy?: string | React.ReactNode;
   title?: string;
-  buttonProps?: ButtonProps[];
+  buttonProps?: ExtendedButtonProps[];
   className?: string;
 }
 

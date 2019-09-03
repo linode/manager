@@ -1,8 +1,8 @@
 import { AccountSettings } from 'linode-js-sdk/lib/account';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
+import ExternalLink from 'src/assets/icons/external-link.svg';
 import ManagedIcon from 'src/assets/icons/managed.svg';
-import MoreInfo from 'src/assets/icons/moreInfo.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -71,21 +71,22 @@ const ManagedPlaceholder: React.FC<CombinedProps> = props => {
     <>
       <Placeholder
         icon={ManagedIcon}
-        title="Managed Services"
+        title="Linode Managed"
         copy={
           'Experience true peace of mind and let the experts at Linode manage your servers.'
         }
         buttonProps={[
           {
             onClick: () => setOpen(true),
-            children: 'Add Managed services'
+            children: 'Add Linode Managed'
           },
           {
-            onClick: () => null,
+            href: 'https://linode.com/managed',
+            target: '_blank', // Not a great solution.
             children: (
               <>
                 Learn more
-                <MoreInfo style={{ marginLeft: '10px' }} />
+                <ExternalLink style={{ marginLeft: '10px' }} />
               </>
             ),
             buttonType: 'secondary'
@@ -96,17 +97,16 @@ const ManagedPlaceholder: React.FC<CombinedProps> = props => {
         open={isOpen}
         error={error}
         onClose={() => handleClose()}
-        title="Confirm Managed Enrollment"
+        title="Just to confirm..."
         actions={actions}
       >
         <Typography>
-          Linode Managed costs an additional $100/mo per Linode. {` `}
+          Linode Managed is billed at{' '}
+          <strong>$100 per month per Linode.</strong> {` `}
           You currently have{` `}
-          <strong>
-            {pluralize('Linode', 'Linodes', props.linodeCount)}
-          </strong>{' '}
-          on your account. This will increase your projected monthly bill by{' '}
-          <strong>${`${props.linodeCount * 100}/month`}</strong>. Are you sure?{' '}
+          <strong>{pluralize('Linode', 'Linodes', props.linodeCount)}</strong>,
+          so Managed will cost{' '}
+          <strong>${`${props.linodeCount * 100}/month`}</strong>.
         </Typography>
       </ConfirmationDialog>
     </>
