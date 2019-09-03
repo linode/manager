@@ -8,18 +8,18 @@ import Grid from 'src/components/Grid';
 
 export const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: `${theme.spacing(3) - 4}px`,
+    padding: theme.spacing(2),
     maxWidth: '100%'
   },
   container: {
     flex: 1
   },
   icon: {
-    width: 48,
-    height: 48
+    width: 40,
+    height: 40
   },
   header: {
-    marginBottom: 11
+    marginBottom: 2
   }
 }));
 
@@ -32,11 +32,10 @@ export const Healthy: React.FC<{}> = _ => {
         direction="row"
         alignItems="center"
         className={classes.root}
-        spacing={0}
       >
         <Grid item>
-          <Grid item xs={12} className={classes.icon}>
-            <MonitorOK width={48} height={48} />
+          <Grid item className={classes.icon}>
+            <MonitorOK width={40} height={40} />
           </Grid>
         </Grid>
         <Grid item className={classes.container}>
