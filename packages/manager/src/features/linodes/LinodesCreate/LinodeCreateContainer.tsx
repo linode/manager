@@ -126,6 +126,12 @@ const trimOneClickFromLabel = (script: StackScript) => {
   };
 };
 
+const isNonDefaultImageType = (prevType: string, type: string) => {
+  return ['fromStackScript', 'fromBackup', 'fromLinode'].some(
+    thisEntry => prevType !== thisEntry && type === thisEntry
+  );
+};
+
 class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   params = getParamsFromUrl(this.props.location.search);
 
@@ -142,10 +148,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      * defaulting to Debian 9 because it's possible the user chooses a stackscript
      * that isn't compatible with the defaulted image
      */
-    if (
-      prevProps.createType !== 'fromStackScript' &&
-      this.props.createType === 'fromStackScript'
-    ) {
+    if (isNonDefaultImageType(prevProps.createType, this.props.createType)) {
       this.setState({ selectedImageID: undefined });
     }
   }
@@ -278,7 +281,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   setUDFs = (udfs: any[]) => this.setState({ udfs });
 
   generateLabel = () => {
-    const { getLabel, imagesData, regionsData } = this.props;
+    const { createType, getLabel, imagesData, regionsData } = this.props;
     const {
       selectedImageID,
       selectedRegionID,
@@ -326,9 +329,13 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       arg2 = selectedRegion ? selectedRegion.id : '';
     }
 
-    if (this.props.createType === 'fromLinode') {
+    if (createType === 'fromLinode') {
       // @todo handle any other custom label cases we'd like to have here
       arg3 = 'clone';
+    }
+
+    if (createType === 'fromBackup') {
+      arg3 = 'backup';
     }
 
     return getLabel(arg1, arg2, arg3);
