@@ -27,7 +27,7 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
   const { label, open, onClose, onSubmitLabel, onSubmitPassword } = props;
 
   return (
-    <Drawer title={'Edit Credential'} open={open} onClose={onClose}>
+    <Drawer title={`Edit Credential: ${label}`} open={open} onClose={onClose}>
       <Formik
         initialValues={{
           label
@@ -84,7 +84,7 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
                   loading={isSubmitting}
                   data-qa-submit
                 >
-                  Save
+                  Update label
                 </Button>
               </ActionsPanel>
             </form>
@@ -162,7 +162,7 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
                   loading={isSubmitting}
                   data-qa-submit
                 >
-                  Save
+                  Update credentials
                 </Button>
               </ActionsPanel>
             </form>
