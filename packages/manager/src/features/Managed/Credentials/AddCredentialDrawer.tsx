@@ -79,6 +79,7 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
               <TextField
                 name="password"
                 label="Password / Passphrase"
+                type="password"
                 data-qa-add-password
                 value={values.password}
                 error={!!errors.password}

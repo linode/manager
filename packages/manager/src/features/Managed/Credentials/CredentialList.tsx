@@ -90,12 +90,6 @@ export const CredentialList: React.FC<CombinedProps> = props => {
       );
   };
 
-  const handleSuccess = (cb: any) => {
-    cb();
-    setDrawerOpen(false);
-    update();
-  };
-
   const _handleError = (
     e: Linode.ApiFieldError[],
     setSubmitting: any,
@@ -117,7 +111,11 @@ export const CredentialList: React.FC<CombinedProps> = props => {
   ) => {
     setStatus(undefined);
     createCredential(values)
-      .then(() => handleSuccess(() => setSubmitting(false)))
+      .then(() => {
+        setDrawerOpen(false);
+        setSubmitting(false);
+        update();
+      })
       .catch(e => {
         _handleError(
           e,
@@ -131,7 +129,7 @@ export const CredentialList: React.FC<CombinedProps> = props => {
 
   const handleUpdatePassword = (
     values: CredentialPayload,
-    { setSubmitting, setErrors, setStatus }: FormikProps
+    { setSubmitting, setErrors, setStatus, setFieldValue }: FormikProps
   ) => {
     setStatus(undefined);
     if (!selectedCredential) {
@@ -144,6 +142,8 @@ export const CredentialList: React.FC<CombinedProps> = props => {
       .then(() => {
         setSubmitting(false);
         setStatus({ success: 'Updated successfully.' });
+        setFieldValue('password', '');
+        setFieldValue('username', '');
         update();
       })
       .catch(err =>
@@ -166,8 +166,8 @@ export const CredentialList: React.FC<CombinedProps> = props => {
       updateCredential(editID, { label: values.label })
         .then(() => {
           setSubmitting(false);
-          update();
           setStatus({ success: 'Label updated successfully.' });
+          update();
         })
         .catch(err =>
           _handleError(
