@@ -397,9 +397,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             <Select
               options={kernelList}
               label="Select a Kernel"
-              defaultValue={kernelList.find(
-                thisKernel => thisKernel.value === kernel
-              )}
+              value={kernelList.find(thisKernel => thisKernel.value === kernel)}
               onChange={this.handleChangeKernel}
               errorText={errorFor('kernel')}
               errorGroup="linode-config-drawer"
