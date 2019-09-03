@@ -1,5 +1,5 @@
 import countryData from 'country-region-data';
-import { Account } from 'linode-js-sdk/lib/account'
+import { Account } from 'linode-js-sdk/lib/account';
 import { defaultTo, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -185,7 +185,7 @@ class UpdateContactInformationPanel extends React.Component<
 
     const regionResults = countryRegions.map(region => {
       return {
-        value: region.shortCode ? region.shortCode : region.name,
+        value: region.name,
         label: region.name
       };
     });
