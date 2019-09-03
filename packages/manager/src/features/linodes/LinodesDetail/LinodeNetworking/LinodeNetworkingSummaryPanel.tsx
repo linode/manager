@@ -1,3 +1,4 @@
+import { ZoneName } from 'linode-js-sdk/lib/networking';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -51,7 +52,7 @@ const styles = (theme: Theme) =>
 const styled = withStyles(styles);
 
 interface Props {
-  linodeRegion: Linode.ZoneName;
+  linodeRegion: ZoneName;
   linodeLabel: string;
   linkLocal?: string;
   sshIPAddress?: string;

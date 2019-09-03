@@ -1,3 +1,4 @@
+import { IPAddress } from 'linode-js-sdk/lib/networking';
 import { compose, head, isEmpty, path, pathOr, uniq, uniqBy } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -106,7 +107,7 @@ interface State {
   linodeIPs?: Linode.LinodeIPsResponse;
   removeIPDialogOpen: boolean;
   initialLoading: boolean;
-  currentlySelectedIP?: Linode.IPAddress;
+  currentlySelectedIP?: IPAddress;
   currentlySelectedIPRange?: Linode.IPRange;
   viewIPDrawerOpen: boolean;
   viewRangeDrawerOpen: boolean;
@@ -120,7 +121,7 @@ interface State {
 type CombinedProps = ContextProps & WithStyles<ClassNames> & DispatchProps;
 
 // Save some typing below
-export const uniqByIP = uniqBy((thisIP: Linode.IPAddress) => thisIP.address);
+export const uniqByIP = uniqBy((thisIP: IPAddress) => thisIP.address);
 
 class LinodeNetworking extends React.Component<CombinedProps, State> {
   state: State = {
@@ -138,7 +139,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     this.refreshIPs().then(() => this.setState({ initialLoading: false }));
   }
 
-  openRemoveIPDialog = (IPToRemove: Linode.IPAddress) => {
+  openRemoveIPDialog = (IPToRemove: IPAddress) => {
     this.setState({
       removeIPDialogOpen: !this.state.removeIPDialogOpen,
       currentlySelectedIP: IPToRemove
@@ -181,14 +182,14 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     });
   };
 
-  displayIPDrawer = (ip: Linode.IPAddress) => () => {
+  displayIPDrawer = (ip: IPAddress) => () => {
     this.setState({
       viewIPDrawerOpen: true,
       currentlySelectedIP: ip
     });
   };
 
-  handleOpenEditRDNS = (ip: Linode.IPAddress) => {
+  handleOpenEditRDNS = (ip: IPAddress) => {
     this.setState({
       editRDNSDrawerOpen: true,
       currentlySelectedIP: ip
@@ -220,7 +221,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     );
   }
 
-  renderIPRow(ip: Linode.IPAddress, type: IPTypes) {
+  renderIPRow(ip: IPAddress, type: IPTypes) {
     const { classes, readOnly } = this.props;
 
     return (
@@ -489,21 +490,17 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
               </TableRow>
             </TableHead>
             <TableBody>
-              {publicIPs.map((ip: Linode.IPAddress) =>
-                this.renderIPRow(ip, 'Public')
-              )}
-              {privateIPs.map((ip: Linode.IPAddress) =>
+              {publicIPs.map((ip: IPAddress) => this.renderIPRow(ip, 'Public'))}
+              {privateIPs.map((ip: IPAddress) =>
                 this.renderIPRow(ip, 'Private')
               )}
-              {publicReservedIps.map((ip: Linode.IPAddress) =>
+              {publicReservedIps.map((ip: IPAddress) =>
                 this.renderIPRow(ip, 'Public Reserved')
               )}
-              {privateReservedIps.map((ip: Linode.IPAddress) =>
+              {privateReservedIps.map((ip: IPAddress) =>
                 this.renderIPRow(ip, 'Private Reserved')
               )}
-              {sharedIPs.map((ip: Linode.IPAddress) =>
-                this.renderIPRow(ip, 'Shared')
-              )}
+              {sharedIPs.map((ip: IPAddress) => this.renderIPRow(ip, 'Shared'))}
             </TableBody>
           </Table>
         </Paper>
@@ -582,19 +579,15 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     const { linodeIPs } = this.state;
 
     const publicIPs = uniq<string>(
-      pathOr([], ['ipv4', 'public'], linodeIPs).map(
-        (i: Linode.IPAddress) => i.address
-      )
+      pathOr([], ['ipv4', 'public'], linodeIPs).map((i: IPAddress) => i.address)
     );
     const privateIPs = uniq<string>(
       pathOr([], ['ipv4', 'private'], linodeIPs).map(
-        (i: Linode.IPAddress) => i.address
+        (i: IPAddress) => i.address
       )
     );
     const sharedIPs = uniq<string>(
-      pathOr([], ['ipv4', 'shared'], linodeIPs).map(
-        (i: Linode.IPAddress) => i.address
-      )
+      pathOr([], ['ipv4', 'shared'], linodeIPs).map((i: IPAddress) => i.address)
     );
 
     return (
