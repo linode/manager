@@ -1,5 +1,5 @@
 import countryData from 'country-region-data';
-import { Account } from 'linode-js-sdk/lib/account'
+import { Account } from 'linode-js-sdk/lib/account';
 import { defaultTo, lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -373,29 +373,46 @@ class UpdateContactInformationPanel extends React.Component<
         >
           <Grid container className={classes.stateZip}>
             <Grid item xs={12} sm={7}>
-              <EnhancedSelect
-                label="State / Province"
-                errorText={errorMap.state}
-                onChange={this.updateState}
-                placeholder="Select a State"
-                options={regionResults}
-                isClearable={false}
-                // Explicitly setting the value as an object so the text will populate on selection.
-                // For more info see here: https://github.com/JedWatson/react-select/issues/2674
-                value={
-                  fields.state
-                    ? {
-                        label: fields.state,
-                        value: fields.state
-                      }
-                    : ''
-                }
-                textFieldProps={{
-                  dataAttrs: {
-                    'data-qa-contact-province': true
+              {fields.country === 'US' || fields.country === 'CA' ? (
+                <EnhancedSelect
+                  label="State / Province"
+                  errorText={errorMap.state}
+                  onChange={this.updateState}
+                  placeholder="Select a State"
+                  options={regionResults}
+                  isClearable={false}
+                  // Explicitly setting the value as an object so the text will populate on selection.
+                  // For more info see here: https://github.com/JedWatson/react-select/issues/2674
+                  value={
+                    fields.state
+                      ? {
+                          label: fields.state,
+                          value: fields.state
+                        }
+                      : ''
                   }
-                }}
-              />
+                  textFieldProps={{
+                    dataAttrs: {
+                      'data-qa-contact-province': true
+                    }
+                  }}
+                />
+              ) : (
+                <TextField
+                  label="State / Province"
+                  placeholder="Enter a State or Province"
+                  errorText={errorMap.state}
+                  onChange={e =>
+                    this.updateState({
+                      label: e.target.value,
+                      value: e.target.value
+                    })
+                  }
+                  dataAttrs={{
+                    'data-qa-contact-province': true
+                  }}
+                />
+              )}
             </Grid>
             <Grid item xs={12} sm={5}>
               <TextField
