@@ -1,40 +1,13 @@
-import { API_ROOT } from 'src/constants';
-import Request, { setData, setMethod, setURL } from '../index';
+import { API_ROOT } from '../constants';
+import Request, { setData, setMethod, setURL } from '../request';
+import { ResourcePage as Page } from '../types';
 import { nodeBalancerConfigNodeSchema } from './nodebalancers.schema';
+import {
+  CreateNodeBalancerConfigNode,
+  NodeBalancerConfigNode,
+  UpdateNodeBalancerConfigNode
+} from './types';
 import { mergeAddressAndPort } from './utils';
-
-type Page<T> = Linode.ResourcePage<T>;
-
-export type NodeBalancerConfigNodeMode =
-  | 'accept'
-  | 'reject'
-  | 'backup'
-  | 'drain';
-
-export interface CreateNodeBalancerConfigNode {
-  address: string;
-  label: string;
-  mode?: NodeBalancerConfigNodeMode;
-  weight?: number;
-}
-
-export interface UpdateNodeBalancerConfigNode {
-  address?: string;
-  label?: string;
-  mode?: NodeBalancerConfigNodeMode;
-  weight?: number;
-}
-
-export interface NodeBalancerConfigNode {
-  address: string;
-  config_id: number;
-  id: number;
-  label: string;
-  mode: NodeBalancerConfigNodeMode;
-  nodebalancer_id: number;
-  status: 'unknown' | 'UP' | 'DOWN';
-  weight: number;
-}
 
 /**
  * getNodeBalancerConfigNodes

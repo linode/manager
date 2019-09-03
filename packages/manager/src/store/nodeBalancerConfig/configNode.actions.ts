@@ -1,7 +1,8 @@
 import {
   CreateNodeBalancerConfigNode,
+  NodeBalancerConfigNode,
   UpdateNodeBalancerConfigNode
-} from 'src/services/nodebalancers';
+} from 'linode-js-sdk/lib/nodebalancers';
 import { actionCreatorFactory } from 'typescript-fsa';
 import { BalancerParams } from '../nodeBalancer/nodeBalancer.actions';
 
@@ -18,7 +19,7 @@ const actionCreator = actionCreatorFactory(`@@manager/nodeBalancerConfigNode`);
 export type GetAllConfigNodesParams = ConfigParams;
 export const requestNodeBalancerConfigNodesActions = actionCreator.async<
   GetAllConfigNodesParams,
-  Linode.NodeBalancerConfigNode[],
+  NodeBalancerConfigNode[],
   Linode.ApiFieldError[]
 >(`get-all`);
 
@@ -26,7 +27,7 @@ export type CreateNodeBalancerConfigNodeParams = ConfigParams &
   CreateNodeBalancerConfigNode;
 export const createNodeBalancerConfigNodeActions = actionCreator.async<
   CreateNodeBalancerConfigNodeParams,
-  Linode.NodeBalancerConfigNode,
+  NodeBalancerConfigNode,
   Linode.ApiFieldError[]
 >(`create`);
 
@@ -34,7 +35,7 @@ export type UpdateNodeBalancerConfigNodeParams = NodeParams &
   UpdateNodeBalancerConfigNode;
 export const updateNodeBalancerConfigNodeActions = actionCreator.async<
   UpdateNodeBalancerConfigNodeParams,
-  Linode.NodeBalancerConfigNode,
+  NodeBalancerConfigNode,
   Linode.ApiFieldError[]
 >(`update`);
 
@@ -50,5 +51,5 @@ export const removeNodeBalancerConfigNodes = actionCreator<number[]>(
 );
 
 export const addNodeBalancerConfigNodes = actionCreator<
-  Linode.NodeBalancerConfigNode[]
+  NodeBalancerConfigNode[]
 >(`add-many`);

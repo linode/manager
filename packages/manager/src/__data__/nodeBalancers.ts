@@ -1,4 +1,7 @@
-export const extendedNodeBalancers: Linode.ExtendedNodeBalancer[] = [
+import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
+import { ExtendedNodeBalancer } from 'src/services/nodebalancers';
+
+export const extendedNodeBalancers: ExtendedNodeBalancer[] = [
   {
     transfer: {
       total: 9.492830276489258,
@@ -41,7 +44,7 @@ export const extendedNodeBalancers: Linode.ExtendedNodeBalancer[] = [
   }
 ];
 
-export const nodeBalancers: Linode.NodeBalancer[] = [
+export const nodeBalancers: NodeBalancer[] = [
   {
     transfer: {
       total: 9.492830276489258,

@@ -1,5 +1,15 @@
 import * as Promise from 'bluebird';
 import {
+  createNodeBalancerConfigNode,
+  deleteNodeBalancerConfigNode,
+  getNodeBalancerConfigNodes,
+  getNodeBalancerConfigs,
+  NodeBalancerConfig,
+  NodeBalancerConfigNode,
+  NodeBalancerConfigNodeFields,
+  updateNodeBalancerConfigNode
+} from 'linode-js-sdk/lib/nodebalancers';
+import {
   append,
   clone,
   compose,
@@ -30,13 +40,6 @@ import Grid from 'src/components/Grid';
 import PromiseLoader, {
   PromiseLoaderResponse
 } from 'src/components/PromiseLoader/PromiseLoader';
-import {
-  createNodeBalancerConfigNode,
-  deleteNodeBalancerConfigNode,
-  getNodeBalancerConfigNodes,
-  getNodeBalancerConfigs,
-  updateNodeBalancerConfigNode
-} from 'src/services/nodebalancers';
 import {
   withNodeBalancerConfigActions,
   WithNodeBalancerConfigActions
@@ -134,7 +137,7 @@ const getConfigsWithNodes = (nodeBalancerId: number) => {
   });
 };
 
-const formatNodesStatus = (nodes: Linode.NodeBalancerConfigNodeFields[]) => {
+const formatNodesStatus = (nodes: NodeBalancerConfigNodeFields[]) => {
   const statuses = nodes.reduce(
     (acc, node) => {
       if (node.status) {
@@ -942,8 +945,8 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     configErrors: any[],
     configSubmitting: any[]
   ) => (
-    config: Linode.NodeBalancerConfig & {
-      nodes: Linode.NodeBalancerConfigNode[];
+    config: NodeBalancerConfig & {
+      nodes: NodeBalancerConfigNode[];
     },
     idx: number
   ) => {

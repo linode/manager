@@ -2,8 +2,9 @@ import {
   createNodeBalancerConfigNode as _createNode,
   deleteNodeBalancerConfigNode as _deleteNode,
   getNodeBalancerConfigNodes as _getConfigNodes,
+  NodeBalancerConfig,
   updateNodeBalancerConfigNode as _updateNode
-} from 'src/services/nodebalancers';
+} from 'linode-js-sdk/lib/nodebalancers';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import {
@@ -14,9 +15,7 @@ import {
 } from './configNode.actions';
 
 const getNodeBalancerConfigNodes = (nodeBalancerId: number, configId: number) =>
-  getAll<Linode.NodeBalancerConfig>(() =>
-    _getConfigNodes(nodeBalancerId, configId)
-  );
+  getAll<NodeBalancerConfig>(() => _getConfigNodes(nodeBalancerId, configId));
 
 export const getAllNodeBalancerConfigs = createRequestThunk(
   requestNodeBalancerConfigNodesActions,

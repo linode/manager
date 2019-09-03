@@ -1,5 +1,6 @@
 import * as Bluebird from 'bluebird';
 import { Domain, getDomains } from 'linode-js-sdk/lib/domains';
+import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
 import { getVolumes, Volume } from 'linode-js-sdk/lib/volumes';
 import { range } from 'ramda';
 
@@ -75,7 +76,7 @@ export const getAll: <T>(
             response => response.data
           )
         )
-          /** We're given Linode.NodeBalancer[][], so we flatten that, and append the first page response. */
+          /** We're given NodeBalancer[][], so we flatten that, and append the first page response. */
           .then(resultPages => {
             const combinedData = resultPages.reduce((result, nextPage) => {
               return [...result, ...nextPage];
@@ -119,7 +120,7 @@ export const getAllWithArguments: <T>(
             response => response.data
           )
         )
-          /** We're given Linode.NodeBalancer[][], so we flatten that, and append the first page response. */
+          /** We're given NodeBalancer[][], so we flatten that, and append the first page response. */
           .then(resultPages => {
             const combinedData = resultPages.reduce((result, nextPage) => {
               return [...result, ...nextPage];
@@ -159,7 +160,7 @@ export const getAllFromEntity: (
             response => response.data
           )
         )
-          /** We're given Linode.NodeBalancer[][], so we flatten that, and append the first page response. */
+          /** We're given NodeBalancer[][], so we flatten that, and append the first page response. */
           .then(resultPages =>
             resultPages.reduce(
               (result, nextPage) => [...result, ...nextPage],
@@ -173,7 +174,7 @@ export const getAllFromEntity: (
 
 export type GetAllHandler = (
   linodes: Linode.Linode[],
-  nodebalancers: Linode.NodeBalancer[],
+  nodebalancers: NodeBalancer[],
   volumes: Volume[],
   domains: Domain[]
 ) => any;
@@ -190,7 +191,7 @@ export type GetAllHandler = (
 export const getAllEntities = (cb: GetAllHandler) =>
   Bluebird.join(
     getAll<Linode.Linode>(getLinodes)(),
-    getAll<Linode.NodeBalancer>(getNodeBalancers)(),
+    getAll<NodeBalancer>(getNodeBalancers)(),
     getAll<Volume>(getVolumes)(),
     getAll<Domain>(getDomains)(),
     /** for some reason typescript thinks ...results is implicitly typed as 'any' */

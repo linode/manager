@@ -1,57 +1,16 @@
-import { API_ROOT } from 'src/constants';
-import Request, { setData, setMethod, setURL } from '../index';
+import { API_ROOT } from '../constants';
+import Request, { setData, setMethod, setURL } from '../request';
+import { ResourcePage as Page } from '../types';
 import {
   createNodeBalancerConfigSchema,
   UpdateNodeBalancerConfigSchema
 } from './nodebalancers.schema';
+import {
+  CreateNodeBalancerConfig,
+  NodeBalancerConfig,
+  UpdateNodeBalancerConfig
+} from './types';
 import { combineConfigNodeAddressAndPort } from './utils';
-
-type Page<T> = Linode.ResourcePage<T>;
-
-export interface CreateNodeBalancerConfig {
-  port?: number;
-  protocol?: 'http' | 'https' | 'tcp';
-  algorithm?: 'roundrobin' | 'leastconn' | 'source';
-  stickiness?: 'none' | 'table' | 'http_cookie';
-  check?: 'none' | 'connection' | 'http' | 'http_body';
-  check_interval?: number;
-  check_timeout?: number;
-  check_attempts?: number;
-  check_path?: string;
-  check_body?: string;
-  check_passive?: boolean;
-  cipher_suite?: 'recommended' | 'legacy';
-  ssl_cert?: string;
-  ssl_key?: string;
-}
-
-/* tslint:disable-next-line:no-empty-interface */
-export interface UpdateNodeBalancerConfig extends CreateNodeBalancerConfig {}
-
-export interface NodeBalancerConfig {
-  algorithm: 'roundrobin' | 'leastconn' | 'source';
-  check_attempts: number;
-  check_body: string;
-  check_interval: number;
-  check_passive: boolean;
-  check_path: string;
-  check_timeout: number;
-  check: 'none' | 'connection' | 'http' | 'http_body';
-  cipher_suite: 'recommended' | 'legacy';
-  id: number;
-  nodebalancer_id: number;
-  nodes_status: {
-    up: number;
-    down: number;
-  };
-  port: number;
-  protocol: 'http' | 'https' | 'tcp';
-  ssl_cert: string;
-  ssl_commonname: string;
-  ssl_fingerprint: string;
-  ssl_key: string;
-  stickiness: 'none' | 'table' | 'http_cookie';
-}
 
 /**
  * getNodeBalancerConfigs

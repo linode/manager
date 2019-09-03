@@ -1,3 +1,4 @@
+import { NodeBalancerWithConfigs } from 'linode-js-sdk/lib/nodebalancers';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -45,7 +46,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  data: Linode.NodeBalancerWithConfigs[];
+  data: NodeBalancerWithConfigs[];
   toggleDialog: (id: number, label: string) => void;
 }
 

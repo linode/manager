@@ -1,3 +1,4 @@
+import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -18,14 +19,14 @@ import {
 export interface WithNodeBalancerActions {
   nodeBalancerActions: {
     getAllNodeBalancersWithConfigs: () => Promise<void>;
-    getAllNodeBalancers: () => Promise<Linode.NodeBalancer[]>;
+    getAllNodeBalancers: () => Promise<NodeBalancer[]>;
     createNodeBalancer: (
       params: CreateNodeBalancerParams
-    ) => Promise<Linode.NodeBalancer>;
+    ) => Promise<NodeBalancer>;
     deleteNodeBalancer: (params: DeleteNodeBalancerParams) => Promise<{}>;
     updateNodeBalancer: (
       params: UpdateNodeBalancerParams
-    ) => Promise<Linode.NodeBalancer>;
+    ) => Promise<NodeBalancer>;
   };
 }
 

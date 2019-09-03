@@ -1,3 +1,4 @@
+import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
 import { take } from 'ramda';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -72,7 +73,7 @@ const styles = (theme: Theme) =>
   });
 
 interface NodeBalancerProps {
-  nodeBalancersData: Linode.NodeBalancer[];
+  nodeBalancersData: NodeBalancer[];
   nodeBalancersLoading: boolean;
   nodeBalancersError?: Linode.ApiFieldError[];
 }
