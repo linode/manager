@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { GPUError } from 'src/components/GPUError';
 
@@ -32,5 +33,26 @@ export const interceptGPUErrors = (
     }
 
     return thisError;
+  });
+};
+
+interface Intercept {
+  condition: (e: APIError) => boolean;
+  replacementText: JSX.Element | string;
+}
+
+export const interceptErrors = (
+  errors: APIError[],
+  interceptors: Intercept[]
+) => {
+  return errors.map(thisError => {
+    return interceptors.reduce((acc, eachInterceptor) => {
+      if (eachInterceptor.condition(thisError)) {
+        acc = {
+          reason: eachInterceptor.replacementText as string
+        };
+      }
+      return acc;
+    }, thisError);
   });
 };
