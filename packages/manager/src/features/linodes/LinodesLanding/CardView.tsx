@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import * as React from 'react';
 import Grid from 'src/components/Grid';
 import { PaginationProps } from 'src/components/Paginate';
@@ -10,7 +11,7 @@ import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 
 interface Props {
   data: LinodeWithMaintenance[];
-  images: Linode.Image[];
+  images: Image[];
   showHead?: boolean;
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
@@ -58,7 +59,7 @@ const CardView: React.StatelessComponent<CombinedProps> = props => {
 };
 
 interface WithImagesProps {
-  imagesData: Linode.Image[];
+  imagesData: Image[];
 }
 
 export default withImages((ownProps, imagesData) => ({

@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -68,7 +69,7 @@ interface State {
   selectedLinodeID?: number;
   selectedBackupID?: number;
   availableUserDefinedFields?: Linode.StackScript.UserDefinedField[];
-  availableStackScriptImages?: Linode.Image[];
+  availableStackScriptImages?: Image[];
   selectedStackScriptID?: number;
   selectedStackScriptLabel?: string;
   selectedStackScriptUsername?: string;
@@ -239,7 +240,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     label: string,
     username: string,
     userDefinedFields: Linode.StackScript.UserDefinedField[],
-    images: Linode.Image[],
+    images: Image[],
     defaultData?: any
   ) => {
     /**

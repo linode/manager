@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
@@ -8,7 +9,7 @@ interface Props {
   onDeploy: (imageID: string) => void;
   onEdit: (label: string, description: string, imageID: string) => void;
   onDelete: (label: string, imageID: string) => void;
-  image: Linode.Image;
+  image: Image;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;

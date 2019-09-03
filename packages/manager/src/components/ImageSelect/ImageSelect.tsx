@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -19,7 +20,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   title: string;
   selectedImageID?: string;
-  images: Linode.Image[];
+  images: Image[];
   error?: string;
   variant?: 'public' | 'private' | 'all'; // @todo no one uses "all", either use or remove
   disabled?: boolean;
@@ -31,7 +32,7 @@ export interface ImageProps
   selectedImageID?: string;
   disabled: boolean;
   handleSelectImage: (selection?: string) => void;
-  images: Linode.Image[];
+  images: Image[];
   error?: string;
 }
 

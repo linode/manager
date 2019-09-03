@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 
@@ -6,7 +7,7 @@ const isEmpty = (error?: Linode.ApiFieldError[]) => {
 };
 
 export interface WithImages {
-  images: Linode.Image[];
+  images: Image[];
   imagesLoading: boolean;
   imageError?: string;
 }
@@ -14,7 +15,7 @@ export interface WithImages {
 export default <TInner extends {}, TOuter extends {}>(
   mapImagesToProps: (
     ownProps: TOuter,
-    images: Linode.Image[],
+    images: Image[],
     imagesLoading: boolean,
     imageError?: string
   ) => TInner

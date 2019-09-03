@@ -1,15 +1,14 @@
-import { API_ROOT } from 'src/constants';
+import { API_ROOT } from '../constants';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
   setXFilter
-} from 'src/services';
-import { createImageSchema, updateImageSchema } from './image.schema';
-
-type Page<T> = Linode.ResourcePage<T>;
-type Image = Linode.Image;
+} from '../request';
+import { ResourcePage as Page } from '../types';
+import { createImageSchema, updateImageSchema } from './images.schema';
+import { Image } from './types';
 
 /**
  * Get information about a single Image.

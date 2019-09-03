@@ -1,4 +1,5 @@
 import { Domain } from 'linode-js-sdk/lib/domains';
+import { Image } from 'linode-js-sdk/lib/images';
 import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { createSelector } from 'reselect';
@@ -31,7 +32,7 @@ export const getNodebalIps = (nodebal: NodeBalancer): string[] => {
 const formatLinode = (
   linode: Linode.Linode,
   types: Linode.LinodeType[],
-  images: Linode.Image[]
+  images: Image[]
 ): SearchableItem => ({
   label: linode.label,
   value: linode.id,
@@ -70,12 +71,12 @@ const volumeToSearchableItem = (volume: Volume): SearchableItem => ({
   }
 });
 
-const imageReducer = (accumulator: SearchableItem[], image: Linode.Image) =>
+const imageReducer = (accumulator: SearchableItem[], image: Image) =>
   image.is_public
     ? accumulator
     : [...accumulator, imageToSearchableItem(image)];
 
-const imageToSearchableItem = (image: Linode.Image): SearchableItem => ({
+const imageToSearchableItem = (image: Image): SearchableItem => ({
   label: image.label,
   value: image.id,
   entityType: 'image',
@@ -130,7 +131,7 @@ export default createSelector<
   State,
   Linode.Linode[],
   Volume[],
-  Linode.Image[],
+  Image[],
   Domain[],
   NodeBalancer[],
   Linode.LinodeType[],

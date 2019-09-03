@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -28,7 +29,7 @@ export const styles = (theme: Theme) =>
   });
 
 export interface Props {
-  images: Linode.Image[];
+  images: Image[];
   selectedImageID: string | null;
   handleSelection: (id: string) => void;
   error?: string;
@@ -100,7 +101,7 @@ const imagePanelFactory = (
   selectedImageID: string,
   handleSelection: (id: string) => void,
   disabled?: boolean
-) => (images: Linode.Image[] = []) =>
+) => (images: Image[] = []) =>
   images.map((image, idx) => (
     <SelectionCard
       key={idx}

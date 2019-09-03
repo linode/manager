@@ -1,5 +1,6 @@
 import { Formik, FormikProps } from 'formik';
 import { GrantLevel } from 'linode-js-sdk/lib/account';
+import { Image } from 'linode-js-sdk/lib/images';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -45,7 +46,7 @@ const styles = (theme: Theme) =>
   });
 
 interface WithImagesProps {
-  imagesData: Linode.Image[];
+  imagesData: Image[];
   imagesLoading: boolean;
   imagesError?: string;
 }

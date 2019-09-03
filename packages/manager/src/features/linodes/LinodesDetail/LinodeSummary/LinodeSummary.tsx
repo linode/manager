@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as moment from 'moment';
 import { map, pathOr } from 'ramda';
@@ -146,7 +147,7 @@ interface LinodeContextProps {
 }
 
 interface WithImagesProps {
-  imagesData: Linode.Image[];
+  imagesData: Image[];
 }
 
 interface State {

@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import * as moment from 'moment';
 import {
   compose,
@@ -25,7 +26,7 @@ import PublicImages from './PublicImages';
 import { getParamFromUrl } from 'src/utilities/queryParams';
 
 interface Props {
-  images: Linode.Image[];
+  images: Image[];
   title?: string;
   error?: string;
   selectedImageID?: string;

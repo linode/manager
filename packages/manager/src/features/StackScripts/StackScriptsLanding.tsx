@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -96,7 +97,7 @@ export class StackScriptsLanding extends React.Component<CombinedProps, {}> {
 const styled = withStyles(styles);
 
 interface WithImagesProps {
-  imagesData: Linode.Image[];
+  imagesData: Image[];
   imagesLoading: boolean;
   imagesError?: Linode.ApiFieldError[];
 }

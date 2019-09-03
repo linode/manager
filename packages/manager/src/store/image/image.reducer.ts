@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import { Reducer } from 'redux';
 import { EntityState } from 'src/store/types';
 import updateOrAdd from 'src/utilities/updateOrAdd';
@@ -13,7 +14,7 @@ import {
 /**
  * State
  */
-export type State = EntityState<Linode.Image>;
+export type State = EntityState<Image>;
 
 export const defaultState: State = {
   entities: [],

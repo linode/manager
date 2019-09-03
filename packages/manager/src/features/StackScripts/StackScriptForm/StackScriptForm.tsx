@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -109,7 +110,7 @@ interface TextFieldHandler {
 
 interface Images {
   // available to select in the dropdown
-  available: Linode.Image[];
+  available: Image[];
   // image ids that are already selected
   selected: string[];
 }

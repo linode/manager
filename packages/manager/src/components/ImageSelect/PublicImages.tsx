@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import { groupBy, uniq } from 'ramda';
 import * as React from 'react';
 
@@ -11,10 +12,7 @@ import { distroIcons } from './icons';
 import ImageOption from './ImageOption';
 import { ImageProps as Props } from './ImageSelect';
 
-const getVendorFromImageID = (
-  imageID: string | undefined,
-  images: Linode.Image[]
-) => {
+const getVendorFromImageID = (imageID: string | undefined, images: Image[]) => {
   const image = images.find(thisImage => thisImage.id === imageID);
   return image ? image.vendor || '' : '';
 };
@@ -92,7 +90,7 @@ export const PublicImages: React.FC<Props> = props => {
     }))
   );
 
-  const groupedImages = groupBy((eachImage: Linode.Image) => {
+  const groupedImages = groupBy((eachImage: Image) => {
     return eachImage.vendor || 'No Vendor';
   }, images);
 

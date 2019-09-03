@@ -1,4 +1,6 @@
-export const images: Linode.Image[] = [
+import { Image } from 'linode-js-sdk/lib/images';
+
+export const images: Image[] = [
   {
     created_by: 'linode',
     deprecated: true,
@@ -274,7 +276,7 @@ export const images: Linode.Image[] = [
   }
 ];
 
-export const privateImages: Linode.Image[] = [
+export const privateImages: Image[] = [
   {
     created_by: 'linode',
     deprecated: false,

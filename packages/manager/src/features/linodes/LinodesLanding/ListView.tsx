@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import * as React from 'react';
 import { PaginationProps } from 'src/components/Paginate';
 import LinodeRow from './LinodeRow/LinodeRow';
@@ -7,7 +8,7 @@ import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 
 interface Props {
   data: LinodeWithMaintenance[];
-  images: Linode.Image[];
+  images: Image[];
   showHead?: boolean;
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
   openPowerActionDialog: (
