@@ -1,3 +1,4 @@
+import { IPAddress } from 'linode-js-sdk/lib/networking';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -25,7 +26,7 @@ const styles = (theme: Theme) =>
 
 interface Props {
   open: boolean;
-  ip?: Linode.IPAddress;
+  ip?: IPAddress;
   onClose: () => void;
 }
 

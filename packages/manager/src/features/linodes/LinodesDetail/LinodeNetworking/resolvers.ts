@@ -1,7 +1,8 @@
+import { ZoneName } from 'linode-js-sdk/lib/networking';
 // @todo: In principle, everything in this file should be returned by the API.
 // We have no choice but to hard-code these at the moment.
 
-export const ipv4DNSResolvers: Record<Linode.ZoneName, string[]> = {
+export const ipv4DNSResolvers: Record<ZoneName, string[]> = {
   newark: [
     '66.228.42.5',
     '96.126.106.5',
@@ -129,7 +130,7 @@ export const ipv4DNSResolvers: Record<Linode.ZoneName, string[]> = {
 // ::9
 // ::b
 // ::c
-export const getIPv6DNSResolvers = (region: Linode.ZoneName) => {
+export const getIPv6DNSResolvers = (region: ZoneName) => {
   const prefix = ipv6DNSResolverPrefixes[region];
 
   if (!region || !prefix) {
@@ -148,7 +149,7 @@ export const getIPv6DNSResolvers = (region: Linode.ZoneName) => {
 };
 
 // IPv6 Prefixes for each region.
-export const ipv6DNSResolverPrefixes: Record<Linode.ZoneName, string> = {
+export const ipv6DNSResolverPrefixes: Record<ZoneName, string> = {
   newark: '2600:3c03::',
   dallas: '2600:3c00::',
   fremont: '2600:3c01::',

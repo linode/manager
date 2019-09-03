@@ -1,10 +1,9 @@
+import { IPAddress } from 'linode-js-sdk/lib/networking';
 import { API_ROOT } from 'src/constants';
 
 import Request, { setData, setMethod, setURL } from '../index';
 
 import { IPAllocationSchema } from './linode.schema';
-
-type IPAddress = Linode.IPAddress;
 
 export interface IPAllocationRequest {
   type: 'ipv4';
