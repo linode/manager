@@ -1,7 +1,7 @@
 import { storiesOf } from '@storybook/react';
+import { baseRequest } from 'linode-js-sdk/lib/request';
 import * as React from 'react';
 
-import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
 import { API_ROOT } from '../../constants';
@@ -55,7 +55,7 @@ class TagsPanelDemo extends React.Component<Props, {}> {
 
 storiesOf('Tags Panel', module)
   .addDecorator(story => {
-    const mock = new MockAdapter(axios);
+    const mock = new MockAdapter(baseRequest);
 
     mock.onGet(API_REQUEST).reply(200, {
       data: ['tag1', 'tag2', 'tag3', 'tag4'].map(tag => ({ label: tag }))
