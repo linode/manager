@@ -1,4 +1,5 @@
 import { Event } from 'linode-js-sdk/lib/account';
+import { APIError as APIErrorType } from 'linode-js-sdk/lib/types';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
@@ -123,7 +124,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
         );
         props.history.push(`/linodes/${linodeId}`);
       })
-      .catch((e: Linode.ApiFieldError[]) => {
+      .catch((e: APIErrorType[]) => {
         setLoading(false);
         setAPIError(e[0].reason);
       });
