@@ -8,11 +8,9 @@ import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { CredentialPayload } from 'src/services/managed';
 
-import { creationSchema, updateSchema } from './credential.schema';
+import { creationSchema } from './credential.schema';
 
 export interface Props {
-  credential?: Linode.ManagedCredential;
-  mode: 'create' | 'edit';
   open: boolean;
   onClose: () => void;
   onSubmit: (values: CredentialPayload, formikProps: any) => void;
@@ -20,28 +18,18 @@ export interface Props {
 
 type CombinedProps = Props;
 
-export const modes = {
-  CREATING: 'create',
-  EDITING: 'edit'
-};
-
-const titleMap = {
-  [modes.CREATING]: 'Add Credentials',
-  [modes.EDITING]: 'Edit a Credential'
-};
-
 const CredentialDrawer: React.FC<CombinedProps> = props => {
-  const { credential, mode, open, onClose, onSubmit } = props;
+  const { open, onClose, onSubmit } = props;
 
   return (
-    <Drawer title={titleMap[mode]} open={open} onClose={onClose}>
+    <Drawer title={'Add Credential'} open={open} onClose={onClose}>
       <Formik
         initialValues={{
-          label: credential ? credential.label : '',
+          label: '',
           password: '',
           username: ''
         }}
-        validationSchema={mode === 'create' ? creationSchema : updateSchema}
+        validationSchema={creationSchema}
         validateOnChange={false}
         validateOnBlur={false}
         onSubmit={onSubmit}
