@@ -1,3 +1,4 @@
+import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
 import { Reducer } from 'redux';
 import { EntityError, MappedEntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
@@ -17,7 +18,7 @@ import {
   updateNodeBalancersActions
 } from './nodeBalancer.actions';
 
-export type State = MappedEntityState<Linode.NodeBalancer, EntityError>;
+export type State = MappedEntityState<NodeBalancer, EntityError>;
 
 export const defaultState: State = createDefaultState();
 
@@ -43,10 +44,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
 
   if (isType(action, getAllNodeBalancersActions.failed)) {
     const { error } = action.payload;
-    return onError<
-      MappedEntityState<Linode.NodeBalancer, EntityError>,
-      EntityError
-    >(
+    return onError<MappedEntityState<NodeBalancer, EntityError>, EntityError>(
       {
         read: error
       },

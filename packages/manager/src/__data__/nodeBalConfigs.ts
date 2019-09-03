@@ -1,4 +1,6 @@
-export const nodes: Linode.NodeBalancerConfigNode[] = [
+import { NodeBalancerConfigNode } from 'linode-js-sdk/lib/nodebalancers';
+
+export const nodes: NodeBalancerConfigNode[] = [
   {
     label: 'config 1',
     nodebalancer_id: 642,

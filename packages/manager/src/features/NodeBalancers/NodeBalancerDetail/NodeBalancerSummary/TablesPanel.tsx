@@ -1,3 +1,7 @@
+import {
+  getNodeBalancerStats,
+  NodeBalancerStats
+} from 'linode-js-sdk/lib/nodebalancers';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -15,7 +19,7 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LineGraph from 'src/components/LineGraph';
 import MetricsDisplay from 'src/features/linodes/LinodesDetail/LinodeSummary/MetricsDisplay';
-import { getNodeBalancerStats } from 'src/services/nodebalancers';
+import { ExtendedNodeBalancer } from 'src/services/nodebalancers';
 import { ApplicationState } from 'src/store';
 import { initAll } from 'src/utilities/initAll';
 import {
@@ -106,11 +110,11 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  nodeBalancer: Linode.ExtendedNodeBalancer;
+  nodeBalancer: ExtendedNodeBalancer;
 }
 
 interface State {
-  stats: Linode.NodeBalancerStats | null;
+  stats: NodeBalancerStats | null;
   loadingStats: boolean;
   openPanels: number;
   statsError?: string;
@@ -175,7 +179,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
   getStats = () => {
     const { nodeBalancer } = this.props;
     getNodeBalancerStats(nodeBalancer.id)
-      .then((response: Linode.NodeBalancerStats) => {
+      .then((response: NodeBalancerStats) => {
         if (!this.mounted) {
           return;
         }

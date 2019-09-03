@@ -1,4 +1,5 @@
 import produce from 'immer';
+import { NodeBalancerConfigNode } from 'linode-js-sdk/lib/nodebalancers';
 import { Reducer } from 'redux';
 import { EntityError, EntityState } from 'src/store/types';
 import updateOrAdd from 'src/utilities/updateOrAdd';
@@ -14,7 +15,7 @@ import {
  * State
  */
 
-export type State = EntityState<Linode.NodeBalancerConfigNode, EntityError>;
+export type State = EntityState<NodeBalancerConfigNode, EntityError>;
 
 export const defaultState: State = {
   results: [],

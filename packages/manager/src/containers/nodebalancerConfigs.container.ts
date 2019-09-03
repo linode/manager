@@ -1,5 +1,5 @@
+import { NodeBalancerConfig } from 'linode-js-sdk/lib/nodebalancers';
 import { connect, MapStateToProps } from 'react-redux';
-import { NodeBalancerConfig } from 'src/services/nodebalancers';
 import { ApplicationState } from 'src/store';
 
 export interface StateProps {

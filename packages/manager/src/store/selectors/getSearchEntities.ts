@@ -1,4 +1,5 @@
 import { Domain } from 'linode-js-sdk/lib/domains';
+import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { createSelector } from 'reselect';
 import { displayType } from 'src/features/linodes/presentation';
@@ -17,7 +18,7 @@ export const getDomainIps = (domain: Domain): string[] => {
   return domain.master_ips;
 };
 
-export const getNodebalIps = (nodebal: Linode.NodeBalancer): string[] => {
+export const getNodebalIps = (nodebal: NodeBalancer): string[] => {
   const { ipv4, ipv6 } = nodebal;
   const ips: string[] = [ipv4];
 
@@ -103,9 +104,7 @@ const domainToSearchableItem = (domain: Domain): SearchableItem => ({
   }
 });
 
-const nodeBalToSearchableItem = (
-  nodebal: Linode.NodeBalancer
-): SearchableItem => ({
+const nodeBalToSearchableItem = (nodebal: NodeBalancer): SearchableItem => ({
   label: nodebal.label,
   value: nodebal.id,
   entityType: 'nodebalancer',
@@ -133,7 +132,7 @@ export default createSelector<
   Volume[],
   Linode.Image[],
   Domain[],
-  Linode.NodeBalancer[],
+  NodeBalancer[],
   Linode.LinodeType[],
   SearchableItem[]
 >(

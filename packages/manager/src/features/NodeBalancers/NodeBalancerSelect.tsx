@@ -1,3 +1,4 @@
+import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
 import * as React from 'react';
 import { compose } from 'recompose';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
@@ -7,7 +8,7 @@ import withNodeBalancers from 'src/containers/withNodeBalancers.container';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 interface WithNodeBalancersProps {
-  nodeBalancersData: Linode.NodeBalancer[];
+  nodeBalancersData: NodeBalancer[];
   nodeBalancersLoading: boolean;
   nodeBalancersError?: Linode.ApiFieldError[];
 }
@@ -18,15 +19,13 @@ interface Props {
   selectedNodeBalancer: number | null;
   disabled?: boolean;
   region?: string;
-  handleChange: (nodeBalancer: Linode.NodeBalancer) => void;
+  handleChange: (nodeBalancer: NodeBalancer) => void;
   textFieldProps?: TextFieldProps;
 }
 
 type CombinedProps = Props & WithNodeBalancersProps;
 
-const nodeBalancersToItems = (
-  nodeBalancers: Linode.NodeBalancer[]
-): Item<number>[] =>
+const nodeBalancersToItems = (nodeBalancers: NodeBalancer[]): Item<number>[] =>
   nodeBalancers.map(thisNodeBalancer => ({
     value: thisNodeBalancer.id,
     label: thisNodeBalancer.label,
