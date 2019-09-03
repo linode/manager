@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import * as React from 'react';
 import {
   createStyles,
@@ -29,7 +30,7 @@ interface Props {
   onDelete: (image: string, imageID: string) => void;
   onRestore: (imageID: string) => void;
   onDeploy: (imageID: string) => void;
-  image: Linode.Image;
+  image: Image;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;

@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -144,7 +145,7 @@ class SummaryPanel extends React.Component<CombinedProps> {
 const localStyles = withStyles(styles);
 
 interface WithImage {
-  image?: Linode.Image;
+  image?: Image;
 }
 
 interface LinodeContextProps {

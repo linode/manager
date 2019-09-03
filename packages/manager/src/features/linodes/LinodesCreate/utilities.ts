@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import { displayType } from 'src/features/linodes/presentation';
 import { ExtendedType } from './SelectPlanPanel';
 import { ExtendedLinode } from './types';
@@ -7,7 +8,7 @@ import { ExtendedLinode } from './types';
  */
 export const extendLinodes = (
   linodes: Linode.Linode[],
-  imagesData: Linode.Image[] = [],
+  imagesData: Image[] = [],
   typesData: ExtendedType[] = []
 ): ExtendedLinode[] => {
   return linodes.map(linode => {

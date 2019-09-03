@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import * as React from 'react';
 import {
   createStyles,
@@ -20,8 +21,8 @@ const styles = (theme: Theme) =>
     root: {}
   });
 interface Props {
-  images: Linode.Image[];
-  oldImages: Linode.Image[];
+  images: Image[];
+  oldImages: Image[];
   selectedImageID?: string;
   disabled?: boolean;
   handleSelection: (id: string) => void;
@@ -51,9 +52,9 @@ const PublicImages: React.StatelessComponent<CombinedProps> = props => {
     oldImages,
     selectedImageID
   } = props;
-  const renderImages = (imageList: Linode.Image[]) =>
+  const renderImages = (imageList: Image[]) =>
     imageList.length &&
-    imageList.map((image: Linode.Image, idx: number) => (
+    imageList.map((image: Image, idx: number) => (
       <SelectionCard
         key={idx}
         checked={image.id === String(selectedImageID)}
