@@ -164,6 +164,14 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         selectedLinodeID: isNaN(+params.linodeID) ? undefined : +params.linodeID
       });
     }
+    if (
+      ['fromStackScript', 'fromBackup', 'fromLinode'].includes(
+        this.props.createType
+      )
+    ) {
+      // If we're navigating directly to e.g. the clone page, don't select an image by default
+      this.setState({ selectedImageID: undefined });
+    }
     this.setState({ appInstancesLoading: true });
     getOneClickApps()
       // Don't display One-Click Helpers to the user
