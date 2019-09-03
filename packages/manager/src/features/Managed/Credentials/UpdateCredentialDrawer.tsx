@@ -110,13 +110,14 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
           handleSubmit,
           isSubmitting
         }) => (
-          <>
+          <div style={{ paddingTop: '1em' }}>
             {status && status.generalError && (
               <Notice
                 key={status.generalError}
                 text={status.generalError}
                 error
                 data-qa-error
+                spacingBottom={0}
               />
             )}
 
@@ -126,6 +127,7 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
                 text={status.success}
                 success
                 data-qa-success
+                spacingBottom={0}
               />
             )}
 
@@ -164,7 +166,7 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
                 </Button>
               </ActionsPanel>
             </form>
-          </>
+          </div>
         )}
       </Formik>
     </Drawer>
