@@ -29,13 +29,12 @@ export const Unhealthy: React.FC<Props> = props => {
         </Grid>
         <Grid item className={classes.container}>
           <Typography variant="h3" className={classes.header}>
-            {/** This does not quite match the designs, but we don't have a way of checking failure time yet. */}
             {monitorsDown} of your Managed Service Monitors{' '}
             {monitorsDown === 1 ? 'has' : 'have'} failed.
           </Typography>
           <Typography>
-            Please check your
-            <Link to="/support/tickets"> Support tickets</Link> for details.
+            Please check your{` `}
+            <Link to="/managed/monitors">Monitors</Link> for details.
           </Typography>
         </Grid>
       </Grid>
