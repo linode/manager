@@ -57,6 +57,20 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
 
   const contacts = useAPIRequest<Linode.ManagedContact[]>(getAllContacts, []);
 
+  const groups = React.useMemo(() => {
+    const _groups: string[] = [];
+    let i = 0;
+    for (i; i < contacts.data.length; i++) {
+      if (
+        contacts.data[i].group !== null &&
+        !_groups.includes(contacts.data[i].group!)
+      ) {
+        _groups.push(contacts.data[i].group as string);
+      }
+    }
+    return _groups;
+  }, [contacts.data]);
+
   const tabs = [
     /* NB: These must correspond to the routes inside the Switch */
     { title: 'Monitors', routeName: `${props.match.url}/monitors` },
@@ -84,14 +98,6 @@ export const ManagedLandingContent: React.FC<CombinedProps> = props => {
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
-
-  const groups: string[] = [];
-  let i = 0;
-  for (i; i < contacts.data.length; i++) {
-    if (contacts.data[i].group !== null) {
-      groups.push(contacts.data[i].group as string);
-    }
-  }
 
   return (
     <React.Fragment>
