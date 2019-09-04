@@ -47,6 +47,8 @@ const styles = (theme: Theme) =>
 
 interface Props {
   monitors: Linode.ManagedServiceMonitor[];
+  credentials: Linode.ManagedCredential[];
+  groups: string[];
   loading: boolean;
   error?: Linode.ApiFieldError[];
 }
@@ -66,7 +68,9 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
     enqueueSnackbar,
     error,
     loading,
-    monitors
+    monitors,
+    groups,
+    credentials
   } = props;
 
   const {
@@ -256,6 +260,8 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
         onSubmit={submitMonitorForm}
         mode={drawerMode}
         monitor={monitors.find(m => m.id === editID)}
+        groups={groups}
+        credentials={credentials}
       />
     </>
   );
