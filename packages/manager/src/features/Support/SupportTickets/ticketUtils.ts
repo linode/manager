@@ -1,4 +1,4 @@
-import { getTickets } from 'src/services/support';
+import { getTickets } from 'linode-js-sdk/lib/support';
 
 /**
  * getStatusFilter

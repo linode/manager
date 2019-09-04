@@ -1,6 +1,7 @@
 import * as Bluebird from 'bluebird';
 import * as classNames from 'classnames';
-import { SupportReply, SupportTicket } from "linode-js-sdk/lib/account";
+import { SupportReply, SupportTicket } from 'linode-js-sdk/lib/account';
+import { getTicket, getTicketReplies } from 'linode-js-sdk/lib/support';
 import { compose, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -24,7 +25,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import { getTicket, getTicketReplies } from 'src/services/support';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import formatDate from 'src/utilities/formatDate';
@@ -448,10 +448,7 @@ export class SupportTicketDetail extends React.Component<CombinedProps, State> {
   }
 }
 
-const reduceToUniqueGravatarIDs = (
-  acc: string[],
-  reply: SupportReply
-) => {
+const reduceToUniqueGravatarIDs = (acc: string[], reply: SupportReply) => {
   const { gravatar_id } = reply;
 
   return acc.includes(gravatar_id) ? acc : [...acc, gravatar_id];
