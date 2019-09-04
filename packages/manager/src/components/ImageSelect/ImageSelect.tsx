@@ -17,12 +17,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
+export type Variant = 'public' | 'private' | 'all';
 interface Props {
   title: string;
   selectedImageID?: string;
   images: Image[];
   error?: string;
-  variant?: 'public' | 'private' | 'all'; // @todo no one uses "all", either use or remove
+  variant?: Variant;
   disabled?: boolean;
   handleSelectImage: (selection?: string) => void;
 }
@@ -48,6 +49,33 @@ export const ImageSelect: React.FC<Props> = props => {
   } = props;
   const classes = useStyles();
 
+  const renderVariant = () => {
+    switch (variant) {
+      case 'all':
+      case 'private':
+        return (
+          <PrivateImages
+            error={error}
+            images={images.filter(thisImage => !thisImage.is_public)}
+            disabled={Boolean(disabled)}
+            handleSelectImage={handleSelectImage}
+            selectedImageID={selectedImageID}
+          />
+        )
+      case 'public':
+      default:
+        return (
+          <PublicImages
+            images={images.filter(thisImage => thisImage.is_public)}
+            disabled={Boolean(disabled)}
+            handleSelectImage={handleSelectImage}
+            selectedImageID={selectedImageID}
+            error={error}
+          />
+        )
+    }
+  }
+
   return (
     <>
       <Paper className={classes.root} data-qa-select-image-panel>
@@ -55,23 +83,7 @@ export const ImageSelect: React.FC<Props> = props => {
           {title}
         </Typography>
         <Grid container direction="row" wrap="nowrap" spacing={4}>
-          {variant === 'public' ? (
-            <PublicImages
-              images={images.filter(thisImage => thisImage.is_public)}
-              disabled={Boolean(disabled)}
-              handleSelectImage={handleSelectImage}
-              selectedImageID={selectedImageID}
-              error={error}
-            />
-          ) : (
-            <PrivateImages
-              error={error}
-              images={images.filter(thisImage => !thisImage.is_public)}
-              disabled={Boolean(disabled)}
-              handleSelectImage={handleSelectImage}
-              selectedImageID={selectedImageID}
-            />
-          )}
+          {renderVariant()}
         </Grid>
       </Paper>
     </>
