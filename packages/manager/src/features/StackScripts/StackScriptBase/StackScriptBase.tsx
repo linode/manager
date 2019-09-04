@@ -1,4 +1,4 @@
-import { Grant } from "linode-js-sdk/lib/account";
+import { Grant } from 'linode-js-sdk/lib/account';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -442,10 +442,12 @@ const withStackScriptBase = (isSelecting: boolean) => (
                   icon={StackScriptsIcon}
                   title="StackScripts"
                   copy={<EmptyCopy />}
-                  buttonProps={{
-                    href: '/stackscripts/create',
-                    children: 'Create a StackScript'
-                  }}
+                  buttonProps={[
+                    {
+                      href: '/stackscripts/create',
+                      children: 'Create a StackScript'
+                    }
+                  ]}
                   className={classes.stackscriptPlaceholder}
                 />
               )}

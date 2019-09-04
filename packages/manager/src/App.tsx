@@ -1,5 +1,6 @@
 import * as classnames from 'classnames';
 import { Account, AccountCapability } from 'linode-js-sdk/lib/account';
+import { Image } from 'linode-js-sdk/lib/images';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { shim } from 'promise.prototype.finally';
 import { path, pathOr } from 'ramda';
@@ -585,7 +586,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
 interface StateProps {
   /** Profile */
   linodes: Linode.Linode[];
-  images?: Linode.Image[];
+  images?: Image[];
   notifications?: Linode.Notification[];
   types?: string[];
   regions?: Linode.Region[];

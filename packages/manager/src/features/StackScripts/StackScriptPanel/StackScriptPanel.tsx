@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -46,7 +47,7 @@ const styles = (theme: Theme) =>
 
 interface Props {
   error?: string;
-  publicImages: Linode.Image[];
+  publicImages: Image[];
 }
 
 type CombinedProps = Props & StateProps & WithStyles<ClassNames>;

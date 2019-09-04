@@ -30,6 +30,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 export interface Props {
   mode: 'create' | 'edit';
   open: boolean;
+  credentials: Linode.ManagedCredential[];
+  groups: string[];
   label?: string;
   successMsg?: string;
   monitor?: Linode.ManagedServiceMonitor;
@@ -60,12 +62,23 @@ const typeOptions: Item<Linode.ServiceType>[] = [
   }
 ];
 
-const credentialOptions: Item<string>[] = [
-  {
-    value: 'none',
-    label: 'None required'
-  }
-];
+const getCredentialOptions = (
+  credentials: Linode.ManagedCredential[]
+): Item<number>[] => {
+  return credentials.map(thisCredential => {
+    return {
+      value: thisCredential.id,
+      label: thisCredential.label
+    };
+  });
+};
+
+const getGroupsOptions = (groups: string[]): Item<string>[] => {
+  return groups.map(thisGroup => ({
+    value: thisGroup,
+    label: thisGroup
+  }));
+};
 
 const helperText = {
   consultation_group:
@@ -76,16 +89,18 @@ const helperText = {
     'Any additional credentials required for incident response or routine maintenance.'
 };
 
-const getValueFromItem = (
-  value: string,
-  options: Item<Linode.ServiceType>[]
-) => {
+const getValueFromItem = (value: string, options: Item<any>[]) => {
   return options.find(thisOption => thisOption.value === value);
+};
+
+const getMultiValuesFromItems = (values: number[], options: Item<any>[]) => {
+  return options.filter(thisOption => values.includes(thisOption.value));
 };
 
 const emptyInitialValues = {
   label: '',
   consultation_group: '',
+  credentials: [],
   service_type: 'url',
   address: '',
   body: '',
@@ -96,7 +111,10 @@ const emptyInitialValues = {
 const MonitorDrawer: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const { mode, monitor, open, onClose, onSubmit } = props;
+  const { credentials, groups, mode, monitor, open, onClose, onSubmit } = props;
+
+  const credentialOptions = getCredentialOptions(credentials);
+  const groupOptions = getGroupsOptions(groups);
 
   /**
    * We only care about the fields in the form. Previously unfilled optional
@@ -151,16 +169,28 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                 onBlur={handleBlur}
               />
 
-              <TextField
+              <Select
                 name="consultation_group"
                 label="Contact Group"
+                placeholder="Select a group..."
+                isClearable
                 data-qa-add-consultation-group
-                value={values.consultation_group}
-                error={!!errors.consultation_group}
+                value={getValueFromItem(
+                  values.consultation_group || '',
+                  groupOptions
+                )}
+                options={groupOptions}
                 errorText={errors.consultation_group}
-                onChange={handleChange}
+                onChange={(item: Item<Linode.ServiceType>) =>
+                  setFieldValue(
+                    'consultation_group',
+                    item === null ? '' : item.value
+                  )
+                }
                 onBlur={handleBlur}
-                tooltipText={helperText.consultation_group}
+                textFieldProps={{
+                  tooltipText: helperText.consultation_group
+                }}
               />
 
               <div className={classes.box}>
@@ -224,20 +254,28 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                 onChange={handleChange}
                 onBlur={handleBlur}
               />
-              <Select // @todo this is a dummy select atm
+              <Select
                 name="credentials"
+                placeholder="None Required"
+                isMulti
                 isClearable={false}
                 label="Credentials"
                 data-qa-add-credentials
                 options={credentialOptions}
-                value={credentialOptions[0]}
+                value={getMultiValuesFromItems(
+                  values.credentials || [],
+                  credentialOptions
+                )}
                 errorText={errors.credentials}
                 textFieldProps={{
                   tooltipText: helperText.credentials
                 }}
-                onChange={(item: Item<Linode.ServiceType>) =>
-                  setFieldValue('credentials', item.value)
-                }
+                onChange={(items: Item<number>[]) => {
+                  setFieldValue(
+                    'credentials',
+                    items.map(thisItem => thisItem.value)
+                  );
+                }}
                 onBlur={handleBlur}
               />
               <ActionsPanel>
@@ -247,7 +285,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                   loading={isSubmitting}
                   data-qa-submit
                 >
-                  Add
+                  {mode === 'create' ? 'Add' : 'Update'}
                 </Button>
                 <Button
                   onClick={onClose}

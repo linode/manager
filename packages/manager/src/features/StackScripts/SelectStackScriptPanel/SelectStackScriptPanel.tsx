@@ -1,4 +1,5 @@
-import { Grant } from "linode-js-sdk/lib/account";
+import { Grant } from 'linode-js-sdk/lib/account';
+import { Image } from 'linode-js-sdk/lib/images';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -90,7 +91,7 @@ interface Props extends RenderGuardProps {
     images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]
   ) => void;
-  publicImages: Linode.Image[];
+  publicImages: Image[];
   resetSelectedStackScript: () => void;
   disabled?: boolean;
   request: (

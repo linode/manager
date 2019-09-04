@@ -1,35 +1,17 @@
 import { AccountSettings } from 'linode-js-sdk/lib/account';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
+import ExternalLink from 'src/assets/icons/external-link.svg';
 import ManagedIcon from 'src/assets/icons/managed.svg';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import ExternalLink from 'src/components/ExternalLink';
 import Placeholder from 'src/components/Placeholder';
 import withLinodes from 'src/containers/withLinodes.container';
 import { pluralize } from 'src/utilities/pluralize';
 
 import { enableManaged } from 'src/services/managed';
-
-const copy = (
-  <>
-    <Typography variant="subtitle1">
-      Let us worry about your infrastructure, so you can get back to worrying
-      about your business. Linode Managed helps keep your systems up and running
-      with our team of Linode experts responding to monitoring events, so you
-      can sleep well. Linode Managed includes 24/7 monitoring and incident
-      responses, backups and Longview Pro. +$100/mo per Linode.{` `}
-    </Typography>
-    <Typography variant="subtitle1" style={{ marginTop: 8 }}>
-      <ExternalLink
-        link="https://linode.com/managed"
-        text="Learn more about Managed."
-      />
-    </Typography>
-  </>
-);
 
 export interface StateProps {
   linodeCount: number;
@@ -80,7 +62,7 @@ const ManagedPlaceholder: React.FC<CombinedProps> = props => {
         data-qa-submit-managed-enrollment
         loading={isLoading}
       >
-        Enable Managed
+        Add Managed services
       </Button>
     </ActionsPanel>
   );
@@ -90,27 +72,41 @@ const ManagedPlaceholder: React.FC<CombinedProps> = props => {
       <Placeholder
         icon={ManagedIcon}
         title="Linode Managed"
-        copy={copy}
-        buttonProps={{
-          onClick: () => setOpen(true),
-          children: 'Upgrade to Managed now!'
-        }}
+        copy={
+          'Experience true peace of mind and let the experts at Linode manage your servers.'
+        }
+        buttonProps={[
+          {
+            onClick: () => setOpen(true),
+            children: 'Add Linode Managed'
+          },
+          {
+            href: 'https://linode.com/managed',
+            target: '_blank', // Not a great solution.
+            children: (
+              <>
+                Learn more
+                <ExternalLink style={{ marginLeft: '10px' }} />
+              </>
+            ),
+            buttonType: 'secondary'
+          }
+        ]}
       />
       <ConfirmationDialog
         open={isOpen}
         error={error}
         onClose={() => handleClose()}
-        title="Confirm Managed Enrollment"
+        title="Just to confirm..."
         actions={actions}
       >
         <Typography>
-          Linode Managed costs an additional $100/mo per Linode. {` `}
+          Linode Managed is billed at{' '}
+          <strong>$100 per month per Linode.</strong> {` `}
           You currently have{` `}
-          <strong>
-            {pluralize('Linode', 'Linodes', props.linodeCount)}
-          </strong>{' '}
-          on your account. This will increase your projected monthly bill by{' '}
-          <strong>${`${props.linodeCount * 100}/month`}</strong>. Are you sure?{' '}
+          <strong>{pluralize('Linode', 'Linodes', props.linodeCount)}</strong>,
+          so Managed will cost{' '}
+          <strong>${`${props.linodeCount * 100}/month`}</strong>.
         </Typography>
       </ConfirmationDialog>
     </>

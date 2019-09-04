@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import { ExtendedRegion } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { Tag } from 'src/components/TagsInput';
 import { State as userSSHKeysProps } from 'src/features/linodes/userSSHKeyHoc';
@@ -37,7 +38,7 @@ export interface WithDisplayData {
  * the null, loading and error checking
  */
 export interface WithImagesProps {
-  imagesData?: Linode.Image[];
+  imagesData?: Image[];
   imagesLoading: boolean;
   imagesError?: string;
 }
@@ -68,7 +69,7 @@ export interface WithTypesProps {
 export interface WithTypesRegionsAndImages {
   regionsData: ExtendedRegion[];
   typesData: ExtendedType[];
-  imagesData: Linode.Image[];
+  imagesData: Image[];
 }
 
 export interface WithLinodesTypesRegionsAndImages
@@ -137,13 +138,13 @@ export interface StackScriptFormStateHandlers extends BaseFormStateAndHandlers {
   selectedStackScriptUsername?: string;
   selectedStackScriptLabel?: string;
   availableUserDefinedFields?: Linode.StackScript.UserDefinedField[];
-  availableStackScriptImages?: Linode.Image[];
+  availableStackScriptImages?: Image[];
   updateStackScript: (
     id: number,
     label: string,
     username: string,
     userDefinedFields: Linode.StackScript.UserDefinedField[],
-    availableImages: Linode.Image[],
+    availableImages: Image[],
     defaultData?: any
   ) => void;
   selectedUDFs?: any;
