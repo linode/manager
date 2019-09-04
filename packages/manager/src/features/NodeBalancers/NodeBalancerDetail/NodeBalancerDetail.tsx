@@ -1,3 +1,7 @@
+import {
+  getNodeBalancer,
+  getNodeBalancerConfigs
+} from 'linode-js-sdk/lib/nodebalancers';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { any, last, pathOr } from 'ramda';
 import * as React from 'react';
@@ -29,10 +33,6 @@ import withLoadingAndError, {
 } from 'src/components/withLoadingAndError';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import {
-  getNodeBalancer,
-  getNodeBalancerConfigs
-} from 'src/services/nodebalancers';
-import {
   withNodeBalancerActions,
   WithNodeBalancerActions
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
@@ -46,6 +46,8 @@ import { NodeBalancerProvider } from './context';
 import NodeBalancerConfigurations from './NodeBalancerConfigurations';
 import NodeBalancerSettings from './NodeBalancerSettings';
 import NodeBalancerSummary from './NodeBalancerSummary';
+
+import { ExtendedNodeBalancer } from 'src/services/nodebalancers';
 
 type ClassNames = 'root' | 'backButton';
 
@@ -64,7 +66,7 @@ const styles = (theme: Theme) =>
 type RouteProps = RouteComponentProps<{ nodeBalancerId?: string }>;
 
 interface State {
-  nodeBalancer?: Linode.ExtendedNodeBalancer;
+  nodeBalancer?: ExtendedNodeBalancer;
   ApiError: Linode.ApiFieldError[] | undefined;
   labelInput?: string;
 }
@@ -104,7 +106,7 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
           }, [])
         };
       })
-      .then((nodeBalancer: Linode.ExtendedNodeBalancer) => {
+      .then((nodeBalancer: ExtendedNodeBalancer) => {
         this.setState({ nodeBalancer });
         this.props.clearLoadingAndErrors();
       })

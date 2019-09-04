@@ -1,4 +1,5 @@
 import { Grant } from 'linode-js-sdk/lib/account';
+import { Image } from 'linode-js-sdk/lib/images';
 import { ResourcePage } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -16,7 +17,7 @@ interface Props {
     userDefinedFields: Linode.StackScript.UserDefinedField[]
   ) => void;
   resetStackScriptSelection: () => void;
-  publicImages: Linode.Image[];
+  publicImages: Image[];
   currentUser: string;
   request: (
     username: string,

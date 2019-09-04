@@ -1,6 +1,6 @@
 import { array, boolean, mixed, number, object, string } from 'yup';
 
-import { NodeBalancerConfigFields } from './interfaces';
+import { NodeBalancerConfig } from './types';
 
 export const nodeBalancerConfigNodeSchema = object({
   label: string()
@@ -137,14 +137,14 @@ export const NodeBalancerSchema = object({
     .of(createNodeBalancerConfigSchema)
     /* @todo there must be an easier way */
     .test('unique', 'Port must be unique.', function(
-      values: NodeBalancerConfigFields[]
+      values: NodeBalancerConfig[]
     ) {
       if (!values) {
         return true;
       }
       const ports: number[] = [];
       const configs = values.reduce(
-        (prev: number[], value: NodeBalancerConfigFields, idx: number) => {
+        (prev: number[], value: NodeBalancerConfig, idx: number) => {
           if (!value.port) {
             return prev;
           }

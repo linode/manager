@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import { assocPath } from 'ramda';
 import * as React from 'react';
 
@@ -5,7 +6,7 @@ import * as React from 'react';
 interface StackScriptState {
   id?: number;
   label: string;
-  images: Linode.Image[];
+  images: Image[];
   username: string;
   user_defined_fields: Linode.StackScript.UserDefinedField[];
   udf_data: any;
@@ -36,13 +37,11 @@ type UseStackScriptReturn = [
 
 /**
  * Provides state and methods used on forms/components that handle StackScripts.
- * @param {Linode.Image[]} images a list of all images, which are used to
+ * @param {Image[]} images a list of all images, which are used to
  * filter compatible images for a StackScript
  * @returns {UseStackScriptReturn} [stackScript, handleSelectStackScript, handleChangeUDF, resetStackScript]
  */
-export const useStackScript = (
-  images: Linode.Image[]
-): UseStackScriptReturn => {
+export const useStackScript = (images: Image[]): UseStackScriptReturn => {
   const [stackScript, setStackScript] = React.useState<StackScriptState>(
     emptyStackScriptState
   );
@@ -103,7 +102,7 @@ const emptyStackScriptState: StackScriptState = {
 };
 
 const getCompatibleImages = (
-  allImages: Linode.Image[],
+  allImages: Image[],
   stackScriptImages: string[]
 ) => {
   return allImages.filter(image => stackScriptImages.includes(image.id));

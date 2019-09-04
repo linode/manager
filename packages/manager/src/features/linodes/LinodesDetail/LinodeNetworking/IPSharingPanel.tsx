@@ -1,3 +1,4 @@
+import { shareAddresses } from 'linode-js-sdk/lib/networking';
 import { clone, flatten, pathOr, uniq } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -18,7 +19,6 @@ import LinearProgress from 'src/components/LinearProgress';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
 import { getLinodes } from 'src/services/linodes';
-import { shareAddresses } from 'src/services/networking';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 

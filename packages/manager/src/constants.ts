@@ -1,3 +1,5 @@
+import { ZoneName } from 'linode-js-sdk/lib/networking';
+
 const PRODUCTION = 'production';
 
 /** native to webpack build */
@@ -60,7 +62,7 @@ export const MAX_VOLUME_SIZE = 10240;
  * Used by e.g. LISH to determine the websocket connection address.
  * Whenever updating this, also update the corresponding name in resolvers.ts
  */
-export const ZONES: Record<string, Linode.ZoneName> = {
+export const ZONES: Record<string, ZoneName> = {
   'us-east': 'newark',
   'us-east-1a': 'newark',
   'us-south': 'dallas',

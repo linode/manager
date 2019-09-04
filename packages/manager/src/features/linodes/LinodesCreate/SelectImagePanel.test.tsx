@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import {
   getMyImages,
   getOlderPublicImages,
@@ -5,7 +6,7 @@ import {
 } from './SelectImagePanel';
 
 describe('CreateFromImage', () => {
-  const images: Partial<Linode.Image>[] = [
+  const images: Partial<Image>[] = [
     {
       vendor: 'Slackware',
       id: 'linode/',

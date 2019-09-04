@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import * as React from 'react';
 import {
   createStyles,
@@ -19,7 +20,7 @@ const styles = (theme: Theme) =>
     root: {}
   });
 interface Props {
-  images: Linode.Image[];
+  images: Image[];
   disabled?: boolean;
   selectedImageID?: string;
   handleSelection: (id: string) => void;
@@ -32,7 +33,7 @@ const PrivateImages: React.StatelessComponent<CombinedProps> = props => {
   return (
     <Grid container className={classes.flatImagePanelSelections}>
       {images &&
-        images.map((image: Linode.Image, idx: number) => (
+        images.map((image: Image, idx: number) => (
           <SelectionCard
             key={idx}
             checked={image.id === String(selectedImageID)}

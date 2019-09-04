@@ -1,4 +1,6 @@
 import { Event } from 'linode-js-sdk/lib/account';
+import { Image } from 'linode-js-sdk/lib/images';
+import { APIError as APIErrorType } from 'linode-js-sdk/lib/types';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
@@ -123,7 +125,7 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
         );
         props.history.push(`/linodes/${linodeId}`);
       })
-      .catch((e: Linode.ApiFieldError[]) => {
+      .catch((e: APIErrorType[]) => {
         setLoading(false);
         setAPIError(e[0].reason);
       });
@@ -240,7 +242,7 @@ interface LinodeContextProps {
   linodeSpecs: Linode.LinodeSpecs;
   linodeEvents: Event[];
   type: string | null;
-  image: Linode.Image;
+  image: Image;
   linodeVolumes: Volume[];
   recentEvents: Event[];
   linodeDisks: Linode.Disk[];
@@ -265,7 +267,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 
 interface WithTypesAndImages {
   types: Linode.LinodeType[];
-  images: Linode.Image[];
+  images: Image[];
   notifications: Linode.Notification[];
 }
 
