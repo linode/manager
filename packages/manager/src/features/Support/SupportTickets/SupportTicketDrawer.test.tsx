@@ -2,7 +2,6 @@ import { shallow, ShallowWrapper } from 'enzyme';
 import { SupportTicket } from 'linode-js-sdk/lib/account';
 import { createSupportTicket } from 'linode-js-sdk/lib/support';
 import * as React from 'react';
-// import { supportTicket } from 'src/__data__/supportTicket';
 import { getVersionString } from 'src/utilities/getVersionString';
 import {
   CombinedProps,
@@ -27,7 +26,7 @@ const supportTicket: SupportTicket = {
   gravatarUrl: 'not found'
 };
 
-// // Mock support services library
+// Mock support services library
 jest.mock('linode-js-sdk/lib/support', () => ({
   createSupportTicket: jest.fn().mockResolvedValue(supportTicket)
 }));
