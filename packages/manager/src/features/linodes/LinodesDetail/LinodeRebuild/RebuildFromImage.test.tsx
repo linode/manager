@@ -11,6 +11,7 @@ import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { CombinedProps, RebuildFromImage } from './RebuildFromImage';
 
 jest.mock('src/utilities/scrollErrorIntoView');
+jest.mock('src/components/EnhancedSelect/Select');
 
 afterEach(cleanup);
 
@@ -50,7 +51,7 @@ describe('RebuildFromImage', () => {
     const { getByTestId, getByText, getByPlaceholderText } = render(
       wrapWithTheme(<RebuildFromImage {...props} />)
     );
-    fireEvent.click(getByText('Ubuntu'));
+    fireEvent.change(getByTestId('select'), { target: { value: 'Arch' } });
     fireEvent.change(getByPlaceholderText('Enter a password.'), {
       target: { value: 'AAbbCC1234!!' }
     });

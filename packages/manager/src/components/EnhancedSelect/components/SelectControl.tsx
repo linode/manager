@@ -18,13 +18,13 @@ const inputComponent: React.StatelessComponent<SelectProps> = ({
 interface Props extends ControlProps<any> {}
 
 const SelectControl: React.StatelessComponent<Props> = props => {
+  const qaLabel = props.selectProps.value
+    ? props.selectProps.value.label
+    : props.selectProps.placeholder;
   return (
     <TextField
-      data-qa-enhanced-select={
-        props.selectProps.value
-          ? props.selectProps.value.label
-          : props.selectProps.placeholder
-      }
+      data-qa-enhanced-select={qaLabel}
+      data-testid={qaLabel}
       fullWidth
       InputProps={{
         inputComponent,

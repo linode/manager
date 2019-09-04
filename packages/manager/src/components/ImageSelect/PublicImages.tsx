@@ -105,13 +105,13 @@ export const PublicImages: React.FC<Props> = props => {
     : [];
 
   return (
-    <Grid container item direction="column">
+    <Grid container item direction="column" style={{ paddingTop: 0 }}>
       <Grid item>
         {error && (
           <Notice spacingTop={8} spacingBottom={0} error text={error} />
         )}
       </Grid>
-      <Grid container item direction="row">
+      <Grid container item direction="row" style={{ paddingTop: 0 }}>
         <Grid item xs={6}>
           <Select
             disabled={disabled}

@@ -8,7 +8,11 @@ interface Props extends OptionProps<any> {
 
 const Option: React.StatelessComponent<Props> = props => {
   return (
-    <div data-qa-option={String(props.value)} {...props.attrs}>
+    <div
+      data-qa-option={String(props.value)}
+      data-testid={String(props.value)}
+      {...props.attrs}
+    >
       <_Option {...props} />
     </div>
   );
