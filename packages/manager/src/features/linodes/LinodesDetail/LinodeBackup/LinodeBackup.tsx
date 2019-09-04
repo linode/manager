@@ -503,12 +503,14 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
           icon={VolumeIcon}
           title="Backups"
           copy={backupPlaceholderText}
-          buttonProps={{
-            onClick: () => this.enableBackups(),
-            children: 'Enable Backups',
-            loading: enabling,
-            disabled
-          }}
+          buttonProps={[
+            {
+              onClick: () => this.enableBackups(),
+              children: 'Enable Backups',
+              loading: enabling,
+              disabled
+            }
+          ]}
         />
       </React.Fragment>
     );

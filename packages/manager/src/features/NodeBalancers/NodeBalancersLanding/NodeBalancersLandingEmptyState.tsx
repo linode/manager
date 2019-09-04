@@ -19,10 +19,12 @@ const NodeBalancerLandingEmptyState: React.StatelessComponent<
         title="Add NodeBalancers!"
         copy={<EmptyCopy />}
         icon={NodeBalancer}
-        buttonProps={{
-          onClick: () => history.push('/nodebalancers/create'),
-          children: 'Add a NodeBalancer'
-        }}
+        buttonProps={[
+          {
+            onClick: () => history.push('/nodebalancers/create'),
+            children: 'Add a NodeBalancer'
+          }
+        ]}
       />
     </React.Fragment>
   );

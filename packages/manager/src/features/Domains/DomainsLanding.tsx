@@ -418,10 +418,12 @@ const RenderEmpty: React.StatelessComponent<{
         title="Manage your Domains"
         copy={<EmptyCopy />}
         icon={DomainIcon}
-        buttonProps={{
-          onClick: props.onClick,
-          children: 'Add a Domain'
-        }}
+        buttonProps={[
+          {
+            onClick: props.onClick,
+            children: 'Add a Domain'
+          }
+        ]}
       />
     </React.Fragment>
   );

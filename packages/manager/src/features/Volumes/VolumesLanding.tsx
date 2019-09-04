@@ -444,10 +444,12 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
             title="No configs available."
             copy="This Linode has no configurations. Click below to create a configuration."
             icon={VolumesIcon}
-            buttonProps={{
-              onClick: this.goToSettings,
-              children: 'View Linode Configurations'
-            }}
+            buttonProps={[
+              {
+                onClick: this.goToSettings,
+                children: 'View Linode Configurations'
+              }
+            ]}
           />
         </React.Fragment>
       );
@@ -461,11 +463,13 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
           title="Add Block Storage!"
           copy={<EmptyCopy />}
           icon={VolumesIcon}
-          buttonProps={{
-            onClick: this.openCreateVolumeDrawer,
-            children: 'Add a Volume',
-            disabled: readOnly
-          }}
+          buttonProps={[
+            {
+              onClick: this.openCreateVolumeDrawer,
+              children: 'Add a Volume',
+              disabled: readOnly
+            }
+          ]}
         />
       </React.Fragment>
     );
