@@ -1,6 +1,6 @@
 import countryData from 'country-region-data';
 import { Account } from 'linode-js-sdk/lib/account';
-import { defaultTo, lensPath, pathOr, set } from 'ramda';
+import { defaultTo, lensPath, set } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -24,7 +24,7 @@ import composeState from 'src/utilities/composeState';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import { Country, Region } from './types';
+import { Country } from './types';
 
 type ClassNames = 'root' | 'mainFormContainer' | 'stateZip';
 
@@ -171,24 +171,24 @@ class UpdateContactInformationPanel extends React.Component<
       }
     );
 
-    const currentCountryResult = countryData.filter((country: Country) =>
-      fields.country
-        ? country.countryShortCode === fields.country
-        : country.countryShortCode === account.country
-    );
+    // const currentCountryResult = countryData.filter((country: Country) =>
+    //   fields.country
+    //     ? country.countryShortCode === fields.country
+    //     : country.countryShortCode === account.country
+    // );
 
-    const countryRegions: Region[] = pathOr(
-      [],
-      ['0', 'regions'],
-      currentCountryResult
-    );
+    // const countryRegions: Region[] = pathOr(
+    //   [],
+    //   ['0', 'regions'],
+    //   currentCountryResult
+    // );
 
-    const regionResults = countryRegions.map(region => {
-      return {
-        value: region.shortCode ? region.shortCode : region.name,
-        label: region.name
-      };
-    });
+    // const regionResults = countryRegions.map(region => {
+    //   return {
+    //     value: region.name,
+    //     label: region.name
+    //   };
+    // });
 
     return (
       <Grid
@@ -373,8 +373,7 @@ class UpdateContactInformationPanel extends React.Component<
         >
           <Grid container className={classes.stateZip}>
             <Grid item xs={12} sm={7}>
-              {fields.country === 'US' || fields.country === 'CA' ? (
-                <EnhancedSelect
+              {/* <EnhancedSelect
                   label="State / Province"
                   errorText={errorMap.state}
                   onChange={this.updateState}
@@ -396,23 +395,22 @@ class UpdateContactInformationPanel extends React.Component<
                       'data-qa-contact-province': true
                     }
                   }}
-                />
-              ) : (
-                <TextField
-                  label="State / Province"
-                  placeholder="Enter a State or Province"
-                  errorText={errorMap.state}
-                  onChange={e =>
-                    this.updateState({
-                      label: e.target.value,
-                      value: e.target.value
-                    })
-                  }
-                  dataAttrs={{
-                    'data-qa-contact-province': true
-                  }}
-                />
-              )}
+                /> */}
+              <TextField
+                label="State / Province"
+                placeholder="Enter a State or Province"
+                errorText={errorMap.state}
+                onChange={e =>
+                  this.updateState({
+                    label: e.target.value,
+                    value: e.target.value
+                  })
+                }
+                dataAttrs={{
+                  'data-qa-contact-province': true
+                }}
+                value={fields.state}
+              />
             </Grid>
             <Grid item xs={12} sm={5}>
               <TextField
