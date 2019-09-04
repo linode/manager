@@ -1,10 +1,18 @@
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import { compose } from 'recompose';
 
 import MonitorOK from 'src/assets/icons/monitor-ok.svg';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  makeStyles,
+  Theme,
+  withTheme,
+  WithTheme
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+
+import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 
 export const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -15,16 +23,17 @@ export const useStyles = makeStyles((theme: Theme) => ({
     flex: 1
   },
   icon: {
-    width: 40,
-    height: 40
-  },
-  header: {
-    marginBottom: 2
+    '& svg': {
+      display: 'flex'
+    }
   }
 }));
 
-export const Healthy: React.FC<{}> = _ => {
+export const Healthy: React.FC<WithTheme> = props => {
   const classes = useStyles();
+
+  const iconSize = props.theme.spacing(1) === COMPACT_SPACING_UNIT ? 32 : 38;
+
   return (
     <>
       <Grid
@@ -34,12 +43,20 @@ export const Healthy: React.FC<{}> = _ => {
         className={classes.root}
       >
         <Grid item>
-          <Grid item className={classes.icon}>
-            <MonitorOK width={40} height={40} />
+          <Grid
+            item
+            style={
+              props.theme.spacing(1) === COMPACT_SPACING_UNIT
+                ? { padding: '0 3px' }
+                : undefined
+            }
+            className={classes.icon}
+          >
+            <MonitorOK width={iconSize} height={iconSize} />
           </Grid>
         </Grid>
         <Grid item className={classes.container}>
-          <Typography variant="h3" className={classes.header}>
+          <Typography variant="h3">
             All Managed Service Monitors are verified.
           </Typography>
           <Typography>
@@ -52,4 +69,6 @@ export const Healthy: React.FC<{}> = _ => {
   );
 };
 
-export default Healthy;
+const enhanced = compose<WithTheme, {}>(withTheme);
+
+export default enhanced(Healthy);
