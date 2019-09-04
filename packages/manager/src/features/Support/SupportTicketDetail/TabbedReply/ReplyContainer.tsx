@@ -1,4 +1,5 @@
-import { SupportReply } from "linode-js-sdk/lib/account";
+import { SupportReply } from 'linode-js-sdk/lib/account';
+import { createReply, uploadAttachment } from 'linode-js-sdk/lib/support';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -11,7 +12,6 @@ import {
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import { createReply, uploadAttachment } from 'src/services/support';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import AttachFileForm from '../../AttachFileForm';
@@ -97,8 +97,8 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
     setSubmitting(true);
     setErrors(undefined);
 
-    /* 
-      Send the reply as the user entered it to the server - no restrictions here 
+    /*
+      Send the reply as the user entered it to the server - no restrictions here
       since we're sanitizing again at render time.
     */
     createReply({ description: value, ticket_id: props.ticketId })

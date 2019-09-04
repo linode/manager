@@ -1,5 +1,9 @@
 import * as Bluebird from 'bluebird';
 import { getDomains } from 'linode-js-sdk/lib/domains';
+import {
+  createSupportTicket,
+  uploadAttachment
+} from 'linode-js-sdk/lib/support';
 import { getVolumes } from 'linode-js-sdk/lib/volumes';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
@@ -21,7 +25,6 @@ import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
 import { getLinodes } from 'src/services/linodes';
 import { getNodeBalancers } from 'src/services/nodebalancers';
-import { createSupportTicket, uploadAttachment } from 'src/services/support';
 import composeState from 'src/utilities/composeState';
 import {
   getAPIErrorOrDefault,

@@ -1,7 +1,7 @@
 import { AxiosRequestConfig } from 'axios';
 import * as support from './support';
 
-import { API_ROOT } from 'src/constants';
+import { API_ROOT } from '../constants';
 
 const mockFn = jest.fn((config: AxiosRequestConfig) =>
   Promise.resolve({ data: config })

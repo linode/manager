@@ -1,5 +1,5 @@
-import { SupportReply, SupportTicket } from 'linode-js-sdk/lib/account';
-import { ResourcePage } from 'linode-js-sdk/lib/types';
+import { SupportReply, SupportTicket } from '../account';
+import { ResourcePage as Page } from '../types';
 import { createReplySchema, createSupportTicketSchema } from './support.schema';
 
 import { API_ROOT } from 'src/constants';
@@ -10,24 +10,8 @@ import Request, {
   setParams,
   setURL,
   setXFilter
-} from '../index';
-
-type Page<T> = ResourcePage<T>;
-
-export interface ReplyRequest {
-  ticket_id: number;
-  description: string;
-}
-
-export interface TicketRequest {
-  summary: string;
-  description: string;
-  domain_id?: number;
-  linode_id?: number;
-  longviewclient_id?: number;
-  nodebalancer_id?: number;
-  volume_id?: number;
-}
+} from '../request';
+import { ReplyRequest, TicketRequest } from './types';
 
 /**
  * getTickets
