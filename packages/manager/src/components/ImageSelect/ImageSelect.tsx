@@ -7,6 +7,7 @@ import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
 
 import Grid from 'src/components/Grid';
 
+import AllImages from './AllImages';
 import PrivateImages from './PrivateImages';
 import PublicImages from './PublicImages';
 
@@ -52,6 +53,15 @@ export const ImageSelect: React.FC<Props> = props => {
   const renderVariant = () => {
     switch (variant) {
       case 'all':
+        return (
+          <AllImages
+            error={error}
+            images={images}
+            disabled={Boolean(disabled)}
+            handleSelectImage={handleSelectImage}
+            selectedImageID={selectedImageID}
+          />
+        );
       case 'private':
         return (
           <PrivateImages
@@ -61,7 +71,7 @@ export const ImageSelect: React.FC<Props> = props => {
             handleSelectImage={handleSelectImage}
             selectedImageID={selectedImageID}
           />
-        )
+        );
       case 'public':
       default:
         return (
@@ -72,9 +82,9 @@ export const ImageSelect: React.FC<Props> = props => {
             selectedImageID={selectedImageID}
             error={error}
           />
-        )
+        );
     }
-  }
+  };
 
   return (
     <>
