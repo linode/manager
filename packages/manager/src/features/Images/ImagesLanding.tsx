@@ -429,10 +429,12 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
         <Placeholder
           title="Add an Image"
           copy={<EmptyCopy />}
-          buttonProps={{
-            onClick: this.openForCreate,
-            children: 'Add an Image'
-          }}
+          buttonProps={[
+            {
+              onClick: this.openForCreate,
+              children: 'Add an Image'
+            }
+          ]}
         />
         {this.renderImageDrawer()}
       </React.Fragment>

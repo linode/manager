@@ -228,10 +228,12 @@ const RenderEmpty: React.StatelessComponent<{
         title="Object Storage"
         copy={<EmptyCopy />}
         icon={BucketIcon}
-        buttonProps={{
-          onClick: props.onClick,
-          children: 'Add a Bucket'
-        }}
+        buttonProps={[
+          {
+            onClick: props.onClick,
+            children: 'Add a Bucket'
+          }
+        ]}
       />
     </React.Fragment>
   );

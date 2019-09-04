@@ -86,12 +86,16 @@ const styles = (theme: Theme) =>
     }
   });
 
+export interface ExtendedButtonProps extends ButtonProps {
+  target?: string;
+}
+
 export interface Props {
   icon?: React.ComponentType<any>;
   animate?: boolean;
   copy?: string | React.ReactNode;
   title?: string;
-  buttonProps?: ButtonProps;
+  buttonProps?: ExtendedButtonProps[];
   className?: string;
 }
 
@@ -128,13 +132,23 @@ const Placeholder: React.StatelessComponent<CombinedProps> = props => {
         )}
       </Grid>
       {buttonProps && (
-        <Grid item xs={12} lg={10}>
-          <Button
-            buttonType="primary"
-            className={classes.button}
-            {...buttonProps}
-            data-qa-placeholder-button
-          />
+        <Grid
+          container
+          item
+          direction="row"
+          alignItems="center"
+          justify="center"
+        >
+          {buttonProps.map(thisButton => (
+            <Grid item>
+              <Button
+                buttonType="primary"
+                className={classes.button}
+                {...thisButton}
+                data-qa-placeholder-button
+              />
+            </Grid>
+          ))}
         </Grid>
       )}
     </Grid>
