@@ -8,43 +8,34 @@ import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import { CredentialPayload } from 'src/services/managed';
 
-import { creationSchema, updateSchema } from './credential.schema';
+import { updateLabelSchema, updatePasswordSchema } from './credential.schema';
 
 export interface Props {
-  credential?: Linode.ManagedCredential;
-  mode: 'create' | 'edit';
+  label: string;
   open: boolean;
   onClose: () => void;
-  onSubmit: (values: CredentialPayload, formikProps: any) => void;
+  onSubmitLabel: (values: Partial<CredentialPayload>, formikProps: any) => void;
+  onSubmitPassword: (
+    values: Partial<CredentialPayload>,
+    formikProps: any
+  ) => void;
 }
 
 type CombinedProps = Props;
 
-export const modes = {
-  CREATING: 'create',
-  EDITING: 'edit'
-};
-
-const titleMap = {
-  [modes.CREATING]: 'Add Credentials',
-  [modes.EDITING]: 'Edit a Credential'
-};
-
 const CredentialDrawer: React.FC<CombinedProps> = props => {
-  const { credential, mode, open, onClose, onSubmit } = props;
+  const { label, open, onClose, onSubmitLabel, onSubmitPassword } = props;
 
   return (
-    <Drawer title={titleMap[mode]} open={open} onClose={onClose}>
+    <Drawer title={`Edit Credential: ${label}`} open={open} onClose={onClose}>
       <Formik
         initialValues={{
-          label: credential ? credential.label : '',
-          password: '',
-          username: ''
+          label
         }}
-        validationSchema={mode === 'create' ? creationSchema : updateSchema}
+        validationSchema={updateLabelSchema}
         validateOnChange={false}
         validateOnBlur={false}
-        onSubmit={onSubmit}
+        onSubmit={onSubmitLabel}
       >
         {({
           values,
@@ -56,12 +47,21 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
           isSubmitting
         }) => (
           <>
-            {status && (
+            {status && status.generalError && (
               <Notice
-                key={status}
+                key={status.generalError}
                 text={status.generalError}
                 error
                 data-qa-error
+              />
+            )}
+
+            {status && status.success && (
+              <Notice
+                key={status.success}
+                text={status.success}
+                success
+                data-qa-success
               />
             )}
 
@@ -77,6 +77,61 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
                 onBlur={handleBlur}
               />
 
+              <ActionsPanel>
+                <Button
+                  buttonType="primary"
+                  onClick={() => handleSubmit()}
+                  loading={isSubmitting}
+                  data-qa-submit
+                >
+                  Update label
+                </Button>
+              </ActionsPanel>
+            </form>
+          </>
+        )}
+      </Formik>
+      <Formik
+        initialValues={{
+          password: '',
+          username: ''
+        }}
+        validationSchema={updatePasswordSchema}
+        validateOnChange={false}
+        validateOnBlur={false}
+        onSubmit={onSubmitPassword}
+      >
+        {({
+          values,
+          errors,
+          status,
+          handleChange,
+          handleBlur,
+          handleSubmit,
+          isSubmitting
+        }) => (
+          <div style={{ paddingTop: '1em' }}>
+            {status && status.generalError && (
+              <Notice
+                key={status.generalError}
+                text={status.generalError}
+                error
+                data-qa-error
+                spacingBottom={0}
+              />
+            )}
+
+            {status && status.success && (
+              <Notice
+                key={status.success}
+                text={status.success}
+                success
+                data-qa-success
+                spacingBottom={0}
+              />
+            )}
+
+            <form onSubmit={handleSubmit}>
               <TextField
                 name="username"
                 label="Username (optional)"
@@ -91,6 +146,7 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
               <TextField
                 name="password"
                 label="Password / Passphrase"
+                type="password"
                 data-qa-add-password
                 value={values.password}
                 error={!!errors.password}
@@ -106,19 +162,11 @@ const CredentialDrawer: React.FC<CombinedProps> = props => {
                   loading={isSubmitting}
                   data-qa-submit
                 >
-                  Add
-                </Button>
-                <Button
-                  onClick={onClose}
-                  data-qa-cancel
-                  buttonType="secondary"
-                  className="cancel"
-                >
-                  Cancel
+                  Update credentials
                 </Button>
               </ActionsPanel>
             </form>
-          </>
+          </div>
         )}
       </Formik>
     </Drawer>
