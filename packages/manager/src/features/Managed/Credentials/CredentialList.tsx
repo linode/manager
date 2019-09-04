@@ -57,7 +57,7 @@ export const CredentialList: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const { credentials, enqueueSnackbar, error, loading, update } = props;
   // Creation drawer
-  const [isDrawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+  const [isCreateDrawerOpen, setDrawerOpen] = React.useState<boolean>(false);
 
   // Edit drawer (separate because the API requires two different endpoints for editing credentials)
   const [isEditDrawerOpen, setEditDrawerOpen] = React.useState<boolean>(false);
@@ -162,23 +162,24 @@ export const CredentialList: React.FC<CombinedProps> = props => {
     { setSubmitting, setErrors, setStatus }: FormikProps
   ) => {
     setStatus(undefined);
-    if (selectedCredential) {
-      updateCredential(editID, { label: values.label })
-        .then(() => {
-          setSubmitting(false);
-          setStatus({ success: 'Label updated successfully.' });
-          update();
-        })
-        .catch(err =>
-          _handleError(
-            err,
-            setSubmitting,
-            setErrors,
-            setStatus,
-            'Unable to update this Credential.'
-          )
-        );
+    if (!selectedCredential) {
+      return;
     }
+    updateCredential(editID, { label: values.label })
+      .then(() => {
+        setSubmitting(false);
+        setStatus({ success: 'Label updated successfully.' });
+        update();
+      })
+      .catch(err =>
+        _handleError(
+          err,
+          setSubmitting,
+          setErrors,
+          setStatus,
+          'Unable to update this Credential.'
+        )
+      );
   };
 
   const openForEdit = (credentialID: number) => {
@@ -289,7 +290,7 @@ export const CredentialList: React.FC<CombinedProps> = props => {
         onDelete={handleDelete}
       />
       <AddCredentialDrawer
-        open={isDrawerOpen}
+        open={isCreateDrawerOpen}
         onClose={() => setDrawerOpen(false)}
         onSubmit={handleCreate}
       />

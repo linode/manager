@@ -13,7 +13,7 @@ export const linodeDescription = (
   const imageDesc = safeGetImageLabel(images, imageId);
   const typeDesc = typeLabelLong(typeLabel, memory, disk, vcpus);
 
-  // Check if we return an empty string for imageDesc if the slug is nonexsistent
+  // Check if we return an empty string for imageDesc if the slug is nonexistent
   if (imageDesc === '') {
     return `${typeDesc}`;
   } else {

@@ -12,7 +12,7 @@ export const creationSchema = createCredentialSchema.shape({
 });
 
 export const updateLabelSchema = object().shape({
-  label: credentialLabel.notRequired()
+  label: credentialLabel.required('Label is required.')
 });
 
 export const updatePasswordSchema = object().shape({
