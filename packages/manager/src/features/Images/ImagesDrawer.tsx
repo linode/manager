@@ -1,4 +1,5 @@
 import { createImage, updateImage } from 'linode-js-sdk/lib/images';
+import { getLinodeDisks } from 'linode-js-sdk/lib/linodes';
 import { compose, equals } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -18,7 +19,6 @@ import TextField from 'src/components/TextField';
 import { resetEventsPolling } from 'src/events';
 import DiskSelect from 'src/features/linodes/DiskSelect';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
-import { getLinodeDisks } from 'src/services/linodes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 

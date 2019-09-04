@@ -1,3 +1,4 @@
+import { getLinodeConfigs, Config, LinodeBackups } from 'linode-js-sdk/lib/linodes'
 import { stringify } from 'qs';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -19,7 +20,6 @@ import regionsContainer, {
   DefaultProps as WithRegionsProps
 } from 'src/containers/regions.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
-import { getLinodeConfigs } from 'src/services/linodes';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector.ts';
 import { MapState } from 'src/store/types';
 
@@ -32,7 +32,7 @@ export interface Props {
   linodeLabel: string;
   linodeRegion: string;
   linodeType: string | null;
-  linodeBackups: Linode.LinodeBackups;
+  linodeBackups: LinodeBackups;
   linodeStatus: string;
   noImage: boolean;
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
@@ -40,7 +40,7 @@ export interface Props {
     bootAction: BootAction,
     linodeID: number,
     linodeLabel: string,
-    linodeConfigs: Linode.Config[]
+    linodeConfigs: Config[]
   ) => void;
 }
 

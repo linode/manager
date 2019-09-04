@@ -1,4 +1,3 @@
-import { Volume } from 'linode-js-sdk/lib/volumes';
 import { API_ROOT } from 'src/constants';
 import Request, {
   setData,
@@ -6,29 +5,11 @@ import Request, {
   setParams,
   setURL,
   setXFilter
-} from '../index';
-import { CreateLinodeSchema, UpdateLinodeSchema } from './linode.schema';
-
-type Page<T> = Linode.ResourcePage<T>;
-type Linode = Linode.Linode;
-
-export interface CreateLinodeRequest {
-  type?: string;
-  region?: string;
-  stackscript_id?: number;
-  backup_id?: number;
-  swap_size?: number;
-  image?: string;
-  root_pass?: string;
-  authorized_keys?: string[];
-  backups_enabled?: boolean;
-  stackscript_data?: any;
-  booted?: boolean;
-  label?: string;
-  tags?: string[];
-  private_ip?: boolean;
-  authorized_users?: string[];
-}
+} from '../request';
+import { ResourcePage as Page } from '../types'
+import { Volume } from '../volumes/types';
+import { CreateLinodeSchema, UpdateLinodeSchema } from './linodes.schema';
+import { CreateLinodeRequest, Linode } from './types';
 
 /**
  * getLinode

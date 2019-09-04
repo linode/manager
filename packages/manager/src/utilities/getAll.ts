@@ -1,13 +1,11 @@
 import * as Bluebird from 'bluebird';
 import { Domain, getDomains } from 'linode-js-sdk/lib/domains';
-import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
+import { getLinodes, Linode } from 'linode-js-sdk/lib/linodes'
+import { getNodeBalancers, NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
 import { getVolumes, Volume } from 'linode-js-sdk/lib/volumes';
 import { range } from 'ramda';
 
 import { sendFetchAllEvent } from 'src/utilities/ga';
-
-import { getLinodes } from 'src/services/linodes';
-import { getNodeBalancers } from 'src/services/nodebalancers';
 
 export interface APIResponsePage<T> {
   page: number;
@@ -173,7 +171,7 @@ export const getAllFromEntity: (
 };
 
 export type GetAllHandler = (
-  linodes: Linode.Linode[],
+  linodes: Linode[],
   nodebalancers: NodeBalancer[],
   volumes: Volume[],
   domains: Domain[]
@@ -190,7 +188,7 @@ export type GetAllHandler = (
  */
 export const getAllEntities = (cb: GetAllHandler) =>
   Bluebird.join(
-    getAll<Linode.Linode>(getLinodes)(),
+    getAll<Linode>(getLinodes)(),
     getAll<NodeBalancer>(getNodeBalancers)(),
     getAll<Volume>(getVolumes)(),
     getAll<Domain>(getDomains)(),

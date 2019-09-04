@@ -1,8 +1,8 @@
 import * as Bluebird from 'bluebird';
 import { updateAccountSettings } from 'linode-js-sdk/lib/account'
+import { enableBackups, Linode } from 'linode-js-sdk/lib/linodes'
 import { isEmpty, pathOr } from 'ramda';
 import { Reducer } from 'redux';
-import { enableBackups } from 'src/services/linodes';
 import { handleUpdate } from 'src/store/accountSettings/accountSettings.actions';
 import { updateMultipleLinodes } from 'src/store/linodes/linodes.actions';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
@@ -24,11 +24,11 @@ export interface State {
   autoEnrollError?: string;
   enrolling: boolean;
   error?: Error | Linode.ApiFieldError[];
-  data?: Linode.Linode[];
+  data?: Linode[];
 }
 
 interface Accumulator {
-  success: Linode.Linode[];
+  success: Linode[];
   errors: BackupError[];
 }
 
@@ -218,7 +218,7 @@ export default reducer;
  */
 export const gatherResponsesAndErrors = (
   accumulator: Accumulator,
-  linode: Linode.Linode
+  linode: Linode
 ) => {
   return enableBackups(linode.id)
     .then(() => ({

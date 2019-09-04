@@ -1,3 +1,4 @@
+import { getLinodeTransfer, Linode } from 'linode-js-sdk/lib/linodes'
 import * as moment from 'moment';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -12,7 +13,6 @@ import {
   ClassNames,
   styled
 } from 'src/features/Dashboard/TransferDashboardCard/TransferDashboardCard';
-import { getLinodeTransfer } from 'src/services/linodes';
 import { MapState } from 'src/store/types';
 import { isRecent } from 'src/utilities/isRecent.ts';
 import { readableBytes } from 'src/utilities/unitConversions';
@@ -150,7 +150,7 @@ interface StoreProps {
 
 const mapStateToProps: MapState<StoreProps, CombinedProps> = (state, props) => {
   const linode = state.__resources.linodes.entities.find(
-    (l: Linode.Linode) => l.id === props.linodeId
+    (l: Linode) => l.id === props.linodeId
   );
   return {
     total: linode ? linode.specs.transfer : 0,

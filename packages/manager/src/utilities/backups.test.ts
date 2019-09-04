@@ -1,3 +1,4 @@
+import { LinodeBackupsResponse } from 'linode-js-sdk/lib/linodes'
 import { collectBackups, mostRecentFromResponse } from './backups';
 
 const notTheMostRecent = `1999-12-01T00:00:00`;
@@ -13,7 +14,7 @@ describe('utilities/backups', () => {
           current: null,
           in_progress: null
         }
-      } as Linode.LinodeBackupsResponse;
+      } as LinodeBackupsResponse;
 
       expect(collectBackups(response)).toEqual(automatic);
     });
@@ -60,7 +61,7 @@ describe('utilities/backups', () => {
               },
               current: null
             }
-          } as Linode.LinodeBackupsResponse;
+          } as LinodeBackupsResponse;
 
           expect(mostRecentFromResponse(response)).toEqual(mostRecent);
         });
@@ -90,7 +91,7 @@ describe('utilities/backups', () => {
                 finished: mostRecent
               }
             }
-          } as Linode.LinodeBackupsResponse;
+          } as LinodeBackupsResponse;
 
           expect(mostRecentFromResponse(response)).toEqual(mostRecent);
         });
@@ -120,7 +121,7 @@ describe('utilities/backups', () => {
               },
               current: null
             }
-          } as Linode.LinodeBackupsResponse;
+          } as LinodeBackupsResponse;
 
           expect(mostRecentFromResponse(response)).toEqual(mostRecent);
         });
@@ -135,7 +136,7 @@ describe('utilities/backups', () => {
             current: null,
             in_progress: null
           }
-        } as Linode.LinodeBackupsResponse;
+        } as LinodeBackupsResponse;
 
         expect(mostRecentFromResponse(response)).toBe(null);
       });
@@ -165,7 +166,7 @@ describe('utilities/backups', () => {
             },
             current: null
           }
-        } as Linode.LinodeBackupsResponse;
+        } as LinodeBackupsResponse;
 
         expect(mostRecentFromResponse(response)).toBe(null);
       });

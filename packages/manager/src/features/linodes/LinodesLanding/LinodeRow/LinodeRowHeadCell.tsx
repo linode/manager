@@ -1,3 +1,4 @@
+import { LinodeBackups, LinodeStatus } from 'linode-js-sdk/lib/linodes'
 import { Event } from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
 import * as React from 'react';
@@ -80,7 +81,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  backups: Linode.LinodeBackups;
+  backups: LinodeBackups;
   id: number;
   image: string | null;
   ipv4: string[];
@@ -90,7 +91,7 @@ interface Props {
   disk: number;
   memory: number;
   vcpus: number;
-  status: Linode.LinodeStatus;
+  status: LinodeStatus;
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;

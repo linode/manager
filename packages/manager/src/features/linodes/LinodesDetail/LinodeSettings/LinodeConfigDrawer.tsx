@@ -3,6 +3,7 @@
  * should source it directly from there rather than making an additional request. OR We can source
  * it from there and make the (thunk) request to get the latest/greatest information.
  */
+import { Disk, getLinodeKernels } from 'linode-js-sdk/lib/linodes';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -36,7 +37,6 @@ import DeviceSelection, {
   ExtendedDisk,
   ExtendedVolume
 } from 'src/features/linodes/LinodesDetail/LinodeRescue/DeviceSelection';
-import { getLinodeKernels } from 'src/services/linodes';
 import { ApplicationState } from 'src/store';
 import createDevicesFromStrings, {
   DevicesAsStrings
@@ -869,7 +869,7 @@ const enhanced = compose<CombinedProps, Props>(
 
   withLinodeDetailContext(
     ({ linode, createLinodeConfig, updateLinodeConfig, getLinodeConfig }) => ({
-      disks: linode._disks.map((disk: Linode.Disk) => ({
+      disks: linode._disks.map((disk: Disk) => ({
         ...disk,
         _id: `disk-${disk.id}`
       })),

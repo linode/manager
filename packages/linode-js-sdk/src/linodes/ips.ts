@@ -1,14 +1,8 @@
-import { IPAddress } from 'linode-js-sdk/lib/networking';
 import { API_ROOT } from 'src/constants';
-
-import Request, { setData, setMethod, setURL } from '../index';
-
-import { IPAllocationSchema } from './linode.schema';
-
-export interface IPAllocationRequest {
-  type: 'ipv4';
-  public: boolean;
-}
+import { IPAddress } from '../networking/types';
+import Request, { setData, setMethod, setURL } from '../request';
+import { IPAllocationSchema } from './linodes.schema';
+import { IPAllocationRequest, LinodeIPsResponse } from './types'
 
 /**
  * getLinodeIPs
@@ -18,7 +12,7 @@ export interface IPAllocationRequest {
  * @param linodeId { number } The id of the Linode whose addresses you would like to retrieve.
  */
 export const getLinodeIPs = (id: number) =>
-  Request<Linode.LinodeIPsResponse>(
+  Request<LinodeIPsResponse>(
     setURL(`${API_ROOT}/linode/instances/${id}/ips`),
     setMethod('GET')
   ).then(response => response.data);
@@ -59,7 +53,7 @@ export const removeIPAddress = (payload: {
   return Request<{}>(
     setURL(
       `${API_ROOT}/linode/instances/${payload.linodeID}/ips/${
-        payload.IPAddress
+      payload.IPAddress
       }`
     ),
     setMethod('DELETE')

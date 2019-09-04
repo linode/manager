@@ -1,38 +1,21 @@
 import { API_ROOT } from 'src/constants';
-
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
   setXFilter
-} from '../index';
-
+} from '../request';
+import { ResourcePage as Page } from '../types'
 import {
   CreateLinodeConfigSchema,
   UpdateLinodeConfigSchema
-} from './linode.schema';
+} from './linodes.schema';
+import {
+  Config,
+  LinodeConfigCreationData
+} from './types'
 
-type Page<T> = Linode.ResourcePage<T>;
-type Config = Linode.Config;
-
-export interface LinodeConfigCreationData {
-  label: string;
-  devices: Linode.Devices;
-  kernel?: string;
-  comments?: string;
-  memory_limit?: number;
-  run_level?: 'default' | 'single' | 'binbash';
-  virt_mode?: 'fullvirt' | 'paravirt';
-  helpers: {
-    updatedb_disabled: boolean;
-    distro: boolean;
-    modules_dep: boolean;
-    network: boolean;
-    devtmpfs_automount: boolean;
-  };
-  root_device: string;
-}
 
 /**
  * getLinodeConfigs

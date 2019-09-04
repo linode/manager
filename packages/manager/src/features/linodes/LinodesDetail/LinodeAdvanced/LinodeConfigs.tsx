@@ -1,3 +1,4 @@
+import { linodeReboot } from 'linode-js-sdk/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -26,7 +27,6 @@ import {
   DeleteLinodeConfig,
   withLinodeDetailContext
 } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
-import { linodeReboot } from 'src/services/linodes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import LinodeConfigActionMenu from '../LinodeSettings/LinodeConfigActionMenu';
 import LinodeConfigDrawer from '../LinodeSettings/LinodeConfigDrawer';

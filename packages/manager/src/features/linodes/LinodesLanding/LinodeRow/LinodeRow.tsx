@@ -1,4 +1,5 @@
 import * as classNames from 'classnames';
+import { LinodeBackups, LinodeStatus } from 'linode-js-sdk/lib/linodes'
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -25,7 +26,7 @@ import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { parseMaintenanceStartTime } from '../utils';
 
 interface Props {
-  backups: Linode.LinodeBackups;
+  backups: LinodeBackups;
   id: number;
   image: string | null;
   ipv4: string[];
@@ -36,7 +37,7 @@ interface Props {
   disk: number;
   memory: number;
   vcpus: number;
-  status: Linode.LinodeStatus;
+  status: LinodeStatus;
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;

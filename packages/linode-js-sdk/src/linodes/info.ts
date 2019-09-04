@@ -1,10 +1,9 @@
 import { NetworkUtilization } from 'linode-js-sdk/lib/account';
 import { API_ROOT } from 'src/constants';
-
-import Request, { setMethod, setParams, setURL, setXFilter } from '../index';
-
-type Page<T> = Linode.ResourcePage<T>;
-type Type = Linode.LinodeType;
+import { NetworkUtilization } from '../account/types'
+import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
+import { ResourcePage as Page } from '../types'
+import { Kernel, LinodeType as Type, Stats } from './types';
 
 /**
  * getLinodeStats
@@ -14,7 +13,7 @@ type Type = Linode.LinodeType;
  * @param linodeId { number } The id of the Linode to retrieve stats data for.
  */
 export const getLinodeStats = (linodeId: number) =>
-  Request<Linode.Stats>(
+  Request<Stats>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/stats`),
     setMethod('GET')
   ).then(response => response.data);
@@ -35,7 +34,7 @@ export const getLinodeStatsByDate = (
   year: string,
   month: string
 ) =>
-  Request<Linode.Stats>(
+  Request<Stats>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/stats/${year}/${month}`),
     setMethod('GET')
   ).then(response => response.data);
@@ -61,7 +60,7 @@ export const getLinodeTransfer = (linodeId: number) =>
  *
  */
 export const getLinodeKernels = (params?: any, filter?: any) =>
-  Request<Page<Linode.Kernel>>(
+  Request<Page<Kernel>>(
     setURL(`${API_ROOT}/linode/kernels`),
     setMethod('GET'),
     setParams(params),
@@ -78,7 +77,7 @@ export const getLinodeKernels = (params?: any, filter?: any) =>
  */
 
 export const getLinodeKernel = (kernelId: string) =>
-  Request<Page<Linode.Kernel>>(
+  Request<Page<Kernel>>(
     setURL(`${API_ROOT}/linode/kernels/${kernelId}`),
     setMethod('GET')
   ).then(response => response.data);

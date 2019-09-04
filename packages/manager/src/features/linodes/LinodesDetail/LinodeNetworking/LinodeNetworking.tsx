@@ -1,3 +1,4 @@
+import { getLinodeIPs, Linode, LinodeIPsResponse, LinodeIPsResponseIPV4, LinodeIPsResponseIPV6 } from 'linode-js-sdk/lib/linodes'
 import { IPAddress } from 'linode-js-sdk/lib/networking';
 import { compose, head, isEmpty, path, pathOr, uniq, uniqBy } from 'ramda';
 import * as React from 'react';
@@ -24,7 +25,6 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import { ZONES } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
-import { getLinodeIPs } from 'src/services/linodes';
 import { upsertLinode as _upsertLinode } from 'src/store/linodes/linodes.actions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { withLinodeDetailContext } from '../linodeDetailContext';
@@ -104,7 +104,7 @@ const styles = (theme: Theme) =>
   });
 
 interface State {
-  linodeIPs?: Linode.LinodeIPsResponse;
+  linodeIPs?: LinodeIPsResponse;
   removeIPDialogOpen: boolean;
   initialLoading: boolean;
   currentlySelectedIP?: IPAddress;
@@ -169,7 +169,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       });
   };
 
-  handleRemoveIPSuccess = (linode: Linode.Linode) => {
+  handleRemoveIPSuccess = (linode: Linode) => {
     /** refresh local state and redux state so our data is persistent everywhere */
     this.refreshIPs();
     this.props.upsertLinode(linode);
@@ -409,7 +409,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   renderIPv4 = () => {
     const { classes, readOnly } = this.props;
-    const ipv4 = path<Linode.LinodeIPsResponseIPV4>(
+    const ipv4 = path<LinodeIPsResponseIPV4>(
       ['linodeIPs', 'ipv4'],
       this.state
     );
@@ -510,7 +510,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   renderIPv6 = () => {
     const { classes, readOnly } = this.props;
-    const ipv6 = path<Linode.LinodeIPsResponseIPV6>(
+    const ipv6 = path<LinodeIPsResponseIPV6>(
       ['linodeIPs', 'ipv6'],
       this.state
     );
@@ -631,7 +631,7 @@ const getFirstPublicIPv4FromResponse = compose(
 );
 
 interface ContextProps {
-  linode: Linode.Linode;
+  linode: Linode;
   readOnly: boolean;
 }
 
@@ -642,7 +642,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 }));
 
 interface DispatchProps {
-  upsertLinode: (data: Linode.Linode) => void;
+  upsertLinode: (data: Linode) => void;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (

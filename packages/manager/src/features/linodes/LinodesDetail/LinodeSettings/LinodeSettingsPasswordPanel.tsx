@@ -1,4 +1,5 @@
 import { GrantLevel } from 'linode-js-sdk/lib/account';
+import { changeLinodeDiskPassword, getLinodeDisks } from 'linode-js-sdk/lib/linodes';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
@@ -9,7 +10,6 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import PasswordInput from 'src/components/PasswordInput';
-import { changeLinodeDiskPassword, getLinodeDisks } from 'src/services/linodes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { debounce } from 'throttle-debounce';

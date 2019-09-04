@@ -1,14 +1,15 @@
+import { LinodeType } from 'linode-js-sdk/lib/linodes'
 import { ExtendedCluster, ExtendedPoolNode, PoolNodeWithPrice } from './types';
 
 export const getMonthlyPrice = (
   type: string,
   count: number,
-  types: Linode.LinodeType[]
+  types: LinodeType[]
 ) => {
   if (!types) {
     return 0;
   }
-  const thisType = types.find((t: Linode.LinodeType) => t.id === type);
+  const thisType = types.find((t: LinodeType) => t.id === type);
   return thisType ? thisType.price.monthly * count : 0;
 };
 
@@ -27,7 +28,7 @@ export const getTotalClusterPrice = (pools: PoolNodeWithPrice[]) =>
 export const extendCluster = (
   cluster: Linode.KubernetesCluster,
   pools: ExtendedPoolNode[],
-  types: Linode.LinodeType[]
+  types: LinodeType[]
 ): ExtendedCluster => {
   // Identify which pools belong to this cluster and add pricing information.
   const _pools = pools.reduce((accumulator, thisPool) => {
@@ -61,7 +62,7 @@ interface ClusterData {
 
 export const getTotalClusterMemoryAndCPU = (
   pools: ExtendedPoolNode[],
-  types: Linode.LinodeType[]
+  types: LinodeType[]
 ) => {
   if (!types || !pools) {
     return { RAM: 0, CPU: 0 };
@@ -70,7 +71,7 @@ export const getTotalClusterMemoryAndCPU = (
   return pools.reduce(
     (accumulator: ClusterData, thisPool: ExtendedPoolNode) => {
       const thisType = types.find(
-        (type: Linode.LinodeType) => type.id === thisPool.type
+        (type: LinodeType) => type.id === thisPool.type
       );
       if (!thisType) {
         return accumulator;

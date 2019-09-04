@@ -1,4 +1,5 @@
 import produce from 'immer';
+import { Linode } from 'linode-js-sdk/lib/linodes'
 import { APIError } from 'linode-js-sdk/lib/types';
 import { useEffect, useState } from 'react';
 
@@ -36,11 +37,11 @@ interface UseAPIRequest<T> {
  *
  * Get Linodes:
  *
- * We'd like to resolve `response.data` from the request, so we can deal with Linode.Linode[]
- * instead of Linode.ResourcePage<Linode.Linode>.
+ * We'd like to resolve `response.data` from the request, so we can deal with Linode[]
+ * instead of Linode.ResourcePage<Linode>.
  *
  * ```typescript
- * const { data, loading, lastUpdated, error } = useAPIData<Linode.Linode[]>(
+ * const { data, loading, lastUpdated, error } = useAPIData<Linode[]>(
  *  () => getLinodes().then(linodes => linodes.data) // resolve `data` from request
  *  [], // Initial value of `data`
  *  [props.someProp] // Run the request when `props.someProp` changes

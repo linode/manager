@@ -1,13 +1,14 @@
+import { LinodeBackup } from 'linode-js-sdk/lib/linodes'
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  backup: Linode.LinodeBackup;
+  backup: LinodeBackup;
   disabled: boolean;
-  onRestore: (backup: Linode.LinodeBackup) => void;
-  onDeploy: (backup: Linode.LinodeBackup) => void;
+  onRestore: (backup: LinodeBackup) => void;
+  onDeploy: (backup: LinodeBackup) => void;
 }
 
 type CombinedProps = Props & RouteComponentProps<{}>;

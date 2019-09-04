@@ -9,7 +9,7 @@ import {
   getLinodeDisks as _getLinodeDisks,
   resizeLinodeDisk as _resizeLinodeDisk,
   updateLinodeDisk as _updateLinodeDisk
-} from 'src/services/linodes';
+} from 'linode-js-sdk/lib/linodes';
 import { createRequestThunk } from 'src/store/store.helpers';
 import { ThunkActionCreator } from 'src/store/types';
 import { getAll } from 'src/utilities/getAll';

@@ -1,39 +1,8 @@
 import { omit } from 'ramda';
-
 import { API_ROOT } from 'src/constants';
-
-import Request, { setData, setMethod, setURL } from '../index';
-
-import { RebuildLinodeSchema } from './linode.schema';
-
-type Linode = Linode.Linode;
-
-/* tslint:disable-next-line */
-export type RescueRequestObject = Pick<
-  Linode.Devices,
-  'sda' | 'sdb' | 'sdc' | 'sdd' | 'sde' | 'sdf' | 'sdg'
->;
-
-export interface LinodeCloneData {
-  linode_id?: number;
-  region?: string | null;
-  type?: string | null;
-  label?: string | null;
-  backups_enabled?: boolean | null;
-  tags?: string[] | null;
-  configs?: number[];
-  disks?: number[];
-}
-
-export interface RebuildRequest {
-  image: string;
-  root_pass: string;
-  authorized_keys?: Linode.SSHKey[];
-  authorized_users?: string[];
-  stackscript_id?: number;
-  stackscript_data?: any;
-  booted?: boolean;
-}
+import Request, { setData, setMethod, setURL } from '../request';
+import { RebuildLinodeSchema } from './linodes.schema';
+import { Linode, LinodeCloneData, RebuildRequest, RescueRequestObject } from './types'
 
 /**
  * linodeBoot
@@ -214,6 +183,6 @@ export const scheduleOrQueueMigration = (
 ) =>
   Request<{}>(
     setURL(`${API_ROOT}/linode/instances/${linodeID}/migrate`),
-    setData(payload),
+    setData(payload || {}),
     setMethod('POST')
   );

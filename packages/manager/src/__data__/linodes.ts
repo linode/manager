@@ -1,4 +1,6 @@
-export const linode1: Linode.Linode = {
+import { Linode } from 'linode-js-sdk/lib/linodes'
+
+export const linode1: Linode = {
   specs: {
     transfer: 1000,
     memory: 1024,
@@ -36,7 +38,7 @@ export const linode1: Linode.Linode = {
   tags: []
 };
 
-export const linode2: Linode.Linode = {
+export const linode2: Linode = {
   specs: {
     transfer: 2000,
     memory: 2048,
@@ -74,7 +76,7 @@ export const linode2: Linode.Linode = {
   tags: []
 };
 
-export const linode3: Linode.Linode = {
+export const linode3: Linode = {
   specs: {
     transfer: 2000,
     memory: 2048,
@@ -112,7 +114,7 @@ export const linode3: Linode.Linode = {
   tags: []
 };
 
-export const linode4: Linode.Linode = {
+export const linode4: Linode = {
   specs: {
     transfer: 2000,
     memory: 2048,

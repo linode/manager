@@ -1,4 +1,14 @@
 import { GrantLevel } from 'linode-js-sdk/lib/account';
+import {
+  cancelBackups,
+  enableBackups,
+  getLinodeBackups,
+  getType,
+  LinodeBackup,
+  LinodeBackupSchedule,
+  LinodeType,
+  takeSnapshot
+} from 'linode-js-sdk/lib/linodes';
 import * as moment from 'moment-timezone';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path, pathOr, sortBy } from 'ramda';
@@ -40,13 +50,6 @@ import TableCell from 'src/components/TableCell';
 import TextField from 'src/components/TextField';
 import { events$, resetEventsPolling } from 'src/events';
 import { linodeInTransition as isLinodeInTransition } from 'src/features/linodes/transitions';
-import {
-  cancelBackups,
-  enableBackups,
-  getLinodeBackups,
-  getType,
-  takeSnapshot
-} from 'src/services/linodes';
 import {
   LinodeActionsProps,
   withLinodeActions
@@ -132,19 +135,19 @@ interface ContextProps {
   linodeRegion: string;
   linodeType: null | string;
   backupsEnabled: boolean;
-  backupsSchedule: Linode.LinodeBackupSchedule;
+  backupsSchedule: LinodeBackupSchedule;
   linodeInTransition: boolean;
   linodeLabel: string;
   permissions: GrantLevel;
 }
 
 interface PreloadedProps {
-  backups: PromiseLoaderResponse<Linode.LinodeBackupsResponse>;
-  type: PromiseLoaderResponse<Linode.LinodeType>;
+  backups: PromiseLoaderResponse<LinodeBackupsResponse>;
+  type: PromiseLoaderResponse<LinodeType>;
 }
 
 interface State {
-  backups: Linode.LinodeBackupsResponse;
+  backups: LinodeBackupsResponse;
   snapshotForm: {
     label: string;
     errors?: Linode.ApiFieldError[];
@@ -183,8 +186,8 @@ const isReadOnly = (permissions: GrantLevel) => {
 };
 
 export const aggregateBackups = (
-  backups: Linode.LinodeBackupsResponse
-): Linode.LinodeBackup[] => {
+  backups: LinodeBackupsResponse
+): LinodeBackup[] => {
   const manualSnapshot =
     path(['status'], backups.snapshot.in_progress) === 'needsPostProcessing'
       ? backups.snapshot.in_progress
@@ -448,17 +451,17 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     this.setState({ cancelBackupsAlertOpen: true });
   };
 
-  handleDeploy = (backup: Linode.LinodeBackup) => {
+  handleDeploy = (backup: LinodeBackup) => {
     const { history, linodeID } = this.props;
     history.push(
       '/linodes/create' +
-        `?type=My%20Images&subtype=Backups&backupID=${
-          backup.id
-        }&linodeID=${linodeID}`
+      `?type=My%20Images&subtype=Backups&backupID=${
+      backup.id
+      }&linodeID=${linodeID}`
     );
   };
 
-  handleRestore = (backup: Linode.LinodeBackup) => {
+  handleRestore = (backup: LinodeBackup) => {
     this.openRestoreDrawer(backup.id, formatDate(backup.created));
   };
 
@@ -494,7 +497,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         backup, a 2-7 day old backup, and 8-14 day old backup. To enable backups
         just click below.
       </Typography>
-    );
+      );
 
     return (
       <React.Fragment>
@@ -519,7 +522,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
   Table = ({
     backups
   }: {
-    backups: Linode.LinodeBackup[];
+    backups: LinodeBackup[];
   }): JSX.Element | null => {
     const { classes, permissions } = this.props;
     const disabled = isReadOnly(permissions);
@@ -539,7 +542,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
               </TableRow>
             </TableHead>
             <TableBody>
-              {backups.map((backup: Linode.LinodeBackup, idx: number) => (
+              {backups.map((backup: LinodeBackup, idx: number) => (
                 <BackupTableRow
                   key={idx}
                   backup={backup}
@@ -742,12 +745,12 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         {backups.length ? (
           <this.Table backups={backups} />
         ) : (
-          <Paper className={classes.paper} data-qa-backup-description>
-            <Typography>
-              Automatic and manual backups will be listed here
+            <Paper className={classes.paper} data-qa-backup-description>
+              <Typography>
+                Automatic and manual backups will be listed here
             </Typography>
-          </Paper>
-        )}
+            </Paper>
+          )}
         <this.SnapshotForm />
         <this.SettingsForm />
         <Button

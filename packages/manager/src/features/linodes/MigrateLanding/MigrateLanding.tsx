@@ -1,5 +1,6 @@
-import { Event } from 'linode-js-sdk/lib/account';
+import { Event, Notification } from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
+import { LinodeSpecs, LinodeStatus, LinodeType, scheduleOrQueueMigration } from 'linode-js-sdk/lib/linodes'
 import { APIError as APIErrorType } from 'linode-js-sdk/lib/types';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
@@ -30,8 +31,6 @@ import { linodeInTransition } from '../transitions';
 
 import CautionNotice from './CautionNotice';
 import ConfigureForm from './ConfigureForm';
-
-import { scheduleOrQueueMigration } from 'src/services/linodes/linodeActions.ts';
 
 import withRegions, {
   DefaultProps as RegionProps
@@ -238,8 +237,8 @@ interface LinodeContextProps {
   linodeId: number;
   region: { region: string; countryCode: string };
   label: string;
-  linodeStatus: Linode.LinodeStatus;
-  linodeSpecs: Linode.LinodeSpecs;
+  linodeStatus: LinodeStatus;
+  linodeSpecs: LinodeSpecs;
   linodeEvents: Event[];
   type: string | null;
   image: Image;
@@ -266,9 +265,9 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 }));
 
 interface WithTypesAndImages {
-  types: Linode.LinodeType[];
+  types: LinodeType[];
   images: Image[];
-  notifications: Linode.Notification[];
+  notifications: Notification[];
 }
 
 const mapStateToProps: MapStateToProps<
@@ -294,7 +293,7 @@ const getDisabledReason = (
   events: Event[],
   linodeStatus: string,
   linodeID: number,
-  notifications: Linode.Notification[]
+  notifications: Notification[]
 ) => {
   if (events[0]) {
     if (

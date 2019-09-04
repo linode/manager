@@ -1,3 +1,4 @@
+import { Linode } from 'linode-js-sdk/lib/linodes'
 import * as React from 'react';
 import { createHOCForConsumer } from 'src/requestableContext';
 import {
@@ -76,14 +77,14 @@ export type UpdateLinodeDisk = (
 ) => UpdateLinodeDiskResponse;
 
 export type UpdateLinode = (
-  data: Partial<Linode.Linode>
-) => Promise<Linode.Linode>;
+  data: Partial<Linode>
+) => Promise<Linode>;
 
 export interface LinodeDetailContext {
   linode: ExtendedLinode;
 
   /** Linode Actions */
-  updateLinode: (data: Partial<Linode.Linode>) => Promise<Linode.Linode>;
+  updateLinode: (data: Partial<Linode>) => Promise<Linode>;
 
   /** Linode Config actions */
   createLinodeConfig: CreateLinodeConfig;
@@ -113,7 +114,7 @@ export const linodeDetailContextFactory = (
 
   return {
     /** @todo Add every Linode specific action here as a Thunk. */
-    updateLinode: (data: Partial<Linode.Linode>) =>
+    updateLinode: (data: Partial<Linode>) =>
       dispatch(_updateLinode({ linodeId, ...data })),
 
     /** Linode Config actions */
