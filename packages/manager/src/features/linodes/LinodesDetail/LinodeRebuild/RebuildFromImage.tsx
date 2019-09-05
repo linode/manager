@@ -171,7 +171,7 @@ export const RebuildFromImage: React.StatelessComponent<
             {/* `status` holds generalError messages */}
             {status && <Notice error>{status.generalError}</Notice>}
             <ImageSelect
-              title="Choose an Image"
+              title="Select Image"
               images={imagesData}
               error={imagesError || errors.image}
               selectedImageID={values.image}
