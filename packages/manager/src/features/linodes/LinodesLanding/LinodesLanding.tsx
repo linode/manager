@@ -33,6 +33,7 @@ import {
   sendGroupByTagEnabledEvent,
   sendLinodesViewEvent
 } from 'src/utilities/ga';
+import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import { BackupsCtaDismissed } from 'src/utilities/storage';
 import CardView from './CardView';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
@@ -205,7 +206,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     }
 
     const headers = [
-      { label: 'Label', key: 'label' },
+      { label: 'Label', key: 'linodeDescription' },
       { label: 'Linode ID', key: 'id' },
       { label: 'Image', key: 'image' },
       { label: 'Region', key: 'region' },
@@ -359,7 +360,19 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                               <Grid container justify="flex-end">
                                 <Grid item className={classes.CSVlinkContainer}>
                                   <CSVLink
-                                    data={linodesData}
+                                    data={linodesData.map(e => {
+                                      return {
+                                        ...e,
+                                        linodeDescription: getLinodeDescription(
+                                          e.label,
+                                          e.specs.memory,
+                                          e.specs.disk,
+                                          e.specs.vcpus,
+                                          '',
+                                          []
+                                        )
+                                      };
+                                    })}
                                     headers={
                                       this.props
                                         .someLinodesHaveScheduledMaintenance
