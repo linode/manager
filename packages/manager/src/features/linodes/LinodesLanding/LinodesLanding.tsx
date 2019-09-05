@@ -206,7 +206,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     }
 
     const headers = [
-      { label: 'Description', key: 'linodeDescription' },
+      { label: 'Label', key: 'linodeDescription' },
       { label: 'Linode ID', key: 'id' },
       { label: 'Image', key: 'image' },
       { label: 'Region', key: 'region' },
