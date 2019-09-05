@@ -33,5 +33,5 @@ namespace Linode {
   }
 
   // Enum containing IDs for each Cluster
-  export type ClusterID = 'us-east-1';
+  export type ClusterID = 'us-east-1' | 'alpha';
 }

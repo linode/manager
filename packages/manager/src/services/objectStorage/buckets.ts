@@ -70,20 +70,23 @@ export const deleteBucket = ({
     setMethod('DELETE')
   );
 
+export interface ObjectListParams {
+  delimiter?: string;
+  marker?: string;
+  prefix?: string;
+}
 /**
  * Returns a list of Objects in a given Bucket.
  */
-export const getBucketObjects = (
+export const getObjectList = (
   clusterId: string,
   bucketName: string,
-  params?: any,
-  filters?: any
+  params?: ObjectListParams
 ) =>
-  Request<Page<Linode.Object>>(
+  Request<{ data: Linode.Object[] }>(
     setMethod('GET'),
     setParams(params),
-    setXFilter(filters),
     setURL(
-      `${BETA_API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/objects`
+      `${BETA_API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/object-list`
     )
   ).then(response => response.data);

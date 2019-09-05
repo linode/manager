@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
+import Waypoint from 'react-waypoint';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
@@ -7,12 +8,17 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
+import Typography from 'src/components/core/Typography';
 import DocumentationButton from 'src/components/DocumentationButton';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import { getBucketObjects } from 'src/services/objectStorage/buckets';
+import {
+  getObjectList,
+  ObjectListParams
+} from 'src/services/objectStorage/buckets';
+import { getQueryParam } from 'src/utilities/queryParams';
+import { ExtendedObject, extendObject } from '../utilities';
 import ObjectTableContent from './ObjectTableContent';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -38,11 +44,85 @@ type CombinedProps = RouteComponentProps<{
 const BucketDetail: React.FC<CombinedProps> = props => {
   const { clusterId, bucketName } = props.match.params;
 
-  const { data, error, loading } = useAPIRequest<Linode.Object[]>(
-    () =>
-      getBucketObjects(clusterId, bucketName).then(response => response.data),
-    []
+  const [data, setData] = React.useState<ExtendedObject[]>([]);
+  const [loading, setLoading] = React.useState<boolean>(false);
+  const [error, setError] = React.useState<Linode.ApiFieldError[] | undefined>(
+    undefined
   );
+
+  const [allObjectsFetched, setAllObjectsFetched] = React.useState<boolean>(
+    false
+  );
+
+  const prefix = React.useMemo(
+    () => getQueryParam(props.location.search, 'prefix'),
+    [props.location.search]
+  );
+
+  /**
+   * Request objects with the prefix changes. This happens in one of two ways:
+   * 1. On component mount
+   * 2. When a folder is clicked (since a query param is added to the URL)
+   *
+   * The new objects REPLACE the old objects.
+   */
+  React.useEffect(() => {
+    const params: ObjectListParams = {
+      delimiter: '/',
+      prefix
+    };
+
+    setAllObjectsFetched(false);
+    setLoading(true);
+    setError(undefined);
+    getObjectList(clusterId, bucketName, params)
+      .then(response => {
+        setLoading(false);
+        if (response.data.length < 100) {
+          setAllObjectsFetched(true);
+        }
+        setData(response.data.map(object => extendObject(object)));
+      })
+      .catch(err => {
+        setLoading(false);
+        setError(err);
+      });
+  }, [props.location.search]);
+
+  /**
+   * Request additional objects when the next page is requested.
+   * The new objects do NOT replace the old objects, but instead are appended.
+   */
+  const getNextPage = () => {
+    const tail = data[data.length - 1];
+    if (!tail) {
+      return;
+    }
+    setLoading(true);
+    setError(undefined);
+
+    const params: ObjectListParams = {
+      delimiter: '/',
+      prefix,
+      marker: tail.name
+    };
+
+    getObjectList(clusterId, bucketName, params)
+      .then(response => {
+        setLoading(false);
+        if (response.data.length < 100) {
+          setAllObjectsFetched(true);
+        }
+        setData([
+          ...data,
+          ...response.data.map(object => extendObject(object))
+        ]);
+      })
+      .catch(err => {
+        setLoading(false);
+        setError(err);
+      });
+  };
 
   const classes = useStyles();
 
@@ -82,10 +162,19 @@ const BucketDetail: React.FC<CombinedProps> = props => {
               data={data}
               loading={loading}
               error={error}
+              prefix={prefix}
             />
           </TableBody>
         </Table>
+        {!loading && !allObjectsFetched && (
+          <Waypoint onEnter={getNextPage}>
+            <div />
+          </Waypoint>
+        )}
       </Paper>
+      {allObjectsFetched && data.length >= 100 && (
+        <Typography>You've reached the end of your bucket!</Typography>
+      )}
     </>
   );
 };
