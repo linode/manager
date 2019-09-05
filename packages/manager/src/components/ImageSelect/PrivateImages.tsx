@@ -34,7 +34,7 @@ export const PrivateImages: React.FC<Props> = props => {
   };
 
   return (
-    <Grid item xs={12}>
+    <Grid item>
       <Select
         label="Images"
         disabled={disabled}

@@ -18,12 +18,7 @@ export const AllImages: React.FC<Props> = props => {
   };
 
   return (
-    <Grid
-      container
-      direction="column"
-      wrap="nowrap"
-      style={{ padding: '10px' }}
-    >
+    <Grid item direction="column" wrap="nowrap" xs={12}>
       <Tabs
         value={activeTab}
         onChange={handleTabChange}

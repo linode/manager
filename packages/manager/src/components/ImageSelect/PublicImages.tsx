@@ -2,6 +2,7 @@ import { Image } from 'linode-js-sdk/lib/images';
 import { groupBy, uniq } from 'ramda';
 import * as React from 'react';
 
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Select, { Item } from 'src/components/EnhancedSelect';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import Grid from 'src/components/Grid';
@@ -11,6 +12,10 @@ import { getItemFromID } from 'src/utilities/getItemByID';
 import { distroIcons } from './icons';
 import ImageOption from './ImageOption';
 import { ImageProps as Props } from './ImageSelect';
+
+export const useStyles = makeStyles((theme: Theme) => ({
+  select: { minWidth: 480 }
+}));
 
 const getVendorFromImageID = (imageID: string | undefined, images: Image[]) => {
   const image = images.find(thisImage => thisImage.id === imageID);
@@ -32,6 +37,7 @@ export const sortByImageVersion = (a: ImageItem, b: ImageItem) => {
 };
 
 export const PublicImages: React.FC<Props> = props => {
+  const classes = useStyles();
   const {
     disabled,
     error,
@@ -105,14 +111,14 @@ export const PublicImages: React.FC<Props> = props => {
     : [];
 
   return (
-    <Grid container item direction="column" style={{ paddingTop: 0 }}>
-      <Grid item>
-        {error && (
+    <Grid container item direction="column">
+      {error && (
+        <Grid item>
           <Notice spacingTop={8} spacingBottom={0} error text={error} />
-        )}
-      </Grid>
-      <Grid container item direction="row" style={{ paddingTop: 0 }}>
-        <Grid item xs={6}>
+        </Grid>
+      )}
+      <Grid container item direction="row">
+        <Grid item>
           <Select
             disabled={disabled}
             label="Distributions"
@@ -121,11 +127,12 @@ export const PublicImages: React.FC<Props> = props => {
             onChange={handleSelectVendor}
             value={getItemFromID(vendors, selectedVendor)}
             components={{ Option: ImageOption, SingleValue }}
+            className={classes.select}
             {...reactSelectProps}
           />
         </Grid>
         {Boolean(selectedVendor) && (
-          <Grid item xs={6}>
+          <Grid item>
             <Select
               disabled={disabled}
               label="Version"
@@ -134,6 +141,7 @@ export const PublicImages: React.FC<Props> = props => {
               options={imageOptions}
               onChange={_handleSelectImage}
               value={getItemFromID(imageOptions, selectedImageID)}
+              className={classes.select}
               {...reactSelectProps}
             />
           </Grid>
