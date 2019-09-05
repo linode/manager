@@ -126,8 +126,10 @@ const trimOneClickFromLabel = (script: StackScript) => {
   };
 };
 
+const nonImageCreateTypes = ['fromStackScript', 'fromBackup', 'fromLinode'];
+
 const isNonDefaultImageType = (prevType: string, type: string) => {
-  return ['fromStackScript', 'fromBackup', 'fromLinode'].some(
+  return nonImageCreateTypes.some(
     thisEntry => prevType !== thisEntry && type === thisEntry
   );
 };
@@ -144,9 +146,9 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   componentDidUpdate(prevProps: CombinedProps) {
     /**
-     * if we're clicking on the stackscript create flow, we need to stop
-     * defaulting to Debian 9 because it's possible the user chooses a stackscript
-     * that isn't compatible with the defaulted image
+     * When switching to a creation flow where
+     * having a pre-selected image is problematic,
+     * deselect it.
      */
     if (isNonDefaultImageType(prevProps.createType, this.props.createType)) {
       this.setState({ selectedImageID: undefined });
@@ -164,11 +166,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
         selectedLinodeID: isNaN(+params.linodeID) ? undefined : +params.linodeID
       });
     }
-    if (
-      ['fromStackScript', 'fromBackup', 'fromLinode'].includes(
-        this.props.createType
-      )
-    ) {
+    if (nonImageCreateTypes.includes(this.props.createType)) {
       // If we're navigating directly to e.g. the clone page, don't select an image by default
       this.setState({ selectedImageID: undefined });
     }
@@ -323,6 +321,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           ? selectedImage.vendor
           : selectedImage.label
         : '';
+
+      if (createType === 'fromApp') {
+        // All 1-clicks are Debian so this isn't useful information.
+        // Once an app is
+        arg1 = '';
+      }
     }
 
     if (selectedRegionID) {
