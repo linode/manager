@@ -100,7 +100,7 @@ const ManagedPlaceholder: React.FC<CombinedProps> = props => {
         title="Just to confirm..."
         actions={actions}
       >
-        <Typography>
+        <Typography variant="subtitle1">
           Linode Managed is billed at{' '}
           <strong>$100 per month per Linode.</strong> {` `}
           You currently have{` `}
