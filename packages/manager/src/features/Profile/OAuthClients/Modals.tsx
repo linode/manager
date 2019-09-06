@@ -4,6 +4,7 @@ import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 
@@ -22,9 +23,21 @@ interface Props {
   isDeleting: boolean;
 }
 
+const useStyles = makeStyles((theme: Theme) => ({
+  key: {
+    wordBreak: 'break-word'
+  },
+  dialog: {
+    '& > div > div': {
+      maxWidth: 800
+    }
+  }
+}));
+
 type CombinedProps = Props;
 
 const Modals: React.FC<CombinedProps> = props => {
+  const classes = useStyles();
   const { modalErrors, label, resetClient, isResetting, closeDialogs } = props;
 
   return (
@@ -36,11 +49,17 @@ const Modals: React.FC<CombinedProps> = props => {
         })}
         open={props.secretSuccessOpen}
         onClose={props.closeDialogs}
+        className={classes.dialog}
       >
-        <Typography variant="body1">
+        <Typography>
           {`Here is your client secret! Store it securely, as it won't be shown again.`}
         </Typography>
-        <Notice typeProps={{ variant: 'body1' }} warning text={props.secret} />
+        <Notice
+          warning
+          text={props.secret}
+          spacingTop={24}
+          className={classes.key}
+        />
       </ConfirmationDialog>
 
       <ConfirmationDialog
