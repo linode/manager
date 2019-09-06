@@ -102,6 +102,9 @@ const BucketDetail: React.FC<CombinedProps> = props => {
     getObjectList(clusterId, bucketName, {
       delimiter,
       prefix,
+      // `marker` is used for Object Storage pagination. It is the name of
+      // the last file of the current set. Specifying a marker will get you
+      // the next X number of objects after the marker.
       marker: tail.name
     })
       .then(response => {
