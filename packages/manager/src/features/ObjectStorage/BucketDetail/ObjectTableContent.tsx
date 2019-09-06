@@ -2,7 +2,7 @@ import * as React from 'react';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import { ExtendedObject, isFolder } from '../utilities';
+import { ExtendedObject } from '../utilities';
 import FolderTableRow from './FolderTableRow';
 import ObjectTableRow from './ObjectTableRow';
 
@@ -12,11 +12,12 @@ interface Props {
   data: ExtendedObject[];
   loading: boolean;
   error?: Linode.ApiFieldError[];
+  nextPageError?: Linode.ApiFieldError[];
   prefix: string;
 }
 
-const ObjectTable: React.FC<Props> = props => {
-  const { clusterId, bucketName, data, loading, error, prefix } = props;
+const ObjectTableContent: React.FC<Props> = props => {
+  const { clusterId, bucketName, data, loading, error, nextPageError } = props;
 
   if (loading && data.length === 0) {
     return <TableRowLoading colSpan={6} />;
@@ -40,20 +41,32 @@ const ObjectTable: React.FC<Props> = props => {
     );
   }
 
+  // A folder is considered "empty" if `_shouldDisplayObject` is `false` for
+  // every object in the folder.
+  const isFolderEmpty = data.every(object => !object._shouldDisplayObject);
+
+  if (isFolderEmpty) {
+    return (
+      <TableRowEmptyState
+        colSpan={6}
+        message="No objects matching this prefix."
+      />
+    );
+  }
+
   return (
     <>
       {data.map(object => {
-        console.log(object.displayName);
-        if (!object.displayName || object.displayName.endsWith('/')) {
+        if (!object._shouldDisplayObject) {
           return null;
         }
 
-        if (isFolder(object)) {
+        if (object._isFolder) {
           return (
             <FolderTableRow
               key={object.name}
               folderName={object.name}
-              displayName={object.displayName}
+              displayName={object._displayName}
             />
           );
         }
@@ -63,15 +76,18 @@ const ObjectTable: React.FC<Props> = props => {
             key={object.name}
             clusterId={clusterId}
             bucketName={bucketName}
-            objectName={object.displayName}
+            objectName={object._displayName}
             objectSize={object.size}
             objectLastModified={object.last_modified}
           />
         );
       })}
       {loading && <TableRowLoading colSpan={12} transparent />}
+      {nextPageError && (
+        <TableRowError colSpan={12} message={nextPageError[0].reason} />
+      )}
     </>
   );
 };
 
-export default ObjectTable;
+export default React.memo(ObjectTableContent);

@@ -13,10 +13,8 @@ import DocumentationButton from 'src/components/DocumentationButton';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import {
-  getObjectList,
-  ObjectListParams
-} from 'src/services/objectStorage/buckets';
+import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
+import { getObjectList } from 'src/services/objectStorage/buckets';
 import { getQueryParam } from 'src/utilities/queryParams';
 import { ExtendedObject, extendObject } from '../utilities';
 import ObjectTableContent from './ObjectTableContent';
@@ -49,6 +47,9 @@ const BucketDetail: React.FC<CombinedProps> = props => {
   const [error, setError] = React.useState<Linode.ApiFieldError[] | undefined>(
     undefined
   );
+  const [nextPageError, setNextPageError] = React.useState<
+    Linode.ApiFieldError[] | undefined
+  >(undefined);
 
   const [allObjectsFetched, setAllObjectsFetched] = React.useState<boolean>(
     false
@@ -60,28 +61,25 @@ const BucketDetail: React.FC<CombinedProps> = props => {
   );
 
   /**
-   * Request objects with the prefix changes. This happens in one of two ways:
-   * 1. On component mount
-   * 2. When a folder is clicked (since a query param is added to the URL)
+   * Request objects when the prefix changes. This happens under two conditions:
    *
-   * The new objects REPLACE the old objects.
+   * 1. When the component mounts.
+   * 2. When a folder is clicked (since a query param is added to the URL).
+   *
+   * The new data REPLACES the old data, since objects in one "folder" shouldn't
+   * be in the same table as objects in a different "folder"
    */
   React.useEffect(() => {
-    const params: ObjectListParams = {
-      delimiter: '/',
-      prefix
-    };
-
     setAllObjectsFetched(false);
     setLoading(true);
     setError(undefined);
-    getObjectList(clusterId, bucketName, params)
+    getObjectList(clusterId, bucketName, { delimiter, prefix })
       .then(response => {
         setLoading(false);
         if (response.data.length < 100) {
           setAllObjectsFetched(true);
         }
-        setData(response.data.map(object => extendObject(object)));
+        setData(response.data.map(object => extendObject(object, prefix)));
       })
       .catch(err => {
         setLoading(false);
@@ -91,7 +89,7 @@ const BucketDetail: React.FC<CombinedProps> = props => {
 
   /**
    * Request additional objects when the next page is requested.
-   * The new objects do NOT replace the old objects, but instead are appended.
+   * The new objects are appended to the existing objects.
    */
   const getNextPage = () => {
     const tail = data[data.length - 1];
@@ -99,15 +97,13 @@ const BucketDetail: React.FC<CombinedProps> = props => {
       return;
     }
     setLoading(true);
-    setError(undefined);
+    setNextPageError(undefined);
 
-    const params: ObjectListParams = {
-      delimiter: '/',
+    getObjectList(clusterId, bucketName, {
+      delimiter,
       prefix,
       marker: tail.name
-    };
-
-    getObjectList(clusterId, bucketName, params)
+    })
       .then(response => {
         setLoading(false);
         if (response.data.length < 100) {
@@ -115,17 +111,16 @@ const BucketDetail: React.FC<CombinedProps> = props => {
         }
         setData([
           ...data,
-          ...response.data.map(object => extendObject(object))
+          ...response.data.map(object => extendObject(object, prefix))
         ]);
       })
       .catch(err => {
         setLoading(false);
-        setError(err);
+        setNextPageError(err);
       });
   };
 
   const classes = useStyles();
-
   return (
     <>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
@@ -162,11 +157,12 @@ const BucketDetail: React.FC<CombinedProps> = props => {
               data={data}
               loading={loading}
               error={error}
+              nextPageError={nextPageError}
               prefix={prefix}
             />
           </TableBody>
         </Table>
-        {!loading && !allObjectsFetched && (
+        {!loading && !allObjectsFetched && !error && !nextPageError && (
           <Waypoint onEnter={getNextPage}>
             <div />
           </Waypoint>
