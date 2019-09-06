@@ -22,6 +22,8 @@ import {
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import withDisplayType, { WithDisplayType } from '../withDisplayType';
 
+import { filterImagesByType } from 'src/store/image/image.helpers';
+
 type ClassNames =
   | 'root'
   | 'link'
@@ -185,13 +187,7 @@ const enhanced = compose<CombinedProps, Props>(
   withDisplayType,
   withImages((ownProps, imagesData, imagesLoading) => ({
     ...ownProps,
-    imagesData: Object.keys(imagesData).reduce((acc, eachKey) => {
-      if (imagesData[eachKey].is_public) {
-        acc[eachKey] = imagesData[eachKey];
-      }
-
-      return acc;
-    }, {})
+    imagesData: filterImagesByType(imagesData, 'public')
   })),
   styled
 );

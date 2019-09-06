@@ -33,6 +33,8 @@ import { MapState } from 'src/store/types';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
+import { filterImagesByType } from 'src/store/image/image.helpers';
+
 type ClassNames = 'backButton' | 'createTitle';
 
 const styles = (theme: Theme) =>
@@ -346,13 +348,7 @@ const enhanced = compose<CombinedProps, {}>(
   setDocs(StackScriptCreate.docs),
   withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
     ...ownProps,
-    imagesData: Object.keys(imagesData).reduce((acc, eachKey) => {
-      if (imagesData[eachKey].is_public) {
-        acc[eachKey] = imagesData[eachKey];
-      }
-
-      return acc;
-    }, {}),
+    imagesData: filterImagesByType(imagesData, 'public'),
     imagesLoading,
     imagesError
   })),

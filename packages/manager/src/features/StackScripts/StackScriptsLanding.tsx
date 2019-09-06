@@ -17,6 +17,8 @@ import Notice from 'src/components/Notice';
 import withImagesContainer from 'src/containers/withImages.container';
 import StackScriptPanel from './StackScriptPanel';
 
+import { filterImagesByType } from 'src/store/image/image.helpers';
+
 type ClassNames = 'root' | 'title';
 
 const styles = (theme: Theme) =>
@@ -105,13 +107,7 @@ interface WithImagesProps {
 export default compose<CombinedProps, {}>(
   withImagesContainer((ownProps, imagesData, imagesLoading, imagesError) => ({
     ...ownProps,
-    imagesData: Object.keys(imagesData).reduce((acc, eachKey) => {
-      if (imagesData[eachKey].is_public) {
-        acc[eachKey] = imagesData[eachKey];
-      }
-
-      return acc;
-    }, {}),
+    imagesData: filterImagesByType(imagesData, 'public'),
     imagesLoading,
     imagesError
   })),

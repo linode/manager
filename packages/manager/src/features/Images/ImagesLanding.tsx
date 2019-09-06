@@ -39,6 +39,8 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow from './ImageRow';
 import ImagesDrawer from './ImagesDrawer';
 
+import { filterImagesByType } from 'src/store/image/image.helpers';
+
 type ClassNames = 'root' | 'title';
 
 const styles = (theme: Theme) =>
@@ -483,12 +485,7 @@ const withPrivateImages = connect(
   (state: ApplicationState): WithPrivateImages => {
     const { error, data } = state.__resources.images;
     return {
-      imagesData: Object.keys(data).reduce((acc, eachKey) => {
-        if (!!data[eachKey].is_public) {
-          acc[eachKey] = data[eachKey];
-        }
-        return acc;
-      }, {}),
+      imagesData: filterImagesByType(data, 'private'),
       imagesLoading: state.__resources.images.loading,
       imagesError: error ? error.read : undefined
     };

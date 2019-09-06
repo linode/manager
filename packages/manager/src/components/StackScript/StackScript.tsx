@@ -15,6 +15,8 @@ import ExternalLink from 'src/components/ExternalLink';
 import ScriptCode from 'src/components/ScriptCode';
 import withImages from 'src/containers/withImages.container';
 
+import { filterImagesByType } from 'src/store/image/image.helpers';
+
 type CSSClasses =
   | 'root'
   | 'deployments'
@@ -191,13 +193,7 @@ const enhanced = compose<CombinedProps, Props>(
   styled,
   withImages((ownProps, imagesData, imagesLoading) => ({
     ...ownProps,
-    imagesData: Object.keys(imagesData).reduce((acc, eachKey) => {
-      if (imagesData[eachKey].is_public) {
-        acc[eachKey] = imagesData[eachKey];
-      }
-
-      return acc;
-    }, {}),
+    imagesData: filterImagesByType(imagesData, 'public'),
     imagesLoading
   }))
 );

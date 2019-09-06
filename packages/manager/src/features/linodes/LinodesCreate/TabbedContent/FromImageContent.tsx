@@ -24,6 +24,8 @@ import AddonsPanel from '../AddonsPanel';
 import SelectPlanPanel from '../SelectPlanPanel';
 import { renderBackupsDisplaySection } from './utils';
 
+import { filterImagesByType } from 'src/store/image/image.helpers';
+
 import {
   BaseFormStateAndHandlers,
   ReduxStatePropsAndSSHKeys,
@@ -116,9 +118,9 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
     } = this.props;
 
     const hasBackups = this.props.backupsEnabled || accountBackupsEnabled;
-    const privateImages = images.filter(image => !image.is_public);
+    const privateImages = filterImagesByType(images, 'private');
 
-    if (variant === 'private' && privateImages.length === 0) {
+    if (variant === 'private' && Object.keys(privateImages).length === 0) {
       return (
         <Grid item className={`${classes.main} mlMain py0`}>
           <Paper>
@@ -156,7 +158,7 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
           <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
           <ImageSelect
             title={imagePanelTitle || 'Choose an Image'}
-            images={images}
+            images={Object.keys(images).map(eachKey => images[eachKey])}
             handleSelectImage={this.props.updateImageID}
             selectedImageID={this.props.selectedImageID}
             error={hasErrorFor.image}

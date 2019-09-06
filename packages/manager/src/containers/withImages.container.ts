@@ -2,10 +2,6 @@ import { Image } from 'linode-js-sdk/lib/images';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 
-const isEmpty = (error?: Linode.ApiFieldError[]) => {
-  return error && error.length > 0;
-};
-
 export interface WithImages {
   images: Record<string, Image>;
   imagesLoading: boolean;
@@ -24,9 +20,7 @@ export default <TInner extends {}, TOuter extends {}>(
     const images = state.__resources.images.data;
     const imagesLoading = state.__resources.images.loading;
     const { error } = state.__resources.images;
-    const imageError = isEmpty(error ? error.read : undefined)
-      ? error!.read![0].reason
-      : undefined; // @todo use updated error handling utils after they're merged
+    const imageError = (error || {}).read ? error!.read![0].reason : undefined;
 
     return mapImagesToProps(ownProps, images, imagesLoading, imageError);
   });
