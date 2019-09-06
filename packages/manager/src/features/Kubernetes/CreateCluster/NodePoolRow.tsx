@@ -171,18 +171,19 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
         <Typography>{`${displayPrice(pool.totalMonthlyPrice)}/mo`}</Typography>
       </TableCell>
       <TableCell className={classes.removeButtonWrapper}>
-        <Button
-          buttonType="remove"
-          disabled={!editable}
-          deleteText={pool.queuedForDeletion ? 'Undo Remove' : 'Remove'}
-          data-testid={`delete-node-row-${idx}`}
-          onClick={() => handleDelete(idx)}
-          className={classNames({
-            [classes.link]: true,
-            [classes.disabled]: !editable,
-            [classes.removeButton]: true
-          })}
-        />
+        {editable && (
+          <Button
+            buttonType="remove"
+            deleteText={pool.queuedForDeletion ? 'Undo Remove' : 'Remove'}
+            data-testid={`delete-node-row-${idx}`}
+            onClick={() => handleDelete(idx)}
+            className={classNames({
+              [classes.link]: true,
+              [classes.disabled]: !editable,
+              [classes.removeButton]: true
+            })}
+          />
+        )}
       </TableCell>
     </TableRow>
   );
