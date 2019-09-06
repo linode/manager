@@ -188,7 +188,8 @@ export const styles = (theme: Theme) =>
       padding: 0,
       display: 'flex',
       color: theme.palette.text.primary,
-      cursor: 'pointer'
+      cursor: 'pointer',
+      overflow: 'hidden'
     },
     noOptionsMessage: {
       padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`
