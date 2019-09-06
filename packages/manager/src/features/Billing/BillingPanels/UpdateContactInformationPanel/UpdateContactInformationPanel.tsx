@@ -373,6 +373,18 @@ class UpdateContactInformationPanel extends React.Component<
         >
           <Grid container className={classes.stateZip}>
             <Grid item xs={12} sm={7}>
+              {/*
+                @todo use the <EnhancedSelect /> in favor of the
+                <TextField /> when the DB and API remove the 24 character limit.
+
+                The issue here is that the province/state short codes (for a subset of countries)
+                uses the ISO 3316 numeric format, which is not as helpful as just being able
+                to submit the full name of the region. What we'd like to do is PUT /account
+                with the full name of the province/state, but there is a server-side
+                24-character limitation which makes it impossible to submit some provinces.
+
+                Follow DBA-1066 for more information.
+              */}
               {/* <EnhancedSelect
                   label="State / Province"
                   errorText={errorMap.state}
