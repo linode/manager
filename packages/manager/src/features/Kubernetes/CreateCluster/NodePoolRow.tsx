@@ -25,6 +25,7 @@ type ClassNames =
   | 'link'
   | 'error'
   | 'toDelete'
+  | 'regularCell'
   | 'toAdd'
   | 'disabled'
   | 'removeButton'
@@ -54,7 +55,8 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.down('sm')]: {
         justifyContent: 'flex-end !important' as 'flex-end',
         padding: 0,
-        paddingRight: '0 !important' as '0'
+        paddingRight: '0 !important' as '0',
+        width: '10%'
       }
     },
     editableCount: {
@@ -67,7 +69,11 @@ const styles = (theme: Theme) =>
     },
     priceTableCell: {
       // prevents position shift as price grows/shrinks
-      minWidth: 130
+      minWidth: 130,
+      width: '20%'
+    },
+    regularCell: {
+      width: '25%'
     }
   });
 
@@ -142,10 +148,10 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
         [classes.error]: Boolean(errorMap.none)
       })}
     >
-      <TableCell parentColumn="Plan">
+      <TableCell parentColumn="Plan" className={classes.regularCell}>
         <Typography>{typeLabel}</Typography>
       </TableCell>
-      <TableCell parentColumn="Node Count">
+      <TableCell parentColumn="Node Count" className={classes.regularCell}>
         {editable ? (
           <TextField
             small
