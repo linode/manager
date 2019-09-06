@@ -3,7 +3,7 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
 import { compose as recompose } from 'recompose';
 
@@ -26,6 +26,7 @@ import { dcDisplayNames } from 'src/constants';
 import withLabelGenerator, {
   LabelProps
 } from 'src/features/linodes/LinodesCreate/withLabelGenerator';
+import deepCheckRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import {
@@ -620,6 +621,11 @@ const withRegions = regionsContainer(({ data, loading, error }) => ({
 }));
 
 export default recompose<CombinedProps, {}>(
+  deepCheckRouter(
+    (oldProps, newProps) =>
+      oldProps.location.search !== newProps.location.search,
+    true
+  ),
   withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
     ...ownProps,
     imagesData,
@@ -636,7 +642,6 @@ export default recompose<CombinedProps, {}>(
   withTypes,
   withLinodeActions,
   connected,
-  withRouter,
   withSnackbar,
   userSSHKeyHoc,
   withLabelGenerator
