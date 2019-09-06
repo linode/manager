@@ -81,9 +81,9 @@ const MutationNotification: React.FC<CombinedProps> = props => {
     }
 
     /** did we find successor meta data in GET /types or GET /types-legacy? */
-    const foundSuccessorInAllTypes = linodeType.successor
-      ? allTypes.find(({ id }) => id === linodeType.successor)
-      : null;
+    const foundSuccessorInAllTypes = allTypes.find(
+      ({ id }) => id === linodeType.successor
+    );
 
     if (allTypes.length > 0 && !!foundSuccessorInAllTypes) {
       setSuccessorMetaData(foundSuccessorInAllTypes);
