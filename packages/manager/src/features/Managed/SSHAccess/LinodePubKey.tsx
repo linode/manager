@@ -20,8 +20,12 @@ const DOC_URL =
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(3),
-    minHeight: '120px'
+    padding: theme.spacing(2.5),
+    minHeight: '112px'
+  },
+  copy: {
+    paddingLeft: theme.spacing(4),
+    paddingRight: theme.spacing(4)
   },
   errorState: {
     padding: theme.spacing(2) - 1,
@@ -55,17 +59,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     wordBreak: 'break-all',
     fontFamily: '"Ubuntu Mono", monospace, sans-serif',
     color: theme.color.grey1,
-    fontSize: '0.9rem'
+    fontSize: '0.9rem',
+    paddingRight: theme.spacing(2)
   },
   copyToClipboard: {
     [theme.breakpoints.up('md')]: {
       alignItems: 'center',
-      justifyContent: 'center',
+      justifyContent: 'flex-end',
       display: 'flex'
     },
     '& > button': {
-      paddingLeft: theme.spacing(1),
-      paddingRight: theme.spacing(1)
+      [theme.breakpoints.up('md')]: {
+        fontSize: 18
+      },
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2)
     }
   }
 }));
@@ -99,7 +107,7 @@ const LinodePubKey: React.FC<{}> = props => {
     <>
       <Paper className={classes.root}>
         <Grid container>
-          <Grid item xs={12} md={3}>
+          <Grid item xs={12} md={3} lg={4} className={classes.copy}>
             <Box display="flex" flexDirection="row" justifyContent="flex-start">
               <SSHKeyIcon className={classes.icon} />
               <Typography variant="h3">Linode Public Key</Typography>
@@ -114,7 +122,7 @@ const LinodePubKey: React.FC<{}> = props => {
           </Grid>
           {/* Hide the SSH key on x-small viewports */}
           <Hidden xsDown>
-            <Grid item xs={6} lg={7}>
+            <Grid item xs={6}>
               <Typography variant="subtitle1" className={classes.sshKey}>
                 {data.ssh_key}
                 {/* See NOTE A. If that CSS is removed, we can use the following instead: */}
