@@ -12,7 +12,10 @@ type ReloadIf<R> = (
 ) => boolean;
 
 /* tslint:disable */
-export default function reloadableWithRouter<P, R>(reloadIf: ReloadIf<R>) {
+export default function reloadableWithRouter<P, R>(
+  reloadIf: ReloadIf<R>,
+  alreadyHasRouter: boolean = false
+) {
   return function(Component: React.ComponentType<P & RouteComponentProps<R>>) {
     /* tslint:enable */
     class ReloadableComponent extends React.Component<
@@ -55,6 +58,11 @@ export default function reloadableWithRouter<P, R>(reloadIf: ReloadIf<R>) {
       }
     }
 
-    return withRouter(ReloadableComponent);
+    /**
+     * only wrap in withRouter if the router props don't already exist.
+     */
+    return alreadyHasRouter
+      ? ReloadableComponent
+      : withRouter(ReloadableComponent);
   };
 }

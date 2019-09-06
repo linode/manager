@@ -342,7 +342,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
         key: 'one-click',
         attr: { 'data-qa-one-click-nav-btn': true },
         onClick: () => {
-          // this.props.ldClient.track('one-click-nav-click');
           sendOneClickNavigationEvent('Primary Nav');
         }
       });
