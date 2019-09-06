@@ -16,6 +16,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
+import ImageSelect from 'src/components/ImageSelect';
 import Notice from 'src/components/Notice';
 import withImages from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/events';
@@ -31,7 +32,6 @@ import {
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import { RebuildDialog } from './RebuildDialog';
-import SelectImagePanel from './SelectImagePanel';
 
 type ClassNames = 'root' | 'error';
 
@@ -170,15 +170,15 @@ export const RebuildFromImage: React.StatelessComponent<
           <Grid item className={classes.root}>
             {/* `status` holds generalError messages */}
             {status && <Notice error>{status.generalError}</Notice>}
-
-            <SelectImagePanel
+            <ImageSelect
+              title="Select Image"
               images={imagesData}
               error={imagesError || errors.image}
-              updateFor={[classes, values.image, errors]}
               selectedImageID={values.image}
-              handleSelection={selected => setFieldValue('image', selected)}
-              data-qa-select-image
+              handleSelectImage={selected => setFieldValue('image', selected)}
               disabled={disabled}
+              variant="all"
+              data-qa-select-image
             />
             <AccessPanel
               password={values.root_pass}
