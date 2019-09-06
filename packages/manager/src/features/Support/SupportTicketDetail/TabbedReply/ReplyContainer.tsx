@@ -31,9 +31,11 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
+      width: `calc(100% + ${theme.spacing(1)}px)`,
       paddingLeft: theme.spacing(1),
       paddingRight: theme.spacing(1),
       [theme.breakpoints.up('sm')]: {
+        width: `calc(100% + ${theme.spacing(2)}px)`,
         paddingLeft: theme.spacing(2),
         paddingRight: theme.spacing(2)
       }
