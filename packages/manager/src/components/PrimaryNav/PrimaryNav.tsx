@@ -35,9 +35,7 @@ import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
 import { linkIsActive } from './utils';
 
-import withLDConsumer, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container';
+import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 
 interface PrimaryLink {
   display: string;
@@ -344,7 +342,8 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
         key: 'one-click',
         attr: { 'data-qa-one-click-nav-btn': true },
         onClick: () => {
-          this.props.ldClient.track('one-click-nav-click');
+          // this.props.ldClient.track('one-click-nav-click');
+          sendOneClickNavigationEvent('Primary Nav');
         }
       });
     }
@@ -647,6 +646,5 @@ export default compose<CombinedProps, Props>(
   withRouter,
   withFeatureFlagConsumer,
   connected,
-  withLDConsumer,
   styled
 )(PrimaryNav);

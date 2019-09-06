@@ -1,6 +1,6 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
-import { AccountCapability } from "linode-js-sdk/lib/account";
+import { AccountCapability } from 'linode-js-sdk/lib/account';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
@@ -30,6 +30,7 @@ import AddNewMenuItem, { MenuItems } from './AddNewMenuItem';
 import withLDConsumer, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
+import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 
 type CSSClasses =
   | 'wrapper'
@@ -151,11 +152,12 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
         title: 'One-Click App',
         onClick: e => {
           this.props.history.push('/linodes/create?type=One-Click');
-          this.props.ldClient.track('one-click-add-new-button');
+          // this.props.ldClient.track('one-click-add-new-button');
+          sendOneClickNavigationEvent('Add New Menu');
           this.handleClose();
           e.preventDefault();
         },
-        body: 'Provision an already configured One-Click App.',
+        body: 'Deploy blogs, game servers, and other web apps with ease.',
         ItemIcon: OneClickIcon,
         attr: { 'data-qa-one-click-add-new': true }
       });
