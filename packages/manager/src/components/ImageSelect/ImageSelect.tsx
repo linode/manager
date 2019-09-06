@@ -20,7 +20,6 @@ import ImageOption from './ImageOption';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginTop: theme.spacing(3),
     padding: theme.spacing(3)
   }
 }));
@@ -40,6 +39,7 @@ interface Props {
   variant?: Variant; // @todo no one uses "all", either use or remove
   disabled?: boolean;
   handleSelectImage: (selection?: string) => void;
+  classNames?: string;
 }
 
 export interface ImageProps
@@ -119,6 +119,7 @@ export const ImageSelect: React.FC<Props> = props => {
     selectedImageID,
     title,
     variant,
+    classNames,
     ...reactSelectProps
   } = props;
   const classes = useStyles();
@@ -153,13 +154,13 @@ export const ImageSelect: React.FC<Props> = props => {
         </Typography>
         <Grid container direction="row" wrap="nowrap" spacing={4}>
           <Grid container item direction="column">
-            <Grid item>
-              {error && (
+            {error && (
+              <Grid item>
                 <Notice spacingTop={8} spacingBottom={0} error text={error} />
-              )}
-            </Grid>
+              </Grid>
+            )}
             <Grid container item direction="row">
-              <Grid item xs={6}>
+              <Grid item xs={12}>
                 <Select
                   disabled={disabled}
                   label="Images"
@@ -172,6 +173,7 @@ export const ImageSelect: React.FC<Props> = props => {
                   )}
                   components={{ Option: ImageOption, SingleValue }}
                   {...reactSelectProps}
+                  className={classNames}
                 />
               </Grid>
             </Grid>

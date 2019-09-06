@@ -45,7 +45,7 @@ export const flags = {
 };
 
 export const selectStyles = {
-  menuList: (base: any) => ({ ...base, maxHeight: `60vh !important` })
+  menuList: (base: any) => ({ ...base, maxHeight: `40vh !important` })
 };
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
