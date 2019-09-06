@@ -287,3 +287,12 @@ export const generateTimeOfDay = (currentHour: number) => {
 
   return currentTimeOfDay;
 };
+
+export const sendOneClickNavigationEvent = (
+  whichButton: 'Add New Menu' | 'Primary Nav'
+) => {
+  return sendEvent({
+    category: 'One Click App Navigation',
+    action: `From ${whichButton}`
+  });
+};

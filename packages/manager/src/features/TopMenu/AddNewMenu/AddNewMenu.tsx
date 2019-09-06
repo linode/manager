@@ -1,6 +1,6 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
-import { AccountCapability } from "linode-js-sdk/lib/account";
+import { AccountCapability } from 'linode-js-sdk/lib/account';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
@@ -11,6 +11,7 @@ import DomainIcon from 'src/assets/addnewmenu/domain.svg';
 import KubernetesIcon from 'src/assets/addnewmenu/kubernetes.svg';
 import LinodeIcon from 'src/assets/addnewmenu/linode.svg';
 import NodebalancerIcon from 'src/assets/addnewmenu/nodebalancer.svg';
+import OneClickIcon from 'src/assets/addnewmenu/oneclick.svg';
 import VolumeIcon from 'src/assets/addnewmenu/volume.svg';
 import Button from 'src/components/Button';
 import Menu from 'src/components/core/Menu';
@@ -25,6 +26,11 @@ import { MapState } from 'src/store/types';
 import { openForCreating as openVolumeDrawerForCreating } from 'src/store/volumeDrawer';
 import { isKubernetesEnabled } from 'src/utilities/accountCapabilities';
 import AddNewMenuItem, { MenuItems } from './AddNewMenuItem';
+
+import withLDConsumer, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
+import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 
 type CSSClasses =
   | 'wrapper'
@@ -87,6 +93,7 @@ type CombinedProps = Props &
   WithStyles<CSSClasses> &
   RouteComponentProps<{}> &
   DispatchProps &
+  FeatureFlagConsumerProps &
   StateProps;
 
 const styled = withStyles(styles);
@@ -139,6 +146,21 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
         ItemIcon: DomainIcon
       }
     ];
+
+    if (this.props.flags.oneClickLocation === 'createmenu') {
+      items.push({
+        title: 'One-Click App',
+        onClick: e => {
+          this.props.history.push('/linodes/create?type=One-Click');
+          sendOneClickNavigationEvent('Add New Menu');
+          this.handleClose();
+          e.preventDefault();
+        },
+        body: 'Deploy blogs, game servers, and other web apps with ease.',
+        ItemIcon: OneClickIcon,
+        attr: { 'data-qa-one-click-add-new': true }
+      });
+    }
 
     if (isKubernetesEnabled(this.props.accountCapabilities)) {
       items.push({
@@ -245,5 +267,6 @@ const connected = connect(
 export default compose<CombinedProps, {}>(
   connected,
   withRouter,
+  withLDConsumer,
   styled
 )(AddNewMenu);
