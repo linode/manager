@@ -167,11 +167,10 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   React.useEffect(() => {
     const clusterID = +props.match.params.clusterID;
     if (clusterID) {
-      props.requestClusterForStore(clusterID)
+      props.requestClusterForStore(clusterID);
     }
 
     /**
-     * Once node pools have loaded:
      * If we're navigating from the action menu on the cluster list page,
      * we want to start with editing mode active.
      */
@@ -182,9 +181,9 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     );
 
     if (isEditing !== editing) {
-      setEditing(isEditing);
+      toggleEditing();
     }
-    
+
     const interval = setInterval(
       () => props.requestNodePools(+props.match.params.clusterID),
       10000

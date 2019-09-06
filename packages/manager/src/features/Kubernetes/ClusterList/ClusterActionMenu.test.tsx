@@ -1,5 +1,6 @@
 import { cleanup, fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
+import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { ClusterActionMenu } from './ClusterActionMenu';
 const requests = require.requireMock('../../../services/kubernetes');
 
@@ -18,7 +19,8 @@ const props = {
   clusterId: 123456,
   enqueueSnackbar: jest.fn(),
   closeSnackbar: jest.fn(),
-  openDialog: jest.fn()
+  openDialog: jest.fn(),
+  ...reactRouterProps
 };
 
 afterEach(cleanup);
