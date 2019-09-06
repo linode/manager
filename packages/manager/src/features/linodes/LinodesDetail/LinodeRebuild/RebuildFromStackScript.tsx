@@ -17,10 +17,10 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import ImageSelect from 'src/components/ImageSelect';
 import Notice from 'src/components/Notice';
 import withImages from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/events';
-import SelectImagePanel from 'src/features/linodes/LinodesCreate/SelectImagePanel';
 import userSSHKeyHoc, {
   UserSSHKeyProps
 } from 'src/features/linodes/userSSHKeyHoc';
@@ -293,11 +293,11 @@ export const RebuildFromStackScript: React.StatelessComponent<
               />
             )}
             {ss.images && ss.images.length > 0 ? (
-              <SelectImagePanel
+              <ImageSelect
                 variant="public"
+                title="Choose Image"
                 images={ss.images}
-                handleSelection={selected => setFieldValue('image', selected)}
-                updateFor={[classes, values.image, ss.images, errors]}
+                handleSelectImage={selected => setFieldValue('image', selected)}
                 selectedImageID={values.image}
                 error={errors.image}
               />

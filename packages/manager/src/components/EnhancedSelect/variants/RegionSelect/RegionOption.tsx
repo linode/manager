@@ -41,7 +41,9 @@ export const RegionOption: React.FC<CombinedProps> = props => {
       {...props}
     >
       <Grid container direction="row" alignItems="center" justify="flex-start">
-        <Grid item>{data.flag && data.flag()}</Grid>
+        <Grid item className="py0">
+          {data.flag && data.flag()}
+        </Grid>
         <Grid item>{label}</Grid>
       </Grid>
     </Option>

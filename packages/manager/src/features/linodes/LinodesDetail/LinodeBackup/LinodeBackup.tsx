@@ -479,7 +479,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     );
 
     const backupPlaceholderText = backupsMonthlyPrice ? (
-      <Typography>
+      <Typography variant="subtitle1">
         Three backup slots are executed and rotated automatically: a daily
         backup, a 2-7 day old backup, and 8-14 day old backup. To enable backups
         for just{' '}
@@ -489,7 +489,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         , click below.
       </Typography>
     ) : (
-      <Typography>
+      <Typography variant="subtitle1">
         Three backup slots are executed and rotated automatically: a daily
         backup, a 2-7 day old backup, and 8-14 day old backup. To enable backups
         just click below.

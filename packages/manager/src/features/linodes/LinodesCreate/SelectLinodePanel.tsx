@@ -27,8 +27,8 @@ const styles = (theme: Theme) =>
     root: {
       flexGrow: 1,
       width: '100%',
-      backgroundColor: theme.color.white,
-      marginBottom: theme.spacing(3)
+      backgroundColor: theme.color.white
+      // marginBottom: theme.spacing(3)
     },
     inner: {
       padding: theme.spacing(3)
