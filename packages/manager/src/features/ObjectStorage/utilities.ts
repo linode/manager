@@ -38,24 +38,11 @@ export const basename = (path: string, delimiter = '/'): string => {
   return path.substr(idx + 1);
 };
 
-export const formatFolderName = (folderName: string, delimiter = '/') => {
-  return basename(folderName.substr(0, folderName.length - 1));
-};
-
 export interface ExtendedObject extends Linode.Object {
   _isFolder: boolean;
   _displayName: string;
   _shouldDisplayObject: boolean;
 }
-
-/**
- * There are 3 conceptual types of objects:
- *
- * 1. Plain, objects (thinK: files).
- * 2. "Folders", which are really just objects whose name ends with a slash.
- * 3.
- *
- */
 
 export const extendObject = (
   object: Linode.Object,
