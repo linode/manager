@@ -3,10 +3,7 @@ import MockAdapter from 'axios-mock-adapter';
 import { baseRequest } from 'linode-js-sdk/lib/request';
 import * as React from 'react';
 import { Item } from 'src/components/EnhancedSelect/Select';
-import { API_ROOT } from '../../constants';
 import TagsInput from './TagsInput';
-
-const API_REQUEST = `${API_ROOT}/tags`;
 
 interface State {
   tags: Item[];
@@ -34,7 +31,7 @@ storiesOf('Tags Input', module)
   .add('Tags Input', () => {
     const mock = new MockAdapter(baseRequest);
 
-    mock.onGet(API_REQUEST).reply(200, {
+    mock.onGet('/tags').reply(200, {
       data: ['tag1', 'tag2', 'tag3', 'tag4'].map(tag => ({ label: tag }))
     });
     return <TagsInputDemo />;
@@ -42,6 +39,6 @@ storiesOf('Tags Input', module)
   .add('Tags Input with an error', () => {
     const mock = new MockAdapter(baseRequest);
 
-    mock.onGet(API_REQUEST).reply(500, {});
+    mock.onGet('/tags').reply(500, {});
     return <TagsInputDemo />;
   });

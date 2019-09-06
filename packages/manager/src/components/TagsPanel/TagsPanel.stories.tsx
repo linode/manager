@@ -4,12 +4,8 @@ import * as React from 'react';
 
 import MockAdapter from 'axios-mock-adapter';
 
-import { API_ROOT } from '../../constants';
-
 import Snackbar from 'src/components/SnackBar';
 import TagsPanel from './TagsPanel';
-
-const API_REQUEST = `${API_ROOT}/tags`;
 
 interface Props {
   tags: string[];
@@ -57,7 +53,7 @@ storiesOf('Tags Panel', module)
   .addDecorator(story => {
     const mock = new MockAdapter(baseRequest);
 
-    mock.onGet(API_REQUEST).reply(200, {
+    mock.onGet('/tags').reply(200, {
       data: ['tag1', 'tag2', 'tag3', 'tag4'].map(tag => ({ label: tag }))
     });
     return <div>{story()}</div>;
