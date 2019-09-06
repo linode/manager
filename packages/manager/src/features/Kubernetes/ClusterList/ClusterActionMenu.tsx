@@ -1,5 +1,6 @@
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
@@ -13,12 +14,12 @@ interface Props {
   openDialog: () => void;
 }
 
-type CombinedProps = Props & WithSnackbarProps;
+type CombinedProps = Props & RouteComponentProps<{}> & WithSnackbarProps;
 
 export const ClusterActionMenu: React.FunctionComponent<
   CombinedProps
 > = props => {
-  const { clusterId, enqueueSnackbar, openDialog } = props;
+  const { clusterId, enqueueSnackbar, history, openDialog } = props;
   const createActions = () => {
     return (closeMenu: Function): Action[] => {
       const actions = [
@@ -28,6 +29,17 @@ export const ClusterActionMenu: React.FunctionComponent<
             downloadKubeConfig();
             closeMenu();
             e.preventDefault();
+          }
+        },
+        {
+          title: 'Edit Cluster',
+          onClick: () => {
+            history.push({
+              pathname: `/kubernetes/clusters/${clusterId}`,
+              state: {
+                editing: true
+              }
+            })
           }
         },
         {
@@ -73,6 +85,6 @@ export const ClusterActionMenu: React.FunctionComponent<
   return <ActionMenu createActions={createActions()} />;
 };
 
-const enhanced = compose<CombinedProps, Props>(withSnackbar);
+const enhanced = compose<CombinedProps, Props>(withSnackbar, withRouter);
 
 export default enhanced(ClusterActionMenu);
