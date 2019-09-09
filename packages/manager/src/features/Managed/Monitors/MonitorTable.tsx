@@ -22,6 +22,9 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
+import withManagedIssues, {
+  ManagedIssuesProps
+} from 'src/containers/managedIssues.container';
 import withManagedServices, {
   DispatchProps
 } from 'src/containers/managedServices.container';
@@ -34,6 +37,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 
 import MonitorDrawer from '../MonitorDrawer';
+import HistoryDrawer from './HistoryDrawer';
 import MonitorTableContent from './MonitorTableContent';
 
 type ClassNames = 'labelHeader';
@@ -59,6 +63,7 @@ export type FormikProps = FormikBag<CombinedProps, ManagedServicePayload>;
 export type CombinedProps = Props &
   WithStyles<ClassNames> &
   DispatchProps &
+  ManagedIssuesProps &
   WithSnackbarProps;
 
 export const MonitorTable: React.FC<CombinedProps> = props => {
@@ -70,7 +75,11 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
     loading,
     monitors,
     groups,
-    credentials
+    credentials,
+    issues,
+    issuesError,
+    issuesLoading,
+    lastUpdated
   } = props;
 
   const {
@@ -263,6 +272,14 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
         groups={groups}
         credentials={credentials}
       />
+      <HistoryDrawer
+        open={true}
+        onClose={() => null}
+        monitorLabel="My-monitor"
+        issues={issues}
+        loading={issuesLoading && lastUpdated === 0}
+        error={issuesError.read}
+      />
     </>
   );
 };
@@ -270,6 +287,15 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
 const styled = withStyles(styles);
 const enhanced = compose<CombinedProps, Props>(
   styled,
+  withManagedIssues(
+    (ownProps, issuesLoading, lastUpdated, issues, issuesError) => ({
+      ...ownProps,
+      issuesLoading,
+      lastUpdated,
+      issues,
+      issuesError
+    })
+  ),
   withManagedServices(() => ({})),
   withSnackbar
 );
