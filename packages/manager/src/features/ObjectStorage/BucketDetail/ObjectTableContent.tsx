@@ -77,8 +77,14 @@ const ObjectTableContent: React.FC<Props> = props => {
             clusterId={clusterId}
             bucketName={bucketName}
             objectName={object._displayName}
-            objectSize={object.size}
-            objectLastModified={object.last_modified}
+            /**
+             * In reality, if there's no `size` or `last_modified`, we're
+             * probably dealing with a folder and will have already returned
+             * `null`. The OR fallbacks are to make TSC happy, and to safeguard
+             * in the event of the data being something we don't expect.
+             */
+            objectSize={object.size || 0}
+            objectLastModified={object.last_modified || ''}
           />
         );
       })}

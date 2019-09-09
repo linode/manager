@@ -74,6 +74,7 @@ export interface ObjectListParams {
   delimiter?: string;
   marker?: string;
   prefix?: string;
+  page_size?: number;
 }
 /**
  * Returns a list of Objects in a given Bucket.

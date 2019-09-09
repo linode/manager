@@ -19,6 +19,8 @@ import { getQueryParam } from 'src/utilities/queryParams';
 import { ExtendedObject, extendObject } from '../utilities';
 import ObjectTableContent from './ObjectTableContent';
 
+const page_size = 100;
+
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   divider: {
@@ -44,17 +46,25 @@ const BucketDetail: React.FC<CombinedProps> = props => {
 
   const [data, setData] = React.useState<ExtendedObject[]>([]);
   const [loading, setLoading] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<Linode.ApiFieldError[] | undefined>(
-    undefined
-  );
+
+  const [generalError, setGeneralError] = React.useState<
+    Linode.ApiFieldError[] | undefined
+  >(undefined);
+
+  // Errors that happen when fetching the next page should be kept separate,
+  // since we don't want to bomb the whole object listing table.
   const [nextPageError, setNextPageError] = React.useState<
     Linode.ApiFieldError[] | undefined
   >(undefined);
 
+  // This lets us know if we've reached the end of our bucket or folder,
+  // so that we don't allow for more infinite scrolling.
   const [allObjectsFetched, setAllObjectsFetched] = React.useState<boolean>(
     false
   );
 
+  // The prefix is used to organize objects in a bucket. We grab it from a
+  // query param so that it can be bookmarked.
   const prefix = React.useMemo(
     () => getQueryParam(props.location.search, 'prefix'),
     [props.location.search]
@@ -72,18 +82,23 @@ const BucketDetail: React.FC<CombinedProps> = props => {
   React.useEffect(() => {
     setAllObjectsFetched(false);
     setLoading(true);
-    setError(undefined);
-    getObjectList(clusterId, bucketName, { delimiter, prefix })
+    setGeneralError(undefined);
+    getObjectList(clusterId, bucketName, { delimiter, prefix, page_size })
       .then(response => {
         setLoading(false);
-        if (response.data.length < 100) {
+
+        // If there are less results than the page size we requested, we know
+        // we've reached the end of the bucket (or folder).
+        if (response.data.length < page_size) {
           setAllObjectsFetched(true);
         }
+
+        // Replace the old data with the new data.
         setData(response.data.map(object => extendObject(object, prefix)));
       })
       .catch(err => {
         setLoading(false);
-        setError(err);
+        setGeneralError(err);
       });
   }, [props.location.search]);
 
@@ -104,14 +119,20 @@ const BucketDetail: React.FC<CombinedProps> = props => {
       prefix,
       // `marker` is used for Object Storage pagination. It is the name of
       // the last file of the current set. Specifying a marker will get you
-      // the next X number of objects after the marker.
-      marker: tail.name
+      // the next page of objects after the marker.
+      marker: tail.name,
+      page_size
     })
       .then(response => {
         setLoading(false);
-        if (response.data.length < 100) {
+
+        // If there are less results than the page size we requested, we know
+        // we've reached the end of the bucket (or folder).
+        if (response.data.length < page_size) {
           setAllObjectsFetched(true);
         }
+
+        // Append the old data with the new data.
         setData([
           ...data,
           ...response.data.map(object => extendObject(object, prefix))
@@ -159,18 +180,23 @@ const BucketDetail: React.FC<CombinedProps> = props => {
               bucketName={bucketName}
               data={data}
               loading={loading}
-              error={error}
+              error={generalError}
               nextPageError={nextPageError}
               prefix={prefix}
             />
           </TableBody>
         </Table>
-        {!loading && !allObjectsFetched && !error && !nextPageError && (
+        {/* We shouldn't allow infinite scrolling if we're still loading,
+        if we've gotten all objects in the bucket (or folder), or if there
+        are errors. */}
+        {!loading && !allObjectsFetched && !generalError && !nextPageError && (
           <Waypoint onEnter={getNextPage}>
             <div />
           </Waypoint>
         )}
       </Paper>
+      {/* Only display this message if there were more than 100 objects to
+      begin with, as a matter of UX convention. */}
       {allObjectsFetched && data.length >= 100 && (
         <Typography>You've reached the end of your bucket!</Typography>
       )}

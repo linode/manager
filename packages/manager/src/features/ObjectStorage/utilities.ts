@@ -17,12 +17,8 @@ export const generateObjectUrl = (
 export const isFolder = (object: Linode.Object) =>
   !object.etag && !object.last_modified && !object.owner && !object.size;
 
-export const isCurrentDirectory = (object: Linode.Object, prefix: string) => {
-  return prefix.endsWith('/') && object.name === prefix;
-};
-
 /**
- * Returns the basename of the given path
+ * Returns the basename of the given path.
  *
  * @example
  * basename('my-path/folder/test.txt') // test.txt
