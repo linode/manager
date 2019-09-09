@@ -12,11 +12,10 @@ before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev 
   build-essential g++ google-chrome-stable curl
 install:
 - yarn global add lerna
-- lerna bootstrap
+- lerna bootstrap && lerna run build --stream --scope linode-js-sdk
 before_script:
 - lerna run --stream --scope linode-manager storybook &
 script:
-- lerna run build
 - lerna run --stream --scope linode-manager test -- --coverage --maxWorkers=2
 - lerna run --stream --scope linode-manager storybook:e2e
 - 'pkill -f selenium-standalone || :'
