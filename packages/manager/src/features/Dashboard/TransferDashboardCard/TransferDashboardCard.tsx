@@ -19,7 +19,8 @@ export type ClassNames =
   | 'grid'
   | 'poolUsageProgress'
   | 'initialLoader'
-  | 'title';
+  | 'title'
+  | 'overLimit';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -48,6 +49,10 @@ const styles = (theme: Theme) =>
     },
     title: {
       paddingBottom: theme.spacing(2)
+    },
+    overLimit: {
+      color: theme.palette.status.warningDark,
+      fontFamily: theme.font.bold
     }
   });
 
@@ -79,7 +84,7 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { errors, loading, used, quota } = this.state;
+    const { errors, loading, quota, used } = this.state;
     const { classes } = this.props;
 
     if (loading) {
@@ -95,7 +100,7 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
       return null;
     }
 
-    const poolUsagePct = (used / quota) * 100;
+    const poolUsagePct = used < quota ? (used / quota) * 100 : 100;
 
     return (
       <DashboardCard className={classes.card}>
@@ -114,13 +119,23 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
                 value={Math.ceil(poolUsagePct)}
                 className={classes.poolUsageProgress}
                 rounded
+                overLimit={quota < used}
               />
               <Grid container justify="space-between">
                 <Grid item style={{ marginRight: 10 }}>
                   <Typography>{used} GB Used</Typography>
                 </Grid>
                 <Grid item>
-                  <Typography>{quota - used} GB Available</Typography>
+                  <Typography>
+                    {quota > used ? (
+                      <span>{quota - used} GB Available</span>
+                    ) : (
+                      <span className={classes.overLimit}>
+                        {(quota - used).toString().replace(/\-/, '')} GB Over
+                        Quota
+                      </span>
+                    )}
+                  </Typography>
                 </Grid>
               </Grid>
             </Grid>
