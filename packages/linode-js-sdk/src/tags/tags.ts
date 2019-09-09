@@ -1,23 +1,13 @@
 import { API_ROOT } from 'src/constants';
-
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
   setXFilter
-} from '../index';
-
-type Page<T> = Linode.ResourcePage<T>;
-
-export interface Tag {
-  label: string;
-}
-
-export interface TagRequest {
-  label: string;
-  linodes?: number[];
-}
+} from 'src/request';
+import { ResourcePage as Page } from '../types';
+import { Tag, TagRequest } from './types';
 
 export const getTags = (params?: any, filter?: any) =>
   Request<Page<Tag>>(

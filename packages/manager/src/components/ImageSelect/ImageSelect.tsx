@@ -36,7 +36,7 @@ interface Props {
   selectedImageID?: string;
   images: Image[];
   error?: string;
-  variant?: Variant; // @todo no one uses "all", either use or remove
+  variant?: Variant;
   disabled?: boolean;
   handleSelectImage: (selection?: string) => void;
   classNames?: string;
@@ -140,7 +140,7 @@ export const ImageSelect: React.FC<Props> = props => {
 
   const onChange = (selection: ImageItem | null) => {
     if (selection === null) {
-      return handleSelectImage('');
+      return handleSelectImage(undefined);
     }
 
     return handleSelectImage(selection.value);

@@ -29,7 +29,7 @@ export const SSHAccessActionMenu: React.FC<CombinedProps> = props => {
             title: 'Disable',
             onClick: () => {
               updateLinodeSettings(linodeId, {
-                ssh: { access: true }
+                ssh: { access: false }
               })
                 .then(updatedLinodeSetting => {
                   updateOne(updatedLinodeSetting);
@@ -50,7 +50,7 @@ export const SSHAccessActionMenu: React.FC<CombinedProps> = props => {
             title: 'Enable',
             onClick: () => {
               updateLinodeSettings(linodeId, {
-                ssh: { access: false }
+                ssh: { access: true }
               })
                 .then(updatedLinodeSetting => {
                   updateOne(updatedLinodeSetting);
