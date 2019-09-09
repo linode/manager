@@ -2,35 +2,40 @@ import axios from 'axios';
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { useDropzone } from 'react-dropzone';
-import { makeStyles, Theme } from 'src/components/core/styles';
-import { getObjectURL } from 'src/services/objectStorage/objects';
+import Button from 'src/components/Button';
 import LinearProgress from 'src/components/core/LinearProgress';
-
-// const Axios = axios({});
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
+import { getObjectURL } from 'src/services/objectStorage/objects';
 
 const A = axios.create({});
 
 const useStyles = makeStyles((theme: Theme) => ({
   dropzone: {
-    flex: 1,
     display: 'flex',
-    flexDirection: 'column',
+    flexDirection: 'row',
     alignItems: 'center',
-    padding: '20px',
+    justifyContent: 'space-between',
+    padding: theme.spacing(4.5),
+    marginTop: theme.spacing(3),
     borderWidth: 2,
-    borderRadius: 2,
-    borderColor: '#eeeeee',
+    borderRadius: 8,
+    borderColor: theme.palette.primary.main,
     borderStyle: 'dashed',
-    backgroundColor: '#fafafa',
-    color: '#bdbdbd',
+    color: theme.palette.primary.main,
     outline: 'none',
-    transition: 'border .24s ease-in-out'
+    transition: 'border .24s ease-in-out',
+    height: 120
+  },
+  copy: {
+    color: theme.palette.primary.main
   },
   active: {
-    borderColor: '#2196f3'
+    borderColor: theme.palette.primary.light
   },
   accept: {
-    borderColor: '#00e676'
+    // @todo: What color to use here?
+    borderColor: theme.palette.primary.light
   },
   reject: {
     borderColor: '#ff1744'
@@ -77,7 +82,7 @@ const ObjectUpload: React.FC<CombinedProps> = props => {
             headers: {
               'Content-Type': file.type
             },
-            onUploadProgress: progressEvent => {
+            onUploadProgress: (progressEvent: ProgressEvent) => {
               setCompleted((progressEvent.loaded / progressEvent.total) * 100);
             },
             url: res.url
@@ -109,8 +114,9 @@ const ObjectUpload: React.FC<CombinedProps> = props => {
     getRootProps,
     isDragActive,
     isDragAccept,
-    isDragReject
-  } = useDropzone({ onDrop });
+    isDragReject,
+    open
+  } = useDropzone({ onDrop, noClick: true, noKeyboard: true });
 
   const className = React.useMemo(
     () =>
@@ -122,13 +128,16 @@ const ObjectUpload: React.FC<CombinedProps> = props => {
     [isDragActive, isDragAccept, isDragReject]
   );
 
-  console.log(completed);
-
   return (
     <>
       <div {...getRootProps({ className: `${classes.dropzone} ${className}` })}>
         <input {...getInputProps({ accept: 'application/json' })} />
-        <p>You can browse your device to upload files or drop them here.</p>
+        <Typography variant="subtitle1" className={classes.copy}>
+          You can browse your device to upload files or drop them here.
+        </Typography>
+        <Button buttonType="primary" onClick={open}>
+          Browse Files
+        </Button>
       </div>
       {completed !== 0 && completed !== 100 && (
         <LinearProgress variant="determinate" value={completed} />
