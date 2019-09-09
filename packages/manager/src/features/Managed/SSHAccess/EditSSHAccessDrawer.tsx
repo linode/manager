@@ -150,11 +150,11 @@ const EditSSHAccessDrawer: React.FC<CombinedProps> = props => {
                       control={
                         <Toggle
                           name="ssh.access"
-                          checked={!access}
+                          checked={access}
                           onChange={() => setFieldValue('ssh.access', !access)}
                         />
                       }
-                      label={access ? 'Access disabled' : 'Access enabled'}
+                      label={access ? 'Access enabled' : 'Access disabled'}
                     />
 
                     <TextField
