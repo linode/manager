@@ -174,13 +174,13 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     };
 
     if (imagesError || linodesRequestError) {
-      let errorText = pathOr(
+      let errorText: string | JSX.Element = pathOr<string | JSX.Element>(
         'Error loading linodes',
         [0, 'reason'],
         linodesRequestError
       );
 
-      if (errorText.toLowerCase() === 'this linode has been suspended') {
+      if (typeof errorText === 'string' && errorText.toLowerCase() === 'this linode has been suspended') {
         errorText = (
           <React.Fragment>
             One or more of your Linodes is suspended. Please{' '}

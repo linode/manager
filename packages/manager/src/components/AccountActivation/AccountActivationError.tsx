@@ -1,11 +1,11 @@
 import * as React from 'react';
 import { compose } from 'recompose';
+import withGlobalErrors, { Props, ReduxState } from 'src/containers/globalErrors.container'
 
-// interface Props { }
-
-type CombinedProps = any;
+type CombinedProps = Props;
 
 const AccountActivationError: React.FC<CombinedProps> = props => {
+
   return (
     <React.Fragment>
       Whoops! Looks like your account hasn't been activated yet.
@@ -13,4 +13,13 @@ const AccountActivationError: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, {}>(React.memo)(AccountActivationError);
+interface S {
+  hello: ReduxState
+}
+
+export default compose<CombinedProps, {}>(
+  React.memo,
+  withGlobalErrors<S, {}>((errors => ({
+    hello: errors
+  })))
+)(AccountActivationError);
