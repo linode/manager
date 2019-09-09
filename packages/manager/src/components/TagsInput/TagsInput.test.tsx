@@ -6,14 +6,11 @@ import TagsInput from './TagsInput';
 
 import MockAdapter from 'axios-mock-adapter';
 
-import { API_ROOT } from 'src/constants';
-
 const mockApi = new MockAdapter(baseRequest);
-const API_REQUEST = `${API_ROOT}/tags`;
 
 const mockTags = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'];
 
-mockApi.onGet(API_REQUEST).reply(200, {
+mockApi.onGet('/tags').reply(200, {
   data: mockTags.map(tag => ({ label: tag }))
 });
 
