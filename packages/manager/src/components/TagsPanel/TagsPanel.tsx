@@ -1,5 +1,6 @@
 import AddCircle from '@material-ui/icons/AddCircle';
 import * as classNames from 'classnames';
+import { getTags } from 'linode-js-sdk/lib/tags';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { clone } from 'ramda';
 import * as React from 'react';
@@ -15,7 +16,6 @@ import {
 import Typography from 'src/components/core/Typography';
 import Select from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
-import { getTags } from 'src/services/tags';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import TagsPanelItem from './TagsPanelItem';
 
