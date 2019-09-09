@@ -693,8 +693,13 @@ export const hasOauthError = (
   ...args: (Error | Linode.ApiFieldError[] | undefined)[]
 ) => {
   return args.some(eachError => {
-    return pathOr('', [0, 'reason'], eachError)
-      .toLowerCase()
-      .includes('oauth');
+    const cleanedError: string | JSX.Element = pathOr(
+      '',
+      [0, 'reason'],
+      eachError
+    );
+    return typeof cleanedError !== 'string'
+      ? false
+      : cleanedError.toLowerCase().includes('oauth');
   });
 };
