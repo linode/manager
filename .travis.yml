@@ -13,15 +13,14 @@ before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev 
 install:
 - yarn global add lerna
 - lerna bootstrap && lerna run build --stream --scope linode-js-sdk
-# before_script:
-# - lerna run --stream --scope linode-manager storybook &
+before_script:
+- lerna run --stream --scope linode-manager storybook &
 script:
-- yarn test src/components/TagsInput/TagsInput.test.tsx
-# - lerna run build --stream --scope linode-manager
-# - lerna run --stream --scope linode-manager test -- --coverage --maxWorkers=2
-# - lerna run --stream --scope linode-manager storybook:e2e
-# - 'pkill -f selenium-standalone || :'
-# - pkill -f storybook
+- lerna run build --stream --scope linode-manager
+- lerna run --stream --scope linode-manager test -- --coverage --maxWorkers=2
+- lerna run --stream --scope linode-manager storybook:e2e
+- 'pkill -f selenium-standalone || :'
+- pkill -f storybook
 env:
   global:
     - secure: hi9s9NL0PppRIWgLxxf465G5lA/vc/4ydpC0tBOSsfAME1xAbDCpDmhTCvIR0cV9bw0ayChExyRquUryGNWvsnksc7qP+JDlpAlYXRww44PS11GdABdF7AvrAjMUbCtOJzoEOuZwZH1RiRYr2p1rUdO7mxmsmcbxlxFeRBBoVt0diG107y1i41Ipw8NQhgYFzkJ/6LktBTDmMfw/K/xLEF8mWc6GrUJiUGpM3v+89w4n9GDD8sHRVs6SGDDoTHb3siIRaFtnMw0HFsb5hBLnW6WwPY/7jvmHctx938Zxma0bTs36Y0MkspsuwsFVqroLCqamnC70GRO9g7yGIX+GTfxvqM2b97J5gWmOFQVLUu8ciapCWUxbangSooiavtJg6AoRKrX2fUNvxd4iz0xiMmEQgXnRX7v9IYbcaUm5yXbKkm7b22UkP2+D6S2be2DGNzzV0BqxCEtKOn43Bp+Yrk6ox7jpDhTu6pYoM41KMNQ4a1h7KykiQaiJAzICwFS3QmU5QPpckSUJS68FOxop0saJVV3rB1s4SUSU/iQnLIy+LuCQRkXpO+lsauY0ccjQiTFlXtOFUNHXoOkMOlWEpSvtew0erA/mdWA31LOgO3ihyVrPbGwCUQ/FQOskWHvJ/kI/SMH3bKLyyoSKVKOwoiIXvt8XMDQ/0dysAuQ5KQk=

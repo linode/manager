@@ -31,7 +31,6 @@ describe('TagsInput', () => {
   );
 
   it('sets account tags based on API request', () => {
-    console.log(API_ROOT)
     expect(component.state('accountTags')).toHaveLength(mockTags.length);
   });
 
