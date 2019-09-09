@@ -1,7 +1,7 @@
 import { AccountCapability } from 'linode-js-sdk/lib/account';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
-import { Redirect, Route, Switch } from 'react-router-dom';
+import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
@@ -10,6 +10,11 @@ import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LandingLoading from 'src/components/LandingLoading';
 import NotFound from 'src/components/NotFound';
+import SupportLink from 'src/components/SupportLink';
+
+import withGlobalErrors, {
+  Props as GlobalErrorProps
+} from 'src/containers/globalErrors.container';
 
 import {
   isKubernetesEnabled as _isKubernetesEnabled,
@@ -17,15 +22,6 @@ import {
 } from './utilities/accountCapabilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  wrapper: {
-    padding: theme.spacing(3),
-    transition: theme.transitions.create('opacity'),
-    [theme.breakpoints.down('sm')]: {
-      paddingTop: theme.spacing(2),
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2)
-    }
-  },
   grid: {
     [theme.breakpoints.up('lg')]: {
       height: '100%'
@@ -47,9 +43,11 @@ interface Props {
   accountLoading: boolean;
   accountError?: APIError[];
   accountCapabilities: AccountCapability[];
+  location: RouteComponentProps['location'];
+  history: RouteComponentProps['history'];
 }
 
-type CombinedProps = Props;
+type CombinedProps = Props & GlobalErrorProps;
 
 const Account = DefaultLoader({
   loader: () => import('src/features/Account')
@@ -133,59 +131,74 @@ const MainContent: React.FC<CombinedProps> = props => {
 
   const isKubernetesEnabled = _isKubernetesEnabled(props.accountCapabilities);
 
+  if (props.globalErrors.account_unactivated) {
+    return (
+      <ErrorState
+        errorText={
+          <React.Fragment>
+            Looks like you have not activated your account yet. Please check
+            your email for activation instructions or{' '}
+            <SupportLink
+              title="Help me activate my account"
+              text="open a Support ticket for help."
+            />
+          </React.Fragment>
+        }
+      />
+    );
+  }
+
   return (
-    <div className={classes.wrapper} id="main-content">
-      <Grid container spacing={0} className={classes.grid}>
-        <Grid item className={classes.switchWrapper}>
-          <Switch>
-            <Route path="/linodes" component={LinodesRoutes} />
-            <Route path="/volumes" component={Volumes} exact strict />
-            <Redirect path="/volumes*" to="/volumes" />
-            <Route path="/nodebalancers" component={NodeBalancers} />
-            <Route path="/domains" component={Domains} />
-            <Route path="/managed" component={Managed} />
-            <Route exact path="/longview" component={Longview} />
-            <Route exact strict path="/images" component={Images} />
-            <Redirect path="/images*" to="/images" />
-            <Route path="/stackscripts" component={StackScripts} />
-            {getObjectStorageRoute(
-              props.accountLoading,
-              props.accountCapabilities,
-              props.accountError
-            )}
-            {isKubernetesEnabled && (
-              <Route path="/kubernetes" component={Kubernetes} />
-            )}
-            <Route path="/account" component={Account} />
-            <Route
-              exact
-              strict
-              path="/support/tickets"
-              component={SupportTickets}
-            />
-            <Route
-              path="/support/tickets/:ticketId"
-              component={SupportTicketDetail}
-              exact
-              strict
-            />
-            <Route path="/profile" component={Profile} />
-            <Route exact path="/support" component={Help} />
-            <Route
-              exact
-              strict
-              path="/support/search/"
-              component={SupportSearchLanding}
-            />
-            <Route path="/dashboard" component={Dashboard} />
-            <Route path="/search" component={SearchLanding} />
-            <Route path="/events" component={EventsLanding} />
-            <Redirect exact from="/" to="/dashboard" />
-            <Route component={NotFound} />
-          </Switch>
-        </Grid>
+    <Grid container spacing={0} className={classes.grid}>
+      <Grid item className={classes.switchWrapper}>
+        <Switch>
+          <Route path="/linodes" component={LinodesRoutes} />
+          <Route path="/volumes" component={Volumes} exact strict />
+          <Redirect path="/volumes*" to="/volumes" />
+          <Route path="/nodebalancers" component={NodeBalancers} />
+          <Route path="/domains" component={Domains} />
+          <Route path="/managed" component={Managed} />
+          <Route exact path="/longview" component={Longview} />
+          <Route exact strict path="/images" component={Images} />
+          <Redirect path="/images*" to="/images" />
+          <Route path="/stackscripts" component={StackScripts} />
+          {getObjectStorageRoute(
+            props.accountLoading,
+            props.accountCapabilities,
+            props.accountError
+          )}
+          {isKubernetesEnabled && (
+            <Route path="/kubernetes" component={Kubernetes} />
+          )}
+          <Route path="/account" component={Account} />
+          <Route
+            exact
+            strict
+            path="/support/tickets"
+            component={SupportTickets}
+          />
+          <Route
+            path="/support/tickets/:ticketId"
+            component={SupportTicketDetail}
+            exact
+            strict
+          />
+          <Route path="/profile" component={Profile} />
+          <Route exact path="/support" component={Help} />
+          <Route
+            exact
+            strict
+            path="/support/search/"
+            component={SupportSearchLanding}
+          />
+          <Route path="/dashboard" component={Dashboard} />
+          <Route path="/search" component={SearchLanding} />
+          <Route path="/events" component={EventsLanding} />
+          <Redirect exact from="/" to="/dashboard" />
+          <Route component={NotFound} />
+        </Switch>
       </Grid>
-    </div>
+    </Grid>
   );
 };
 
@@ -218,4 +231,7 @@ const getObjectStorageRoute = (
   return <Route path="/object-storage" component={component} />;
 };
 
-export default compose<CombinedProps, Props>(React.memo)(MainContent);
+export default compose<CombinedProps, Props>(
+  // React.memo,
+  withGlobalErrors()
+)(MainContent);

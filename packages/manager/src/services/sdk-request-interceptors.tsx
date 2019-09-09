@@ -1,4 +1,5 @@
 import { AxiosError, AxiosResponse } from 'axios';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import React from 'react';
 
@@ -42,7 +43,7 @@ export const handleError = (error: AxiosError) => {
   const url = pathOr('', ['response', 'config', 'url'], error);
   const method = pathOr('', ['response', 'config', 'method'], error);
   const status: number = pathOr<number>(0, ['response', 'status'], error);
-  const errors = pathOr(
+  const errors: APIError[] = pathOr<APIError[]>(
     [{ reason: DEFAULT_ERROR_MESSAGE }],
     ['response', 'data', 'errors'],
     error

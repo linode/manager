@@ -58,13 +58,7 @@ import MainContent from './MainContent';
 
 shim(); // allows for .finally() usage
 
-type ClassNames =
-  | 'hidden'
-  | 'appFrame'
-  | 'content'
-  | 'wrapper'
-  | 'grid'
-  | 'switchWrapper';
+type ClassNames = 'hidden' | 'appFrame' | 'wrapper' | 'content';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -75,6 +69,15 @@ const styles = (theme: Theme) =>
       flexDirection: 'column',
       backgroundColor: theme.bg.main,
       zIndex: 1
+    },
+    wrapper: {
+      padding: theme.spacing(3),
+      transition: theme.transitions.create('opacity'),
+      [theme.breakpoints.down('sm')]: {
+        paddingTop: theme.spacing(2),
+        paddingLeft: theme.spacing(2),
+        paddingRight: theme.spacing(2)
+      }
     },
     content: {
       flex: 1,
@@ -357,11 +360,15 @@ export class App extends React.Component<CombinedProps, State> {
                 isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
                 username={this.props.username}
               />
-              <MainContent
-                accountCapabilities={accountCapabilities}
-                accountError={accountError}
-                accountLoading={accountLoading}
-              />
+              <div className={classes.wrapper} id="main-content">
+                <MainContent
+                  accountCapabilities={accountCapabilities}
+                  accountError={accountError}
+                  accountLoading={accountLoading}
+                  history={this.props.history}
+                  location={this.props.location}
+                />
+              </div>
             </main>
             <Footer />
             <WelcomeBanner

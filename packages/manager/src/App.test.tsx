@@ -34,9 +34,7 @@ it('renders without crashing.', () => {
               appFrame: '',
               content: '',
               hidden: '',
-              wrapper: '',
-              grid: '',
-              switchWrapper: ''
+              wrapper: ''
             }}
             userId={123456}
             addNotificationsToLinodes={jest.fn()}
