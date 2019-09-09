@@ -1,14 +1,14 @@
 import { shallow } from 'enzyme';
+import { baseRequest } from 'linode-js-sdk/lib/request';
 import * as React from 'react';
 
 import TagsInput from './TagsInput';
 
-import axios from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
 import { API_ROOT } from 'src/constants';
 
-const mockApi = new MockAdapter(axios);
+const mockApi = new MockAdapter(baseRequest);
 const API_REQUEST = `${API_ROOT}/tags`;
 
 const mockTags = ['tag1', 'tag2', 'tag3', 'tag4', 'tag5'];
