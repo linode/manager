@@ -9,7 +9,12 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
-type ClassNames = 'root' | 'primaryColor' | 'loadingText' | 'rounded';
+type ClassNames =
+  | 'root'
+  | 'primaryColor'
+  | 'overLimit'
+  | 'loadingText'
+  | 'rounded';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -19,6 +24,11 @@ const styles = (theme: Theme) =>
     },
     primaryColor: {
       backgroundColor: theme.color.green
+    },
+    overLimit: {
+      '& > div': {
+        backgroundColor: theme.palette.status.warningDark
+      }
     },
     rounded: {
       borderRadius: theme.shape.borderRadius
@@ -36,6 +46,7 @@ interface Props {
   loadingText?: string;
   className?: string;
   rounded?: boolean;
+  overLimit?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -49,7 +60,8 @@ export class BarPercent extends React.PureComponent<CombinedProps, {}> {
       max,
       isFetchingValue,
       loadingText,
-      rounded
+      rounded,
+      overLimit
     } = this.props;
     return (
       <div className={className}>
@@ -66,7 +78,8 @@ export class BarPercent extends React.PureComponent<CombinedProps, {}> {
             barColorPrimary: classes.primaryColor
           }}
           className={classNames({
-            [classes.rounded]: rounded
+            [classes.rounded]: rounded,
+            [classes.overLimit]: overLimit
           })}
         />
       </div>
