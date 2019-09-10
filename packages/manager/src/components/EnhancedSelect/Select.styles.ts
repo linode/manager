@@ -51,7 +51,6 @@ export const styles = (theme: Theme) =>
       },
       '& .react-select__value-container': {
         width: '100%',
-        overflow: 'initial',
         '& > div': {
           width: '100%'
         },
@@ -188,8 +187,7 @@ export const styles = (theme: Theme) =>
       padding: 0,
       display: 'flex',
       color: theme.palette.text.primary,
-      cursor: 'pointer',
-      overflow: 'hidden'
+      cursor: 'pointer'
     },
     noOptionsMessage: {
       padding: `${theme.spacing(1)}px ${theme.spacing(2)}px`
