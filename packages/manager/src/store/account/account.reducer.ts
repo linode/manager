@@ -1,4 +1,5 @@
-import { Account } from "linode-js-sdk/lib/account";
+import produce from 'immer';
+import { Account } from 'linode-js-sdk/lib/account';
 import { Reducer } from 'redux';
 import { RequestableDataWithEntityError } from 'src/store/types';
 import { isType } from 'typescript-fsa';
@@ -25,65 +26,48 @@ export const defaultState: State = {
  * Reducer
  */
 const reducer: Reducer<State> = (state: State = defaultState, action) => {
-  if (isType(action, profileRequest)) {
-    return { ...state, loading: true };
-  }
+  return produce(state, draft => {
+    if (isType(action, profileRequest)) {
+      draft.loading = true;
+    }
 
-  if (isType(action, profileRequestSuccess)) {
-    const { payload } = action;
+    if (isType(action, profileRequestSuccess)) {
+      const { payload } = action;
 
-    return {
-      ...state,
-      loading: false,
-      data: payload,
-      lastUpdated: Date.now()
-    };
-  }
+      draft.loading = false;
+      draft.data = payload;
+      draft.lastUpdated = Date.now();
+    }
 
-  if (isType(action, profileRequestFail)) {
-    const { payload } = action;
+    if (isType(action, profileRequestFail)) {
+      const { payload } = action;
 
-    return {
-      ...state,
-      loading: false,
-      error: { ...state.error, read: payload }
-    };
-  }
+      draft.loading = false;
+      draft.error.read = payload;
+    }
 
-  if (isType(action, updateAccountActions.started)) {
-    return {
-      ...state,
-      loading: true,
-      error: { ...state.error, update: undefined }
-    };
-  }
+    if (isType(action, updateAccountActions.started)) {
+      draft.loading = true;
+      draft.error.update = undefined;
+    }
 
-  if (isType(action, updateAccountActions.done)) {
-    const { result } = action.payload;
+    if (isType(action, updateAccountActions.done)) {
+      const { result } = action.payload;
 
-    return {
-      ...state,
-      loading: false,
-      data: result,
-      lastUpdated: Date.now(),
-      error: { ...state.error, update: undefined, read: undefined }
-    };
-  }
+      draft.loading = false;
+      draft.data = result;
+      draft.lastUpdated = Date.now();
+      draft.error.update = undefined;
+      draft.error.read = undefined;
+    }
 
-  if (isType(action, updateAccountActions.failed)) {
-    const { error } = action.payload;
+    if (isType(action, updateAccountActions.failed)) {
+      const { error } = action.payload;
 
-    return {
-      ...state,
-      loading: false,
-      error: {
-        ...state.error,
-        update: error
-      }
-    };
-  }
-
-  return state;
+      draft.loading = false;
+      draft.error.update = error;
+    }
+  });
 };
 
 export default reducer;
