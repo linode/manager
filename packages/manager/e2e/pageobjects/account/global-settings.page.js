@@ -9,9 +9,9 @@ class GlobalSettings extends Page {
   get enableBackupsForAllLinodesDrawer() { return $(this.enableAllBackups.selector); }
 
   baseElementsDisplay(){
-      this.enrollInNewLinodesAutoBackupsToggle.waitForVisible(constants.wait.normal);
-      this.networkHelperToggle.waitForVisible(constants.wait.normal);
-      this.backupPricingPage.waitForVisible(constants.wait.normal);
+      this.enrollInNewLinodesAutoBackupsToggle.waitForDisplayed(constants.wait.normal);
+      this.networkHelperToggle.waitForDisplayed(constants.wait.normal);
+      this.backupPricingPage.waitForDisplayed(constants.wait.normal);
   }
 }
 
