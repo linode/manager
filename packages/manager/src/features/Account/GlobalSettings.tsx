@@ -16,7 +16,7 @@ import getEntitiesWithGroupsToImport, {
   emptyGroupedEntities,
   GroupedEntitiesForImport
 } from 'src/store/selectors/getEntitiesWithGroupsToImport';
-import { openGroupDrawer } from 'src/store/tagImportDrawer';
+import { openDrawer as openGroupDrawer } from 'src/store/tagImportDrawer';
 import { MapState } from 'src/store/types';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import shouldDisplayGroupImport from 'src/utilities/shouldDisplayGroupImportCTA';
