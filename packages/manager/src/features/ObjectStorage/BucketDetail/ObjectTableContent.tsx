@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
@@ -11,8 +12,8 @@ interface Props {
   bucketName: string;
   data: ExtendedObject[];
   loading: boolean;
-  error?: Linode.ApiFieldError[];
-  nextPageError?: Linode.ApiFieldError[];
+  error?: APIError[];
+  nextPageError?: APIError[];
   prefix: string;
 }
 

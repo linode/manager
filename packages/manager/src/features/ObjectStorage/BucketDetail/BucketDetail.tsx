@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import Waypoint from 'react-waypoint';
@@ -48,13 +49,13 @@ const BucketDetail: React.FC<CombinedProps> = props => {
   const [loading, setLoading] = React.useState<boolean>(false);
 
   const [generalError, setGeneralError] = React.useState<
-    Linode.ApiFieldError[] | undefined
+    APIError[] | undefined
   >(undefined);
 
   // Errors that happen when fetching the next page should be kept separate,
   // since we don't want to bomb the whole object listing table.
   const [nextPageError, setNextPageError] = React.useState<
-    Linode.ApiFieldError[] | undefined
+    APIError[] | undefined
   >(undefined);
 
   // This lets us know if we've reached the end of our bucket or folder,
