@@ -9,9 +9,7 @@ import {
   updateSettingsInStore
 } from './accountSettings.actions';
 
-export type State = RequestableDataWithEntityError<AccountSettings> & {
-  updateError?: Linode.ApiFieldError[];
-};
+export type State = RequestableDataWithEntityError<AccountSettings>;
 
 // DEFAULT STATE
 export const defaultState: State = {
