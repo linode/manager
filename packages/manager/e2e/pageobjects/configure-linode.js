@@ -377,9 +377,6 @@ class ConfigureLinode extends Page {
     this.generic();
     this.imageDistro().setValue(imageName);
     browser.enhancedSelect(this.imageDistro.selector, distro);
-
-    // const requestedImage = $(`[data-qa-select-card-heading="${imageName}"]`);
-    // requestedImage.click();
   }
 
   selectPlanTab(planType) {

@@ -328,11 +328,7 @@ exports.config = {
      * Hook that gets executed before the suite starts
      * @param {Object} suite suite details
      */
-    // beforeSuite: function (suite) {
-    //     // Click beta notice button
-    //     browser.waitForVisible('[data-qa-dialog-content] button');
-    //     browser.click('[data-qa-dialog-content] button');
-    // },
+
     /**
      * Function to be executed before a test (in Mocha/Jasmine) or a step (in Cucumber) starts.
      * @param {Object} test test details
