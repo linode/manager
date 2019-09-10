@@ -83,6 +83,7 @@ const BucketDetail: React.FC<CombinedProps> = props => {
     setAllObjectsFetched(false);
     setLoading(true);
     setGeneralError(undefined);
+    setData([]);
     getObjectList(clusterId, bucketName, { delimiter, prefix, page_size })
       .then(response => {
         setLoading(false);
@@ -111,6 +112,7 @@ const BucketDetail: React.FC<CombinedProps> = props => {
     if (!tail) {
       return;
     }
+
     setLoading(true);
     setNextPageError(undefined);
 

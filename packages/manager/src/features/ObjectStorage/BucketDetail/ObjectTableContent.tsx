@@ -47,10 +47,7 @@ const ObjectTableContent: React.FC<Props> = props => {
 
   if (isFolderEmpty) {
     return (
-      <TableRowEmptyState
-        colSpan={6}
-        message="No objects matching this prefix."
-      />
+      <TableRowEmptyState colSpan={6} message="No matching Objects found." />
     );
   }
 

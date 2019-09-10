@@ -1,4 +1,4 @@
-import { OBJECT_STORAGE_ROOT } from 'src/constants';
+import { OBJECT_STORAGE_DELIMITER, OBJECT_STORAGE_ROOT } from 'src/constants';
 
 export const generateObjectUrl = (
   clusterId: Linode.ClusterID,
@@ -23,7 +23,10 @@ export const isFolder = (object: Linode.Object) =>
  * @example
  * basename('my-path/folder/test.txt') // test.txt
  */
-export const basename = (path: string, delimiter = '/'): string => {
+export const basename = (
+  path: string,
+  delimiter = OBJECT_STORAGE_DELIMITER
+): string => {
   const idx = path.lastIndexOf(delimiter);
 
   // If the delimiter is not found in the string, there's nothing to do.
