@@ -127,7 +127,7 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
                 </Grid>
                 <Grid item>
                   <Typography>
-                    {quota > used ? (
+                    {quota >= used ? (
                       <span>{quota - used} GB Available</span>
                     ) : (
                       <span className={classes.overLimit}>
