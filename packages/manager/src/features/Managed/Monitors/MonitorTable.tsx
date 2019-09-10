@@ -1,4 +1,9 @@
 import { FormikBag } from 'formik';
+import { ManagedServicePayload } from 'linode-js-sdk/lib/managed';
+import {
+  ManagedCredential,
+  ManagedServiceMonitor
+} from 'linode-js-sdk/lib/managed/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -25,7 +30,6 @@ import TableSortCell from 'src/components/TableSortCell';
 import { ManagedIssuesProps } from 'src/containers/managedIssues.container';
 import { DispatchProps } from 'src/containers/managedServices.container';
 import { useDialog } from 'src/hooks/useDialog';
-import { ManagedServicePayload } from 'src/services/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
@@ -46,8 +50,8 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  monitors: Linode.ManagedServiceMonitor[];
-  credentials: Linode.ManagedCredential[];
+  monitors: ManagedServiceMonitor[];
+  credentials: ManagedCredential[];
   groups: string[];
   loading: boolean;
   error?: Linode.ApiFieldError[];

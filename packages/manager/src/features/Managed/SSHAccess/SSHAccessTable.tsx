@@ -1,4 +1,6 @@
 import produce from 'immer';
+import { getLinodeSettings } from 'linode-js-sdk/lib/managed';
+import { ManagedLinodeSetting } from 'linode-js-sdk/lib/managed/types';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -13,7 +15,6 @@ import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import useOpenClose from 'src/hooks/useOpenClose';
-import { getLinodeSettings } from 'src/services/managed';
 import { getAll } from 'src/utilities/getAll';
 import { DEFAULTS } from './common';
 import EditSSHAccessDrawer from './EditSSHAccessDrawer';
@@ -38,18 +39,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const request = () =>
-  getAll<Linode.ManagedLinodeSetting>(getLinodeSettings)().then(
-    res => res.data
-  );
+  getAll<ManagedLinodeSetting>(getLinodeSettings)().then(res => res.data);
 
 const SSHAccessTable: React.FC<{}> = () => {
   const classes = useStyles();
 
   const { data, loading, lastUpdated, transformData, error } = useAPIRequest<
-    Linode.ManagedLinodeSetting[]
+    ManagedLinodeSetting[]
   >(request, []);
 
-  const updateOne = (linodeSetting: Linode.ManagedLinodeSetting) => {
+  const updateOne = (linodeSetting: ManagedLinodeSetting) => {
     transformData(draft => {
       const idx = draft.findIndex(l => l.id === linodeSetting.id);
       draft[idx] = linodeSetting;
@@ -65,7 +64,7 @@ const SSHAccessTable: React.FC<{}> = () => {
   // For all intents and purposes, the default `user` is "root", and the default `port` is 22.
   // Surprisingly, these are returned as `null` from the API. We want to display the defaults
   // to the user, though, so we normalize the data here by exchanging `null` for the defaults.
-  const normalizedData: Linode.ManagedLinodeSetting[] = produce(data, draft => {
+  const normalizedData: ManagedLinodeSetting[] = produce(data, draft => {
     data.forEach((linodeSetting, idx) => {
       if (linodeSetting.ssh.user === null) {
         draft[idx].ssh.user = DEFAULTS.user;

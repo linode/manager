@@ -1,3 +1,7 @@
+import {
+  ManagedServiceMonitor,
+  MonitorStatus
+} from 'linode-js-sdk/lib/managed/types';
 import { monitors } from 'src/__data__/serviceMonitors';
 
 import {
@@ -10,7 +14,7 @@ import reducer, { defaultState } from './managed.reducer';
 
 const mockError = [{ reason: 'no reason' }];
 
-const addEntities = (entities: Linode.ManagedServiceMonitor[]) =>
+const addEntities = (entities: ManagedServiceMonitor[]) =>
   reducer(defaultState, requestServicesActions.done({ result: entities }));
 
 describe('Managed services reducer', () => {
@@ -43,7 +47,7 @@ describe('Managed services reducer', () => {
   it('should handle a disable action', () => {
     const disabledMonitor = {
       ...monitors[0],
-      status: 'disabled' as Linode.MonitorStatus
+      status: 'disabled' as MonitorStatus
     };
     const withEntities = addEntities(monitors);
     const newState = reducer(

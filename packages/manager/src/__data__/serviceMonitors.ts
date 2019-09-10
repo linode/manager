@@ -1,6 +1,7 @@
+import { ManagedServiceMonitor } from 'linode-js-sdk/lib/managed/types';
 import { credentials } from './managedCredentials';
 
-export const monitors: Linode.ManagedServiceMonitor[] = [
+export const monitors: ManagedServiceMonitor[] = [
   {
     consultation_group: '',
     timeout: 10,

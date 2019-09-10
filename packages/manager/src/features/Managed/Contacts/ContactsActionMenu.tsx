@@ -1,9 +1,10 @@
+import { ManagedContact } from 'linode-js-sdk/lib/managed/types';
 import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   contactId: number;
-  updateOrAdd: (contact: Linode.ManagedContact) => void;
+  updateOrAdd: (contact: ManagedContact) => void;
   openDialog: (id: number) => void;
   openDrawer: (contactId: number) => void;
 }

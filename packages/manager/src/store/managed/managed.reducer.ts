@@ -1,4 +1,5 @@
 import produce from 'immer';
+import { ManagedServiceMonitor } from 'linode-js-sdk/lib/managed/types';
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
 
@@ -18,7 +19,7 @@ import {
  * State
  */
 
-export type State = EntityState<Linode.ManagedServiceMonitor, EntityError>;
+export type State = EntityState<ManagedServiceMonitor, EntityError>;
 
 export const defaultState: State = {
   results: [],

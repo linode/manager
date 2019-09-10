@@ -1,3 +1,5 @@
+import { deleteContact } from 'linode-js-sdk/lib/managed';
+import { ManagedContact } from 'linode-js-sdk/lib/managed/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
@@ -19,7 +21,6 @@ import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 import { useDialog } from 'src/hooks/useDialog';
 import useOpenClose from 'src/hooks/useOpenClose';
-import { deleteContact } from 'src/services/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { ManagedContactGroup, Mode } from './common';
 import ContactDrawer from './ContactsDrawer';
@@ -44,11 +45,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  contacts: Linode.ManagedContact[];
+  contacts: ManagedContact[];
   loading: boolean;
   error?: Linode.ApiFieldError[];
   lastUpdated: number;
-  transformData: (fn: (contacts: Linode.ManagedContact[]) => void) => void;
+  transformData: (fn: (contacts: ManagedContact[]) => void) => void;
   update: () => void;
 }
 
@@ -67,7 +68,7 @@ const Contacts: React.FC<CombinedProps> = props => {
     enqueueSnackbar
   } = props;
 
-  const updateOrAdd = (contact: Linode.ManagedContact) => {
+  const updateOrAdd = (contact: ManagedContact) => {
     transformData(draft => {
       const idx = draft.findIndex(l => l.id === contact.id);
       // Add the contact if we don't already have it.
@@ -277,7 +278,7 @@ export default withSnackbar(Contacts);
  * A list of contacts to generate groups from.
  */
 export const generateGroupsFromContacts = (
-  contacts: Linode.ManagedContact[]
+  contacts: ManagedContact[]
 ): ManagedContactGroup[] => {
   const groups: ManagedContactGroup[] = [];
 

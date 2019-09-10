@@ -1,3 +1,4 @@
+import { MonitorStatus } from 'linode-js-sdk/lib/managed/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -10,7 +11,7 @@ import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
   monitorID: number;
-  status: Linode.MonitorStatus;
+  status: MonitorStatus;
   label: string;
   openDialog: (id: number, label: string) => void;
   openMonitorDrawer: (id: number, mode: string) => void;

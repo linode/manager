@@ -1,4 +1,3 @@
-import { omit } from 'ramda';
 import {
   createServiceMonitor as _create,
   deleteServiceMonitor as _delete,
@@ -7,7 +6,8 @@ import {
   getServices,
   ManagedServicePayload,
   updateServiceMonitor as _update
-} from 'src/services/managed';
+} from 'linode-js-sdk/lib/managed';
+import { omit } from 'ramda';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import {

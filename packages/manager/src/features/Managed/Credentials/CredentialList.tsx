@@ -1,4 +1,12 @@
 import { FormikBag } from 'formik';
+import {
+  createCredential,
+  CredentialPayload,
+  deleteCredential,
+  updateCredential,
+  updatePassword
+} from 'linode-js-sdk/lib/managed';
+import { ManagedCredential } from 'linode-js-sdk/lib/managed/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
@@ -18,13 +26,6 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
 import { useDialog } from 'src/hooks/useDialog';
-import {
-  createCredential,
-  CredentialPayload,
-  deleteCredential,
-  updateCredential,
-  updatePassword
-} from 'src/services/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   error?: Linode.ApiFieldError[];
-  credentials: Linode.ManagedCredential[];
+  credentials: ManagedCredential[];
   loading: boolean;
   update: () => void;
 }
