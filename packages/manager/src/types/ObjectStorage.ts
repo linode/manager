@@ -25,10 +25,10 @@ namespace Linode {
   }
 
   export interface Object {
-    size: number; // Size of object in bytes
-    owner: string;
-    etag: string;
-    last_modified: string; // Date
+    size: number | null; // Size of object in bytes
+    owner: string | null;
+    etag: string | null;
+    last_modified: string | null; // Date
     name: string;
   }
 

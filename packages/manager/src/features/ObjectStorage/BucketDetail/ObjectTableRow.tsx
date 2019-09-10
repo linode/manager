@@ -72,4 +72,4 @@ const ObjectTableRow: React.FC<Props> = props => {
   );
 };
 
-export default ObjectTableRow;
+export default React.memo(ObjectTableRow);
