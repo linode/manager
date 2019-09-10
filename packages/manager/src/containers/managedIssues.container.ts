@@ -23,7 +23,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 });
 
 export default <TInner extends {}, TOuter extends {}>(
-  mapManagedIssuesToProps: (
+  mapManagedIssuesToProps?: (
     ownProps: TOuter,
     issuesLoading: boolean,
     lastUpdated: number,
@@ -38,13 +38,17 @@ export default <TInner extends {}, TOuter extends {}>(
       const issuesError = state.__resources.managedIssues.error;
       const lastUpdated = state.__resources.managedIssues.lastUpdated;
 
-      return mapManagedIssuesToProps(
-        ownProps,
-        issuesLoading,
-        lastUpdated,
-        issues,
-        issuesError
-      );
+      if (mapManagedIssuesToProps) {
+        return mapManagedIssuesToProps(
+          ownProps,
+          issuesLoading,
+          lastUpdated,
+          issues,
+          issuesError
+        );
+      }
+
+      return { ...ownProps, issuesLoading, lastUpdated, issues, issuesError };
     },
     mapDispatchToProps
   );

@@ -45,13 +45,20 @@ const styles = (theme: Theme) =>
 interface Props {
   monitor: Linode.ManagedServiceMonitor;
   openDialog: (id: number, label: string) => void;
-  openDrawer: (id: number, mode: string) => void;
+  openMonitorDrawer: (id: number, mode: string) => void;
+  openHistoryDrawer: () => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 export const monitorRow: React.FunctionComponent<CombinedProps> = props => {
-  const { classes, monitor, openDialog, openDrawer } = props;
+  const {
+    classes,
+    monitor,
+    openDialog,
+    openHistoryDrawer,
+    openMonitorDrawer
+  } = props;
   const Icon = statusIconMap[monitor.status];
   return (
     <TableRow
@@ -89,7 +96,8 @@ export const monitorRow: React.FunctionComponent<CombinedProps> = props => {
           status={monitor.status}
           monitorID={monitor.id}
           openDialog={openDialog}
-          openDrawer={openDrawer}
+          openMonitorDrawer={openMonitorDrawer}
+          openHistoryDrawer={openHistoryDrawer}
           label={monitor.label}
         />
       </TableCell>
