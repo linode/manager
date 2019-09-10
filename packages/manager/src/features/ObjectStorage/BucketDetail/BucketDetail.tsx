@@ -194,6 +194,22 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
       });
   }
 
+  updateInPlace() {
+    const { bucketName, clusterId } = this.props.match.params;
+    const prefix = getQueryParam(this.props.location.search, 'prefix');
+
+    // @todo: If there are exactly 100 objects already, what do we do? Set a marker?
+    getObjectList(clusterId, bucketName, { delimiter, prefix, page_size }).then(
+      response => {
+        // Replace the old data with the new data.
+        this.setState({
+          data: response.data.map(object => extendObject(object, prefix))
+        });
+      }
+    );
+    // @todo: Do we need to catch this?
+  }
+
   render() {
     const { classes } = this.props;
     const {
@@ -238,7 +254,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
         <ObjectUpload
           clusterId={clusterId}
           bucketName={bucketName}
-          fn={() => null}
+          fn={() => this.updateInPlace()}
         />
         <Paper className={classes.objectTable}>
           <Table removeLabelonMobile aria-label="List of Bucket Objects">

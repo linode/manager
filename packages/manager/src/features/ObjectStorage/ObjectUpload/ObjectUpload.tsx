@@ -7,6 +7,7 @@ import LinearProgress from 'src/components/core/LinearProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { getObjectURL } from 'src/services/objectStorage/objects';
+import { readableBytes } from 'src/utilities/unitConversions';
 
 const A = axios.create({});
 
@@ -42,11 +43,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface ExtendedFile {
-  file: File;
-  uploadURL: string;
-}
-
 interface Props {
   clusterId: string;
   bucketName: string;
@@ -60,53 +56,37 @@ const ObjectUpload: React.FC<CombinedProps> = props => {
 
   const classes = useStyles();
 
-  const [acceptedFiles, setAcceptedFiles] = React.useState<ExtendedFile[]>([]);
-
   const [completed, setCompleted] = React.useState(0);
+  const [fileInProgress, setFileInProgress] = React.useState<File | null>(null);
 
   const onDrop = (newFiles: File[]) => {
-    const promises = newFiles.map(file =>
-      getObjectURL(clusterId, bucketName, file.name, 'PUT', {
-        content_type: file.type
-      })
-    );
-    Promise.all(promises)
-      .then(response => {
-        const extendedFiles: ExtendedFile[] = response.map((res, idx) => {
-          // Upload File
+    const file = newFiles[0];
+    setFileInProgress(file);
 
-          const file = newFiles[idx];
-          const config = {
-            method: 'PUT',
-            data: file,
-            headers: {
-              'Content-Type': file.type
-            },
-            onUploadProgress: (progressEvent: ProgressEvent) => {
-              setCompleted((progressEvent.loaded / progressEvent.total) * 100);
-            },
-            url: res.url
-          };
+    getObjectURL(clusterId, bucketName, file.name, 'PUT', {
+      content_type: file.type
+    }).then(({ url }) => {
+      const config = {
+        method: 'PUT',
+        data: file,
+        headers: {
+          'Content-Type': file.type
+        },
+        onUploadProgress: (progressEvent: ProgressEvent) => {
+          setCompleted((progressEvent.loaded / progressEvent.total) * 100);
+        },
+        url
+      };
 
-          A.request(config)
-            .then(res => {
-              console.log(res);
-              fn();
-            })
-            .catch(err => {
-              console.log(err);
-            });
-
-          return {
-            file: newFiles[idx],
-            uploadURL: res.url
-          };
+      A.request(config)
+        .then(res => {
+          console.log(res);
+          fn();
+        })
+        .catch(err => {
+          console.log(err);
         });
-        setAcceptedFiles(extendedFiles);
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    });
   };
 
   const {
@@ -132,17 +112,82 @@ const ObjectUpload: React.FC<CombinedProps> = props => {
     <>
       <div {...getRootProps({ className: `${classes.dropzone} ${className}` })}>
         <input {...getInputProps({ accept: 'application/json' })} />
-        <Typography variant="subtitle1" className={classes.copy}>
-          You can browse your device to upload files or drop them here.
-        </Typography>
-        <Button buttonType="primary" onClick={open}>
-          Browse Files
-        </Button>
+        {fileInProgress && completed !== 0 && completed !== 100 && (
+          <File
+            name={fileInProgress.name}
+            sizeInBytes={fileInProgress.size}
+            percentCompleted={completed}
+          />
+        )}
+        {!fileInProgress && (
+          <>
+            <Typography variant="subtitle1" className={classes.copy}>
+              You can browse your device to upload files or drop them here.
+            </Typography>
+            <Button buttonType="primary" onClick={open}>
+              Browse Files
+            </Button>
+          </>
+        )}
       </div>
-      {completed !== 0 && completed !== 100 && (
-        <LinearProgress variant="determinate" value={completed} />
-      )}
     </>
+  );
+};
+
+interface FileProps {
+  name: string;
+  sizeInBytes: number;
+  percentCompleted: number;
+}
+
+const useFileStyles = makeStyles((theme: Theme) => ({
+  progressBox: {
+    display: 'flex',
+    flex: 1,
+    alignItems: 'center',
+    position: 'relative',
+    height: theme.spacing(5.25)
+  },
+  progress: {
+    height: theme.spacing(5.25),
+    position: 'absolute',
+    width: '100%',
+    backgroundColor: theme.bg.main
+  },
+  barColorPrimary: {
+    backgroundColor: theme.bg.lightBlue
+  },
+  fileName: {
+    position: 'absolute',
+    left: theme.spacing(2)
+  },
+  fileSize: {
+    position: 'absolute',
+    right: theme.spacing(2)
+  }
+}));
+
+const File: React.FC<FileProps> = props => {
+  const classes = useFileStyles();
+
+  return (
+    <div className={classes.progressBox}>
+      <LinearProgress
+        variant="determinate"
+        value={props.percentCompleted}
+        classes={{
+          root: classes.progress,
+          barColorPrimary: classes.barColorPrimary
+        }}
+        className={classes.progress}
+      />
+      <Typography variant="body1" className={classes.fileName}>
+        {props.name}
+      </Typography>
+      <Typography variant="body1" className={classes.fileSize}>
+        {readableBytes(props.sizeInBytes).formatted}
+      </Typography>
+    </div>
   );
 };
 
