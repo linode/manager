@@ -1,16 +1,15 @@
-import { Grants } from 'linode-js-sdk/lib/account';
-import { Profile } from 'linode-js-sdk/lib/profile';
-import { ResourcePage } from 'linode-js-sdk/lib/types';
 import { API_ROOT } from 'src/constants';
-
+import { Grants } from '../account';
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
   setXFilter
-} from '../index';
+} from '../request';
+import { ResourcePage } from '../types';
 import { updateProfileSchema } from './profile.schema';
+import { Profile, TrustedDevice } from './types';
 
 /**
  * getProfile
@@ -73,7 +72,7 @@ export const getMyGrants = () =>
  * Returns a paginated list of all trusted devices associated with the user's profile.
  */
 export const getTrustedDevices = (params: any, filter: any) =>
-  Request<ResourcePage<Linode.Device>>(
+  Request<ResourcePage<TrustedDevice>>(
     setURL(`${API_ROOT}/profile/devices`),
     setMethod('GET'),
     setXFilter(filter),

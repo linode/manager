@@ -1,5 +1,6 @@
 import { Event } from '../account/types';
 import { IPAddress, IPRange } from '../networking/types';
+import { SSHKey } from '../profile/types';
 
 export type Hypervisor = 'kvm' | 'zen';
 
@@ -332,13 +333,6 @@ export interface LinodeCloneData {
   tags?: string[] | null;
   configs?: number[];
   disks?: number[];
-}
-
-export interface SSHKey {
-  created: string;
-  id: number;
-  label: string;
-  ssh_key: string;
 }
 
 export interface RebuildRequest {
