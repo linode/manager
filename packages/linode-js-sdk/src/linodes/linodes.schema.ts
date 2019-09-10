@@ -56,6 +56,7 @@ export const CreateLinodeSchema = object({
   stackscript_data,
   booted: boolean().notRequired(),
   label: string()
+    .transform(v => (v === '' ? undefined : v))
     .notRequired()
     .min(3, 'Label must contain between 3 and 32 characters.')
     .max(32, 'Label must contain between 3 and 32 characters.'),
@@ -119,6 +120,7 @@ const backups = object({
 
 export const UpdateLinodeSchema = object({
   label: string()
+    .transform(v => (v === '' ? undefined : v))
     .notRequired()
     .min(3, 'Label must contain between 3 and 32 characters.')
     .max(32, 'Label must contain between 3 and 32 characters.'),
