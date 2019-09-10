@@ -1,5 +1,6 @@
 import * as classNames from 'classnames';
-import { LinodeBackups, LinodeStatus } from 'linode-js-sdk/lib/linodes'
+import { Notification } from 'linode-js-sdk/lib/account';
+import { Config, LinodeBackups, LinodeStatus } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -46,7 +47,7 @@ interface Props {
     bootAction: Action,
     linodeID: number,
     linodeLabel: string,
-    linodeConfigs: Linode.Config[]
+    linodeConfigs: Config[]
   ) => void;
 }
 
@@ -223,7 +224,7 @@ export default enhanced(LinodeRow);
 
 export const RenderFlag: React.StatelessComponent<{
   mutationAvailable: boolean;
-  linodeNotifications: Linode.Notification[];
+  linodeNotifications: Notification[];
   classes: any;
 }> = props => {
   /*

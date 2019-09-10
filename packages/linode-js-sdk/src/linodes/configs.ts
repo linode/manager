@@ -6,16 +6,12 @@ import Request, {
   setURL,
   setXFilter
 } from '../request';
-import { ResourcePage as Page } from '../types'
+import { ResourcePage as Page } from '../types';
 import {
   CreateLinodeConfigSchema,
   UpdateLinodeConfigSchema
 } from './linodes.schema';
-import {
-  Config,
-  LinodeConfigCreationData
-} from './types'
-
+import { Config, LinodeConfigCreationData } from './types';
 
 /**
  * getLinodeConfigs

@@ -6,7 +6,7 @@ import Request, {
   setURL,
   setXFilter
 } from '../request';
-import { ResourcePage as Page } from '../types'
+import { ResourcePage as Page } from '../types';
 import { Volume } from '../volumes/types';
 import { CreateLinodeSchema, UpdateLinodeSchema } from './linodes.schema';
 import { CreateLinodeRequest, Linode } from './types';

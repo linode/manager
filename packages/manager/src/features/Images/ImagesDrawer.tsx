@@ -1,5 +1,5 @@
 import { createImage, updateImage } from 'linode-js-sdk/lib/images';
-import { getLinodeDisks } from 'linode-js-sdk/lib/linodes';
+import { Disk, getLinodeDisks } from 'linode-js-sdk/lib/linodes';
 import { compose, equals } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -46,7 +46,7 @@ export interface Props {
   imageID?: string;
   label?: string;
   // Only used from LinodeDisks to pre-populate the selected Disk
-  disks?: Linode.Disk[];
+  disks?: Disk[];
   selectedDisk: string | null;
   onClose: () => void;
   changeDisk: (disk: string | null) => void;
@@ -58,7 +58,7 @@ export interface Props {
 }
 
 interface State {
-  disks: Linode.Disk[];
+  disks: Disk[];
   notice?: string;
   errors?: Linode.ApiFieldError[];
 }

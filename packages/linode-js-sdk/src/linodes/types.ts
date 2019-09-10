@@ -1,5 +1,5 @@
 import { Event } from '../account/types';
-import { IPAddress, IPRange } from '../networking/types'
+import { IPAddress, IPRange } from '../networking/types';
 
 export type Hypervisor = 'kvm' | 'zen';
 

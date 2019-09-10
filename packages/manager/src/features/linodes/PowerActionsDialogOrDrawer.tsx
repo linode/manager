@@ -1,4 +1,9 @@
-import { linodeBoot, linodeReboot, linodeShutdown } from 'linode-js-sdk/lib/linodes';
+import {
+  Config,
+  linodeBoot,
+  linodeReboot,
+  linodeShutdown
+} from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -10,7 +15,6 @@ import Typography from 'src/components/core/Typography';
 import { resetEventsPolling } from 'src/events';
 import LinodeConfigDrawer from 'src/features/LinodeConfigSelectionDrawer';
 
-
 export type Action = 'Reboot' | 'Power Off' | 'Power On';
 
 interface Props {
@@ -20,7 +24,7 @@ interface Props {
   isOpen: boolean;
   close: () => void;
   /** if a Linode has multiple configs, we need to boot a specific config */
-  linodeConfigs?: Linode.Config[];
+  linodeConfigs?: Config[];
 }
 
 type CombinedProps = Props;

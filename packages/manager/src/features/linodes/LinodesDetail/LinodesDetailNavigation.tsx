@@ -1,3 +1,4 @@
+import { Config } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import {
   matchPath,
@@ -195,7 +196,7 @@ const matches = (p: string) => {
 
 interface ContextProps {
   linodeId: number;
-  linodeConfigs: Linode.Config[];
+  linodeConfigs: Config[];
   linodeLabel: string;
   linodeRegion: string;
   readOnly: boolean;

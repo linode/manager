@@ -1,4 +1,9 @@
 import browser from 'browser-detect';
+import {
+  Notification,
+  NotificationSeverity,
+  NotificationType
+} from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { compose } from 'recompose';
@@ -84,7 +89,7 @@ const userAgentDetection = () => {
 };
 
 class UserNotificationsMenu extends React.Component<CombinedProps, State> {
-  static displayedEvents: Linode.NotificationType[] = [
+  static displayedEvents: NotificationType[] = [
     'outage',
     'payment_due',
     'ticket_important',
@@ -189,12 +194,12 @@ class UserNotificationsMenu extends React.Component<CombinedProps, State> {
     this.setState({ anchorEl: undefined });
 }
 
-const isPrivacyPolicityNotification = (n: Linode.Notification) =>
+const isPrivacyPolicityNotification = (n: Notification) =>
   n.type === `notice` && n.label === `We've updated our policies.`;
 
 const reduceSeverity = (
-  result: Linode.NotificationSeverity | null,
-  { severity, type }: Linode.Notification
+  result: NotificationSeverity | null,
+  { severity, type }: Notification
 ) => {
   if (result === 'major' || severity === 'major' || type === 'maintenance') {
     return 'major';
@@ -212,12 +217,12 @@ const reduceSeverity = (
 const styled = withStyles(styles);
 
 interface StateProps {
-  notifications: Linode.Notification[];
+  notifications: Notification[];
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => ({
   notifications: (state.__resources.notifications.data || []).reduce(
-    (result: Linode.Notification[], notification) => {
+    (result: Notification[], notification) => {
       /** Filter out any notifications that do not meet our expectations. */
       if (
         !notification.message ||

@@ -2,7 +2,12 @@ import { omit } from 'ramda';
 import { API_ROOT } from 'src/constants';
 import Request, { setData, setMethod, setURL } from '../request';
 import { RebuildLinodeSchema } from './linodes.schema';
-import { Linode, LinodeCloneData, RebuildRequest, RescueRequestObject } from './types'
+import {
+  Linode,
+  LinodeCloneData,
+  RebuildRequest,
+  RescueRequestObject
+} from './types';
 
 /**
  * linodeBoot

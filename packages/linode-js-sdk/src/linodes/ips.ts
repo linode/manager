@@ -2,7 +2,7 @@ import { API_ROOT } from 'src/constants';
 import { IPAddress } from '../networking/types';
 import Request, { setData, setMethod, setURL } from '../request';
 import { IPAllocationSchema } from './linodes.schema';
-import { IPAllocationRequest, LinodeIPsResponse } from './types'
+import { IPAllocationRequest, LinodeIPsResponse } from './types';
 
 /**
  * getLinodeIPs
@@ -52,9 +52,7 @@ export const removeIPAddress = (payload: {
 }) => {
   return Request<{}>(
     setURL(
-      `${API_ROOT}/linode/instances/${payload.linodeID}/ips/${
-      payload.IPAddress
-      }`
+      `${API_ROOT}/linode/instances/${payload.linodeID}/ips/${payload.IPAddress}`
     ),
     setMethod('DELETE')
   );

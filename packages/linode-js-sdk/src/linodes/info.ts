@@ -1,8 +1,8 @@
 import { NetworkUtilization } from 'linode-js-sdk/lib/account';
 import { API_ROOT } from 'src/constants';
-import { NetworkUtilization } from '../account/types'
+import { NetworkUtilization } from '../account/types';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
-import { ResourcePage as Page } from '../types'
+import { ResourcePage as Page } from '../types';
 import { Kernel, LinodeType as Type, Stats } from './types';
 
 /**

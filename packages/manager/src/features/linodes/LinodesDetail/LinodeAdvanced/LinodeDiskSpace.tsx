@@ -1,3 +1,4 @@
+import { Disk } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
 import Grid from 'src/components/core/Grid';
@@ -45,7 +46,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  disks: Linode.Disk[];
+  disks: Disk[];
   totalDiskSpace: number;
 }
 
@@ -106,7 +107,7 @@ export class LinodeDiskSpace extends React.PureComponent<CombinedProps> {
 /**
  * add all the used disk space together
  */
-export const addUsedDiskSpace = (disks: Linode.Disk[]) => {
+export const addUsedDiskSpace = (disks: Disk[]) => {
   return disks.reduce((accum, eachDisk) => eachDisk.size + accum, 0);
 };
 

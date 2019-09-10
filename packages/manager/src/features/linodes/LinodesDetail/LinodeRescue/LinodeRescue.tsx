@@ -1,5 +1,5 @@
 import { GrantLevel } from 'linode-js-sdk/lib/account';
-import { rescueLinode } from 'linode-js-sdk/lib/linodes';
+import { Config, rescueLinode } from 'linode-js-sdk/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { assoc, clamp, pathOr } from 'ramda';
 import * as React from 'react';
@@ -77,7 +77,7 @@ interface State {
     disks: ExtendedDisk[];
     volumes: ExtendedVolume[];
   };
-  config?: Linode.Config;
+  config?: Config;
   counter: number;
 }
 

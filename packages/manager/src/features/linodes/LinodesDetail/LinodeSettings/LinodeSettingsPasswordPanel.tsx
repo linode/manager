@@ -1,5 +1,9 @@
 import { GrantLevel } from 'linode-js-sdk/lib/account';
-import { changeLinodeDiskPassword, getLinodeDisks } from 'linode-js-sdk/lib/linodes';
+import {
+  changeLinodeDiskPassword,
+  Disk,
+  getLinodeDisks
+} from 'linode-js-sdk/lib/linodes';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
@@ -130,7 +134,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
     )
       .then(response =>
         response.data
-          .filter((disk: Linode.Disk) => disk.filesystem !== 'swap')
+          .filter((disk: Disk) => disk.filesystem !== 'swap')
           .map(disk => ({
             value: disk.id,
             label: disk.label,

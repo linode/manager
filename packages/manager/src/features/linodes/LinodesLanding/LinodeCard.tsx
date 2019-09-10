@@ -1,5 +1,5 @@
-import { Event } from 'linode-js-sdk/lib/account';
-import { LinodeBackups, LinodeStatus } from 'linode-js-sdk/lib/linodes'
+import { Event, Notification } from 'linode-js-sdk/lib/account';
+import { Config, LinodeBackups, LinodeStatus } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -61,7 +61,7 @@ interface Props {
     bootAction: Action,
     linodeID: number,
     linodeLabel: string,
-    linodeConfigs: Linode.Config[]
+    linodeConfigs: Config[]
   ) => void;
 }
 
@@ -297,7 +297,7 @@ export const RenderTitle: React.StatelessComponent<{
   linodeLabel: string;
   linodeId: number;
   mutationAvailable: boolean;
-  linodeNotifications: Linode.Notification[];
+  linodeNotifications: Notification[];
   maintenance?: string | null;
 }> = props => {
   const {
@@ -343,7 +343,7 @@ RenderTitle.displayName = `RenderTitle`;
 
 export const RenderFlag: React.StatelessComponent<{
   mutationAvailable: boolean;
-  linodeNotifications: Linode.Notification[];
+  linodeNotifications: Notification[];
   classes: any;
 }> = props => {
   /*

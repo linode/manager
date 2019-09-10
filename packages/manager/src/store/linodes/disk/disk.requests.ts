@@ -5,6 +5,7 @@
 import {
   createLinodeDisk as _createLinodeDisk,
   deleteLinodeDisk as _deleteLinodeDisk,
+  Disk,
   getLinodeDisk as _getLinodeDisk,
   getLinodeDisks as _getLinodeDisks,
   resizeLinodeDisk as _resizeLinodeDisk,
@@ -25,9 +26,7 @@ import {
 } from './disk.actions';
 import { Entity } from './disk.types';
 
-const addLinodeIdToDisk = (linodeId: number) => (
-  disk: Linode.Disk
-): Entity => ({
+const addLinodeIdToDisk = (linodeId: number) => (disk: Disk): Entity => ({
   ...disk,
   linode_id: linodeId
 });

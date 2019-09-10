@@ -3,7 +3,7 @@
  * should source it directly from there rather than making an additional request. OR We can source
  * it from there and make the (thunk) request to get the latest/greatest information.
  */
-import { Disk, getLinodeKernels } from 'linode-js-sdk/lib/linodes';
+import { Disk, getLinodeKernels, Kernel } from 'linode-js-sdk/lib/linodes';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -101,7 +101,7 @@ interface State {
     kernels: boolean;
     config: boolean;
   };
-  kernels: Linode.Kernel[];
+  kernels: Kernel[];
   errors?: Error | Linode.ApiFieldError[];
   fields: EditableFields;
 }
@@ -111,7 +111,7 @@ type CombinedProps = LinodeContextProps &
   StateProps &
   WithStyles<ClassNames>;
 
-const getAllKernels = getAll<Linode.Kernel>(getLinodeKernels);
+const getAllKernels = getAll<Kernel>(getLinodeKernels);
 
 class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
   state: State = {

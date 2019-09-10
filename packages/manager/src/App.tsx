@@ -1,7 +1,11 @@
 import * as classnames from 'classnames';
-import { Account, AccountCapability, Notification } from 'linode-js-sdk/lib/account';
+import {
+  Account,
+  AccountCapability,
+  Notification
+} from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
-import { Linode } from 'linode-js-sdk/lib/linodes'
+import { Linode } from 'linode-js-sdk/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { shim } from 'promise.prototype.finally';
 import { path, pathOr } from 'ramda';
@@ -588,7 +592,7 @@ interface StateProps {
   /** Profile */
   linodes: Linode[];
   images?: Image[];
-  notifications?: Linode.Notification[];
+  notifications?: Notification[];
   types?: string[];
   regions?: Linode.Region[];
   userId?: number;

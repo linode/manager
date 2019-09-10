@@ -1,5 +1,5 @@
 import { Event } from 'linode-js-sdk/lib/account';
-import { Linode } from 'linode-js-sdk/lib/linodes'
+import { Config, Linode } from 'linode-js-sdk/lib/linodes';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
@@ -149,7 +149,7 @@ interface Props {
   linodeId?: number;
   linodeLabel?: string;
   linodeRegion?: string;
-  linodeConfigs?: Linode.Config[];
+  linodeConfigs?: Config[];
   recentEvent?: Event;
   readOnly?: boolean;
   removeBreadCrumb?: boolean;

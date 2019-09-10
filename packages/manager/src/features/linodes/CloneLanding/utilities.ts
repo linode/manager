@@ -1,5 +1,5 @@
 import produce from 'immer';
-import {Config, Disk } from 'linode-js-sdk/lib/linodes'
+import { Config, Disk } from 'linode-js-sdk/lib/linodes';
 import * as moment from 'moment';
 import { append, compose, flatten, keys, map, pickBy, uniqBy } from 'ramda';
 
@@ -233,9 +233,9 @@ export const createConfigDiskSelection = (
  * This function returns an array of disks that match a `disk_id` in the config.
  */
 export const getAssociatedDisks = (
-  config: Linode.Config,
-  allDisks: Linode.Disk[]
-): Linode.Disk[] => {
+  config: Config,
+  allDisks: Disk[]
+): Disk[] => {
   const disksOnConfig: number[] = [];
 
   // Go through the devices and grab all the disks

@@ -73,7 +73,7 @@ const MutationNotification: React.FC<CombinedProps> = props => {
   const [
     successorMetaData,
     setSuccessorMetaData
-  ] = React.useState<Linode.LinodeType | null>(null);
+  ] = React.useState<LinodeType | null>(null);
 
   React.useEffect(() => {
     if (!linodeType) {

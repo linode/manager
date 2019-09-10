@@ -1,4 +1,8 @@
-import { getLinodeConfigs, Config, LinodeBackups } from 'linode-js-sdk/lib/linodes'
+import {
+  Config,
+  getLinodeConfigs,
+  LinodeBackups
+} from 'linode-js-sdk/lib/linodes';
 import { stringify } from 'qs';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -51,7 +55,7 @@ export type CombinedProps = Props &
   WithRegionsProps;
 
 interface State {
-  configs: Linode.Config[];
+  configs: Config[];
   hasMadeConfigsRequest: boolean;
   configsError?: Linode.ApiFieldError[];
 }

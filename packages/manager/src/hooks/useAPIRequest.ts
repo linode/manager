@@ -1,5 +1,4 @@
 import produce from 'immer';
-import { Linode } from 'linode-js-sdk/lib/linodes'
 import { APIError } from 'linode-js-sdk/lib/types';
 import { useEffect, useState } from 'react';
 

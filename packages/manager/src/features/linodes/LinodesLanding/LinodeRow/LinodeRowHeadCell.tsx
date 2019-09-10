@@ -1,6 +1,6 @@
-import { LinodeBackups, LinodeStatus } from 'linode-js-sdk/lib/linodes'
 import { Event } from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
+import { LinodeBackups, LinodeStatus } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';

@@ -6,13 +6,12 @@ import Request, {
   setURL,
   setXFilter
 } from '../request';
-import { ResourcePage as Page } from '../types'
+import { ResourcePage as Page } from '../types';
 import {
   CreateLinodeDiskSchema,
   ResizeLinodeDiskSchema
 } from './linodes.schema';
 import { Disk, LinodeDiskCreationData } from './types';
-
 
 /**
  * getLinodeDisks

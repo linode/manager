@@ -1,6 +1,6 @@
 export * from './actions';
 
-export * from './backups'
+export * from './backups';
 
 export * from './configs';
 
@@ -12,6 +12,6 @@ export * from './ips';
 
 export * from './linodes.schema';
 
-export * from './linodes'
+export * from './linodes';
 
-export * from './types'
+export * from './types';

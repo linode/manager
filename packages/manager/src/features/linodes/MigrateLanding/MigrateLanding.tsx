@@ -1,6 +1,12 @@
 import { Event, Notification } from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
-import { LinodeSpecs, LinodeStatus, LinodeType, scheduleOrQueueMigration } from 'linode-js-sdk/lib/linodes'
+import {
+  Disk,
+  LinodeSpecs,
+  LinodeStatus,
+  LinodeType,
+  scheduleOrQueueMigration
+} from 'linode-js-sdk/lib/linodes';
 import { APIError as APIErrorType } from 'linode-js-sdk/lib/types';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
@@ -244,7 +250,7 @@ interface LinodeContextProps {
   image: Image;
   linodeVolumes: Volume[];
   recentEvents: Event[];
-  linodeDisks: Linode.Disk[];
+  linodeDisks: Disk[];
 }
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({

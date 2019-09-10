@@ -1,13 +1,16 @@
 import { GrantLevel } from 'linode-js-sdk/lib/account';
 import {
   cancelBackups,
+  Day,
   enableBackups,
   getLinodeBackups,
   getType,
   LinodeBackup,
   LinodeBackupSchedule,
+  LinodeBackupsResponse,
   LinodeType,
-  takeSnapshot
+  takeSnapshot,
+  Window
 } from 'linode-js-sdk/lib/linodes';
 import * as moment from 'moment-timezone';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
@@ -153,8 +156,8 @@ interface State {
     errors?: Linode.ApiFieldError[];
   };
   settingsForm: {
-    window: Linode.Window;
-    day: Linode.Day;
+    window: Window;
+    day: Day;
     errors?: Linode.ApiFieldError[];
   };
   restoreDrawer: {
@@ -197,7 +200,8 @@ export const aggregateBackups = (
   );
 };
 
-class LinodeBackup extends React.Component<CombinedProps, State> {
+/* tslint:disable-next-line */
+class _LinodeBackup extends React.Component<CombinedProps, State> {
   state: State = {
     backups: this.props.backups.response,
     snapshotForm: {
@@ -425,7 +429,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     this.setState({
       settingsForm: {
         ...this.state.settingsForm,
-        window: e.value as Linode.Window
+        window: e.value as Window
       }
     });
   };
@@ -434,7 +438,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     this.setState({
       settingsForm: {
         ...this.state.settingsForm,
-        day: e.value as Linode.Day
+        day: e.value as Day
       }
     });
   };
@@ -455,9 +459,9 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     const { history, linodeID } = this.props;
     history.push(
       '/linodes/create' +
-      `?type=My%20Images&subtype=Backups&backupID=${
-      backup.id
-      }&linodeID=${linodeID}`
+        `?type=My%20Images&subtype=Backups&backupID=${
+          backup.id
+        }&linodeID=${linodeID}`
     );
   };
 
@@ -497,7 +501,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         backup, a 2-7 day old backup, and 8-14 day old backup. To enable backups
         just click below.
       </Typography>
-      );
+    );
 
     return (
       <React.Fragment>
@@ -519,11 +523,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
     );
   };
 
-  Table = ({
-    backups
-  }: {
-    backups: LinodeBackup[];
-  }): JSX.Element | null => {
+  Table = ({ backups }: { backups: LinodeBackup[] }): JSX.Element | null => {
     const { classes, permissions } = this.props;
     const disabled = isReadOnly(permissions);
 
@@ -636,7 +636,7 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
       getErrorFor('backups.schedule.window') ||
       getErrorFor('backups.schedule.day');
 
-    const timeSelection = this.windows.map((window: Linode.Window[]) => {
+    const timeSelection = this.windows.map((window: Window[]) => {
       const label = window[0];
       return { label, value: window[1] };
     });
@@ -745,12 +745,12 @@ class LinodeBackup extends React.Component<CombinedProps, State> {
         {backups.length ? (
           <this.Table backups={backups} />
         ) : (
-            <Paper className={classes.paper} data-qa-backup-description>
-              <Typography>
-                Automatic and manual backups will be listed here
+          <Paper className={classes.paper} data-qa-backup-description>
+            <Typography>
+              Automatic and manual backups will be listed here
             </Typography>
-            </Paper>
-          )}
+          </Paper>
+        )}
         <this.SnapshotForm />
         <this.SettingsForm />
         <Button
@@ -877,4 +877,4 @@ export default compose<CombinedProps, {}>(
   connected,
   withSnackbar,
   withLinodeActions
-)(LinodeBackup);
+)(_LinodeBackup);

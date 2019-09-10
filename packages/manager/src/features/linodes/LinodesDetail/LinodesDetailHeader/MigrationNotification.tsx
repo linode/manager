@@ -1,3 +1,4 @@
+import { NotificationType } from 'linode-js-sdk/lib/account';
 import { scheduleOrQueueMigration } from 'linode-js-sdk/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
@@ -28,7 +29,7 @@ const styles = (theme: Theme) =>
 interface Props {
   linodeID: number;
   requestNotifications: () => void;
-  notificationType: Linode.NotificationType;
+  notificationType: NotificationType;
   notificationMessage: string;
 }
 
