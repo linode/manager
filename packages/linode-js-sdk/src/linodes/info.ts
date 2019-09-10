@@ -1,4 +1,3 @@
-import { NetworkUtilization } from 'linode-js-sdk/lib/account';
 import { API_ROOT } from 'src/constants';
 import { NetworkUtilization } from '../account/types';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../request';

@@ -14,6 +14,6 @@ export * from './images';
 
 export * from './tags';
 
-export * from './linodes'
+export * from './linodes';
 
 export { baseRequest } from './request';
