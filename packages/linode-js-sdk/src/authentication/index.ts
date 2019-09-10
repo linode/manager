@@ -1,10 +1,7 @@
 import { stringify } from 'querystring';
 import { LOGIN_ROOT } from 'src/constants';
-import Request, { setData, setHeaders, setMethod, setURL } from '../index';
-
-export interface Success {
-  success: true;
-}
+import Request, { setData, setHeaders, setMethod, setURL } from 'src/request';
+import { Success } from './types';
 
 /**
  * Revokes auth token used to make HTTP requests
@@ -27,3 +24,5 @@ export const revokeToken = (client_id: string, token: string) =>
       'Content-Type': 'application/x-www-form-urlencoded;charset=utf-8'
     })
   ).then(response => response.data);
+
+export { Success };

@@ -16,4 +16,6 @@ export * from './tags';
 
 export * from './linodes';
 
+export * from './authentication';
+
 export { baseRequest } from './request';
