@@ -2,6 +2,8 @@ import * as classNames from 'classnames';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+// @todo: What is the actual folder icon?
+import FolderIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
 import KubeIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
@@ -81,7 +83,8 @@ export type Variant =
   | 'stackscript'
   | 'kube'
   | 'bucket'
-  | 'object';
+  | 'object'
+  | 'folder';
 
 interface Props {
   variant: Variant;
@@ -103,7 +106,8 @@ const iconMap = {
   stackscript: StackScriptIcon,
   kube: KubeIcon,
   bucket: BucketIcon,
-  object: ObjectIcon
+  object: ObjectIcon,
+  folder: FolderIcon
 };
 
 const getIcon = (variant: Variant) => {
