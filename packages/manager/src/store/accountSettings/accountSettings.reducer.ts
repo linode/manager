@@ -1,18 +1,15 @@
 import produce from 'immer';
 import { AccountSettings } from 'linode-js-sdk/lib/account';
+import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
-import { RequestableData } from '../types';
+import { RequestableDataWithEntityError } from '../types';
 import {
-  Action,
-  ERROR,
-  LOAD,
-  SUCCESS,
-  UPDATE,
-  UPDATE_ERROR,
+  requestAccountSettingsActions,
+  updateAccountSettingsActions,
   updateSettingsInStore
 } from './accountSettings.actions';
 
-export type State = RequestableData<AccountSettings> & {
+export type State = RequestableDataWithEntityError<AccountSettings> & {
   updateError?: Linode.ApiFieldError[];
 };
 
@@ -21,62 +18,50 @@ export const defaultState: State = {
   lastUpdated: 0,
   loading: false,
   data: undefined,
-  error: undefined,
-  updateError: undefined
+  error: {}
 };
 
 // REDUCER
-// @todo Update this to current patterns.
-export default (state: State = defaultState, action: Action) => {
-  if (isType(action, updateSettingsInStore)) {
-    const settings = action.payload;
-    return produce(state, draft => {
-      draft.data = { ...state.data!, ...settings }; // data shouldn't be initialized as undefined...
-    });
-  }
+export const reducer: Reducer<State> = (state = defaultState, action) => {
+  return produce(state, draft => {
+    if (isType(action, updateSettingsInStore)) {
+      const settings = action.payload;
+      draft.data = { ...state.data!, ...settings };
+    }
 
-  switch (action.type) {
-    case LOAD:
-      return { ...state, loading: true };
+    if (isType(action, requestAccountSettingsActions.started)) {
+      draft.loading = true;
+      draft.error.read = undefined;
+    }
 
-    case ERROR:
-      return {
-        ...state,
-        loading: false,
-        lastUpdated: Date.now(),
-        error: action.error
-      };
+    if (isType(action, requestAccountSettingsActions.done)) {
+      const { result } = action.payload;
+      draft.loading = false;
+      draft.lastUpdated = Date.now();
+      draft.data = result;
+    }
 
-    case SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        error: undefined,
-        updateError: undefined,
-        lastUpdated: Date.now(),
-        data: action.data
-      };
+    if (isType(action, requestAccountSettingsActions.failed)) {
+      const { error } = action.payload;
+      draft.loading = false;
+      draft.error.read = error;
+    }
 
-    case UPDATE:
-      return {
-        ...state,
-        loading: false,
-        error: undefined,
-        updateError: undefined,
-        lastUpdated: Date.now(),
-        data: action.data
-      };
+    if (isType(action, updateAccountSettingsActions.started)) {
+      draft.error.update = undefined;
+    }
 
-    case UPDATE_ERROR:
-      return {
-        ...state,
-        loading: false,
-        error: undefined,
-        lastUpdated: Date.now(),
-        updateError: action.error
-      };
+    if (isType(action, updateAccountSettingsActions.done)) {
+      const { result } = action.payload;
+      draft.data = result;
+      draft.lastUpdated = Date.now();
+    }
 
-    default:
-      return state;
-  }
+    if (isType(action, updateAccountSettingsActions.failed)) {
+      const { error } = action.payload;
+      draft.error.update = error;
+    }
+  });
 };
+
+export default reducer;

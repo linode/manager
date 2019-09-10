@@ -1,9 +1,8 @@
 import * as Bluebird from 'bluebird';
-import { updateAccountSettings } from 'linode-js-sdk/lib/account'
 import { isEmpty, pathOr } from 'ramda';
 import { Reducer } from 'redux';
 import { enableBackups } from 'src/services/linodes';
-import { handleUpdate } from 'src/store/accountSettings/accountSettings.actions';
+import { updateAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { updateMultipleLinodes } from 'src/store/linodes/linodes.actions';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { sendBackupsEnabledEvent } from 'src/utilities/ga';
@@ -310,12 +309,10 @@ export const enableAutoEnroll: EnableAutoEnrollThunk = () => (
   }
 
   dispatch(handleAutoEnroll());
-  updateAccountSettings({ backups_enabled: shouldEnableBackups })
-    .then(response => {
+  dispatch(updateAccountSettings({ backups_enabled: shouldEnableBackups }))
+    .then(_ => {
       dispatch(handleAutoEnrollSuccess());
       dispatch(enableAllBackups());
-      // Have to let the rest of the store know that the backups setting has been updated.
-      dispatch(handleUpdate(response));
     })
     .catch(errors => {
       const finalError = getErrorStringOrDefault(

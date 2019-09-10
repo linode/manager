@@ -628,7 +628,7 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   imagesError: state.__resources.images.error,
   notifications: state.__resources.notifications.data,
   notificationsError: state.__resources.notifications.error,
-  settingsError: state.__resources.accountSettings.error,
+  settingsError: state.__resources.accountSettings.error.read,
   typesError: state.__resources.types.error,
   regionsError: state.__resources.regions.error,
   volumesError: state.__resources.volumes.error

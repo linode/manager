@@ -5,12 +5,12 @@ import { ThunkDispatch } from 'redux-thunk';
 import { ApplicationState } from 'src/store';
 import { updateSettingsInStore } from 'src/store/accountSettings/accountSettings.actions';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
-// import { EntityError } from 'src/store/types';
+import { EntityError } from 'src/store/types';
 
 export interface SettingsProps {
   account?: AccountSettings;
   accountLoading: boolean;
-  accountError?: Linode.ApiFieldError[];
+  accountError: EntityError;
   lastUpdated: number;
 }
 
@@ -32,7 +32,7 @@ export default <TInner extends {}, TOuter extends {}>(
     ownProps: TOuter,
     loading: boolean,
     lastUpdated: number,
-    accountError?: Linode.ApiFieldError[],
+    accountError?: EntityError,
     accountSettings?: AccountSettings
   ) => TInner
 ) =>
@@ -47,7 +47,7 @@ export default <TInner extends {}, TOuter extends {}>(
         ownProps,
         loading,
         lastUpdated,
-        accountError, // @todo update this to the new entity error pattern.
+        accountError,
         accountSettings
       );
     },

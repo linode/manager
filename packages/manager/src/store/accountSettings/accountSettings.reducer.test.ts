@@ -1,56 +1,72 @@
 import { accountSettings } from 'src/__data__/account';
 import {
-  handleError,
-  handleSuccess,
-  handleUpdate,
-  handleUpdateError,
-  startRequest
+  requestAccountSettingsActions,
+  updateAccountSettingsActions,
+  updateSettingsInStore
 } from './accountSettings.actions';
 import reducer, { defaultState } from './accountSettings.reducer';
 
 const error = [{ reason: 'An error occurred.' }];
 const updatedSettings = { backups_enabled: false, ...accountSettings };
 
-describe('Redux duck for Account settings', () => {
-  it('should handle LOAD', () => {
-    const newState = reducer(defaultState, startRequest());
+describe('Redux for Account settings', () => {
+  it('should handle an initialization action', () => {
+    const newState = reducer(
+      defaultState,
+      requestAccountSettingsActions.started
+    );
     expect(newState).toHaveProperty('loading', true);
   });
-  it('should handle ERROR', () => {
+
+  it('should handle a failed request', () => {
     const newState = reducer(
       { ...defaultState, loading: true },
-      handleError(error)
+      requestAccountSettingsActions.failed({ error })
     );
     expect(newState).toHaveProperty('loading', false);
-    expect(newState).toHaveProperty('error', error);
+    expect(newState.error).toHaveProperty('read', error);
   });
-  it('should handle SUCCESS', () => {
+
+  it('should handle a successful request', () => {
     const newState = reducer(
-      { ...defaultState, loading: true, error, updateError: error },
-      handleSuccess(accountSettings)
+      { ...defaultState, loading: true },
+      requestAccountSettingsActions.done({ result: accountSettings })
     );
     expect(newState).toHaveProperty('data', accountSettings);
-    expect(newState).toHaveProperty('error', undefined);
-    expect(newState).toHaveProperty('updateError', undefined);
     expect(newState).toHaveProperty('loading', false);
   });
-  it('should handle UPDATE', () => {
+
+  it('should initiate an updater request', () => {
     const newState = reducer(
-      { ...defaultState, data: accountSettings, error, updateError: error },
-      handleUpdate(accountSettings)
+      { ...defaultState, error: { update: error } },
+      updateAccountSettingsActions.started
+    );
+    expect(newState.error).toHaveProperty('update', undefined);
+  });
+
+  it('should handle an update request', () => {
+    const newState = reducer(
+      { ...defaultState, data: accountSettings },
+      updateAccountSettingsActions.done({ result: accountSettings, params: {} })
     );
     expect(newState).toHaveProperty('data', updatedSettings);
-    expect(newState).toHaveProperty('error', undefined);
-    expect(newState).toHaveProperty('updateError', undefined);
     expect(newState).toHaveProperty('loading', false);
   });
-  it('should handle UPDATE_ERROR', () => {
+
+  it('should handle a failed update', () => {
     const newState = reducer(
-      { ...defaultState, data: accountSettings, updateError: undefined },
-      handleUpdateError(error)
+      { ...defaultState, data: accountSettings },
+      updateAccountSettingsActions.failed({ error, params: {} })
     );
     expect(newState).toHaveProperty('data', accountSettings);
-    expect(newState).toHaveProperty('error', undefined);
-    expect(newState).toHaveProperty('updateError', error);
+    expect(newState.error).toHaveProperty('update', error);
+  });
+
+  it('should update settings in store', () => {
+    const newState = reducer(
+      { ...defaultState, data: accountSettings },
+      updateSettingsInStore({ managed: !accountSettings.managed })
+    );
+    expect(newState.data).toHaveProperty('managed', !accountSettings.managed);
   });
 });
