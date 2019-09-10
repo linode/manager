@@ -127,7 +127,12 @@ class CheckoutBar extends React.Component<CombinedProps> {
                 </Typography>
               )}
               {details && (
-                <Typography className={classes.detail}>{details}</Typography>
+                <Typography
+                  data-qa-details={details}
+                  className={classes.detail}
+                >
+                  {details}
+                </Typography>
               )}
             </div>
           ))}

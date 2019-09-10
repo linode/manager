@@ -15,7 +15,7 @@ describe('Create Linode from Image - With Tags Suite', () => {
     const linodeName = `Lin-${timestamp()}`;
 
     const assertTagsDisplay = (tags) => {
-        ConfigureLinode.tag.waitForVisible(constants.wait.normal);
+        ConfigureLinode.tag.waitForDisplayed(constants.wait.normal);
 
         const displayedTags = ConfigureLinode.tags.map(t => t.getText());
 
@@ -32,8 +32,8 @@ describe('Create Linode from Image - With Tags Suite', () => {
     });
 
     it('should display the tags multi select', () => {
-        ConfigureLinode.multiSelect.waitForVisible(constants.wait.normal);
-        expect(ConfigureLinode.tagsMultiSelect.isVisible()).toBe(true);
+        ConfigureLinode.multiSelect.waitForDisplayed(constants.wait.normal);
+        expect(ConfigureLinode.tagsMultiSelect.isDisplayed()).toBe(true);
         // Make this assertion generic, in case the copy changes
         expect(ConfigureLinode.tagsMultiSelect.getText()).toContain('tag');
     });
@@ -53,8 +53,8 @@ describe('Create Linode from Image - With Tags Suite', () => {
 
         selectOptions[selectOptions.length - 1].click();
 
-        ConfigureLinode.selectOption.waitForVisible(constants.wait.normal, true);
-        ConfigureLinode.multiOption.waitForVisible(constants.wait.normal);
+        ConfigureLinode.selectOption.waitForDisplayed(constants.wait.normal, true);
+        ConfigureLinode.multiOption.waitForDisplayed(constants.wait.normal);
 
         const selectedTags = $$(ConfigureLinode.multiOption.selector).map( tag => tag.getText());
 
@@ -80,7 +80,7 @@ describe('Create Linode from Image - With Tags Suite', () => {
     it('should deploy the tagged linode', () => {
         ConfigureLinode.generic(linodeName);
         ConfigureLinode.deploy.click();
-        $('[data-qa-editable-text]').waitForVisible();
+        $('[data-qa-editable-text]').waitForDisplayed();
         expect($('[data-qa-editable-text]').getText()).toBe(linodeName)
     });
 
@@ -91,11 +91,11 @@ describe('Create Linode from Image - With Tags Suite', () => {
              * so we need to navigate to the landing page
              */
             browser.url(constants.routes.linodes)
-            $('[data-qa-label]').waitForVisible();
+            $('[data-qa-label]').waitForDisplayed();
 
             /** make sure we're on the grid view */
             ListLinodes.gridToggle.click();
-            ListLinodes.rebootButton.waitForVisible(constants.wait.normal);
+            ListLinodes.rebootButton.waitForDisplayed(constants.wait.normal);
 
             assertTagsDisplay(addedTags);
         });

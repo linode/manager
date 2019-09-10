@@ -41,15 +41,15 @@ export class Dashboard extends Page {
     get dismissGroupCTA() { return $('[data-qa-dismiss-cta]'); }
 
     baseElemsDisplay() {
-        this.header.waitForVisible(constants.wait.normal);
+        this.header.waitForDisplayed(constants.wait.normal);
 
-        expect(this.linodesCard.isVisible()).toBe(true);
-        expect(this.volumesCard.isVisible()).toBe(true);
-        expect(this.nodebalancerCard.isVisible()).toBe(true);
-        expect(this.domainsCard.isVisible()).toBe(true);
-        this.blogCard.waitForVisible(constants.wait.normal);
-        expect(this.blogCard.isVisible()).toBe(true);
-        expect(this.readMore.isVisible()).toBe(true);
+        expect(this.linodesCard.isDisplayed()).toBe(true);
+        expect(this.volumesCard.isDisplayed()).toBe(true);
+        expect(this.nodebalancerCard.isDisplayed()).toBe(true);
+        expect(this.domainsCard.isDisplayed()).toBe(true);
+        this.blogCard.waitForDisplayed(constants.wait.normal);
+        expect(this.blogCard.isDisplayed()).toBe(true);
+        expect(this.readMore.isDisplayed()).toBe(true);
     }
 
     entityCount(entity){

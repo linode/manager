@@ -28,7 +28,7 @@ const getAxiosInstance = (token) => {
 }
 
 exports.removeAllLinodes = token => {
-    
+
     const linodesEndpoint = '/linode/instances';
 
     return getAxiosInstance(token).get(linodesEndpoint)
@@ -55,7 +55,7 @@ exports.pause = (volumesResponse) => {
 }
 
 exports.removeAllVolumes = token => {
-    
+
     const endpoint = '/volumes';
 
     return getAxiosInstance(token).get(endpoint).then(volumesResponse => {
@@ -79,7 +79,8 @@ exports.deleteAll = (token, user) => {
         '/nodebalancers',
         '/images',
         '/account/users',
-        '/account/oauth-clients'
+        // TODO JIRA - M3-3249: Uncomment this when we are ready to run on CI:
+        // '/account/oauth-clients'
     ];
 
     const getEndpoint = (endpoint, user) => {

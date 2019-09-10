@@ -1,50 +1,66 @@
 const { constants } = require('../../constants');
-import Create from '../../pageobjects/create';
+//import Create from '../../pageobjects/create';
 import ConfigureLinode from '../../pageobjects/configure-linode';
 import CheckoutSummary from '../../pageobjects/checkout-summary';
+//import { browserCommands } from '../../config/custom-commands';
 
 describe('Create Linode - Configure Linode Suite', () => {
-    beforeAll(() => {
-        ConfigureLinode.selectGlobalCreateItem('Linode');
+  beforeAll(() => {
+    ConfigureLinode.selectGlobalCreateItem('Linode');
+  });
+
+  beforeEach(() => {
+    browser.refresh()
+    $('[data-qa-create-linode-header]').waitForDisplayed(constants.wait.short);
+  })
+
+  it('should display configure elements', () => {
+    ConfigureLinode.baseDisplay();
+  });
+
+  it('should update cost summary on plan selection', () => {
+    $('[data-qa-tp="Linode Plan"] [data-qa-selection-card]').waitForDisplayed();
+    ConfigureLinode.plans.forEach(p => {
+      const originalPrice = CheckoutSummary.costSummary.getText();
+      p.click();
+      const updatedPrice = CheckoutSummary.costSummary.getText();
+      expect(updatedPrice)
+        .withContext(`incorrect summary price`)
+        .not.toBe(originalPrice);
     });
+  });
 
-    it('should display configure elements', () => {
-        ConfigureLinode.baseDisplay();
-    });
+  it('should configure a generic linode and update cost summary', () => {
 
-    it('should update cost summary on plan selection', () => {
-        browser.waitForVisible('[data-qa-tp="Linode Plan"] [data-qa-selection-card]');
-        ConfigureLinode.plans.forEach(p => {
-            const originalPrice = CheckoutSummary.costSummary.getText();
-            p.click();
-            const updatedPrice = CheckoutSummary.costSummary.getText();
-            expect(updatedPrice).not.toBe(originalPrice);
-        });
-    });
+    const genericPrice = CheckoutSummary.costSummary.getText()
+    const genericType = ConfigureLinode.planNames[0].getText();
+    ConfigureLinode.generic();
+    const genericImage = ConfigureLinode.imageName.getText();
 
-    it('should configure a generic linode and update cost summary', () => {
-        const genericPrice = /\$.*\/mo/ig;
-        const genericImage = ConfigureLinode.imageNames[0].getText();
-        const genericType = ConfigureLinode.planNames[0].getText();
+    expect(CheckoutSummary.costSummary.getText())
+      .withContext(`incorrect cost summary value`)
+      .toBeGreaterThan(genericPrice);
+    expect(CheckoutSummary.imageDetailDisplays(genericImage))
+      .withContext(`image detail "${genericImage}" image should be displayed`)
+      .toBe(true);
+    expect(CheckoutSummary.subheaderDisplays(genericType))
+      .withContext(`Linode plan "${genericType}" type should be displayed`)
+      .toBe(true);
+  });
 
-        ConfigureLinode.generic();
+  it('should display a region select', () => {
 
-        expect(CheckoutSummary.costSummary.getText()).toMatch(genericPrice);
-        expect(CheckoutSummary.subheaderDisplays(genericImage)).toBe(true);
-        expect(CheckoutSummary.subheaderDisplays(genericType)).toBe(true);
-    });
+    expect(ConfigureLinode.regionSelect.isDisplayed())
+      .withContext(`region select should be displayed`)
+      .toBe(true);
+  });
 
-    xit('should display a region select', () => {
-        // This fails currently because the previous test sets the region,
-        // which changes the selector value. Since we're planning to make tests
-        // not dependent on each other in this way, skipping for now.
-        expect(ConfigureLinode.regionSelect.isVisible()).toBe(true);
-    });
+  it('should select a specific image', () => {
+    const imageName = 'CentOS 7';
+    browser.enhancedSelect(ConfigureLinode.imageDistro.selector, imageName)
 
-    it('should select a specific image', () => {
-        const imageName = 'Debian';
-        ConfigureLinode.selectImage(imageName);
-
-        expect(CheckoutSummary.subheaderDisplays(imageName)).toBe(true);
-    });
+    expect(CheckoutSummary.imageDetailDisplays(imageName))
+      .withContext(`distribution name ${imageName} should be displayed`)
+      .toBe(true);
+  });
 });

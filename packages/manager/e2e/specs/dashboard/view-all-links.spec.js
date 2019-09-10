@@ -17,7 +17,7 @@ import VolumeDetail from '../../pageobjects/linode-detail/linode-detail-volume.p
 import ListDomains from '../../pageobjects/list-domains.page';
 import ListNodeBalancers from '../../pageobjects/list-nodebalancers.page';
 
-describe('View All Links on Dashboard Entity Tables', () => {
+xdescribe('View All Links on Dashboard Entity Tables', () => {
     let linodes, volumes, domains, nodebalancers;
 
     const entities = ['Linodes','Volumes','NodeBalancers','Domains'];
@@ -27,22 +27,22 @@ describe('View All Links on Dashboard Entity Tables', () => {
         switch (entity) {
           case 'Linodes':
               linodes.forEach((linode) => {
-                  $(ListLinodes.getLinodeSelector(linode.label)).waitForVisible(constants.wait.normal);
+                  $(ListLinodes.getLinodeSelector(linode.label)).waitForDisplayed(constants.wait.normal);
               });
               break;
           case 'Volumes':
               volumes.forEach((volume) => {
-                  VolumeDetail.volumeRow(volume.label).waitForVisible(constants.wait.normal);
+                  VolumeDetail.volumeRow(volume.label).waitForDisplayed(constants.wait.normal);
               });
               break;
           case 'NodeBalancers':
               nodebalancers.forEach((nodebalancer) => {
-                  ListNodeBalancers.nodeBlanacerRow(nodebalancer.label).waitForVisible(constants.wait.normal);
+                  ListNodeBalancers.nodeBlanacerRow(nodebalancer.label).waitForDisplayed(constants.wait.normal);
               });
               break;
           case 'Domains':
               domains.forEach((domain) => {
-                  ListDomains.domainRow(domain.domain).waitForVisible(constants.wait.normal);
+                  ListDomains.domainRow(domain.domain).waitForDisplayed(constants.wait.normal);
               });
         }
         browser.url(constants.routes.dashboard);
@@ -101,7 +101,7 @@ describe('View All Links on Dashboard Entity Tables', () => {
 
     entities.forEach((entity) => {
         it(`View all links display on the dashboard ${entity} table`, () => {
-            Dashboard.viewAllLink(entity).waitForVisible(constants.wait.minute);
+            Dashboard.viewAllLink(entity).waitForDisplayed(constants.wait.minute);
             expect(Dashboard.entityCount(entity)).toBe('6');
         });
 
