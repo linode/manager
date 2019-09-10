@@ -137,17 +137,17 @@ exports.browserCommands = () => {
     }, elementsToClick);
   });
 
-  /* Waits for the element to click to be visible
-  * then execute a browser.click command on the element
-  * @param { String } selector to wait for/click
-  * @returns { null } Returns nothing
-  */
-  browser.addCommand('waitClick', function(elementToClick, timeout=10000) {
-    browser.waitUntil(function() {
-      $(elementToClick).waitForDisplayed();
-      return browser.click(elementToClick).state === 'success';
-    }, timeout);
-  });
+    /* Waits for the element to click to be visible
+    * then execute a browser.click command on the element
+    * @param { String } selector to wait for/click
+    * @returns { null } Returns nothing
+    */
+    browser.addCommand('waitClick', function(elementToClick, timeout=10000) {
+        browser.waitUntil(function() {
+            $(elementToClick).waitForDisplayed();
+            return $(elementToClick).click().state === 'success';
+        }, timeout);
+    });
 
   browser.addCommand('tryClick', function(elementToClick, timeout=5000) {
     let errorObject;
