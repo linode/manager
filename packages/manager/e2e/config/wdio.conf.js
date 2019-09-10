@@ -11,8 +11,6 @@ const { browserConf } = require('./browser-config');
 const { keysIn } = require('lodash');
 const selectedBrowser = argv.browser ? browserConf[argv.browser] : browserConf['chrome'];
 
-const { createLinode } = require('../setup/setup');
-
 const specsToRun = () => {
     if (argv.file) {
         return [`./e2e/specs/${argv.file}`];
