@@ -61,7 +61,7 @@ export const apiCreateLinode = (linodeLabel=false, privateIp=false, tags=[], typ
     const linode = browser.createLinode(token, newLinodePass, linodeLabel, tags, type, region, group, image, privateIp);
 
     browser.url(constants.routes.linodes);
-    browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.normal);
+    $('[data-qa-add-new-menu-button]').waitForDisplayed(constants.wait.normal);
 
     waitForLinodeStatus(linodeLabel ? linodeLabel : linode.label, 'running', image);
 
@@ -78,7 +78,7 @@ export const apiCreateLinode = (linodeLabel=false, privateIp=false, tags=[], typ
     });
 
     browser.url(constants.routes.linodes);
-    browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.normal);
+    $('[data-qa-add-new-menu-button]').waitForDisplayed(constants.wait.normal);
 
     arrayOfLinodeCreateObj.forEach((linodeObj,i) => {
         waitForLinodeStatus(linodeObj.linodeLabel ? linodeObj.linodeLabel : linodes[i].label, 'running', !linodeObj.noImage);
@@ -91,19 +91,19 @@ export const apiCreateLinode = (linodeLabel=false, privateIp=false, tags=[], typ
 }
 
 export const waitForLinodeStatus = (linodeLabel, status, image=true, timeout=constants.wait.minute) => {
-    browser.waitForVisible(`[data-qa-linode="${linodeLabel}"]`, timeout);
+    $(`[data-qa-linode="${linodeLabel}"]`).waitForDisplayed(timeout);
     if(image){
-        browser.waitForVisible(`[data-qa-linode="${linodeLabel}"] [data-qa-entity-status="${status}"]`, timeout * 3);
+        $(`[data-qa-linode="${linodeLabel}"] [data-qa-entity-status="${status}"]`).waitForDisplayed(timeout * 3);
     }else{
-        browser.waitForVisible(`[data-qa-linode="${linodeLabel}"] [data-qa-is-loading="true"]`, timeout);
-        browser.waitForVisible(`[data-qa-linode="${linodeLabel}"] [data-qa-is-loading="false"]`, timeout * 3);
+        $(`[data-qa-linode="${linodeLabel}"] [data-qa-is-loading="true"]`).waitForDisplayed(timeout);
+        $(`[data-qa-linode="${linodeLabel}"] [data-qa-is-loading="false"]`).waitForDisplayed(timeout * 3);
         //this is a hack due to the offline status not rendering until a page refresh when creating a linode without an image
         let i = 0;
         browser.waitUntil(() => {
             browser.refresh();
-            browser.waitForVisible(`[data-qa-linode="${linodeLabel}"]`, timeout);
+            $(`[data-qa-linode="${linodeLabel}"]`).waitForDisplayed(timeout);
             i++
-            return $(`[data-qa-linode="${linodeLabel}"] [data-qa-entity-status="offline"]`).isVisible() && i < 6;
+            return $(`[data-qa-linode="${linodeLabel}"] [data-qa-entity-status="offline"]`).isDisplayed() && i < 6;
         });
     }
 }
@@ -202,14 +202,14 @@ export const createVolumes = (volumeObjArray,waitForToast) => {
     });
 
     browser.url(constants.routes.volumes);
-    browser.waitForVisible('[data-qa-add-new-menu-button]', constants.wait.normal);
-    $('[data-qa-volume-loading]').waitForVisible(constants.wait.long, true);
+    $('[data-qa-add-new-menu-button]').waitForDisplayed(constants.wait.normal);
+    $('[data-qa-volume-loading]').waitForDisplayed(constants.wait.long, true);
     volumeObjArray.forEach((volumeObj) => {
-        browser.waitForVisible(`[data-qa-volume-cell-label="${volumeObj.label}"]`, constants.wait.normal);
+        $(`[data-qa-volume-cell-label="${volumeObj.label}"]`).waitForDisplayed(constants.wait.normal);
     });
     if(waitForToast){
-        $('[data-qa-toast]').waitForVisible(constants.wait.minute);
-        $('[data-qa-toast]').waitForVisible(constants.wait.long, true);
+        $('[data-qa-toast]').waitForDisplayed(constants.wait.minute);
+        $('[data-qa-toast]').waitForDisplayed(constants.wait.long, true);
     }
     return volumes;
 }
@@ -247,7 +247,7 @@ export const apiCreateDomains = (domainObjArray) => {
         domains.push(newDomain);
     });
     browser.url(constants.routes.domains);
-    domainObjArray.forEach((domain) => browser.waitForVisible(`[data-qa-domain-cell="${domain.domain}"]`,constants.wait.normal));
+    domainObjArray.forEach((domain) => $(`[data-qa-domain-cell="${domain.domain}"]`).waitForDisplayed(constants.wait.normal));
     return domains;
 }
 
@@ -259,6 +259,6 @@ export const apiCreateNodeBalancers = (nodebalancerObjArray) => {
         nodebalancers.push(newNodebalancer);
     });
     browser.url(constants.routes.nodeBalancers);
-    nodebalancerObjArray.forEach((nodebalancer) => browser.waitForVisible(`[data-qa-nodebalancer-cell="${nodebalancer.label}"]`,constants.wait.normal));
+    nodebalancerObjArray.forEach((nodebalancer) => $(`[data-qa-nodebalancer-cell="${nodebalancer.label}"]`).waitForDisplayed(constants.wait.normal));
     return nodebalancers;
 }

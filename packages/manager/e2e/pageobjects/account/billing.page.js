@@ -39,52 +39,52 @@ class Billing extends Page {
     get amount() { return $('[data-qa-invoice-amount]'); }
 
     contactSummaryDisplay() {
-        this.contactSummary.waitForVisible(constants.wait.normal);
-        this.currentCompany.waitForVisible(constants.wait.normal);
+        this.contactSummary.waitForDisplayed(constants.wait.normal);
+        this.currentCompany.waitForDisplayed(constants.wait.normal);
         expect(this.currentCompany.getText()).not.toBe(null);
-        this.currentName.waitForVisible(constants.wait.normal);
+        this.currentName.waitForDisplayed(constants.wait.normal);
         expect(this.currentName.getText()).not.toBe(null);
-        this.currentAddress.waitForVisible(constants.wait.normal);
+        this.currentAddress.waitForDisplayed(constants.wait.normal);
         expect(this.currentAddress.getText()).not.toBe(null);
-        this.currentEmail.waitForVisible(constants.wait.normal);
+        this.currentEmail.waitForDisplayed(constants.wait.normal);
         expect(this.currentEmail.getText()).not.toBe(null);
-        this.currentPhone.waitForVisible(constants.wait.normal);
+        this.currentPhone.waitForDisplayed(constants.wait.normal);
         expect(this.currentPhone.getText()).not.toBe(null);
-        this.currentCreditCard.waitForVisible(constants.wait.normal);
+        this.currentCreditCard.waitForDisplayed(constants.wait.normal);
         expect(this.currentCreditCard.getText()).not.toBe(null);
-        this.currentExpDate.waitForVisible(constants.wait.normal);
+        this.currentExpDate.waitForDisplayed(constants.wait.normal);
         expect(this.currentExpDate.getText()).not.toBe(null);
     }
 
     updateElemsDisplay() {
-        this.updateContact.waitForVisible(constants.wait.normal);
-        this.updateFirstName.waitForVisible(constants.wait.normal);
+        this.updateContact.waitForDisplayed(constants.wait.normal);
+        this.updateFirstName.waitForDisplayed(constants.wait.normal);
 
-        // expect(this.updateCompany.isVisible()).toBe(true);
-        expect(this.updateFirstName.isVisible()).toBe(true);
-        expect(this.updateLastName.isVisible()).toBe(true);
-        expect(this.updateAddress1.isVisible()).toBe(true);
-        expect(this.updateAddress2.isVisible()).toBe(true);
-        expect(this.updateEmail.isVisible()).toBe(true);
-        expect(this.updatePhone.isVisible()).toBe(true);
-        expect(this.updateCity.isVisible()).toBe(true);
-        expect(this.updateStateProvince.isVisible()).toBe(true);
-        expect(this.updatePostCode.isVisible()).toBe(true);
-        expect(this.updateTaxId.isVisible()).toBe(true);
-        expect(this.updateButton.isVisible()).toBe(true);
+        // expect(this.updateCompany.isDisplayed()).toBe(true);
+        expect(this.updateFirstName.isDisplayed()).toBe(true);
+        expect(this.updateLastName.isDisplayed()).toBe(true);
+        expect(this.updateAddress1.isDisplayed()).toBe(true);
+        expect(this.updateAddress2.isDisplayed()).toBe(true);
+        expect(this.updateEmail.isDisplayed()).toBe(true);
+        expect(this.updatePhone.isDisplayed()).toBe(true);
+        expect(this.updateCity.isDisplayed()).toBe(true);
+        expect(this.updateStateProvince.isDisplayed()).toBe(true);
+        expect(this.updatePostCode.isDisplayed()).toBe(true);
+        expect(this.updateTaxId.isDisplayed()).toBe(true);
+        expect(this.updateButton.isDisplayed()).toBe(true);
         expect(this.updateButton.getTagName()).toBe('button');
-        expect(this.resetButton.isVisible()).toBe(true);
+        expect(this.resetButton.isDisplayed()).toBe(true);
         expect(this.resetButton.getTagName()).toBe('button');
     }
 
     invoicesDisplay() {
         const dateRegex = /^(19[0-9]{2}|2[0-9]{3})-(0[1-9]|1[012])-([123]0|[012][1-9]|31) ([01][0-9]|2[0-3]):([0-5][0-9]):([0-5][0-9])$/g;
 
-        this.invoice.waitForVisible(constants.wait.normal);
+        this.invoice.waitForDisplayed(constants.wait.normal);
         expect($$(this.invoice.selector).length).toBeGreaterThan(0);
 
         $$(this.invoice.selector).forEach(inv => {
-            expect(inv.$(this.dateCreated.selector).isVisible()).toBe(true);
+            expect(inv.$(this.dateCreated.selector).isDisplayed()).toBe(true);
             expect(inv.$(this.dateCreated.selector).getText()).toMatch(dateRegex);
             expect(inv.$(this.description.selector).getText()).toMatch(/\d/);
             expect(inv.$(this.amount.selector).getText()).toMatch(/\$\d/);
