@@ -1,4 +1,5 @@
 import { Image } from 'linode-js-sdk/lib/images';
+import { StackScript } from 'linode-js-sdk/lib/stackscripts';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Chip from 'src/components/core/Chip';
@@ -73,7 +74,7 @@ const styles = (theme: Theme) =>
   });
 
 export interface Props {
-  data: Linode.StackScript.Response;
+  data: StackScript;
 }
 
 export interface State {
@@ -82,7 +83,8 @@ export interface State {
 
 type CombinedProps = Props & WithImagesProps & WithStyles<CSSClasses>;
 
-export class StackScript extends React.Component<CombinedProps> {
+/* tslint:disable-next-line */
+export class _StackScript extends React.Component<CombinedProps> {
   render() {
     const {
       classes,
@@ -197,4 +199,4 @@ const enhanced = compose<CombinedProps, Props>(
     imagesLoading
   }))
 );
-export default enhanced(StackScript);
+export default enhanced(_StackScript);

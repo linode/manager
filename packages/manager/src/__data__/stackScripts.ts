@@ -1,4 +1,6 @@
-export const stackScripts: Linode.StackScript.Response[] = [
+import { StackScript } from 'linode-js-sdk/lib/stackscripts';
+
+export const stackScripts: StackScript[] = [
   {
     username: 'mmckenna',
     updated: '2018-07-10T15:30:56',

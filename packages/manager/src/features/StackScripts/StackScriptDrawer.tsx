@@ -1,16 +1,16 @@
+import { getStackScript, StackScript } from 'linode-js-sdk/lib/stackscripts';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import Drawer from 'src/components/Drawer';
 import DrawerContent from 'src/components/DrawerContent';
-import StackScript from 'src/components/StackScript';
-import { getStackScript } from 'src/services/stackscripts';
+import _StackScript from 'src/components/StackScript';
 import { ApplicationState } from 'src/store';
 import { closeStackScriptDrawer } from 'src/store/stackScriptDrawer';
 import { MapState } from 'src/store/types';
 
 interface State {
-  stackScript?: Linode.StackScript.Response;
+  stackScript?: StackScript;
   error: boolean;
   loading: boolean;
 }
@@ -61,7 +61,7 @@ export class StackScriptDrawer extends React.Component<CombinedProps, State> {
     return (
       <Drawer title={title} open={open} onClose={closeDrawer}>
         <DrawerContent title={title} error={error} loading={loading}>
-          {stackScript && <StackScript data={stackScript} />}
+          {stackScript && <_StackScript data={stackScript} />}
         </DrawerContent>
       </Drawer>
     );

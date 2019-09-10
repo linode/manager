@@ -1,12 +1,12 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import { StackScript } from './StackScript';
+import { _StackScript } from './StackScript';
 
 describe('StackScript', () => {
   it('should render script code', () => {
     const component = shallow(
-      <StackScript
+      <_StackScript
         imagesData={{}}
         imagesLoading={false}
         data={{
