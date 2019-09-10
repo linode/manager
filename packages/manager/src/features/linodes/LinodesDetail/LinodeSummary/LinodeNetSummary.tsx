@@ -138,7 +138,7 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
             </Grid>
             <Grid item>
               <Typography>
-                {totalInBytes > used ? (
+                {totalInBytes >= used ? (
                   <span>{readableFree.formatted} Available</span>
                 ) : (
                   <span className={classes.overLimit}>
