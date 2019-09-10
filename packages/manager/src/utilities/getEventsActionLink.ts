@@ -1,4 +1,4 @@
-import { Entity, EventAction } from 'linode-js-sdk/lib/account'
+import { Entity, EventAction } from 'linode-js-sdk/lib/account';
 import { path } from 'ramda';
 import { nonClickEvents } from 'src/constants';
 import {
@@ -18,7 +18,7 @@ export default (
 
   if (action.match(/community/gi)) {
     return () => {
-      window.open(entity!.url, '_blank');
+      window.open(entity!.url, '_blank', 'noopener');
     };
   }
 

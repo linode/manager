@@ -111,6 +111,7 @@ export class BlogDashboardCard extends React.Component<CombinedProps, State> {
             href={item.link}
             className="blue"
             target="_blank"
+            rel="noopener noreferrer"
             data-qa-blog-post
           >
             {cleanedTitle}

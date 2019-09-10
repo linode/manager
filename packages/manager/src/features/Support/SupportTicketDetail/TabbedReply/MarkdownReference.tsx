@@ -38,7 +38,11 @@ const MarkdownReference: React.FC<CombinedProps> = props => {
       <Typography>
         You can use Markdown to format your{' '}
         {props.isReply ? 'reply' : 'question'}. For more examples see this
-        <a target="_blank" href="http://demo.showdownjs.com/">
+        <a
+          target="_blank"
+          rel="noopener noreferrer"
+          href="http://demo.showdownjs.com/"
+        >
           {' '}
           Markdown cheatsheet.
         </a>

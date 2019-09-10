@@ -64,7 +64,11 @@ const SelectRegionPanel: React.FC<Props & WithStyles<ClassNames>> = props => {
           <Typography variant="body1">
             {copy}
             {` `}
-            <a target="_blank" href="https://www.linode.com/speedtest">
+            <a
+              target="_blank"
+              rel="noopener noreferrer"
+              href="https://www.linode.com/speedtest"
+            >
               Use our speedtest page
             </a>
             {` `}

@@ -58,6 +58,7 @@ const VATBanner: React.FC<Props> = props => {
                 <a
                   href="https://www.linode.com/docs/platform/billing-and-support/tax-information/"
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
                   Tax Information Guide.
                 </a>

@@ -10,6 +10,7 @@ export const Link: React.FC<LinkProps> = props => {
     <a
       href={props.to as string}
       target="_blank"
+      rel="noopener noreferrer"
       onClick={props.onClick}
       className={props.className}
     >

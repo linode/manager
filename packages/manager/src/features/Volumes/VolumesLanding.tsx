@@ -608,12 +608,18 @@ const EmptyCopy = () => (
       <a
         href="https://linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode-new-manager/"
         target="_blank"
+        rel="noopener noreferrer"
         className="h-u"
       >
         Here's how to use Block Storage with your Linode
       </a>
       &nbsp;or&nbsp;
-      <a href="https://www.linode.com/docs/" target="_blank" className="h-u">
+      <a
+        href="https://www.linode.com/docs/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="h-u"
+      >
         visit our guides and tutorials.
       </a>
     </Typography>
