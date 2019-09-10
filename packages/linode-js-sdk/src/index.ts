@@ -24,4 +24,6 @@ export * from './stackscripts';
 
 export * from './regions';
 
+export * from './managed';
+
 export { baseRequest } from './request';
