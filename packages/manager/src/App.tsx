@@ -6,6 +6,7 @@ import {
 } from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
 import { Linode } from 'linode-js-sdk/lib/linodes';
+import { Region } from 'linode-js-sdk/lib/regions';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { shim } from 'promise.prototype.finally';
 import { path, pathOr } from 'ramda';
@@ -594,7 +595,7 @@ interface StateProps {
   images?: Image[];
   notifications?: Notification[];
   types?: string[];
-  regions?: Linode.Region[];
+  regions?: Region[];
   userId?: number;
   accountData?: Account;
   username: string;

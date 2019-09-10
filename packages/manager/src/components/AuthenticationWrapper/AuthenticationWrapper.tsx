@@ -1,8 +1,13 @@
-import { Account, AccountSettings, Notification } from 'linode-js-sdk/lib/account';
+import {
+  Account,
+  AccountSettings,
+  Notification
+} from 'linode-js-sdk/lib/account';
 import { Domain } from 'linode-js-sdk/lib/domains';
 import { Image } from 'linode-js-sdk/lib/images';
-import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes'
+import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
 import { Profile } from 'linode-js-sdk/lib/profile';
+import { Region } from 'linode-js-sdk/lib/regions';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -141,7 +146,7 @@ interface DispatchProps {
   requestNotifications: () => Promise<Notification[]>;
   requestSettings: () => Promise<AccountSettings>;
   requestTypes: () => Promise<LinodeType[]>;
-  requestRegions: () => Promise<Linode.Region[]>;
+  requestRegions: () => Promise<Region[]>;
   requestVolumes: () => Promise<Volume[]>;
   requestProfile: () => Promise<Profile>;
   requestBuckets: () => Promise<Linode.Bucket[]>;
