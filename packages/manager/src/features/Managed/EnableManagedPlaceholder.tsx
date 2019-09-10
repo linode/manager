@@ -74,7 +74,7 @@ const ManagedPlaceholder: React.FC<CombinedProps> = props => {
         title="Linode Managed"
         copy={`Let us worry about your infrastructure, so you can get back to worrying about your business. 
            Linode Managed helps keep your systems up and running with our team of Linode experts responding to monitoring events, so you can sleep well.
-           Linode Managed includes 24/7 monitoring and incident responses, backups and Longview Pro. +$100/month per Linode.`}
+           Linode Managed includes 24/7 monitoring and incident responses, backups, and Longview Pro. +$100/month per Linode.`}
         buttonProps={[
           {
             onClick: () => setOpen(true),
