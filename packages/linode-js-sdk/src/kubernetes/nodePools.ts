@@ -5,13 +5,10 @@ import Request, {
   setParams,
   setURL,
   setXFilter
-} from '../index';
-
+} from '../request';
+import { ResourcePage as Page } from '../types';
 import { nodePoolSchema } from './kubernetes.schema';
-
-// Payload types
-
-type Page<T> = Linode.ResourcePage<T>;
+import { KubeNodePoolResponse, PoolNodeRequest } from './types';
 
 /**
  * getNodePools
@@ -19,7 +16,7 @@ type Page<T> = Linode.ResourcePage<T>;
  * Gets a list of all node pools associated with the specified cluster
  */
 export const getNodePools = (clusterID: number, params?: any, filters?: any) =>
-  Request<Page<Linode.KubeNodePoolResponse>>(
+  Request<Page<KubeNodePoolResponse>>(
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
@@ -32,7 +29,7 @@ export const getNodePools = (clusterID: number, params?: any, filters?: any) =>
  * Returns a single node pool
  */
 export const getNodePool = (clusterID: number, nodePoolID: number) =>
-  Request<Linode.KubeNodePoolResponse>(
+  Request<KubeNodePoolResponse>(
     setMethod('GET'),
     setURL(`${BETA_API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`)
   ).then(response => response.data);
@@ -42,11 +39,8 @@ export const getNodePool = (clusterID: number, nodePoolID: number) =>
  *
  * Adds a node pool to the specified cluster.
  */
-export const createNodePool = (
-  clusterID: number,
-  data: Linode.PoolNodeRequest
-) =>
-  Request<Linode.KubeNodePoolResponse>(
+export const createNodePool = (clusterID: number, data: PoolNodeRequest) =>
+  Request<KubeNodePoolResponse>(
     setMethod('POST'),
     setURL(`${BETA_API_ROOT}/lke/clusters/${clusterID}/pools`),
     setData(data, nodePoolSchema)
@@ -60,9 +54,9 @@ export const createNodePool = (
 export const updateNodePool = (
   clusterID: number,
   nodePoolID: number,
-  data: Linode.PoolNodeRequest
+  data: PoolNodeRequest
 ) =>
-  Request<Linode.KubeNodePoolResponse>(
+  Request<KubeNodePoolResponse>(
     setMethod('PUT'),
     setURL(`${BETA_API_ROOT}/lke/clusters/${clusterID}/pools/${nodePoolID}`),
     setData(data, nodePoolSchema)

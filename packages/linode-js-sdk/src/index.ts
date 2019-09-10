@@ -18,4 +18,6 @@ export * from './linodes';
 
 export * from './authentication';
 
+export * from './kubernetes';
+
 export { baseRequest } from './request';
