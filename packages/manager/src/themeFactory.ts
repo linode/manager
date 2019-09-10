@@ -744,7 +744,10 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           },
           '&$focused': {
             borderColor: primaryColors.main,
-            boxShadow: '0 0 2px 1px #e1edfa'
+            boxShadow: '0 0 2px 1px #e1edfa',
+            '& .select-option-icon': {
+              paddingLeft: `30px !important`
+            }
           },
           '&$error': {
             borderColor: '#ca0813'
