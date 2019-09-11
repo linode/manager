@@ -1,6 +1,7 @@
 import * as moment from 'moment';
 import * as React from 'react';
 
+import useTimezone from 'src/hooks/useTimezone';
 import { ExtendedIssue } from 'src/store/managed/issues.actions';
 import IssueDay from './IssueDay';
 
@@ -12,6 +13,7 @@ interface Props {
 
 export const IssueCalendar: React.FC<Props> = props => {
   const { issues } = props;
+  const timezone = useTimezone();
 
   /**
    * To maintain continuity with Classic, we have to generate
@@ -19,12 +21,12 @@ export const IssueCalendar: React.FC<Props> = props => {
    * on that day, it belongs to that day and is passed to the
    * display component.
    *
-   * The number of issues affecting a given monitor should always be small (<10),
+   * The number of issues affecting a given monitor should always be small (<10?),
    * so imo it would be ineffective to memoize this computation.
    */
   const days: JSX.Element[] = [];
   let i = 0;
-  const day = moment.utc().tz('GMT');
+  const day = moment.utc().tz(timezone);
   for (i; i < TOTAL_DAYS; i++) {
     let j = 0;
     const relevantIssues = [];
@@ -33,7 +35,7 @@ export const IssueCalendar: React.FC<Props> = props => {
       if (
         moment
           .utc(thisIssue.created)
-          .tz('GMT')
+          .tz(timezone)
           .isSame(day, 'day')
       ) {
         relevantIssues.push(thisIssue);
