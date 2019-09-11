@@ -71,18 +71,28 @@ export const IssueDay: React.FC<Props> = props => {
     return thisIssue.dateClosed ? accum : [...accum, thisIssue.entity.id];
   }, []);
 
+  if (issues.length === 0) {
+    // No issues for today
+    return <DayDisplay icon={<Good {...iconStyles} />} day={day} />;
+  }
+
   if (openIssueLinks.length > 0) {
     return (
       <DayDisplay
         icon={<Bad {...iconStyles} />}
         day={day}
+        // For now, not worrying about the possibility of multiple tickets opened in a single day
         ticketUrl={`/support/tickets/${openIssueLinks[0]}`}
       />
     );
   }
 
-  // No open issues for today
-  return <DayDisplay icon={<Good {...iconStyles} />} day={day} />;
+  /**
+   * If we get here, there were one or more issues opened on this day,
+   * but they've all since been resolved.
+   */
+
+  return <DayDisplay icon={<Bad {...iconStyles} />} day={day} />;
 };
 
 export default IssueDay;
