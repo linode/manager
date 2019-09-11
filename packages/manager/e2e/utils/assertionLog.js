@@ -5,6 +5,7 @@ export const assertLog = {
   incorrectRegExVal: 'incorrect value found for regex with',
   incorrectNum: 'incorrect number of items',
   incorrectVal: 'incorrect value found',
+  incorrectAttr: 'incorrect attribute found for',
   shouldNotBeNull: 'value should not be null',
   shouldExist: 'element should exist in DOM'
 };
