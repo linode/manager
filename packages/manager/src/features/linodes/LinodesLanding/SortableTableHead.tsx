@@ -55,15 +55,6 @@ const SortableTableHead: React.StatelessComponent<combinedProps> = props => {
           Status
         </TableSortCell>
         <TableSortCell
-          noWrap
-          label="mostRecentBackup"
-          direction={order}
-          active={isActive('mostRecentBackup')}
-          handleClick={handleOrderChange}
-        >
-          Last Backup
-        </TableSortCell>
-        <TableSortCell
           label="ipv4[0]" // we want to sort by the first ipv4
           active={isActive('ipv4[0]')}
           handleClick={handleOrderChange}
@@ -79,6 +70,15 @@ const SortableTableHead: React.StatelessComponent<combinedProps> = props => {
           data-qa-sort-region={order}
         >
           Region
+        </TableSortCell>
+        <TableSortCell
+          noWrap
+          label="mostRecentBackup"
+          direction={order}
+          active={isActive('mostRecentBackup')}
+          handleClick={handleOrderChange}
+        >
+          Last Backup
         </TableSortCell>
         <TableCell />
       </TableRow>
