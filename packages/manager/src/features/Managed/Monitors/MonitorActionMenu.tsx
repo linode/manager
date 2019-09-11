@@ -14,7 +14,7 @@ interface Props {
   label: string;
   openDialog: (id: number, label: string) => void;
   openMonitorDrawer: (id: number, mode: string) => void;
-  openHistoryDrawer: () => void;
+  openHistoryDrawer: (id: number, label: string) => void;
 }
 
 export type CombinedProps = Props & DispatchProps & WithSnackbarProps;
@@ -74,7 +74,7 @@ export class MonitorActionMenu extends React.Component<CombinedProps, {}> {
         {
           title: 'View Issue History',
           onClick: () => {
-            openHistoryDrawer();
+            openHistoryDrawer(monitorID, label);
             closeMenu();
           }
         },

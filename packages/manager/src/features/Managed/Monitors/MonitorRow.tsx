@@ -1,4 +1,6 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
+import TicketIcon from 'src/assets/icons/ticket.svg';
 import {
   createStyles,
   Theme,
@@ -9,6 +11,7 @@ import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
+import { ExtendedIssue } from 'src/store/managed/issues.actions';
 
 import ActionMenu from './MonitorActionMenu';
 import { statusIconMap, statusTextMap } from './monitorMaps';
@@ -16,6 +19,7 @@ import { statusIconMap, statusTextMap } from './monitorMaps';
 type ClassNames =
   | 'root'
   | 'label'
+  | 'icon'
   | 'monitorDescription'
   | 'monitorRow'
   | 'errorStatus';
@@ -28,6 +32,10 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       }
+    },
+    icon: {
+      color: theme.color.red,
+      marginLeft: theme.spacing()
     },
     monitorDescription: {
       paddingTop: theme.spacing(1) / 2
@@ -44,9 +52,10 @@ const styles = (theme: Theme) =>
 
 interface Props {
   monitor: Linode.ManagedServiceMonitor;
+  issues: ExtendedIssue[];
   openDialog: (id: number, label: string) => void;
   openMonitorDrawer: (id: number, mode: string) => void;
-  openHistoryDrawer: () => void;
+  openHistoryDrawer: (id: number, label: string) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -55,11 +64,15 @@ export const monitorRow: React.FunctionComponent<CombinedProps> = props => {
   const {
     classes,
     monitor,
+    issues,
     openDialog,
     openHistoryDrawer,
     openMonitorDrawer
   } = props;
   const Icon = statusIconMap[monitor.status];
+  // For now, only include a ticket icon in this view if the ticket is still open (per Jay).
+  const openIssues = issues.filter(thisIssue => !thisIssue.dateClosed);
+
   return (
     <TableRow
       key={monitor.id}
@@ -82,11 +95,21 @@ export const monitorRow: React.FunctionComponent<CombinedProps> = props => {
         </Grid>
       </TableCell>
       <TableCell parentColumn="Status" data-qa-monitor-status>
-        <Typography
-          className={monitor.status === 'problem' ? classes.errorStatus : ''}
-        >
-          {statusTextMap[monitor.status]}
-        </Typography>
+        <Grid container item direction="row" alignItems="center">
+          <Typography
+            className={monitor.status === 'problem' ? classes.errorStatus : ''}
+          >
+            {statusTextMap[monitor.status]}
+          </Typography>
+          {openIssues.length > 0 && (
+            <Link
+              to={`/support/tickets/${issues[0].entity.id}`}
+              className={classes.icon}
+            >
+              <TicketIcon />
+            </Link>
+          )}
+        </Grid>
       </TableCell>
       <TableCell parentColumn="Resource" data-qa-monitor-resource>
         <Typography>{monitor.address}</Typography>

@@ -3,13 +3,13 @@ import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
 
 import { EntityError, EntityState } from 'src/store/types';
-import { requestManagedIssuesActions } from './issues.actions';
+import { ExtendedIssue, requestManagedIssuesActions } from './issues.actions';
 
 /**
  * State
  */
 
-export type State = EntityState<Linode.ManagedIssue, EntityError>;
+export type State = EntityState<ExtendedIssue, EntityError>;
 
 export const defaultState: State = {
   results: [],
