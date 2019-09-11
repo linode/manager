@@ -17,6 +17,7 @@ import TableRow from 'src/components/TableRow';
 import TextField from 'src/components/TextField';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { displayTypeForKubePoolNode } from 'src/features/linodes/presentation';
+import useFlags from 'src/hooks/useFlags';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { PoolNodeWithPrice } from '.././types';
 
@@ -117,6 +118,7 @@ export const getStatusString = (
 
 export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
   const { classes, editable, pool, idx, deletePool, type, updatePool } = props;
+  const flags = useFlags();
 
   if (editable && !(updatePool && deletePool)) {
     // Checking for conditionally required props
@@ -177,7 +179,7 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
         <Typography>{`${displayPrice(pool.totalMonthlyPrice)}/mo`}</Typography>
       </TableCell>
       <TableCell className={classes.removeButtonWrapper}>
-        {editable && (
+        {(!flags.lkeHideButtons || editable) && (
           <Button
             buttonType="remove"
             deleteText={pool.queuedForDeletion ? 'Undo Remove' : 'Remove'}
