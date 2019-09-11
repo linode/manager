@@ -1,5 +1,5 @@
 import * as Bluebird from 'bluebird';
-import { contains, equals, path, remove, update } from 'ramda';
+import { contains, equals, path, pathOr, remove, update } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -168,6 +168,20 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     const clusterID = +props.match.params.clusterID;
     if (clusterID) {
       props.requestClusterForStore(clusterID);
+    }
+
+    /**
+     * If we're navigating from the action menu on the cluster list page,
+     * we want to start with editing mode active.
+     */
+    const isEditing = pathOr(
+      false,
+      ['history', 'location', 'state', 'editing'],
+      props
+    );
+
+    if (isEditing !== editing) {
+      toggleEditing();
     }
 
     const interval = setInterval(

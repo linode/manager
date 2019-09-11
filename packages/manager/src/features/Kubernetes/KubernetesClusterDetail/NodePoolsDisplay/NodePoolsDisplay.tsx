@@ -205,25 +205,26 @@ export const NodePoolsDisplay: React.FunctionComponent<
               {`$${getTotalClusterPrice(poolsForEdit)}/month`}
             </Typography>
           )}
-          <Grid item container xs={12} className={classes.ctaOuter}>
-            <Button
-              className={classes.button}
-              buttonType="primary"
-              disabled={!editing || submittingForm}
-              loading={submittingForm}
-              onClick={submitForm}
-            >
-              Save
-            </Button>
-            <Button
-              className={classes.button}
-              buttonType="secondary"
-              disabled={!editing}
-              onClick={resetForm}
-            >
-              Clear Changes
-            </Button>
-          </Grid>
+          {editing && (
+            <Grid item container xs={12} className={classes.ctaOuter}>
+              <Button
+                className={classes.button}
+                buttonType="primary"
+                disabled={submittingForm}
+                loading={submittingForm}
+                onClick={submitForm}
+              >
+                Save
+              </Button>
+              <Button
+                className={classes.button}
+                buttonType="secondary"
+                onClick={resetForm}
+              >
+                Clear Changes
+              </Button>
+            </Grid>
+          )}
         </Grid>
       </Grid>
     </Paper>
