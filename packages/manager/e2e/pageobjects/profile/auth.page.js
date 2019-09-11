@@ -73,19 +73,29 @@ export class Auth extends Page {
     this.toggleTfa.click();
     this.dialogTitle.waitForDisplayed(constants.wait.normal);
     expect(this.dialogContent.getText())
-      .withContext(``)
+      .withContext(
+        `${assertLog.incorrectText} for "${
+          this.dialogContent.selector
+        }" selector`
+      )
       .toContain('disable two-factor');
     expect(this.cancelToken.isDisplayed())
-      .withContext(``)
+      .withContext(
+        `"${this.cancelToken.selector}" selector ${assertLog.displayed}`
+      )
       .toBe(true);
     expect(this.confirmToken.isDisplayed())
-      .withContext(``)
+      .withContext(
+        `"${this.confirmToken.selector}" selector ${assertLog.displayed}`
+      )
       .toBe(true);
 
     this.confirmToken.click();
     this.waitForNotice(disableMsg, constants.wait.normal);
     expect(this.toggleTfa.getAttribute('data-qa-toggle-tfa'))
-      .withContext(``)
+      .withContext(
+        `${assertLog.incorrectAttr} "${this.toggleTfa.selector}" selector`
+      )
       .toBe('false');
   }
 }
