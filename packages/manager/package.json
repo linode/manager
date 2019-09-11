@@ -93,7 +93,7 @@
   "scripts": {
     "postinstall": "patch-package",
     "axe": "npx wdio ./e2e/config/wdio.axe.conf.js",
-    "format": "prettier 'src/**/*.{ts,tsx}' --write",
+    "format": "prettier 'src/**/*.{ts,tsx,js}' --write",
     "compare": "./scripts/jira-changelog.sh",
     "start": "node scripts/start.js",
     "lint": "tslint 'src/**/*.ts' 'src/**/*.tsx'",
@@ -120,7 +120,7 @@
     "release": "./scripts/release_changelog.sh"
   },
   "lint-staged": {
-    "*.{ts,tsx}": [
+    "*.{ts,tsx,js}": [
       "prettier --write",
       "git add"
     ]
