@@ -67,6 +67,7 @@ const LabelCell: React.StatelessComponent<CombinedProps> = props => {
     <React.Fragment>
       <a
         target="_blank"
+        rel="noopener noreferrer"
         href={`https://www.linode.com/stackscripts/view/${stackScriptId}`}
         className={classes.root}
       >

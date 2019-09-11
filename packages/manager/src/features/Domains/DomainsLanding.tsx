@@ -396,12 +396,18 @@ const EmptyCopy = () => (
       <a
         href="https://www.linode.com/docs/platform/manager/dns-manager-new-manager/"
         target="_blank"
+        rel="noopener noreferrer"
         className="h-u"
       >
         Find out how to setup your domains associated with your Linodes
       </a>
       &nbsp;or&nbsp;
-      <a href="https://www.linode.com/docs/" target="_blank" className="h-u">
+      <a
+        href="https://www.linode.com/docs/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="h-u"
+      >
         visit our guides and tutorials.
       </a>
     </Typography>
