@@ -1,3 +1,4 @@
+import { Grant } from 'linode-js-sdk/lib/account';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -63,7 +64,7 @@ export interface State {
 }
 
 interface StoreProps {
-  stackScriptGrants?: Linode.Grant[];
+  stackScriptGrants?: Grant[];
   userCannotCreateStackScripts: boolean;
 }
 
@@ -441,10 +442,12 @@ const withStackScriptBase = (isSelecting: boolean) => (
                   icon={StackScriptsIcon}
                   title="StackScripts"
                   copy={<EmptyCopy />}
-                  buttonProps={{
-                    href: '/stackscripts/create',
-                    children: 'Create a StackScript'
-                  }}
+                  buttonProps={[
+                    {
+                      href: '/stackscripts/create',
+                      children: 'Create a StackScript'
+                    }
+                  ]}
                   className={classes.stackscriptPlaceholder}
                 />
               )}
@@ -560,12 +563,18 @@ const withStackScriptBase = (isSelecting: boolean) => (
         <a
           href="https://linode.com/docs/platform/stackscripts-new-manager/"
           target="_blank"
+          rel="noopener noreferrer"
           className="h-u"
         >
           Learn more about getting started
         </a>
         &nbsp;or&nbsp;
-        <a href="https://www.linode.com/docs/" target="_blank" className="h-u">
+        <a
+          href="https://www.linode.com/docs/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="h-u"
+        >
           visit our guides and tutorials.
         </a>
       </Typography>

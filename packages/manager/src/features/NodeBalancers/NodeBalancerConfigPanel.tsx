@@ -1,3 +1,4 @@
+import { NodeBalancerConfigNodeFields } from 'linode-js-sdk/lib/nodebalancers';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -162,7 +163,7 @@ interface Props {
   privateKey: string;
   onPrivateKeyChange: (v: string) => void;
 
-  nodes: Linode.NodeBalancerConfigNodeFields[];
+  nodes: NodeBalancerConfigNodeFields[];
   disabled?: boolean;
   addNode: (nodeIdx?: number) => void;
   removeNode: (nodeIdx: number) => void;

@@ -1,10 +1,10 @@
+import { getTags } from 'linode-js-sdk/lib/tags';
 import { concat } from 'ramda';
 import * as React from 'react';
 import Select, {
   Item,
   NoOptionsMessageProps
 } from 'src/components/EnhancedSelect/Select';
-import { getTags } from 'src/services/tags';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 export interface Tag {

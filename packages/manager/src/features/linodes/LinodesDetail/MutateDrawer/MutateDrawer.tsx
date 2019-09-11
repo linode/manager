@@ -177,7 +177,7 @@ class MutateDrawer extends React.Component<CombinedProps, State> {
          */}
         <Typography style={{ display: 'none' }}>
           {`Need help? Refer to the `}
-          <a href="google.com" target="_blank">
+          <a href="google.com" target="_blank" rel="noopener noreferrer">
             supporting documentation
           </a>
           .

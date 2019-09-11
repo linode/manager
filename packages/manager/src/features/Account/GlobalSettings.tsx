@@ -1,3 +1,5 @@
+import { AccountSettings } from 'linode-js-sdk/lib/account';
+import { Linode } from 'linode-js-sdk/lib/linodes'
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
@@ -28,7 +30,7 @@ interface StateProps {
   loading: boolean;
   backups_enabled: boolean;
   error?: Error;
-  linodesWithoutBackups: Linode.Linode[];
+  linodesWithoutBackups: Linode[];
   updateError?: Linode.ApiFieldError[];
   networkHelperEnabled: boolean;
   entitiesWithGroupsToImport: GroupedEntitiesForImport;
@@ -37,7 +39,7 @@ interface StateProps {
 
 interface DispatchProps {
   actions: {
-    updateAccount: (data: Partial<Linode.AccountSettings>) => void;
+    updateAccount: (data: Partial<AccountSettings>) => void;
     openImportDrawer: () => void;
     openBackupsDrawer: () => void;
   };
@@ -154,7 +156,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 ) => {
   return {
     actions: {
-      updateAccount: (data: Partial<Linode.AccountSettings>) =>
+      updateAccount: (data: Partial<AccountSettings>) =>
         dispatch(updateAccountSettings(data)),
       openBackupsDrawer: () => dispatch(handleOpen()),
       openImportDrawer: () => dispatch(openGroupDrawer())

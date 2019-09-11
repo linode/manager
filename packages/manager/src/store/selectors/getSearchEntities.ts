@@ -1,3 +1,8 @@
+import { Domain } from 'linode-js-sdk/lib/domains';
+import { Image } from 'linode-js-sdk/lib/images';
+import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes'
+import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import { createSelector } from 'reselect';
 import { displayType } from 'src/features/linodes/presentation';
 import { SearchableItem } from 'src/features/Search/search.interfaces';
@@ -6,16 +11,16 @@ import getLinodeDescription from 'src/utilities/getLinodeDescription';
 
 type State = ApplicationState['__resources'];
 
-export const getLinodeIps = (linode: Linode.Linode): string[] => {
+export const getLinodeIps = (linode: Linode): string[] => {
   const { ipv4, ipv6 } = linode;
   return ipv4.concat([ipv6]);
 };
 
-export const getDomainIps = (domain: Linode.Domain): string[] => {
+export const getDomainIps = (domain: Domain): string[] => {
   return domain.master_ips;
 };
 
-export const getNodebalIps = (nodebal: Linode.NodeBalancer): string[] => {
+export const getNodebalIps = (nodebal: NodeBalancer): string[] => {
   const { ipv4, ipv6 } = nodebal;
   const ips: string[] = [ipv4];
 
@@ -26,9 +31,9 @@ export const getNodebalIps = (nodebal: Linode.NodeBalancer): string[] => {
 };
 
 const formatLinode = (
-  linode: Linode.Linode,
-  types: Linode.LinodeType[],
-  images: Linode.Image[]
+  linode: Linode,
+  types: LinodeType[],
+  images: Image[]
 ): SearchableItem => ({
   label: linode.label,
   value: linode.id,
@@ -53,7 +58,7 @@ const formatLinode = (
   }
 });
 
-const volumeToSearchableItem = (volume: Linode.Volume): SearchableItem => ({
+const volumeToSearchableItem = (volume: Volume): SearchableItem => ({
   label: volume.label,
   value: volume.id,
   entityType: 'volume',
@@ -67,12 +72,12 @@ const volumeToSearchableItem = (volume: Linode.Volume): SearchableItem => ({
   }
 });
 
-const imageReducer = (accumulator: SearchableItem[], image: Linode.Image) =>
+const imageReducer = (accumulator: SearchableItem[], image: Image) =>
   image.is_public
     ? accumulator
     : [...accumulator, imageToSearchableItem(image)];
 
-const imageToSearchableItem = (image: Linode.Image): SearchableItem => ({
+const imageToSearchableItem = (image: Image): SearchableItem => ({
   label: image.label,
   value: image.id,
   entityType: 'image',
@@ -87,7 +92,7 @@ const imageToSearchableItem = (image: Linode.Image): SearchableItem => ({
   }
 });
 
-const domainToSearchableItem = (domain: Linode.Domain): SearchableItem => ({
+const domainToSearchableItem = (domain: Domain): SearchableItem => ({
   label: domain.domain,
   value: domain.id,
   entityType: 'domain',
@@ -101,9 +106,7 @@ const domainToSearchableItem = (domain: Linode.Domain): SearchableItem => ({
   }
 });
 
-const nodeBalToSearchableItem = (
-  nodebal: Linode.NodeBalancer
-): SearchableItem => ({
+const nodeBalToSearchableItem = (nodebal: NodeBalancer): SearchableItem => ({
   label: nodebal.label,
   value: nodebal.id,
   entityType: 'nodebalancer',
@@ -127,12 +130,12 @@ const typesSelector = (state: State) => state.types.entities;
 
 export default createSelector<
   State,
-  Linode.Linode[],
-  Linode.Volume[],
-  Linode.Image[],
-  Linode.Domain[],
-  Linode.NodeBalancer[],
-  Linode.LinodeType[],
+  Linode[],
+  Volume[],
+  Image[],
+  Domain[],
+  NodeBalancer[],
+  LinodeType[],
   SearchableItem[]
 >(
   linodeSelector,

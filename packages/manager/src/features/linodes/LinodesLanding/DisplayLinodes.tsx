@@ -1,3 +1,4 @@
+import { Config, Linode } from 'linode-js-sdk/lib/linodes'
 import * as React from 'react';
 import TableBody from 'src/components/core/TableBody';
 import Grid from 'src/components/Grid';
@@ -14,11 +15,11 @@ interface Props {
     bootAction: Action,
     linodeID: number,
     linodeLabel: string,
-    linodeConfigs: Linode.Config[]
+    linodeConfigs: Config[]
   ) => void;
   display: 'grid' | 'list';
   component: any;
-  data: Linode.Linode[];
+  data: Linode[];
   someLinodesHaveMaintenance: boolean;
 }
 

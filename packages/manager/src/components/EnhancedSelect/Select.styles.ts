@@ -73,6 +73,12 @@ export const styles = (theme: Theme) =>
         maxWidth: 415,
         zIndex: 100
       },
+      '& .react-select__group': {
+        width: 'calc(100% + 4px)',
+        '&:last-child': {
+          paddingBottom: 0
+        }
+      },
       '& .react-select__group-heading': {
         textTransform: 'initial',
         fontSize: '1rem',
@@ -143,7 +149,13 @@ export const styles = (theme: Theme) =>
         paddingRight: 0
       },
       '& .react-select__clear-indicator': {
-        padding: theme.spacing(1)
+        padding: theme.spacing(1),
+        '& svg': {
+          color: theme.color.grey4,
+          '&:hover': {
+            color: theme.palette.primary.main
+          }
+        }
       },
       '& .react-select__multi-value__remove': {
         backgroundColor: 'transparent',

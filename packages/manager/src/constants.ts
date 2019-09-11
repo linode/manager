@@ -1,3 +1,5 @@
+import { ZoneName } from 'linode-js-sdk/lib/networking';
+
 const PRODUCTION = 'production';
 
 /** native to webpack build */
@@ -9,7 +11,7 @@ export const APP_ROOT =
 export const LOGIN_ROOT =
   process.env.REACT_APP_LOGIN_ROOT || 'https://login.linode.com';
 export const API_ROOT =
-  process.env.REACT_APP_API_ROOT || 'https://api.lindev.local';
+  process.env.REACT_APP_API_ROOT || 'https://api.linode.com/v4';
 export const BETA_API_ROOT = API_ROOT + 'beta';
 export const LISH_ROOT =
   process.env.REACT_APP_LISH_ROOT || 'webconsole.linode.com';
@@ -60,7 +62,7 @@ export const MAX_VOLUME_SIZE = 10240;
  * Used by e.g. LISH to determine the websocket connection address.
  * Whenever updating this, also update the corresponding name in resolvers.ts
  */
-export const ZONES: Record<string, Linode.ZoneName> = {
+export const ZONES: Record<string, ZoneName> = {
   'us-east': 'newark',
   'us-east-1a': 'newark',
   'us-south': 'dallas',
@@ -173,9 +175,6 @@ export const dcContinent: Record<string, ContinentKey> = {
   'ca-east': 'NA',
   'ap-west': 'AS'
 };
-
-// At this time, the following regions do not support block storage.
-export const regionsWithoutBlockStorage = ['us-southeast', 'ap-northeast-1a'];
 
 // Default error message for non-API errors
 export const DEFAULT_ERROR_MESSAGE = 'An unexpected error occurred.';

@@ -1,5 +1,6 @@
 import countryData from 'country-region-data';
-import { defaultTo, lensPath, pathOr, set } from 'ramda';
+import { Account } from 'linode-js-sdk/lib/account';
+import { defaultTo, lensPath, set } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -23,7 +24,7 @@ import composeState from 'src/utilities/composeState';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
-import { Country, Region } from './types';
+import { Country } from './types';
 
 type ClassNames = 'root' | 'mainFormContainer' | 'stateZip';
 
@@ -137,7 +138,7 @@ class UpdateContactInformationPanel extends React.Component<
 
   renderErrors = (e: Linode.ApiFieldError[]) => null;
 
-  renderForm = (account: Linode.Account) => {
+  renderForm = (account: Account) => {
     const { classes, accountError } = this.props;
     const { fields, success } = this.state;
 
@@ -170,24 +171,24 @@ class UpdateContactInformationPanel extends React.Component<
       }
     );
 
-    const currentCountryResult = countryData.filter((country: Country) =>
-      fields.country
-        ? country.countryShortCode === fields.country
-        : country.countryShortCode === account.country
-    );
+    // const currentCountryResult = countryData.filter((country: Country) =>
+    //   fields.country
+    //     ? country.countryShortCode === fields.country
+    //     : country.countryShortCode === account.country
+    // );
 
-    const countryRegions: Region[] = pathOr(
-      [],
-      ['0', 'regions'],
-      currentCountryResult
-    );
+    // const countryRegions: Region[] = pathOr(
+    //   [],
+    //   ['0', 'regions'],
+    //   currentCountryResult
+    // );
 
-    const regionResults = countryRegions.map(region => {
-      return {
-        value: region.shortCode ? region.shortCode : region.name,
-        label: region.name
-      };
-    });
+    // const regionResults = countryRegions.map(region => {
+    //   return {
+    //     value: region.name,
+    //     label: region.name
+    //   };
+    // });
 
     return (
       <Grid
@@ -372,28 +373,55 @@ class UpdateContactInformationPanel extends React.Component<
         >
           <Grid container className={classes.stateZip}>
             <Grid item xs={12} sm={7}>
-              <EnhancedSelect
-                label="State / Province"
-                errorText={errorMap.state}
-                onChange={this.updateState}
-                placeholder="Select a State"
-                options={regionResults}
-                isClearable={false}
-                // Explicitly setting the value as an object so the text will populate on selection.
-                // For more info see here: https://github.com/JedWatson/react-select/issues/2674
-                value={
-                  fields.state
-                    ? {
-                        label: fields.state,
-                        value: fields.state
-                      }
-                    : ''
-                }
-                textFieldProps={{
-                  dataAttrs: {
-                    'data-qa-contact-province': true
+              {/*
+                @todo use the <EnhancedSelect /> in favor of the
+                <TextField /> when the DB and API remove the 24 character limit.
+
+                The issue here is that the province/state short codes (for a subset of countries)
+                uses the ISO 3316 numeric format, which is not as helpful as just being able
+                to submit the full name of the region. What we'd like to do is PUT /account
+                with the full name of the province/state, but there is a server-side
+                24-character limitation which makes it impossible to submit some provinces.
+
+                Follow DBA-1066 for more information.
+              */}
+              {/* <EnhancedSelect
+                  label="State / Province"
+                  errorText={errorMap.state}
+                  onChange={this.updateState}
+                  placeholder="Select a State"
+                  options={regionResults}
+                  isClearable={false}
+                  // Explicitly setting the value as an object so the text will populate on selection.
+                  // For more info see here: https://github.com/JedWatson/react-select/issues/2674
+                  value={
+                    fields.state
+                      ? {
+                          label: fields.state,
+                          value: fields.state
+                        }
+                      : ''
                   }
+                  textFieldProps={{
+                    dataAttrs: {
+                      'data-qa-contact-province': true
+                    }
+                  }}
+                /> */}
+              <TextField
+                label="State / Province"
+                placeholder="Enter a State or Province"
+                errorText={errorMap.state}
+                onChange={e =>
+                  this.updateState({
+                    label: e.target.value,
+                    value: e.target.value
+                  })
+                }
+                dataAttrs={{
+                  'data-qa-contact-province': true
                 }}
+                value={fields.state}
               />
             </Grid>
             <Grid item xs={12} sm={5}>

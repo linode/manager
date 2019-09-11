@@ -1,9 +1,10 @@
+import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 
 type MapProps<TOuter, TInner> = (
   ownProps: TOuter,
-  nodeBalancers: Linode.NodeBalancer[],
+  nodeBalancers: NodeBalancer[],
   loading: boolean,
   error?: Linode.ApiFieldError[]
 ) => TInner;
@@ -17,13 +18,13 @@ export default <TInner extends {}, TOuter extends {}>(
     /** itemsById looks like this
      *
      * {
-     *  123: Linode.NodeBalancer,
-     *  4234: Linode.NodeBalancer
+     *  123: NodeBalancer,
+     *  4234: NodeBalancer
      * }
      *
      * we want it to look like
      *
-     * Linode.NodeBalancer[]
+     * NodeBalancer[]
      */
     const nodeBalancers = Object.keys(itemsById).map(
       eachKey => itemsById[eachKey]

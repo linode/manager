@@ -1,14 +1,17 @@
-import { defaultTo, flatten } from 'ramda';
+import { Disk } from 'linode-js-sdk/lib/linodes';
+import { Volume } from 'linode-js-sdk/lib/volumes';
+import { defaultTo } from 'ramda';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
-import Select, { GroupType, Item } from 'src/components/EnhancedSelect/Select';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { titlecase } from 'src/features/linodes/presentation';
+import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 
-export interface ExtendedDisk extends Linode.Disk {
+export interface ExtendedDisk extends Disk {
   _id: string;
 }
 
-export interface ExtendedVolume extends Linode.Volume {
+export interface ExtendedVolume extends Volume {
   _id: string;
 }
 
@@ -26,20 +29,6 @@ interface Props {
 }
 
 type CombinedProps = Props;
-
-export const getSelectedOption = (
-  selectedValue: string,
-  options: GroupType<string>[]
-) => {
-  if (!selectedValue) {
-    return null;
-  }
-  // Ramda's flatten doesn't seem able to handle the typing issues here, but this returns an array of Item<string>.
-  const optionsList = (flatten(
-    options.map(group => group.options)
-  ) as unknown) as Item<string>[];
-  return optionsList.find(option => option.value === selectedValue) || null;
-};
 
 const DeviceSelection: React.StatelessComponent<CombinedProps> = props => {
   const { devices, onChange, getSelected, slots, rescue, disabled } = props;
@@ -66,7 +55,10 @@ const DeviceSelection: React.StatelessComponent<CombinedProps> = props => {
           options: [{ value: null, label: 'None' }]
         });
 
-        const selectedDevice = getSelectedOption(getSelected(slot), deviceList);
+        const selectedDevice = getSelectedOptionFromGroupedOptions(
+          getSelected(slot),
+          deviceList
+        );
 
         return counter < idx ? null : (
           <FormControl

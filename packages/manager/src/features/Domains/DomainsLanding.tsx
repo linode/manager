@@ -1,3 +1,4 @@
+import { Domain } from 'linode-js-sdk/lib/domains';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -154,7 +155,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       }
     });
 
-  handleSuccess = (domain: Linode.Domain) => {
+  handleSuccess = (domain: Domain) => {
     if (domain.id) {
       return this.props.history.push(`/domains/${domain.id}`);
     }
@@ -395,12 +396,18 @@ const EmptyCopy = () => (
       <a
         href="https://www.linode.com/docs/platform/manager/dns-manager-new-manager/"
         target="_blank"
+        rel="noopener noreferrer"
         className="h-u"
       >
         Find out how to setup your domains associated with your Linodes
       </a>
       &nbsp;or&nbsp;
-      <a href="https://www.linode.com/docs/" target="_blank" className="h-u">
+      <a
+        href="https://www.linode.com/docs/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="h-u"
+      >
         visit our guides and tutorials.
       </a>
     </Typography>
@@ -417,10 +424,12 @@ const RenderEmpty: React.StatelessComponent<{
         title="Manage your Domains"
         copy={<EmptyCopy />}
         icon={DomainIcon}
-        buttonProps={{
-          onClick: props.onClick,
-          children: 'Add a Domain'
-        }}
+        buttonProps={[
+          {
+            onClick: props.onClick,
+            children: 'Add a Domain'
+          }
+        ]}
       />
     </React.Fragment>
   );

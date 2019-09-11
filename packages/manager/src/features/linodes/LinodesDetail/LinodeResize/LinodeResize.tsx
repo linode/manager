@@ -1,3 +1,5 @@
+import { GrantLevel } from 'linode-js-sdk/lib/account';
+import { Disk, LinodeStatus, LinodeType, resizeLinode } from "linode-js-sdk/lib/linodes";
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -32,7 +34,6 @@ import SelectPlanPanel, {
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import { linodeInTransition } from 'src/features/linodes/transitions';
-import { resizeLinode } from 'src/services/linodes';
 import { ApplicationState } from 'src/store';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -85,10 +86,10 @@ const styles = (theme: Theme) =>
 interface LinodeContextProps {
   linodeId: number;
   linodeType: null | string;
-  linodeStatus?: Linode.LinodeStatus;
+  linodeStatus?: LinodeStatus;
   linodeLabel: string;
-  permissions: Linode.GrantLevel;
-  linodeDisks: Linode.Disk[];
+  permissions: GrantLevel;
+  linodeDisks: Disk[];
 }
 
 interface State {
@@ -112,7 +113,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
     autoDiskResize: shouldEnableAutoResizeDiskOption(this.props.linodeDisks)[1]
   };
 
-  static extendType = (type: Linode.LinodeType): ExtendedType => {
+  static extendType = (type: LinodeType): ExtendedType => {
     const {
       label,
       memory,
@@ -451,7 +452,7 @@ const linodeContext = withLinodeDetailContext(state => {
  * of whether the option should be enabled
  */
 export const shouldEnableAutoResizeDiskOption = (
-  linodeDisks: Linode.Disk[]
+  linodeDisks: Disk[]
 ): [string | undefined, boolean] => {
   const linodeExtDiskLabels = linodeDisks.reduce((acc, eachDisk) => {
     return eachDisk.filesystem === 'ext3' || eachDisk.filesystem === 'ext4'

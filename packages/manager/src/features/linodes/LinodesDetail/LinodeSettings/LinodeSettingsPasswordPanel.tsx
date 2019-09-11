@@ -1,3 +1,9 @@
+import { GrantLevel } from 'linode-js-sdk/lib/account';
+import {
+  changeLinodeDiskPassword,
+  Disk,
+  getLinodeDisks
+} from 'linode-js-sdk/lib/linodes';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
@@ -8,7 +14,6 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
 import PanelErrorBoundary from 'src/components/PanelErrorBoundary';
 import PasswordInput from 'src/components/PasswordInput';
-import { changeLinodeDiskPassword, getLinodeDisks } from 'src/services/linodes';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { debounce } from 'throttle-debounce';
@@ -36,7 +41,7 @@ interface State {
 type CombinedProps = Props & ContextProps;
 
 interface ContextProps {
-  permissions: Linode.GrantLevel;
+  permissions: GrantLevel;
 }
 
 class LinodeSettingsPasswordPanel extends React.Component<
@@ -129,7 +134,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
     )
       .then(response =>
         response.data
-          .filter((disk: Linode.Disk) => disk.filesystem !== 'swap')
+          .filter((disk: Disk) => disk.filesystem !== 'swap')
           .map(disk => ({
             value: disk.id,
             label: disk.label,

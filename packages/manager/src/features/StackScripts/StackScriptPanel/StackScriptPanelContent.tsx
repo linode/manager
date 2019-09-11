@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import * as React from 'react';
 import { compose } from 'recompose';
 import StackScriptBase, {
@@ -32,7 +33,7 @@ interface State {
 
 interface Props {
   currentUser: string;
-  publicImages: Linode.Image[];
+  publicImages: Image[];
   request: (
     username: string,
     params?: any,

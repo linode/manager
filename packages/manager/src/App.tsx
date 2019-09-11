@@ -1,4 +1,11 @@
 import * as classnames from 'classnames';
+import {
+  Account,
+  AccountCapability,
+  Notification
+} from 'linode-js-sdk/lib/account';
+import { Image } from 'linode-js-sdk/lib/images';
+import { Linode } from 'linode-js-sdk/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { shim } from 'promise.prototype.finally';
 import { path, pathOr } from 'ramda';
@@ -359,6 +366,8 @@ export class App extends React.Component<CombinedProps, State> {
       accountError,
       linodesLoading,
       domainsLoading,
+      accountSettingsError,
+      accountSettingsLoading,
       userId,
       username,
       volumesLoading,
@@ -412,24 +421,27 @@ export class App extends React.Component<CombinedProps, State> {
         <DataLoadedListener
           markAppAsLoaded={this.props.markAppAsDoneLoading}
           flagsHaveLoaded={this.state.flagsLoaded}
-          linodesLoadingOrErrorExists={
+          linodesLoadedOrErrorExists={
             linodesLoading === false || !!linodesError
           }
-          volumesLoadingOrErrorExists={
+          volumesLoadedOrErrorExists={
             volumesLoading === false || !!volumesError
           }
-          domainsLoadingOrErrorExists={
+          domainsLoadedOrErrorExists={
             domainsLoading === false || !!domainsError
           }
-          bucketsLoadingOrErrorExists={
+          bucketsLoadedOrErrorExists={
             bucketsLoading === false || !!bucketsError
           }
-          nodeBalancersLoadingOrErrorExists={
+          nodeBalancersLoadedOrErrorExists={
             nodeBalancersLoading === false || !!nodeBalancersError
           }
-          profileLoadingOrErrorExists={!!this.props.userId || !!profileError}
-          accountLoadingOrErrorExists={
-            !!this.props.accountCapabilities || !!accountError
+          profileLoadedOrErrorExists={!!this.props.userId || !!profileError}
+          accountLoadedOrErrorExists={
+            accountLoading === false || !!accountError
+          }
+          accountSettingsLoadedOrErrorExists={
+            accountSettingsLoading === false || !!accountSettingsError
           }
           appIsLoaded={!this.props.appIsLoading}
         />
@@ -532,7 +544,7 @@ export class App extends React.Component<CombinedProps, State> {
 // whether or not the feature is enabled for this account.
 const getObjectStorageRoute = (
   accountLoading: boolean,
-  accountCapabilities: Linode.AccountCapability[],
+  accountCapabilities: AccountCapability[],
   accountError?: Error | Linode.ApiFieldError[]
 ) => {
   let component;
@@ -558,8 +570,8 @@ const getObjectStorageRoute = (
 
 interface DispatchProps {
   addNotificationsToLinodes: (
-    notifications: Linode.Notification[],
-    linodes: Linode.Linode[]
+    notifications: Notification[],
+    linodes: Linode[]
   ) => void;
   markAppAsDoneLoading: () => void;
 }
@@ -569,8 +581,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
 ) => {
   return {
     addNotificationsToLinodes: (
-      _notifications: Linode.Notification[],
-      linodes: Linode.Linode[]
+      _notifications: Notification[],
+      linodes: Linode[]
     ) => dispatch(addNotificationsToLinodes(_notifications, linodes)),
     markAppAsDoneLoading: () => dispatch(handleLoadingDone())
   };
@@ -578,22 +590,24 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
 
 interface StateProps {
   /** Profile */
-  linodes: Linode.Linode[];
-  images?: Linode.Image[];
-  notifications?: Linode.Notification[];
+  linodes: Linode[];
+  images?: Image[];
+  notifications?: Notification[];
   types?: string[];
   regions?: Linode.Region[];
   userId?: number;
-  accountData?: Linode.Account;
+  accountData?: Account;
   username: string;
   documentation: Linode.Doc[];
   isLoggedInAsCustomer: boolean;
-  accountCapabilities: Linode.AccountCapability[];
+  accountCapabilities: AccountCapability[];
   linodesLoading: boolean;
   volumesLoading: boolean;
   domainsLoading: boolean;
   bucketsLoading: boolean;
   accountLoading: boolean;
+  accountSettingsLoading: boolean;
+  accountSettingsError?: Linode.ApiFieldError[];
   nodeBalancersLoading: boolean;
   linodesError?: Linode.ApiFieldError[];
   volumesError?: Linode.ApiFieldError[];
@@ -638,6 +652,15 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   accountCapabilities: pathOr(
     [],
     ['__resources', 'account', 'data', 'capabilities'],
+    state
+  ),
+  accountSettingsLoading: pathOr(
+    true,
+    ['__resources', 'accountSettings', 'loading'],
+    state
+  ),
+  accountSettingsError: path(
+    ['__resources', 'accountSettings', 'error'],
     state
   ),
   linodesLoading: state.__resources.linodes.loading,

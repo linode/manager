@@ -6,6 +6,8 @@
   "rules": {
     "interface-name": false,
     "object-literal-sort-keys": false,
-    "ban-types": false
+    "ban-types": false,
+    "variable-name": false,
+    "array-type": false
   }
 }

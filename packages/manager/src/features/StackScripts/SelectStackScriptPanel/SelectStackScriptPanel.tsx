@@ -1,3 +1,6 @@
+import { Grant } from 'linode-js-sdk/lib/account';
+import { Image } from 'linode-js-sdk/lib/images';
+import { Linode } from 'linode-js-sdk/lib/linodes'
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -25,7 +28,7 @@ import StackScriptTableHead from '../Partials/StackScriptTableHead';
 import SelectStackScriptPanelContent from './SelectStackScriptPanelContent';
 import StackScriptSelectionRow from './StackScriptSelectionRow';
 
-export interface ExtendedLinode extends Linode.Linode {
+export interface ExtendedLinode extends Linode {
   heading: string;
   subHeadings: string[];
 }
@@ -89,14 +92,14 @@ interface Props extends RenderGuardProps {
     images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]
   ) => void;
-  publicImages: Linode.Image[];
+  publicImages: Image[];
   resetSelectedStackScript: () => void;
   disabled?: boolean;
   request: (
     username: string,
     params?: any,
     filter?: any,
-    stackScriptGrants?: Linode.Grant[]
+    stackScriptGrants?: Grant[]
   ) => Promise<Linode.ResourcePage<any>>;
   category: string;
   header: string;

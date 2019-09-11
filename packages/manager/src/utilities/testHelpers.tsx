@@ -1,4 +1,5 @@
 import { render } from '@testing-library/react';
+import { ResourcePage } from 'linode-js-sdk/lib/types'
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { MemoryRouter } from 'react-router-dom';
@@ -9,7 +10,7 @@ import store from 'src/store';
 export let createPromiseLoaderResponse: <T>(r: T) => PromiseLoaderResponse<T>;
 createPromiseLoaderResponse = response => ({ response });
 
-export let createResourcePage: <T>(data: T[]) => Linode.ResourcePage<T>;
+export let createResourcePage: <T>(data: T[]) => ResourcePage<T>;
 createResourcePage = data => ({
   data,
   page: 0,

@@ -1,6 +1,7 @@
+import { Event } from 'linode-js-sdk/lib/account'
 import { ExtendedEvent } from 'src/store/events/event.helpers';
 
-export const events: Linode.Event[] = [
+export const events: Event[] = [
   {
     id: 18029754,
     time_remaining: 0,
@@ -453,7 +454,7 @@ export const events: Linode.Event[] = [
   }
 ];
 
-export const uniqueEvents: Linode.Event[] = [
+export const uniqueEvents: Event[] = [
   {
     id: 1231234,
     time_remaining: 50,

@@ -1,3 +1,6 @@
+import { Grant } from 'linode-js-sdk/lib/account';
+import { Image } from 'linode-js-sdk/lib/images';
+import { ResourcePage } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import StackScriptBase, {
@@ -14,14 +17,14 @@ interface Props {
     userDefinedFields: Linode.StackScript.UserDefinedField[]
   ) => void;
   resetStackScriptSelection: () => void;
-  publicImages: Linode.Image[];
+  publicImages: Image[];
   currentUser: string;
   request: (
     username: string,
     params?: any,
     filter?: any,
-    stackScriptGrants?: Linode.Grant[]
-  ) => Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
+    stackScriptGrants?: Grant[]
+  ) => Promise<ResourcePage<Linode.StackScript.Response>>;
   category: string;
   disabled?: boolean;
 }

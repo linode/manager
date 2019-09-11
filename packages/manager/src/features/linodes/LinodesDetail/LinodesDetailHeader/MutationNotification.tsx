@@ -1,3 +1,4 @@
+import { Disk, getType, LinodeSpecs, LinodeType, startMutation } from 'linode-js-sdk/lib/linodes'
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -12,7 +13,6 @@ import {
 } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import { resetEventsPolling } from 'src/events';
-import { startMutation } from 'src/services/linodes';
 import { ApplicationState } from 'src/store';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import {
@@ -42,7 +42,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  disks: Linode.Disk[];
+  disks: Disk[];
 }
 
 type CombinedProps = Props &
@@ -53,12 +53,12 @@ type CombinedProps = Props &
   DispatchProps &
   WithStyles<ClassNames>;
 
-const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
+const MutationNotification: React.FC<CombinedProps> = props => {
   const {
     classes,
-    types,
+    types: allTypes,
     linodeId,
-    linodeTypeData,
+    linodeType,
     linodeSpecs,
     enqueueSnackbar,
     openMutationDrawer,
@@ -70,17 +70,41 @@ const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
     updateLinode
   } = props;
 
-  /** Mutate */
-  if (!linodeTypeData) {
-    return null;
-  }
+  const [
+    successorMetaData,
+    setSuccessorMetaData
+  ] = React.useState<LinodeType | null>(null);
 
-  const successorId = linodeTypeData.successor;
+  React.useEffect(() => {
+    if (!linodeType) {
+      return;
+    }
 
-  const successorType = successorId
-    ? types.find(({ id }) => id === successorId)
-    : null;
-  const { vcpus, network_out, disk, transfer, memory } = linodeTypeData;
+    /** did we find successor meta data in GET /types or GET /types-legacy? */
+    const foundSuccessorInAllTypes = allTypes.find(
+      ({ id }) => id === linodeType.successor
+    );
+
+    if (allTypes.length > 0 && !!foundSuccessorInAllTypes) {
+      setSuccessorMetaData(foundSuccessorInAllTypes);
+    } else {
+      /**
+       * this means we couldn't find the Linode's successor in either
+       * GET request to /types or /types-legacy. This is a SUPER edge
+       * case but it *does* happen. An example type that would flatter this
+       * condition would be the "standard-4" plan. In this case, we need to actually
+       * request the successor metadata
+       */
+      if (linodeType.successor) {
+        getType(linodeType.successor)
+          .then(requestedType => {
+            setSuccessorMetaData(requestedType);
+          })
+          /** just silently fail if we couldn't get the data */
+          .catch(e => e);
+      }
+    }
+  }, [allTypes, linodeType]);
 
   const initMutation = () => {
     openMutationDrawer();
@@ -108,14 +132,17 @@ const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
       });
   };
 
-  if (!successorId || !successorType) {
-    return null;
-  }
-
   const usedDiskSpace = addUsedDiskSpace(props.disks);
   const estimatedTimeToUpgradeInMins = Math.ceil(
     usedDiskSpace / MBpsIntraDC / 60
   );
+
+  /** Mutate */
+  if (!linodeType || !successorMetaData) {
+    return null;
+  }
+
+  const { vcpus, network_out, disk, transfer, memory } = linodeType;
 
   return (
     <>
@@ -143,15 +170,21 @@ const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
         error={mutationDrawerError}
         handleClose={closeMutationDrawer}
         mutateInfo={{
-          vcpus: successorType.vcpus !== vcpus ? successorType.vcpus : null,
+          vcpus:
+            successorMetaData.vcpus !== vcpus ? successorMetaData.vcpus : null,
           network_out:
-            successorType.network_out !== network_out
-              ? successorType.network_out
+            successorMetaData.network_out !== network_out
+              ? successorMetaData.network_out
               : null,
-          disk: successorType.disk !== disk ? successorType.disk : null,
+          disk: successorMetaData.disk !== disk ? successorMetaData.disk : null,
           transfer:
-            successorType.transfer !== transfer ? successorType.transfer : null,
-          memory: successorType.memory !== memory ? successorType.memory : null
+            successorMetaData.transfer !== transfer
+              ? successorMetaData.transfer
+              : null,
+          memory:
+            successorMetaData.memory !== memory
+              ? successorMetaData.memory
+              : null
         }}
         currentTypeInfo={{
           vcpus: linodeSpecs.vcpus,
@@ -169,16 +202,16 @@ const MutationNotification: React.StatelessComponent<CombinedProps> = props => {
 /**
  * add all the used disk space together
  */
-export const addUsedDiskSpace = (disks: Linode.Disk[]) => {
+export const addUsedDiskSpace = (disks: Disk[]) => {
   return disks.reduce((accum, eachDisk) => eachDisk.size + accum, 0);
 };
 
 const styled = withStyles(styles);
 
 interface ContextProps {
-  linodeSpecs: Linode.LinodeSpecs;
+  linodeSpecs: LinodeSpecs;
   linodeId: number;
-  linodeType?: Linode.LinodeType | null;
+  linodeType?: LinodeType | null;
 }
 
 interface DispatchProps {
@@ -205,7 +238,7 @@ const enhanced = compose<CombinedProps, Props>(
   withLinodeDetailContext<ContextProps>(({ linode }) => ({
     linodeSpecs: linode.specs,
     linodeId: linode.id,
-    linodeTypeData: linode._type
+    linodeType: linode._type
   })),
   withMutationDrawerState,
   withSnackbar

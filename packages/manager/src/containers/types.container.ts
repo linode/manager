@@ -1,3 +1,4 @@
+import { LinodeType } from 'linode-js-sdk/lib/linodes'
 import { compose, filter, map, pathOr } from 'ramda';
 import { connect } from 'react-redux';
 
@@ -13,7 +14,7 @@ export interface WithTypesProps {
 
 export default connect((state: ApplicationState, ownProps) => ({
   typesData: compose(
-    map<Linode.LinodeType, ExtendedType>(type => {
+    map<LinodeType, ExtendedType>(type => {
       const {
         label,
         memory,
@@ -31,7 +32,7 @@ export default connect((state: ApplicationState, ownProps) => ({
       };
     }),
     /* filter out all the deprecated types because we don't to display them */
-    filter<any>((eachType: Linode.LinodeType) => {
+    filter<any>((eachType: LinodeType) => {
       if (!eachType.successor) {
         return true;
       }

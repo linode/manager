@@ -1,3 +1,4 @@
+import { EventAction, EventStatus } from 'linode-js-sdk/lib/account';
 import * as moment from 'moment';
 import { Dispatch } from 'redux';
 import { ApplicationState } from 'src/store';
@@ -57,7 +58,7 @@ export default linodeEventsHandler;
 
 const handleLinodeRebuild = (
   dispatch: Dispatch<any>,
-  status: Linode.EventStatus,
+  status: EventStatus,
   id: number,
   percent_complete: number | null
 ) => {
@@ -91,7 +92,7 @@ const handleLinodeRebuild = (
 
 const handleLinodeMigrate = (
   dispatch: Dispatch<any>,
-  status: Linode.EventStatus,
+  status: EventStatus,
   id: number
 ) => {
   switch (status) {
@@ -113,7 +114,7 @@ const handleLinodeMigrate = (
 
 const handleLinodeUpdate = (
   dispatch: Dispatch<any>,
-  status: Linode.EventStatus,
+  status: EventStatus,
   id: number
 ) => {
   switch (status) {
@@ -131,7 +132,7 @@ const handleLinodeUpdate = (
 
 const handleLinodeDelete = (
   dispatch: Dispatch<any>,
-  status: Linode.EventStatus,
+  status: EventStatus,
   id: number,
   state: ApplicationState
 ) => {
@@ -156,7 +157,7 @@ const handleLinodeDelete = (
 
 const handleLinodeCreation = (
   dispatch: Dispatch<any>,
-  status: Linode.EventStatus,
+  status: EventStatus,
   id: number,
   state: ApplicationState
 ) => {
@@ -188,7 +189,7 @@ const handleLinodeCreation = (
  */
 export const shouldRequestNotifications = (
   notificationsLastUpdated: number,
-  lastEventAction?: Linode.EventAction,
+  lastEventAction?: EventAction,
   lastEventCreated?: string
 ) => {
   if (!lastEventAction || !lastEventCreated) {
@@ -202,7 +203,7 @@ export const shouldRequestNotifications = (
   );
 };
 
-const eventsWithRelevantNotifications: Linode.EventAction[] = [
+const eventsWithRelevantNotifications: EventAction[] = [
   'linode_resize',
   'linode_resize_create',
   'linode_migrate',

@@ -1,3 +1,4 @@
+import { Event } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
@@ -26,7 +27,8 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     header: {
-      marginBottom: theme.spacing(2)
+      marginTop: theme.spacing(3),
+      marginBottom: theme.spacing(1)
     },
     viewMore: {
       position: 'relative',
@@ -44,7 +46,7 @@ interface Props {
 interface State {
   loading: boolean;
   error?: string;
-  events: Linode.Event[];
+  events: Event[];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;

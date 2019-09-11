@@ -1,3 +1,14 @@
+import { Event, Notification } from 'linode-js-sdk/lib/account';
+import { Image } from 'linode-js-sdk/lib/images';
+import {
+  Disk,
+  LinodeSpecs,
+  LinodeStatus,
+  LinodeType,
+  scheduleOrQueueMigration
+} from 'linode-js-sdk/lib/linodes';
+import { APIError as APIErrorType } from 'linode-js-sdk/lib/types';
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
@@ -27,14 +38,14 @@ import { linodeInTransition } from '../transitions';
 import CautionNotice from './CautionNotice';
 import ConfigureForm from './ConfigureForm';
 
-import { scheduleOrQueueMigration } from 'src/services/linodes/linodeActions.ts';
-
 import withRegions, {
   DefaultProps as RegionProps
 } from 'src/containers/regions.container';
 
 import { MBpsInterDC } from 'src/constants';
 import { addUsedDiskSpace } from 'src/features/linodes/LinodesDetail/LinodeAdvanced/LinodeDiskSpace';
+import { formatDate } from 'src/utilities/formatDate';
+import { sendMigrationInitiatedEvent } from 'src/utilities/ga';
 
 const useStyles = makeStyles((theme: Theme) => ({
   details: {
@@ -110,9 +121,16 @@ const MigrateLanding: React.FC<CombinedProps> = props => {
       .then(() => {
         resetEventsPolling();
         setLoading(false);
+        sendMigrationInitiatedEvent(
+          region.region,
+          selectedRegion,
+          +formatDate(new Date().toISOString(), {
+            format: 'H'
+          })
+        );
         props.history.push(`/linodes/${linodeId}`);
       })
-      .catch((e: Linode.ApiFieldError[]) => {
+      .catch((e: APIErrorType[]) => {
         setLoading(false);
         setAPIError(e[0].reason);
       });
@@ -225,14 +243,14 @@ interface LinodeContextProps {
   linodeId: number;
   region: { region: string; countryCode: string };
   label: string;
-  linodeStatus: Linode.LinodeStatus;
-  linodeSpecs: Linode.LinodeSpecs;
-  linodeEvents: Linode.Event[];
+  linodeStatus: LinodeStatus;
+  linodeSpecs: LinodeSpecs;
+  linodeEvents: Event[];
   type: string | null;
-  image: Linode.Image;
-  linodeVolumes: Linode.Volume[];
-  recentEvents: Linode.Event[];
-  linodeDisks: Linode.Disk[];
+  image: Image;
+  linodeVolumes: Volume[];
+  recentEvents: Event[];
+  linodeDisks: Disk[];
 }
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
@@ -253,9 +271,9 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 }));
 
 interface WithTypesAndImages {
-  types: Linode.LinodeType[];
-  images: Linode.Image[];
-  notifications: Linode.Notification[];
+  types: LinodeType[];
+  images: Image[];
+  notifications: Notification[];
 }
 
 const mapStateToProps: MapStateToProps<
@@ -278,10 +296,10 @@ export default compose<CombinedProps, {}>(
 )(MigrateLanding);
 
 const getDisabledReason = (
-  events: Linode.Event[],
+  events: Event[],
   linodeStatus: string,
   linodeID: number,
-  notifications: Linode.Notification[]
+  notifications: Notification[]
 ) => {
   if (events[0]) {
     if (

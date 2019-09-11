@@ -1,3 +1,5 @@
+import { Hypervisor, LinodeBackupStatus, LinodeBackupType, LinodeStatus } from 'linode-js-sdk/lib/linodes'
+
 export const LinodesWithBackups = [
   {
     label: 'fromnanoooooooode',
@@ -11,8 +13,8 @@ export const LinodesWithBackups = [
       transfer: 4000,
       vcpus: 2
     },
-    type: 'g6-standard-2' as Linode.LinodeBackupType,
-    hypervisor: 'kvm' as Linode.Hypervisor,
+    type: 'g6-standard-2' as LinodeBackupType,
+    hypervisor: 'kvm' as Hypervisor,
     region: 'us-central',
     backups: {
       enabled: true,
@@ -29,7 +31,7 @@ export const LinodesWithBackups = [
       network_out: 10,
       cpu: 90
     },
-    status: 'offline' as Linode.LinodeStatus,
+    status: 'offline' as LinodeStatus,
     group: '',
     created: '2018-06-05T16:15:03',
     currentBackups: {
@@ -54,8 +56,8 @@ export const LinodesWithBackups = [
           created: '2018-06-06T00:23:17',
           region: 'us-central',
           label: null,
-          type: 'auto' as Linode.LinodeBackupType,
-          status: 'successful' as Linode.LinodeBackupStatus
+          type: 'auto' as LinodeBackupType,
+          status: 'successful' as LinodeBackupStatus
         }
       ],
       snapshot: {
@@ -80,8 +82,8 @@ export const LinodesWithBackups = [
           created: '2018-06-05T16:29:15',
           region: 'us-central',
           label: 'testing',
-          type: 'snapshot' as Linode.LinodeBackupType,
-          status: 'successful' as Linode.LinodeBackupStatus
+          type: 'snapshot' as LinodeBackupType,
+          status: 'successful' as LinodeBackupStatus
         }
       }
     },

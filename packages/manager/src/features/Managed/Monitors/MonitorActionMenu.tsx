@@ -13,6 +13,7 @@ interface Props {
   status: Linode.MonitorStatus;
   label: string;
   openDialog: (id: number, label: string) => void;
+  openDrawer: (id: number, mode: string) => void;
 }
 
 export type CombinedProps = Props & DispatchProps & WithSnackbarProps;
@@ -26,6 +27,7 @@ export class MonitorActionMenu extends React.Component<CombinedProps, {}> {
       label,
       monitorID,
       openDialog,
+      openDrawer,
       status
     } = this.props;
 
@@ -67,6 +69,13 @@ export class MonitorActionMenu extends React.Component<CombinedProps, {}> {
                 closeMenu();
               }
             },
+        {
+          title: 'Edit',
+          onClick: () => {
+            openDrawer(monitorID, 'edit');
+            closeMenu();
+          }
+        },    
         {
           title: 'Delete',
           onClick: () => {

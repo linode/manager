@@ -3,8 +3,9 @@ import {
   CloneVolumePayload,
   ResizeVolumePayload,
   UpdateVolumeRequest,
+  Volume,
   VolumeRequestPayload
-} from 'src/services/volumes';
+} from 'linode-js-sdk/lib/volumes';
 import { actionCreatorFactory } from 'typescript-fsa';
 
 export interface VolumeId {
@@ -20,17 +21,17 @@ export const actionCreator = actionCreatorFactory('@@manager/volumes');
 
 export const createVolumeActions = actionCreator.async<
   VolumeRequestPayload,
-  Linode.Volume,
+  Volume,
   Linode.ApiFieldError[]
 >(`create`);
 export const getOneVolumeActions = actionCreator.async<
   VolumeId,
-  Linode.Volume,
+  Volume,
   Linode.ApiFieldError[]
 >(`get-one`);
 export const updateVolumeActions = actionCreator.async<
   UpdateVolumeParams,
-  Linode.Volume,
+  Volume,
   Linode.ApiFieldError[]
 >(`update`);
 export const deleteVolumeActions = actionCreator.async<
@@ -41,7 +42,7 @@ export const deleteVolumeActions = actionCreator.async<
 
 export const attachVolumeActions = actionCreator.async<
   AttachVolumeParams,
-  Linode.Volume,
+  Volume,
   Linode.ApiFieldError[]
 >(`attach`);
 export const detachVolumeActions = actionCreator.async<
@@ -52,12 +53,12 @@ export const detachVolumeActions = actionCreator.async<
 
 export const cloneVolumeActions = actionCreator.async<
   CloneVolumeParams,
-  Linode.Volume,
+  Volume,
   Linode.ApiFieldError[]
 >(`clone`);
 export const resizeVolumeActions = actionCreator.async<
   ResizeVolumeParams,
-  Linode.Volume,
+  Volume,
   Linode.ApiFieldError[]
 >(`resize`);
 
@@ -69,6 +70,6 @@ export interface GetAllVolumesOptions {
 }
 export const getAllVolumesActions = actionCreator.async<
   GetAllVolumesOptions,
-  Linode.Volume[],
+  Volume[],
   Linode.ApiFieldError[]
 >('get-all');

@@ -1,3 +1,4 @@
+import { GrantLevel } from 'linode-js-sdk/lib/account';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -162,7 +163,7 @@ const styled = withStyles(styles);
 const errorBoundary = PanelErrorBoundary({ heading: 'Delete Linode' });
 
 interface ContextProps {
-  permissions: Linode.GrantLevel;
+  permissions: GrantLevel;
 }
 
 const linodeContext = withLinodeDetailContext<ContextProps>(({ linode }) => ({

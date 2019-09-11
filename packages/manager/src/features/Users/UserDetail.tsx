@@ -1,3 +1,4 @@
+import { getUser, updateUser } from "linode-js-sdk/lib/account";
 import { clone, compose, path as pathRamda } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -24,7 +25,6 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TabLink from 'src/components/TabLink';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
-import { getUser, updateUser } from 'src/services/account';
 import { updateProfile } from 'src/services/profile';
 import { requestProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';

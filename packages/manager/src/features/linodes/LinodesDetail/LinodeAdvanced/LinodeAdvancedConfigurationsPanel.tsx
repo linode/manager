@@ -1,3 +1,4 @@
+import { Disk } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -97,7 +98,7 @@ class LinodeAdvancedConfigurationsPanel extends React.PureComponent<
 
 interface LinodeContextProps {
   linodeTotalDisk: number;
-  disks: Linode.Disk[];
+  disks: Disk[];
   linodeID: number;
 }
 

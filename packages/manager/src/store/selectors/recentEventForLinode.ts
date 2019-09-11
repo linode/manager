@@ -1,9 +1,10 @@
+import { Event } from 'linode-js-sdk/lib/account'
 import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';
 import { isInProgressEvent } from 'src/store/events/event.helpers';
 
 export default (linodeId: number) =>
-  createSelector<ApplicationState, Linode.Event[], undefined | Linode.Event>(
+  createSelector<ApplicationState, Event[], undefined | Event>(
     state => state.events.events,
     events => {
       let idx = 0;

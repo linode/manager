@@ -1,3 +1,5 @@
+import { Event } from 'linode-js-sdk/lib/account';
+import { Disk, LinodeStatus} from 'linode-js-sdk/lib/linodes'
 import * as React from 'react';
 import { compose } from 'recompose';
 import { linodeInTransition } from 'src/features/linodes/transitions';
@@ -28,9 +30,9 @@ const LinodeDetailHeader: React.StatelessComponent<CombinedProps> = props => {
 };
 
 interface LinodeContext {
-  linodeStatus: Linode.LinodeStatus;
-  linodeEvents: Linode.Event[];
-  linodeDisks: Linode.Disk[];
+  linodeStatus: LinodeStatus;
+  linodeEvents: Event[];
+  linodeDisks: Disk[];
 }
 
 export default compose<CombinedProps, {}>(

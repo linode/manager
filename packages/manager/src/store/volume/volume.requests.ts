@@ -8,8 +8,9 @@ import {
   getVolumes,
   resizeVolume as _resizeVolume,
   updateVolume as _updateVolume,
+  Volume,
   VolumeRequestPayload as _VolumeRequestPayload
-} from 'src/services/volumes';
+} from 'linode-js-sdk/lib/volumes';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import {
@@ -35,7 +36,7 @@ import {
 export type CreateVolumeRequest = _VolumeRequestPayload;
 export const createVolume = createRequestThunk<
   CreateVolumeRequest,
-  Linode.Volume,
+  Volume,
   Linode.ApiFieldError[]
 >(createVolumeActions, data => _createVolume(data));
 
@@ -44,7 +45,7 @@ export const createVolume = createRequestThunk<
  */
 export const updateVolume = createRequestThunk<
   UpdateVolumeParams,
-  Linode.Volume,
+  Volume,
   Linode.ApiFieldError[]
 >(updateVolumeActions, ({ volumeId, ...data }) =>
   _updateVolume(volumeId, data)
@@ -64,7 +65,7 @@ export const deleteVolume = createRequestThunk<
  */
 export const attachVolume = createRequestThunk<
   AttachVolumeParams,
-  Linode.Volume,
+  Volume,
   Linode.ApiFieldError[]
 >(attachVolumeActions, ({ volumeId, ...data }) =>
   _attachVolume(volumeId, data)
@@ -84,7 +85,7 @@ export const detachVolume = createRequestThunk<
  */
 export const resizeVolume = createRequestThunk<
   ResizeVolumeParams,
-  Linode.Volume,
+  Volume,
   Linode.ApiFieldError[]
 >(resizeVolumeActions, ({ volumeId, ...payload }) =>
   _resizeVolume(volumeId, payload)
@@ -95,7 +96,7 @@ export const resizeVolume = createRequestThunk<
  */
 export const getOneVolume = createRequestThunk<
   VolumeId,
-  Linode.Volume,
+  Volume,
   Linode.ApiFieldError[]
 >(getOneVolumeActions, ({ volumeId }) => _getVolume(volumeId));
 
@@ -104,7 +105,7 @@ export const getOneVolume = createRequestThunk<
  */
 export const cloneVolume = createRequestThunk<
   CloneVolumeParams,
-  Linode.Volume,
+  Volume,
   Linode.ApiFieldError[]
 >(cloneVolumeActions, ({ volumeId, ...payload }) =>
   _cloneVolume(volumeId, payload)
@@ -114,7 +115,7 @@ export const cloneVolume = createRequestThunk<
 
 * Get All Volumes
 */
-const _getAll = getAll<Linode.Volume>(getVolumes);
+const _getAll = getAll<Volume>(getVolumes);
 
 const getAllVolumesRequest = () => _getAll().then(({ data }) => data);
 

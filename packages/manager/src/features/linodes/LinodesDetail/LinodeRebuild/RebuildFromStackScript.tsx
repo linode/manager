@@ -1,4 +1,6 @@
 import { Formik, FormikProps } from 'formik';
+import { Image } from 'linode-js-sdk/lib/images';
+import { rebuildLinode, RebuildLinodeFromStackScriptSchema } from 'linode-js-sdk/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -16,10 +18,10 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import ImageSelect from 'src/components/ImageSelect';
 import Notice from 'src/components/Notice';
 import withImages from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/events';
-import SelectImagePanel from 'src/features/linodes/LinodesCreate/SelectImagePanel';
 import userSSHKeyHoc, {
   UserSSHKeyProps
 } from 'src/features/linodes/userSSHKeyHoc';
@@ -31,8 +33,6 @@ import {
 } from 'src/features/StackScripts/stackScriptUtils';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import { useStackScript } from 'src/hooks/useStackScript';
-import { rebuildLinode } from 'src/services/linodes';
-import { RebuildLinodeFromStackScriptSchema } from 'src/services/linodes/linode.schema';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
@@ -70,7 +70,7 @@ interface ContextProps {
   linodeId: number;
 }
 interface WithImagesProps {
-  imagesData: Linode.Image[];
+  imagesData: Image[];
   imagesLoading: boolean;
   imagesError?: string;
 }
@@ -292,11 +292,11 @@ export const RebuildFromStackScript: React.StatelessComponent<
               />
             )}
             {ss.images && ss.images.length > 0 ? (
-              <SelectImagePanel
+              <ImageSelect
                 variant="public"
+                title="Choose Image"
                 images={ss.images}
-                handleSelection={selected => setFieldValue('image', selected)}
-                updateFor={[classes, values.image, ss.images, errors]}
+                handleSelectImage={selected => setFieldValue('image', selected)}
                 selectedImageID={values.image}
                 error={errors.image}
               />

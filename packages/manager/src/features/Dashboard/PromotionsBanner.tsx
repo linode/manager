@@ -1,3 +1,4 @@
+import { Notification } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -38,7 +39,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  notifications: Linode.Notification[];
+  notifications: Notification[];
 }
 
 export type CombinedProps = Props & WithStyles<ClassNames>;

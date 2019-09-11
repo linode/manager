@@ -4,6 +4,58 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.70.0] - 2019-09-9
+
+### Added:
+- One-Click App navigation
+- Placeholder to enable Managed for an account
+
+### Changed:
+
+- Remove Private IP Checkbox from Clone Linode form
+- Edit drawer for Managed service monitors
+- Use dropdown instead of cards when selecting an image/distribution
+- Replace Region/Province Select with Text field in the Update Contact Information form
+- Managed credential drawer now uses separate forms for label and password/username
+- Update Managed icon on the dashboard to align with entity icons
+- Messaging and billing calculations for expiring credits
+- Use account credentials and groups when creating or editing a Monitor
+- Monitor dashboard card links to /managed/monitors instead of /support/tickets
+- Better error messaging for Inter-datacenter migrations
+
+### Fixed:
+- Client Secret key wrapping
+- Backups and clones always labeled as Debian
+- Correctly show upgrade banner for all deprecated types 
+- Issue with kernel input not being populated with a default value in the Edit Linode Configuration form
+- Stop inverting SSH key access to account for the API fix for this bug
+
+
+## [v0.69.0] - 2019-08-28
+
+### Added:
+- Inter-datacenter Migrations for Linodes
+- Warning text to detach volume dialog
+- Ability to add, edit, and delete Managed credentials
+- Ability to add, edit, and delete Managed contacts
+- Ability to add, update, and delete Managed service monitors
+- Ability to update Managed SSH Access for Linodes
+- Button to navigate to Create Linode workflow from the Linodes landing page
+
+### Changed:
+- Use dynamic versions for Kubernetes create workflow
+- Remove tags from Domains landing table rows
+- Support Tickets refactor
+- Improve splash page loader animation
+- Required textfields now show “(required)” instead of an asterisk
+- Show tax banner on dashboard and account landing only
+- Region selection in both the Create Linode and Create Volume workflows
+- Object Storage documentation
+
+### Fixed:
+- Update copy in credentials table
+- StackScript error handling
+
 ## [v0.68.0] - 2019-08-15
 
 ### Added:

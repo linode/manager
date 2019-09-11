@@ -9,13 +9,14 @@ interface Props {
   monitors: Linode.ManagedServiceMonitor[];
   loading: boolean;
   openDialog: (id: number, label: string) => void;
+  openDrawer: (id: number, mode: string) => void;
   error?: Linode.ApiFieldError[];
 }
 
 export type CombinedProps = Props;
 
 export const MonitorTableContent: React.FC<CombinedProps> = props => {
-  const { error, loading, monitors, openDialog } = props;
+  const { error, loading, monitors, openDialog, openDrawer } = props;
   if (loading) {
     return <TableRowLoading colSpan={12} />;
   }
@@ -40,6 +41,7 @@ export const MonitorTableContent: React.FC<CombinedProps> = props => {
           key={`service-monitor-row-${idx}`}
           monitor={monitor}
           openDialog={openDialog}
+          openDrawer={openDrawer}
         />
       ))}
     </>

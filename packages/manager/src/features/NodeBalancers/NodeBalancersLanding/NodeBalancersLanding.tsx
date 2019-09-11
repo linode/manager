@@ -1,3 +1,7 @@
+import {
+  NodeBalancer,
+  NodeBalancerConfig
+} from 'linode-js-sdk/lib/nodebalancers';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -376,8 +380,8 @@ const toggleNodeBalancersGroupBy = (checked: boolean) =>
 
 const styled = withStyles(styles);
 
-interface NodeBalancerWithConfigs extends Linode.NodeBalancer {
-  configs: Linode.NodeBalancerConfig[];
+interface NodeBalancerWithConfigs extends NodeBalancer {
+  configs: NodeBalancerConfig[];
 }
 
 interface WithNodeBalancers {

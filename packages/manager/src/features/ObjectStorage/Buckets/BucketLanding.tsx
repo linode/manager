@@ -228,10 +228,12 @@ const RenderEmpty: React.StatelessComponent<{
         title="Object Storage"
         copy={<EmptyCopy />}
         icon={BucketIcon}
-        buttonProps={{
-          onClick: props.onClick,
-          children: 'Add a Bucket'
-        }}
+        buttonProps={[
+          {
+            onClick: props.onClick,
+            children: 'Add a Bucket'
+          }
+        ]}
       />
     </React.Fragment>
   );
@@ -244,6 +246,7 @@ const EmptyCopy = () => (
       <a
         href="https://linode.com/docs/platform/object-storage/how-to-use-object-storage/"
         target="_blank"
+        rel="noopener noreferrer"
         className="h-u"
       >
         Learn more about storage options for your multimedia, archives, and data

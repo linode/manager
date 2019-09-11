@@ -1,4 +1,11 @@
 import KeyboardArrowLeft from '@material-ui/icons/KeyboardArrowLeft';
+import {
+  Account,
+  getInvoice,
+  getInvoiceItems,
+  Invoice,
+  InvoiceItem
+} from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
@@ -17,7 +24,6 @@ import IconButton from 'src/components/IconButton';
 import Notice from 'src/components/Notice';
 import { printInvoice } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import createMailto from 'src/features/Footer/createMailto';
-import { getInvoice, getInvoiceItems } from 'src/services/account';
 import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { ThunkDispatch } from 'src/store/types';
@@ -54,8 +60,8 @@ const styles = (theme: Theme) =>
   });
 
 interface State {
-  invoice?: Linode.Invoice;
-  items?: Linode.InvoiceItem[];
+  invoice?: Invoice;
+  items?: InvoiceItem[];
   loading: boolean;
   errors?: Linode.ApiFieldError[];
   pdfGenerationError?: any;
@@ -86,7 +92,7 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
       this.props.requestAccount();
     }
 
-    const getAllInvoiceItems = getAll<Linode.InvoiceItem>((params, filter) =>
+    const getAllInvoiceItems = getAll<InvoiceItem>((params, filter) =>
       getInvoiceItems(+invoiceId, params, filter)
     );
 
@@ -117,11 +123,7 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
     this.mounted = false;
   }
 
-  printInvoice(
-    account: Linode.Account,
-    invoice: Linode.Invoice,
-    items: Linode.InvoiceItem[]
-  ) {
+  printInvoice(account: Account, invoice: Invoice, items: InvoiceItem[]) {
     const result = printInvoice(account, invoice, items);
     this.setState({
       pdfGenerationError: result.status === 'error' ? result.error : undefined
@@ -160,7 +162,6 @@ class InvoiceDetail extends React.Component<CombinedProps, State> {
                 {data && invoice && items && (
                   <Button
                     buttonType="primary"
-                    // target="_blank" M3-2869 - needed?
                     onClick={() => this.printInvoice(data, invoice, items)}
                   >
                     Download PDF

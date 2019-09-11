@@ -6,9 +6,10 @@ import {
   getNodeBalancerConfigs,
   getNodeBalancerConfigs as _getNodeBalancerConfigs,
   getNodeBalancers,
+  NodeBalancer,
   NodeBalancerConfig,
   updateNodeBalancer as _updateNodeBalancer
-} from 'src/services/nodebalancers';
+} from 'linode-js-sdk/lib/nodebalancers';
 import { getAll } from 'src/utilities/getAll';
 import { addNodeBalancerConfigs } from '../nodeBalancerConfig/nodeBalancerConfig.actions';
 import { getAllNodeBalancerConfigs } from '../nodeBalancerConfig/nodeBalancerConfig.requests';
@@ -24,9 +25,7 @@ import {
   updateNodeBalancersActions
 } from './nodeBalancer.actions';
 
-const getAllNodeBalancersRequest = getAll<Linode.NodeBalancer>(
-  getNodeBalancers
-);
+const getAllNodeBalancersRequest = getAll<NodeBalancer>(getNodeBalancers);
 
 export const getAllNodeBalancers = createRequestThunk(
   getAllNodeBalancersActions,
@@ -38,9 +37,9 @@ export const getAllNodeBalancers = createRequestThunk(
  * include the newly created configs or nodes. In order to keep the state updated, we manually
  * request the configs after successful creation.
  */
-export const createNodeBalancer: ThunkActionCreator<
-  Promise<Linode.NodeBalancer>
-> = (params: CreateNodeBalancerParams) => dispatch => {
+export const createNodeBalancer: ThunkActionCreator<Promise<NodeBalancer>> = (
+  params: CreateNodeBalancerParams
+) => dispatch => {
   const { started, done, failed } = createNodeBalancersActions;
 
   dispatch(started(params));
@@ -112,7 +111,7 @@ export const getAllNodeBalancersWithConfigs: ThunkActionCreator<
 };
 
 export const getNodeBalancerWithConfigs: ThunkActionCreator<
-  Promise<Linode.NodeBalancer>
+  Promise<NodeBalancer>
 > = (params: GetNodeBalancerWithConfigsParams) => async dispatch => {
   const { nodeBalancerId } = params;
   const { started, done, failed } = getNodeBalancerWithConfigsActions;

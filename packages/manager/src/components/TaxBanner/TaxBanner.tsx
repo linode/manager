@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Link, RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
+import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
 import useFlags from 'src/hooks/useFlags';
@@ -44,25 +45,34 @@ const VATBanner: React.FC<Props> = props => {
           return isDismissed ? (
             <React.Fragment />
           ) : (
-            <Notice warning dismissible={true} onClose={dismissBanner}>
-              Starting {date}, {taxNameToUpperCase} may be applied to your
-              Linode services. For more information, please see the{' '}
-              <a
-                href="https://www.linode.com/docs/platform/billing-and-support/tax-information/"
-                target="_blank"
+            <Grid item xs={12}>
+              <Notice
+                warning
+                dismissible={true}
+                onClose={dismissBanner}
+                important
+                spacingBottom={8}
               >
-                Tax Information Guide.
-              </a>
-              {!isBillingPage && (
-                <React.Fragment>
-                  {' '}
-                  To ensure the correct {taxNameToUpperCase} is applied, please
-                  verify your{' '}
-                  <Link to="/account/billing">contact information</Link> is up
-                  to date.
-                </React.Fragment>
-              )}
-            </Notice>
+                Starting {date}, {taxNameToUpperCase} may be applied to your
+                Linode services. For more information, please see the{' '}
+                <a
+                  href="https://www.linode.com/docs/platform/billing-and-support/tax-information/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Tax Information Guide.
+                </a>
+                {!isBillingPage && (
+                  <React.Fragment>
+                    <br />
+                    To ensure the correct {taxNameToUpperCase} is applied,
+                    please verify your{' '}
+                    <Link to="/account/billing">contact information</Link> is up
+                    to date.
+                  </React.Fragment>
+                )}
+              </Notice>
+            </Grid>
           );
         }}
       </PreferenceToggle>

@@ -1,3 +1,5 @@
+import { Domain } from 'linode-js-sdk/lib/domains';
+import { Linode } from 'linode-js-sdk/lib/linodes'
 import { lensPath, view } from 'ramda';
 import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';
@@ -19,7 +21,7 @@ export const emptyGroupedEntities = {
 };
 
 // Linodes and Domains are the only entities with Display Groups.
-type GroupedEntity = Linode.Linode | Linode.Domain;
+type GroupedEntity = Linode | Domain;
 
 // Returns TRUE if "group" is NOT in "tags". (CASE IGNORED)
 export const uniqueGroup = (entity: GroupedEntity) => {
@@ -58,8 +60,8 @@ const domainSelector = (state: ApplicationState) =>
 // corresponding TAG.
 export const entitiesWithGroupsToImport = createSelector<
   ApplicationState,
-  Linode.Linode[],
-  Linode.Domain[],
+  Linode[],
+  Domain[],
   GroupedEntitiesForImport
 >(
   linodeSelector,

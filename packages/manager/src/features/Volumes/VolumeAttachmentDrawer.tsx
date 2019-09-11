@@ -1,3 +1,5 @@
+import { Grant } from 'linode-js-sdk/lib/account'
+import { getLinodeConfigs } from 'linode-js-sdk/lib/linodes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -17,7 +19,6 @@ import withLinodes from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/events';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
-import { getLinodeConfigs } from 'src/services/linodes';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
@@ -250,7 +251,7 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
     state
   );
   const volumePermissions = volumesPermissions.find(
-    (v: Linode.Grant) => v.id === ownProps.volumeId
+    (v: Grant) => v.id === ownProps.volumeId
   );
 
   return {

@@ -1,3 +1,4 @@
+import { deleteUser } from 'linode-js-sdk/lib/account'
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path } from 'ramda';
 import * as React from 'react';
@@ -19,7 +20,6 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { deleteUser } from 'src/services/account';
 import { MapState } from 'src/store/types';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';

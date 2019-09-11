@@ -1,3 +1,4 @@
+import { Notification } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -5,7 +6,7 @@ import Notice from 'src/components/Notice';
 import SupportLink from 'src/components/SupportLink';
 
 interface Props {
-  notifications: Linode.Notification[];
+  notifications: Notification[];
   linodeID: number;
   className?: string;
 }

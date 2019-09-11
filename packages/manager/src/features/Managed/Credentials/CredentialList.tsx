@@ -31,8 +31,9 @@ import {
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
 
-import CredentialDrawer from './CredentialDrawer';
+import AddCredentialDrawer from './AddCredentialDrawer';
 import CredentialTableContent from './CredentialTableContent';
+import UpdateCredentialDrawer from './UpdateCredentialDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   subHeader: {
@@ -55,10 +56,11 @@ export type FormikProps = FormikBag<Props, CredentialPayload>;
 export const CredentialList: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const { credentials, enqueueSnackbar, error, loading, update } = props;
-  const [isDrawerOpen, setDrawerOpen] = React.useState<boolean>(false);
-  const [drawerMode, setDrawerMode] = React.useState<'create' | 'edit'>(
-    'create'
-  );
+  // Creation drawer
+  const [isCreateDrawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+
+  // Edit drawer (separate because the API requires two different endpoints for editing credentials)
+  const [isEditDrawerOpen, setEditDrawerOpen] = React.useState<boolean>(false);
   const [editID, setEditID] = React.useState<number>(0);
 
   const {
@@ -69,25 +71,23 @@ export const CredentialList: React.FC<CombinedProps> = props => {
     handleError
   } = useDialog<number>(deleteCredential);
 
+  const selectedCredential = credentials.find(
+    thisCredential => thisCredential.id === editID
+  );
+
   const handleDelete = () => {
     submitDialog(dialog.entityID)
       .then(() => {
-        update();
         enqueueSnackbar('Credential deleted successfully.', {
           variant: 'success'
         });
+        update();
       })
       .catch(e =>
         handleError(
           getAPIErrorOrDefault(e, 'Error deleting this credential.')[0].reason
         )
       );
-  };
-
-  const handleSuccess = (cb: any) => {
-    cb();
-    setDrawerOpen(false);
-    update();
   };
 
   const _handleError = (
@@ -100,7 +100,6 @@ export const CredentialList: React.FC<CombinedProps> = props => {
     const mapErrorToStatus = (generalError: string) =>
       setStatus({ generalError });
 
-    setSubmitting(false);
     handleFieldErrors(setErrors, e);
     handleGeneralErrors(mapErrorToStatus, e, defaultMessage);
     setSubmitting(false);
@@ -110,8 +109,13 @@ export const CredentialList: React.FC<CombinedProps> = props => {
     values: CredentialPayload,
     { setSubmitting, setErrors, setStatus }: FormikProps
   ) => {
+    setStatus(undefined);
     createCredential(values)
-      .then(() => handleSuccess(() => setSubmitting(false)))
+      .then(() => {
+        setDrawerOpen(false);
+        setSubmitting(false);
+        update();
+      })
       .catch(e => {
         _handleError(
           e,
@@ -123,51 +127,24 @@ export const CredentialList: React.FC<CombinedProps> = props => {
       });
   };
 
-  const handleUpdate = (
+  const handleUpdatePassword = (
     values: CredentialPayload,
-    { setSubmitting, setErrors, setStatus }: FormikProps
+    { setSubmitting, setErrors, setStatus, setFieldValue }: FormikProps
   ) => {
-    const thisCredential = credentials.find(c => c.id === editID);
-    const promises = [];
-
-    /**
-     * Due to reasons, a PUT to /managed/credentials/id is only
-     * able to update the credential's label. There is a separate endpoint,
-     * /managed/credentials/id/update, which you can POST to in order to
-     * update the password and or username. Since all fields are present in
-     * the drawer, we need to use the standard Promise magic to combine
-     * multiple requests. Here we first check if the user has input any values
-     * or changes; if not, just exit. If the label is changed, do a PUT, and
-     * in parallel do a POST if there have been password or username changes.
-     */
-    if (thisCredential && thisCredential.label !== values.label) {
-      // Label has changed. Update it through /managed/credentials/editID
-      promises.push(updateCredential(editID, { label: values.label }));
-    }
-
-    if (values.password || values.username) {
-      // User has input a new password or username. Update through /update.
-      promises.push(
-        updatePassword(editID, {
-          password: values.password || undefined,
-          username: values.username || undefined
-        })
-      );
-    }
-
-    if (promises.length === 0) {
-      // Nothing changed, let's get out of here while we still can.
-      handleDrawerClose();
-      setSubmitting(false);
+    setStatus(undefined);
+    if (!selectedCredential) {
       return;
     }
-
-    Promise.all(promises)
+    updatePassword(editID, {
+      password: values.password || undefined,
+      username: values.username || undefined
+    })
       .then(() => {
-        handleSuccess(() => setSubmitting(false));
-        enqueueSnackbar('Credential updated successfully', {
-          variant: 'success'
-        });
+        setSubmitting(false);
+        setStatus({ success: 'Updated successfully.' });
+        setFieldValue('password', '');
+        setFieldValue('username', '');
+        update();
       })
       .catch(err =>
         _handleError(
@@ -180,26 +157,39 @@ export const CredentialList: React.FC<CombinedProps> = props => {
       );
   };
 
-  const submitForm = (values: CredentialPayload, formikProps: FormikProps) => {
-    switch (drawerMode) {
-      case 'edit':
-        return handleUpdate(values, formikProps);
-      case 'create':
-      default:
-        return handleCreate(values, formikProps);
+  const handleUpdateLabel = (
+    values: CredentialPayload,
+    { setSubmitting, setErrors, setStatus }: FormikProps
+  ) => {
+    setStatus(undefined);
+    if (!selectedCredential) {
+      return;
     }
+    updateCredential(editID, { label: values.label })
+      .then(() => {
+        setSubmitting(false);
+        setStatus({ success: 'Label updated successfully.' });
+        update();
+      })
+      .catch(err =>
+        _handleError(
+          err,
+          setSubmitting,
+          setErrors,
+          setStatus,
+          'Unable to update this Credential.'
+        )
+      );
   };
 
   const openForEdit = (credentialID: number) => {
-    setDrawerMode('edit');
     setEditID(credentialID);
-    setDrawerOpen(true);
+    setEditDrawerOpen(true);
   };
 
   const handleDrawerClose = () => {
     setEditID(0);
-    setDrawerOpen(false);
-    setDrawerMode('create');
+    setEditDrawerOpen(false);
   };
 
   return (
@@ -299,12 +289,17 @@ export const CredentialList: React.FC<CombinedProps> = props => {
         onClose={closeDialog}
         onDelete={handleDelete}
       />
-      <CredentialDrawer
-        open={isDrawerOpen}
+      <AddCredentialDrawer
+        open={isCreateDrawerOpen}
+        onClose={() => setDrawerOpen(false)}
+        onSubmit={handleCreate}
+      />
+      <UpdateCredentialDrawer
+        open={isEditDrawerOpen}
+        label={selectedCredential ? selectedCredential.label : ''}
         onClose={handleDrawerClose}
-        onSubmit={submitForm}
-        mode={drawerMode}
-        credential={credentials.find(c => c.id === editID)}
+        onSubmitLabel={handleUpdateLabel}
+        onSubmitPassword={handleUpdatePassword}
       />
     </>
   );
