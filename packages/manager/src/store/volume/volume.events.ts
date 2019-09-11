@@ -1,3 +1,4 @@
+import { EventStatus } from 'linode-js-sdk/lib/account'
 import { Dispatch } from 'redux';
 import { EventHandler } from 'src/store/types';
 import { deleteVolumeActions } from './volume.actions';
@@ -28,7 +29,7 @@ const volumeEventsHandler: EventHandler = (event, dispatch) => {
 
 const handleVolumeUpdate = (
   dispatch: Dispatch<any>,
-  status: Linode.EventStatus,
+  status: EventStatus,
   volumeId: number
 ) => {
   switch (status) {
@@ -46,7 +47,7 @@ const handleVolumeUpdate = (
 
 const handleVolumeClone = (
   dispatch: Dispatch<any>,
-  status: Linode.EventStatus
+  status: EventStatus
 ) => {
   switch (status) {
     case 'failed':
@@ -66,7 +67,7 @@ const handleVolumeClone = (
 
 const handleVolumeDelete = (
   dispatch: Dispatch<any>,
-  status: Linode.EventStatus,
+  status: EventStatus,
   volumeId: number
 ) => {
   switch (status) {

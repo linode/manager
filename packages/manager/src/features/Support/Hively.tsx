@@ -69,12 +69,22 @@ export const Hively: React.FC<Props> = props => {
     <div className={classes.hivelyContainer}>
       <Divider />
       <Typography component="span">
-        <a className={classes.hivelyLink} href={href + '3'} target="_blank">
+        <a
+          className={classes.hivelyLink}
+          href={href + '3'}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
           How did I do?
         </a>
       </Typography>
       <span>
-        <a href={href + '3'} target="_blank" className={classes.hivelyLinkIcon}>
+        <a
+          href={href + '3'}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={classes.hivelyLinkIcon}
+        >
           <img
             className={classes.hivelyImage}
             src={
@@ -82,7 +92,12 @@ export const Hively: React.FC<Props> = props => {
             }
           />
         </a>
-        <a href={href + '2'} target="_blank" className={classes.hivelyLinkIcon}>
+        <a
+          href={href + '2'}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={classes.hivelyLinkIcon}
+        >
           <img
             className={classes.hivelyImage}
             src={
@@ -90,7 +105,12 @@ export const Hively: React.FC<Props> = props => {
             }
           />
         </a>
-        <a href={href + '1'} target="_blank" className={classes.hivelyLinkIcon}>
+        <a
+          href={href + '1'}
+          target="_blank"
+          rel="noopener noreferrer"
+          className={classes.hivelyLinkIcon}
+        >
           <img
             className={classes.hivelyImage}
             src={

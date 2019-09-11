@@ -1,3 +1,4 @@
+import { Grant } from 'linode-js-sdk/lib/account';
 import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
@@ -13,6 +14,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
+import ImageSelect from 'src/components/ImageSelect';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
@@ -22,7 +24,6 @@ import StackScriptDrawer from 'src/features/StackScripts/StackScriptDrawer';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import AddonsPanel from '../AddonsPanel';
-import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel from '../SelectPlanPanel';
 
 import { filterPublicImages, filterUDFErrors } from './formUtilities';
@@ -64,7 +65,7 @@ interface Props {
     username: string,
     params?: any,
     filter?: any,
-    stackScriptGrants?: Linode.Grant[]
+    stackScriptGrants?: Grant[]
   ) => Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
   header: string;
   category: 'community' | 'account';
@@ -245,10 +246,11 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
             />
           )}
           {!disabled && compatibleImages && compatibleImages.length > 0 ? (
-            <SelectImagePanel
+            <ImageSelect
+              data-qa-select-image-panel
+              title="Select an Image"
               images={compatibleImages}
-              handleSelection={updateImageID}
-              updateFor={[selectedImageID, compatibleImages, errors]}
+              handleSelectImage={updateImageID}
               selectedImageID={selectedImageID}
               error={hasErrorFor('image')}
               variant="public"

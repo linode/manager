@@ -1,13 +1,14 @@
 import * as Bluebird from 'bluebird';
-import requestMostRecentBackupForLinode from 'src/features/linodes/LinodesLanding/requestMostRecentBackupForLinode';
 import {
   createLinode as _createLinode,
   deleteLinode as _deleteLinode,
   getLinode as _getLinode,
   getLinodes,
+  Linode,
   linodeReboot as _rebootLinode,
   updateLinode as _updateLinode
-} from 'src/services/linodes';
+} from 'linode-js-sdk/lib/linodes';
+import requestMostRecentBackupForLinode from 'src/features/linodes/LinodesLanding/requestMostRecentBackupForLinode';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
@@ -46,11 +47,11 @@ export const rebootLinode = createRequestThunk(
 );
 
 export const requestLinodes: ThunkActionCreator<
-  Promise<Linode.Linode[]>
+  Promise<Linode[]>
 > = () => dispatch => {
   dispatch(getLinodesActions.started);
 
-  return getAll<Linode.Linode>(getLinodes)()
+  return getAll<Linode>(getLinodes)()
     .then(getBackupsForLinodes)
     .then(result => {
       dispatch(getLinodesActions.done({ result }));
@@ -69,7 +70,7 @@ export const requestLinodes: ThunkActionCreator<
     });
 };
 
-const getBackupsForLinodes = ({ data }: { data: Linode.Linode[] }) =>
+const getBackupsForLinodes = ({ data }: { data: Linode[] }) =>
   Bluebird.map(data, requestMostRecentBackupForLinode);
 
 type RequestLinodeForStoreThunk = ThunkActionCreator<void>;

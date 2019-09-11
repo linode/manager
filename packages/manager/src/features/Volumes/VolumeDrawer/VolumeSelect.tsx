@@ -1,3 +1,5 @@
+import { Grant } from 'linode-js-sdk/lib/account';
+import { getVolumes, Volume } from 'linode-js-sdk/lib/volumes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -6,7 +8,6 @@ import FormControl from 'src/components/core/FormControl';
 import FormHelperText from 'src/components/core/FormHelperText';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
-import { getVolumes } from 'src/services/volumes';
 import { MapState } from 'src/store/types';
 import { debounce } from 'throttle-debounce';
 
@@ -68,7 +69,7 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
     }
   };
 
-  renderLinodeOptions = (volumes: Linode.Volume[]) => {
+  renderLinodeOptions = (volumes: Volume[]) => {
     if (!volumes) {
       return [];
     }
@@ -79,7 +80,7 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
 
     if (volumeGrants) {
       const allowedVolumeGrants = volumeGrants.reduce(
-        (acc: number[], volume: Linode.Grant) => {
+        (acc: number[], volume: Grant) => {
           if (volume.permissions === 'read_write') {
             acc.push(volume.id);
           }
@@ -186,7 +187,7 @@ class VolumeSelect extends React.Component<CombinedProps, State> {
 }
 
 interface StateProps {
-  volumeGrants?: Linode.Grant[];
+  volumeGrants?: Grant[];
 }
 
 const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({

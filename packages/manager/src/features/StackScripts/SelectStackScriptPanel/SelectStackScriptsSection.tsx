@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import {
@@ -30,7 +31,7 @@ export interface Props {
   selectedId?: number;
   data: Linode.StackScript.Response[];
   isSorting: boolean;
-  publicImages: Linode.Image[];
+  publicImages: Image[];
   currentUser: string;
   disabled?: boolean;
 }

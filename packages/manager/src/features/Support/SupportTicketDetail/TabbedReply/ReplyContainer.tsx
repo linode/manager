@@ -1,3 +1,5 @@
+import { SupportReply } from 'linode-js-sdk/lib/account';
+import { createReply, uploadAttachment } from 'linode-js-sdk/lib/support';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -10,7 +12,6 @@ import {
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import { createReply, uploadAttachment } from 'src/services/support';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import AttachFileForm from '../../AttachFileForm';
@@ -30,9 +31,11 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
+      width: `calc(100% + ${theme.spacing(1)}px)`,
       paddingLeft: theme.spacing(1),
       paddingRight: theme.spacing(1),
       [theme.breakpoints.up('sm')]: {
+        width: `calc(100% + ${theme.spacing(2)}px)`,
         paddingLeft: theme.spacing(2),
         paddingRight: theme.spacing(2)
       }
@@ -74,7 +77,7 @@ const styles = (theme: Theme) =>
 
 interface Props {
   closable: boolean;
-  onSuccess: (newReply: Linode.SupportReply) => void;
+  onSuccess: (newReply: SupportReply) => void;
   reloadAttachments: () => void;
   ticketId: number;
   closeTicketSuccess: () => void;
@@ -96,8 +99,8 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
     setSubmitting(true);
     setErrors(undefined);
 
-    /* 
-      Send the reply as the user entered it to the server - no restrictions here 
+    /*
+      Send the reply as the user entered it to the server - no restrictions here
       since we're sanitizing again at render time.
     */
     createReply({ description: value, ticket_id: props.ticketId })

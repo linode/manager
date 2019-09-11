@@ -4,7 +4,7 @@ import { ObjectSchema, ValidationError } from 'yup';
 import { APIError } from './types';
 
 export const baseRequest = Axios.create({
-  baseURL: 'https://api.linode.com/v4',
+  baseURL: 'https://api.linode.com/v4'
 });
 
 const L = {
@@ -14,12 +14,12 @@ const L = {
   data: lensPath(['data']),
   xFilter: lensPath(['headers', 'X-Filter']),
   validationErrors: lensPath(['validationErrors']),
-  headers: lensPath(['headers']),
+  headers: lensPath(['headers'])
 };
 
 const isNotEmpty = compose(
   not,
-  (v: any) => isEmpty(v) || isNil(v),
+  (v: any) => isEmpty(v) || isNil(v)
 );
 
 /** URL */
@@ -51,7 +51,7 @@ export const setData = <T extends {}>(
    * object, after the validation has happened. Use with caution: It was created as a trap door for
    * merging IPv4 addresses and ports in the NodeBalancer creation flow.
    */
-  postValidationTransform?: (v: any) => any,
+  postValidationTransform?: (v: any) => any
 ) => {
   if (!schema) {
     return set(L.data, data);
@@ -70,8 +70,8 @@ export const setData = <T extends {}>(
       set(L.data, updatedData),
       set(
         L.validationErrors,
-        convertYupToLinodeErrors(error),
-      ) as () => APIError[],
+        convertYupToLinodeErrors(error)
+      ) as () => APIError[]
     );
   }
 };
@@ -81,7 +81,7 @@ export const setData = <T extends {}>(
  * to itself since we have nested structures (think NodeBalancers).
  */
 const convertYupToLinodeErrors = (
-  validationError: ValidationError,
+  validationError: ValidationError
 ): APIError[] => {
   const { inner } = validationError;
 
@@ -99,10 +99,10 @@ const convertYupToLinodeErrors = (
 
 const mapYupToLinodeAPIError = ({
   message,
-  path,
+  path
 }: ValidationError): APIError => ({
   reason: message,
-  ...(path && { field: path }),
+  ...(path && { field: path })
 });
 
 /** X-Filter */
@@ -117,7 +117,7 @@ export const requestGenerator = <T>(...fns: Function[]): AxiosPromise<T> => {
   const config = reduceRequestConfig(...fns);
   if (config.validationErrors) {
     return Promise.reject(
-      config.validationErrors, // All failed requests, client or server errors, should be Linode.ApiFieldError[]
+      config.validationErrors // All failed requests, client or server errors, should be Linode.ApiFieldError[]
     );
   }
 
@@ -177,7 +177,7 @@ export const requestGenerator = <T>(...fns: Function[]): AxiosPromise<T> => {
 export const mockAPIError = (
   status: number = 400,
   statusText: string = 'Internal Server Error',
-  data: any = {},
+  data: any = {}
 ): Promise<AxiosError> =>
   new Promise((resolve, reject) =>
     setTimeout(
@@ -188,11 +188,11 @@ export const mockAPIError = (
             status,
             statusText,
             headers: {},
-            config: {},
-          }),
+            config: {}
+          })
         ),
-      process.env.NODE_ENV === 'test' ? 0 : 250,
-    ),
+      process.env.NODE_ENV === 'test' ? 0 : 250
+    )
   );
 
 const createError = (message: string, response: AxiosResponse) => {
@@ -208,7 +208,7 @@ const createError = (message: string, response: AxiosResponse) => {
 export const mockAPIFieldErrors = (fields: string[]): APIError[] => {
   return fields.reduce(
     (result, field) => [...result, { field, reason: `${field} is incorrect.` }],
-    [{ reason: 'A general error has occurred.' }],
+    [{ reason: 'A general error has occurred.' }]
   );
 };
 
@@ -232,8 +232,8 @@ export const CancellableRequest = <T>(
       request: () =>
         Promise.reject({
           config: omit(['validationErrors'], config),
-          response: { data: { errors: config.validationErrors } },
-        }),
+          response: { data: { errors: config.validationErrors } }
+        })
     };
   }
 
@@ -241,8 +241,8 @@ export const CancellableRequest = <T>(
     cancel: source.cancel,
     request: () =>
       baseRequest({ ...config, cancelToken: source.token }).then(
-        response => response.data,
-      ),
+        response => response.data
+      )
   };
 };
 

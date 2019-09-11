@@ -1,7 +1,7 @@
 import { shallow, ShallowWrapper } from 'enzyme';
+import { SupportTicket } from 'linode-js-sdk/lib/account';
+import { createSupportTicket } from 'linode-js-sdk/lib/support';
 import * as React from 'react';
-import { supportTicket } from 'src/__data__/supportTicket';
-import { createSupportTicket } from 'src/services/support';
 import { getVersionString } from 'src/utilities/getVersionString';
 import {
   CombinedProps,
@@ -9,8 +9,25 @@ import {
   SupportTicketDrawer
 } from './SupportTicketDrawer';
 
+const supportTicket: SupportTicket = {
+  updated_by: 'test-account',
+  closed: null,
+  attachments: [],
+  summary: 'TEST Support Ticket',
+  gravatar_id: '0',
+  closable: false,
+  id: 0,
+  status: 'new',
+  description: 'TEST support ticket body',
+  opened_by: 'test-account',
+  entity: null,
+  opened: '2018-11-01T01:00:00',
+  updated: '2018-11-01T01:00:00',
+  gravatarUrl: 'not found'
+};
+
 // Mock support services library
-jest.mock('src/services/support', () => ({
+jest.mock('linode-js-sdk/lib/support', () => ({
   createSupportTicket: jest.fn().mockResolvedValue(supportTicket)
 }));
 

@@ -1,4 +1,4 @@
-// import * as classNames from 'classnames';
+import { SupportReply, SupportTicket } from "linode-js-sdk/lib/account";
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -107,8 +107,8 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  reply?: Linode.SupportReply;
-  ticket?: Linode.SupportTicket;
+  reply?: SupportReply;
+  ticket?: SupportTicket;
   open?: boolean;
   isCurrentUser: boolean;
   parentTicket?: number;

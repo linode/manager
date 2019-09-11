@@ -1,10 +1,11 @@
+import { Image } from 'linode-js-sdk/lib/images';
+import { CreateLinodeRequest, Linode } from 'linode-js-sdk/lib/linodes';
 import { ExtendedRegion } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { Tag } from 'src/components/TagsInput';
 import { State as userSSHKeysProps } from 'src/features/linodes/userSSHKeyHoc';
-import { CreateLinodeRequest } from 'src/services/linodes';
 import { ExtendedType } from './SelectPlanPanel';
 
-export interface ExtendedLinode extends Linode.Linode {
+export interface ExtendedLinode extends Linode {
   heading: string;
   subHeadings: string[];
 }
@@ -37,13 +38,13 @@ export interface WithDisplayData {
  * the null, loading and error checking
  */
 export interface WithImagesProps {
-  imagesData?: Linode.Image[];
+  imagesData?: Image[];
   imagesLoading: boolean;
   imagesError?: string;
 }
 
 export interface WithLinodesProps {
-  linodesData?: Linode.Linode[];
+  linodesData?: Linode[];
   linodesLoading: boolean;
   linodesError?: Linode.ApiFieldError[];
 }
@@ -68,12 +69,12 @@ export interface WithTypesProps {
 export interface WithTypesRegionsAndImages {
   regionsData: ExtendedRegion[];
   typesData: ExtendedType[];
-  imagesData: Linode.Image[];
+  imagesData: Image[];
 }
 
 export interface WithLinodesTypesRegionsAndImages
   extends WithTypesRegionsAndImages {
-  linodesData: Linode.Linode[];
+  linodesData: Linode[];
 }
 
 export interface ReduxStateProps {
@@ -137,13 +138,13 @@ export interface StackScriptFormStateHandlers extends BaseFormStateAndHandlers {
   selectedStackScriptUsername?: string;
   selectedStackScriptLabel?: string;
   availableUserDefinedFields?: Linode.StackScript.UserDefinedField[];
-  availableStackScriptImages?: Linode.Image[];
+  availableStackScriptImages?: Image[];
   updateStackScript: (
     id: number,
     label: string,
     username: string,
     userDefinedFields: Linode.StackScript.UserDefinedField[],
-    availableImages: Linode.Image[],
+    availableImages: Image[],
     defaultData?: any
   ) => void;
   selectedUDFs?: any;

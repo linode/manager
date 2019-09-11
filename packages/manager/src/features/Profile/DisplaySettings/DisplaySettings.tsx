@@ -1,3 +1,4 @@
+import { Profile } from "linode-js-sdk/lib/profile";
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -111,11 +112,11 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
 };
 
 interface DispatchProps {
-  updateProfile: (v: Linode.Profile) => Promise<Linode.Profile>;
+  updateProfile: (v: Profile) => Promise<Profile>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-  updateProfile: (v: Linode.Profile) => dispatch(handleUpdateProfile(v) as any)
+  updateProfile: (v: Profile) => dispatch(handleUpdateProfile(v) as any)
 });
 
 const connected = connect(

@@ -1,3 +1,5 @@
+import { Event, Notification } from 'linode-js-sdk/lib/account';
+import { Config, LinodeBackups, LinodeStatus } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -38,7 +40,7 @@ import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { parseMaintenanceStartTime } from './utils';
 
 interface Props {
-  backups: Linode.LinodeBackups;
+  backups: LinodeBackups;
   id: number;
   image: string | null;
   ipv4: string[];
@@ -49,7 +51,7 @@ interface Props {
   maintenanceStartTime?: string | null;
   memory: number;
   vcpus: number;
-  status: Linode.LinodeStatus;
+  status: LinodeStatus;
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;
@@ -59,7 +61,7 @@ interface Props {
     bootAction: Action,
     linodeID: number,
     linodeLabel: string,
-    linodeConfigs: Linode.Config[]
+    linodeConfigs: Config[]
   ) => void;
 }
 
@@ -290,12 +292,12 @@ export const RenderTitle: React.StatelessComponent<{
     cardHeader: string;
     flag: string;
   };
-  linodeStatus: Linode.LinodeStatus;
-  recentEvent?: Linode.Event;
+  linodeStatus: LinodeStatus;
+  recentEvent?: Event;
   linodeLabel: string;
   linodeId: number;
   mutationAvailable: boolean;
-  linodeNotifications: Linode.Notification[];
+  linodeNotifications: Notification[];
   maintenance?: string | null;
 }> = props => {
   const {
@@ -341,7 +343,7 @@ RenderTitle.displayName = `RenderTitle`;
 
 export const RenderFlag: React.StatelessComponent<{
   mutationAvailable: boolean;
-  linodeNotifications: Linode.Notification[];
+  linodeNotifications: Notification[];
   classes: any;
 }> = props => {
   /*

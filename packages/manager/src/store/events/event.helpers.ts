@@ -1,13 +1,21 @@
+import {
+  Entity,
+  Event,
+  EventAction,
+  EventStatus
+} from 'linode-js-sdk/lib/account';
 import * as moment from 'moment';
 import { compose, equals, findIndex, omit, take, update } from 'ramda';
 import updateRight from 'src/utilities/updateRight';
 
-export interface ExtendedEvent extends Linode.Event {
+export interface ExtendedEvent extends Event {
   _deleted?: string;
   _initial?: boolean;
 }
 
-type Event = ExtendedEvent;
+interface EntityEvent extends Omit<Event, 'entity'> {
+  entity: Entity;
+}
 
 /** We use the epoch on our initial request to get all of the users events. */
 export const epoch = new Date(`1970-01-01T00:00:00.000`).getTime();
@@ -26,8 +34,8 @@ export const epoch = new Date(`1970-01-01T00:00:00.000`).getTime();
  * @param action
  */
 export const isRelevantDeletionEvent = (
-  action: Linode.EventAction,
-  status: Linode.EventStatus
+  action: EventAction,
+  status: EventStatus
 ) => {
   /**
    * These events point to a Linode, not a disk/config/etc.,
@@ -47,12 +55,12 @@ export const isRelevantDeletionEvent = (
  * Safely find an entity in a list of entities returning the index.
  * Will return -1 if the index is not found.
  *
- * entities {Linode.Entity[]}
- * entity {null | Linode.Entity}
+ * entities {Entity[]}
+ * entity {null | Entity}
  */
 export const findInEvents = (
-  events: Pick<Event, 'entity'>[],
-  entity: null | Partial<Linode.Entity> = {}
+  events: Pick<ExtendedEvent, 'entity'>[],
+  entity: null | Partial<Entity> = {}
 ) => findIndex(e => equals(e.entity, entity), events);
 
 export const setDeletedEvents = (events: Event[]) => {
@@ -159,8 +167,7 @@ export const isCompletedEvent = ({
 }: Pick<Event, 'percent_complete'>) =>
   percent_complete !== null && percent_complete === 100;
 
-export const isEntityEvent = (e: Linode.Event): e is Linode.EntityEvent =>
-  Boolean(e.entity);
+export const isEntityEvent = (e: Event): e is EntityEvent => Boolean(e.entity);
 
 /**
  * Iterate through new events.

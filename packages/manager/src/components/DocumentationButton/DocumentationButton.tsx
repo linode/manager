@@ -38,7 +38,7 @@ export const DocumentationButton: React.FC<CombinedProps> = props => {
       SideIcon={BookIcon}
       text="Documentation"
       title="Documentation"
-      onClick={() => window.open(href, '_blank')}
+      onClick={() => window.open(href, '_blank', 'noopener')}
     >
       Documentation
     </IconTextLink>

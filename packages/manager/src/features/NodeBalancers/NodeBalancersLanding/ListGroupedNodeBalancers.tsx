@@ -1,3 +1,4 @@
+import { NodeBalancerWithConfigs } from 'linode-js-sdk/lib/nodebalancers';
 import { compose } from 'ramda';
 import * as React from 'react';
 import {
@@ -72,7 +73,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  data: Linode.NodeBalancerWithConfigs[];
+  data: NodeBalancerWithConfigs[];
   orderBy: string;
   order: 'asc' | 'desc';
   handleOrderChange: (orderBy: string, order?: 'asc' | 'desc') => void;

@@ -1,7 +1,5 @@
-export * from './nodebalancers';
+import { getNodeBalancers as _getNodeBalancers } from 'linode-js-sdk/lib/nodebalancers';
 
-export * from './configs';
+export const getNodeBalancers = _getNodeBalancers;
 
-export * from './configNodes';
-
-export * from './interfaces';
+export { ExtendedNodeBalancer } from './types';

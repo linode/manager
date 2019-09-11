@@ -1,9 +1,10 @@
+import { Event } from 'linode-js-sdk/lib/account';
 import { connect } from 'react-redux';
 import recentEventForLinode from 'src/store/selectors/recentEventForLinode';
 import { MapState } from 'src/store/types';
 
 export interface WithRecentEvent {
-  recentEvent?: Linode.Event;
+  recentEvent?: Event;
 }
 
 const mapStateToProps: MapState<WithRecentEvent, { id: number }> = (

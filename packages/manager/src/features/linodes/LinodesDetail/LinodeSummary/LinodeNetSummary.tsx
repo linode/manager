@@ -1,3 +1,4 @@
+import { getLinodeTransfer, Linode } from 'linode-js-sdk/lib/linodes'
 import * as moment from 'moment';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -12,7 +13,6 @@ import {
   ClassNames,
   styled
 } from 'src/features/Dashboard/TransferDashboardCard/TransferDashboardCard';
-import { getLinodeTransfer } from 'src/services/linodes';
 import { MapState } from 'src/store/types';
 import { isRecent } from 'src/utilities/isRecent.ts';
 import { readableBytes } from 'src/utilities/unitConversions';
@@ -60,18 +60,20 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
 
     const usedInGb = used / 1024 / 1024 / 1024;
 
-    const usagePercent = 100 - ((total - usedInGb) * 100) / total;
+    const totalInBytes = total * 1024 * 1024 * 1024;
+
+    const usagePercent =
+      totalInBytes > used ? 100 - ((total - usedInGb) * 100) / total : 100;
 
     const readableUsed = readableBytes(used, {
       maxUnit: 'GB',
       round: { MB: 0, GB: 1 }
     });
 
-    const totalInBytes = total * 1024 * 1024 * 1024;
     const readableFree = readableBytes(totalInBytes - used, {
       maxUnit: 'GB',
       round: { MB: 0, GB: 1 },
-      handleNegatives: false
+      handleNegatives: true
     });
 
     if (loading) {
@@ -126,6 +128,7 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
             value={Math.ceil(usagePercent)}
             className={classes.poolUsageProgress}
             rounded
+            overLimit={totalInBytes < used}
           />
           <Grid container justify="space-between">
             <Grid item style={{ marginRight: 10 }}>
@@ -134,7 +137,16 @@ class LinodeNetSummary extends React.Component<CombinedProps, StateProps> {
               </Typography>
             </Grid>
             <Grid item>
-              <Typography>{readableFree.formatted} Available</Typography>
+              <Typography>
+                {totalInBytes >= used ? (
+                  <span>{readableFree.formatted} Available</span>
+                ) : (
+                  <span className={classes.overLimit}>
+                    {readableFree.formatted.toString().replace(/\-/, '')} Over
+                    Quota
+                  </span>
+                )}
+              </Typography>
             </Grid>
           </Grid>
         </Grid>
@@ -150,7 +162,7 @@ interface StoreProps {
 
 const mapStateToProps: MapState<StoreProps, CombinedProps> = (state, props) => {
   const linode = state.__resources.linodes.entities.find(
-    (l: Linode.Linode) => l.id === props.linodeId
+    (l: Linode) => l.id === props.linodeId
   );
   return {
     total: linode ? linode.specs.transfer : 0,

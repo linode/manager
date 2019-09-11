@@ -1,3 +1,4 @@
+import { Event } from 'linode-js-sdk/lib/account';
 import * as moment from 'moment';
 import {
   addToEvents,
@@ -20,7 +21,7 @@ describe('event.helpers', () => {
       url: 'whoecares'
     };
 
-    const event: Pick<Linode.Event, 'entity'> = { entity };
+    const event: Pick<Event, 'entity'> = { entity };
 
     it('should return index when entity is found', () => {
       const result = findInEvents([event], entity);
@@ -93,7 +94,7 @@ describe('event.helpers', () => {
 
   describe('setDeletedEvents', () => {
     it('should add a _deleted prop if entity refers to a deleted entity', () => {
-      const events: Linode.Event[] = [
+      const events: Event[] = [
         {
           id: 17957944,
           time_remaining: 0,
@@ -180,7 +181,7 @@ describe('event.helpers', () => {
 
   describe('addToEvents', () => {
     it('should append the event to the list', () => {
-      const prevEvents: Linode.Event[] = [
+      const prevEvents: Event[] = [
         {
           id: 17957944,
           time_remaining: 0,
@@ -221,7 +222,7 @@ describe('event.helpers', () => {
           status: 'finished'
         }
       ];
-      const events: Linode.Event[] = [
+      const events: Event[] = [
         {
           id: 17957718,
           time_remaining: 0,
@@ -285,7 +286,7 @@ describe('event.helpers', () => {
   describe('updateInProgressEvents', () => {
     it('should do nothing if there are no events', () => {
       const inProgressEvents = {};
-      const events: Linode.Event[] = [];
+      const events: Event[] = [];
       const result = updateInProgressEvents(inProgressEvents, events);
       expect(result).toEqual({});
     });

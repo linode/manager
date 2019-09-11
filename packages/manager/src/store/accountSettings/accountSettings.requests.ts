@@ -1,9 +1,10 @@
-import { compose } from 'redux';
-
 import {
+  AccountSettings,
   getAccountSettings,
   updateAccountSettings as _update
-} from 'src/services/account';
+} from 'linode-js-sdk/lib/account'
+import { compose } from 'redux';
+
 import { ThunkActionCreator } from '../types';
 import {
   handleError,
@@ -14,7 +15,7 @@ import {
 } from './accountSettings.actions';
 
 export const requestAccountSettings: ThunkActionCreator<
-  Promise<Linode.AccountSettings>
+  Promise<AccountSettings>
 > = () => dispatch => {
   dispatch(startRequest());
   return getAccountSettings()
@@ -35,7 +36,7 @@ export const requestAccountSettings: ThunkActionCreator<
 };
 
 export const updateAccountSettings: ThunkActionCreator<void> = (
-  data: Partial<Linode.AccountSettings>
+  data: Partial<AccountSettings>
 ) => dispatch => {
   _update(data)
     .then(

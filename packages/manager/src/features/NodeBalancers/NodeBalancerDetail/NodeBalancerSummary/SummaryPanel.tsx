@@ -18,6 +18,8 @@ import { formatRegion } from 'src/utilities';
 import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import { NodeBalancerConsumer } from '../context';
 
+import { ExtendedNodeBalancer } from 'src/services/nodebalancers';
+
 type ClassNames =
   | 'NBsummarySection'
   | 'IPgrouping'
@@ -46,7 +48,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  nodeBalancer: Linode.ExtendedNodeBalancer;
+  nodeBalancer: ExtendedNodeBalancer;
 }
 
 type CombinedProps = Props & StyleProps & WithStyles<ClassNames>;

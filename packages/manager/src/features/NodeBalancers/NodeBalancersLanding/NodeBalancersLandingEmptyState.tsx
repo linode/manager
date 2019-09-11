@@ -19,10 +19,12 @@ const NodeBalancerLandingEmptyState: React.StatelessComponent<
         title="Add NodeBalancers!"
         copy={<EmptyCopy />}
         icon={NodeBalancer}
-        buttonProps={{
-          onClick: () => history.push('/nodebalancers/create'),
-          children: 'Add a NodeBalancer'
-        }}
+        buttonProps={[
+          {
+            onClick: () => history.push('/nodebalancers/create'),
+            children: 'Add a NodeBalancer'
+          }
+        ]}
       />
     </React.Fragment>
   );
@@ -34,12 +36,18 @@ const EmptyCopy = () => (
       <a
         href="https://www.linode.com/docs/platform/nodebalancer/getting-started-with-nodebalancers/"
         target="_blank"
+        rel="noopener noreferrer"
         className="h-u"
       >
         Learn how to use NodeBalancers with your Linode
       </a>
       &nbsp;or&nbsp;
-      <a href="https://www.linode.com/docs/" target="_blank" className="h-u">
+      <a
+        href="https://www.linode.com/docs/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="h-u"
+      >
         visit our guides and tutorials.
       </a>
     </Typography>

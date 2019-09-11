@@ -1,3 +1,4 @@
+import { Event } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
@@ -25,7 +26,7 @@ const styles = (theme: Theme) =>
 interface Props {
   error?: string;
   loading: boolean;
-  events: Linode.Event[];
+  events: Event[];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;

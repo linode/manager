@@ -1,3 +1,4 @@
+import { IPAddress } from 'linode-js-sdk/lib/networking';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
@@ -5,10 +6,10 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
   onView: () => void;
-  onEdit?: (ip: Linode.IPAddress) => void;
-  onRemove?: (ip: Linode.IPAddress) => void;
+  onEdit?: (ip: IPAddress) => void;
+  onRemove?: (ip: IPAddress) => void;
   ipType: IPTypes;
-  ipAddress?: Linode.IPAddress;
+  ipAddress?: IPAddress;
   readOnly?: boolean;
 }
 

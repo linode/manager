@@ -1,3 +1,4 @@
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Hidden from 'src/components/core/Hidden';
@@ -62,7 +63,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  volume: Linode.Volume;
+  volume: Volume;
 }
 type CombinedProps = Props & WithStyles<ClassNames>;
 

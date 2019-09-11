@@ -1,4 +1,11 @@
 import {
+  deleteDomainRecord,
+  Domain,
+  DomainRecord,
+  DomainType,
+  RecordType
+} from 'linode-js-sdk/lib/domains';
+import {
   compose,
   equals,
   filter,
@@ -35,7 +42,6 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
-import { deleteDomainRecord } from 'src/services/domains';
 import {
   getAPIErrorOrDefault,
   getErrorStringOrDefault
@@ -79,8 +85,8 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  domain: Linode.Domain;
-  domainRecords: Linode.DomainRecord[];
+  domain: Domain;
+  domainRecords: DomainRecord[];
   updateRecords: () => void;
 }
 
@@ -94,8 +100,8 @@ interface ConfirmationState {
 interface DrawerState {
   open: boolean;
   mode: 'create' | 'edit';
-  type: Linode.RecordType | Linode.DomainType;
-  fields?: Partial<Linode.DomainRecord> | Partial<Linode.Domain>;
+  type: RecordType | DomainType;
+  fields?: Partial<DomainRecord> | Partial<Domain>;
 }
 
 interface State {
@@ -113,9 +119,7 @@ interface IType {
   orderBy: 'name' | 'target' | 'domain';
   columns: {
     title: string;
-    render: (
-      r: Linode.DomainRecord | Linode.Domain
-    ) => null | string | JSX.Element;
+    render: (r: DomainRecord | Domain) => null | string | JSX.Element;
   }[];
   link?: () => null | JSX.Element;
 }
@@ -143,7 +147,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
 
   resetDrawer = () => this.updateDrawer(() => DomainRecords.defaultDrawerState);
 
-  openForCreation = (type: Linode.RecordType) =>
+  openForCreation = (type: RecordType) =>
     this.updateDrawer(() => ({
       open: true,
       submitting: false,
@@ -152,8 +156,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
     }));
 
   openForEditing = (
-    type: Linode.RecordType | Linode.DomainType,
-    fields: Partial<Linode.DomainRecord> | Partial<Linode.Domain>
+    type: RecordType | DomainType,
+    fields: Partial<DomainRecord> | Partial<Domain>
   ) =>
     this.updateDrawer(() => ({
       open: true,
@@ -163,51 +167,48 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       fields
     }));
 
-  openForEditMasterDomain = (f: Partial<Linode.Domain>) =>
+  openForEditMasterDomain = (f: Partial<Domain>) =>
     this.openForEditing('master', f);
 
-  openForEditSlaveDomain = (f: Partial<Linode.Domain>) =>
+  openForEditSlaveDomain = (f: Partial<Domain>) =>
     this.openForEditing('slave', f);
 
   openForCreateNSRecord = () => this.openForCreation('NS');
   openForEditNSRecord = (
-    f: Pick<Linode.DomainRecord, 'id' | 'target' | 'name' | 'ttl_sec'>
+    f: Pick<DomainRecord, 'id' | 'target' | 'name' | 'ttl_sec'>
   ) => this.openForEditing('NS', f);
 
   openForCreateMXRecord = () => this.openForCreation('MX');
   openForEditMXRecord = (
-    f: Pick<
-      Linode.DomainRecord,
-      'id' | 'target' | 'priority' | 'name' | 'ttl_sec'
-    >
+    f: Pick<DomainRecord, 'id' | 'target' | 'priority' | 'name' | 'ttl_sec'>
   ) => this.openForEditing('MX', f);
 
   openForCreateARecord = () => this.openForCreation('AAAA');
   openForEditARecord = (
-    f: Pick<Linode.DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
+    f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('AAAA', f);
 
   openForCreateCNAMERecord = () => this.openForCreation('CNAME');
   openForEditCNAMERecord = (
-    f: Pick<Linode.DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
+    f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('CNAME', f);
 
   openForCreateTXTRecord = () => this.openForCreation('TXT');
   openForEditTXTRecord = (
-    f: Pick<Linode.DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
+    f: Pick<DomainRecord, 'id' | 'name' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('TXT', f);
 
   openForCreateSRVRecord = () => this.openForCreation('SRV');
   openForEditSRVRecord = (
     f: Pick<
-      Linode.DomainRecord,
+      DomainRecord,
       'id' | 'name' | 'priority' | 'weight' | 'port' | 'target' | 'protocol'
     >
   ) => this.openForEditing('SRV', f);
 
   openForCreateCAARecord = () => this.openForCreation('CAA');
   openForEditCAARecord = (
-    f: Pick<Linode.DomainRecord, 'id' | 'name' | 'tag' | 'target' | 'ttl_sec'>
+    f: Pick<DomainRecord, 'id' | 'name' | 'tag' | 'target' | 'ttl_sec'>
   ) => this.openForEditing('CAA', f);
 
   confirmDeletion = (recordId: number) =>
@@ -256,7 +257,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
     this.updateConfirmDialog(c => ({ ...c, submitting: true }));
   };
 
-  handleOpenSOADrawer = (d: Linode.Domain) => {
+  handleOpenSOADrawer = (d: Domain) => {
     d.type === 'master'
       ? this.openForEditMasterDomain(d)
       : this.openForEditSlaveDomain(d);
@@ -272,11 +273,11 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       columns: [
         {
           title: 'Primary Domain',
-          render: (d: Linode.Domain) => d.domain
+          render: (d: Domain) => d.domain
         },
         {
           title: 'Email',
-          render: (d: Linode.Domain) => d.soa_email
+          render: (d: Domain) => d.soa_email
         },
         {
           title: 'Default TTL',
@@ -308,7 +309,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         },
         {
           title: '',
-          render: (d: Linode.Domain) => {
+          render: (d: Domain) => {
             return d.type === 'master' ? (
               <ActionMenu editPayload={d} onEdit={this.handleOpenSOADrawer} />
             ) : null;
@@ -326,11 +327,11 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       columns: [
         {
           title: 'Name Server',
-          render: (r: Linode.DomainRecord) => r.target
+          render: (r: DomainRecord) => r.target
         },
         {
           title: 'Subdomain',
-          render: (r: Linode.DomainRecord) => {
+          render: (r: DomainRecord) => {
             const sd = r.name;
             const {
               domain: { domain }
@@ -348,7 +349,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
            * If the NS is one of Linode's, don't display the Action menu since the user
            * cannot make changes to Linode's nameservers.
            */
-          render: ({ id, name, target, ttl_sec }: Linode.DomainRecord) =>
+          render: ({ id, name, target, ttl_sec }: DomainRecord) =>
             /linode.com/.test(target) ? null : (
               <ActionMenu
                 editPayload={{
@@ -378,15 +379,15 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       columns: [
         {
           title: 'Mail Server',
-          render: (r: Linode.DomainRecord) => r.target
+          render: (r: DomainRecord) => r.target
         },
         {
           title: 'Preference',
-          render: (r: Linode.DomainRecord) => String(r.priority)
+          render: (r: DomainRecord) => String(r.priority)
         },
         {
           title: 'Subdomain',
-          render: (r: Linode.DomainRecord) => r.name
+          render: (r: DomainRecord) => r.name
         },
         {
           title: 'TTL',
@@ -394,13 +395,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         },
         {
           title: '',
-          render: ({
-            id,
-            name,
-            priority,
-            target,
-            ttl_sec
-          }: Linode.DomainRecord) => (
+          render: ({ id, name, priority, target, ttl_sec }: DomainRecord) => (
             <ActionMenu
               onEdit={this.openForEditMXRecord}
               editPayload={{
@@ -430,12 +425,12 @@ class DomainRecords extends React.Component<CombinedProps, State> {
         r => typeEq('AAAA', r) || typeEq('A', r)
       ),
       columns: [
-        { title: 'Hostname', render: (r: Linode.DomainRecord) => r.name },
-        { title: 'IP Address', render: (r: Linode.DomainRecord) => r.target },
+        { title: 'Hostname', render: (r: DomainRecord) => r.name },
+        { title: 'IP Address', render: (r: DomainRecord) => r.target },
         { title: 'TTL', render: getTTL },
         {
           title: '',
-          render: ({ id, name, target, ttl_sec }: Linode.DomainRecord) => (
+          render: ({ id, name, target, ttl_sec }: DomainRecord) => (
             <ActionMenu
               editPayload={{
                 id,
@@ -462,12 +457,12 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       order: 'asc',
       data: this.props.domainRecords.filter(typeEq('CNAME')),
       columns: [
-        { title: 'Hostname', render: (r: Linode.DomainRecord) => r.name },
-        { title: 'Aliases to', render: (r: Linode.DomainRecord) => r.target },
+        { title: 'Hostname', render: (r: DomainRecord) => r.name },
+        { title: 'Aliases to', render: (r: DomainRecord) => r.target },
         { title: 'TTL', render: getTTL },
         {
           title: '',
-          render: ({ id, name, target, ttl_sec }: Linode.DomainRecord) => (
+          render: ({ id, name, target, ttl_sec }: DomainRecord) => (
             <ActionMenu
               editPayload={{
                 id,
@@ -495,12 +490,12 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       order: 'asc',
       data: this.props.domainRecords.filter(typeEq('TXT')),
       columns: [
-        { title: 'Hostname', render: (r: Linode.DomainRecord) => r.name },
-        { title: 'Value', render: (r: Linode.DomainRecord) => r.target },
+        { title: 'Hostname', render: (r: DomainRecord) => r.name },
+        { title: 'Value', render: (r: DomainRecord) => r.target },
         { title: 'TTL', render: getTTL },
         {
           title: '',
-          render: ({ id, target, name, ttl_sec }: Linode.DomainRecord) => (
+          render: ({ id, target, name, ttl_sec }: DomainRecord) => (
             <ActionMenu
               editPayload={{
                 id,
@@ -526,21 +521,21 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       order: 'asc',
       data: this.props.domainRecords.filter(typeEq('SRV')),
       columns: [
-        { title: 'Name', render: (r: Linode.DomainRecord) => r.name },
+        { title: 'Name', render: (r: DomainRecord) => r.name },
         {
           title: 'Domain',
-          render: (r: Linode.DomainRecord) => this.props.domain.domain
+          render: (r: DomainRecord) => this.props.domain.domain
         },
         {
           title: 'Priority',
-          render: (r: Linode.DomainRecord) => String(r.priority)
+          render: (r: DomainRecord) => String(r.priority)
         },
         {
           title: 'Weight',
-          render: (r: Linode.DomainRecord) => String(r.weight)
+          render: (r: DomainRecord) => String(r.weight)
         },
-        { title: 'Port', render: (r: Linode.DomainRecord) => String(r.port) },
-        { title: 'Target', render: (r: Linode.DomainRecord) => r.target },
+        { title: 'Port', render: (r: DomainRecord) => String(r.port) },
+        { title: 'Target', render: (r: DomainRecord) => r.target },
         { title: 'TTL', render: getTTL },
         {
           title: '',
@@ -552,7 +547,7 @@ class DomainRecords extends React.Component<CombinedProps, State> {
             protocol,
             target,
             weight
-          }: Linode.DomainRecord) => (
+          }: DomainRecord) => (
             <ActionMenu
               editPayload={{
                 id,
@@ -582,13 +577,13 @@ class DomainRecords extends React.Component<CombinedProps, State> {
       order: 'asc',
       data: this.props.domainRecords.filter(typeEq('CAA')),
       columns: [
-        { title: 'Name', render: (r: Linode.DomainRecord) => r.name },
-        { title: 'Tag', render: (r: Linode.DomainRecord) => r.tag },
-        { title: 'Value', render: (r: Linode.DomainRecord) => r.target },
+        { title: 'Name', render: (r: DomainRecord) => r.name },
+        { title: 'Tag', render: (r: DomainRecord) => r.tag },
+        { title: 'Value', render: (r: DomainRecord) => r.target },
         { title: 'TTL', render: getTTL },
         {
           title: '',
-          render: ({ id, name, tag, target, ttl_sec }: Linode.DomainRecord) => (
+          render: ({ id, name, tag, target, ttl_sec }: DomainRecord) => (
             <ActionMenu
               editPayload={{
                 id,
@@ -834,7 +829,7 @@ const getTTL = compose(
 
 const typeEq = propEq('type');
 
-const prependLinodeNS = compose<any, any, Linode.DomainRecord[]>(
+const prependLinodeNS = compose<any, any, DomainRecord[]>(
   flatten,
   prepend([
     {
@@ -907,9 +902,9 @@ const prependLinodeNS = compose<any, any, Linode.DomainRecord[]>(
 
 const getNSRecords = compose<
   Props,
-  Linode.DomainRecord[],
-  Linode.DomainRecord[],
-  Linode.DomainRecord[]
+  DomainRecord[],
+  DomainRecord[],
+  DomainRecord[]
 >(
   prependLinodeNS,
   filter(typeEq('NS')),

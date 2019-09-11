@@ -10,6 +10,8 @@ interface Flags {
   objectStorage: boolean;
   promos: boolean;
   vatBanner: TaxBanner;
+  oneClickLocation: 'sidenav' | 'createmenu';
+  lkeHideButtons: boolean;
 }
 
 /**

@@ -1,3 +1,4 @@
+import { deleteImage, Image } from 'linode-js-sdk/lib/images';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -33,7 +34,6 @@ import Placeholder from 'src/components/Placeholder';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
-import { deleteImage } from 'src/services/images';
 import { ApplicationState } from 'src/store';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow from './ImageRow';
@@ -429,10 +429,12 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
         <Placeholder
           title="Add an Image"
           copy={<EmptyCopy />}
-          buttonProps={{
-            onClick: this.openForCreate,
-            children: 'Add an Image'
-          }}
+          buttonProps={[
+            {
+              onClick: this.openForCreate,
+              children: 'Add an Image'
+            }
+          ]}
         />
         {this.renderImageDrawer()}
       </React.Fragment>
@@ -449,6 +451,7 @@ const EmptyCopy = () => (
       <a
         href="https://linode.com/docs/platform/disk-images/linode-images-new-manager/"
         target="_blank"
+        rel="noopener noreferrer"
         className="h-u"
       >
         learn more about Images
@@ -457,6 +460,7 @@ const EmptyCopy = () => (
       <a
         href="https://linode.com/docs/quick-answers/linode-platform/deploy-an-image-to-a-linode"
         target="_blank"
+        rel="noopener noreferrer"
         className="h-u"
       >
         deploy an Image to a Linode.
@@ -466,7 +470,7 @@ const EmptyCopy = () => (
 );
 
 interface WithPrivateImages {
-  imagesData: Linode.Image[];
+  imagesData: Image[];
   imagesLoading: boolean;
   imagesError?: Linode.ApiFieldError[];
 }

@@ -14,13 +14,13 @@ import {
 import Typography from 'src/components/core/Typography';
 import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
+import ImageSelect from 'src/components/ImageSelect';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Notice from 'src/components/Notice';
 import Placeholder from 'src/components/Placeholder';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import AddonsPanel from '../AddonsPanel';
-import SelectImagePanel from '../SelectImagePanel';
 import SelectPlanPanel from '../SelectPlanPanel';
 import { renderBackupsDisplaySection } from './utils';
 
@@ -154,17 +154,15 @@ export class FromImageContent extends React.PureComponent<CombinedProps> {
             <Notice error spacingTop={8} text={hasErrorFor.none} />
           )}
           <CreateLinodeDisabled isDisabled={userCannotCreateLinode} />
-          <SelectImagePanel
-            variant={variant}
-            data-qa-select-image-panel
-            title={imagePanelTitle}
+          <ImageSelect
+            title={imagePanelTitle || 'Choose an Image'}
             images={images}
-            handleSelection={this.props.updateImageID}
+            handleSelectImage={this.props.updateImageID}
             selectedImageID={this.props.selectedImageID}
-            updateFor={[this.props.selectedImageID, errors]}
-            initTab={0}
             error={hasErrorFor.image}
+            variant={variant}
             disabled={userCannotCreateLinode}
+            data-qa-select-image-panel
           />
           <SelectRegionPanel
             error={hasErrorFor.region}

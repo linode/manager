@@ -1,6 +1,6 @@
+import { NodeBalancerConfig } from 'linode-js-sdk/lib/nodebalancers';
 import { assoc } from 'ramda';
 import { Reducer } from 'redux';
-import { NodeBalancerConfig } from 'src/services/nodebalancers';
 import { MappedEntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
 import { deleteNodeBalancerActions } from '../nodeBalancer/nodeBalancer.actions';

@@ -1,8 +1,10 @@
+import { Image } from 'linode-js-sdk/lib/images';
+import { cloneLinode, CreateLinodeRequest, Linode } from 'linode-js-sdk/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { StickyContainer } from 'react-sticky';
 import { compose as recompose } from 'recompose';
 
@@ -25,6 +27,7 @@ import { dcDisplayNames } from 'src/constants';
 import withLabelGenerator, {
   LabelProps
 } from 'src/features/linodes/LinodesCreate/withLabelGenerator';
+import deepCheckRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { typeLabelDetails } from 'src/features/linodes/presentation';
 import userSSHKeyHoc from 'src/features/linodes/userSSHKeyHoc';
 import {
@@ -49,7 +52,6 @@ import {
 
 import { resetEventsPolling } from 'src/events';
 import { getOneClickApps } from 'src/features/StackScripts/stackScriptUtils';
-import { cloneLinode, CreateLinodeRequest } from 'src/services/linodes';
 
 import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { MapState } from 'src/store/types';
@@ -68,7 +70,7 @@ interface State {
   selectedLinodeID?: number;
   selectedBackupID?: number;
   availableUserDefinedFields?: Linode.StackScript.UserDefinedField[];
-  availableStackScriptImages?: Linode.Image[];
+  availableStackScriptImages?: Image[];
   selectedStackScriptID?: number;
   selectedStackScriptLabel?: string;
   selectedStackScriptUsername?: string;
@@ -125,6 +127,14 @@ const trimOneClickFromLabel = (script: StackScript) => {
   };
 };
 
+const nonImageCreateTypes = ['fromStackScript', 'fromBackup', 'fromLinode'];
+
+const isNonDefaultImageType = (prevType: string, type: string) => {
+  return nonImageCreateTypes.some(
+    thisEntry => prevType !== thisEntry && type === thisEntry
+  );
+};
+
 class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   params = getParamsFromUrl(this.props.location.search);
 
@@ -137,14 +147,11 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   componentDidUpdate(prevProps: CombinedProps) {
     /**
-     * if we're clicking on the stackscript create flow, we need to stop
-     * defaulting to Debian 9 because it's possible the user chooses a stackscript
-     * that isn't compatible with the defaulted image
+     * When switching to a creation flow where
+     * having a pre-selected image is problematic,
+     * deselect it.
      */
-    if (
-      prevProps.createType !== 'fromStackScript' &&
-      this.props.createType === 'fromStackScript'
-    ) {
+    if (isNonDefaultImageType(prevProps.createType, this.props.createType)) {
       this.setState({ selectedImageID: undefined });
     }
   }
@@ -159,6 +166,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           : +params.backupID,
         selectedLinodeID: isNaN(+params.linodeID) ? undefined : +params.linodeID
       });
+    }
+    if (nonImageCreateTypes.includes(this.props.createType)) {
+      // If we're navigating directly to e.g. the clone page, don't select an image by default
+      this.setState({ selectedImageID: undefined });
     }
     this.setState({ appInstancesLoading: true });
     getOneClickApps()
@@ -239,7 +250,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     label: string,
     username: string,
     userDefinedFields: Linode.StackScript.UserDefinedField[],
-    images: Linode.Image[],
+    images: Image[],
     defaultData?: any
   ) => {
     /**
@@ -277,7 +288,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
   setUDFs = (udfs: any[]) => this.setState({ udfs });
 
   generateLabel = () => {
-    const { getLabel, imagesData, regionsData } = this.props;
+    const { createType, getLabel, imagesData, regionsData } = this.props;
     const {
       selectedImageID,
       selectedRegionID,
@@ -311,6 +322,12 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
           ? selectedImage.vendor
           : selectedImage.label
         : '';
+
+      if (createType === 'fromApp') {
+        // All 1-clicks are Debian so this isn't useful information.
+        // Once an app is
+        arg1 = '';
+      }
     }
 
     if (selectedRegionID) {
@@ -325,9 +342,13 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       arg2 = selectedRegion ? selectedRegion.id : '';
     }
 
-    if (this.props.createType === 'fromLinode') {
+    if (createType === 'fromLinode') {
       // @todo handle any other custom label cases we'd like to have here
       arg3 = 'clone';
+    }
+
+    if (createType === 'fromBackup') {
+      arg3 = 'backup';
     }
 
     return getLabel(arg1, arg2, arg3);
@@ -404,7 +425,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.setState({ formIsSubmitting: true });
 
     return request()
-      .then((response: Linode.Linode) => {
+      .then((response: Linode) => {
         this.setState({ formIsSubmitting: false });
 
         /** if cloning a Linode, upsert Linode in redux */
@@ -585,7 +606,7 @@ const mapStateToProps: MapState<
 });
 
 interface DispatchProps {
-  upsertLinode: (l: Linode.Linode) => void;
+  upsertLinode: (l: Linode) => void;
 }
 
 const connected = connect(
@@ -600,6 +621,11 @@ const withRegions = regionsContainer(({ data, loading, error }) => ({
 }));
 
 export default recompose<CombinedProps, {}>(
+  deepCheckRouter(
+    (oldProps, newProps) =>
+      oldProps.location.search !== newProps.location.search,
+    true
+  ),
   withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
     ...ownProps,
     imagesData,
@@ -616,7 +642,6 @@ export default recompose<CombinedProps, {}>(
   withTypes,
   withLinodeActions,
   connected,
-  withRouter,
   withSnackbar,
   userSSHKeyHoc,
   withLabelGenerator

@@ -13,6 +13,8 @@ import NodeBalancerCreationErrors, {
 import SummaryPanel from './SummaryPanel';
 import TablesPanel from './TablesPanel';
 
+import { ExtendedNodeBalancer } from 'src/services/nodebalancers';
+
 type ClassNames = 'main' | 'sidebar';
 
 const styles = (theme: Theme) =>
@@ -30,7 +32,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  nodeBalancer: Linode.ExtendedNodeBalancer;
+  nodeBalancer: ExtendedNodeBalancer;
   errorResponses?: ConfigOrNodeErrorResponse[];
 }
 

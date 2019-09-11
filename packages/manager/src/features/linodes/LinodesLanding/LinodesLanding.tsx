@@ -1,3 +1,4 @@
+import { Config } from 'linode-js-sdk/lib/linodes';
 import * as moment from 'moment-timezone';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { parse, stringify } from 'qs';
@@ -33,6 +34,7 @@ import {
   sendGroupByTagEnabledEvent,
   sendLinodesViewEvent
 } from 'src/utilities/ga';
+import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import { BackupsCtaDismissed } from 'src/utilities/storage';
 import CardView from './CardView';
 import DisplayGroupedLinodes from './DisplayGroupedLinodes';
@@ -54,7 +56,7 @@ import CSVLink from 'src/components/DownloadCSV';
 interface State {
   powerDialogOpen: boolean;
   powerDialogAction?: Action;
-  selectedLinodeConfigs?: Linode.Config[];
+  selectedLinodeConfigs?: Config[];
   selectedLinodeID?: number;
   selectedLinodeLabel?: string;
   deleteDialogOpen: boolean;
@@ -113,7 +115,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     bootAction: Action,
     linodeID: number,
     linodeLabel: string,
-    linodeConfigs: Linode.Config[]
+    linodeConfigs: Config[]
   ) => {
     this.setState({
       powerDialogOpen: true,
@@ -205,7 +207,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     }
 
     const headers = [
-      { label: 'Label', key: 'label' },
+      { label: 'Label', key: 'linodeDescription' },
       { label: 'Linode ID', key: 'id' },
       { label: 'Image', key: 'image' },
       { label: 'Region', key: 'region' },
@@ -359,7 +361,19 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                               <Grid container justify="flex-end">
                                 <Grid item className={classes.CSVlinkContainer}>
                                   <CSVLink
-                                    data={linodesData}
+                                    data={linodesData.map(e => {
+                                      return {
+                                        ...e,
+                                        linodeDescription: getLinodeDescription(
+                                          e.label,
+                                          e.specs.memory,
+                                          e.specs.disk,
+                                          e.specs.vcpus,
+                                          '',
+                                          []
+                                        )
+                                      };
+                                    })}
                                     headers={
                                       this.props
                                         .someLinodesHaveScheduledMaintenance

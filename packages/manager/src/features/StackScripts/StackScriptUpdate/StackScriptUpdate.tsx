@@ -1,3 +1,5 @@
+import { Grant } from 'linode-js-sdk/lib/account';
+import { Image } from 'linode-js-sdk/lib/images';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -58,7 +60,7 @@ interface State {
   labelText: string;
   descriptionText: string;
   selectedImages: string[];
-  availableImages: Linode.Image[];
+  availableImages: Image[];
   script: string;
   revisionNote: string;
   isSubmitting: boolean;
@@ -393,7 +395,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
     state
   );
   const grantsForThisStackScript = stackScriptGrants.find(
-    (eachGrant: Linode.Grant) => eachGrant.id === Number(stackScriptID)
+    (eachGrant: Grant) => eachGrant.id === Number(stackScriptID)
   );
 
   return {
@@ -420,7 +422,7 @@ const reloaded = reloadableWithRouter<
 });
 
 interface WithImagesProps {
-  imagesData: Linode.Image[];
+  imagesData: Image[];
   imagesLoading: boolean;
   imagesError?: Linode.ApiFieldError[];
 }

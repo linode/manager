@@ -1,3 +1,4 @@
+import { cancelAccount } from 'linode-js-sdk/lib/account'
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -8,8 +9,6 @@ import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import TextField from 'src/components/TextField';
-
-import { cancelAccount } from 'src/services/account';
 
 interface Props extends Pick<RouteComponentProps, 'history'> {
   open: boolean;

@@ -1,8 +1,9 @@
 import { shallow } from 'enzyme';
+import { ResourcePage } from 'linode-js-sdk/lib/types'
 import * as React from 'react';
 import paginate from './Pagey';
 
-const mockData: Linode.ResourcePage<any> = {
+const mockData: ResourcePage<any> = {
   page: 1,
   pages: 1,
   results: 0,

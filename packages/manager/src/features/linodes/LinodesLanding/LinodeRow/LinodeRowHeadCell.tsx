@@ -1,3 +1,6 @@
+import { Event } from 'linode-js-sdk/lib/account';
+import { Image } from 'linode-js-sdk/lib/images';
+import { LinodeBackups, LinodeStatus } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -78,7 +81,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  backups: Linode.LinodeBackups;
+  backups: LinodeBackups;
   id: number;
   image: string | null;
   ipv4: string[];
@@ -88,18 +91,18 @@ interface Props {
   disk: number;
   memory: number;
   vcpus: number;
-  status: Linode.LinodeStatus;
+  status: LinodeStatus;
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;
   width?: number;
   loading: boolean;
-  recentEvent?: Linode.Event;
+  recentEvent?: Event;
   maintenance?: string | null;
 }
 
 interface WithImagesProps {
-  imagesData: Linode.Image[];
+  imagesData: Image[];
 }
 
 type CombinedProps = Props &

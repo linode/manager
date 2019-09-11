@@ -1,4 +1,4 @@
-import { getUsers } from 'src/services/account';
+import { getUsers, Grant } from 'linode-js-sdk/lib/account';
 import { getStackScript, getStackScripts } from 'src/services/stackscripts';
 
 type StackScript = Linode.StackScript.Response;
@@ -43,7 +43,7 @@ export const getMineAndAccountStackScripts = (
   currentUser: string,
   params?: any,
   filter?: any,
-  stackScriptGrants?: Linode.Grant[]
+  stackScriptGrants?: Grant[]
 ) => {
   /**
    * Secondary users can't see other account users but they have a list of
@@ -108,7 +108,7 @@ export const getCommunityStackscripts = (
   currentUser: string,
   params?: any,
   filter?: any,
-  stackScriptGrants?: Linode.Grant[]
+  stackScriptGrants?: Grant[]
 ) => {
   if (stackScriptGrants) {
     // User is restricted, so can't ask for a list of account users
@@ -203,7 +203,7 @@ export const getStackScriptUrl = (
 
 export const canUserModifyAccountStackScript = (
   isRestrictedUser: boolean,
-  stackScriptGrants: Linode.Grant[],
+  stackScriptGrants: Grant[],
   stackScriptID: number
 ) => {
   // If the user isn't restricted, they can modify any StackScript on the account
@@ -213,7 +213,7 @@ export const canUserModifyAccountStackScript = (
 
   // Look for permissions for this specific StackScript
   const grantsForThisStackScript = stackScriptGrants.find(
-    (eachGrant: Linode.Grant) => eachGrant.id === Number(stackScriptID)
+    (eachGrant: Grant) => eachGrant.id === Number(stackScriptID)
   );
 
   // If there are no permissions for this StackScript (permissions:"none")

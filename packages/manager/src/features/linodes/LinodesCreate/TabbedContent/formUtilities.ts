@@ -1,10 +1,12 @@
+import { Image } from 'linode-js-sdk/lib/images';
+
 /**
- * @returns { Linode.Image[] } - a list of public images AKA
+ * @returns { Image[] } - a list of public images AKA
  * images that are officially supported by Linode
  *
  */
-export const filterPublicImages = (images: Linode.Image[]) => {
-  return images.filter((image: Linode.Image) => image.is_public);
+export const filterPublicImages = (images: Image[]) => {
+  return images.filter((image: Image) => image.is_public);
 };
 
 /**

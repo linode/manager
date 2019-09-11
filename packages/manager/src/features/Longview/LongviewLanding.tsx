@@ -22,11 +22,17 @@ export class LongviewLanding extends React.Component<{}, {}> {
         <Placeholder
           title="Longview"
           copy="Keep your Linux systems running smoothly with insights from your system metrics."
-          buttonProps={{
-            onClick: () =>
-              window.open('https://manager.linode.com/longview', '_blank'),
-            children: 'Navigate to Classic Manager'
-          }}
+          buttonProps={[
+            {
+              onClick: () =>
+                window.open(
+                  'https://manager.linode.com/longview',
+                  '_blank',
+                  'noopener'
+                ),
+              children: 'Navigate to Classic Manager'
+            }
+          ]}
         />
       </React.Fragment>
     );

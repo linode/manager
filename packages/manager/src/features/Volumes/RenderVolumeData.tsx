@@ -1,3 +1,5 @@
+import { Event } from 'linode-js-sdk/lib/account';
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import VolumeTableRow from './VolumeTableRow';
 
@@ -31,7 +33,7 @@ export interface RenderVolumeDataProps {
 }
 
 const RenderData: React.StatelessComponent<
-  { data: Linode.Volume[] } & RenderVolumeDataProps
+  { data: Volume[] } & RenderVolumeDataProps
 > = props => {
   const {
     data,
@@ -66,7 +68,7 @@ const RenderData: React.StatelessComponent<
   );
 };
 
-export const isVolumeUpdating = (e?: Linode.Event) => {
+export const isVolumeUpdating = (e?: Event) => {
   // Make Typescript happy, since this function can otherwise technically return undefined
   if (!e) {
     return false;

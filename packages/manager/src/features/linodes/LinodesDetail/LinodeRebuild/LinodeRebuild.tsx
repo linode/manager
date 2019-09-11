@@ -1,3 +1,4 @@
+import { GrantLevel } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
@@ -29,7 +30,7 @@ const styles = (theme: Theme) =>
 
 interface ContextProps {
   linodeLabel: string;
-  permissions: Linode.GrantLevel;
+  permissions: GrantLevel;
 }
 type CombinedProps = WithStyles<ClassNames> & ContextProps;
 

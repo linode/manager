@@ -1,3 +1,4 @@
+import { Account, getPayments, Payment } from 'linode-js-sdk/lib/account'
 import { compose } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -17,12 +18,11 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import { printPayment } from 'src/features/Billing/PdfGenerator/PdfGenerator';
 import createMailto from 'src/features/Footer/createMailto';
-import { getPayments } from 'src/services/account';
 import { ApplicationState } from 'src/store';
 import { requestAccount } from 'src/store/account/account.requests';
 import { ThunkDispatch } from 'src/store/types';
 
-interface Props extends PaginationProps<Linode.Payment> {}
+interface Props extends PaginationProps<Payment> { }
 
 type CombinedProps = Props & StateProps;
 
@@ -104,13 +104,13 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
     return data && data.length > 0 ? (
       this.renderItems(data)
     ) : (
-      <TableRowEmptyState colSpan={3} />
-    );
+        <TableRowEmptyState colSpan={3} />
+      );
   };
 
-  renderItems = (items: Linode.Payment[]) => items.map(this.renderRow);
+  renderItems = (items: Payment[]) => items.map(this.renderRow);
 
-  printPayment(account: Linode.Account, item: Linode.Payment) {
+  printPayment(account: Account, item: Payment) {
     this.setState({
       pdfGenerationError: {
         itemId: undefined
@@ -128,7 +128,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
     }
   }
 
-  renderRow = (item: Linode.Payment) => {
+  renderRow = (item: Payment) => {
     const { account } = this.props;
     const { pdfGenerationError } = this.state;
 
@@ -146,7 +146,7 @@ class RecentPaymentsPanel extends React.Component<CombinedProps, State> {
             <a
               href="#"
               onClick={() =>
-                this.printPayment(account.data as Linode.Account, item)
+                this.printPayment(account.data as Account, item)
               }
               className="secondaryLink"
             >

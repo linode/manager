@@ -8,7 +8,8 @@ const componentLoading = shallow(
       root: '',
       primaryColor: '',
       loadingText: '',
-      rounded: ''
+      rounded: '',
+      overLimit: ''
     }}
     value={20}
     max={100}

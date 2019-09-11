@@ -1,13 +1,14 @@
+import { Config } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  onEdit: (config: Linode.Config) => void;
+  onEdit: (config: Config) => void;
   onDelete: (id: number, label: string) => void;
   onBoot: (linodeId: number, configId: number, label: string) => void;
-  config: Linode.Config;
+  config: Config;
   linodeId: number;
   readOnly?: boolean;
 }

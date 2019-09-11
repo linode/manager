@@ -1,5 +1,6 @@
 import { shallow, ShallowWrapper } from 'enzyme';
 import * as React from 'react';
+import ldClient from 'src/__data__/ldClient';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { light } from 'src/themes';
 import { ClassNames, PrimaryNav } from './PrimaryNav';
@@ -45,11 +46,13 @@ describe('PrimaryNav', () => {
           })}
           toggleSpacing={jest.fn()}
           closeMenu={jest.fn()}
+          flags={{}}
+          ldClient={ldClient}
           toggleTheme={jest.fn()}
           hasAccountAccess={false}
-          isManagedAccount={false}
           accountCapabilities={[]}
           accountLastUpdated={0}
+          isManagedAccount={true}
           {...reactRouterProps}
         />
       );
@@ -93,8 +96,8 @@ describe('PrimaryNav', () => {
       expect(findLinkInPrimaryNav('account')).toHaveLength(0);
     });
 
-    it('should note have a managed link', () => {
-      expect(findLinkInPrimaryNav('managed')).toHaveLength(0);
+    it('should have a managed link', () => {
+      expect(findLinkInPrimaryNav('managed')).toHaveLength(1);
     });
   });
 
@@ -111,11 +114,13 @@ describe('PrimaryNav', () => {
           })}
           toggleSpacing={jest.fn()}
           closeMenu={jest.fn()}
+          flags={{}}
+          ldClient={ldClient}
           toggleTheme={jest.fn()}
           hasAccountAccess={true}
-          isManagedAccount={false}
           accountCapabilities={[]}
           accountLastUpdated={0}
+          isManagedAccount={true}
           {...reactRouterProps}
         />
       );
@@ -141,11 +146,13 @@ describe('PrimaryNav', () => {
           })}
           toggleSpacing={jest.fn()}
           closeMenu={jest.fn()}
+          flags={{}}
+          ldClient={ldClient}
           toggleTheme={jest.fn()}
           hasAccountAccess={false}
-          isManagedAccount={true}
           accountCapabilities={[]}
           accountLastUpdated={0}
+          isManagedAccount={true}
           {...reactRouterProps}
         />
       );
@@ -171,9 +178,10 @@ describe('PrimaryNav', () => {
           })}
           toggleSpacing={jest.fn()}
           closeMenu={jest.fn()}
+          flags={{}}
+          ldClient={ldClient}
           toggleTheme={jest.fn()}
           hasAccountAccess={false}
-          isManagedAccount={true}
           accountCapabilities={[
             'Linodes',
             'NodeBalancers',
@@ -181,6 +189,7 @@ describe('PrimaryNav', () => {
             'Object Storage'
           ]}
           accountLastUpdated={0}
+          isManagedAccount={true}
           {...reactRouterProps}
         />
       );

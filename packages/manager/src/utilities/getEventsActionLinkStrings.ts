@@ -1,9 +1,10 @@
+import { Entity, EventAction } from 'linode-js-sdk/lib/account';
 import { path } from 'ramda';
 import { nonClickEvents } from 'src/constants';
 
 export default (
-  action: Linode.EventAction,
-  entity: null | Linode.Entity,
+  action: EventAction,
+  entity: null | Entity,
   deleted: undefined | string | boolean
 ) => {
   const type = path(['type'], entity);

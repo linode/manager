@@ -1,13 +1,13 @@
-import { getImages } from 'src/services/images';
+import { getImages, Image } from 'linode-js-sdk/lib/images';
 import { ThunkActionCreator } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import { getImagesFailure, getImagesSuccess } from './image.actions';
 
 export const requestImages: ThunkActionCreator<
-  Promise<Linode.Image[]>
+  Promise<Image[]>
 > = () => dispatch => {
-  const getAllImages = getAll<Linode.Image>(getImages);
+  const getAllImages = getAll<Image>(getImages);
 
   return getAllImages()
     .then(({ data }) => {

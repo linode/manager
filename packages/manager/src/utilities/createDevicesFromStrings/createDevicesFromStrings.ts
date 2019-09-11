@@ -1,3 +1,4 @@
+import { Devices } from 'linode-js-sdk/lib/linodes';
 import { isNil, objOf, split } from 'ramda';
 
 type DiskRecord = Record<'disk_id', number>;
@@ -32,7 +33,7 @@ const createTypeRecord = (value?: string): null | DiskRecord | VolumeRecord => {
   return objOf(key, idAsNumber); // -> { volume_id: 123 }
 };
 
-let createDevicesFromStrings: (v: DevicesAsStrings) => Linode.Devices;
+let createDevicesFromStrings: (v: DevicesAsStrings) => Devices;
 createDevicesFromStrings = devices => ({
   sda: createTypeRecord(devices.sda),
   sdb: createTypeRecord(devices.sdb),

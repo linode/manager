@@ -1,4 +1,7 @@
 import { Formik, FormikProps } from 'formik';
+import { GrantLevel } from 'linode-js-sdk/lib/account';
+import { Image } from 'linode-js-sdk/lib/images';
+import { rebuildLinode, RebuildLinodeSchema, RebuildRequest } from 'linode-js-sdk/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -14,14 +17,13 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
+import ImageSelect from 'src/components/ImageSelect';
 import Notice from 'src/components/Notice';
 import withImages from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/events';
 import userSSHKeyHoc, {
   UserSSHKeyProps
 } from 'src/features/linodes/userSSHKeyHoc';
-import { rebuildLinode, RebuildRequest } from 'src/services/linodes';
-import { RebuildLinodeSchema } from 'src/services/linodes/linode.schema';
 import {
   handleFieldErrors,
   handleGeneralErrors
@@ -29,7 +31,6 @@ import {
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import { RebuildDialog } from './RebuildDialog';
-import SelectImagePanel from './SelectImagePanel';
 
 type ClassNames = 'root' | 'error';
 
@@ -44,14 +45,14 @@ const styles = (theme: Theme) =>
   });
 
 interface WithImagesProps {
-  imagesData: Linode.Image[];
+  imagesData: Image[];
   imagesLoading: boolean;
   imagesError?: string;
 }
 
 interface ContextProps {
   linodeId: number;
-  permissions: Linode.GrantLevel;
+  permissions: GrantLevel;
 }
 
 export type CombinedProps = WithImagesProps &
@@ -168,15 +169,15 @@ export const RebuildFromImage: React.StatelessComponent<
           <Grid item className={classes.root}>
             {/* `status` holds generalError messages */}
             {status && <Notice error>{status.generalError}</Notice>}
-
-            <SelectImagePanel
+            <ImageSelect
+              title="Select Image"
               images={imagesData}
               error={imagesError || errors.image}
-              updateFor={[classes, values.image, errors]}
               selectedImageID={values.image}
-              handleSelection={selected => setFieldValue('image', selected)}
-              data-qa-select-image
+              handleSelectImage={selected => setFieldValue('image', selected)}
               disabled={disabled}
+              variant="all"
+              data-qa-select-image
             />
             <AccessPanel
               password={values.root_pass}

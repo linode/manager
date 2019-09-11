@@ -1,3 +1,4 @@
+import { EventAction, EventStatus } from 'linode-js-sdk/lib/account';
 import { EventHandler } from 'src/store/types';
 import { ApplicationState } from '..';
 import { removeNodeBalancerConfigs } from '../nodeBalancerConfig/nodeBalancerConfig.actions';
@@ -36,8 +37,8 @@ export default nodeBalancerEventHandler;
 type NodeBalancerActionHandler = (
   dispatch: ThunkDispatch,
   id: number,
-  action: Linode.EventAction,
-  status: Linode.EventStatus,
+  action: EventAction,
+  status: EventStatus,
   resourceState: ApplicationState['__resources']
 ) => void;
 

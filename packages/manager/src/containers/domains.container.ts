@@ -1,5 +1,5 @@
+import { CreateDomainPayload, Domain } from 'linode-js-sdk/lib/domains';
 import { connect } from 'react-redux';
-import { CreateDomainPayload } from 'src/services/domains';
 import { ApplicationState } from 'src/store';
 import {
   DomainId,
@@ -13,14 +13,14 @@ import {
 import { EntityError, ThunkDispatch } from 'src/store/types';
 
 export interface StateProps {
-  domainsData?: Linode.Domain[];
+  domainsData?: Domain[];
   domainsLoading: boolean;
   domainsError: EntityError;
 }
 
 export interface DomainActionsProps {
-  createDomain: (payload: CreateDomainPayload) => Promise<Linode.Domain>;
-  updateDomain: (params: UpdateDomainParams) => Promise<Linode.Domain>;
+  createDomain: (payload: CreateDomainPayload) => Promise<Domain>;
+  updateDomain: (params: UpdateDomainParams) => Promise<Domain>;
   deleteDomain: (domainId: DomainId) => Promise<{}>;
 }
 
@@ -31,7 +31,7 @@ export default <InnerStateProps extends {}, TOuter extends {}>(
     ownProps: TOuter,
     domainsLoading: boolean,
     domainsError: EntityError,
-    domains?: Linode.Domain[]
+    domains?: Domain[]
   ) => InnerStateProps
 ) =>
   connect(

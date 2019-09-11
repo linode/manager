@@ -1,3 +1,5 @@
+import { Entity, Event } from 'linode-js-sdk/lib/account';
+import { Domain } from 'linode-js-sdk/lib/domains';
 import { compose, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -28,6 +30,10 @@ import {
   isInProgressEvent
 } from 'src/store/events/event.helpers';
 import DashboardCard from '../DashboardCard';
+
+interface EntityEvent extends Omit<Event, 'entity'> {
+  entity: Entity;
+}
 
 type ClassNames =
   | 'root'
@@ -68,7 +74,7 @@ const styles = (theme: Theme) =>
 interface State {
   loading: boolean;
   errors?: Linode.ApiFieldError[];
-  data?: Linode.Domain[];
+  data?: Domain[];
   results?: number;
 }
 
@@ -145,7 +151,7 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
 
   renderEmpty = () => <TableRowEmptyState colSpan={2} />;
 
-  renderData = (data: Linode.Domain[]) => {
+  renderData = (data: Domain[]) => {
     const { classes } = this.props;
 
     return data.map(({ id, domain, type, status }) => (
@@ -201,7 +207,7 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 interface WithUpdatingDomainsProps {
-  domains: Linode.Domain[];
+  domains: Domain[];
   domainCount: number;
   loading: boolean;
   error?: Linode.ApiFieldError[];
@@ -223,7 +229,7 @@ const withUpdatingDomains = connect(
   }
 );
 
-const mergeEvents = (events: Linode.Event[]) => (domains: Linode.Domain[]) =>
+const mergeEvents = (events: Event[]) => (domains: Domain[]) =>
   events.reduce((updatedDomains, event) => {
     if (isWantedEvent(event)) {
       return updatedDomains.map(domain =>
@@ -236,7 +242,7 @@ const mergeEvents = (events: Linode.Event[]) => (domains: Linode.Domain[]) =>
     return updatedDomains;
   }, domains);
 
-const isWantedEvent = (e: Linode.Event): e is Linode.EntityEvent => {
+const isWantedEvent = (e: Event): e is EntityEvent => {
   if (!isInProgressEvent(e)) {
     return false;
   }

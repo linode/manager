@@ -1,4 +1,7 @@
-import { CreateNodeBalancerPayload } from 'src/services/nodebalancers';
+import {
+  CreateNodeBalancerPayload,
+  NodeBalancer
+} from 'linode-js-sdk/lib/nodebalancers';
 import { actionCreatorFactory } from 'typescript-fsa';
 
 const actionCreator = actionCreatorFactory(`@@manager/nodeBalancer`);
@@ -7,11 +10,11 @@ export interface BalancerParams {
   nodeBalancerId: number;
 }
 
-type Entity = Linode.NodeBalancer;
+type Entity = NodeBalancer;
 
 export const getAllNodeBalancersActions = actionCreator.async<
   void,
-  Linode.NodeBalancer[],
+  NodeBalancer[],
   Linode.ApiFieldError[]
 >(`get-all`);
 
@@ -44,6 +47,6 @@ export type GetNodeBalancerWithConfigsParams = BalancerParams;
 
 export const getNodeBalancerWithConfigsActions = actionCreator.async<
   GetNodeBalancerWithConfigsParams,
-  Linode.NodeBalancer,
+  NodeBalancer,
   Linode.ApiFieldError[]
 >(`get`);

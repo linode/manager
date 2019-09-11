@@ -1,4 +1,6 @@
-export const extDisk: Linode.Disk = {
+import { Disk } from 'linode-js-sdk/lib/linodes';
+
+export const extDisk: Disk = {
   updated: '2018-07-05T18:16:08',
   label: 'Arch Linux Disk',
   created: '2018-07-05T18:15:43',
@@ -8,7 +10,7 @@ export const extDisk: Linode.Disk = {
   id: 19040623
 };
 
-export const swapDisk: Linode.Disk = {
+export const swapDisk: Disk = {
   updated: '2018-07-05T18:16:09',
   label: '512 MB Swap Image',
   created: '2018-07-05T18:15:43',
@@ -18,7 +20,7 @@ export const swapDisk: Linode.Disk = {
   id: 19040624
 };
 
-export const extDiskCopy: Linode.Disk = {
+export const extDiskCopy: Disk = {
   updated: '2018-07-05T18:16:08',
   label: 'Arch Linux Disk',
   created: '2018-07-05T18:15:43',
@@ -28,7 +30,7 @@ export const extDiskCopy: Linode.Disk = {
   id: 19040623
 };
 
-export const extDisk2: Linode.Disk = {
+export const extDisk2: Disk = {
   updated: '2018-08-05T18:16:08',
   label: 'Custom Disk',
   created: '2018-08-05T18:15:43',
@@ -38,7 +40,7 @@ export const extDisk2: Linode.Disk = {
   id: 19040625
 };
 
-export const extDisk3: Linode.Disk = {
+export const extDisk3: Disk = {
   updated: '2018-08-05T18:16:08',
   label: 'Custom Disk which matches config',
   created: '2018-08-06T18:15:43',

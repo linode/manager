@@ -1,3 +1,7 @@
+import {
+  NodeBalancerConfig,
+  NodeBalancerConfigNode
+} from 'linode-js-sdk/lib/nodebalancers';
 import * as React from 'react';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
@@ -9,11 +13,11 @@ interface ErrorResponse {
 }
 
 interface ConfigErrorResponse extends ErrorResponse {
-  config: Partial<Linode.NodeBalancerConfig>;
+  config: Partial<NodeBalancerConfig>;
 }
 
 interface NodeErrorResponse extends ErrorResponse {
-  config: Partial<Linode.NodeBalancerConfigNode>;
+  config: Partial<NodeBalancerConfigNode>;
 }
 
 export type ConfigOrNodeErrorResponse = ConfigErrorResponse | NodeErrorResponse;

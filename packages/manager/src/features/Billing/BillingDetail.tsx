@@ -1,4 +1,4 @@
-import { getAccountInfo } from 'linode-js-sdk/lib/account';
+import { Account, getAccountInfo } from 'linode-js-sdk/lib/account';
 import { lensPath, set, view } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -48,11 +48,11 @@ const styles = (theme: Theme) =>
   });
 
 interface PreloadedProps {
-  account: { response: Linode.Account };
+  account: { response: Account };
 }
 
 interface State {
-  account: Requestable<Linode.Account>;
+  account: Requestable<Account>;
 }
 
 type CombinedProps = SetDocsProps &
@@ -104,8 +104,8 @@ export class BillingDetail extends React.Component<CombinedProps, State> {
       lastUpdated: 0,
       loading: true,
       request: this.getAccount,
-      update: (updater: (s: Linode.Account) => Linode.Account) => {
-        const data = view<State, Linode.Account>(L.account.data, this.state);
+      update: (updater: (s: Account) => Account) => {
+        const data = view<State, Account>(L.account.data, this.state);
 
         if (!data) {
           return;

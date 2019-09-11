@@ -1,3 +1,5 @@
+import { Image } from 'linode-js-sdk/lib/images';
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { compose } from 'recompose';
 import BackupStatus from 'src/components/BackupStatus';
@@ -143,7 +145,7 @@ class SummaryPanel extends React.Component<CombinedProps> {
 const localStyles = withStyles(styles);
 
 interface WithImage {
-  image?: Linode.Image;
+  image?: Image;
 }
 
 interface LinodeContextProps {
@@ -154,7 +156,7 @@ interface LinodeContextProps {
   linodeRegion: string;
   linodeTags: string[];
   mostRecentBackup: string | null;
-  linodeVolumes: Linode.Volume[];
+  linodeVolumes: Volume[];
   linodeVolumesError?: Linode.ApiFieldError[];
   backupsEnabled: boolean;
   readOnly: boolean;

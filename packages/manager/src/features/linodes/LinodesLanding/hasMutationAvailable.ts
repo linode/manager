@@ -1,3 +1,4 @@
+import { LinodeType } from 'linode-js-sdk/lib/linodes'
 import { connect } from 'react-redux';
 import { MapState } from 'src/store/types';
 import getLinodeType from 'src/utilities/getLinodeType';
@@ -6,7 +7,7 @@ export interface HasMutationAvailable {
   mutationAvailable: boolean;
 }
 
-const hasMutation = (type?: null | Linode.LinodeType) => {
+const hasMutation = (type?: null | LinodeType) => {
   if (!type) {
     return false;
   }

@@ -1,5 +1,7 @@
 import Settings from '@material-ui/icons/Settings';
 import * as classNames from 'classnames';
+import { AccountCapability } from 'linode-js-sdk/lib/account';
+import { Profile } from 'linode-js-sdk/lib/profile';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -19,6 +21,9 @@ import {
   WithTheme
 } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
+import withFeatureFlagConsumer, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
 import { MapState } from 'src/store/types';
 import { NORMAL_SPACING_UNIT } from 'src/themeFactory';
 import {
@@ -30,10 +35,14 @@ import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
 import { linkIsActive } from './utils';
 
+import { sendOneClickNavigationEvent } from 'src/utilities/ga';
+
 interface PrimaryLink {
   display: string;
   href: string;
   key: string;
+  attr?: { [key: string]: any };
+  onClick?: (e: React.ChangeEvent<any>) => void;
 }
 
 export type ClassNames =
@@ -235,8 +244,10 @@ interface State {
 
 export type CombinedProps = Props &
   StateProps &
+  FeatureFlagConsumerProps &
   WithTheme &
   WithStyles<ClassNames> &
+  FeatureFlagConsumerProps &
   RouteComponentProps<{}>;
 
 export class PrimaryNav extends React.Component<CombinedProps, State> {
@@ -268,8 +279,10 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     // `account.capabilities`.
     if (
       prevProps.hasAccountAccess !== this.props.hasAccountAccess ||
+      prevProps.accountLastUpdated !== this.props.accountLastUpdated ||
       prevProps.isManagedAccount !== this.props.isManagedAccount ||
-      prevProps.accountLastUpdated !== this.props.accountLastUpdated
+      prevProps.accountLastUpdated !== this.props.accountLastUpdated ||
+      prevProps.flags !== this.props.flags
     ) {
       this.createMenuItems();
     }
@@ -279,7 +292,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     const {
       hasAccountAccess,
       // isLongviewEnabled,
-      isManagedAccount,
       accountCapabilities
     } = this.props;
 
@@ -323,6 +335,18 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     });
     // }
 
+    if (this.props.flags.oneClickLocation === 'sidenav') {
+      primaryLinks.push({
+        display: 'One-Click Apps',
+        href: '/linodes/create?type=One-Click',
+        key: 'one-click',
+        attr: { 'data-qa-one-click-nav-btn': true },
+        onClick: () => {
+          sendOneClickNavigationEvent('Primary Nav');
+        }
+      });
+    }
+
     if (isKubernetesEnabled(accountCapabilities)) {
       primaryLinks.push({
         display: 'Kubernetes',
@@ -331,7 +355,9 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       });
     }
 
-    if (isManagedAccount) {
+    // All users should now see Managed so they can sign up
+    // (if the new Managed feature is toggled)
+    if (this.props.isManagedAccount || this.props.flags.managed) {
       primaryLinks.push({
         display: 'Managed',
         href: '/managed',
@@ -368,19 +394,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     closeMenu();
   };
 
-  expandMenutItem = (e: React.MouseEvent<HTMLElement>) => {
-    const menuName = e.currentTarget.getAttribute('data-menu-name');
-    if (!menuName) {
-      return;
-    }
-    this.setState({
-      expandedMenus: {
-        ...this.state.expandedMenus,
-        [menuName]: !this.state.expandedMenus[menuName]
-      }
-    });
-  };
-
   goToHelp = () => {
     this.navigate('/support');
   };
@@ -410,8 +423,14 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           role="menuitem"
           to={primaryLink.href}
           href="javascript:void(0)"
-          onClick={this.props.closeMenu}
+          onClick={(e: React.ChangeEvent<any>) => {
+            this.props.closeMenu();
+            if (primaryLink.onClick) {
+              primaryLink.onClick(e);
+            }
+          }}
           data-qa-nav-item={primaryLink.key}
+          {...primaryLink.attr}
           className={classNames({
             [classes.listItem]: true,
             [classes.active]: linkIsActive(primaryLink.href)
@@ -565,13 +584,13 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
 
 interface StateProps {
   hasAccountAccess: boolean;
-  isManagedAccount: boolean;
   // isLongviewEnabled: boolean;
-  accountCapabilities: Linode.AccountCapability[];
+  accountCapabilities: AccountCapability[];
   accountLastUpdated: number;
+  isManagedAccount: boolean;
 }
 
-const userHasAccountAccess = (profile: Linode.Profile) => {
+const userHasAccountAccess = (profile: Profile) => {
   if (profile.restricted === false) {
     return true;
   }
@@ -584,8 +603,6 @@ const userHasAccountAccess = (profile: Linode.Profile) => {
   return Boolean(grants.global.account_access);
 };
 
-const accountHasManaged = (account: Linode.AccountSettings) => account.managed;
-
 // const accountHasLongviewSubscription = (account: Linode.AccountSettings) => Boolean(account.longview_subscription);
 
 const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
@@ -596,23 +613,27 @@ const mapStateToProps: MapState<StateProps, Props> = (state, ownProps) => {
   if (!account || !profile) {
     return {
       hasAccountAccess: false,
-      isManagedAccount: false,
       // isLongviewEnabled: false,
       accountCapabilities: [],
-      accountLastUpdated
+      accountLastUpdated,
+      isManagedAccount: false
     };
   }
 
   return {
     hasAccountAccess: userHasAccountAccess(profile),
-    isManagedAccount: accountHasManaged(account),
     // isLongviewEnabled: accountHasLongviewSubscription(account),
     accountCapabilities: pathOr(
       [],
       ['__resources', 'account', 'data', 'capabilities'],
       state
     ),
-    accountLastUpdated
+    accountLastUpdated,
+    isManagedAccount: pathOr(
+      false,
+      ['__resources', 'accountSettings', 'data', 'managed'],
+      state
+    )
   };
 };
 
@@ -622,6 +643,7 @@ const styled = withStyles(styles, { withTheme: true });
 
 export default compose<CombinedProps, Props>(
   withRouter,
+  withFeatureFlagConsumer,
   connected,
   styled
 )(PrimaryNav);

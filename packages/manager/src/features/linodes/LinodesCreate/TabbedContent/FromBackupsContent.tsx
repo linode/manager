@@ -1,4 +1,5 @@
 import * as Promise from 'bluebird';
+import { getLinodeBackups, Linode, LinodeWithBackups } from 'linode-js-sdk/lib/linodes'
 import { compose as ramdaCompose, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
@@ -16,7 +17,6 @@ import CreateLinodeDisabled from 'src/components/CreateLinodeDisabled';
 import Grid from 'src/components/Grid';
 import LabelAndTagsPanel from 'src/components/LabelAndTagsPanel';
 import Placeholder from 'src/components/Placeholder';
-import { getLinodeBackups } from 'src/services/linodes';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import AddonsPanel from '../AddonsPanel';
 import SelectBackupPanel from '../SelectBackupPanel';
@@ -52,7 +52,7 @@ interface Props {
 }
 
 interface State {
-  linodesWithBackups: Linode.LinodeWithBackups[] | null;
+  linodesWithBackups: LinodeWithBackups[] | null;
   userHasBackups: boolean;
   backups: boolean;
   selectedBackupInfo: Info;
@@ -75,7 +75,7 @@ const errorResources = {
   tags: 'Tags for this Linode'
 };
 
-const filterLinodesWithBackups = (linodes: Linode.LinodeWithBackups[]) => {
+const filterLinodesWithBackups = (linodes: LinodeWithBackups[]) => {
   return linodes.filter(linode => {
     const hasAutomaticBackups = !!linode.currentBackups.automatic.length;
     const hasSnapshotBackup = !!linode.currentBackups.snapshot.current;
@@ -97,11 +97,11 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
   mounted: boolean = false;
 
-  getLinodesWithBackups = (linodes: Linode.Linode[]) => {
+  getLinodesWithBackups = (linodes: Linode[]) => {
     this.setState({ isGettingBackups: true });
     return Promise.map(
       linodes.filter(l => l.backups.enabled),
-      (linode: Linode.Linode) => {
+      (linode: Linode) => {
         return getLinodeBackups(linode.id).then(backups => {
           return {
             ...linode,
@@ -123,7 +123,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
 
   userHasBackups = () => {
     const { linodesWithBackups } = this.state;
-    return linodesWithBackups!.some((linode: Linode.LinodeWithBackups) => {
+    return linodesWithBackups!.some((linode: LinodeWithBackups) => {
       // automatic backups is an array, but snapshots are either null or an object
       // user can have up to 3 automatic backups, but one one snapshot
       return (
@@ -259,7 +259,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
               <SelectLinodePanel
                 error={hasErrorFor('linode_id')}
                 linodes={ramdaCompose(
-                  (linodes: Linode.LinodeWithBackups[]) =>
+                  (linodes: LinodeWithBackups[]) =>
                     extendLinodes(linodes, imagesData, typesData),
                   filterLinodesWithBackups
                 )(linodesWithBackups!)}
@@ -278,7 +278,7 @@ export class FromBackupsContent extends React.Component<CombinedProps, State> {
               <SelectBackupPanel
                 error={hasErrorFor('backup_id')}
                 backups={linodesWithBackups!.filter(
-                  (linode: Linode.LinodeWithBackups) => {
+                  (linode: LinodeWithBackups) => {
                     return linode.id === +selectedLinodeID!;
                   }
                 )}

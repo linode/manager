@@ -1,3 +1,4 @@
+import { Profile } from 'linode-js-sdk/lib/profile'
 import { pathOr } from 'ramda';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -13,8 +14,8 @@ import { ThunkActionCreator } from 'src/store/types';
 import { getProfileActions, handleUpdateProfile } from './profile.actions';
 
 const maybeRequestGrants: (
-  response: Linode.Profile
-) => Promise<Linode.Profile> = profile => {
+  response: Profile
+) => Promise<Profile> = profile => {
   if (profile.restricted === false) {
     return Promise.resolve(profile);
   }
@@ -37,7 +38,7 @@ export const getTimezone = (state: ApplicationState, timezone: string) => {
 };
 
 export const requestProfile: ThunkActionCreator<
-  Promise<Linode.Profile>
+  Promise<Profile>
 > = () => (dispatch, getState) => {
   const { started, done, failed } = getProfileActions;
 
@@ -63,8 +64,8 @@ export const requestProfile: ThunkActionCreator<
  * @todo this doesn't let you update grants
  */
 export const updateProfile: ThunkActionCreator<
-  Promise<Partial<Linode.Profile>>
-> = (payload: Partial<Linode.Profile>) => dispatch => {
+  Promise<Partial<Profile>>
+> = (payload: Partial<Profile>) => dispatch => {
   const { done, failed } = handleUpdateProfile;
 
   /**
@@ -78,10 +79,10 @@ export const updateProfile: ThunkActionCreator<
 };
 
 const handleUpdateSuccess = (
-  payload: Partial<Linode.Profile>,
-  result: Partial<Linode.Profile>,
+  payload: Partial<Profile>,
+  result: Partial<Profile>,
   done: ActionCreator<
-    Success<Partial<Linode.Profile>, Partial<Linode.Profile>>
+    Success<Partial<Profile>, Partial<Profile>>
   >,
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => {
@@ -95,10 +96,10 @@ const handleUpdateSuccess = (
 };
 
 const handleUpdateFailure = (
-  payload: Partial<Linode.Profile>,
+  payload: Partial<Profile>,
   error: Linode.ApiFieldError[],
   failed: ActionCreator<
-    Failure<Partial<Linode.Profile>, Linode.ApiFieldError[]>
+    Failure<Partial<Profile>, Linode.ApiFieldError[]>
   >,
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => {

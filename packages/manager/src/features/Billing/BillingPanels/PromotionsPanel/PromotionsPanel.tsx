@@ -1,3 +1,4 @@
+import { ActivePromotion } from 'linode-js-sdk/lib/account'
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -21,7 +22,7 @@ interface StateProps {
   accountLoading: boolean;
   accountError?: Linode.ApiFieldError[];
   accountUpdated: number;
-  promotions: Linode.ActivePromotion[];
+  promotions: ActivePromotion[];
 }
 
 export type CombinedProps = StateProps;

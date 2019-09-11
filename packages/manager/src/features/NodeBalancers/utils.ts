@@ -1,6 +1,11 @@
+import {
+  NodeBalancerConfigFields,
+  NodeBalancerConfigNode,
+  NodeBalancerConfigNode2,
+  NodeBalancerConfigNodeFields
+} from 'linode-js-sdk/lib/nodebalancers';
 import { clamp, compose, filter, isNil, toString } from 'ramda';
 
-import { NodeBalancerConfigFields } from 'src/services/nodebalancers';
 import defaultNumeric from 'src/utilities/defaultNumeric';
 
 export interface NodeBalancerConfigFieldsWithStatus
@@ -15,7 +20,7 @@ export const clampNumericString = (low: number, hi: number) =>
     (value: number) => defaultNumeric(0, value)
   ) as (value: any) => string;
 
-export const createNewNodeBalancerConfigNode = (): Linode.NodeBalancerConfigNodeFields => ({
+export const createNewNodeBalancerConfigNode = (): NodeBalancerConfigNodeFields => ({
   label: '',
   address: '',
   port: 80,
@@ -45,7 +50,7 @@ export const createNewNodeBalancerConfig = (
   modifyStatus: 'new'
 });
 
-export const nodeForRequest = (node: Linode.NodeBalancerConfigNodeFields) => ({
+export const nodeForRequest = (node: NodeBalancerConfigNodeFields) => ({
   label: node.label,
   address: node.address,
   port: node.port,
@@ -54,12 +59,12 @@ export const nodeForRequest = (node: Linode.NodeBalancerConfigNodeFields) => ({
   mode: node.mode
 });
 
-export const formatAddress = (node: Linode.NodeBalancerConfigNode) => ({
+export const formatAddress = (node: NodeBalancerConfigNode2) => ({
   ...node,
   address: `${node.address}:${node.port}`
 });
 
-export const parseAddress = (node: Linode.NodeBalancerConfigNode) => {
+export const parseAddress = (node: NodeBalancerConfigNode) => {
   const match = /^(192\.168\.\d{1,3}\.\d{1,3}):(\d{1,5})$/.exec(node.address);
   if (match) {
     return {
@@ -71,7 +76,7 @@ export const parseAddress = (node: Linode.NodeBalancerConfigNode) => {
   return node;
 };
 
-export const parseAddresses = (nodes: Linode.NodeBalancerConfigNode[]) => {
+export const parseAddresses = (nodes: NodeBalancerConfigNode[]) => {
   return nodes.map(parseAddress);
 };
 
@@ -135,9 +140,9 @@ export const transformConfigsForRequest = (
 /* Transform the Node fields in an array of Nodes into valid request data
    Does not modify in-place, returns a deep clone of the Nodes */
 export const transformConfigNodesForRequest = (
-  nodes: Linode.NodeBalancerConfigNode[]
-): Linode.NodeBalancerConfigNodeFields[] => {
-  return nodes.map((node: Linode.NodeBalancerConfigNodeFields) =>
+  nodes: NodeBalancerConfigNode[]
+): NodeBalancerConfigNodeFields[] => {
+  return nodes.map((node: NodeBalancerConfigNodeFields) =>
     nodeForRequest(node)
   );
 };

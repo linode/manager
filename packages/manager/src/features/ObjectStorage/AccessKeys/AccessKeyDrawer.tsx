@@ -62,6 +62,7 @@ export const AccessKeyDrawer: React.StatelessComponent<
                 <a
                   href="https://linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools"
                   target="_blank"
+                  rel="noopener noreferrer"
                   className="h-u"
                 >
                   S3-compatible client

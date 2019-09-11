@@ -1,3 +1,4 @@
+import { Entity, EventAction } from 'linode-js-sdk/lib/account';
 import { path } from 'ramda';
 import { nonClickEvents } from 'src/constants';
 import {
@@ -6,8 +7,8 @@ import {
 } from 'src/utilities/getEntityByIDFromStore';
 
 export default (
-  action: Linode.EventAction,
-  entity: null | Linode.Entity,
+  action: EventAction,
+  entity: null | Entity,
   deleted: undefined | string | boolean,
   onClick: (path: string) => void
 ) => {
@@ -17,7 +18,7 @@ export default (
 
   if (action.match(/community/gi)) {
     return () => {
-      window.open(entity!.url, '_blank');
+      window.open(entity!.url, '_blank', 'noopener');
     };
   }
 
@@ -141,7 +142,7 @@ export default (
   }
 };
 
-export const getLinkTargets = (entity: Linode.Entity | null) => {
+export const getLinkTargets = (entity: Entity | null) => {
   if (entity === null) {
     return null;
   }

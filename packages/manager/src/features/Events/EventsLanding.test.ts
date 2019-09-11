@@ -1,7 +1,8 @@
+import { Event } from 'linode-js-sdk/lib/account';
 import { reduxEvent, uniqueEvents } from 'src/__data__/events';
 import { reducer, ReducerActions, ReducerState } from './EventsLanding';
 
-const someEvent: Linode.Event[] = [
+const someEvent: Event[] = [
   {
     id: 1234,
     time_remaining: 50,

@@ -71,7 +71,7 @@ class TableRow extends React.Component<CombinedProps> {
             ? // if no meta or ctrl key is pressed (new tab)
               this.props.history.push(target)
             : // else open in new tab/window
-              window.open(target, '_blank');
+              window.open(target, '_blank', 'noopener');
         }
         if (typeof target === 'function') {
           target(e);

@@ -1,4 +1,10 @@
-export const activePromotions: Linode.ActivePromotion[] = [
+import {
+  Account,
+  AccountSettings,
+  ActivePromotion
+} from 'linode-js-sdk/lib/account';
+
+export const activePromotions: ActivePromotion[] = [
   {
     description: 'Get $10 off your Linodes',
     expire_dt: '2019-08-30T23:52:21',
@@ -10,7 +16,7 @@ export const activePromotions: Linode.ActivePromotion[] = [
   }
 ];
 
-export const account: Linode.Account = {
+export const account: Account = {
   active_since: 'hello world',
   address_2: 'apt b2',
   email: 'mmckenna@linode.com',
@@ -37,7 +43,7 @@ export const account: Linode.Account = {
   // capabilities: ['Linodes', 'NodeBalancers', 'Block Storage']
 };
 
-export const accountSettings: Linode.AccountSettings = {
+export const accountSettings: AccountSettings = {
   backups_enabled: true,
   managed: false,
   longview_subscription: null,

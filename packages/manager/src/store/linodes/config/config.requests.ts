@@ -3,12 +3,13 @@
  */
 
 import {
+  Config,
   createLinodeConfig as _createLinodeConfig,
   deleteLinodeConfig as _deleteLinodeConfig,
   getLinodeConfig as _getLinodeConfig,
   getLinodeConfigs as _getLinodeConfigs,
   updateLinodeConfig as _updateLinodeConfig
-} from 'src/services/linodes';
+} from 'linode-js-sdk/lib/linodes';
 import { createRequestThunk } from 'src/store/store.helpers';
 import { ThunkActionCreator } from 'src/store/types';
 import { getAll } from 'src/utilities/getAll';
@@ -23,9 +24,7 @@ import {
 } from './config.actions';
 import { Entity } from './config.types';
 
-const addLinodeIdToConfig = (linodeId: number) => (
-  config: Linode.Config
-): Entity => ({
+const addLinodeIdToConfig = (linodeId: number) => (config: Config): Entity => ({
   ...config,
   linode_id: linodeId
 });

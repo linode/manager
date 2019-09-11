@@ -1,3 +1,4 @@
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import moment from 'moment';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
@@ -34,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  linodeVolumes: Linode.Volume[];
+  linodeVolumes: Volume[];
   hasConfirmed: boolean;
   setConfirmed: (value: boolean) => void;
   error?: string;
@@ -69,6 +70,7 @@ const CautionNotice: React.FC<CombinedProps> = props => {
           <a
             href="https://linode.com/docs/networking/dns/configure-your-linode-for-reverse-dns/"
             target="_blank"
+            rel="noopener noreferrer"
           >
             Configure Your Linode for Reverse DNS (rDNS).
           </a>

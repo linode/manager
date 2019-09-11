@@ -1,4 +1,5 @@
 import * as classNames from 'classnames';
+import { NotificationSeverity } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import IconButton from 'src/components/core/IconButton';
 import {
@@ -66,7 +67,7 @@ const styles = (theme: Theme) =>
 interface Props {
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
   className?: string;
-  severity: null | Linode.NotificationSeverity;
+  severity: null | NotificationSeverity;
   notifications: any;
 }
 

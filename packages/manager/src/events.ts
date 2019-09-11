@@ -10,12 +10,13 @@
  * The next step is to move this logic into a Redux connected component so we can more easily
  * access Redux and control the start of the event loop.
  */
+import { Event } from 'linode-js-sdk/lib/account';
 import { Subject } from 'rxjs/Subject';
 import { DISABLE_EVENT_THROTTLE } from 'src/constants';
 import store from 'src/store';
 import { getEvents } from 'src/store/events/event.request';
 
-export const events$ = new Subject<Linode.Event>();
+export const events$ = new Subject<Event>();
 
 export let eventRequestDeadline = Date.now();
 
@@ -39,14 +40,14 @@ export const resetEventsPolling = (newPollIteration = 1) => {
 
 export const requestEvents = () => {
   inProgress = true;
-  return store.dispatch(getEvents() as any).then((events: Linode.Event[]) => {
+  return store.dispatch(getEvents() as any).then((events: Event[]) => {
     const reversed = events.reverse();
 
     /**
      * This feeds the stream for consumers of events$. We're simply pushing the events from the
      * request response onto the stream one at a time.
      */
-    reversed.forEach((linodeEvent: Linode.Event) => {
+    reversed.forEach((linodeEvent: Event) => {
       events$.next(linodeEvent);
     });
     inProgress = false;

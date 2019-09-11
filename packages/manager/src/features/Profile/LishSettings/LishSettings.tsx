@@ -1,3 +1,4 @@
+import { Profile } from "linode-js-sdk/lib/profile";
 import { dec, lensPath, path, remove, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -83,7 +84,7 @@ interface State {
   submitting: boolean;
   errors?: Linode.ApiFieldError[];
   success?: string;
-  lishAuthMethod: Pick<Linode.Profile, 'lish_auth_method'>;
+  lishAuthMethod: Pick<Profile, 'lish_auth_method'>;
   authorizedKeys: string[];
   authorizedKeysCount: number;
 }
@@ -257,7 +258,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
   };
 
   onListAuthMethodChange = (
-    e: Item<Pick<Linode.Profile, 'lish_auth_method'>>
+    e: Item<Pick<Profile, 'lish_auth_method'>>
   ) => this.setState({ lishAuthMethod: e.value });
 
   onPublicKeyChange = (idx: number) => (
@@ -277,7 +278,7 @@ class LishSettings extends React.Component<CombinedProps, State> {
 const styled = withStyles(styles);
 
 interface StateProps {
-  lishAuthMethod?: Pick<Linode.Profile, 'lish_auth_method'>;
+  lishAuthMethod?: Pick<Profile, 'lish_auth_method'>;
   authorizedKeys?: string[];
   loading: boolean;
 }
@@ -292,11 +293,11 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
 };
 
 interface DispatchProps {
-  updateProfile: (v: Partial<Linode.Profile>) => Promise<Linode.Profile>;
+  updateProfile: (v: Partial<Profile>) => Promise<Profile>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = dispatch => ({
-  updateProfile: (v: Linode.Profile) => dispatch(handleUpdateProfile(v) as any)
+  updateProfile: (v: Profile) => dispatch(handleUpdateProfile(v) as any)
 });
 
 const connected = connect(

@@ -2,11 +2,11 @@ import { shallow } from 'enzyme';
 import * as React from 'react';
 import { ActivitySummary } from './ActivitySummary';
 
-const requests = require.requireMock('src/services/account');
+const requests = require.requireMock('linode-js-sdk/lib/account');
 
 requests.getEvents = jest.fn(() => Promise.resolve([]));
 
-jest.mock('src/services/account', () => ({
+jest.mock('linode-js-sdk/lib/account', () => ({
   getEvents: () => jest.fn()
 }));
 

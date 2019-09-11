@@ -1,3 +1,4 @@
+import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
@@ -8,7 +9,7 @@ import RenderVolumeData, { RenderVolumeDataProps } from './RenderVolumeData';
 import SortableVolumesTableHeader from './SortableVolumesTableHeader';
 
 interface Props {
-  data: Linode.Volume[];
+  data: Volume[];
   orderBy: string;
   order: 'asc' | 'desc';
   renderProps: RenderVolumeDataProps;

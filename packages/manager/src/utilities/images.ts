@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import * as moment from 'moment';
 import {
   always,
@@ -41,28 +42,28 @@ export const getMyImages = compose<any, any, any>(
   filter(propSatisfies(startsWith('private'), 'id'))
 );
 
-const isRecentlyDeleted = (i: Linode.Image) =>
+const isRecentlyDeleted = (i: Image) =>
   i.created_by === null && i.type === 'automatic';
-const isByLinode = (i: Linode.Image) =>
+const isByLinode = (i: Image) =>
   i.created_by !== null && i.created_by === 'linode';
-const isDeprecated = (i: Linode.Image) => i.deprecated === true;
-const isRecommended = (i: Linode.Image) => isByLinode(i) && !isDeprecated(i);
-const isOlderImage = (i: Linode.Image) => isByLinode(i) && isDeprecated(i);
+const isDeprecated = (i: Image) => i.deprecated === true;
+const isRecommended = (i: Image) => isByLinode(i) && !isDeprecated(i);
+const isOlderImage = (i: Image) => isByLinode(i) && isDeprecated(i);
 
 interface GroupedImages {
-  deleted?: Linode.Image[];
-  recommended?: Linode.Image[];
-  older?: Linode.Image[];
-  images?: Linode.Image[];
+  deleted?: Image[];
+  recommended?: Image[];
+  older?: Image[];
+  images?: Image[];
 }
 
-export let groupImages: (i: Linode.Image[]) => GroupedImages;
+export let groupImages: (i: Image[]) => GroupedImages;
 groupImages = groupBy(
   cond([
     [isRecentlyDeleted, always('deleted')],
     [isRecommended, always('recommended')],
     [isOlderImage, always('older')],
-    [(i: Linode.Image) => true, always('images')]
+    [(i: Image) => true, always('images')]
   ])
 );
 
@@ -77,6 +78,6 @@ export const groupNameMap = {
 export const getDisplayNameForGroup = (key: string) =>
   propOr('Other', key, groupNameMap);
 
-export const filterPublicImages = (images: Linode.Image[] = []) => {
-  return images.filter((image: Linode.Image) => image.is_public);
+export const filterPublicImages = (images: Image[] = []) => {
+  return images.filter((image: Image) => image.is_public);
 };

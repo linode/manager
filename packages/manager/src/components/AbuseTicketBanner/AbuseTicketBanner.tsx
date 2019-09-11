@@ -1,3 +1,4 @@
+import { Notification } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
@@ -8,7 +9,7 @@ import getAbuseTicket from 'src/store/selectors/getAbuseTicket';
 import { MapState } from 'src/store/types';
 
 interface Props {
-  abuseTickets: Linode.Notification[];
+  abuseTickets: Notification[];
 }
 
 export class AbuseTicketBanner extends React.Component<Props> {

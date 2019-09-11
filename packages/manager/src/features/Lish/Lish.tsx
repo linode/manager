@@ -1,3 +1,4 @@
+import { getLinode, getLinodeLishToken, Linode } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import {
   matchPath,
@@ -16,7 +17,6 @@ import {
 import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import NotFound from 'src/components/NotFound';
-import { getLinode, getLinodeLishToken } from 'src/services/linodes';
 import Glish from './Glish';
 import Weblish from './Weblish';
 
@@ -54,7 +54,7 @@ const styles = (theme: Theme) =>
 
 interface State {
   loading: boolean;
-  linode?: Linode.Linode;
+  linode?: Linode;
   token?: string;
 }
 

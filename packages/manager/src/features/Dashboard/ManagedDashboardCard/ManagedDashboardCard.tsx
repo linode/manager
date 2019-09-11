@@ -125,7 +125,7 @@ const getFailedMonitors = (monitors: Linode.ManagedServiceMonitor[]) => {
    * error state; but if all a user's monitors are pending
    * or disabled, they'll all pass the test here and the
    * user will get a message saying that all monitors are
-   * verified. Need to discuss.
+   * verified.
    */
   return monitors.reduce((accum, thisMonitor) => {
     if (thisMonitor.status === 'problem') {

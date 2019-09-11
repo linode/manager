@@ -1,4 +1,6 @@
-export const types: Linode.LinodeType[] = [
+import { LinodeType } from 'linode-js-sdk/lib/linodes'
+
+export const types: LinodeType[] = [
   {
     transfer: 2000,
     network_out: 1000,

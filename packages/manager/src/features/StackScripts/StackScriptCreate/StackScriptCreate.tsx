@@ -1,3 +1,4 @@
+import { Image } from 'linode-js-sdk/lib/images';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -332,7 +333,7 @@ const connected = connect(mapStateToProps);
 const styled = withStyles(styles);
 
 interface WithImagesProps {
-  imagesData: Linode.Image[];
+  imagesData: Image[];
   imagesLoading: boolean;
   imagesError?: Linode.ApiFieldError[];
 }
