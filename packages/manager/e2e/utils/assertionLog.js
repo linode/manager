@@ -6,6 +6,7 @@ export const assertLog = {
   incorrectNum: 'incorrect number of items',
   incorrectVal: 'incorrect value found',
   incorrectAttr: 'incorrect attribute found for',
+  incorrectTagName: 'incorrect tag name for',
   shouldNotBeNull: 'value should not be null',
   shouldExist: 'element should exist in DOM'
 };
