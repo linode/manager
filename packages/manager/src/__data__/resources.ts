@@ -1,11 +1,12 @@
 import { Domain } from 'linode-js-sdk/lib/domains';
+import { Linode } from 'linode-js-sdk/lib/linodes'
 import { domains, linodes } from 'src/__data__';
 
 export default {
   linodes: {
     loading: false,
     lastUpdated: 0,
-    results: [linodes.map((linode: Linode.Linode) => linode.id)],
+    results: [linodes.map((linode: Linode) => linode.id)],
     entities: linodes
   },
   volumes: {

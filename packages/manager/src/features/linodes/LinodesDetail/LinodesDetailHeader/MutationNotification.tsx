@@ -1,3 +1,4 @@
+import { Disk, getType, LinodeSpecs, LinodeType, startMutation } from 'linode-js-sdk/lib/linodes'
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -12,7 +13,6 @@ import {
 } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import { resetEventsPolling } from 'src/events';
-import { getType, startMutation } from 'src/services/linodes';
 import { ApplicationState } from 'src/store';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import {
@@ -42,7 +42,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  disks: Linode.Disk[];
+  disks: Disk[];
 }
 
 type CombinedProps = Props &
@@ -73,7 +73,7 @@ const MutationNotification: React.FC<CombinedProps> = props => {
   const [
     successorMetaData,
     setSuccessorMetaData
-  ] = React.useState<Linode.LinodeType | null>(null);
+  ] = React.useState<LinodeType | null>(null);
 
   React.useEffect(() => {
     if (!linodeType) {
@@ -202,16 +202,16 @@ const MutationNotification: React.FC<CombinedProps> = props => {
 /**
  * add all the used disk space together
  */
-export const addUsedDiskSpace = (disks: Linode.Disk[]) => {
+export const addUsedDiskSpace = (disks: Disk[]) => {
   return disks.reduce((accum, eachDisk) => eachDisk.size + accum, 0);
 };
 
 const styled = withStyles(styles);
 
 interface ContextProps {
-  linodeSpecs: Linode.LinodeSpecs;
+  linodeSpecs: LinodeSpecs;
   linodeId: number;
-  linodeType?: Linode.LinodeType | null;
+  linodeType?: LinodeType | null;
 }
 
 interface DispatchProps {

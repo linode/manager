@@ -1,3 +1,4 @@
+import { Linode } from 'linode-js-sdk/lib/linodes'
 import { groupBy } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -12,12 +13,12 @@ import { formatRegion } from 'src/utilities';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 interface WithLinodesProps {
-  linodesData: Linode.Linode[];
+  linodesData: Linode[];
   linodesLoading: boolean;
   linodesError?: Linode.ApiFieldError[];
 }
 
-type Override = keyof Linode.Linode | ((linode: Linode.Linode) => any);
+type Override = keyof Linode | ((linode: Linode) => any);
 
 interface Props {
   generalError?: string;
@@ -26,13 +27,13 @@ interface Props {
   selectedLinode: number | null;
   disabled?: boolean;
   region?: string;
-  handleChange: (linode: Linode.Linode) => void;
+  handleChange: (linode: Linode) => void;
   textFieldProps?: TextFieldProps;
   groupByRegion?: boolean;
   placeholder?: string;
   valueOverride?: Override;
   labelOverride?: Override;
-  filterCondition?: (linode: Linode.Linode) => boolean;
+  filterCondition?: (linode: Linode) => boolean;
   label?: string;
   noOptionsMessage?: string;
   small?: boolean;
@@ -129,10 +130,10 @@ export default compose<CombinedProps, Props & RenderGuardProps>(
  */
 
 export const linodesToItems = (
-  linodes: Linode.Linode[],
+  linodes: Linode[],
   valueOverride?: Override,
   labelOverride?: Override,
-  filterCondition?: (linodes: Linode.Linode) => boolean
+  filterCondition?: (linodes: Linode) => boolean
 ): Item<any>[] => {
   const maybeFilteredLinodes = filterCondition
     ? linodes.filter(filterCondition)
@@ -165,17 +166,17 @@ export const linodeFromItems = (
 
   return (
     linodes.find(thisLinode => {
-      return (thisLinode.data as Linode.Linode).id === linodeId;
+      return (thisLinode.data as Linode).id === linodeId;
     }) || null
   );
 };
 
 // Grouped by Region
 export const linodesToGroupedItems = (
-  linodes: Linode.Linode[],
+  linodes: Linode[],
   valueOverride?: Override,
   labelOverride?: Override,
-  filterCondition?: (linodes: Linode.Linode) => boolean
+  filterCondition?: (linodes: Linode) => boolean
 ) => {
   // We need to filter Linode BEFORE grouping by region, since some regions
   // may become irrelevant when Linodes are filtered.
@@ -183,7 +184,7 @@ export const linodesToGroupedItems = (
     ? linodes.filter(filterCondition)
     : linodes;
 
-  const groupedByRegion = groupBy((linode: Linode.Linode) => linode.region)(
+  const groupedByRegion = groupBy((linode: Linode) => linode.region)(
     maybeFilteredLinodes
   );
 

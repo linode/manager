@@ -1,33 +1,17 @@
 import { API_ROOT } from 'src/constants';
-
 import Request, {
   setData,
   setMethod,
   setParams,
   setURL,
   setXFilter
-} from '../index';
-
+} from '../request';
+import { ResourcePage as Page } from '../types';
 import {
   CreateLinodeDiskSchema,
   ResizeLinodeDiskSchema
-} from './linode.schema';
-
-type Page<T> = Linode.ResourcePage<T>;
-type Disk = Linode.Disk;
-
-export interface LinodeDiskCreationData {
-  label: string;
-  size: number;
-  filesystem?: 'raw' | 'swap' | 'ext3' | 'ext4' | 'initrd';
-  read_only?: boolean;
-  image?: string;
-  authorized_keys?: string[];
-  authorized_users?: string[];
-  root_pass?: string;
-  stackscript_id?: number;
-  stackscript_data?: any;
-}
+} from './linodes.schema';
+import { Disk, LinodeDiskCreationData } from './types';
 
 /**
  * getLinodeDisks
@@ -113,7 +97,7 @@ export const resizeLinodeDisk = (
   diskId: number,
   size: number
 ) =>
-  Request<Linode.Disk>(
+  Request<Disk>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/disks/${diskId}/resize`),
     setMethod('POST'),
     setData({ size }, ResizeLinodeDiskSchema)
@@ -127,7 +111,7 @@ export const resizeLinodeDisk = (
  * @param diskId { number } The id of the disk to be resized.
  */
 export const cloneLinodeDisk = (linodeId: number, diskId: number) =>
-  Request<Linode.Disk>(
+  Request<Disk>(
     setURL(`${API_ROOT}/linode/instances/${linodeId}/disks/${diskId}/clone`),
     setMethod('POST')
   ).then(response => response.data);

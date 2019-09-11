@@ -1,5 +1,6 @@
 import { Domain } from 'linode-js-sdk/lib/domains';
 import { Image } from 'linode-js-sdk/lib/images';
+import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes'
 import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { createSelector } from 'reselect';
@@ -10,7 +11,7 @@ import getLinodeDescription from 'src/utilities/getLinodeDescription';
 
 type State = ApplicationState['__resources'];
 
-export const getLinodeIps = (linode: Linode.Linode): string[] => {
+export const getLinodeIps = (linode: Linode): string[] => {
   const { ipv4, ipv6 } = linode;
   return ipv4.concat([ipv6]);
 };
@@ -30,8 +31,8 @@ export const getNodebalIps = (nodebal: NodeBalancer): string[] => {
 };
 
 const formatLinode = (
-  linode: Linode.Linode,
-  types: Linode.LinodeType[],
+  linode: Linode,
+  types: LinodeType[],
   images: Image[]
 ): SearchableItem => ({
   label: linode.label,
@@ -129,12 +130,12 @@ const typesSelector = (state: State) => state.types.entities;
 
 export default createSelector<
   State,
-  Linode.Linode[],
+  Linode[],
   Volume[],
   Image[],
   Domain[],
   NodeBalancer[],
-  Linode.LinodeType[],
+  LinodeType[],
   SearchableItem[]
 >(
   linodeSelector,

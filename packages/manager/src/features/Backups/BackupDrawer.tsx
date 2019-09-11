@@ -1,3 +1,4 @@
+import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes'
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
@@ -29,8 +30,8 @@ export interface ExtendedLinode extends LinodeWithTypeInfo {
   linodeError?: BackupError;
 }
 
-export interface LinodeWithTypeInfo extends Linode.Linode {
-  typeInfo?: Linode.LinodeType;
+export interface LinodeWithTypeInfo extends Linode {
+  typeInfo?: LinodeType;
 }
 
 interface DispatchProps {
@@ -222,8 +223,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
  * price and label information in BackupsTable.tsx.
  */
 export const addTypeInfo = (
-  types: Linode.LinodeType[],
-  linodes: Linode.Linode[]
+  types: LinodeType[],
+  linodes: Linode[]
 ) =>
   linodes.map(linode => {
     const typeInfo = getTypeInfo(linode.type, types || []);
@@ -250,9 +251,9 @@ export const addErrors = (
 
 /* Add type and error info to each Linode, so that it's available when rendering each Linode later */
 export const enhanceLinodes = (
-  linodes: Linode.Linode[],
+  linodes: Linode[],
   errors: BackupError[],
-  types: Linode.LinodeType[]
+  types: LinodeType[]
 ) => {
   const linodesWithTypes = addTypeInfo(types, linodes);
   return addErrors(errors, linodesWithTypes);
@@ -298,7 +299,7 @@ const connected = connect(
 );
 
 interface WithTypesProps {
-  typesData: Linode.LinodeType[];
+  typesData: LinodeType[];
 }
 
 const withTypes = connect((state: ApplicationState, ownProps) => ({

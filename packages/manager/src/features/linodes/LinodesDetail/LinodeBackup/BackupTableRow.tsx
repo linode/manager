@@ -1,3 +1,4 @@
+import { LinodeBackup } from 'linode-js-sdk/lib/linodes'
 import * as moment from 'moment-timezone';
 import * as React from 'react';
 import TableRow from 'src/components/core/TableRow';
@@ -6,10 +7,10 @@ import TableCell from 'src/components/TableCell';
 import LinodeBackupActionMenu from './LinodeBackupActionMenu';
 
 interface Props {
-  backup: Linode.LinodeBackup;
+  backup: LinodeBackup;
   disabled: boolean;
-  handleRestore: (backup: Linode.LinodeBackup) => void;
-  handleDeploy: (backup: Linode.LinodeBackup) => void;
+  handleRestore: (backup: LinodeBackup) => void;
+  handleDeploy: (backup: LinodeBackup) => void;
 }
 
 const typeMap = {

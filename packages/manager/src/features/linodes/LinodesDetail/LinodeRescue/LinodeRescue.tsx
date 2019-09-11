@@ -1,4 +1,5 @@
 import { GrantLevel } from 'linode-js-sdk/lib/account';
+import { Config, rescueLinode } from 'linode-js-sdk/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { assoc, clamp, pathOr } from 'ramda';
 import * as React from 'react';
@@ -21,7 +22,6 @@ import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import withVolumes from 'src/containers/volumes.container';
 import { resetEventsPolling } from 'src/events';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
-import { rescueLinode } from 'src/services/linodes';
 import { MapState } from 'src/store/types';
 import createDevicesFromStrings, {
   DevicesAsStrings
@@ -77,7 +77,7 @@ interface State {
     disks: ExtendedDisk[];
     volumes: ExtendedVolume[];
   };
-  config?: Linode.Config;
+  config?: Config;
   counter: number;
 }
 

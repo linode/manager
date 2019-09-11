@@ -1,8 +1,9 @@
+import { Notification } from 'linode-js-sdk/lib/account';
 import { Reducer } from 'redux';
 import { RequestableData } from 'src/store/types';
 import { Action, ERROR, LOAD, SUCCESS, UPDATE } from './notification.actions';
 
-export type State = RequestableData<Linode.Notification[]>;
+export type State = RequestableData<Notification[]>;
 
 export const defaultState: State = {
   lastUpdated: 0,

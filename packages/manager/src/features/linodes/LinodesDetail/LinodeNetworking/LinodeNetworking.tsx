@@ -1,4 +1,11 @@
-import { IPAddress } from 'linode-js-sdk/lib/networking';
+import {
+  getLinodeIPs,
+  Linode,
+  LinodeIPsResponse,
+  LinodeIPsResponseIPV4,
+  LinodeIPsResponseIPV6
+} from 'linode-js-sdk/lib/linodes';
+import { IPAddress, IPRange } from 'linode-js-sdk/lib/networking';
 import { compose, head, isEmpty, path, pathOr, uniq, uniqBy } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -24,7 +31,6 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import { ZONES } from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
-import { getLinodeIPs } from 'src/services/linodes';
 import { upsertLinode as _upsertLinode } from 'src/store/linodes/linodes.actions';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { withLinodeDetailContext } from '../linodeDetailContext';
@@ -104,11 +110,11 @@ const styles = (theme: Theme) =>
   });
 
 interface State {
-  linodeIPs?: Linode.LinodeIPsResponse;
+  linodeIPs?: LinodeIPsResponse;
   removeIPDialogOpen: boolean;
   initialLoading: boolean;
   currentlySelectedIP?: IPAddress;
-  currentlySelectedIPRange?: Linode.IPRange;
+  currentlySelectedIPRange?: IPRange;
   viewIPDrawerOpen: boolean;
   viewRangeDrawerOpen: boolean;
   editRDNSDrawerOpen: boolean;
@@ -169,13 +175,13 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
       });
   };
 
-  handleRemoveIPSuccess = (linode: Linode.Linode) => {
+  handleRemoveIPSuccess = (linode: Linode) => {
     /** refresh local state and redux state so our data is persistent everywhere */
     this.refreshIPs();
     this.props.upsertLinode(linode);
   };
 
-  displayRangeDrawer = (range: Linode.IPRange) => () => {
+  displayRangeDrawer = (range: IPRange) => () => {
     this.setState({
       viewRangeDrawerOpen: true,
       currentlySelectedIPRange: range
@@ -196,7 +202,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
     });
   };
 
-  renderRangeRow(range: Linode.IPRange, type: IPTypes) {
+  renderRangeRow(range: IPRange, type: IPTypes) {
     const { classes } = this.props;
 
     return (
@@ -409,10 +415,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   renderIPv4 = () => {
     const { classes, readOnly } = this.props;
-    const ipv4 = path<Linode.LinodeIPsResponseIPV4>(
-      ['linodeIPs', 'ipv4'],
-      this.state
-    );
+    const ipv4 = path<LinodeIPsResponseIPV4>(['linodeIPs', 'ipv4'], this.state);
 
     if (!ipv4) {
       return null;
@@ -510,10 +513,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
 
   renderIPv6 = () => {
     const { classes, readOnly } = this.props;
-    const ipv6 = path<Linode.LinodeIPsResponseIPV6>(
-      ['linodeIPs', 'ipv6'],
-      this.state
-    );
+    const ipv6 = path<LinodeIPsResponseIPV6>(['linodeIPs', 'ipv6'], this.state);
 
     if (!ipv6) {
       return null;
@@ -560,7 +560,7 @@ class LinodeNetworking extends React.Component<CombinedProps, State> {
               {slaac && this.renderIPRow(slaac, 'SLAAC')}
               {link_local && this.renderIPRow(link_local, 'Link Local')}
               {globalRange &&
-                globalRange.map((range: Linode.IPRange) =>
+                globalRange.map((range: IPRange) =>
                   this.renderRangeRow(range, 'Range')
                 )}
             </TableBody>
@@ -631,7 +631,7 @@ const getFirstPublicIPv4FromResponse = compose(
 );
 
 interface ContextProps {
-  linode: Linode.Linode;
+  linode: Linode;
   readOnly: boolean;
 }
 
@@ -642,7 +642,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 }));
 
 interface DispatchProps {
-  upsertLinode: (data: Linode.Linode) => void;
+  upsertLinode: (data: Linode) => void;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (

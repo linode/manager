@@ -1,13 +1,14 @@
+import { Notification } from 'linode-js-sdk/lib/account';
 import { connect } from 'react-redux';
 import { MapState } from 'src/store/types';
 
 export interface WithNotifications {
-  linodeNotifications: Linode.Notification[];
+  linodeNotifications: Notification[];
 }
 
 const notificationsForLinode = (id: number) => (
-  notifications: Linode.Notification[]
-): Linode.Notification[] => {
+  notifications: Notification[]
+): Notification[] => {
   return notifications.filter(
     ({ entity }) => entity && entity.type === 'linode' && entity.id === id
   );

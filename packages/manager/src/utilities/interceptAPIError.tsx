@@ -1,10 +1,11 @@
+import { LinodeTypeClass } from 'linode-js-sdk/lib/linodes'
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { GPUError } from 'src/components/GPUError';
 
 export const interceptGPUErrors = (
-  selectedTypeID?: Linode.LinodeTypeClass,
-  errors?: Linode.ApiFieldError[]
+  selectedTypeID?: LinodeTypeClass,
+  errors?: APIError[]
 ) => {
   if (!errors) {
     return [];

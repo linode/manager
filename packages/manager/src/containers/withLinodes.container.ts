@@ -1,10 +1,11 @@
+import { Linode } from 'linode-js-sdk/lib/linodes'
 import { path } from 'ramda';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 
 type MapProps<TOuter, TInner> = (
   ownProps: TOuter,
-  linodes: Linode.Linode[],
+  linodes: Linode[],
   loading: boolean,
   error?: Linode.ApiFieldError[]
 ) => TInner;

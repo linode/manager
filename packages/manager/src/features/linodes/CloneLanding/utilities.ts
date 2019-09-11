@@ -1,4 +1,5 @@
 import produce from 'immer';
+import { Config, Disk } from 'linode-js-sdk/lib/linodes';
 import * as moment from 'moment';
 import { append, compose, flatten, keys, map, pickBy, uniqBy } from 'ramda';
 
@@ -35,11 +36,11 @@ export type CloneLandingAction =
   | { type: 'clearAll' }
   | {
       type: 'syncConfigsDisks';
-      configs: Linode.Config[];
-      disks: Linode.Disk[];
+      configs: Config[];
+      disks: Disk[];
     };
 
-export type ExtendedConfig = Linode.Config & { associatedDisks: Linode.Disk[] };
+export type ExtendedConfig = Config & { associatedDisks: Disk[] };
 /**
  * REDUCER
  *
@@ -178,8 +179,8 @@ const getSelectedIDs = (selection: ConfigSelection | DiskSelection) =>
   )(selection);
 
 export const createConfigDiskSelection = (
-  configs: Linode.Config[],
-  disks: Linode.Disk[],
+  configs: Config[],
+  disks: Disk[],
   selectedConfigIds: number[] = [], // Which configs should be selected?
   selectedDiskIds: number[] = [] // Which disks should be selected?
 ): { configSelection: ConfigSelection; diskSelection: DiskSelection } => {
@@ -232,9 +233,9 @@ export const createConfigDiskSelection = (
  * This function returns an array of disks that match a `disk_id` in the config.
  */
 export const getAssociatedDisks = (
-  config: Linode.Config,
-  allDisks: Linode.Disk[]
-): Linode.Disk[] => {
+  config: Config,
+  allDisks: Disk[]
+): Disk[] => {
   const disksOnConfig: number[] = [];
 
   // Go through the devices and grab all the disks
@@ -250,8 +251,8 @@ export const getAssociatedDisks = (
 
 // Grabs the associated disks and attaches them to each config
 export const attachAssociatedDisksToConfigs = (
-  configs: Linode.Config[],
-  disks: Linode.Disk[]
+  configs: Config[],
+  disks: Disk[]
 ): ExtendedConfig[] => {
   return configs.map(eachConfig => {
     const associatedDisks = getAssociatedDisks(eachConfig, disks);
@@ -261,8 +262,8 @@ export const attachAssociatedDisksToConfigs = (
 
 export const getAllDisks = (
   configs: ExtendedConfig[],
-  disks: Linode.Disk[]
-): Linode.Disk[] => {
+  disks: Disk[]
+): Disk[] => {
   /**
    * Get ALL disks so the estimated clone time can be calculated.
    *
@@ -273,8 +274,8 @@ export const getAllDisks = (
    *
    * ...I can't believe the typing worked out for this...
    */
-  const allDisks: Linode.Disk[] = compose(
-    uniqBy((eachDisk: Linode.Disk) => eachDisk.id),
+  const allDisks: Disk[] = compose(
+    uniqBy((eachDisk: Disk) => eachDisk.id),
     flatten,
     append(disks) as any,
     map((eachConfig: ExtendedConfig) => eachConfig.associatedDisks)
