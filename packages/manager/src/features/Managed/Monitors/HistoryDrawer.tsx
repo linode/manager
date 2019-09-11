@@ -1,6 +1,11 @@
 import * as React from 'react';
-
+import ActionsPanel from 'src/components/ActionsPanel';
+import Button from 'src/components/Button';
+import CircleProgress from 'src/components/CircleProgress';
 import Drawer from 'src/components/Drawer';
+import ErrorState from 'src/components/ErrorState';
+
+import IssueCalendar from './IssueCalendar';
 
 interface Props {
   open: boolean;
@@ -20,6 +25,15 @@ export const HistoryDrawer: React.FC<Props> = props => {
       onClose={onClose}
     >
       {renderDrawerContent(issues, loading, error)}
+      <ActionsPanel>
+        <Button
+          buttonType="primary"
+          onClick={() => onClose()}
+          data-qa-close
+        >
+          Close
+        </Button>
+      </ActionsPanel>
     </Drawer>
   );
 };
@@ -30,18 +44,16 @@ const renderDrawerContent = (
   error?: Linode.ApiFieldError[]
 ) => {
   if (loading) {
-    return <div>Loading!</div>;
+    return <CircleProgress />;
   }
 
   if (error) {
-    return <div>Error!</div>;
+    return <ErrorState errorText={error[0].reason} />;
   }
 
-  if (issues.length === 0) {
-    return <div>Empty</div>;
-  }
-
-  return issues.map((i, idx) => <div key={idx}>{i.id}</div>);
+  return <IssueCalendar 
+    issues={issues}
+  />;
 };
 
 export default HistoryDrawer;

@@ -100,17 +100,25 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
   const [drawerMode, setDrawerMode] = React.useState<Modes>('create');
   const [editID, setEditID] = React.useState<number>(0);
 
+  const [editLabel, setEditLabel] = React.useState<string>('');
+
   const handleDrawerClose = () => {
     setEditID(0);
     setDrawerMode('create');
     setMonitorDrawerOpen(false);
   };
 
-  const handleDrawerOpen = (id: number, mode: Modes) => {
+  const handleMonitorDrawerOpen = (id: number, mode: Modes) => {
     setEditID(id);
     setDrawerMode(mode);
     setMonitorDrawerOpen(true);
   };
+
+  const handleHistoryDrawerOpen = (id: number, label: string) => {
+    setEditID(id);
+    setEditLabel(label);
+    setHistoryDrawerOpen(true);
+  }
 
   const handleDelete = () => {
     if (!dialog.entityID) {
@@ -243,8 +251,8 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
                         loading={loading}
                         error={error}
                         openDialog={openDialog}
-                        openMonitorDrawer={handleDrawerOpen}
-                        openHistoryDrawer={() => setHistoryDrawerOpen(true)}
+                        openMonitorDrawer={handleMonitorDrawerOpen}
+                        openHistoryDrawer={handleHistoryDrawerOpen}
                       />
                     </TableBody>
                   </Table>
@@ -282,8 +290,8 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
       <HistoryDrawer
         open={historyDrawerOpen}
         onClose={() => setHistoryDrawerOpen(false)}
-        monitorLabel="My-monitor"
-        issues={issues}
+        monitorLabel={editLabel}
+        issues={issues.filter(thisIssue => thisIssue.services.includes(editID))}
         loading={issuesLoading && lastUpdated === 0}
         error={issuesError.read}
       />

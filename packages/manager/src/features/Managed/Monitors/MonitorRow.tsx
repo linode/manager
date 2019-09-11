@@ -46,7 +46,7 @@ interface Props {
   monitor: Linode.ManagedServiceMonitor;
   openDialog: (id: number, label: string) => void;
   openMonitorDrawer: (id: number, mode: string) => void;
-  openHistoryDrawer: () => void;
+  openHistoryDrawer: (id: number, label: string) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;

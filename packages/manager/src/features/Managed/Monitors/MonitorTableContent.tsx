@@ -9,7 +9,7 @@ interface Props {
   monitors: Linode.ManagedServiceMonitor[];
   loading: boolean;
   openDialog: (id: number, label: string) => void;
-  openHistoryDrawer: () => void;
+  openHistoryDrawer: (id: number, label: string) => void;
   openMonitorDrawer: (id: number, mode: string) => void;
   error?: Linode.ApiFieldError[];
 }
