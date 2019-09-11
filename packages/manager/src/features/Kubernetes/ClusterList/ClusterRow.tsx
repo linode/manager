@@ -89,6 +89,7 @@ export const ClusterRow: React.FunctionComponent<CombinedProps> = props => {
       <TableCell>
         <ActionMenu
           clusterId={cluster.id}
+          clusterLabel={cluster.label}
           openDialog={() =>
             openDeleteDialog(cluster.id, cluster.label, cluster.node_pools)
           }

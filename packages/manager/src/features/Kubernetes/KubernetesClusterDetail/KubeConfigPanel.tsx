@@ -113,7 +113,7 @@ export const KubeConfigPanel: React.FC<CombinedProps> = props => {
     fetchKubeConfig()
       .then(decodedFile => {
         if (decodedFile) {
-          downloadFile('kubeconfig.yaml', decodedFile);
+          downloadFile(`${clusterLabel}-kubeconfig.yaml`, decodedFile);
         } else {
           // There was a parsing error, the user will see an error toast.
           return;
