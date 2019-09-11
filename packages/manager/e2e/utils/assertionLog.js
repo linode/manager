@@ -7,4 +7,4 @@ export const assertLog = {
   incorrectVal: 'incorrect value found',
   shouldNotBeNull: 'value should not be null',
   shouldExist: 'element should exist in DOM'
-}
+};
