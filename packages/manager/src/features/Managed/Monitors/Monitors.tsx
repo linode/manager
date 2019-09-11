@@ -1,7 +1,9 @@
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
-
+import withManagedIssues, {
+  DispatchProps as IssuesDispatchProps
+} from 'src/containers/managedIssues.container';
 import withManagedServices, {
   DispatchProps,
   ManagedProps
@@ -15,7 +17,7 @@ interface Props {
   errorFromProps?: APIError[];
 }
 
-type CombinedProps = Props & ManagedProps & DispatchProps;
+type CombinedProps = Props & ManagedProps & DispatchProps & IssuesDispatchProps;
 
 export const Monitors: React.FC<CombinedProps> = props => {
   const {
@@ -27,10 +29,12 @@ export const Monitors: React.FC<CombinedProps> = props => {
     managedError,
     managedLoading,
     monitors,
+    requestManagedIssues,
     requestManagedServices
   } = props;
 
   React.useEffect(() => {
+    requestManagedIssues().catch(_ => null); // Errors handled in Redux state
     requestManagedServices().catch(_ => null); // Errors handled in Redux state
   }, [requestManagedServices]);
 
@@ -46,6 +50,7 @@ export const Monitors: React.FC<CombinedProps> = props => {
 };
 
 const enhanced = compose<CombinedProps, Props>(
+  withManagedIssues(() => ({})),
   withManagedServices(
     (ownProps, managedLoading, lastUpdated, monitors, managedError) => ({
       ...ownProps,
