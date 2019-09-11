@@ -16,6 +16,7 @@ import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import useFlags from 'src/hooks/useFlags';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import NodePoolDisplayTable from '../../CreateCluster/NodePoolDisplayTable';
@@ -122,6 +123,8 @@ export const NodePoolsDisplay: React.FunctionComponent<
     updatePool
   } = props;
 
+  const flags = useFlags();
+
   const TooltipText = () => {
     return (
       <>
@@ -205,12 +208,12 @@ export const NodePoolsDisplay: React.FunctionComponent<
               {`$${getTotalClusterPrice(poolsForEdit)}/month`}
             </Typography>
           )}
-          {editing && (
+          {(!flags.lkeHideButtons || editing) && (
             <Grid item container xs={12} className={classes.ctaOuter}>
               <Button
                 className={classes.button}
                 buttonType="primary"
-                disabled={submittingForm}
+                disabled={!editing || submittingForm}
                 loading={submittingForm}
                 onClick={submitForm}
               >
@@ -219,6 +222,7 @@ export const NodePoolsDisplay: React.FunctionComponent<
               <Button
                 className={classes.button}
                 buttonType="secondary"
+                disabled={!editing}
                 onClick={resetForm}
               >
                 Clear Changes
