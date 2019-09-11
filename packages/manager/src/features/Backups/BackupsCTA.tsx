@@ -76,6 +76,7 @@ const BackupsCTA: React.StatelessComponent<CombinedProps> = props => {
             and be sure to read our guide on Backups{` `}
             <a
               target="_blank"
+              rel="noopener noreferrer"
               href={
                 'https://www.linode.com/docs/platform' +
                 '/disk-images/linode-backup-service/'

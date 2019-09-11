@@ -266,11 +266,19 @@ export const Configs: React.FC<Props> = props => {
       {linodeError && (
         <Typography variant="body1" className={classes.errorText}>
           {linodeError}{' '}
-          <a href={errorMessageLinks.shrink} target="_blank">
+          <a
+            href={errorMessageLinks.shrink}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Shrink your existing disks
           </a>{' '}
           or{' '}
-          <a href={errorMessageLinks.resize} target="_blank">
+          <a
+            href={errorMessageLinks.resize}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             resize your Linode to a larger plan.
           </a>
         </Typography>
