@@ -35,10 +35,14 @@ import SpacingToggle from './SpacingToggle';
 import ThemeToggle from './ThemeToggle';
 import { linkIsActive } from './utils';
 
+import { sendOneClickNavigationEvent } from 'src/utilities/ga';
+
 interface PrimaryLink {
   display: string;
   href: string;
   key: string;
+  attr?: { [key: string]: any };
+  onClick?: (e: React.ChangeEvent<any>) => void;
 }
 
 export type ClassNames =
@@ -240,6 +244,7 @@ interface State {
 
 export type CombinedProps = Props &
   StateProps &
+  FeatureFlagConsumerProps &
   WithTheme &
   WithStyles<ClassNames> &
   FeatureFlagConsumerProps &
@@ -276,6 +281,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       prevProps.hasAccountAccess !== this.props.hasAccountAccess ||
       prevProps.accountLastUpdated !== this.props.accountLastUpdated ||
       prevProps.isManagedAccount !== this.props.isManagedAccount ||
+      prevProps.accountLastUpdated !== this.props.accountLastUpdated ||
       prevProps.flags !== this.props.flags
     ) {
       this.createMenuItems();
@@ -328,6 +334,18 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       key: 'longview'
     });
     // }
+
+    if (this.props.flags.oneClickLocation === 'sidenav') {
+      primaryLinks.push({
+        display: 'One-Click Apps',
+        href: '/linodes/create?type=One-Click',
+        key: 'one-click',
+        attr: { 'data-qa-one-click-nav-btn': true },
+        onClick: () => {
+          sendOneClickNavigationEvent('Primary Nav');
+        }
+      });
+    }
 
     if (isKubernetesEnabled(accountCapabilities)) {
       primaryLinks.push({
@@ -405,8 +423,14 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
           role="menuitem"
           to={primaryLink.href}
           href="javascript:void(0)"
-          onClick={this.props.closeMenu}
+          onClick={(e: React.ChangeEvent<any>) => {
+            this.props.closeMenu();
+            if (primaryLink.onClick) {
+              primaryLink.onClick(e);
+            }
+          }}
           data-qa-nav-item={primaryLink.key}
+          {...primaryLink.attr}
           className={classNames({
             [classes.listItem]: true,
             [classes.active]: linkIsActive(primaryLink.href)

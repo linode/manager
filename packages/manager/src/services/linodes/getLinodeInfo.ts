@@ -1,4 +1,4 @@
-import { NetworkUtilization } from "linode-js-sdk/lib/account";
+import { NetworkUtilization } from 'linode-js-sdk/lib/account';
 import { API_ROOT } from 'src/constants';
 
 import Request, { setMethod, setParams, setURL, setXFilter } from '../index';
@@ -88,8 +88,6 @@ export const getLinodeKernel = (kernelId: string) =>
  *
  * Return a paginated list of available Linode types.
  * This endpoint does not require authentication.
- *
- * @param linodeId { number } The id of the Linode to retrieve.
  */
 export const getLinodeTypes = () =>
   Request<Page<Type>>(

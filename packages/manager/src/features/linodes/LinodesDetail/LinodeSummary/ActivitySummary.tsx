@@ -27,7 +27,8 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     header: {
-      marginBottom: theme.spacing(2)
+      marginTop: theme.spacing(3),
+      marginBottom: theme.spacing(1)
     },
     viewMore: {
       position: 'relative',

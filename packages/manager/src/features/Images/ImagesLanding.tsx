@@ -451,6 +451,7 @@ const EmptyCopy = () => (
       <a
         href="https://linode.com/docs/platform/disk-images/linode-images-new-manager/"
         target="_blank"
+        rel="noopener noreferrer"
         className="h-u"
       >
         learn more about Images
@@ -459,6 +460,7 @@ const EmptyCopy = () => (
       <a
         href="https://linode.com/docs/quick-answers/linode-platform/deploy-an-image-to-a-linode"
         target="_blank"
+        rel="noopener noreferrer"
         className="h-u"
       >
         deploy an Image to a Linode.

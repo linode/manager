@@ -12,4 +12,6 @@ export * from './networking';
 
 export * from './images';
 
+export * from './tags';
+
 export { baseRequest } from './request';

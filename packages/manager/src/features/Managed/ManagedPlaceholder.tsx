@@ -10,7 +10,11 @@ const ManagedPlaceholder = () => (
     buttonProps={[
       {
         onClick: () =>
-          window.open('https://manager.linode.com/account#managed', '_blank'),
+          window.open(
+            'https://manager.linode.com/account#managed',
+            '_blank',
+            'noopener'
+          ),
         children: 'Navigate to Classic Manager'
       }
     ]}

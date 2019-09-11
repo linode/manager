@@ -1,13 +1,11 @@
 import classNames from 'classnames';
 import * as React from 'react';
 import { OptionProps } from 'react-select/lib/components/Option';
+import { Item } from 'src/components/EnhancedSelect';
 import Option from 'src/components/EnhancedSelect/components/Option';
-import { Item } from 'src/components/EnhancedSelect/Select';
 
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
-
-import { distroIcons } from './icons';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -22,8 +20,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
+interface ImageItem extends Item<string> {
+  className?: string;
+}
+
 interface ImageOptionProps extends OptionProps<string> {
-  data: Item<string>;
+  data: ImageItem;
 }
 
 type CombinedProps = ImageOptionProps;
@@ -31,9 +33,6 @@ type CombinedProps = ImageOptionProps;
 export const ImageOption: React.FC<CombinedProps> = props => {
   const classes = useStyles();
   const { data, label } = props;
-  const iconClass = distroIcons[data.label]
-    ? `fl-${distroIcons[data.label as string]}`
-    : 'fl-tux';
 
   return (
     <Option
@@ -46,8 +45,8 @@ export const ImageOption: React.FC<CombinedProps> = props => {
       {...props}
     >
       <Grid container direction="row" alignItems="center" justify="flex-start">
-        <Grid item>
-          <span className={`${iconClass} ${classes.icon}`} />
+        <Grid item className="py0">
+          <span className={`${props.data.className} ${classes.icon}`} />
         </Grid>
         <Grid item>{label}</Grid>
       </Grid>

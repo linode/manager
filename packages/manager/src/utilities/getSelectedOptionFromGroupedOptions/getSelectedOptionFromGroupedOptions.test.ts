@@ -1,4 +1,4 @@
-import { getSelectedOption } from './DeviceSelection';
+import { getSelectedOptionFromGroupedOptions } from './getSelectedOptionFromGroupedOptions';
 
 const option1 = {
   label: 'Option 1',
@@ -34,14 +34,20 @@ const fakeDeviceList = [
 ];
 
 describe('DeviceSelection', () => {
-  describe('getSelectedOption helper method', () => {
+  describe('getSelectedOptionFromGroupedOptions helper method', () => {
     it('should retrieve an Item from a set of grouped options', () => {
-      expect(getSelectedOption(option3.value, fakeDeviceList)).toBe(option3);
-      expect(getSelectedOption(option2.value, fakeDeviceList)).toBe(option2);
+      expect(
+        getSelectedOptionFromGroupedOptions(option3.value, fakeDeviceList)
+      ).toBe(option3);
+      expect(
+        getSelectedOptionFromGroupedOptions(option2.value, fakeDeviceList)
+      ).toBe(option2);
     });
 
     it("should return null if the option isn't found", () => {
-      expect(getSelectedOption('not a real value', fakeDeviceList)).toBeNull();
+      expect(
+        getSelectedOptionFromGroupedOptions('not a real value', fakeDeviceList)
+      ).toBeNull();
     });
   });
 });

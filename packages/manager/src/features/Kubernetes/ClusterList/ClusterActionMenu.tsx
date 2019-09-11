@@ -11,6 +11,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
   clusterId: number;
+  clusterLabel: string;
   openDialog: () => void;
 }
 
@@ -19,7 +20,8 @@ type CombinedProps = Props & RouteComponentProps<{}> & WithSnackbarProps;
 export const ClusterActionMenu: React.FunctionComponent<
   CombinedProps
 > = props => {
-  const { clusterId, enqueueSnackbar, history, openDialog } = props;
+  const { clusterId, clusterLabel, enqueueSnackbar, history, openDialog } = props;
+
   const createActions = () => {
     return (closeMenu: Function): Action[] => {
       const actions = [
@@ -62,7 +64,7 @@ export const ClusterActionMenu: React.FunctionComponent<
         // Convert to utf-8 from base64
         try {
           const decodedFile = window.atob(response.kubeconfig);
-          downloadFile('kubeconfig.yaml', decodedFile);
+          downloadFile(`${clusterLabel}-kubeconfig.yaml`, decodedFile);
         } catch (e) {
           reportException(e, {
             'Encoded response': response.kubeconfig

@@ -17,6 +17,7 @@ requests.getKubeConfig = jest
 
 const props = {
   clusterId: 123456,
+  clusterLabel: 'my-cluster',
   enqueueSnackbar: jest.fn(),
   closeSnackbar: jest.fn(),
   openDialog: jest.fn(),
