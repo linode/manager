@@ -20,7 +20,18 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       padding: `0 ${theme.spacing(1) + 4}px`,
-      color: '#3683DC'
+      color: '#3683DC',
+      /**
+       * @bailly @kayla
+       * I had to ask Kayla how to override the
+       * button hover style here, but there must be
+       * a better way.
+       */
+      '&:hover': {
+        '& svg': {
+          color: '#3683DC !important'
+        }
+      }
     }
   });
 
@@ -46,6 +57,7 @@ export const SupportWidget: React.FC<CombinedProps> = props => {
         text="Open Support Ticket"
         title="Open Support Ticket"
         onClick={() => setOpen(true)}
+        activeClass={classes.root}
       />
       <SupportTicketDrawer
         open={open}
