@@ -1,3 +1,4 @@
+import { getLinodes } from 'linode-js-sdk/lib/linodes';
 import { assignAddresses } from 'linode-js-sdk/lib/networking';
 import {
   both,
@@ -28,7 +29,6 @@ import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { getLinodes } from 'src/services/linodes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 type ClassNames =

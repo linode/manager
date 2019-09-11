@@ -1,4 +1,5 @@
 import { Image } from 'linode-js-sdk/lib/images';
+import { Linode } from 'linode-js-sdk/lib/linodes'
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -17,7 +18,7 @@ import {
 } from '../stackScriptUtils';
 import StackScriptPanelContent from './StackScriptPanelContent';
 
-export interface ExtendedLinode extends Linode.Linode {
+export interface ExtendedLinode extends Linode {
   heading: string;
   subHeadings: string[];
 }

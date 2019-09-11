@@ -1,3 +1,4 @@
+import { Linode } from 'linode-js-sdk/lib/linodes'
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {
@@ -14,9 +15,9 @@ import {
 } from './linodes.actions';
 
 export interface Actions {
-  createLinode: (params: CreateLinodeParams) => Promise<Linode.Linode>;
+  createLinode: (params: CreateLinodeParams) => Promise<Linode>;
   deleteLinode: (params: DeleteLinodeParams) => Promise<void>;
-  updateLinode: (params: UpdateLinodeParams) => Promise<Linode.Linode>;
+  updateLinode: (params: UpdateLinodeParams) => Promise<Linode>;
   rebootLinode: (params: RebootLinodeParams) => Promise<void>;
 }
 

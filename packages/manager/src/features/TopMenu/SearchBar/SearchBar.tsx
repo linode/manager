@@ -1,6 +1,7 @@
 import Close from '@material-ui/icons/Close';
 import Search from '@material-ui/icons/Search';
 import { Image } from 'linode-js-sdk/lib/images';
+import { LinodeType } from 'linode-js-sdk/lib/linodes'
 import { take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -223,7 +224,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
 }
 
 interface WithTypesProps {
-  typesData: Linode.LinodeType[];
+  typesData: LinodeType[];
 }
 
 const withTypes = connect((state: ApplicationState, ownProps) => ({

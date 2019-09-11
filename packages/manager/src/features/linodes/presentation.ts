@@ -1,3 +1,4 @@
+import { LinodeType } from 'linode-js-sdk/lib/linodes'
 import { dcDisplayCountry, dcDisplayNames } from 'src/constants';
 
 export const titlecase = (string: string): string => {
@@ -31,7 +32,7 @@ export const typeLabelDetails = (
 
 export const displayType = (
   linodeTypeId: null | string,
-  types: Pick<Linode.LinodeType, 'id' | 'label'>[]
+  types: Pick<LinodeType, 'id' | 'label'>[]
 ): string => {
   if (linodeTypeId === null) {
     return 'No Plan';

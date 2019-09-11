@@ -1,4 +1,4 @@
-import { LinodeDiskCreationData } from 'src/services/linodes';
+import { LinodeDiskCreationData } from 'linode-js-sdk/lib/linodes';
 import { actionCreatorFactory } from 'typescript-fsa';
 import { Entity } from './disk.types';
 

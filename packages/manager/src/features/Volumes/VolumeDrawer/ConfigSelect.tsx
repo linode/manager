@@ -1,7 +1,7 @@
+import { getLinodeConfigs } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import { getLinodeConfigs } from 'src/services/linodes';
 
 interface Props {
   error?: string;

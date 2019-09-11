@@ -1,3 +1,4 @@
+import { IPRange } from 'linode-js-sdk/lib/networking';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -25,7 +26,7 @@ const styles = (theme: Theme) =>
 
 interface Props {
   open: boolean;
-  range?: Linode.IPRange;
+  range?: IPRange;
   onClose: () => void;
 }
 

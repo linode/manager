@@ -1,3 +1,4 @@
+import { Linode, removeIPAddress } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -8,15 +9,14 @@ import withLoadingAndError, {
 } from 'src/components/withLoadingAndError';
 import DeleteIPActions from './DeleteIPActions';
 
-import { removeIPAddress } from 'src/services/linodes/linodeIPs';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
   handleClose: () => void;
   open: boolean;
-  linode: Linode.Linode;
+  linode: Linode;
   IPAddress: string;
-  ipRemoveSuccess?: (linode: Linode.Linode) => void;
+  ipRemoveSuccess?: (linode: Linode) => void;
 }
 
 type CombinedProps = Props & LoadingErrorProps;

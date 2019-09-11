@@ -1,3 +1,4 @@
+import { getLinodes, restoreBackup } from 'linode-js-sdk/lib/linodes';
 import { Profile } from 'linode-js-sdk/lib/profile';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -12,7 +13,6 @@ import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Notice from 'src/components/Notice';
 import withProfile from 'src/containers/profile.container';
-import { getLinodes, restoreBackup } from 'src/services/linodes';
 import { getPermissionsForLinode } from 'src/store/linodes/permissions/permissions.selector.ts';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';

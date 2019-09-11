@@ -47,7 +47,7 @@ export const CreateLinodeSchema = object({
   stackscript_id: number().notRequired(),
   backup_id: number().notRequired(),
   swap_size: number().notRequired(),
-  image: string().nullable(true),
+  image: string().notRequired(),
   root_pass: string().notRequired(),
   authorized_keys: array()
     .of(string())
@@ -56,7 +56,8 @@ export const CreateLinodeSchema = object({
   stackscript_data,
   booted: boolean().notRequired(),
   label: string()
-    .nullable(true)
+    .transform(v => (v === '' ? undefined : v))
+    .notRequired()
     .min(3, 'Label must contain between 3 and 32 characters.')
     .max(32, 'Label must contain between 3 and 32 characters.'),
   tags: array()
@@ -77,7 +78,7 @@ const alerts = object({
   network_out: number(),
   transfer_quota: number(),
   io: number()
-}).nullable(true);
+}).notRequired();
 
 const schedule = object({
   day: mixed().oneOf(
@@ -119,7 +120,8 @@ const backups = object({
 
 export const UpdateLinodeSchema = object({
   label: string()
-    .nullable(true)
+    .transform(v => (v === '' ? undefined : v))
+    .notRequired()
     .min(3, 'Label must contain between 3 and 32 characters.')
     .max(32, 'Label must contain between 3 and 32 characters.'),
   tags: array()

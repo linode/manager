@@ -1,3 +1,5 @@
+import { StatsData } from 'linode-js-sdk/lib/linodes';
+
 export interface Metrics {
   max: number;
   average: number;
@@ -122,7 +124,7 @@ export const getTotalTraffic = (
   };
 };
 
-export const getMonthlyTraffic = (stats: Linode.StatsData) => {
+export const getMonthlyTraffic = (stats: StatsData) => {
   const getTrafficSum = (records: number[][]) =>
     records.reduce((acc, record) => {
       return acc + record[1];

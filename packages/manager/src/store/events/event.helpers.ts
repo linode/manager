@@ -1,4 +1,9 @@
-import { Entity, Event, EventAction, EventStatus } from 'linode-js-sdk/lib/account'
+import {
+  Entity,
+  Event,
+  EventAction,
+  EventStatus
+} from 'linode-js-sdk/lib/account';
 import * as moment from 'moment';
 import { compose, equals, findIndex, omit, take, update } from 'ramda';
 import updateRight from 'src/utilities/updateRight';
@@ -9,7 +14,7 @@ export interface ExtendedEvent extends Event {
 }
 
 interface EntityEvent extends Omit<Event, 'entity'> {
-  entity: Entity
+  entity: Entity;
 }
 
 /** We use the epoch on our initial request to get all of the users events. */
@@ -50,8 +55,8 @@ export const isRelevantDeletionEvent = (
  * Safely find an entity in a list of entities returning the index.
  * Will return -1 if the index is not found.
  *
- * entities {Linode.Entity[]}
- * entity {null | Linode.Entity}
+ * entities {Entity[]}
+ * entity {null | Entity}
  */
 export const findInEvents = (
   events: Pick<ExtendedEvent, 'entity'>[],
@@ -162,8 +167,7 @@ export const isCompletedEvent = ({
 }: Pick<Event, 'percent_complete'>) =>
   percent_complete !== null && percent_complete === 100;
 
-export const isEntityEvent = (e: Event): e is EntityEvent =>
-  Boolean(e.entity);
+export const isEntityEvent = (e: Event): e is EntityEvent => Boolean(e.entity);
 
 /**
  * Iterate through new events.

@@ -1,4 +1,5 @@
 import * as classNames from 'classnames';
+import { NotificationSeverity } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import ListItem from 'src/components/core/ListItem';
 import {
@@ -87,7 +88,7 @@ const styles = (theme: Theme) => {
 interface Props {
   label: string;
   message: string;
-  severity: Linode.NotificationSeverity;
+  severity: NotificationSeverity;
   onClick?: (e: React.MouseEvent<HTMLElement>) => void;
 }
 

@@ -1,3 +1,4 @@
+import { Config } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -9,7 +10,7 @@ import SelectionCard from 'src/components/SelectionCard';
 export type LinodeConfigSelectionDrawerCallback = (id: number) => void;
 
 interface Props {
-  linodeConfigs: Linode.Config[];
+  linodeConfigs: Config[];
   onClose: () => void;
   onSubmit: () => void;
   onSelectConfig: (configID: number) => void;

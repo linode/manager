@@ -1,10 +1,11 @@
 import { API_ROOT } from 'src/constants';
 
-import Request, { setData, setMethod, setURL } from '../index';
+import Request, { setData, setMethod, setURL } from '../request';
 
-import { CreateSnapshotSchema } from './linode.schema';
+import { CreateSnapshotSchema } from './linodes.schema';
+import { LinodeBackup, LinodeBackupsResponse } from './types';
 
-type Backup = Linode.LinodeBackup;
+type Backup = LinodeBackup;
 
 /**
  * getLinodeBackups
@@ -14,7 +15,7 @@ type Backup = Linode.LinodeBackup;
  * @param linodeId { number } The id of a Linode with backups enabled.
  */
 export const getLinodeBackups = (id: number) =>
-  Request<Linode.LinodeBackupsResponse>(
+  Request<LinodeBackupsResponse>(
     setURL(`${API_ROOT}/linode/instances/${id}/backups`),
     setMethod('GET')
   ).then(response => response.data);

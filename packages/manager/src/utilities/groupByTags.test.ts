@@ -1,6 +1,6 @@
 import { groupByTags, NONE } from './groupByTags';
 /**
- * [Tag, Linode.Linode[]]s
+ * [Tag, Linode[]]s
  */
 describe('groupByTags', () => {
   it('return return a tuple[0] _ for entities without tags', () => {

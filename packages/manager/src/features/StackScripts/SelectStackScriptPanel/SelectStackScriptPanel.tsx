@@ -1,5 +1,6 @@
 import { Grant } from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
+import { Linode } from 'linode-js-sdk/lib/linodes'
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -27,7 +28,7 @@ import StackScriptTableHead from '../Partials/StackScriptTableHead';
 import SelectStackScriptPanelContent from './SelectStackScriptPanelContent';
 import StackScriptSelectionRow from './StackScriptSelectionRow';
 
-export interface ExtendedLinode extends Linode.Linode {
+export interface ExtendedLinode extends Linode {
   heading: string;
   subHeadings: string[];
 }

@@ -1,5 +1,6 @@
 import { Domain } from 'linode-js-sdk/lib/domains';
 import { Image } from 'linode-js-sdk/lib/images';
+import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes'
 import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { createSelector } from 'reselect';
@@ -36,12 +37,12 @@ const isInitialLoad = (
 
 export default createSelector<
   State,
-  Resource<Linode.Linode[], EntityError>,
+  Resource<Linode[], EntityError>,
   Resource<Volume[]>,
   Resource<NodeBalancer[][]>,
   RequestableDataWithEntityError<Domain[]>,
   Resource<Image[]>,
-  Resource<Linode.LinodeType[]>,
+  Resource<LinodeType[]>,
   boolean
 >(
   linodesSelector,

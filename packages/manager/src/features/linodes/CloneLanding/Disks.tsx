@@ -1,3 +1,4 @@
+import { Disk } from 'linode-js-sdk/lib/linodes';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
 import CheckBox from 'src/components/CheckBox';
@@ -28,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export interface Props {
-  disks: Linode.Disk[];
+  disks: Disk[];
   diskSelection: DiskSelection;
   selectedConfigIds: number[];
   handleSelect: (id: number) => void;
@@ -64,7 +65,7 @@ export const Disks: React.FC<Props> = props => {
                     {paginatedData.length === 0 ? (
                       <TableRowEmptyState colSpan={2} />
                     ) : (
-                      paginatedData.map((disk: Linode.Disk) => {
+                      paginatedData.map((disk: Disk) => {
                         const isDiskSelected =
                           diskSelection[disk.id] &&
                           diskSelection[disk.id].isSelected;

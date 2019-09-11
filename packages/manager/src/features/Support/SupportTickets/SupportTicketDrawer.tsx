@@ -1,5 +1,6 @@
 import * as Bluebird from 'bluebird';
 import { getDomains } from 'linode-js-sdk/lib/domains';
+import { getLinodes } from 'linode-js-sdk/lib/linodes';
 import {
   createSupportTicket,
   uploadAttachment
@@ -23,7 +24,6 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import Notice from 'src/components/Notice';
 import SectionErrorBoundary from 'src/components/SectionErrorBoundary';
 import TextField from 'src/components/TextField';
-import { getLinodes } from 'src/services/linodes';
 import { getNodeBalancers } from 'src/services/nodebalancers';
 import composeState from 'src/utilities/composeState';
 import {

@@ -1,4 +1,5 @@
 import { Image } from 'linode-js-sdk/lib/images';
+import { getLinodeStats, getLinodeStatsByDate, Linode, LinodeType, Stats } from 'linode-js-sdk/lib/linodes'
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as moment from 'moment';
 import { map, pathOr } from 'ramda';
@@ -20,7 +21,6 @@ import LineGraph from 'src/components/LineGraph';
 import withImages from 'src/containers/withImages.container';
 import { withLinodeDetailContext } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
 import { displayType } from 'src/features/linodes/presentation';
-import { getLinodeStats, getLinodeStatsByDate } from 'src/services/linodes';
 import { ApplicationState } from 'src/store';
 import { ExtendedEvent } from 'src/store/events/event.helpers';
 import { formatRegion } from 'src/utilities';
@@ -141,7 +141,7 @@ const styles = (theme: Theme) =>
 interface LinodeContextProps {
   linodeCreated: string;
   linodeId: number;
-  linodeData: Linode.Linode;
+  linodeData: Linode;
   linodeVolumes: Volume[];
   linodeVolumesError?: Linode.ApiFieldError[];
 }
@@ -151,7 +151,7 @@ interface WithImagesProps {
 }
 
 interface State {
-  stats?: Linode.Stats;
+  stats?: Stats;
   rangeSelection: string;
   statsLoadError?: string;
   dataIsLoading: boolean;
@@ -808,7 +808,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 }));
 
 interface WithTypesProps {
-  typesData: Linode.LinodeType[];
+  typesData: LinodeType[];
   timezone: string;
   inProgressEvents: Record<number, number>;
   events: ExtendedEvent[];

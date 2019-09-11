@@ -1,5 +1,6 @@
 import { Formik, FormikProps } from 'formik';
 import { Image } from 'linode-js-sdk/lib/images';
+import { rebuildLinode, RebuildLinodeFromStackScriptSchema } from 'linode-js-sdk/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -32,8 +33,6 @@ import {
 } from 'src/features/StackScripts/stackScriptUtils';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import { useStackScript } from 'src/hooks/useStackScript';
-import { rebuildLinode } from 'src/services/linodes';
-import { RebuildLinodeFromStackScriptSchema } from 'src/services/linodes/linode.schema';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
