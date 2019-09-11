@@ -14,6 +14,7 @@ import { baseRequest } from 'linode-js-sdk/lib/request';
 
 import store from 'src/store';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
+import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 
 import { API_ROOT, LOGIN_ROOT } from 'src/constants';
 
@@ -74,9 +75,29 @@ export const handleError = (error: AxiosError) => {
         requestedLinodeType.match(/gpu/i)
     },
     {
+      /**
+       * this component when rendered will set an account activation
+       * error in the globalErrors Redux state. The only issue here
+       * is that if a component is not rendering the actual error message
+       * that comes down, the Redux state will never be set.
+       *
+       * This means that we have 2 options
+       *
+       * 1. Dispatch the globalError Redux action somewhere in the interceptor.
+       * 2. Fix the Landing page components to display the actual error being passed.
+       */
       replacementText: <AccountActivationError />,
       condition: e =>
-        !!e.reason.match(/account must be activated/i) && status === 403
+        !!e.reason.match(/account must be activated/i) && status === 403,
+      callback: () => {
+        if (store && !store.getState().globalErrors.account_unactivated) {
+          store.dispatch(
+            setErrors({
+              account_unactivated: true
+            })
+          );
+        }
+      }
     },
     {
       replacementText: <MigrateError />,

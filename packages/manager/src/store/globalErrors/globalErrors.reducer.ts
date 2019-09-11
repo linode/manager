@@ -1,12 +1,9 @@
 import { Reducer } from 'redux';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
-import {
-  clearErrors,
-  setErrors
-} from './globalErrors.actions';
-import { State } from './types'
+import { clearErrors, setErrors } from './globalErrors.actions';
+import { State } from './types';
 
-export const defaultState: State = {}
+export const defaultState: State = {};
 
 const reducer: Reducer<State> = reducerWithInitialState(defaultState)
   .case(setErrors, (state, payload) => {
@@ -16,13 +13,16 @@ const reducer: Reducer<State> = reducerWithInitialState(defaultState)
     };
   })
   .case(clearErrors, (state, payload) => {
-
-    return (payload)
+    /**
+     * if a payload exists, only clear the specified
+     * errors. If not, clear it all.
+     */
+    return payload
       ? {
-        ...state,
-        ...payload
-      }
-      : {}
+          ...state,
+          ...payload
+        }
+      : {};
   })
   .default(state => state);
 

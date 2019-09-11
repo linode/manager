@@ -14,6 +14,10 @@ import SupportLink from 'src/components/SupportLink';
 const useStyles = makeStyles((theme: Theme) => ({
   errorHeading: {
     marginBottom: theme.spacing(2)
+  },
+  subheading: {
+    margin: '0 auto',
+    maxWidth: '60%'
   }
 }));
 
@@ -31,10 +35,10 @@ const AccountActivationLanding: React.FC<CombinedProps> = props => {
       errorText={
         <React.Fragment>
           <Typography variant="h2" className={classes.errorHeading}>
-            Thank you for completing your signup!
+            Thanks for signing up!
           </Typography>
-          <Typography>
-            Your account is currently being reviewed. You'll recieve an email
+          <Typography className={classes.subheading}>
+            Your account is currently being reviewed. You'll receive an email
             from us once our review is complete, so hang tight! If you have
             questions during this process{' '}
             <SupportLink
