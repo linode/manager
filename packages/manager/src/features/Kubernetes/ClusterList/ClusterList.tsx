@@ -1,6 +1,6 @@
 import { path } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import 'rxjs/add/operator/filter';
 import AddNewLink from 'src/components/AddNewLink';
@@ -259,7 +259,6 @@ const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
   styled,
-  withRouter,
   withTypes
 );
 

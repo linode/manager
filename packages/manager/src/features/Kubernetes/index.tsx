@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  Redirect,
   Route,
   RouteComponentProps,
   Switch,
@@ -30,9 +31,10 @@ class Kubernetes extends React.Component<Props> {
 
     return (
       <Switch>
-        <Route component={ClusterCreate} path={`${path}/create`} />
-        <Route component={ClusterDetail} path={`${path}/clusters/:clusterID`} />
-        <Route component={KubernetesLanding} path={path} exact />
+        <Route component={ClusterCreate} exact path={`${path}/create`} />
+        <Route component={ClusterDetail} exact path={`${path}/clusters/:clusterID`} />
+        <Route component={KubernetesLanding} exact path={path} />
+        <Redirect to={'/kubernetes'} />
       </Switch>
     );
   }

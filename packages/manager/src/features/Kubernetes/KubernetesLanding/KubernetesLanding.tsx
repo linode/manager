@@ -24,7 +24,8 @@ export const KubernetesLanding: React.FunctionComponent<
     lastUpdated,
     deleteCluster,
     requestKubernetesClusters,
-    setKubernetesErrors
+    setKubernetesErrors,
+    ...reactRouterProps
   } = props;
   React.useEffect(() => {
     requestKubernetesClusters();
@@ -59,6 +60,7 @@ export const KubernetesLanding: React.FunctionComponent<
       deleteCluster={deleteCluster}
       error={clustersError}
       clearErrors={clearErrors}
+      {...reactRouterProps}
     />
   );
 };
