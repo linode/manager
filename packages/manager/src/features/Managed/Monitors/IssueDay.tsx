@@ -2,6 +2,7 @@ import * as React from 'react';
 import { Link } from 'react-router-dom';
 import Bad from 'src/assets/icons/monitor-failed.svg';
 import Good from 'src/assets/icons/monitor-ok.svg';
+import TicketIcon from 'src/assets/icons/ticket.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
@@ -11,7 +12,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginTop: theme.spacing(2)
   },
-}))
+  icon: {
+    color: theme.color.red
+  },
+  failureText: {
+    color: theme.color.red
+  }
+}));
 
 interface Props {
   issues: ExtendedIssue[];
@@ -29,24 +36,33 @@ const DayDisplay: React.FC<DisplayProps> = props => {
   const classes = useStyles();
 
   return (
-    <Grid container direction="row" alignItems="center" className={classes.root}>
+    <Grid
+      container
+      direction="row"
+      alignItems="center"
+      className={classes.root}
+    >
+      <Grid item>{icon}</Grid>
       <Grid item>
-        {icon}
+        <DateTimeDisplay
+          value={day}
+          format={'D-MMM-YYYY'}
+          className={`${ticketUrl ? classes.failureText : ''}`}
+        />
       </Grid>
-      <Grid item>
-        <DateTimeDisplay value={day} format={'D-MMM-YYYY'} />
-      </Grid>
-      {ticketUrl &&
-        <Link to={ticketUrl}>Ur ticket iz here</Link>
-      }
+      {ticketUrl && (
+        <Link to={ticketUrl} className={classes.icon}>
+          <TicketIcon />
+        </Link>
+      )}
     </Grid>
-  )
-}
+  );
+};
 
 const iconStyles = {
   width: 30,
   height: 30
-}
+};
 
 export const IssueDay: React.FC<Props> = props => {
   const { day, issues } = props;
@@ -54,20 +70,19 @@ export const IssueDay: React.FC<Props> = props => {
   const openIssueLinks = issues.reduce((accum, thisIssue) => {
     return thisIssue.dateClosed ? accum : [...accum, thisIssue.entity.id];
   }, []);
-  
+
   if (openIssueLinks.length > 0) {
-    return <DayDisplay
-      icon={<Bad {...iconStyles} />}
-      day={day}
-      ticketUrl={`support/tickets/${openIssueLinks[0]}`}
-    />
+    return (
+      <DayDisplay
+        icon={<Bad {...iconStyles} />}
+        day={day}
+        ticketUrl={`/support/tickets/${openIssueLinks[0]}`}
+      />
+    );
   }
 
   // No open issues for today
-  return <DayDisplay
-    icon={<Good {...iconStyles} />}
-    day={day}
-  />
-} 
+  return <DayDisplay icon={<Good {...iconStyles} />} day={day} />;
+};
 
 export default IssueDay;
