@@ -5,12 +5,12 @@ import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
+import AccountActivationLanding from 'src/components/AccountActivation/AccountActivationLanding';
 import DefaultLoader from 'src/components/DefaultLoader';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LandingLoading from 'src/components/LandingLoading';
 import NotFound from 'src/components/NotFound';
-import SupportLink from 'src/components/SupportLink';
 
 import withGlobalErrors, {
   Props as GlobalErrorProps
@@ -131,23 +131,23 @@ const MainContent: React.FC<CombinedProps> = props => {
 
   const isKubernetesEnabled = _isKubernetesEnabled(props.accountCapabilities);
 
-  if (props.globalErrors.account_unactivated) {
-    return (
-      <ErrorState
-        errorText={
-          <React.Fragment>
-            Looks like you have not activated your account yet. Please check
-            your email for activation instructions or{' '}
-            <SupportLink
-              title="Help me activate my account"
-              text="open a Support ticket for help."
-            />
-          </React.Fragment>
-        }
-      />
-    );
+  /**
+   * this is the case where the user has successfully completed signup
+   * but needs a manual review from Customer Support. In this case,
+   * the user is going to get 403 errors from almost every single endpoint.
+   *
+   * So in this case, we'll show something more user-friendly
+   */
+  if (
+    props.globalErrors.account_unactivated &&
+    !props.location.pathname.match(/support/i)
+  ) {
+    return <AccountActivationLanding />;
   }
 
+  /**
+   * otherwise just show the rest of the app.
+   */
   return (
     <Grid container spacing={0} className={classes.grid}>
       <Grid item className={classes.switchWrapper}>
@@ -232,6 +232,6 @@ const getObjectStorageRoute = (
 };
 
 export default compose<CombinedProps, Props>(
-  // React.memo,
+  React.memo,
   withGlobalErrors()
 )(MainContent);
