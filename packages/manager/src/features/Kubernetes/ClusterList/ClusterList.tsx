@@ -1,3 +1,4 @@
+import { KubernetesCluster } from 'linode-js-sdk/lib/kubernetes';
 import { path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -44,7 +45,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  clusters: Linode.KubernetesCluster[];
+  clusters: KubernetesCluster[];
   deleteCluster: (data: DeleteClusterParams) => Promise<void>;
   error: EntityError;
   clearErrors: () => void;

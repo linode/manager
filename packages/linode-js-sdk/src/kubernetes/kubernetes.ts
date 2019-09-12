@@ -5,20 +5,15 @@ import Request, {
   setParams,
   setURL,
   setXFilter
-} from '../index';
-
+} from 'src/request';
+import { ResourcePage as Page } from '../types';
 import { createKubeClusterSchema } from './kubernetes.schema';
-
-// Payload types
-export interface CreateKubeClusterPayload {
-  label?: string; // Label will be assigned by the API if not provided
-  region?: string; // Will be caught by Yup if undefined
-  node_pools: Linode.PoolNodeRequest[];
-  version?: string; // Will be caught by Yup if undefined
-  tags: string[];
-}
-
-type Page<T> = Linode.ResourcePage<T>;
+import {
+  CreateKubeClusterPayload,
+  KubeConfigResponse,
+  KubernetesCluster,
+  KubernetesVersion
+} from './types';
 
 /**
  * getKubernetesClusters
@@ -26,7 +21,7 @@ type Page<T> = Linode.ResourcePage<T>;
  * Gets a list of a user's Kubernetes clusters
  */
 export const getKubernetesClusters = (params?: any, filters?: any) =>
-  Request<Page<Linode.KubernetesCluster>>(
+  Request<Page<KubernetesCluster>>(
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
@@ -39,7 +34,7 @@ export const getKubernetesClusters = (params?: any, filters?: any) =>
  * Return details about a single Kubernetes cluster
  */
 export const getKubernetesCluster = (clusterID: string) =>
-  Request<Linode.KubernetesCluster>(
+  Request<KubernetesCluster>(
     setMethod('GET'),
     setURL(`${BETA_API_ROOT}/lke/clusters/${clusterID}`)
   ).then(response => response.data);
@@ -50,7 +45,7 @@ export const getKubernetesCluster = (clusterID: string) =>
  * Create a new Cluster.
  */
 export const createKubernetesCluster = (data: CreateKubeClusterPayload) =>
-  Request<Linode.KubernetesCluster>(
+  Request<KubernetesCluster>(
     setMethod('POST'),
     setURL(`${BETA_API_ROOT}/lke/clusters`),
     setData(data, createKubeClusterSchema)
@@ -63,9 +58,9 @@ export const createKubernetesCluster = (data: CreateKubeClusterPayload) =>
  */
 export const updateKubernetesCluster = (
   clusterID: number,
-  data: Partial<Linode.KubernetesCluster>
+  data: Partial<KubernetesCluster>
 ) =>
-  Request<Linode.KubernetesCluster>(
+  Request<KubernetesCluster>(
     setMethod('PUT'),
     setURL(`${BETA_API_ROOT}/lke/clusters/${clusterID}`),
     setData(data)
@@ -90,7 +85,7 @@ export const deleteKubernetesCluster = (clusterID: number) =>
  */
 
 export const getKubeConfig = (clusterId: number) =>
-  Request<Linode.KubeConfigResponse>(
+  Request<KubeConfigResponse>(
     setMethod('GET'),
     setURL(`${BETA_API_ROOT}/lke/clusters/${clusterId}/kubeconfig`)
   ).then(response => response.data);
@@ -102,7 +97,7 @@ export const getKubeConfig = (clusterId: number) =>
  */
 
 export const getKubernetesVersions = () =>
-  Request<Page<Linode.KubernetesVersion>>(
+  Request<Page<KubernetesVersion>>(
     setMethod('GET'),
     setURL(`${BETA_API_ROOT}/lke/versions`)
   ).then(response => response.data);
@@ -114,7 +109,7 @@ export const getKubernetesVersions = () =>
  */
 
 export const getKubernetesVersion = (versionID: string) =>
-  Request<Linode.KubernetesVersion>(
+  Request<KubernetesVersion>(
     setMethod('GET'),
     setURL(`${BETA_API_ROOT}/lke/versions/${versionID}`)
   ).then(response => response.data);

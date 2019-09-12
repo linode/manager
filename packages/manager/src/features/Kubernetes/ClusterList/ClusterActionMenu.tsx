@@ -1,3 +1,4 @@
+import { getKubeConfig } from 'linode-js-sdk/lib/kubernetes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -5,7 +6,6 @@ import { compose } from 'recompose';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 import { reportException } from 'src/exceptionReporting';
-import { getKubeConfig } from 'src/services/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 

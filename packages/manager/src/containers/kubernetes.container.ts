@@ -1,3 +1,4 @@
+import { KubernetesCluster } from 'linode-js-sdk/lib/kubernetes';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -29,7 +30,7 @@ import {
 import { EntityError } from 'src/store/types';
 
 export interface KubernetesProps {
-  clusters: Linode.KubernetesCluster[];
+  clusters: KubernetesCluster[];
   clustersLoading: boolean;
   clustersError: EntityError;
   lastUpdated?: number;
@@ -40,9 +41,7 @@ export interface DispatchProps {
   requestKubernetesClusters: () => Promise<any>;
   requestClusterForStore: (clusterID: number) => void;
   requestNodePools: (clusterID: number) => Promise<any>;
-  updateCluster: (
-    params: UpdateClusterParams
-  ) => Promise<Linode.KubernetesCluster>;
+  updateCluster: (params: UpdateClusterParams) => Promise<KubernetesCluster>;
   createNodePool: (params: CreateNodePoolParams) => Promise<any>;
   updateNodePool: (params: UpdateNodePoolParams) => Promise<any>;
   deleteNodePool: (params: DeleteNodePoolParams) => Promise<any>;
@@ -78,7 +77,7 @@ export default <TInner extends {}, TOuter extends {}>(
     clustersLoading: boolean,
     lastUpdated: number,
     clustersError: EntityError,
-    clusters: Linode.KubernetesCluster[],
+    clusters: KubernetesCluster[],
     nodePoolsLoading: boolean
   ) => TInner
 ) =>

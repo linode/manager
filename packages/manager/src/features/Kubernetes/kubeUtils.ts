@@ -1,4 +1,5 @@
-import { LinodeType } from 'linode-js-sdk/lib/linodes'
+import { KubernetesCluster } from 'linode-js-sdk/lib/kubernetes';
+import { LinodeType } from 'linode-js-sdk/lib/linodes';
 import { ExtendedCluster, ExtendedPoolNode, PoolNodeWithPrice } from './types';
 
 export const getMonthlyPrice = (
@@ -26,7 +27,7 @@ export const getTotalClusterPrice = (pools: PoolNodeWithPrice[]) =>
  * returned from the API and must be computed.
  */
 export const extendCluster = (
-  cluster: Linode.KubernetesCluster,
+  cluster: KubernetesCluster,
   pools: ExtendedPoolNode[],
   types: LinodeType[]
 ): ExtendedCluster => {
