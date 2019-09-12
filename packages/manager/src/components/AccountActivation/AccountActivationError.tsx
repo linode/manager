@@ -22,7 +22,10 @@ const AccountActivationError: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      {getAPIErrorOrDefault(props.errors, 'Your account is not yet activated.')}
+      {getAPIErrorOrDefault(
+        props.errors,
+        'Your account is not yet activated. Please reach out to support@linode.com for more information'
+      )}
     </React.Fragment>
   );
 };

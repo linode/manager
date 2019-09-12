@@ -102,7 +102,6 @@ const Account = DefaultLoader({
 
 const LinodesRoutes = DefaultLoader({
   loader: () => import('src/features/linodes')
-  // loading: () => <div>loading...</div>
 });
 
 const Volumes = DefaultLoader({
