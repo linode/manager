@@ -1,4 +1,5 @@
 const { constants } = require('../constants');
+const { assertLog } = require('../utils/assertionLog');
 
 export default class Page {
   get dialogTitle() { return $('[data-qa-dialog-title]'); }
@@ -170,7 +171,6 @@ export default class Page {
 
   openActionMenu(actionMenuRow) {
     $(`${actionMenuRow.selector} ${this.actionMenu.selector}`).waitForDisplayed(constants.wait.normal);
-    // actionMenuRow.$(this.actionMenu.selector).waitForDisplayed(constants.wait.normal);
     try {
     actionMenuRow.$(this.actionMenu.selector).click();
     browser.waitUntil(() => {
@@ -243,7 +243,7 @@ export default class Page {
     this.selectOptions[0].click();
     this.multiOption.waitForDisplayed(constants.wait.normal);
     expect(this.multiOption.getText())
-    .withContext(``)
+    .withContext(`${assertLog.incorrectText} for "${this.multiOption.selector}" selector`)
     .toBe(tagName);
   }
 
@@ -266,7 +266,7 @@ export default class Page {
     const appliedTags = this.tags.map(tag => tag.getText());
     expectedTags.forEach((tag) => {
       expect(appliedTags.includes(tag))
-      .withContext(``)
+      .withContext(`missing tag`)
       .toBe(true);
     });
   }
