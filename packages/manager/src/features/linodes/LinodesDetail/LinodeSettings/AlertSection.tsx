@@ -40,7 +40,6 @@ const styles = (theme: Theme) =>
         ...theme.typography.h3,
         [theme.breakpoints.up('md')]: {
           top: theme.spacing(3) + 8,
-          // margin: `24px ${theme.spacing(3) + 8}px 0`,
           left: `calc(58px + ${theme.spacing(4)}px)`
         }
       }
