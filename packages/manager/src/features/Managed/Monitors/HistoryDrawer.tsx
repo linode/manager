@@ -5,6 +5,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import Drawer from 'src/components/Drawer';
 import ErrorState from 'src/components/ErrorState';
 import { ExtendedIssue } from 'src/store/managed/issues.actions';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import IssueCalendar from './IssueCalendar';
 
 interface Props {
@@ -44,7 +45,14 @@ const renderDrawerContent = (
   }
 
   if (error) {
-    return <ErrorState errorText={error[0].reason} />;
+    return (
+      <ErrorState
+        errorText={
+          getAPIErrorOrDefault(error, 'Error loading your issue history')[0]
+            .reason
+        }
+      />
+    );
   }
   return <IssueCalendar issues={issues} />;
 };
