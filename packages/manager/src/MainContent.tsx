@@ -217,8 +217,8 @@ const MainContent: React.FC<CombinedProps> = props => {
         <div style={{ padding: '5em' }}>
           <Box
             style={{
-              display: 'flex',
-              justifyContent: 'flex-end'
+              display: 'flex'
+              // justifyContent: 'flex-end'
             }}
           >
             <Logo width={150} height={87} className={classes.logo} />
