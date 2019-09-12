@@ -25,13 +25,15 @@ export interface State {
   results: number;
   lastUpdated: number;
   loading: boolean;
+  listOfIDsInOriginalOrder: string[];
 }
 
 export const defaultState: State = {
   loading: true,
   lastUpdated: 0,
   results: 0,
-  data: {}
+  data: {},
+  listOfIDsInOriginalOrder: []
 };
 
 /**
@@ -52,6 +54,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       ...state,
       loading: false,
       lastUpdated: Date.now(),
+      listOfIDsInOriginalOrder: payload.data.map(eachImage => eachImage.id),
       data: payload.data.reduce((acc, eachImage) => {
         acc[eachImage.id] = eachImage;
         return acc;
@@ -87,6 +90,9 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return {
       ...state,
       data: dataClone,
+      listOfIDsInOriginalOrder: state.listOfIDsInOriginalOrder.filter(
+        eachID => eachID !== id
+      ),
       results: Object.keys(dataClone).length,
       lastUpdated: Date.now()
     };
@@ -101,6 +107,13 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return {
       ...state,
       data: dataClone,
+      /**
+       * in the case of updating and adding, we're just going to add the new ID to the
+       * end of the list. Set() will make sure to get rid of the dupes in the list
+       */
+      listOfIDsInOriginalOrder: [
+        ...new Set([...state.listOfIDsInOriginalOrder, payload.id])
+      ],
       results: Object.keys(dataClone).length,
       lastUpdated: Date.now()
     };
