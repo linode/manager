@@ -8,17 +8,17 @@ class Create extends Page {
     get selectionCards () { return $$('[SelectionCard-heading-321]'); }
 
     linode() {
-        browser.waitForVisible('[data-qa-add-new-menu="Linode"]');
+      $('[data-qa-add-new-menu="Linode"]').waitForDisplayed();
         this.linodeMenuItem.click();
     }
 
     volume() {
-        browser.waitForVisible('[data-qa-add-new-menu="Volume"]');
+        browser$('[data-qa-add-new-menu="Volume"]').waitForDisplayed();
         this.volumeMenuItem.click();
     }
 
     nodebalancer() {
-        browser.waitForVisible('[data-qa-add-new-menu="NodeBalancer"]');
+        $('[data-qa-add-new-menu="NodeBalancer"]').waitForDisplayed();
         this.nodeBalancerMenuItem.click();
     }
 }
