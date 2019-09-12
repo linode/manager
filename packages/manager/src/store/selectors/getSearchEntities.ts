@@ -33,7 +33,7 @@ export const getNodebalIps = (nodebal: NodeBalancer): string[] => {
 const formatLinode = (
   linode: Linode,
   types: LinodeType[],
-  images: Image[]
+  images: Record<string, Image>
 ): SearchableItem => ({
   label: linode.label,
   value: linode.id,
@@ -124,7 +124,7 @@ const linodeSelector = (state: State) => state.linodes.entities;
 const volumeSelector = ({ volumes }: State) => Object.values(volumes.itemsById);
 const nodebalSelector = ({ nodeBalancers }: State) =>
   Object.values(nodeBalancers.itemsById);
-const imageSelector = (state: State) => state.images.entities;
+const imageSelector = (state: State) => state.images.data || {};
 const domainSelector = (state: State) => state.domains.data || [];
 const typesSelector = (state: State) => state.types.entities;
 
@@ -132,7 +132,7 @@ export default createSelector<
   State,
   Linode[],
   Volume[],
-  Image[],
+  { [key: string]: Image },
   Domain[],
   NodeBalancer[],
   LinodeType[],
@@ -145,11 +145,12 @@ export default createSelector<
   nodebalSelector,
   typesSelector,
   (linodes, volumes, images, domains, nodebalancers, types) => {
+    const arrOfImages = Object.keys(images).map(eachKey => images[eachKey]);
     const searchableLinodes = linodes.map(linode =>
       formatLinode(linode, types, images)
     );
     const searchableVolumes = volumes.map(volumeToSearchableItem);
-    const searchableImages = images.reduce(imageReducer, []);
+    const searchableImages = arrOfImages.reduce(imageReducer, []);
     const searchableDomains = domains.map(domainToSearchableItem);
     const searchableNodebalancers = nodebalancers.map(nodeBalToSearchableItem);
 

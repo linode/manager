@@ -39,6 +39,8 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ImageRow from './ImageRow';
 import ImagesDrawer from './ImagesDrawer';
 
+import { filterImagesByType } from 'src/store/image/image.helpers';
+
 type ClassNames = 'root' | 'title';
 
 const styles = (theme: Theme) =>
@@ -295,7 +297,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     }
 
     /** Empty State */
-    if (!imagesData || imagesData.length === 0) {
+    if (!imagesData || Object.keys(imagesData).length === 0) {
       return this.renderEmpty();
     }
 
@@ -324,7 +326,11 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
             </Grid>
           </Grid>
         </Grid>
-        <OrderBy data={imagesData} orderBy={'label'} order={'asc'}>
+        <OrderBy
+          data={Object.keys(imagesData).map(eachKey => imagesData[eachKey])}
+          orderBy={'label'}
+          order={'asc'}
+        >
           {({ data: orderedData, handleOrderChange, order, orderBy }) => (
             <Paginate data={orderedData}>
               {({
@@ -470,19 +476,20 @@ const EmptyCopy = () => (
 );
 
 interface WithPrivateImages {
-  imagesData: Image[];
+  imagesData: Record<string, Image>;
   imagesLoading: boolean;
   imagesError?: Linode.ApiFieldError[];
 }
 
 const withPrivateImages = connect(
-  (state: ApplicationState): WithPrivateImages => ({
-    imagesData: state.__resources.images.entities.filter(
-      i => i.is_public === false
-    ),
-    imagesLoading: state.__resources.images.loading,
-    imagesError: state.__resources.images.error
-  })
+  (state: ApplicationState): WithPrivateImages => {
+    const { error, data } = state.__resources.images;
+    return {
+      imagesData: filterImagesByType(data, 'private'),
+      imagesLoading: state.__resources.images.loading,
+      imagesError: error ? error.read : undefined
+    };
+  }
 );
 
 const styled = withStyles(styles);

@@ -311,7 +311,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
        * safe to ignore possibility of "undefined"
        * null checking happens in CALinodeCreate
        */
-      const selectedImage = imagesData!.find(img => img.id === selectedImageID);
+      const selectedImage = imagesData![selectedImageID];
       /**
        * Use 'vendor' if it's a public image, otherwise use label (because 'vendor' will be null)
        *
@@ -528,9 +528,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      * safe to ignore possibility of "undefined"
      * null checking happens in CALinodeCreate
      */
-    const selectedImage = this.props.imagesData!.find(
-      image => image.id === selectedImageID
-    );
+    const selectedImage = this.props.imagesData![selectedImageID];
 
     return (
       selectedImage && {

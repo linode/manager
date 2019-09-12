@@ -92,7 +92,7 @@ interface Props extends RenderGuardProps {
     images: string[],
     userDefinedFields: Linode.StackScript.UserDefinedField[]
   ) => void;
-  publicImages: Image[];
+  publicImages: Record<string, Image>;
   resetSelectedStackScript: () => void;
   disabled?: boolean;
   request: (

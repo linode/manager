@@ -8,7 +8,7 @@ export const linodeDescription = (
   disk: number,
   vcpus: number,
   imageId: string | null,
-  images: Image[]
+  images: Record<string, Image>
 ) => {
   const imageDesc = safeGetImageLabel(images, imageId);
   const typeDesc = typeLabelLong(typeLabel, memory, disk, vcpus);

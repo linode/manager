@@ -60,7 +60,7 @@ const CardView: React.StatelessComponent<CombinedProps> = props => {
 };
 
 interface WithImagesProps {
-  imagesData: Image[];
+  imagesData: Record<string, Image>;
 }
 
 export default withImages((ownProps, imagesData) => ({

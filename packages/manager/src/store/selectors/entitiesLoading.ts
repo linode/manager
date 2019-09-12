@@ -1,11 +1,12 @@
 import { Domain } from 'linode-js-sdk/lib/domains';
-import { Image } from 'linode-js-sdk/lib/images';
 import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes'
 import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';
 import { EntityError, RequestableDataWithEntityError } from 'src/store/types';
+
+import { State as ImageState } from 'src/store/image/image.reducer';
 
 type State = ApplicationState['__resources'];
 
@@ -32,7 +33,7 @@ export const imagesSelector = (state: State) => state.images;
 export const typesSelector = (state: State) => state.types;
 
 const isInitialLoad = (
-  e: Resource<any, any> | RequestableDataWithEntityError<any>
+  e: Resource<any, any> | RequestableDataWithEntityError<any> | ImageState
 ) => e.loading && e.lastUpdated === 0;
 
 export default createSelector<
@@ -41,7 +42,7 @@ export default createSelector<
   Resource<Volume[]>,
   Resource<NodeBalancer[][]>,
   RequestableDataWithEntityError<Domain[]>,
-  Resource<Image[]>,
+  ImageState,
   Resource<LinodeType[]>,
   boolean
 >(

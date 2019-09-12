@@ -42,7 +42,7 @@ const styles = (theme: Theme) =>
 export interface Props {
   data: Linode.StackScript.Response[];
   isSorting: boolean;
-  publicImages: Image[];
+  publicImages: Record<string, Image>;
   triggerDelete: (id: number, label: string) => void;
   triggerMakePublic: (id: number, label: string) => void;
   currentUser: string;

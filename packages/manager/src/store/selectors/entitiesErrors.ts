@@ -22,7 +22,7 @@ export const nodeBalsErrorSelector = (state: State) => false; //  Boolean(state.
 export const domainsErrorSelector = (state: State) =>
   Object.keys(state.domains.error).length > 0;
 export const imagesErrorSelector = (state: State) =>
-  Boolean(state.images.error && state.images.error.length > 0);
+  Boolean(state.images.error && Object.keys(state.images.error).length > 0);
 export const typesErrorSelector = (state: State) =>
   Boolean(state.types.error && state.types.error.length > 0);
 

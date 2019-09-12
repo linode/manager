@@ -6,7 +6,7 @@ import { StackScriptUpdate } from './StackScriptUpdate';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { stackScripts } from 'src/__data__/stackScripts';
 
-import { images } from 'src/__data__/images';
+import { normalizedImages as images } from 'src/__data__/images';
 
 describe('StackScriptUpdate', () => {
   const component = shallow(

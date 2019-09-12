@@ -9,14 +9,12 @@ import { ExtendedLinode } from './types';
  */
 export const extendLinodes = (
   linodes: Linode[],
-  imagesData: Image[] = [],
+  imagesData: Record<string, Image> = {},
   typesData: ExtendedType[] = []
 ): ExtendedLinode[] => {
   return linodes.map(linode => {
     /** get image data based on the Linode's image key */
-    const linodeImageMetaData = imagesData.find(
-      eachImage => eachImage.id === linode.image
-    );
+    const linodeImageMetaData = imagesData[linode.image || ''];
 
     return {
       ...linode,

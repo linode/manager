@@ -33,6 +33,8 @@ import { MapState } from 'src/store/types';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
+import { filterImagesByType } from 'src/store/image/image.helpers';
+
 type ClassNames = 'backButton' | 'createTitle';
 
 const styles = (theme: Theme) =>
@@ -236,7 +238,8 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
       username,
       userCannotCreateStackScripts,
       classes,
-      location
+      location,
+      imagesData
     } = this.props;
     const {
       selectedImages,
@@ -250,9 +253,12 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     const hasErrorFor = getAPIErrorsFor(errorResources, errors);
     const generalError = hasErrorFor('none');
 
-    const availableImages = this.props.imagesData.filter(
-      image => !this.state.selectedImages.includes(image.id)
-    );
+    const availableImages = Object.keys(imagesData).reduce((acc, eachKey) => {
+      if (!this.state.selectedImages.includes(eachKey)) {
+        acc[eachKey] = imagesData[eachKey];
+      }
+      return acc;
+    }, {});
 
     if (!username) {
       return (
@@ -333,7 +339,7 @@ const connected = connect(mapStateToProps);
 const styled = withStyles(styles);
 
 interface WithImagesProps {
-  imagesData: Image[];
+  imagesData: Record<string, Image>;
   imagesLoading: boolean;
   imagesError?: Linode.ApiFieldError[];
 }
@@ -342,7 +348,7 @@ const enhanced = compose<CombinedProps, {}>(
   setDocs(StackScriptCreate.docs),
   withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
     ...ownProps,
-    imagesData: imagesData.filter(i => i.is_public === true),
+    imagesData: filterImagesByType(imagesData, 'public'),
     imagesLoading,
     imagesError
   })),
