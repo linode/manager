@@ -57,7 +57,6 @@ export const SupportWidget: React.FC<CombinedProps> = props => {
         text="Open Support Ticket"
         title="Open Support Ticket"
         onClick={() => setOpen(true)}
-        activeClass={classes.root}
       />
       <SupportTicketDrawer
         open={open}

@@ -70,6 +70,7 @@ export const monitorRow: React.FunctionComponent<CombinedProps> = props => {
     openMonitorDrawer
   } = props;
   const Icon = statusIconMap[monitor.status];
+  // For now, only include a ticket icon in this view if the ticket is still open (per Jay).
   const openIssues = issues.filter(thisIssue => !thisIssue.dateClosed);
 
   return (

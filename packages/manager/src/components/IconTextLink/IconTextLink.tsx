@@ -67,7 +67,6 @@ export interface Props {
   text: string;
   onClick: () => void;
   active?: Boolean;
-  activeClass?: string;
   disabled?: Boolean;
   title: string;
   left?: boolean;
