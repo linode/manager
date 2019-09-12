@@ -9,16 +9,14 @@ import ObjectTableRow from './ObjectTableRow';
 
 interface Props {
   clusterId: Linode.ClusterID;
-  bucketName: string;
   data: ExtendedObject[];
   loading: boolean;
   error?: APIError[];
   nextPageError?: APIError[];
-  prefix: string;
 }
 
 const ObjectTableContent: React.FC<Props> = props => {
-  const { clusterId, bucketName, data, loading, error, nextPageError } = props;
+  const { clusterId, data, loading, error, nextPageError } = props;
 
   if (loading && data.length === 0) {
     return <TableRowLoading colSpan={6} />;
@@ -73,7 +71,6 @@ const ObjectTableContent: React.FC<Props> = props => {
           <ObjectTableRow
             key={object.name}
             clusterId={clusterId}
-            bucketName={bucketName}
             objectName={object._displayName}
             /**
              * In reality, if there's no `size` or `last_modified`, we're

@@ -15,6 +15,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
+import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { getObjectList } from 'src/services/objectStorage/buckets';
 import { getQueryParam } from 'src/utilities/queryParams';
 import { ExtendedObject, extendObject } from '../utilities';
@@ -37,10 +38,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type CombinedProps = RouteComponentProps<{
+interface MatchProps {
   clusterId: Linode.ClusterID;
   bucketName: string;
-}>;
+}
+
+type CombinedProps = RouteComponentProps<MatchProps>;
 
 const BucketDetail: React.FC<CombinedProps> = props => {
   const { clusterId, bucketName } = props.match.params;
@@ -102,7 +105,7 @@ const BucketDetail: React.FC<CombinedProps> = props => {
         setLoading(false);
         setGeneralError(err);
       });
-  }, [props.location.search]);
+  }, [prefix, clusterId, bucketName]);
 
   /**
    * Request additional objects when the next page is requested.
@@ -180,12 +183,10 @@ const BucketDetail: React.FC<CombinedProps> = props => {
           <TableBody>
             <ObjectTableContent
               clusterId={clusterId}
-              bucketName={bucketName}
               data={data}
               loading={loading}
               error={generalError}
               nextPageError={nextPageError}
-              prefix={prefix}
             />
           </TableBody>
         </Table>
@@ -207,4 +208,10 @@ const BucketDetail: React.FC<CombinedProps> = props => {
   );
 };
 
-export default BucketDetail;
+const reloaded = reloadableWithRouter<CombinedProps, MatchProps>(
+  (routePropsOld, routePropsNew) => {
+    return routePropsOld.location.search !== routePropsNew.location.search;
+  }
+);
+
+export default reloaded(BucketDetail);
