@@ -1,3 +1,4 @@
+import { TrustedDevice } from 'linode-js-sdk/lib/profile';
 import * as React from 'react';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell';
@@ -9,7 +10,7 @@ import TableRowLoading from 'src/components/TableRowLoading';
 interface Props {
   loading: boolean;
   error?: Linode.ApiFieldError[];
-  data?: Linode.Device[];
+  data?: TrustedDevice[];
   setDevice: (deviceId: number) => void;
   toggleDialog: () => void;
 }

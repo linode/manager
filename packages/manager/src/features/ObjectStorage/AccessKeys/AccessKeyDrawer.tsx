@@ -1,4 +1,8 @@
 import { Formik } from 'formik';
+import {
+  createObjectStorageKeysSchema,
+  ObjectStorageKeyRequest
+} from 'linode-js-sdk/lib/profile';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -6,8 +10,6 @@ import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import { ObjectStorageKeyRequest } from 'src/services/profile/objectStorageKeys';
-import { createObjectStorageKeysSchema } from 'src/services/profile/objectStorageKeys.schema';
 import { MODES } from './AccessKeyLanding';
 
 export interface Props {
