@@ -1,5 +1,5 @@
 import SettingsBackupRestore from '@material-ui/icons/SettingsBackupRestore';
-import { Profile } from 'linode-js-sdk/lib/profile';
+import { getTFAToken, Profile } from 'linode-js-sdk/lib/profile';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -18,7 +18,6 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
 import ToggleState from 'src/components/ToggleState';
-import { getTFAToken } from 'src/services/profile';
 import { requestProfile } from 'src/store/profile/profile.requests';
 import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';

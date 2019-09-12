@@ -1,16 +1,14 @@
 import { API_ROOT } from 'src/constants';
-
-import Request, { setData, setMethod, setParams, setURL, setXFilter } from '..';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter
+} from '../request';
+import { ResourcePage as Page } from '../types';
 import { createPersonalAccessTokenSchema } from './profile.schema';
-
-type Page<T> = Linode.ResourcePage<T>;
-type Token = Linode.Token;
-
-export interface TokenRequest {
-  scopes?: string;
-  expiry?: string;
-  label: string;
-}
+import { Token, TokenRequest } from './types';
 
 /**
  * getPersonalAccessTokens

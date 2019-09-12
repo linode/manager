@@ -43,11 +43,4 @@ namespace Linode {
     page?: number;
     page_size?: number;
   }
-  
-  export interface SSHKey {
-    created: string;
-    id: number;
-    label: string;
-    ssh_key: string;
-  }
 }

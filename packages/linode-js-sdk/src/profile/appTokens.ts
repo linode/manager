@@ -1,9 +1,7 @@
 import { API_ROOT } from 'src/constants';
-
-import Request, { setMethod, setParams, setURL, setXFilter } from '../index';
-
-type Page<T> = Linode.ResourcePage<T>;
-type Token = Linode.Token;
+import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
+import { ResourcePage as Page } from '../types';
+import { Token } from './types';
 
 /**
  * getAppTokens

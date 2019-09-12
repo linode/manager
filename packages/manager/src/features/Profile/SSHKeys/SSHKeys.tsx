@@ -1,3 +1,4 @@
+import { getSSHKeys, SSHKey } from 'linode-js-sdk/lib/profile';
 import * as moment from 'moment-timezone';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -18,16 +19,8 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 import DeleteSSHKeyDialog from 'src/features/Profile/SSHKeys/DeleteSSHKeyDialog';
 import SSHKeyActionMenu from 'src/features/Profile/SSHKeys/SSHKeyActionMenu';
-import { getSSHKeys } from 'src/services/profile';
 import fingerprint from 'src/utilities/ssh-fingerprint';
 import SSHKeyCreationDrawer from './SSHKeyCreationDrawer';
-
-interface SSHKey {
-  id: number;
-  label: string;
-  ssh_key: string;
-  created: string;
-}
 
 interface Props extends PaginationProps<ExtendedSSHKey> {}
 
@@ -216,7 +209,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
   };
 }
 
-const updateResponseData = (keys: Linode.SSHKey[]) =>
+const updateResponseData = (keys: SSHKey[]) =>
   keys.map(key => ({
     ...key,
     fingerprint: fingerprint(key.ssh_key),
