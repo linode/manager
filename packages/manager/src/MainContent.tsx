@@ -4,7 +4,13 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { compose } from 'recompose';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import Box from 'src/components/core/Box';
+import {
+  makeStyles,
+  Theme,
+  withTheme,
+  WithTheme
+} from 'src/components/core/styles';
 
 import BackupDrawer from 'src/features/Backups';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
@@ -15,7 +21,6 @@ import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import WelcomeBanner from 'src/WelcomeBanner';
 import BucketDrawer from './features/ObjectStorage/BucketLanding/BucketDrawer';
 
-import AccountActivationLanding from 'src/components/AccountActivation/AccountActivationLanding';
 import DefaultLoader from 'src/components/DefaultLoader';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
@@ -26,6 +31,8 @@ import SideMenu from 'src/components/SideMenu';
 import withGlobalErrors, {
   Props as GlobalErrorProps
 } from 'src/containers/globalErrors.container';
+
+import Logo from 'src/assets/logo/logo-text.svg';
 
 import { notifications } from 'src/utilities/storage';
 import {
@@ -78,6 +85,11 @@ const useStyles = makeStyles((theme: Theme) => ({
         maxWidth: '78.8%'
       }
     }
+  },
+  logo: {
+    '& > g': {
+      fill: '#000'
+    }
   }
 }));
 
@@ -94,7 +106,7 @@ interface Props {
   isLoggedInAsCustomer: boolean;
 }
 
-type CombinedProps = Props & GlobalErrorProps;
+type CombinedProps = Props & GlobalErrorProps & WithTheme;
 
 const Account = DefaultLoader({
   loader: () => import('src/features/Account')
@@ -172,6 +184,11 @@ const EventsLanding = DefaultLoader({
   loader: () => import('src/features/Events/EventsLanding')
 });
 
+const AccountActivationLanding = DefaultLoader({
+  loader: () =>
+    import('src/components/AccountActivation/AccountActivationLanding')
+});
+
 const MainContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
@@ -191,23 +208,38 @@ const MainContent: React.FC<CombinedProps> = props => {
    */
   if (props.globalErrors.account_unactivated) {
     return (
-      <div style={{ margin: '5em' }}>
-        <Switch>
-          <Route
-            exact
-            strict
-            path="/support/tickets"
-            component={SupportTickets}
-          />
-          <Route
-            path="/support/tickets/:ticketId"
-            component={SupportTicketDetail}
-            exact
-            strict
-          />
-          <Route exact path="/support" component={Help} />
-          <Route component={AccountActivationLanding} />
-        </Switch>
+      <div
+        style={{
+          backgroundColor: props.theme.bg.main,
+          minHeight: '100vh'
+        }}
+      >
+        <div style={{ padding: '5em' }}>
+          <Box
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end'
+            }}
+          >
+            <Logo width={150} height={87} className={classes.logo} />
+          </Box>
+          <Switch>
+            <Route
+              exact
+              strict
+              path="/support/tickets"
+              component={SupportTickets}
+            />
+            <Route
+              path="/support/tickets/:ticketId"
+              component={SupportTicketDetail}
+              exact
+              strict
+            />
+            <Route exact path="/support" component={Help} />
+            <Route component={AccountActivationLanding} />
+          </Switch>
+        </div>
       </div>
     );
   }
@@ -339,5 +371,6 @@ const getObjectStorageRoute = (
 
 export default compose<CombinedProps, Props>(
   React.memo,
-  withGlobalErrors()
+  withGlobalErrors(),
+  withTheme
 )(MainContent);
