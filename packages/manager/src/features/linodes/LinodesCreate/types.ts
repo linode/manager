@@ -38,7 +38,7 @@ export interface WithDisplayData {
  * the null, loading and error checking
  */
 export interface WithImagesProps {
-  imagesData?: Image[];
+  imagesData?: Record<string, Image>;
   imagesLoading: boolean;
   imagesError?: string;
 }
@@ -69,7 +69,7 @@ export interface WithTypesProps {
 export interface WithTypesRegionsAndImages {
   regionsData: ExtendedRegion[];
   typesData: ExtendedType[];
-  imagesData: Image[];
+  imagesData: Record<string, Image>;
 }
 
 export interface WithLinodesTypesRegionsAndImages

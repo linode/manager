@@ -147,7 +147,7 @@ interface LinodeContextProps {
 }
 
 interface WithImagesProps {
-  imagesData: Image[];
+  imagesData: Record<string, Image>;
 }
 
 interface State {

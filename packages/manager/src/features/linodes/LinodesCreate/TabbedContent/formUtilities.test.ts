@@ -1,23 +1,6 @@
-import { images, privateImages } from 'src/__data__/images';
-import { filterPublicImages, filterUDFErrors } from './formUtilities';
+import { filterUDFErrors } from './formUtilities';
 
 describe('Linode Create Utilities', () => {
-  it('should filter out private Images', () => {
-    const filteredImages = filterPublicImages([...images, ...privateImages]);
-    expect(
-      filteredImages.every(eachImage => !!eachImage.is_public)
-    ).toBeTruthy();
-  });
-
-  it('should return a list of public images unchanged', () => {
-    expect(filterPublicImages(images)).toEqual(images);
-  });
-
-  it('should handle abnormal inputs', () => {
-    expect(filterPublicImages([])).toEqual([]);
-    expect(filterPublicImages(privateImages)).toEqual([]);
-  });
-
   it('should filter out all errors except UDF errors', () => {
     const mockErrors: Linode.ApiFieldError[] = [
       {

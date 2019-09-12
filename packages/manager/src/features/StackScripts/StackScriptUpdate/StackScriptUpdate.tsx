@@ -34,6 +34,8 @@ import { MapState } from 'src/store/types';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
+import { filterImagesByType } from 'src/store/image/image.helpers';
+
 type ClassNames = 'backButton' | 'createTitle';
 
 const styles = (theme: Theme) =>
@@ -60,7 +62,7 @@ interface State {
   labelText: string;
   descriptionText: string;
   selectedImages: string[];
-  availableImages: Image[];
+  availableImages: Record<string, Image>;
   script: string;
   revisionNote: string;
   isSubmitting: boolean;
@@ -422,7 +424,7 @@ const reloaded = reloadableWithRouter<
 });
 
 interface WithImagesProps {
-  imagesData: Image[];
+  imagesData: Record<string, Image>;
   imagesLoading: boolean;
   imagesError?: Linode.ApiFieldError[];
 }
@@ -430,7 +432,7 @@ const enhanced = compose<CombinedProps, {}>(
   setDocs(StackScriptUpdate.docs),
   withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
     ...ownProps,
-    imagesData: imagesData.filter(i => i.is_public === true),
+    imagesData: filterImagesByType(imagesData, 'public'),
     imagesLoading,
     imagesError
   })),

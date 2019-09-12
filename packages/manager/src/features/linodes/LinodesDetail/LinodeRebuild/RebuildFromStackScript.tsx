@@ -38,10 +38,11 @@ import {
   handleFieldErrors,
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
-import { filterPublicImages } from 'src/utilities/images';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import { RebuildDialog } from './RebuildDialog';
+
+import { filterImagesByType } from 'src/store/image/image.helpers';
 
 type ClassNames = 'root' | 'error' | 'emptyImagePanel' | 'emptyImagePanelText';
 
@@ -70,7 +71,7 @@ interface ContextProps {
   linodeId: number;
 }
 interface WithImagesProps {
-  imagesData: Image[];
+  imagesData: Record<string, Image>;
   imagesLoading: boolean;
   imagesError?: string;
 }
@@ -114,7 +115,9 @@ export const RebuildFromStackScript: React.StatelessComponent<
     handleSelectStackScript,
     handleChangeUDF,
     resetStackScript
-  ] = useStackScript(imagesData);
+  ] = useStackScript(
+    Object.keys(imagesData).map(eachKey => imagesData[eachKey])
+  );
 
   // In this component, most errors are handled by Formik. This is not
   // possible with UDFs, since they are dynamic. Their errors need to
@@ -264,7 +267,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
               selectedUsername={ss.username}
               updateFor={[classes, ss.id, errors]}
               onSelect={handleSelect}
-              publicImages={filterPublicImages(imagesData)}
+              publicImages={filterImagesByType(imagesData, 'public')}
               resetSelectedStackScript={resetStackScript}
               data-qa-select-stackscript
               category={props.type}

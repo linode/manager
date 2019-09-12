@@ -7,7 +7,7 @@ describe('StackScript', () => {
   it('should render script code', () => {
     const component = shallow(
       <StackScript
-        imagesData={[]}
+        imagesData={{}}
         imagesLoading={false}
         data={{
           id: 1,

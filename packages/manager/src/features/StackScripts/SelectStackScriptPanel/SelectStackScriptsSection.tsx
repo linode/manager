@@ -31,7 +31,7 @@ export interface Props {
   selectedId?: number;
   data: Linode.StackScript.Response[];
   isSorting: boolean;
-  publicImages: Image[];
+  publicImages: Record<string, Image>;
   currentUser: string;
   disabled?: boolean;
 }

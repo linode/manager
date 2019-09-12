@@ -1,4 +1,5 @@
 import { Grant } from 'linode-js-sdk/lib/account';
+import { Image } from 'linode-js-sdk/lib/images';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -68,7 +69,13 @@ interface StoreProps {
   userCannotCreateStackScripts: boolean;
 }
 
-type CombinedProps = StyleProps & StoreProps & any;
+type CombinedProps = StyleProps &
+  StoreProps & {
+    publicImages: Record<string, Image>;
+    currentUser: string;
+    category: string;
+    request: Function;
+  };
 
 interface HelperFunctions {
   getDataAtPage: (page: number, filter?: any, isSorting?: boolean) => any;
@@ -218,10 +225,8 @@ const withStackScriptBase = (isSelecting: boolean) => (
     hasNonDeprecatedImages = (stackScriptImages: string[]) => {
       const { publicImages } = this.props;
       for (const stackScriptImage of stackScriptImages) {
-        for (const publicImage of publicImages) {
-          if (stackScriptImage === publicImage.id) {
-            return true;
-          }
+        if (publicImages[stackScriptImage]) {
+          return true;
         }
       }
       return false;
