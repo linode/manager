@@ -13,7 +13,7 @@ const selectedBrowser = argv.browser ? browserConf[argv.browser] : browserConf['
 
 const specsToRun = () => {
     if (argv.file) {
-        return [argv.file];
+        return [`./e2e/specs/${argv.file}`];
     }
 
     if (argv.spec) {
@@ -66,6 +66,8 @@ if (!(CRED_STORE_MODE in credStores)) {
     throw new Error(msg);
 }
 const credStore = credStores[CRED_STORE_MODE];
+
+let creds = null;
 
 exports.config = {
     // Selenium Host/Port
@@ -235,9 +237,9 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      */
     onPrepare: function (config, capabilities, user) {
-        if ((parallelRunners > 1) && (CRED_STORE_MODE === 'fs')) {
-            throw new Error("***** Can't use filesystem cred store when parallelRunners > 1.\n***** Set CRED_STORE_MODE=mongolocal in .env and launch mongodb by running: docker run -d -p 27017:27017 mongo");
-        }
+        // if ((parallelRunners > 1) && (CRED_STORE_MODE === 'fs')) {
+            // throw new Error("***** Can't use filesystem cred store when parallelRunners > 1.\n***** Set CRED_STORE_MODE=mongolocal in .env and launch mongodb by running: docker run -d -p 27017:27017 mongo");
+        // }
 
         // Generate temporary test credentials and store for use across tests
         credStore.generateCreds(config, parallelRunners)
@@ -249,13 +251,17 @@ exports.config = {
         });
     },
     /**
-     * Gets executed just before initialising the webdriver session and test framework. It allows you
+     * TODO Gets executed just before initializing the webdriver session and test framework. It allows you
      * to manipulate configurations depending on the capability or spec.
      * @param {Object} config wdio configuration object
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {Array.<String>} specs List of spec file paths that are to be run
      */
     // beforeSession: function (config, capabilities, specs) {
+    //     return credStore.checkoutCreds(specs[0])
+    //         .then((testCreds) => {
+    //             creds = testCreds;
+    //         }).catch((err) => console.log(err));
     // },
     /**
      * Gets executed before test execution begins. At this point you can access to all global
@@ -268,7 +274,6 @@ exports.config = {
         require('@babel/register');
 
         browserCommands();
-
         // Timecount needed to generate unqiue timestamp values for mocks
         global.timeCount = 0;
 
@@ -283,13 +288,13 @@ exports.config = {
         }
 
 
-        if (browser.options.desiredCapabilities.browserName.includes('chrome')) {
-            browser.timeouts('page load', process.env.DOCKER ? 30000 : 20000);
-        }
+        // if (browser.options.requestedCapabilities.jsonwpCaps.browserName.includes('chrome')) {
+        //     browser.setTimeout('pageLoad', process.env.DOCKER ? 30000 : 20000);
+        // }
 
-        if (browser.options.desiredCapabilities.browserName.includes('edge')) {
-            browser.windowHandleMaximize();
-        }
+        // if (browser.options.desiredCapabilities.jsonwpCaps.browserName.includes('edge')) {
+        //     browser.windowHandleMaximize();
+        // }
 
         // inject browser object into credstore for login and a few other functions
         credStore.setBrowser(browser);
@@ -298,7 +303,9 @@ exports.config = {
         // and utility code
         browser.credStore = credStore;
 
-        let creds = null;
+
+        // TODO We are now checking out credentials in the beforeSession hook,
+        // This will allow us to do api calls before the session
         browser.call(() => {
             return credStore.checkoutCreds(specs[0])
             .then((testCreds) => {
@@ -319,11 +326,7 @@ exports.config = {
      * Hook that gets executed before the suite starts
      * @param {Object} suite suite details
      */
-    /*beforeSuite: function (suite) {
-        // Click beta notice button
-        browser.waitForVisible('[data-qa-dialog-content] button');
-        browser.click('[data-qa-dialog-content] button');
-    },*/
+
     /**
      * Function to be executed before a test (in Mocha/Jasmine) or a step (in Cucumber) starts.
      * @param {Object} test test details
@@ -346,14 +349,14 @@ exports.config = {
      * Function to be executed after a test (in Mocha/Jasmine) or a step (in Cucumber) ends.
      * @param {Object} test test details
      */
-    // afterTest: function (test) {
-    // },
+    afterTest: function (test) {
+    },
     /**
      * Hook that gets executed after the suite has ended
      * @param {Object} suite suite details
      */
-    // afterSuite: function (suite) {
-    // },
+    afterSuite: function (suite) {
+    },
 
     /**
      * Runs after a WebdriverIO command gets executed
@@ -362,8 +365,8 @@ exports.config = {
      * @param {Number} result 0 - command success, 1 - command error
      * @param {Object} error error object if any
      */
-    // afterCommand: function (commandName, args, result, error) {
-    // },
+    afterCommand: function (commandName, args, result, error) {
+    },
     /**
      * Gets executed after all tests are done. You still have access to all global variables from
      * the test.
@@ -393,8 +396,8 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {Array.<String>} specs List of spec file paths that ran
      */
-    // afterSession: function (config, capabilities, specs) {
-    // },
+    afterSession: function (config, capabilities, specs) {
+    },
     /**
      * Gets executed after all workers got shut down and the process is about to exit.
      * @param {Object} exitCode 0 - success, 1 - fail

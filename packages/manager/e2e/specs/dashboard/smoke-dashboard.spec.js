@@ -12,7 +12,7 @@ describe('Dashboard Suite', () => {
     });
 
     it('should display blog posts', () => {
-        Dashboard.blogCard.waitForVisible(constants.wait.normal);
+        Dashboard.blogCard.waitForDisplayed(constants.wait.normal);
         expect(Dashboard.blogPosts.length).toBeGreaterThan(0);
         expect(Dashboard.blogPosts.length).toEqual($$(Dashboard.postDescription.selector).length);
 

@@ -15,7 +15,7 @@ describe('List Linodes - Actions - Reboot Suite', () => {
     const waitForRebootListView = (linode) => {
         const linodeRow = $(ListLinodes.getLinodeSelector(linode));
         browser.waitUntil(() => {
-             return linodeRow.$('..').$('[data-qa-loading] [data-qa-entity-status="rebooting"]').isVisible();
+             return linodeRow.$('..').$('[data-qa-loading] [data-qa-entity-status="rebooting"]').isDisplayed();
         }, constants.wait.normal);
     }
 
@@ -55,7 +55,7 @@ describe('List Linodes - Actions - Reboot Suite', () => {
 
         beforeAll(() => {
             ListLinodes.switchView('list');
-            ListLinodes.tableHead.waitForVisible(constants.wait.normal);
+            ListLinodes.tableHead.waitForDisplayed(constants.wait.normal);
             totalLinodes = ListLinodes.linode.length;
         });
 
@@ -70,10 +70,10 @@ describe('List Linodes - Actions - Reboot Suite', () => {
 
         it('should display the linear progress bar above the linode row details', () => {
             const linodeRow = $(ListLinodes.getLinodeSelector(linode));
-            expect(linodeRow.$(ListLinodes.linodeLabel.selector).isVisible()).toBe(true);
-            expect(linodeRow.$(ListLinodes.ip.selector).isVisible()).toBe(true);
-            expect(linodeRow.$(ListLinodes.region.selector).isVisible()).toBe(true);
-            expect(linodeRow.$(ListLinodes.actionMenu.selector).isVisible()).toBe(true);
+            expect(linodeRow.$(ListLinodes.linodeLabel.selector).isDisplayed()).toBe(true);
+            expect(linodeRow.$(ListLinodes.ip.selector).isDisplayed()).toBe(true);
+            expect(linodeRow.$(ListLinodes.region.selector).isDisplayed()).toBe(true);
+            expect(linodeRow.$(ListLinodes.actionMenu.selector).isDisplayed()).toBe(true);
         });
 
         it('should display running status after booted', () => {

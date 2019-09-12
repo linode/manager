@@ -55,91 +55,91 @@ class DomainDetail extends Page {
     }
 
     domainDetailDisplays(domainName) {
-        this.domainTitle.waitForVisible(constants.wait.normal);
+        this.domainTitle.waitForDisplayed(constants.wait.normal);
         this.domainRecords.forEach((record) => {
-            this.recordHeaderElementByLabel(record).waitForVisible(constants.wait.normal);
+            this.recordHeaderElementByLabel(record).waitForDisplayed(constants.wait.normal);
         });
         this.domainRecords.forEach((record) => {
             if (record !== 'SOA Record') {
-                this.addRecordButtonElementByLabel(record).waitForVisible(constants.wait.normal);
+                this.addRecordButtonElementByLabel(record).waitForDisplayed(constants.wait.normal);
             }
         });
         expect(this.domainTitle.getText()).toEqual(domainName);
     }
 
     editSoaRecordDrawerDisplays(){
-        this.drawerBase.waitForVisible(constants.wait.normal);
+        this.drawerBase.waitForDisplayed(constants.wait.normal);
         ['Domain', 'SOA Email'].forEach((label) => {
-            this.inputElementByLabel(label).waitForVisible(constants.wait.normal);
+            this.inputElementByLabel(label).waitForDisplayed(constants.wait.normal);
         });
         ['Default TTL', 'Refresh Rate', 'Retry Rate', 'Expire Rate'].forEach((label) => {
-            this.selectElementByLabel(label).waitForVisible(constants.wait.normal);
+            this.selectElementByLabel(label).waitForDisplayed(constants.wait.normal);
         });
         expect(this.drawerTitle.getText()).toMatch(/edit/i);
     }
 
     nsRecordDrawerDisplays(){
-        this.drawerBase.waitForVisible(constants.wait.normal);
+        this.drawerBase.waitForDisplayed(constants.wait.normal);
         ['Name Server', 'Subdomain'].forEach((label) => {
-            this.inputElementByLabel(label).waitForVisible(constants.wait.normal);
+            this.inputElementByLabel(label).waitForDisplayed(constants.wait.normal);
         });
-        this.selectElementByLabel('TTL').waitForVisible(constants.wait.normal);
+        this.selectElementByLabel('TTL').waitForDisplayed(constants.wait.normal);
         expect(this.drawerTitle.getText()).toContain('NS Record');
     }
 
     mxRecordDrawerDisplays(){
-        this.drawerBase.waitForVisible(constants.wait.normal);
+        this.drawerBase.waitForDisplayed(constants.wait.normal);
         ['Mail Server', 'Preference', 'Subdomain'].forEach((label) => {
-            this.inputElementByLabel(label).waitForVisible(constants.wait.normal);
+            this.inputElementByLabel(label).waitForDisplayed(constants.wait.normal);
         });
-        this.selectElementByLabel('TTL').waitForVisible(constants.wait.normal);
+        this.selectElementByLabel('TTL').waitForDisplayed(constants.wait.normal);
         expect(this.drawerTitle.getText()).toContain('MX Record');
     }
 
     aaaaRecordDrawerDisplays(){
-        this.drawerBase.waitForVisible(constants.wait.normal);
+        this.drawerBase.waitForDisplayed(constants.wait.normal);
         ['Hostname', 'IP Address'].forEach((label) => {
-            this.inputElementByLabel(label).waitForVisible(constants.wait.normal);
+            this.inputElementByLabel(label).waitForDisplayed(constants.wait.normal);
         });
-        this.selectElementByLabel('TTL').waitForVisible(constants.wait.normal);
+        this.selectElementByLabel('TTL').waitForDisplayed(constants.wait.normal);
         expect(this.drawerTitle.getText()).toContain('AAAA Record');
     }
 
     cNameRecordDrawerDisplays(){
-        this.drawerBase.waitForVisible(constants.wait.normal);
+        this.drawerBase.waitForDisplayed(constants.wait.normal);
         ['Hostname', 'Alias to'].forEach((label) => {
-            this.inputElementByLabel(label).waitForVisible(constants.wait.normal);
+            this.inputElementByLabel(label).waitForDisplayed(constants.wait.normal);
         });
-        this.selectElementByLabel('TTL').waitForVisible(constants.wait.normal);
+        this.selectElementByLabel('TTL').waitForDisplayed(constants.wait.normal);
         expect(this.drawerTitle.getText()).toContain('CNAME Record');
     }
 
     txtRecordDrawerDisplays(){
-        this.drawerBase.waitForVisible(constants.wait.normal);
+        this.drawerBase.waitForDisplayed(constants.wait.normal);
         ['Hostname', 'Value'].forEach((label) => {
-            this.inputElementByLabel(label).waitForVisible(constants.wait.normal);
+            this.inputElementByLabel(label).waitForDisplayed(constants.wait.normal);
         });
-        this.selectElementByLabel('TTL').waitForVisible(constants.wait.normal);
+        this.selectElementByLabel('TTL').waitForDisplayed(constants.wait.normal);
         expect(this.drawerTitle.getText()).toContain('TXT Record');
     }
 
     srvRecordDrawerDisplays(){
-        this.drawerBase.waitForVisible(constants.wait.normal);
+        this.drawerBase.waitForDisplayed(constants.wait.normal);
         ['Service', 'Priority', 'Weight', 'Port'].forEach((label) => {
-            this.inputElementByLabel(label).waitForVisible(constants.wait.normal);
+            this.inputElementByLabel(label).waitForDisplayed(constants.wait.normal);
         });
-        this.selectElementByLabel('TTL').waitForVisible(constants.wait.normal);
-        this.selectElementByLabel('Protocol').waitForVisible(constants.wait.normal);
+        this.selectElementByLabel('TTL').waitForDisplayed(constants.wait.normal);
+        this.selectElementByLabel('Protocol').waitForDisplayed(constants.wait.normal);
         expect(this.drawerTitle.getText()).toContain('SRV Record');
     }
 
     caaRecordDrawerDisplays(){
-        this.drawerBase.waitForVisible(constants.wait.normal);
+        this.drawerBase.waitForDisplayed(constants.wait.normal);
         ['Name', 'Value'].forEach((label) => {
-            this.inputElementByLabel(label).waitForVisible(constants.wait.normal);
+            this.inputElementByLabel(label).waitForDisplayed(constants.wait.normal);
         });
-        this.selectElementByLabel('TTL').waitForVisible(constants.wait.normal);
-        this.selectElementByLabel('caa tag').waitForVisible(constants.wait.normal);
+        this.selectElementByLabel('TTL').waitForDisplayed(constants.wait.normal);
+        this.selectElementByLabel('caa tag').waitForDisplayed(constants.wait.normal);
         expect(this.drawerTitle.getText()).toContain('CAA Record');
     }
 
@@ -214,19 +214,19 @@ class DomainDetail extends Page {
 
     saveRecord(){
         this.confirmButton.click();
-        this.drawerBase.waitForVisible(constants.wait.normal, true);
+        this.drawerBase.waitForDisplayed(constants.wait.normal, true);
         browser.pause(1000);
     }
 
     confirmDelete(){
-        this.dialogContent.waitForVisible(constants.wait.normal);
+        this.dialogContent.waitForDisplayed(constants.wait.normal);
         this.dialogContent.$('..').$$('button').find(button => button.getText() === 'Delete').click();
     }
 
     deleteRecord(recordType) {
         this.selectActionMenuItemV2(this.rowSelector(recordType),'Delete');
         this.confirmDelete();
-        $(this.rowSelector(recordType)).waitForVisible(constants.wait.normal, true);
+        $(this.rowSelector(recordType)).waitForDisplayed(constants.wait.normal, true);
     }
 }
 

@@ -38,42 +38,42 @@ class Backups extends Page {
 
     baseElemsDisplay(backupsNotEnabled) {
         if (backupsNotEnabled) {
-            this.placeholderText.waitForVisible(constants.wait.normal);
-            expect(this.enableButton.isVisible()).toBe(true);
+            this.placeholderText.waitForDisplayed(constants.wait.normal);
+            expect(this.enableButton.isDisplayed()).toBe(true);
             return;
         }
 
-        this.manualDescription.waitForVisible();
+        this.manualDescription.waitForDisplayed();
 
         if (this.backupInstances.length < 1) {
-            expect(this.description.isVisible()).toBe(true);
+            expect(this.description.isDisplayed()).toBe(true);
         }
 
-        expect(this.heading.isVisible()).toBe(true);
-        expect(this.manualSnapshotHeading.isVisible()).toBe(true);
-        expect(this.manualDescription.isVisible()).toBe(true);
-        expect(this.snapshotButton.isVisible()).toBe(true);
-        expect(this.settingsHeading.isVisible()).toBe(true);
-        expect(this.settingsDescription.isVisible()).toBe(true);
-        expect(this.timedaySelect.isVisible()).toBe(true);
-        expect(this.weekdaySelect.isVisible()).toBe(true);
-        expect(this.saveScheduleButton.isVisible()).toBe(true);
-        expect(this.cancelDescription.isVisible()).toBe(true);
-        expect(this.cancelButton.isVisible()).toBe(true);
-        expect(this.manualSnapshotName.isVisible()).toBe(true);
+        expect(this.heading.isDisplayed()).toBe(true);
+        expect(this.manualSnapshotHeading.isDisplayed()).toBe(true);
+        expect(this.manualDescription.isDisplayed()).toBe(true);
+        expect(this.snapshotButton.isDisplayed()).toBe(true);
+        expect(this.settingsHeading.isDisplayed()).toBe(true);
+        expect(this.settingsDescription.isDisplayed()).toBe(true);
+        expect(this.timedaySelect.isDisplayed()).toBe(true);
+        expect(this.weekdaySelect.isDisplayed()).toBe(true);
+        expect(this.saveScheduleButton.isDisplayed()).toBe(true);
+        expect(this.cancelDescription.isDisplayed()).toBe(true);
+        expect(this.cancelButton.isDisplayed()).toBe(true);
+        expect(this.manualSnapshotName.isDisplayed()).toBe(true);
         // expect(this.cancelButton.getAttribute('class')).toContain('destructive');
     }
 
     restoreToExistingDrawerDisplays() {
-        this.restoreToLinodeSelect.waitForVisible(constants.wait.normal);
-        this.overwriteLinodeCheckbox.waitForVisible(constants.wait.normal);
-        this.restoreSubmit.waitForVisible(constants.wait.normal);
-        this.restoreCancel.waitForVisible(constants.wait.normal);
+        this.restoreToLinodeSelect.waitForDisplayed(constants.wait.normal);
+        this.overwriteLinodeCheckbox.waitForDisplayed(constants.wait.normal);
+        this.restoreSubmit.waitForDisplayed(constants.wait.normal);
+        this.restoreCancel.waitForDisplayed(constants.wait.normal);
     }
 
     enableBackups() {
         const toastMsg = 'Backups are being enabled for this Linode';
-        this.enableButton.waitForVisible(constants.wait.normal);
+        this.enableButton.waitForDisplayed(constants.wait.normal);
         this.enableButton.click();
         this.toastDisplays(toastMsg);
     }
@@ -87,15 +87,15 @@ class Backups extends Page {
 
     takeSnapshotWaitForComplete(label) {
         this.takeSnapshot(label);
-        this.linearProgress.waitForVisible(constants.wait.normal);
-        this.linearProgress.waitForVisible(constants.wait.minute*5,true);
+        this.linearProgress.waitForDisplayed(constants.wait.normal);
+        this.linearProgress.waitForDisplayed(constants.wait.minute*5,true);
         browser.waitUntil(() => {
             return $$(this.label.selector).find( backup => backup.getText() === label )
         },constants.wait.normal);
     }
 
     assertSnapshot(label) {
-        browser.waitForVisible('[data-qa-backup]', constants.wait.veryLong);
+        $('[data-qa-backup]').waitForDisplayed(constants.wait.veryLong);
 
         const backupInstance = this.backupInstances.map(i => {
             return i.$(this.label.selector).getText();
@@ -112,8 +112,8 @@ class Backups extends Page {
 
     cancelBackups() {
         this.cancelButton.click();
-        this.cancelDialogTitle.waitForVisible();
-        this.cancelConfirm.waitForVisible();
+        this.cancelDialogTitle.waitForDisplayed();
+        this.cancelConfirm.waitForDisplayed();
         this.cancelConfirm.click();
 
         const toastMsg = 'Backups are being cancelled for this Linode';

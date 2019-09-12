@@ -128,7 +128,7 @@ exports.createLinode = (token, password, linodeLabel, tags, type, region, group,
         }
 
         if(image){
-            linodeConfig['image'] = 'linode/debian9';
+            linodeConfig['image'] = 'linode/alpine3.10';
         }
 
         if (linodeLabel !== false) {
