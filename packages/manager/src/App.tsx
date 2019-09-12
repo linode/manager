@@ -1,4 +1,3 @@
-import * as classnames from 'classnames';
 import {
   Account,
   AccountCapability,
@@ -8,7 +7,6 @@ import { Image } from 'linode-js-sdk/lib/images';
 import { Linode } from 'linode-js-sdk/lib/linodes';
 import { Region } from 'linode-js-sdk/lib/regions';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
-import { shim } from 'promise.prototype.finally';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -17,35 +15,18 @@ import { Action, compose } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { Subscription } from 'rxjs/Subscription';
 import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
-import {
   DocumentTitleSegment,
   withDocumentTitleProvider
 } from 'src/components/DocumentTitle';
-import SideMenu from 'src/components/SideMenu';
+
 import withFeatureFlagProvider from 'src/containers/withFeatureFlagProvider.container';
 import { events$ } from 'src/events';
-import BackupDrawer from 'src/features/Backups';
-import DomainDrawer from 'src/features/Domains/DomainDrawer';
-import Footer from 'src/features/Footer';
 import TheApplicationIsOnFire from 'src/features/TheApplicationIsOnFire';
-import ToastNotifications from 'src/features/ToastNotifications';
-import TopMenu from 'src/features/TopMenu';
-import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
+
 import { ApplicationState } from 'src/store';
 import composeState from 'src/utilities/composeState';
-import { notifications } from 'src/utilities/storage';
-import WelcomeBanner from 'src/WelcomeBanner';
-import BucketDrawer from './features/ObjectStorage/BucketLanding/BucketDrawer';
 import { MapState } from './store/types';
-import {
-  isKubernetesEnabled as _isKubernetesEnabled,
-  isObjectStorageEnabled
-} from './utilities/accountCapabilities';
+import { isKubernetesEnabled as _isKubernetesEnabled } from './utilities/accountCapabilities';
 
 import DataLoadedListener from 'src/components/DataLoadedListener';
 import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
@@ -55,44 +36,6 @@ import { formatDate } from 'src/utilities/formatDate';
 import IdentifyUser from './IdentifyUser';
 
 import MainContent from './MainContent';
-
-shim(); // allows for .finally() usage
-
-type ClassNames = 'hidden' | 'appFrame' | 'wrapper' | 'content';
-
-const styles = (theme: Theme) =>
-  createStyles({
-    appFrame: {
-      position: 'relative',
-      display: 'flex',
-      minHeight: '100vh',
-      flexDirection: 'column',
-      backgroundColor: theme.bg.main,
-      zIndex: 1
-    },
-    wrapper: {
-      padding: theme.spacing(3),
-      transition: theme.transitions.create('opacity'),
-      [theme.breakpoints.down('sm')]: {
-        paddingTop: theme.spacing(2),
-        paddingLeft: theme.spacing(2),
-        paddingRight: theme.spacing(2)
-      }
-    },
-    content: {
-      flex: 1,
-      [theme.breakpoints.up('md')]: {
-        marginLeft: theme.spacing(14) + 103 // 215
-      },
-      [theme.breakpoints.up('xl')]: {
-        marginLeft: theme.spacing(22) + 99 // 275
-      }
-    },
-    hidden: {
-      display: 'none',
-      overflow: 'hidden'
-    }
-  });
 
 interface Props {
   toggleTheme: () => void;
@@ -112,7 +55,6 @@ type CombinedProps = Props &
   DispatchProps &
   StateProps &
   RouteComponentProps &
-  WithStyles<ClassNames> &
   WithSnackbarProps;
 
 export class App extends React.Component<CombinedProps, State> {
@@ -213,34 +155,11 @@ export class App extends React.Component<CombinedProps, State> {
           );
         }
       });
-
-    if (notifications.welcome.get() === 'open') {
-      this.setState({ welcomeBanner: true });
-    }
   }
 
-  closeMenu = () => {
-    this.setState({ menuOpen: false });
-  };
-  openMenu = () => {
-    this.setState({ menuOpen: true });
-  };
-
-  toggleMenu = () => {
-    this.setState({
-      menuOpen: !this.state.menuOpen
-    });
-  };
-
-  closeWelcomeBanner = () => {
-    this.setState({ welcomeBanner: false });
-    notifications.welcome.set('closed');
-  };
-
   render() {
-    const { menuOpen, hasError } = this.state;
+    const { hasError } = this.state;
     const {
-      classes,
       toggleSpacing,
       toggleTheme,
       linodesError,
@@ -338,51 +257,18 @@ export class App extends React.Component<CombinedProps, State> {
           appIsLoaded={!this.props.appIsLoading}
         />
         <DocumentTitleSegment segment="Linode Manager" />
-        <React.Fragment>
-          <div
-            className={classnames({
-              [classes.appFrame]: true,
-              /**
-               * hidden to prevent some jankiness with the app loading before the splash screen
-               */
-              [classes.hidden]: this.props.appIsLoading
-            })}
-          >
-            <SideMenu
-              open={menuOpen}
-              closeMenu={this.closeMenu}
-              toggleTheme={toggleTheme}
-              toggleSpacing={toggleSpacing}
-            />
-            <main className={classes.content}>
-              <TopMenu
-                openSideMenu={this.openMenu}
-                isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
-                username={this.props.username}
-              />
-              <div className={classes.wrapper} id="main-content">
-                <MainContent
-                  accountCapabilities={accountCapabilities}
-                  accountError={accountError}
-                  accountLoading={accountLoading}
-                  history={this.props.history}
-                  location={this.props.location}
-                />
-              </div>
-            </main>
-            <Footer />
-            <WelcomeBanner
-              open={this.state.welcomeBanner}
-              onClose={this.closeWelcomeBanner}
-              data-qa-beta-notice
-            />
-            <ToastNotifications />
-            <DomainDrawer />
-            <VolumeDrawer />
-            <BackupDrawer />
-            {isObjectStorageEnabled(accountCapabilities) && <BucketDrawer />}
-          </div>
-        </React.Fragment>
+        <MainContent
+          accountCapabilities={accountCapabilities}
+          accountError={accountError}
+          accountLoading={accountLoading}
+          history={this.props.history}
+          location={this.props.location}
+          toggleSpacing={toggleSpacing}
+          toggleTheme={toggleTheme}
+          appIsLoading={this.props.appIsLoading}
+          isLoggedInAsCustomer={this.props.isLoggedInAsCustomer}
+          username={username}
+        />
       </React.Fragment>
     );
   }
@@ -497,11 +383,8 @@ export const connected = connect(
   mapDispatchToProps
 );
 
-export const styled = withStyles(styles);
-
 export default compose(
   connected,
-  styled,
   withDocumentTitleProvider,
   withSnackbar,
   withFeatureFlagProvider

@@ -30,12 +30,6 @@ it('renders without crashing.', () => {
               search: '',
               state: {}
             }}
-            classes={{
-              appFrame: '',
-              content: '',
-              hidden: '',
-              wrapper: ''
-            }}
             userId={123456}
             addNotificationsToLinodes={jest.fn()}
             documentation={[]}

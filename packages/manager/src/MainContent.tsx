@@ -1,3 +1,4 @@
+import * as classnames from 'classnames';
 import { AccountCapability } from 'linode-js-sdk/lib/account';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
@@ -5,23 +6,64 @@ import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
+import BackupDrawer from 'src/features/Backups';
+import DomainDrawer from 'src/features/Domains/DomainDrawer';
+import Footer from 'src/features/Footer';
+import ToastNotifications from 'src/features/ToastNotifications';
+import TopMenu from 'src/features/TopMenu';
+import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
+import WelcomeBanner from 'src/WelcomeBanner';
+import BucketDrawer from './features/ObjectStorage/BucketLanding/BucketDrawer';
+
 import AccountActivationLanding from 'src/components/AccountActivation/AccountActivationLanding';
 import DefaultLoader from 'src/components/DefaultLoader';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import LandingLoading from 'src/components/LandingLoading';
 import NotFound from 'src/components/NotFound';
+import SideMenu from 'src/components/SideMenu';
 
 import withGlobalErrors, {
   Props as GlobalErrorProps
 } from 'src/containers/globalErrors.container';
 
+import { notifications } from 'src/utilities/storage';
 import {
   isKubernetesEnabled as _isKubernetesEnabled,
   isObjectStorageEnabled
 } from './utilities/accountCapabilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  appFrame: {
+    position: 'relative',
+    display: 'flex',
+    minHeight: '100vh',
+    flexDirection: 'column',
+    backgroundColor: theme.bg.main,
+    zIndex: 1
+  },
+  wrapper: {
+    padding: theme.spacing(3),
+    transition: theme.transitions.create('opacity'),
+    [theme.breakpoints.down('sm')]: {
+      paddingTop: theme.spacing(2),
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2)
+    }
+  },
+  content: {
+    flex: 1,
+    [theme.breakpoints.up('md')]: {
+      marginLeft: theme.spacing(14) + 103 // 215
+    },
+    [theme.breakpoints.up('xl')]: {
+      marginLeft: theme.spacing(22) + 99 // 275
+    }
+  },
+  hidden: {
+    display: 'none',
+    overflow: 'hidden'
+  },
   grid: {
     [theme.breakpoints.up('lg')]: {
       height: '100%'
@@ -45,6 +87,11 @@ interface Props {
   accountCapabilities: AccountCapability[];
   location: RouteComponentProps['location'];
   history: RouteComponentProps['history'];
+  appIsLoading: boolean;
+  toggleTheme: () => void;
+  toggleSpacing: () => void;
+  username: string;
+  isLoggedInAsCustomer: boolean;
 }
 
 type CombinedProps = Props & GlobalErrorProps;
@@ -129,6 +176,11 @@ const EventsLanding = DefaultLoader({
 const MainContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
+  const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
+  const [welcomeModalIsOpen, toggleWelcomeModal] = React.useState<boolean>(
+    notifications.welcome.get() === 'open'
+  );
+
   const isKubernetesEnabled = _isKubernetesEnabled(props.accountCapabilities);
 
   /**
@@ -138,39 +190,10 @@ const MainContent: React.FC<CombinedProps> = props => {
    *
    * So in this case, we'll show something more user-friendly
    */
-  if (
-    props.globalErrors.account_unactivated &&
-    !props.location.pathname.match(/support/i)
-  ) {
-    return <AccountActivationLanding />;
-  }
-
-  /**
-   * otherwise just show the rest of the app.
-   */
-  return (
-    <Grid container spacing={0} className={classes.grid}>
-      <Grid item className={classes.switchWrapper}>
+  if (props.globalErrors.account_unactivated) {
+    return (
+      <div style={{ margin: '5em' }}>
         <Switch>
-          <Route path="/linodes" component={LinodesRoutes} />
-          <Route path="/volumes" component={Volumes} exact strict />
-          <Redirect path="/volumes*" to="/volumes" />
-          <Route path="/nodebalancers" component={NodeBalancers} />
-          <Route path="/domains" component={Domains} />
-          <Route path="/managed" component={Managed} />
-          <Route exact path="/longview" component={Longview} />
-          <Route exact strict path="/images" component={Images} />
-          <Redirect path="/images*" to="/images" />
-          <Route path="/stackscripts" component={StackScripts} />
-          {getObjectStorageRoute(
-            props.accountLoading,
-            props.accountCapabilities,
-            props.accountError
-          )}
-          {isKubernetesEnabled && (
-            <Route path="/kubernetes" component={Kubernetes} />
-          )}
-          <Route path="/account" component={Account} />
           <Route
             exact
             strict
@@ -183,22 +206,106 @@ const MainContent: React.FC<CombinedProps> = props => {
             exact
             strict
           />
-          <Route path="/profile" component={Profile} />
           <Route exact path="/support" component={Help} />
-          <Route
-            exact
-            strict
-            path="/support/search/"
-            component={SupportSearchLanding}
-          />
-          <Route path="/dashboard" component={Dashboard} />
-          <Route path="/search" component={SearchLanding} />
-          <Route path="/events" component={EventsLanding} />
-          <Redirect exact from="/" to="/dashboard" />
-          <Route component={NotFound} />
+          <Route component={AccountActivationLanding} />
         </Switch>
-      </Grid>
-    </Grid>
+      </div>
+    );
+  }
+
+  /**
+   * otherwise just show the rest of the app.
+   */
+  return (
+    <div
+      className={classnames({
+        [classes.appFrame]: true,
+        /**
+         * hidden to prevent some jankiness with the app loading before the splash screen
+         */
+        [classes.hidden]: props.appIsLoading
+      })}
+    >
+      <SideMenu
+        open={menuIsOpen}
+        closeMenu={() => toggleMenu(false)}
+        toggleTheme={props.toggleTheme}
+        toggleSpacing={props.toggleSpacing}
+      />
+      <main className={classes.content}>
+        <TopMenu
+          openSideMenu={() => toggleMenu(true)}
+          isLoggedInAsCustomer={props.isLoggedInAsCustomer}
+          username={props.username}
+        />
+        <div className={classes.wrapper} id="main-content">
+          <Grid container spacing={0} className={classes.grid}>
+            <Grid item className={classes.switchWrapper}>
+              <Switch>
+                <Route path="/linodes" component={LinodesRoutes} />
+                <Route path="/volumes" component={Volumes} exact strict />
+                <Redirect path="/volumes*" to="/volumes" />
+                <Route path="/nodebalancers" component={NodeBalancers} />
+                <Route path="/domains" component={Domains} />
+                <Route path="/managed" component={Managed} />
+                <Route exact path="/longview" component={Longview} />
+                <Route exact strict path="/images" component={Images} />
+                <Redirect path="/images*" to="/images" />
+                <Route path="/stackscripts" component={StackScripts} />
+                {getObjectStorageRoute(
+                  props.accountLoading,
+                  props.accountCapabilities,
+                  props.accountError
+                )}
+                {isKubernetesEnabled && (
+                  <Route path="/kubernetes" component={Kubernetes} />
+                )}
+                <Route path="/account" component={Account} />
+                <Route
+                  exact
+                  strict
+                  path="/support/tickets"
+                  component={SupportTickets}
+                />
+                <Route
+                  path="/support/tickets/:ticketId"
+                  component={SupportTicketDetail}
+                  exact
+                  strict
+                />
+                <Route path="/profile" component={Profile} />
+                <Route exact path="/support" component={Help} />
+                <Route path="/dashboard" component={Dashboard} />
+                <Route path="/search" component={SearchLanding} />
+                <Route
+                  exact
+                  strict
+                  path="/support/search/"
+                  component={SupportSearchLanding}
+                />
+                <Route path="/events" component={EventsLanding} />
+                <Redirect exact from="/" to="/dashboard" />
+                <Route component={NotFound} />
+              </Switch>
+            </Grid>
+          </Grid>
+        </div>
+      </main>
+      <Footer />
+      <WelcomeBanner
+        open={welcomeModalIsOpen}
+        onClose={() => {
+          notifications.welcome.set('closed');
+          toggleWelcomeModal(false);
+        }}
+        data-qa-beta-notice
+      />
+      <ToastNotifications />
+      <DomainDrawer />
+      <VolumeDrawer />
+      <BackupDrawer />
+      {isObjectStorageEnabled(props.accountCapabilities) && <BucketDrawer />}
+    </div>
   );
 };
 
