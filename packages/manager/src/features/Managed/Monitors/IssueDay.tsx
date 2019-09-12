@@ -67,40 +67,21 @@ const iconStyles = {
 export const IssueDay: React.FC<Props> = props => {
   const { day, issues } = props;
 
-  /**
-   * Maybe we want to show resolved issues as a special case,
-   * in which case this code should be used. Classic does not do
-   * this, however, so for now it's safest to treat all issues
-   * the same.
-   */
-  // const openIssueLinks = issues.reduce((accum, thisIssue) => {
-  //   return thisIssue.dateClosed ? accum : [...accum, thisIssue.entity.id];
-  // }, []);
-
-  const openIssueLinks = issues.map(thisIssue => thisIssue.entity.id);
+  const issueLinks = issues.map(thisIssue => thisIssue.entity.id);
 
   if (issues.length === 0) {
     // No issues for today
     return <DayDisplay icon={<Good {...iconStyles} />} day={day} />;
   }
 
-  // if (openIssueLinks.length > 0) {
   return (
     <DayDisplay
       icon={<Bad {...iconStyles} />}
       day={day}
       // For now, not worrying about the possibility of multiple tickets opened in a single day
-      ticketUrl={`/support/tickets/${openIssueLinks[0]}`}
+      ticketUrl={`/support/tickets/${issueLinks[0]}`}
     />
   );
-  // }
-
-  /**
-   * If we get here, there were one or more issues opened on this day,
-   * but they've all since been resolved.
-   */
-
-  // return <DayDisplay icon={<Bad {...iconStyles} />} day={day} />;
 };
 
 export default IssueDay;

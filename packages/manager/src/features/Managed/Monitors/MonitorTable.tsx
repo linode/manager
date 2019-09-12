@@ -118,7 +118,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
     setEditID(id);
     setEditLabel(label);
     setHistoryDrawerOpen(true);
-  }
+  };
 
   const handleDelete = () => {
     if (!dialog.entityID) {
@@ -248,6 +248,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
                     <TableBody>
                       <MonitorTableContent
                         monitors={data}
+                        issues={issues}
                         loading={loading}
                         error={error}
                         openDialog={openDialog}

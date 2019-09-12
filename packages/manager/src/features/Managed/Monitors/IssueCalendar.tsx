@@ -21,17 +21,23 @@ export const IssueCalendar: React.FC<Props> = props => {
    * on that day, it belongs to that day and is passed to the
    * display component.
    *
-   * The number of issues affecting a given monitor should always be small (<10?),
+   * The number of issues affecting a given monitor should be small,
    * so imo it would be ineffective to memoize this computation.
    */
   const days: JSX.Element[] = [];
   let i = 0;
+  // Start with today, since it will be at the top of our list.
   const day = moment.utc().tz(timezone);
   for (i; i < TOTAL_DAYS; i++) {
+    /**
+     * Iterate through the past 10 days
+     */
     let j = 0;
     const relevantIssues = [];
     for (j; j < issues.length; j++) {
+      // Iterate through the available issues.
       const thisIssue = issues[j];
+      // Was this issue opened on the current day?
       if (
         moment
           .utc(thisIssue.created)
@@ -48,6 +54,7 @@ export const IssueCalendar: React.FC<Props> = props => {
         day={day.toISOString()}
       />
     );
+    // Move the calendar back a day
     day.subtract(1, 'day');
   }
 

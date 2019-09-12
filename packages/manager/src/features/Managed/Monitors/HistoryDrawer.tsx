@@ -46,7 +46,6 @@ const renderDrawerContent = (
   if (error) {
     return <ErrorState errorText={error[0].reason} />;
   }
-
   return <IssueCalendar issues={issues} />;
 };
 
