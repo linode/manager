@@ -13,7 +13,8 @@ import { baseRequest } from 'linode-js-sdk/lib/request';
 import store from 'src/store';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
 
-import { API_ROOT } from 'src/constants';
+import { API_ROOT, LOGIN_ROOT } from 'src/constants';
+
 const handleSuccess: <T extends AxiosResponse<any>>(
   response: T
 ) => T | T = response => {
@@ -96,7 +97,9 @@ baseRequest.interceptors.request.use(config => {
    * override the base URL with the one we have defined in the .env file
    */
   if (config.url && config.baseURL) {
-    finalUrl = config.url.replace(config.baseURL, API_ROOT);
+    finalUrl = config.baseURL.includes('login')
+      ? config.url.replace(config.baseURL, LOGIN_ROOT)
+      : config.url.replace(config.baseURL, API_ROOT);
   }
 
   return {
