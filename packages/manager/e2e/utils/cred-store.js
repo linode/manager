@@ -53,11 +53,8 @@ class CredStore {
         }
 
         $('#password').waitForDisplayed(constants.wait.long);
-        //browser.jsClick('#username');
         $('#username').setValue(username);
-        //browser.jsClick('#password');
         $('#password').setValue(password);
-        // browser.setNewValue('#password', password);
 
 
         let url = browser.getUrl();
