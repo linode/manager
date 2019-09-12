@@ -81,7 +81,7 @@ export const handleError = (error: AxiosError) => {
        * 1. Dispatch the globalError Redux action somewhere in the interceptor.
        * 2. Fix the Landing page components to display the actual error being passed.
        */
-      replacementText: <AccountActivationError />,
+      replacementText: <AccountActivationError errors={errors} />,
       condition: e =>
         !!e.reason.match(/account must be activated/i) && status === 403,
       callback: () => {

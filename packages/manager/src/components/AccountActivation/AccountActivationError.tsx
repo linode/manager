@@ -1,8 +1,14 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import withGlobalErrors, { Props } from 'src/containers/globalErrors.container';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
-type CombinedProps = Props;
+interface InnerProps {
+  errors: APIError[];
+}
+
+type CombinedProps = Props & InnerProps;
 
 const AccountActivationError: React.FC<CombinedProps> = props => {
   React.useEffect(() => {
@@ -16,12 +22,12 @@ const AccountActivationError: React.FC<CombinedProps> = props => {
 
   return (
     <React.Fragment>
-      Whoops! Looks like your account hasn't been activated yet.
+      {getAPIErrorOrDefault(props.errors, 'Your account is not yet activated.')}
     </React.Fragment>
   );
 };
 
-export default compose<CombinedProps, {}>(
+export default compose<CombinedProps, InnerProps>(
   React.memo,
   withGlobalErrors()
 )(AccountActivationError);
