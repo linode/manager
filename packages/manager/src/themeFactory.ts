@@ -1170,18 +1170,13 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         root: {
           margin: `${spacingUnit * 2}px 0`,
           boxShadow: 'inset 0 -1px 0 #c5c6c8',
-          minHeight: spacingUnit * 6
-        },
-        fixed: {
-          overflowX: 'auto'
-        },
-        flexContainer: {
+          minHeight: spacingUnit * 6,
           position: 'relative',
           '& $scrollButtons:first-child': {
             position: 'absolute',
             bottom: 6,
             zIndex: 2,
-            left: -9,
+            left: 0,
             '& svg': {
               backgroundColor: 'rgba(232, 232, 232, .9)',
               height: 39,
@@ -1199,6 +1194,9 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
               borderRadius: '50%'
             }
           }
+        },
+        fixed: {
+          overflowX: 'auto'
         },
         scrollButtons: {
           flex: '0 0 40px'
