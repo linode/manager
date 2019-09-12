@@ -1,8 +1,12 @@
+import {
+  KubeNodePoolResponse,
+  PoolNodeRequest
+} from 'linode-js-sdk/lib/kubernetes';
 import actionCreatorFactory from 'typescript-fsa';
 
 import { EntityError } from 'src/store/types';
 
-export interface ExtendedNodePool extends Linode.KubeNodePoolResponse {
+export interface ExtendedNodePool extends KubeNodePoolResponse {
   clusterID: number; // clusterID of the cluster this node is associated with
 }
 
@@ -16,13 +20,11 @@ export const requestNodePoolsActions = actionCreator.async<
   Linode.ApiFieldError[]
 >('request');
 
-export const addOrUpdateNodePool = actionCreator<Linode.KubeNodePoolResponse>(
+export const addOrUpdateNodePool = actionCreator<KubeNodePoolResponse>(
   'add_or_update'
 );
 
-export const upsertNodePool = actionCreator<Linode.KubeNodePoolResponse>(
-  `upsert`
-);
+export const upsertNodePool = actionCreator<KubeNodePoolResponse>(`upsert`);
 
 export const setErrors = actionCreator<EntityError>('set-errors');
 
@@ -34,16 +36,14 @@ export interface NodePoolID {
   nodePoolID: number;
 }
 
-export type CreateNodePoolParams = ClusterID & Linode.PoolNodeRequest;
+export type CreateNodePoolParams = ClusterID & PoolNodeRequest;
 export const createNodePoolActions = actionCreator.async<
   CreateNodePoolParams,
   ExtendedNodePool,
   Linode.ApiFieldError[]
 >(`create-node-pool`);
 
-export type UpdateNodePoolParams = ClusterID &
-  NodePoolID &
-  Linode.PoolNodeRequest;
+export type UpdateNodePoolParams = ClusterID & NodePoolID & PoolNodeRequest;
 export const updateNodePoolActions = actionCreator.async<
   UpdateNodePoolParams,
   ExtendedNodePool,
