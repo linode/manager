@@ -89,7 +89,7 @@ describe('LinodeResize', () => {
     );
 
     expect(currentSelection.exists()).toBeTruthy();
-    expect(currentSelection.length).toEqual(1);
+    expect(currentSelection.length).toEqual(5);
   });
 
   describe('when linodeType is null', () => {
@@ -131,7 +131,7 @@ describe('LinodeResize', () => {
         );
 
         expect(currentSelection.exists()).toBeTruthy();
-        expect(currentSelection.length).toEqual(1);
+        expect(currentSelection.length).toEqual(5);
       });
     });
   });
@@ -175,7 +175,7 @@ describe('LinodeResize', () => {
         );
 
         expect(currentSelection.exists()).toBeTruthy();
-        expect(currentSelection.length).toEqual(1);
+        expect(currentSelection.length).toEqual(5);
       });
     });
   });
