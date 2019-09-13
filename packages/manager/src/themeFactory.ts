@@ -720,21 +720,6 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           marginRight: 0
         }
       },
-      MuiRadio: {
-        root: {
-          '& $checked': {
-            color: primaryColors.main
-          },
-          color: primaryColors.main
-        },
-        checked: {},
-        colorSecondary: {
-          color: primaryColors.main,
-          '&$checked': {
-            color: primaryColors.main
-          }
-        }
-      },
       MuiInput: {
         root: {
           '&$disabled': {
@@ -822,6 +807,11 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         },
         shrink: {
           transform: 'none'
+        }
+      },
+      MuiLinearProgress: {
+        colorPrimary: {
+          backgroundColor: '#b7d6f9'
         }
       },
       MuiList: {
@@ -941,6 +931,21 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
           minWidth: 200,
           [breakpoints.up('lg')]: {
             minWidth: 250
+          }
+        }
+      },
+      MuiRadio: {
+        root: {
+          '& $checked': {
+            color: primaryColors.main
+          },
+          color: primaryColors.main
+        },
+        checked: {},
+        colorSecondary: {
+          color: primaryColors.main,
+          '&$checked': {
+            color: primaryColors.main
           }
         }
       },
