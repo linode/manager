@@ -3,6 +3,7 @@ import { pickBy } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
+import InputAdornment from 'src/components/core/InputAdornment';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
@@ -167,6 +168,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                 errorText={errors.label}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                required={mode === modes.CREATING}
               />
 
               <Select
@@ -207,17 +209,28 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                     setFieldValue('service_type', item.value)
                   }
                   onBlur={handleBlur}
+                  textFieldProps={{
+                    required: mode === modes.CREATING
+                  }}
                 />
                 <TextField
                   className={classes.smallInput}
                   name="timeout"
-                  label="Response Timeout (Seconds)"
+                  label="Response Timeout"
+                  type="number"
+                  tiny
                   data-qa-add-timeout
                   value={values.timeout}
                   error={!!errors.timeout}
                   errorText={errors.timeout}
                   onChange={handleChange}
+                  required={mode === modes.CREATING}
                   onBlur={handleBlur}
+                  InputProps={{
+                    endAdornment: (
+                      <InputAdornment position="end">seconds</InputAdornment>
+                    )
+                  }}
                 />
               </div>
 
@@ -231,6 +244,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                 tooltipText={helperText.url}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                required={mode === modes.CREATING}
               />
               <TextField
                 name="body"
