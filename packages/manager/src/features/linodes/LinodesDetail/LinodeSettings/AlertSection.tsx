@@ -28,7 +28,6 @@ const styles = (theme: Theme) =>
       }
     },
     root: {
-      minHeight: theme.spacing(16),
       position: 'relative',
       padding: `${theme.spacing(3)}px 0`,
       '&:last-of-type + hr': {
@@ -36,9 +35,13 @@ const styles = (theme: Theme) =>
       },
       '& .toggleLabel > span:last-child': {
         position: 'absolute',
-        left: `calc(58px + ${theme.spacing(4)}px)`,
-        top: theme.spacing(5),
-        ...theme.typography.h3
+        left: `calc(58px + ${theme.spacing(2)}px)`,
+        top: theme.spacing(3) + 16,
+        ...theme.typography.h3,
+        [theme.breakpoints.up('md')]: {
+          top: theme.spacing(3) + 8,
+          left: `calc(58px + ${theme.spacing(4)}px)`
+        }
       }
     },
     switch: {
@@ -50,7 +53,7 @@ const styles = (theme: Theme) =>
         flexBasis: '100%'
       },
       [theme.breakpoints.up('md')]: {
-        margin: `${theme.spacing(4)}px ${theme.spacing(4)}px 0`
+        margin: `24px ${theme.spacing(3) + 8}px 0`
       },
       [theme.breakpoints.up('lg')]: {
         width: 600
@@ -58,7 +61,8 @@ const styles = (theme: Theme) =>
     },
     usageWrapper: {
       [theme.breakpoints.down('md')]: {
-        width: '100%'
+        width: '100%',
+        marginTop: theme.spacing(2)
       }
     },
     usage: {
@@ -114,7 +118,7 @@ class AlertSection extends React.Component<CombinedProps> {
           <Grid item className={classes.copy}>
             <Typography>{this.props.copy}</Typography>
           </Grid>
-          <Grid item className={classes.usageWrapper}>
+          <Grid item className={`${classes.usageWrapper} py0`}>
             <TextField
               label={this.props.textTitle}
               type="number"
