@@ -47,8 +47,8 @@ export interface ManagedContact {
   updated: string;
 }
 export interface ManagedContactPhone {
-  primary: string | null;
-  secondary: string | null;
+  primary: string | null | undefined;
+  secondary: string | null | undefined;
 }
 
 export interface ManagedSSHPubKey {

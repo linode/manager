@@ -1,11 +1,11 @@
-import { array, boolean, number, object, string } from 'yup';
+import { array, boolean, mixed, number, object, string } from 'yup';
 
 export const createServiceMonitorSchema = object().shape({
   label: string()
     .required('Label is required.')
     .min(3, 'Label must be between 3 and 64 characters.')
     .max(64, 'Label must be between 3 and 64 characters.'),
-  service_type: string()
+  service_type: mixed()
     .required('Monitor type is required.')
     .oneOf(['url', 'tcp']),
   address: string().required('URL is required.'),
@@ -72,11 +72,11 @@ export const createContactSchema = object().shape({
     .email('Invalid e-mail address'),
   phone: object().shape({
     primary: string()
-      .notRequired()
-      .nullable(true),
-    secondary: string()
-      .notRequired()
       .nullable(true)
+      .notRequired(),
+    secondary: string()
+      .nullable(true)
+      .notRequired()
   }),
   group: string()
     .notRequired()

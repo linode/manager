@@ -57,7 +57,7 @@ export interface ContactPayload {
   name: string;
   email: string;
   phone?: ManagedContactPhone;
-  group?: string;
+  group?: string | null;
 }
 
 /**
@@ -140,7 +140,7 @@ export const getLinodeSettings = (params?: any, filters?: any) =>
  *
  * Creates a Managed Service Monitor
  */
-export const createServiceMonitor = (data: Partial<ManagedServicePayload>) =>
+export const createServiceMonitor = (data: ManagedServicePayload) =>
   Request<ManagedServiceMonitor>(
     setMethod('POST'),
     setURL(`${API_ROOT}/managed/services`),
@@ -288,10 +288,7 @@ export const createContact = (data: Partial<ContactPayload>) =>
  *
  * Updates a Managed Contact
  */
-export const updateContact = (
-  contactId: number,
-  data: Partial<ContactPayload>
-) =>
+export const updateContact = (contactId: number, data: ContactPayload) =>
   Request<ManagedContact>(
     setMethod('PUT'),
     setURL(`${API_ROOT}/managed/contacts/${contactId}`),
