@@ -2,10 +2,9 @@ import * as classNames from 'classnames';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
-// @todo: What is the actual folder icon?
-import FolderIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
+import FolderIcon from 'src/assets/icons/entityIcons/folder.svg';
 import KubeIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
 import LoadingIcon from 'src/assets/icons/entityIcons/loading.svg';
