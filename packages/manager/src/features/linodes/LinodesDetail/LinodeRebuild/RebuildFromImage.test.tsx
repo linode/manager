@@ -5,7 +5,7 @@ import {
   waitForElement
 } from '@testing-library/react';
 import * as React from 'react';
-import { images } from 'src/__data__/images';
+import { imagesByID as images } from 'src/__data__/images';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import { CombinedProps, RebuildFromImage } from './RebuildFromImage';
@@ -51,7 +51,9 @@ describe('RebuildFromImage', () => {
     const { getByTestId, getByText, getByPlaceholderText } = render(
       wrapWithTheme(<RebuildFromImage {...props} />)
     );
-    fireEvent.change(getByTestId('select'), { target: { value: 'linode/centos7' } });
+    fireEvent.change(getByTestId('select'), {
+      target: { value: 'linode/centos7' }
+    });
     fireEvent.change(getByPlaceholderText('Enter a password.'), {
       target: { value: 'AAbbCC1234!!' }
     });

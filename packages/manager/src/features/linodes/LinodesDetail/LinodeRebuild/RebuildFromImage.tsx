@@ -1,7 +1,11 @@
 import { Formik, FormikProps } from 'formik';
 import { GrantLevel } from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
-import { rebuildLinode, RebuildLinodeSchema, RebuildRequest } from 'linode-js-sdk/lib/linodes';
+import {
+  rebuildLinode,
+  RebuildLinodeSchema,
+  RebuildRequest
+} from 'linode-js-sdk/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -45,7 +49,7 @@ const styles = (theme: Theme) =>
   });
 
 interface WithImagesProps {
-  imagesData: Image[];
+  imagesData: Record<string, Image>;
   imagesLoading: boolean;
   imagesError?: string;
 }
@@ -171,7 +175,9 @@ export const RebuildFromImage: React.StatelessComponent<
             {status && <Notice error>{status.generalError}</Notice>}
             <ImageSelect
               title="Select Image"
-              images={imagesData}
+              images={Object.keys(imagesData).map(
+                thisKey => imagesData[thisKey]
+              )}
               error={imagesError || errors.image}
               selectedImageID={values.image}
               handleSelectImage={selected => setFieldValue('image', selected)}
