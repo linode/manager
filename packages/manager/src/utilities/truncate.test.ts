@@ -24,6 +24,6 @@ describe('truncateEnd', () => {
   });
 
   it('works with a maxLength of 4 (minimum)', () => {
-    expect(truncateEnd('bb.txt', 54)).toBe('aa...');
+    expect(truncateEnd('bb.txt', 4)).toBe('b...');
   });
 });
