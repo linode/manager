@@ -1,6 +1,6 @@
+import FileCopy from '@material-ui/icons/FileCopy';
 import * as copy from 'copy-to-clipboard';
 import * as React from 'react';
-import BucketBreadcrumbIcon from 'src/assets/icons/bucketBreadcrumb.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
@@ -12,10 +12,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center'
   },
   icon: {
-    '& .hover': {
-      // @todo: What to show here?
-    },
-    cursor: 'pointer'
+    cursor: 'pointer',
+    transition: theme.transitions.create(['color', 'background-color']),
+    color: theme.color.grey1,
+    margin: 0,
+    position: 'relative',
+    width: 24,
+    height: 24,
+    padding: 4,
+    borderRadius: theme.shape.borderRadius,
+    '&:hover': {
+      backgroundColor: theme.color.grey1,
+      color: theme.color.white
+    }
   },
   prefixWrapper: {
     marginLeft: theme.spacing(1.5),
@@ -30,6 +39,17 @@ const useStyles = makeStyles((theme: Theme) => ({
   link: {
     color: theme.palette.primary.main,
     cursor: 'pointer'
+  },
+  copied: {
+    fontSize: '.85rem',
+    left: -16,
+    color: theme.palette.text.primary,
+    padding: '6px 8px',
+    backgroundColor: theme.color.white,
+    position: 'absolute',
+    boxShadow: `0 0 5px ${theme.color.boxShadow}`,
+    transition: 'opacity .5s ease-in-out',
+    animation: '$popUp 200ms ease-in-out forwards'
   }
 }));
 
@@ -59,15 +79,14 @@ const BucketBreadcrumb: React.FC<CombinedProps> = props => {
 
   return (
     <div className={classes.root}>
-      <BucketBreadcrumbIcon
-        className={classes.icon}
-        onClick={() => copy(prefix)}
-      />
+      {/* {copied && (
+        <span className={classes.copied} data-qa-copied>
+          copied
+        </span>
+      )} */}
+      <FileCopy className={classes.icon} onClick={() => copy(prefix)} />
       <div className={classes.prefixWrapper}>
         {/* Bucket name */}
-        <Typography variant="body1" className={classes.slash}>
-          /
-        </Typography>
         <Typography
           variant="body1"
           className={classes.link}
