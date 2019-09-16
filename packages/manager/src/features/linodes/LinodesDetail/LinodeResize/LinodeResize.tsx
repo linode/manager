@@ -270,8 +270,8 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
               Current Plan
             </Typography>
             <Grid container>
-              <Hidden smDown>
-                <Grid item xs={12} lg={10}>
+              <Grid item xs={12} lg={10}>
+                <Hidden smDown implementation="css">
                   <Table border>
                     <TableHead>
                       <TableRow>
@@ -310,19 +310,19 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
                       </TableRow>
                     </TableBody>
                   </Table>
-                </Grid>
-              </Hidden>
-              {/* Displays SelectionCard for small screens */}
-              <Hidden mdUp>
-                <SelectionCard
-                  data-qa-current-plan
-                  checked={false}
-                  heading={currentPlanHeading}
-                  subheadings={currentPlanSubHeadings}
-                  disabled={disabled}
-                  variant="check"
-                />
-              </Hidden>
+                </Hidden>
+                {/* Displays SelectionCard for small screens */}
+                <Hidden mdUp implementation="css">
+                  <SelectionCard
+                    data-qa-current-plan
+                    checked={false}
+                    heading={currentPlanHeading}
+                    subheadings={currentPlanSubHeadings}
+                    disabled={disabled}
+                    variant="check"
+                  />
+                </Hidden>
+              </Grid>
             </Grid>
           </div>
         </Paper>
