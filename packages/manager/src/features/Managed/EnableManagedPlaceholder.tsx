@@ -72,9 +72,8 @@ const ManagedPlaceholder: React.FC<CombinedProps> = props => {
       <Placeholder
         icon={ManagedIcon}
         title="Linode Managed"
-        copy={`Let us worry about your infrastructure, so you can get back to worrying about your business. 
-           Linode Managed helps keep your systems up and running with our team of Linode experts responding to monitoring events, so you can sleep well.
-           Linode Managed includes 24/7 monitoring and incident responses, backups, and Longview Pro. +$100/month per Linode.`}
+        copy={`Linode Managed includes Backups, Longview Pro, cPanel, and round-the-clock monitoring to help keep your systems up and running. 
+          +$100/month per Linode.`}
         buttonProps={[
           {
             onClick: () => setOpen(true),
