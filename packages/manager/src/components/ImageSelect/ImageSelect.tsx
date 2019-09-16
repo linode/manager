@@ -1,5 +1,6 @@
 import produce from 'immer';
 import { Image } from 'linode-js-sdk/lib/images';
+import { equals } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -12,7 +13,6 @@ import { groupBy } from 'ramda';
 
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
-import Notice from 'src/components/Notice';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 
 import { distroIcons } from './icons';
@@ -154,11 +154,6 @@ export const ImageSelect: React.FC<Props> = props => {
         </Typography>
         <Grid container direction="row" wrap="nowrap" spacing={4}>
           <Grid container item direction="column">
-            {error && (
-              <Grid item>
-                <Notice spacingTop={8} spacingBottom={0} error text={error} />
-              </Grid>
-            )}
             <Grid container item direction="row">
               <Grid item xs={12}>
                 <Select
@@ -171,6 +166,7 @@ export const ImageSelect: React.FC<Props> = props => {
                     selectedImageID || '',
                     options
                   )}
+                  errorText={error}
                   components={{ Option: ImageOption, SingleValue }}
                   {...reactSelectProps}
                   className={classNames}
@@ -184,4 +180,12 @@ export const ImageSelect: React.FC<Props> = props => {
   );
 };
 
-export default ImageSelect;
+const isMemo = (prevProps: Props, nextProps: Props) => {
+  return (
+    equals(prevProps.images, nextProps.images) &&
+    prevProps.selectedImageID === nextProps.selectedImageID &&
+    prevProps.error === nextProps.error &&
+    prevProps.disabled === nextProps.disabled
+  );
+};
+export default React.memo(ImageSelect, isMemo);
