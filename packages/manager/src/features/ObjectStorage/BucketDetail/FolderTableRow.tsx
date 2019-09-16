@@ -6,7 +6,6 @@ import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import truncateText from 'src/utilities/truncateText';
 
 // Keep this for when we display URL on hover
 // import { generateObjectUrl } from '../utilities';
@@ -22,9 +21,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center'
-  },
-  folderName: {
-    color: theme.palette.primary.main
   }
 }));
 
@@ -53,15 +49,14 @@ const FolderTableRow: React.FC<CombinedProps> = props => {
           </Grid>
           <Grid item>
             <div className={classes.folderNameWrapper}>
-              <Typography variant="h3" className={classes.folderName}>
-                {truncateText(displayName, 40)}
+              <Typography variant="h3" style={{ whiteSpace: 'nowrap' }}>
+                {displayName}
               </Typography>
             </div>
           </Grid>
         </Grid>
       </TableCell>
       <TableCell parentColumn="Size" />
-      <TableCell parentColumn="Region" />
       <TableCell parentColumn="Last Modified" />
     </TableRow>
   );

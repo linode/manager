@@ -1,4 +1,9 @@
-import { basename, extendObject, isFolder } from './utilities';
+import {
+  basename,
+  extendObject,
+  isFolder,
+  prefixArrayToString
+} from './utilities';
 
 const folder: Linode.Object = {
   name: 'my-folder',
@@ -83,6 +88,30 @@ describe('Object Storage utilities', () => {
       );
     });
   });
-});
 
-extendObject(object1, 'hello');
+  describe('prefixArrayToString', () => {
+    it('returns a string with each element of the array joined by a slash', () => {
+      const result = prefixArrayToString(['hello', 'world'], 2);
+      expect(result).toBe('hello/world/');
+    });
+
+    it('allows specification of an ending index', () => {
+      const result1 = prefixArrayToString(['hello', 'world', 'test'], 0);
+      expect(result1).toBe('hello/');
+      const result2 = prefixArrayToString(['hello', 'world', 'test'], 1);
+      expect(result2).toBe('hello/world/');
+      const result3 = prefixArrayToString(['hello', 'world', 'test'], 2);
+      expect(result3).toBe('hello/world/test/');
+    });
+
+    it('returns nothing if prefixArray is empty', () => {
+      const result = prefixArrayToString([], 0);
+      expect(result).toBe('');
+    });
+
+    it('behaves like the cutoff is the length of the prefix array if the given cutoff is greater', () => {
+      const result = prefixArrayToString(['hello', 'world'], 8);
+      expect(result).toBe('hello/world/');
+    });
+  });
+});

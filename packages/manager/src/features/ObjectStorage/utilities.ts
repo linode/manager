@@ -68,3 +68,17 @@ export const extendObject = (
     _shouldDisplayObject: object.name !== prefix
   };
 };
+
+export const prefixArrayToString = (prefixArray: string[], cutoff: number) => {
+  if (prefixArray.length === 0) {
+    return '';
+  }
+
+  if (cutoff > prefixArray.length - 1) {
+    cutoff = prefixArray.length - 1;
+  }
+
+  const prefixSlice = prefixArray.slice(0, cutoff + 1).join('/');
+  const prefixString = prefixSlice + '/';
+  return prefixString;
+};

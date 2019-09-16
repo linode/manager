@@ -3,20 +3,23 @@ import * as React from 'react';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
+import { truncateEnd, truncateMiddle } from 'src/utilities/truncate';
 import { ExtendedObject } from '../utilities';
 import FolderTableRow from './FolderTableRow';
 import ObjectTableRow from './ObjectTableRow';
 
 interface Props {
-  clusterId: Linode.ClusterID;
   data: ExtendedObject[];
   loading: boolean;
   error?: APIError[];
-  nextPageError?: APIError[];
+  prefix: string;
 }
 
 const ObjectTableContent: React.FC<Props> = props => {
-  const { clusterId, data, loading, error, nextPageError } = props;
+  const { data, loading, error, prefix } = props;
+
+  const { width } = useWindowDimensions();
 
   if (loading && data.length === 0) {
     return <TableRowLoading colSpan={6} />;
@@ -31,11 +34,14 @@ const ObjectTableContent: React.FC<Props> = props => {
     );
   }
 
-  if (data.length === 0) {
+  // If there is no prefix, this is NOT a folder, so display the empty bucket message.
+  if (data.length === 0 && !prefix) {
     return (
       <TableRowEmptyState
         colSpan={6}
-        message="You don't have any Objects in this Bucket."
+        message="This bucket is empty."
+        // @todo: When we have the ability to add objects, use this message:
+        // message="This bucket is empty. Click here to add Objects."
       />
     );
   }
@@ -46,9 +52,14 @@ const ObjectTableContent: React.FC<Props> = props => {
 
   if (isFolderEmpty) {
     return (
-      <TableRowEmptyState colSpan={6} message="No matching Objects found." />
+      <TableRowEmptyState colSpan={6} message="This folder is empty." />
+      // @todo: When we have the ability to add objects, use this message:
+      // <TableRowEmptyState colSpan={6} message="This folder is empty. Click here to add Objects." />
     );
   }
+
+  // Be more strict with truncation lengths on smaller viewports.
+  const maxNameWidth = width < 600 ? 20 : 40;
 
   return (
     <>
@@ -62,7 +73,7 @@ const ObjectTableContent: React.FC<Props> = props => {
             <FolderTableRow
               key={object.name}
               folderName={object.name}
-              displayName={object._displayName}
+              displayName={truncateEnd(object._displayName, maxNameWidth)}
             />
           );
         }
@@ -70,8 +81,7 @@ const ObjectTableContent: React.FC<Props> = props => {
         return (
           <ObjectTableRow
             key={object.name}
-            clusterId={clusterId}
-            objectName={object._displayName}
+            objectName={truncateMiddle(object._displayName, maxNameWidth)}
             /**
              * In reality, if there's no `size` or `last_modified`, we're
              * probably dealing with a folder and will have already returned
@@ -84,9 +94,6 @@ const ObjectTableContent: React.FC<Props> = props => {
         );
       })}
       {loading && <TableRowLoading colSpan={12} transparent />}
-      {nextPageError && (
-        <TableRowError colSpan={12} message={nextPageError[0].reason} />
-      )}
     </>
   );
 };
