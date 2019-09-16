@@ -115,7 +115,9 @@ class ConfigureLinode extends Page {
     return $('[data-qa-tp="Region"]');
   }
 
-  get regionSelect() { return $('[data-qa-enhanced-select="Regions"] input'); }
+  get regionSelect() {
+    return $('[data-qa-enhanced-select="Regions"] input');
+  }
 
   get planHeader() {
     return $('[data-qa-tp="Linode Plan"]');
@@ -177,7 +179,7 @@ class ConfigureLinode extends Page {
   }
 
   cloneBaseElemsDisplay() {
-    console.log(`checking base clone page`)
+    console.log(`checking base clone page`);
     this.notice.waitForDisplayed();
     const notices = $$(this.notice.selector);
 
@@ -237,7 +239,8 @@ class ConfigureLinode extends Page {
       .withContext(`${this.label.selector} ${assertLog.displayed}`)
       .toBe(true);
     expect(this.labelHeader.isDisplayed())
-      .withContext(`${this.labelHeader.selector} ${assertLog.displayed}`).toBe(true);
+      .withContext(`${this.labelHeader.selector} ${assertLog.displayed}`)
+      .toBe(true);
 
     expect(this.passwordHeader.isDisplayed())
       .withContext(`${this.passwordHeader.selector} ${assertLog.displayed}`)
@@ -296,7 +299,7 @@ class ConfigureLinode extends Page {
     console.log('checking Create New Linode page');
     const tabDisplayed = `tab ${assertLog.displayed}`;
 
-    this.createHeader.waitForDisplayed(constants.wait.normal)
+    this.createHeader.waitForDisplayed(constants.wait.normal);
 
     expect(this.createFromDistribution.isDisplayed())
       .withContext(`Distributions ${tabDisplayed}`)
@@ -314,11 +317,13 @@ class ConfigureLinode extends Page {
     this.imageTabs.forEach(tab =>
       expect(tab.isDisplayed())
         .withContext(`${tabDisplayed}`)
-        .toBe(true));
+        .toBe(true)
+    );
     this.images.forEach(i =>
       expect(i.isDisplayed())
         .withContext(`distro image ${assertLog.displayed}`)
-        .toBe(true));
+        .toBe(true)
+    );
     expect(this.regionSelect.isDisplayed())
       .withContext(`"Select a Region" ${assertLog.displayed}`)
       .toBe(true);
@@ -327,12 +332,14 @@ class ConfigureLinode extends Page {
       .toBe(true);
     this.planTabs.forEach(tab =>
       expect(tab.isDisplayed())
-      .withContext(`plan ${tabDisplayed}`)
-      .toBe(true));
+        .withContext(`plan ${tabDisplayed}`)
+        .toBe(true)
+    );
     this.plans.forEach(p =>
       expect(p.isDisplayed())
         .withContext(`plan options ${assertLog.displayed}`)
-        .toBe(true));
+        .toBe(true)
+    );
     expect(this.labelHeader.isDisplayed())
       .withContext(`label header ${assertLog.displayed}`)
       .toBe(true);
@@ -351,26 +358,30 @@ class ConfigureLinode extends Page {
     this.addons.forEach(a =>
       expect(a.isDisplayed())
         .withContext(`add-on ${assertLog.displayed}`)
-        .toBe(true));
-    console.log('base Linode create page checked')
+        .toBe(true)
+    );
+    console.log('base Linode create page checked');
   }
   // Configure a basic linode, selecting all the default options
-  generic(label = `Test-Linode${new Date().getTime()}`, distro = 'Alpine 3.10') {
-    console.log(`creating a default linode`)
+  generic(
+    label = `Test-Linode${new Date().getTime()}`,
+    distro = 'Alpine 3.10'
+  ) {
+    console.log(`creating a default linode`);
 
     browser.enhancedSelect(this.imageDistro.selector, distro);
 
-    browser.trySetValue(this.regionSelect.selector, 'us-east')
-    browser.keys("\uE007");
+    browser.trySetValue(this.regionSelect.selector, 'us-east');
+    browser.keys('\uE007');
     this.plans[0].click();
-    browser.trySetValue(this.label.selector, label)
+    browser.trySetValue(this.label.selector, label);
     this.password.setValue(`SomeTimeStamp${new Date().getTime()}`);
   }
 
   selectRegion(region) {
     this.generic();
     this.regionSelect.setValue(region);
-    browser.keys("\uE007");
+    browser.keys('\uE007');
   }
 
   selectImage(imageName) {

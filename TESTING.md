@@ -60,7 +60,7 @@ brew cask uninstall java
 brew tap caskroom/versions
 brew cask install java
 ```
-* Node.js 8 LTS (`brew install node@8`)
+* Node.js 10 LTS (`brew install node@10`)
 * Google Chrome v60+ (`brew cask install google-chrome`)
 * Yarn  (`brew install yarn`)
 
