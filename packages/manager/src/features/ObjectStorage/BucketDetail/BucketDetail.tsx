@@ -206,7 +206,11 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
           <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/" />
         </Box>
         <Divider className={classes.divider} />
-        <BucketBreadcrumb prefix={prefix} />
+        <BucketBreadcrumb
+          prefix={prefix}
+          history={this.props.history}
+          bucketName={bucketName}
+        />
         <Paper className={classes.objectTable}>
           <Table removeLabelonMobile aria-label="List of Bucket Objects">
             <TableHead>
@@ -221,6 +225,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
                 data={data}
                 loading={loading}
                 error={generalError}
+                prefix={prefix}
               />
             </TableBody>
           </Table>

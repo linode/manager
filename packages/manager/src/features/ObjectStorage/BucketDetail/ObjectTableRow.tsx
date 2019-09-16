@@ -6,21 +6,16 @@ import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import { formatObjectStorageCluster } from 'src/utilities/formatRegion';
-import { truncateFileName } from 'src/utilities/truncateFileName';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 interface Props {
-  clusterId: Linode.ClusterID;
   objectName: string;
   objectSize: number;
   objectLastModified: string;
 }
 
 const ObjectTableRow: React.FC<Props> = props => {
-  const { clusterId, objectName, objectSize, objectLastModified } = props;
-
-  const truncatedObjectName = truncateFileName(objectName);
+  const { objectName, objectSize, objectLastModified } = props;
 
   return (
     <TableRow>
@@ -31,16 +26,15 @@ const ObjectTableRow: React.FC<Props> = props => {
           </Grid>
           <Grid item>
             <Box display="flex" alignItems="center">
-              <Typography variant="h3">{truncatedObjectName}</Typography>
+              <Typography variant="h3" style={{ whiteSpace: 'nowrap' }}>
+                {objectName}
+              </Typography>
             </Box>
           </Grid>
         </Grid>
       </TableCell>
       <TableCell parentColumn="Size">
         {readableBytes(objectSize).formatted}
-      </TableCell>
-      <TableCell parentColumn="Region">
-        {formatObjectStorageCluster(clusterId)}
       </TableCell>
       <TableCell parentColumn="Last Modified">
         <DateTimeDisplay value={objectLastModified} humanizeCutoff="never" />
