@@ -33,7 +33,7 @@ type ClassNames =
   | 'objectTable'
   | 'nameColumn'
   | 'sizeColumn'
-  | 'nextPageError'
+  | 'footer'
   | 'tryAgainText';
 
 const styles = (theme: Theme) =>
@@ -52,7 +52,7 @@ const styles = (theme: Theme) =>
     sizeColumn: {
       width: '11%'
     },
-    nextPageError: {
+    footer: {
       marginTop: theme.spacing(3),
       textAlign: 'center',
       color: theme.color.headline
@@ -83,7 +83,9 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
   state: State = {
     data: [],
     loading: false,
-    allObjectsFetched: false
+    allObjectsFetched: false,
+    generalError: undefined,
+    nextPageError: undefined
   };
 
   fetchData() {
@@ -94,6 +96,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
       allObjectsFetched: false,
       loading: true,
       generalError: undefined,
+      nextPageError: undefined,
       data: []
     });
 
@@ -123,7 +126,10 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
   }
 
   componentDidUpdate(prevProps: CombinedProps) {
-    if (prevProps.location.search !== this.props.location.search) {
+    // Request new data when the prefix changes.
+    const prevPrefix = getQueryParam(prevProps.location.search, 'prefix');
+    const nextPrefix = getQueryParam(this.props.location.search, 'prefix');
+    if (prevPrefix !== nextPrefix) {
       this.fetchData();
     }
   }
@@ -170,14 +176,12 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
       .catch(err => {
         this.setState({
           loading: false,
-          nextPage: err
+          nextPageError: err
         });
       });
   }
 
   render() {
-    const { bucketName } = this.props.match.params;
-    const prefix = getQueryParam(this.props.location.search, 'prefix');
     const { classes } = this.props;
     const {
       data,
@@ -186,6 +190,13 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
       nextPageError,
       allObjectsFetched
     } = this.state;
+
+    const { bucketName } = this.props.match.params;
+    const prefix = getQueryParam(this.props.location.search, 'prefix');
+
+    const numOfDisplayedObjects = this.state.data.filter(
+      object => object._shouldDisplayObject
+    ).length;
 
     return (
       <>
@@ -243,18 +254,22 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
             )}
         </Paper>
         {nextPageError && (
-          <Typography variant="subtitle2" className={classes.nextPageError}>
+          <Typography variant="subtitle2" className={classes.footer}>
             The next objects in the list failed to load.{' '}
-            <span className={classes.tryAgainText} onClick={this.getNextPage}>
+            <span
+              className={classes.tryAgainText}
+              onClick={() => this.getNextPage()}
+            >
               Click here to try again.
             </span>
           </Typography>
         )}
 
-        {/* Only display this message if there were more than 100 objects to
-        begin with, as a matter of UX convention. */}
-        {allObjectsFetched && data.length >= 100 && (
-          <Typography>You've reached the end of your bucket!</Typography>
+        {/* Only display this message if there were more than 100 objects. */}
+        {allObjectsFetched && numOfDisplayedObjects > 100 && (
+          <Typography variant="subtitle2" className={classes.footer}>
+            Showing all {numOfDisplayedObjects} items
+          </Typography>
         )}
       </>
     );
