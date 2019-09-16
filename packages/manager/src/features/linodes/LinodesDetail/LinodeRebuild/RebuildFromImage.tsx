@@ -232,12 +232,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 
 const enhanced = compose<CombinedProps, {}>(
   linodeContext,
-  withImages((ownProps, images, imagesLoading, imageError) => ({
-    ...ownProps,
-    images,
-    imagesLoading,
-    imageError
-  })),
+  withImages(),
   userSSHKeyHoc,
   styled,
   withSnackbar,
