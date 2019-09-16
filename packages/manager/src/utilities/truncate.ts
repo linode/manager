@@ -1,5 +1,5 @@
 /**
- * Truncate a string with an ellipsis in the middle.
+ * Truncate a string and add an ellipsis in the middle.
  */
 export const truncateMiddle = (objectName: string, maxLength = 40) => {
   if (objectName.length <= maxLength) {
@@ -20,7 +20,7 @@ export const truncateMiddle = (objectName: string, maxLength = 40) => {
 };
 
 /**
- * Truncate a string with an ellipsis at the end.
+ * Truncate a string and add an ellipsis at the end.
  */
 export const truncateEnd = (folderName: string, maxLength = 40) => {
   if (folderName.length <= maxLength) {
