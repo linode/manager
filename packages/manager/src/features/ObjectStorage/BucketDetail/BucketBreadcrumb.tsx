@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     cursor: 'pointer'
   },
   prefixWrapper: {
-    marginLeft: theme.spacing(2),
+    marginLeft: theme.spacing(1.5),
     display: 'flex',
     overflow: 'scroll',
     whiteSpace: 'nowrap'
@@ -47,11 +47,13 @@ const BucketBreadcrumb: React.FC<CombinedProps> = props => {
   const { prefix, bucketName, history } = props;
   const { width } = useWindowDimensions();
 
+  // Split the prefix into discrete sections for displaying in the component.
+  // 'my/path/to/objects/` > ['my', 'path', 'to', 'objects]
   const prefixArray = prefix.split('/').filter(section => section !== '');
 
   // This is not a very elegant way to truncate the prefix. In the future we
   // could take into account both the length of the prefix string AND the prefix
-  // array (the number of sections).
+  // array (the number of sections). @todo: Intelligent breadcrumbs.
   const shouldTruncatePrefix =
     (width <= 600 && prefixArray.length >= 3) || prefixArray.length > 5;
 
@@ -62,6 +64,7 @@ const BucketBreadcrumb: React.FC<CombinedProps> = props => {
         onClick={() => copy(prefix)}
       />
       <div className={classes.prefixWrapper}>
+        {/* Bucket name */}
         <Typography variant="body1" className={classes.slash}>
           /
         </Typography>
@@ -74,9 +77,15 @@ const BucketBreadcrumb: React.FC<CombinedProps> = props => {
         >
           {bucketName}
         </Typography>
+
+        {/* Ellipsis (if prefix is truncated) */}
         {shouldTruncatePrefix && (
-          <Typography variant="body1">/ ... </Typography>
+          <Typography variant="body1" className={classes.slash}>
+            / ...
+          </Typography>
         )}
+
+        {/* Mapped prefix */}
         {prefixArray.map((prefixSection, idx) => {
           if (shouldTruncatePrefix && idx < prefixArray.length - 3) {
             return null;
