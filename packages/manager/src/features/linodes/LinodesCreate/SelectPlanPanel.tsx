@@ -1,4 +1,4 @@
-import { LinodeType, LinodeTypeClass } from 'linode-js-sdk/lib/linodes'
+import { LinodeType, LinodeTypeClass } from 'linode-js-sdk/lib/linodes';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -35,7 +35,8 @@ type ClassNames = 'root' | 'copy';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      marginTop: theme.spacing(3)
+      marginTop: theme.spacing(3),
+      width: '100%'
     },
     copy: {
       marginTop: theme.spacing(1),
@@ -103,9 +104,9 @@ export class SelectPlanPanel extends React.Component<
           >
             <TableCell>
               <Radio
-                checked={isSamePlan ? true : type.id === String(selectedID)}
+                checked={type.id === String(selectedID)}
                 onChange={this.onSelect(type.id)}
-                disabled={planTooSmall || isSamePlan || disabled}
+                disabled={planTooSmall || disabled}
                 id={type.id}
               />
             </TableCell>
