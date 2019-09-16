@@ -1,5 +1,10 @@
 import { GrantLevel } from 'linode-js-sdk/lib/account';
-import { Disk, LinodeStatus, LinodeType, resizeLinode } from "linode-js-sdk/lib/linodes";
+import {
+  Disk,
+  LinodeStatus,
+  LinodeType,
+  resizeLinode
+} from 'linode-js-sdk/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -23,7 +28,6 @@ import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
-import Radio from 'src/components/Radio';
 import SelectionCard from 'src/components/SelectionCard';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
@@ -50,13 +54,18 @@ type ClassNames =
   | 'toolTip'
   | 'currentPlanContainer'
   | 'resizeTitle'
-  | 'checkbox';
+  | 'checkbox'
+  | 'currentHeaderEmptyCell'
+  | 'currentHeaderPlanCell';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
       padding: theme.spacing(3),
-      paddingBottom: theme.spacing(2)
+      paddingBottom: theme.spacing(2),
+      '& .selectionCard': {
+        padding: 0
+      }
     },
     checkbox: {
       marginTop: theme.spacing(3)
@@ -80,6 +89,12 @@ const styles = (theme: Theme) =>
       '& input[type=radio]': {
         cursor: 'not-allowed'
       }
+    },
+    currentHeaderEmptyCell: {
+      width: '13%'
+    },
+    currentHeaderPlanCell: {
+      width: '26%'
     }
   });
 
@@ -275,8 +290,10 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
                   <Table border>
                     <TableHead>
                       <TableRow>
-                        <TableCell />
-                        <TableCell>Linode Plan</TableCell>
+                        <TableCell className={classes.currentHeaderEmptyCell} />
+                        <TableCell className={classes.currentHeaderPlanCell}>
+                          Linode Plan
+                        </TableCell>
                         <TableCell>Monthly</TableCell>
                         <TableCell>Hourly</TableCell>
                         <TableCell>CPUs</TableCell>
@@ -286,13 +303,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
                     </TableHead>
                     <TableBody>
                       <TableRow key={type && type.id} data-qa-current-plan>
-                        <TableCell>
-                          <Radio
-                            checked={false}
-                            disabled={true}
-                            id={type && type.id}
-                          />
-                        </TableCell>
+                        <TableCell />
                         <TableCell
                           data-qa-select-table-heading={currentPlanHeading}
                         >
