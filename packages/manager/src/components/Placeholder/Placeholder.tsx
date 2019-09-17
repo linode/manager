@@ -139,8 +139,8 @@ const Placeholder: React.StatelessComponent<CombinedProps> = props => {
           alignItems="center"
           justify="center"
         >
-          {buttonProps.map(thisButton => (
-            <Grid item>
+          {buttonProps.map((thisButton, index) => (
+            <Grid item key={index}>
               <Button
                 buttonType="primary"
                 className={classes.button}
