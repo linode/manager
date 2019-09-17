@@ -12,9 +12,9 @@ import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
-
 import { distroIcons } from './icons';
 import ImageOption from './ImageOption';
+
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
