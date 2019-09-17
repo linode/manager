@@ -6,6 +6,8 @@ export const truncateMiddle = (str: string, maxLength = 40) => {
     return str;
   }
 
+  // We need a length of at least 5 for the result to make sense.
+  // truncateMiddle('aaaaa') === 'a...a'
   if (maxLength < 5) {
     throw Error('maxLength must be greater than 5.');
   }
@@ -27,6 +29,8 @@ export const truncateEnd = (str: string, maxLength = 40) => {
     return str;
   }
 
+  // We need a length of at least 4 for the result to make sense.
+  // truncateMiddle('aaaa') === 'a...'
   if (maxLength < 4) {
     throw Error('maxLength must be greater than 4.');
   }
