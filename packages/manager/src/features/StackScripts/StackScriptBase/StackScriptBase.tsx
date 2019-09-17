@@ -1,5 +1,6 @@
 import { Grant } from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
+import { StackScript } from 'linode-js-sdk/lib/stackscripts';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -51,7 +52,7 @@ export interface State {
   gettingMoreStackScripts: boolean;
   allStackScriptsLoaded: boolean;
   getMoreStackScriptsFailed: boolean; // did our attempt to get the next page of stackscripts fail?
-  listOfStackScripts: Linode.StackScript.Response[]; // @TODO type correctly
+  listOfStackScripts: StackScript[];
   sortOrder: SortOrder;
   currentFilterType: CurrentFilter | null;
   currentFilter: any; // @TODO type correctly
@@ -140,7 +141,7 @@ const withStackScriptBase = (isSelecting: boolean) => (
         filter,
         stackScriptGrants
       )
-        .then((response: Linode.ResourcePage<Linode.StackScript.Response>) => {
+        .then((response: Linode.ResourcePage<StackScript>) => {
           if (!this.mounted) {
             return;
           }

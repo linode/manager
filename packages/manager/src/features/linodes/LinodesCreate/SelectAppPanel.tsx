@@ -1,3 +1,4 @@
+import { UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
 import * as React from 'react';
 import { compose } from 'recompose';
 import {
@@ -38,7 +39,7 @@ interface Props extends AppsData {
     label: string,
     username: string,
     stackScriptImages: string[],
-    userDefinedFields: Linode.StackScript.UserDefinedField[]
+    userDefinedFields: UserDefinedField[]
   ) => void;
   openDrawer: (stackScriptLabel: string) => void;
   disabled: boolean;
@@ -151,13 +152,13 @@ interface SelectionProps {
     label: string,
     username: string,
     stackScriptImages: string[],
-    userDefinedFields: Linode.StackScript.UserDefinedField[]
+    userDefinedFields: UserDefinedField[]
   ) => void;
   openDrawer: (stackScriptLabel: string) => void;
   iconUrl: string;
   id: number;
   label: string;
-  userDefinedFields: Linode.StackScript.UserDefinedField[];
+  userDefinedFields: UserDefinedField[];
   availableImages: string[];
   disabled: boolean;
   checked: boolean;

@@ -1,7 +1,9 @@
 import { getUsers, Grant } from 'linode-js-sdk/lib/account';
-import { getStackScript, getStackScripts } from 'src/services/stackscripts';
-
-type StackScript = Linode.StackScript.Response;
+import {
+  getStackScript,
+  getStackScripts,
+  StackScript
+} from 'linode-js-sdk/lib/stackscripts';
 
 export type StackScriptCategory = 'account' | 'community';
 

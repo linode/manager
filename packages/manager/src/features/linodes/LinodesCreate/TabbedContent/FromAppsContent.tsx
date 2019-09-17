@@ -1,4 +1,5 @@
 import { Image } from 'linode-js-sdk/lib/images';
+import { UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
 import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
@@ -100,7 +101,7 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
     label: string,
     username: string,
     stackScriptImages: string[],
-    userDefinedFields: Linode.StackScript.UserDefinedField[]
+    userDefinedFields: UserDefinedField[]
   ) => {
     const { imagesData } = this.props;
     /**

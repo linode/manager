@@ -5,24 +5,13 @@ import Request, {
   setParams,
   setURL,
   setXFilter
-} from '../index';
-
+} from 'src/request';
+import { ResourcePage as Page } from '../types';
 import {
   stackScriptSchema,
   updateStackScriptSchema
 } from './stackscripts.schema';
-
-type Page<T> = Linode.ResourcePage<T>;
-type StackScript = Linode.StackScript.Response;
-
-interface StackScriptPayload {
-  script: string;
-  label: string;
-  images: string[];
-  description?: string;
-  is_public?: boolean;
-  rev_note?: string;
-}
+import { StackScript, StackScriptPayload } from './types';
 
 /**
  * Returns a paginated list of StackScripts.

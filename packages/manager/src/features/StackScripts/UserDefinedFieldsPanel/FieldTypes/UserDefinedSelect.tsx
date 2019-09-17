@@ -1,3 +1,4 @@
+import { UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import InputLabel from 'src/components/core/InputLabel';
@@ -28,7 +29,7 @@ const styles = (theme: Theme) =>
 interface Props {
   updateFormState: (key: string, value: any) => void;
   value: string;
-  field: Linode.StackScript.UserDefinedField;
+  field: UserDefinedField;
   isOptional: boolean;
   error?: string;
 }
