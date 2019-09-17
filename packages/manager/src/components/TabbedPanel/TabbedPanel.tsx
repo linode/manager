@@ -20,11 +20,7 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       flexGrow: 1,
-      width: `calc(100% + ${theme.spacing(1)}px)`,
-      backgroundColor: theme.color.white,
-      [theme.breakpoints.up('sm')]: {
-        width: `calc(100% + ${theme.spacing(2)}px)`
-      }
+      backgroundColor: theme.color.white
     },
     inner: {
       padding: theme.spacing(2),
