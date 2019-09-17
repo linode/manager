@@ -52,7 +52,7 @@ export interface State {
   gettingMoreStackScripts: boolean;
   allStackScriptsLoaded: boolean;
   getMoreStackScriptsFailed: boolean; // did our attempt to get the next page of stackscripts fail?
-  listOfStackScripts: StackScript[]; // @TODO type correctly
+  listOfStackScripts: StackScript[];
   sortOrder: SortOrder;
   currentFilterType: CurrentFilter | null;
   currentFilter: any; // @TODO type correctly
