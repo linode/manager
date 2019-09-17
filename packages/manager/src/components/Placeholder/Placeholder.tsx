@@ -140,7 +140,7 @@ const Placeholder: React.StatelessComponent<CombinedProps> = props => {
           justify="center"
         >
           {buttonProps.map((thisButton, index) => (
-            <Grid item key={index}>
+            <Grid item key={`placeholder-button-${index}`}>
               <Button
                 buttonType="primary"
                 className={classes.button}
