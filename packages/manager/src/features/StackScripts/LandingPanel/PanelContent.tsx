@@ -1,3 +1,8 @@
+import {
+  deleteStackScript,
+  StackScript,
+  updateStackScript
+} from 'linode-js-sdk/lib/stackscripts';
 import { compose, pathOr, split } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -9,10 +14,6 @@ import {
 } from 'src/components/core/styles';
 import DebouncedSearch from 'src/components/DebouncedSearchTextField';
 import Pagey, { PaginationProps } from 'src/components/Pagey';
-import {
-  deleteStackScript,
-  updateStackScript
-} from 'src/services/stackscripts';
 import { MapState } from 'src/store/types';
 import { sendStackscriptsSearchEvent } from 'src/utilities/ga';
 import {
@@ -58,7 +59,7 @@ interface State {
 }
 
 type CombinedProps = Props &
-  PaginationProps<Linode.StackScript.Response> &
+  PaginationProps<StackScript> &
   StateProps &
   WithStyles<ClassNames>;
 

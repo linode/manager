@@ -1,5 +1,10 @@
 import { Grant } from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
+import {
+  getStackScript,
+  StackScript,
+  updateStackScript
+} from 'linode-js-sdk/lib/stackscripts';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -29,7 +34,6 @@ import { StackScripts } from 'src/documentation';
 import reloadableWithRouter from 'src/features/linodes/LinodesDetail/reloadableWithRouter';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
 import ScriptForm from 'src/features/StackScripts/StackScriptForm';
-import { getStackScript, updateStackScript } from 'src/services/stackscripts';
 import { MapState } from 'src/store/types';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -53,11 +57,11 @@ const styles = (theme: Theme) =>
   });
 
 interface PreloadedProps {
-  stackScript: { response: Linode.StackScript.Response };
+  stackScript: { response: StackScript };
 }
 
 interface State {
-  stackScript: Linode.StackScript.Response;
+  stackScript: StackScript;
   retrievalError?: Error; // error retrieving the stackscript
   labelText: string;
   descriptionText: string;
@@ -204,7 +208,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
     this.setState({ isSubmitting: true });
 
     updateStackScript(stackScript.response.id, payload)
-      .then((updatedStackScript: Linode.StackScript.Response) => {
+      .then((updatedStackScript: StackScript) => {
         if (!this.mounted) {
           return;
         }

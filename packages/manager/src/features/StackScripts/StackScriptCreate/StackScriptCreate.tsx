@@ -1,4 +1,5 @@
 import { Image } from 'linode-js-sdk/lib/images';
+import { createStackScript, StackScript } from 'linode-js-sdk/lib/stackscripts';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -28,7 +29,6 @@ import {
   isRestrictedUser
 } from 'src/features/Profile/permissionsHelpers';
 import ScriptForm from 'src/features/StackScripts/StackScriptForm';
-import { createStackScript } from 'src/services/stackscripts';
 import { MapState } from 'src/store/types';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -160,7 +160,7 @@ export class StackScriptCreate extends React.Component<CombinedProps, State> {
     this.setState({ isSubmitting: true });
 
     createStackScript(payload)
-      .then((stackScript: Linode.StackScript.Response) => {
+      .then((stackScript: StackScript) => {
         if (!this.mounted) {
           return;
         }

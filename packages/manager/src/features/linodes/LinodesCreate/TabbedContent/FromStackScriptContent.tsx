@@ -1,5 +1,6 @@
 import { Grant } from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
+import { StackScript, UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
 import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
@@ -69,7 +70,7 @@ interface Props {
     params?: any,
     filter?: any,
     stackScriptGrants?: Grant[]
-  ) => Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
+  ) => Promise<Linode.ResourcePage<StackScript>>;
   header: string;
   category: 'community' | 'account';
 }
@@ -97,7 +98,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
     label: string,
     username: string,
     stackScriptImages: string[],
-    userDefinedFields: Linode.StackScript.UserDefinedField[]
+    userDefinedFields: UserDefinedField[]
   ) => {
     const { imagesData } = this.props;
     /**

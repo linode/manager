@@ -1,3 +1,4 @@
+import { UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
@@ -43,7 +44,7 @@ const styles = (theme: Theme) =>
 
 interface Props {
   errors?: Linode.ApiFieldError[];
-  userDefinedFields?: Linode.StackScript.UserDefinedField[];
+  userDefinedFields?: UserDefinedField[];
   handleChange: (key: string, value: any) => void;
   udf_data: any;
   selectedLabel: string;
@@ -53,10 +54,7 @@ interface Props {
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
-  renderField = (
-    field: Linode.StackScript.UserDefinedField,
-    error?: string
-  ) => {
+  renderField = (field: UserDefinedField, error?: string) => {
     const { udf_data, handleChange } = this.props;
     // if the 'default' key is returned from the API, the field is optional
     const isOptional = field.hasOwnProperty('default');
@@ -155,7 +153,7 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
         </Typography>
 
         {/* Required Fields */}
-        {requiredUDFs.map((field: Linode.StackScript.UserDefinedField) => {
+        {requiredUDFs.map((field: UserDefinedField) => {
           const error = getError(field, this.props.errors);
           return this.renderField(field, error);
         })}
@@ -170,12 +168,10 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
             <div
               className={`${classes.optionalFieldWrapper} optionalFieldWrapper`}
             >
-              {optionalUDFs.map(
-                (field: Linode.StackScript.UserDefinedField) => {
-                  const error = getError(field, this.props.errors);
-                  return this.renderField(field, error);
-                }
-              )}
+              {optionalUDFs.map((field: UserDefinedField) => {
+                const error = getError(field, this.props.errors);
+                return this.renderField(field, error);
+              })}
             </div>
           </ShowMoreExpansion>
         )}
@@ -184,10 +180,7 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
   }
 }
 
-const getError = (
-  field: Linode.StackScript.UserDefinedField,
-  errors?: Linode.ApiFieldError[]
-) => {
+const getError = (field: UserDefinedField, errors?: Linode.ApiFieldError[]) => {
   if (!errors) {
     return;
   }
@@ -199,11 +192,11 @@ const isPasswordField = (udfName: string) => {
   return udfName.toLowerCase().includes('password');
 };
 
-const isOneSelect = (udf: Linode.StackScript.UserDefinedField) => {
+const isOneSelect = (udf: UserDefinedField) => {
   return !!udf.oneof; // if we have a oneof prop, it's a radio button
 };
 
-const isMultiSelect = (udf: Linode.StackScript.UserDefinedField) => {
+const isMultiSelect = (udf: UserDefinedField) => {
   return !!udf.manyof; // if we have a manyof prop, it's a checkbox
 };
 
@@ -212,9 +205,7 @@ const isMultiSelect = (udf: Linode.StackScript.UserDefinedField) => {
  *
  * @return nested array [[...requiredUDFs], [...nonRequiredUDFs]]
  */
-const seperateUDFsByRequiredStatus = (
-  udfs: Linode.StackScript.UserDefinedField[]
-) => {
+const seperateUDFsByRequiredStatus = (udfs: UserDefinedField[]) => {
   return udfs.reduce(
     (accum, eachUDF) => {
       /**

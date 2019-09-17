@@ -1,4 +1,5 @@
 import { Grant } from 'linode-js-sdk/lib/account';
+import { StackScript } from 'linode-js-sdk/lib/stackscripts';
 import {
   compose as ramdaCompose,
   isEmpty,
@@ -29,7 +30,7 @@ import { MapState } from 'src/store/types';
 import LabelCell from '../LabelCell';
 
 interface StackScriptData {
-  stackScripts?: Linode.StackScript.Response[];
+  stackScripts?: StackScript[];
   loading: boolean;
   error?: Linode.ApiFieldError[];
 }

@@ -22,4 +22,6 @@ export * from './kubernetes';
 
 export * from './firewalls';
 
+export * from './stackscripts';
+
 export { baseRequest } from './request';
