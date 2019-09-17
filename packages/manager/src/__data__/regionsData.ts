@@ -1,4 +1,6 @@
-export const regions = [
+import { Region } from 'linode-js-sdk/lib/regions';
+
+export const regions: Region[] = [
   {
     capabilities: ['Linodes', 'NodeBalancers', 'Block Storage'],
     country: 'in',

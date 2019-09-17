@@ -5,6 +5,7 @@ import IN from 'flag-icon-css/flags/4x3/in.svg';
 import JP from 'flag-icon-css/flags/4x3/jp.svg';
 import SG from 'flag-icon-css/flags/4x3/sg.svg';
 import US from 'flag-icon-css/flags/4x3/us.svg';
+import { Region } from 'linode-js-sdk/lib/regions';
 import { groupBy, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -16,7 +17,7 @@ import Select, {
 
 import RegionOption, { RegionItem } from './RegionOption';
 
-export interface ExtendedRegion extends Linode.Region {
+export interface ExtendedRegion extends Region {
   display: string;
 }
 

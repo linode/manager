@@ -1,3 +1,4 @@
+import { Region } from 'linode-js-sdk/lib/regions';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -40,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   currentRegion: { region: string; countryCode: string };
-  allRegions: Linode.Region[];
+  allRegions: Region[];
   handleSelectRegion: (id: string) => void;
   selectedRegion: string | null;
   errorText?: string;
