@@ -333,3 +333,8 @@ export const normalizedImages = {
     expiry: null
   }
 };
+
+export const imagesByID = images.reduce((accum, thisImage) => {
+  accum[thisImage.id] = thisImage;
+  return accum;
+}, {});
