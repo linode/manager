@@ -1,3 +1,8 @@
+import {
+  LinodeBackup,
+  LinodeBackupsResponse,
+  LinodeWithBackups
+} from 'linode-js-sdk/lib/linodes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -48,16 +53,16 @@ interface Props {
   selectedLinodeID?: number;
   selectedBackupID?: number;
   error?: string;
-  backups: Linode.LinodeWithBackups[];
+  backups: LinodeWithBackups[];
   handleChangeBackup: (id: number) => void;
   handleChangeBackupInfo: (info: BackupInfo) => void;
 }
 
 interface State {
-  backups?: Linode.LinodeBackup[];
+  backups?: LinodeBackup[];
 }
 
-const mockBackup: Linode.LinodeBackupsResponse = {
+const mockBackup: LinodeBackupsResponse = {
   snapshot: {
     in_progress: null,
     current: null
@@ -123,7 +128,7 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
     }
   }
 
-  getBackupInfo(backup: Linode.LinodeBackup) {
+  getBackupInfo(backup: LinodeBackup) {
     const heading = backup.label
       ? backup.label
       : backup.type === 'auto'
@@ -141,7 +146,7 @@ class SelectBackupPanel extends React.Component<CombinedProps, State> {
     };
   }
 
-  renderCard(backup: Linode.LinodeBackup) {
+  renderCard(backup: LinodeBackup) {
     const { selectedBackupID } = this.props;
     const backupInfo_ = this.getBackupInfo(backup);
     return (

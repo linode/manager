@@ -1,4 +1,9 @@
 import { Image } from 'linode-js-sdk/lib/images';
+import {
+  cloneLinode,
+  CreateLinodeRequest,
+  Linode
+} from 'linode-js-sdk/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -51,7 +56,6 @@ import {
 
 import { resetEventsPolling } from 'src/events';
 import { getOneClickApps } from 'src/features/StackScripts/stackScriptUtils';
-import { cloneLinode, CreateLinodeRequest } from 'src/services/linodes';
 
 import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { MapState } from 'src/store/types';
@@ -311,7 +315,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
        * safe to ignore possibility of "undefined"
        * null checking happens in CALinodeCreate
        */
-      const selectedImage = imagesData!.find(img => img.id === selectedImageID);
+      const selectedImage = imagesData![selectedImageID];
       /**
        * Use 'vendor' if it's a public image, otherwise use label (because 'vendor' will be null)
        *
@@ -425,7 +429,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.setState({ formIsSubmitting: true });
 
     return request()
-      .then((response: Linode.Linode) => {
+      .then((response: Linode) => {
         this.setState({ formIsSubmitting: false });
 
         /** if cloning a Linode, upsert Linode in redux */
@@ -528,9 +532,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      * safe to ignore possibility of "undefined"
      * null checking happens in CALinodeCreate
      */
-    const selectedImage = this.props.imagesData!.find(
-      image => image.id === selectedImageID
-    );
+    const selectedImage = this.props.imagesData![selectedImageID];
 
     return (
       selectedImage && {
@@ -606,7 +608,7 @@ const mapStateToProps: MapState<
 });
 
 interface DispatchProps {
-  upsertLinode: (l: Linode.Linode) => void;
+  upsertLinode: (l: Linode) => void;
 }
 
 const connected = connect(

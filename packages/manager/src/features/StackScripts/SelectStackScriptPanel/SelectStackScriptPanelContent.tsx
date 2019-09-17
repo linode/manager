@@ -17,7 +17,7 @@ interface Props {
     userDefinedFields: Linode.StackScript.UserDefinedField[]
   ) => void;
   resetStackScriptSelection: () => void;
-  publicImages: Image[];
+  publicImages: Record<string, Image>;
   currentUser: string;
   request: (
     username: string,

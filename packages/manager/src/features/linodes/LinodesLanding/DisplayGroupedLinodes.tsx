@@ -1,3 +1,4 @@
+import { Config, Linode } from 'linode-js-sdk/lib/linodes';
 import { compose } from 'ramda';
 import * as React from 'react';
 import {
@@ -70,11 +71,11 @@ interface Props {
     bootAction: Action,
     linodeID: number,
     linodeLabel: string,
-    linodeConfigs: Linode.Config[]
+    linodeConfigs: Config[]
   ) => void;
   display: 'grid' | 'list';
   component: any;
-  data: Linode.Linode[];
+  data: Linode[];
   someLinodesHaveMaintenance: boolean;
 }
 

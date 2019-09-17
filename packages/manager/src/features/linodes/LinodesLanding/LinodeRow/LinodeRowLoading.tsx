@@ -1,4 +1,5 @@
 import { Event } from 'linode-js-sdk/lib/account';
+import { LinodeStatus } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import {
   createStyles,
@@ -35,7 +36,7 @@ const styles = (theme: Theme) =>
 
 interface Props {
   linodeId: number;
-  linodeStatus: Linode.LinodeStatus;
+  linodeStatus: LinodeStatus;
   linodeRecentEvent?: Event;
 }
 

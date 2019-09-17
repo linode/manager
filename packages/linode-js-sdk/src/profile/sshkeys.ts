@@ -1,10 +1,14 @@
 import { API_ROOT } from 'src/constants';
-
-import Request, { setData, setMethod, setParams, setURL, setXFilter } from '..';
+import Request, {
+  setData,
+  setMethod,
+  setParams,
+  setURL,
+  setXFilter
+} from 'src/request';
+import { ResourcePage as Page } from '../types';
 import { createSSHKeySchema } from './profile.schema';
-
-type Page<T> = Linode.ResourcePage<T>;
-type SSHKey = Linode.SSHKey;
+import { SSHKey } from './types';
 
 /**
  * getSSHKeys
@@ -53,7 +57,7 @@ export const createSSHKey = (data: { label: string; ssh_key: string }) =>
  * @param keyId { number } the ID of the key to be updated.
  *
  */
-export const updateSSHKey = (keyId: number, data: Partial<Linode.SSHKey>) =>
+export const updateSSHKey = (keyId: number, data: Partial<SSHKey>) =>
   Request<SSHKey>(
     setMethod('DELETE'),
     setURL(`${API_ROOT}/profile/sshkeys/${keyId}`),

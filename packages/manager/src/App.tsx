@@ -1,6 +1,11 @@
 import * as classnames from 'classnames';
-import { Account, AccountCapability } from 'linode-js-sdk/lib/account';
+import {
+  Account,
+  AccountCapability,
+  Notification
+} from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
+import { Linode } from 'linode-js-sdk/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { shim } from 'promise.prototype.finally';
 import { path, pathOr } from 'ramda';
@@ -565,8 +570,8 @@ const getObjectStorageRoute = (
 
 interface DispatchProps {
   addNotificationsToLinodes: (
-    notifications: Linode.Notification[],
-    linodes: Linode.Linode[]
+    notifications: Notification[],
+    linodes: Linode[]
   ) => void;
   markAppAsDoneLoading: () => void;
 }
@@ -576,8 +581,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
 ) => {
   return {
     addNotificationsToLinodes: (
-      _notifications: Linode.Notification[],
-      linodes: Linode.Linode[]
+      _notifications: Notification[],
+      linodes: Linode[]
     ) => dispatch(addNotificationsToLinodes(_notifications, linodes)),
     markAppAsDoneLoading: () => dispatch(handleLoadingDone())
   };
@@ -585,9 +590,9 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
 
 interface StateProps {
   /** Profile */
-  linodes: Linode.Linode[];
+  linodes: Linode[];
   images?: Image[];
-  notifications?: Linode.Notification[];
+  notifications?: Notification[];
   types?: string[];
   regions?: Linode.Region[];
   userId?: number;
@@ -625,15 +630,13 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   linodes: state.__resources.linodes.entities,
   linodesError: path(['read'], state.__resources.linodes.error),
   domainsError: state.__resources.domains.error.read,
-  imagesError: state.__resources.images.error,
+  imagesError: path(['read'], state.__resources.images.error),
   notifications: state.__resources.notifications.data,
   notificationsError: state.__resources.notifications.error,
   settingsError: state.__resources.accountSettings.error.read,
   typesError: state.__resources.types.error,
   regionsError: state.__resources.regions.error,
-  volumesError: state.__resources.volumes.error
-    ? state.__resources.volumes.error.read
-    : undefined,
+  volumesError: path(['read'], state.__resources.volumes.error),
   bucketsError: state.__resources.buckets.error,
   userId: path(['data', 'uid'], state.__resources.profile),
   username: pathOr('', ['data', 'username'], state.__resources.profile),

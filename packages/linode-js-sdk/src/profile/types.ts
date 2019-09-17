@@ -23,3 +23,66 @@ export interface Profile {
   restricted: boolean;
   grants?: Grants;
 }
+
+export interface TokenRequest {
+  scopes?: string;
+  expiry?: string;
+  label: string;
+}
+
+export interface Token {
+  id: number;
+  scopes: string;
+  label: string;
+  created: string;
+  token?: string;
+  expiry: string;
+  website?: string;
+  thumbnail_url?: null | string;
+}
+
+export interface ObjectStorageKey {
+  access_key: string;
+  id: number;
+  label: string;
+  secret_key: string;
+}
+
+export interface Bucket {
+  label: string;
+  objects: number;
+  created: string;
+  size: number;
+  region: string;
+  cluster: string;
+  hostname: string;
+}
+
+export interface Cluster {
+  region: string;
+  status: string; // @todo: should be enum
+  id: string;
+  domain: string;
+  static_site_domain: string;
+}
+
+export interface TrustedDevice {
+  created: string;
+  last_authenticated: string;
+  last_remote_addr: string;
+  id: number;
+  user_agent: string;
+  expiry: string;
+}
+
+export interface SSHKey {
+  created: string;
+  id: number;
+  label: string;
+  ssh_key: string;
+}
+
+export interface Secret {
+  secret: string;
+  expiry: Date;
+}

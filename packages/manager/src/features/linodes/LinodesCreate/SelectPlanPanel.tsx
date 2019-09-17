@@ -1,3 +1,4 @@
+import { LinodeType, LinodeTypeClass } from 'linode-js-sdk/lib/linodes';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -15,7 +16,7 @@ import SelectionCard from 'src/components/SelectionCard';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 
-export interface ExtendedType extends Linode.LinodeType {
+export interface ExtendedType extends LinodeType {
   heading: string;
   subHeadings: [string, string];
 }
@@ -96,7 +97,7 @@ export class SelectPlanPanel extends React.Component<
     );
   };
 
-  createTabs = (): [Tab[], Linode.LinodeTypeClass[]] => {
+  createTabs = (): [Tab[], LinodeTypeClass[]] => {
     const { classes, types } = this.props;
     const tabs: Tab[] = [];
     const nanodes = getNanodes(types);
@@ -105,7 +106,7 @@ export class SelectPlanPanel extends React.Component<
     const dedicated = getDedicated(types);
     const gpu = getGPU(types);
 
-    const tabOrder: Linode.LinodeTypeClass[] = [];
+    const tabOrder: LinodeTypeClass[] = [];
 
     if (!isEmpty(nanodes)) {
       tabs.push({
@@ -195,6 +196,7 @@ export class SelectPlanPanel extends React.Component<
           <a
             href="https://www.linode.com/docs/platform/linode-gpu/getting-started-with-gpu/"
             target="_blank"
+            rel="noopener noreferrer"
           >
             {` `}Here is a guide
           </a>{' '}
@@ -233,7 +235,7 @@ export class SelectPlanPanel extends React.Component<
     const [tabs, tabOrder] = this.createTabs();
     // Determine initial plan category tab based on selectedTypeID
     // (if there is one).
-    const selectedTypeClass: Linode.LinodeTypeClass = pathOr(
+    const selectedTypeClass: LinodeTypeClass = pathOr(
       'standard', // Use `standard` by default
       ['class'],
       types.find(type => type.id === selectedID)

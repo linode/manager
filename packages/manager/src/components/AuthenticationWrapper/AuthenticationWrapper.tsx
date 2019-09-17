@@ -1,6 +1,11 @@
-import { Account, AccountSettings } from 'linode-js-sdk/lib/account';
+import {
+  Account,
+  AccountSettings,
+  Notification
+} from 'linode-js-sdk/lib/account';
 import { Domain } from 'linode-js-sdk/lib/domains';
 import { Image } from 'linode-js-sdk/lib/images';
+import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
 import { Profile } from 'linode-js-sdk/lib/profile';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
@@ -136,10 +141,10 @@ interface DispatchProps {
   requestAccount: () => Promise<Account>;
   requestDomains: () => Promise<Domain[]>;
   requestImages: () => Promise<Image[]>;
-  requestLinodes: () => Promise<Linode.Linode[]>;
-  requestNotifications: () => Promise<Linode.Notification[]>;
+  requestLinodes: () => Promise<Linode[]>;
+  requestNotifications: () => Promise<Notification[]>;
   requestSettings: () => Promise<AccountSettings>;
-  requestTypes: () => Promise<Linode.LinodeType[]>;
+  requestTypes: () => Promise<LinodeType[]>;
   requestRegions: () => Promise<Linode.Region[]>;
   requestVolumes: () => Promise<Volume[]>;
   requestProfile: () => Promise<Profile>;

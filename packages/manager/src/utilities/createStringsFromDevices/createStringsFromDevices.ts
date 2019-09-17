@@ -1,10 +1,11 @@
+import { DiskDevice, VolumeDevice } from 'linode-js-sdk/lib/linodes';
 import { compose, reduce, toPairs } from 'ramda';
 
 import { DevicesAsStrings } from 'src/utilities/createDevicesFromStrings';
 
 const rdx = (
   result: DevicesAsStrings,
-  [key, device]: [string, null | Linode.DiskDevice | Linode.VolumeDevice]
+  [key, device]: [string, null | DiskDevice | VolumeDevice]
 ) => {
   if (device === null) {
     return result;
@@ -21,15 +22,13 @@ const rdx = (
   return result;
 };
 
-const isDisk = (
-  device: Linode.DiskDevice | Linode.VolumeDevice
-): device is Linode.DiskDevice => {
-  return typeof (device as Linode.DiskDevice).disk_id === 'number';
+const isDisk = (device: DiskDevice | VolumeDevice): device is DiskDevice => {
+  return typeof (device as DiskDevice).disk_id === 'number';
 };
 const isVolume = (
-  device: Linode.DiskDevice | Linode.VolumeDevice
-): device is Linode.VolumeDevice => {
-  return typeof (device as Linode.VolumeDevice).volume_id === 'number';
+  device: DiskDevice | VolumeDevice
+): device is VolumeDevice => {
+  return typeof (device as VolumeDevice).volume_id === 'number';
 };
 
 export default compose(

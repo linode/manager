@@ -1,4 +1,12 @@
 import { Event } from 'linode-js-sdk/lib/account';
+import {
+  cloneLinode,
+  cloneLinodeDisk,
+  Config,
+  Disk,
+  Linode,
+  LinodeStatus
+} from 'linode-js-sdk/lib/linodes';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -24,7 +32,6 @@ import Grid from 'src/components/Grid';
 import TabLink from 'src/components/TabLink';
 import withLinodes from 'src/containers/withLinodes.container';
 import { resetEventsPolling } from 'src/events';
-import { cloneLinode, cloneLinodeDisk } from 'src/services/linodes';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { getErrorMap } from 'src/utilities/errorUtils';
@@ -77,7 +84,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface WithLinodesProps {
-  linodesData: Linode.Linode[];
+  linodesData: Linode[];
   linodesLoading: boolean;
   linodesError?: Linode.ApiFieldError[];
 }
@@ -238,7 +245,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
      * 1) Duplicate a single disk on the current Linode.
      * 2) Clone configs/disks to a different Linode.
      */
-    let request: () => Promise<Linode.Linode | Linode.Disk>;
+    let request: () => Promise<Linode | Disk>;
 
     // The selected Linode is the same as the current Linode -- duplicate the disk
     if (state.selectedLinodeId === linodeId) {
@@ -441,11 +448,11 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
 
 interface LinodeContextProps {
   linodeId: number;
-  configs: Linode.Config[];
-  disks: Linode.Disk[];
+  configs: Config[];
+  disks: Disk[];
   region: string;
   label: string;
-  linodeStatus: Linode.LinodeStatus;
+  linodeStatus: LinodeStatus;
   linodeEvents: Event[];
 }
 const linodeContext = withLinodeDetailContext(({ linode }) => ({

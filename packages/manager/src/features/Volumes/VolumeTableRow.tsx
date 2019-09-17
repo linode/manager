@@ -220,7 +220,7 @@ export const VolumeTableRow: React.StatelessComponent<
               {volume.linodeLabel}
             </Link>
           ) : (
-            <Typography>Unattached</Typography>
+            <Typography data-qa-unattached>Unattached</Typography>
           )}
         </TableCell>
       )}

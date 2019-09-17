@@ -14,4 +14,12 @@ export * from './images';
 
 export * from './tags';
 
+export * from './linodes';
+
+export * from './authentication';
+
+export * from './kubernetes';
+
+export * from './firewalls';
+
 export { baseRequest } from './request';

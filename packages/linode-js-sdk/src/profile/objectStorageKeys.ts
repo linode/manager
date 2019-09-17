@@ -5,10 +5,11 @@ import Request, {
   setParams,
   setURL,
   setXFilter
-} from '../index';
+} from '../request';
+import { ResourcePage as Page } from '../types';
 import { createObjectStorageKeysSchema } from './objectStorageKeys.schema';
+import { ObjectStorageKey } from './types';
 
-type Page<T> = Linode.ResourcePage<T>;
 export interface ObjectStorageKeyRequest {
   label: string;
 }
@@ -18,7 +19,7 @@ export interface ObjectStorageKeyRequest {
  * Gets a list of a user's Object Storage Keys
  */
 export const getObjectStorageKeys = (params?: any, filters?: any) =>
-  Request<Page<Linode.ObjectStorageKey>>(
+  Request<Page<ObjectStorageKey>>(
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
@@ -31,7 +32,7 @@ export const getObjectStorageKeys = (params?: any, filters?: any) =>
  * Creates an Object Storage key
  */
 export const createObjectStorageKeys = (data: ObjectStorageKeyRequest) =>
-  Request<Linode.ObjectStorageKey>(
+  Request<ObjectStorageKey>(
     setMethod('POST'),
     setURL(`${API_ROOT}beta/object-storage/keys`),
     setData(data, createObjectStorageKeysSchema)
@@ -46,7 +47,7 @@ export const updateObjectStorageKey = (
   id: number,
   data: ObjectStorageKeyRequest
 ) =>
-  Request<Linode.ObjectStorageKey>(
+  Request<ObjectStorageKey>(
     setMethod('PUT'),
     setURL(`${API_ROOT}beta/object-storage/keys/${id}`),
     setData(data, createObjectStorageKeysSchema)
@@ -58,7 +59,7 @@ export const updateObjectStorageKey = (
  * Revokes an Object Storage key
  */
 export const revokeObjectStorageKey = (id: number) =>
-  Request<Linode.ObjectStorageKey>(
+  Request<ObjectStorageKey>(
     setMethod('DELETE'),
     setURL(`${API_ROOT}beta/object-storage/keys/${id}`)
   ).then(response => response.data);

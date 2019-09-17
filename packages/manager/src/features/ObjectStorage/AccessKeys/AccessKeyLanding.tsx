@@ -1,4 +1,11 @@
 import { FormikBag } from 'formik';
+import {
+  createObjectStorageKeys,
+  getObjectStorageKeys,
+  ObjectStorageKeyRequest,
+  revokeObjectStorageKey,
+  updateObjectStorageKey
+} from 'linode-js-sdk/lib/profile';
 import * as React from 'react';
 import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
@@ -14,13 +21,6 @@ import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { useErrors } from 'src/hooks/useErrors';
 import { useOpenClose } from 'src/hooks/useOpenClose';
-import {
-  createObjectStorageKeys,
-  getObjectStorageKeys,
-  ObjectStorageKeyRequest,
-  revokeObjectStorageKey,
-  updateObjectStorageKey
-} from 'src/services/profile/objectStorageKeys';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import {
   sendCreateAccessKeyEvent,

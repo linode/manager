@@ -1,3 +1,4 @@
+import { Disk } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { compose } from 'recompose';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
@@ -6,7 +7,7 @@ import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 interface Props {
   generalError?: string;
   diskError?: string;
-  disks: Linode.Disk[];
+  disks: Disk[];
   selectedDisk: string | null;
   disabled?: boolean;
   handleChange: (disk: string | null) => void;
@@ -14,7 +15,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const disksToOptions = (disks: Linode.Disk[]): Item<string>[] => {
+const disksToOptions = (disks: Disk[]): Item<string>[] => {
   return disks.map(disk => ({ label: disk.label, value: String(disk.id) }));
 };
 

@@ -1,6 +1,7 @@
+import { KubernetesCluster } from 'linode-js-sdk/lib/kubernetes';
 import { path } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import 'rxjs/add/operator/filter';
 import AddNewLink from 'src/components/AddNewLink';
@@ -44,7 +45,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  clusters: Linode.KubernetesCluster[];
+  clusters: KubernetesCluster[];
   deleteCluster: (data: DeleteClusterParams) => Promise<void>;
   error: EntityError;
   clearErrors: () => void;
@@ -259,7 +260,6 @@ const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
   styled,
-  withRouter,
   withTypes
 );
 

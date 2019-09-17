@@ -19,16 +19,16 @@ export class SupportLanding extends Page {
     get supportTile() { return $('[data-qa-tile="Customer Support"]'); }
 
     baseElemsDisplay() {
-        this.searchHeading.waitForVisible(constants.wait.normal);
+        this.searchHeading.waitForDisplayed(constants.wait.normal);
 
-        expect(this.searchField.isVisible()).toBe(true);
+        expect(this.searchField.isDisplayed()).toBe(true);
         expect(this.communityPosts.length).toBe(3);
         expect(this.docLinks.length).toBe(3);
 
-        expect(this.viewDocsTile.isVisible()).toBe(true);
-        expect(this.communityTile.isVisible()).toBe(true);
-        expect(this.adaTile.isVisible()).toBe(true);
-        expect(this.supportTile.isVisible()).toBe(true);
+        expect(this.viewDocsTile.isDisplayed()).toBe(true);
+        expect(this.communityTile.isDisplayed()).toBe(true);
+        expect(this.adaTile.isDisplayed()).toBe(true);
+        expect(this.supportTile.isDisplayed()).toBe(true);
     }
 
     search(query){

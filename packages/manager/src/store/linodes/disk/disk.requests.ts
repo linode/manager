@@ -5,11 +5,12 @@
 import {
   createLinodeDisk as _createLinodeDisk,
   deleteLinodeDisk as _deleteLinodeDisk,
+  Disk,
   getLinodeDisk as _getLinodeDisk,
   getLinodeDisks as _getLinodeDisks,
   resizeLinodeDisk as _resizeLinodeDisk,
   updateLinodeDisk as _updateLinodeDisk
-} from 'src/services/linodes';
+} from 'linode-js-sdk/lib/linodes';
 import { createRequestThunk } from 'src/store/store.helpers';
 import { ThunkActionCreator } from 'src/store/types';
 import { getAll } from 'src/utilities/getAll';
@@ -25,9 +26,7 @@ import {
 } from './disk.actions';
 import { Entity } from './disk.types';
 
-const addLinodeIdToDisk = (linodeId: number) => (
-  disk: Linode.Disk
-): Entity => ({
+const addLinodeIdToDisk = (linodeId: number) => (disk: Disk): Entity => ({
   ...disk,
   linode_id: linodeId
 });

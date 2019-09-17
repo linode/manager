@@ -1,4 +1,5 @@
 import { AccountSettings } from 'linode-js-sdk/lib/account';
+import { Linode } from 'linode-js-sdk/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
@@ -29,7 +30,7 @@ interface StateProps {
   loading: boolean;
   backups_enabled: boolean;
   error?: Error;
-  linodesWithoutBackups: Linode.Linode[];
+  linodesWithoutBackups: Linode[];
   updateError?: Linode.ApiFieldError[];
   networkHelperEnabled: boolean;
   entitiesWithGroupsToImport: GroupedEntitiesForImport;

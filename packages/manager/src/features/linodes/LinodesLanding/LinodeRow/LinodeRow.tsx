@@ -1,4 +1,6 @@
 import * as classNames from 'classnames';
+import { Notification } from 'linode-js-sdk/lib/account';
+import { Config, LinodeBackups, LinodeStatus } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -25,7 +27,7 @@ import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
 import { parseMaintenanceStartTime } from '../utils';
 
 interface Props {
-  backups: Linode.LinodeBackups;
+  backups: LinodeBackups;
   id: number;
   image: string | null;
   ipv4: string[];
@@ -36,7 +38,7 @@ interface Props {
   disk: number;
   memory: number;
   vcpus: number;
-  status: Linode.LinodeStatus;
+  status: LinodeStatus;
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;
@@ -45,7 +47,7 @@ interface Props {
     bootAction: Action,
     linodeID: number,
     linodeLabel: string,
-    linodeConfigs: Linode.Config[]
+    linodeConfigs: Config[]
   ) => void;
 }
 
@@ -165,11 +167,6 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
             </>
           )}
         </TableCell>
-        <LinodeRowBackupCell
-          linodeId={id}
-          backupsEnabled={backups.enabled || false}
-          mostRecentBackup={mostRecentBackup || ''}
-        />
         <TableCell
           parentColumn="IP Address"
           className={classes.ipCell}
@@ -186,6 +183,11 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
         >
           <RegionIndicator region={region} />
         </TableCell>
+        <LinodeRowBackupCell
+          linodeId={id}
+          backupsEnabled={backups.enabled || false}
+          mostRecentBackup={mostRecentBackup || ''}
+        />
         <TableCell className={classes.actionCell} data-qa-notifications>
           <div className={classes.actionInner}>
             <RenderFlag
@@ -222,7 +224,7 @@ export default enhanced(LinodeRow);
 
 export const RenderFlag: React.StatelessComponent<{
   mutationAvailable: boolean;
-  linodeNotifications: Linode.Notification[];
+  linodeNotifications: Notification[];
   classes: any;
 }> = props => {
   /*

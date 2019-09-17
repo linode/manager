@@ -1,4 +1,5 @@
 import { Image } from 'linode-js-sdk/lib/images';
+import { Config } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import Grid from 'src/components/Grid';
 import { PaginationProps } from 'src/components/Paginate';
@@ -18,7 +19,7 @@ interface Props {
     bootAction: Action,
     linodeID: number,
     linodeLabel: string,
-    linodeConfigs: Linode.Config[]
+    linodeConfigs: Config[]
   ) => void;
 }
 
@@ -59,7 +60,7 @@ const CardView: React.StatelessComponent<CombinedProps> = props => {
 };
 
 interface WithImagesProps {
-  imagesData: Image[];
+  imagesData: Record<string, Image>;
 }
 
 export default withImages((ownProps, imagesData) => ({

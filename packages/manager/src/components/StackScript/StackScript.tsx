@@ -15,6 +15,8 @@ import ExternalLink from 'src/components/ExternalLink';
 import ScriptCode from 'src/components/ScriptCode';
 import withImages from 'src/containers/withImages.container';
 
+import { filterImagesByType } from 'src/store/image/image.helpers';
+
 type CSSClasses =
   | 'root'
   | 'deployments'
@@ -99,7 +101,7 @@ export class StackScript extends React.Component<CombinedProps> {
 
     const compatibleImages =
       images.reduce((acc: any[], image: string) => {
-        const imageObj = imagesData.find(i => i.id === image);
+        const imageObj = imagesData[image];
 
         if (imageObj) {
           acc.push(
@@ -183,7 +185,7 @@ export class StackScript extends React.Component<CombinedProps> {
 const styled = withStyles(styles);
 
 interface WithImagesProps {
-  imagesData: Image[];
+  imagesData: Record<string, Image>;
   imagesLoading: boolean;
 }
 
@@ -191,7 +193,7 @@ const enhanced = compose<CombinedProps, Props>(
   styled,
   withImages((ownProps, imagesData, imagesLoading) => ({
     ...ownProps,
-    imagesData: imagesData.filter(i => i.is_public === true),
+    imagesData: filterImagesByType(imagesData, 'public'),
     imagesLoading
   }))
 );

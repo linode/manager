@@ -1,9 +1,7 @@
 import { API_ROOT } from 'src/constants';
-
-import Request, { setData, setMethod, setURL } from '..';
+import Request, { setData, setMethod, setURL } from '../request';
 import { enableTwoFactorSchema } from './twofactor.schema';
-
-type Secret = Linode.Secret;
+import { Secret } from './types';
 
 /**
  * getTFAToken

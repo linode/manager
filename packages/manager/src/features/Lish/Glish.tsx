@@ -1,3 +1,4 @@
+import { Linode } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
@@ -35,7 +36,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  linode: Linode.Linode;
+  linode: Linode;
   token: string;
   refreshToken: () => Promise<void> | undefined;
 }
@@ -81,7 +82,7 @@ class Glish extends React.Component<CombinedProps, State> {
 
     resizeViewPort(1080, 840);
 
-    const region = (linode as Linode.Linode).region;
+    const region = (linode as Linode).region;
     this.refreshMonitor(region, token as string);
     this.renewVncToken();
   }
@@ -97,7 +98,7 @@ class Glish extends React.Component<CombinedProps, State> {
 
   componentDidUpdate(prevProps: CombinedProps, prevState: State) {
     const { linode } = this.props;
-    const region = (linode as Linode.Linode).region;
+    const region = (linode as Linode).region;
 
     /*
      * If we have a new token, refresh the console
@@ -289,7 +290,7 @@ class Glish extends React.Component<CombinedProps, State> {
       error,
       isRetryingConnection
     } = this.state;
-    const region = linode && (linode as Linode.Linode).region;
+    const region = linode && (linode as Linode).region;
 
     if (error) {
       return this.renderErrorState();
