@@ -1,0 +1,139 @@
+import Axios, { AxiosResponse } from 'axios';
+import { LONGVIEW_ROOT } from 'src/constants';
+
+/**
+ * A successful LV request results in a response like this:
+ *
+ * [
+ *   {
+ *       "NOTIFICATIONS": [],
+ *       "ACTION": "lastUpdated",
+ *       "DATA": {
+ *           "updated": 1568823297
+ *       },
+ *       "VERSION": 0.4
+ *   }
+ * ]
+ *
+ * It's always an array! This is (probably) to support
+ * batch operations, where each response is a separate
+ * entry in the array.
+ *
+ * This means that for a single request, the data we want
+ * will be in response.data[0].DATA.
+ *
+ * Errors will have a status code of 200, with the errors in
+ * the NOTIFICATIONS field:
+ *
+ * [
+ *   {
+ *       "VERSION": 0.4,
+ *       "ACTION": "lastUpdated",
+ *       "NOTIFICATIONS": [
+ *           {
+ *               "CODE": 4,
+ *               "SEVERITY": 3,
+ *               "TEXT": "Authentication failed."
+ *           }
+ *       ],
+ *       "DATA": {}
+ *   }
+ * ]
+ *
+ * So the errors will be available at response.data[0].NOTIFICATIONS.
+ */
+
+export interface LongviewResponse {
+  VERSION: number;
+  ACTION: string;
+  DATA: any;
+  NOTIFICATIONS: LongviewError[];
+}
+
+export interface LongviewError {
+  CODE: number;
+  SEVERITY: number;
+  TEXT: string;
+}
+
+export const baseRequest = () =>
+  Axios.create({
+    baseURL: LONGVIEW_ROOT,
+    method: 'POST',
+    headers: { 'Content-Type': 'Multivalue-FormData' }
+  });
+
+export const handleLongviewResponse = (
+  response: AxiosResponse<LongviewResponse>
+) => {
+  const notifications = response.data[0].NOTIFICATIONS;
+  if (notifications.length > 0) {
+    /**
+     * We have some errors.
+     *
+     * @todo check if there are non-error notifications
+     * and what code/severity checking we should be doing
+     * to make sure we only reject with errors.
+     */
+    // const errors = [];
+    // let i = 0;
+    // for (i; i < notifications.length; i++) {
+    //   errors.push({
+    //     reason: notifications[i].TEXT
+    //   });
+    // }
+    const errors = notifications.map((thisNotification: LongviewError) => ({
+      reason: thisNotification.TEXT
+    }));
+    return Promise.reject(errors);
+  } else {
+    return Promise.resolve(response.data[0].DATA);
+  }
+};
+
+export const getLastUpdated = (token: string) => {
+  return get(token, 'getLatestValue');
+};
+
+export const get = (token: string, action: string, fields?: string[]) => {
+  const request = baseRequest();
+  const data = new FormData();
+  data.set('api_key', token);
+  data.set('api_action', action);
+  if (fields) {
+    data.set('keys', JSON.stringify(fields));
+  }
+  return request({
+    data
+  }).then(handleLongviewResponse);
+};
+
+export const getValues = (token: string, fields: string[]) => {
+  return get(token, 'getValues', fields);
+};
+
+export const getLatestValue = (token: string, fields: []) => {
+  return get(token, 'getLatestValue', fields);
+};
+
+/*
+ * getTopProcesses
+ * lastUpdated
+ * batch
+ *  - api
+ * getValues and getLatestValue
+ *  - keys:
+ *    - SysInfo.(os.distSysInfo|client)
+ *    - Processes.*.(cpu|ioreadkbytes|iowritekbytes)
+ *    - Disk.*.(reads|writes|read_bytes|write_bytes)
+ *    - CPU.*.(wait|system|user)
+ *    - Network.Linode.v[46].(rx|tx|ip6_rx|ip6_tx)(_private)_bytes
+ *    - Network.Interface.*.(tx_bytes|rx_bytes)
+ *    - Applications.{application}.status
+ *    - Applications.{application}.status_message
+ *    - Applications.Apache.Total
+ *    - Applications.Nginx.(accepted_cons|handled_cons|requests)
+ *    - Applications.MySQL.(Com|Slow_queries|Bytes|Connections|Max_used|Aborted|
+ *    -                     Qcache_hits|Qcache_inserts)
+ *    - Packages (?)
+ **/
