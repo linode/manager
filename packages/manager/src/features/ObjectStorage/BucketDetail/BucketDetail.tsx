@@ -47,10 +47,10 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing(2)
     },
     nameColumn: {
-      width: '50%'
+      width: '70%'
     },
     sizeColumn: {
-      width: '11%'
+      width: '15%'
     },
     footer: {
       marginTop: theme.spacing(3),

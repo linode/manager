@@ -11,16 +11,13 @@ import TableRow from 'src/components/TableRow';
 // import { generateObjectUrl } from '../utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    cursor: 'pointer',
-    '& div': {
-      cursor: 'pointer'
-    }
-  },
   folderNameWrapper: {
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center'
+  },
+  iconWrapper: {
+    margin: '2px 0'
   }
 }));
 
@@ -41,11 +38,11 @@ const FolderTableRow: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <TableRow className={classes.root} key={folderName} rowLink={handleClick}>
+    <TableRow key={folderName} rowLink={handleClick}>
       <TableCell parentColumn="Object">
         <Grid container wrap="nowrap" alignItems="center">
-          <Grid item className="py0">
-            <EntityIcon variant="folder" size={20} />
+          <Grid item className={classes.iconWrapper}>
+            <EntityIcon variant="folder" size={22} />
           </Grid>
           <Grid item>
             <div className={classes.folderNameWrapper}>

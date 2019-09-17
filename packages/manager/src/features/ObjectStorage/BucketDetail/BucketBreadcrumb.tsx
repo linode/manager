@@ -7,6 +7,18 @@ import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { prefixArrayToString } from '../utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  '@keyframes popUp': {
+    from: {
+      opacity: 0,
+      top: -10,
+      transform: 'scale(.1)'
+    },
+    to: {
+      opacity: 1,
+      top: -45,
+      transform: 'scale(1)'
+    }
+  },
   root: {
     display: 'flex',
     alignItems: 'center',
@@ -43,8 +55,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   copied: {
     fontSize: '.85rem',
-    left: -16,
-    top: -32,
+    left: -24,
     color: theme.palette.text.primary,
     padding: '6px 8px',
     backgroundColor: theme.color.white,
@@ -90,7 +101,7 @@ const BucketBreadcrumb: React.FC<CombinedProps> = props => {
     <div className={classes.root}>
       {copied && (
         <span className={classes.copied} data-qa-copied>
-          copied
+          Path copied
         </span>
       )}
       <FileCopy className={classes.icon} onClick={() => iconOnClick(prefix)} />
