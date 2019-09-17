@@ -10,7 +10,7 @@ export interface WithImages {
 }
 
 export default <TInner extends {}, TOuter extends {}>(
-  mapImagesToProps: (
+  mapImagesToProps?: (
     ownProps: TOuter,
     images: Record<string, Image>,
     imagesLoading: boolean,
@@ -20,6 +20,15 @@ export default <TInner extends {}, TOuter extends {}>(
   connect((state: ApplicationState, ownProps: TOuter) => {
     const { data: images, error, loading } = state.__resources.images;
     const imageError = path<undefined | string>(['read', 0, 'reason'], error);
+
+    if (!mapImagesToProps) {
+      return {
+        ...ownProps,
+        images,
+        loading,
+        imageError
+      };
+    }
 
     return mapImagesToProps(ownProps, images, loading, imageError);
   });
