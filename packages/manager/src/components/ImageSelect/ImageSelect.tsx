@@ -13,6 +13,7 @@ import { groupBy } from 'ramda';
 
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
+import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 
 import { distroIcons } from './icons';
@@ -183,9 +184,11 @@ export const ImageSelect: React.FC<Props> = props => {
 const isMemo = (prevProps: Props, nextProps: Props) => {
   return (
     equals(prevProps.images, nextProps.images) &&
-    prevProps.selectedImageID === nextProps.selectedImageID &&
-    prevProps.error === nextProps.error &&
-    prevProps.disabled === nextProps.disabled
+    arePropsEqual<Props>(
+      ['selectedImageID', 'error', 'disabled'],
+      prevProps,
+      nextProps
+    )
   );
 };
 export default React.memo(ImageSelect, isMemo);
