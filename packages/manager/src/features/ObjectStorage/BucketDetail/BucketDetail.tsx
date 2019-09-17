@@ -1,4 +1,5 @@
 import { APIError } from 'linode-js-sdk/lib/types';
+import { prop, sortBy } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import Waypoint from 'react-waypoint';
@@ -107,9 +108,16 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
         const allObjectsFetched =
           response.data.length < page_size ? true : false;
 
+        // @todo @tdt: Extract this data-manipulation logic out of this
+        // component and test.
+        const extendedData = response.data.map(object =>
+          extendObject(object, prefix)
+        );
+        const sortedData = sortBy(prop('name'))(extendedData);
+
         this.setState({
           loading: false,
-          data: response.data.map(object => extendObject(object, prefix)),
+          data: sortedData,
           allObjectsFetched
         });
       })
@@ -164,12 +172,16 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
         const allObjectsFetched =
           response.data.length < page_size ? true : false;
 
+        // @todo @tdt: Extract this data-manipulation logic out of this
+        // component and test.
+        const extendedData = response.data.map(object =>
+          extendObject(object, prefix)
+        );
+        const sortedData = sortBy(prop('name'))(extendedData);
+
         this.setState({
           loading: false,
-          data: [
-            ...this.state.data,
-            ...response.data.map(object => extendObject(object, prefix))
-          ],
+          data: [...this.state.data, ...sortedData],
           allObjectsFetched
         });
       })
