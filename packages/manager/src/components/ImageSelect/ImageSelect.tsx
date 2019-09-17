@@ -10,7 +10,7 @@ import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
-import Notice from 'src/components/Notice';
+import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 
 import { distroIcons } from './icons';
