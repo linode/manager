@@ -1,9 +1,9 @@
 /**
  * Truncate a string and add an ellipsis in the middle.
  */
-export const truncateMiddle = (objectName: string, maxLength = 40) => {
-  if (objectName.length <= maxLength) {
-    return objectName;
+export const truncateMiddle = (str: string, maxLength = 40) => {
+  if (str.length <= maxLength) {
+    return str;
   }
 
   if (maxLength < 5) {
@@ -13,8 +13,8 @@ export const truncateMiddle = (objectName: string, maxLength = 40) => {
   // We need to accommodate the ellipsis
   const actualMax = maxLength - 3;
 
-  const firstHalf = objectName.substr(0, actualMax / 2);
-  const secondHalf = objectName.substr(objectName.length - actualMax / 2);
+  const firstHalf = str.substr(0, actualMax / 2);
+  const secondHalf = str.substr(str.length - actualMax / 2);
 
   return firstHalf + '...' + secondHalf;
 };
@@ -22,9 +22,9 @@ export const truncateMiddle = (objectName: string, maxLength = 40) => {
 /**
  * Truncate a string and add an ellipsis at the end.
  */
-export const truncateEnd = (folderName: string, maxLength = 40) => {
-  if (folderName.length <= maxLength) {
-    return folderName;
+export const truncateEnd = (str: string, maxLength = 40) => {
+  if (str.length <= maxLength) {
+    return str;
   }
 
   if (maxLength < 4) {
@@ -34,5 +34,5 @@ export const truncateEnd = (folderName: string, maxLength = 40) => {
   // We need to accommodate the ellipsis
   const actualMax = maxLength - 3;
 
-  return folderName.substr(0, actualMax) + '...';
+  return str.substr(0, actualMax) + '...';
 };
