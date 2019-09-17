@@ -5,6 +5,10 @@ import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Placeholder from 'src/components/Placeholder';
 import { MonitoringYourServer } from 'src/documentation';
 
+import { getValues } from './longviewRequests';
+
+const DUMMY_KEY = 'AFD0FFEF-9706-D7DF-C1AAAC956F40E301';
+
 export class LongviewLanding extends React.Component<{}, {}> {
   static docs: Linode.Doc[] = [
     {
@@ -14,6 +18,15 @@ export class LongviewLanding extends React.Component<{}, {}> {
     },
     MonitoringYourServer
   ];
+
+  /**
+   * Only for testing the LV API. Will be deleted pre-merge.
+   */
+  componentDidMount() {
+    getValues(DUMMY_KEY, ['Packages', 'SysInfo.client'])
+      .then(response => console.log(response))
+      .catch(e => console.log('error!', e));
+  }
 
   render() {
     return (
