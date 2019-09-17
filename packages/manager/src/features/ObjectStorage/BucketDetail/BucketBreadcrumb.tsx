@@ -9,7 +9,8 @@ import { prefixArrayToString } from '../utilities';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
-    alignItems: 'center'
+    alignItems: 'center',
+    position: 'relative'
   },
   icon: {
     cursor: 'pointer',
@@ -43,6 +44,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   copied: {
     fontSize: '.85rem',
     left: -16,
+    top: -32,
     color: theme.palette.text.primary,
     padding: '6px 8px',
     backgroundColor: theme.color.white,
@@ -62,7 +64,14 @@ interface Props {
 type CombinedProps = Props;
 
 const BucketBreadcrumb: React.FC<CombinedProps> = props => {
+  const [copied, setCopied] = React.useState<boolean>(false);
   const classes = useStyles();
+
+  const iconOnClick = (value: string) => {
+    setCopied(!copied);
+    window.setTimeout(() => setCopied(false), 1500);
+    copy(value);
+  };
 
   const { prefix, bucketName, history } = props;
   const { width } = useWindowDimensions();
@@ -79,12 +88,12 @@ const BucketBreadcrumb: React.FC<CombinedProps> = props => {
 
   return (
     <div className={classes.root}>
-      {/* {copied && (
+      {copied && (
         <span className={classes.copied} data-qa-copied>
           copied
         </span>
-      )} */}
-      <FileCopy className={classes.icon} onClick={() => copy(prefix)} />
+      )}
+      <FileCopy className={classes.icon} onClick={() => iconOnClick(prefix)} />
       <div className={classes.prefixWrapper}>
         {/* Bucket name */}
         <Typography
