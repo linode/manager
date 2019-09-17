@@ -21,7 +21,6 @@ import ReplyActions from './ReplyActions';
 import TabbedReply from './TabbedReply';
 
 type ClassNames =
-  | 'root'
   | 'replyContainer'
   | 'reference'
   | 'expPanelSummary'
@@ -30,26 +29,13 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {
-      width: `calc(100% + ${theme.spacing(1)}px)`,
-      paddingLeft: theme.spacing(1),
-      paddingRight: theme.spacing(1),
-      [theme.breakpoints.up('sm')]: {
-        width: `calc(100% + ${theme.spacing(2)}px)`,
-        paddingLeft: theme.spacing(2),
-        paddingRight: theme.spacing(2)
-      }
-    },
     inner: {
-      padding: 0,
-      [theme.breakpoints.up('sm')]: {
-        padding: theme.spacing(1)
-      }
+      padding: 0
     },
     replyContainer: {
-      paddingLeft: 32,
+      paddingLeft: `calc(32px + ${theme.spacing(1)}px)`,
       [theme.breakpoints.up('sm')]: {
-        paddingLeft: 40
+        paddingLeft: `calc(40px + ${theme.spacing(2)}px)`
       }
     },
     expPanelSummary: {
@@ -62,7 +48,6 @@ const styles = (theme: Theme) =>
       }
     },
     reference: {
-      // backgroundColor: theme.palette.divider,
       [theme.breakpoints.up('sm')]: {
         marginTop: theme.spacing(7),
         marginRight: theme.spacing(1) / 2,
@@ -169,14 +154,16 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
       {errorMap.none && (
         <Notice error spacingBottom={8} spacingTop={16} text={errorMap.none} />
       )}
-      <TabbedReply
-        error={errorMap.description}
-        handleChange={setValue}
-        innerClass={classes.inner}
-        isReply
-        value={value}
-      />
-      <Grid className={classes.root} item>
+      <Grid item>
+        <TabbedReply
+          error={errorMap.description}
+          handleChange={setValue}
+          innerClass={classes.inner}
+          isReply
+          value={value}
+        />
+      </Grid>
+      <Grid item style={{ marginTop: 8 }}>
         <ExpansionPanel
           heading="Formatting Tips"
           detailProps={{ className: classes.expPanelSummary }}
@@ -184,7 +171,7 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
           <Reference isReply rootClass={classes.referenceRoot} />
         </ExpansionPanel>
       </Grid>
-      <Grid className={classes.root} item>
+      <Grid item>
         <AttachFileForm
           files={files}
           updateFiles={(filesToAttach: FileAttachment[]) =>
