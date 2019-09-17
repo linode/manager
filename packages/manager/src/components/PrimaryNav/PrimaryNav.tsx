@@ -2,7 +2,7 @@ import Settings from '@material-ui/icons/Settings';
 import * as classNames from 'classnames';
 import { AccountCapability } from 'linode-js-sdk/lib/account';
 import { Profile } from 'linode-js-sdk/lib/profile';
-import { pathOr } from 'ramda';
+import { clone, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
@@ -247,6 +247,12 @@ interface State {
   anchorEl?: HTMLElement;
 }
 
+interface MenuItemReducer {
+  link: PrimaryLink;
+  insertAfter: string;
+  conditionToAdd: () => boolean;
+}
+
 export type CombinedProps = Props &
   StateProps &
   FeatureFlagConsumerProps &
@@ -293,104 +299,94 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     }
   }
 
-  createMenuItems = () => {
+  primaryNavManipulator = (): MenuItemReducer[] => {
     const {
       hasAccountAccess,
-      // isLongviewEnabled,
-      accountCapabilities
+      isManagedAccount,
+      accountCapabilities,
+      flags
     } = this.props;
 
+    return [
+      {
+        conditionToAdd: () => isObjectStorageEnabled(accountCapabilities),
+        insertAfter: 'volumes',
+        link: {
+          display: 'Object Storage',
+          href: '/object-storage/buckets',
+          key: 'object-storage'
+        }
+      },
+      {
+        conditionToAdd: () => isKubernetesEnabled(accountCapabilities),
+        insertAfter: 'linodes',
+        link: { display: 'Kubernetes', href: '/kubernetes', key: 'kubernetes' }
+      },
+      {
+        conditionToAdd: () => flags.oneClickLocation === 'sidenav',
+        insertAfter: 'longview',
+        link: {
+          display: 'One-Click Apps',
+          href: '/linodes/create?type=One-Click',
+          key: 'one-click',
+          attr: { 'data-qa-one-click-nav-btn': true },
+          onClick: () => {
+            sendOneClickNavigationEvent('Primary Nav');
+          }
+        }
+      },
+      {
+        conditionToAdd: () => isManagedAccount || !!flags.managed,
+        insertAfter: 'longview',
+        link: { display: 'Managed', href: '/managed', key: 'managed' }
+      },
+      {
+        conditionToAdd: () => hasAccountAccess,
+        insertAfter: 'stackscripts',
+        link: { display: 'Account', href: '/account/billing', key: 'account' }
+      }
+    ];
+  };
+
+  createMenuItems = () => {
     const primaryLinks: PrimaryLink[] = [
-      { display: 'Dashboard', href: '/dashboard', key: 'dashboard' }
+      { display: 'Dashboard', href: '/dashboard', key: 'dashboard' },
+      { display: 'Linodes', href: '/linodes', key: 'linodes' },
+      {
+        display: 'NodeBalancers',
+        href: '/nodebalancers',
+        key: 'nodebalancers'
+      },
+      { display: 'Domains', href: '/domains', key: 'domains' },
+      { display: 'Firewalls', href: '/firewalls', key: 'firewalls' },
+      { display: 'Volumes', href: '/volumes', key: 'volumes' },
+      { display: 'Images', href: '/images', key: 'images' },
+      { display: 'Longview', href: '/longview', key: 'longview' },
+      { display: 'StackScripts', href: '/stackscripts', key: 'stackscripts' }
     ];
 
-    // if (canAccessLinodes) {
-    primaryLinks.push({ display: 'Linodes', href: '/linodes', key: 'linodes' });
-    // }
+    const potentialMenuItemsToAdd = this.primaryNavManipulator();
 
-    // if (canAccessVolumes) {
-    primaryLinks.push({ display: 'Volumes', href: '/volumes', key: 'volumes' });
-    // }
+    const finalMenuItems: PrimaryLink[] = potentialMenuItemsToAdd.reduce(
+      (acc, eachItem) => {
+        const indexOfFoundNavItem = acc.findIndex(eachNavItem =>
+          eachNavItem.display.match(new RegExp(eachItem.insertAfter, 'gmi'))
+        );
 
-    if (isObjectStorageEnabled(accountCapabilities)) {
-      primaryLinks.push({
-        display: 'Object Storage',
-        href: '/object-storage/buckets',
-        key: 'object-storage'
-      });
-    }
-
-    // if (canAccessNodeBalancers) {
-    primaryLinks.push({
-      display: 'NodeBalancers',
-      href: '/nodebalancers',
-      key: 'nodebalancers'
-    });
-    // }
-
-    // if (canAccessDomains) {
-    primaryLinks.push({ display: 'Domains', href: '/domains', key: 'domains' });
-    // }
-
-    // if (isLongviewEnabled) {
-    primaryLinks.push({
-      display: 'Longview',
-      href: '/longview',
-      key: 'longview'
-    });
-    // }
-
-    if (this.props.flags.oneClickLocation === 'sidenav') {
-      primaryLinks.push({
-        display: 'One-Click Apps',
-        href: '/linodes/create?type=One-Click',
-        key: 'one-click',
-        attr: { 'data-qa-one-click-nav-btn': true },
-        onClick: () => {
-          sendOneClickNavigationEvent('Primary Nav');
+        /**
+         * if our passed boolean condition evaluates true,
+         * add it to the list of primary nav items.
+         */
+        if (eachItem.conditionToAdd()) {
+          acc.splice(indexOfFoundNavItem + 1, 0, eachItem.link);
         }
-      });
-    }
 
-    if (isKubernetesEnabled(accountCapabilities)) {
-      primaryLinks.push({
-        display: 'Kubernetes',
-        href: '/kubernetes',
-        key: 'kubernetes'
-      });
-    }
+        return acc;
+      },
+      clone(primaryLinks)
+    );
 
-    // All users should now see Managed so they can sign up
-    // (if the new Managed feature is toggled)
-    if (this.props.isManagedAccount || this.props.flags.managed) {
-      primaryLinks.push({
-        display: 'Managed',
-        href: '/managed',
-        key: 'managed'
-      });
-    }
-
-    // if(canAccessStackscripts){
-    primaryLinks.push({
-      display: 'StackScripts',
-      href: '/stackscripts',
-      key: 'stackscripts'
-    });
-    // }
-
-    // if(canAccessImages){
-    primaryLinks.push({ display: 'Images', href: '/images', key: 'images' });
-    // }
-
-    if (hasAccountAccess) {
-      primaryLinks.push({
-        display: 'Account',
-        href: '/account/billing',
-        key: 'account'
-      });
-    }
-
-    this.setState({ primaryLinks });
+    this.setState({ primaryLinks: finalMenuItems });
   };
 
   navigate = (href: string) => {

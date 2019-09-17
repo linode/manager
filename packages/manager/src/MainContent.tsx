@@ -196,6 +196,10 @@ const AccountActivationLanding = DefaultLoader({
     import('src/components/AccountActivation/AccountActivationLanding')
 });
 
+const Firewalls = DefaultLoader({
+  loader: () => import('src/features/Firewalls')
+});
+
 const MainContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
@@ -322,6 +326,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                   component={SupportSearchLanding}
                 />
                 <Route path="/events" component={EventsLanding} />
+                <Route path="/firewalls" component={Firewalls} />
                 <Redirect exact from="/" to="/dashboard" />
                 <Route component={NotFound} />
               </Switch>
