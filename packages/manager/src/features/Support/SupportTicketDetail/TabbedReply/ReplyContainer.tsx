@@ -30,8 +30,7 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     inner: {
-      padding: 0,
-      maxWidth: `calc(100% - ${theme.spacing(2)}px)`
+      padding: 0
     },
     replyContainer: {
       paddingLeft: `calc(32px + ${theme.spacing(1)}px)`,
