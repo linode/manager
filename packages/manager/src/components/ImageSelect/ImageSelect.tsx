@@ -185,7 +185,7 @@ const isMemo = (prevProps: Props, nextProps: Props) => {
   return (
     equals(prevProps.images, nextProps.images) &&
     arePropsEqual<Props>(
-      ['selectedImageID', 'error', 'disabled'],
+      ['selectedImageID', 'error', 'disabled', 'handleSelectImage'],
       prevProps,
       nextProps
     )
