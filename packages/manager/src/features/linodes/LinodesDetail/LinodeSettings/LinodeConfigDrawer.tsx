@@ -485,7 +485,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
             <TextField
               type="number"
               label="Memory Limit Allotment (in MB)"
-              // value={memory_limit}
+              value={memory_limit}
               min={0}
               max={maxMemory}
               onChange={this.handleMemoryLimitChange}
