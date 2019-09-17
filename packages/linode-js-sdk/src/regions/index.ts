@@ -1,9 +1,7 @@
 import { API_ROOT } from 'src/constants';
-
-import Request, { setMethod, setURL } from '../index';
-
-type Page<T> = Linode.ResourcePage<T>;
-type Region = Linode.Region;
+import Request, { setMethod, setURL } from 'src/request';
+import { ResourcePage as Page } from '../types';
+import { Region } from './types';
 
 /**
  * getRegions
@@ -35,3 +33,5 @@ export const getRegion = (regionID: string) =>
     setURL(`${API_ROOT}/regions/${regionID}`),
     setMethod('GET')
   ).then(response => response.data);
+
+export { Region };

@@ -1,8 +1,9 @@
+import { Region } from 'linode-js-sdk/lib/regions';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 
 export interface DefaultProps {
-  regionsData: Linode.Region[];
+  regionsData: Region[];
   regionsError?: Linode.ApiFieldError[];
   regionsLoading: boolean;
   regionsLastUpdated: number;
@@ -21,7 +22,7 @@ const defaultMap: (p: InjectedProps) => DefaultProps = ({
 });
 
 interface InjectedProps {
-  data: Linode.Region[];
+  data: Region[];
   error?: Linode.ApiFieldError[];
   loading: boolean;
   lastUpdated: number;
