@@ -6,7 +6,12 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
 import Paper from 'src/components/core/Paper';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
@@ -18,104 +23,131 @@ import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
 import { getObjectList } from 'src/services/objectStorage/buckets';
 import { getQueryParam } from 'src/utilities/queryParams';
 import { ExtendedObject, extendObject } from '../utilities';
+import BucketBreadcrumb from './BucketBreadcrumb';
 import ObjectTableContent from './ObjectTableContent';
 
 const page_size = 100;
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
-  divider: {
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(2),
-    backgroundColor: theme.color.grey3
-  },
-  objectTable: {
-    marginTop: theme.spacing(4)
-  },
-  objectNameColumn: {
-    width: '50%'
-  }
-}));
+type ClassNames =
+  | 'divider'
+  | 'objectTable'
+  | 'nameColumn'
+  | 'sizeColumn'
+  | 'footer'
+  | 'tryAgainText';
 
-type CombinedProps = RouteComponentProps<{
+const styles = (theme: Theme) =>
+  createStyles({
+    divider: {
+      marginTop: theme.spacing(4),
+      marginBottom: theme.spacing(2),
+      backgroundColor: theme.color.grey3
+    },
+    objectTable: {
+      marginTop: theme.spacing(2)
+    },
+    nameColumn: {
+      width: '70%'
+    },
+    sizeColumn: {
+      width: '15%'
+    },
+    footer: {
+      marginTop: theme.spacing(3),
+      textAlign: 'center',
+      color: theme.color.headline
+    },
+    tryAgainText: {
+      color: theme.palette.primary.main,
+      textDecoration: 'underline',
+      cursor: 'pointer'
+    }
+  });
+
+interface MatchProps {
   clusterId: Linode.ClusterID;
   bucketName: string;
-}>;
+}
 
-const BucketDetail: React.FC<CombinedProps> = props => {
-  const { clusterId, bucketName } = props.match.params;
+type CombinedProps = RouteComponentProps<MatchProps> & WithStyles<ClassNames>;
 
-  const [data, setData] = React.useState<ExtendedObject[]>([]);
-  const [loading, setLoading] = React.useState<boolean>(false);
+interface State {
+  data: ExtendedObject[];
+  loading: boolean;
+  allObjectsFetched: boolean;
+  generalError?: APIError[];
+  nextPageError?: APIError[];
+}
 
-  const [generalError, setGeneralError] = React.useState<
-    APIError[] | undefined
-  >(undefined);
+export class BucketDetail extends React.Component<CombinedProps, {}> {
+  state: State = {
+    data: [],
+    loading: false,
+    allObjectsFetched: false,
+    generalError: undefined,
+    nextPageError: undefined
+  };
 
-  // Errors that happen when fetching the next page should be kept separate,
-  // since we don't want to bomb the whole object listing table.
-  const [nextPageError, setNextPageError] = React.useState<
-    APIError[] | undefined
-  >(undefined);
+  fetchData() {
+    const { clusterId, bucketName } = this.props.match.params;
+    const prefix = getQueryParam(this.props.location.search, 'prefix');
 
-  // This lets us know if we've reached the end of our bucket or folder,
-  // so that we don't allow for more infinite scrolling.
-  const [allObjectsFetched, setAllObjectsFetched] = React.useState<boolean>(
-    false
-  );
+    this.setState({
+      allObjectsFetched: false,
+      loading: true,
+      generalError: undefined,
+      nextPageError: undefined,
+      data: []
+    });
 
-  // The prefix is used to organize objects in a bucket. We grab it from a
-  // query param so that it can be bookmarked.
-  const prefix = React.useMemo(
-    () => getQueryParam(props.location.search, 'prefix'),
-    [props.location.search]
-  );
-
-  /**
-   * Request objects when the prefix changes. This happens under two conditions:
-   *
-   * 1. When the component mounts.
-   * 2. When a folder is clicked (since a query param is added to the URL).
-   *
-   * The new data REPLACES the old data, since objects in one "folder" shouldn't
-   * be in the same table as objects in a different "folder"
-   */
-  React.useEffect(() => {
-    setAllObjectsFetched(false);
-    setLoading(true);
-    setGeneralError(undefined);
-    setData([]);
     getObjectList(clusterId, bucketName, { delimiter, prefix, page_size })
       .then(response => {
-        setLoading(false);
-
         // If there are less results than the page size we requested, we know
         // we've reached the end of the bucket (or folder).
-        if (response.data.length < page_size) {
-          setAllObjectsFetched(true);
-        }
+        const allObjectsFetched =
+          response.data.length < page_size ? true : false;
 
-        // Replace the old data with the new data.
-        setData(response.data.map(object => extendObject(object, prefix)));
+        this.setState({
+          loading: false,
+          data: response.data.map(object => extendObject(object, prefix)),
+          allObjectsFetched
+        });
       })
       .catch(err => {
-        setLoading(false);
-        setGeneralError(err);
+        this.setState({
+          loading: false,
+          generalError: err
+        });
       });
-  }, [props.location.search]);
+  }
 
-  /**
-   * Request additional objects when the next page is requested.
-   * The new objects are appended to the existing objects.
-   */
-  const getNextPage = () => {
+  componentDidMount() {
+    this.fetchData();
+  }
+
+  componentDidUpdate(prevProps: CombinedProps) {
+    // Request new data when the prefix changes.
+    const prevPrefix = getQueryParam(prevProps.location.search, 'prefix');
+    const nextPrefix = getQueryParam(this.props.location.search, 'prefix');
+    if (prevPrefix !== nextPrefix) {
+      this.fetchData();
+    }
+  }
+
+  getNextPage() {
+    const { data } = this.state;
     const tail = data[data.length - 1];
     if (!tail) {
       return;
     }
 
-    setLoading(true);
-    setNextPageError(undefined);
+    this.setState({
+      loading: true,
+      nextPageError: undefined
+    });
+
+    const { clusterId, bucketName } = this.props.match.params;
+    const prefix = getQueryParam(this.props.location.search, 'prefix');
 
     getObjectList(clusterId, bucketName, {
       delimiter,
@@ -127,84 +159,123 @@ const BucketDetail: React.FC<CombinedProps> = props => {
       page_size
     })
       .then(response => {
-        setLoading(false);
-
         // If there are less results than the page size we requested, we know
         // we've reached the end of the bucket (or folder).
-        if (response.data.length < page_size) {
-          setAllObjectsFetched(true);
-        }
+        const allObjectsFetched =
+          response.data.length < page_size ? true : false;
 
-        // Append the old data with the new data.
-        setData([
-          ...data,
-          ...response.data.map(object => extendObject(object, prefix))
-        ]);
+        this.setState({
+          loading: false,
+          data: [
+            ...this.state.data,
+            ...response.data.map(object => extendObject(object, prefix))
+          ],
+          allObjectsFetched
+        });
       })
       .catch(err => {
-        setLoading(false);
-        setNextPageError(err);
+        this.setState({
+          loading: false,
+          nextPageError: err
+        });
       });
-  };
+  }
 
-  const classes = useStyles();
-  return (
-    <>
-      <Box display="flex" flexDirection="row" justifyContent="space-between">
-        <Breadcrumb
-          // The actual pathname doesn't match what we want in the Breadcrumb,
-          // so we create a custom one.
-          pathname={`/object-storage/${bucketName}`}
-          crumbOverrides={[
-            {
-              position: 1,
-              label: 'Object Storage'
-            }
-          ]}
-          labelOptions={{ noCap: true }}
+  render() {
+    const { classes } = this.props;
+    const {
+      data,
+      loading,
+      generalError,
+      nextPageError,
+      allObjectsFetched
+    } = this.state;
+
+    const { bucketName } = this.props.match.params;
+    const prefix = getQueryParam(this.props.location.search, 'prefix');
+
+    const numOfDisplayedObjects = this.state.data.filter(
+      object => object._shouldDisplayObject
+    ).length;
+
+    return (
+      <>
+        <Box display="flex" flexDirection="row" justifyContent="space-between">
+          <Breadcrumb
+            // The actual pathname doesn't match what we want in the Breadcrumb,
+            // so we create a custom one.
+            pathname={`/object-storage/${bucketName}`}
+            crumbOverrides={[
+              {
+                position: 1,
+                label: 'Object Storage'
+              }
+            ]}
+            labelOptions={{ noCap: true }}
+          />
+          {/* @todo: What should this link be? */}
+          <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/" />
+        </Box>
+        <Divider className={classes.divider} />
+        <BucketBreadcrumb
+          prefix={prefix}
+          history={this.props.history}
+          bucketName={bucketName}
         />
-        {/* @todo: What should this link be? */}
-        <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/" />
-      </Box>
-      <Divider className={classes.divider} />
-      <Paper className={classes.objectTable}>
-        <Table removeLabelonMobile aria-label="List of Bucket Objects">
-          <TableHead>
-            <TableRow>
-              <TableCell className={classes.objectNameColumn}>Object</TableCell>
-              <TableCell>Size</TableCell>
-              <TableCell>Region</TableCell>
-              <TableCell>Last Modified</TableCell>
-            </TableRow>
-          </TableHead>
-          <TableBody>
-            <ObjectTableContent
-              clusterId={clusterId}
-              bucketName={bucketName}
-              data={data}
-              loading={loading}
-              error={generalError}
-              nextPageError={nextPageError}
-              prefix={prefix}
-            />
-          </TableBody>
-        </Table>
-        {/* We shouldn't allow infinite scrolling if we're still loading,
-        if we've gotten all objects in the bucket (or folder), or if there
-        are errors. */}
-        {!loading && !allObjectsFetched && !generalError && !nextPageError && (
-          <Waypoint onEnter={getNextPage}>
-            <div />
-          </Waypoint>
+        <Paper className={classes.objectTable}>
+          <Table removeLabelonMobile aria-label="List of Bucket Objects">
+            <TableHead>
+              <TableRow>
+                <TableCell className={classes.nameColumn}>Object</TableCell>
+                <TableCell className={classes.sizeColumn}>Size</TableCell>
+                <TableCell>Last Modified</TableCell>
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              <ObjectTableContent
+                data={data}
+                loading={loading}
+                error={generalError}
+                prefix={prefix}
+              />
+            </TableBody>
+          </Table>
+          {/* We shouldn't allow infinite scrolling if we're still loading,
+          if we've gotten all objects in the bucket (or folder), or if there
+          are errors. */}
+          {!loading &&
+            !allObjectsFetched &&
+            !generalError &&
+            !nextPageError &&
+            data.length >= 100 && (
+              <Waypoint onEnter={() => this.getNextPage()}>
+                <div />
+              </Waypoint>
+            )}
+        </Paper>
+        {nextPageError && (
+          <Typography variant="subtitle2" className={classes.footer}>
+            The next objects in the list failed to load.{' '}
+            <span
+              className={classes.tryAgainText}
+              onClick={() => this.getNextPage()}
+            >
+              Click here to try again.
+            </span>
+          </Typography>
         )}
-      </Paper>
-      {/* Only display this message if there were more than 100 objects to
-      begin with, as a matter of UX convention. */}
-      {allObjectsFetched && data.length >= 100 && (
-        <Typography>You've reached the end of your bucket!</Typography>
-      )}
-    </>
-  );
-};
 
-export default BucketDetail;
+        {/* Only display this message if there were more than 100 objects. */}
+        {allObjectsFetched && numOfDisplayedObjects > 100 && (
+          <Typography variant="subtitle2" className={classes.footer}>
+            Showing all {numOfDisplayedObjects} items
+          </Typography>
+        )}
+      </>
+    );
+  }
+}
+
+const styled = withStyles(styles);
+
+export default styled(BucketDetail);

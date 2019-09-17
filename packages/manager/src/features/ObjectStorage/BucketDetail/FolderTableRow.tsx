@@ -11,20 +11,13 @@ import TableRow from 'src/components/TableRow';
 // import { generateObjectUrl } from '../utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    cursor: 'pointer',
-    '& div': {
-      cursor: 'pointer'
-    }
-  },
   folderNameWrapper: {
     display: 'flex',
     flexFlow: 'row nowrap',
-    alignItems: 'center',
-    wordBreak: 'break-all'
+    alignItems: 'center'
   },
-  folderName: {
-    color: theme.palette.primary.main
+  iconWrapper: {
+    margin: '2px 0'
   }
 }));
 
@@ -45,15 +38,15 @@ const FolderTableRow: React.FC<CombinedProps> = props => {
   };
 
   return (
-    <TableRow className={classes.root} key={folderName} rowLink={handleClick}>
+    <TableRow key={folderName} rowLink={handleClick}>
       <TableCell parentColumn="Object">
         <Grid container wrap="nowrap" alignItems="center">
-          <Grid item className="py0">
-            <EntityIcon variant="folder" size={20} />
+          <Grid item className={classes.iconWrapper}>
+            <EntityIcon variant="folder" size={22} />
           </Grid>
           <Grid item>
             <div className={classes.folderNameWrapper}>
-              <Typography variant="h3" className={classes.folderName}>
+              <Typography variant="h3" style={{ whiteSpace: 'nowrap' }}>
                 {displayName}
               </Typography>
             </div>
@@ -61,7 +54,6 @@ const FolderTableRow: React.FC<CombinedProps> = props => {
         </Grid>
       </TableCell>
       <TableCell parentColumn="Size" />
-      <TableCell parentColumn="Region" />
       <TableCell parentColumn="Last Modified" />
     </TableRow>
   );
