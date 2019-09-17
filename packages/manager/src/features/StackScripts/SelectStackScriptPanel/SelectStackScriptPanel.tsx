@@ -1,6 +1,11 @@
 import { Grant } from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
 import { Linode } from 'linode-js-sdk/lib/linodes';
+import {
+  getStackScript,
+  StackScript,
+  UserDefinedField
+} from 'linode-js-sdk/lib/stackscripts';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -18,7 +23,6 @@ import Typography from 'src/components/core/Typography';
 import Notice from 'src/components/Notice';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
 import Table from 'src/components/Table';
-import { getStackScript } from 'src/services/stackscripts';
 import { MapState } from 'src/store/types';
 import { formatDate } from 'src/utilities/format-date-iso8601';
 import { getParamFromUrl } from 'src/utilities/queryParams';
@@ -90,7 +94,7 @@ interface Props extends RenderGuardProps {
     label: string,
     username: string,
     images: string[],
-    userDefinedFields: Linode.StackScript.UserDefinedField[]
+    userDefinedFields: UserDefinedField[]
   ) => void;
   publicImages: Record<string, Image>;
   resetSelectedStackScript: () => void;
@@ -111,7 +115,7 @@ type CombinedProps = Props &
   WithStyles<ClassNames>;
 
 interface State {
-  stackScript?: Linode.StackScript.Response;
+  stackScript?: StackScript;
   stackScriptError: boolean;
   stackScriptLoading: boolean;
 }

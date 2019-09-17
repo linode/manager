@@ -4,6 +4,7 @@ import {
   rebuildLinode,
   RebuildLinodeFromStackScriptSchema
 } from 'linode-js-sdk/lib/linodes';
+import { UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -240,7 +241,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
           label: string,
           username: string,
           stackScriptImages: string[],
-          user_defined_fields: Linode.StackScript.UserDefinedField[]
+          user_defined_fields: UserDefinedField[]
         ) => {
           handleSelectStackScript(
             id,
@@ -398,5 +399,4 @@ const getUDFErrors = (errors: Linode.ApiFieldError[] | undefined) => {
     : undefined;
 };
 
-const isUDFRequired = (udf: Linode.StackScript.UserDefinedField) =>
-  !udf.hasOwnProperty('default');
+const isUDFRequired = (udf: UserDefinedField) => !udf.hasOwnProperty('default');

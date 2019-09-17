@@ -1,6 +1,5 @@
 import { Formik, FormikProps } from 'formik';
 import { GrantLevel } from 'linode-js-sdk/lib/account';
-import { Image } from 'linode-js-sdk/lib/images';
 import {
   rebuildLinode,
   RebuildLinodeSchema,
@@ -23,7 +22,7 @@ import {
 import Grid from 'src/components/Grid';
 import ImageSelect from 'src/components/ImageSelect';
 import Notice from 'src/components/Notice';
-import withImages from 'src/containers/withImages.container';
+import withImages, { WithImages } from 'src/containers/withImages.container';
 import { resetEventsPolling } from 'src/events';
 import userSSHKeyHoc, {
   UserSSHKeyProps
@@ -48,18 +47,12 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface WithImagesProps {
-  imagesData: Image[];
-  imagesLoading: boolean;
-  imagesError?: string;
-}
-
 interface ContextProps {
   linodeId: number;
   permissions: GrantLevel;
 }
 
-export type CombinedProps = WithImagesProps &
+export type CombinedProps = WithImages &
   WithStyles<ClassNames> &
   ContextProps &
   UserSSHKeyProps &
@@ -81,8 +74,8 @@ export const RebuildFromImage: React.StatelessComponent<
 > = props => {
   const {
     classes,
-    imagesData,
-    imagesError,
+    images,
+    imageError,
     userSSHKeys,
     sshError,
     requestKeys,
@@ -175,8 +168,8 @@ export const RebuildFromImage: React.StatelessComponent<
             {status && <Notice error>{status.generalError}</Notice>}
             <ImageSelect
               title="Select Image"
-              images={imagesData}
-              error={imagesError || errors.image}
+              images={Object.keys(images).map(thisKey => images[thisKey])}
+              error={imageError || errors.image}
               selectedImageID={values.image}
               handleSelectImage={selected => setFieldValue('image', selected)}
               disabled={disabled}
@@ -239,12 +232,7 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 
 const enhanced = compose<CombinedProps, {}>(
   linodeContext,
-  withImages((ownProps, imagesData, imagesLoading, imagesError) => ({
-    ...ownProps,
-    imagesData,
-    imagesLoading,
-    imagesError
-  })),
+  withImages(),
   userSSHKeyHoc,
   styled,
   withSnackbar,

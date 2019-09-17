@@ -1,3 +1,4 @@
+import { StackScript } from 'linode-js-sdk/lib/stackscripts';
 import * as React from 'react';
 
 import TableBody from 'src/components/core/TableBody';
@@ -14,7 +15,7 @@ interface Props {
   loading: boolean;
   page: number;
   pageSize: number;
-  data?: Linode.StackScript.Response[];
+  data?: StackScript[];
   orderBy?: string;
   order: 'asc' | 'desc';
   handlePageChange: (v: number, showSpinner?: boolean) => void;
