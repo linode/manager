@@ -61,7 +61,8 @@ const styles = (theme: Theme) =>
       margin: '0 auto 16px',
       display: 'block',
       '& .outerCircle': {
-        stroke: theme.bg.main
+        stroke: theme.bg.main,
+        fill: theme.bg.offWhiteDT
       },
       '& .insidePath': {
         fill: 'none',
@@ -71,8 +72,7 @@ const styles = (theme: Theme) =>
       },
       '& svg': {
         width: 70,
-        height: 70,
-        fill: theme.bg.offWhiteDT
+        height: 70
       }
     }
   });

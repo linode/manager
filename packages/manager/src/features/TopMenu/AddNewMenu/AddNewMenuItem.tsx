@@ -27,10 +27,8 @@ const styles = (theme: Theme) =>
       display: 'flex',
       alignItems: 'center',
       transition: 'background-color .2s ease-in-out',
-      '& .circle': {
-        fill: theme.bg.offWhiteDT
-      },
       '& .outerCircle': {
+        fill: theme.bg.offWhiteDT,
         stroke: theme.bg.main
       },
       '&:hover, &:focus': {

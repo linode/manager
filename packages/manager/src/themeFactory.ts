@@ -83,14 +83,13 @@ const primaryFonts = {
 };
 
 const iconCircleAnimation = {
-  '& .circle': {
-    fill: primaryColors.main,
-    transition: 'fill .2s ease-in-out .2s'
-  },
+  '& .circle': {},
   '& .outerCircle': {
     stroke: primaryColors.dark,
     strokeDasharray: 1000,
     strokeDashoffset: 1000,
+    fill: primaryColors.main,
+    transition: 'fill .2s ease-in-out .2s',
     animation: '$dash 2s linear forwards'
   },
   '& .insidePath *': {
