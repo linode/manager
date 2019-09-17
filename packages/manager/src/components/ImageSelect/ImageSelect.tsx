@@ -1,21 +1,16 @@
 import produce from 'immer';
 import { Image } from 'linode-js-sdk/lib/images';
-import { equals } from 'ramda';
+import { equals, groupBy } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
-
-import Grid from 'src/components/Grid';
-
-import { groupBy } from 'ramda';
-
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
+import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
+import Grid from 'src/components/Grid';
 import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
-
 import { distroIcons } from './icons';
 import ImageOption from './ImageOption';
 
@@ -163,6 +158,7 @@ export const ImageSelect: React.FC<Props> = props => {
                   placeholder="Choose an image"
                   options={options}
                   onChange={onChange}
+                  onFocus={onChange}
                   value={getSelectedOptionFromGroupedOptions(
                     selectedImageID || '',
                     options

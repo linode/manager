@@ -63,7 +63,7 @@ const _components = {
 type CombinedProps = WithStyles<ClassNames> & BaseSelectProps & CreatableProps;
 
 export interface BaseSelectProps
-  extends Omit<SelectProps<any>, 'onChange' | 'value'> {
+  extends Omit<SelectProps<any>, 'onChange' | 'value' | 'onFocus'> {
   classes?: any;
   /*
    textFieldProps isn't native to react-select
@@ -87,6 +87,7 @@ export interface BaseSelectProps
   /** alias for onCreateOption */
   createNew?: (inputValue: string) => void;
   loadOptions?: (inputValue: string) => Promise<Item | Item[]> | undefined;
+  onFocus?: any;
   /** the rest are props we've added ourselves */
   medium?: boolean;
   small?: boolean;
@@ -131,6 +132,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
       inline,
       hideLabel,
       errorGroup,
+      onFocus,
       ...restOfProps
     } = this.props;
 
@@ -207,6 +209,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
         noOptionsMessage={this.props.noOptionsMessage || (() => 'No results')}
         menuPlacement={this.props.menuPlacement || 'auto'}
         onMenuClose={onMenuClose}
+        onFocus={onFocus}
       />
     );
   }

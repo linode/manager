@@ -9,9 +9,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     flexFlow: 'row nowrap',
     alignItems: 'center',
-    paddingLeft: `30px !important`
+    paddingLeft: `45px !important`
   },
   icon: {
+    marginLeft: theme.spacing(1) - 2,
     marginRight: theme.spacing(1),
     fontSize: '1.8em',
     position: 'absolute'
