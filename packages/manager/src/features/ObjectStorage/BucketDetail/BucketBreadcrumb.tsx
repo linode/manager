@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   prefixWrapper: {
     marginLeft: theme.spacing(1.5),
     display: 'flex',
-    overflow: 'scroll',
+    overflow: 'auto',
     whiteSpace: 'nowrap'
   },
   slash: {
