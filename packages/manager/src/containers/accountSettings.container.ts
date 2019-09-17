@@ -8,10 +8,10 @@ import { requestAccountSettings } from 'src/store/accountSettings/accountSetting
 import { EntityError } from 'src/store/types';
 
 export interface SettingsProps {
-  account?: AccountSettings;
-  accountLoading: boolean;
-  accountError: EntityError;
-  lastUpdated: number;
+  accountSettings?: AccountSettings;
+  accountSettingsLoading: boolean;
+  accountSettingsError: EntityError;
+  accountSettingsLastUpdated: number;
 }
 
 export interface DispatchProps {
@@ -28,7 +28,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 });
 
 export default <TInner extends {}, TOuter extends {}>(
-  mapAccountToProps: (
+  mapAccountToProps?: (
     ownProps: TOuter,
     loading: boolean,
     lastUpdated: number,
@@ -39,15 +39,25 @@ export default <TInner extends {}, TOuter extends {}>(
   connect(
     (state: ApplicationState, ownProps: TOuter) => {
       const accountSettings = state.__resources.accountSettings.data;
-      const loading = state.__resources.accountSettings.loading;
-      const accountError = state.__resources.accountSettings.error;
-      const lastUpdated = state.__resources.accountSettings.lastUpdated;
+      const accountSettingsLoading = state.__resources.accountSettings.loading;
+      const accountSettingsError = state.__resources.accountSettings.error;
+      const accountSettingsLastUpdated =
+        state.__resources.accountSettings.lastUpdated;
 
+      if (!mapAccountToProps) {
+        return {
+          ...ownProps,
+          accountSettingsLoading,
+          accountSettingsLastUpdated,
+          accountSettingsError,
+          accountSettings
+        };
+      }
       return mapAccountToProps(
         ownProps,
-        loading,
-        lastUpdated,
-        accountError,
+        accountSettingsLoading,
+        accountSettingsLastUpdated,
+        accountSettingsError,
         accountSettings
       );
     },

@@ -658,7 +658,7 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
     state
   ),
   accountSettingsError: path(
-    ['__resources', 'accountSettings', 'error'],
+    ['__resources', 'accountSettings', 'error', 'read'],
     state
   ),
   linodesLoading: state.__resources.linodes.loading,
