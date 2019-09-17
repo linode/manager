@@ -104,7 +104,10 @@ const BucketBreadcrumb: React.FC<CombinedProps> = props => {
           Path copied
         </span>
       )}
-      <FileCopy className={classes.icon} onClick={() => iconOnClick(prefix)} />
+      <FileCopy
+        className={classes.icon}
+        onClick={() => iconOnClick(bucketName + '/' + prefix)}
+      />
       <div className={classes.prefixWrapper}>
         {/* Bucket name */}
         <Typography
