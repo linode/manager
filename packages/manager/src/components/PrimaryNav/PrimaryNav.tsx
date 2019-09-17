@@ -318,8 +318,13 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
         }
       },
       {
+        conditionToAdd: () => isManagedAccount || !!flags.managed,
+        insertAfter: 'longview',
+        link: { display: 'Managed', href: '/managed', key: 'managed' }
+      },
+      {
         conditionToAdd: () => isKubernetesEnabled(accountCapabilities),
-        insertAfter: 'linodes',
+        insertAfter: 'longview',
         link: { display: 'Kubernetes', href: '/kubernetes', key: 'kubernetes' }
       },
       {
@@ -336,14 +341,14 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
         }
       },
       {
-        conditionToAdd: () => isManagedAccount || !!flags.managed,
-        insertAfter: 'longview',
-        link: { display: 'Managed', href: '/managed', key: 'managed' }
+        conditionToAdd: () => hasAccountAccess,
+        insertAfter: 'images',
+        link: { display: 'Account', href: '/account/billing', key: 'account' }
       },
       {
-        conditionToAdd: () => hasAccountAccess,
-        insertAfter: 'stackscripts',
-        link: { display: 'Account', href: '/account/billing', key: 'account' }
+        conditionToAdd: () => !!flags.firewalls,
+        insertAfter: 'domains',
+        link: { display: 'Firewalls', href: '/firewalls', key: 'firewalls' }
       }
     ];
   };
@@ -352,17 +357,16 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     const primaryLinks: PrimaryLink[] = [
       { display: 'Dashboard', href: '/dashboard', key: 'dashboard' },
       { display: 'Linodes', href: '/linodes', key: 'linodes' },
+      { display: 'Volumes', href: '/volumes', key: 'volumes' },
       {
         display: 'NodeBalancers',
         href: '/nodebalancers',
         key: 'nodebalancers'
       },
       { display: 'Domains', href: '/domains', key: 'domains' },
-      { display: 'Firewalls', href: '/firewalls', key: 'firewalls' },
-      { display: 'Volumes', href: '/volumes', key: 'volumes' },
-      { display: 'Images', href: '/images', key: 'images' },
       { display: 'Longview', href: '/longview', key: 'longview' },
-      { display: 'StackScripts', href: '/stackscripts', key: 'stackscripts' }
+      { display: 'StackScripts', href: '/stackscripts', key: 'stackscripts' },
+      { display: 'Images', href: '/images', key: 'images' }
     ];
 
     const potentialMenuItemsToAdd = this.primaryNavManipulator();
