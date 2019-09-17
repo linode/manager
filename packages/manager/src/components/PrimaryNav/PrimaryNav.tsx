@@ -149,6 +149,11 @@ const styles = (theme: Theme) =>
           right: 0,
           top: '8%'
         }
+      },
+      [theme.breakpoints.down('sm')]: {
+        '&:before': {
+          display: 'none'
+        }
       }
     },
     sublinkPanel: {
