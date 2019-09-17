@@ -53,8 +53,11 @@ export const CredentialRow: React.FunctionComponent<CombinedProps> = props => {
         <Typography variant="h3">{credential.label}</Typography>
       </TableCell>
       <TableCell parentColumn="Last Decrypted" data-qa-credential-decrypted>
-        {credential.last_decrypted && (
+        {/** If credential.last_decrypted is null, it has never been decrypted */}
+        {credential.last_decrypted ? (
           <DateTimeDisplay value={credential.last_decrypted} />
+        ) : (
+          'Never'
         )}
       </TableCell>
       <TableCell>
