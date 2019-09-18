@@ -425,7 +425,11 @@ const withStackScriptBase = (isSelecting: boolean) => (
       }
 
       if (this.state.loading) {
-        return <CircleProgress noTopMargin />;
+        return (
+          <div className={classes.loaderWrapper}>
+            <CircleProgress />
+          </div>
+        );
       }
 
       return (
