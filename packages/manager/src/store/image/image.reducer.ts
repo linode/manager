@@ -10,23 +10,9 @@ import {
   removeImage
 } from './image.actions';
 
-/**
- * State
- */
+import { EntitiesAsObjectState } from '../types';
 
-export interface State {
-  error?: Partial<{
-    read: Linode.ApiFieldError[];
-    create: Linode.ApiFieldError[];
-    delete: Linode.ApiFieldError[];
-    update: Linode.ApiFieldError[];
-  }>;
-  data: Record<string, Image>;
-  results: number;
-  lastUpdated: number;
-  loading: boolean;
-  listOfIDsInOriginalOrder: string[];
-}
+export type State = EntitiesAsObjectState<Image>;
 
 export const defaultState: State = {
   loading: true,

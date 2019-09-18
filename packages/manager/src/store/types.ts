@@ -90,3 +90,17 @@ export type EventHandler = (
   dispatch: Dispatch<any>,
   getState: () => ApplicationState
 ) => void;
+
+export interface EntitiesAsObjectState<T> {
+  error?: Partial<{
+    read: APIError[];
+    create: APIError[];
+    delete: APIError[];
+    update: APIError[];
+  }>;
+  data: Record<string, T>;
+  results: number;
+  lastUpdated: number;
+  loading: boolean;
+  listOfIDsInOriginalOrder: (string | number)[];
+}
