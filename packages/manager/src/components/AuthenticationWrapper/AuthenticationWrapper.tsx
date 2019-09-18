@@ -4,6 +4,7 @@ import {
   Notification
 } from 'linode-js-sdk/lib/account';
 import { Domain } from 'linode-js-sdk/lib/domains';
+import { Firewall } from 'linode-js-sdk/lib/firewalls';
 import { Image } from 'linode-js-sdk/lib/images';
 import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
 import { Profile } from 'linode-js-sdk/lib/profile';
@@ -27,6 +28,7 @@ import { requestAccountSettings } from 'src/store/accountSettings/accountSetting
 import { getAllBuckets } from 'src/store/bucket/bucket.requests';
 import { requestClusters } from 'src/store/clusters/clusters.actions';
 import { requestDomains } from 'src/store/domains/domains.actions';
+import { getAllFirewalls } from 'src/store/firewalls/firewalls.requests';
 import { requestImages } from 'src/store/image/image.requests';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
 import { requestTypes } from 'src/store/linodeType/linodeType.requests';
@@ -38,6 +40,8 @@ import { requestNotifications } from 'src/store/notification/notification.reques
 import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
 import { getAllVolumes } from 'src/store/volume/volume.requests';
+
+import { GetAllData } from 'src/utilities/getAll';
 
 type CombinedProps = DispatchProps & StateProps & WithNodeBalancerActions;
 
@@ -67,6 +71,7 @@ export class AuthenticationWrapper extends React.Component<CombinedProps> {
       this.props.requestTypes(),
       this.props.requestRegions(),
       this.props.requestVolumes(),
+      this.props.requestFirewalls(),
       getAllNodeBalancersWithConfigs()
     ];
 
@@ -151,6 +156,7 @@ interface DispatchProps {
   requestProfile: () => Promise<Profile>;
   requestBuckets: () => Promise<Linode.Bucket[]>;
   requestClusters: () => Promise<Linode.Cluster[]>;
+  requestFirewalls: () => Promise<GetAllData<Firewall[]>>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
@@ -168,7 +174,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   requestVolumes: () => dispatch(getAllVolumes()),
   requestProfile: () => dispatch(requestProfile()),
   requestBuckets: () => dispatch(getAllBuckets()),
-  requestClusters: () => dispatch(requestClusters())
+  requestClusters: () => dispatch(requestClusters()),
+  requestFirewalls: () => dispatch(getAllFirewalls())
 });
 
 const connected = connect(

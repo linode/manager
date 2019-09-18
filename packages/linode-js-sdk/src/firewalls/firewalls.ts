@@ -6,7 +6,7 @@
 //   setURL,
 //   setXFilter
 // } from '../request';
-// import { ResourcePage as Page } from '../types'
+import { ResourcePage as Page } from '../types';
 import { Firewall } from './types';
 
 /**
@@ -16,7 +16,7 @@ export const getFirewalls = (
   mockData: Firewall[],
   params: any = {},
   filters: any = {}
-) => {
+): Promise<Page<Firewall>> => {
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       resolve({
@@ -26,7 +26,7 @@ export const getFirewalls = (
         results: mockData.length
       });
     }, 1000);
-  }).then(data => {
+  }).then((data: any) => {
     return data;
   });
 };
