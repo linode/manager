@@ -1,67 +1,130 @@
 const { constants } = require('../../constants');
+const { assertLog } = require('../../utils/assertionLog');
 
 import Page from '../page';
 
 export class SshKeys extends Page {
-    get addKeyButton() { return this.addIcon('Add a SSH Key'); }
+  get addKeyButton() {
+    return this.addIcon('Add a SSH Key');
+  }
 
-    get drawerKeyLabel() { return $('[data-qa-label-field] input'); }
-    get drawerPublicKey() { return $('[data-qa-ssh-key-field] textarea'); }
+  get drawerKeyLabel() {
+    return $('[data-qa-label-field] input');
+  }
+  get drawerPublicKey() {
+    return $('[data-qa-ssh-key-field] textarea');
+  }
 
-    get submitKeyButton() { return $(this.submitButton.selector); }
+  get submitKeyButton() {
+    return $(this.submitButton.selector);
+  }
 
-    get publicKeyRow() { return $('[data-qa-content-row]'); }
-    get publicKeyRows() { return $$('[data-qa-content-row]'); }
+  get publicKeyRow() {
+    return $('[data-qa-content-row]');
+  }
+  get publicKeyRows() {
+    return $$('[data-qa-content-row]');
+  }
 
-    get publicKeyActionMenu() { return $('[data-qa-action-menu="true"]'); }
+  get publicKeyActionMenu() {
+    return $('[data-qa-action-menu="true"]');
+  }
 
-    get label() { return $('[data-qa-label]'); }
-    get labelColumn() { return $('[data-qa-label-column]'); }
-    get keyColumn() { return $('[data-qa-key-column]'); }
-    get createdColumn() { return $('[data-qa-created-column]'); }
+  get label() {
+    return $('[data-qa-label]');
+  }
+  get labelColumn() {
+    return $('[data-qa-label-column]');
+  }
+  get keyColumn() {
+    return $('[data-qa-key-column]');
+  }
+  get createdColumn() {
+    return $('[data-qa-created-column]');
+  }
 
-    get placeholderMsg() { return $('[data-qa-placeholder-msg]'); }
+  get placeholderMsg() {
+    return $('[data-qa-placeholder-msg]');
+  }
 
-    baseElemsDisplay() {
-        this.addKeyButton.waitForVisible(constants.wait.normal);
-        this.labelColumn.waitForVisible(constants.wait.normal);
+  baseElemsDisplay() {
+    this.addKeyButton.waitForDisplayed(constants.wait.normal);
+    this.labelColumn.waitForDisplayed(constants.wait.normal);
 
-        expect(this.keyColumn.isVisible()).toBe(true);
-        expect(this.createdColumn.isVisible()).toBe(true);
-    }
+    expect(this.keyColumn.isDisplayed())
+      .withContext(
+        `"${this.keyColumn.selector}" selector ${assertLog.displayed}`
+      )
+      .toBe(true);
+    expect(this.createdColumn.isDisplayed())
+      .withContext(
+        `"${this.createdColumn.selector}" selector ${assertLog.displayed}`
+      )
+      .toBe(true);
+  }
 
+  addKey(label, publicKey) {
+    this.addKeyButton.click();
+    this.drawerTitle.waitForDisplayed(constants.wait.normal);
+    this.drawerKeyLabel.waitForDisplayed(constants.wait.normal);
+    expect(this.drawerPublicKey.isDisplayed())
+      .withContext(
+        `"${this.drawerPublicKey.selector}" selector ${assertLog.displayed}`
+      )
+      .toBe(true);
+    expect(this.addKeyButton.isDisplayed())
+      .withContext(
+        `"${this.addKeyButton.selector}" selector ${assertLog.displayed}`
+      )
+      .toBe(true);
+    expect(this.cancelButton.isDisplayed())
+      .withContext(
+        `"${this.cancelButton.selector}" selector ${assertLog.displayed}`
+      )
+      .toBe(true);
 
-    addKey(label, publicKey) {
-        this.addKeyButton.click();
-        this.drawerTitle.waitForVisible(constants.wait.normal);
-        this.drawerKeyLabel.waitForVisible(constants.wait.normal);
-        expect(this.drawerPublicKey.isVisible()).toBe(true);
-        expect(this.addKeyButton.isVisible()).toBe(true);
-        expect(this.cancelButton.isVisible()).toBe(true);
+    this.drawerKeyLabel.setValue(label);
+    this.drawerPublicKey.setValue(publicKey);
+    this.submitKeyButton.click();
 
-        this.drawerKeyLabel.setValue(label);
-        this.drawerPublicKey.setValue(publicKey);
-        this.submitKeyButton.click();
+    $(`[data-qa-content-row="${label}"]`).waitForDisplayed(
+      constants.wait.normal
+    );
+  }
 
-        $(`[data-qa-content-row="${label}"]`).waitForVisible(constants.wait.normal);
-    }
+  removeKey(label) {
+    $(`[data-qa-content-row="${label}"]`).waitForDisplayed(
+      constants.wait.normal
+    );
+    const keyToRemove = $(`[data-qa-content-row="${label}"]`);
+    this.selectActionMenuItem(keyToRemove, 'Delete');
 
-    removeKey(label) {
-        browser.waitForVisible(`[data-qa-content-row="${label}"]`, constants.wait.normal);
-        const keyToRemove = $(`[data-qa-content-row="${label}"]`);
-        this.selectActionMenuItem(keyToRemove, 'Delete');
+    this.dialogTitle.waitForDisplayed(constants.wait.normal);
 
-        this.dialogTitle.waitForVisible(constants.wait.normal);
+    expect(this.dialogConfirmDelete.isDisplayed())
+      .withContext(
+        `"${this.dialogConfirmDelete.selector}" selector ${assertLog.displayed}`
+      )
+      .toBe(true);
+    expect(this.dialogConfirmCancel.isDisplayed())
+      .withContext(
+        `"${this.dialogConfirmCancel.selector}" selector ${assertLog.displayed}`
+      )
+      .toBe(true);
+    expect(this.dialogTitle.getText())
+      .withContext(
+        `${assertLog.incorrectText} for "${this.dialogTitle.selector}" selector`
+      )
+      .toBe('Delete SSH Key');
 
-        expect(this.dialogConfirmDelete.isVisible()).toBe(true);
-        expect(this.dialogConfirmCancel.isVisible()).toBe(true);
-        expect(this.dialogTitle.getText()).toBe('Delete SSH Key');
+    this.dialogConfirmDelete.click();
+    this.dialogTitle.waitForExist(constants.wait.normal, true);
 
-        this.dialogConfirmDelete.click();
-        this.dialogTitle.waitForExist(constants.wait.normal, true);
-
-        $(`[data-qa-content-row="${label}"]`).waitForVisible(constants.wait.long, true);
-    }
+    $(`[data-qa-content-row="${label}"]`).waitForDisplayed(
+      constants.wait.long,
+      true
+    );
+  }
 }
 
 export default new SshKeys();

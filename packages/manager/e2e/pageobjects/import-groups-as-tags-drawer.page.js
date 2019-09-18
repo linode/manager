@@ -1,4 +1,6 @@
 const { constants } = require('../constants');
+const { assertLog } = require('../utils/assertionLog');
+
 import Page from './page';
 
 class ImportGroupsAsTagsDrawer extends Page {
@@ -19,11 +21,15 @@ class ImportGroupsAsTagsDrawer extends Page {
   }
 
   drawerDisplays() {
-    this.drawerBase.waitForVisible(constants.wait.normal);
-    this.submitButton.waitForVisible(constants.wait.normal);
-    this.linodeGroupList.waitForVisible(constants.wait.normal);
-    this.domainGroupList.waitForVisible(constants.wait.normal);
-    expect(this.drawerTitle.getText()).toBe('Import Display Groups as Tags');
+    this.drawerBase.waitForDisplayed(constants.wait.normal);
+    this.submitButton.waitForDisplayed(constants.wait.normal);
+    this.linodeGroupList.waitForDisplayed(constants.wait.normal);
+    this.domainGroupList.waitForDisplayed(constants.wait.normal);
+    expect(this.drawerTitle.getText())
+      .withContext(
+        `${assertLog.incorrectText} for "${this.drawerTitle.selector} selector`
+      )
+      .toBe('Import Display Groups as Tags');
   }
 }
 

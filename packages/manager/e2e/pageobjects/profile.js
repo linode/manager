@@ -1,4 +1,5 @@
 const { constants } = require('../constants');
+const { assertLog } = require('../utils/assertionLog');
 
 import Page from './page';
 
@@ -118,40 +119,102 @@ export class TokenCreateDrawer extends Page {
   }
 
   baseElemsDisplay() {
-    expect(this.noneColumn.isVisible()).toBe(true);
-    expect(this.readColumn.isVisible()).toBe(true);
-    expect(this.rwColumn.isVisible()).toBe(true);
-    expect(this.label.isVisible()).toBe(true);
+    expect(this.noneColumn.isDisplayed())
+      .withContext(
+        `"${this.noneColumn.selector}" selector ${assertLog.displayed}`
+      )
+      .toBe(true);
+    expect(this.readColumn.isDisplayed())
+      .withContext(
+        `"${this.readColumn.selector}" selector ${assertLog.displayed}`
+      )
+      .toBe(true);
+    expect(this.rwColumn.isDisplayed())
+      .withContext(
+        `"${this.rwColumn.selector}" selector ${assertLog.displayed}`
+      )
+      .toBe(true);
+    expect(this.label.isDisplayed())
+      .withContext(`"${this.label.selector}" selector ${assertLog.displayed}`)
+      .toBe(true);
 
-    expect(this.account.isVisible()).toBe(true);
-    expect(this.domain.isVisible()).toBe(true);
-    expect(this.events.isVisible()).toBe(true);
-    expect(this.images.isVisible()).toBe(true);
-    expect(this.ips.isVisible()).toBe(true);
-    expect(this.linodes.isVisible()).toBe(true);
-    expect(this.longview.isVisible()).toBe(true);
-    expect(this.nodebalancers.isVisible()).toBe(true);
-    expect(this.stackscripts.isVisible()).toBe(true);
-    expect(this.volumes.isVisible()).toBe(true);
+    expect(this.account.isDisplayed())
+      .withContext(`"${this.account.selector}" selector ${assertLog.displayed}`)
+      .toBe(true);
+    expect(this.domain.isDisplayed())
+      .withContext(`"${this.domain.selector}" selector ${assertLog.displayed}`)
+      .toBe(true);
+    expect(this.events.isDisplayed())
+      .withContext(`"${this.events.selector}" selector ${assertLog.displayed}`)
+      .toBe(true);
+    expect(this.images.isDisplayed())
+      .withContext(`"${this.images.selector}" selector ${assertLog.displayed}`)
+      .toBe(true);
+    expect(this.ips.isDisplayed())
+      .withContext(`"${this.ips.selector}" selector ${assertLog.displayed}`)
+      .toBe(true);
+    expect(this.linodes.isDisplayed())
+      .withContext(`"${this.linodes.selector}" selector ${assertLog.displayed}`)
+      .toBe(true);
+    expect(this.longview.isDisplayed())
+      .withContext(
+        `"${this.longview.selector}" selector ${assertLog.displayed}`
+      )
+      .toBe(true);
+    expect(this.nodebalancers.isDisplayed())
+      .withContext(
+        `"${this.nodebalancers.selector}" selector ${assertLog.displayed}`
+      )
+      .toBe(true);
+    expect(this.stackscripts.isDisplayed())
+      .withContext(
+        `"${this.stackscripts.selector}" selector ${assertLog.displayed}`
+      )
+      .toBe(true);
+    expect(this.volumes.isDisplayed())
+      .withContext(`"${this.volumes.selector}" selector ${assertLog.displayed}`)
+      .toBe(true);
 
-    // expect(this.expiry.isVisible()).toBe(true);
-    expect(this.nonePermission.isVisible()).toBe(true);
-    expect(this.readPermission.isVisible()).toBe(true);
-    expect(this.rwPermission.isVisible()).toBe(true);
-    expect(this.submit.isVisible()).toBe(true);
-    expect(this.cancel.isVisible()).toBe(true);
+    expect(this.nonePermission.isDisplayed())
+      .withContext(
+        `"${this.nonePermission.selector}" selector ${assertLog.displayed}`
+      )
+      .toBe(true);
+    expect(this.readPermission.isDisplayed())
+      .withContext(
+        `"${this.readPermission.selector}" selector ${assertLog.displayed}`
+      )
+      .toBe(true);
+    expect(this.rwPermission.isDisplayed())
+      .withContext(
+        `"${this.rwPermission.selector}" selector ${assertLog.displayed}`
+      )
+      .toBe(true);
+    expect(this.submit.isDisplayed())
+      .withContext(`"${this.submit.selector}" selector ${assertLog.displayed}`)
+      .toBe(true);
+    expect(this.cancel.isDisplayed())
+      .withContext(`"${this.cancel.selector}" selector ${assertLog.displayed}`)
+      .toBe(true);
   }
 
   labelTimestamp(time) {
     this.label.setValue(time);
-    this.accessColumn.forEach(col => expect(col.isVisible()).toBe(true));
-    // expect(this.expiry.isVisible()).toBe(true);
+    this.accessColumn.forEach(col =>
+      expect(col.isDisplayed())
+        .withContext(`"${this.col}" selector ${assertLog.displayed}`)
+        .toBe(true)
+    );
   }
 
   setPermission(row, permission) {
     const elem = row.$(permission.selector);
     elem.click();
-    expect(elem.getAttribute('data-qa-radio')).toBe('true');
+    expect(elem.getAttribute('data-qa-radio'))
+      .withContext(
+        `${assertLog.incorrectAttr} "${this.elem.selector}" selector`
+      )
+      .toBe('true');
   }
 }
 
@@ -221,56 +284,87 @@ export class Profile extends Page {
   }
 
   tokenBaseElems() {
-    browser.waitForVisible('[data-qa-profile-header]', constants.wait.normal);
-    browser.waitForVisible('[data-qa-tabs] [data-qa-tab="API Tokens"]', constants.wait.normal)
-    expect(this.profileHeader.isVisible()).toBe(true);
-    expect(this.tokenCreate.waitForVisible(constants.wait.normal)).toBe(true);
-    expect(this.tableHeader.length).toBe(2);
-    expect(this.tableHead.length).toBe(2);
+    $('[data-qa-profile-header]').waitForDisplayed(constants.wait.normal);
+    $('[data-qa-tabs] [data-qa-tab="API Tokens"]').waitForDisplayed(
+      constants.wait.normal
+    );
+    expect(this.profileHeader.isDisplayed())
+      .withContext(
+        `"${this.profileHeader.selector} selector ${assertLog.displayed}`
+      )
+      .toBe(true);
+    this.tokenCreate.waitForDisplayed(constants.wait.normal);
+    expect(this.tableHeader.length)
+      .withContext(`"${this.tableHeader.selector}" selector`)
+      .toBe(2);
+    expect(this.tableHead.length)
+      .withContext(
+        `${assertLog.incorrectNum} for "${this.tableHead.selector}" selector`
+      )
+      .toBe(2);
   }
 
   oauthBaseElems() {
-    browser.waitForVisible('[data-qa-profile-header]', constants.wait.normal);
-    expect(this.profileTab('OAuth Apps').getAttribute('aria-selected')).toBe(
-      'true'
-    );
-    browser.waitForVisible('[data-qa-oauth-label]', constants.wait.normal);
-    expect(this.oauthLabel.isVisible()).toBe(true);
-    expect(this.oauthAccess.isVisible()).toBe(true);
-    expect(this.oauthId.isVisible()).toBe(true);
-    expect(this.oauthActionMenu.isVisible()).toBe(true);
-    expect(this.oauthCreate.isVisible()).toBe(true);
+    $('[data-qa-profile-header]').waitForDisplayed(constants.wait.normal);
+    expect(this.profileTab('OAuth Apps').getAttribute('aria-selected'))
+      .withContext(
+        `"${this.profileTab.selector}" selector ${assertLog.incorrectAttr} `
+      )
+      .toBe('true');
+    browser.waitForDisplayed('[data-qa-oauth-label]', constants.wait.normal);
+    expect(this.oauthLabel.isDisplayed())
+      .withContext(
+        `"${this.oauthLabel.selector}" selector ${assertLog.displayed}`
+      )
+      .toBe(true);
+    expect(this.oauthAccess.isDisplayed())
+      .withContext(
+        `"${this.oauthAccess.selector}" selector ${assertLog.displayed}`
+      )
+      .toBe(true);
+    expect(this.oauthId.isDisplayed())
+      .withContext(`"${this.oauthId.selector}" selector ${assertLog.displayed}`)
+      .toBe(true);
+    expect(this.oauthActionMenu.isDisplayed())
+      .withContext(
+        `"${this.oauthActionMenu.selector}" selector ${assertLog.displayed}`
+      )
+      .toBe(true);
+    expect(this.oauthCreate.isDisplayed())
+      .withContext(
+        `"${this.oauthCreate.selector}" selector ${assertLog.displayed}`
+      )
+      .toBe(true);
   }
 
   create(type) {
     if (type === 'oauth') {
-      this.oauthCreate.waitForVisible(constants.wait.normal);
+      this.oauthCreate.waitForDisplayed(constants.wait.normal);
       this.oauthCreate.click();
     }
     if (type === 'token') {
-      this.tokenCreate.waitForVisible(constants.wait.normal);
+      this.tokenCreate.waitForDisplayed(constants.wait.normal);
       this.tokenCreate.click();
     }
-    browser.waitForText('[data-qa-drawer-title]', constants.wait.normal);
-    browser.waitForVisible('[data-qa-add-label]', constants.wait.normal);
+    $('[data-qa-drawer-title]').waitForText(constants.wait.normal);
+    $('[data-qa-add-label]').waitForDisplayed(constants.wait.normal);
   }
 
   selectActionMenu(row, item) {
-    browser.click(`[data-qa-table-row="${row}"] [data-qa-action-menu]`);
-    browser.waitForVisible('[data-qa-action-menu-item]', constants.wait.normal);
-    browser.click(`[data-qa-action-menu-item="${item}"]`);
+    $(`[data-qa-table-row="${row}"] [data-qa-action-menu]`).click();
+    $('[data-qa-action-menu-item]').waitForDisplayed(constants.wait.normal);
+    $(`[data-qa-action-menu-item="${item}"]`).click();
   }
 
   delete(type, row) {
     if (type === 'oauth') {
       this.selectActionMenu(row, 'Delete');
-      browser.waitForVisible(dialogMap.title, constants.wait.normal);
+      $(dialogMap.title).waitForDisplayed(constants.wait.normal);
 
       const deleteButton = $(dialogMap.confirm);
       deleteButton.click();
 
-      browser.waitForVisible(
-        `[data-qa-table-row="${row}"]`,
+      $(`[data-qa-table-row="${row}"]`).waitForDisplayed(
         constants.wait.normal,
         true
       );
