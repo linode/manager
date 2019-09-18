@@ -1,5 +1,9 @@
 import * as Promise from 'bluebird';
-import { getLinodeBackups, Linode, LinodeWithBackups } from 'linode-js-sdk/lib/linodes'
+import {
+  getLinodeBackups,
+  Linode,
+  LinodeWithBackups
+} from 'linode-js-sdk/lib/linodes';
 import { compose as ramdaCompose, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';

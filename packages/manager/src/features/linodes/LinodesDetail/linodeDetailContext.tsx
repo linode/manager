@@ -1,4 +1,4 @@
-import { Linode } from 'linode-js-sdk/lib/linodes'
+import { Linode } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { createHOCForConsumer } from 'src/requestableContext';
 import {
@@ -76,9 +76,7 @@ export type UpdateLinodeDisk = (
   data: LinodeDiskUpdateFields
 ) => UpdateLinodeDiskResponse;
 
-export type UpdateLinode = (
-  data: Partial<Linode>
-) => Promise<Linode>;
+export type UpdateLinode = (data: Partial<Linode>) => Promise<Linode>;
 
 export interface LinodeDetailContext {
   linode: ExtendedLinode;

@@ -1,5 +1,11 @@
 import { Image } from 'linode-js-sdk/lib/images';
-import { getLinodeStats, getLinodeStatsByDate, Linode, LinodeType, Stats } from 'linode-js-sdk/lib/linodes'
+import {
+  getLinodeStats,
+  getLinodeStatsByDate,
+  Linode,
+  LinodeType,
+  Stats
+} from 'linode-js-sdk/lib/linodes';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as moment from 'moment';
 import { map, pathOr } from 'ramda';

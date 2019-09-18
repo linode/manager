@@ -8,7 +8,6 @@ import { Subscription } from 'rxjs/Subscription';
 
 import { events$ } from 'src/events';
 
-
 export const updateVolumes$ = new Subject<boolean>();
 
 interface State {

@@ -1,4 +1,4 @@
-import { LinodeType } from 'linode-js-sdk/lib/linodes'
+import { LinodeType } from 'linode-js-sdk/lib/linodes';
 import actionCreatorFactory from 'typescript-fsa';
 
 const actionCreator = actionCreatorFactory(`@@manager/types`);

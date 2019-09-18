@@ -1,5 +1,5 @@
 import Close from '@material-ui/icons/Close';
-import { Disk, Linode } from 'linode-js-sdk/lib/linodes'
+import { Disk, Linode } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';

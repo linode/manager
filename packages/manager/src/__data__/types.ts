@@ -1,4 +1,4 @@
-import { LinodeType } from 'linode-js-sdk/lib/linodes'
+import { LinodeType } from 'linode-js-sdk/lib/linodes';
 
 export const types: LinodeType[] = [
   {

@@ -1,6 +1,6 @@
 import * as Bluebird from 'bluebird';
 import { Domain } from 'linode-js-sdk/lib/domains';
-import { Linode } from 'linode-js-sdk/lib/linodes'
+import { Linode } from 'linode-js-sdk/lib/linodes';
 import { isEmpty } from 'ramda';
 import { Action } from 'redux';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
@@ -228,10 +228,7 @@ export const addTagsToEntities: ImportGroupsAsTagsThunk = () => (
   dispatch(handleUpdate());
   const entities = getEntitiesWithGroupsToImport(getState());
 
-  const linodeAccumulator = createAccumulator<Linode>(
-    'linode',
-    dispatch
-  );
+  const linodeAccumulator = createAccumulator<Linode>('linode', dispatch);
   const domainAccumulator = createAccumulator<Domain>('domain', dispatch);
 
   Bluebird.join(

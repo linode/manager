@@ -1,4 +1,4 @@
-import { LinodeBackup } from 'linode-js-sdk/lib/linodes'
+import { LinodeBackup } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 

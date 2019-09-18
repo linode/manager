@@ -1,5 +1,12 @@
 import { Event } from 'linode-js-sdk/lib/account';
-import { cloneLinode, cloneLinodeDisk, Config, Disk, Linode, LinodeStatus } from 'linode-js-sdk/lib/linodes'
+import {
+  cloneLinode,
+  cloneLinodeDisk,
+  Config,
+  Disk,
+  Linode,
+  LinodeStatus
+} from 'linode-js-sdk/lib/linodes';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';

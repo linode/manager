@@ -1,4 +1,10 @@
-import { Disk, getType, LinodeSpecs, LinodeType, startMutation } from 'linode-js-sdk/lib/linodes'
+import {
+  Disk,
+  getType,
+  LinodeSpecs,
+  LinodeType,
+  startMutation
+} from 'linode-js-sdk/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';

@@ -1,4 +1,4 @@
-import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes'
+import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
@@ -222,10 +222,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 /* Attaches a full type object to each Linode. Needed to calculate
  * price and label information in BackupsTable.tsx.
  */
-export const addTypeInfo = (
-  types: LinodeType[],
-  linodes: Linode[]
-) =>
+export const addTypeInfo = (types: LinodeType[], linodes: Linode[]) =>
   linodes.map(linode => {
     const typeInfo = getTypeInfo(linode.type, types || []);
     return {

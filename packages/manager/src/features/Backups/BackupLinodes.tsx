@@ -1,4 +1,4 @@
-import { LinodeType } from "linode-js-sdk/lib/linodes";
+import { LinodeType } from 'linode-js-sdk/lib/linodes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import {
@@ -37,8 +37,7 @@ export const displayPrice = (price: string | number) => {
   return _displayPrice(price);
 };
 
-const getLabel = (type?: LinodeType) =>
-  pathOr('Unknown', ['label'], type);
+const getLabel = (type?: LinodeType) => pathOr('Unknown', ['label'], type);
 
 const getPrice = (type?: LinodeType) =>
   pathOr('Unavailable', ['addons', 'backups', 'price', 'monthly'], type);

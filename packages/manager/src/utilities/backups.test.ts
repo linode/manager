@@ -1,4 +1,4 @@
-import { LinodeBackupsResponse } from 'linode-js-sdk/lib/linodes'
+import { LinodeBackupsResponse } from 'linode-js-sdk/lib/linodes';
 import { collectBackups, mostRecentFromResponse } from './backups';
 
 const notTheMostRecent = `1999-12-01T00:00:00`;

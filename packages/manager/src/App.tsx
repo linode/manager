@@ -634,7 +634,7 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   imagesError: path(['read'], state.__resources.images.error),
   notifications: state.__resources.notifications.data,
   notificationsError: state.__resources.notifications.error,
-  settingsError: state.__resources.accountSettings.error,
+  settingsError: state.__resources.accountSettings.error.read,
   typesError: state.__resources.types.error,
   regionsError: state.__resources.regions.error,
   volumesError: path(['read'], state.__resources.volumes.error),
@@ -659,7 +659,7 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
     state
   ),
   accountSettingsError: path(
-    ['__resources', 'accountSettings', 'error'],
+    ['__resources', 'accountSettings', 'error', 'read'],
     state
   ),
   linodesLoading: state.__resources.linodes.loading,

@@ -1,7 +1,10 @@
 import * as Bluebird from 'bluebird';
 import { Domain, getDomains } from 'linode-js-sdk/lib/domains';
-import { getLinodes, Linode } from 'linode-js-sdk/lib/linodes'
-import { getNodeBalancers, NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
+import { getLinodes, Linode } from 'linode-js-sdk/lib/linodes';
+import {
+  getNodeBalancers,
+  NodeBalancer
+} from 'linode-js-sdk/lib/nodebalancers';
 import { getVolumes, Volume } from 'linode-js-sdk/lib/volumes';
 import { range } from 'ramda';
 
