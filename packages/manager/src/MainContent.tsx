@@ -90,6 +90,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     '& > g': {
       fill: '#000'
     }
+  },
+  activationWrapper: {
+    padding: theme.spacing(4),
+    [theme.breakpoints.up('xl')]: {
+      width: '50%',
+      margin: '0 auto'
+    }
   }
 }));
 
@@ -214,7 +221,7 @@ const MainContent: React.FC<CombinedProps> = props => {
           minHeight: '100vh'
         }}
       >
-        <div style={{ padding: '5em' }}>
+        <div className={classes.activationWrapper}>
           <Box
             style={{
               display: 'flex'
