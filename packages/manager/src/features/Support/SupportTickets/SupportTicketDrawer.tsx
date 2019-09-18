@@ -483,7 +483,7 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
           label="What is this regarding?"
           value={selectedTopic}
           onChange={this.handleEntityTypeChange}
-          data-qa-ticket-entity-type
+          data-qa-ticket-entity-type={true}
           placeholder="Choose a Product"
           isClearable={false}
         />
@@ -500,7 +500,7 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
               inputValue={inputValue}
               onChange={this.handleEntityIDChange}
               onInputChange={this.onInputValueChange}
-              data-qa-ticket-entity-id
+              data-qa-ticket-entity-id={true}
               isLoading={this.state.loading}
               isClearable={false}
             />

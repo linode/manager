@@ -150,7 +150,7 @@ export default class Page {
     return $('[data-qa-editable-text]');
   }
   get breadcrumbStaticText() {
-    return $('[data-qa-label-title]');
+    return $('[data-qa-label-text]');
   }
   get breadcrumbBackLink() {
     return $('[data-qa-link]');
@@ -241,6 +241,7 @@ export default class Page {
   }
 
   expandPanel(title) {
+    console.log(`expanding "${title}" panel`);
     $(`[data-qa-panel-summary="${title}"]`).waitForDisplayed(
       constants.wait.normal
     );
@@ -393,13 +394,14 @@ export default class Page {
   }
 
   changeTab(tab) {
+    console.log(`changing to "${tab}" tab`);
     const tabElementSelector = `[data-qa-tab="${tab}"]`;
     $(tabElementSelector).waitForDisplayed(constants.wait.normal);
     browser.jsClick(tabElementSelector);
     browser.waitUntil(
       function() {
-        return browser
-          .getAttribute(`[data-qa-tab="${tab}"]`, 'aria-selected')
+        return $(`[data-qa-tab="${tab}"]`)
+          .getAttribute('aria-selected')
           .includes('true');
       },
       constants.wait.normal,

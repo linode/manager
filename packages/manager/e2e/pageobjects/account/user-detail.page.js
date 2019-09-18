@@ -2,7 +2,6 @@ const { constants } = require('../../constants');
 const { assertLog } = require('../../utils/assertionLog');
 
 import Page from '../page';
-import { browserCommands } from '../../config/custom-commands';
 
 class UserDetail extends Page {
   get userDetailHeader() {
