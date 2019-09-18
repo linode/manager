@@ -25,11 +25,11 @@ import { requestClusters as _requestClusters } from 'src/store/clusters/clusters
 import { MapState } from 'src/store/types';
 
 const BucketLanding = DefaultLoader({
-  loader: () => import('./Buckets/BucketLanding')
+  loader: () => import('./BucketLanding/BucketLanding')
 });
 
 const AccessKeyLanding = DefaultLoader({
-  loader: () => import('./AccessKeys/AccessKeyLanding')
+  loader: () => import('./AccessKeyLanding/AccessKeyLanding')
 });
 
 type CombinedProps = StateProps & DispatchProps & RouteComponentProps<{}>;
@@ -44,12 +44,11 @@ export const ObjectStorageLanding: React.FunctionComponent<
   ];
 
   const handleTabChange = (
-    event: React.ChangeEvent<HTMLDivElement>,
+    _: React.ChangeEvent<HTMLDivElement>,
     value: number
   ) => {
-    const { history } = props;
     const routeName = tabs[value].routeName;
-    history.push(`${routeName}`);
+    props.history.push(`${routeName}`);
   };
 
   React.useEffect(() => {
@@ -79,9 +78,7 @@ export const ObjectStorageLanding: React.FunctionComponent<
     }
   }, []);
 
-  const {
-    match: { url }
-  } = props;
+  const url = props.match.url;
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
