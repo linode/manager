@@ -4,6 +4,37 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.71.0] - 2019-09-18
+
+### Added:
+- Bucket Detail page (Object Storage)
+
+### Changed:
+- Display “Never” for Managed credentials without a last_encrypted field
+- Update copy on EnableManagedPlaceholder
+- Add Normalized Data Structure to Images in Redux
+- Hide active caret on mobile navigation
+- Add Edit action to Kubernetes Cluster action menu
+- Add Kubernetes cluster label to filename when downloading kubeconfig
+- Switch position of “Region” and “Last Backup” columns on Linode table
+- Account for over limit case for account transfer display on dashboard
+- [SDK] Migrate /regions
+- [SDK] Migrate /linodes
+- [SDK] Migrate /kubernetes
+- [SDK] Migrate /profile
+- [SDK] Migrate authentication requests
+
+### Fixed:
+- Overflow in react selects
+- Error with Placeholders missing key prop
+- Image select bug
+- LinodeConfig memory size limit not displayed
+- Style regression for notification thresholds panel
+- Tooltip not showing for selection cards
+- Update dependencies to resolve vulnerabilities
+- Security issue with external links
+
+
 ## [v0.70.0] - 2019-09-9
 
 ### Added:
@@ -26,7 +57,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 ### Fixed:
 - Client Secret key wrapping
 - Backups and clones always labeled as Debian
-- Correctly show upgrade banner for all deprecated types 
+- Correctly show upgrade banner for all deprecated types
 - Issue with kernel input not being populated with a default value in the Edit Linode Configuration form
 - Stop inverting SSH key access to account for the API fix for this bug
 
@@ -84,7 +115,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Breadcrumb enhancements
 - Tooltip for cluster command on Kubernetes detail page
 - Managed service monitor list
-- Add SupportWidget to Managed landing 
+- Add SupportWidget to Managed landing
 - Adjustments to view config drawer
 - Adjustments to buttons
 - Optional CVV field when updating credit card information
@@ -94,12 +125,12 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Improve error handling for LKE node pools
 - LKE form element UI adjustments
 - Make search link the first option in Algolia search bar
-- Add Logic to CSV Link to Prevent CSV Injections 
+- Add Logic to CSV Link to Prevent CSV Injections
 - Add Mutation Time to Banner
-- Disable Add User Button for Restricted Users 
+- Disable Add User Button for Restricted Users
 - Select user by default after adding an SSH key using the AccessPanel
 - Add max-width to main content
-- Handling for new event types 
+- Handling for new event types
 - Improve link styles for PDF downloads in account
 - Enable hot reload for local development
 
@@ -107,7 +138,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Charts display issue
 - Issue with css transitions on theme switch
 - Firefox issue with flag icons
-- Broken error key scrolling in Get Help search bar 
+- Broken error key scrolling in Get Help search bar
 
 
 ## [v0.66.0] - 2019-07-30
@@ -169,7 +200,7 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 - Update NB config node schema
 
 ### Fixed:
-- Domain record validation 
+- Domain record validation
 - Important notice icon placement
 - Fix spelling mistake in LinodeConfigDrawer
 - Safe access backups.snapshot
