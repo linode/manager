@@ -75,14 +75,20 @@ interface Props {
 type CombinedProps = Props;
 
 const BucketBreadcrumb: React.FC<CombinedProps> = props => {
-  const [copied, setCopied] = React.useState<boolean>(false);
   const classes = useStyles();
 
+  const [copied, setCopied] = React.useState<boolean>(false);
+
+  let timeout: ReturnType<typeof setTimeout>;
   const iconOnClick = (value: string) => {
     setCopied(!copied);
-    window.setTimeout(() => setCopied(false), 1500);
+    timeout = setTimeout(() => setCopied(false), 1500);
     copy(value);
   };
+
+  React.useEffect(() => {
+    return () => clearTimeout(timeout);
+  }, []);
 
   const { prefix, bucketName, history } = props;
   const { width } = useWindowDimensions();
