@@ -1,5 +1,5 @@
 import { Image } from 'linode-js-sdk/lib/images';
-import { Linode } from 'linode-js-sdk/lib/linodes'
+import { Linode } from 'linode-js-sdk/lib/linodes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';

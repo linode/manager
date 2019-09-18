@@ -1,5 +1,5 @@
 import { Domain } from 'linode-js-sdk/lib/domains';
-import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes'
+import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
 import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { createSelector } from 'reselect';

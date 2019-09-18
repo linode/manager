@@ -1,4 +1,4 @@
-import { Config, Linode } from 'linode-js-sdk/lib/linodes'
+import { Config, Linode } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import TableBody from 'src/components/core/TableBody';
 import Grid from 'src/components/Grid';

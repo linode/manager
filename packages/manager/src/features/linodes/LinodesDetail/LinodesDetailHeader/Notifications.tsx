@@ -1,5 +1,5 @@
-import { Notification } from 'linode-js-sdk/lib/account'
-import { LinodeStatus } from 'linode-js-sdk/lib/linodes'
+import { Notification } from 'linode-js-sdk/lib/account';
+import { LinodeStatus } from 'linode-js-sdk/lib/linodes';
 import { path } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';

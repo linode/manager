@@ -1,4 +1,8 @@
-import { LinodeBackup, LinodeBackupsResponse, LinodeWithBackups } from "linode-js-sdk/lib/linodes";
+import {
+  LinodeBackup,
+  LinodeBackupsResponse,
+  LinodeWithBackups
+} from 'linode-js-sdk/lib/linodes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';

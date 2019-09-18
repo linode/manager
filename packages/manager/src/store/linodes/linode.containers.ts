@@ -1,4 +1,4 @@
-import { Linode } from 'linode-js-sdk/lib/linodes'
+import { Linode } from 'linode-js-sdk/lib/linodes';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import {

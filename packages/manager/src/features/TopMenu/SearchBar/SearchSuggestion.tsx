@@ -1,4 +1,4 @@
-import { LinodeStatus } from 'linode-js-sdk/lib/linodes'
+import { LinodeStatus } from 'linode-js-sdk/lib/linodes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { OptionProps } from 'react-select/lib/components/Option';

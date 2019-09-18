@@ -1,5 +1,5 @@
 import { Event, GrantLevel } from 'linode-js-sdk/lib/account';
-import { Config, Disk, LinodeType } from 'linode-js-sdk/lib/linodes'
+import { Config, Disk, LinodeType } from 'linode-js-sdk/lib/linodes';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 

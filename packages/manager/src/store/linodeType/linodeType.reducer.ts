@@ -1,4 +1,4 @@
-import { LinodeType } from 'linode-js-sdk/lib/linodes'
+import { LinodeType } from 'linode-js-sdk/lib/linodes';
 import { Reducer } from 'redux';
 import { EntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';

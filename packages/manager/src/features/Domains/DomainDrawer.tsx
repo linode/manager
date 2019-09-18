@@ -3,7 +3,7 @@ import {
   createDomainRecord,
   Domain
 } from 'linode-js-sdk/lib/domains';
-import { Linode } from "linode-js-sdk/lib/linodes";
+import { Linode } from 'linode-js-sdk/lib/linodes';
 import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { Lens, lensPath, over, path, pathOr, set, view } from 'ramda';

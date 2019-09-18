@@ -6,9 +6,9 @@ export const actionCreator = actionCreatorFactory(`@@manager/images`);
 
 export const getImagesRequest = actionCreator(`request`);
 
-export const getImagesSuccess = actionCreator<
-  Linode.ResourcePage<Image>
->(`success`);
+export const getImagesSuccess = actionCreator<Linode.ResourcePage<Image>>(
+  `success`
+);
 
 export const getImagesFailure = actionCreator<Linode.ApiFieldError[]>(`fail`);
 

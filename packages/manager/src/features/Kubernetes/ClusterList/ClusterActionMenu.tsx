@@ -20,7 +20,13 @@ type CombinedProps = Props & RouteComponentProps<{}> & WithSnackbarProps;
 export const ClusterActionMenu: React.FunctionComponent<
   CombinedProps
 > = props => {
-  const { clusterId, clusterLabel, enqueueSnackbar, history, openDialog } = props;
+  const {
+    clusterId,
+    clusterLabel,
+    enqueueSnackbar,
+    history,
+    openDialog
+  } = props;
 
   const createActions = () => {
     return (closeMenu: Function): Action[] => {
@@ -41,7 +47,7 @@ export const ClusterActionMenu: React.FunctionComponent<
               state: {
                 editing: true
               }
-            })
+            });
           }
         },
         {
@@ -87,6 +93,9 @@ export const ClusterActionMenu: React.FunctionComponent<
   return <ActionMenu createActions={createActions()} />;
 };
 
-const enhanced = compose<CombinedProps, Props>(withSnackbar, withRouter);
+const enhanced = compose<CombinedProps, Props>(
+  withSnackbar,
+  withRouter
+);
 
 export default enhanced(ClusterActionMenu);
