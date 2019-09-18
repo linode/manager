@@ -7,6 +7,7 @@ import {
 
 type ClassNames =
   | 'root'
+  | 'loaderWrapper'
   | 'emptyState'
   | 'table'
   | 'searchWrapper'
@@ -16,6 +17,11 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {},
+    loaderWrapper: {
+      display: 'flex',
+      justifyContent: 'center',
+      padding: theme.spacing(2)
+    },
     table: {
       overflow: 'scroll'
     },
