@@ -140,6 +140,8 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
     VolumeDetail.checkVolumeConfigurationCommands(testVolume.label);
   });
 
+  // TODO this test fails at times but if skipped cause the trailing tests to fail
+  // leaving this on for now
   it('should create a volume without attaching to a linode', () => {
     VolumeDetail.drawerClose.click();
     browser.url(constants.routes.volumes);

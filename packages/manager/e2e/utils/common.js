@@ -63,6 +63,7 @@ export const apiCreateLinode = (
   group,
   image = true
 ) => {
+  console.log(`creating a linode via api`);
   const token = readToken(browser.options.testUser);
   const newLinodePass = crypto.randomBytes(20).toString('hex');
   const linode = browser.createLinode(
@@ -85,7 +86,7 @@ export const apiCreateLinode = (
     'running',
     image
   );
-
+  console.log(`linode: "${linode.label}" created`);
   return linode;
 };
 export const apiCreateMultipleLinodes = arrayOfLinodeCreateObj => {
