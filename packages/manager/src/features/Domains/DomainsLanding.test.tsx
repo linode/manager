@@ -9,6 +9,7 @@ const props: CombinedProps = {
   domainsData: domains,
   domainsLoading: false,
   domainsError: {},
+  isRestrictedUser: false,
   howManyLinodesOnAccount: 0,
   shouldGroupDomains: true,
   createDomain: jest.fn(),
