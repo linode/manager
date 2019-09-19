@@ -23,7 +23,7 @@ export class LongviewLanding extends React.Component<{}, {}> {
    * Only for testing the LV API. Will be deleted pre-merge.
    */
   componentDidMount() {
-    getValues(DUMMY_KEY, ['Packages', 'SysInfo.client'])
+    getValues(DUMMY_KEY, ['Uptime', 'SysInfo.client', 'Load'])
       .then(response => console.log(response))
       .catch(e => console.log('error!', e));
   }

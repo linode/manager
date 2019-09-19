@@ -135,5 +135,5 @@ export const getLatestValue = (token: string, fields: []) => {
  *    - Applications.Nginx.(accepted_cons|handled_cons|requests)
  *    - Applications.MySQL.(Com|Slow_queries|Bytes|Connections|Max_used|Aborted|
  *    -                     Qcache_hits|Qcache_inserts)
- *    - Packages
+ *    - Packages (?)
  **/
