@@ -1,4 +1,4 @@
-import { Linode } from 'linode-js-sdk/lib/linodes'
+import { Linode } from 'linode-js-sdk/lib/linodes';
 import { path } from 'ramda';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';

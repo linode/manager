@@ -1,3 +1,4 @@
+import { getKubeConfig } from 'linode-js-sdk/lib/kubernetes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -5,7 +6,6 @@ import { compose } from 'recompose';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 import { reportException } from 'src/exceptionReporting';
-import { getKubeConfig } from 'src/services/kubernetes';
 import { downloadFile } from 'src/utilities/downloadFile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
@@ -20,7 +20,13 @@ type CombinedProps = Props & RouteComponentProps<{}> & WithSnackbarProps;
 export const ClusterActionMenu: React.FunctionComponent<
   CombinedProps
 > = props => {
-  const { clusterId, clusterLabel, enqueueSnackbar, history, openDialog } = props;
+  const {
+    clusterId,
+    clusterLabel,
+    enqueueSnackbar,
+    history,
+    openDialog
+  } = props;
 
   const createActions = () => {
     return (closeMenu: Function): Action[] => {
@@ -41,7 +47,7 @@ export const ClusterActionMenu: React.FunctionComponent<
               state: {
                 editing: true
               }
-            })
+            });
           }
         },
         {
@@ -87,6 +93,9 @@ export const ClusterActionMenu: React.FunctionComponent<
   return <ActionMenu createActions={createActions()} />;
 };
 
-const enhanced = compose<CombinedProps, Props>(withSnackbar, withRouter);
+const enhanced = compose<CombinedProps, Props>(
+  withSnackbar,
+  withRouter
+);
 
 export default enhanced(ClusterActionMenu);

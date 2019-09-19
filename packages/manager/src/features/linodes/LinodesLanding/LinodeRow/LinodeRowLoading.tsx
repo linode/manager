@@ -1,5 +1,5 @@
 import { Event } from 'linode-js-sdk/lib/account';
-import { LinodeStatus } from 'linode-js-sdk/lib/linodes'
+import { LinodeStatus } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import {
   createStyles,

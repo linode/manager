@@ -1,5 +1,5 @@
 import { Domain } from 'linode-js-sdk/lib/domains';
-import { Linode } from 'linode-js-sdk/lib/linodes'
+import { Linode } from 'linode-js-sdk/lib/linodes';
 import { lensPath, view } from 'ramda';
 import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';

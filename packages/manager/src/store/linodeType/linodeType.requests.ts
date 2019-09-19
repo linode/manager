@@ -1,4 +1,8 @@
-import { getDeprecatedLinodeTypes, getLinodeTypes, LinodeType } from 'linode-js-sdk/lib/linodes'
+import {
+  getDeprecatedLinodeTypes,
+  getLinodeTypes,
+  LinodeType
+} from 'linode-js-sdk/lib/linodes';
 import { ThunkActionCreator } from 'src/store/types';
 import { getAll } from 'src/utilities/getAll';
 import { getLinodeTypesActions } from './linodeType.actions';

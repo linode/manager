@@ -1,5 +1,10 @@
 import { Image } from 'linode-js-sdk/lib/images';
-import { cloneLinode, CreateLinodeRequest, Linode } from 'linode-js-sdk/lib/linodes';
+import {
+  cloneLinode,
+  CreateLinodeRequest,
+  Linode
+} from 'linode-js-sdk/lib/linodes';
+import { StackScript, UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -61,15 +66,13 @@ import { sendCreateLinodeEvent } from 'src/utilities/ga';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { getRegionIDFromLinodeID } from './utilities';
 
-type StackScript = Linode.StackScript.Response;
-
 interface State {
   selectedImageID?: string;
   selectedRegionID?: string;
   selectedTypeID?: string;
   selectedLinodeID?: number;
   selectedBackupID?: number;
-  availableUserDefinedFields?: Linode.StackScript.UserDefinedField[];
+  availableUserDefinedFields?: UserDefinedField[];
   availableStackScriptImages?: Image[];
   selectedStackScriptID?: number;
   selectedStackScriptLabel?: string;
@@ -249,7 +252,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     id: number,
     label: string,
     username: string,
-    userDefinedFields: Linode.StackScript.UserDefinedField[],
+    userDefinedFields: UserDefinedField[],
     images: Image[],
     defaultData?: any
   ) => {
@@ -311,7 +314,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
        * safe to ignore possibility of "undefined"
        * null checking happens in CALinodeCreate
        */
-      const selectedImage = imagesData!.find(img => img.id === selectedImageID);
+      const selectedImage = imagesData![selectedImageID];
       /**
        * Use 'vendor' if it's a public image, otherwise use label (because 'vendor' will be null)
        *
@@ -528,9 +531,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
      * safe to ignore possibility of "undefined"
      * null checking happens in CALinodeCreate
      */
-    const selectedImage = this.props.imagesData!.find(
-      image => image.id === selectedImageID
-    );
+    const selectedImage = this.props.imagesData![selectedImageID];
 
     return (
       selectedImage && {

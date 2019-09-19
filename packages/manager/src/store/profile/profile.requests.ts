@@ -1,21 +1,19 @@
-import { Profile } from 'linode-js-sdk/lib/profile'
+import {
+  getMyGrants,
+  getProfile,
+  Profile,
+  updateProfile as _updateProfile
+} from 'linode-js-sdk/lib/profile';
 import { pathOr } from 'ramda';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import { ActionCreator, Failure, Success } from 'typescript-fsa';
 
-import {
-  getMyGrants,
-  getProfile,
-  updateProfile as _updateProfile
-} from 'src/services/profile';
 import { ApplicationState } from 'src/store';
 import { ThunkActionCreator } from 'src/store/types';
 import { getProfileActions, handleUpdateProfile } from './profile.actions';
 
-const maybeRequestGrants: (
-  response: Profile
-) => Promise<Profile> = profile => {
+const maybeRequestGrants: (response: Profile) => Promise<Profile> = profile => {
   if (profile.restricted === false) {
     return Promise.resolve(profile);
   }
@@ -37,9 +35,10 @@ export const getTimezone = (state: ApplicationState, timezone: string) => {
     : timezone;
 };
 
-export const requestProfile: ThunkActionCreator<
-  Promise<Profile>
-> = () => (dispatch, getState) => {
+export const requestProfile: ThunkActionCreator<Promise<Profile>> = () => (
+  dispatch,
+  getState
+) => {
   const { started, done, failed } = getProfileActions;
 
   dispatch(started());
@@ -63,9 +62,9 @@ export const requestProfile: ThunkActionCreator<
 /**
  * @todo this doesn't let you update grants
  */
-export const updateProfile: ThunkActionCreator<
-  Promise<Partial<Profile>>
-> = (payload: Partial<Profile>) => dispatch => {
+export const updateProfile: ThunkActionCreator<Promise<Partial<Profile>>> = (
+  payload: Partial<Profile>
+) => dispatch => {
   const { done, failed } = handleUpdateProfile;
 
   /**
@@ -81,9 +80,7 @@ export const updateProfile: ThunkActionCreator<
 const handleUpdateSuccess = (
   payload: Partial<Profile>,
   result: Partial<Profile>,
-  done: ActionCreator<
-    Success<Partial<Profile>, Partial<Profile>>
-  >,
+  done: ActionCreator<Success<Partial<Profile>, Partial<Profile>>>,
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => {
   dispatch(
@@ -98,9 +95,7 @@ const handleUpdateSuccess = (
 const handleUpdateFailure = (
   payload: Partial<Profile>,
   error: Linode.ApiFieldError[],
-  failed: ActionCreator<
-    Failure<Partial<Profile>, Linode.ApiFieldError[]>
-  >,
+  failed: ActionCreator<Failure<Partial<Profile>, Linode.ApiFieldError[]>>,
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => {
   dispatch(

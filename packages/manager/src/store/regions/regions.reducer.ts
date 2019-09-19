@@ -1,3 +1,4 @@
+import { Region } from 'linode-js-sdk/lib/regions';
 import { Reducer } from 'redux';
 import { EntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
@@ -6,7 +7,7 @@ import { regionsRequestActions } from './regions.actions';
 /**
  * State
  */
-export type State = EntityState<Linode.Region>;
+export type State = EntityState<Region>;
 
 export const defaultState: State = {
   results: [],

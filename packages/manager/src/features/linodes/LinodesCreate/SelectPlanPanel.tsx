@@ -14,6 +14,7 @@ import {
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
+import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
@@ -103,6 +104,7 @@ export class SelectPlanPanel extends React.Component<
     let tooltip;
     const planTooSmall = selectedDiskSize > type.disk;
     const isSamePlan = type.heading === currentPlanHeading;
+    const isGPU = type.class === 'gpu';
 
     if (planTooSmall) {
       tooltip = `This plan is too small for the selected image.`;
@@ -141,7 +143,13 @@ export class SelectPlanPanel extends React.Component<
               )}
             </TableCell>
             <TableCell>${type.price.monthly}</TableCell>
-            <TableCell>${type.price.hourly}</TableCell>
+            <TableCell>
+              {isGPU ? (
+                <Currency quantity={type.price.hourly} />
+              ) : (
+                type.price.hourly
+              )}
+            </TableCell>
             <TableCell>{type.vcpus}</TableCell>
             <TableCell>{convertMegabytesTo(type.disk, true)}</TableCell>
             <TableCell>{convertMegabytesTo(type.memory, true)}</TableCell>
@@ -317,16 +325,25 @@ export class SelectPlanPanel extends React.Component<
   };
 
   render() {
-    const { classes, copy, error, header, types, selectedID } = this.props;
+    const {
+      classes,
+      copy,
+      error,
+      header,
+      types,
+      currentPlanHeading
+    } = this.props;
 
     const [tabs, tabOrder] = this.createTabs();
-    // Determine initial plan category tab based on selectedTypeID
+
+    // Determine initial plan category tab based on current plan selection
     // (if there is one).
     const selectedTypeClass: LinodeTypeClass = pathOr(
       'standard', // Use `standard` by default
       ['class'],
-      types.find(type => type.id === selectedID)
+      types.find(type => type.heading === currentPlanHeading)
     );
+
     const initialTab = tabOrder.indexOf(selectedTypeClass);
 
     return (

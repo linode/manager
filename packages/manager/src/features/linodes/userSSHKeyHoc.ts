@@ -1,9 +1,9 @@
-import { getUsers } from "linode-js-sdk/lib/account";
+import { getUsers } from 'linode-js-sdk/lib/account';
+import { getSSHKeys, SSHKey } from 'linode-js-sdk/lib/profile';
 import { assoc, clone, equals, map, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
-import { getSSHKeys } from 'src/services/profile';
 import { MapState } from 'src/store/types';
 import { getAll } from 'src/utilities/getAll';
 import { getEmailHash } from 'src/utilities/gravatar';
@@ -21,7 +21,7 @@ export interface State {
   requestKeys: () => void;
 }
 
-const getAllSSHKeys = getAll<Linode.SSHKey>(getSSHKeys);
+const getAllSSHKeys = getAll<SSHKey>(getSSHKeys);
 
 const resetKeys = (key: UserSSHKeyObject) => {
   return assoc('selected', false, key);

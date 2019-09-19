@@ -5,13 +5,13 @@ import { ThunkDispatch } from 'redux-thunk';
 import { ApplicationState } from 'src/store';
 import { updateSettingsInStore } from 'src/store/accountSettings/accountSettings.actions';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
-// import { EntityError } from 'src/store/types';
+import { EntityError } from 'src/store/types';
 
 export interface SettingsProps {
-  account?: AccountSettings;
-  accountLoading: boolean;
-  accountError?: Linode.ApiFieldError[];
-  lastUpdated: number;
+  accountSettings?: AccountSettings;
+  accountSettingsLoading: boolean;
+  accountSettingsError: EntityError;
+  accountSettingsLastUpdated: number;
 }
 
 export interface DispatchProps {
@@ -28,26 +28,36 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 });
 
 export default <TInner extends {}, TOuter extends {}>(
-  mapAccountToProps: (
+  mapAccountToProps?: (
     ownProps: TOuter,
     loading: boolean,
     lastUpdated: number,
-    accountError?: Linode.ApiFieldError[],
+    accountError?: EntityError,
     accountSettings?: AccountSettings
   ) => TInner
 ) =>
   connect(
     (state: ApplicationState, ownProps: TOuter) => {
       const accountSettings = state.__resources.accountSettings.data;
-      const loading = state.__resources.accountSettings.loading;
-      const accountError = state.__resources.accountSettings.error;
-      const lastUpdated = state.__resources.accountSettings.lastUpdated;
+      const accountSettingsLoading = state.__resources.accountSettings.loading;
+      const accountSettingsError = state.__resources.accountSettings.error;
+      const accountSettingsLastUpdated =
+        state.__resources.accountSettings.lastUpdated;
 
+      if (!mapAccountToProps) {
+        return {
+          ...ownProps,
+          accountSettingsLoading,
+          accountSettingsLastUpdated,
+          accountSettingsError,
+          accountSettings
+        };
+      }
       return mapAccountToProps(
         ownProps,
-        loading,
-        lastUpdated,
-        accountError, // @todo update this to the new entity error pattern.
+        accountSettingsLoading,
+        accountSettingsLastUpdated,
+        accountSettingsError,
         accountSettings
       );
     },

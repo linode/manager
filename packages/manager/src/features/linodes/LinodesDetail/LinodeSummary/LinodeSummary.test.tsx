@@ -32,7 +32,7 @@ describe('LinodeSummary', () => {
       }}
       linodeVolumes={[]}
       typesData={[]}
-      imagesData={[]}
+      imagesData={{}}
     />
   );
 

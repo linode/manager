@@ -14,7 +14,6 @@ import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import Hidden from 'src/components/core/Hidden';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -22,15 +21,8 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
-import TableBody from 'src/components/core/TableBody';
-import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import Grid from 'src/components/Grid';
-import SelectionCard from 'src/components/SelectionCard';
-import Table from 'src/components/Table';
-import TableCell from 'src/components/TableCell';
 import { resetEventsPolling } from 'src/events';
 import SelectPlanPanel, {
   ExtendedType
@@ -41,7 +33,6 @@ import { linodeInTransition } from 'src/features/linodes/transitions';
 import { ApplicationState } from 'src/store';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
-import { convertMegabytesTo } from 'src/utilities/unitConversions';
 import LinodePermissionsError from '../LinodePermissionsError';
 
 import Checkbox from 'src/components/CheckBox';
@@ -62,8 +53,10 @@ const styles = (theme: Theme) =>
     root: {
       padding: theme.spacing(3),
       paddingBottom: theme.spacing(2),
-      '& .selectionCard': {
-        padding: 0
+      '& .tabbedPanel': {
+        '& > div': {
+          padding: 0
+        }
       }
     },
     checkbox: {
@@ -133,11 +126,13 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       price: { monthly, hourly }
     } = type;
 
+    const isGPU = type.class === 'gpu';
+
     return {
       ...type,
       heading: label,
       subHeadings: [
-        `$${monthly}/mo ($${hourly}/hr)`,
+        `$${monthly}/mo ($${isGPU ? hourly.toFixed(2) : hourly}/hr)`,
         typeLabelDetails(memory, disk, vcpus)
       ]
     };
@@ -231,15 +226,6 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         : 'Unknown Plan'
       : 'No Assigned Plan';
 
-    const currentPlanSubHeadings = linodeType
-      ? type
-        ? [
-            `$${type.price.monthly}/mo ($${type.price.hourly}/hr)`,
-            typeLabelDetails(type.memory, type.disk, type.vcpus)
-          ]
-        : []
-      : [];
-
     const [
       diskToResize,
       _shouldEnableAutoResizeDiskOption
@@ -269,75 +255,15 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             if you're not using your Linode as much as you thought, you can
             temporarily or permanently resize your Linode to a different plan.
           </Typography>
-          <div
-            className={classes.currentPlanContainer}
-            data-qa-current-container
-          >
-            <Typography
-              variant="h3"
-              className={classes.subTitle}
-              data-qa-current-header
-            >
-              Current Plan
-            </Typography>
-            <Grid container>
-              <Grid item xs={12} lg={10}>
-                <Hidden smDown implementation="css">
-                  <Table border>
-                    <TableHead>
-                      <TableRow>
-                        <TableCell className={classes.currentHeaderEmptyCell} />
-                        <TableCell>Linode Plan</TableCell>
-                        <TableCell>Monthly</TableCell>
-                        <TableCell>Hourly</TableCell>
-                        <TableCell>CPUs</TableCell>
-                        <TableCell>Storage</TableCell>
-                        <TableCell>Ram</TableCell>
-                      </TableRow>
-                    </TableHead>
-                    <TableBody>
-                      <TableRow key={type && type.id} data-qa-current-plan>
-                        <TableCell />
-                        <TableCell
-                          data-qa-select-table-heading={currentPlanHeading}
-                        >
-                          {currentPlanHeading}
-                        </TableCell>
-                        <TableCell>${type && type.price.monthly}</TableCell>
-                        <TableCell>${type && type.price.hourly}</TableCell>
-                        <TableCell>{type && type.vcpus}</TableCell>
-                        <TableCell>
-                          {type && convertMegabytesTo(type.disk, true)}
-                        </TableCell>
-                        <TableCell>
-                          {type && convertMegabytesTo(type.memory, true)}
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
-                  </Table>
-                </Hidden>
-                {/* Displays SelectionCard for small screens */}
-                <Hidden mdUp implementation="css">
-                  <SelectionCard
-                    data-qa-current-plan
-                    checked={false}
-                    heading={currentPlanHeading}
-                    subheadings={currentPlanSubHeadings}
-                    disabled={disabled}
-                    variant="check"
-                  />
-                </Hidden>
-              </Grid>
-            </Grid>
-          </div>
+
+          <SelectPlanPanel
+            currentPlanHeading={currentPlanHeading}
+            types={this.props.currentTypesData}
+            onSelect={this.handleSelectPlan}
+            selectedID={this.state.selectedId}
+            disabled={disabled}
+          />
         </Paper>
-        <SelectPlanPanel
-          currentPlanHeading={currentPlanHeading}
-          types={this.props.currentTypesData}
-          onSelect={this.handleSelectPlan}
-          selectedID={this.state.selectedId}
-          disabled={disabled}
-        />
         <Paper className={`${classes.checkbox} ${classes.root}`}>
           <Typography variant="h2" className={classes.resizeTitle}>
             Auto Resize Disk

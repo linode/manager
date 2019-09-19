@@ -22,6 +22,8 @@ import {
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import withDisplayType, { WithDisplayType } from '../withDisplayType';
 
+import { filterImagesByType } from 'src/store/image/image.helpers';
+
 type ClassNames =
   | 'root'
   | 'link'
@@ -102,7 +104,7 @@ interface Props {
 }
 
 interface WithImagesProps {
-  imagesData: Image[];
+  imagesData: Record<string, Image>;
 }
 
 type CombinedProps = Props &
@@ -185,7 +187,7 @@ const enhanced = compose<CombinedProps, Props>(
   withDisplayType,
   withImages((ownProps, imagesData, imagesLoading) => ({
     ...ownProps,
-    imagesData: imagesData.filter(i => i.is_public === true)
+    imagesData: filterImagesByType(imagesData, 'public')
   })),
   styled
 );

@@ -10,12 +10,12 @@ import { Image } from 'linode-js-sdk/lib/images';
  * @param { string | null } slug - image slug that belongs to the Linode instance
  */
 export const safeGetImageLabel = (
-  images: Image[],
+  images: Record<string, Image>,
   slug: string | null
 ): string => {
   if (!slug) {
     return '';
   }
-  const iv = images.find(i => i.id === slug);
+  const iv = images[slug];
   return iv ? iv.label : 'Unknown Image';
 };

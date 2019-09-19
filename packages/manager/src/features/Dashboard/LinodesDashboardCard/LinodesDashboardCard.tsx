@@ -1,5 +1,5 @@
 import { Entity, Event } from 'linode-js-sdk/lib/account';
-import { Linode, LinodeType } from "linode-js-sdk/lib/linodes";
+import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
 import { compose, path, pathOr, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';

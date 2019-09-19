@@ -51,7 +51,6 @@ export const styles = (theme: Theme) =>
       },
       '& .react-select__value-container': {
         width: '100%',
-        overflow: 'initial',
         '& > div': {
           width: '100%'
         },

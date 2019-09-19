@@ -77,7 +77,3 @@ export const groupNameMap = {
 
 export const getDisplayNameForGroup = (key: string) =>
   propOr('Other', key, groupNameMap);
-
-export const filterPublicImages = (images: Image[] = []) => {
-  return images.filter((image: Image) => image.is_public);
-};

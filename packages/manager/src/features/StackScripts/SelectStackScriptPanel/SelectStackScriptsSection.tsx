@@ -1,4 +1,5 @@
 import { Image } from 'linode-js-sdk/lib/images';
+import { StackScript } from 'linode-js-sdk/lib/stackscripts';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import {
@@ -27,11 +28,11 @@ const styles = (theme: Theme) =>
   });
 
 export interface Props {
-  onSelect: (s: Linode.StackScript.Response) => void;
+  onSelect: (s: StackScript) => void;
   selectedId?: number;
-  data: Linode.StackScript.Response[];
+  data: StackScript[];
   isSorting: boolean;
-  publicImages: Image[];
+  publicImages: Record<string, Image>;
   currentUser: string;
   disabled?: boolean;
 }
@@ -43,7 +44,7 @@ const SelectStackScriptsSection: React.StatelessComponent<
 > = props => {
   const { onSelect, selectedId, data, isSorting, classes, disabled } = props;
 
-  const selectStackScript = (s: Linode.StackScript.Response) => (
+  const selectStackScript = (s: StackScript) => (
     <StackScriptSelectionRow
       key={s.id}
       label={s.label}

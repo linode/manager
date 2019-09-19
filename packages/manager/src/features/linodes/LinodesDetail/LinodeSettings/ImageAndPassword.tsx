@@ -50,7 +50,7 @@ export const ImageAndPassword: React.StatelessComponent<
     <React.Fragment>
       {disabled && <LinodePermissionsError />}
       <ImageSelect
-        images={images}
+        images={Object.keys(images).map(eachKey => images[eachKey])}
         imageError={imageError}
         imageFieldError={imageFieldError}
         onSelect={onImageChange}

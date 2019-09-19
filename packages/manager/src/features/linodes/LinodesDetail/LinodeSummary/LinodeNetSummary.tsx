@@ -1,4 +1,4 @@
-import { getLinodeTransfer, Linode } from 'linode-js-sdk/lib/linodes'
+import { getLinodeTransfer, Linode } from 'linode-js-sdk/lib/linodes';
 import * as moment from 'moment';
 import * as React from 'react';
 import { connect } from 'react-redux';

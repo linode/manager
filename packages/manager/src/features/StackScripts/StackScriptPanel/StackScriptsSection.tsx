@@ -1,5 +1,6 @@
 import { Grant } from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
+import { StackScript } from 'linode-js-sdk/lib/stackscripts';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -40,9 +41,9 @@ const styles = (theme: Theme) =>
   });
 
 export interface Props {
-  data: Linode.StackScript.Response[];
+  data: StackScript[];
   isSorting: boolean;
-  publicImages: Image[];
+  publicImages: Record<string, Image>;
   triggerDelete: (id: number, label: string) => void;
   triggerMakePublic: (id: number, label: string) => void;
   currentUser: string;
@@ -68,7 +69,7 @@ const StackScriptsSection: React.StatelessComponent<CombinedProps> = props => {
     userCannotAddLinodes
   } = props;
 
-  const listStackScript = (s: Linode.StackScript.Response) => (
+  const listStackScript = (s: StackScript) => (
     <StackScriptRow
       key={s.id}
       label={s.label}

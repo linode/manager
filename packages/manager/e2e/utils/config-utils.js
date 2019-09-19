@@ -1,26 +1,27 @@
-
 module.exports.readToken = () => {
-    let token = null;
-    browser.call(() => {
-        return browser.credStore.readToken(browser.options.testUser).then((t) => token = t);
-    });
-    return token;
-}
+  let token = null;
+  browser.call(() => {
+    return browser.credStore
+      .readToken(browser.options.testUser)
+      .then(t => (token = t));
+  });
+  return token;
+};
 
-module.exports.getToken = (username) => {
-    let token = null;
-    browser.call(() => {
-        return browser.credStore.readToken(username).then((t) => token = t);
-    });
-    return token;
-}
+module.exports.getToken = username => {
+  let token = null;
+  browser.call(() => {
+    return browser.credStore.readToken(username).then(t => (token = t));
+  });
+  return token;
+};
 
 /*
-* Navigate to a null route on the manager,
-* Add the token properties to local storage
-* Navigate back to the homepage to be logged in
-* @returns {Null} returns nothing
-*/
+ * Navigate to a null route on the manager,
+ * Add the token properties to local storage
+ * Navigate back to the homepage to be logged in
+ * @returns {Null} returns nothing
+ */
 // exports.loadToken = () => {
 //     const tokenPath = '../../localStorage.json';
 //     try {

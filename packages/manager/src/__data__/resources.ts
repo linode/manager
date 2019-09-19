@@ -1,5 +1,5 @@
 import { Domain } from 'linode-js-sdk/lib/domains';
-import { Linode } from 'linode-js-sdk/lib/linodes'
+import { Linode } from 'linode-js-sdk/lib/linodes';
 import { domains, linodes } from 'src/__data__';
 
 export default {

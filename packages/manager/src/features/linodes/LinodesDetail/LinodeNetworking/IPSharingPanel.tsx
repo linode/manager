@@ -1,4 +1,4 @@
-import { getLinodes, Linode } from 'linode-js-sdk/lib/linodes'
+import { getLinodes, Linode } from 'linode-js-sdk/lib/linodes';
 import { shareAddresses } from 'linode-js-sdk/lib/networking';
 import { clone, flatten, pathOr, uniq } from 'ramda';
 import * as React from 'react';

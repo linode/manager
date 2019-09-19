@@ -1,3 +1,9 @@
+import {
+  createKubernetesCluster,
+  getKubernetesVersions,
+  KubernetesVersion,
+  PoolNodeRequest
+} from 'linode-js-sdk/lib/kubernetes';
 import { pick, remove, update } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -23,10 +29,6 @@ import { dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
 import withTypes, { WithTypesProps } from 'src/containers/types.container';
 import { WithRegionsProps } from 'src/features/linodes/LinodesCreate/types';
-import {
-  createKubernetesCluster,
-  getKubernetesVersions
-} from 'src/services/kubernetes';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -80,7 +82,7 @@ type CombinedProps = RouteComponentProps<{}> &
  * though to match convention, so to be safe we're following
  * our own convention.
  */
-const getAllVersions = getAll<Linode.KubernetesVersion>(getKubernetesVersions);
+const getAllVersions = getAll<KubernetesVersion>(getKubernetesVersions);
 
 export class CreateCluster extends React.Component<CombinedProps, State> {
   state: State = {
@@ -136,7 +138,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
      */
     const node_pools = nodePools.map(
       pick(['type', 'count'])
-    ) as Linode.PoolNodeRequest[];
+    ) as PoolNodeRequest[];
     const payload = {
       region: selectedRegion,
       node_pools,

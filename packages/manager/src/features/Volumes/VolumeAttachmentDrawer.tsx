@@ -1,4 +1,4 @@
-import { Grant } from 'linode-js-sdk/lib/account'
+import { Grant } from 'linode-js-sdk/lib/account';
 import { getLinodeConfigs } from 'linode-js-sdk/lib/linodes';
 import { pathOr } from 'ramda';
 import * as React from 'react';

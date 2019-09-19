@@ -22,7 +22,6 @@ interface Props {
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      padding: theme.spacing(1),
       backgroundColor: 'transparent'
     }
   });
