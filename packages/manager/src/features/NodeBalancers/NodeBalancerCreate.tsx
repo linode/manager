@@ -65,7 +65,11 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     main: {},
-    sidebar: {},
+    sidebar: {
+      [theme.breakpoints.up('md')]: {
+        marginTop: '60px !important'
+      }
+    },
     title: {
       marginTop: theme.spacing(3)
     }
