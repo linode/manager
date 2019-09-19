@@ -1,7 +1,9 @@
+import * as classnames from 'classnames';
 import { LinodeType, LinodeTypeClass } from 'linode-js-sdk/lib/linodes';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
 import {
   createStyles,
@@ -30,7 +32,12 @@ export interface ExtendedType extends LinodeType {
   subHeadings: [string, string];
 }
 
-type ClassNames = 'root' | 'copy';
+type ClassNames =
+  | 'root'
+  | 'copy'
+  | 'disabledRow'
+  | 'chip'
+  | 'currentPlanChipCell';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -41,6 +48,18 @@ const styles = (theme: Theme) =>
     copy: {
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(3)
+    },
+    disabledRow: {
+      backgroundColor: theme.bg.tableHeader,
+      cursor: 'not-allowed'
+    },
+    chip: {
+      backgroundColor: theme.color.green,
+      color: '#fff',
+      textTransform: 'uppercase'
+    },
+    currentPlanChipCell: {
+      width: '13%'
     }
   });
 
@@ -77,7 +96,7 @@ export class SelectPlanPanel extends React.Component<
   onSelect = (id: string) => () => this.props.onSelect(id);
 
   renderSelection = (type: ExtendedType) => {
-    const { selectedID, currentPlanHeading, disabled } = this.props;
+    const { selectedID, currentPlanHeading, disabled, classes } = this.props;
     const selectedDiskSize = this.props.selectedDiskSize
       ? this.props.selectedDiskSize
       : 0;
@@ -89,27 +108,32 @@ export class SelectPlanPanel extends React.Component<
       tooltip = `This plan is too small for the selected image.`;
     }
 
-    if (isSamePlan) {
-      tooltip = `This is your current plan. Please select another to resize.`;
-    }
-
     return (
       <React.Fragment>
         {/* Displays Table Row for larger screens */}
         <Hidden smDown>
           <TableRow
             key={type.id}
-            onClick={this.onSelect(type.id)}
+            onClick={!isSamePlan ? this.onSelect(type.id) : undefined}
             rowLink={this.onSelect ? this.onSelect(type.id) : undefined}
+            className={classnames({
+              [classes.disabledRow]: isSamePlan || planTooSmall
+            })}
           >
-            <TableCell>
-              <Radio
-                checked={type.id === String(selectedID)}
-                onChange={this.onSelect(type.id)}
-                disabled={planTooSmall || disabled}
-                id={type.id}
-              />
-            </TableCell>
+            {isSamePlan ? (
+              <TableCell className={classes.currentPlanChipCell}>
+                <Chip label="Current Plan" className={classes.chip} />
+              </TableCell>
+            ) : (
+              <TableCell>
+                <Radio
+                  checked={!planTooSmall && type.id === String(selectedID)}
+                  onChange={this.onSelect(type.id)}
+                  disabled={planTooSmall || disabled}
+                  id={type.id}
+                />
+              </TableCell>
+            )}
             <TableCell>
               {type.heading}{' '}
               {tooltip && (

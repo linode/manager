@@ -8,7 +8,13 @@ import { SelectPlanPanel } from './SelectPlanPanel';
 describe('Select Plan Panel', () => {
   const component = shallow(
     <SelectPlanPanel
-      classes={{ root: '', copy: '' }}
+      classes={{
+        root: '',
+        copy: '',
+        disabledRow: '',
+        chip: '',
+        currentPlanChipCell: ''
+      }}
       types={extendedTypes}
       currentPlanHeading="Linode 2GB"
       selectedID="test"
