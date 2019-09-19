@@ -268,7 +268,7 @@ export class StackScriptForm extends React.Component<CombinedProps> {
               disabled={disabled}
               data-qa-cancel
             >
-              Cancel
+              Reset
             </Button>
           </ActionsPanel>
         </Paper>

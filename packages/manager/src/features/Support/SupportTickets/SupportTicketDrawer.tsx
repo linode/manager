@@ -8,6 +8,7 @@ import {
 import { getVolumes } from 'linode-js-sdk/lib/volumes';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
+import { compose as recompose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import FormHelperText from 'src/components/core/FormHelperText';
@@ -94,6 +95,8 @@ export interface Props {
   prefilledDescription?: string;
   onClose: () => void;
   onSuccess: (ticketId: number, attachmentErrors?: AttachmentError[]) => void;
+  keepOpenOnSuccess?: boolean;
+  hideProductSelection?: boolean;
 }
 
 export interface State {
@@ -404,7 +407,9 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
       .then(response => {
         this.attachFiles(response!.id).then(
           ({ success, errors }: Accumulator) => {
-            this.close();
+            if (!this.props.keepOpenOnSuccess) {
+              this.close();
+            }
             /* Errors will be an array of errors, or empty if all attachments succeeded. */
             onSuccess(response!.id, errors);
           }
@@ -469,98 +474,108 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
         onClose={this.props.onClose}
         title="Open a Support Ticket"
       >
-        {generalError && <Notice error text={generalError} data-qa-notice />}
+        {this.props.children || (
+          <React.Fragment>
+            {generalError && (
+              <Notice error text={generalError} data-qa-notice />
+            )}
 
-        <Typography data-qa-support-ticket-helper-text>
-          {`We love our customers, and we're here to help if you need us.
+            <Typography data-qa-support-ticket-helper-text>
+              {`We love our customers, and we're here to help if you need us.
           Please keep in mind that not all topics are within the scope of our support.
           For overall system status, please see `}
-          <a href="https://status.linode.com">status.linode.com</a>.
-        </Typography>
+              <a href="https://status.linode.com">status.linode.com</a>.
+            </Typography>
 
-        <Select
-          options={topicOptions}
-          label="What is this regarding?"
-          value={selectedTopic}
-          onChange={this.handleEntityTypeChange}
-          data-qa-ticket-entity-type
-          placeholder="Choose a Product"
-          isClearable={false}
-        />
-
-        {!['none', 'general'].includes(ticket.entity_type) && (
-          <>
-            <Select
-              options={data}
-              value={selectedEntity}
-              disabled={data.length === 0}
-              errorText={inputError}
-              placeholder={`Select a ${entityIdtoNameMap[ticket.entity_type]}`}
-              label={entityIdtoNameMap[ticket.entity_type]}
-              inputValue={inputValue}
-              onChange={this.handleEntityIDChange}
-              onInputChange={this.onInputValueChange}
-              data-qa-ticket-entity-id
-              isLoading={this.state.loading}
-              isClearable={false}
-            />
-            {hasNoEntitiesMessage && (
-              <FormHelperText>{hasNoEntitiesMessage}</FormHelperText>
+            {this.props.hideProductSelection ? null : (
+              <React.Fragment>
+                <Select
+                  options={topicOptions}
+                  label="What is this regarding?"
+                  value={selectedTopic}
+                  onChange={this.handleEntityTypeChange}
+                  data-qa-ticket-entity-type
+                  placeholder="Choose a Product"
+                  isClearable={false}
+                />
+                {!['none', 'general'].includes(ticket.entity_type) && (
+                  <>
+                    <Select
+                      options={data}
+                      value={selectedEntity}
+                      disabled={data.length === 0}
+                      errorText={inputError}
+                      placeholder={`Select a ${
+                        entityIdtoNameMap[ticket.entity_type]
+                      }`}
+                      label={entityIdtoNameMap[ticket.entity_type]}
+                      inputValue={inputValue}
+                      onChange={this.handleEntityIDChange}
+                      onInputChange={this.onInputValueChange}
+                      data-qa-ticket-entity-id
+                      isLoading={this.state.loading}
+                      isClearable={false}
+                    />
+                    {hasNoEntitiesMessage && (
+                      <FormHelperText>{hasNoEntitiesMessage}</FormHelperText>
+                    )}
+                  </>
+                )}
+              </React.Fragment>
             )}
-          </>
+            <TextField
+              label="Title"
+              placeholder="Enter a title for your ticket."
+              required
+              value={ticket.summary}
+              onChange={this.handleSummaryInputChange}
+              errorText={summaryError}
+              data-qa-ticket-summary
+            />
+            <TabbedReply
+              required
+              error={descriptionError}
+              handleChange={this.handleDescriptionInputChange}
+              value={ticket.description}
+              innerClass={this.props.classes.innerReply}
+              rootClass={this.props.classes.rootReply}
+              placeholder={
+                "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
+              }
+            />
+            {/* <TicketAttachmentList attachments={attachments} /> */}
+            <ExpansionPanel
+              heading="Formatting Tips"
+              detailProps={{ className: classes.expPanelSummary }}
+            >
+              <Reference rootClass={this.props.classes.reference} />
+            </ExpansionPanel>
+            <AttachFileForm
+              inlineDisplay
+              files={files}
+              updateFiles={this.updateFiles}
+            />
+            <ActionsPanel style={{ marginTop: 16 }}>
+              <Button
+                onClick={this.onSubmit}
+                disabled={!requirementsMet}
+                loading={submitting}
+                buttonType="primary"
+                data-qa-submit
+              >
+                Open Ticket
+              </Button>
+              <Button
+                onClick={this.close}
+                buttonType="secondary"
+                className="cancel"
+                data-qa-cancel
+              >
+                Cancel
+              </Button>
+            </ActionsPanel>
+          </React.Fragment>
         )}
-
-        <TextField
-          label="Title"
-          placeholder="Enter a title for your ticket."
-          required
-          value={ticket.summary}
-          onChange={this.handleSummaryInputChange}
-          errorText={summaryError}
-          data-qa-ticket-summary
-        />
-        <TabbedReply
-          required
-          error={descriptionError}
-          handleChange={this.handleDescriptionInputChange}
-          value={ticket.description}
-          innerClass={this.props.classes.innerReply}
-          rootClass={this.props.classes.rootReply}
-          placeholder={
-            "Tell us more about the trouble you're having and any steps you've already taken to resolve it."
-          }
-        />
-        {/* <TicketAttachmentList attachments={attachments} /> */}
-        <ExpansionPanel
-          heading="Formatting Tips"
-          detailProps={{ className: classes.expPanelSummary }}
-        >
-          <Reference rootClass={this.props.classes.reference} />
-        </ExpansionPanel>
-        <AttachFileForm
-          inlineDisplay
-          files={files}
-          updateFiles={this.updateFiles}
-        />
-        <ActionsPanel style={{ marginTop: 16 }}>
-          <Button
-            onClick={this.onSubmit}
-            disabled={!requirementsMet}
-            loading={submitting}
-            buttonType="primary"
-            data-qa-submit
-          >
-            Open Ticket
-          </Button>
-          <Button
-            onClick={this.close}
-            buttonType="secondary"
-            className="cancel"
-            data-qa-cancel
-          >
-            Cancel
-          </Button>
-        </ActionsPanel>
       </Drawer>
     );
   }
@@ -568,7 +583,6 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
 
 const styled = withStyles(styles);
 
-export default compose<any, any, any>(
-  styled,
-  SectionErrorBoundary
-)(SupportTicketDrawer);
+export default recompose<CombinedProps, Props>(styled, SectionErrorBoundary)(
+  SupportTicketDrawer
+);

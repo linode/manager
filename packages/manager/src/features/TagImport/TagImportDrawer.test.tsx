@@ -37,6 +37,8 @@ const errors = [
   { reason: 'two', entityId: 345, entityLabel: 'entity3' }
 ];
 
+jest.mock('src/store');
+
 describe('TagImportDrawer', () => {
   describe('getGroupImportList function', () => {
     it('should return a unique list of groups', () => {

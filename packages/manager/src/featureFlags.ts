@@ -12,6 +12,7 @@ interface Flags {
   vatBanner: TaxBanner;
   oneClickLocation: 'sidenav' | 'createmenu';
   lkeHideButtons: boolean;
+  firewalls: boolean;
 }
 
 /**

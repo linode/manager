@@ -49,6 +49,10 @@ import firewalls, {
   defaultState as defaultFirewallState,
   State as FirewallState
 } from 'src/store/firewalls/firewalls.reducer';
+import globalErrors, {
+  defaultState as defaultGlobalErrorState,
+  State as GlobalErrorState
+} from 'src/store/globalErrors'
 import images, {
   defaultState as defaultImagesState,
   State as ImagesState
@@ -203,6 +207,7 @@ export interface ApplicationState {
   preferences: PreferencesState;
   initialLoad: InitialLoadState;
   firewalls: FirewallState;
+  globalErrors: GlobalErrorState
 }
 
 const defaultState: ApplicationState = {
@@ -219,7 +224,8 @@ const defaultState: ApplicationState = {
   createLinode: linodeCreateDefaultState,
   preferences: preferencesState,
   initialLoad: initialLoadState,
-  firewalls: defaultFirewallState
+  firewalls: defaultFirewallState,
+  globalErrors: defaultGlobalErrorState
 };
 
 /**
@@ -261,7 +267,8 @@ const reducers = combineReducers<ApplicationState>({
   createLinode: linodeCreateReducer,
   preferences,
   initialLoad,
-  firewalls
+  firewalls,
+  globalErrors
 });
 
 const enhancers = compose(
