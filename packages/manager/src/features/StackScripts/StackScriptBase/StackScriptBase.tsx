@@ -406,12 +406,14 @@ const withStackScriptBase = (isSelecting: boolean) => (
         return (
           <div style={{ overflow: 'hidden' }}>
             <ErrorState
-              errorText={
+              errorText={pathOr(
+                'There was an error.',
+                [0, 'reason'],
                 handleUnauthorizedErrors(
                   error,
                   'You are not authorized to view StackScripts for this account.'
-                )[0].reason
-              }
+                )
+              )}
             />
           </div>
         );
