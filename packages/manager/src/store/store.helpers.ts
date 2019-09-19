@@ -125,23 +125,30 @@ export const getAddRemoved = <E extends Entity>(
   return [added, removed];
 };
 
+/**
+ * Create overload for createRequestThunk so that the param argument
+ * can either be typed as Req[] or Req. In the case of Req[], we need
+ * to spread the props to the request
+ */
+
 /* tslint:disable-next-line */
 function createRequestThunk<Req extends any, Res, Err>(
   actions: AsyncActionCreators<Req, Res, Err>,
   request: (params: Req) => Promise<Res>
 ): ThunkActionCreator<Promise<Res>, Req>;
 /* tslint:disable-next-line */
-function createRequestThunk<Req extends any, Res, Err>(
+function createRequestThunk<Req extends any[], Res, Err>(
   actions: AsyncActionCreators<Req[], Res, Err>,
   request: (...params: Req[]) => Promise<Res>
 ): ThunkActionCreator<Promise<Res>, Req> {
-  return (...params: any[]) => async dispatch => {
+  return (...params: Req[]) => async dispatch => {
     const { started, done, failed } = actions;
 
     dispatch(started(params));
 
     try {
       const result = await request(...params);
+
       const doneAction = done({ result, params });
 
       dispatch(doneAction);

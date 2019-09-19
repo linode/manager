@@ -175,7 +175,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   requestProfile: () => dispatch(requestProfile()),
   requestBuckets: () => dispatch(getAllBuckets()),
   requestClusters: () => dispatch(requestClusters()),
-  requestFirewalls: () => dispatch(getAllFirewalls())
+  requestFirewalls: () => dispatch(getAllFirewalls({}))
 });
 
 const connected = connect(
