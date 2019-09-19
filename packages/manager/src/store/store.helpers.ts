@@ -139,15 +139,15 @@ function createRequestThunk<Req extends any, Res, Err>(
 /* tslint:disable-next-line */
 function createRequestThunk<Req extends any[], Res, Err>(
   actions: AsyncActionCreators<Req[], Res, Err>,
-  request: (...params: Req[]) => Promise<Res>
-): ThunkActionCreator<Promise<Res>, Req> {
-  return (...params: Req[]) => async dispatch => {
+  request: (params: Req[]) => Promise<Res>
+): ThunkActionCreator<Promise<Res>, Req[]> {
+  return (params: Req[]) => async dispatch => {
     const { started, done, failed } = actions;
 
     dispatch(started(params));
 
     try {
-      const result = await request(...params);
+      const result = await request(params);
 
       const doneAction = done({ result, params });
 
