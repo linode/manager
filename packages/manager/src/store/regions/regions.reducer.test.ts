@@ -4,7 +4,7 @@ import reducer, { defaultState } from './regions.reducer';
 
 const mockError = [{ reason: 'No reason' }];
 
-describe('Images reducer', () => {
+describe('Regions reducer', () => {
   it('should handle an initialized request correctly', () => {
     const newState = reducer(defaultState, regionsRequestActions.started);
     expect(newState.loading).toBe(true);

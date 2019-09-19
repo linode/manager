@@ -1,3 +1,4 @@
+import produce from 'immer';
 import { Region } from 'linode-js-sdk/lib/regions';
 import { Reducer } from 'redux';
 import { EntityState } from 'src/store/types';
@@ -25,23 +26,23 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     if (isType(action, regionsRequestActions.started)) {
       draft.loading = true;
     }
-  
+
     if (isType(action, regionsRequestActions.done)) {
       const { result } = action.payload;
-  
+
       draft.loading = false;
       draft.lastUpdated = Date.now();
       draft.entities = result;
       draft.results = result.map(r => r.id);
     }
-  
+
     if (isType(action, regionsRequestActions.failed)) {
       const { error } = action.payload;
-  
+
       draft.loading = false;
       draft.error = error;
     }
-  })
+  });
 };
 
 export default reducer;
