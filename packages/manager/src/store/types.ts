@@ -23,29 +23,9 @@ export interface EntityError {
   update?: APIError[];
 }
 
-/**
- * the native Redux Action Creator doesn't let us pass typed
- * arguments for the parameters section
- *
- * original ReduxActionCreator:
- *
- * export interface ReduxActionCreator<A> {
- *  (...args: any[]): A;
- * }
- *
- */
-export type ParamType<F> = F extends (args: infer A) => any
-  ? A extends undefined | null
-    ? void
-    : A
-  : void;
-
-export type R<A, Params> = (args: ParamType<(args: Params) => A>) => A;
-
-export type ThunkActionCreator<T, Params = undefined> = R<
-  ThunkResult<T>,
-  Params
->;
+export type ThunkActionCreator<ReturnType, Params = void> = (
+  args: Params
+) => ThunkResult<ReturnType>;
 
 export type ThunkDispatch = _ThunkDispatch<ApplicationState, undefined, Action>;
 
