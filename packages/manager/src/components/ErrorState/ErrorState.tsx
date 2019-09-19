@@ -3,6 +3,7 @@ import * as classNames from 'classnames';
 import * as React from 'react';
 import {
   createStyles,
+  SvgIconProps,
   Theme,
   withStyles,
   WithStyles
@@ -14,6 +15,8 @@ interface Props {
   errorText: string | JSX.Element;
   compact?: boolean;
   cozy?: boolean;
+  CustomIcon?: React.ComponentType<SvgIconProps>;
+  CustomIconStyles?: React.CSSProperties;
 }
 
 type CSSClasses = 'root' | 'iconContainer' | 'icon' | 'compact' | 'cozy';
@@ -41,6 +44,7 @@ const styles = (theme: Theme) =>
   });
 
 const ErrorState = (props: Props & WithStyles<CSSClasses>) => {
+  const { CustomIcon } = props;
   return (
     <Grid
       container
@@ -54,15 +58,27 @@ const ErrorState = (props: Props & WithStyles<CSSClasses>) => {
     >
       <Grid item>
         <div className={props.classes.iconContainer}>
-          <ErrorOutline className={props.classes.icon} data-qa-error-icon />
+          {CustomIcon ? (
+            <CustomIcon
+              className={props.classes.icon}
+              data-qa-error-icon
+              style={props.CustomIconStyles}
+            />
+          ) : (
+            <ErrorOutline className={props.classes.icon} data-qa-error-icon />
+          )}
         </div>
-        <Typography
-          style={{ textAlign: 'center' }}
-          variant="h3"
-          data-qa-error-msg
-        >
-          {props.errorText}
-        </Typography>
+        {typeof props.errorText === 'string' ? (
+          <Typography
+            style={{ textAlign: 'center' }}
+            variant="h3"
+            data-qa-error-msg
+          >
+            {props.errorText}
+          </Typography>
+        ) : (
+          <div style={{ textAlign: 'center' }}>{props.errorText}</div>
+        )}
       </Grid>
     </Grid>
   );

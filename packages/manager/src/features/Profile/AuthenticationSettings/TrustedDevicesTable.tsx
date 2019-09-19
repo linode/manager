@@ -32,7 +32,7 @@ class TrustedDevicesTable extends React.PureComponent<CombinedProps, {}> {
     if (error) {
       return (
         <TableRowError
-          colSpan={4}
+          colSpan={6}
           message="There was an issue loading your trusted devices."
         />
       );

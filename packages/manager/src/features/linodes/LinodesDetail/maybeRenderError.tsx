@@ -61,7 +61,7 @@ export default compose(
         'There was an issue retrieving your Linode. Please try again later.'
       )[0].reason;
 
-      if (errorText.toLowerCase() === 'this linode has been suspended') {
+      if (typeof errorText === 'string' && errorText.toLowerCase() === 'this linode has been suspended') {
         errorText = (
           <React.Fragment>
             This Linode is suspended. Please{' '}
