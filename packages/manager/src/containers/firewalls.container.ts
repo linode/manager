@@ -35,8 +35,8 @@ const connected = <ReduxStateProps extends {}, OwnProps extends {}>(
       return state.firewalls;
     },
     (dispatch: ThunkDispatch) => ({
-      getFirewalls: (params, filters) =>
-        dispatch(_getFirewalls(params, filters))
+      getFirewalls: (params, filter) =>
+        dispatch(_getFirewalls({ params, filter }))
     })
   );
 

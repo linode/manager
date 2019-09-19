@@ -1,9 +1,6 @@
 import { Entity as EventEntity, Event } from 'linode-js-sdk/lib/account';
 import { APIError } from 'linode-js-sdk/lib/types';
-import {
-  ActionCreator,
-  MapStateToProps as _MapStateToProps
-} from 'react-redux';
+import { MapStateToProps as _MapStateToProps } from 'react-redux';
 import { Action, Dispatch } from 'redux';
 import { ThunkAction, ThunkDispatch as _ThunkDispatch } from 'redux-thunk';
 import { ApplicationState } from 'src/store';
@@ -26,7 +23,25 @@ export interface EntityError {
   update?: APIError[];
 }
 
-export type ThunkActionCreator<T> = ActionCreator<ThunkResult<T>>;
+/**
+ * the native Redux Action Creator doesn't let us pass typed
+ * arguments for the parameters section
+ *
+ * original ReduxActionCreator:
+ *
+ * export interface ReduxActionCreator<A> {
+ *  (...args: any[]): A;
+ * }
+ *
+ */
+export type ReduxActionCreator<A, Params extends any> = (
+  ...args: Params[]
+) => A;
+
+export type ThunkActionCreator<T, Params = any> = ReduxActionCreator<
+  ThunkResult<T>,
+  Params
+>;
 
 export type ThunkDispatch = _ThunkDispatch<ApplicationState, undefined, Action>;
 

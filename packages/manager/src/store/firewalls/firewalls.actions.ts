@@ -7,7 +7,10 @@ import actionCreatorFactory from 'typescript-fsa';
 export const actionCreator = actionCreatorFactory(`@@manager/firewalls`);
 
 export const getFirewalls = actionCreator.async<
-  void,
+  {
+    params?: any;
+    filter?: any;
+  },
   GetAllData<Firewall[]>,
   APIError[]
 >(`success`);

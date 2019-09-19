@@ -19,7 +19,7 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   React.useEffect(() => {
-    props.getFirewalls('hello', 'world');
+    props.getFirewalls({ hello: 'hello' }, { world: 'world' });
   }, []);
 
   return <div className={classes.root}>hello world</div>;
