@@ -1,5 +1,8 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import { DEFAULT_ERROR_MESSAGE } from 'src/constants';
+
+import { reportException } from 'src/exceptionReporting';
 
 /**
  *
@@ -47,7 +50,7 @@ const isDefaultError = (errorResponse: Linode.ApiFieldError[]) => {
 };
 
 export const handleUnauthorizedErrors = (
-  e: Linode.ApiFieldError[],
+  e: APIError[],
   unauthedMessage: string
 ) => {
   /**
@@ -60,16 +63,24 @@ export const handleUnauthorizedErrors = (
    * flag to true
    */
   let hasUnauthorizedError = false;
-  const filteredErrors = e.filter(eachError => {
-    if (
-      typeof eachError.reason === 'string' &&
-      eachError.reason.toLowerCase().includes('unauthorized')
-    ) {
-      hasUnauthorizedError = true;
-      return false;
-    }
-    return true;
-  });
+  let filteredErrors: APIError[] = [];
+
+  try {
+    filteredErrors = e.filter(eachError => {
+      if (
+        typeof eachError.reason === 'string' &&
+        eachError.reason.toLowerCase().includes('unauthorized')
+      ) {
+        hasUnauthorizedError = true;
+        return false;
+      }
+      return true;
+    });
+  } catch (caughtError) {
+    reportException(`Error with Unauthed error handling: ${caughtError}`, {
+      apiError: e
+    });
+  }
 
   /**
    * if we found an unauthorized error, add on the new message in the API
@@ -77,11 +88,11 @@ export const handleUnauthorizedErrors = (
    */
   return hasUnauthorizedError
     ? [
-        {
-          reason: unauthedMessage
-        },
-        ...filteredErrors
-      ]
+      {
+        reason: unauthedMessage
+      },
+      ...filteredErrors
+    ]
     : filteredErrors;
 };
 
