@@ -31,6 +31,9 @@ import SideMenu from 'src/components/SideMenu';
 import withGlobalErrors, {
   Props as GlobalErrorProps
 } from 'src/containers/globalErrors.container';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container.ts';
 
 import Logo from 'src/assets/logo/logo-text.svg';
 
@@ -113,7 +116,10 @@ interface Props {
   isLoggedInAsCustomer: boolean;
 }
 
-type CombinedProps = Props & GlobalErrorProps & WithTheme;
+type CombinedProps = Props &
+  GlobalErrorProps &
+  WithTheme &
+  FeatureFlagConsumerProps;
 
 const Account = DefaultLoader({
   loader: () => import('src/features/Account')
@@ -326,7 +332,9 @@ const MainContent: React.FC<CombinedProps> = props => {
                   component={SupportSearchLanding}
                 />
                 <Route path="/events" component={EventsLanding} />
-                <Route path="/firewalls" component={Firewalls} />
+                {props.flags.firewalls && (
+                  <Route path="/firewalls" component={Firewalls} />
+                )}
                 <Redirect exact from="/" to="/dashboard" />
                 <Route component={NotFound} />
               </Switch>
@@ -384,5 +392,6 @@ const getObjectStorageRoute = (
 export default compose<CombinedProps, Props>(
   React.memo,
   withGlobalErrors(),
-  withTheme
+  withTheme,
+  withFeatureFlags
 )(MainContent);
