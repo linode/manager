@@ -14,6 +14,16 @@ import {
 import { Provider } from 'react-redux';
 import store from 'src/store';
 
+window.matchMedia = jest.fn().mockImplementation(query => {
+  return {
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn()
+  };
+});
+
 describe('LinodeResize', () => {
   const mockTypes = types.map(LinodeResize.extendType);
 
