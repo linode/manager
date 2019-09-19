@@ -3,6 +3,7 @@ import * as moment from 'moment';
 import { Dispatch } from 'redux';
 import { ApplicationState } from 'src/store';
 import { getAllLinodeConfigs } from 'src/store/linodes/config/config.requests';
+import { handleDiskDeleteFailureEvent } from 'src/store/linodes/disk/disk.actions';
 import { getAllLinodeDisks } from 'src/store/linodes/disk/disk.requests';
 import { requestLinodeForStore } from 'src/store/linodes/linode.requests';
 import { EventHandler } from 'src/store/types';
@@ -48,6 +49,19 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
     /** Create Linode */
     case 'linode_create':
       return handleLinodeCreation(dispatch, status, id, getState());
+
+    case 'disk_delete':
+      if (status === 'failed') {
+        /**
+         * If a disk deletion fails (most likely because it is attached to
+         * a configuration profile that is in use on a running Linode)
+         * the disk menu needs to be refreshed to return the disk to it.
+         * We also need to set error.delete for any listening components to
+         * handle.
+         */
+        dispatch(handleDiskDeleteFailureEvent());
+        dispatch(getAllLinodeDisks({ linodeId: id }));
+      }
 
     default:
       return;

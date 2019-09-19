@@ -18,6 +18,7 @@ import {
   getAllLinodeDisksActions,
   getLinodeDiskActions,
   getLinodeDisksActions,
+  handleDiskDeleteFailureEvent,
   updateLinodeDiskActions
 } from './disk.actions';
 import { Entity } from './disk.types';
@@ -98,6 +99,20 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return onError<MappedEntityState<Entity, EntityError>, EntityError>(
       {
         read: error
+      },
+      state
+    );
+  }
+
+  if (isType(action, handleDiskDeleteFailureEvent)) {
+    return onError<MappedEntityState<Entity, EntityError>, EntityError>(
+      {
+        delete: [
+          {
+            reason:
+              'Unable to delete disk. Is it attached to a configuration profile that is in use?'
+          }
+        ]
       },
       state
     );

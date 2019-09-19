@@ -123,3 +123,7 @@ export const resizeLinodeDiskActions = actionCreator.async<
   Entity,
   Linode.ApiFieldError[]
 >(`resize`);
+
+export const handleDiskDeleteFailureEvent = actionCreator<void>(
+  'delete-failure'
+);

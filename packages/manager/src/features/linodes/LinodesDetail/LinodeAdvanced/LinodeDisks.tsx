@@ -1,6 +1,8 @@
 import { Disk } from 'linode-js-sdk/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { path } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -35,6 +37,7 @@ import {
 import userSSHKeyHoc, {
   UserSSHKeyProps
 } from 'src/features/linodes/userSSHKeyHoc';
+import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import LinodeDiskActionMenu from './LinodeDiskActionMenu';
@@ -128,6 +131,7 @@ interface State {
 type CombinedProps = UserSSHKeyProps &
   LinodeContextProps &
   WithStyles<ClassNames> &
+  StateProps &
   WithSnackbarProps;
 
 const defaultDrawerState: DrawerState = {
@@ -169,6 +173,17 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
       imagizeDrawer: defaultImagizeDrawerState,
       confirmDelete: defaultConfirmDeleteState
     };
+  }
+
+  componentDidUpdate(prevProps: CombinedProps) {
+    if (
+      prevProps.diskDeleteError &&
+      prevProps.diskDeleteError !== this.props.diskDeleteError
+    ) {
+      this.props.enqueueSnackbar(prevProps.diskDeleteError[0].reason, {
+        variant: 'error'
+      });
+    }
   }
 
   errorState = (
@@ -582,6 +597,8 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         });
       })
       .catch(error => {
+        // This error only fires if the request fails;
+        // if the deletion hostjob fails, it must be handled through events/Redux.
         const errors = getAPIErrorOrDefault(
           error,
           'There was an error deleting your disk.'
@@ -704,8 +721,25 @@ const linodeContext = withLinodeDetailContext(
   })
 );
 
+interface StateProps {
+  diskDeleteError?: Linode.ApiFieldError[];
+}
+
+const mapStateToProps: MapState<StateProps, CombinedProps> = state => ({
+  diskDeleteError: path(
+    ['__resources', 'linodeDisks', 'error', 'delete'],
+    state
+  )
+});
+
+const connected = connect(
+  mapStateToProps,
+  undefined
+);
+
 const enhanced = compose<CombinedProps, {}>(
   styled,
+  connected,
   linodeContext,
   userSSHKeyHoc,
   withSnackbar
