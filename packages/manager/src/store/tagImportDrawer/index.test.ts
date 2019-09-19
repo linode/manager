@@ -1,5 +1,7 @@
 import tagDrawer, * as T from './index';
 
+jest.mock('src/store');
+
 describe('tagImportDrawer Redux duck', () => {
   describe('reducer', () => {
     it('should be closed by default', () => {

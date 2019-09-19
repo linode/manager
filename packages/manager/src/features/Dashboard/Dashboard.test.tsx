@@ -22,6 +22,8 @@ const props = {
   theme: light({ spacingOverride: 8 })
 };
 
+jest.mock('src/store');
+
 const component = shallow(<Dashboard {...props} {...reactRouterProps} />);
 
 describe('Dashboard view', () => {
