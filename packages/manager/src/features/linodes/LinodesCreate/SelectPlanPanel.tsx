@@ -1,7 +1,9 @@
+import * as classnames from 'classnames';
 import { LinodeType, LinodeTypeClass } from 'linode-js-sdk/lib/linodes';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+import Chip from 'src/components/core/Chip';
 import Hidden from 'src/components/core/Hidden';
 import {
   createStyles,
@@ -12,7 +14,9 @@ import {
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
 import Typography from 'src/components/core/Typography';
+import Currency from 'src/components/Currency';
 import Grid from 'src/components/Grid';
+import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import RenderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
@@ -29,16 +33,34 @@ export interface ExtendedType extends LinodeType {
   subHeadings: [string, string];
 }
 
-type ClassNames = 'root' | 'copy';
+type ClassNames =
+  | 'root'
+  | 'copy'
+  | 'disabledRow'
+  | 'chip'
+  | 'currentPlanChipCell';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      marginTop: theme.spacing(3)
+      marginTop: theme.spacing(3),
+      width: '100%'
     },
     copy: {
       marginTop: theme.spacing(1),
       marginBottom: theme.spacing(3)
+    },
+    disabledRow: {
+      backgroundColor: theme.bg.tableHeader,
+      cursor: 'not-allowed'
+    },
+    chip: {
+      backgroundColor: theme.color.green,
+      color: '#fff',
+      textTransform: 'uppercase'
+    },
+    currentPlanChipCell: {
+      width: '13%'
     }
   });
 
@@ -75,20 +97,17 @@ export class SelectPlanPanel extends React.Component<
   onSelect = (id: string) => () => this.props.onSelect(id);
 
   renderSelection = (type: ExtendedType) => {
-    const { selectedID, currentPlanHeading, disabled } = this.props;
+    const { selectedID, currentPlanHeading, disabled, classes } = this.props;
     const selectedDiskSize = this.props.selectedDiskSize
       ? this.props.selectedDiskSize
       : 0;
     let tooltip;
     const planTooSmall = selectedDiskSize > type.disk;
     const isSamePlan = type.heading === currentPlanHeading;
+    const isGPU = type.class === 'gpu';
 
     if (planTooSmall) {
       tooltip = `This plan is too small for the selected image.`;
-    }
-
-    if (isSamePlan) {
-      tooltip = `This is your current plan. Please select another to resize.`;
     }
 
     return (
@@ -97,22 +116,40 @@ export class SelectPlanPanel extends React.Component<
         <Hidden smDown>
           <TableRow
             key={type.id}
-            onClick={this.onSelect(type.id)}
+            onClick={!isSamePlan ? this.onSelect(type.id) : undefined}
             rowLink={this.onSelect ? this.onSelect(type.id) : undefined}
+            className={classnames({
+              [classes.disabledRow]: isSamePlan || planTooSmall
+            })}
           >
+            {isSamePlan ? (
+              <TableCell className={classes.currentPlanChipCell}>
+                <Chip label="Current Plan" className={classes.chip} />
+              </TableCell>
+            ) : (
+              <TableCell>
+                <Radio
+                  checked={!planTooSmall && type.id === String(selectedID)}
+                  onChange={this.onSelect(type.id)}
+                  disabled={planTooSmall || disabled}
+                  id={type.id}
+                />
+              </TableCell>
+            )}
             <TableCell>
-              <Radio
-                checked={type.id === String(selectedID)}
-                onChange={this.onSelect(type.id)}
-                disabled={planTooSmall || isSamePlan || disabled}
-                id={type.id}
-              />
-            </TableCell>
-            <TableCell data-qa-select-card-heading={type.heading}>
-              {type.heading}
+              {type.heading}{' '}
+              {tooltip && (
+                <HelpIcon text={tooltip} tooltipPosition="right-end" />
+              )}
             </TableCell>
             <TableCell>${type.price.monthly}</TableCell>
-            <TableCell>${type.price.hourly}</TableCell>
+            <TableCell>
+              {isGPU ? (
+                <Currency quantity={type.price.hourly} />
+              ) : (
+                `$` + type.price.hourly
+              )}
+            </TableCell>
             <TableCell>{type.vcpus}</TableCell>
             <TableCell>{convertMegabytesTo(type.disk, true)}</TableCell>
             <TableCell>{convertMegabytesTo(type.memory, true)}</TableCell>
@@ -154,7 +191,7 @@ export class SelectPlanPanel extends React.Component<
       <Grid container>
         <Hidden mdUp>{plans.map(this.renderSelection)}</Hidden>
         <Hidden smDown>
-          <Grid item xs={12} lg={8}>
+          <Grid item xs={12} lg={10}>
             <Table isResponsive={false} border spacingBottom={16}>
               {tableHeader}
               <TableBody>{plans.map(this.renderSelection)}</TableBody>
@@ -288,16 +325,25 @@ export class SelectPlanPanel extends React.Component<
   };
 
   render() {
-    const { classes, copy, error, header, types, selectedID } = this.props;
+    const {
+      classes,
+      copy,
+      error,
+      header,
+      types,
+      currentPlanHeading
+    } = this.props;
 
     const [tabs, tabOrder] = this.createTabs();
-    // Determine initial plan category tab based on selectedTypeID
+
+    // Determine initial plan category tab based on current plan selection
     // (if there is one).
     const selectedTypeClass: LinodeTypeClass = pathOr(
       'standard', // Use `standard` by default
       ['class'],
-      types.find(type => type.id === selectedID)
+      types.find(type => type.heading === currentPlanHeading)
     );
+
     const initialTab = tabOrder.indexOf(selectedTypeClass);
 
     return (

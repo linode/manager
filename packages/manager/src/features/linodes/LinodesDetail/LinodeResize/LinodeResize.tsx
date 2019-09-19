@@ -23,7 +23,6 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
-import SelectionCard from 'src/components/SelectionCard';
 import { resetEventsPolling } from 'src/events';
 import SelectPlanPanel, {
   ExtendedType
@@ -45,14 +44,20 @@ type ClassNames =
   | 'subTitle'
   | 'toolTip'
   | 'currentPlanContainer'
+  | 'resizeTitle'
   | 'checkbox'
-  | 'resizeTitle';
+  | 'currentHeaderEmptyCell';
 
 const styles = (theme: Theme) =>
   createStyles({
     root: {
       padding: theme.spacing(3),
-      paddingBottom: theme.spacing(2)
+      paddingBottom: theme.spacing(2),
+      '& .tabbedPanel': {
+        '& > div': {
+          padding: 0
+        }
+      }
     },
     checkbox: {
       marginTop: theme.spacing(3)
@@ -73,14 +78,12 @@ const styles = (theme: Theme) =>
       marginBottom: theme.spacing(1)
     },
     currentPlanContainer: {
-      '& .selectionCard': {
-        padding: `0 ${theme.spacing(1)}px 0 0`,
-        cursor: 'not-allowed',
-        '& > div, &:focus > div': {
-          backgroundColor: theme.bg.main,
-          borderColor: theme.color.border2
-        }
+      '& input[type=radio]': {
+        cursor: 'not-allowed'
       }
+    },
+    currentHeaderEmptyCell: {
+      width: '13%'
     }
   });
 
@@ -123,11 +126,13 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
       price: { monthly, hourly }
     } = type;
 
+    const isGPU = type.class === 'gpu';
+
     return {
       ...type,
       heading: label,
       subHeadings: [
-        `$${monthly}/mo ($${hourly}/hr)`,
+        `$${monthly}/mo ($${isGPU ? hourly.toFixed(2) : hourly}/hr)`,
         typeLabelDetails(memory, disk, vcpus)
       ]
     };
@@ -221,15 +226,6 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         : 'Unknown Plan'
       : 'No Assigned Plan';
 
-    const currentPlanSubHeadings = linodeType
-      ? type
-        ? [
-            `$${type.price.monthly}/mo ($${type.price.hourly}/hr)`,
-            typeLabelDetails(type.memory, type.disk, type.vcpus)
-          ]
-        : []
-      : [];
-
     const [
       diskToResize,
       _shouldEnableAutoResizeDiskOption
@@ -259,36 +255,15 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
             if you're not using your Linode as much as you thought, you can
             temporarily or permanently resize your Linode to a different plan.
           </Typography>
-          <div
-            className={classes.currentPlanContainer}
-            data-qa-current-container
-          >
-            <Typography
-              variant="h3"
-              className={classes.subTitle}
-              data-qa-current-header
-            >
-              Current Plan
-            </Typography>
-            {
-              <SelectionCard
-                data-qa-current-plan
-                checked={false}
-                heading={currentPlanHeading}
-                subheadings={currentPlanSubHeadings}
-                disabled={disabled}
-                variant="check"
-              />
-            }
-          </div>
+
+          <SelectPlanPanel
+            currentPlanHeading={currentPlanHeading}
+            types={this.props.currentTypesData}
+            onSelect={this.handleSelectPlan}
+            selectedID={this.state.selectedId}
+            disabled={disabled}
+          />
         </Paper>
-        <SelectPlanPanel
-          currentPlanHeading={currentPlanHeading}
-          types={this.props.currentTypesData}
-          onSelect={this.handleSelectPlan}
-          selectedID={this.state.selectedId}
-          disabled={disabled}
-        />
         <Paper className={`${classes.checkbox} ${classes.root}`}>
           <Typography variant="h2" className={classes.resizeTitle}>
             Auto Resize Disk
