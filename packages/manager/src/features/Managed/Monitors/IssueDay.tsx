@@ -61,7 +61,7 @@ const DayDisplay: React.FC<DisplayProps> = props => {
           enterTouchDelay={0}
           leaveTouchDelay={5000}
           placement={'top'}
-          title={'See the open ticket associated with this incident'}
+          title={'See the ticket associated with this incident'}
         >
           <Link to={ticketUrl} className={classes.icon}>
             <TicketIcon />
