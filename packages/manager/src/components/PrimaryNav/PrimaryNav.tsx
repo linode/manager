@@ -9,6 +9,7 @@ import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 import Logo from 'src/assets/logo/logo-text.svg';
 import Divider from 'src/components/core/Divider';
+import Grid from 'src/components/core/Grid';
 import Hidden from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
 import ListItemText from 'src/components/core/ListItemText';
@@ -20,7 +21,6 @@ import {
   WithStyles,
   WithTheme
 } from 'src/components/core/styles';
-import Grid from 'src/components/Grid';
 import withFeatureFlagConsumer, {
   FeatureFlagConsumerProps
 } from 'src/containers/withFeatureFlagConsumer.container';
