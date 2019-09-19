@@ -272,8 +272,8 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 
 interface WithTypesAndImages {
   types: LinodeType[];
-  images: Image[];
   notifications: Notification[];
+  images: Record<string, Image>;
 }
 
 const mapStateToProps: MapStateToProps<
@@ -282,7 +282,7 @@ const mapStateToProps: MapStateToProps<
   ApplicationState
 > = (state, ownProps) => ({
   types: state.__resources.types.entities,
-  images: state.__resources.images.entities,
+  images: state.__resources.images.data,
   notifications: state.__resources.notifications.data || []
 });
 

@@ -170,7 +170,7 @@ class ExampleCheckboxes extends React.Component {
 class ExampleRadios extends React.Component {
   state = { value: undefined };
 
-  handleChange = (e: React.ChangeEvent<HTMLFormElement>, value: string) => {
+  handleChange = (e: React.ChangeEvent<HTMLInputElement>, value: string) => {
     this.setState(() => ({ value }));
   };
 

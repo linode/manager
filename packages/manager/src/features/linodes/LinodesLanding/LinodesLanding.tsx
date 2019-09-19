@@ -370,7 +370,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                           e.specs.disk,
                                           e.specs.vcpus,
                                           '',
-                                          []
+                                          {}
                                         )
                                       };
                                     })}

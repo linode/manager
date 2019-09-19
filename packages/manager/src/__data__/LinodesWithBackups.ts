@@ -1,4 +1,9 @@
-import { Hypervisor, LinodeBackupStatus, LinodeBackupType, LinodeStatus } from 'linode-js-sdk/lib/linodes'
+import {
+  Hypervisor,
+  LinodeBackupStatus,
+  LinodeBackupType,
+  LinodeStatus
+} from 'linode-js-sdk/lib/linodes';
 
 export const LinodesWithBackups = [
   {

@@ -1,5 +1,6 @@
 import { Grant } from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
+import { StackScript, UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
 import { ResourcePage } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -14,17 +15,17 @@ interface Props {
     label: string,
     username: string,
     images: string[],
-    userDefinedFields: Linode.StackScript.UserDefinedField[]
+    userDefinedFields: UserDefinedField[]
   ) => void;
   resetStackScriptSelection: () => void;
-  publicImages: Image[];
+  publicImages: Record<string, Image>;
   currentUser: string;
   request: (
     username: string,
     params?: any,
     filter?: any,
     stackScriptGrants?: Grant[]
-  ) => Promise<ResourcePage<Linode.StackScript.Response>>;
+  ) => Promise<ResourcePage<StackScript>>;
   category: string;
   disabled?: boolean;
 }
@@ -43,7 +44,7 @@ class SelectStackScriptPanelContent extends React.Component<
     selected: undefined
   };
 
-  handleSelectStackScript = (stackscript: Linode.StackScript.Response) => {
+  handleSelectStackScript = (stackscript: StackScript) => {
     if (this.props.disabled) {
       return;
     }

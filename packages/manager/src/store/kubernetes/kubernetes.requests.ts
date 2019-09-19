@@ -4,9 +4,10 @@ import {
   deleteNodePool as _deleteNodePool,
   getKubernetesCluster,
   getKubernetesClusters,
+  KubernetesCluster,
   updateKubernetesCluster as _updateCluster,
   updateNodePool as _updateNodePool
-} from 'src/services/kubernetes';
+} from 'linode-js-sdk/lib/kubernetes';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
@@ -18,7 +19,7 @@ import {
 } from './kubernetes.actions';
 import { requestNodePoolsForCluster } from './nodePools.requests';
 
-const getAllClusters = getAll<Linode.KubernetesCluster>(getKubernetesClusters);
+const getAllClusters = getAll<KubernetesCluster>(getKubernetesClusters);
 
 export const requestKubernetesClusters: ThunkActionCreator<
   Promise<Linode.Cluster[]>

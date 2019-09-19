@@ -1,4 +1,5 @@
-import { Grant } from "linode-js-sdk/lib/account";
+import { Grant } from 'linode-js-sdk/lib/account';
+import { Region } from 'linode-js-sdk/lib/regions';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -176,7 +177,7 @@ interface StateProps {
   linodeRegion?: string;
   message?: string;
   readOnly?: boolean;
-  regions: Linode.Region[];
+  regions: Region[];
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => {

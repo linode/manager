@@ -1,4 +1,4 @@
-import { Linode } from 'linode-js-sdk/lib/linodes'
+import { Linode } from 'linode-js-sdk/lib/linodes';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';

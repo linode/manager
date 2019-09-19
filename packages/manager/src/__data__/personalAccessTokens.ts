@@ -1,6 +1,7 @@
+import { Token } from 'linode-js-sdk/lib/profile';
 import * as moment from 'moment';
 
-export const personalAccessTokens: Linode.Token[] = [
+export const personalAccessTokens: Token[] = [
   {
     created: '2018-04-09T20:00:00',
     expiry: moment

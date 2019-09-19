@@ -19,6 +19,7 @@ type Props = TextFieldProps & {
   disabledReason?: string;
   hideStrengthLabel?: boolean;
   hideHelperText?: boolean;
+  hideValidation?: boolean;
 };
 
 interface State {
@@ -78,6 +79,7 @@ class PasswordInput extends React.Component<CombinedProps, State> {
       disabledReason,
       hideStrengthLabel,
       hideHelperText,
+      hideValidation,
       ...rest
     } = this.props;
 
@@ -94,12 +96,14 @@ class PasswordInput extends React.Component<CombinedProps, State> {
               required={required}
             />
           </Grid>
-          <Grid item xs={12} className={`${classes.strengthIndicator} py0`}>
-            <StrengthIndicator
-              strength={strength}
-              hideStrengthLabel={hideStrengthLabel}
-            />
-          </Grid>
+          {!hideValidation && (
+            <Grid item xs={12} className={`${classes.strengthIndicator} py0`}>
+              <StrengthIndicator
+                strength={strength}
+                hideStrengthLabel={hideStrengthLabel}
+              />
+            </Grid>
+          )}
         </Grid>
         {!hideHelperText && (
           <Typography variant="body1" className={classes.infoText}>

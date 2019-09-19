@@ -1,14 +1,15 @@
+import { Token } from 'linode-js-sdk/lib/profile';
 import * as React from 'react';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 interface Props {
-  token: Linode.Token;
+  token: Token;
   type: string;
   isAppTokenMenu: boolean;
-  openViewDrawer: (token: Linode.Token) => void;
-  openEditDrawer: (token: Linode.Token) => void;
-  openRevokeDialog: (token: Linode.Token, type: string) => void;
+  openViewDrawer: (token: Token) => void;
+  openEditDrawer: (token: Token) => void;
+  openRevokeDialog: (token: Token, type: string) => void;
 }
 
 type CombinedProps = Props;

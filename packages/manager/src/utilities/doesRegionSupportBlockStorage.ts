@@ -1,6 +1,8 @@
+import { Region } from 'linode-js-sdk/lib/regions';
+
 export const doesRegionSupportBlockStorage = (
   region: string,
-  regionsData: Linode.Region[]
+  regionsData: Region[]
 ) => {
   const regionMetaData = regionsData.find(thisRegion => {
     return thisRegion.id === region;

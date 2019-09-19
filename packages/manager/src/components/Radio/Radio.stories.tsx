@@ -7,7 +7,7 @@ import Radio from './Radio';
 class Example extends React.Component<{}, { value?: string }> {
   state = { value: undefined };
 
-  handleChange = (e: React.ChangeEvent<HTMLFormElement>, value: string) => {
+  handleChange = (e: React.ChangeEvent<HTMLInputElement>, value: string) => {
     this.setState(() => ({ value }));
   };
 

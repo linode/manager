@@ -3,7 +3,7 @@ import * as React from 'react';
 
 import { StackScriptForm } from './StackScriptForm';
 
-import { images } from 'src/__data__/images';
+import { normalizedImages as images } from 'src/__data__/images';
 
 describe('StackScriptCreate', () => {
   const component = shallow(

@@ -1,4 +1,4 @@
-import { LinodeBackup } from 'linode-js-sdk/lib/linodes'
+import { LinodeBackup } from 'linode-js-sdk/lib/linodes';
 import * as moment from 'moment-timezone';
 import * as React from 'react';
 import TableRow from 'src/components/core/TableRow';

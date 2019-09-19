@@ -1,6 +1,6 @@
 {
   "name": "linode-js-sdk",
-  "version": "0.4.0-alpha.0",
+  "version": "0.5.0-alpha.0",
   "homepage": "https://github.com/linode/manager/tree/develop/packages/linode-js-sdk",
   "bugs": {
     "url": "https://github.com/linode/manager/issues",
@@ -22,6 +22,7 @@
   "unpkg": "./index.js",
   "dependencies": {
     "axios": "^0.19.0",
+    "querystring": "^0.2.0",
     "ramda": "^0.26.1",
     "yup": "^0.27.0"
   },

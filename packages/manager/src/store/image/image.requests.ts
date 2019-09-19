@@ -10,8 +10,13 @@ export const requestImages: ThunkActionCreator<
   const getAllImages = getAll<Image>(getImages);
 
   return getAllImages()
-    .then(({ data }) => {
-      dispatch(getImagesSuccess(data));
+    .then(({ data, results }) => {
+      dispatch(
+        getImagesSuccess({
+          data,
+          results
+        } as Linode.ResourcePage<Image>)
+      );
       return data;
     })
     .catch(err => {

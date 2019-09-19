@@ -1,48 +1,20 @@
 import { AccountSettings } from 'linode-js-sdk/lib/account';
+import { APIError } from 'linode-js-sdk/lib/types';
 import actionCreatorFactory from 'typescript-fsa';
-
-// TYPES
-export interface Action {
-  type: string;
-  error?: Linode.ApiFieldError[];
-  data?: any;
-}
 
 export const actionCreator = actionCreatorFactory(`@@manager/account/settings`);
 
-type ActionCreator = (...args: any[]) => Action;
+export const requestAccountSettingsActions = actionCreator.async<
+  void,
+  AccountSettings,
+  APIError[]
+>('request');
 
-// ACTIONS
-export const LOAD = '@manager/account/LOAD';
-export const ERROR = '@manager/account/ERROR';
-export const SUCCESS = '@manager/account/SUCCESS';
-export const UPDATE = '@manager/account/UPDATE';
-export const UPDATE_ERROR = '@manager/account/UPDATE_ERROR';
-
-// ACTION CREATORS
-export const startRequest: ActionCreator = () => ({ type: LOAD });
-
-export const handleError: ActionCreator = (error: Linode.ApiFieldError[]) => ({
-  type: ERROR,
-  error
-});
-
-export const handleSuccess: ActionCreator = (data: AccountSettings) => ({
-  type: SUCCESS,
-  data
-});
-
-export const handleUpdate: ActionCreator = (data: AccountSettings) => ({
-  type: UPDATE,
-  data
-});
-
-export const handleUpdateError: ActionCreator = (
-  error: Linode.ApiFieldError[]
-) => ({
-  type: UPDATE_ERROR,
-  error
-});
+export const updateAccountSettingsActions = actionCreator.async<
+  Partial<AccountSettings>,
+  AccountSettings,
+  APIError[]
+>('update');
 
 export const updateSettingsInStore = actionCreator<Partial<AccountSettings>>(
   'update-store'

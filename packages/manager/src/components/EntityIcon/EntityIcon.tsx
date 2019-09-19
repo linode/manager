@@ -4,10 +4,12 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
 import DomainIcon from 'src/assets/icons/entityIcons/domain.svg';
+import FolderIcon from 'src/assets/icons/entityIcons/folder.svg';
 import KubeIcon from 'src/assets/icons/entityIcons/kubernetes.svg';
 import LinodeIcon from 'src/assets/icons/entityIcons/linode.svg';
 import LoadingIcon from 'src/assets/icons/entityIcons/loading.svg';
 import NodeBalancerIcon from 'src/assets/icons/entityIcons/nodebalancer.svg';
+import ObjectIcon from 'src/assets/icons/entityIcons/object.svg';
 import StackScriptIcon from 'src/assets/icons/entityIcons/stackscript.svg';
 import VolumeIcon from 'src/assets/icons/entityIcons/volume.svg';
 import {
@@ -79,7 +81,9 @@ export type Variant =
   | 'domain'
   | 'stackscript'
   | 'kube'
-  | 'bucket';
+  | 'bucket'
+  | 'object'
+  | 'folder';
 
 interface Props {
   variant: Variant;
@@ -100,7 +104,9 @@ const iconMap = {
   domain: DomainIcon,
   stackscript: StackScriptIcon,
   kube: KubeIcon,
-  bucket: BucketIcon
+  bucket: BucketIcon,
+  object: ObjectIcon,
+  folder: FolderIcon
 };
 
 const getIcon = (variant: Variant) => {

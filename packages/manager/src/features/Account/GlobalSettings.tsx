@@ -1,5 +1,5 @@
 import { AccountSettings } from 'linode-js-sdk/lib/account';
-import { Linode } from 'linode-js-sdk/lib/linodes'
+import { Linode } from 'linode-js-sdk/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
@@ -132,8 +132,11 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
     ['__resources', 'accountSettings', 'data', 'backups_enabled'],
     state
   ),
-  error: path(['__resources', 'accountSettings', 'error'], state),
-  updateError: path(['__resources', 'accountSettings', 'updateError'], state),
+  error: path(['__resources', 'accountSettings', 'error', 'read'], state),
+  updateError: path(
+    ['__resources', 'accountSettings', 'error', 'update'],
+    state
+  ),
   linodesWithoutBackups: state.__resources.linodes.entities.filter(
     l => !l.backups.enabled
   ),

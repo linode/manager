@@ -1,31 +1,29 @@
 import * as React from 'react';
-import {
-  Route,
-  RouteComponentProps,
-  Switch,
-  withRouter
-} from 'react-router-dom';
-
+import { Route, RouteComponentProps, Switch } from 'react-router-dom';
 import DefaultLoader from 'src/components/DefaultLoader';
 
 const ObjectStorageLanding = DefaultLoader({
   loader: () => import('./ObjectStorageLanding')
 });
 
-type Props = RouteComponentProps<{}>;
+const BucketDetail = DefaultLoader({
+  loader: () => import('./BucketDetail/BucketDetail')
+});
 
-class ObjectStorage extends React.Component<Props> {
-  render() {
-    const {
-      match: { path }
-    } = this.props;
+type CombinedProps = RouteComponentProps;
 
-    return (
-      <Switch>
-        <Route component={ObjectStorageLanding} path={path} />
-      </Switch>
-    );
-  }
-}
+export const ObjectStorage: React.FC<CombinedProps> = props => {
+  const path = props.match.path;
 
-export default withRouter(ObjectStorage);
+  return (
+    <Switch>
+      <Route
+        path={`${path}/buckets/:clusterId/:bucketName`}
+        component={BucketDetail}
+      />
+      <Route component={ObjectStorageLanding} path={path} />
+    </Switch>
+  );
+};
+
+export default ObjectStorage;

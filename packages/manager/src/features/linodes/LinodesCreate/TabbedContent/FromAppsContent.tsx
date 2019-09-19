@@ -1,3 +1,5 @@
+import { Image } from 'linode-js-sdk/lib/images';
+import { UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
 import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapStateToProps } from 'react-redux';
@@ -99,18 +101,24 @@ class FromAppsContent extends React.PureComponent<CombinedProps, State> {
     label: string,
     username: string,
     stackScriptImages: string[],
-    userDefinedFields: Linode.StackScript.UserDefinedField[]
+    userDefinedFields: UserDefinedField[]
   ) => {
+    const { imagesData } = this.props;
     /**
      * based on the list of images we get back from the API, compare those
      * to our list of master images supported by Linode and filter out the ones
      * that aren't compatible with our selected StackScript
      */
-    const compatibleImages = this.props.imagesData.filter(eachImage => {
-      return stackScriptImages.some(
-        eachSSImage => eachSSImage === eachImage.id
-      );
-    });
+    const compatibleImages = Object.keys(imagesData).reduce(
+      (acc, eachKey) => {
+        if (stackScriptImages.some(eachSSImage => eachSSImage === eachKey)) {
+          acc.push(imagesData[eachKey]);
+        }
+
+        return acc;
+      },
+      [] as Image[]
+    );
 
     /**
      * if a UDF field comes back from the API with a "default"

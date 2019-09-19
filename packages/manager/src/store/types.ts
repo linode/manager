@@ -1,4 +1,5 @@
 import { Entity as EventEntity, Event } from 'linode-js-sdk/lib/account';
+import { APIError } from 'linode-js-sdk/lib/types';
 import {
   ActionCreator,
   MapStateToProps as _MapStateToProps
@@ -19,10 +20,10 @@ export type ThunkResult<T> = ThunkAction<
 >;
 
 export interface EntityError {
-  read?: Linode.ApiFieldError[];
-  create?: Linode.ApiFieldError[];
-  delete?: Linode.ApiFieldError[];
-  update?: Linode.ApiFieldError[];
+  read?: APIError[];
+  create?: APIError[];
+  delete?: APIError[];
+  update?: APIError[];
 }
 
 export type ThunkActionCreator<T> = ActionCreator<ThunkResult<T>>;
@@ -47,7 +48,7 @@ export type EntityMap<T> = Record<string, T>;
 
 export interface MappedEntityState<
   T extends Entity,
-  E = Linode.ApiFieldError[] | undefined
+  E = APIError[] | undefined
 > {
   error?: E;
   items: string[];
@@ -56,10 +57,7 @@ export interface MappedEntityState<
   loading: boolean;
 }
 
-export interface EntityState<
-  T extends Entity,
-  E = Linode.ApiFieldError[] | undefined
-> {
+export interface EntityState<T extends Entity, E = APIError[] | undefined> {
   results: TypeOfID<T>[];
   entities: T[];
   loading: boolean;
@@ -67,7 +65,7 @@ export interface EntityState<
   error?: E;
 }
 
-export interface RequestableData<D, E = Linode.ApiFieldError[]> {
+export interface RequestableData<D, E = APIError[]> {
   lastUpdated: number;
   loading: boolean;
   data?: D;
@@ -92,3 +90,17 @@ export type EventHandler = (
   dispatch: Dispatch<any>,
   getState: () => ApplicationState
 ) => void;
+
+export interface EntitiesAsObjectState<T> {
+  error?: Partial<{
+    read: APIError[];
+    create: APIError[];
+    delete: APIError[];
+    update: APIError[];
+  }>;
+  data: Record<string, T>;
+  results: number;
+  lastUpdated: number;
+  loading: boolean;
+  listOfIDsInOriginalOrder: (string | number)[];
+}

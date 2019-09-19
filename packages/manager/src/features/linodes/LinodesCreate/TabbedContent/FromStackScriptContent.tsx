@@ -1,4 +1,6 @@
 import { Grant } from 'linode-js-sdk/lib/account';
+import { Image } from 'linode-js-sdk/lib/images';
+import { StackScript, UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
 import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
@@ -26,8 +28,10 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import AddonsPanel from '../AddonsPanel';
 import SelectPlanPanel from '../SelectPlanPanel';
 
-import { filterPublicImages, filterUDFErrors } from './formUtilities';
+import { filterUDFErrors } from './formUtilities';
 import { renderBackupsDisplaySection } from './utils';
+
+import { filterImagesByType } from 'src/store/image/image.helpers';
 
 import {
   ReduxStatePropsAndSSHKeys,
@@ -66,7 +70,7 @@ interface Props {
     params?: any,
     filter?: any,
     stackScriptGrants?: Grant[]
-  ) => Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
+  ) => Promise<Linode.ResourcePage<StackScript>>;
   header: string;
   category: 'community' | 'account';
 }
@@ -94,18 +98,24 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
     label: string,
     username: string,
     stackScriptImages: string[],
-    userDefinedFields: Linode.StackScript.UserDefinedField[]
+    userDefinedFields: UserDefinedField[]
   ) => {
+    const { imagesData } = this.props;
     /**
      * based on the list of images we get back from the API, compare those
      * to our list of master images supported by Linode and filter out the ones
      * that aren't compatible with our selected StackScript
      */
-    const compatibleImages = this.props.imagesData.filter(eachImage => {
-      return stackScriptImages.some(
-        eachSSImage => eachSSImage === eachImage.id
-      );
-    });
+    const compatibleImages = Object.keys(imagesData).reduce(
+      (acc, eachKey) => {
+        if (stackScriptImages.some(eachSSImage => eachSSImage === eachKey)) {
+          acc.push(imagesData[eachKey]);
+        }
+
+        return acc;
+      },
+      [] as Image[]
+    );
 
     /**
      * if a UDF field comes back from the API with a "default"
@@ -228,7 +238,7 @@ export class FromStackScriptContent extends React.PureComponent<CombinedProps> {
             selectedUsername={selectedStackScriptUsername}
             updateFor={[selectedStackScriptID, errors]}
             onSelect={this.handleSelectStackScript}
-            publicImages={filterPublicImages(imagesData) || []}
+            publicImages={filterImagesByType(imagesData, 'public')}
             resetSelectedStackScript={() => null}
             disabled={disabled}
             request={request}

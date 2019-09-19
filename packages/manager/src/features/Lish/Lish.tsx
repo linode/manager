@@ -1,4 +1,8 @@
-import { getLinode, getLinodeLishToken, Linode } from 'linode-js-sdk/lib/linodes';
+import {
+  getLinode,
+  getLinodeLishToken,
+  Linode
+} from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import {
   matchPath,

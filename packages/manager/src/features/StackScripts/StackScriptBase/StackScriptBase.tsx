@@ -1,4 +1,6 @@
 import { Grant } from 'linode-js-sdk/lib/account';
+import { Image } from 'linode-js-sdk/lib/images';
+import { StackScript } from 'linode-js-sdk/lib/stackscripts';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -50,7 +52,7 @@ export interface State {
   gettingMoreStackScripts: boolean;
   allStackScriptsLoaded: boolean;
   getMoreStackScriptsFailed: boolean; // did our attempt to get the next page of stackscripts fail?
-  listOfStackScripts: Linode.StackScript.Response[]; // @TODO type correctly
+  listOfStackScripts: StackScript[];
   sortOrder: SortOrder;
   currentFilterType: CurrentFilter | null;
   currentFilter: any; // @TODO type correctly
@@ -68,7 +70,13 @@ interface StoreProps {
   userCannotCreateStackScripts: boolean;
 }
 
-type CombinedProps = StyleProps & StoreProps & any;
+type CombinedProps = StyleProps &
+  StoreProps & {
+    publicImages: Record<string, Image>;
+    currentUser: string;
+    category: string;
+    request: Function;
+  };
 
 interface HelperFunctions {
   getDataAtPage: (page: number, filter?: any, isSorting?: boolean) => any;
@@ -133,7 +141,7 @@ const withStackScriptBase = (isSelecting: boolean) => (
         filter,
         stackScriptGrants
       )
-        .then((response: Linode.ResourcePage<Linode.StackScript.Response>) => {
+        .then((response: Linode.ResourcePage<StackScript>) => {
           if (!this.mounted) {
             return;
           }
@@ -218,10 +226,8 @@ const withStackScriptBase = (isSelecting: boolean) => (
     hasNonDeprecatedImages = (stackScriptImages: string[]) => {
       const { publicImages } = this.props;
       for (const stackScriptImage of stackScriptImages) {
-        for (const publicImage of publicImages) {
-          if (stackScriptImage === publicImage.id) {
-            return true;
-          }
+        if (publicImages[stackScriptImage]) {
+          return true;
         }
       }
       return false;

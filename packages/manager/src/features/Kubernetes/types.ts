@@ -1,3 +1,8 @@
+import {
+  KubernetesCluster,
+  PoolNodeResponse
+} from 'linode-js-sdk/lib/kubernetes';
+
 export interface PoolNodeWithPrice extends ExtendedPoolNode {
   totalMonthlyPrice: number;
   queuedForDeletion?: boolean;
@@ -10,9 +15,9 @@ export interface ExtendedPoolNode {
   count: number;
   type: string;
   clusterID?: number;
-  linodes?: Linode.PoolNodeResponse[];
+  linodes?: PoolNodeResponse[];
 }
-export interface ExtendedCluster extends Linode.KubernetesCluster {
+export interface ExtendedCluster extends KubernetesCluster {
   node_pools: PoolNodeWithPrice[];
   totalMemory: number;
   totalCPU: number;

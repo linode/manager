@@ -1,8 +1,9 @@
 import { Image } from 'linode-js-sdk/lib/images';
-import { Linode } from 'linode-js-sdk/lib/linodes'
-import { compose, pathOr } from 'ramda';
+import { Linode } from 'linode-js-sdk/lib/linodes';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { compose } from 'recompose';
 import {
   createStyles,
   Theme,
@@ -48,7 +49,7 @@ const styles = (theme: Theme) =>
 
 interface Props {
   error?: string;
-  publicImages: Image[];
+  publicImages: Record<string, Image>;
 }
 
 type CombinedProps = Props & StateProps & WithStyles<ClassNames>;
@@ -120,12 +121,7 @@ const connected = connect(mapStateToProps);
 
 const styled = withStyles(styles);
 
-export default compose<
-  Linode.TodoAny,
-  Linode.TodoAny,
-  Linode.TodoAny,
-  Linode.TodoAny
->(
+export default compose<CombinedProps, Props>(
   connected,
   RenderGuard,
   styled

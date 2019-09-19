@@ -1,20 +1,16 @@
 import produce from 'immer';
 import { Image } from 'linode-js-sdk/lib/images';
+import { equals, groupBy } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
-
-import Grid from 'src/components/Grid';
-
-import { groupBy } from 'ramda';
-
 import Select, { GroupType, Item } from 'src/components/EnhancedSelect';
 import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
-import Notice from 'src/components/Notice';
+import { BaseSelectProps } from 'src/components/EnhancedSelect/Select';
+import Grid from 'src/components/Grid';
+import { arePropsEqual } from 'src/utilities/arePropsEqual';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
-
 import { distroIcons } from './icons';
 import ImageOption from './ImageOption';
 
@@ -154,11 +150,6 @@ export const ImageSelect: React.FC<Props> = props => {
         </Typography>
         <Grid container direction="row" wrap="nowrap" spacing={4}>
           <Grid container item direction="column">
-            {error && (
-              <Grid item>
-                <Notice spacingTop={8} spacingBottom={0} error text={error} />
-              </Grid>
-            )}
             <Grid container item direction="row">
               <Grid item xs={12}>
                 <Select
@@ -167,10 +158,12 @@ export const ImageSelect: React.FC<Props> = props => {
                   placeholder="Choose an image"
                   options={options}
                   onChange={onChange}
+                  onFocus={onChange}
                   value={getSelectedOptionFromGroupedOptions(
                     selectedImageID || '',
                     options
                   )}
+                  errorText={error}
                   components={{ Option: ImageOption, SingleValue }}
                   {...reactSelectProps}
                   className={classNames}
@@ -184,4 +177,14 @@ export const ImageSelect: React.FC<Props> = props => {
   );
 };
 
-export default ImageSelect;
+const isMemo = (prevProps: Props, nextProps: Props) => {
+  return (
+    equals(prevProps.images, nextProps.images) &&
+    arePropsEqual<Props>(
+      ['selectedImageID', 'error', 'disabled', 'handleSelectImage'],
+      prevProps,
+      nextProps
+    )
+  );
+};
+export default React.memo(ImageSelect, isMemo);

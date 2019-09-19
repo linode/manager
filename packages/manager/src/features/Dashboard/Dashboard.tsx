@@ -1,5 +1,5 @@
 import { Notification } from 'linode-js-sdk/lib/account';
-import { Linode } from 'linode-js-sdk/lib/linodes'
+import { Linode } from 'linode-js-sdk/lib/linodes';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -99,7 +99,7 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
       )}
       <Grid container spacing={3}>
         <AbuseTicketBanner />
-        <TaxBanner location={location} />
+        <TaxBanner location={location} marginBottom={8} />
         <DocumentTitleSegment segment="Dashboard" />
         <Grid item xs={12}>
           <Typography variant="h1" data-qa-dashboard-header>

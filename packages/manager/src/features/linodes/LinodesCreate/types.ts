@@ -1,5 +1,6 @@
 import { Image } from 'linode-js-sdk/lib/images';
 import { CreateLinodeRequest, Linode } from 'linode-js-sdk/lib/linodes';
+import { StackScript, UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
 import { ExtendedRegion } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { Tag } from 'src/components/TagsInput';
 import { State as userSSHKeysProps } from 'src/features/linodes/userSSHKeyHoc';
@@ -38,7 +39,7 @@ export interface WithDisplayData {
  * the null, loading and error checking
  */
 export interface WithImagesProps {
-  imagesData?: Image[];
+  imagesData?: Record<string, Image>;
   imagesLoading: boolean;
   imagesError?: string;
 }
@@ -69,7 +70,7 @@ export interface WithTypesProps {
 export interface WithTypesRegionsAndImages {
   regionsData: ExtendedRegion[];
   typesData: ExtendedType[];
-  imagesData: Image[];
+  imagesData: Record<string, Image>;
 }
 
 export interface WithLinodesTypesRegionsAndImages
@@ -137,13 +138,13 @@ export interface StackScriptFormStateHandlers extends BaseFormStateAndHandlers {
   selectedStackScriptID?: number;
   selectedStackScriptUsername?: string;
   selectedStackScriptLabel?: string;
-  availableUserDefinedFields?: Linode.StackScript.UserDefinedField[];
+  availableUserDefinedFields?: UserDefinedField[];
   availableStackScriptImages?: Image[];
   updateStackScript: (
     id: number,
     label: string,
     username: string,
-    userDefinedFields: Linode.StackScript.UserDefinedField[],
+    userDefinedFields: UserDefinedField[],
     availableImages: Image[],
     defaultData?: any
   ) => void;
@@ -162,7 +163,7 @@ export interface BackupFormStateHandlers extends CloneFormStateHandlers {
 }
 
 export interface AppsData {
-  appInstances?: Linode.StackScript.Response[];
+  appInstances?: StackScript[];
   appInstancesLoading: boolean;
   appInstancesError?: string;
 }

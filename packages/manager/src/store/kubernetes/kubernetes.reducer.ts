@@ -1,3 +1,4 @@
+import { KubernetesCluster } from 'linode-js-sdk/lib/kubernetes';
 import { Reducer } from 'redux';
 import { EntityError, EntityState } from 'src/store/types';
 import updateOrAdd from 'src/utilities/updateOrAdd';
@@ -14,7 +15,7 @@ import {
  * State
  */
 
-export type State = EntityState<Linode.KubernetesCluster, EntityError>;
+export type State = EntityState<KubernetesCluster, EntityError>;
 
 export const defaultState: State = {
   results: [],

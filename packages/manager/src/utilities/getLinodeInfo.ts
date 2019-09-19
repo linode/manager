@@ -1,4 +1,4 @@
-import { Linode } from 'linode-js-sdk/lib/linodes'
+import { Linode } from 'linode-js-sdk/lib/linodes';
 
 /**
  * getLinodeInfo

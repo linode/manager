@@ -1,3 +1,4 @@
+import { getStackScript, StackScript } from 'linode-js-sdk/lib/stackscripts';
 import { path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -15,10 +16,9 @@ import Typography from 'src/components/core/Typography';
 import setDocs, { SetDocsProps } from 'src/components/DocsSidebar/setDocs';
 import Grid from 'src/components/Grid';
 import NotFound from 'src/components/NotFound';
-import StackScript from 'src/components/StackScript';
+import _StackScript from 'src/components/StackScript';
 import withProfile from 'src/containers/profile.container';
 import { StackScripts as StackScriptsDocs } from 'src/documentation';
-import { getStackScript } from 'src/services/stackscripts';
 import { getStackScriptUrl } from './stackScriptUtils';
 
 interface MatchProps {
@@ -27,7 +27,7 @@ interface MatchProps {
 type RouteProps = RouteComponentProps<MatchProps>;
 interface State {
   loading: boolean;
-  stackScript?: Linode.StackScript.Response;
+  stackScript?: StackScript;
 }
 
 type ClassNames = 'root' | 'cta' | 'button' | 'userName' | 'userNameSlash';
@@ -137,7 +137,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
           </Grid>
         </Grid>
         <div className="detailsWrapper">
-          <StackScript data={stackScript} />
+          <_StackScript data={stackScript} />
         </div>
       </React.Fragment>
     );

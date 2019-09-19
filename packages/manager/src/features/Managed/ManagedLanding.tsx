@@ -1,4 +1,3 @@
-import { AccountSettings } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -7,21 +6,15 @@ import setDocs from 'src/components/DocsSidebar/setDocs';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
 import withAccountSettings, {
-  DispatchProps as SettingsDispatchProps
+  DispatchProps as SettingsDispatchProps,
+  SettingsProps
 } from 'src/containers/accountSettings.container';
 import useFlags from 'src/hooks/useFlags';
 import EnableManagedPlaceholder from './EnableManagedPlaceholder';
 import ManagedLandingContent from './ManagedLandingContent';
 import ManagedPlaceholder from './ManagedPlaceholder';
 
-export interface StateProps {
-  accountSettings: AccountSettings;
-  accountSettingsLoading: boolean;
-  accountSettingsLastUpdated: number;
-  accountSettingsError?: Linode.ApiFieldError[];
-}
-
-export type CombinedProps = StateProps &
+export type CombinedProps = SettingsProps &
   SettingsDispatchProps &
   RouteComponentProps<{}>;
 
@@ -58,8 +51,8 @@ export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
       return <CircleProgress />;
     }
 
-    if (accountSettingsError) {
-      return <ErrorState errorText={accountSettingsError[0].reason} />;
+    if (accountSettingsError.read) {
+      return <ErrorState errorText={accountSettingsError.read[0].reason} />;
     }
 
     if (!flags.managed) {
@@ -83,21 +76,7 @@ export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
 
 const enhanced = compose<CombinedProps, {}>(
   setDocs(docs),
-  withAccountSettings(
-    (
-      ownProps,
-      accountSettingsLoading,
-      accountSettingsLastUpdated,
-      accountSettingsError,
-      accountSettings
-    ) => ({
-      ...ownProps,
-      accountSettings,
-      accountSettingsLoading,
-      accountSettingsError,
-      accountSettingsLastUpdated
-    })
-  )
+  withAccountSettings()
 );
 
 export default enhanced(ManagedLanding);
