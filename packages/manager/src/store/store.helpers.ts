@@ -125,7 +125,7 @@ export const getAddRemoved = <E extends Entity>(
   return [added, removed];
 };
 
-const createRequestThunk = <Req extends any, Res, Err>(
+export const createRequestThunk = <Req extends any, Res, Err>(
   actions: AsyncActionCreators<Req, Res, Err>,
   request: (params: Req) => Promise<Res>
 ): ThunkActionCreator<Promise<Res>, Req> => {
@@ -136,21 +136,16 @@ const createRequestThunk = <Req extends any, Res, Err>(
 
     try {
       const result = await request(params);
-
       const doneAction = done({ result, params });
-
       dispatch(doneAction);
       return result;
     } catch (error) {
       const failAction = failed({ error, params });
-
       dispatch(failAction);
       return Promise.reject(error);
     }
   };
 };
-
-export { createRequestThunk };
 
 export const updateInPlace = <E extends Entity>(
   id: number | string,
