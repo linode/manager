@@ -147,7 +147,7 @@ export class SelectPlanPanel extends React.Component<
               {isGPU ? (
                 <Currency quantity={type.price.hourly} />
               ) : (
-                type.price.hourly
+                `$` + type.price.hourly
               )}
             </TableCell>
             <TableCell>{type.vcpus}</TableCell>
