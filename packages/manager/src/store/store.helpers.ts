@@ -125,27 +125,37 @@ export const getAddRemoved = <E extends Entity>(
   return [added, removed];
 };
 
-export const createRequestThunk = <Req extends any, Res, Err>(
+/* tslint:disable-next-line */
+function createRequestThunk<Req extends any, Res, Err>(
   actions: AsyncActionCreators<Req, Res, Err>,
   request: (params: Req) => Promise<Res>
-): ThunkActionCreator<Promise<Res>, Req> => (params: Req) => async dispatch => {
-  const { started, done, failed } = actions;
+): ThunkActionCreator<Promise<Res>, Req>;
+/* tslint:disable-next-line */
+function createRequestThunk<Req extends any, Res, Err>(
+  actions: AsyncActionCreators<Req[], Res, Err>,
+  request: (...params: Req[]) => Promise<Res>
+): ThunkActionCreator<Promise<Res>, Req> {
+  return (...params: any[]) => async dispatch => {
+    const { started, done, failed } = actions;
 
-  dispatch(started(params));
+    dispatch(started(params));
 
-  try {
-    const result = await request(params);
-    const doneAction = done({ result, params });
+    try {
+      const result = await request(...params);
+      const doneAction = done({ result, params });
 
-    dispatch(doneAction);
-    return result;
-  } catch (error) {
-    const failAction = failed({ error, params });
+      dispatch(doneAction);
+      return result;
+    } catch (error) {
+      const failAction = failed({ error, params });
 
-    dispatch(failAction);
-    return Promise.reject(error);
-  }
-};
+      dispatch(failAction);
+      return Promise.reject(error);
+    }
+  };
+}
+
+export { createRequestThunk };
 
 export const updateInPlace = <E extends Entity>(
   id: number | string,

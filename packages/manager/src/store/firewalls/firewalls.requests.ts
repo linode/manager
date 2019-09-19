@@ -11,10 +11,11 @@ const getAllFirewallsRequest = (payload: { params?: any; filter?: any }) =>
   )(payload.params, payload.filter);
 
 export const getAllFirewalls = createRequestThunk<
-  {
-    params?: any;
-    filter?: any;
-  },
+  | {
+      params?: any;
+      filter?: any;
+    }
+  | undefined,
   GetAllData<Firewall[]>,
   APIError[]
 >(_getFirewallsAction, getAllFirewallsRequest);

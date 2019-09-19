@@ -34,11 +34,20 @@ export interface EntityError {
  * }
  *
  */
-export type ReduxActionCreator<A, Params extends any> = (
-  ...args: Params[]
-) => A;
 
-export type ThunkActionCreator<T, Params = any> = ReduxActionCreator<
+export type ParamType<F> = F extends (args: infer A) => any
+  ? A extends undefined | null
+    ? [any?]
+    : [A]
+  : [any?];
+
+// export type ReduxActionCreator<A, Params> = Params extends null | undefined
+//   ? (...args: any[]) => A
+//   : (args: Params) => A;
+
+export type R<A, Params> = (...args: ParamType<(args: Params) => A>) => A;
+
+export type ThunkActionCreator<T, Params = undefined> = R<
   ThunkResult<T>,
   Params
 >;
