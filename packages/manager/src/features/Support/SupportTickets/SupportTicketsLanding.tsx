@@ -1,7 +1,8 @@
-import { SupportTicket } from "linode-js-sdk/lib/account";
-import { compose, pathOr } from 'ramda';
+import { SupportTicket } from 'linode-js-sdk/lib/account';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { compose } from 'recompose';
 import AbuseTicketBanner from 'src/components/AbuseTicketBanner';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
@@ -22,6 +23,10 @@ import { AttachmentError } from '../SupportTicketDetail/SupportTicketDetail';
 import SupportTicketDrawer from './SupportTicketDrawer';
 import TicketList from './TicketList';
 
+import withGlobalErrors, {
+  Props as GlobalErrorProps
+} from 'src/containers/globalErrors.container';
+
 type ClassNames = 'title';
 
 const styles = (theme: Theme) =>
@@ -32,9 +37,12 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  history: any;
+  history: RouteComponentProps['history'];
 }
-type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;
+type CombinedProps = Props &
+  WithStyles<ClassNames> &
+  RouteComponentProps<{}> &
+  GlobalErrorProps;
 
 interface State {
   value: number;
@@ -172,19 +180,23 @@ export class SupportTicketsLanding extends React.PureComponent<
               data-qa-breadcrumb
             />
           </Grid>
-          <Grid item>
-            <Grid container alignItems="flex-end">
-              <Grid item>
-                <Button
-                  buttonType="primary"
-                  onClick={this.openDrawer}
-                  data-qa-open-ticket-link
-                >
-                  Open New Ticket
-                </Button>
+          {this.props.globalErrors.account_unactivated ? (
+            <React.Fragment />
+          ) : (
+            <Grid item>
+              <Grid container alignItems="flex-end">
+                <Grid item>
+                  <Button
+                    buttonType="primary"
+                    onClick={this.openDrawer}
+                    data-qa-open-ticket-link
+                  >
+                    Open New Ticket
+                  </Button>
+                </Grid>
               </Grid>
             </Grid>
-          </Grid>
+          )}
         </Grid>
         {notice && <Notice success text={notice} />}
         <AppBar position="static" color="default">
@@ -213,7 +225,8 @@ export class SupportTicketsLanding extends React.PureComponent<
 
 const styled = withStyles(styles);
 
-export default compose<any, any, any>(
+export default compose<CombinedProps, Props>(
   withRouter,
-  styled
+  styled,
+  withGlobalErrors()
 )(SupportTicketsLanding);

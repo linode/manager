@@ -8,7 +8,13 @@ import {
 
 describe('Support Tickets Landing', () => {
   const component = shallow(
-    <SupportTicketsLanding classes={{ title: '' }} {...reactRouterProps} />
+    <SupportTicketsLanding
+      globalErrors={{}}
+      setErrors={jest.fn()}
+      clearErrors={jest.fn()}
+      classes={{ title: '' }}
+      {...reactRouterProps}
+    />
   );
 
   it('title of page should read "Customer Support"', () => {

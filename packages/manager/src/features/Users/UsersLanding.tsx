@@ -1,9 +1,5 @@
 import { map as mapPromise } from 'bluebird';
-import {
-  deleteUser,
-  getUsers,
-  User
-} from 'linode-js-sdk/lib/account'
+import { deleteUser, getUsers, User } from 'linode-js-sdk/lib/account';
 import * as memoize from 'memoizee';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
@@ -319,16 +315,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
     }
 
     if (error) {
-      return (
-        <TableRowError
-          colSpan={4}
-          message={
-            error[0].reason.match(/not auth/i)
-              ? 'You do not have permission to view other users.'
-              : `Unable to load user data.`
-          }
-        />
-      );
+      return <TableRowError colSpan={4} message={error[0].reason} />;
     }
 
     if (!data || data.length === 0) {
