@@ -7,9 +7,18 @@ describe('tagImportDrawer Redux duck', () => {
     });
 
     it('should handle an open action', () => {
-      expect(tagDrawer(T.defaultState, T.openDrawer())).toEqual({
+      expect(
+        tagDrawer(
+          {
+            ...T.defaultState,
+            errors: [{ entityId: 'mock error', reason: 'mock reason' }]
+          },
+          T.openDrawer()
+        )
+      ).toEqual({
         ...T.defaultState,
-        open: true
+        open: true,
+        errors: []
       });
     });
 

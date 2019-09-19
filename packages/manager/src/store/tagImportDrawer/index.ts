@@ -77,6 +77,7 @@ export const tagImportDrawer: Reducer<State> = (
 
     if (isType(action, openDrawer)) {
       draft.open = true;
+      draft.errors = [];
     }
 
     if (isType(action, closeDrawer)) {

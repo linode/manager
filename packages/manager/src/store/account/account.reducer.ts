@@ -37,6 +37,7 @@ const reducer: Reducer<State> = (state: State = defaultState, action) => {
       draft.loading = false;
       draft.data = payload;
       draft.lastUpdated = Date.now();
+      draft.error.read = undefined;
     }
 
     if (isType(action, profileRequestFail)) {
