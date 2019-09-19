@@ -45,7 +45,7 @@ type ClassNames = 'labelHeader';
 const styles = (theme: Theme) =>
   createStyles({
     labelHeader: {
-      paddingLeft: theme.spacing(2) + 49
+      paddingLeft: theme.spacing(4) + 32
     }
   });
 
@@ -302,9 +302,9 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 const enhanced = compose<CombinedProps, Props>(
-  styled,
   withManagedIssues(),
   withManagedServices(),
-  withSnackbar
+  withSnackbar,
+  styled
 );
 export default enhanced(MonitorTable);

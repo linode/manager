@@ -7,6 +7,7 @@ import {
   withStyles,
   WithStyles
 } from 'src/components/core/styles';
+import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
@@ -34,8 +35,12 @@ const styles = (theme: Theme) =>
       }
     },
     icon: {
-      color: theme.color.red,
-      marginLeft: theme.spacing()
+      alignItems: 'center',
+      marginLeft: theme.spacing(1),
+      transition: 'color 225ms ease-in-out',
+      '&:hover': {
+        color: theme.color.red
+      }
     },
     monitorDescription: {
       paddingTop: theme.spacing(1) / 2
@@ -86,8 +91,8 @@ export const monitorRow: React.FunctionComponent<CombinedProps> = props => {
         data-qa-monitor-label
       >
         <Grid container wrap="nowrap" alignItems="center">
-          <Grid item className="classes.icon">
-            <Icon className="classes.icon" height={30} width={30} />
+          <Grid item className={classes.icon} style={{ display: 'flex' }}>
+            <Icon height={30} width={30} />
           </Grid>
           <Grid item>
             <Typography variant="h3">{monitor.label}</Typography>
@@ -96,19 +101,33 @@ export const monitorRow: React.FunctionComponent<CombinedProps> = props => {
       </TableCell>
       <TableCell parentColumn="Status" data-qa-monitor-status>
         <Grid container item direction="row" alignItems="center">
-          <Typography
-            className={monitor.status === 'problem' ? classes.errorStatus : ''}
-          >
-            {statusTextMap[monitor.status]}
-          </Typography>
-          {openIssues.length > 0 && (
-            <Link
-              to={`/support/tickets/${issues[0].entity.id}`}
-              className={classes.icon}
+          <Grid item>
+            <Typography
+              className={
+                monitor.status === 'problem' ? classes.errorStatus : ''
+              }
             >
-              <TicketIcon />
-            </Link>
-          )}
+              {statusTextMap[monitor.status]}
+            </Typography>
+          </Grid>
+          <Grid>
+            {openIssues.length > 0 && (
+              <Tooltip
+                data-qa-open-ticket-tooltip
+                enterTouchDelay={0}
+                leaveTouchDelay={5000}
+                placement={'top'}
+                title={'See the open ticket associated with this incident'}
+              >
+                <Link
+                  to={`/support/tickets/${issues[0].entity.id}`}
+                  className={classes.icon}
+                >
+                  <TicketIcon />
+                </Link>
+              </Tooltip>
+            )}
+          </Grid>
         </Grid>
       </TableCell>
       <TableCell parentColumn="Resource" data-qa-monitor-resource>

@@ -4,6 +4,7 @@ import Bad from 'src/assets/icons/monitor-failed.svg';
 import Good from 'src/assets/icons/monitor-ok.svg';
 import TicketIcon from 'src/assets/icons/ticket.svg';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import Tooltip from 'src/components/core/Tooltip';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import Grid from 'src/components/Grid';
 import { ExtendedIssue } from 'src/store/managed/issues.actions';
@@ -13,7 +14,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing(2)
   },
   icon: {
-    color: theme.color.red
+    marginLeft: theme.spacing(1),
+    transition: 'color 225ms ease-in-out',
+    '&:hover': {
+      color: theme.color.red
+    }
   },
   failureText: {
     color: theme.color.red
@@ -51,9 +56,17 @@ const DayDisplay: React.FC<DisplayProps> = props => {
         />
       </Grid>
       {ticketUrl && (
-        <Link to={ticketUrl} className={classes.icon}>
-          <TicketIcon />
-        </Link>
+        <Tooltip
+          data-qa-open-ticket-tooltip
+          enterTouchDelay={0}
+          leaveTouchDelay={5000}
+          placement={'top'}
+          title={'See the open ticket associated with this incident'}
+        >
+          <Link to={ticketUrl} className={classes.icon}>
+            <TicketIcon />
+          </Link>
+        </Tooltip>
       )}
     </Grid>
   );
