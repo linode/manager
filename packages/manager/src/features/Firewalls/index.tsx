@@ -17,7 +17,7 @@ class Firewall extends React.Component<Props> {
 
     return (
       <Switch>
-        <Route path={`${path}`} component={FirewallLanding} />
+        <Route exact path={`${path}`} component={FirewallLanding} />
         <Route component={FirewallLanding} />
       </Switch>
     );
