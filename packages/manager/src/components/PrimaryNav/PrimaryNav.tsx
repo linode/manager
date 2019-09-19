@@ -389,8 +389,8 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
 
     const finalMenuItems: PrimaryLink[] = potentialMenuItemsToAdd.reduce(
       (acc, eachItem) => {
-        const indexOfFoundNavItem = acc.findIndex(eachNavItem =>
-          eachNavItem.display.match(new RegExp(eachItem.insertAfter, 'gmi'))
+        const indexOfFoundNavItem = acc.findIndex(
+          eachNavItem => eachNavItem.display === eachItem.insertAfter
         );
 
         /**
