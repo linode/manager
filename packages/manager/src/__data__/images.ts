@@ -304,3 +304,37 @@ export const privateImages: Image[] = [
     expiry: null
   }
 ];
+
+export const normalizedImages = {
+  'linode/debian8.7': {
+    created_by: 'linode',
+    deprecated: false,
+    id: 'linode/debian8.7',
+    vendor: 'Debian',
+    size: 1100,
+    type: 'manual',
+    created: '2017-08-15T22:28:13',
+    is_public: true,
+    label: 'Debian 8.7',
+    description: null,
+    expiry: null
+  },
+  'linode/containerlinux': {
+    created_by: 'linode',
+    deprecated: false,
+    id: 'linode/containerlinux',
+    vendor: 'CoreOS',
+    size: 3000,
+    type: 'manual',
+    created: '2017-08-15T22:28:13',
+    is_public: true,
+    label: 'Container Linux',
+    description: null,
+    expiry: null
+  }
+};
+
+export const imagesByID = images.reduce((accum, thisImage) => {
+  accum[thisImage.id] = thisImage;
+  return accum;
+}, {});

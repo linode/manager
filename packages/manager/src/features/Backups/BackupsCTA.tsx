@@ -1,3 +1,4 @@
+import { Linode } from 'linode-js-sdk/lib/linodes';
 import { isEmpty, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -76,6 +77,7 @@ const BackupsCTA: React.StatelessComponent<CombinedProps> = props => {
             and be sure to read our guide on Backups{` `}
             <a
               target="_blank"
+              rel="noopener noreferrer"
               href={
                 'https://www.linode.com/docs/platform' +
                 '/disk-images/linode-backup-service/'
@@ -108,7 +110,7 @@ const BackupsCTA: React.StatelessComponent<CombinedProps> = props => {
 };
 
 interface StateProps {
-  linodesWithoutBackups: Linode.Linode[];
+  linodesWithoutBackups: Linode[];
   managed: boolean;
 }
 

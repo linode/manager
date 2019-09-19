@@ -1,4 +1,7 @@
-import { /* dcDisplayCountry, */ dcDisplayNames } from 'src/constants';
+import {
+  /* dcDisplayCountry, */ dcDisplayNames,
+  objectStorageClusterDisplay
+} from 'src/constants';
 
 export const formatRegion = (region: string) => {
   const city = dcDisplayNames[region];
@@ -43,3 +46,6 @@ export const getHumanReadableCountry = (regionSlug: string) => {
   }
   return 'Other';
 };
+
+export const formatObjectStorageCluster = (clusterId: Linode.ClusterID) =>
+  objectStorageClusterDisplay[clusterId];

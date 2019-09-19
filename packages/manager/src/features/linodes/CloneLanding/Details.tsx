@@ -1,4 +1,5 @@
 import Close from '@material-ui/icons/Close';
+import { Disk, Linode } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import Button from 'src/components/Button';
 import Divider from 'src/components/core/Divider';
@@ -68,7 +69,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   selectedConfigs: ExtendedConfig[];
-  selectedDisks: Linode.Disk[];
+  selectedDisks: Disk[];
   selectedLinodeId: number | null;
   selectedLinodeRegion?: string;
   thisLinodeRegion: string;
@@ -248,7 +249,7 @@ export const Configs: React.FC<Props> = props => {
         handleChange={linode => handleSelectLinode(linode.id)}
         filterCondition={
           shouldExcludeCurrentLinode
-            ? (linode: Linode.Linode) => linode.id !== currentLinodeId
+            ? (linode: Linode) => linode.id !== currentLinodeId
             : undefined
         }
         textFieldProps={{
@@ -266,11 +267,19 @@ export const Configs: React.FC<Props> = props => {
       {linodeError && (
         <Typography variant="body1" className={classes.errorText}>
           {linodeError}{' '}
-          <a href={errorMessageLinks.shrink} target="_blank">
+          <a
+            href={errorMessageLinks.shrink}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             Shrink your existing disks
           </a>{' '}
           or{' '}
-          <a href={errorMessageLinks.resize} target="_blank">
+          <a
+            href={errorMessageLinks.resize}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             resize your Linode to a larger plan.
           </a>
         </Typography>

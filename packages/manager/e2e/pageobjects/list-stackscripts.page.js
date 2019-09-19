@@ -1,4 +1,5 @@
 const { constants } = require('../constants');
+const { assertLog } = require('../utils/assertionLog');
 
 import Page from './page.js';
 import ConfigureLinode from './configure-linode';
@@ -96,13 +97,41 @@ class ListStackScripts extends Page {
   }
 
   baseElementsDisplay() {
-    this.landingHeader.waitForVisible(constants.wait.normal);
-    expect(this.stackScriptTable.isVisible()).toBe(true);
-    expect(this.landingHeader.getText()).toBe('StackScripts');
-    expect(this.create.isVisible()).toBe(true);
-    expect(this.create.getTagName()).toBe('button');
-    expect(this.accountStackScriptTab.isVisible()).toBe(true);
-    expect(this.communityStackScriptTab.isVisible()).toBe(true);
+    this.landingHeader.waitForDisplayed(constants.wait.normal);
+    expect(this.stackScriptTable.isDisplayed())
+      .withContext(
+        `"${this.stackScriptTable.selector}" selector ${assertLog.displayed}`
+      )
+      .toBe(true);
+    expect(this.landingHeader.getText())
+      .withContext(
+        `${assertLog.incorrectText} for "${
+          this.stackScriptTable.selector
+        }" selector`
+      )
+      .toBe('StackScripts');
+    expect(this.create.isDisplayed())
+      .withContext(`"${this.create.selector}" selector ${assertLog.displayed}`)
+      .toBe(true);
+    expect(this.create.getTagName())
+      .withContext(
+        `${assertLog.incorrectTagName} "${this.create.selector}" selector`
+      )
+      .toBe('button');
+    expect(this.accountStackScriptTab.isDisplayed())
+      .withContext(
+        `"${this.accountStackScriptTab.selector}" selector ${
+          assertLog.displayed
+        }`
+      )
+      .toBe(true);
+    expect(this.communityStackScriptTab.isDisplayed())
+      .withContext(
+        `"${this.communityStackScriptTab.selector}" selector ${
+          assertLog.displayed
+        }`
+      )
+      .toBe(true);
   }
 
   stackScriptTableDisplay() {

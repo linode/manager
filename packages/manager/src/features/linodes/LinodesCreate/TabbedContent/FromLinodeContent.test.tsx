@@ -32,7 +32,7 @@ const mockProps: CombinedProps = {
   privateIPEnabled: false,
   resetCreationState: jest.fn(),
   resetSSHKeys: jest.fn(),
-  imagesData: [],
+  imagesData: {},
   linodesData: linodes,
   regionsData: [],
   typesData: [],

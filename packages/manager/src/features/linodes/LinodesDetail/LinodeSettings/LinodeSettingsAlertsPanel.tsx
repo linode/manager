@@ -1,4 +1,5 @@
 import { GrantLevel } from 'linode-js-sdk/lib/account';
+import { LinodeAlerts } from 'linode-js-sdk/lib/linodes';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import { compose as rCompose } from 'recompose';
@@ -20,7 +21,7 @@ import AlertSection from './AlertSection';
 interface Props {
   linodeId: number;
   linodeLabel: string;
-  linodeAlerts: Linode.LinodeAlerts;
+  linodeAlerts: LinodeAlerts;
 }
 
 interface State {

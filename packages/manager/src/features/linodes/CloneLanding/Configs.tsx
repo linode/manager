@@ -1,3 +1,4 @@
+import { Config } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import CheckBox from 'src/components/CheckBox';
 import { makeStyles, Theme } from 'src/components/core/styles';
@@ -20,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 export interface Props {
-  configs: Linode.Config[];
+  configs: Config[];
   configSelection: ConfigSelection;
   handleSelect: (id: number) => void;
 }
@@ -52,7 +53,7 @@ export const Configs: React.FC<Props> = props => {
                 {paginatedData.length === 0 ? (
                   <TableRowEmptyState colSpan={1} />
                 ) : (
-                  paginatedData.map((config: Linode.Config) => (
+                  paginatedData.map((config: Config) => (
                     <TableRow key={config.id} data-qa-config={config.label}>
                       <TableCell>
                         <CheckBox

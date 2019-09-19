@@ -1,5 +1,6 @@
 import { Domain } from 'linode-js-sdk/lib/domains';
 import { Image } from 'linode-js-sdk/lib/images';
+import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
 import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { createSelector } from 'reselect';
@@ -10,7 +11,7 @@ import getLinodeDescription from 'src/utilities/getLinodeDescription';
 
 type State = ApplicationState['__resources'];
 
-export const getLinodeIps = (linode: Linode.Linode): string[] => {
+export const getLinodeIps = (linode: Linode): string[] => {
   const { ipv4, ipv6 } = linode;
   return ipv4.concat([ipv6]);
 };
@@ -30,9 +31,9 @@ export const getNodebalIps = (nodebal: NodeBalancer): string[] => {
 };
 
 const formatLinode = (
-  linode: Linode.Linode,
-  types: Linode.LinodeType[],
-  images: Image[]
+  linode: Linode,
+  types: LinodeType[],
+  images: Record<string, Image>
 ): SearchableItem => ({
   label: linode.label,
   value: linode.id,
@@ -123,18 +124,18 @@ const linodeSelector = (state: State) => state.linodes.entities;
 const volumeSelector = ({ volumes }: State) => Object.values(volumes.itemsById);
 const nodebalSelector = ({ nodeBalancers }: State) =>
   Object.values(nodeBalancers.itemsById);
-const imageSelector = (state: State) => state.images.entities;
+const imageSelector = (state: State) => state.images.data || {};
 const domainSelector = (state: State) => state.domains.data || [];
 const typesSelector = (state: State) => state.types.entities;
 
 export default createSelector<
   State,
-  Linode.Linode[],
+  Linode[],
   Volume[],
-  Image[],
+  { [key: string]: Image },
   Domain[],
   NodeBalancer[],
-  Linode.LinodeType[],
+  LinodeType[],
   SearchableItem[]
 >(
   linodeSelector,
@@ -144,11 +145,12 @@ export default createSelector<
   nodebalSelector,
   typesSelector,
   (linodes, volumes, images, domains, nodebalancers, types) => {
+    const arrOfImages = Object.keys(images).map(eachKey => images[eachKey]);
     const searchableLinodes = linodes.map(linode =>
       formatLinode(linode, types, images)
     );
     const searchableVolumes = volumes.map(volumeToSearchableItem);
-    const searchableImages = images.reduce(imageReducer, []);
+    const searchableImages = arrOfImages.reduce(imageReducer, []);
     const searchableDomains = domains.map(domainToSearchableItem);
     const searchableNodebalancers = nodebalancers.map(nodeBalToSearchableItem);
 

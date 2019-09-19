@@ -1,14 +1,18 @@
-import { getDeprecatedLinodeTypes, getLinodeTypes } from 'src/services/linodes';
+import {
+  getDeprecatedLinodeTypes,
+  getLinodeTypes,
+  LinodeType
+} from 'linode-js-sdk/lib/linodes';
 import { ThunkActionCreator } from 'src/store/types';
 import { getAll } from 'src/utilities/getAll';
 import { getLinodeTypesActions } from './linodeType.actions';
 
-type RequesTypesThunk = ThunkActionCreator<Promise<Linode.LinodeType[]>>;
+type RequesTypesThunk = ThunkActionCreator<Promise<LinodeType[]>>;
 export const requestTypes: RequesTypesThunk = () => dispatch => {
   dispatch(getLinodeTypesActions.started());
   return Promise.all([
-    getAll<Linode.LinodeType>(getLinodeTypes)(),
-    getAll<Linode.LinodeType>(getDeprecatedLinodeTypes)()
+    getAll<LinodeType>(getLinodeTypes)(),
+    getAll<LinodeType>(getDeprecatedLinodeTypes)()
   ])
     .then(([{ data: types }, { data: legacyTypes }]) => [
       ...types,

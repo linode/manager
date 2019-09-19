@@ -1,5 +1,6 @@
 import Cached from '@material-ui/icons/Cached';
 import { Event } from 'linode-js-sdk/lib/account';
+import { LinodeStatus } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import {
   createStyles,
@@ -10,7 +11,7 @@ import {
 import { linodeInTransition } from 'src/features/linodes/transitions';
 
 interface Props {
-  status: Linode.LinodeStatus | 'loading';
+  status: LinodeStatus | 'loading';
   recentEvent?: Event;
 }
 

@@ -1,4 +1,5 @@
 import { Event } from 'linode-js-sdk/lib/account';
+import { Config, Linode } from 'linode-js-sdk/lib/linodes';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
@@ -135,7 +136,7 @@ const styles = (theme: Theme) =>
   });
 
 interface WithLinodesProps {
-  linodesData: Linode.Linode[];
+  linodesData: Linode[];
   linodesLoading: boolean;
   linodesError?: Linode.ApiFieldError[];
 }
@@ -148,7 +149,7 @@ interface Props {
   linodeId?: number;
   linodeLabel?: string;
   linodeRegion?: string;
-  linodeConfigs?: Linode.Config[];
+  linodeConfigs?: Config[];
   recentEvent?: Event;
   readOnly?: boolean;
   removeBreadCrumb?: boolean;
@@ -608,12 +609,18 @@ const EmptyCopy = () => (
       <a
         href="https://linode.com/docs/platform/block-storage/how-to-use-block-storage-with-your-linode-new-manager/"
         target="_blank"
+        rel="noopener noreferrer"
         className="h-u"
       >
         Here's how to use Block Storage with your Linode
       </a>
       &nbsp;or&nbsp;
-      <a href="https://www.linode.com/docs/" target="_blank" className="h-u">
+      <a
+        href="https://www.linode.com/docs/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="h-u"
+      >
         visit our guides and tutorials.
       </a>
     </Typography>
@@ -643,7 +650,7 @@ const styled = withStyles(styles);
 
 const addAttachedLinodeInfoToVolume = (
   volume: Volume,
-  linodes: Linode.Linode[]
+  linodes: Linode[]
 ): Volume | ExtendedVolume => {
   if (!volume.linode_id) {
     return volume;

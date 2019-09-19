@@ -1,5 +1,6 @@
 import { Event } from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
+import { LinodeBackups, LinodeStatus } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -20,6 +21,8 @@ import {
 } from 'src/features/linodes/transitions';
 import getLinodeDescription from 'src/utilities/getLinodeDescription';
 import withDisplayType, { WithDisplayType } from '../withDisplayType';
+
+import { filterImagesByType } from 'src/store/image/image.helpers';
 
 type ClassNames =
   | 'root'
@@ -80,7 +83,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  backups: Linode.LinodeBackups;
+  backups: LinodeBackups;
   id: number;
   image: string | null;
   ipv4: string[];
@@ -90,7 +93,7 @@ interface Props {
   disk: number;
   memory: number;
   vcpus: number;
-  status: Linode.LinodeStatus;
+  status: LinodeStatus;
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;
@@ -101,7 +104,7 @@ interface Props {
 }
 
 interface WithImagesProps {
-  imagesData: Image[];
+  imagesData: Record<string, Image>;
 }
 
 type CombinedProps = Props &
@@ -184,7 +187,7 @@ const enhanced = compose<CombinedProps, Props>(
   withDisplayType,
   withImages((ownProps, imagesData, imagesLoading) => ({
     ...ownProps,
-    imagesData: imagesData.filter(i => i.is_public === true)
+    imagesData: filterImagesByType(imagesData, 'public')
   })),
   styled
 );

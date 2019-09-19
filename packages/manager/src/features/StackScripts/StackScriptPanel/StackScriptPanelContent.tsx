@@ -1,4 +1,9 @@
 import { Image } from 'linode-js-sdk/lib/images';
+import {
+  deleteStackScript,
+  StackScript,
+  updateStackScript
+} from 'linode-js-sdk/lib/stackscripts';
 import * as React from 'react';
 import { compose } from 'recompose';
 import StackScriptBase, {
@@ -10,10 +15,6 @@ import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
-import {
-  deleteStackScript,
-  updateStackScript
-} from 'src/services/stackscripts';
 
 interface DialogVariantProps {
   open: boolean;
@@ -33,12 +34,12 @@ interface State {
 
 interface Props {
   currentUser: string;
-  publicImages: Image[];
+  publicImages: Record<string, Image>;
   request: (
     username: string,
     params?: any,
     filter?: any
-  ) => Promise<Linode.ResourcePage<Linode.StackScript.Response>>;
+  ) => Promise<Linode.ResourcePage<StackScript>>;
   category: string;
 }
 

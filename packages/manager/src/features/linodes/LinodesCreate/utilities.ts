@@ -1,4 +1,5 @@
 import { Image } from 'linode-js-sdk/lib/images';
+import { Linode } from 'linode-js-sdk/lib/linodes';
 import { displayType } from 'src/features/linodes/presentation';
 import { ExtendedType } from './SelectPlanPanel';
 import { ExtendedLinode } from './types';
@@ -7,15 +8,13 @@ import { ExtendedLinode } from './types';
  * adds a heading and subheading key to the Linode
  */
 export const extendLinodes = (
-  linodes: Linode.Linode[],
-  imagesData: Image[] = [],
+  linodes: Linode[],
+  imagesData: Record<string, Image> = {},
   typesData: ExtendedType[] = []
 ): ExtendedLinode[] => {
   return linodes.map(linode => {
     /** get image data based on the Linode's image key */
-    const linodeImageMetaData = imagesData.find(
-      eachImage => eachImage.id === linode.image
-    );
+    const linodeImageMetaData = imagesData[linode.image || ''];
 
     return {
       ...linode,
@@ -39,7 +38,7 @@ export const formatLinodeSubheading = (
 };
 
 export const getRegionIDFromLinodeID = (
-  linodes: Linode.Linode[],
+  linodes: Linode[],
   id: number
 ): string | undefined => {
   const thisLinode = linodes.find(linode => linode.id === id);

@@ -1,6 +1,7 @@
 import * as Bluebird from 'bluebird';
 import produce from 'immer';
 import { Domain } from 'linode-js-sdk/lib/domains';
+import { Linode } from 'linode-js-sdk/lib/linodes';
 import { isEmpty } from 'ramda';
 import { Action, Reducer } from 'redux';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
@@ -106,7 +107,7 @@ export const tagImportDrawer: Reducer<State> = (
  *  errors: TagError[] Accumulated errors.
  * }
  */
-const createAccumulator = <T extends Linode.Linode | Domain>(
+const createAccumulator = <T extends Linode | Domain>(
   entityType: 'linode' | 'domain',
   dispatch: ThunkDispatch<ApplicationState, undefined, Action>
 ) => (accumulator: Accumulator<T>, entity: GroupImportProps) => {
@@ -114,7 +115,7 @@ const createAccumulator = <T extends Linode.Linode | Domain>(
   const tags = [...entity.tags, entity.group!.toLowerCase()];
 
   const action: ThunkAction<
-    Promise<Linode.Linode | Domain>,
+    Promise<Linode | Domain>,
     ApplicationState,
     undefined,
     Action
@@ -157,7 +158,7 @@ const createAccumulator = <T extends Linode.Linode | Domain>(
  *
  */
 const handleAccumulatedResponsesAndErrors = (
-  linodeResponses: Accumulator<Linode.Linode>,
+  linodeResponses: Accumulator<Linode>,
   domainResponses: Accumulator<Domain>,
   dispatch: ThunkDispatch<ApplicationState, undefined, Action>
 ) => {
@@ -180,10 +181,7 @@ export const addTagsToEntities: ImportGroupsAsTagsThunk = () => (
   dispatch(importTagsActions.started());
   const entities = getEntitiesWithGroupsToImport(getState());
 
-  const linodeAccumulator = createAccumulator<Linode.Linode>(
-    'linode',
-    dispatch
-  );
+  const linodeAccumulator = createAccumulator<Linode>('linode', dispatch);
   const domainAccumulator = createAccumulator<Domain>('domain', dispatch);
 
   Bluebird.join(

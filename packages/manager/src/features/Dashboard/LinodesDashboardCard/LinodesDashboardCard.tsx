@@ -1,4 +1,5 @@
 import { Entity, Event } from 'linode-js-sdk/lib/account';
+import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
 import { compose, path, pathOr, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -66,7 +67,7 @@ const styles = (theme: Theme) =>
   });
 
 interface ConnectedProps {
-  types: Linode.LinodeType[];
+  types: LinodeType[];
 }
 
 type CombinedProps = ConnectedProps &
@@ -182,7 +183,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
 const styled = withStyles(styles);
 
 interface WithTypesProps {
-  typesData: Linode.LinodeType[];
+  typesData: LinodeType[];
 }
 
 const withTypes = connect((state: ApplicationState, ownProps) => ({
@@ -209,7 +210,7 @@ const withUpdatingLinodes = connect((state: ApplicationState, ownProps: {}) => {
   };
 });
 
-const mergeEvents = (events: Event[]) => (linodes: Linode.Linode[]) =>
+const mergeEvents = (events: Event[]) => (linodes: Linode[]) =>
   events.reduce((updatedLinodes, event) => {
     if (isWantedEvent(event)) {
       return updatedLinodes.map(linode =>

@@ -7,7 +7,7 @@ const MyComponent = props => {
 
   const [selectedLinode, setSelectedLinode] = React.useState<number | undefined>(undefined);
 
-  const handleSelect = (linode: Linode.Linode) => {
+  const handleSelect = (linode: Linode) => {
     setSelectedLinode(linode.id)
   }
 
@@ -30,7 +30,7 @@ const MyComponent = props => {
 
   const [selectedLinode, setSelectedLinode] = React.useState<number | undefined>(undefined);
 
-  const handleSelect = (linode: Linode.Linode) => {
+  const handleSelect = (linode: Linode) => {
     setSelectedLinode(linode.id)
   }
 

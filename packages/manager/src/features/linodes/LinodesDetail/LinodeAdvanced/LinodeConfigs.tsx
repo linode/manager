@@ -1,3 +1,4 @@
+import { Config, linodeReboot } from 'linode-js-sdk/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -26,7 +27,6 @@ import {
   DeleteLinodeConfig,
   withLinodeDetailContext
 } from 'src/features/linodes/LinodesDetail/linodeDetailContext';
-import { linodeReboot } from 'src/services/linodes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import LinodeConfigActionMenu from '../LinodeSettings/LinodeConfigActionMenu';
 import LinodeConfigDrawer from '../LinodeSettings/LinodeConfigDrawer';
@@ -193,7 +193,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
     });
   };
 
-  openForEditing = (config: Linode.Config) => {
+  openForEditing = (config: Config) => {
     this.setConfigDrawer({
       open: true,
       linodeConfigId: config.id
@@ -303,7 +303,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
     );
   };
 
-  renderConfigTableContent = (data: Linode.Config[]) => {
+  renderConfigTableContent = (data: Config[]) => {
     return data.map(config => (
       <TableRow key={config.id} data-qa-config={config.label}>
         <TableCell>{config.label}</TableCell>
@@ -338,7 +338,7 @@ interface LinodeContext {
   linodeTotalDisk: number;
   deleteLinodeConfig: DeleteLinodeConfig;
   readOnly: boolean;
-  configs: Linode.Config[];
+  configs: Config[];
   getLinodeConfigs: () => void;
 }
 

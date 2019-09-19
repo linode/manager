@@ -1,4 +1,5 @@
 const { constants } = require('../../constants');
+const { assertLog } = require('../../utils/assertionLog')
 
 import {
     apiCreateMultipleLinodes,
@@ -31,11 +32,11 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
 
     const getLinodeOptions = () => {
         VolumeDetail.selectLinodeOrVolume.click();
-        VolumeDetail.selectOption.waitForVisible(constants.wait.normal);
+        VolumeDetail.selectOption.waitForDisplayed(constants.wait.normal);
         const linodes = VolumeDetail.selectOptions.map(option => option.getText());
         const justLinodes = linodes.filter(options => options != 'Select a Linode');
         $('body').click();
-        VolumeDetail.selectOption.waitForVisible(constants.wait.normal, true);
+        VolumeDetail.selectOption.waitForDisplayed(constants.wait.normal, true);
         return justLinodes;
     }
 
@@ -55,7 +56,7 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
 
     it('should display create volumes option in global create menu', () => {
         ListLinodes.globalCreate.click();
-        ListLinodes.addVolumeMenu.waitForVisible(constants.wait.normal);
+        ListLinodes.addVolumeMenu.waitForDisplayed(constants.wait.normal);
     });
 
     it('should display global volume create drawer', () => {
@@ -77,45 +78,47 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
 
     it('should display volume price dynamically based on size', () => {
         [200, 333, 450].forEach( (price) => {
-            $(`${VolumeDetail.size.selector} input`).setValue(price);
+            browser.trySetValue(`${VolumeDetail.size.selector} #size`, price);
             const volumePrice = price * 0.1;
             expect(VolumeDetail.volumePrice.getText()).toEqual(`$${volumePrice.toFixed(2)}`);
             expect(VolumeDetail.volumePriceBillingInterval.getText()).toContain('mo');
         });
     });
 
-    it('should only display linodes in a selected region', () => {
+    //TODO redo this test as we no longer have options for regions like us-east
+    xit('should only display linodes in a selected region', () => {
         checkEnvironment();
         VolumeDetail.selectRegion('us-east');
         browser.pause(500);
         expect(getLinodeOptions()).toEqual([linodeEast.linodeLabel]);
-        browser.debug();
         VolumeDetail.selectRegion('us-central');
         expect(getLinodeOptions()).toEqual([linodeCentral.linodeLabel]);
     });
 
     it('should display a tag input/select field for tagging new volume', () => {
-        expect(VolumeDetail.tagsMultiSelect.isVisible()).toBe(true);
+        expect(VolumeDetail.tagsMultiSelect.isDisplayed()).toBe(true);
         VolumeDetail.closeVolumeDrawer();
     });
 
 
     it('should display form error on create without a label', () => {
         VolumeDetail.createVolume(testVolume, 'header');
-        expect(VolumeDetail.label.$('p').isVisible()).toBe(true);
+        expect(VolumeDetail.label.$('p').isDisplayed()).toBe(true);
         VolumeDetail.closeVolumeDrawer();
     });
 
     it('should display a error notice on create without region', () => {
         testVolume['label'] = `ASD${new Date().getTime()}`;
         VolumeDetail.createVolume(testVolume, 'header');
-        expect(VolumeDetail.region.$('..').$('..').$('p').isVisible()).toBe(true);
+        expect($('#select-a-region-helper-text').isDisplayed())
+          .withContext(`region error ${assertLog.displayed}`)
+          .toBe(true);
         VolumeDetail.closeVolumeDrawer();
     });
 
     it('create a volume in a region with a tag', () => {
         testVolume['label'] = `ASD${new Date().getTime()}`;
-        testVolume['region'] = 'us-east';
+        testVolume['region'] = 'Newark, NJ';
         testVolume['tag'] = `Auto${new Date().getTime()}`;
         VolumeDetail.createVolume(testVolume, 'header');
         VolumeDetail.waitForNotice('Volume scheduled for creation.');
@@ -136,21 +139,23 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
         expect(VolumeDetail.volumeCellLabel.getText()).toContain(testVolume.label);
     });
 
-    it('should display the tags added to the volume', () => {
+    //TODO check if this tag functionality works this way now
+    xit('should display the tags added to the volume', () => {
         VolumeDetail.hoverVolumeTags(testVolume.label);
         VolumeDetail.checkTagsApplied([testVolume.tag]);
     });
 
     it('expected action menu options are displayed for a detached volume', () => {
         const volumeActionMenu = `${VolumeDetail.volumeCellElem.selector} ${VolumeDetail.actionMenu.selector}`;
-        $(volumeActionMenu).waitForVisible(constants.wait.true);
+        $(volumeActionMenu).waitForDisplayed(constants.wait.true);
         $(volumeActionMenu).click();
         VolumeDetail.assertActionMenuItems(false);
         $('body').click();
-        VolumeDetail.actionMenuItem.waitForVisible(constants.wait.normal,true);
+        VolumeDetail.actionMenuItem.waitForDisplayed(constants.wait.normal,true);
     });
 
-    it('can edit volume, update label and add tag', () => {
+    //TODO check if this tag functionality works this way now
+    xit('can edit volume, update label and add tag', () => {
         const tag1 = testVolume.tag
         const tag2 = `Auto-New${timestamp()}`;
         testVolume['label'] = `edit${timestamp()}`;
@@ -167,17 +172,25 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
         testVolume['size'] = 100;
         VolumeDetail.selectActionMenuItemV2(VolumeDetail.volumeCellElem.selector, 'Resize');
         VolumeDetail.resizeVolume(testVolume.size);
-        expect(VolumeDetail.umountCommand.getAttribute('value')).toEqual(`umount /dev/disk/by-id/scsi-0Linode_Volume_${testVolume.label}`);
-        expect(VolumeDetail.fileSystemCheckCommand.getAttribute('value')).toEqual(`e2fsck -f /dev/disk/by-id/scsi-0Linode_Volume_${testVolume.label}`);
-        expect(VolumeDetail.resizeFileSystemCommand.getAttribute('value')).toEqual(`resize2fs /dev/disk/by-id/scsi-0Linode_Volume_${testVolume.label}`);
-        expect(VolumeDetail.mountCommand.getAttribute('value')).toEqual(`mount /dev/disk/by-id/scsi-0Linode_Volume_${testVolume.label} /mnt/${testVolume.label}`);
+        expect(VolumeDetail.umountCommand.getAttribute('value'))
+          .withContext(`${assertLog.incorrectText}`)
+          .toEqual(`umount /dev/disk/by-id/scsi-0Linode_Volume_${testVolume.label}`);
+        expect(VolumeDetail.fileSystemCheckCommand.getAttribute('value'))
+          .withContext(`${assertLog.incorrectText}`)
+          .toEqual(`e2fsck -f /dev/disk/by-id/scsi-0Linode_Volume_${testVolume.label}`);
+        expect(VolumeDetail.resizeFileSystemCommand.getAttribute('value'))
+          .withContext(`${assertLog.incorrectText}`)
+          .toEqual(`resize2fs /dev/disk/by-id/scsi-0Linode_Volume_${testVolume.label}`);
+        expect(VolumeDetail.mountCommand.getAttribute('value'))
+          .withContext(`${assertLog.incorrectText}`)
+          .toEqual(`mount /dev/disk/by-id/scsi-0Linode_Volume_${testVolume.label} /mnt/${testVolume.label}`);
         VolumeDetail.closeVolumeDrawer();
         browser.waitUntil(() => {
             return VolumeDetail.volumeCellSize.getText().includes(testVolume.size);
         }, constants.wait.normal);
     });
 
-    it('can attached a detached volume', () =>  {
+    it('can attach a detached volume', () =>  {
         VolumeDetail.selectActionMenuItemV2(VolumeDetail.volumeCellElem.selector, 'Attach');
         VolumeDetail.attachVolumeFromVolumeLanding(linodeEast.linodeLabel);
         VolumeDetail.toastDisplays('Volume successfully attached.',constants.wait.minute);
@@ -185,11 +198,11 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
 
     it('can detach an attached volume', () => {
         const volumeActionMenu = `${VolumeDetail.volumeCellElem.selector} ${VolumeDetail.actionMenu.selector}`;
-        $(volumeActionMenu).waitForVisible(constants.wait.true);
+        $(volumeActionMenu).waitForDisplayed(constants.wait.true);
         $(volumeActionMenu).click();
         VolumeDetail.assertActionMenuItems(true);
         $('body').click();
-        VolumeDetail.actionMenuItem.waitForVisible(constants.wait.normal,true);
+        VolumeDetail.actionMenuItem.waitForDisplayed(constants.wait.normal,true);
         browser.pause(750);
         VolumeDetail.selectActionMenuItemV2(VolumeDetail.volumeCellElem.selector, 'Detach');
         VolumeDetail.confirmDetachORDelete();

@@ -3,8 +3,9 @@ import {
   deleteNodePool as _deleteNodePool,
   getNodePool,
   getNodePools,
+  KubeNodePoolResponse,
   updateNodePool as _updateNodePool
-} from 'src/services/kubernetes';
+} from 'linode-js-sdk/lib/kubernetes';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
@@ -18,11 +19,11 @@ import {
 } from './nodePools.actions';
 
 const getAllNodePools = (clusterID: number) =>
-  getAll<Linode.KubeNodePoolResponse>(() => getNodePools(clusterID));
+  getAll<KubeNodePoolResponse>(() => getNodePools(clusterID));
 
 export const extendNodePools = (
   clusterID: number,
-  nodePools: Linode.KubeNodePoolResponse[]
+  nodePools: KubeNodePoolResponse[]
 ): ExtendedNodePool[] => {
   /**
    * We store the ID of the associated cluster as part of the entity in the store,
@@ -31,13 +32,13 @@ export const extendNodePools = (
   return nodePools.map(thisPool => extendNodePool(clusterID, thisPool));
 };
 
-const extendNodePool = (
-  clusterID: number,
-  nodePool: Linode.KubeNodePoolResponse
-) => ({ ...nodePool, clusterID });
+const extendNodePool = (clusterID: number, nodePool: KubeNodePoolResponse) => ({
+  ...nodePool,
+  clusterID
+});
 
 export const requestNodePoolsForCluster: ThunkActionCreator<
-  Promise<Linode.KubeNodePoolResponse[]>
+  Promise<KubeNodePoolResponse[]>
 > = ({ clusterID }) => dispatch => {
   dispatch(requestNodePoolsActions.started());
 

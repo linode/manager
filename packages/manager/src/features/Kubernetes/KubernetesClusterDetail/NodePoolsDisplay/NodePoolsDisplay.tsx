@@ -16,6 +16,7 @@ import HelpIcon from 'src/components/HelpIcon';
 import Notice from 'src/components/Notice';
 
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
+import useFlags from 'src/hooks/useFlags';
 import { getErrorMap } from 'src/utilities/errorUtils';
 
 import NodePoolDisplayTable from '../../CreateCluster/NodePoolDisplayTable';
@@ -122,6 +123,8 @@ export const NodePoolsDisplay: React.FunctionComponent<
     updatePool
   } = props;
 
+  const flags = useFlags();
+
   const TooltipText = () => {
     return (
       <>
@@ -205,25 +208,27 @@ export const NodePoolsDisplay: React.FunctionComponent<
               {`$${getTotalClusterPrice(poolsForEdit)}/month`}
             </Typography>
           )}
-          <Grid item container xs={12} className={classes.ctaOuter}>
-            <Button
-              className={classes.button}
-              buttonType="primary"
-              disabled={!editing || submittingForm}
-              loading={submittingForm}
-              onClick={submitForm}
-            >
-              Save
-            </Button>
-            <Button
-              className={classes.button}
-              buttonType="secondary"
-              disabled={!editing}
-              onClick={resetForm}
-            >
-              Clear Changes
-            </Button>
-          </Grid>
+          {(!flags.lkeHideButtons || editing) && (
+            <Grid item container xs={12} className={classes.ctaOuter}>
+              <Button
+                className={classes.button}
+                buttonType="primary"
+                disabled={!editing || submittingForm}
+                loading={submittingForm}
+                onClick={submitForm}
+              >
+                Save
+              </Button>
+              <Button
+                className={classes.button}
+                buttonType="secondary"
+                disabled={!editing}
+                onClick={resetForm}
+              >
+                Clear Changes
+              </Button>
+            </Grid>
+          )}
         </Grid>
       </Grid>
     </Paper>

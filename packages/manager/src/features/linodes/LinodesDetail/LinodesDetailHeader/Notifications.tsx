@@ -1,3 +1,5 @@
+import { Notification } from 'linode-js-sdk/lib/account';
+import { LinodeStatus } from 'linode-js-sdk/lib/linodes';
 import { path } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -26,7 +28,7 @@ const Notifications: React.StatelessComponent<CombinedProps> = props => {
     linodeStatus
   } = props;
 
-  const generateNotificationBody = (notification: Linode.Notification) => {
+  const generateNotificationBody = (notification: Notification) => {
     switch (notification.type) {
       case 'maintenance':
         return (
@@ -79,9 +81,9 @@ const Notifications: React.StatelessComponent<CombinedProps> = props => {
 };
 
 interface ContextProps {
-  linodeNotifications: Linode.Notification[];
+  linodeNotifications: Notification[];
   linodeId: number;
-  linodeStatus: Linode.LinodeStatus;
+  linodeStatus: LinodeStatus;
   maintenance: Maintenance;
 }
 

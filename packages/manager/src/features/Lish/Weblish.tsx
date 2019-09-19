@@ -1,3 +1,4 @@
+import { Linode } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import CircleProgress from 'src/components/CircleProgress';
@@ -32,7 +33,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  linode: Linode.Linode;
+  linode: Linode;
   token: string;
   refreshToken: () => Promise<void> | undefined;
 }

@@ -1,3 +1,4 @@
+import { Config } from 'linode-js-sdk/lib/linodes';
 import * as moment from 'moment-timezone';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { parse, stringify } from 'qs';
@@ -55,7 +56,7 @@ import CSVLink from 'src/components/DownloadCSV';
 interface State {
   powerDialogOpen: boolean;
   powerDialogAction?: Action;
-  selectedLinodeConfigs?: Linode.Config[];
+  selectedLinodeConfigs?: Config[];
   selectedLinodeID?: number;
   selectedLinodeLabel?: string;
   deleteDialogOpen: boolean;
@@ -114,7 +115,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
     bootAction: Action,
     linodeID: number,
     linodeLabel: string,
-    linodeConfigs: Linode.Config[]
+    linodeConfigs: Config[]
   ) => {
     this.setState({
       powerDialogOpen: true,
@@ -369,7 +370,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                           e.specs.disk,
                                           e.specs.vcpus,
                                           '',
-                                          []
+                                          {}
                                         )
                                       };
                                     })}

@@ -1,5 +1,12 @@
-import { Event } from 'linode-js-sdk/lib/account';
+import { Event, Notification } from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
+import {
+  Disk,
+  LinodeSpecs,
+  LinodeStatus,
+  LinodeType,
+  scheduleOrQueueMigration
+} from 'linode-js-sdk/lib/linodes';
 import { APIError as APIErrorType } from 'linode-js-sdk/lib/types';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
@@ -30,8 +37,6 @@ import { linodeInTransition } from '../transitions';
 
 import CautionNotice from './CautionNotice';
 import ConfigureForm from './ConfigureForm';
-
-import { scheduleOrQueueMigration } from 'src/services/linodes/linodeActions.ts';
 
 import withRegions, {
   DefaultProps as RegionProps
@@ -238,14 +243,14 @@ interface LinodeContextProps {
   linodeId: number;
   region: { region: string; countryCode: string };
   label: string;
-  linodeStatus: Linode.LinodeStatus;
-  linodeSpecs: Linode.LinodeSpecs;
+  linodeStatus: LinodeStatus;
+  linodeSpecs: LinodeSpecs;
   linodeEvents: Event[];
   type: string | null;
   image: Image;
   linodeVolumes: Volume[];
   recentEvents: Event[];
-  linodeDisks: Linode.Disk[];
+  linodeDisks: Disk[];
 }
 
 const linodeContext = withLinodeDetailContext(({ linode }) => ({
@@ -266,9 +271,9 @@ const linodeContext = withLinodeDetailContext(({ linode }) => ({
 }));
 
 interface WithTypesAndImages {
-  types: Linode.LinodeType[];
-  images: Image[];
-  notifications: Linode.Notification[];
+  types: LinodeType[];
+  notifications: Notification[];
+  images: Record<string, Image>;
 }
 
 const mapStateToProps: MapStateToProps<
@@ -277,7 +282,7 @@ const mapStateToProps: MapStateToProps<
   ApplicationState
 > = (state, ownProps) => ({
   types: state.__resources.types.entities,
-  images: state.__resources.images.entities,
+  images: state.__resources.images.data,
   notifications: state.__resources.notifications.data || []
 });
 
@@ -294,7 +299,7 @@ const getDisabledReason = (
   events: Event[],
   linodeStatus: string,
   linodeID: number,
-  notifications: Linode.Notification[]
+  notifications: Notification[]
 ) => {
   if (events[0]) {
     if (
