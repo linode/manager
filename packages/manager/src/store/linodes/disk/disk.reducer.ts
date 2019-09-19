@@ -70,6 +70,15 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     return onCreateOrUpdate(result, state);
   }
 
+  if (isType(action, deleteLinodeDiskActions.started)) {
+    return onError<MappedEntityState<Entity, EntityError>, EntityError>(
+      {
+        delete: undefined
+      },
+      state
+    );
+  }
+
   if (isType(action, deleteLinodeDiskActions.done)) {
     const {
       params: { diskId: DiskId }

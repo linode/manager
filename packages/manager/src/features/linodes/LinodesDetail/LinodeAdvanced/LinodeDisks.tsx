@@ -177,10 +177,10 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
 
   componentDidUpdate(prevProps: CombinedProps) {
     if (
-      prevProps.diskDeleteError &&
+      this.props.diskDeleteError &&
       prevProps.diskDeleteError !== this.props.diskDeleteError
     ) {
-      this.props.enqueueSnackbar(prevProps.diskDeleteError[0].reason, {
+      this.props.enqueueSnackbar(this.props.diskDeleteError[0].reason, {
         variant: 'error'
       });
     }
