@@ -8,9 +8,9 @@ describe('Create Linode - Configure Linode Suite', () => {
   });
 
   beforeEach(() => {
-    browser.refresh()
+    browser.refresh();
     $('[data-qa-create-linode-header]').waitForDisplayed(constants.wait.short);
-  })
+  });
 
   it('should display configure elements', () => {
     ConfigureLinode.baseDisplay();
@@ -29,8 +29,7 @@ describe('Create Linode - Configure Linode Suite', () => {
   });
 
   it('should configure a generic linode and update cost summary', () => {
-
-    const genericPrice = CheckoutSummary.costSummary.getText()
+    const genericPrice = CheckoutSummary.costSummary.getText();
     const genericType = ConfigureLinode.planNames[0].getText();
     ConfigureLinode.generic();
     const genericImage = ConfigureLinode.imageName.getText();
@@ -47,7 +46,6 @@ describe('Create Linode - Configure Linode Suite', () => {
   });
 
   it('should display a region select', () => {
-
     expect(ConfigureLinode.regionSelect.isDisplayed())
       .withContext(`region select should be displayed`)
       .toBe(true);
@@ -55,7 +53,7 @@ describe('Create Linode - Configure Linode Suite', () => {
 
   it('should select a specific image', () => {
     const imageName = 'CentOS 7';
-    browser.enhancedSelect(ConfigureLinode.imageDistro.selector, imageName)
+    browser.enhancedSelect(ConfigureLinode.imageDistro.selector, imageName);
 
     expect(CheckoutSummary.imageDetailDisplays(imageName))
       .withContext(`distribution name ${imageName} should be displayed`)

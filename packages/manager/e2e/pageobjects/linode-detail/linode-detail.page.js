@@ -4,23 +4,57 @@ const { assertLog } = require('../../utils/assertionLog');
 import Page from '../page';
 
 class LinodeDetail extends Page {
-  get title() { return this.pageTitle; }
-  get summaryTab() { return $('[data-qa-tab="Summary"]'); }
-  get volumesTab() { return $('[data-qa-tab="Volumes"]'); }
-  get networkingTab() { return $('[data-qa-tab="Networking"]'); }
-  get resizeTab() { return $('[data-qa-tab="Resize"]'); }
-  get rescueTab() { return $('[data-qa-tab="Rescue"]'); }
-  get rebuildTab() { return $('[data-qa-tab="Rebuild"]'); }
-  get backupTab() { return $('[data-qa-tab="Backups"]'); }
-  get settingsTab() { return $('[data-qa-tab="Settings"]'); }
-  get launchConsole() { return $('[data-qa-launch-console]'); }
-  get powerControl() { return $('[data-qa-power-control]'); }
-  get setPowerReboot() { return $('[data-qa-set-power="reboot"]'); }
-  get setPowerOff() { return $('[data-qa-set-power="powerOff"]'); }
-  get setPowerOn() { return $('[data-qa-set-power="powerOn"]'); }
-  get tagsMultiSelect() { return $('[data-qa-tags-multiselect]'); }
-  get linodeLabel() { return $(this.breadcrumbEditableText.selector); }
-  get editLabel() { return $(this.breadcrumbEditableText.selector); }
+  get title() {
+    return this.pageTitle;
+  }
+  get summaryTab() {
+    return $('[data-qa-tab="Summary"]');
+  }
+  get volumesTab() {
+    return $('[data-qa-tab="Volumes"]');
+  }
+  get networkingTab() {
+    return $('[data-qa-tab="Networking"]');
+  }
+  get resizeTab() {
+    return $('[data-qa-tab="Resize"]');
+  }
+  get rescueTab() {
+    return $('[data-qa-tab="Rescue"]');
+  }
+  get rebuildTab() {
+    return $('[data-qa-tab="Rebuild"]');
+  }
+  get backupTab() {
+    return $('[data-qa-tab="Backups"]');
+  }
+  get settingsTab() {
+    return $('[data-qa-tab="Settings"]');
+  }
+  get launchConsole() {
+    return $('[data-qa-launch-console]');
+  }
+  get powerControl() {
+    return $('[data-qa-power-control]');
+  }
+  get setPowerReboot() {
+    return $('[data-qa-set-power="reboot"]');
+  }
+  get setPowerOff() {
+    return $('[data-qa-set-power="powerOff"]');
+  }
+  get setPowerOn() {
+    return $('[data-qa-set-power="powerOn"]');
+  }
+  get tagsMultiSelect() {
+    return $('[data-qa-tags-multiselect]');
+  }
+  get linodeLabel() {
+    return $(this.breadcrumbEditableText.selector);
+  }
+  get editLabel() {
+    return $(this.breadcrumbEditableText.selector);
+  }
 
   changeName(name) {
     this.linodeLabel.waitForDisplayed();
@@ -30,12 +64,14 @@ class LinodeDetail extends Page {
     this.breadcrumbEditableText.$('input').setValue(name);
     this.breadcrumbSaveEdit.click();
     browser.waitUntil(function() {
-        return this.linodeLabel.getText() === name;
+      return this.linodeLabel.getText() === name;
     }, constants.wait.normal);
   }
 
   setPower(powerState) {
-    const currentPowerState = this.powerControl.getAttribute('data-qa-power-control');
+    const currentPowerState = this.powerControl.getAttribute(
+      'data-qa-power-control'
+    );
 
     browser.jsClick('[data-qa-power-control]');
     $(`[data-qa-set-power="${powerState}"]`).click();
@@ -44,7 +80,7 @@ class LinodeDetail extends Page {
       this.dialogTitle.waitForDisplayed(constants.wait.normal);
       $('[data-qa-confirm-cancel]').click();
       browser.waitUntil(function() {
-          return $('[data-qa-power-control="offline"]').isDisplayed();
+        return $('[data-qa-power-control="offline"]').isDisplayed();
       }, constants.wait.minute * 3);
       return;
     }
@@ -87,10 +123,8 @@ class LinodeDetail extends Page {
       .withContext(`${this.linodeLabel.selector} ${assertLog.displayed}`)
       .toBe(true);
 
-      return this;
+    return this;
   }
-
-
 }
 
 export default new LinodeDetail();
