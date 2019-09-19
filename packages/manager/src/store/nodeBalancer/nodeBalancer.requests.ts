@@ -37,9 +37,10 @@ export const getAllNodeBalancers = createRequestThunk(
  * include the newly created configs or nodes. In order to keep the state updated, we manually
  * request the configs after successful creation.
  */
-export const createNodeBalancer: ThunkActionCreator<Promise<NodeBalancer>> = (
-  params: CreateNodeBalancerParams
-) => dispatch => {
+export const createNodeBalancer: ThunkActionCreator<
+  Promise<NodeBalancer>,
+  CreateNodeBalancerParams
+> = params => dispatch => {
   const { started, done, failed } = createNodeBalancersActions;
 
   dispatch(started(params));
@@ -59,9 +60,10 @@ export const createNodeBalancer: ThunkActionCreator<Promise<NodeBalancer>> = (
     });
 };
 
-export const deleteNodeBalancer: ThunkActionCreator<Promise<{}>> = (params: {
-  nodeBalancerId: number;
-}) => dispatch => {
+export const deleteNodeBalancer: ThunkActionCreator<
+  Promise<{}>,
+  { nodeBalancerId: number }
+> = params => dispatch => {
   const { nodeBalancerId } = params;
   const { started, done, failed } = deleteNodeBalancerActions;
 
@@ -111,8 +113,9 @@ export const getAllNodeBalancersWithConfigs: ThunkActionCreator<
 };
 
 export const getNodeBalancerWithConfigs: ThunkActionCreator<
-  Promise<NodeBalancer>
-> = (params: GetNodeBalancerWithConfigsParams) => async dispatch => {
+  Promise<NodeBalancer>,
+  GetNodeBalancerWithConfigsParams
+> = params => async dispatch => {
   const { nodeBalancerId } = params;
   const { started, done, failed } = getNodeBalancerWithConfigsActions;
 

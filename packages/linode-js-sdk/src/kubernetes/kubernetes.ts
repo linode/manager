@@ -33,7 +33,7 @@ export const getKubernetesClusters = (params?: any, filters?: any) =>
  *
  * Return details about a single Kubernetes cluster
  */
-export const getKubernetesCluster = (clusterID: string) =>
+export const getKubernetesCluster = (clusterID: number) =>
   Request<KubernetesCluster>(
     setMethod('GET'),
     setURL(`${BETA_API_ROOT}/lke/clusters/${clusterID}`)

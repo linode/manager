@@ -7,7 +7,8 @@ import {
 } from './notification.actions';
 
 export const requestNotifications: ThunkActionCreator<
-  Promise<Notification[]>
+  Promise<Notification[]>,
+  void
 > = () => dispatch => {
   dispatch(startRequest());
   return getNotifications()

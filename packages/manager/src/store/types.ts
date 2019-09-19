@@ -36,11 +36,11 @@ export interface EntityError {
  */
 export type ParamType<F> = F extends (args: infer A) => any
   ? A extends undefined | null
-    ? [any?]
-    : [A]
-  : [any?];
+    ? void
+    : A
+  : void;
 
-export type R<A, Params> = (...args: ParamType<(args: Params) => A>) => A;
+export type R<A, Params> = (args: ParamType<(args: Params) => A>) => A;
 
 export type ThunkActionCreator<T, Params = undefined> = R<
   ThunkResult<T>,

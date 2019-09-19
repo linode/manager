@@ -38,7 +38,8 @@ const extendNodePool = (clusterID: number, nodePool: KubeNodePoolResponse) => ({
 });
 
 export const requestNodePoolsForCluster: ThunkActionCreator<
-  Promise<KubeNodePoolResponse[]>
+  Promise<KubeNodePoolResponse[]>,
+  { clusterID: number }
 > = ({ clusterID }) => dispatch => {
   dispatch(requestNodePoolsActions.started());
 
@@ -60,7 +61,10 @@ export const requestNodePoolsForCluster: ThunkActionCreator<
     });
 };
 
-type RequestNodePoolForStoreThunk = ThunkActionCreator<void>;
+type RequestNodePoolForStoreThunk = ThunkActionCreator<
+  void,
+  { clusterID: number; nodePoolID: number }
+>;
 export const requestNodePoolForStore: RequestNodePoolForStoreThunk = ({
   clusterID,
   nodePoolID
