@@ -55,8 +55,7 @@ type ClassNames =
   | 'currentPlanContainer'
   | 'resizeTitle'
   | 'checkbox'
-  | 'currentHeaderEmptyCell'
-  | 'currentHeaderPlanCell';
+  | 'currentHeaderEmptyCell';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -92,9 +91,6 @@ const styles = (theme: Theme) =>
     },
     currentHeaderEmptyCell: {
       width: '13%'
-    },
-    currentHeaderPlanCell: {
-      width: '26%'
     }
   });
 
@@ -291,9 +287,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
                     <TableHead>
                       <TableRow>
                         <TableCell className={classes.currentHeaderEmptyCell} />
-                        <TableCell className={classes.currentHeaderPlanCell}>
-                          Linode Plan
-                        </TableCell>
+                        <TableCell>Linode Plan</TableCell>
                         <TableCell>Monthly</TableCell>
                         <TableCell>Hourly</TableCell>
                         <TableCell>CPUs</TableCell>

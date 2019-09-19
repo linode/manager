@@ -41,8 +41,7 @@ describe('LinodeResize', () => {
         resizeTitle: '',
         toolTip: '',
         checkbox: '',
-        currentHeaderEmptyCell: '',
-        currentHeaderPlanCell: ''
+        currentHeaderEmptyCell: ''
       }}
       linodeId={12}
       permissions={{} as any}
@@ -72,8 +71,7 @@ describe('LinodeResize', () => {
                 checkbox: '',
                 resizeTitle: '',
                 toolTip: '',
-                currentHeaderEmptyCell: '',
-                currentHeaderPlanCell: ''
+                currentHeaderEmptyCell: ''
               }}
               linodeId={12}
               permissions={{} as any}
@@ -116,8 +114,7 @@ describe('LinodeResize', () => {
                     checkbox: '',
                     resizeTitle: '',
                     toolTip: '',
-                    currentHeaderEmptyCell: '',
-                    currentHeaderPlanCell: ''
+                    currentHeaderEmptyCell: ''
                   }}
                   linodeId={12}
                   linodeType={null}
@@ -162,8 +159,7 @@ describe('LinodeResize', () => {
                     checkbox: '',
                     resizeTitle: '',
                     toolTip: '',
-                    currentHeaderEmptyCell: '',
-                    currentHeaderPlanCell: ''
+                    currentHeaderEmptyCell: ''
                   }}
                   linodeId={12}
                   permissions={{} as any}
