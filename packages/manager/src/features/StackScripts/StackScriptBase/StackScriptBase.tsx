@@ -4,6 +4,7 @@ import { StackScript } from 'linode-js-sdk/lib/stackscripts';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import Waypoint from 'react-waypoint';
 import { compose } from 'recompose';
 import StackScriptsIcon from 'src/assets/addnewmenu/stackscripts.svg';
@@ -71,6 +72,7 @@ interface StoreProps {
 }
 
 type CombinedProps = StyleProps &
+  RouteComponentProps &
   StoreProps & {
     publicImages: Record<string, Image>;
     currentUser: string;
@@ -289,6 +291,11 @@ const withStackScriptBase = (isSelecting: boolean) => (
       });
     };
 
+    goToCreateStackScript = () => {
+      const { history } = this.props;
+      history.push('/stackscripts/create');
+    };
+
     handleSearch = (value: string) => {
       const { currentFilter } = this.state;
       const { category, currentUser, request, stackScriptGrants } = this.props;
@@ -418,7 +425,11 @@ const withStackScriptBase = (isSelecting: boolean) => (
       }
 
       if (this.state.loading) {
-        return <CircleProgress noTopMargin />;
+        return (
+          <div className={classes.loaderWrapper}>
+            <CircleProgress />
+          </div>
+        );
       }
 
       return (
@@ -450,8 +461,8 @@ const withStackScriptBase = (isSelecting: boolean) => (
                   copy={<EmptyCopy />}
                   buttonProps={[
                     {
-                      href: '/stackscripts/create',
-                      children: 'Create a StackScript'
+                      children: 'Create New StackScript',
+                      onClick: () => this.goToCreateStackScript()
                     }
                   ]}
                   className={classes.stackscriptPlaceholder}
@@ -590,8 +601,9 @@ const withStackScriptBase = (isSelecting: boolean) => (
   const connected = connect(mapStateToProps);
 
   return compose(
-    withStyles,
-    connected
+    withRouter,
+    connected,
+    withStyles
   )(EnhancedComponent);
 };
 
