@@ -1,3 +1,4 @@
+import { Notification } from 'linode-js-sdk/lib/account';
 import { compose, path } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
@@ -23,7 +24,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  notifications: Linode.Notification[];
+  notifications: Notification[];
   closeMenu: () => void;
 }
 
@@ -66,9 +67,7 @@ class UserNotificationsList extends React.Component<CombinedProps, {}> {
   }
 }
 
-const interceptNotification = (
-  notification: Linode.Notification
-): Linode.Notification => {
+const interceptNotification = (notification: Notification): Notification => {
   /** this is an outage to one of the datacenters */
   if (
     notification.type === 'outage' &&
@@ -124,7 +123,7 @@ const interceptNotification = (
 };
 
 const createClickHandlerForNotification = (
-  notification: Linode.Notification,
+  notification: Notification,
   onClick: (path: string) => void
 ) => {
   /**

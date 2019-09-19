@@ -66,7 +66,7 @@ class AccountLanding extends React.Component<Props> {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Account Settings" />
-        <TaxBanner location={location} />
+        <TaxBanner location={location} marginBottom={24} />
         <Breadcrumb
           pathname={location.pathname}
           labelTitle="Account"

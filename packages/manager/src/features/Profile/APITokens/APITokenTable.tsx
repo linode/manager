@@ -1,3 +1,12 @@
+import {
+  createPersonalAccessToken,
+  deleteAppToken,
+  deletePersonalAccessToken,
+  getAppTokens,
+  getPersonalAccessTokens,
+  Token,
+  updatePersonalAccessToken
+} from 'linode-js-sdk/lib/profile';
 import * as moment from 'moment';
 import { compose } from 'ramda';
 import * as React from 'react';
@@ -26,14 +35,6 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
-import {
-  createPersonalAccessToken,
-  deleteAppToken,
-  deletePersonalAccessToken,
-  getAppTokens,
-  getPersonalAccessTokens,
-  updatePersonalAccessToken
-} from 'src/services/profile';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import isPast from 'src/utilities/isPast';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -62,7 +63,7 @@ const styles = (theme: Theme) =>
 export type APITokenType = 'OAuth Client Token' | 'Personal Access Token';
 export type APITokenTitle = 'Apps' | 'Personal Access Tokens';
 
-interface Props extends PaginationProps<Linode.Token> {
+interface Props extends PaginationProps<Token> {
   type: APITokenType;
   title: APITokenTitle;
 }
@@ -100,7 +101,7 @@ interface State {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-export const filterOutLinodeApps = (token: Linode.Token) =>
+export const filterOutLinodeApps = (token: Token) =>
   !token.website || !/.linode.com$/.test(token.website);
 
 export class APITokenTable extends React.Component<CombinedProps, State> {
@@ -145,7 +146,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     });
   };
 
-  openViewDrawer = (token: Linode.Token) => {
+  openViewDrawer = (token: Token) => {
     this.setState({
       form: {
         ...APITokenTable.defaultState.form,
@@ -161,7 +162,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     });
   };
 
-  openEditDrawer = (token: Linode.Token) => {
+  openEditDrawer = (token: Token) => {
     this.setState({
       form: {
         ...APITokenTable.defaultState.form,
@@ -188,7 +189,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     });
   };
 
-  openRevokeDialog = (token: Linode.Token, type: string) => {
+  openRevokeDialog = (token: Token, type: string) => {
     const { label, id } = token;
     this.setState({
       dialog: {
@@ -442,10 +443,10 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     );
   }
 
-  renderRows(tokens: Linode.Token[]) {
+  renderRows(tokens: Token[]) {
     const { title, type } = this.props;
 
-    return tokens.map((token: Linode.Token) => (
+    return tokens.map((token: Token) => (
       <TableRow key={token.id} data-qa-table-row={token.label}>
         <TableCell parentColumn="Label">
           <Typography variant="h3" data-qa-token-label>

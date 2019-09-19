@@ -1,5 +1,6 @@
 import * as classNames from 'classnames';
 import produce from 'immer';
+import { PoolNodeResponse } from 'linode-js-sdk/lib/kubernetes';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Button from 'src/components/Button';
@@ -17,6 +18,7 @@ import TableRow from 'src/components/TableRow';
 import TextField from 'src/components/TextField';
 import { ExtendedType } from 'src/features/linodes/LinodesCreate/SelectPlanPanel';
 import { displayTypeForKubePoolNode } from 'src/features/linodes/presentation';
+import useFlags from 'src/hooks/useFlags';
 import { getErrorMap } from 'src/utilities/errorUtils';
 import { PoolNodeWithPrice } from '.././types';
 
@@ -25,6 +27,7 @@ type ClassNames =
   | 'link'
   | 'error'
   | 'toDelete'
+  | 'regularCell'
   | 'toAdd'
   | 'disabled'
   | 'removeButton'
@@ -54,7 +57,8 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.down('sm')]: {
         justifyContent: 'flex-end !important' as 'flex-end',
         padding: 0,
-        paddingRight: '0 !important' as '0'
+        paddingRight: '0 !important' as '0',
+        width: '10%'
       }
     },
     editableCount: {
@@ -67,7 +71,11 @@ const styles = (theme: Theme) =>
     },
     priceTableCell: {
       // prevents position shift as price grows/shrinks
-      minWidth: 130
+      minWidth: 130,
+      width: '20%'
+    },
+    regularCell: {
+      width: '25%'
     }
   });
 
@@ -87,7 +95,7 @@ export interface NodeStatus {
   not_ready: number;
 }
 
-export const getNodeStatus = (linodes: Linode.PoolNodeResponse[]) => {
+export const getNodeStatus = (linodes: PoolNodeResponse[]) => {
   return produce<NodeStatus, NodeStatus>({ ready: 0, not_ready: 0 }, draft => {
     linodes.forEach(thisLinode => {
       draft[thisLinode.status]++;
@@ -97,7 +105,7 @@ export const getNodeStatus = (linodes: Linode.PoolNodeResponse[]) => {
 
 export const getStatusString = (
   count: number,
-  linodes?: Linode.PoolNodeResponse[]
+  linodes?: PoolNodeResponse[]
 ) => {
   if (!count) {
     return '';
@@ -111,6 +119,7 @@ export const getStatusString = (
 
 export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
   const { classes, editable, pool, idx, deletePool, type, updatePool } = props;
+  const flags = useFlags();
 
   if (editable && !(updatePool && deletePool)) {
     // Checking for conditionally required props
@@ -142,10 +151,10 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
         [classes.error]: Boolean(errorMap.none)
       })}
     >
-      <TableCell parentColumn="Plan">
+      <TableCell parentColumn="Plan" className={classes.regularCell}>
         <Typography>{typeLabel}</Typography>
       </TableCell>
-      <TableCell parentColumn="Node Count">
+      <TableCell parentColumn="Node Count" className={classes.regularCell}>
         {editable ? (
           <TextField
             small
@@ -171,18 +180,19 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
         <Typography>{`${displayPrice(pool.totalMonthlyPrice)}/mo`}</Typography>
       </TableCell>
       <TableCell className={classes.removeButtonWrapper}>
-        <Button
-          buttonType="remove"
-          disabled={!editable}
-          deleteText={pool.queuedForDeletion ? 'Undo Remove' : 'Remove'}
-          data-testid={`delete-node-row-${idx}`}
-          onClick={() => handleDelete(idx)}
-          className={classNames({
-            [classes.link]: true,
-            [classes.disabled]: !editable,
-            [classes.removeButton]: true
-          })}
-        />
+        {(!flags.lkeHideButtons || editable) && (
+          <Button
+            buttonType="remove"
+            deleteText={pool.queuedForDeletion ? 'Undo Remove' : 'Remove'}
+            data-testid={`delete-node-row-${idx}`}
+            onClick={() => handleDelete(idx)}
+            className={classNames({
+              [classes.link]: true,
+              [classes.disabled]: !editable,
+              [classes.removeButton]: true
+            })}
+          />
+        )}
       </TableCell>
     </TableRow>
   );

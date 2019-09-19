@@ -1,3 +1,4 @@
+import { LinodeStatus } from 'linode-js-sdk/lib/linodes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { OptionProps } from 'react-select/lib/components/Option';
@@ -14,7 +15,7 @@ export interface SearchSuggestionT {
   history: any;
   tags?: string[];
   isHighlighted?: boolean;
-  status?: Linode.LinodeStatus;
+  status?: LinodeStatus;
 }
 
 interface Props extends OptionProps<any> {

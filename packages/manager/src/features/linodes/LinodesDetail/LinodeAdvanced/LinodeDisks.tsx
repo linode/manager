@@ -1,3 +1,4 @@
+import { Disk } from 'linode-js-sdk/lib/linodes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -115,7 +116,7 @@ interface ImagizeDrawerState {
   open: boolean;
   description?: string;
   label?: string;
-  disk?: Linode.Disk;
+  disk?: Disk;
 }
 
 interface State {
@@ -246,7 +247,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     );
   }
 
-  renderTableContent = (data: Linode.Disk[], status?: string) => {
+  renderTableContent = (data: Disk[], status?: string) => {
     const { linodeId, readOnly } = this.props;
 
     return data.map(disk => (
@@ -319,7 +320,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     );
   };
 
-  openConfirmDelete = (disk: Linode.Disk) => () => {
+  openConfirmDelete = (disk: Disk) => () => {
     this.setConfirmDelete({
       open: true,
       submitting: false,
@@ -365,7 +366,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     );
   };
 
-  openImagizeDrawer = (disk: Linode.Disk) => () => {
+  openImagizeDrawer = (disk: Disk) => () => {
     this.setImagizeDrawer({
       ...defaultImagizeDrawerState,
       open: true,
@@ -594,7 +595,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     filesystem,
     label,
     size
-  }: Linode.Disk) => () => {
+  }: Disk) => () => {
     this.setDrawer({
       diskId,
       errors: undefined,
@@ -614,7 +615,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     filesystem,
     label,
     size
-  }: Linode.Disk) => () => {
+  }: Disk) => () => {
     this.setDrawer({
       diskId,
       errors: undefined,
@@ -662,7 +663,7 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
     }
     return (
       linodeTotalDisk -
-      disks.reduce((acc: number, disk: Linode.Disk) => {
+      disks.reduce((acc: number, disk: Disk) => {
         return diskId === disk.id ? acc : acc + disk.size;
       }, 0)
     );
@@ -680,7 +681,7 @@ interface LinodeContextProps {
   createLinodeDisk: CreateLinodeDisk;
   resizeLinodeDisk: ResizeLinodeDisk;
   readOnly: boolean;
-  disks: Linode.Disk[];
+  disks: Disk[];
 }
 
 const linodeContext = withLinodeDetailContext(

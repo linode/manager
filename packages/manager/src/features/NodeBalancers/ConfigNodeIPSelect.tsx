@@ -1,3 +1,4 @@
+import { Linode } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -22,7 +23,7 @@ const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
     null
   );
 
-  const handleChange = (linode: Linode.Linode) => {
+  const handleChange = (linode: Linode) => {
     setSelectedLinode(linode.id);
 
     const thisLinodesPrivateIP = linode.ipv4.find(ipv4 =>

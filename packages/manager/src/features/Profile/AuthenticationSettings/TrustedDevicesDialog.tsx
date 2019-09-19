@@ -1,3 +1,4 @@
+import { deleteTrustedDevice } from 'linode-js-sdk/lib/profile';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -7,7 +8,6 @@ import Typography from 'src/components/core/Typography';
 import withLoadingAndError, {
   Props as LoadingAndErrorProps
 } from 'src/components/withLoadingAndError';
-import { deleteTrustedDevice } from 'src/services/profile';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {

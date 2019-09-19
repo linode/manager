@@ -1,4 +1,5 @@
 import { Image } from 'linode-js-sdk/lib/images';
+import { StackScript } from 'linode-js-sdk/lib/stackscripts';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Chip from 'src/components/core/Chip';
@@ -14,6 +15,8 @@ import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import ExternalLink from 'src/components/ExternalLink';
 import ScriptCode from 'src/components/ScriptCode';
 import withImages from 'src/containers/withImages.container';
+
+import { filterImagesByType } from 'src/store/image/image.helpers';
 
 type CSSClasses =
   | 'root'
@@ -71,7 +74,7 @@ const styles = (theme: Theme) =>
   });
 
 export interface Props {
-  data: Linode.StackScript.Response;
+  data: StackScript;
 }
 
 export interface State {
@@ -80,7 +83,8 @@ export interface State {
 
 type CombinedProps = Props & WithImagesProps & WithStyles<CSSClasses>;
 
-export class StackScript extends React.Component<CombinedProps> {
+/* tslint:disable-next-line */
+export class _StackScript extends React.Component<CombinedProps> {
   render() {
     const {
       classes,
@@ -99,7 +103,7 @@ export class StackScript extends React.Component<CombinedProps> {
 
     const compatibleImages =
       images.reduce((acc: any[], image: string) => {
-        const imageObj = imagesData.find(i => i.id === image);
+        const imageObj = imagesData[image];
 
         if (imageObj) {
           acc.push(
@@ -183,7 +187,7 @@ export class StackScript extends React.Component<CombinedProps> {
 const styled = withStyles(styles);
 
 interface WithImagesProps {
-  imagesData: Image[];
+  imagesData: Record<string, Image>;
   imagesLoading: boolean;
 }
 
@@ -191,8 +195,8 @@ const enhanced = compose<CombinedProps, Props>(
   styled,
   withImages((ownProps, imagesData, imagesLoading) => ({
     ...ownProps,
-    imagesData: imagesData.filter(i => i.is_public === true),
+    imagesData: filterImagesByType(imagesData, 'public'),
     imagesLoading
   }))
 );
-export default enhanced(StackScript);
+export default enhanced(_StackScript);

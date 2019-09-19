@@ -25,7 +25,11 @@ export class LongviewLanding extends React.Component<{}, {}> {
           buttonProps={[
             {
               onClick: () =>
-                window.open('https://manager.linode.com/longview', '_blank'),
+                window.open(
+                  'https://manager.linode.com/longview',
+                  '_blank',
+                  'noopener'
+                ),
               children: 'Navigate to Classic Manager'
             }
           ]}

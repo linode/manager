@@ -153,6 +153,10 @@ export const dcDisplayCountry = {
   'ap-west': 'IN'
 };
 
+export const objectStorageClusterDisplay: Record<Linode.ClusterID, string> = {
+  'us-east-1': 'Newark, NJ'
+};
+
 export type ContinentKey = 'NA' | 'EU' | 'AS';
 export const dcContinent: Record<string, ContinentKey> = {
   'us-east-1a': 'NA',
@@ -264,3 +268,23 @@ export const MBpsInterDC = 1.5;
  * there is no sensible destination.
  */
 export const nonClickEvents = ['profile_update'];
+
+/**
+ * Root URL for Object Storage clusters and buckets.
+ * A bucket can be accessed at: {bucket}.{cluster}.OBJECT_STORAGE_ROOT
+ */
+export const OBJECT_STORAGE_ROOT = 'linodeobjects.com';
+
+/**
+ * This delimiter is used to retrieve objects at just one hierarchical level.
+ * As an example, assume the following objects are in a bucket:
+ *
+ * file1.txt
+ * my-folder/file2.txt
+ * my-folder/file3.txt
+ *
+ * Retrieving an object-list with a delimiter of '/' will return `file1.txt`
+ * only. This mechanism, in combination with "prefix" and "marker", allow us
+ * to simulate folder traversal of a bucket.
+ */
+export const OBJECT_STORAGE_DELIMITER = '/';

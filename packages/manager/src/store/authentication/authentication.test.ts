@@ -28,7 +28,7 @@ describe('Authentication', () => {
     });
   });
 
-  it('expire() should proerly expire tokens stored in local storage and redux state', () => {
+  it('expire() should properly expire tokens stored in local storage and redux state', () => {
     store.dispatch(
       handleStartSession({
         token: 'helloworld',

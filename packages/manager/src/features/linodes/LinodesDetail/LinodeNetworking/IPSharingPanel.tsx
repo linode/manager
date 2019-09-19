@@ -1,3 +1,4 @@
+import { getLinodes, Linode } from 'linode-js-sdk/lib/linodes';
 import { shareAddresses } from 'linode-js-sdk/lib/networking';
 import { clone, flatten, pathOr, uniq } from 'ramda';
 import * as React from 'react';
@@ -18,7 +19,6 @@ import Grid from 'src/components/Grid';
 import LinearProgress from 'src/components/LinearProgress';
 import RenderGuard from 'src/components/RenderGuard';
 import TextField from 'src/components/TextField';
-import { getLinodes } from 'src/services/linodes';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 
@@ -119,10 +119,10 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
         const linodes = pathOr([], ['data'], response);
         const ipChoices = flatten<string>(
           linodes
-            .filter((linode: Linode.Linode) => {
+            .filter((linode: Linode) => {
               return linode.id !== linodeID;
             })
-            .map((linode: Linode.Linode) => {
+            .map((linode: Linode) => {
               // side-effect of this mapping is saving the labels
               linode.ipv4.map((ip: string) => {
                 choiceLabels[ip] = linode.label;

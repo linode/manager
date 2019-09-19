@@ -1,4 +1,6 @@
-export const linodeConfigs: Linode.Config[] = [
+import { Config } from 'linode-js-sdk/lib/linodes';
+
+export const linodeConfigs: Config[] = [
   {
     created: '2018-06-26T16:04:28',
     memory_limit: 0,
@@ -39,7 +41,7 @@ export const linodeConfigs: Linode.Config[] = [
     kernel: 'linode/grub2'
   }
 ];
-export const linodeConfig2: Linode.Config = {
+export const linodeConfig2: Config = {
   created: '2018-06-26T16:05:28',
   memory_limit: 0,
   updated: '2018-06-26T16:05:28',

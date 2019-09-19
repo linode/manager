@@ -1,3 +1,4 @@
+import { Disk } from 'linode-js-sdk/lib/linodes';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { defaultTo } from 'ramda';
 import * as React from 'react';
@@ -6,7 +7,7 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import { titlecase } from 'src/features/linodes/presentation';
 import getSelectedOptionFromGroupedOptions from 'src/utilities/getSelectedOptionFromGroupedOptions';
 
-export interface ExtendedDisk extends Linode.Disk {
+export interface ExtendedDisk extends Disk {
   _id: string;
 }
 

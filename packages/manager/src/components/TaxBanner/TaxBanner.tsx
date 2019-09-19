@@ -8,9 +8,11 @@ import useFlags from 'src/hooks/useFlags';
 
 interface Props {
   location: RouteComponentProps<{}>['location'];
+  marginBottom?: 0 | 8 | 16 | 24 | undefined;
 }
 
 const VATBanner: React.FC<Props> = props => {
+  const { marginBottom } = props;
   const flags = useFlags();
 
   const isBillingPage = props.location.pathname.match(/account[/]billing/);
@@ -51,13 +53,14 @@ const VATBanner: React.FC<Props> = props => {
                 dismissible={true}
                 onClose={dismissBanner}
                 important
-                spacingBottom={8}
+                spacingBottom={marginBottom}
               >
                 Starting {date}, {taxNameToUpperCase} may be applied to your
                 Linode services. For more information, please see the{' '}
                 <a
                   href="https://www.linode.com/docs/platform/billing-and-support/tax-information/"
                   target="_blank"
+                  rel="noopener noreferrer"
                 >
                   Tax Information Guide.
                 </a>

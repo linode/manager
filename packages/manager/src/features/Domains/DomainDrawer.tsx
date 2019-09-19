@@ -3,6 +3,7 @@ import {
   createDomainRecord,
   Domain
 } from 'linode-js-sdk/lib/domains';
+import { Linode } from 'linode-js-sdk/lib/linodes';
 import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { Lens, lensPath, over, path, pathOr, set, view } from 'ramda';
@@ -80,7 +81,7 @@ interface State {
   master_ips: string[];
   masterIPsCount: number;
   defaultRecordsSetting: DefaultRecordsType;
-  selectedDefaultLinode?: Linode.Linode;
+  selectedDefaultLinode?: Linode;
   selectedDefaultNodeBalancer?: NodeBalancer;
 }
 
@@ -802,7 +803,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
   updateEmailAddress = (e: React.ChangeEvent<HTMLInputElement>) =>
     this.setState({ soaEmail: e.target.value });
 
-  updateSelectedLinode = (linode: Linode.Linode) =>
+  updateSelectedLinode = (linode: Linode) =>
     this.setState({ selectedDefaultLinode: linode });
 
   updateSelectedNodeBalancer = (nodebalancer: NodeBalancer) =>

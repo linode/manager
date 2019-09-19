@@ -1,3 +1,4 @@
+import { UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
 import * as React from 'react';
 import AccessPanel from 'src/components/AccessPanel';
 import {
@@ -21,7 +22,7 @@ const styles = (theme: Theme) =>
 
 interface Props {
   isPassword?: boolean;
-  field: Linode.StackScript.UserDefinedField;
+  field: UserDefinedField;
   updateFormState: (key: string, value: any) => void;
   isOptional: boolean;
   placeholder?: string;

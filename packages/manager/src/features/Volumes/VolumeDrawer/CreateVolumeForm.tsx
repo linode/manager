@@ -1,4 +1,5 @@
 import { Form, Formik } from 'formik';
+import { Region } from 'linode-js-sdk/lib/regions';
 import { CreateVolumeSchema } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -53,7 +54,7 @@ const styles = (theme: Theme) =>
 
 interface Props {
   onClose: () => void;
-  regions: Linode.Region[];
+  regions: Region[];
   onSuccess: (
     volumeLabel: string,
     volumePath: string,

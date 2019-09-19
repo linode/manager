@@ -72,9 +72,8 @@ const ManagedPlaceholder: React.FC<CombinedProps> = props => {
       <Placeholder
         icon={ManagedIcon}
         title="Linode Managed"
-        copy={
-          'Experience true peace of mind and let the experts at Linode manage your servers.'
-        }
+        copy={`Linode Managed includes Backups, Longview Pro, cPanel, and round-the-clock monitoring to help keep your systems up and running. 
+          +$100/month per Linode.`}
         buttonProps={[
           {
             onClick: () => setOpen(true),
@@ -101,12 +100,12 @@ const ManagedPlaceholder: React.FC<CombinedProps> = props => {
         actions={actions}
       >
         <Typography variant="subtitle1">
-          Linode Managed is billed at{' '}
+          Linode Managed costs an additional{' '}
           <strong>$100 per month per Linode.</strong> {` `}
           You currently have{` `}
           <strong>{pluralize('Linode', 'Linodes', props.linodeCount)}</strong>,
-          so Managed will cost{' '}
-          <strong>${`${props.linodeCount * 100}/month`}</strong>.
+          so Managed will increase your projected monthly bill by{' '}
+          <strong>${`${props.linodeCount * 100}`}</strong>.
         </Typography>
       </ConfirmationDialog>
     </>

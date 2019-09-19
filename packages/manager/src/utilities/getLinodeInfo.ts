@@ -1,3 +1,5 @@
+import { Linode } from 'linode-js-sdk/lib/linodes';
+
 /**
  * getLinodeInfo
  *
@@ -9,12 +11,12 @@
  */
 const getLinodeInfo = (
   linodeId: number,
-  linodes: Linode.Linode[]
-): Linode.Linode | undefined => {
+  linodes: Linode[]
+): Linode | undefined => {
   if (!linodes) {
     throw new Error('You must provide a list of Linodes.');
   }
-  return linodes.find((linode: Linode.Linode) => linode.id === linodeId);
+  return linodes.find((linode: Linode) => linode.id === linodeId);
 };
 
 export default getLinodeInfo;

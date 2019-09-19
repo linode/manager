@@ -1,6 +1,7 @@
+import { KubernetesCluster } from 'linode-js-sdk/lib/kubernetes';
 import { pool1 } from 'src/__data__/nodePools';
 
-export const clusters: Linode.KubernetesCluster[] = [
+export const clusters: KubernetesCluster[] = [
   {
     tags: ['spam', 'eggs'],
     region: 'us-central',

@@ -1,10 +1,10 @@
+import { getLinodes, Linode } from 'linode-js-sdk/lib/linodes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import _Option from 'react-select/lib/components/Option';
 import { compose } from 'recompose';
 import FormHelperText from 'src/components/core/FormHelperText';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
-import { getLinodes } from 'src/services/linodes';
 import { doesRegionSupportBlockStorage } from 'src/utilities/doesRegionSupportBlockStorage';
 import { debounce } from 'throttle-debounce';
 
@@ -90,11 +90,11 @@ export class LinodeSelect extends React.Component<CombinedProps, State> {
     }
   };
 
-  renderLinodeOptions = (linodes: Linode.Linode[]) => {
+  renderLinodeOptions = (linodes: Linode[]) => {
     if (!linodes) {
       return [];
     }
-    return linodes.map((linode: Linode.Linode) => {
+    return linodes.map((linode: Linode) => {
       return {
         value: linode.id,
         label: linode.label,

@@ -45,6 +45,10 @@ import events, {
   defaultState as eventsDefaultState,
   State as EventsState
 } from 'src/store/events/event.reducer';
+import firewalls, {
+  defaultState as defaultFirewallState,
+  State as FirewallState
+} from 'src/store/firewalls/firewalls.reducer';
 import images, {
   defaultState as defaultImagesState,
   State as ImagesState
@@ -204,6 +208,7 @@ export interface ApplicationState {
   createLinode: LinodeCreateState;
   preferences: PreferencesState;
   initialLoad: InitialLoadState;
+  firewalls: FirewallState;
 }
 
 const defaultState: ApplicationState = {
@@ -219,7 +224,8 @@ const defaultState: ApplicationState = {
   bucketDrawer: bucketDrawerDefaultState,
   createLinode: linodeCreateDefaultState,
   preferences: preferencesState,
-  initialLoad: initialLoadState
+  initialLoad: initialLoadState,
+  firewalls: defaultFirewallState
 };
 
 /**
@@ -261,7 +267,8 @@ const reducers = combineReducers<ApplicationState>({
   events,
   createLinode: linodeCreateReducer,
   preferences,
-  initialLoad
+  initialLoad,
+  firewalls
 });
 
 const enhancers = compose(

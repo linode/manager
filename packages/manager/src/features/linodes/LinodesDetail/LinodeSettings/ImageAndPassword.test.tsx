@@ -1,13 +1,13 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 
-import { images } from 'src/__data__/images';
+import { normalizedImages } from 'src/__data__/images';
 
 import { ImageAndPassword } from './ImageAndPassword';
 
 const props = {
   classes: { root: '' },
-  images,
+  images: normalizedImages,
   imagesLoading: false,
   imageError: undefined,
   onImageChange: jest.fn(),

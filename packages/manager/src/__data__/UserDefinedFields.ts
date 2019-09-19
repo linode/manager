@@ -1,4 +1,6 @@
-export const UserDefinedFields: Linode.StackScript.UserDefinedField[] = [
+import { UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
+
+export const UserDefinedFields: UserDefinedField[] = [
   {
     label: 'Wordpress root password',
     name: 'wordpress_password',

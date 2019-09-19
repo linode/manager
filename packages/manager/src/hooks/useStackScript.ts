@@ -1,4 +1,5 @@
 import { Image } from 'linode-js-sdk/lib/images';
+import { UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
 import { assocPath } from 'ramda';
 import * as React from 'react';
 
@@ -8,7 +9,7 @@ interface StackScriptState {
   label: string;
   images: Image[];
   username: string;
-  user_defined_fields: Linode.StackScript.UserDefinedField[];
+  user_defined_fields: UserDefinedField[];
   udf_data: any;
 }
 
@@ -18,7 +19,7 @@ type HandleSelectStackScript = (
   label: string,
   username: string,
   stackScriptImages: string[],
-  user_defined_fields: Linode.StackScript.UserDefinedField[]
+  user_defined_fields: UserDefinedField[]
 ) => void;
 
 // Function used by child components to handle changes in UDFs
@@ -52,7 +53,7 @@ export const useStackScript = (images: Image[]): UseStackScriptReturn => {
     label: string,
     username: string,
     stackScriptImages: string[],
-    user_defined_fields: Linode.StackScript.UserDefinedField[]
+    user_defined_fields: UserDefinedField[]
   ) => {
     setStackScript({
       id,
@@ -108,9 +109,7 @@ const getCompatibleImages = (
   return allImages.filter(image => stackScriptImages.includes(image.id));
 };
 
-const getDefaultUDFData = (
-  userDefinedFields: Linode.StackScript.UserDefinedField[]
-) => {
+const getDefaultUDFData = (userDefinedFields: UserDefinedField[]) => {
   const defaultUDFData = {};
   userDefinedFields.forEach(eachField => {
     if (!!eachField.default) {

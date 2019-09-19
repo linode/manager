@@ -1,5 +1,10 @@
 import { Formik, FormikProps } from 'formik';
 import { Image } from 'linode-js-sdk/lib/images';
+import {
+  rebuildLinode,
+  RebuildLinodeFromStackScriptSchema
+} from 'linode-js-sdk/lib/linodes';
+import { UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -32,17 +37,16 @@ import {
 } from 'src/features/StackScripts/stackScriptUtils';
 import UserDefinedFieldsPanel from 'src/features/StackScripts/UserDefinedFieldsPanel';
 import { useStackScript } from 'src/hooks/useStackScript';
-import { rebuildLinode } from 'src/services/linodes';
-import { RebuildLinodeFromStackScriptSchema } from 'src/services/linodes/linode.schema';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
-import { filterPublicImages } from 'src/utilities/images';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import { withLinodeDetailContext } from '../linodeDetailContext';
 import { RebuildDialog } from './RebuildDialog';
+
+import { filterImagesByType } from 'src/store/image/image.helpers';
 
 type ClassNames = 'root' | 'error' | 'emptyImagePanel' | 'emptyImagePanelText';
 
@@ -71,7 +75,7 @@ interface ContextProps {
   linodeId: number;
 }
 interface WithImagesProps {
-  imagesData: Image[];
+  imagesData: Record<string, Image>;
   imagesLoading: boolean;
   imagesError?: string;
 }
@@ -115,7 +119,9 @@ export const RebuildFromStackScript: React.StatelessComponent<
     handleSelectStackScript,
     handleChangeUDF,
     resetStackScript
-  ] = useStackScript(imagesData);
+  ] = useStackScript(
+    Object.keys(imagesData).map(eachKey => imagesData[eachKey])
+  );
 
   // In this component, most errors are handled by Formik. This is not
   // possible with UDFs, since they are dynamic. Their errors need to
@@ -235,7 +241,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
           label: string,
           username: string,
           stackScriptImages: string[],
-          user_defined_fields: Linode.StackScript.UserDefinedField[]
+          user_defined_fields: UserDefinedField[]
         ) => {
           handleSelectStackScript(
             id,
@@ -265,7 +271,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
               selectedUsername={ss.username}
               updateFor={[classes, ss.id, errors]}
               onSelect={handleSelect}
-              publicImages={filterPublicImages(imagesData)}
+              publicImages={filterImagesByType(imagesData, 'public')}
               resetSelectedStackScript={resetStackScript}
               data-qa-select-stackscript
               category={props.type}
@@ -393,5 +399,4 @@ const getUDFErrors = (errors: Linode.ApiFieldError[] | undefined) => {
     : undefined;
 };
 
-const isUDFRequired = (udf: Linode.StackScript.UserDefinedField) =>
-  !udf.hasOwnProperty('default');
+const isUDFRequired = (udf: UserDefinedField) => !udf.hasOwnProperty('default');

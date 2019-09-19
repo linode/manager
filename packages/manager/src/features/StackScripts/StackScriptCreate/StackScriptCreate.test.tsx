@@ -5,7 +5,7 @@ import { StackScriptCreate } from './StackScriptCreate';
 
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 
-import { images } from 'src/__data__/images';
+import { normalizedImages as images } from 'src/__data__/images';
 
 describe('StackScriptCreate', () => {
   const component = shallow(

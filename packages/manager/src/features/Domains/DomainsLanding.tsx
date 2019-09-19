@@ -223,7 +223,14 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
 
   render() {
     const { classes } = this.props;
-    const { domainsError, domainsData, domainsLoading } = this.props;
+    const {
+      domainsError,
+      domainsData,
+      domainsLoading,
+      howManyLinodesOnAccount,
+      isRestrictedUser,
+      linodesLoading
+    } = this.props;
 
     if (domainsLoading) {
       return <RenderLoading />;
@@ -236,6 +243,23 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     if (!domainsData || domainsData.length === 0) {
       return <RenderEmpty onClick={this.props.openForCreating} />;
     }
+
+    /**
+     * Users with no Linodes on their account should see a banner
+     * warning them that their DNS records are not being served.
+     *
+     * Restricted users can often not view the number of Linodes
+     * on the account, so to prevent the possibility of displaying inaccurate
+     * warnings, we don't show the banner to restricted users.
+     *
+     * We also hide the banner while Linodes data are still loading, since count
+     * will be 0 until loading is complete.
+     */
+    const shouldShowBanner =
+      !isRestrictedUser &&
+      !linodesLoading &&
+      howManyLinodesOnAccount === 0 &&
+      domainsData.length > 0;
 
     return (
       <React.Fragment>
@@ -303,24 +327,22 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                     </Grid>
                   </Grid>
                 </Grid>
-                {!this.props.linodesLoading &&
-                  this.props.howManyLinodesOnAccount === 0 &&
-                  domainsData.length > 0 && (
-                    <Notice warning important className={classes.dnsWarning}>
-                      <Typography variant="h3">
-                        Your DNS zones are not being served.
-                      </Typography>
-                      <Typography>
-                        Your domains will not be served by Linode's nameservers
-                        unless you have at least one active Linode on your
-                        account.
-                        <Link to="/linodes/create">
-                          {' '}
-                          You can create one here.
-                        </Link>
-                      </Typography>
-                    </Notice>
-                  )}
+                {shouldShowBanner && (
+                  <Notice warning important className={classes.dnsWarning}>
+                    <Typography variant="h3">
+                      Your DNS zones are not being served.
+                    </Typography>
+                    <Typography>
+                      Your domains will not be served by Linode's nameservers
+                      unless you have at least one active Linode on your
+                      account.
+                      <Link to="/linodes/create">
+                        {' '}
+                        You can create one here.
+                      </Link>
+                    </Typography>
+                  </Notice>
+                )}
                 {this.props.location.state &&
                   this.props.location.state.recordError && (
                     <Notice
@@ -396,12 +418,18 @@ const EmptyCopy = () => (
       <a
         href="https://www.linode.com/docs/platform/manager/dns-manager-new-manager/"
         target="_blank"
+        rel="noopener noreferrer"
         className="h-u"
       >
         Find out how to setup your domains associated with your Linodes
       </a>
       &nbsp;or&nbsp;
-      <a href="https://www.linode.com/docs/" target="_blank" className="h-u">
+      <a
+        href="https://www.linode.com/docs/"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="h-u"
+      >
         visit our guides and tutorials.
       </a>
     </Typography>
@@ -445,6 +473,7 @@ interface DispatchProps {
 interface StateProps {
   howManyLinodesOnAccount: number;
   linodesLoading: boolean;
+  isRestrictedUser: boolean;
 }
 
 const mapStateToProps: MapStateToProps<
@@ -457,7 +486,12 @@ const mapStateToProps: MapStateToProps<
     ['__resources', 'linodes', 'results'],
     state
   ).length,
-  linodesLoading: pathOr(false, ['linodes', 'loading'], state.__resources)
+  linodesLoading: pathOr(false, ['linodes', 'loading'], state.__resources),
+  isRestrictedUser: pathOr(
+    true,
+    ['__resources', 'profile', 'data', 'restricted'],
+    state
+  )
 });
 
 export const connected = connect(

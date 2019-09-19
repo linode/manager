@@ -164,24 +164,11 @@ export interface Props {
   variant?: 'check' | 'info';
 }
 
-type CombinedProps = Props & WithStyles<CSSClasses>;
-
 interface WithTooltipProps {
   title?: string;
-  render: () => JSX.Element;
 }
 
-const WithTooltip: React.StatelessComponent<WithTooltipProps> = ({
-  title,
-  render
-}) =>
-  title ? (
-    <Tooltip title={title} className={'disabledInnerGrid'}>
-      {render()}
-    </Tooltip>
-  ) : (
-    render()
-  );
+type CombinedProps = Props & WithTooltipProps & WithStyles<CSSClasses>;
 
 class SelectionCard extends React.PureComponent<CombinedProps, {}> {
   handleKeyPress = (e: React.KeyboardEvent<HTMLElement>) => {
@@ -257,7 +244,7 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
   render() {
     const { checked, classes, disabled, onClick, tooltip } = this.props;
 
-    return (
+    const cardGrid = () => (
       <Grid
         item
         xs={12}
@@ -276,8 +263,16 @@ class SelectionCard extends React.PureComponent<CombinedProps, {}> {
         onKeyPress={this.handleKeyPress}
         data-qa-selection-card
       >
-        <WithTooltip title={tooltip} render={this.content} />
+        {this.content()}
       </Grid>
+    );
+
+    return tooltip ? (
+      <Tooltip title={tooltip} placement={'top'}>
+        {cardGrid()}
+      </Tooltip>
+    ) : (
+      cardGrid()
     );
   }
 }

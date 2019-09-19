@@ -1,4 +1,5 @@
 import { Image } from 'linode-js-sdk/lib/images';
+import { Config } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { PaginationProps } from 'src/components/Paginate';
 import LinodeRow from './LinodeRow/LinodeRow';
@@ -15,7 +16,7 @@ interface Props {
     bootAction: Action,
     linodeID: number,
     linodeLabel: string,
-    linodeConfigs: Linode.Config[]
+    linodeConfigs: Config[]
   ) => void;
 }
 

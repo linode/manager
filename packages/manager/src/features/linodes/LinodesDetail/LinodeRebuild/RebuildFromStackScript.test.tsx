@@ -5,7 +5,7 @@ import {
   waitForElement
 } from '@testing-library/react';
 import * as React from 'react';
-import { images } from 'src/__data__/images';
+import { normalizedImages as images } from 'src/__data__/images';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
 import {

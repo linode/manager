@@ -1,3 +1,4 @@
+import { getTrustedDevices, TrustedDevice } from 'linode-js-sdk/lib/profile';
 import * as React from 'react';
 import {
   compose,
@@ -21,7 +22,6 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import ToggleState from 'src/components/ToggleState';
-import { getTrustedDevices } from 'src/services/profile';
 import Dialog from './TrustedDevicesDialog';
 import TrustedDevicesTable from './TrustedDevicesTable';
 
@@ -53,7 +53,7 @@ const styles = (theme: Theme) =>
     }
   });
 
-type CombinedProps = PaginationProps<Linode.Device> &
+type CombinedProps = PaginationProps<TrustedDevice> &
   WithStyles<ClassNames> &
   StateUpdaters &
   DialogState;
@@ -133,7 +133,7 @@ const paginated = Pagey((ownProps: {}, params: any, filter: any) =>
 
 const styled = withStyles(styles);
 
-const withRequestOnMount = lifecycle<PaginationProps<Linode.Device>, {}>({
+const withRequestOnMount = lifecycle<PaginationProps<TrustedDevice>, {}>({
   componentDidMount() {
     /** initial request for trusted devices, ordered by which ones expire first */
     this.props.handleOrderChange('expiry', 'asc');
