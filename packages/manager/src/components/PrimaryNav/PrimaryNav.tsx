@@ -37,8 +37,24 @@ import { linkIsActive } from './utils';
 
 import { sendOneClickNavigationEvent } from 'src/utilities/ga';
 
+type Entity =
+  | 'Linodes'
+  | 'Volumes'
+  | 'NodeBalancers'
+  | 'Domains'
+  | 'Longview'
+  | 'Kubernetes'
+  | 'Object Storage'
+  | 'Managed'
+  | 'One-Click Apps'
+  | 'Images'
+  | 'Firewalls'
+  | 'Account'
+  | 'Dashboard'
+  | 'StackScripts';
+
 interface PrimaryLink {
-  display: string;
+  display: Entity;
   href: string;
   key: string;
   attr?: { [key: string]: any };
@@ -249,7 +265,7 @@ interface State {
 
 interface MenuItemReducer {
   link: PrimaryLink;
-  insertAfter: string;
+  insertAfter: Entity;
   conditionToAdd: () => boolean;
 }
 
@@ -310,7 +326,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
     return [
       {
         conditionToAdd: () => isObjectStorageEnabled(accountCapabilities),
-        insertAfter: 'volumes',
+        insertAfter: 'Volumes',
         link: {
           display: 'Object Storage',
           href: '/object-storage/buckets',
@@ -319,17 +335,17 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       },
       {
         conditionToAdd: () => isManagedAccount || !!flags.managed,
-        insertAfter: 'longview',
+        insertAfter: 'Longview',
         link: { display: 'Managed', href: '/managed', key: 'managed' }
       },
       {
         conditionToAdd: () => isKubernetesEnabled(accountCapabilities),
-        insertAfter: 'longview',
+        insertAfter: 'Longview',
         link: { display: 'Kubernetes', href: '/kubernetes', key: 'kubernetes' }
       },
       {
         conditionToAdd: () => flags.oneClickLocation === 'sidenav',
-        insertAfter: 'longview',
+        insertAfter: 'Longview',
         link: {
           display: 'One-Click Apps',
           href: '/linodes/create?type=One-Click',
@@ -342,12 +358,12 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
       },
       {
         conditionToAdd: () => hasAccountAccess,
-        insertAfter: 'images',
+        insertAfter: 'Images',
         link: { display: 'Account', href: '/account/billing', key: 'account' }
       },
       {
         conditionToAdd: () => !!flags.firewalls,
-        insertAfter: 'domains',
+        insertAfter: 'Domains',
         link: { display: 'Firewalls', href: '/firewalls', key: 'firewalls' }
       }
     ];
