@@ -1,10 +1,12 @@
 import { AxiosError, AxiosResponse } from 'axios';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import React from 'react';
 
 import { ACCESS_TOKEN, DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import { interceptErrors } from 'src/utilities/interceptAPIError';
 
+import { AccountActivationError } from 'src/components/AccountActivation';
 import { GPUError } from 'src/components/GPUError';
 import { MigrateError } from 'src/components/MigrateError';
 
@@ -12,6 +14,7 @@ import { baseRequest } from 'linode-js-sdk/lib/request';
 
 import store from 'src/store';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
+import { setErrors } from 'src/store/globalErrors/globalErrors.actions';
 
 import { API_ROOT, LOGIN_ROOT } from 'src/constants';
 
@@ -40,8 +43,8 @@ export const handleError = (error: AxiosError) => {
 
   const url = pathOr('', ['response', 'config', 'url'], error);
   const method = pathOr('', ['response', 'config', 'method'], error);
-  const status = pathOr(0, ['response', 'status'], error);
-  const errors = pathOr(
+  const status: number = pathOr<number>(0, ['response', 'status'], error);
+  const errors: APIError[] = pathOr<APIError[]>(
     [{ reason: DEFAULT_ERROR_MESSAGE }],
     ['response', 'data', 'errors'],
     error
@@ -68,14 +71,39 @@ export const handleError = (error: AxiosError) => {
     {
       replacementText: <GPUError />,
       condition: e =>
-        e.reason.match(/verification is required/i) &&
+        !!e.reason.match(/verification is required/i) &&
         requestedLinodeType.match(/gpu/i)
+    },
+    {
+      /**
+       * this component when rendered will set an account activation
+       * error in the globalErrors Redux state. The only issue here
+       * is that if a component is not rendering the actual error message
+       * that comes down, the Redux state will never be set.
+       *
+       * This means that we have 2 options
+       *
+       * 1. Dispatch the globalError Redux action somewhere in the interceptor.
+       * 2. Fix the Landing page components to display the actual error being passed.
+       */
+      replacementText: <AccountActivationError errors={errors} />,
+      condition: e =>
+        !!e.reason.match(/account must be activated/i) && status === 403,
+      callback: () => {
+        if (store && !store.getState().globalErrors.account_unactivated) {
+          store.dispatch(
+            setErrors({
+              account_unactivated: true
+            })
+          );
+        }
+      }
     },
     {
       replacementText: <MigrateError />,
       condition: e => {
         return (
-          e.reason.match(/migrations are currently disabled/i) &&
+          !!e.reason.match(/migrations are currently disabled/i) &&
           url.match(/migrate/i)
         );
       }

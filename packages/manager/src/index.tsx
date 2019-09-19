@@ -5,7 +5,7 @@ import { Provider } from 'react-redux';
 import {
   BrowserRouter as Router,
   Route,
-  RouteProps,
+  RouteComponentProps,
   Switch
 } from 'react-router-dom';
 import { initAnalytics, initTagManager } from 'src/analytics';
@@ -65,7 +65,7 @@ const renderLish = () => (
   <LinodeThemeWrapper>{toggle => <Lish />}</LinodeThemeWrapper>
 );
 
-const renderApp = (props: RouteProps) => (
+const renderApp = (props: RouteComponentProps) => (
   <React.Fragment>
     <SplashScreen />
     <LinodeThemeWrapper>
@@ -81,6 +81,7 @@ const renderApp = (props: RouteProps) => (
             toggleTheme={toggle}
             toggleSpacing={spacing}
             location={props.location}
+            history={props.history}
           />
         </SnackBar>
       )}

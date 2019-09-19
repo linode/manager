@@ -5,7 +5,7 @@ import ErrorState from 'src/components/ErrorState';
 
 export interface Props {
   colSpan: number;
-  message: string;
+  message: string | JSX.Element;
 }
 
 type CombinedProps = Props;

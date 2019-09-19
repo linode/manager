@@ -422,16 +422,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     }
 
     if (error) {
-      return (
-        <TableRowError
-          colSpan={6}
-          message={
-            error[0].reason.match(/not auth/i)
-              ? 'You do not have permission to view API Tokens.'
-              : `We were unable to load your API Tokens.`
-          }
-        />
-      );
+      return <TableRowError colSpan={6} message={error[0].reason} />;
     }
 
     const filteredData = data ? data.filter(filterOutLinodeApps) : [];
