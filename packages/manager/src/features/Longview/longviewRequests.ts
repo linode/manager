@@ -75,13 +75,16 @@ export const handleLongviewResponse = (
      * and what code/severity checking we should be doing
      * to make sure we only reject with errors.
      */
-    const errors = [];
-    let i = 0;
-    for (i; i < notifications.length; i++) {
-      errors.push({
-        reason: notifications[i].TEXT
-      });
-    }
+    // const errors = [];
+    // let i = 0;
+    // for (i; i < notifications.length; i++) {
+    //   errors.push({
+    //     reason: notifications[i].TEXT
+    //   });
+    // }
+    const errors = notifications.map((thisNotification: LongviewError) => ({
+      reason: thisNotification.TEXT
+    }));
     return Promise.reject(errors);
   } else {
     return Promise.resolve(response.data[0].DATA);
