@@ -2,7 +2,7 @@ import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
 
-import TicketIcon from 'src/assets/icons/ticket-blue.svg';
+import TicketIcon from 'src/assets/icons/ticket.svg';
 import {
   createStyles,
   Theme,
@@ -19,7 +19,19 @@ type ClassNames = 'root';
 const styles = (theme: Theme) =>
   createStyles({
     root: {
-      padding: `0 ${theme.spacing(1) + 4}px`
+      padding: `0 ${theme.spacing(1) + 4}px`,
+      color: '#3683DC',
+      /**
+       * @bailly @kayla
+       * I had to ask Kayla how to override the
+       * button hover style here, but there must be
+       * a better way.
+       */
+      '&:hover': {
+        '& svg': {
+          color: '#3683DC !important'
+        }
+      }
     }
   });
 
