@@ -1,9 +1,9 @@
 version: '3.1'
 services:
   selenium:
-    image: selenium/hub:3.13.0-argon
+    image: selenium/hub:3.141.59-titanium
   chrome:
-    image: selenium/node-chrome:3.13.0-argon
+    image: selenium/node-chrome:3.141.59-titanium
     volumes:
       - /dev/shm:/dev/shm #Mitigates the Chromium issue described at https://code.google.com/p/chromium/issues/detail?id=519952
     environment:
@@ -26,7 +26,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    entrypoint: ["/src/scripts/start_manager.sh"]
+    entrypoint: ["/home/node/app/scripts/start_manager.sh"]
     depends_on:
       - chrome
   manager-e2e:
@@ -46,7 +46,7 @@ services:
       dockerfile: Dockerfile
     volumes:
       - ./packages/manager/e2e/test-results:/home/node/app/packages/manager/e2e/test-results
-    entrypoint: ["./scripts/wait-for-it.sh", "-t", "500", "-s", "manager-local:3000", "--", "yarn", "e2e", "--log"]
+    entrypoint: ["/home/node/app/scripts/wait-for-it.sh", "-t", "500", "-s", "manager-local:3000", "--", "yarn", "e2e", "--smoke", "--log"]
     depends_on:
       - manager-local
       - mongodb
