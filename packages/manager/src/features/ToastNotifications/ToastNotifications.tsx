@@ -1,4 +1,5 @@
 import { withSnackbar, WithSnackbarProps } from 'notistack';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import 'rxjs/add/operator/bufferTime';
 import 'rxjs/add/operator/filter';
@@ -86,6 +87,14 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
           return enqueueSnackbar(
             `There was an error attaching volume ${event.entity &&
               event.entity.label}.`,
+            { variant: 'error' }
+          );
+        }
+
+        if (event.action === 'disk_delete' && ['finished', 'notification'].includes(event.status)) {
+          const label = pathOr(false, ['entity', 'label'], event);
+          return enqueueSnackbar(
+            `Unable to delete disk${label ? ` on ${label}` : ''}. Is it attached to a configuration profile that is in use?`,
             { variant: 'error' }
           );
         }
