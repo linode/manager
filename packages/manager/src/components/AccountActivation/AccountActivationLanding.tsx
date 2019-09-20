@@ -2,8 +2,6 @@ import Warning from '@material-ui/icons/CheckCircle';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-// import ActionsPanel from 'src/components/ActionsPanel';
-// import Button from 'src/components/Button';
 import {
   makeStyles,
   Theme,
@@ -38,9 +36,6 @@ const AccountActivationLanding: React.FC<CombinedProps> = props => {
   const [supportDrawerIsOpen, toggleSupportDrawer] = React.useState<boolean>(
     false
   );
-  // const [ticketSubmitSuccess, setTicketSubmitSuccess] = React.useState<boolean>(
-  //   false
-  // );
 
   const handleTicketSubmitSuccess = (
     ticketID: number,
@@ -84,23 +79,6 @@ const AccountActivationLanding: React.FC<CombinedProps> = props => {
             hideProductSelection
             prefilledTitle="Help me activate my account"
           />
-          {/** @todo remove pending Sept 20, 2019 review feedback */}
-          {/* {ticketSubmitSuccess ? (
-              <React.Fragment>
-                <Typography variant="subtitle2">
-                  Your support ticket has been submitted. We will reach out as
-                  soon as possible.
-                </Typography>
-                <ActionsPanel style={{ marginTop: 16 }}>
-                  <Button
-                    onClick={() => toggleSupportDrawer(false)}
-                    buttonType="primary"
-                  >
-                    OK
-                  </Button>
-                </ActionsPanel>
-              </React.Fragment>
-            ) : null} */}
         </React.Fragment>
       }
     />
