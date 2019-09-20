@@ -1,8 +1,9 @@
 import Warning from '@material-ui/icons/CheckCircle';
 import * as React from 'react';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
-import ActionsPanel from 'src/components/ActionsPanel';
-import Button from 'src/components/Button';
+// import ActionsPanel from 'src/components/ActionsPanel';
+// import Button from 'src/components/Button';
 import {
   makeStyles,
   Theme,
@@ -12,6 +13,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 
+import { AttachmentError } from 'src/features/Support/SupportTicketDetail/SupportTicketDetail';
 import SupportTicketDrawer from 'src/features/Support/SupportTickets/SupportTicketDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -28,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type CombinedProps = WithTheme;
+type CombinedProps = WithTheme & RouteComponentProps;
 
 const AccountActivationLanding: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -36,9 +38,21 @@ const AccountActivationLanding: React.FC<CombinedProps> = props => {
   const [supportDrawerIsOpen, toggleSupportDrawer] = React.useState<boolean>(
     false
   );
-  const [ticketSubmitSuccess, setTicketSubmitSuccess] = React.useState<boolean>(
-    false
-  );
+  // const [ticketSubmitSuccess, setTicketSubmitSuccess] = React.useState<boolean>(
+  //   false
+  // );
+
+  const handleTicketSubmitSuccess = (
+    ticketID: number,
+    attachmentErrors?: AttachmentError[]
+  ) => {
+    props.history.push({
+      pathname: `/support/tickets/${ticketID}`,
+      state: { attachmentErrors }
+    });
+
+    toggleSupportDrawer(false);
+  };
 
   return (
     <ErrorState
@@ -65,12 +79,13 @@ const AccountActivationLanding: React.FC<CombinedProps> = props => {
           <SupportTicketDrawer
             open={supportDrawerIsOpen}
             onClose={() => toggleSupportDrawer(false)}
-            onSuccess={() => setTicketSubmitSuccess(true)}
+            onSuccess={handleTicketSubmitSuccess}
             keepOpenOnSuccess={true}
             hideProductSelection
             prefilledTitle="Help me activate my account"
-          >
-            {ticketSubmitSuccess ? (
+          />
+          {/** @todo remove pending Sept 20, 2019 review feedback */}
+          {/* {ticketSubmitSuccess ? (
               <React.Fragment>
                 <Typography variant="subtitle2">
                   Your support ticket has been submitted. We will reach out as
@@ -85,8 +100,7 @@ const AccountActivationLanding: React.FC<CombinedProps> = props => {
                   </Button>
                 </ActionsPanel>
               </React.Fragment>
-            ) : null}
-          </SupportTicketDrawer>
+            ) : null} */}
         </React.Fragment>
       }
     />

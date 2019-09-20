@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   logo: {
     '& > g': {
-      fill: '#000'
+      fill: theme.color.black
     }
   },
   activationWrapper: {
