@@ -6,10 +6,11 @@ import { getFirewalls } from './firewalls.actions';
 export type State = EntitiesAsObjectState<Firewall>;
 
 export const defaultState: State = {
-  loading: true,
+  loading: false,
   lastUpdated: 0,
   results: 0,
   data: {},
+  error: {},
   listOfIDsInOriginalOrder: []
 };
 

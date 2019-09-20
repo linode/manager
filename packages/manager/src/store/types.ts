@@ -91,7 +91,7 @@ export type EventHandler = (
 ) => void;
 
 export interface EntitiesAsObjectState<T> {
-  error?: Partial<{
+  error: Partial<{
     read: APIError[];
     create: APIError[];
     delete: APIError[];

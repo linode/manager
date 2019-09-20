@@ -28,7 +28,7 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface Props extends TableCellProps {
+export interface Props extends TableCellProps {
   active: boolean;
   isLoading?: boolean;
   label: string;
