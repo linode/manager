@@ -38,7 +38,8 @@ type ClassNames =
   | 'copy'
   | 'disabledRow'
   | 'chip'
-  | 'currentPlanChipCell';
+  | 'currentPlanChipCell'
+  | 'radioCell';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -57,10 +58,14 @@ const styles = (theme: Theme) =>
     chip: {
       backgroundColor: theme.color.green,
       color: '#fff',
-      textTransform: 'uppercase'
+      textTransform: 'uppercase',
+      marginLeft: theme.spacing(2)
     },
     currentPlanChipCell: {
       width: '13%'
+    },
+    radioCell: {
+      width: '5%'
     }
   });
 
@@ -122,22 +127,21 @@ export class SelectPlanPanel extends React.Component<
               [classes.disabledRow]: isSamePlan || planTooSmall
             })}
           >
-            {isSamePlan ? (
-              <TableCell className={classes.currentPlanChipCell}>
-                <Chip label="Current Plan" className={classes.chip} />
-              </TableCell>
-            ) : (
-              <TableCell>
+            <TableCell className={classes.radioCell}>
+              {!isSamePlan && (
                 <Radio
                   checked={!planTooSmall && type.id === String(selectedID)}
                   onChange={this.onSelect(type.id)}
                   disabled={planTooSmall || disabled}
                   id={type.id}
                 />
-              </TableCell>
-            )}
+              )}
+            </TableCell>
             <TableCell>
               {type.heading}{' '}
+              {isSamePlan && (
+                <Chip label="Current Plan" className={classes.chip} />
+              )}
               {tooltip && (
                 <HelpIcon text={tooltip} tooltipPosition="right-end" />
               )}

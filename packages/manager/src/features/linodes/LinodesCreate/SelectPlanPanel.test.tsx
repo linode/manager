@@ -13,7 +13,8 @@ describe('Select Plan Panel', () => {
         copy: '',
         disabledRow: '',
         chip: '',
-        currentPlanChipCell: ''
+        currentPlanChipCell: '',
+        radioCell: ''
       }}
       types={extendedTypes}
       currentPlanHeading="Linode 2GB"
