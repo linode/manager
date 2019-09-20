@@ -97,11 +97,7 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
    * Get All Volumes
    **/
   if (isType(action, getAllVolumesActions.started)) {
-    const shouldSetLoading = pathOr(
-      true,
-      ['payload', 'shouldSetLoading'],
-      action
-    );
+    const shouldSetLoading = pathOr(true, ['payload', 'setLoading'], action);
     if (shouldSetLoading) {
       return onStart<MappedEntityState<Volume, EntityError>>(state);
     }

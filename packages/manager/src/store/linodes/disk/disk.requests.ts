@@ -62,9 +62,10 @@ export const deleteLinodeDisk = createRequestThunk(
   ({ linodeId, diskId }) => _deleteLinodeDisk(linodeId, diskId)
 );
 
-export const getAllLinodeDisks: ThunkActionCreator<Promise<Entity[]>> = (
-  params: GetAllLinodeDisksParams
-) => async dispatch => {
+export const getAllLinodeDisks: ThunkActionCreator<
+  Promise<Entity[]>,
+  GetAllLinodeDisksParams
+> = params => async dispatch => {
   const { linodeId } = params;
   const { started, done, failed } = getAllLinodeDisksActions;
   dispatch(started(params));

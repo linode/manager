@@ -69,7 +69,7 @@ export interface GetAllVolumesOptions {
   setLoading?: boolean;
 }
 export const getAllVolumesActions = actionCreator.async<
-  GetAllVolumesOptions,
+  GetAllVolumesOptions | void,
   Volume[],
   Linode.ApiFieldError[]
 >('get-all');

@@ -74,7 +74,7 @@ export const requestDomains: ThunkActionCreator<Promise<Domain[]>> = () => (
     });
 };
 
-type RequestDomainForStoreThunk = ThunkActionCreator<void>;
+type RequestDomainForStoreThunk = ThunkActionCreator<void, number>;
 export const requestDomainForStore: RequestDomainForStoreThunk = id => (
   dispatch,
   getState
