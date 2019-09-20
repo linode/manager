@@ -6,6 +6,7 @@ import Waypoint from 'react-waypoint';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
+import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -246,65 +247,76 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
           <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/" />
         </Box>
         <Divider className={classes.divider} />
+
         <BucketBreadcrumb
           prefix={prefix}
           history={this.props.history}
           bucketName={bucketName}
         />
-        <ObjectUpload
-          clusterId={clusterId}
-          bucketName={bucketName}
-          fn={() => this.updateInPlace()}
-        />
-        <Paper className={classes.objectTable}>
-          <Table removeLabelonMobile aria-label="List of Bucket Objects">
-            <TableHead>
-              <TableRow>
-                <TableCell className={classes.nameColumn}>Object</TableCell>
-                <TableCell className={classes.sizeColumn}>Size</TableCell>
-                <TableCell>Last Modified</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <ObjectTableContent
-                data={data}
-                loading={loading}
-                error={generalError}
-                prefix={prefix}
-              />
-            </TableBody>
-          </Table>
-          {/* We shouldn't allow infinite scrolling if we're still loading,
-          if we've gotten all objects in the bucket (or folder), or if there
-          are errors. */}
-          {!loading &&
-            !allObjectsFetched &&
-            !generalError &&
-            !nextPageError &&
-            data.length >= 100 && (
-              <Waypoint onEnter={() => this.getNextPage()}>
-                <div />
-              </Waypoint>
-            )}
-        </Paper>
-        {nextPageError && (
-          <Typography variant="subtitle2" className={classes.footer}>
-            The next objects in the list failed to load.{' '}
-            <span
-              className={classes.tryAgainText}
-              onClick={() => this.getNextPage()}
-            >
-              Click here to try again.
-            </span>
-          </Typography>
-        )}
+        <Grid container>
+          <Grid item xs={8}>
+            <>
+              <Paper className={classes.objectTable}>
+                <Table removeLabelonMobile aria-label="List of Bucket Objects">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell className={classes.nameColumn}>
+                        Object
+                      </TableCell>
+                      <TableCell className={classes.sizeColumn}>Size</TableCell>
+                      <TableCell>Last Modified</TableCell>
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <ObjectTableContent
+                      data={data}
+                      loading={loading}
+                      error={generalError}
+                      prefix={prefix}
+                    />
+                  </TableBody>
+                </Table>
+                {/* We shouldn't allow infinite scrolling if we're still loading,
+              if we've gotten all objects in the bucket (or folder), or if there
+              are errors. */}
+                {!loading &&
+                  !allObjectsFetched &&
+                  !generalError &&
+                  !nextPageError &&
+                  data.length >= 100 && (
+                    <Waypoint onEnter={() => this.getNextPage()}>
+                      <div />
+                    </Waypoint>
+                  )}
+              </Paper>
+              {nextPageError && (
+                <Typography variant="subtitle2" className={classes.footer}>
+                  The next objects in the list failed to load.{' '}
+                  <span
+                    className={classes.tryAgainText}
+                    onClick={() => this.getNextPage()}
+                  >
+                    Click here to try again.
+                  </span>
+                </Typography>
+              )}
 
-        {/* Only display this message if there were more than 100 objects. */}
-        {allObjectsFetched && numOfDisplayedObjects > 100 && (
-          <Typography variant="subtitle2" className={classes.footer}>
-            Showing all {numOfDisplayedObjects} items
-          </Typography>
-        )}
+              {/* Only display this message if there were more than 100 objects. */}
+              {allObjectsFetched && numOfDisplayedObjects > 100 && (
+                <Typography variant="subtitle2" className={classes.footer}>
+                  Showing all {numOfDisplayedObjects} items
+                </Typography>
+              )}
+            </>
+          </Grid>
+          <Grid item xs={4}>
+            <ObjectUpload
+              clusterId={clusterId}
+              bucketName={bucketName}
+              update={() => this.updateInPlace()}
+            />
+          </Grid>
+        </Grid>
       </>
     );
   }
