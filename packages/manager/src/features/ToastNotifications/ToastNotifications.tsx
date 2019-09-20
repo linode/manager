@@ -91,10 +91,12 @@ class ToastNotifications extends React.PureComponent<WithSnackbarProps, {}> {
           );
         }
 
-        if (event.action === 'disk_delete' && ['finished', 'notification'].includes(event.status)) {
+        if (event.action === 'disk_delete' && event.status === 'failed') {
           const label = pathOr(false, ['entity', 'label'], event);
           return enqueueSnackbar(
-            `Unable to delete disk${label ? ` on ${label}` : ''}. Is it attached to a configuration profile that is in use?`,
+            `Unable to delete disk${
+              label ? ` on ${label}` : ''
+            }. Is it attached to a configuration profile that is in use?`,
             { variant: 'error' }
           );
         }
