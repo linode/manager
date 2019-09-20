@@ -89,7 +89,7 @@ const Content: React.FC<StateProps> = props => {
    * Don't show error state if we've successfully retrieved
    * monitor data but then a subsequent poll fails
    */
-  if (error && monitors.length === 0) {
+  if (error && updated === 0) {
     const errorString = getAPIErrorOrDefault(
       error,
       'Error loading your Managed service information.'
