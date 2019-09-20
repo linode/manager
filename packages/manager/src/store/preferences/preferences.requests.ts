@@ -35,8 +35,9 @@ export const getUserPreferences: ThunkActionCreator<
 };
 
 export const updateUserPreferences: ThunkActionCreator<
-  Promise<Record<string, any>>
-> = (payload: Record<string, any>) => dispatch => {
+  Promise<Record<string, any>>,
+  Record<string, any>
+> = payload => dispatch => {
   const { started, done, failed } = handleUpdatePreferences;
 
   dispatch(

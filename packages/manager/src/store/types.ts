@@ -1,9 +1,6 @@
 import { Entity as EventEntity, Event } from 'linode-js-sdk/lib/account';
 import { APIError } from 'linode-js-sdk/lib/types';
-import {
-  ActionCreator,
-  MapStateToProps as _MapStateToProps
-} from 'react-redux';
+import { MapStateToProps as _MapStateToProps } from 'react-redux';
 import { Action, Dispatch } from 'redux';
 import { ThunkAction, ThunkDispatch as _ThunkDispatch } from 'redux-thunk';
 import { ApplicationState } from 'src/store';
@@ -26,7 +23,9 @@ export interface EntityError {
   update?: APIError[];
 }
 
-export type ThunkActionCreator<T> = ActionCreator<ThunkResult<T>>;
+export type ThunkActionCreator<ReturnType, Params = void> = (
+  args: Params
+) => ThunkResult<ReturnType>;
 
 export type ThunkDispatch = _ThunkDispatch<ApplicationState, undefined, Action>;
 

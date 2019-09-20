@@ -1,4 +1,4 @@
-import { EventStatus } from 'linode-js-sdk/lib/account'
+import { EventStatus } from 'linode-js-sdk/lib/account';
 import { Dispatch } from 'redux';
 import { EventHandler } from 'src/store/types';
 import { deleteVolumeActions } from './volume.actions';
@@ -45,10 +45,7 @@ const handleVolumeUpdate = (
   }
 };
 
-const handleVolumeClone = (
-  dispatch: Dispatch<any>,
-  status: EventStatus
-) => {
+const handleVolumeClone = (dispatch: Dispatch<any>, status: EventStatus) => {
   switch (status) {
     case 'failed':
     case 'finished':
@@ -58,7 +55,7 @@ const handleVolumeClone = (
       // We can't just get the cloned volume, since the entity on volume_clone events is the PARENT
       // (so we don't know the correct volumeId to GET). Therefore, we need to get ALL volumes,
       // but we don't want to see a loading state – we want this to happen in the "background".
-      dispatch(getAllVolumes({ shouldSetLoading: false }));
+      dispatch(getAllVolumes({ setLoading: false }));
 
     default:
       return;

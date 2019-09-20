@@ -38,7 +38,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 ) => {
   return {
     dispatchLogout: (client_id: string, token: string) =>
-      dispatch(handleLogout(client_id, token))
+      dispatch(handleLogout({ client_id, token }))
   };
 };
 

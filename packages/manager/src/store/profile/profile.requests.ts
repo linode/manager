@@ -62,9 +62,10 @@ export const requestProfile: ThunkActionCreator<Promise<Profile>> = () => (
 /**
  * @todo this doesn't let you update grants
  */
-export const updateProfile: ThunkActionCreator<Promise<Partial<Profile>>> = (
-  payload: Partial<Profile>
-) => dispatch => {
+export const updateProfile: ThunkActionCreator<
+  Promise<Partial<Profile>>,
+  Partial<Profile>
+> = payload => dispatch => {
   const { done, failed } = handleUpdateProfile;
 
   /**

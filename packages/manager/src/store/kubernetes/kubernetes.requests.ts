@@ -44,7 +44,7 @@ export const requestKubernetesClusters: ThunkActionCreator<
     });
 };
 
-type RequestClusterForStoreThunk = ThunkActionCreator<void>;
+type RequestClusterForStoreThunk = ThunkActionCreator<void, number>;
 export const requestClusterForStore: RequestClusterForStoreThunk = clusterID => dispatch => {
   getKubernetesCluster(clusterID).then(cluster => {
     dispatch(requestNodePoolsForCluster({ clusterID }));

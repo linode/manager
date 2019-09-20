@@ -13,7 +13,7 @@ export const createBucketActions = actionCreator.async<
 >(`create`);
 
 export const getAllBucketsActions = actionCreator.async<
-  {},
+  void,
   Linode.Bucket[],
   Linode.ApiFieldError[]
 >('get-all');

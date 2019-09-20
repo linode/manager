@@ -10,10 +10,13 @@ import { handleLogout as _handleLogout } from './authentication.actions';
  * @param { string } token - the auth token used to make HTTP requests
  *
  */
-export const handleLogout: ThunkActionCreator<Promise<Success>> = (
-  client_id: string,
-  token: string
-) => dispatch => {
+export const handleLogout: ThunkActionCreator<
+  Promise<Success>,
+  {
+    client_id: string;
+    token: string;
+  }
+> = ({ client_id, token }) => dispatch => {
   return revokeToken(client_id, token)
     .then(response => {
       dispatch(_handleLogout());

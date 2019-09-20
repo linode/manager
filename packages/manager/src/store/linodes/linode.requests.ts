@@ -73,7 +73,7 @@ export const requestLinodes: ThunkActionCreator<
 const getBackupsForLinodes = ({ data }: { data: Linode[] }) =>
   Bluebird.map(data, requestMostRecentBackupForLinode);
 
-type RequestLinodeForStoreThunk = ThunkActionCreator<void>;
+type RequestLinodeForStoreThunk = ThunkActionCreator<void, number>;
 export const requestLinodeForStore: RequestLinodeForStoreThunk = id => (
   dispatch,
   getState

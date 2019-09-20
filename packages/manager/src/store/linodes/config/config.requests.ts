@@ -62,9 +62,10 @@ export const deleteLinodeConfig = createRequestThunk(
   ({ linodeId, configId }) => _deleteLinodeConfig(linodeId, configId)
 );
 
-export const getAllLinodeConfigs: ThunkActionCreator<Promise<Entity[]>> = (
-  params: GetAllLinodeConfigsParams
-) => async dispatch => {
+export const getAllLinodeConfigs: ThunkActionCreator<
+  Promise<Entity[]>,
+  GetAllLinodeConfigsParams
+> = params => async dispatch => {
   const { linodeId } = params;
   const { started, done, failed } = getAllLinodeConfigsActions;
   dispatch(started(params));

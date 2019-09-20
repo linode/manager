@@ -39,11 +39,9 @@ export const updateNodeBalancerConfig = createRequestThunk(
 );
 
 export const deleteNodeBalancerConfig: ThunkActionCreator<
-  Promise<{}>
-> = (params: { nodeBalancerConfigId: number; nodeBalancerId: number }) => (
-  dispatch,
-  getStore
-) => {
+  Promise<{}>,
+  { nodeBalancerConfigId: number; nodeBalancerId: number }
+> = params => (dispatch, getStore) => {
   const { nodeBalancerConfigId, nodeBalancerId } = params;
   const { started, done, failed } = deleteNodeBalancerConfigActions;
 
@@ -67,9 +65,10 @@ export const deleteNodeBalancerConfig: ThunkActionCreator<
  * An orphaned config is one which exists in the STORE but not in the API.
  * A new config is one which exists in the API but not in the STORE.
  */
-export const updateNodeBalancerConfigs: ThunkActionCreator<void> = (
-  nodeBalancerId: number
-) => (dispatch, getStore) => {
+export const updateNodeBalancerConfigs: ThunkActionCreator<
+  void,
+  number
+> = nodeBalancerId => (dispatch, getStore) => {
   const {
     nodeBalancerConfigs: { itemsById: nodeBalancerConfigs }
   } = getStore().__resources;
