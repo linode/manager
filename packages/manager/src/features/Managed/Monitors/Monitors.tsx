@@ -30,7 +30,8 @@ export const Monitors: React.FC<CombinedProps> = props => {
     managedLoading,
     monitors,
     requestManagedIssues,
-    requestManagedServices
+    requestManagedServices,
+    ...rest
   } = props;
 
   React.useEffect(() => {
@@ -45,20 +46,13 @@ export const Monitors: React.FC<CombinedProps> = props => {
       groups={groups}
       loading={loading || (managedLoading && lastUpdated === 0)}
       error={managedError.read || errorFromProps}
+      {...rest}
     />
   );
 };
 
 const enhanced = compose<CombinedProps, Props>(
-  withManagedIssues(() => ({})),
-  withManagedServices(
-    (ownProps, managedLoading, lastUpdated, monitors, managedError) => ({
-      ...ownProps,
-      managedLoading,
-      lastUpdated,
-      monitors,
-      managedError
-    })
-  )
+  withManagedIssues(),
+  withManagedServices()
 );
 export default enhanced(Monitors);

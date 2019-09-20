@@ -22,12 +22,8 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
-import withManagedIssues, {
-  ManagedIssuesProps
-} from 'src/containers/managedIssues.container';
-import withManagedServices, {
-  DispatchProps
-} from 'src/containers/managedServices.container';
+import { ManagedIssuesProps } from 'src/containers/managedIssues.container';
+import { DispatchProps } from 'src/containers/managedServices.container';
 import { useDialog } from 'src/hooks/useDialog';
 import { ManagedServicePayload } from 'src/services/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -302,8 +298,6 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
 
 const styled = withStyles(styles);
 const enhanced = compose<CombinedProps, Props>(
-  withManagedIssues(),
-  withManagedServices(),
   withSnackbar,
   styled
 );
