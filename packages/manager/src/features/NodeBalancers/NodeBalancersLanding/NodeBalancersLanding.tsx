@@ -2,6 +2,7 @@ import {
   NodeBalancer,
   NodeBalancerConfig
 } from 'linode-js-sdk/lib/nodebalancers';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -228,7 +229,7 @@ export class NodeBalancersLanding extends React.Component<
     } = this.state;
 
     if (nodeBalancersError) {
-      return <RenderError />;
+      return <RenderError errors={nodeBalancersError} />;
     }
 
     if (nodeBalancersLoading) {
@@ -423,8 +424,13 @@ const LoadingState = () => {
   return <CircleProgress />;
 };
 
-const RenderError = () => {
+const RenderError = ({ errors }: { errors: APIError[] }) => {
   return (
-    <ErrorState errorText="There was an error loading your NodeBalancers. Please try again later." />
+    <ErrorState
+      errorText={
+        errors[0].reason ||
+        'There was an error loading your NodeBalancers. Please try again later.'
+      }
+    />
   );
 };

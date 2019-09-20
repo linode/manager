@@ -2,7 +2,7 @@
   "name": "linode-manager",
   "author": "Linode",
   "description": "The Linode Manager website",
-  "version": "0.70.0",
+  "version": "0.71.0",
   "private": true,
   "engines": {
     "node": ">= 10.16.0"
@@ -16,9 +16,9 @@
     "url": "https://github.com/Linode/manager.git"
   },
   "dependencies": {
-    "@material-ui/core": "^4.1.0",
-    "@material-ui/icons": "^4.1.0",
-    "@material-ui/styles": "^4.1.2",
+    "@material-ui/core": "^4.4.2",
+    "@material-ui/icons": "^4.4.1",
+    "@material-ui/styles": "^4.4.1",
     "@sentry/browser": "^5.4.3",
     "@types/sanitize-html": "^1.18.3",
     "algoliasearch": "^3.30.0",
@@ -38,7 +38,7 @@
     "js-cookie": "^2.2.0",
     "jspdf": "^1.5.3",
     "launchdarkly-react-client-sdk": "^2.11.0",
-    "linode-js-sdk": "^0.4.0-alpha.0",
+    "linode-js-sdk": "^0.5.0-alpha.0",
     "logic-query-parser": "^0.0.5",
     "md5": "^2.2.1",
     "memoizee": "^0.4.14",
@@ -51,7 +51,6 @@
     "postinstall-postinstall": "^2.0.0",
     "pretty-bytes": "^5.1.0",
     "promise": "8.0.1",
-    "promise.prototype.finally": "^3.1.0",
     "qrcode.react": "^0.8.0",
     "qs": "^6.6.0",
     "ramda": "^0.25.0",

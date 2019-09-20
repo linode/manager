@@ -1,18 +1,23 @@
-import { mount, shallow } from 'enzyme';
+import { shallow } from 'enzyme';
 import * as React from 'react';
-import { MemoryRouter } from 'react-router-dom';
 import { extDisk, swapDisk } from 'src/__data__/disks';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { types } from 'src/__data__/types';
-import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
 import {
   isSmallerThanCurrentPlan,
   LinodeResize,
   shouldEnableAutoResizeDiskOption
 } from './LinodeResize';
 
-import { Provider } from 'react-redux';
-import store from 'src/store';
+window.matchMedia = jest.fn().mockImplementation(query => {
+  return {
+    matches: false,
+    media: query,
+    onchange: null,
+    addListener: jest.fn(),
+    removeListener: jest.fn()
+  };
+});
 
 describe('LinodeResize', () => {
   const mockTypes = types.map(LinodeResize.extendType);
@@ -28,9 +33,10 @@ describe('LinodeResize', () => {
         title: '',
         subTitle: '',
         currentPlanContainer: '',
-        checkbox: '',
         resizeTitle: '',
-        toolTip: ''
+        toolTip: '',
+        checkbox: '',
+        currentHeaderEmptyCell: ''
       }}
       linodeId={12}
       permissions={{} as any}
@@ -41,134 +47,6 @@ describe('LinodeResize', () => {
       linodeLabel=""
     />
   );
-
-  it('should render the currently selected plan as a card', () => {
-    const componentWithTheme = mount(
-      <Provider store={store}>
-        <LinodeThemeWrapper theme="dark" spacing="normal">
-          <MemoryRouter>
-            <LinodeResize
-              linodeDisks={[]}
-              closeSnackbar={jest.fn()}
-              enqueueSnackbar={jest.fn()}
-              {...reactRouterProps}
-              classes={{
-                root: '',
-                title: '',
-                subTitle: '',
-                currentPlanContainer: '',
-                checkbox: '',
-                resizeTitle: '',
-                toolTip: ''
-              }}
-              linodeId={12}
-              permissions={{} as any}
-              updateLinode={jest.fn()}
-              linodeType={null}
-              currentTypesData={mockTypes}
-              deprecatedTypesData={mockTypes}
-              linodeLabel=""
-            />
-          </MemoryRouter>
-        </LinodeThemeWrapper>
-      </Provider>
-    );
-
-    const currentSelectionCard = componentWithTheme.find(
-      'div [data-qa-select-card-heading="No Assigned Plan"]'
-    );
-
-    expect(currentSelectionCard.exists()).toBeTruthy();
-    expect(currentSelectionCard.length).toEqual(1);
-  });
-
-  describe('when linodeType is null', () => {
-    describe('current plan card', () => {
-      it('should have a heading of No Assigned Plan', () => {
-        const componentWithTheme = mount(
-          <Provider store={store}>
-            <LinodeThemeWrapper theme="dark" spacing="normal">
-              <MemoryRouter>
-                <LinodeResize
-                  closeSnackbar={jest.fn()}
-                  enqueueSnackbar={jest.fn()}
-                  linodeDisks={[]}
-                  {...reactRouterProps}
-                  classes={{
-                    root: '',
-                    title: '',
-                    subTitle: '',
-                    currentPlanContainer: '',
-                    checkbox: '',
-                    resizeTitle: '',
-                    toolTip: ''
-                  }}
-                  linodeId={12}
-                  linodeType={null}
-                  permissions={{} as any}
-                  updateLinode={jest.fn()}
-                  currentTypesData={mockTypes}
-                  deprecatedTypesData={mockTypes}
-                  linodeLabel=""
-                />
-              </MemoryRouter>
-            </LinodeThemeWrapper>
-          </Provider>
-        );
-
-        const currentSelectionCard = componentWithTheme.find(
-          'div [data-qa-select-card-heading="No Assigned Plan"]'
-        );
-
-        expect(currentSelectionCard.exists()).toBeTruthy();
-        expect(currentSelectionCard.length).toEqual(1);
-      });
-    });
-  });
-
-  describe('when linodeType is unexpected', () => {
-    describe('current plan card', () => {
-      it('should have a heading of Unknown Plan', () => {
-        const componentWithTheme = mount(
-          <Provider store={store}>
-            <LinodeThemeWrapper theme="dark" spacing="normal">
-              <MemoryRouter>
-                <LinodeResize
-                  closeSnackbar={jest.fn()}
-                  linodeDisks={[]}
-                  enqueueSnackbar={jest.fn()}
-                  {...reactRouterProps}
-                  classes={{
-                    root: '',
-                    title: '',
-                    subTitle: '',
-                    currentPlanContainer: '',
-                    checkbox: '',
-                    resizeTitle: '',
-                    toolTip: ''
-                  }}
-                  linodeId={12}
-                  permissions={{} as any}
-                  updateLinode={jest.fn()}
-                  linodeType={'_something_unexpected_'}
-                  currentTypesData={mockTypes}
-                  deprecatedTypesData={mockTypes}
-                  linodeLabel=""
-                />
-              </MemoryRouter>
-            </LinodeThemeWrapper>
-          </Provider>
-        );
-
-        const currentSelectionCard = componentWithTheme.find(
-          'div [data-qa-select-card-heading="Unknown Plan"]'
-        );
-
-        expect(currentSelectionCard.exists()).toBeTruthy();
-        expect(currentSelectionCard.length).toEqual(1);
-      });
-    });
-  });
 
   it('submit button should be enabled if a plan is selected', () => {
     component.setState({ selectedId: 'selected' });

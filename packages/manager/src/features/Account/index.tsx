@@ -1,10 +1,5 @@
 import * as React from 'react';
-import {
-  Route,
-  RouteComponentProps,
-  Switch,
-  withRouter
-} from 'react-router-dom';
+import { Route, RouteComponentProps, Switch } from 'react-router-dom';
 
 import DefaultLoader from 'src/components/DefaultLoader';
 
@@ -41,4 +36,4 @@ class Account extends React.Component<Props> {
     );
   }
 }
-export default withRouter(Account);
+export default Account;
