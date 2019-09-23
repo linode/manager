@@ -20,6 +20,7 @@ import {
   CredentialPayload,
   ManagedContact,
   ManagedCredential,
+  ManagedIssue,
   ManagedLinodeSetting,
   ManagedServiceMonitor,
   ManagedServicePayload,
@@ -284,7 +285,7 @@ export const deleteContact = (contactId: number) =>
  * Returns a paginated list of Issues on a Managed customer's account.
  */
 export const getManagedIssues = () =>
-  Request<Page<Linode.ManagedIssue>>(
+  Request<Page<ManagedIssue>>(
     setMethod('GET'),
     setURL(`${API_ROOT}/managed/issues`)
   ).then(response => response.data);

@@ -88,3 +88,18 @@ export interface ContactPayload {
   phone?: ManagedContactPhone;
   group?: string;
 }
+
+export interface ManagedIssue {
+  id: number;
+  services: number[];
+  created: string;
+  entity: any;
+}
+
+// This is much like a support ticket but it's a special case so here's a special type:
+export interface IssueEntity {
+  id: number;
+  label: string;
+  type: 'ticket'; // I don't make the rules I'm just describing them
+  url: string;
+}
