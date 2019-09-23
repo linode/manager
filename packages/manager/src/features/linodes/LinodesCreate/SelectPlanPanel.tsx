@@ -116,7 +116,7 @@ export class SelectPlanPanel extends React.Component<
     }
 
     return (
-      <React.Fragment key={idx}>
+      <React.Fragment key={`tabbed-panel-${idx}`}>
         {/* Displays Table Row for larger screens */}
         <Hidden smDown>
           <TableRow
