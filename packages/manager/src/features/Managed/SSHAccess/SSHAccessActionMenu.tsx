@@ -1,14 +1,17 @@
+import {
+  ManagedLinodeSetting,
+  updateLinodeSettings
+} from 'linode-js-sdk/lib/managed';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
-import { updateLinodeSettings } from 'src/services/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface Props {
   linodeId: number;
   isEnabled: boolean;
-  updateOne: (linodeSetting: Linode.ManagedLinodeSetting) => void;
+  updateOne: (linodeSetting: ManagedLinodeSetting) => void;
   openDrawer: (linodeId: number) => void;
 }
 

@@ -1,8 +1,10 @@
+import {
+  ManagedServiceMonitor,
+  ManagedServicePayload
+} from 'linode-js-sdk/lib/managed';
 import actionCreatorFactory from 'typescript-fsa';
 
 export const actionCreator = actionCreatorFactory(`@@manager/managed`);
-
-import { ManagedServicePayload } from 'src/services/managed';
 
 export interface MonitorPayload {
   monitorID: number;
@@ -10,32 +12,32 @@ export interface MonitorPayload {
 
 export const requestServicesActions = actionCreator.async<
   void,
-  Linode.ManagedServiceMonitor[],
+  ManagedServiceMonitor[],
   Linode.ApiFieldError[]
 >('request');
 
 export const disableServiceMonitorActions = actionCreator.async<
   MonitorPayload,
-  Linode.ManagedServiceMonitor,
+  ManagedServiceMonitor,
   Linode.ApiFieldError[]
 >('disable');
 
 export const createServiceMonitorActions = actionCreator.async<
   ManagedServicePayload,
-  Linode.ManagedServiceMonitor,
+  ManagedServiceMonitor,
   Linode.ApiFieldError[]
 >('create');
 
 export type UpdateServicePayload = MonitorPayload & ManagedServicePayload;
 export const updateServiceMonitorActions = actionCreator.async<
   UpdateServicePayload,
-  Linode.ManagedServiceMonitor,
+  ManagedServiceMonitor,
   Linode.ApiFieldError[]
 >('update');
 
 export const enableServiceMonitorActions = actionCreator.async<
   MonitorPayload,
-  Linode.ManagedServiceMonitor,
+  ManagedServiceMonitor,
   Linode.ApiFieldError[]
 >('enable');
 

@@ -1,4 +1,8 @@
 import { Formik, FormikActions } from 'formik';
+import {
+  ManagedLinodeSetting,
+  updateLinodeSettings
+} from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -11,7 +15,6 @@ import IPSelect from 'src/components/IPSelect';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import Toggle from 'src/components/Toggle';
-import { updateLinodeSettings } from 'src/services/managed';
 import {
   handleFieldErrors,
   handleGeneralErrors
@@ -38,8 +41,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   isOpen: boolean;
   closeDrawer: () => void;
-  updateOne: (linodeSetting: Linode.ManagedLinodeSetting) => void;
-  linodeSetting?: Linode.ManagedLinodeSetting;
+  updateOne: (linodeSetting: ManagedLinodeSetting) => void;
+  linodeSetting?: ManagedLinodeSetting;
 }
 
 type CombinedProps = Props;
@@ -54,12 +57,8 @@ const EditSSHAccessDrawer: React.FC<CombinedProps> = props => {
     : 'Edit SSH Access';
 
   const onSubmit = (
-    values: Linode.ManagedLinodeSetting,
-    {
-      setErrors,
-      setSubmitting,
-      setStatus
-    }: FormikActions<Linode.ManagedLinodeSetting>
+    values: ManagedLinodeSetting,
+    { setErrors, setSubmitting, setStatus }: FormikActions<ManagedLinodeSetting>
   ) => {
     // It probably isn't possible to end up here without linodeSetting,
     // but we'll include an early return to make TypeScript happy.

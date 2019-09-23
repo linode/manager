@@ -5,11 +5,11 @@ import {
   credentialLabel,
   credentialPassword,
   credentialUsername
-} from 'src/services/managed';
+} from 'linode-js-sdk/lib/managed';
 
 export const creationSchema = createCredentialSchema.shape({
   password: string().required('Password is required.')
-});
+} as any);
 
 export const updateLabelSchema = object().shape({
   label: credentialLabel.required('Label is required.')

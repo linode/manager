@@ -1,11 +1,12 @@
+import { ManagedLinodeSetting } from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import ActionMenu from './SSHAccessActionMenu';
 
 interface Props {
-  linodeSetting: Linode.ManagedLinodeSetting;
-  updateOne: (linodeSetting: Linode.ManagedLinodeSetting) => void;
+  linodeSetting: ManagedLinodeSetting;
+  updateOne: (linodeSetting: ManagedLinodeSetting) => void;
   openDrawer: (linodeId: number) => void;
 }
 

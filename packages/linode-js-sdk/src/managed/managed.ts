@@ -5,7 +5,8 @@ import Request, {
   setParams,
   setURL,
   setXFilter
-} from '../index';
+} from '../request';
+import { ResourcePage as Page } from '../types';
 import {
   createContactSchema,
   createCredentialSchema,
@@ -14,44 +15,20 @@ import {
   updateManagedLinodeSchema,
   updatePasswordSchema
 } from './managed.schema';
-
-// Payload types
-
-type Page<T> = Linode.ResourcePage<T>;
-
-export interface ManagedServicePayload {
-  label: string;
-  service_type: Linode.ServiceType;
-  address: string;
-  timeout: number;
-  notes?: string;
-  body?: string;
-  consultation_group?: string;
-  credentials?: number[];
-}
-
-export interface CredentialPayload {
-  label: string;
-  password?: string;
-  username?: string;
-}
-
-export interface UpdateCredentialPayload {
-  // Not using a Partial<> bc this is the only possible field to update
-  label: string;
-}
-
-export interface UpdatePasswordPayload {
-  password?: string;
-  username?: string;
-}
-
-export interface ContactPayload {
-  name: string;
-  email: string;
-  phone?: Linode.ManagedContactPhone;
-  group?: string;
-}
+import {
+  ContactPayload,
+  CredentialPayload,
+  ManagedContact,
+  ManagedCredential,
+  ManagedIssue,
+  ManagedLinodeSetting,
+  ManagedServiceMonitor,
+  ManagedServicePayload,
+  ManagedSSHPubKey,
+  ManagedSSHSetting,
+  UpdateCredentialPayload,
+  UpdatePasswordPayload
+} from './types';
 
 /**
  * enableManaged
@@ -75,7 +52,7 @@ export const enableManaged = () =>
  * Returns a paginated list of Managed Services on your account.
  */
 export const getServices = (params?: any, filters?: any) =>
-  Request<Page<Linode.ManagedServiceMonitor>>(
+  Request<Page<ManagedServiceMonitor>>(
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
@@ -88,7 +65,7 @@ export const getServices = (params?: any, filters?: any) =>
  * Temporarily disables monitoring of a Managed Service.
  */
 export const disableServiceMonitor = (serviceID: number) =>
-  Request<Linode.ManagedServiceMonitor>(
+  Request<ManagedServiceMonitor>(
     setMethod('POST'),
     setURL(`${API_ROOT}/managed/services/${serviceID}/disable`)
   ).then(response => response.data);
@@ -99,7 +76,7 @@ export const disableServiceMonitor = (serviceID: number) =>
  * Enables monitoring of a Managed Service that is currently disabled.
  */
 export const enableServiceMonitor = (serviceID: number) =>
-  Request<Linode.ManagedServiceMonitor>(
+  Request<ManagedServiceMonitor>(
     setMethod('POST'),
     setURL(`${API_ROOT}/managed/services/${serviceID}/enable`)
   ).then(response => response.data);
@@ -121,7 +98,7 @@ export const deleteServiceMonitor = (serviceID: number) =>
  * Returns a paginated list of Managed Settings for your Linodes. There will be one entry per Linode on your Account.
  */
 export const getLinodeSettings = (params?: any, filters?: any) =>
-  Request<Page<Linode.ManagedLinodeSetting>>(
+  Request<Page<ManagedLinodeSetting>>(
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
@@ -134,7 +111,7 @@ export const getLinodeSettings = (params?: any, filters?: any) =>
  * Creates a Managed Service Monitor
  */
 export const createServiceMonitor = (data: ManagedServicePayload) =>
-  Request<Linode.ManagedServiceMonitor>(
+  Request<ManagedServiceMonitor>(
     setMethod('POST'),
     setURL(`${API_ROOT}/managed/services`),
     setData(data, createServiceMonitorSchema)
@@ -149,7 +126,7 @@ export const updateServiceMonitor = (
   monitorID: number,
   data: Partial<ManagedServicePayload>
 ) =>
-  Request<Linode.ManagedServiceMonitor>(
+  Request<ManagedServiceMonitor>(
     setMethod('PUT'),
     setURL(`${API_ROOT}/managed/services/${monitorID}`),
     setData(data, createServiceMonitorSchema)
@@ -161,7 +138,7 @@ export const updateServiceMonitor = (
  * Returns a paginated list of Managed Credentials for your account.
  */
 export const getCredentials = (params?: any, filters?: any) =>
-  Request<Page<Linode.ManagedCredential>>(
+  Request<Page<ManagedCredential>>(
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
@@ -178,7 +155,7 @@ export const updateCredential = (
   credentialID: number,
   data: UpdateCredentialPayload
 ) =>
-  Request<Page<Linode.ManagedCredential>>(
+  Request<Page<ManagedCredential>>(
     setMethod('PUT'),
     setData(data, updateCredentialSchema),
     setURL(`${API_ROOT}/managed/credentials/${credentialID}`)
@@ -193,7 +170,7 @@ export const updatePassword = (
   credentialID: number,
   data: UpdatePasswordPayload
 ) =>
-  Request<Page<Linode.ManagedCredential>>(
+  Request<Page<ManagedCredential>>(
     setMethod('POST'),
     setData(data, updatePasswordSchema),
     setURL(`${API_ROOT}/managed/credentials/${credentialID}/update`)
@@ -216,7 +193,7 @@ export const deleteCredential = (credentialID: number) =>
  * Creates a Managed Credential
  */
 export const createCredential = (data: CredentialPayload) =>
-  Request<Linode.ManagedCredential>(
+  Request<ManagedCredential>(
     setMethod('POST'),
     setURL(`${API_ROOT}/managed/credentials`),
     setData(data, createCredentialSchema)
@@ -230,7 +207,7 @@ export const createCredential = (data: CredentialPayload) =>
  * able to log in to the Linode with this key when attempting to resolve issues.
  */
 export const getSSHPubKey = () =>
-  Request<Linode.ManagedSSHPubKey>(
+  Request<ManagedSSHPubKey>(
     setMethod('GET'),
     setURL(`${API_ROOT}/managed/credentials/sshkey`)
   ).then(response => response.data);
@@ -243,9 +220,9 @@ export const getSSHPubKey = () =>
  */
 export const updateLinodeSettings = (
   linodeId: number,
-  data: { ssh: Partial<Linode.ManagedSSHSetting> }
+  data: { ssh: Partial<ManagedSSHSetting> }
 ) =>
-  Request<Linode.ManagedLinodeSetting>(
+  Request<ManagedLinodeSetting>(
     setURL(`${API_ROOT}/managed/linode-settings/${linodeId}`),
     setMethod('PUT'),
     setData(data, updateManagedLinodeSchema)
@@ -257,7 +234,7 @@ export const updateLinodeSettings = (
  * Returns a paginated list of Managed Contacts on your Account.
  */
 export const getManagedContacts = (params?: any, filters?: any) =>
-  Request<Page<Linode.ManagedContact>>(
+  Request<Page<ManagedContact>>(
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
@@ -270,7 +247,7 @@ export const getManagedContacts = (params?: any, filters?: any) =>
  * Creates a Managed Contact
  */
 export const createContact = (data: ContactPayload) =>
-  Request<Linode.ManagedContact>(
+  Request<ManagedContact>(
     setMethod('POST'),
     setURL(`${API_ROOT}/managed/contacts`),
     setData(data, createContactSchema)
@@ -281,8 +258,11 @@ export const createContact = (data: ContactPayload) =>
  *
  * Updates a Managed Contact
  */
-export const updateContact = (contactId: number, data: ContactPayload) =>
-  Request<Linode.ManagedContact>(
+export const updateContact = (
+  contactId: number,
+  data: Partial<ContactPayload>
+) =>
+  Request<ManagedContact>(
     setMethod('PUT'),
     setURL(`${API_ROOT}/managed/contacts/${contactId}`),
     setData(data, createContactSchema)
@@ -305,7 +285,7 @@ export const deleteContact = (contactId: number) =>
  * Returns a paginated list of Issues on a Managed customer's account.
  */
 export const getManagedIssues = () =>
-  Request<Page<Linode.ManagedIssue>>(
+  Request<Page<ManagedIssue>>(
     setMethod('GET'),
     setURL(`${API_ROOT}/managed/issues`)
   ).then(response => response.data);

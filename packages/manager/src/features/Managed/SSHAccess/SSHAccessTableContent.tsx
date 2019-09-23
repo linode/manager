@@ -1,3 +1,4 @@
+import { ManagedLinodeSetting } from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 import TableRowEmpty from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
@@ -6,10 +7,10 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import SSHAccessRow from './SSHAccessRow';
 
 interface Props {
-  linodeSettings: Linode.ManagedLinodeSetting[];
+  linodeSettings: ManagedLinodeSetting[];
   loading: boolean;
   lastUpdated: number;
-  updateOne: (linodeSetting: Linode.ManagedLinodeSetting) => void;
+  updateOne: (linodeSetting: ManagedLinodeSetting) => void;
   openDrawer: (linodeId: number) => void;
   error?: Linode.ApiFieldError[];
 }
@@ -47,7 +48,7 @@ export const SSHAccessTableContent: React.FC<CombinedProps> = props => {
   return (
     <>
       {linodeSettings.map(
-        (linodeSetting: Linode.ManagedLinodeSetting, idx: number) => (
+        (linodeSetting: ManagedLinodeSetting, idx: number) => (
           <SSHAccessRow
             key={`linode-setting-row-${idx}`}
             updateOne={updateOne}

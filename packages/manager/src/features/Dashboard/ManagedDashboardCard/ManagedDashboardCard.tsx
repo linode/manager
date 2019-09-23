@@ -1,3 +1,4 @@
+import { ManagedServiceMonitor } from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface StateProps {
-  monitors: Linode.ManagedServiceMonitor[];
+  monitors: ManagedServiceMonitor[];
   loading: boolean;
   error?: Linode.ApiFieldError[];
   updated: number;
@@ -119,7 +120,7 @@ const withManaged = ManagedContainer(
   })
 );
 
-const getFailedMonitors = (monitors: Linode.ManagedServiceMonitor[]) => {
+const getFailedMonitors = (monitors: ManagedServiceMonitor[]) => {
   /**
    * This assumes that a status of "failed" is the only
    * error state; but if all a user's monitors are pending

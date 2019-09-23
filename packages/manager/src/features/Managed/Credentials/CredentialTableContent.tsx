@@ -1,3 +1,4 @@
+import { ManagedCredential } from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 
 import TableRowEmpty from 'src/components/TableRowEmptyState';
@@ -6,7 +7,7 @@ import TableRowLoading from 'src/components/TableRowLoading';
 import CredentialRow from './CredentialRow';
 
 interface Props {
-  credentials: Linode.ManagedCredential[];
+  credentials: ManagedCredential[];
   loading: boolean;
   openDialog: (id: number, label: string) => void;
   openForEdit: (id: number) => void;
@@ -36,7 +37,7 @@ export const CredentialTableContent: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      {credentials.map((credential: Linode.ManagedCredential, idx: number) => (
+      {credentials.map((credential: ManagedCredential, idx: number) => (
         <CredentialRow
           key={`managed-credential-row-${idx}`}
           credential={credential}

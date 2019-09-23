@@ -1,4 +1,5 @@
 import { AccountSettings } from 'linode-js-sdk/lib/account';
+import { enableManaged } from 'linode-js-sdk/lib/managed';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import ExternalLink from 'src/assets/icons/external-link.svg';
@@ -10,8 +11,6 @@ import Typography from 'src/components/core/Typography';
 import Placeholder from 'src/components/Placeholder';
 import withLinodes from 'src/containers/withLinodes.container';
 import { pluralize } from 'src/utilities/pluralize';
-
-import { enableManaged } from 'src/services/managed';
 
 export interface StateProps {
   linodeCount: number;

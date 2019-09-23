@@ -1,3 +1,4 @@
+import { ManagedIssue } from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -36,7 +37,7 @@ export const HistoryDrawer: React.FC<Props> = props => {
 };
 
 const renderDrawerContent = (
-  issues: Linode.ManagedIssue[],
+  issues: ManagedIssue[],
   loading: boolean,
   error?: Linode.ApiFieldError[]
 ) => {

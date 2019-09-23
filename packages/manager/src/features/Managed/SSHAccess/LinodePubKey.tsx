@@ -1,4 +1,5 @@
 import * as copy from 'copy-to-clipboard';
+import { getSSHPubKey, ManagedSSHPubKey } from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 import SSHKeyIcon from 'src/assets/icons/ssh-key.svg';
 import Button from 'src/components/Button';
@@ -10,7 +11,6 @@ import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import { getSSHPubKey } from 'src/services/managed';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 
 // @todo: is this URL correct? Are there new docs being written?
@@ -91,7 +91,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 const LinodePubKey: React.FC<{}> = props => {
   const classes = useStyles();
 
-  const { data, loading, error } = useAPIRequest<Linode.ManagedSSHPubKey>(
+  const { data, loading, error } = useAPIRequest<ManagedSSHPubKey>(
     getSSHPubKey,
     { ssh_key: '' }
   );
