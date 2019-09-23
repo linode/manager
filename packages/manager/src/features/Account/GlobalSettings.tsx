@@ -118,7 +118,10 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
           onChange={this.toggleNetworkHelper}
           networkHelperEnabled={networkHelperEnabled}
         />
-        <EnableManaged isManaged={isManaged} />
+        <EnableManaged
+          isManaged={isManaged}
+          update={this.props.actions.updateAccount}
+        />
         {shouldDisplayGroupImport(entitiesWithGroupsToImport) && (
           <ImportGroupsAsTags openDrawer={openImportDrawer} />
         )}
