@@ -7,6 +7,7 @@ import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import ExpansionPanel from 'src/components/ExpansionPanel';
+import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import SupportLink from 'src/components/SupportLink';
 import withLinodes from 'src/containers/withLinodes.container';
@@ -48,7 +49,12 @@ export const ManagedContent: React.FC<ContentProps> = props => {
         <Typography variant="body1">
           Linode Managed includes Backups, Longview Pro, cPanel, and
           round-the-clock monitoring to help keep your systems up and running.
-          +$100/month per Linode.
+          +$100/month per Linode.{' '}
+          <ExternalLink
+            fixedIcon
+            text="Learn more."
+            link="https://linode.com/managed"
+          />
         </Typography>
       </Grid>
       <Grid item>
