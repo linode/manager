@@ -23,6 +23,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import shouldDisplayGroupImport from 'src/utilities/shouldDisplayGroupImportCTA';
 import { storage } from 'src/utilities/storage';
 import AutoBackups from './AutoBackups';
+import EnableManaged from './EnableManaged';
 import ImportGroupsAsTags from './ImportGroupsAsTags';
 import NetworkHelper from './NetworkHelper';
 
@@ -117,6 +118,7 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
           onChange={this.toggleNetworkHelper}
           networkHelperEnabled={networkHelperEnabled}
         />
+        <EnableManaged isManaged={isManaged} />
         {shouldDisplayGroupImport(entitiesWithGroupsToImport) && (
           <ImportGroupsAsTags openDrawer={openImportDrawer} />
         )}
