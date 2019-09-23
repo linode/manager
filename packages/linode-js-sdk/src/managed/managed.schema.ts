@@ -70,14 +70,16 @@ export const createContactSchema = object().shape({
     .min(6, 'E-mail must be between 6 and 100 characters')
     .max(100, 'E-mail must be between 6 and 100 characters')
     .email('Invalid e-mail address'),
-  phone: object().shape({
-    primary: string()
-      .nullable(true)
-      .notRequired(),
-    secondary: string()
-      .nullable(true)
-      .notRequired()
-  }),
+  phone: object()
+    .shape({
+      primary: string()
+        .nullable(true)
+        .notRequired(),
+      secondary: string()
+        .nullable(true)
+        .notRequired()
+    })
+    .notRequired(),
   group: string()
     .notRequired()
     .nullable(true)

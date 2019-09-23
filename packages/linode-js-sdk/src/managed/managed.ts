@@ -246,7 +246,7 @@ export const getManagedContacts = (params?: any, filters?: any) =>
  *
  * Creates a Managed Contact
  */
-export const createContact = (data: Partial<ContactPayload>) =>
+export const createContact = (data: ContactPayload) =>
   Request<ManagedContact>(
     setMethod('POST'),
     setURL(`${API_ROOT}/managed/contacts`),
