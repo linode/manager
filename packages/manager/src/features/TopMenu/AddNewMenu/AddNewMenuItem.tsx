@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import MenuItem from 'src/components/core/MenuItem';
 import {
   createStyles,
@@ -8,7 +9,13 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 
-type CSSClasses = 'root' | 'content' | 'titleLink' | 'body' | 'iconWrapper';
+type CSSClasses =
+  | 'root'
+  | 'content'
+  | 'link'
+  | 'titleLink'
+  | 'body'
+  | 'iconWrapper';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -58,12 +65,16 @@ const styles = (theme: Theme) =>
       marginTop: 3,
       fontSize: '.9rem',
       lineHeight: '1.1rem'
+    },
+    link: {
+      display: 'flex'
     }
   });
 
 export interface MenuItems {
   title: string;
   onClick: (e: React.MouseEvent<HTMLElement>) => void;
+  linkTo?: string;
   body: string;
   ItemIcon: React.ComponentClass<any>;
   attr?: { [key: string]: any };
@@ -82,30 +93,48 @@ type PropsWithStyles = Props & WithStyles<CSSClasses>;
 
 class AddNewMenuItem extends React.Component<PropsWithStyles, State> {
   render() {
-    const { classes, title, onClick, body, ItemIcon, attr } = this.props;
+    const {
+      classes,
+      title,
+      onClick,
+      linkTo,
+      body,
+      ItemIcon,
+      attr
+    } = this.props;
+
+    const menuItemContent = () => (
+      <>
+        <div className={classes.iconWrapper}>
+          <ItemIcon />
+        </div>
+        <div className={classes.content}>
+          <Typography variant="h3">{title}</Typography>
+          <Typography variant="body1" className={classes.body}>
+            {body}
+          </Typography>
+        </div>
+      </>
+    );
 
     return (
-      <React.Fragment>
-        <MenuItem
-          onClick={onClick}
-          className={classes.root}
-          data-qa-add-new-menu={title}
-          button
-          component="li"
-          aria-label={`Create ${title}`}
-          {...attr}
-        >
-          <div className={classes.iconWrapper}>
-            <ItemIcon />
-          </div>
-          <div className={classes.content}>
-            <Typography variant="h3">{title}</Typography>
-            <Typography variant="body1" className={classes.body}>
-              {body}
-            </Typography>
-          </div>
-        </MenuItem>
-      </React.Fragment>
+      <MenuItem
+        onClick={onClick}
+        className={classes.root}
+        data-qa-add-new-menu={title}
+        button
+        component="li"
+        aria-label={`Create ${title}`}
+        {...attr}
+      >
+        {linkTo ? (
+          <Link to={linkTo} className={classes.link}>
+            {menuItemContent()}
+          </Link>
+        ) : (
+          menuItemContent()
+        )}
+      </MenuItem>
     );
   }
 }
