@@ -57,9 +57,15 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
 
   return (
     <Drawer {...restOfDrawerProps}>
-      <TextField label="Name" required inputRef={inputRef} />
+      <TextField
+        aria-label="Name of your new firewall"
+        label="Name"
+        required
+        inputRef={inputRef}
+      />
       <Select
         label="Rules"
+        aria-label="Select predefined rules for your firewall."
         textFieldProps={{
           required: true,
           helperText: `Add one or more predefined rules to this firewall. You can edit the
@@ -112,6 +118,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
           handleSelectLinodes(values)
         }
         placeholder="Select a Linode or type to search..."
+        aria-label="Select which Linodes to which you want to apply this new firewall"
         textFieldProps={{
           helperTextPosition: 'top',
           helperText: `Assign one or more Linodes to this firewall. You can
