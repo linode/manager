@@ -24,7 +24,7 @@ import TableRow from 'src/components/TableRow';
 import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
 import { getObjectList } from 'src/services/objectStorage/buckets';
 import { getQueryParam } from 'src/utilities/queryParams';
-import ObjectUpload from '../ObjectUpload';
+import ObjectUploader from '../ObjectUploader';
 import { ExtendedObject, extendObject } from '../utilities';
 import BucketBreadcrumb from './BucketBreadcrumb';
 import ObjectTableContent from './ObjectTableContent';
@@ -310,7 +310,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
             </>
           </Grid>
           <Grid item xs={4}>
-            <ObjectUpload
+            <ObjectUploader
               clusterId={clusterId}
               bucketName={bucketName}
               update={() => this.updateInPlace()}
