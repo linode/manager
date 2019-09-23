@@ -1,4 +1,5 @@
 import Axios, { AxiosResponse } from 'axios';
+import { pathOr } from 'ramda';
 import { LONGVIEW_ROOT } from 'src/constants';
 
 /**
@@ -43,9 +44,17 @@ import { LONGVIEW_ROOT } from 'src/constants';
  * So the errors will be available at response.data[0].NOTIFICATIONS.
  */
 
+export type LongviewAction =
+  | 'batch'
+  | 'getTopProcesses'
+  | 'getLatestValue'
+  | 'getValue'
+  | 'getValues'
+  | 'lastUpdated';
+
 export interface LongviewResponse {
   VERSION: number;
-  ACTION: string;
+  ACTION: LongviewAction;
   DATA: any;
   NOTIFICATIONS: LongviewError[];
 }
@@ -83,7 +92,7 @@ export const handleLongviewResponse = (
     //   });
     // }
     const errors = notifications.map((thisNotification: LongviewError) => ({
-      reason: thisNotification.TEXT
+      reason: pathOr('Error accessing Longview API', ['TEXT'], thisNotification)
     }));
     return Promise.reject(errors);
   } else {
@@ -95,7 +104,11 @@ export const getLastUpdated = (token: string) => {
   return get(token, 'getLatestValue');
 };
 
-export const get = (token: string, action: string, fields?: string[]) => {
+export const get = (
+  token: string,
+  action: LongviewAction,
+  fields?: string[]
+) => {
   const request = baseRequest();
   const data = new FormData();
   data.set('api_key', token);
