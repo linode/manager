@@ -10,7 +10,6 @@ import withAccountSettings, {
   SettingsProps
 } from 'src/containers/accountSettings.container';
 import useFlags from 'src/hooks/useFlags';
-import EnableManagedPlaceholder from './EnableManagedPlaceholder';
 import ManagedLandingContent from './ManagedLandingContent';
 import ManagedPlaceholder from './ManagedPlaceholder';
 
@@ -36,14 +35,6 @@ export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
   } = props;
 
   const flags = useFlags();
-  const isManaged = accountSettings && accountSettings.managed;
-
-  /**
-   * Temporary logic since we currently have 3 states:
-   * 1. User is Managed but feature flag is off -> show existing placeholder to point them to Classic
-   * 2. User is not Managed -> show new placeholder to enable Managed
-   * 3. User is Managed & flag is on -> show ManagedLanding page
-   */
 
   const renderContent = () => {
     // Loading and error states
@@ -57,12 +48,8 @@ export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
 
     if (!flags.managed) {
       return <ManagedPlaceholder />;
-    } else if (flags.managed && !isManaged) {
-      // Eventually we can rename this to ManagedPlaceholder and delete the existing one
-      return (
-        <EnableManagedPlaceholder update={props.updateAccountSettingsInStore} />
-      );
     }
+
     return <ManagedLandingContent {...routeComponentProps} />;
   };
 
