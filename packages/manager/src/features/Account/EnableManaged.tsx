@@ -16,6 +16,7 @@ import { pluralize } from 'src/utilities/pluralize';
 interface Props {
   isManaged: boolean;
   update: (data: Partial<AccountSettings>) => void;
+  push: (url: string) => void;
 }
 
 interface StateProps {
@@ -60,7 +61,7 @@ export const ManagedContent: React.FC<ContentProps> = props => {
 };
 
 export const EnableManaged: React.FC<CombinedProps> = props => {
-  const { isManaged, linodeCount, update } = props;
+  const { isManaged, linodeCount, push, update } = props;
   const flags = useFlags();
   const [isOpen, setOpen] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string | undefined>();
@@ -83,6 +84,7 @@ export const EnableManaged: React.FC<CombinedProps> = props => {
       .then(() => {
         handleClose();
         update({ managed: true });
+        push('/managed');
       })
       .catch(handleError);
   };

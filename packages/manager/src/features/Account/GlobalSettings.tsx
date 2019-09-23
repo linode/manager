@@ -4,6 +4,7 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -46,7 +47,10 @@ interface DispatchProps {
   };
 }
 
-type CombinedProps = StateProps & DispatchProps & WithSnackbarProps;
+type CombinedProps = StateProps &
+  DispatchProps &
+  WithSnackbarProps &
+  RouteComponentProps<{}>;
 
 class GlobalSettings extends React.Component<CombinedProps, {}> {
   toggleAutomaticBackups = () => {
@@ -121,6 +125,7 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
         <EnableManaged
           isManaged={isManaged}
           update={this.props.actions.updateAccount}
+          push={this.props.history.push}
         />
         {shouldDisplayGroupImport(entitiesWithGroupsToImport) && (
           <ImportGroupsAsTags openDrawer={openImportDrawer} />
