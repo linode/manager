@@ -4,6 +4,33 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.72.0] - 2019-09-23
+
+### Added:
+- Managed service monitor history drawer
+- Routes unactivated user to ticket detail post-ticket submit
+- Firewall Landing and Routing
+- App-Blocking Activation Landing Page
+- New table-based flow for selecting a Linode plan
+- Adding conversion for mb and removeDecimals boolean to the util
+
+### Changed:
+- [SDK] Change: Migrate all /managed functions and types
+- Display Never for Managed credentials that have never been decrypted.
+- Update Typings for Thunk Action Creators
+- Update Material UI to 4.4.2
+- Use password input component for credential drawers
+- Don’t show DNS “Your Linodes are not being served” banner for restricted users
+
+### Fixed:
+- Use safer check for the Managed dashboard card error state
+- Safely Handle Unauthed Errors
+- Tooltip for current plan on resize Linode workflow
+- Layout issue with nodeBalancers create workflow
+- Stackscripts creation routing and CTAs
+- Formating, syntax and added withContext to expect assertions
+
+
 ## [v0.71.0] - 2019-09-18
 
 ### Added:
