@@ -96,6 +96,7 @@ export interface BaseSelectProps
   hideLabel?: boolean;
   errorGroup?: string;
   guidance?: string | React.ReactNode;
+  inputId?: any;
 }
 
 interface CreatableProps extends CreatableSelectProps<any> {}
@@ -133,6 +134,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
       hideLabel,
       errorGroup,
       onFocus,
+      inputId,
       ...restOfProps
     } = this.props;
 
@@ -177,6 +179,7 @@ class Select extends React.PureComponent<CombinedProps, {}> {
           but we're using the MUI select element so any props that
           can be passed to the MUI TextField element can be passed here
          */
+        inputId={inputId}
         textFieldProps={{
           ...textFieldProps,
           label,

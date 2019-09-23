@@ -184,7 +184,7 @@ class SearchBar extends React.Component<CombinedProps, State> {
         >
           <Search className={classes.icon} data-qa-search-icon />
           <EnhancedSelect
-            id="search-bar"
+            inputId="search-bar"
             blurInputOnSelect
             options={finalOptions}
             onChange={this.onSelect}
