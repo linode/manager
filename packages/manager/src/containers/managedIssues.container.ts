@@ -1,3 +1,4 @@
+import { ManagedIssue } from 'linode-js-sdk/lib/managed';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -6,7 +7,7 @@ import { requestManagedIssues as _requestManagedIssues } from 'src/store/managed
 import { EntityError } from 'src/store/types';
 
 export interface ManagedIssuesProps {
-  issues: Linode.ManagedIssue[];
+  issues: ManagedIssue[];
   issuesLoading: boolean;
   issuesError: EntityError;
   lastUpdated: number;
@@ -27,7 +28,7 @@ export default <TInner extends {}, TOuter extends {}>(
     ownProps: TOuter,
     issuesLoading: boolean,
     lastUpdated: number,
-    issues: Linode.ManagedIssue[],
+    issues: ManagedIssue[],
     issuesError?: EntityError
   ) => TInner
 ) =>

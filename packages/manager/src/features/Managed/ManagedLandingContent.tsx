@@ -1,3 +1,9 @@
+import {
+  getCredentials,
+  getManagedContacts,
+  ManagedContact,
+  ManagedCredential
+} from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 import {
   matchPath,
@@ -16,7 +22,6 @@ import DocumentationButton from 'src/components/DocumentationButton';
 import Grid from 'src/components/Grid';
 import TabLink from 'src/components/TabLink';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import { getCredentials, getManagedContacts } from 'src/services/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import SupportWidget from './SupportWidget';
@@ -40,22 +45,17 @@ const Contacts = DefaultLoader({
 export type CombinedProps = {} & RouteComponentProps<{}>;
 
 const getAllCredentials = () =>
-  getAll<Linode.ManagedCredential>(getCredentials)().then(
-    response => response.data
-  );
+  getAll<ManagedCredential>(getCredentials)().then(response => response.data);
 
 // We need to "Get All" on this request in order to handle Groups
 // as a quasi-independent entity.
 const getAllContacts = () =>
-  getAll<Linode.ManagedContact>(getManagedContacts)().then(res => res.data);
+  getAll<ManagedContact>(getManagedContacts)().then(res => res.data);
 
 export const ManagedLandingContent: React.FC<CombinedProps> = props => {
-  const credentials = useAPIRequest<Linode.ManagedCredential[]>(
-    getAllCredentials,
-    []
-  );
+  const credentials = useAPIRequest<ManagedCredential[]>(getAllCredentials, []);
 
-  const contacts = useAPIRequest<Linode.ManagedContact[]>(getAllContacts, []);
+  const contacts = useAPIRequest<ManagedContact[]>(getAllContacts, []);
 
   const groups = React.useMemo(() => {
     const _groups: string[] = [];

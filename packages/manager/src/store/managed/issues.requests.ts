@@ -1,16 +1,16 @@
 import * as Bluebird from 'bluebird';
+import { getManagedIssues, ManagedIssue } from 'linode-js-sdk/lib/managed';
 import { getTicket } from 'linode-js-sdk/lib/support';
 import * as moment from 'moment';
-import { getManagedIssues } from 'src/services/managed';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import { ExtendedIssue, requestManagedIssuesActions } from './issues.actions';
 
-const _getAllIssues = getAll<Linode.ManagedIssue>(getManagedIssues);
+const _getAllIssues = getAll<ManagedIssue>(getManagedIssues);
 const getAllIssues = () =>
   _getAllIssues().then(({ data }) => extendIssues(data));
 
-export const extendIssues = async (issues: Linode.ManagedIssue[]) => {
+export const extendIssues = async (issues: ManagedIssue[]) => {
   /**
    * Issues live forever, but we only care about recent and/or open issues.
    * To avoid pummeling the API for Support tickets for a list of ancient issues,

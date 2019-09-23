@@ -1,4 +1,11 @@
 import { Formik, FormikActions } from 'formik';
+import {
+  ContactPayload,
+  createContact,
+  createContactSchema,
+  ManagedContact,
+  updateContact
+} from 'linode-js-sdk/lib/managed';
 import { pathOr, pick } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -9,12 +16,6 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import {
-  ContactPayload,
-  createContact,
-  createContactSchema,
-  updateContact
-} from 'src/services/managed';
-import {
   handleFieldErrors,
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
@@ -24,9 +25,9 @@ interface Props {
   isOpen: boolean;
   closeDrawer: () => void;
   mode: Mode;
-  updateOrAdd: (contact: Linode.ManagedContact) => void;
+  updateOrAdd: (contact: ManagedContact) => void;
   groups: ManagedContactGroup[];
-  contact?: Linode.ManagedContact;
+  contact?: ManagedContact;
 }
 
 type CombinedProps = Props;
@@ -67,7 +68,7 @@ const ContactsDrawer: React.FC<CombinedProps> = props => {
     }
 
     // Conditionally build request based on the mode of the drawer.
-    let createOrUpdate: () => Promise<Linode.ManagedContact>;
+    let createOrUpdate: () => Promise<ManagedContact>;
 
     if (mode === 'edit' && contact) {
       createOrUpdate = () => updateContact(contact.id, payload);

@@ -1,4 +1,11 @@
 import { Formik } from 'formik';
+import {
+  createServiceMonitorSchema,
+  ManagedCredential,
+  ManagedServiceMonitor,
+  ManagedServicePayload,
+  ServiceType
+} from 'linode-js-sdk/lib/managed';
 import { pickBy } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -9,19 +16,15 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import {
-  createServiceMonitorSchema,
-  ManagedServicePayload
-} from 'src/services/managed';
 
 export interface Props {
   mode: 'create' | 'edit';
   open: boolean;
-  credentials: Linode.ManagedCredential[];
+  credentials: ManagedCredential[];
   groups: string[];
   label?: string;
   successMsg?: string;
-  monitor?: Linode.ManagedServiceMonitor;
+  monitor?: ManagedServiceMonitor;
   onClose: () => void;
   onSubmit: (values: ManagedServicePayload, formikProps: any) => void;
 }
@@ -38,7 +41,7 @@ const titleMap = {
   [modes.EDITING]: 'Edit Monitor'
 };
 
-const typeOptions: Item<Linode.ServiceType>[] = [
+const typeOptions: Item<ServiceType>[] = [
   {
     value: 'url',
     label: 'URL'
@@ -50,7 +53,7 @@ const typeOptions: Item<Linode.ServiceType>[] = [
 ];
 
 const getCredentialOptions = (
-  credentials: Linode.ManagedCredential[]
+  credentials: ManagedCredential[]
 ): Item<number>[] => {
   return credentials.map(thisCredential => {
     return {
@@ -167,7 +170,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                 )}
                 options={groupOptions}
                 errorText={errors.consultation_group}
-                onChange={(item: Item<Linode.ServiceType>) =>
+                onChange={(item: Item<ServiceType>) =>
                   setFieldValue(
                     'consultation_group',
                     item === null ? '' : item.value
@@ -189,7 +192,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                     options={typeOptions}
                     value={getValueFromItem(values.service_type, typeOptions)}
                     errorText={errors.service_type}
-                    onChange={(item: Item<Linode.ServiceType>) =>
+                    onChange={(item: Item<ServiceType>) =>
                       setFieldValue('service_type', item.value)
                     }
                     onBlur={handleBlur}

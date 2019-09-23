@@ -1,4 +1,6 @@
-export const contact1: Linode.ManagedContact = {
+import { ManagedContact } from 'linode-js-sdk/lib/managed';
+
+export const contact1: ManagedContact = {
   id: 1,
   name: 'Fred',
   group: 'DBA',
@@ -10,7 +12,7 @@ export const contact1: Linode.ManagedContact = {
   updated: '2019-08-01T12:00:00'
 };
 
-export const contact2: Linode.ManagedContact = {
+export const contact2: ManagedContact = {
   id: 2,
   name: 'Barney',
   group: 'DBA',
@@ -22,7 +24,7 @@ export const contact2: Linode.ManagedContact = {
   updated: '2019-08-01T12:00:00'
 };
 
-export const contact3: Linode.ManagedContact = {
+export const contact3: ManagedContact = {
   id: 3,
   name: 'Jane',
   group: 'Web Server Admin',
@@ -34,7 +36,7 @@ export const contact3: Linode.ManagedContact = {
   updated: '2019-08-01T12:00:00'
 };
 
-export const contactWithoutGroup: Linode.ManagedContact = {
+export const contactWithoutGroup: ManagedContact = {
   id: 3,
   name: 'Jane',
   group: null,

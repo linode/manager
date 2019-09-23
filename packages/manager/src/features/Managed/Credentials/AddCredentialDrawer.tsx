@@ -1,4 +1,5 @@
 import { Formik } from 'formik';
+import { CredentialPayload } from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -7,7 +8,6 @@ import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import PasswordInput from 'src/components/PasswordInput';
 import TextField from 'src/components/TextField';
-import { CredentialPayload } from 'src/services/managed';
 
 import { creationSchema } from './credential.schema';
 

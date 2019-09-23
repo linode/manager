@@ -1,11 +1,12 @@
+import { ManagedContact } from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import ActionMenu from './ContactsActionMenu';
 
 interface Props {
-  contact: Linode.ManagedContact;
-  updateOrAdd: (contact: Linode.ManagedContact) => void;
+  contact: ManagedContact;
+  updateOrAdd: (contact: ManagedContact) => void;
   openDrawer: (linodeId: number) => void;
   openDialog: (contactId: number) => void;
 }

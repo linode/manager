@@ -1,7 +1,10 @@
+import {
+  ManagedServiceMonitor,
+  ManagedServicePayload
+} from 'linode-js-sdk/lib/managed';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
-import { ManagedServicePayload } from 'src/services/managed';
 import { ApplicationState } from 'src/store';
 import { UpdateServicePayload } from 'src/store/managed/managed.actions';
 import {
@@ -15,7 +18,7 @@ import {
 import { EntityError } from 'src/store/types';
 
 export interface ManagedProps {
-  monitors: Linode.ManagedServiceMonitor[];
+  monitors: ManagedServiceMonitor[];
   managedLoading: boolean;
   managedError: EntityError;
   lastUpdated: number;
@@ -51,7 +54,7 @@ export default <TInner extends {}, TOuter extends {}>(
     ownProps: TOuter,
     managedLoading: boolean,
     lastUpdated: number,
-    monitors: Linode.ManagedServiceMonitor[],
+    monitors: ManagedServiceMonitor[],
     managedError?: EntityError
   ) => TInner
 ) =>

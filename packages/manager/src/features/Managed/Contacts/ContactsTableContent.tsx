@@ -1,3 +1,4 @@
+import { ManagedContact } from 'linode-js-sdk/lib/managed';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -9,10 +10,10 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import ContactsRow from './ContactsRow';
 
 interface Props {
-  contacts: Linode.ManagedContact[];
+  contacts: ManagedContact[];
   loading: boolean;
   lastUpdated: number;
-  updateOrAdd: (contact: Linode.ManagedContact) => void;
+  updateOrAdd: (contact: ManagedContact) => void;
   openDrawer: (linodeId: number) => void;
   openDialog: (contactId: number) => void;
   error?: Linode.ApiFieldError[];
@@ -51,7 +52,7 @@ export const ContactsTableContent: React.FC<CombinedProps> = props => {
 
   return (
     <>
-      {contacts.map((contact: Linode.ManagedContact, idx: number) => (
+      {contacts.map((contact: ManagedContact, idx: number) => (
         <ContactsRow
           key={`managed-contact-row-${idx}`}
           updateOrAdd={updateOrAdd}

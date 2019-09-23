@@ -1,3 +1,4 @@
+import { ManagedCredential } from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 import { createStyles, makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
@@ -27,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 interface Props {
-  credential: Linode.ManagedCredential;
+  credential: ManagedCredential;
   openDialog: (id: number, label: string) => void;
   openForEdit: (id: number) => void;
 }
