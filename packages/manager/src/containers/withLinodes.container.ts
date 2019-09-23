@@ -1,21 +1,53 @@
 import { Linode } from 'linode-js-sdk/lib/linodes';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { path } from 'ramda';
-import { connect } from 'react-redux';
+import { connect, InferableComponentEnhancerWithProps } from 'react-redux';
 import { ApplicationState } from 'src/store';
+import { requestLinodes } from 'src/store/linodes/linode.requests';
+import { LinodeWithMaintenance as L } from 'src/store/linodes/linodes.helpers';
+import { State } from 'src/store/linodes/linodes.reducer';
+import { ThunkDispatch } from 'src/store/types';
+import { GetAllData } from 'src/utilities/getAll';
 
-type MapProps<TOuter, TInner> = (
-  ownProps: TOuter,
+interface DispatchProps {
+  getLinodes: (params: any, filters: any) => Promise<GetAllData<Linode[]>>;
+}
+
+export type LinodeWithMaintenance = L;
+
+/* tslint:disable-next-line */
+export type StateProps = State;
+
+type MapProps<ReduxStateProps, OwnProps> = (
+  ownProps: OwnProps,
   linodes: Linode[],
   loading: boolean,
   error?: APIError[]
-) => TInner;
+) => ReduxStateProps & Partial<StateProps>;
 
-export default <TInner extends {}, TOuter extends {}>(
-  mapToProps: MapProps<TOuter, TInner>
-) =>
-  connect((state: ApplicationState, ownProps: TOuter) => {
-    const { loading, error, entities } = state.__resources.linodes;
+export type Props = DispatchProps & StateProps;
 
-    return mapToProps(ownProps, entities, loading, path(['read'], error));
-  });
+const connected = <ReduxStateProps extends {}, OwnProps extends {}>(
+  mapAccountToProps?: MapProps<ReduxStateProps, OwnProps>
+): InferableComponentEnhancerWithProps<any, any> =>
+  connect<
+    ReduxStateProps | StateProps,
+    DispatchProps,
+    OwnProps,
+    ApplicationState
+    >(
+      (state, ownProps) => {
+        const { loading, error, entities } = state.__resources.linodes;
+        if (mapAccountToProps) {
+          return mapAccountToProps(ownProps, entities, loading, path(['read'], error));
+        }
+
+      return state.__resources.linodes;
+    },
+    (dispatch: ThunkDispatch) => ({
+      getLinodes: (params, filter) =>
+        dispatch(requestLinodes({ params, filter }))
+    })
+  );
+
+export default connected;

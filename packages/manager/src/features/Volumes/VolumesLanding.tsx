@@ -33,7 +33,9 @@ import withVolumes, {
 import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
-import withLinodes from 'src/containers/withLinodes.container';
+import withLinodes, {
+  LinodeWithMaintenance
+} from 'src/containers/withLinodes.container';
 import { BlockStorage } from 'src/documentation';
 import { resetEventsPolling } from 'src/events';
 import LinodePermissionsError from 'src/features/linodes/LinodesDetail/LinodePermissionsError';
@@ -137,10 +139,11 @@ const styles = (theme: Theme) =>
   });
 
 interface WithLinodesProps {
-  linodesData: Linode[];
+  linodesData: LinodeWithMaintenance[];
   linodesLoading: boolean;
   linodesError?: APIError[];
 }
+
 export interface ExtendedVolume extends Volume {
   linodeLabel?: string;
   linodeStatus?: string;
@@ -694,14 +697,11 @@ export default compose<CombinedProps, Props>(
     ...ownProps,
     eventsData: eventsData.filter(filterVolumeEvents)
   })),
-  withLinodes(
-    (ownProps: CombinedProps, linodesData, linodesLoading, linodesError) => ({
-      ...ownProps,
-      linodesData,
-      linodesLoading,
-      linodesError
-    })
-  ),
+  withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
+    ...ownProps,
+    linodesData,
+    linodesLoading
+  })),
   withVolumes(
     (ownProps: CombinedProps, volumesData, volumesLoading, volumesError) => {
       const mappedData = volumesData.items.map(id => volumesData.itemsById[id]);

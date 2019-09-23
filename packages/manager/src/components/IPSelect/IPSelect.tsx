@@ -3,7 +3,9 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import withLinodes from 'src/containers/withLinodes.container';
+import withLinodes, {
+  Props as LinodeProps
+} from 'src/containers/withLinodes.container';
 
 interface Props {
   linodeId: number;
@@ -16,7 +18,7 @@ interface Props {
 interface WithLinodesProps {
   linode?: Linode;
   linodesLoading: boolean;
-  linodesError?: APIError[];
+  linodesError?: LinodeProps['error'];
 }
 
 type CombinedProps = Props & WithLinodesProps;
@@ -55,7 +57,7 @@ const IPSelect: React.FC<CombinedProps> = props => {
 
   if (props.errorText) {
     errorText = props.errorText;
-  } else if (linodesError) {
+  } else if (linodesError && linodesError.read) {
     errorText = "There was an error retrieving this Linode's IP addresses.";
   }
 
