@@ -487,31 +487,50 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
               <a href="https://status.linode.com">status.linode.com</a>.
             </Typography>
 
-        <Select
-          options={topicOptions}
-          label="What is this regarding?"
-          value={selectedTopic}
-          onChange={this.handleEntityTypeChange}
-          data-qa-ticket-entity-type={true}
-          placeholder="Choose a Product"
-          isClearable={false}
-        />
-
-        {!['none', 'general'].includes(ticket.entity_type) && (
-          <>
-            <Select
-              options={data}
-              value={selectedEntity}
-              disabled={data.length === 0}
-              errorText={inputError}
-              placeholder={`Select a ${entityIdtoNameMap[ticket.entity_type]}`}
-              label={entityIdtoNameMap[ticket.entity_type]}
-              inputValue={inputValue}
-              onChange={this.handleEntityIDChange}
-              onInputChange={this.onInputValueChange}
-              data-qa-ticket-entity-id={true}
-              isLoading={this.state.loading}
-              isClearable={false}
+            {this.props.hideProductSelection ? null : (
+              <React.Fragment>
+                <Select
+                  options={topicOptions}
+                  label="What is this regarding?"
+                  value={selectedTopic}
+                  onChange={this.handleEntityTypeChange}
+                  data-qa-ticket-entity-type
+                  placeholder="Choose a Product"
+                  isClearable={false}
+                />
+                {!['none', 'general'].includes(ticket.entity_type) && (
+                  <>
+                    <Select
+                      options={data}
+                      value={selectedEntity}
+                      disabled={data.length === 0}
+                      errorText={inputError}
+                      placeholder={`Select a ${
+                        entityIdtoNameMap[ticket.entity_type]
+                      }`}
+                      label={entityIdtoNameMap[ticket.entity_type]}
+                      inputValue={inputValue}
+                      onChange={this.handleEntityIDChange}
+                      onInputChange={this.onInputValueChange}
+                      data-qa-ticket-entity-id
+                      isLoading={this.state.loading}
+                      isClearable={false}
+                    />
+                    {hasNoEntitiesMessage && (
+                      <FormHelperText>{hasNoEntitiesMessage}</FormHelperText>
+                    )}
+                  </>
+                )}
+              </React.Fragment>
+            )}
+            <TextField
+              label="Title"
+              placeholder="Enter a title for your ticket."
+              required
+              value={ticket.summary}
+              onChange={this.handleSummaryInputChange}
+              errorText={summaryError}
+              data-qa-ticket-summary
             />
             <TabbedReply
               required

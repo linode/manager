@@ -120,6 +120,7 @@ export class SelectPlanPanel extends React.Component<
         {/* Displays Table Row for larger screens */}
         <Hidden smDown>
           <TableRow
+            data-qa-plan={type.label}
             key={type.id}
             onClick={!isSamePlan ? this.onSelect(type.id) : undefined}
             rowLink={this.onSelect ? this.onSelect(type.id) : undefined}
@@ -146,17 +147,21 @@ export class SelectPlanPanel extends React.Component<
                 <HelpIcon text={tooltip} tooltipPosition="right-end" />
               )}
             </TableCell>
-            <TableCell>${type.price.monthly}</TableCell>
-            <TableCell>
+            <TableCell data-qa-monthly> ${type.price.monthly}</TableCell>
+            <TableCell data-qa-hourly>
               {isGPU ? (
                 <Currency quantity={type.price.hourly} />
               ) : (
                 `$` + type.price.hourly
               )}
             </TableCell>
-            <TableCell>{type.vcpus}</TableCell>
-            <TableCell>{convertMegabytesTo(type.disk, true)}</TableCell>
-            <TableCell>{convertMegabytesTo(type.memory, true)}</TableCell>
+            <TableCell data-qa-cpu>{type.vcpus}</TableCell>
+            <TableCell data-qa-storage>
+              {convertMegabytesTo(type.disk, true)}
+            </TableCell>
+            <TableCell data-qa-ram>
+              {convertMegabytesTo(type.memory, true)}
+            </TableCell>
           </TableRow>
         </Hidden>
         {/* Displays SelectionCard for small screens */}
@@ -181,12 +186,12 @@ export class SelectPlanPanel extends React.Component<
       <TableHead>
         <TableRow>
           <TableCell />
-          <TableCell>Linode Plan</TableCell>
-          <TableCell>Monthly</TableCell>
-          <TableCell>Hourly</TableCell>
-          <TableCell>CPUs</TableCell>
-          <TableCell>Storage</TableCell>
-          <TableCell>Ram</TableCell>
+          <TableCell data-qa-plan-header>Linode Plan</TableCell>
+          <TableCell data-qa-monthly-header>Monthly</TableCell>
+          <TableCell data-qa-hourly-header>Hourly</TableCell>
+          <TableCell data-qa-cpu-header>CPUs</TableCell>
+          <TableCell data-qa-storage-header>Storage</TableCell>
+          <TableCell data-qa-ram-header>Ram</TableCell>
         </TableRow>
       </TableHead>
     );
@@ -222,7 +227,7 @@ export class SelectPlanPanel extends React.Component<
         render: () => {
           return (
             <>
-              <Typography className={classes.copy}>
+              <Typography data-qa-nanode className={classes.copy}>
                 Nanode instances are good for low-duty workloads, where
                 performance isn't critical.
               </Typography>
@@ -240,7 +245,7 @@ export class SelectPlanPanel extends React.Component<
         render: () => {
           return (
             <>
-              <Typography className={classes.copy}>
+              <Typography data-qa-standard className={classes.copy}>
                 Standard instances are good for medium-duty workloads and are a
                 good mix of performance, resources, and price.
               </Typography>
@@ -258,7 +263,7 @@ export class SelectPlanPanel extends React.Component<
         render: () => {
           return (
             <>
-              <Typography className={classes.copy}>
+              <Typography data-qa-dedicated className={classes.copy}>
                 Dedicated CPU instances are good for full-duty workloads where
                 consistent performance is important.
               </Typography>
@@ -276,7 +281,7 @@ export class SelectPlanPanel extends React.Component<
         render: () => {
           return (
             <>
-              <Typography className={classes.copy}>
+              <Typography data-qa-highmem className={classes.copy}>
                 High Memory instances favor RAM over other resources, and can be
                 good for memory hungry use cases like caching and in-memory
                 databases.
@@ -311,7 +316,7 @@ export class SelectPlanPanel extends React.Component<
           return (
             <>
               <Notice warning text={programInfo} />
-              <Typography className={classes.copy}>
+              <Typography data-qa-gpu className={classes.copy}>
                 Linodes with dedicated GPUs accelerate highly specialized
                 applications such as machine learning, AI, and video
                 transcoding.

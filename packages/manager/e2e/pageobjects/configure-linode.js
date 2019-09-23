@@ -122,16 +122,14 @@ class ConfigureLinode extends Page {
   get planHeader() {
     return $('[data-qa-tp="Linode Plan"]');
   }
-  get planTabs() {
-    return $$('[data-qa-tp="Linode Plan"] [data-qa-tab]');
+  get planRows() {
+    return $$('[data-qa-plan]');
   }
   get plans() {
-    return $$('[data-qa-tp="Linode Plan"] [data-qa-selection-card]');
+    return $$('[data-qa-tp="Linode Plan"] [data-qa-plan]');
   }
   get planNames() {
-    return $$(
-      '[data-qa-tp="Linode Plan"] [data-qa-selection-card] [data-qa-select-card-heading]'
-    );
+    return $$('[data-qa-tp="Linode Plan"] [data-qa-plan-header]');
   }
 
   get labelHeader() {
@@ -228,7 +226,7 @@ class ConfigureLinode extends Page {
     expect(this.planHeader.isDisplayed())
       .withContext(`${this.planHeader.selector} ${assertLog.displayed}`)
       .toBe(true);
-    expect(this.planTabs.length)
+    expect(this.planRows.length)
       .withContext(`${assertLog.incorrectNum} for plan tabs`)
       .toBe(4);
     expect(this.plans.length)
@@ -330,8 +328,8 @@ class ConfigureLinode extends Page {
     expect(this.planHeader.isDisplayed())
       .withContext(`Linode plan header ${assertLog.displayed}`)
       .toBe(true);
-    this.planTabs.forEach(tab =>
-      expect(tab.isDisplayed())
+    this.planRows.forEach(row =>
+      expect(row.isDisplayed())
         .withContext(`plan ${tabDisplayed}`)
         .toBe(true)
     );
@@ -371,7 +369,7 @@ class ConfigureLinode extends Page {
 
     browser.enhancedSelect(this.imageDistro.selector, distro);
 
-    browser.trySetValue(this.regionSelect.selector, 'us-east');
+    browser.trySetValue(this.regionSelect.selector, 'Newark, NJ');
     browser.keys('\uE007');
     this.plans[0].click();
     browser.trySetValue(this.label.selector, label);

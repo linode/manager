@@ -17,7 +17,7 @@ describe('Create Linode - Configure Linode Suite', () => {
   });
 
   it('should update cost summary on plan selection', () => {
-    $('[data-qa-tp="Linode Plan"] [data-qa-selection-card]').waitForDisplayed();
+    $('[data-qa-tp="Linode Plan"] [data-qa-plan-header]').waitForDisplayed();
     ConfigureLinode.plans.forEach(p => {
       const originalPrice = CheckoutSummary.costSummary.getText();
       p.click();
@@ -30,7 +30,7 @@ describe('Create Linode - Configure Linode Suite', () => {
 
   it('should configure a generic linode and update cost summary', () => {
     const genericPrice = CheckoutSummary.costSummary.getText();
-    const genericType = ConfigureLinode.planNames[0].getText();
+    const genericType = ConfigureLinode.planNames[1].getText();
     ConfigureLinode.generic();
     const genericImage = ConfigureLinode.imageName.getText();
 

@@ -48,7 +48,7 @@ class CredStore {
       $('#username').waitForDisplayed(constants.wait.long);
     } catch (err) {
       //console.log(`page source`)
-      console.log(browser.getHTML());
+      console.log(browser.getPageSource());
     }
 
     $('#password').waitForDisplayed(constants.wait.long);
