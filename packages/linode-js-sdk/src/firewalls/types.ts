@@ -1,6 +1,10 @@
+export type FirewallStatus = 'enabled' | 'disabled' | 'deleted';
+
+export type FirewallRuleProtocol = 'ALL' | 'TCP' | 'UDP' | 'ICMP';
+
 export interface Firewall {
   id: number;
-  status: 'enabled' | 'disabled' | 'deleted';
+  status: FirewallStatus;
   label: string;
   tags: string[];
   rules: FirewallRule[];
@@ -15,7 +19,7 @@ export interface FirewallRule {
 }
 
 export interface FirewallRuleType {
-  protocol: 'ALL' | 'TCP' | 'UDP' | 'ICMP';
+  protocol: FirewallRuleProtocol;
   start_port: number;
   end_port?: null | number;
   addresses?: null | {
