@@ -24,7 +24,7 @@ type FirewallProps = Omit<FireProps, 'getFirewalls'>;
 
 type CombinedProps = FirewallProps;
 
-const FirewallTableContent: React.FC<CombinedProps> = props => {
+const FirewallTable: React.FC<CombinedProps> = props => {
   // const classes = useStyles();
 
   const {
@@ -108,6 +108,4 @@ const FirewallTableContent: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, FirewallProps>(React.memo)(
-  FirewallTableContent
-);
+export default compose<CombinedProps, FirewallProps>(React.memo)(FirewallTable);

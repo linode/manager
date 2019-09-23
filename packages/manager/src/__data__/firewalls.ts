@@ -38,7 +38,7 @@ export const firewall: Firewall = {
 
 export const firewall2: Firewall = {
   id: 2,
-  status: 'enabled',
+  status: 'disabled',
   label: 'zzz',
   created_dt: '2019-12-11T19:44:38.526Z',
   updated_dt: '2019-12-11T19:44:38.526Z',
