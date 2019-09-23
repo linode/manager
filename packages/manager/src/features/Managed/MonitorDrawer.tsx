@@ -3,29 +3,16 @@ import { pickBy } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import InputAdornment from 'src/components/core/InputAdornment';
 import Drawer from 'src/components/Drawer';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import {
   createServiceMonitorSchema,
   ManagedServicePayload
 } from 'src/services/managed';
-
-const useStyles = makeStyles((theme: Theme) => ({
-  smallInput: {
-    width: '12em',
-    marginRight: theme.spacing(1)
-  },
-  actionPanel: {
-    marginTop: theme.spacing(2)
-  },
-  box: {
-    display: 'flex',
-    flexFlow: 'row nowrap'
-  }
-}));
 
 export interface Props {
   mode: 'create' | 'edit';
@@ -109,8 +96,6 @@ const emptyInitialValues = {
 } as ManagedServicePayload;
 
 const MonitorDrawer: React.FC<CombinedProps> = props => {
-  const classes = useStyles();
-
   const { credentials, groups, mode, monitor, open, onClose, onSubmit } = props;
 
   const credentialOptions = getCredentialOptions(credentials);
@@ -167,6 +152,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                 errorText={errors.label}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                required={mode === modes.CREATING}
               />
 
               <Select
@@ -193,33 +179,45 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                 }}
               />
 
-              <div className={classes.box}>
-                <Select
-                  className={classes.smallInput}
-                  name="service_type"
-                  label="Monitor Type"
-                  isClearable={false}
-                  data-qa-add-service-type
-                  options={typeOptions}
-                  value={getValueFromItem(values.service_type, typeOptions)}
-                  errorText={errors.service_type}
-                  onChange={(item: Item<Linode.ServiceType>) =>
-                    setFieldValue('service_type', item.value)
-                  }
-                  onBlur={handleBlur}
-                />
-                <TextField
-                  className={classes.smallInput}
-                  name="timeout"
-                  label="Response Timeout (Seconds)"
-                  data-qa-add-timeout
-                  value={values.timeout}
-                  error={!!errors.timeout}
-                  errorText={errors.timeout}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
-                />
-              </div>
+              <Grid container>
+                <Grid item xs={12} sm={6}>
+                  <Select
+                    name="service_type"
+                    label="Monitor Type"
+                    isClearable={false}
+                    data-qa-add-service-type
+                    options={typeOptions}
+                    value={getValueFromItem(values.service_type, typeOptions)}
+                    errorText={errors.service_type}
+                    onChange={(item: Item<Linode.ServiceType>) =>
+                      setFieldValue('service_type', item.value)
+                    }
+                    onBlur={handleBlur}
+                    textFieldProps={{
+                      required: mode === modes.CREATING
+                    }}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6}>
+                  <TextField
+                    name="timeout"
+                    label="Response Timeout"
+                    type="number"
+                    data-qa-add-timeout
+                    value={values.timeout}
+                    error={!!errors.timeout}
+                    errorText={errors.timeout}
+                    onChange={handleChange}
+                    required={mode === modes.CREATING}
+                    onBlur={handleBlur}
+                    InputProps={{
+                      endAdornment: (
+                        <InputAdornment position="end">seconds</InputAdornment>
+                      )
+                    }}
+                  />
+                </Grid>
+              </Grid>
 
               <TextField
                 name="address"
@@ -231,6 +229,7 @@ const MonitorDrawer: React.FC<CombinedProps> = props => {
                 tooltipText={helperText.url}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                required={mode === modes.CREATING}
               />
               <TextField
                 name="body"

@@ -298,3 +298,14 @@ export const deleteContact = (contactId: number) =>
     setMethod('DELETE'),
     setURL(`${API_ROOT}/managed/contacts/${contactId}`)
   ).then(response => response.data);
+
+/**
+ * getManagedIssues
+ *
+ * Returns a paginated list of Issues on a Managed customer's account.
+ */
+export const getManagedIssues = () =>
+  Request<Page<Linode.ManagedIssue>>(
+    setMethod('GET'),
+    setURL(`${API_ROOT}/managed/issues`)
+  ).then(response => response.data);
