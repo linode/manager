@@ -1,4 +1,5 @@
 import { AccountSettings } from 'linode-js-sdk/lib/account';
+import { enableManaged } from 'linode-js-sdk/lib/managed';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -7,6 +8,7 @@ import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Typography from 'src/components/core/Typography';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import Grid from 'src/components/Grid';
+import SupportLink from 'src/components/SupportLink';
 import withLinodes from 'src/containers/withLinodes.container';
 import useFlags from 'src/hooks/useFlags';
 import { pluralize } from 'src/utilities/pluralize';
@@ -20,9 +22,42 @@ interface StateProps {
   linodeCount: number;
 }
 
-const enableManaged = jest.fn();
-
 type CombinedProps = Props & StateProps;
+
+interface ContentProps {
+  isManaged: boolean;
+  openConfirmationModal: () => void;
+}
+export const ManagedContent: React.FC<ContentProps> = props => {
+  const { isManaged, openConfirmationModal } = props;
+
+  if (isManaged) {
+    return (
+      <Typography>
+        Managed is already enabled on your account. To cancel Linode Managed,
+        please open a
+        <SupportLink text="Support Ticket" title="Cancel Linode Managed" />.
+      </Typography>
+    );
+  }
+
+  return (
+    <Grid container>
+      <Grid item>
+        <Typography variant="body1">
+          Linode Managed includes Backups, Longview Pro, cPanel, and
+          round-the-clock monitoring to help keep your systems up and running.
+          +$100/month per Linode.
+        </Typography>
+      </Grid>
+      <Grid item>
+        <Button buttonType="primary" onClick={openConfirmationModal}>
+          Add Linode Managed
+        </Button>
+      </Grid>
+    </Grid>
+  );
+};
 
 export const EnableManaged: React.FC<CombinedProps> = props => {
   const { isManaged, linodeCount, update } = props;
@@ -75,11 +110,10 @@ export const EnableManaged: React.FC<CombinedProps> = props => {
   return (
     <>
       <ExpansionPanel heading="Linode Managed" defaultExpanded={true}>
-        <Grid container direction="column">
-          <Grid item>
-            <Typography variant="h2">Managed panel {isManaged}</Typography>
-          </Grid>
-        </Grid>
+        <ManagedContent
+          isManaged={isManaged}
+          openConfirmationModal={() => setOpen(true)}
+        />
       </ExpansionPanel>
       <ConfirmationDialog
         open={isOpen}

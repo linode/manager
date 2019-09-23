@@ -119,7 +119,7 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
           networkHelperEnabled={networkHelperEnabled}
         />
         <EnableManaged
-          isManaged={isManaged}
+          isManaged={false}
           update={this.props.actions.updateAccount}
         />
         {shouldDisplayGroupImport(entitiesWithGroupsToImport) && (
