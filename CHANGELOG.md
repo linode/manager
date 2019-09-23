@@ -4,6 +4,28 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.72.0] - 2019-09-23
+
+### Added:
+- Managed service monitor history drawer
+- Firewall Landing and Routing
+- New landing page for unactivated users
+- New table-based flow for selecting a Linode plan
+- Managed endpoints to JavaScript SDK
+
+### Changed:
+- Display Never for Managed credentials that have never been decrypted.
+- Use password input component for credential drawers
+- Don’t show DNS “Your Linodes are not being served” banner for restricted users
+
+### Fixed:
+- Error handling for Managed dashboard card
+- Tooltip for current plan on resize Linode workflow
+- Layout issue with nodeBalancers create workflow
+- Stackscripts creation routing and CTAs
+
+
+
 ## [v0.71.0] - 2019-09-18
 
 ### Added:
