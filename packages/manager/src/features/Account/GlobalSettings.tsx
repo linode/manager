@@ -12,6 +12,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
 import TagImportDrawer from 'src/features/TagImport';
 import { ApplicationState } from 'src/store';
+import { updateSettingsInStore } from 'src/store/accountSettings/accountSettings.actions';
 import { updateAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { handleOpen } from 'src/store/backupDrawer';
 import getEntitiesWithGroupsToImport, {
@@ -42,6 +43,7 @@ interface StateProps {
 interface DispatchProps {
   actions: {
     updateAccount: (data: Partial<AccountSettings>) => void;
+    updateAccountSettingsInStore: (data: Partial<AccountSettings>) => void;
     openImportDrawer: () => void;
     openBackupsDrawer: () => void;
   };
@@ -124,7 +126,7 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
         />
         <EnableManaged
           isManaged={isManaged}
-          update={this.props.actions.updateAccount}
+          update={this.props.actions.updateAccountSettingsInStore}
           push={this.props.history.push}
         />
         {shouldDisplayGroupImport(entitiesWithGroupsToImport) && (
@@ -172,7 +174,9 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
       updateAccount: (data: Partial<AccountSettings>) =>
         dispatch(updateAccountSettings(data)),
       openBackupsDrawer: () => dispatch(handleOpen()),
-      openImportDrawer: () => dispatch(openGroupDrawer())
+      openImportDrawer: () => dispatch(openGroupDrawer()),
+      updateAccountSettingsInStore: (data: Partial<AccountSettings>) =>
+        dispatch(updateSettingsInStore(data))
     }
   };
 };
