@@ -8,27 +8,22 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ### Added:
 - Managed service monitor history drawer
-- Routes unactivated user to ticket detail post-ticket submit
 - Firewall Landing and Routing
-- App-Blocking Activation Landing Page
+- New landing page for unactivated users
 - New table-based flow for selecting a Linode plan
-- Adding conversion for mb and removeDecimals boolean to the util
+- Managed endpoints to JavaScript SDK
 
 ### Changed:
-- [SDK] Change: Migrate all /managed functions and types
 - Display Never for Managed credentials that have never been decrypted.
-- Update Typings for Thunk Action Creators
-- Update Material UI to 4.4.2
 - Use password input component for credential drawers
 - Don’t show DNS “Your Linodes are not being served” banner for restricted users
 
 ### Fixed:
-- Use safer check for the Managed dashboard card error state
-- Safely Handle Unauthed Errors
+- Error handling for Managed dashboard card
 - Tooltip for current plan on resize Linode workflow
 - Layout issue with nodeBalancers create workflow
 - Stackscripts creation routing and CTAs
-- Formating, syntax and added withContext to expect assertions
+
 
 
 ## [v0.71.0] - 2019-09-18
