@@ -169,7 +169,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
           this.handleClose();
           e.preventDefault();
         },
-        linkTo: '/linodes/create?type=One-Click',
+        linkTo: '/kubernetes/create',
         body: `Create and manage Kubernetes Clusters for highly available container workloads`,
         ItemIcon: KubernetesIcon
       });
