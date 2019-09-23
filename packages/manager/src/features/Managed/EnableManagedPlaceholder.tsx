@@ -62,7 +62,7 @@ const ManagedPlaceholder: React.FC<CombinedProps> = props => {
         data-qa-submit-managed-enrollment
         loading={isLoading}
       >
-        Add Managed services
+        Add Linode Managed
       </Button>
     </ActionsPanel>
   );

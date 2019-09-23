@@ -42,11 +42,12 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
     dispatch(_deleteServiceMonitor({ monitorID })),
   enableServiceMonitor: (monitorID: number) =>
     dispatch(_enableServiceMonitor({ monitorID })),
-  updateServiceMonitor: (params: UpdateServicePayload) => dispatch(_updateServiceMonitor(params))
+  updateServiceMonitor: (params: UpdateServicePayload) =>
+    dispatch(_updateServiceMonitor(params))
 });
 
 export default <TInner extends {}, TOuter extends {}>(
-  mapManagedServicesToProps: (
+  mapManagedServicesToProps?: (
     ownProps: TOuter,
     managedLoading: boolean,
     lastUpdated: number,
@@ -61,13 +62,23 @@ export default <TInner extends {}, TOuter extends {}>(
       const managedError = state.__resources.managed.error;
       const lastUpdated = state.__resources.managed.lastUpdated;
 
-      return mapManagedServicesToProps(
-        ownProps,
-        managedLoading,
-        lastUpdated,
+      if (mapManagedServicesToProps) {
+        return mapManagedServicesToProps(
+          ownProps,
+          managedLoading,
+          lastUpdated,
+          monitors,
+          managedError
+        );
+      }
+
+      return {
+        ...ownProps,
         monitors,
-        managedError
-      );
+        managedLoading,
+        managedError,
+        lastUpdated
+      };
     },
     mapDispatchToProps
   );

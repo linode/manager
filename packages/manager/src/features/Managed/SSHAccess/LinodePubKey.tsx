@@ -145,7 +145,6 @@ const LinodePubKey: React.FC<{}> = props => {
             md={3}
             lg={2}
             className={classes.copyToClipboard}
-            justify="flex-end"
           >
             {/* @todo: Should we include an indication that the key was successfully copied? */}
             <Button buttonType="secondary" onClick={() => copy(data.ssh_key)}>

@@ -22,9 +22,8 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
-import withManagedServices, {
-  DispatchProps
-} from 'src/containers/managedServices.container';
+import { ManagedIssuesProps } from 'src/containers/managedIssues.container';
+import { DispatchProps } from 'src/containers/managedServices.container';
 import { useDialog } from 'src/hooks/useDialog';
 import { ManagedServicePayload } from 'src/services/managed';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
@@ -34,6 +33,7 @@ import {
 } from 'src/utilities/formikErrorUtils';
 
 import MonitorDrawer from '../MonitorDrawer';
+import HistoryDrawer from './HistoryDrawer';
 import MonitorTableContent from './MonitorTableContent';
 
 type ClassNames = 'labelHeader';
@@ -41,7 +41,7 @@ type ClassNames = 'labelHeader';
 const styles = (theme: Theme) =>
   createStyles({
     labelHeader: {
-      paddingLeft: theme.spacing(2) + 49
+      paddingLeft: theme.spacing(4) + 32
     }
   });
 
@@ -59,6 +59,7 @@ export type FormikProps = FormikBag<CombinedProps, ManagedServicePayload>;
 export type CombinedProps = Props &
   WithStyles<ClassNames> &
   DispatchProps &
+  ManagedIssuesProps &
   WithSnackbarProps;
 
 export const MonitorTable: React.FC<CombinedProps> = props => {
@@ -70,7 +71,11 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
     loading,
     monitors,
     groups,
-    credentials
+    credentials,
+    issues,
+    issuesError,
+    issuesLoading,
+    lastUpdated
   } = props;
 
   const {
@@ -81,20 +86,34 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
     handleError
   } = useDialog<number>(deleteServiceMonitor);
 
-  const [drawerOpen, setDrawerOpen] = React.useState<boolean>(false);
+  const [historyDrawerOpen, setHistoryDrawerOpen] = React.useState<boolean>(
+    false
+  );
+
+  const [monitorDrawerOpen, setMonitorDrawerOpen] = React.useState<boolean>(
+    false
+  );
   const [drawerMode, setDrawerMode] = React.useState<Modes>('create');
   const [editID, setEditID] = React.useState<number>(0);
+
+  const [editLabel, setEditLabel] = React.useState<string>('');
 
   const handleDrawerClose = () => {
     setEditID(0);
     setDrawerMode('create');
-    setDrawerOpen(false);
+    setMonitorDrawerOpen(false);
   };
 
-  const handleDrawerOpen = (id: number, mode: Modes) => {
+  const handleMonitorDrawerOpen = (id: number, mode: Modes) => {
     setEditID(id);
     setDrawerMode(mode);
-    setDrawerOpen(true);
+    setMonitorDrawerOpen(true);
+  };
+
+  const handleHistoryDrawerOpen = (id: number, label: string) => {
+    setEditID(id);
+    setEditLabel(label);
+    setHistoryDrawerOpen(true);
   };
 
   const handleDelete = () => {
@@ -168,7 +187,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
           <Grid container alignItems="flex-end">
             <Grid item className="pt0">
               <AddNewLink
-                onClick={() => setDrawerOpen(true)}
+                onClick={() => setMonitorDrawerOpen(true)}
                 label="Add a Monitor"
               />
             </Grid>
@@ -225,10 +244,12 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
                     <TableBody>
                       <MonitorTableContent
                         monitors={data}
+                        issues={issues}
                         loading={loading}
                         error={error}
                         openDialog={openDialog}
-                        openDrawer={handleDrawerOpen}
+                        openMonitorDrawer={handleMonitorDrawerOpen}
+                        openHistoryDrawer={handleHistoryDrawerOpen}
                       />
                     </TableBody>
                   </Table>
@@ -255,7 +276,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
         loading={dialog.isLoading}
       />
       <MonitorDrawer
-        open={drawerOpen}
+        open={monitorDrawerOpen}
         onClose={handleDrawerClose}
         onSubmit={submitMonitorForm}
         mode={drawerMode}
@@ -263,14 +284,21 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
         groups={groups}
         credentials={credentials}
       />
+      <HistoryDrawer
+        open={historyDrawerOpen}
+        onClose={() => setHistoryDrawerOpen(false)}
+        monitorLabel={editLabel}
+        issues={issues.filter(thisIssue => thisIssue.services.includes(editID))}
+        loading={issuesLoading && lastUpdated === 0}
+        error={issuesError.read}
+      />
     </>
   );
 };
 
 const styled = withStyles(styles);
 const enhanced = compose<CombinedProps, Props>(
-  styled,
-  withManagedServices(() => ({})),
-  withSnackbar
+  withSnackbar,
+  styled
 );
 export default enhanced(MonitorTable);

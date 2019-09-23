@@ -86,6 +86,10 @@ import types, {
   defaultState as defaultTypesState,
   State as TypesState
 } from 'src/store/linodeType/linodeType.reducer';
+import managedIssues, {
+  defaultState as defaultManagedIssuesState,
+  State as ManagedIssuesState
+} from 'src/store/managed/issues.reducer';
 import managed, {
   defaultState as defaultManagedState,
   State as ManagedState
@@ -155,6 +159,7 @@ const __resourcesDefaultState = {
   images: defaultImagesState,
   kubernetes: defaultKubernetesState,
   managed: defaultManagedState,
+  managedIssues: defaultManagedIssuesState,
   nodePools: defaultNodePoolsState,
   linodes: defaultLinodesState,
   linodeConfigs: defaultLinodeConfigsState,
@@ -177,6 +182,7 @@ export interface ResourcesState {
   images: ImagesState;
   kubernetes: KubernetesState;
   managed: ManagedState;
+  managedIssues: ManagedIssuesState;
   nodePools: KubeNodePoolsState;
   linodes: LinodesState;
   linodeConfigs: LinodeConfigsState;
@@ -242,6 +248,7 @@ const __resources = combineReducers({
   linodeConfigs,
   linodeDisks,
   managed,
+  managedIssues,
   nodeBalancers,
   nodeBalancerConfigs,
   notifications,

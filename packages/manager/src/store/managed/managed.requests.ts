@@ -6,7 +6,7 @@ import {
   enableServiceMonitor as _enable,
   getServices,
   ManagedServicePayload,
-  updateServiceMonitor as _update,
+  updateServiceMonitor as _update
 } from 'src/services/managed';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
@@ -17,7 +17,7 @@ import {
   enableServiceMonitorActions,
   MonitorPayload,
   requestServicesActions,
-  updateServiceMonitorActions,
+  updateServiceMonitorActions
 } from './managed.actions';
 
 const _getAll = getAll(getServices);
@@ -25,7 +25,8 @@ const _getAll = getAll(getServices);
 const deleteService = (params: MonitorPayload) => _delete(params.monitorID);
 const disableService = (params: MonitorPayload) => _disable(params.monitorID);
 const enableService = (params: MonitorPayload) => _enable(params.monitorID);
-const updateService = (params: MonitorPayload & ManagedServicePayload) => _update(params.monitorID, omit(['monitorID'], params));
+const updateService = (params: MonitorPayload & ManagedServicePayload) =>
+  _update(params.monitorID, omit(['monitorID'], params));
 
 const getAllServices = () => _getAll().then(({ data }) => data);
 
@@ -47,7 +48,7 @@ export const createServiceMonitor = createRequestThunk(
 export const updateServiceMonitor = createRequestThunk(
   updateServiceMonitorActions,
   updateService
-)
+);
 
 export const deleteServiceMonitor = createRequestThunk(
   deleteServiceMonitorActions,

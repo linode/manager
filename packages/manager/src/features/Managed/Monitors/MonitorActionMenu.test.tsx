@@ -17,7 +17,8 @@ const props: CombinedProps = {
   label: 'this-monitor',
   openDialog: jest.fn(),
   monitorID: 1,
-  openDrawer: jest.fn(),
+  openMonitorDrawer: jest.fn(),
+  openHistoryDrawer: jest.fn(),
   updateServiceMonitor: jest.fn(),
   createServiceMonitor: jest.fn(),
   requestManagedServices: jest.fn(),
@@ -34,7 +35,7 @@ describe('Volume action menu', () => {
     const { queryByText } = render(
       wrapWithTheme(<ActionMenu {...props} status={'disabled'} />)
     );
-    includesActions(['Delete'], queryByText);
+    includesActions(['Edit', 'View Issue History', 'Delete'], queryByText);
   });
 
   it('should include Enable if the monitor is disabled', () => {
