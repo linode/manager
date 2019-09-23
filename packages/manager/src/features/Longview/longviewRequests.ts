@@ -1,5 +1,5 @@
 import Axios, { AxiosResponse } from 'axios';
-import { pathOr } from 'ramda';
+import { curry, pathOr } from 'ramda';
 import { LONGVIEW_ROOT } from 'src/constants';
 
 /**
@@ -65,12 +65,22 @@ export interface LongviewError {
   TEXT: string;
 }
 
-export const baseRequest = () =>
-  Axios.create({
-    baseURL: LONGVIEW_ROOT,
-    method: 'POST',
-    headers: { 'Content-Type': 'Multivalue-FormData' }
-  });
+/**
+ * Scaffolding; expand as we gather requirements.
+ */
+
+export type LongviewFieldName = 'cpu' | 'uptime';
+
+export const fieldNames: Record<LongviewFieldName, string> = {
+  cpu: 'CPU.*',
+  uptime: 'Uptime'
+};
+
+export const baseRequest = Axios.create({
+  baseURL: LONGVIEW_ROOT,
+  method: 'POST',
+  headers: { 'Content-Type': 'Multivalue-FormData' }
+});
 
 export const handleLongviewResponse = (
   response: AxiosResponse<LongviewResponse>
@@ -100,34 +110,39 @@ export const handleLongviewResponse = (
   }
 };
 
-export const getLastUpdated = (token: string) => {
-  return get(token, 'getLatestValue');
-};
-
 export const get = (
   token: string,
   action: LongviewAction,
-  fields?: string[]
+  fields?: LongviewFieldName[]
 ) => {
-  const request = baseRequest();
+  const request = baseRequest;
   const data = new FormData();
   data.set('api_key', token);
   data.set('api_action', action);
   if (fields) {
-    data.set('keys', JSON.stringify(fields));
+    data.set(
+      'keys',
+      JSON.stringify(fields.map(thisField => fieldNames[thisField]))
+    );
   }
   return request({
     data
   }).then(handleLongviewResponse);
 };
 
-export const getValues = (token: string, fields: string[]) => {
-  return get(token, 'getValues', fields);
-};
+export const getLastUpdated = curry((token: string) => {
+  return get(token, 'getLatestValue');
+});
 
-export const getLatestValue = (token: string, fields: []) => {
-  return get(token, 'getLatestValue', fields);
-};
+export const getValues = curry((token: string, fields: LongviewFieldName[]) => {
+  return get(token, 'getValues', fields);
+});
+
+export const getLatestValue = curry(
+  (token: string, fields: LongviewFieldName[]) => {
+    return get(token, 'getLatestValue', fields);
+  }
+);
 
 /*
  * getTopProcesses
