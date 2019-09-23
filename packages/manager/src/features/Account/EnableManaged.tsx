@@ -35,14 +35,14 @@ export const ManagedContent: React.FC<ContentProps> = props => {
     return (
       <Typography>
         Managed is already enabled on your account. To cancel Linode Managed,
-        please open a
+        please open a {` `}
         <SupportLink text="Support Ticket" title="Cancel Linode Managed" />.
       </Typography>
     );
   }
 
   return (
-    <Grid container>
+    <Grid container direction="column">
       <Grid item>
         <Typography variant="body1">
           Linode Managed includes Backups, Longview Pro, cPanel, and
