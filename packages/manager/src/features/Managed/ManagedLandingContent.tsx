@@ -1,8 +1,9 @@
-import { getCredentials, getManagedContacts } from 'linode-js-sdk/lib/managed';
 import {
+  getCredentials,
+  getManagedContacts,
   ManagedContact,
   ManagedCredential
-} from 'linode-js-sdk/lib/managed/types';
+} from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 import {
   matchPath,

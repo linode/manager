@@ -1,4 +1,4 @@
-import { MonitorStatus } from 'linode-js-sdk/lib/managed/types';
+import { MonitorStatus } from 'linode-js-sdk/lib/managed';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';

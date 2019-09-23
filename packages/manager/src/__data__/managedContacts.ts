@@ -1,4 +1,4 @@
-import { ManagedContact } from 'linode-js-sdk/lib/managed/types';
+import { ManagedContact } from 'linode-js-sdk/lib/managed';
 
 export const contact1: ManagedContact = {
   id: 1,

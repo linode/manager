@@ -1,5 +1,4 @@
-import { deleteContact } from 'linode-js-sdk/lib/managed';
-import { ManagedContact } from 'linode-js-sdk/lib/managed/types';
+import { deleteContact, ManagedContact } from 'linode-js-sdk/lib/managed';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';

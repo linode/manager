@@ -1,13 +1,11 @@
 import { Formik } from 'formik';
 import {
   createServiceMonitorSchema,
-  ManagedServicePayload
-} from 'linode-js-sdk/lib/managed';
-import {
   ManagedCredential,
   ManagedServiceMonitor,
+  ManagedServicePayload,
   ServiceType
-} from 'linode-js-sdk/lib/managed/types';
+} from 'linode-js-sdk/lib/managed';
 import { pickBy } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';

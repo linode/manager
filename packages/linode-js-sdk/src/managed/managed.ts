@@ -16,49 +16,18 @@ import {
   updatePasswordSchema
 } from './managed.schema';
 import {
+  ContactPayload,
+  CredentialPayload,
   ManagedContact,
-  ManagedContactPhone,
   ManagedCredential,
   ManagedLinodeSetting,
   ManagedServiceMonitor,
+  ManagedServicePayload,
   ManagedSSHPubKey,
   ManagedSSHSetting,
-  ServiceType
+  UpdateCredentialPayload,
+  UpdatePasswordPayload
 } from './types';
-
-export interface ManagedServicePayload {
-  label: string;
-  service_type: ServiceType;
-  address: string;
-  timeout: number;
-  notes?: string;
-  body?: string;
-  consultation_group?: string;
-  credentials?: number[];
-}
-
-export interface CredentialPayload {
-  label: string;
-  password?: string;
-  username?: string;
-}
-
-export interface UpdateCredentialPayload {
-  // Not using a Partial<> bc this is the only possible field to update
-  label: string;
-}
-
-export interface UpdatePasswordPayload {
-  password?: string;
-  username?: string;
-}
-
-export interface ContactPayload {
-  name: string;
-  email: string;
-  phone?: ManagedContactPhone;
-  group?: string | null;
-}
 
 /**
  * enableManaged
@@ -288,7 +257,10 @@ export const createContact = (data: Partial<ContactPayload>) =>
  *
  * Updates a Managed Contact
  */
-export const updateContact = (contactId: number, data: ContactPayload) =>
+export const updateContact = (
+  contactId: number,
+  data: Partial<ContactPayload>
+) =>
   Request<ManagedContact>(
     setMethod('PUT'),
     setURL(`${API_ROOT}/managed/contacts/${contactId}`),

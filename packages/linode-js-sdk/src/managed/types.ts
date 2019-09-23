@@ -47,10 +47,44 @@ export interface ManagedContact {
   updated: string;
 }
 export interface ManagedContactPhone {
-  primary: string | null | undefined;
-  secondary: string | null | undefined;
+  primary: string | null;
+  secondary: string | null;
 }
 
 export interface ManagedSSHPubKey {
   ssh_key: string;
+}
+
+export interface ManagedServicePayload {
+  label: string;
+  service_type: ServiceType;
+  address: string;
+  timeout: number;
+  notes?: string;
+  body?: string;
+  consultation_group?: string;
+  credentials?: number[];
+}
+
+export interface CredentialPayload {
+  label: string;
+  password?: string;
+  username?: string;
+}
+
+export interface UpdateCredentialPayload {
+  // Not using a Partial<> bc this is the only possible field to update
+  label: string;
+}
+
+export interface UpdatePasswordPayload {
+  password?: string;
+  username?: string;
+}
+
+export interface ContactPayload {
+  name: string;
+  email: string;
+  phone?: ManagedContactPhone;
+  group?: string;
 }

@@ -3,9 +3,9 @@ import {
   ContactPayload,
   createContact,
   createContactSchema,
+  ManagedContact,
   updateContact
 } from 'linode-js-sdk/lib/managed';
-import { ManagedContact } from 'linode-js-sdk/lib/managed/types';
 import { pathOr, pick } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';

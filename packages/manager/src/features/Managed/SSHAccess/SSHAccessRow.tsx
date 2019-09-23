@@ -1,4 +1,4 @@
-import { ManagedLinodeSetting } from 'linode-js-sdk/lib/managed/types';
+import { ManagedLinodeSetting } from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';

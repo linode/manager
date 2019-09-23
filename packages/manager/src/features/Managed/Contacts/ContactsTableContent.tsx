@@ -1,4 +1,4 @@
-import { ManagedContact } from 'linode-js-sdk/lib/managed/types';
+import { ManagedContact } from 'linode-js-sdk/lib/managed';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';

@@ -1,4 +1,4 @@
-import { ManagedServiceMonitor } from 'linode-js-sdk/lib/managed/types';
+import { ManagedServiceMonitor } from 'linode-js-sdk/lib/managed';
 import { credentials } from './managedCredentials';
 
 export const monitors: ManagedServiceMonitor[] = [

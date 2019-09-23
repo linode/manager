@@ -1,5 +1,7 @@
-import { ManagedServicePayload } from 'linode-js-sdk/lib/managed';
-import { ManagedServiceMonitor } from 'linode-js-sdk/lib/managed/types';
+import {
+  ManagedServiceMonitor,
+  ManagedServicePayload
+} from 'linode-js-sdk/lib/managed';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';

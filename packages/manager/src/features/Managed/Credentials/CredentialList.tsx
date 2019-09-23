@@ -3,10 +3,10 @@ import {
   createCredential,
   CredentialPayload,
   deleteCredential,
+  ManagedCredential,
   updateCredential,
   updatePassword
 } from 'linode-js-sdk/lib/managed';
-import { ManagedCredential } from 'linode-js-sdk/lib/managed/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';

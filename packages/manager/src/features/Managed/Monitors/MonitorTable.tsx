@@ -1,9 +1,9 @@
 import { FormikBag } from 'formik';
-import { ManagedServicePayload } from 'linode-js-sdk/lib/managed';
 import {
   ManagedCredential,
-  ManagedServiceMonitor
-} from 'linode-js-sdk/lib/managed/types';
+  ManagedServiceMonitor,
+  ManagedServicePayload
+} from 'linode-js-sdk/lib/managed';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';

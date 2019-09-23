@@ -16,6 +16,8 @@ export * from './tags';
 
 export * from './linodes';
 
+export * from './managed';
+
 export * from './kubernetes';
 
 export * from './firewalls';
@@ -23,7 +25,5 @@ export * from './firewalls';
 export * from './stackscripts';
 
 export * from './regions';
-
-export * from './managed';
 
 export { baseRequest } from './request';

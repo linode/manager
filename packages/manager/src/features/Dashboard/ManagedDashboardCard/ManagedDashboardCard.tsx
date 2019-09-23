@@ -1,4 +1,4 @@
-import { ManagedServiceMonitor } from 'linode-js-sdk/lib/managed/types';
+import { ManagedServiceMonitor } from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';

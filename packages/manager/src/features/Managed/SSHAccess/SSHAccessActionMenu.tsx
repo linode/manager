@@ -1,5 +1,7 @@
-import { updateLinodeSettings } from 'linode-js-sdk/lib/managed';
-import { ManagedLinodeSetting } from 'linode-js-sdk/lib/managed/types';
+import {
+  ManagedLinodeSetting,
+  updateLinodeSettings
+} from 'linode-js-sdk/lib/managed';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';

@@ -1,6 +1,8 @@
 import produce from 'immer';
-import { getLinodeSettings } from 'linode-js-sdk/lib/managed';
-import { ManagedLinodeSetting } from 'linode-js-sdk/lib/managed/types';
+import {
+  getLinodeSettings,
+  ManagedLinodeSetting
+} from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';

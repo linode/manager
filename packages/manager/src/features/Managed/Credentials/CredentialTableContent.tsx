@@ -1,4 +1,4 @@
-import { ManagedCredential } from 'linode-js-sdk/lib/managed/types';
+import { ManagedCredential } from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 
 import TableRowEmpty from 'src/components/TableRowEmptyState';

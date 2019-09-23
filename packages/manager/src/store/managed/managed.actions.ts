@@ -1,9 +1,10 @@
+import {
+  ManagedServiceMonitor,
+  ManagedServicePayload
+} from 'linode-js-sdk/lib/managed';
 import actionCreatorFactory from 'typescript-fsa';
 
 export const actionCreator = actionCreatorFactory(`@@manager/managed`);
-
-import { ManagedServicePayload } from 'linode-js-sdk/lib/managed';
-import { ManagedServiceMonitor } from 'linode-js-sdk/lib/managed/types';
 
 export interface MonitorPayload {
   monitorID: number;

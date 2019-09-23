@@ -1,5 +1,5 @@
 import produce from 'immer';
-import { ManagedServiceMonitor } from 'linode-js-sdk/lib/managed/types';
+import { ManagedServiceMonitor } from 'linode-js-sdk/lib/managed';
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
 

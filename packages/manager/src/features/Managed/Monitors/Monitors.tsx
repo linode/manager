@@ -1,4 +1,4 @@
-import { ManagedCredential } from 'linode-js-sdk/lib/managed/types';
+import { ManagedCredential } from 'linode-js-sdk/lib/managed';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
