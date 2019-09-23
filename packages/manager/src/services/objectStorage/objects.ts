@@ -1,5 +1,5 @@
 import { BETA_API_ROOT } from 'src/constants';
-import Request, { setData, setHeaders, setMethod, setURL } from '../index';
+import Request, { setData, setMethod, setURL } from '../index';
 
 interface ObjectURLOptions {
   expires_in?: number;
@@ -23,14 +23,3 @@ export const getObjectURL = (
     ),
     setData({ name, method, ...options })
   ).then(response => response.data);
-
-/**
- * Upload Object
- */
-export const uploadObject = (url: string, file: File) =>
-  Request<any>(
-    setMethod('PUT'),
-    setURL(url),
-    setData(file),
-    setHeaders({ 'Content-Type': file.type })
-  );

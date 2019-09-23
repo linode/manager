@@ -48,7 +48,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     position: 'absolute',
     right: theme.spacing(1),
     '& g': {
-      // @todo @alban @kayla Color here?
       stroke: theme.color.offBlack
     }
   },

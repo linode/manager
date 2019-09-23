@@ -102,7 +102,9 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
   };
 
   const onDrop = (files: File[]) => {
-    if (files.length !== 1) {
+    // (TEMPORARY): Don't allow multi-file uploads.
+    // (TEMPORARY): Don't allow uploads when there's already one in progress.
+    if (files.length !== 1 || inProgress) {
       return;
     }
 
@@ -138,7 +140,8 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
   };
 
   const onDropRejected = (files: File[]) => {
-    // This error message
+    // @todo: better error handling. This error message will go away when we
+    // support multi-file uploads.
     props.enqueueSnackbar('Please upload one file at a time.', {
       variant: 'error'
     });
