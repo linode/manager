@@ -71,6 +71,10 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
       <Select
         isLoading={linodesLoading}
         value={
+          /*
+            if the user selected _ALL_, that's the only chip
+            we want appearing in the actual text field.
+           */
           userSelectedAllLinodes(selectedLinodes)
             ? [
                 {
@@ -82,6 +86,10 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
         }
         isMulti
         options={
+          /*
+            basically, don't show any dropdown options
+            if the user has selected _ALL_
+           */
           userSelectedAllLinodes(selectedLinodes)
             ? [
                 {
