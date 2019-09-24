@@ -28,7 +28,7 @@ describe('PromiseLoaderSpec', () => {
     });
   });
 
-  describe('after resolution', async () => {
+  describe('after resolution', () => {
     beforeEach(async () => {
       wrapper = shallow(<LoadedComponent />);
       await mockAxiosResponse(120);
