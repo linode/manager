@@ -33,6 +33,8 @@ const page_size = 100;
 
 type ClassNames =
   | 'divider'
+  | 'tableContainer'
+  | 'uploaderContainer'
   | 'objectTable'
   | 'nameColumn'
   | 'sizeColumn'
@@ -68,6 +70,16 @@ const styles = (theme: Theme) =>
       color: theme.palette.primary.main,
       textDecoration: 'underline',
       cursor: 'pointer'
+    },
+    tableContainer: {
+      [theme.breakpoints.up('sm')]: {
+        order: 1
+      }
+    },
+    uploaderContainer: {
+      [theme.breakpoints.up('sm')]: {
+        order: 2
+      }
     }
   });
 
@@ -258,7 +270,14 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
           bucketName={bucketName}
         />
         <Grid container>
-          <Grid item xs={8}>
+          <Grid item xs={12} sm={4} className={classes.uploaderContainer}>
+            <ObjectUploader
+              clusterId={clusterId}
+              bucketName={bucketName}
+              update={() => this.updateInPlace()}
+            />
+          </Grid>
+          <Grid item xs={12} sm={8} className={classes.tableContainer}>
             <>
               <Paper className={classes.objectTable}>
                 <Table removeLabelonMobile aria-label="List of Bucket Objects">
@@ -314,13 +333,6 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
                 </Typography>
               )}
             </>
-          </Grid>
-          <Grid item xs={4}>
-            <ObjectUploader
-              clusterId={clusterId}
-              bucketName={bucketName}
-              update={() => this.updateInPlace()}
-            />
           </Grid>
         </Grid>
       </>

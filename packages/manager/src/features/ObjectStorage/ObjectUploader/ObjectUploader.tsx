@@ -5,6 +5,7 @@ import * as React from 'react';
 import { useDropzone } from 'react-dropzone';
 import CloudUpload from 'src/assets/icons/cloudUpload.svg';
 import Button from 'src/components/Button';
+import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { getObjectURL } from 'src/services/objectStorage/objects';
@@ -13,10 +14,12 @@ import FileUpload from './FileUpload';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    position: 'sticky',
-    top: theme.spacing(3),
-    height: `calc(100vh - (160px + ${theme.spacing(20)}px))`,
-    marginLeft: theme.spacing(4)
+    [theme.breakpoints.up('sm')]: {
+      position: 'sticky',
+      top: theme.spacing(3),
+      height: `calc(100vh - (160px + ${theme.spacing(20)}px))`,
+      marginLeft: theme.spacing(4)
+    }
   },
   dropzone: {
     display: 'flex',
@@ -35,9 +38,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     transition: theme.transitions.create(['border-color', 'background-color'])
   },
   copy: {
-    marginTop: theme.spacing(4),
-    marginBottom: theme.spacing(4),
-    color: theme.palette.primary.main
+    color: theme.palette.primary.main,
+    margin: '0 auto',
+    [theme.breakpoints.up('sm')]: {
+      margin: `${theme.spacing(4)}px 0`
+    }
   },
   active: {
     // The `active` class active when a user is hovering over the dropzone.
@@ -62,7 +67,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    padding: theme.spacing(4.5)
+    padding: theme.spacing(1),
+    [theme.breakpoints.up('md')]: {
+      padding: theme.spacing(2)
+    },
+    [theme.breakpoints.up('lg')]: {
+      padding: theme.spacing(4)
+    }
   },
   fileUploads: {
     display: 'flex',
@@ -72,7 +83,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   uploadButton: {
     opacity: 1,
-    transition: theme.transitions.create(['opacity'])
+    transition: theme.transitions.create(['opacity']),
+    [theme.breakpoints.only('sm')]: {
+      paddingLeft: theme.spacing(2),
+      paddingRight: theme.spacing(2)
+    },
+    [theme.breakpoints.down('sm')]: {
+      marginTop: theme.spacing(2)
+    }
   }
 }));
 
@@ -200,7 +218,9 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
 
         {!inProgress && (
           <div className={classes.dropzoneContent}>
-            <CloudUpload />
+            <Hidden xsDown>
+              <CloudUpload />
+            </Hidden>
             <Typography variant="subtitle2" className={classes.copy}>
               You can browse your device to upload files or drop them here.
             </Typography>
