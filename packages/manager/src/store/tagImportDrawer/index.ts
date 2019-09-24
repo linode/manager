@@ -1,8 +1,9 @@
 import * as Bluebird from 'bluebird';
+import produce from 'immer';
 import { Domain } from 'linode-js-sdk/lib/domains';
 import { Linode } from 'linode-js-sdk/lib/linodes';
 import { isEmpty } from 'ramda';
-import { Action } from 'redux';
+import { Action, Reducer } from 'redux';
 import { ThunkAction, ThunkDispatch } from 'redux-thunk';
 import { ApplicationState } from 'src/store';
 import { updateDomain } from 'src/store/domains/domains.requests';
@@ -14,6 +15,8 @@ import { ThunkActionCreator } from 'src/store/types';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { storage } from 'src/utilities/storage';
 import actionCreatorFactory from 'typescript-fsa';
+
+import { isType } from 'typescript-fsa';
 
 const actionCreator = actionCreatorFactory(`@@manager/tagImportDrawer`);
 
@@ -35,52 +38,13 @@ interface Accumulator<T> {
   errors: TagError[];
 }
 
-const CLOSE = '@@manager/tagImportDrawer/CLOSE';
-const OPEN = '@@manager/tagImportDrawer/OPEN';
-const UPDATE = '@@manager/tagImportDrawer/UPDATE';
-const SUCCESS = '@@manager/tagImportDrawer/SUCCESS';
-const ERROR = '@@manager/tagImportDrawer/ERROR';
-const RESET = '@@manager/tagImportDrawer/RESET';
+export const importTagsActions = actionCreator.async<void, void, TagError[]>(
+  'import'
+);
 
-interface Close extends Action {
-  type: typeof CLOSE;
-}
-
-interface Open extends Action {
-  type: typeof OPEN;
-}
-
-interface Update extends Action {
-  type: typeof UPDATE;
-}
-
-interface Success extends Action {
-  type: typeof SUCCESS;
-}
-
-interface Error extends Action {
-  type: typeof ERROR;
-  payload: ErrorPayload;
-}
-
-interface Reset extends Action {
-  type: typeof RESET;
-}
-
-type ErrorPayload = TagError[];
-
-export const closeGroupDrawer = (): Close => ({
-  type: CLOSE
-});
-
-export const openGroupDrawer = (): Open => ({
-  type: OPEN
-});
-
-export const handleSuccess = actionCreator<void>(`SUCCESS`);
-export const handleError = actionCreator<ErrorPayload>(`ERROR`);
-export const handleUpdate = actionCreator<void>(`UPDATE`);
-export const handleReset = actionCreator<void>(`RESET`);
+export const openDrawer = actionCreator<void>('openDrawer');
+export const closeDrawer = actionCreator<void>('closeDrawer');
+export const handleReset = actionCreator<void>('reset');
 
 export const defaultState: State = {
   open: false,
@@ -89,51 +53,41 @@ export const defaultState: State = {
   success: false
 };
 
-type ActionTypes = Open | Close | Error | Success | Update | Reset;
+export const tagImportDrawer: Reducer<State> = (
+  state = defaultState,
+  action
+) => {
+  return produce(state, draft => {
+    if (isType(action, importTagsActions.started)) {
+      draft.loading = true;
+      draft.success = false;
+      draft.errors = [];
+    }
 
-export const tagImportDrawer = (state = defaultState, action: ActionTypes) => {
-  switch (action.type) {
-    case CLOSE:
-      return {
-        ...state,
-        open: false
-      };
+    if (isType(action, importTagsActions.done)) {
+      draft.loading = false;
+      draft.success = true;
+      draft.errors = [];
+    }
 
-    case OPEN:
-      return {
-        ...defaultState,
-        open: true
-      };
+    if (isType(action, importTagsActions.failed)) {
+      draft.loading = false;
+      draft.errors = action.payload.error;
+    }
 
-    case ERROR:
-      return {
-        ...state,
-        loading: false,
-        errors: action.payload
-      };
+    if (isType(action, openDrawer)) {
+      draft.open = true;
+      draft.errors = [];
+    }
 
-    case SUCCESS:
-      return {
-        ...state,
-        loading: false,
-        errors: [],
-        success: true
-      };
+    if (isType(action, closeDrawer)) {
+      draft.open = false;
+    }
 
-    case UPDATE:
-      return {
-        ...state,
-        loading: true,
-        errors: [],
-        success: false
-      };
-
-    case RESET:
-      return defaultState;
-
-    default:
-      return state;
-  }
+    if (isType(action, handleReset)) {
+      Object.assign(draft, defaultState);
+    }
+  });
 };
 
 // Async
@@ -158,7 +112,7 @@ const createAccumulator = <T extends Linode | Domain>(
   entityType: 'linode' | 'domain',
   dispatch: ThunkDispatch<ApplicationState, undefined, Action>
 ) => (accumulator: Accumulator<T>, entity: GroupImportProps) => {
-  // @todo if the API decides to enforce lowercase tags, remove this lowercasing.
+  // @todo if the API decides to enforce lowercase tags, remove this lower-casing.
   const tags = [...entity.tags, entity.group!.toLowerCase()];
 
   const action: ThunkAction<
@@ -211,9 +165,9 @@ const handleAccumulatedResponsesAndErrors = (
 ) => {
   const totalErrors = [...linodeResponses.errors, ...domainResponses.errors];
   if (!isEmpty(totalErrors)) {
-    dispatch(handleError(totalErrors));
+    dispatch(importTagsActions.failed({ error: totalErrors }));
   } else {
-    dispatch(handleSuccess());
+    dispatch(importTagsActions.done({}));
   }
   return totalErrors;
   // @todo do we need to update entities in store here? Seems to be currently handled with post-request events
@@ -225,7 +179,7 @@ export const addTagsToEntities: ImportGroupsAsTagsThunk = () => (
   dispatch,
   getState
 ) => {
-  dispatch(handleUpdate());
+  dispatch(importTagsActions.started());
   const entities = getEntitiesWithGroupsToImport(getState());
 
   const linodeAccumulator = createAccumulator<Linode>('linode', dispatch);
@@ -253,12 +207,14 @@ export const addTagsToEntities: ImportGroupsAsTagsThunk = () => (
         // Errors from individual requests will be accumulated and passed to .then(); hitting
         // this block indicates something went wrong with .reduce() or .join().
         // It's unclear under what circumstances this could ever actually fire.
-        handleError([
-          {
-            entityId: 0,
-            reason: 'There was an error importing your display groups.'
-          }
-        ])
+        importTagsActions.failed({
+          error: [
+            {
+              entityId: 0,
+              reason: 'There was an error importing your display groups.'
+            }
+          ]
+        })
       )
     );
 };

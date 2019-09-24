@@ -7,43 +7,59 @@ describe('tagImportDrawer Redux duck', () => {
     it('should be closed by default', () => {
       expect(T.defaultState).toHaveProperty('open', false);
     });
-    it('should handle OPEN', () => {
-      expect(tagDrawer(T.defaultState, T.openGroupDrawer())).toEqual({
+
+    it('should handle an open action', () => {
+      expect(
+        tagDrawer(
+          {
+            ...T.defaultState,
+            errors: [{ entityId: 'mock error', reason: 'mock reason' }]
+          },
+          T.openDrawer()
+        )
+      ).toEqual({
         ...T.defaultState,
-        open: true
+        open: true,
+        errors: []
       });
     });
-    it('should handle CLOSE', () => {
+
+    it('should handle a "close" action', () => {
       const newState = tagDrawer(
         { ...T.defaultState, open: true },
-        T.closeGroupDrawer()
+        T.closeDrawer()
       );
       expect(newState).toHaveProperty('open', false);
     });
-    it('should handle UPDATE', () => {
-      const newState = tagDrawer(T.defaultState, T.handleUpdate() as any);
+
+    it('should handle a tag import initialization', () => {
+      const newState = tagDrawer(T.defaultState, T.importTagsActions.started());
       expect(newState).toHaveProperty('loading', true);
+      expect(newState).toHaveProperty('errors', []);
     });
-    it('should handle SUCCESS', () => {
+
+    it('should handle a successful import', () => {
       const newState = tagDrawer(
         { ...T.defaultState, loading: true },
-        T.handleSuccess() as any
+        T.importTagsActions.done({})
       );
       expect(newState).toHaveProperty('loading', false);
       expect(newState).toHaveProperty('success', true);
     });
-    it('should handle ERROR', () => {
+
+    it('should handle a failed import', () => {
       const errors = [
         { entityId: 12345, reason: 'No reason' },
         { entityId: 6789, reason: 'Reason' }
       ];
       const newState = tagDrawer(
         { ...T.defaultState, loading: true },
-        T.handleError(errors) as any
+        T.importTagsActions.failed({ error: errors })
       );
       expect(newState).toHaveProperty('errors', errors);
     });
-    it('should handle RESET', () => {
+
+    it('should handle a reset action', () => {
       const newState = tagDrawer(
         {
           open: true,
@@ -51,7 +67,7 @@ describe('tagImportDrawer Redux duck', () => {
           success: true,
           errors: []
         },
-        T.handleReset() as any
+        T.handleReset()
       );
       expect(newState).toEqual(T.defaultState);
     });

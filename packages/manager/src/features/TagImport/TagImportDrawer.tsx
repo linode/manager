@@ -26,7 +26,7 @@ import getEntitiesWithGroupsToImport, {
 } from 'src/store/selectors/getEntitiesWithGroupsToImport';
 import {
   addTagsToEntities,
-  closeGroupDrawer as _close,
+  closeDrawer as _close,
   handleReset,
   TagError
 } from 'src/store/tagImportDrawer';
