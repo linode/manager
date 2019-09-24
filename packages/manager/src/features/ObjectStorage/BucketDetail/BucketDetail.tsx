@@ -3,7 +3,10 @@ import { prop, sortBy } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import Waypoint from 'react-waypoint';
+import ActionsPanel from 'src/components/ActionsPanel';
 import Breadcrumb from 'src/components/Breadcrumb';
+import Button from 'src/components/Button';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
@@ -23,9 +26,12 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
 import { getObjectList } from 'src/services/objectStorage/buckets';
+import { getObjectURL } from 'src/services/objectStorage/objects';
 import { getQueryParam } from 'src/utilities/queryParams';
+import { truncateMiddle } from 'src/utilities/truncate';
 import ObjectUploader from '../ObjectUploader';
-import { ExtendedObject, extendObject } from '../utilities';
+import { deleteObject } from '../requests';
+import { displayName, ExtendedObject, extendObject } from '../utilities';
 import BucketBreadcrumb from './BucketBreadcrumb';
 import ObjectTableContent from './ObjectTableContent';
 
@@ -94,8 +100,12 @@ interface State {
   data: ExtendedObject[];
   loading: boolean;
   allObjectsFetched: boolean;
+  deleteObjectDialogOpen: boolean;
+  deleteObjectLoading: boolean;
+  deleteObjectError?: string;
   generalError?: APIError[];
   nextPageError?: APIError[];
+  objectToDelete?: string;
 }
 
 export class BucketDetail extends React.Component<CombinedProps, {}> {
@@ -103,6 +113,8 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
     data: [],
     loading: false,
     allObjectsFetched: false,
+    deleteObjectDialogOpen: false,
+    deleteObjectLoading: false,
     generalError: undefined,
     nextPageError: undefined
   };
@@ -160,7 +172,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
     }
   }
 
-  getNextPage() {
+  getNextPage = () => {
     const { data } = this.state;
     const tail = data[data.length - 1];
     if (!tail) {
@@ -209,7 +221,64 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
           nextPageError: err
         });
       });
-  }
+  };
+
+  handleClickDelete = (objectName: string) => {
+    this.setState({
+      objectToDelete: objectName,
+      deleteObjectDialogOpen: true
+    });
+  };
+
+  deleteObject = async () => {
+    const { clusterId, bucketName } = this.props.match.params;
+    const { objectToDelete } = this.state;
+
+    if (!objectToDelete) {
+      return;
+    }
+
+    this.setState({ deleteObjectLoading: true, deleteObjectError: undefined });
+
+    try {
+      const { url } = await getObjectURL(
+        clusterId,
+        bucketName,
+        objectToDelete,
+        'DELETE'
+      );
+
+      await deleteObject(url);
+
+      this.setState({
+        deleteObjectLoading: false,
+        deleteObjectDialogOpen: false
+      });
+      this.removeOne(objectToDelete);
+    } catch (err) {
+      this.setState({
+        deleteObjectLoading: false,
+        // We are unlikely to get back a helpful error message, so we create a
+        // generic one here.
+        deleteObjectError: 'Unable to delete object.'
+      });
+    }
+  };
+
+  removeOne = (objectName: string) => {
+    const updatedData = [...this.state.data];
+    const idx = updatedData.findIndex(object => object.name === objectName);
+    if (idx > -1) {
+      updatedData.splice(idx, 1);
+      this.setState({
+        data: updatedData
+      });
+    }
+  };
+
+  openDeleteObjectDialog = () => {
+    this.setState({ deleteObjectDialogOpen: true });
+  };
 
   updateInPlace() {
     const { bucketName, clusterId } = this.props.match.params;
@@ -234,7 +303,11 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
       loading,
       generalError,
       nextPageError,
-      allObjectsFetched
+      allObjectsFetched,
+      objectToDelete,
+      deleteObjectLoading,
+      deleteObjectError,
+      deleteObjectDialogOpen
     } = this.state;
 
     const { bucketName, clusterId } = this.props.match.params;
@@ -288,9 +361,9 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
                         Object
                       </TableCell>
                       <TableCell className={classes.sizeColumn}>Size</TableCell>
-                      <TableCell className={classes.updatedColumn}>
-                        Last Modified
-                      </TableCell>
+                      <TableCell>Last Modified</TableCell>
+                      {/* Empty TableCell for Action Menu */}
+                      <TableCell />
                     </TableRow>
                   </TableHead>
                   <TableBody>
@@ -299,6 +372,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
                       loading={loading}
                       error={generalError}
                       prefix={prefix}
+                      handleClickDelete={this.handleClickDelete}
                     />
                   </TableBody>
                 </Table>
@@ -310,7 +384,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
                   !generalError &&
                   !nextPageError &&
                   data.length >= 100 && (
-                    <Waypoint onEnter={() => this.getNextPage()}>
+                    <Waypoint onEnter={this.getNextPage}>
                       <div />
                     </Waypoint>
                   )}
@@ -320,7 +394,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
                   The next objects in the list failed to load.{' '}
                   <span
                     className={classes.tryAgainText}
-                    onClick={() => this.getNextPage()}
+                    onClick={this.getNextPage}
                   >
                     Click here to try again.
                   </span>
@@ -333,6 +407,38 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
                   Showing all {numOfDisplayedObjects} items
                 </Typography>
               )}
+              <ConfirmationDialog
+                open={deleteObjectDialogOpen}
+                onClose={this.openDeleteObjectDialog}
+                title={
+                  objectToDelete
+                    ? `Delete  ${truncateMiddle(displayName(objectToDelete))}`
+                    : 'Delete object'
+                }
+                actions={() => (
+                  <ActionsPanel>
+                    <Button
+                      buttonType="cancel"
+                      onClick={this.openDeleteObjectDialog}
+                      data-qa-cancel
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      buttonType="secondary"
+                      destructive
+                      onClick={this.deleteObject}
+                      data-qa-submit-rebuild
+                      loading={deleteObjectLoading}
+                    >
+                      Delete
+                    </Button>
+                  </ActionsPanel>
+                )}
+                error={deleteObjectError}
+              >
+                Are you sure you want to delete this object?
+              </ConfirmationDialog>
             </>
           </Grid>
         </Grid>

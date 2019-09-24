@@ -73,8 +73,6 @@ describe('BucketTableRow', () => {
     const actionMenuProps = wrapper
       .find('[data-qa-action-menu]')
       .props() as ActionMenuProps;
-    expect(actionMenuProps.bucketLabel).toBe('test-bucket-001');
-    expect(actionMenuProps.cluster).toBe('a-cluster');
     expect(actionMenuProps.onRemove).toBe(mockOnRemove);
   });
 
