@@ -12,3 +12,7 @@ export const actionCreator = actionCreatorFactory(`@@manager/events`);
 export const addEvents = actionCreator<Event[]>(ADD_EVENTS);
 
 export const updateEventsAsSeen = actionCreator(UPDATE_EVENTS_AS_SEEN);
+
+export const setPollingInterval = actionCreator<number>('set-polling-interval');
+
+export const setRequestDeadline = actionCreator<number>('set-request-deadline');

@@ -22,11 +22,9 @@ import {
   isRestrictedUser
 } from 'src/features/Profile/permissionsHelpers';
 import { MapState } from 'src/store/types';
-import {
-  getAPIErrorOrDefault,
-  handleUnauthorizedErrors
-} from 'src/utilities/errorUtils';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendStackscriptsSearchEvent } from 'src/utilities/ga';
+import { handleUnauthorizedErrors } from 'src/utilities/handleUnauthorizedErrors';
 import StackScriptTableHead from '../Partials/StackScriptTableHead';
 import {
   AcceptedFilters,
