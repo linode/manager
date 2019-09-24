@@ -73,7 +73,7 @@ export const styles = (theme: Theme) =>
         zIndex: 100
       },
       '& .react-select__group': {
-        width: 'calc(100% + 4px)',
+        width: `calc(100% + ${theme.spacing(1) / 2}px)`,
         '&:last-child': {
           paddingBottom: 0
         }
