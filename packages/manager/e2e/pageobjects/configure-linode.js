@@ -123,13 +123,13 @@ class ConfigureLinode extends Page {
     return $('[data-qa-tp="Linode Plan"]');
   }
   get planRows() {
-    return $$('[data-qa-plan]');
+    return $$('[data-qa-plan-row]');
   }
   get plans() {
-    return $$('[data-qa-tp="Linode Plan"] [data-qa-plan]');
+    return $$('[data-qa-tp="Linode Plan"] [data-qa-plan-row]');
   }
   get planNames() {
-    return $$('[data-qa-tp="Linode Plan"] [data-qa-plan-header]');
+    return $$('[data-qa-tp="Linode Plan"] [data-qa-plan-name]');
   }
 
   get labelHeader() {
@@ -363,7 +363,8 @@ class ConfigureLinode extends Page {
   // Configure a basic linode, selecting all the default options
   generic(
     label = `Test-Linode${new Date().getTime()}`,
-    distro = 'Alpine 3.10'
+    distro = 'Alpine 3.10',
+    plan = 'Linode 2GB'
   ) {
     console.log(`creating a default linode`);
 
@@ -371,7 +372,7 @@ class ConfigureLinode extends Page {
 
     browser.trySetValue(this.regionSelect.selector, 'Newark, NJ');
     browser.keys('\uE007');
-    this.plans[0].click();
+    $(`[data-qa-plan-row="${plan}"]`).click();
     browser.trySetValue(this.label.selector, label);
     this.password.setValue(`SomeTimeStamp${new Date().getTime()}`);
   }
@@ -419,19 +420,15 @@ class ConfigureLinode extends Page {
   cloneSelectSource(linodeLabel) {
     const sourceSection = $$('[data-qa-select-linode-panel]');
     expect(sourceSection[0].$('[data-qa-select-linode-header]').getText())
-      .withContext(``)
+      .withContext(
+        `${assertLog.incorrectText} for "[data-qa-select-linode-header]"`
+      )
       .toBe('Select Linode to Clone From');
-    // const targetSection = $$('[data-qa-select-linode-panel]')
-    // .filter(s => s.$('[data-qa-select-linode-header]').getText() === 'Select Target Linode');
 
     let linodes = sourceSection[0].$$('[data-qa-selection-card]');
     let sourceLinode = linodes[0];
     let sourceLabel = sourceLinode.$('[data-qa-select-card-heading]').getText();
     sourceLinode.click();
-
-    // let targetLinodeCard = targetSection[0].$$('[data-qa-selection-card]')
-    // .filter(c => c.$('[data-qa-select-card-heading]').getText() === sourceLabel);
-    // expect(targetLinodeCard[0].getAttribute('class')).toContain('disabled');
 
     if (linodeLabel) {
       linodes = sourceSection[0]
@@ -443,11 +440,6 @@ class ConfigureLinode extends Page {
       sourceLabel = sourceLinode.$('[data-qa-select-card-heading]').getText();
 
       sourceLinode.click();
-
-      // targetLinodeCard = targetSection[0].$$('[data-qa-selection-card]')
-      // .filter(c => c.$('[data-qa-select-card-heading]').getText() === sourceLabel);
-
-      // expect(targetLinodeCard[0].getAttribute('class')).toContain('disabled');
     }
   }
 

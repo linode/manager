@@ -120,7 +120,7 @@ export class SelectPlanPanel extends React.Component<
         {/* Displays Table Row for larger screens */}
         <Hidden smDown>
           <TableRow
-            data-qa-plan={type.heading}
+            data-qa-plan-row={type.label}
             key={type.id}
             onClick={!isSamePlan ? this.onSelect(type.id) : undefined}
             rowLink={this.onSelect ? this.onSelect(type.id) : undefined}
@@ -138,7 +138,7 @@ export class SelectPlanPanel extends React.Component<
                 />
               )}
             </TableCell>
-            <TableCell>
+            <TableCell data-qa-plan-name>
               {type.heading}{' '}
               {isSamePlan && (
                 <Chip

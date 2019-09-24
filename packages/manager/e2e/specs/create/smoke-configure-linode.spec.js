@@ -30,7 +30,7 @@ describe('Create Linode - Configure Linode Suite', () => {
 
   it('should configure a generic linode and update cost summary', () => {
     const genericPrice = CheckoutSummary.costSummary.getText();
-    const genericType = ConfigureLinode.planNames[1].getText();
+    const genericType = ConfigureLinode.planNames[0].getText();
     ConfigureLinode.generic();
     const genericImage = ConfigureLinode.imageName.getText();
 
