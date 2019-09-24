@@ -15,7 +15,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(1) - 2,
     marginRight: theme.spacing(1),
     fontSize: '1.8em',
-    position: 'absolute'
+    position: 'absolute',
+    boxShadow: `0 0 5px ${theme.color.boxShadow}`
   }
 }));
 
@@ -34,7 +35,9 @@ const _SingleValue: React.StatelessComponent<CombinedProps> = props => {
       >
         {props.children}
       </SingleValue>
-      <span className={`${props.data.className} ${classes.icon}`} />
+      <span className={`${props.data.className} ${classes.icon}`}>
+        {props.data.flag && props.data.flag()}
+      </span>
     </>
   );
 };
