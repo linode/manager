@@ -68,6 +68,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     alignItems: 'center',
     justifyContent: 'center',
     padding: theme.spacing(1),
+    width: '100%',
     [theme.breakpoints.up('md')]: {
       padding: theme.spacing(2)
     },
@@ -85,8 +86,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     opacity: 1,
     transition: theme.transitions.create(['opacity']),
     [theme.breakpoints.only('sm')]: {
-      paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(2)
+      paddingLeft: theme.spacing(1.5),
+      paddingRight: theme.spacing(1.5)
     },
     [theme.breakpoints.down('sm')]: {
       marginTop: theme.spacing(2)
