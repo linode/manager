@@ -15,8 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginLeft: theme.spacing(1) - 2,
     marginRight: theme.spacing(1),
     fontSize: '1.8em',
-    position: 'absolute',
-    border: `solid 1px ${theme.palette.divider}`
+    position: 'absolute'
   }
 }));
 
