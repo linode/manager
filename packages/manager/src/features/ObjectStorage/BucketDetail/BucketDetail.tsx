@@ -36,6 +36,7 @@ type ClassNames =
   | 'objectTable'
   | 'nameColumn'
   | 'sizeColumn'
+  | 'updatedColumn'
   | 'footer'
   | 'tryAgainText';
 
@@ -50,10 +51,13 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing(2)
     },
     nameColumn: {
-      width: '70%'
+      width: '60%'
     },
     sizeColumn: {
-      width: '15%'
+      width: '20%'
+    },
+    updatedColumn: {
+      width: '20%'
     },
     footer: {
       marginTop: theme.spacing(3),
@@ -264,7 +268,9 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
                         Object
                       </TableCell>
                       <TableCell className={classes.sizeColumn}>Size</TableCell>
-                      <TableCell>Last Modified</TableCell>
+                      <TableCell className={classes.updatedColumn}>
+                        Last Modified
+                      </TableCell>
                     </TableRow>
                   </TableHead>
                   <TableBody>

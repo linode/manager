@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderColor: theme.palette.primary.main,
     borderStyle: 'dashed',
     color: theme.palette.primary.main,
-    backgroundColor: theme.color.white,
+    backgroundColor: 'transparent',
     outline: 'none',
     height: '100%',
     transition: theme.transitions.create(['border-color', 'background-color'])
@@ -42,7 +42,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   active: {
     // The `active` class active when a user is hovering over the dropzone.
     borderColor: theme.palette.primary.light,
-    backgroundColor: 'transparent',
+    backgroundColor: theme.color.white,
     '& $uploadButton': {
       opacity: 0.5
     }

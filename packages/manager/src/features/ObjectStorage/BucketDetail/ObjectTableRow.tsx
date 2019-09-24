@@ -26,17 +26,17 @@ const ObjectTableRow: React.FC<Props> = props => {
           </Grid>
           <Grid item>
             <Box display="flex" alignItems="center">
-              <Typography variant="h3" style={{ whiteSpace: 'nowrap' }}>
-                {objectName}
+              <Typography>
+                <strong>{objectName}</strong>
               </Typography>
             </Box>
           </Grid>
         </Grid>
       </TableCell>
-      <TableCell parentColumn="Size">
+      <TableCell parentColumn="Size" noWrap>
         {readableBytes(objectSize).formatted}
       </TableCell>
-      <TableCell parentColumn="Last Modified">
+      <TableCell parentColumn="Last Modified" noWrap>
         <DateTimeDisplay value={objectLastModified} humanizeCutoff="never" />
       </TableCell>
     </TableRow>
