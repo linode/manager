@@ -226,6 +226,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
   handleClickDelete = (objectName: string) => {
     this.setState({
       objectToDelete: objectName,
+      deleteObjectError: undefined,
       deleteObjectDialogOpen: true
     });
   };
@@ -276,8 +277,10 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
     }
   };
 
-  openDeleteObjectDialog = () => {
-    this.setState({ deleteObjectDialogOpen: true });
+  closeDeleteObjectDialog = () => {
+    this.setState({
+      deleteObjectDialogOpen: false
+    });
   };
 
   updateInPlace() {
@@ -409,7 +412,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
               )}
               <ConfirmationDialog
                 open={deleteObjectDialogOpen}
-                onClose={this.openDeleteObjectDialog}
+                onClose={this.closeDeleteObjectDialog}
                 title={
                   objectToDelete
                     ? `Delete  ${truncateMiddle(displayName(objectToDelete))}`
@@ -419,7 +422,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
                   <ActionsPanel>
                     <Button
                       buttonType="cancel"
-                      onClick={this.openDeleteObjectDialog}
+                      onClick={this.closeDeleteObjectDialog}
                       data-qa-cancel
                     >
                       Cancel
