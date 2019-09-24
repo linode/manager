@@ -39,7 +39,7 @@ export const ClusterSelect: React.StatelessComponent<CombinedProps> = props => {
 
   // Error could be: 1. General Clusters error, 2. Field error, 3. Nothing
   const errorText = clustersError
-    ? 'Error loading Clusters'
+    ? 'Error loading Regions'
     : error
     ? error
     : undefined;
@@ -48,9 +48,9 @@ export const ClusterSelect: React.StatelessComponent<CombinedProps> = props => {
     <Select
       data-qa-select-cluster
       name="cluster"
-      label="Cluster"
+      label="Region"
       options={options}
-      placeholder="All Clusters"
+      placeholder="All Regions"
       onChange={(item: Item<string>) => onChange(item.value)}
       onBlur={onBlur}
       isSearchable={false}
