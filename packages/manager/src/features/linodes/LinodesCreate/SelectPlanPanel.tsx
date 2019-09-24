@@ -65,7 +65,8 @@ const styles = (theme: Theme) =>
       width: '13%'
     },
     radioCell: {
-      width: '5%'
+      width: '5%',
+      height: 55
     }
   });
 
