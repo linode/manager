@@ -66,6 +66,12 @@ export const ISO_FORMAT = 'YYYY-MM-DD HH:mm:ss';
 export const MAX_VOLUME_SIZE = 10240;
 
 /**
+ * The lowest interval at which to make an Events request. This is later multiplied by the pollIteration
+ * to get the actual interval.
+ */
+export const INTERVAL = 1000;
+
+/**
  * Used by e.g. LISH to determine the websocket connection address.
  * Whenever updating this, also update the corresponding name in resolvers.ts
  */

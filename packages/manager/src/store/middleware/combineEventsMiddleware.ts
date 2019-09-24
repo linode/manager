@@ -1,12 +1,17 @@
 import { compose, equals, uniqWith } from 'ramda';
 import { Middleware } from 'redux';
+import { INTERVAL } from 'src/constants';
 import {
   isEntityEvent,
   isInProgressEvent
 } from 'src/store/events/event.helpers';
 import { EventHandler } from 'src/store/types';
 import { isType } from 'typescript-fsa';
-import { addEvents, setPollingInterval } from '../events/event.actions';
+import {
+  addEvents,
+  setPollingInterval,
+  setRequestDeadline
+} from '../events/event.actions';
 import { ExtendedEvent } from '../events/event.helpers';
 
 const eventsMiddlewareFactory = (
@@ -54,6 +59,7 @@ const eventsMiddlewareFactory = (
       if (isInProgressEvent(event)) {
         // If the event is in_progress, we poll more aggressively
         setPollingInterval(1);
+        setRequestDeadline(Date.now() + INTERVAL);
       }
     }
   }

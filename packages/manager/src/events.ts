@@ -12,7 +12,7 @@
  */
 import { Event } from 'linode-js-sdk/lib/account';
 import { Subject } from 'rxjs/Subject';
-import { DISABLE_EVENT_THROTTLE } from 'src/constants';
+import { DISABLE_EVENT_THROTTLE, INTERVAL } from 'src/constants';
 import store from 'src/store';
 import {
   setPollingInterval,
@@ -21,12 +21,6 @@ import {
 import { getEvents } from 'src/store/events/event.request';
 
 export const events$ = new Subject<Event>();
-
-/**
- * The lowest interval at which to make a request. This is later multiplied by the pollIteration
- * to get the actual interval.
- */
-export const INTERVAL: number = 1000;
 
 let inProgress = false;
 
