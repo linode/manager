@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     position: 'sticky',
     top: theme.spacing(3),
-    height: `calc(100vh - 250px)`,
+    height: `calc(100vh - (160px + ${theme.spacing(20)}px))`,
     marginLeft: theme.spacing(4)
   },
   dropzone: {
@@ -29,9 +29,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderColor: theme.palette.primary.main,
     borderStyle: 'dashed',
     color: theme.palette.primary.main,
+    backgroundColor: theme.color.white,
     outline: 'none',
-    transition: 'border .24s ease-in-out',
-    height: '100%'
+    height: '100%',
+    transition: theme.transitions.create(['border-color', 'background-color'])
   },
   copy: {
     marginTop: theme.spacing(4),
@@ -40,7 +41,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   active: {
     // The `active` class active when a user is hovering over the dropzone.
-    borderColor: theme.palette.primary.light
+    borderColor: theme.palette.primary.light,
+    backgroundColor: 'transparent',
+    '& $uploadButton': {
+      opacity: 0.5
+    }
   },
   accept: {
     // The `accept` class active when a user is hovering over the dropzone
@@ -64,6 +69,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     flexDirection: 'column',
     flexGrow: 1,
     justifyContent: 'flex-start'
+  },
+  uploadButton: {
+    opacity: 1,
+    transition: theme.transitions.create(['opacity'])
   }
 }));
 
@@ -195,7 +204,11 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
             <Typography variant="subtitle2" className={classes.copy}>
               You can browse your device to upload files or drop them here.
             </Typography>
-            <Button buttonType="primary" onClick={open}>
+            <Button
+              buttonType="primary"
+              onClick={open}
+              className={classes.uploadButton}
+            >
               Browse Files
             </Button>
           </div>
