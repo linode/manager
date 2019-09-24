@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginRight: theme.spacing(1),
     fontSize: '1.8em',
     position: 'absolute',
-    boxShadow: `0 0 5px ${theme.color.boxShadow}`
+    border: `solid 1px ${theme.palette.divider}`
   }
 }));
 
