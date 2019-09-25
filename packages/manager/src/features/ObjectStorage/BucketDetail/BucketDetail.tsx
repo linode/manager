@@ -72,12 +72,12 @@ const styles = (theme: Theme) =>
       cursor: 'pointer'
     },
     tableContainer: {
-      [theme.breakpoints.up('sm')]: {
+      [theme.breakpoints.up('lg')]: {
         order: 1
       }
     },
     uploaderContainer: {
-      [theme.breakpoints.up('sm')]: {
+      [theme.breakpoints.up('lg')]: {
         order: 2
       }
     }
@@ -270,14 +270,15 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
           bucketName={bucketName}
         />
         <Grid container>
-          <Grid item xs={12} sm={4} className={classes.uploaderContainer}>
+          <Grid item xs={12} lg={4} className={classes.uploaderContainer}>
             <ObjectUploader
               clusterId={clusterId}
               bucketName={bucketName}
+              prefix={prefix}
               update={() => this.updateInPlace()}
             />
           </Grid>
-          <Grid item xs={12} sm={8} className={classes.tableContainer}>
+          <Grid item xs={12} lg={8} className={classes.tableContainer}>
             <>
               <Paper className={classes.objectTable}>
                 <Table removeLabelonMobile aria-label="List of Bucket Objects">
