@@ -154,7 +154,8 @@ export const dcDisplayCountry = {
 };
 
 export const objectStorageClusterDisplay: Record<Linode.ClusterID, string> = {
-  'us-east-1': 'Newark, NJ'
+  'us-east-1': 'Newark, NJ',
+  'us-east': 'Newark, NJ'
 };
 
 export type ContinentKey = 'NA' | 'EU' | 'AS';

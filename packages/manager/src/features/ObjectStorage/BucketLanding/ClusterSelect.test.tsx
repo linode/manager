@@ -23,7 +23,7 @@ describe('ClusterSelect', () => {
   it('should pass down error messages to <Select />', () => {
     wrapper.setProps({ clustersError: 'error' });
     expect(wrapper.find('WithStyles(Select)').prop('errorText')).toBe(
-      'Error loading Clusters'
+      'Error loading Regions'
     );
 
     wrapper.setProps({ error: 'Field Error', clustersError: undefined });

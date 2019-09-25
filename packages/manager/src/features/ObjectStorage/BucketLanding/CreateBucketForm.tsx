@@ -9,7 +9,9 @@ import {
 } from 'src/components/core/styles';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import bucketContainer from 'src/containers/bucket.container';
+import bucketContainer, {
+  StateProps as BucketContainerProps
+} from 'src/containers/bucket.container';
 import bucketRequestsContainer, {
   BucketsRequests
 } from 'src/containers/bucketRequests.container';
@@ -37,12 +39,15 @@ interface Props {
   onSuccess: (bucketLabel: string) => void;
 }
 
-type CombinedProps = Props & BucketsRequests & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  BucketContainerProps &
+  BucketsRequests &
+  WithStyles<ClassNames>;
 
 export const CreateBucketForm: React.StatelessComponent<
   CombinedProps
 > = props => {
-  const { onClose, onSuccess, createBucket } = props;
+  const { onClose, onSuccess, createBucket, bucketsData } = props;
 
   return (
     <Formik
@@ -53,6 +58,14 @@ export const CreateBucketForm: React.StatelessComponent<
         { setSubmitting, setStatus, setErrors, resetForm }
       ) => {
         const { cluster, label } = values;
+
+        if (isDuplicateBucket(bucketsData, label, cluster)) {
+          setErrors({
+            label: `You already have a bucket named ${label} in this region.`
+          });
+          setSubmitting(false);
+          return;
+        }
 
         setSubmitting(true);
 
@@ -156,3 +169,17 @@ const enhanced = compose<CombinedProps, Props>(
 );
 
 export default enhanced(CreateBucketForm);
+
+// Returns `true` if a bucket with the same label and clusterId already exist
+// in the given bucket data.
+export const isDuplicateBucket = (
+  bucketsData: Linode.Bucket[],
+  label: string,
+  cluster: string
+) => {
+  return (
+    bucketsData.findIndex(
+      bucket => bucket.cluster === cluster && bucket.label === label
+    ) > -1
+  );
+};
