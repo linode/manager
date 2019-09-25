@@ -18,6 +18,7 @@ import {
   setPollingInterval,
   setRequestDeadline
 } from 'src/store/events/event.actions';
+import { resetEventsPolling as _resetEventsPolling } from 'src/store/events/event.helpers';
 import { getEvents } from 'src/store/events/event.request';
 
 export const events$ = new Subject<Event>();
@@ -25,8 +26,7 @@ export const events$ = new Subject<Event>();
 let inProgress = false;
 
 export const resetEventsPolling = (newPollIteration = 1) => {
-  store.dispatch(setRequestDeadline(Date.now() + INTERVAL * newPollIteration));
-  store.dispatch(setPollingInterval(newPollIteration));
+  _resetEventsPolling(store.dispatch, newPollIteration);
 };
 
 export const requestEvents = () => {

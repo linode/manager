@@ -6,19 +6,23 @@ import {
 } from 'linode-js-sdk/lib/account';
 import * as moment from 'moment';
 import { compose, equals, findIndex, omit, take, update } from 'ramda';
+import { ThunkDispatch } from 'redux-thunk';
+import { INTERVAL } from 'src/constants';
 import updateRight from 'src/utilities/updateRight';
 
-export interface ExtendedEvent extends Event {
-  _deleted?: string;
-  _initial?: boolean;
-}
-
-interface EntityEvent extends Omit<Event, 'entity'> {
-  entity: Entity;
-}
+import { setPollingInterval, setRequestDeadline } from './event.actions';
+import { EntityEvent, ExtendedEvent } from './event.types';
 
 /** We use the epoch on our initial request to get all of the users events. */
 export const epoch = new Date(`1970-01-01T00:00:00.000`).getTime();
+
+export const resetEventsPolling = (
+  dispatch: ThunkDispatch<any, any, any>,
+  newInterval: number = 1
+) => {
+  dispatch(setRequestDeadline(Date.now() + INTERVAL * newInterval));
+  dispatch(setPollingInterval(newInterval));
+};
 
 /**
  * isRelevantDeletionEvent

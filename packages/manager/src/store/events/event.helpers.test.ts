@@ -10,7 +10,7 @@ import {
   setDeletedEvents,
   updateInProgressEvents
 } from './event.helpers';
-import { ExtendedEvent } from './event.helpers';
+import { ExtendedEvent } from './event.types';
 
 describe('event.helpers', () => {
   describe('findInEvents', () => {

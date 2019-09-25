@@ -8,12 +8,12 @@ import {
 } from './event.actions';
 import {
   epoch,
-  ExtendedEvent,
   getNumUnseenEvents,
   mostRecentCreated,
   updateEvents,
   updateInProgressEvents
 } from './event.helpers';
+import { ExtendedEvent } from './event.types';
 
 export interface State {
   events: ExtendedEvent[];
