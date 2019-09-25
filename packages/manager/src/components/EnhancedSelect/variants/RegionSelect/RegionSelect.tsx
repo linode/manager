@@ -10,6 +10,7 @@ import { groupBy, pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
+import SingleValue from 'src/components/EnhancedSelect/components/SingleValue';
 import Select, {
   BaseSelectProps,
   GroupType
@@ -156,7 +157,7 @@ const SelectRegionPanel: React.FC<Props> = props => {
         placeholder="Regions"
         options={options}
         onChange={(selection: RegionItem) => handleSelection(selection.value)}
-        components={{ Option: RegionOption }}
+        components={{ Option: RegionOption, SingleValue }}
         styles={styles || selectStyles}
         {...restOfReactSelectProps}
       />
