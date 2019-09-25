@@ -3,6 +3,9 @@ import Request, { setData, setMethod, setURL } from '../index';
 
 interface ObjectURLOptions {
   expires_in?: number;
+  // "Content-Type" is normally an HTTP header, but here it is used in the body
+  // of a request to /object-url, to inform the API which kind of file it is
+  // we're trying to upload.
   content_type?: string;
 }
 
