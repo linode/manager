@@ -6,11 +6,16 @@ import {
   Payment
 } from 'linode-js-sdk/lib/account';
 import { pathOr, splitEvery } from 'ramda';
-import formatDate from 'src/utilities/formatDate';
-import LinodeLogo from './LinodeLogo';
-
-import { EU_COUNTRIES, LINODE_EU_TAX_ID } from 'src/constants';
+import {
+  AU_COUNTRY,
+  EU_COUNTRIES,
+  LINODE_ARN_TAX_ID,
+  LINODE_EU_TAX_ID
+} from 'src/constants';
 import { reportException } from 'src/exceptionReporting';
+import formatDate from 'src/utilities/formatDate';
+
+import LinodeLogo from './LinodeLogo';
 
 const leftMargin = 15; // space that needs to be applied to every parent element
 const baseFont = 'helvetica';
@@ -108,7 +113,8 @@ const addLeftHeader = (
   pages: number,
   date: string | null,
   type: string,
-  isInEU: boolean
+  isInEU: boolean,
+  isInAU: boolean
 ) => {
   const addLine = (text: string, fontSize = 9) => {
     doc.text(text, leftMargin, currentLine, { charSpace: 0.75 });
@@ -135,6 +141,9 @@ const addLeftHeader = (
   addLine('USA');
   if (isInEU) {
     addLine(`Linode Tax ID: ${LINODE_EU_TAX_ID}`);
+  }
+  if (isInAU) {
+    addLine(`Linode Tax ID: ${LINODE_ARN_TAX_ID}`);
   }
 };
 
@@ -365,7 +374,8 @@ export const printInvoice = (
         itemsChunks.length,
         date,
         'Invoice',
-        EU_COUNTRIES.includes(account.country)
+        EU_COUNTRIES.includes(account.country),
+        AU_COUNTRY.includes(account.country)
       );
       addRightHeader(doc, account);
 
@@ -500,7 +510,8 @@ export const printPayment = (account: Account, payment: Payment): PdfResult => {
       1,
       date,
       'Payment',
-      EU_COUNTRIES.includes(account.country)
+      EU_COUNTRIES.includes(account.country),
+      AU_COUNTRY.includes(account.country)
     );
     addRightHeader(doc, account);
     addTitle(doc, { text: `Receipt for Payment #${payment.id}` });
