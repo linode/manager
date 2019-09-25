@@ -98,7 +98,7 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface Props {
+export interface Props extends TableProps {
   className?: string;
   noOverflow?: boolean;
   tableClass?: string;
@@ -110,7 +110,7 @@ interface Props {
   removeLabelonMobile?: boolean; // only for table instances where we want to hide the cell label for small screens
 }
 
-type CombinedProps = Props & TableProps & WithStyles<ClassNames>;
+type CombinedProps = Props & WithStyles<ClassNames>;
 
 class WrappedTable extends React.Component<CombinedProps> {
   render() {

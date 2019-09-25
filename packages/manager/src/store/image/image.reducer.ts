@@ -19,6 +19,7 @@ export const defaultState: State = {
   lastUpdated: 0,
   results: 0,
   data: {},
+  error: {},
   listOfIDsInOriginalOrder: []
 };
 
