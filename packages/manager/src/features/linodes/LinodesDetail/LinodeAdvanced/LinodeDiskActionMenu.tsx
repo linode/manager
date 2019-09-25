@@ -79,7 +79,7 @@ class DiskActionMenu extends React.Component<CombinedProps> {
           this.props.onDelete();
           closeMenu();
         },
-        ...disabledProps
+        ...(readOnly ? disabledProps : {})
       }
     ];
 

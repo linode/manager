@@ -49,6 +49,16 @@ const linodeEventsHandler: EventHandler = (event, dispatch, getState) => {
     case 'linode_create':
       return handleLinodeCreation(dispatch, status, id, getState());
 
+    case 'disk_delete':
+      if (status === 'failed') {
+        /**
+         * If a disk deletion fails (most likely because it is attached to
+         * a configuration profile that is in use on a running Linode)
+         * the disk menu needs to be refreshed to return the disk to it.
+         */
+        dispatch(getAllLinodeDisks({ linodeId: id }));
+      }
+
     default:
       return;
   }

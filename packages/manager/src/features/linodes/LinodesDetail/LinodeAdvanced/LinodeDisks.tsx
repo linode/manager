@@ -582,6 +582,8 @@ class LinodeDisks extends React.Component<CombinedProps, State> {
         });
       })
       .catch(error => {
+        // This error only fires if the request fails;
+        // if the deletion hostjob fails, it must be handled through events/Redux.
         const errors = getAPIErrorOrDefault(
           error,
           'There was an error deleting your disk.'
