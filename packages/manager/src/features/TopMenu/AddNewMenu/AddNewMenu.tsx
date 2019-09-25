@@ -108,10 +108,10 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
       {
         title: 'Linode',
         onClick: e => {
-          this.props.history.push('/linodes/create');
           this.handleClose();
           e.preventDefault();
         },
+        linkTo: '/linodes/create',
         body: `High performance SSD Linux servers for all of your infrastructure needs`,
         ItemIcon: LinodeIcon
       },
@@ -128,10 +128,10 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
       {
         title: 'NodeBalancer',
         onClick: e => {
-          this.props.history.push('/nodebalancers/create');
           this.handleClose();
           e.preventDefault();
         },
+        linkTo: '/nodebalancers/create',
         body: `Ensure your valuable applications and services are highly-available`,
         ItemIcon: NodebalancerIcon
       },
@@ -151,11 +151,11 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
       items.push({
         title: 'One-Click App',
         onClick: e => {
-          this.props.history.push('/linodes/create?type=One-Click');
           sendOneClickNavigationEvent('Add New Menu');
           this.handleClose();
           e.preventDefault();
         },
+        linkTo: '/linodes/create?type=One-Click',
         body: 'Deploy blogs, game servers, and other web apps with ease.',
         ItemIcon: OneClickIcon,
         attr: { 'data-qa-one-click-add-new': true }
@@ -166,10 +166,10 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
       items.push({
         title: 'Kubernetes',
         onClick: e => {
-          this.props.history.push('/kubernetes/create');
           this.handleClose();
           e.preventDefault();
         },
+        linkTo: '/kubernetes/create',
         body: `Create and manage Kubernetes Clusters for highly available container workloads`,
         ItemIcon: KubernetesIcon
       });
