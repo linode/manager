@@ -130,11 +130,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
     setCompleted((progressEvent.loaded / progressEvent.total) * 100);
   };
 
-  const handleError = () => {
-    setError({ reason: 'Failed to upload object.' });
-  };
-
-  const onDrop = (files: File[]) => {
+  const onDrop = async (files: File[]) => {
     // (TEMPORARY): Don't allow multi-file uploads.
     // (TEMPORARY): Don't allow uploads when there's already one in progress.
     if (files.length !== 1 || inProgress) {
@@ -152,28 +148,33 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
     // file name with the prefix.
     const fullObjectName = prefix + file.name;
 
-    getObjectURL(clusterId, bucketName, fullObjectName, 'PUT', {
-      content_type: file.type
-    })
-      .then(({ url }) => {
-        uploadObject(url, file, onUploadProgress)
-          .then(() => {
-            // Update objects in table
-            update();
+    try {
+      const { url } = await getObjectURL(
+        clusterId,
+        bucketName,
+        fullObjectName,
+        'PUT',
+        {
+          content_type: file.type
+        }
+      );
 
-            if (completed !== 100) {
-              setCompleted(100);
-            }
+      await uploadObject(url, file, onUploadProgress);
+      // Update objects in table
+      update();
 
-            // Display the file upload as being completed for a few seconds,
-            // then remove it.
-            timeout = setTimeout(() => {
-              setInProgress(false);
-            }, 2000);
-          })
-          .catch(handleError);
-      })
-      .catch(handleError);
+      if (completed !== 100) {
+        setCompleted(100);
+      }
+
+      // Display the file upload as being completed for a few seconds,
+      // then remove it.
+      timeout = setTimeout(() => {
+        setInProgress(false);
+      }, 2000);
+    } catch (_) {
+      setError({ reason: 'Failed to upload object.' });
+    }
   };
 
   const { width } = useWindowDimensions();
