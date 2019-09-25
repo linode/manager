@@ -12,7 +12,7 @@ describe('Nodebalancer - Create Suite', () => {
     let linode,
         privateIp,
         token;
-    
+
     const linodeLabel = `test${new Date().getTime()}`
 
     beforeAll(() => {
@@ -57,7 +57,7 @@ describe('Nodebalancer - Create Suite', () => {
     it('should create a nodebalancer with a valid backend ip', () => {
         NodeBalancers.backendIpLabel.addValue(linode.label);
         /** Select the newark region because that's where our Linode is located */
-        NodeBalancers.regionSelect.waitForVisible();
+        NodeBalancers.regionSelect.waitForDisplayed();
         NodeBalancers.regionSelect.setValue('us-east');
         browser.keys("\uE007");
 
@@ -66,7 +66,7 @@ describe('Nodebalancer - Create Suite', () => {
         NodeBalancers.backendIpAddress.addValue(privateIP);
 
         /** wait for the dropdown options to appear */
-        $('[data-qa-option]').waitForVisible(constants.wait.normal)
+        $('[data-qa-option]').waitForDisplayed(constants.wait.normal)
 
         /** press enter key which will select first value */
         browser.keys("\uE007");

@@ -77,7 +77,7 @@ let creds = null;
 
 exports.config = {
   // Selenium Host/Port
-  host: process.env.DOCKER ? 'selenium' : 'localhost',
+  hostname: process.env.DOCKER ? 'selenium' : 'localhost',
   port: 4444,
   //
   // ==================

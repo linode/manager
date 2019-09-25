@@ -191,8 +191,6 @@ class Settings extends Page {
     const confirmTitle = `Delete ${linodeLabel}?`;
     const confirmContent = /delete/gi;
     this.delete.click();
-    this.deleteDialogTitle.waitForText();
-    this.deleteDialogContent.waitForText();
     this.confirm.waitForDisplayed();
     this.cancel.waitForDisplayed();
 
@@ -221,7 +219,7 @@ class Settings extends Page {
   updateLabel(label) {
     const successMsg = 'Linode label changed successfully.';
     this.label.waitForDisplayed();
-    this.label.setValue(label);
+    browser.trySetValue(this.label.selector, label);
     this.labelSave.click();
     this.waitForNotice(successMsg);
   }

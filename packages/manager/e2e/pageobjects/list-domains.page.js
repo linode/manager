@@ -189,6 +189,7 @@ class ListDomains extends Page {
   }
 
   create(name, email, placeholder, tag = undefined) {
+    console.log(`creating a domain`);
     let existingDomainsCount;
     if (placeholder) {
       this.createButton.click();
@@ -211,9 +212,10 @@ class ListDomains extends Page {
     );
 
     browser.waitUntil(function() {
-      return browser.getUrl().includes('/records');
+      return browser.getUrl().includes('/domains/');
     }, constants.wait.normal);
-
+    console.log(`domain "${name}" created`);
+    //TODO find out if this code is needed
     // if (placeholder) {
     //     this.domainElem.waitForDisplayed(constants.wait.normal);
     // } else {

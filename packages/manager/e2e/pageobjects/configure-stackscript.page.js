@@ -26,7 +26,7 @@ class ConfigureStackScript extends Page {
     return $(this.breadcrumbStaticText.selector);
   }
   get label() {
-    return $('[data-qa-stackscript-label]');
+    return $('[data-qa-label-text]');
   }
   get labelHelp() {
     return $('[data-qa-stackscript-label]')

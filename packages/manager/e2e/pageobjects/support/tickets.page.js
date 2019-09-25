@@ -13,10 +13,12 @@ export class SupportTickets extends Page {
   get supportHeader() {
     return $(this.breadcrumbStaticText.selector);
   }
+  // get openTicketButton() {
+  //   return this.addIcon('Open New Ticket');
+  // }
   get openTicketButton() {
-    return this.addIcon('Open New Ticket');
+    return $('[data-qa-open-ticket-link]');
   }
-
   get supportCreateDateHeader() {
     return $('[data-qa-support-date-header]');
   }
@@ -76,8 +78,16 @@ export class SupportTickets extends Page {
   }
 
   baseElemsDisplay() {
-    this.supportHeader.waitForDisplayed(constants.wait.normal);
+    console.log(`checking support ticket base page`);
     this.openTicketsTab.waitForDisplayed(constants.wait.normal);
+
+    expect(this.supportHeader.getText())
+      .withContext(
+        `${assertLog.incorrectText} for "${
+          this.supportHeader.selector
+        }" selector`
+      )
+      .toBe('Tickets');
 
     expect(this.closedTicketsTab.isDisplayed())
       .withContext(
@@ -96,18 +106,28 @@ export class SupportTickets extends Page {
         }`
       )
       .toBe(true);
-    expect(this.supportSubjectHeader.isDisplayed())
+    expect(this.supportSubjectHeader.isDisplayed()).withContext(
+      `"${this.supportSubjectHeader.selector}" selector ${assertLog.displayed}`
+    );
+    expect(this.supportSubjectHeader.getText())
       .withContext(
-        `"${this.supportSubjectHeader.selector}" selector ${
-          assertLog.displayed
-        }`
+        `${assertLog.incorrectText} for "${
+          this.supportSubjectHeader.selector
+        }" selector`
       )
-      .toBe(true);
+      .toBe('Subject');
     expect(this.supportIdHeader.isDisplayed())
       .withContext(
         `"${this.supportIdHeader.selector}" selector ${assertLog.displayed}`
       )
       .toBe(true);
+    expect(this.supportIdHeader.getText())
+      .withContext(
+        `${assertLog.incorrectText} for "${
+          this.supportIdHeader.selector
+        }" selector`
+      )
+      .toBe('Ticket ID');
     expect(this.supportEntityHeader.isDisplayed())
       .withContext(
         `"${this.supportEntityHeader.selector}" selector ${assertLog.displayed}`
@@ -118,17 +138,15 @@ export class SupportTickets extends Page {
         `"${this.supportUpdateHeader.selector}" selector ${assertLog.displayed}`
       )
       .toBe(true);
+    console.log(`page is ready`);
   }
 
   openCreateTicketDrawer() {
     this.openTicketButton.click();
     this.drawerTitle.waitForDisplayed(constants.wait.normal);
     this.ticketHelpText.waitForDisplayed(constants.wait.normal);
-
-    expect(this.ticketEntityType.isDisplayed())
-      .withContext(
-        `"${this.ticketEntityType.selector}" selector ${assertLog.displayed}`
-      )
+    expect($('[data-qa-enhanced-select="Choose a Product"]').isDisplayed())
+      .withContext(`Choose a Product ${assertLog.displayed}`)
       .toBe(true);
     expect(this.ticketSummary.isDisplayed())
       .withContext(

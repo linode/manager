@@ -11,10 +11,10 @@ class ConfigureImage extends Page {
     return $('[data-qa-placeholder-button]');
   }
   get linodeSelect() {
-    return $('[data-qa-linode-select]');
+    return $('#linode');
   }
   get diskSelect() {
-    return $('[data-qa-disk-select]');
+    return $('#disk');
   }
   get label() {
     return $('[data-qa-image-label]');

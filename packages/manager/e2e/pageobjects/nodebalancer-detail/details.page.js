@@ -43,7 +43,8 @@ class NodeBalancerDetail extends Page {
 
   baseElemsDisplay() {
     this.label.waitForDisplayed(constants.wait.normal);
-    this.summaryHeading.waitForText(constants.wait.normal);
+    // TODO waitForText is no longer a command
+    // this.summaryHeading.waitForText(constants.wait.normal);
     this.summaryTab.waitForDisplayed(constants.wait.normal);
     expect(this.summaryTab.getAttribute('aria-selected'))
       .withContext(

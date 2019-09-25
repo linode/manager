@@ -34,13 +34,13 @@ describe('List Linodes - Actions - Reboot Suite', () => {
   describe('Grid View Reboot - Suite', () => {
     let linodes;
 
-    it('should reboot linode on click', () => {
+    xit('should reboot linode on click', () => {
       linodes = ListLinodes.linode;
       linodes[0].$(ListLinodes.rebootButton.selector).click();
       ListLinodes.acceptDialog('Reboot');
     });
 
-    it('should update status on reboot to rebooting', () => {
+    xit('should update status on reboot to rebooting', () => {
       waitForLinodeStatus(linode, 'rebooting', true, constants.wait.short);
     });
 
@@ -48,7 +48,7 @@ describe('List Linodes - Actions - Reboot Suite', () => {
       waitForLinodeStatus(linode, 'running');
     });
 
-    it('should display all grid view elements after reboot', () => {
+    xit('should display all grid view elements after reboot', () => {
       ListLinodes.gridElemsDisplay();
     });
   });
@@ -62,7 +62,7 @@ describe('List Linodes - Actions - Reboot Suite', () => {
       totalLinodes = ListLinodes.linode.length;
     });
 
-    it('should reboot linode on click', () => {
+    xit('should reboot linode on click', () => {
       ListLinodes.selectActionMenuItemV2(
         ListLinodes.getLinodeSelector(linode),
         'Reboot'
@@ -70,7 +70,7 @@ describe('List Linodes - Actions - Reboot Suite', () => {
       ListLinodes.acceptDialog('Reboot');
     });
 
-    it('should update status on reboot to rebooting', () => {
+    xit('should update status on reboot to rebooting', () => {
       waitForRebootListView(linode);
     });
 

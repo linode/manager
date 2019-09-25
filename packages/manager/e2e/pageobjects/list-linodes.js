@@ -102,6 +102,7 @@ export class ListLinodes extends Page {
   }
 
   linodesDisplay() {
+    console.log(`checking for linodes to be displayed`);
     try {
       browser.waitUntil(function() {
         return (
@@ -140,6 +141,7 @@ export class ListLinodes extends Page {
   }
 
   navigateToDetail(linode) {
+    console.log(`navigating to details of linode: "${linode}"`);
     $('[data-qa-linode] [data-qa-label]').waitForDisplayed(
       constants.wait.normal
     );

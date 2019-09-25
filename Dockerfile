@@ -1,7 +1,7 @@
 FROM node:10
 
 # Run commands as "node" user. We don't want to run these commands as root
-# 
+#
 # See https://github.com/nodejs/docker-node/blob/d094c98a48659ff9f8d59db8dafb7020e181446a/docs/BestPractices.md
 # and https://github.com/nodejs/docker-node/issues/1
 WORKDIR /home/node/app
@@ -16,6 +16,7 @@ RUN yarn
 
 # Copy lerna.json
 COPY --chown=node:node lerna.json .
+COPY --chown=node:node scripts ./scripts/
 
 # Copy Cloud Manager deps
 COPY --chown=node:node packages/manager/package.json ./packages/manager/

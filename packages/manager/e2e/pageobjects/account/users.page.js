@@ -100,9 +100,6 @@ class Users extends Page {
     this.addUserButton.click();
     this.drawerTitle.waitForText(constants.wait.normal);
     this.notice.waitForDisplayed(constants.wait.normal);
-    //TODO check if we need to use
-    // browser.trySetValue(`${this.createDrawerEmail.selector}`, userConfig.email):
-    // browser.trySetValue(`${this.createDrawerUsername.selector}`, userConfig.username):
     this.createDrawerEmail.setValue(userConfig.email);
     this.createDrawerUsername.setValue(userConfig.username);
 

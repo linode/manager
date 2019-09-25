@@ -227,6 +227,22 @@ exports.browserCommands = () => {
     console.log(`${value} has been set for "${selector}" enhanced select`);
   });
 
+  /*this is to replace the removed feature to wait for text of an element
+   * may not need this but it was easy enough to create
+   * @param { string } selector to use
+   * @param { Number } timeout value, defaulted to 12 seconds
+   */
+  browser.addCommand('waitForText', (selector, timeout = 12000) => {
+    browser.waitUntil(
+      () => {
+        console.log(`waiting for "${selector}" text to appear`);
+        return $(selector).getText() != null;
+      },
+      timeout,
+      `expected text to appear after ${timeout} milliseconds`
+    );
+  });
+
   browser.addCommand('deleteAll', function async(token) {
     return deleteAll(token).then(() => {});
   });

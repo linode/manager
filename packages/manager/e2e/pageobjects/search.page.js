@@ -27,6 +27,7 @@ class SearchBar extends Page {
   }
 
   executeSearch(query) {
+    console.log(`searching for "${query}"`);
     this.searchElem.waitForDisplayed(constants.wait.normal);
     this.searchElem.click();
     this.searchInput.setValue(query);
@@ -49,11 +50,11 @@ class SearchBar extends Page {
 
     // Assert suggestions display icons, titles, descriptions
     this.suggestions.forEach(el => {
-      const iconVisible = el.$('svg').isÏDisplayed();
-      const titleVisible = el.$(this.suggestionTitle.selector).isÏDisplayed();
+      const iconVisible = el.$('svg').isDisplayed();
+      const titleVisible = el.$(this.suggestionTitle.selector).isDisplayed();
       const descriptionVisible = el
         .$(this.suggestionDesc.selector)
-        .isÏDisplayed();
+        .isDisplayed();
 
       expect(iconVisible)
         .withContext(`"${el} svg" selector ${assertLog.displayed}`)

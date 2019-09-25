@@ -1,4 +1,5 @@
 const { constants } = require('../../constants');
+const { assertLog } = require('../../utils/assertionLog');
 
 import Dashboard from '../../pageobjects/dashboard.page';
 
@@ -13,13 +14,21 @@ describe('Dashboard Suite', () => {
 
   it('should display blog posts', () => {
     Dashboard.blogCard.waitForDisplayed(constants.wait.normal);
-    expect(Dashboard.blogPosts.length).toBeGreaterThan(0);
-    expect(Dashboard.blogPosts.length).toEqual(
-      $$(Dashboard.postDescription.selector).length
-    );
+    expect(Dashboard.blogPosts.length)
+      .withContext(`Should be at least one blog post`)
+      .toBeGreaterThan(0);
+    expect(Dashboard.blogPosts.length)
+      .withContext(
+        `${assertLog.incorrectNum} for "${
+          Dashboard.blogPosts.selector
+        }" selector`
+      )
+      .toEqual($$(Dashboard.postDescription.selector).length);
 
     Dashboard.blogPosts.forEach(post => {
-      expect(post.getAttribute('href')).toContain('https://blog.linode.com');
+      expect(post.getAttribute('href'))
+        .withContext(`incorrect Url for blog posts`)
+        .toContain('https://blog.linode.com');
     });
   });
 });
