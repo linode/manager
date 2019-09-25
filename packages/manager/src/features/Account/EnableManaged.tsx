@@ -49,7 +49,7 @@ export const ManagedContent: React.FC<ContentProps> = props => {
         <Typography variant="body1">
           Linode Managed includes Backups, Longview Pro, cPanel, and
           round-the-clock monitoring to help keep your systems up and running.
-          +$100/month per Linode.{' '}
+          +$100/month per Linode{' '}
           <ExternalLink
             fixedIcon
             text="Learn more."
