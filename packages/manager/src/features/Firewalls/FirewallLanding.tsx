@@ -4,6 +4,7 @@ import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Box from 'src/components/core/Box';
+import Divider from 'src/components/core/Divider';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
@@ -15,7 +16,7 @@ import FirewallTable from './FirewallTable';
 
 const useStyles = makeStyles((theme: Theme) => ({
   line: {
-    minHeight: '48px',
+    marginTop: theme.spacing(3),
     marginBottom: theme.spacing(3),
     /** these colors match up with the AppBar component boxShadow colors */
     boxShadow: `inset 0 -1px 0 ${
@@ -54,7 +55,8 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
         <Breadcrumb pathname={props.location.pathname} labelTitle="Firewalls" />
         <DocumentationButton href={'https://google.com'} />
       </Box>
-      <div className={classes.line} />
+      {/* <div className={classes.line} /> */}
+      <Divider className={classes.line} />
       <Grid
         container
         justify="flex-end"

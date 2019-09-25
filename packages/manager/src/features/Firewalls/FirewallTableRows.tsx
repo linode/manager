@@ -39,7 +39,7 @@ const FirewallTableRows: React.FC<CombinedProps> = props => {
   /**
    * only display error if we don't already have data
    */
-  if (firewallsError.read && firewallsKeys.length === 0) {
+  if (firewallsError.read && firewallsLastUpdated === 0) {
     return (
       <TableRowError colSpan={6} message={firewallsError.read[0].reason} />
     );
