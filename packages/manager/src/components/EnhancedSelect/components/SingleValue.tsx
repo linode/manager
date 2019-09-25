@@ -34,7 +34,9 @@ const _SingleValue: React.StatelessComponent<CombinedProps> = props => {
       >
         {props.children}
       </SingleValue>
-      <span className={`${props.data.className} ${classes.icon}`} />
+      <span className={`${props.data.className} ${classes.icon}`}>
+        {props.data.flag && props.data.flag()}
+      </span>
     </>
   );
 };
