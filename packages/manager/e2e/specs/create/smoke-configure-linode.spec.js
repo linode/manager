@@ -17,7 +17,7 @@ describe('Create Linode - Configure Linode Suite', () => {
   });
 
   it('should update cost summary on plan selection', () => {
-    $('[data-qa-tp="Linode Plan"] [data-qa-selection-card]').waitForDisplayed();
+    $('[data-qa-tp="Linode Plan"] [data-qa-plan-header]').waitForDisplayed();
     ConfigureLinode.plans.forEach(p => {
       const originalPrice = CheckoutSummary.costSummary.getText();
       p.click();

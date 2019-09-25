@@ -122,16 +122,14 @@ class ConfigureLinode extends Page {
   get planHeader() {
     return $('[data-qa-tp="Linode Plan"]');
   }
-  get planTabs() {
-    return $$('[data-qa-tp="Linode Plan"] [data-qa-tab]');
+  get planRows() {
+    return $$('[data-qa-plan-row]');
   }
   get plans() {
-    return $$('[data-qa-tp="Linode Plan"] [data-qa-selection-card]');
+    return $$('[data-qa-tp="Linode Plan"] [data-qa-plan-row]');
   }
   get planNames() {
-    return $$(
-      '[data-qa-tp="Linode Plan"] [data-qa-selection-card] [data-qa-select-card-heading]'
-    );
+    return $$('[data-qa-tp="Linode Plan"] [data-qa-plan-name]');
   }
 
   get labelHeader() {
@@ -228,7 +226,7 @@ class ConfigureLinode extends Page {
     expect(this.planHeader.isDisplayed())
       .withContext(`${this.planHeader.selector} ${assertLog.displayed}`)
       .toBe(true);
-    expect(this.planTabs.length)
+    expect(this.planRows.length)
       .withContext(`${assertLog.incorrectNum} for plan tabs`)
       .toBe(4);
     expect(this.plans.length)
@@ -330,8 +328,8 @@ class ConfigureLinode extends Page {
     expect(this.planHeader.isDisplayed())
       .withContext(`Linode plan header ${assertLog.displayed}`)
       .toBe(true);
-    this.planTabs.forEach(tab =>
-      expect(tab.isDisplayed())
+    this.planRows.forEach(row =>
+      expect(row.isDisplayed())
         .withContext(`plan ${tabDisplayed}`)
         .toBe(true)
     );
@@ -365,15 +363,16 @@ class ConfigureLinode extends Page {
   // Configure a basic linode, selecting all the default options
   generic(
     label = `Test-Linode${new Date().getTime()}`,
-    distro = 'Alpine 3.10'
+    distro = 'Alpine 3.10',
+    plan = 'Linode 2GB'
   ) {
     console.log(`creating a default linode`);
 
     browser.enhancedSelect(this.imageDistro.selector, distro);
 
-    browser.trySetValue(this.regionSelect.selector, 'us-east');
+    browser.trySetValue(this.regionSelect.selector, 'Newark, NJ');
     browser.keys('\uE007');
-    this.plans[0].click();
+    $(`[data-qa-plan-row="${plan}"]`).click();
     browser.trySetValue(this.label.selector, label);
     this.password.setValue(`SomeTimeStamp${new Date().getTime()}`);
   }
@@ -421,19 +420,15 @@ class ConfigureLinode extends Page {
   cloneSelectSource(linodeLabel) {
     const sourceSection = $$('[data-qa-select-linode-panel]');
     expect(sourceSection[0].$('[data-qa-select-linode-header]').getText())
-      .withContext(``)
+      .withContext(
+        `${assertLog.incorrectText} for "[data-qa-select-linode-header]"`
+      )
       .toBe('Select Linode to Clone From');
-    // const targetSection = $$('[data-qa-select-linode-panel]')
-    // .filter(s => s.$('[data-qa-select-linode-header]').getText() === 'Select Target Linode');
 
     let linodes = sourceSection[0].$$('[data-qa-selection-card]');
     let sourceLinode = linodes[0];
     let sourceLabel = sourceLinode.$('[data-qa-select-card-heading]').getText();
     sourceLinode.click();
-
-    // let targetLinodeCard = targetSection[0].$$('[data-qa-selection-card]')
-    // .filter(c => c.$('[data-qa-select-card-heading]').getText() === sourceLabel);
-    // expect(targetLinodeCard[0].getAttribute('class')).toContain('disabled');
 
     if (linodeLabel) {
       linodes = sourceSection[0]
@@ -445,11 +440,6 @@ class ConfigureLinode extends Page {
       sourceLabel = sourceLinode.$('[data-qa-select-card-heading]').getText();
 
       sourceLinode.click();
-
-      // targetLinodeCard = targetSection[0].$$('[data-qa-selection-card]')
-      // .filter(c => c.$('[data-qa-select-card-heading]').getText() === sourceLabel);
-
-      // expect(targetLinodeCard[0].getAttribute('class')).toContain('disabled');
     }
   }
 
