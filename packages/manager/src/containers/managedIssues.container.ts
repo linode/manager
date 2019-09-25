@@ -49,7 +49,7 @@ export default <TInner extends {}, TOuter extends {}>(
         );
       }
 
-      return { ...ownProps, issuesLoading, lastUpdated, issues, issuesError };
+      return { issuesLoading, lastUpdated, issues, issuesError };
     },
     mapDispatchToProps
   );

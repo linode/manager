@@ -1,5 +1,3 @@
-import { ManagedServiceMonitor } from 'linode-js-sdk/lib/managed';
-import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -8,12 +6,18 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import ManagedContainer, {
-  DispatchProps
+import withManagedIssues, {
+  DispatchProps as IssueDispatch,
+  ManagedIssuesProps
+} from 'src/containers/managedIssues.container';
+import withManaged, {
+  DispatchProps,
+  ManagedProps
 } from 'src/containers/managedServices.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import DashboardCard from '../DashboardCard';
+import ManagedChartPanel from './ManagedChartPanel';
 import MonitorStatus from './MonitorStatus';
 import MonitorTickets from './MonitorTickets';
 
@@ -31,14 +35,10 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-interface StateProps {
-  monitors: ManagedServiceMonitor[];
-  loading: boolean;
-  error?: APIError[];
-  updated: number;
-}
-
-type CombinedProps = StateProps & DispatchProps;
+type CombinedProps = ManagedProps &
+  DispatchProps &
+  ManagedIssuesProps &
+  IssueDispatch;
 
 export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -46,11 +46,12 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
   React.useEffect(() => {
     // Rely on Redux error handling.
     props.requestManagedServices().catch(_ => null);
+    props.requestManagedIssues().catch(_ => null);
 
-    const interval = setInterval(
-      () => props.requestManagedServices().catch(_ => null),
-      10000
-    );
+    const interval = setInterval(() => {
+      props.requestManagedServices().catch(_ => null);
+      props.requestManagedIssues().catch(_ => null);
+    }, 10000);
 
     return () => {
       clearInterval(interval);
@@ -75,34 +76,28 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
   );
 };
 
-const LoadingErrorOrContent: React.FC<StateProps> = props => {
-  const { error, loading, monitors, updated } = props;
+const LoadingErrorOrContent: React.FC<CombinedProps> = props => {
+  const { issues, managedError, managedLoading, monitors, lastUpdated } = props;
   const classes = useStyles();
 
   /**
    * Don't show error state if we've successfully retrieved
    * monitor data but then a subsequent poll fails
    */
-  if (error && updated === 0) {
+  if (managedError.read && lastUpdated === 0) {
     const errorString = getAPIErrorOrDefault(
-      error,
+      managedError.read,
       'Error loading your Managed service information.'
     )[0].reason;
     return <ErrorState errorText={errorString} compact />;
   }
 
-  if (loading && updated === 0) {
+  if (managedLoading && lastUpdated === 0) {
     return <CircleProgress mini />;
   }
 
   return (
-    <Grid
-      container
-      direction="row"
-      wrap="nowrap"
-      justify="center"
-      alignItems="center"
-    >
+    <Grid container direction="row" wrap="nowrap" justify="center">
       <Grid
         container
         item
@@ -116,26 +111,19 @@ const LoadingErrorOrContent: React.FC<StateProps> = props => {
           <MonitorStatus monitors={monitors} />
         </Grid>
         <Grid item>
-          <MonitorTickets issues={[]} />
+          <MonitorTickets issues={issues} />
         </Grid>
       </Grid>
       <Grid item xs={8}>
-        Placeholder
+        <ManagedChartPanel data={6} />
       </Grid>
     </Grid>
   );
 };
 
-const withManaged = ManagedContainer(
-  (ownProps, managedLoading, lastUpdated, monitors, managedError) => ({
-    ...ownProps,
-    loading: managedLoading,
-    updated: lastUpdated,
-    monitors,
-    error: managedError!.read
-  })
+const enhanced = compose<CombinedProps, {}>(
+  withManaged(),
+  withManagedIssues()
 );
-
-const enhanced = compose<CombinedProps, {}>(withManaged);
 
 export default enhanced(ManagedDashboardCard);

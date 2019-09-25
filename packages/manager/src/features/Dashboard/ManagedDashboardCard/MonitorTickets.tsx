@@ -1,4 +1,3 @@
-import { ManagedIssue } from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 
@@ -7,6 +6,7 @@ import Button from 'src/components/Button';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
+import { ExtendedIssue } from 'src/store/managed/issues.actions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -21,17 +21,25 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  issues: ManagedIssue[];
+  issues: ExtendedIssue[];
 }
 
 export const MonitorTickets: React.FC<Props> = props => {
   const { issues } = props;
   const classes = useStyles();
 
-  const hasIssues = issues.length > 0;
+  const openIssues = issues.filter(thisIssue => !thisIssue.dateClosed);
+
+  const hasIssues = openIssues.length > 0;
 
   return (
-    <Grid container direction="column" justify="center" alignItems="center" className={classes.root}>
+    <Grid
+      container
+      direction="column"
+      justify="center"
+      alignItems="center"
+      className={classes.root}
+    >
       <Grid
         item
         className={hasIssues ? classes.sadTicket : classes.happyTicket}
@@ -41,8 +49,8 @@ export const MonitorTickets: React.FC<Props> = props => {
       <Grid item>
         <Typography variant="h3">
           {hasIssues
-            ? `${issues.length} open Support ${
-                issues.length === 1 ? 'ticket' : 'tickets'
+            ? `${openIssues.length} open Support ${
+                openIssues.length === 1 ? 'ticket' : 'tickets'
               }.`
             : 'No open Support tickets.'}
         </Typography>
