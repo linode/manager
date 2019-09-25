@@ -15,8 +15,7 @@ export const firewall: Firewall = {
       inbound: [
         {
           protocol: 'ALL',
-          start_port: 443,
-          sequence: 1
+          start_port: 443
         }
       ]
     },
@@ -25,7 +24,6 @@ export const firewall: Firewall = {
         {
           protocol: 'UDP',
           start_port: 22,
-          sequence: 1,
           addresses: {
             ipv4: ['12.12.12.12'],
             ipv6: ['192.168.12.12']
@@ -51,8 +49,7 @@ export const firewall2: Firewall = {
       outbound: [
         {
           protocol: 'ALL',
-          start_port: 443,
-          sequence: 1
+          start_port: 443
         }
       ]
     },
@@ -61,7 +58,6 @@ export const firewall2: Firewall = {
         {
           protocol: 'UDP',
           start_port: 22,
-          sequence: 1,
           addresses: {
             ipv4: ['12.12.12.12'],
             ipv6: ['192.168.12.12']
