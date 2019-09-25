@@ -1,0 +1,66 @@
+import { ManagedIssue } from 'linode-js-sdk/lib/managed';
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+
+import TicketIcon from 'src/assets/icons/ticket.svg';
+import Button from 'src/components/Button';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
+import Grid from 'src/components/Grid';
+
+const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    padding: theme.spacing()
+  },
+  happyTicket: {
+    color: theme.color.blue
+  },
+  sadTicket: {
+    color: theme.color.red
+  }
+}));
+
+interface Props {
+  issues: ManagedIssue[];
+}
+
+export const MonitorTickets: React.FC<Props> = props => {
+  const { issues } = props;
+  const classes = useStyles();
+
+  const hasIssues = issues.length > 0;
+
+  return (
+    <Grid container direction="column" justify="center" alignItems="center" className={classes.root}>
+      <Grid
+        item
+        className={hasIssues ? classes.sadTicket : classes.happyTicket}
+      >
+        <TicketIcon width={50} height={50} />
+      </Grid>
+      <Grid item>
+        <Typography variant="h3">
+          {hasIssues
+            ? `${issues.length} open Support ${
+                issues.length === 1 ? 'ticket' : 'tickets'
+              }.`
+            : 'No open Support tickets.'}
+        </Typography>
+      </Grid>
+      <Grid item>
+        {hasIssues ? (
+          <Typography>
+            View the <Link to="/support/tickets">Support tickets page</Link> for
+            a full list of open tickets.
+          </Typography>
+        ) : (
+          <Button buttonType="primary" onClick={() => null}>
+            Open a ticket
+          </Button>
+        )}
+      </Grid>
+    </Grid>
+  );
+};
+
+export default MonitorTickets;

@@ -14,16 +14,20 @@ import ManagedContainer, {
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import DashboardCard from '../DashboardCard';
-import Healthy from './Healthy';
-import Unhealthy from './Unhealthy';
+import MonitorStatus from './MonitorStatus';
+import MonitorTickets from './MonitorTickets';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     marginBottom: theme.spacing(3),
-    marginTop: '0 !important'
+    marginTop: '0 !important',
+    width: '100%'
   },
   paper: {
     marginTop: theme.spacing()
+  },
+  status: {
+    padding: theme.spacing()
   }
 }));
 
@@ -38,7 +42,6 @@ type CombinedProps = StateProps & DispatchProps;
 
 export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const { error, loading, monitors, updated } = props;
 
   React.useEffect(() => {
     // Rely on Redux error handling.
@@ -54,39 +57,28 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
     };
   }, []);
 
-  if (!loading && !error && monitors.length === 0 && updated === 0) {
-    return null;
-  }
+  // if (!loading && !error && monitors.length === 0 && updated === 0) {
+  //   return null;
+  // }
 
   return (
     <DashboardCard
       title="Managed Services"
       className={classes.root}
-      headerAction={() => <Link to="/managed">View All</Link>}
-      data-qa-dash-volume
+      headerAction={() => <Link to="/managed">View Details</Link>}
+      data-qa-dash-managed
     >
       <Paper className={classes.paper}>
-        <Grid
-          container
-          direction="row"
-          wrap="nowrap"
-          justify="center"
-          alignItems="center"
-        >
-          <Content
-            error={error}
-            loading={loading}
-            monitors={monitors}
-            updated={updated}
-          />
-        </Grid>
+        <LoadingErrorOrContent {...props} />
       </Paper>
     </DashboardCard>
   );
 };
 
-const Content: React.FC<StateProps> = props => {
+const LoadingErrorOrContent: React.FC<StateProps> = props => {
   const { error, loading, monitors, updated } = props;
+  const classes = useStyles();
+
   /**
    * Don't show error state if we've successfully retrieved
    * monitor data but then a subsequent poll fails
@@ -103,12 +95,35 @@ const Content: React.FC<StateProps> = props => {
     return <CircleProgress mini />;
   }
 
-  const failedMonitors = getFailedMonitors(monitors);
-  if (failedMonitors.length > 0) {
-    return <Unhealthy monitorsDown={failedMonitors.length} />;
-  }
-
-  return <Healthy />;
+  return (
+    <Grid
+      container
+      direction="row"
+      wrap="nowrap"
+      justify="center"
+      alignItems="center"
+    >
+      <Grid
+        container
+        item
+        direction="column"
+        justify="center"
+        alignItems="center"
+        xs={4}
+        className={classes.status}
+      >
+        <Grid item>
+          <MonitorStatus monitors={monitors} />
+        </Grid>
+        <Grid item>
+          <MonitorTickets issues={[]} />
+        </Grid>
+      </Grid>
+      <Grid item xs={8}>
+        Placeholder
+      </Grid>
+    </Grid>
+  );
 };
 
 const withManaged = ManagedContainer(
@@ -120,23 +135,6 @@ const withManaged = ManagedContainer(
     error: managedError!.read
   })
 );
-
-const getFailedMonitors = (monitors: ManagedServiceMonitor[]) => {
-  /**
-   * This assumes that a status of "failed" is the only
-   * error state; but if all a user's monitors are pending
-   * or disabled, they'll all pass the test here and the
-   * user will get a message saying that all monitors are
-   * verified.
-   */
-  return monitors.reduce((accum, thisMonitor) => {
-    if (thisMonitor.status === 'problem') {
-      return [...accum, thisMonitor.id];
-    } else {
-      return accum;
-    }
-  }, []);
-};
 
 const enhanced = compose<CombinedProps, {}>(withManaged);
 

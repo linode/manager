@@ -1,0 +1,134 @@
+import { ManagedServiceMonitor } from 'linode-js-sdk/lib/managed';
+import * as React from 'react';
+import { Link } from 'react-router-dom';
+import { compose } from 'recompose';
+
+import MonitorFailed from 'src/assets/icons/monitor-failed.svg';
+import MonitorOK from 'src/assets/icons/monitor-ok.svg';
+
+import {
+  makeStyles,
+  Theme,
+  withTheme,
+  WithTheme
+} from 'src/components/core/styles';
+import Typography from 'src/components/core/Typography';
+import Grid from 'src/components/Grid';
+
+import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
+
+export const useStyles = makeStyles((theme: Theme) => ({
+  root: {
+    padding: theme.spacing(2)
+  },
+  icon: {
+    '& svg': {
+      display: 'flex'
+    }
+  },
+  subheader: {
+    paddingBottom: theme.spacing()
+  },
+  errorDash: {
+    color: theme.color.red,
+    padding: theme.spacing(),
+    fontSize: '1em'
+  }
+}));
+
+export interface Props {
+  monitors: ManagedServiceMonitor[];
+}
+
+type CombinedProps = Props & WithTheme;
+
+export const MonitorStatus: React.FC<CombinedProps> = props => {
+  const { monitors } = props;
+  const classes = useStyles();
+
+  const iconSize = props.theme.spacing(1) === COMPACT_SPACING_UNIT ? 60 : 45;
+
+  const failedMonitors = getFailedMonitors(monitors);
+
+  return (
+    <>
+      <Grid
+        container
+        direction="column"
+        alignItems="center"
+        justify="center"
+        className={classes.root}
+        item
+      >
+        <Grid item>
+          <Grid
+            item
+            style={
+              props.theme.spacing(1) === COMPACT_SPACING_UNIT
+                ? { padding: '0 3px' }
+                : undefined
+            }
+            className={classes.icon}
+          >
+            {failedMonitors.length === 0 ? (
+              <MonitorOK width={iconSize} height={iconSize} />
+            ) : (
+              <MonitorFailed width={iconSize} height={iconSize} />
+            )}
+          </Grid>
+        </Grid>
+        <Grid item>
+          <Typography variant="h3">
+            {failedMonitors.length === 0
+              ? 'All monitored services are up.'
+              : `${failedMonitors.length} monitored ${
+                  failedMonitors.length === 1 ? 'service is' : 'services are'
+                } down.`}
+          </Typography>
+        </Grid>
+        {failedMonitors.length > 0 && (
+          <Grid item>
+            {failedMonitors.map((thisMonitor, idx) => (
+              <Typography key={`failed-monitor-list-${idx}`} variant="body1">
+                <strong className={classes.errorDash}>&#8212;</strong>
+                {thisMonitor}
+              </Typography>
+            ))}
+          </Grid>
+        )}
+        <Grid item>
+          <Typography>
+            <Link to="/managed/monitors">
+              View your list of service monitors
+            </Link>
+            {` `}
+            {failedMonitors.length === 0
+              ? 'to see details or to update your monitors.'
+              : 'for details.'}
+          </Typography>
+        </Grid>
+      </Grid>
+    </>
+  );
+};
+
+const getFailedMonitors = (monitors: ManagedServiceMonitor[]): string[] => {
+  /**
+   * This assumes that a status of "failed" is the only
+   * error state; but if all a user's monitors are pending
+   * or disabled, they'll all pass the test here and the
+   * user will get a message saying that all monitors are
+   * verified.
+   */
+  return monitors.reduce((accum, thisMonitor) => {
+    if (thisMonitor.status === 'problem') {
+      return [...accum, thisMonitor.label];
+    } else {
+      return accum;
+    }
+  }, []);
+};
+
+const enhanced = compose<CombinedProps, Props>(withTheme);
+
+export default enhanced(MonitorStatus);
