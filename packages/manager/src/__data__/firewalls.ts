@@ -46,10 +46,15 @@ export const firewall2: Firewall = {
   },
   rules: [
     {
+      inbound: [],
       outbound: [
         {
           protocol: 'ALL',
           start_port: 443
+        },
+        {
+          protocol: 'ALL',
+          start_port: 80
         }
       ]
     },

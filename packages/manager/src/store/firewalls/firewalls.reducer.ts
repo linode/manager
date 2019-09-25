@@ -8,11 +8,11 @@ interface FirewallRuleTypeWithSequence extends FirewallRuleType {
 }
 
 interface FirewallRuleWithSequence {
-  inbound?: FirewallRuleTypeWithSequence | null;
-  outbound?: FirewallRuleTypeWithSequence | null;
+  inbound?: FirewallRuleTypeWithSequence[] | null;
+  outbound?: FirewallRuleTypeWithSequence[] | null;
 }
 
-interface FirewallWithSequence extends Omit<Firewall, 'rules'> {
+export interface FirewallWithSequence extends Omit<Firewall, 'rules'> {
   rules: FirewallRuleWithSequence[];
 }
 
@@ -34,8 +34,27 @@ const reducer = reducerWithInitialState(defaultState)
   }))
   .caseWithAction(getFirewalls.done, (state, { payload: { result } }) => ({
     ...state,
-    data: result.data.reduce((acc, eachFirewall, index) => {
-      acc[eachFirewall.id] = eachFirewall;
+    data: result.data.reduce((acc, eachFirewall) => {
+      acc[eachFirewall.id] = {
+        ...eachFirewall,
+        rules: eachFirewall.rules.map(eachRule => ({
+          /**
+           * map over each inbound and outbound rule and add the original order to them.
+           * This is important because the API's original ordering matters
+           * and the order they are returned in is the order they are applied.
+           */
+          inbound: (eachRule.inbound || []).map((eachInboundRule, index) => ({
+            ...eachInboundRule,
+            sequence: index + 1
+          })),
+          outbound: (eachRule.outbound || []).map(
+            (eachOutboundRule, index) => ({
+              ...eachOutboundRule,
+              sequence: index + 1
+            })
+          )
+        }))
+      };
       return acc;
     }, {}),
     loading: false,
