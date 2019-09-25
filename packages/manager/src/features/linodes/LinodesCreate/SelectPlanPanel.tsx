@@ -101,7 +101,7 @@ export class SelectPlanPanel extends React.Component<
 > {
   onSelect = (id: string) => () => this.props.onSelect(id);
 
-  renderSelection = (type: ExtendedType) => {
+  renderSelection = (type: ExtendedType, idx: number) => {
     const { selectedID, currentPlanHeading, disabled, classes } = this.props;
     const selectedDiskSize = this.props.selectedDiskSize
       ? this.props.selectedDiskSize
@@ -116,7 +116,7 @@ export class SelectPlanPanel extends React.Component<
     }
 
     return (
-      <React.Fragment>
+      <React.Fragment key={`tabbed-panel-${idx}`}>
         {/* Displays Table Row for larger screens */}
         <Hidden smDown>
           <TableRow
