@@ -4,7 +4,7 @@ import { getCountOfRules, getRuleString } from './FirewallTableRows';
 describe('Utility functions', () => {
   it('should return correct number of inbound and outbound rules', () => {
     expect(getCountOfRules(firewalls[0])).toEqual([1, 1]);
-    expect(getCountOfRules(firewalls[1])).toEqual([2, 1]);
+    expect(getCountOfRules(firewalls[1])).toEqual([0, 2]);
   });
 
   it('should return the correct string given an array of numbers', () => {
