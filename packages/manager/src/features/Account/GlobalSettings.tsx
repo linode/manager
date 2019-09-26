@@ -4,6 +4,7 @@ import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -11,6 +12,7 @@ import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
 import TagImportDrawer from 'src/features/TagImport';
 import { ApplicationState } from 'src/store';
+import { updateSettingsInStore } from 'src/store/accountSettings/accountSettings.actions';
 import { updateAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { handleOpen } from 'src/store/backupDrawer';
 import getEntitiesWithGroupsToImport, {
@@ -23,6 +25,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import shouldDisplayGroupImport from 'src/utilities/shouldDisplayGroupImportCTA';
 import { storage } from 'src/utilities/storage';
 import AutoBackups from './AutoBackups';
+import EnableManaged from './EnableManaged';
 import ImportGroupsAsTags from './ImportGroupsAsTags';
 import NetworkHelper from './NetworkHelper';
 
@@ -40,12 +43,16 @@ interface StateProps {
 interface DispatchProps {
   actions: {
     updateAccount: (data: Partial<AccountSettings>) => void;
+    updateAccountSettingsInStore: (data: Partial<AccountSettings>) => void;
     openImportDrawer: () => void;
     openBackupsDrawer: () => void;
   };
 }
 
-type CombinedProps = StateProps & DispatchProps & WithSnackbarProps;
+type CombinedProps = StateProps &
+  DispatchProps &
+  WithSnackbarProps &
+  RouteComponentProps<{}>;
 
 class GlobalSettings extends React.Component<CombinedProps, {}> {
   toggleAutomaticBackups = () => {
@@ -117,6 +124,11 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
           onChange={this.toggleNetworkHelper}
           networkHelperEnabled={networkHelperEnabled}
         />
+        <EnableManaged
+          isManaged={isManaged}
+          update={this.props.actions.updateAccountSettingsInStore}
+          push={this.props.history.push}
+        />
         {shouldDisplayGroupImport(entitiesWithGroupsToImport) && (
           <ImportGroupsAsTags openDrawer={openImportDrawer} />
         )}
@@ -162,7 +174,9 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
       updateAccount: (data: Partial<AccountSettings>) =>
         dispatch(updateAccountSettings(data)),
       openBackupsDrawer: () => dispatch(handleOpen()),
-      openImportDrawer: () => dispatch(openGroupDrawer())
+      openImportDrawer: () => dispatch(openGroupDrawer()),
+      updateAccountSettingsInStore: (data: Partial<AccountSettings>) =>
+        dispatch(updateSettingsInStore(data))
     }
   };
 };

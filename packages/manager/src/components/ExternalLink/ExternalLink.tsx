@@ -1,5 +1,8 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
+
+import OpenInNew from '@material-ui/icons/OpenInNew';
+
 import Arrow from 'src/assets/icons/diagonalArrow.svg';
 import {
   createStyles,
@@ -8,7 +11,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 
-type ClassNames = 'root' | 'icon' | 'absoluteIcon' | 'black';
+type ClassNames = 'root' | 'icon' | 'absoluteIcon' | 'black' | 'fixedIcon';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -41,6 +44,10 @@ const styles = (theme: Theme) =>
         left: 'initial'
       }
     },
+    fixedIcon: {
+      display: 'inline-block',
+      fontSize: '0.8em'
+    },
     black: {
       color: theme.palette.text.primary
     }
@@ -52,13 +59,22 @@ interface Props {
   className?: string;
   absoluteIcon?: boolean;
   black?: boolean;
+  fixedIcon?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 class ExternalLink extends React.Component<CombinedProps> {
   render() {
-    const { classes, link, text, className, absoluteIcon, black } = this.props;
+    const {
+      classes,
+      link,
+      text,
+      className,
+      absoluteIcon,
+      black,
+      fixedIcon
+    } = this.props;
 
     return (
       <a
@@ -76,7 +92,11 @@ class ExternalLink extends React.Component<CombinedProps> {
         data-qa-external-link
       >
         {text}
-        <Arrow className={classes.icon} />
+        {fixedIcon ? (
+          <OpenInNew className={classes.fixedIcon} />
+        ) : (
+          <Arrow className={classes.icon} />
+        )}
       </a>
     );
   }
