@@ -66,6 +66,7 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
   return (
     <DashboardCard
       title="Managed Services"
+      alignHeader="space-between"
       className={classes.root}
       headerAction={() => <Link to="/managed">View Details</Link>}
       data-qa-dash-managed
