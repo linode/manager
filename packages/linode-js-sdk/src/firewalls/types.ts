@@ -18,7 +18,6 @@ export interface FirewallRuleType {
   protocol: 'ALL' | 'TCP' | 'UDP' | 'ICMP';
   start_port: number;
   end_port?: null | number;
-  sequence: number;
   addresses?: null | {
     ipv4?: null | string[];
     ipv6?: null | string[];
