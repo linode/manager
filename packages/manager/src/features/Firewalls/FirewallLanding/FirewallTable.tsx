@@ -14,13 +14,14 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
 
+import { ActionHandlers } from './FirewallActionMenu';
 import FirewallRows from './FirewallTableRows';
 
 // const useStyles = makeStyles((theme: Theme) => ({
 //   root: {}
 // }))
 
-type FirewallProps = Omit<FireProps, 'getFirewalls'>;
+type FirewallProps = Omit<FireProps, 'getFirewalls'> & ActionHandlers;
 
 type CombinedProps = FirewallProps;
 
@@ -32,7 +33,8 @@ const FirewallTable: React.FC<CombinedProps> = props => {
     loading: firewallsLoading,
     error: firewallsError,
     lastUpdated: firewallsLastUpdated,
-    listOfIDsInOriginalOrder: firewallsKeys
+    listOfIDsInOriginalOrder: firewallsKeys,
+    ...actionMenuHandlers
   } = props;
 
   return (
@@ -87,6 +89,7 @@ const FirewallTable: React.FC<CombinedProps> = props => {
                         error={firewallsError}
                         listOfIDsInOriginalOrder={firewallsKeys}
                         lastUpdated={firewallsLastUpdated}
+                        {...actionMenuHandlers}
                       />
                     </TableBody>
                   </Table>
