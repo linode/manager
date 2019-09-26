@@ -334,7 +334,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
         }
       },
       {
-        conditionToAdd: () => isManagedAccount || !!flags.managed,
+        conditionToAdd: () => isManagedAccount,
         insertAfter: 'Longview',
         link: { display: 'Managed', href: '/managed', key: 'managed' }
       },

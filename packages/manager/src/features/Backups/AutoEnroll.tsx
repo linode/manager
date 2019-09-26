@@ -1,4 +1,3 @@
-import OpenInNew from '@material-ui/icons/OpenInNew';
 import * as React from 'react';
 import FormControlLabel from 'src/components/core/FormControlLabel';
 import Paper from 'src/components/core/Paper';
@@ -9,16 +8,12 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Toggle from 'src/components/Toggle';
 
-type ClassNames =
-  | 'root'
-  | 'header'
-  | 'icon'
-  | 'toggleLabel'
-  | 'toggleLabelText';
+type ClassNames = 'root' | 'header' | 'toggleLabel' | 'toggleLabelText';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -29,10 +24,6 @@ const styles = (theme: Theme) =>
     header: {
       marginBottom: theme.spacing(1),
       fontSize: 17
-    },
-    icon: {
-      display: 'inline-block',
-      fontSize: '0.8em'
     },
     toggleLabel: {
       display: 'flex',
@@ -81,14 +72,12 @@ export const AutoEnroll: React.StatelessComponent<CombinedProps> = props => {
                 <Typography variant="body1">
                   {`Enroll all future Linodes in backups. Your account will be billed
                     the additional hourly rate noted on the `}
-                  <a
+                  <ExternalLink
                     data-qa-backups-price
-                    href="https://www.linode.com/backups"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Backups pricing page <OpenInNew className={classes.icon} />.
-                  </a>
+                    fixedIcon
+                    link="https://www.linode.com/backups"
+                    text="Backups pricing page"
+                  />
                 </Typography>
               </div>
             }
