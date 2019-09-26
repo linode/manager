@@ -31,7 +31,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginTop: theme.spacing()
   },
   status: {
-    padding: theme.spacing()
+    padding: theme.spacing(),
+    borderRight: `solid 1px ${theme.palette.divider}`
   }
 }));
 
@@ -102,9 +103,10 @@ const LoadingErrorOrContent: React.FC<CombinedProps> = props => {
         container
         item
         direction="column"
-        justify="center"
+        justify="space-around"
         alignItems="center"
-        xs={4}
+        xs={5}
+        spacing={1}
         className={classes.status}
       >
         <Grid item>
@@ -114,7 +116,7 @@ const LoadingErrorOrContent: React.FC<CombinedProps> = props => {
           <MonitorTickets issues={issues} />
         </Grid>
       </Grid>
-      <Grid item xs={8}>
+      <Grid item xs={7}>
         <ManagedChartPanel data={6} />
       </Grid>
     </Grid>

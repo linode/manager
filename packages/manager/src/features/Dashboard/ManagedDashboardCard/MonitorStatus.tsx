@@ -26,9 +26,6 @@ export const useStyles = makeStyles((theme: Theme) => ({
       display: 'flex'
     }
   },
-  subheader: {
-    paddingBottom: theme.spacing()
-  },
   errorDash: {
     color: theme.color.red,
     padding: theme.spacing(),
@@ -46,7 +43,7 @@ export const MonitorStatus: React.FC<CombinedProps> = props => {
   const { monitors } = props;
   const classes = useStyles();
 
-  const iconSize = props.theme.spacing(1) === COMPACT_SPACING_UNIT ? 60 : 45;
+  const iconSize = props.theme.spacing(1) === COMPACT_SPACING_UNIT ? 75 : 50;
 
   const failedMonitors = getFailedMonitors(monitors);
 
@@ -78,12 +75,12 @@ export const MonitorStatus: React.FC<CombinedProps> = props => {
           </Grid>
         </Grid>
         <Grid item>
-          <Typography variant="h3">
+          <Typography variant="h2">
             {failedMonitors.length === 0
-              ? 'All monitored services are up.'
+              ? 'All monitored services are up'
               : `${failedMonitors.length} monitored ${
                   failedMonitors.length === 1 ? 'service is' : 'services are'
-                } down.`}
+                } down`}
           </Typography>
         </Grid>
         {failedMonitors.length > 0 && (

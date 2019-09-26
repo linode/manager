@@ -47,12 +47,12 @@ export const MonitorTickets: React.FC<Props> = props => {
         <TicketIcon width={50} height={50} />
       </Grid>
       <Grid item>
-        <Typography variant="h3">
+        <Typography variant="h2">
           {hasIssues
             ? `${openIssues.length} open Support ${
                 openIssues.length === 1 ? 'ticket' : 'tickets'
-              }.`
-            : 'No open Support tickets.'}
+              }`
+            : 'No open Support tickets'}
         </Typography>
       </Grid>
       <Grid item>
