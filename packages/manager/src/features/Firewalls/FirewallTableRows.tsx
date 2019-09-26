@@ -1,4 +1,3 @@
-import { Firewall } from 'linode-js-sdk/lib/firewalls';
 import * as React from 'react';
 import { compose } from 'recompose';
 // import { makeStyles, Theme } from 'src/components/core/styles'
@@ -10,13 +9,14 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 
 import { Props as FireProps } from 'src/containers/firewalls.container';
+import { FirewallWithSequence } from 'src/store/firewalls/firewalls.reducer';
 
 // const useStyles = makeStyles((theme: Theme) => ({
 //   root: {}
 // }))
 
 interface Props extends Omit<FireProps, 'data' | 'results' | 'getFirewalls'> {
-  data: Firewall[];
+  data: FirewallWithSequence[];
 }
 
 type CombinedProps = Props;
