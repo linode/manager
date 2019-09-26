@@ -11,28 +11,24 @@ export const firewall: Firewall = {
   devices: {
     linodes: []
   },
-  rules: [
-    {
-      inbound: [
-        {
-          protocol: 'ALL',
-          start_port: 443
+  rules: {
+    inbound: [
+      {
+        protocol: 'ALL',
+        start_port: 443
+      }
+    ],
+    outbound: [
+      {
+        protocol: 'UDP',
+        start_port: 22,
+        addresses: {
+          ipv4: ['12.12.12.12'],
+          ipv6: ['192.168.12.12']
         }
-      ]
-    },
-    {
-      outbound: [
-        {
-          protocol: 'UDP',
-          start_port: 22,
-          addresses: {
-            ipv4: ['12.12.12.12'],
-            ipv6: ['192.168.12.12']
-          }
-        }
-      ]
-    }
-  ]
+      }
+    ]
+  }
 };
 
 export const firewall2: Firewall = {
@@ -45,95 +41,62 @@ export const firewall2: Firewall = {
   devices: {
     linodes: [123]
   },
-  rules: [
-    {
-      inbound: [],
-      outbound: [
-        {
-          protocol: 'ALL',
-          start_port: 443
-        },
-        {
-          protocol: 'ALL',
-          start_port: 80
-        }
-      ]
-    },
-    {
-      inbound: [
-        {
-          protocol: 'UDP',
-          start_port: 22,
-          addresses: {
-            ipv4: ['12.12.12.12'],
-            ipv6: ['192.168.12.12']
-          }
-        }
-      ]
-    }
-  ]
+  rules: {
+    inbound: [],
+    outbound: [
+      {
+        protocol: 'ALL',
+        start_port: 443
+      },
+      {
+        protocol: 'ALL',
+        start_port: 80
+      }
+    ]
+  }
 };
 
 const firewallWithSequence: FirewallWithSequence = {
   ...firewall,
-  rules: [
-    {
-      inbound: [
-        {
-          protocol: 'ALL',
-          start_port: 443,
-          sequence: 1
+  rules: {
+    inbound: [
+      {
+        protocol: 'ALL',
+        sequence: 1,
+        start_port: 443
+      }
+    ],
+    outbound: [
+      {
+        protocol: 'UDP',
+        sequence: 1,
+        start_port: 22,
+        addresses: {
+          ipv4: ['12.12.12.12'],
+          ipv6: ['192.168.12.12']
         }
-      ]
-    },
-    {
-      outbound: [
-        {
-          protocol: 'UDP',
-          start_port: 22,
-          addresses: {
-            ipv4: ['12.12.12.12'],
-            ipv6: ['192.168.12.12']
-          },
-          sequence: 1
-        }
-      ]
-    }
-  ]
+      }
+    ]
+  }
 };
 
 const firewallWithSequence2: FirewallWithSequence = {
   ...firewall2,
-  rules: [
-    {
-      inbound: [],
-      outbound: [
-        {
-          protocol: 'ALL',
-          start_port: 443,
-          sequence: 1
-        },
-        {
-          protocol: 'ALL',
-          start_port: 80,
-          sequence: 2
-        }
-      ]
-    },
-    {
-      inbound: [
-        {
-          protocol: 'UDP',
-          start_port: 22,
-          addresses: {
-            ipv4: ['12.12.12.12'],
-            ipv6: ['192.168.12.12']
-          },
-          sequence: 1
-        }
-      ]
-    }
-  ]
+  rules: {
+    inbound: [],
+    outbound: [
+      {
+        protocol: 'ALL',
+        sequence: 1,
+        start_port: 443
+      },
+      {
+        protocol: 'ALL',
+        sequence: 2,
+        start_port: 80
+      }
+    ]
+  }
 };
 
 export const firewallsWithSequence = [
