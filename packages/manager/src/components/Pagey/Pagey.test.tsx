@@ -1,5 +1,5 @@
 import { shallow } from 'enzyme';
-import { ResourcePage } from 'linode-js-sdk/lib/types'
+import { ResourcePage } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import paginate from './Pagey';
 
@@ -224,7 +224,7 @@ describe('Paginator 2: Pagement Day', () => {
       });
     });
 
-    describe('and the promise rejects', async () => {
+    describe('and the promise rejects', () => {
       const { wrapper } = setup(() => Promise.reject(new Error()));
 
       beforeAll(async () => {
