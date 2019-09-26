@@ -29,5 +29,5 @@ export interface FirewallRuleType {
 }
 
 export interface FirewallDevices {
-  linodes: number[];
+  linodes?: number[];
 }
