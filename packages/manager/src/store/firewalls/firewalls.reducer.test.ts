@@ -31,16 +31,15 @@ const baseFirewall: Firewall[] = [
 
 describe('Cloud Firewalls Reducer', () => {
   it('should handle an initiated request for services', () => {
-    expect(reducer(defaultState, getFirewalls.started())).toHaveProperty(
-      'loading',
-      true
-    );
+    expect(
+      reducer(defaultState, getFirewalls.started({ params: {} }))
+    ).toHaveProperty('loading', true);
   });
 
   it('should handle a failed GET request', () => {
     const newState = reducer(
       { ...defaultState, loading: true },
-      getFirewalls.failed({ error: mockError })
+      getFirewalls.failed({ params: {}, error: mockError })
     );
 
     expect(newState).toHaveProperty('error', { read: mockError });
@@ -50,7 +49,10 @@ describe('Cloud Firewalls Reducer', () => {
   it('should handle a successful GET request', () => {
     const newState = reducer(
       { ...defaultState, loading: true },
-      getFirewalls.done({ result: { data: baseFirewall, results: 2 } })
+      getFirewalls.done({
+        params: {},
+        result: { data: baseFirewall, results: 2 }
+      })
     );
     expect(newState).toHaveProperty('data', {
       1: {
