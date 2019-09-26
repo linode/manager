@@ -75,7 +75,9 @@ export const startEventsInterval = () =>
           /** Update the dealing */
           store.dispatch(setRequestDeadline(now + timeout));
           /* Update the iteration to a maximum of 16. */
-          store.dispatch(setPollingInterval(Math.min(pollIteration * 2, 16)));
+          if (pollIteration * 2 < 16) {
+            store.dispatch(setPollingInterval(Math.min(pollIteration * 2, 16)));
+          }
         }
       }
     },

@@ -20,6 +20,10 @@ export const resetEventsPolling = (
   dispatch: ThunkDispatch<any, any, any>,
   newInterval: number = 1
 ) => {
+  // 16 is the max, so no sense dispatching these actions if we're already there.
+  if (newInterval >= 16) {
+    return;
+  }
   dispatch(setRequestDeadline(Date.now() + INTERVAL * newInterval));
   dispatch(setPollingInterval(newInterval));
 };
