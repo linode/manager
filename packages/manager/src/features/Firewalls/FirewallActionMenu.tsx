@@ -1,6 +1,5 @@
 import { FirewallStatus } from 'linode-js-sdk/lib/firewalls';
 import * as React from 'react';
-import { compose } from 'recompose';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
@@ -62,4 +61,4 @@ const FirewallActionMenu: React.FC<CombinedProps> = props => {
   return <ActionMenu createActions={createActions()} />;
 };
 
-export default compose<CombinedProps, Props>(React.memo)(FirewallActionMenu);
+export default React.memo(FirewallActionMenu);
