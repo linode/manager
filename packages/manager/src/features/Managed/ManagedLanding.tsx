@@ -33,6 +33,5 @@ export const ManagedLanding: React.FunctionComponent<CombinedProps> = props => {
 };
 
 const enhanced = compose<CombinedProps, {}>(setDocs(docs));
-4;
 
 export default enhanced(ManagedLanding);
