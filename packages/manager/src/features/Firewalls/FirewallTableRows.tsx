@@ -10,6 +10,7 @@ import TableRowLoading from 'src/components/TableRowLoading';
 
 import { Props as FireProps } from 'src/containers/firewalls.container';
 import { FirewallWithSequence } from 'src/store/firewalls/firewalls.reducer';
+import ActionMenu from './FirewallActionMenu';
 
 // const useStyles = makeStyles((theme: Theme) => ({
 //   root: {}
@@ -59,7 +60,17 @@ const FirewallTableRows: React.FC<CombinedProps> = props => {
           <TableCell>{eachFirewall.status}</TableCell>
           <TableCell>Rules</TableCell>
           <TableCell>Linodes</TableCell>
-          <TableCell />
+          <TableCell>
+            <ActionMenu
+              firewallID={eachFirewall.id}
+              firewallLabel={eachFirewall.label}
+              firewallStatus={eachFirewall.status}
+              triggerDeleteFirewall={() => null}
+              triggerDisableFirewall={() => null}
+              triggerEditFirewall={() => null}
+              triggerEnableFirewall={() => null}
+            />
+          </TableCell>
         </TableRow>
       ))}
     </React.Fragment>
