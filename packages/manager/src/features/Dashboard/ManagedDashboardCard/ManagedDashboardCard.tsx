@@ -78,23 +78,38 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
 };
 
 const LoadingErrorOrContent: React.FC<CombinedProps> = props => {
-  const { issues, managedError, managedLoading, monitors, lastUpdated } = props;
+  const {
+    issues,
+    managedError,
+    managedLoading,
+    monitors,
+    managedLastUpdated,
+    issuesLoading,
+    issuesError,
+    issuesLastUpdated
+  } = props;
   const classes = useStyles();
 
   /**
    * Don't show error state if we've successfully retrieved
    * monitor data but then a subsequent poll fails
    */
-  if (managedError.read && lastUpdated === 0) {
+  if (
+    (managedError.read && managedLastUpdated === 0) ||
+    (issuesError.read && issuesLastUpdated === 0)
+  ) {
     const errorString = getAPIErrorOrDefault(
-      managedError.read,
+      managedError.read || issuesError.read || [],
       'Error loading your Managed service information.'
     )[0].reason;
     return <ErrorState errorText={errorString} compact />;
   }
 
-  if (managedLoading && lastUpdated === 0) {
-    return <CircleProgress mini />;
+  if (
+    (managedLoading && managedLastUpdated === 0) ||
+    (issuesLoading && issuesLastUpdated === 0)
+  ) {
+    return <CircleProgress />;
   }
 
   return (

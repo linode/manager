@@ -8,7 +8,7 @@ import useTimezone from 'src/utilities/useTimezone';
 
 // Temporary
 import { fakeData } from './fakeData';
-const data: [number, number][] = fakeData.map(thisPoint => [
+const _data: [number, number][] = fakeData.map(thisPoint => [
   thisPoint.x,
   thisPoint.y
 ]);
@@ -44,7 +44,7 @@ const tabs: Tab[] = [
               {
                 borderColor: 'rgba(54, 131, 220, 1)',
                 backgroundColor: 'rgba(54, 131, 220, .5)',
-                data,
+                data: _data,
                 label: 'CPU %'
               }
             ]}
