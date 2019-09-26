@@ -103,3 +103,19 @@ export interface IssueEntity {
   type: 'ticket'; // I don't make the rules I'm just describing them
   url: string;
 }
+
+export interface DataSeries {
+  x: number;
+  y: number;
+}
+export interface ManagedStats {
+  disk: DataSeries[];
+  cpu: DataSeries;
+  net_in: DataSeries;
+  net_out: DataSeries;
+  swap: DataSeries;
+}
+
+export interface ManagedStatsResponse {
+  data: ManagedStats;
+}
