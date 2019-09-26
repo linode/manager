@@ -59,10 +59,6 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
     };
   }, []);
 
-  // if (!loading && !error && monitors.length === 0 && updated === 0) {
-  //   return null;
-  // }
-
   return (
     <DashboardCard
       title="Managed Services"
@@ -122,7 +118,6 @@ const LoadingErrorOrContent: React.FC<CombinedProps> = props => {
         justify="space-around"
         alignItems="center"
         xs={5}
-        spacing={1}
         className={classes.status}
       >
         <Grid item>
