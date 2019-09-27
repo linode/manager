@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import EntityIcon from 'src/components/EntityIcon';
@@ -26,15 +26,15 @@ interface Props {
   displayName: string;
 }
 
-type CombinedProps = Props & RouteComponentProps<{}>;
-
-const FolderTableRow: React.FC<CombinedProps> = props => {
+const FolderTableRow: React.FC<Props> = props => {
   const { folderName, displayName } = props;
+
+  const history = useHistory();
 
   const classes = useStyles();
 
   const handleClick = () => {
-    props.history.push({ search: `?prefix=${folderName}` });
+    history.push({ search: `?prefix=${folderName}` });
   };
 
   return (
@@ -59,4 +59,4 @@ const FolderTableRow: React.FC<CombinedProps> = props => {
   );
 };
 
-export default withRouter(FolderTableRow);
+export default React.memo(FolderTableRow);
