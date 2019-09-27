@@ -5,6 +5,7 @@ export interface OCA {
   href?: string;
   logo_url: string;
   summary: string;
+  additonal_info?: Info[];
 }
 
 export interface Doc {
@@ -12,6 +13,9 @@ export interface Doc {
   href: string;
 }
 
+export interface Info {
+  tip: string;
+}
 export const oneClickApps: OCA[] = [
   {
     name: 'Ark',
@@ -127,6 +131,22 @@ export const oneClickApps: OCA[] = [
     // href: 'https://www.ibm.com/cloud/learn/lamp-stack-explained' Not sure this is kosher.
   },
   {
+    name: 'Plesk',
+    description: `Plesk is a leading WordPress and website management platform and control panel. Plesk lets you build and manage multiple websites from a single dashboard to configure web services, email, and other applications. Plesk features hundreds of extensions, plus a complete WordPress toolkit, and can orchestrate multi-server developments. Use the Plesk One-Click App to manage websites hosted on your Linode.`,
+    summary:
+      'A secure, scalable, and versatile website management platform.',
+    additonal_info: [
+      {
+        tip: 'Please allow the script around 15 minutes to finish.',
+      },
+      {
+        tip: 'After deployment SSH into your Linode and run: "plesk login".',
+      }
+    ],
+    href: 'https://www.plesk.com/',
+    logo_url: 'assets/plesk_color.svg'
+  },
+  {
     name: 'Rust',
     description: `In Rust, you must work with or against other players
       to ensure your own survival. Players are able to steal, lie, cheat, or
@@ -167,7 +187,7 @@ export const oneClickApps: OCA[] = [
   {
     name: 'TF2',
     description: `Team Fortress 2 is a team-based multiplayer first-person shooter.
-      In TF2, you and your team choose from a number of hero classes and different game modes, 
+      In TF2, you and your team choose from a number of hero classes and different game modes,
       ensuring a unique in-game experience every match.
       Setting up a personal game server puts you in control of
       what game modes and maps you use, as well as a variety of other settings
@@ -226,11 +246,11 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'OpenVPN',
-    description: `OpenVPN is a widely trusted, free, and open-source virtual private network 
+    description: `OpenVPN is a widely trusted, free, and open-source virtual private network
     application. OpenVPN creates network tunnels between groups of
       computers that are not on the same local network, and it uses OpenSSL
       to encrypt your traffic.`,
-    summary: `Open-source virtual private network (VPN) application. 
+    summary: `Open-source virtual private network (VPN) application.
       OpenVPN securely connects your computer to your servers,
       or to the public Internet.`,
     related_guides: [
