@@ -8,6 +8,8 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import { sanitizeHTML } from 'src/utilities/sanitize-html'
+
 
 type ClassNames = 'root' | 'icon' | 'tip' | 'title';
 
@@ -34,14 +36,10 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface Info {
-  tip: string
-}
-
 interface Props {
   icon: any;
   title: string;
-  tips: Info[];
+  tips: string[];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -67,10 +65,14 @@ export const TipSection: React.FunctionComponent<CombinedProps> = props => {
         </Grid>
       </Grid>
       <Grid container item className={classes.tip}>
-        {tips.map((additional_info, idx) => (
+        {tips.map((tip, idx) => (
           <Grid item key={`${title}-tip-item-${idx}`}>
             <Typography className={classes.title}>
-             {additional_info.tip}
+              <div
+                  dangerouslySetInnerHTML={{
+                    __html: sanitizeHTML(tip)
+                  }}
+              />
             </Typography>
           </Grid>
         ))}

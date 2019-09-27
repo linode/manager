@@ -123,10 +123,10 @@ export const AppDetailDrawer: React.FunctionComponent<
             icon={LibraryBook}
           />
         )}
-        {app.additonal_info && (
+        {app.tips && (
           <TipSection
           title="Tips"
-          tips={app.additonal_info}
+          tips={app.tips}
           icon={Info}
           />
         )}
