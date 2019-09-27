@@ -1,4 +1,5 @@
 import { LinodeConfigCreationData } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { actionCreatorFactory } from 'typescript-fsa';
 import { Entity } from './config.types';
 
@@ -28,7 +29,7 @@ export type GetLinodeConfigsRequest = (
 export const getLinodeConfigsActions = actionCreator.async<
   GetLinodeConfigsParams,
   Entity[],
-  Linode.ApiFieldError[]
+  APIError[]
 >(`get-page`);
 
 /** Get Linode Configs (all) */
@@ -43,7 +44,7 @@ export type GetAllLinodeConfigsRequest = (
 export const getAllLinodeConfigsActions = actionCreator.async<
   GetAllLinodeConfigsParams,
   Entity[],
-  Linode.ApiFieldError[]
+  APIError[]
 >(`get-all`);
 
 /** Get Linode Config */
@@ -58,7 +59,7 @@ export type GetLinodeConfigRequest = (
 export const getLinodeConfigActions = actionCreator.async<
   GetLinodeConfigParams,
   Entity,
-  Linode.ApiFieldError[]
+  APIError[]
 >(`get`);
 
 /** Create Linode Config */
@@ -73,7 +74,7 @@ export type CreateLinodeConfigRequest = (
 export const createLinodeConfigActions = actionCreator.async<
   CreateLinodeConfigParams,
   Entity,
-  Linode.ApiFieldError[]
+  APIError[]
 >(`create`);
 
 /** Update Linode Config */
@@ -89,7 +90,7 @@ export type UpdateLinodeConfigRequest = (
 export const updateLinodeConfigActions = actionCreator.async<
   UpdateLinodeConfigParams,
   Entity,
-  Linode.ApiFieldError[]
+  APIError[]
 >(`update`);
 
 /** Delete Linode Config */
@@ -104,5 +105,5 @@ export type DeleteLinodeConfigRequest = (
 export const deleteLinodeConfigActions = actionCreator.async<
   DeleteLinodeConfigParams,
   {},
-  Linode.ApiFieldError[]
+  APIError[]
 >(`delete`);

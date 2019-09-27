@@ -1,4 +1,5 @@
 import { Image } from 'linode-js-sdk/lib/images';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -122,7 +123,7 @@ interface Props {
   revision: TextFieldHandler;
   description: TextFieldHandler;
   script: TextFieldHandler;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   onSubmit: () => void;
   onCancel: () => void;
   onSelectChange: (image: Item<string>[]) => void;

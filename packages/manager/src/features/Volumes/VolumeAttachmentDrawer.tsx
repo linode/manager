@@ -1,5 +1,6 @@
 import { Grant } from 'linode-js-sdk/lib/account';
 import { getLinodeConfigs } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -37,7 +38,7 @@ interface State {
   configs: string[][];
   selectedLinode: number | null;
   selectedConfig?: string;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
 }
 
 interface LinodesProps {

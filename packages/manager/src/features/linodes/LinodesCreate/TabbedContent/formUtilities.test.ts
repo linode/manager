@@ -1,8 +1,9 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import { filterUDFErrors } from './formUtilities';
 
 describe('Linode Create Utilities', () => {
   it('should filter out all errors except UDF errors', () => {
-    const mockErrors: Linode.ApiFieldError[] = [
+    const mockErrors: APIError[] = [
       {
         field: 'label',
         reason: 'label is required'

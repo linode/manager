@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import { assoc, omit } from 'ramda';
 import {
   Entity,
@@ -34,14 +35,14 @@ export const onGetAllSuccess = <E extends Entity, S>(
     )
   });
 
-export const onError = <S = {}, E = Linode.ApiFieldError[] | undefined>(
+export const onError = <S = {}, E = APIError[] | undefined>(
   error: E,
   state: S
 ) => Object.assign({}, state, { error, loading: false });
 
 export const createDefaultState = <
   E extends Entity,
-  O = Linode.ApiFieldError[] | undefined
+  O = APIError[] | undefined
 >(
   override: Partial<MappedEntityState<E, O>> = {}
 ): MappedEntityState<E, O> => ({
@@ -53,30 +54,21 @@ export const createDefaultState = <
   ...override
 });
 
-export const onDeleteSuccess = <
-  E extends Entity,
-  O = Linode.ApiFieldError[] | undefined
->(
+export const onDeleteSuccess = <E extends Entity, O = APIError[] | undefined>(
   id: string | number,
   state: MappedEntityState<E, O>
 ): MappedEntityState<E, O> => {
   return removeMany([String(id)], state);
 };
 
-export const onCreateOrUpdate = <
-  E extends Entity,
-  O = Linode.ApiFieldError[] | undefined
->(
+export const onCreateOrUpdate = <E extends Entity, O = APIError[] | undefined>(
   entity: E,
   state: MappedEntityState<E, O>
 ): MappedEntityState<E, O> => {
   return addMany([entity], state);
 };
 
-export const removeMany = <
-  E extends Entity,
-  O = Linode.ApiFieldError[] | undefined
->(
+export const removeMany = <E extends Entity, O = APIError[] | undefined>(
   list: string[],
   state: MappedEntityState<E, O>
 ): MappedEntityState<E, O> => {
@@ -89,10 +81,7 @@ export const removeMany = <
   };
 };
 
-export const addMany = <
-  E extends Entity,
-  O = Linode.ApiFieldError[] | undefined
->(
+export const addMany = <E extends Entity, O = APIError[] | undefined>(
   list: E[],
   state: MappedEntityState<E, O>
 ): MappedEntityState<E, O> => {

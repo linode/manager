@@ -1,6 +1,7 @@
 import { Domain } from 'linode-js-sdk/lib/domains';
 import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
 import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { createSelector } from 'reselect';
 import { ApplicationState } from 'src/store';
@@ -10,7 +11,7 @@ import { State as ImageState } from 'src/store/image/image.reducer';
 
 type State = ApplicationState['__resources'];
 
-interface Resource<T, E = Linode.ApiFieldError[]> {
+interface Resource<T, E = APIError[]> {
   results: string[] | number[];
   entities: T;
   loading: boolean;

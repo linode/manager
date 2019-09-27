@@ -1,5 +1,6 @@
 import { GrantLevel } from 'linode-js-sdk/lib/account';
 import { Config, rescueLinode } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { assoc, clamp, pathOr } from 'ramda';
 import * as React from 'react';
@@ -62,7 +63,7 @@ interface ContextProps {
 }
 
 interface StateProps {
-  diskError?: Linode.ApiFieldError[];
+  diskError?: APIError[];
 }
 
 interface VolumesProps {
@@ -72,7 +73,7 @@ interface VolumesProps {
 
 interface State {
   rescueDevices: DevicesAsStrings;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   devices: {
     disks: ExtendedDisk[];
     volumes: ExtendedVolume[];
@@ -153,7 +154,7 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
         getAPIErrorOrDefault(
           errorResponse,
           'There was an issue rescuing your Linode.'
-        ).forEach((err: Linode.ApiFieldError) =>
+        ).forEach((err: APIError) =>
           enqueueSnackbar(err.reason, {
             variant: 'error'
           })

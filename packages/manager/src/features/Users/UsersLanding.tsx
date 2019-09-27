@@ -1,5 +1,6 @@
 import { map as mapPromise } from 'bluebird';
 import { deleteUser, getUsers, User } from 'linode-js-sdk/lib/account';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as memoize from 'memoizee';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
@@ -307,7 +308,7 @@ class UsersLanding extends React.Component<CombinedProps, State> {
 
   renderTableContent = (
     loading: boolean,
-    error?: Linode.ApiFieldError[],
+    error?: APIError[],
     data?: User[]
   ) => {
     if (loading) {

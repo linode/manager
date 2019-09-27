@@ -1,5 +1,6 @@
 import produce from 'immer';
 import { Config, Disk } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as moment from 'moment';
 import { append, compose, flatten, keys, map, pickBy, uniqBy } from 'ramda';
 
@@ -12,7 +13,7 @@ export interface CloneLandingState {
   diskSelection: DiskSelection;
   selectedLinodeId: number | null;
   isSubmitting: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
 }
 
 // Allows for easy toggling of a selected config.
@@ -32,7 +33,7 @@ export type CloneLandingAction =
   | { type: 'toggleDisk'; id: number }
   | { type: 'setSelectedLinodeId'; id: number }
   | { type: 'setSubmitting'; value: boolean }
-  | { type: 'setErrors'; errors?: Linode.ApiFieldError[] }
+  | { type: 'setErrors'; errors?: APIError[] }
   | { type: 'clearAll' }
   | {
       type: 'syncConfigsDisks';

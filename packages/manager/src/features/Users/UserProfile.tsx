@@ -1,4 +1,5 @@
 import { deleteUser } from 'linode-js-sdk/lib/account';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path } from 'ramda';
 import * as React from 'react';
@@ -75,11 +76,11 @@ interface Props {
   saveAccount: () => void;
   accountSaving: boolean;
   accountSuccess: boolean;
-  accountErrors?: Linode.ApiFieldError[];
+  accountErrors?: APIError[];
   saveProfile: () => void;
   profileSaving: boolean;
   profileSuccess: boolean;
-  profileErrors?: Linode.ApiFieldError[];
+  profileErrors?: APIError[];
   originalUsername?: string;
 }
 

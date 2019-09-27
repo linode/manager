@@ -1,4 +1,5 @@
 import { Profile } from 'linode-js-sdk/lib/profile';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { lensPath, path, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -117,7 +118,7 @@ interface StateProps {
   ipWhitelisting: boolean;
   twoFactor?: boolean;
   username?: string;
-  profileUpdateError?: Linode.ApiFieldError[];
+  profileUpdateError?: APIError[];
 }
 
 const mapStateToProps: MapState<StateProps, {}> = state => {
@@ -128,7 +129,7 @@ const mapStateToProps: MapState<StateProps, {}> = state => {
     ipWhitelisting: pathOr(false, ['data', 'ip_whitelist_enabled'], profile),
     twoFactor: path(['data', 'two_factor_auth'], profile),
     username: path(['data', 'username'], profile),
-    profileUpdateError: path<Linode.ApiFieldError[]>(['update'], profile.error)
+    profileUpdateError: path<APIError[]>(['update'], profile.error)
   };
 };
 

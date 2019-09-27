@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -87,7 +88,7 @@ interface Props {
   editing: boolean;
   submittingForm: boolean;
   submissionSuccess: boolean;
-  submissionError?: Linode.ApiFieldError[];
+  submissionError?: APIError[];
   pools: PoolNodeWithPrice[];
   poolsForEdit: PoolNodeWithPrice[];
   types: ExtendedType[];

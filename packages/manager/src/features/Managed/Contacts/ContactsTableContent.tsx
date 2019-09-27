@@ -1,4 +1,5 @@
 import { ManagedContact } from 'linode-js-sdk/lib/managed';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { equals } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -16,7 +17,7 @@ interface Props {
   updateOrAdd: (contact: ManagedContact) => void;
   openDrawer: (linodeId: number) => void;
   openDialog: (contactId: number) => void;
-  error?: Linode.ApiFieldError[];
+  error?: APIError[];
 }
 
 export type CombinedProps = Props;

@@ -1,4 +1,5 @@
 import { Config, linodeReboot } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -214,7 +215,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           errorResponse,
           `Error booting ${label}`
         );
-        errors.map((error: Linode.ApiFieldError) => {
+        errors.map((error: APIError) => {
           this.props.enqueueSnackbar(error.reason, {
             variant: 'error'
           });

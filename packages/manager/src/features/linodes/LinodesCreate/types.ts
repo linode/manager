@@ -1,6 +1,7 @@
 import { Image } from 'linode-js-sdk/lib/images';
 import { CreateLinodeRequest, Linode } from 'linode-js-sdk/lib/linodes';
 import { StackScript, UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { ExtendedRegion } from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { Tag } from 'src/components/TagsInput';
 import { State as userSSHKeysProps } from 'src/features/linodes/userSSHKeyHoc';
@@ -47,19 +48,19 @@ export interface WithImagesProps {
 export interface WithLinodesProps {
   linodesData?: Linode[];
   linodesLoading: boolean;
-  linodesError?: Linode.ApiFieldError[];
+  linodesError?: APIError[];
 }
 
 export interface WithRegionsProps {
   regionsData?: ExtendedRegion[];
   regionsLoading: boolean;
-  regionsError?: Linode.ApiFieldError[];
+  regionsError?: APIError[];
 }
 
 export interface WithTypesProps {
   typesData?: ExtendedType[];
   typesLoading: boolean;
-  typesError?: Linode.ApiFieldError[];
+  typesError?: APIError[];
 }
 
 /**
@@ -93,7 +94,7 @@ export type HandleSubmit = (
  * the _create from image_ flow to function
  */
 export interface BaseFormStateAndHandlers {
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   formIsSubmitting: boolean;
   handleSubmitForm: HandleSubmit;
   selectedImageID?: string;

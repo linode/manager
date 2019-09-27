@@ -97,7 +97,7 @@ const styles = (theme: Theme) =>
 interface DeleteConfirmDialogState {
   open: boolean;
   submitting: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
 }
 
 interface State {
@@ -186,10 +186,7 @@ export class NodeBalancersLanding extends React.Component<
         });
       })
       .catch(err => {
-        const apiError = path<Linode.ApiFieldError[]>(
-          ['response', 'data', 'error'],
-          err
-        );
+        const apiError = path<APIError[]>(['response', 'data', 'error'], err);
 
         return this.setState(
           {
@@ -388,7 +385,7 @@ interface NodeBalancerWithConfigs extends NodeBalancer {
 interface WithNodeBalancers {
   nodeBalancersCount: number;
   nodeBalancersData: NodeBalancerWithConfigs[];
-  nodeBalancersError?: Linode.ApiFieldError[];
+  nodeBalancersError?: APIError[];
   nodeBalancersLoading: boolean;
 }
 

@@ -1,4 +1,5 @@
 import { getTags } from 'linode-js-sdk/lib/tags';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { concat } from 'ramda';
 import * as React from 'react';
 import Select, {
@@ -14,7 +15,7 @@ export interface Tag {
 
 export interface State {
   accountTags: Item[];
-  errors: Linode.ApiFieldError[];
+  errors: APIError[];
 }
 
 export interface Props {

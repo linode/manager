@@ -1,4 +1,5 @@
-import { Profile } from "linode-js-sdk/lib/profile";
+import { Profile } from 'linode-js-sdk/lib/profile';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { dec, lensPath, path, remove, set } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -82,7 +83,7 @@ const styles = (theme: Theme) =>
 
 interface State {
   submitting: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   success?: string;
   lishAuthMethod: Pick<Profile, 'lish_auth_method'>;
   authorizedKeys: string[];
@@ -257,9 +258,8 @@ class LishSettings extends React.Component<CombinedProps, State> {
       });
   };
 
-  onListAuthMethodChange = (
-    e: Item<Pick<Profile, 'lish_auth_method'>>
-  ) => this.setState({ lishAuthMethod: e.value });
+  onListAuthMethodChange = (e: Item<Pick<Profile, 'lish_auth_method'>>) =>
+    this.setState({ lishAuthMethod: e.value });
 
   onPublicKeyChange = (idx: number) => (
     e: React.ChangeEvent<HTMLInputElement>

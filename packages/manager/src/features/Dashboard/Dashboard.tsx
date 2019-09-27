@@ -1,5 +1,6 @@
 import { Notification } from 'linode-js-sdk/lib/account';
 import { Linode } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -57,7 +58,7 @@ interface StateProps {
   notifications: Notification[];
   userTimezone: string;
   userTimezoneLoading: boolean;
-  userTimezoneError?: Linode.ApiFieldError[];
+  userTimezoneError?: APIError[];
   someLinodesHaveScheduledMaintenance: boolean;
 }
 

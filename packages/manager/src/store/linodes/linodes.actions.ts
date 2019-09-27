@@ -1,5 +1,6 @@
 import { Notification } from 'linode-js-sdk/lib/account';
 import { CreateLinodeRequest, Linode } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import actionCreatorFactory from 'typescript-fsa';
 
 export const actionCreator = actionCreatorFactory(`@@manager/linodes`);
@@ -34,39 +35,39 @@ export type GetLinodeResponse = Promise<Linode>;
 export const getLinodesActions = actionCreator.async<
   void,
   Linode[],
-  Linode.ApiFieldError[]
+  APIError[]
 >('get-all');
 
 export const getLinodeActions = actionCreator.async<
   LinodeID,
   Linode,
-  Linode.ApiFieldError[]
+  APIError[]
 >('get-one');
 
 export type CreateLinodeParams = CreateLinodeRequest;
 export const createLinodeActions = actionCreator.async<
   CreateLinodeParams,
   Linode,
-  Linode.ApiFieldError[]
+  APIError[]
 >('create');
 
 export type UpdateLinodeParams = Partial<Linode> & LinodeID;
 export const updateLinodeActions = actionCreator.async<
   UpdateLinodeParams,
   Linode,
-  Linode.ApiFieldError[]
+  APIError[]
 >(`update`);
 
 export type DeleteLinodeParams = LinodeID;
 export const deleteLinodeActions = actionCreator.async<
   DeleteLinodeParams,
   {},
-  Linode.ApiFieldError[]
+  APIError[]
 >('delete');
 
 export type RebootLinodeParams = LinodeID & { configId?: number };
 export const rebootLinodeActions = actionCreator.async<
   RebootLinodeParams,
   {},
-  Linode.ApiFieldError[]
+  APIError[]
 >('reboot');

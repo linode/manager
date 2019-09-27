@@ -362,9 +362,9 @@ import { Observable } from 'rxjs/Observable';
 Our application has to work with different types of errors: JavaScript `Error` objects, `AxiosErrors`, and field errors
 from the Linode API. To simplify working with these and maintain consistency, we have created several helper methods in `src/utilities/errorUtils`.
 
-#### ApiFieldError arrays
+# API Error arrays
 
-In most cases, we want components to work with an array of Linode API field errors. These have the shape:
+In most cases, we want components to work with an array of Linode API errors. These have the shape:
 
 `{ field: 'field-name', reason: 'why this error occurred' }`
 
@@ -449,12 +449,13 @@ If your data is being sourced from Redux state, it's safe to assume that the dat
 The first step in paginating things from Redux is to source the data
 
 ```js
+import { APIError } from 'linode-js-sdk/lib/types'
 import { Volume } from 'linode-js-sdk/lib/volumes'
 import { connect } from 'react-redux'
 
 interface ReduxStateProps {
   loading: boolean;
-  error?: Linode.ApiFieldError[];
+  error?: APIError[];
   data: Volume[];
 }
 

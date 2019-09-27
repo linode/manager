@@ -4,8 +4,9 @@ import {
   getOAuthClients,
   OAuthClient,
   resetOAuthClientSecret,
-  updateOAuthClient,
-} from "linode-js-sdk/lib/account";
+  updateOAuthClient
+} from 'linode-js-sdk/lib/account';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import AddNewLink from 'src/components/AddNewLink';
@@ -59,10 +60,10 @@ interface State {
   isPublic: boolean;
   redirectUri: string;
   deleteModalOpen: boolean;
-  modalErrors?: Linode.ApiFieldError[];
+  modalErrors?: APIError[];
   drawerOpen: boolean;
   drawerIsInEditMode: boolean;
-  drawerErrors?: Linode.ApiFieldError[];
+  drawerErrors?: APIError[];
   isResetting: boolean;
   isDeleting: boolean;
   drawerLoading: boolean;
@@ -161,7 +162,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
         this.props.onDelete();
         this.setState({ deleteModalOpen: false, isDeleting: false });
       })
-      .catch((e: Linode.ApiFieldError[]) =>
+      .catch((e: APIError[]) =>
         this.setState({ modalErrors: e, isDeleting: false })
       );
   };
@@ -194,7 +195,7 @@ export class OAuthClients extends React.Component<CombinedProps, State> {
           isResetting: false
         });
       })
-      .catch((e: Linode.ApiFieldError[]) => {
+      .catch((e: APIError[]) => {
         this.setState({ modalErrors: e, isResetting: false });
       });
   };

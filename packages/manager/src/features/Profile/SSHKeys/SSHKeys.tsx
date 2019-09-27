@@ -1,4 +1,5 @@
 import { getSSHKeys, SSHKey } from 'linode-js-sdk/lib/profile';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as moment from 'moment-timezone';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -143,7 +144,7 @@ export class SSHKeys extends React.Component<CombinedProps, State> {
     return <TableRowEmptyState colSpan={4} />;
   };
 
-  static renderError = (error: Linode.ApiFieldError[]) => {
+  static renderError = (error: APIError[]) => {
     return (
       <TableRowError
         colSpan={4}

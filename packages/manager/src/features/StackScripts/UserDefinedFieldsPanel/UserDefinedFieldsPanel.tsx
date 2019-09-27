@@ -1,4 +1,5 @@
 import { UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
@@ -43,7 +44,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   userDefinedFields?: UserDefinedField[];
   handleChange: (key: string, value: any) => void;
   udf_data: any;
@@ -180,7 +181,7 @@ class UserDefinedFieldsPanel extends React.PureComponent<CombinedProps> {
   }
 }
 
-const getError = (field: UserDefinedField, errors?: Linode.ApiFieldError[]) => {
+const getError = (field: UserDefinedField, errors?: APIError[]) => {
   if (!errors) {
     return;
   }

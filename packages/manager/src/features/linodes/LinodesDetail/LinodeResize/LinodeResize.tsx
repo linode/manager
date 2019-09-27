@@ -5,6 +5,7 @@ import {
   LinodeType,
   resizeLinode
 } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -99,7 +100,7 @@ interface LinodeContextProps {
 interface State {
   selectedId: string;
   isLoading: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   autoDiskResize: boolean;
 }
 
@@ -187,7 +188,7 @@ export class LinodeResize extends React.Component<CombinedProps, State> {
         getAPIErrorOrDefault(
           errorResponse,
           'There was an issue resizing your Linode.'
-        ).forEach((err: Linode.ApiFieldError) =>
+        ).forEach((err: APIError) =>
           enqueueSnackbar(err.reason, {
             variant: 'error'
           })
