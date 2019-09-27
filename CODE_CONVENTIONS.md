@@ -362,7 +362,7 @@ import { Observable } from 'rxjs/Observable';
 Our application has to work with different types of errors: JavaScript `Error` objects, `AxiosErrors`, and field errors
 from the Linode API. To simplify working with these and maintain consistency, we have created several helper methods in `src/utilities/errorUtils`.
 
-# API Error arrays
+#### API Error arrays
 
 In most cases, we want components to work with an array of Linode API errors. These have the shape:
 
