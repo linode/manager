@@ -29,13 +29,21 @@ interface Props {
   title?: string;
   className?: string;
   alignHeader?: 'flex-start' | 'space-between';
+  alignItems?: 'center' | 'flex-start';
   headerAction?: () => JSX.Element | JSX.Element[] | null;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const DashboardCard: React.StatelessComponent<CombinedProps> = props => {
-  const { alignHeader, title, headerAction, classes, className } = props;
+  const {
+    alignHeader,
+    title,
+    headerAction,
+    classes,
+    className,
+    alignItems
+  } = props;
   return (
     <Grid
       container
@@ -48,7 +56,7 @@ const DashboardCard: React.StatelessComponent<CombinedProps> = props => {
         <Grid item xs={12}>
           <Grid
             container
-            alignItems={'flex-start'}
+            alignItems={alignItems || 'flex-start'}
             justify={alignHeader || 'space-between'}
           >
             {title && (

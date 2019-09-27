@@ -19,17 +19,29 @@ import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 
 export const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(2)
+    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px 0`
   },
   icon: {
     '& svg': {
       display: 'flex'
     }
   },
-  errorDash: {
-    color: theme.color.red,
-    padding: theme.spacing(),
-    fontSize: '1em'
+  error: {
+    position: 'relative',
+    color: theme.color.headline,
+    marginBottom: theme.spacing(2) - 3,
+    '&:before': {
+      content: '""',
+      position: 'absolute',
+      top: 7,
+      left: -30,
+      backgroundColor: theme.color.red,
+      height: 3,
+      width: 16
+    },
+    '&:last-of-type': {
+      marginBottom: 0
+    }
   }
 }));
 
@@ -86,8 +98,11 @@ export const MonitorStatus: React.FC<CombinedProps> = props => {
         {failedMonitors.length > 0 && (
           <Grid item>
             {failedMonitors.map((thisMonitor, idx) => (
-              <Typography key={`failed-monitor-list-${idx}`} variant="body1">
-                <strong className={classes.errorDash}>&#8212;</strong>
+              <Typography
+                key={`failed-monitor-list-${idx}`}
+                className={classes.error}
+                variant="body1"
+              >
                 {thisMonitor}
               </Typography>
             ))}

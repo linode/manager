@@ -23,16 +23,38 @@ import MonitorTickets from './MonitorTickets';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginBottom: theme.spacing(3),
     marginTop: '0 !important',
-    width: '100%'
+    [theme.breakpoints.up('sm')]: {
+      marginBottom: theme.spacing(3)
+    }
   },
   paper: {
     marginTop: theme.spacing()
   },
   status: {
-    padding: theme.spacing(),
-    borderRight: `solid 1px ${theme.palette.divider}`
+    position: 'relative',
+    '&:after': {
+      content: '""',
+      position: 'absolute',
+      right: 0,
+      height: '70%',
+      width: 1,
+      backgroundColor: '#e3e5e8',
+      [theme.breakpoints.down('xs')]: {
+        display: 'none'
+      }
+    },
+    [theme.breakpoints.up('sm')]: {
+      padding: `${theme.spacing(3)}px ${theme.spacing(1)}px !important`
+    },
+    [theme.breakpoints.up('lg')]: {
+      padding: `${theme.spacing(6) + 2}px ${theme.spacing(1)}px !important`
+    }
+  },
+  outerContainer: {
+    [theme.breakpoints.up('sm')]: {
+      flexWrap: 'nowrap'
+    }
   }
 }));
 
@@ -64,6 +86,7 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
       title="Managed Services"
       alignHeader="space-between"
       className={classes.root}
+      alignItems="center"
       headerAction={() => <Link to="/managed">View Details</Link>}
       data-qa-dash-managed
     >
@@ -110,14 +133,21 @@ const LoadingErrorOrContent: React.FC<CombinedProps> = props => {
   }
 
   return (
-    <Grid container direction="row" wrap="nowrap" justify="center">
+    <Grid
+      container
+      direction="row"
+      justify="center"
+      alignItems="center"
+      className={classes.outerContainer}
+    >
       <Grid
         container
         item
         direction="column"
         justify="space-around"
         alignItems="center"
-        xs={5}
+        xs={12}
+        sm={5}
         className={classes.status}
       >
         <Grid item>
@@ -127,7 +157,7 @@ const LoadingErrorOrContent: React.FC<CombinedProps> = props => {
           <MonitorTickets issues={issues} />
         </Grid>
       </Grid>
-      <Grid item xs={7}>
+      <Grid item xs={12} sm={8}>
         <ManagedChartPanel data={6} />
       </Grid>
     </Grid>
