@@ -110,10 +110,10 @@ export interface DataSeries {
 }
 export interface ManagedStats {
   disk: DataSeries[];
-  cpu: DataSeries;
-  net_in: DataSeries;
-  net_out: DataSeries;
-  swap: DataSeries;
+  cpu: DataSeries[];
+  net_in: DataSeries[];
+  net_out: DataSeries[];
+  swap: DataSeries[];
 }
 
 export interface ManagedStatsResponse {

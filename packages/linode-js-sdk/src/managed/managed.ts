@@ -296,7 +296,7 @@ export const getManagedIssues = () =>
  *
  * Returns usage data for all of the Linodes on a Managed customer's account.
  */
-export const getManagedData = () =>
+export const getManagedStats = () =>
   Request<ManagedStatsResponse>(
     setMethod('GET'),
     setURL(`${API_ROOT}/managed/stats`)
