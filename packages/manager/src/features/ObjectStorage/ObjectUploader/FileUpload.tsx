@@ -1,4 +1,3 @@
-import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import CautionIcon from 'src/assets/icons/caution.svg';
 import FileUploadIcon from 'src/assets/icons/fileUpload.svg';
@@ -13,6 +12,7 @@ import { readableBytes } from 'src/utilities/unitConversions';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     display: 'flex',
+    flexShrink: 0,
     alignItems: 'center',
     position: 'relative',
     height: theme.spacing(5.25),
@@ -76,7 +76,7 @@ interface Props {
   name: string;
   sizeInBytes: number;
   percentCompleted: number;
-  error?: APIError;
+  error?: string;
 }
 
 const FileUpload: React.FC<Props> = props => {
@@ -118,7 +118,7 @@ const FileUpload: React.FC<Props> = props => {
         <>
           <CautionIcon width={22} height={22} className={classes.iconRight} />
           <Typography variant="body2" className={classes.errorText}>
-            {props.error.reason}
+            {props.error}
           </Typography>
         </>
       ) : (
@@ -131,4 +131,4 @@ const FileUpload: React.FC<Props> = props => {
     </div>
   );
 };
-export default FileUpload;
+export default React.memo(FileUpload);

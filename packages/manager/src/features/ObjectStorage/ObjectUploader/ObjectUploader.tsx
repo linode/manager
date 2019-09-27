@@ -1,5 +1,5 @@
+import * as Bluebird from 'bluebird';
 import * as classNames from 'classnames';
-import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { useDropzone } from 'react-dropzone';
@@ -13,6 +13,18 @@ import { getObjectURL } from 'src/services/objectStorage/objects';
 import { truncateMiddle } from 'src/utilities/truncate';
 import { uploadObject } from '../requests';
 import FileUpload from './FileUpload';
+
+const MAX_NUM_UPLOADS = 100;
+const MAX_PARALLEL_UPLOADS = 4;
+const MAX_FILE_SIZE_IN_BYTES = 5 * 1024 * 1024 * 1024;
+
+type FileStatus = 'QUEUED' | 'IN_PROGRESS' | 'FINISHED' | 'CANCELLED' | 'ERROR';
+
+interface ExtendedFile {
+  status: FileStatus;
+  percentComplete: number;
+  file: File;
+}
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -37,7 +49,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: 'transparent',
     outline: 'none',
     height: '100%',
-    transition: theme.transitions.create(['border-color', 'background-color'])
+    transition: theme.transitions.create(['border-color', 'background-color']),
+    overflow: 'auto'
   },
   copy: {
     color: theme.palette.primary.main,
@@ -108,74 +121,155 @@ interface Props {
 
 type CombinedProps = Props & WithSnackbarProps;
 
+interface FileUpload {
+  name: string;
+  sizeInBytes: number;
+  completedPercentage: number;
+  inProgress: boolean;
+  meta: File;
+  error?: string;
+}
+
 const ObjectUploader: React.FC<CombinedProps> = props => {
   const { clusterId, bucketName, update, prefix } = props;
 
   const classes = useStyles();
 
-  let timeout: ReturnType<typeof setTimeout>;
-  React.useEffect(() => {
-    return () => clearTimeout(timeout);
-  }, []);
-
-  // For the time being, these values are flat. When multiple file uploads
-  // are possible, the data structure will change.
-  const [completed, setCompleted] = React.useState<number | null>(null);
-  const [sizeInBytes, setSizeInBytes] = React.useState<number | null>(null);
-  const [fileName, setFileName] = React.useState<string | null>(null);
-  const [inProgress, setInProgress] = React.useState<boolean>(false);
-  const [error, setError] = React.useState<APIError | undefined>(undefined);
-
-  const onUploadProgress = (progressEvent: ProgressEvent) => {
-    setCompleted((progressEvent.loaded / progressEvent.total) * 100);
-  };
+  const [fileUploads, setFileUploads] = React.useState<ExtendedFile[]>([]);
 
   const onDrop = async (files: File[]) => {
-    // (TEMPORARY): Don't allow multi-file uploads.
-    // (TEMPORARY): Don't allow uploads when there's already one in progress.
-    if (files.length !== 1 || inProgress) {
+    // Protect against large number of uploads at once.
+    const inProgressUploads = fileUploads.filter(
+      upload => upload.status === 'IN_PROGRESS'
+    );
+    if (inProgressUploads.length + files.length > MAX_NUM_UPLOADS) {
+      props.enqueueSnackbar('Upload up to 100 files at a time.', {
+        variant: 'error'
+      });
       return;
     }
 
-    const file = files[0];
-
-    setInProgress(true);
-    setCompleted(0);
-    setSizeInBytes(file.size);
-    setFileName(file.name);
-
-    // We want to upload the object to the current "folder", so we prepend the
-    // file name with the prefix.
-    const fullObjectName = prefix + file.name;
-
-    try {
-      const { url } = await getObjectURL(
-        clusterId,
-        bucketName,
-        fullObjectName,
-        'PUT',
-        {
-          content_type: file.type
-        }
+    // Filter out files that are queued or in progress
+    const filteredFiles = files.filter(file => {
+      const foundFile = fileUploads.find(
+        upload => upload.file.name === file.name
       );
+      return (
+        !foundFile ||
+        (foundFile.status !== 'IN_PROGRESS' && foundFile.status !== 'QUEUED')
+      );
+    });
 
-      await uploadObject(url, file, onUploadProgress);
-      // Update objects in table
-      update();
+    const newFileUploads: ExtendedFile[] = filteredFiles.map(file => ({
+      status: 'QUEUED',
+      percentComplete: 0,
+      file
+    }));
 
-      if (completed !== 100) {
-        setCompleted(100);
-      }
-
-      // Display the file upload as being completed for a few seconds,
-      // then remove it.
-      timeout = setTimeout(() => {
-        setInProgress(false);
-      }, 2000);
-    } catch (_) {
-      setError({ reason: 'Failed to upload object.' });
-    }
+    setFileUploads(prevFileUploads => [...newFileUploads, ...prevFileUploads]);
   };
+
+  const nextBatch = React.useMemo(() => {
+    const inProgressUploads = fileUploads.filter(
+      upload => upload.status === 'IN_PROGRESS'
+    );
+
+    if (inProgressUploads.length < MAX_PARALLEL_UPLOADS) {
+      const queuedUploads = fileUploads.filter(
+        upload => upload.status === 'QUEUED'
+      );
+      return queuedUploads.slice(
+        0,
+        MAX_PARALLEL_UPLOADS - inProgressUploads.length
+      );
+    }
+    return [];
+  }, [JSON.stringify(fileUploads)]);
+
+  React.useEffect(() => {
+    if (nextBatch.length === 0) {
+      return;
+    }
+
+    setFileUploads(prevFileUploads => {
+      const updatedFileUploads = [...prevFileUploads];
+      nextBatch.forEach(upload => {
+        const idx = updatedFileUploads.findIndex(
+          prevUpload => prevUpload.file.name === upload.file.name
+        );
+
+        updatedFileUploads[idx] = {
+          ...upload,
+          status: 'IN_PROGRESS'
+        };
+      });
+      return updatedFileUploads;
+    });
+
+    Bluebird.map(nextBatch, async fileUpload => {
+      const { file } = fileUpload;
+
+      // We want to upload the object to the current "folder", so we prepend the
+      // file name with the prefix.
+      const fullObjectName = prefix + file.name;
+
+      try {
+        const { url } = await getObjectURL(
+          clusterId,
+          bucketName,
+          fullObjectName,
+          'PUT',
+          {
+            content_type: file.type
+          }
+        );
+
+        const onUploadProgress = (progressEvent: ProgressEvent) => {
+          setFileUploads(prev => {
+            const updatedFileUploads = [...prev];
+            const idx = prev.findIndex(
+              upload => upload.file.name === file.name
+            );
+            updatedFileUploads[idx] = {
+              ...updatedFileUploads[idx],
+              percentComplete:
+                (progressEvent.loaded / progressEvent.total) * 100
+            };
+            return updatedFileUploads;
+          });
+        };
+
+        await uploadObject(url, file, onUploadProgress);
+
+        setFileUploads(prev => {
+          const idx = prev.findIndex(upload => upload.file.name === file.name);
+          prev[idx] = {
+            ...prev[idx],
+            status: 'FINISHED',
+            percentComplete: 100
+          };
+          return prev;
+        });
+      } catch (err) {
+        setFileUploads(prev => {
+          const idx = prev.findIndex(upload => upload.file.name === file.name);
+          prev[idx] = {
+            ...prev[idx],
+            status: 'ERROR'
+          };
+          return prev;
+        });
+      }
+    })
+      .then(() => {
+        console.log('updated all');
+        update();
+      })
+      .catch(err => {
+        // @todo: better error handling.
+        console.log('error');
+      });
+  }, [nextBatch]);
 
   const { width } = useWindowDimensions();
 
@@ -183,9 +277,8 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
   const truncationMaxWidth = width < 1920 ? 20 : 30;
 
   const onDropRejected = (files: File[]) => {
-    // @todo: better error handling. This error message will go away when we
-    // support multi-file uploads.
-    props.enqueueSnackbar('Please upload one file at a time.', {
+    // @todo: better error handling.
+    props.enqueueSnackbar('Max file size exceeded (5 GB).', {
       variant: 'error'
     });
   };
@@ -202,7 +295,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
     onDropRejected,
     noClick: true,
     noKeyboard: true,
-    multiple: false
+    maxSize: MAX_FILE_SIZE_IN_BYTES
   });
 
   const className = React.useMemo(
@@ -220,19 +313,26 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
       <div {...getRootProps({ className: `${classes.dropzone} ${className}` })}>
         <input {...getInputProps()} />
 
-        {/* When we support multiple file uploads, this will be a map.*/}
-        {inProgress && (
-          <div className={classes.fileUploads}>
-            <FileUpload
-              name={truncateMiddle(fileName || '', truncationMaxWidth)}
-              sizeInBytes={sizeInBytes || 0}
-              percentCompleted={completed || 0}
-              error={error}
-            />
-          </div>
-        )}
+        <div className={classes.fileUploads}>
+          {fileUploads.map((upload, idx) => {
+            return (
+              <FileUpload
+                key={idx}
+                name={truncateMiddle(
+                  upload.file.name || '',
+                  truncationMaxWidth
+                )}
+                sizeInBytes={upload.file.size || 0}
+                percentCompleted={upload.percentComplete || 0}
+                error={
+                  upload.status === 'ERROR' ? 'Error uploading object.' : ''
+                }
+              />
+            );
+          })}
+        </div>
 
-        {!inProgress && (
+        {fileUploads.length === 0 && (
           <div className={classes.dropzoneContent}>
             <Hidden xsDown>
               <CloudUpload />
