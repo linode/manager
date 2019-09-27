@@ -19,7 +19,8 @@ import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 
 export const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px 0`
+    padding: `${theme.spacing(2)}px ${theme.spacing(2)}px 0`,
+    textAlign: 'center'
   },
   icon: {
     '& svg': {
@@ -30,6 +31,7 @@ export const useStyles = makeStyles((theme: Theme) => ({
     position: 'relative',
     color: theme.color.headline,
     marginBottom: theme.spacing(2) - 3,
+    textAlign: 'left',
     '&:before': {
       content: '""',
       position: 'absolute',

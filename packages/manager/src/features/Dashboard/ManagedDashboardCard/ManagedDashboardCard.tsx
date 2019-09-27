@@ -55,6 +55,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('sm')]: {
       flexWrap: 'nowrap'
     }
+  },
+  detailsLink: {
+    fontSize: 16,
+    fontWeight: 'bold'
   }
 }));
 
@@ -87,7 +91,11 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
       alignHeader="space-between"
       className={classes.root}
       alignItems="center"
-      headerAction={() => <Link to="/managed">View Details</Link>}
+      headerAction={() => (
+        <Link to="/managed" className={classes.detailsLink}>
+          View Details
+        </Link>
+      )}
       data-qa-dash-managed
     >
       <Paper className={classes.paper}>

@@ -10,7 +10,8 @@ import { ExtendedIssue } from 'src/store/managed/issues.actions';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing()
+    padding: theme.spacing(),
+    textAlign: 'center'
   },
   happyTicket: {
     color: theme.color.blue
