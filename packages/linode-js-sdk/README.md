@@ -67,13 +67,13 @@ getAccount()
 
 alternatively, check out the following examples using other frameworks
 
-* [React and TypeScript]('./REACT.md)
+* [React and TypeScript](./REACT.md)
 * Angular (example wanted)
 * Vue (example wanted)
 
 ## Contributing 
 
-This SDK aims to have a 1-to-1 relationship with the endpoints exposed from the Linode APIv4, but endpoints are being added all the time, so it's entirely possible that the SDK is incomplete. If you see an endpoint in the [API docs](https://developers.linode.com/api/v4), don't hesitate to open a PR to add the function and typings that consume the endpoint. If you don't feel comfortable opening a PR, [feel free to open a ticket](https://github.com/linode/manager/issues/new).
+This SDK aims to have a 1-to-1 relationship with the endpoints exposed from the Linode APIv4, but endpoints are being added all the time, so it's entirely possible that the SDK is incomplete. If you see an endpoint in the [API docs](https://developers.linode.com/api/v4) that doesn't exist in this package, don't hesitate to open a PR and add the function and typings that consume the endpoint. If you don't feel comfortable opening a PR, [feel free to open a ticket](https://github.com/linode/manager/issues/new).
 
 We'll do our best to publicize what work needs to be done in the GitHub issues and mark tickets as a _good first issue_. That way, it will be more apparent where the SDK needs work.
 
@@ -93,4 +93,10 @@ For more general types (such as the error shape that comes back from the Linode 
 
 ```js
 import { APIError } from 'linode-js-sdk/lib/types'
+```
+
+and, of course, you can also import from the root if preferred
+
+```js
+import { APIError, Linode } from 'linode-js-sdk'
 ```
