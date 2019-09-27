@@ -218,7 +218,7 @@ export class StackScriptUpdate extends React.Component<CombinedProps, State> {
           successMessage: `${updatedStackScript.label} successfully updated`
         });
       })
-      .catch((error: Linode.TodoAny) => {
+      .catch((error: APIError[]) => {
         if (!this.mounted) {
           return;
         }

@@ -72,7 +72,7 @@ interface Props {
 
 interface State {
   actions?: Action[];
-  anchorEl?: Linode.TodoAny;
+  anchorEl?: any;
 }
 
 type CombinedProps = Props & WithStyles<CSSClasses>;
@@ -83,7 +83,7 @@ export class ActionMenu extends React.Component<CombinedProps, State> {
     anchorEl: undefined
   };
 
-  generateActions(createActions: Linode.TodoAny) {
+  generateActions(createActions: any) {
     this.setState({
       actions: createActions(this.handleClose)
     });

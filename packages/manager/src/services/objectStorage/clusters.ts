@@ -1,7 +1,8 @@
+import { ResourcePage } from 'linode-js-sdk/lib/types';
 import { BETA_API_ROOT } from 'src/constants';
 import Request, { setMethod, setParams, setURL, setXFilter } from '../index';
 
-type Page<T> = Linode.ResourcePage<T>;
+type Page<T> = ResourcePage<T>;
 
 /**
  * getClusters

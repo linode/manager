@@ -1,4 +1,5 @@
 import { getImages, Image } from 'linode-js-sdk/lib/images';
+import { ResourcePage } from 'linode-js-sdk/lib/types';
 import { ThunkActionCreator } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
@@ -15,7 +16,7 @@ export const requestImages: ThunkActionCreator<
         getImagesSuccess({
           data,
           results
-        } as Linode.ResourcePage<Image>)
+        } as ResourcePage<Image>)
       );
       return data;
     })

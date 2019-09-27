@@ -1,7 +1,7 @@
 import { Grant } from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
 import { StackScript } from 'linode-js-sdk/lib/stackscripts';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError, ResourcePage } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -144,7 +144,7 @@ const withStackScriptBase = (isSelecting: boolean) => (
         filter,
         stackScriptGrants
       )
-        .then((response: Linode.ResourcePage<StackScript>) => {
+        .then((response: ResourcePage<StackScript>) => {
           if (!this.mounted) {
             return;
           }
