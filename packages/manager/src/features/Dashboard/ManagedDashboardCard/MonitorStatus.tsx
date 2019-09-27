@@ -24,7 +24,9 @@ export const useStyles = makeStyles((theme: Theme) => ({
   },
   icon: {
     '& svg': {
-      display: 'flex'
+      display: 'flex',
+      width: 56,
+      height: 56
     }
   },
   error: {

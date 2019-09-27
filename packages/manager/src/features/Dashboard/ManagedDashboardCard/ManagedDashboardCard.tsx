@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       right: 0,
       height: '70%',
       width: 1,
-      backgroundColor: '#e3e5e8',
+      backgroundColor: theme.color.divider,
       [theme.breakpoints.down('xs')]: {
         display: 'none'
       }
