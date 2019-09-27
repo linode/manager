@@ -15,6 +15,9 @@ import { compose as recompose } from 'recompose';
 
 import regionsContainer from 'src/containers/regions.container';
 import withTypes from 'src/containers/types.container';
+import withFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
 import withImages from 'src/containers/withImages.container';
 import withLinodes from 'src/containers/withLinodes.container';
 import { CreateTypes } from 'src/store/linodeCreate/linodeCreate.actions';
@@ -56,7 +59,10 @@ import {
 } from './types';
 
 import { resetEventsPolling } from 'src/events';
-import { getOneClickApps } from 'src/features/StackScripts/stackScriptUtils';
+import {
+  baseApps,
+  getOneClickApps
+} from 'src/features/StackScripts/stackScriptUtils';
 
 import { upsertLinode } from 'src/store/linodes/linodes.actions';
 import { MapState } from 'src/store/types';
@@ -101,6 +107,7 @@ type CombinedProps = WithSnackbarProps &
   ReduxStatePropsAndSSHKeys &
   DispatchProps &
   LabelProps &
+  FeatureFlagConsumerProps &
   RouteComponentProps<{}>;
 
 const defaultState: State = {
@@ -161,6 +168,10 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
 
   componentDidMount() {
     const params = getParamsFromUrl(this.props.location.search);
+    // Allowed apps include the base set of original apps + anything LD tells us to show
+    const allowedApps = [...baseApps, ...this.props.flags.oneClickApps].map(
+      i => i.id
+    );
     if (params && params !== {}) {
       this.setState({
         // This set is for creating from a Backup
@@ -177,8 +188,13 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     this.setState({ appInstancesLoading: true });
     getOneClickApps()
       // Don't display One-Click Helpers to the user
+      // Filter out any apps that we don't have info for
       .then(response =>
-        response.data.filter(script => !script.label.match(/helpers/i))
+        response.data.filter(script => {
+          return (
+            !script.label.match(/helpers/i) && !allowedApps.includes(script.id)
+          );
+        })
       )
       .then(response =>
         response.map(stackscript => trimOneClickFromLabel(stackscript))
@@ -645,7 +661,8 @@ export default recompose<CombinedProps, {}>(
   connected,
   withSnackbar,
   userSSHKeyHoc,
-  withLabelGenerator
+  withLabelGenerator,
+  withFlags
 )(LinodeCreateContainer);
 
 const actionsAndLabels = {
