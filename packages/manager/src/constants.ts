@@ -251,7 +251,12 @@ export const EU_COUNTRIES = [
   'GB' // United Kingdom
 ];
 
+// Australia's country code; used for ARN display on invoices
+export const AU_COUNTRY = 'AU';
+
 export const LINODE_EU_TAX_ID = 'EU372008859';
+
+export const LINODE_ARN_TAX_ID = '3000 1606 0612';
 
 /**
  * MBps rate for intra DC migrations (AKA Mutations)
