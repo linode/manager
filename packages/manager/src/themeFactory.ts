@@ -480,8 +480,11 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         label: {
           paddingLeft: 4,
           paddingRight: 4,
-          position: 'relative',
-          top: -1
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          width: '100%',
+          height: 'inherit'
         },
         deleteIcon: {
           padding: 2,
