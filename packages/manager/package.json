@@ -113,6 +113,7 @@
     "serve": "node testServer.js",
     "selenium": "npx selenium-standalone install --config=./e2e/config/selenium-config.js && ./node_modules/.bin/selenium-standalone start --config=./e2e/config/selenium-config.js",
     "e2e": "npx wdio ./e2e/config/wdio.conf.js",
+    "e2e:smoke": "npx wdio ./e2e/config/wdio.conf.js --smoke",
     "e2e:all": "npx wdio ./e2e/config/wdio.conf.js; ./node_modules/.bin/wdio ./e2e/config/wdio.storybook.conf.js",
     "e2e:modified": "./scripts/e2e-modified.sh",
     "e2e:browserstack": "npx wdio ./e2e/config/browserstack.conf.js",
