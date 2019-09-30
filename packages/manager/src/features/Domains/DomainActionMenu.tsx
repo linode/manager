@@ -1,14 +1,24 @@
+import { DomainStatus } from 'linode-js-sdk/lib/domains';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
-interface Props {
+export interface Handlers {
   onRemove: (domain: string, id: number) => void;
+  onDisableOrEnable: (
+    status: 'enable' | 'disable',
+    domain: string,
+    id: number
+  ) => void;
   onClone: (domain: string, id: number) => void;
   onEdit: (domain: string, id: number) => void;
+}
+
+interface Props extends Handlers {
   type: 'master' | 'slave';
   domain: string;
   id: number;
+  status: DomainStatus;
 }
 
 type CombinedProps = RouteComponentProps<any> & Props;
@@ -67,6 +77,18 @@ export class DomainActionMenu extends React.Component<CombinedProps> {
         title: 'Clone',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           this.handleClone();
+          closeMenu();
+          e.preventDefault();
+        }
+      },
+      {
+        title: this.props.status === 'disabled' ? 'Enable' : 'Disable',
+        onClick: (e: React.MouseEvent<HTMLElement>) => {
+          this.props.onDisableOrEnable(
+            this.props.status === 'disabled' ? 'enable' : 'disable',
+            this.props.domain,
+            this.props.id
+          );
           closeMenu();
           e.preventDefault();
         }

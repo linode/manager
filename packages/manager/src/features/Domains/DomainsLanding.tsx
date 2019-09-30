@@ -40,7 +40,9 @@ import {
   openForCreating,
   openForEditing
 } from 'src/store/domainDrawer';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
+import DisableDomainDialog from './DisableDomainDialog';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
 import Notice from 'src/components/Notice';
@@ -99,6 +101,7 @@ interface State {
   selectedDomainLabel: string;
   selectedDomainID?: number;
   removeDialogOpen: boolean;
+  disableDialogOpen: boolean;
 }
 
 interface Props {
@@ -122,7 +125,8 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     createDrawerMode: 'create',
     createDrawerOpen: false,
     removeDialogOpen: false,
-    selectedDomainLabel: ''
+    selectedDomainLabel: '',
+    disableDialogOpen: false
   };
 
   static docs: Linode.Doc[] = [Domains];
@@ -187,6 +191,37 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
       this.closeRemoveDialog();
       enqueueSnackbar('Error when removing domain', {
         variant: 'error'
+      });
+    }
+  };
+
+  handleClickEnableOrDisableDomain = (
+    action: 'enable' | 'disable',
+    domain: string,
+    domainId: number
+  ) => {
+    if (action === 'enable') {
+      return this.props
+        .updateDomain({
+          domainId,
+          status: 'active'
+        })
+        .catch(e => {
+          return this.props.enqueueSnackbar(
+            getAPIErrorOrDefault(
+              e,
+              'There was an issue enabling your domain'
+            )[0].reason,
+            {
+              variant: 'error'
+            }
+          );
+        });
+    } else {
+      return this.setState({
+        disableDialogOpen: true,
+        selectedDomainID: domainId,
+        selectedDomainLabel: domain
       });
     }
   };
@@ -350,7 +385,8 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                         data: orderedData,
                         onClone: this.props.openForCloning,
                         onEdit: this.props.openForEditing,
-                        onRemove: this.openRemoveDialog
+                        onRemove: this.openRemoveDialog,
+                        onDisableOrEnable: this.handleClickEnableOrDisableDomain
                       };
 
                       return domainsAreGrouped ? (
@@ -369,6 +405,13 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
           open={this.state.importDrawerOpen}
           onClose={this.closeImportZoneDrawer}
           onSuccess={this.handleSuccess}
+        />
+        <DisableDomainDialog
+          updateDomain={this.props.updateDomain}
+          selectedDomainID={this.state.selectedDomainID}
+          selectedDomainLabel={this.state.selectedDomainLabel}
+          closeDialog={() => this.setState({ disableDialogOpen: false })}
+          open={this.state.disableDialogOpen}
         />
         <ConfirmationDialog
           open={this.state.removeDialogOpen}

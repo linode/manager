@@ -12,7 +12,7 @@ import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import ActionMenu from './DomainActionMenu';
+import ActionMenu, { Handlers } from './DomainActionMenu';
 
 type ClassNames =
   | 'domain'
@@ -41,14 +41,11 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface Props {
+interface Props extends Handlers {
   domain: string;
   id: number;
   status: DomainStatus;
   type: 'master' | 'slave';
-  onRemove: (domain: string, domainId: number) => void;
-  onClone: (domain: string, id: number) => void;
-  onEdit: (domain: string, id: number) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -127,10 +124,12 @@ class DomainTableRow extends React.Component<CombinedProps> {
         <TableCell>
           <ActionMenu
             domain={domain}
+            onDisableOrEnable={this.props.onDisableOrEnable}
             id={id}
             type={type}
             onRemove={onRemove}
             onClone={onClone}
+            status={status}
             onEdit={onEdit}
           />
         </TableCell>
