@@ -26,7 +26,7 @@ class UserDetail extends Page {
     return this.submitButton;
   }
   get usernameWarning() {
-    return $(`${this.usernameField.selector} p`);
+    return $(`${this.usernameField.selector} #username-helper-text`);
   }
 
   baseElementsDisplay(owner) {
@@ -66,11 +66,9 @@ class UserDetail extends Page {
   }
 
   updateUsername(username) {
-    //TODO see if the trySetValue is needed or not
-    // this.usernameField.$('input').clearElement();
-    // this.usernameField.$('input').setValue(username);
-    browser.trySetValue(`${this.usernameField.$('input')}`, username);
+    browser.trySetValue(`${this.usernameField.selector} #username`, username);
     this.saveButton.click();
+    this.saveButton.waitForDisplayed(constants.wait.short);
   }
 }
 

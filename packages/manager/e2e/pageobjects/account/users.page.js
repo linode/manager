@@ -98,7 +98,7 @@ class Users extends Page {
   add(userConfig) {
     this.addUserButton.waitForDisplayed(constants.wait.normal);
     this.addUserButton.click();
-    this.drawerTitle.waitForText(constants.wait.normal);
+    browser.waitForText(this.drawerTitle.selector, constants.wait.normal);
     this.notice.waitForDisplayed(constants.wait.normal);
     this.createDrawerEmail.setValue(userConfig.email);
     this.createDrawerUsername.setValue(userConfig.username);
@@ -138,7 +138,7 @@ class Users extends Page {
 
   delete(userConfig) {
     this.userTableActionMenu(userConfig.username, 'Delete');
-    this.dialogTitle.waitForText(constants.wait.normal);
+    browser.waitForText(this.dialogTitle.selector, constants.wait.normal);
     this.dialogConfirmDelete.waitForDisplayed(constants.wait.normal);
     this.dialogConfirmCancel.waitForDisplayed(constants.wait.normal);
     this.dialogConfirmDelete.click();

@@ -188,7 +188,6 @@ exports.browserCommands = () => {
    */
   browser.addCommand('trySetValue', function(selector, value, timeout = 10000) {
     fieldLength = $(selector).getValue().length;
-    console.log(`field length is... ${fieldLength}`);
     console.log(
       `clearing out ${fieldLength} characters for "${selector}" selector`
     );

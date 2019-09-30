@@ -1,4 +1,4 @@
-import { deleteUser } from 'linode-js-sdk/lib/account'
+import { deleteUser } from 'linode-js-sdk/lib/account';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path } from 'ramda';
 import * as React from 'react';
@@ -201,7 +201,7 @@ class UserProfile extends React.Component<CombinedProps> {
                   : ''
               }
               errorText={hasProfileErrorFor('email')}
-              data-qa-username
+              data-qa-email
             />
             <ActionsPanel>
               <Button
