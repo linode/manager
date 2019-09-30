@@ -108,10 +108,14 @@ export interface DataSeries {
   x: number;
   y: number;
 }
-export interface ManagedStats {
+
+export interface ManagedStatsData {
   disk: DataSeries[];
   cpu: DataSeries[];
   net_in: DataSeries[];
   net_out: DataSeries[];
   swap: DataSeries[];
+}
+export interface ManagedStats {
+  data: ManagedStatsData;
 }
