@@ -5,10 +5,7 @@ interface TaxBanner {
   date: string;
 }
 
-interface OneClickApp {
-  id: number;
-  label: string;
-}
+type OneClickApp = Record<string, string>;
 
 interface Flags {
   managed: boolean;
@@ -18,7 +15,7 @@ interface Flags {
   oneClickLocation: 'sidenav' | 'createmenu';
   lkeHideButtons: boolean;
   firewalls: boolean;
-  oneClickApps: OneClickApp[];
+  oneClickApps: OneClickApp;
 }
 
 /**
