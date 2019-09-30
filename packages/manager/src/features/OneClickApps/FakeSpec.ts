@@ -107,7 +107,7 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/drupal_color.svg'
   },
   {
-    name: 'LAMP1',
+    name: 'LAMP',
     description: `The LAMP stack consists of the Linux operating system,
       the Apache HTTP Server, the MySQL relational database management system,
       and the PHP programming language.
@@ -128,7 +128,7 @@ export const oneClickApps: OCA[] = [
     // href: 'https://www.ibm.com/cloud/learn/lamp-stack-explained' Not sure this is kosher.
   },
   {
-    name: 'LAMP',
+    name: 'Plesk',
     description: `Plesk is a leading WordPress and website management platform and control panel.
       Plesk lets you build and manage multiple websites from a single dashboard to configure web services,
       email, and other applications. Plesk features hundreds of extensions, plus a complete WordPress toolkit,
