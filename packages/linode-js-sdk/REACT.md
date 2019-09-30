@@ -5,14 +5,14 @@ Here's a common case on how one would use the SDK with React and TypeScript. The
 ```js
 /** request.ts */
 
-import { baseRequest } from 'linode-js-sdk/lib/request'
+import { baseRequest } from 'linode-js-sdk/lib/request';
 
-/** 
+/**
  * intercepts every request with the following config
  * see https://github.com/axios/axios#interceptors for more documentation.
  */
 baseRequest.interceptors.request.use(config => {
-  const myToken = '1234'
+  const myToken = '1234';
 
   return {
     ...config,
@@ -27,9 +27,9 @@ baseRequest.interceptors.request.use(config => {
 ```js
 /** LinodeList.tsx */
 
-/** 
+/**
  * The goal of this component is to create a list of all
- * your Linodes' labels 
+ * your Linodes' labels
  */
 
 import './request'
@@ -40,7 +40,7 @@ import React from 'react'
 
 const MyComponent: React.FC<{}> = () => {
   const [linodes, setLinodesData] = React.useState<Linode[] | undefined>(undefined);
-  const [errors, setErrors] = React.useState<APIError[] | undefined>;
+  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [loading, setLoading] = React.useState<boolean>(false);
 
   React.useEffect(() => {
@@ -53,21 +53,21 @@ const MyComponent: React.FC<{}> = () => {
         setLoading(false);
         setLinodesData(response.data)
       })
-      .catch((e: AxiosError<APIError[]>) => {
+      .catch((e: AxiosError) => {
         setLoading(false);
-        /** 
+        /**
          * All Linode error responses are wrapped in the Axios Error interface.
-         * To override this and just return the Linode response, we recommend 
+         * To override this and just return the Linode response, we recommend
          * looking into Axios interceptors:
-         * 
+         *
          * https://github.com/axios/axios#interceptors
-         * 
+         *
          * Need an example? Check out how we accomplish this in Cloud Manager:
-         * 
+         *
          * https://github.com/linode/manager/blob/develop/packages/manager/src/
          * services/sdk-request-interceptors.tsx#L32
          */
-        setErrors(e.reponse.data.errors)
+        setErrors(e.response.data.errors)
       })
   }, [])
 
@@ -76,9 +76,9 @@ const MyComponent: React.FC<{}> = () => {
   }
 
   if(errors) {
-    /** 
-     * you may need to do some additional undefined checking on 
-     * the AxiosError data 
+    /**
+     * you may need to do some additional undefined checking on
+     * the AxiosError data
      */
     return <div>{errors[0].reason}</div>
   }
