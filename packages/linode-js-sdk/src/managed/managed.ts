@@ -26,7 +26,7 @@ import {
   ManagedServicePayload,
   ManagedSSHPubKey,
   ManagedSSHSetting,
-  ManagedStatsResponse,
+  ManagedStats,
   UpdateCredentialPayload,
   UpdatePasswordPayload
 } from './types';
@@ -297,7 +297,7 @@ export const getManagedIssues = () =>
  * Returns usage data for all of the Linodes on a Managed customer's account.
  */
 export const getManagedStats = () =>
-  Request<ManagedStatsResponse>(
+  Request<ManagedStats>(
     setMethod('GET'),
     setURL(`${API_ROOT}/managed/stats`)
-  ).then(response => response.data.data);
+  ).then(response => response.data);

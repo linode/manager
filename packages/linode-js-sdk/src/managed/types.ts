@@ -115,7 +115,3 @@ export interface ManagedStats {
   net_out: DataSeries[];
   swap: DataSeries[];
 }
-
-export interface ManagedStatsResponse {
-  data: ManagedStats;
-}
