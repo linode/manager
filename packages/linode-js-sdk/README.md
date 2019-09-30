@@ -4,19 +4,19 @@ This directory contains all the code for the client-side wrapper around Linode's
 
 ## Installation
 
-To install the project to your app, run
+To install the project to your app, run:
 
 ```
 $ npm install linode-js-sdk
 ```
 
-or with yarn
+or with yarn:
 
 ```
 $ yarn add linode-js-sdk
 ```
 
-or with a CDN
+or with a CDN:
 
 ```js
 <script src="https://unpkg.com/linode-js-sdk/index.js"></script>
@@ -24,9 +24,9 @@ or with a CDN
 
 ## Using the SDK and Examples
 
-The first step in using the SDK is to authenticate your requests, either with an OAuth Token or Personal Access Token (PAT). Please [see the Linode API docs](https://developers-linode.netlify.com/api/v4/#access-and-authentication) in order to either get an OAuth Token or PAT so that you can authenticate your requests.
+The first step in using the SDK is to authenticate your requests, either with an OAuth Token or Personal Access Token (PAT). Please [see the Linode API docs](https://developers.linode.com/api/v4/#access-and-authentication) in order to either get an OAuth Token or PAT so that you can authenticate your requests.
 
-Once you have your token, authenticating involves adding headers to each request. This library is built on top of [the Axios HTTP Client](https://github.com/axios/axios), so most features that are built into Axios are fair game here. Here's an example of how to authenticate all of your requests.
+Once you have your token, authenticating involves adding headers to each request. This library is built on top of [the Axios HTTP Client](https://github.com/axios/axios), so most features that are built into Axios are fair game here. Here's an example of how to authenticate all of your requests:
 
 ```js
 /** request.js */
@@ -65,7 +65,7 @@ getAccount()
   })
 ```
 
-alternatively, check out the following examples using other frameworks
+Alternatively, check out the following examples using other frameworks:
 
 * [React and TypeScript](./REACT.md)
 * Angular (example wanted)
@@ -83,19 +83,19 @@ When in doubt, look at the code that already exists and mimic that.
 
 This library comes with TypeScript definitions so no need to write your own or find them elsewhere online. Just import the functions as normal and they should play nicely with TypeScript!
 
-Most types can be imported from their respected pathname. For instance:
+Most types can be imported from their corresponding pathname. For instance:
 
 ```js
 import { Linode } from 'linode-js-sdk/lib/linodes'
 ```
 
-For more general types (such as the error shape that comes back from the Linode APIv4, these types can be found in the `/types` dir):
+More general types (such as the error shape that comes back from the Linode APIv4) can be found in the `/types` directory:
 
 ```js
 import { APIError } from 'linode-js-sdk/lib/types'
 ```
 
-and, of course, you can also import from the root if preferred
+You can also import from the root if preferred:
 
 ```js
 import { APIError, Linode } from 'linode-js-sdk'
