@@ -107,7 +107,7 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/drupal_color.svg'
   },
   {
-    name: 'LAMP',
+    name: 'LAMP1',
     description: `The LAMP stack consists of the Linux operating system,
       the Apache HTTP Server, the MySQL relational database management system,
       and the PHP programming language.
@@ -128,14 +128,16 @@ export const oneClickApps: OCA[] = [
     // href: 'https://www.ibm.com/cloud/learn/lamp-stack-explained' Not sure this is kosher.
   },
   {
-    name: 'Plesk',
-    description: `Plesk is a leading WordPress and website management platform and control panel. Plesk lets you build and manage multiple websites from a single dashboard to configure web services, email, and other applications. Plesk features hundreds of extensions, plus a complete WordPress toolkit, and can orchestrate deployments. Use the Plesk One-Click App to manage websites hosted on your Linode.`,
-    summary:
-      'A secure, scalable, and versatile website management platform.',
+    name: 'LAMP',
+    description: `Plesk is a leading WordPress and website management platform and control panel.
+      Plesk lets you build and manage multiple websites from a single dashboard to configure web services,
+      email, and other applications. Plesk features hundreds of extensions, plus a complete WordPress toolkit,
+      and can orchestrate multi-server deployments. Use the Plesk One-Click App to manage websites hosted on your Linode.`,
+    summary: 'A secure, scalable, and versatile website management platform.',
     tips: [
-      'Please allow the script around 15 minutes to finish.',
-      "Once the script finishes, go to <i>https://[your-Linode's-IP-address]</i> in a browser, where you'll be prompted to log in.",
-      'Your credentials are <code>root</code> for the username and the <b>Root Password</b> you defined when you ran the Plesk One-Click App installer.'
+      `Please allow the script around 15 minutes to finish.`,
+      `Once the script finishes, go to <i>https://[your-Linode's-IP-address]</i> in a browser, where you'll be prompted to log in.`,
+      `Your credentials are <code>root</code> for the username and the <b>Root Password</b> you defined when you ran the Plesk One-Click App installer.`
     ],
     href: 'https://www.plesk.com/',
     logo_url: 'assets/plesk_color.svg'
