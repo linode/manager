@@ -83,7 +83,7 @@ const FileUpload: React.FC<Props> = props => {
   const classes = useStyles();
 
   return (
-    <div className={classes.root}>
+    <div className={classes.root} key={props.name}>
       <LinearProgress
         variant="determinate"
         value={props.percentCompleted}

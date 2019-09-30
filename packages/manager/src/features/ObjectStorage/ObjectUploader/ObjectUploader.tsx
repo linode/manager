@@ -1,4 +1,3 @@
-import * as Bluebird from 'bluebird';
 import * as classNames from 'classnames';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
@@ -8,23 +7,23 @@ import Button from 'src/components/Button';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import { usePrevious } from 'src/hooks/usePrevious';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { getObjectURL } from 'src/services/objectStorage/objects';
 import { truncateMiddle } from 'src/utilities/truncate';
+import { throttle } from 'throttle-debounce';
 import { uploadObject } from '../requests';
 import FileUpload from './FileUpload';
+import {
+  curriedObjectUploaderReducer,
+  defaultState,
+  ExtendedFile,
+  ObjectUploaderAction
+} from './reducer';
 
-const MAX_NUM_UPLOADS = 100;
-const MAX_PARALLEL_UPLOADS = 4;
+const MAX_NUM_UPLOADS = 250;
+const MAX_PARALLEL_UPLOADS = 6;
 const MAX_FILE_SIZE_IN_BYTES = 5 * 1024 * 1024 * 1024;
-
-type FileStatus = 'QUEUED' | 'IN_PROGRESS' | 'FINISHED' | 'CANCELLED' | 'ERROR';
-
-interface ExtendedFile {
-  status: FileStatus;
-  percentComplete: number;
-  file: File;
-}
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -135,139 +134,98 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
 
   const classes = useStyles();
 
-  const [fileUploads, setFileUploads] = React.useState<ExtendedFile[]>([]);
+  const [state, dispatch] = React.useReducer(
+    curriedObjectUploaderReducer,
+    defaultState
+  );
+
+  const previousCompletion = usePrevious(state.allUploadsFinished);
+  React.useEffect(() => {
+    if (previousCompletion === false && state.allUploadsFinished === true) {
+      update();
+    }
+  }, [state.allUploadsFinished]);
 
   const onDrop = async (files: File[]) => {
-    // Protect against large number of uploads at once.
-    const inProgressUploads = fileUploads.filter(
-      upload => upload.status === 'IN_PROGRESS'
-    );
-    if (inProgressUploads.length + files.length > MAX_NUM_UPLOADS) {
+    // @todo: GA event
+    if (state.numInProgress + files.length > MAX_NUM_UPLOADS) {
       props.enqueueSnackbar('Upload up to 100 files at a time.', {
         variant: 'error'
       });
       return;
     }
 
-    // Filter out files that are queued or in progress
-    const filteredFiles = files.filter(file => {
-      const foundFile = fileUploads.find(
-        upload => upload.file.name === file.name
-      );
-      return (
-        !foundFile ||
-        (foundFile.status !== 'IN_PROGRESS' && foundFile.status !== 'QUEUED')
-      );
-    });
-
-    const newFileUploads: ExtendedFile[] = filteredFiles.map(file => ({
-      status: 'QUEUED',
-      percentComplete: 0,
-      file
-    }));
-
-    setFileUploads(prevFileUploads => [...newFileUploads, ...prevFileUploads]);
+    dispatch({ type: 'ENQUEUE', files });
   };
 
-  const nextBatch = React.useMemo(() => {
-    const inProgressUploads = fileUploads.filter(
-      upload => upload.status === 'IN_PROGRESS'
-    );
+  const queuedUploads = React.useMemo(() => {
+    return state.files.filter(upload => upload.status === 'QUEUED');
+  }, [state.numQueued]);
 
-    if (inProgressUploads.length < MAX_PARALLEL_UPLOADS) {
-      const queuedUploads = fileUploads.filter(
-        upload => upload.status === 'QUEUED'
-      );
-      return queuedUploads.slice(
-        0,
-        MAX_PARALLEL_UPLOADS - inProgressUploads.length
-      );
+  const nextBatch = React.useMemo(() => {
+    if (state.numQueued === 0) {
+      return [];
+    }
+
+    if (state.numInProgress < MAX_PARALLEL_UPLOADS) {
+      return queuedUploads.slice(0, MAX_PARALLEL_UPLOADS - state.numInProgress);
     }
     return [];
-  }, [JSON.stringify(fileUploads)]);
+  }, [state.numQueued, state.numInProgress, queuedUploads]);
 
   React.useEffect(() => {
     if (nextBatch.length === 0) {
       return;
     }
 
-    setFileUploads(prevFileUploads => {
-      const updatedFileUploads = [...prevFileUploads];
-      nextBatch.forEach(upload => {
-        const idx = updatedFileUploads.findIndex(
-          prevUpload => prevUpload.file.name === upload.file.name
-        );
+    dispatch({ type: 'SET_IN_PROGRESS', files: nextBatch });
 
-        updatedFileUploads[idx] = {
-          ...upload,
-          status: 'IN_PROGRESS'
-        };
-      });
-      return updatedFileUploads;
-    });
-
-    Bluebird.map(nextBatch, async fileUpload => {
+    const getURLAndUploadObject = (fileUpload: ExtendedFile) => {
       const { file } = fileUpload;
 
       // We want to upload the object to the current "folder", so we prepend the
       // file name with the prefix.
-      const fullObjectName = prefix + file.name;
 
-      try {
-        const { url } = await getObjectURL(
-          clusterId,
-          bucketName,
-          fullObjectName,
-          'PUT',
-          {
-            content_type: file.type
-          }
-        );
+      // The `path` key on File is bleeding edge. It's not part of the
+      // official spec, but all new browser versions support it. Using the
+      // path, we can upload directories. Fallback on the name if the browser
+      // doesn't support it.
+      const path = (file as any).path || file.name;
+      const fullObjectName = prefix + path;
 
-        const onUploadProgress = (progressEvent: ProgressEvent) => {
-          setFileUploads(prev => {
-            const updatedFileUploads = [...prev];
-            const idx = prev.findIndex(
-              upload => upload.file.name === file.name
-            );
-            updatedFileUploads[idx] = {
-              ...updatedFileUploads[idx],
-              percentComplete:
-                (progressEvent.loaded / progressEvent.total) * 100
-            };
-            return updatedFileUploads;
-          });
-        };
-
-        await uploadObject(url, file, onUploadProgress);
-
-        setFileUploads(prev => {
-          const idx = prev.findIndex(upload => upload.file.name === file.name);
-          prev[idx] = {
-            ...prev[idx],
-            status: 'FINISHED',
-            percentComplete: 100
-          };
-          return prev;
-        });
-      } catch (err) {
-        setFileUploads(prev => {
-          const idx = prev.findIndex(upload => upload.file.name === file.name);
-          prev[idx] = {
-            ...prev[idx],
-            status: 'ERROR'
-          };
-          return prev;
-        });
-      }
-    })
-      .then(() => {
-        console.log('updated all');
-        update();
+      return getObjectURL(clusterId, bucketName, fullObjectName, 'PUT', {
+        content_type: file.type
       })
-      .catch(err => {
+        .then(({ url }) => {
+          const onUploadProgress = onUploadProgressFactory(dispatch, file.name);
+          return uploadObject(url, file, onUploadProgress);
+        })
+        .then(() => {
+          dispatch({
+            type: 'UPDATE_FILE',
+            data: {
+              fileName: file.name,
+              percentComplete: 100,
+              status: 'FINISHED'
+            }
+          });
+        })
+        .catch(err => {
+          handleError(dispatch, file.name);
+          return Promise.reject();
+        });
+    };
+
+    const requests = nextBatch.map(fileUpload => {
+      return getURLAndUploadObject(fileUpload);
+    });
+
+    Promise.all(requests)
+      .then(() => {
+        dispatch({ type: 'FINISH_BATCH' });
+      })
+      .catch(() => {
         // @todo: better error handling.
-        console.log('error');
       });
   }, [nextBatch]);
 
@@ -314,7 +272,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
         <input {...getInputProps()} />
 
         <div className={classes.fileUploads}>
-          {fileUploads.map((upload, idx) => {
+          {state.files.map((upload, idx) => {
             return (
               <FileUpload
                 key={idx}
@@ -332,7 +290,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
           })}
         </div>
 
-        {fileUploads.length === 0 && (
+        {state.files.length === 0 && (
           <div className={classes.dropzoneContent}>
             <Hidden xsDown>
               <CloudUpload />
@@ -355,3 +313,30 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
 };
 
 export default withSnackbar(ObjectUploader);
+
+const onUploadProgressFactory = (
+  dispatch: (value: ObjectUploaderAction) => void,
+  fileName: string
+) =>
+  throttle(300, (progressEvent: ProgressEvent) => {
+    dispatch({
+      type: 'UPDATE_FILE',
+      data: {
+        fileName,
+        percentComplete: (progressEvent.loaded / progressEvent.total) * 100
+      }
+    });
+  });
+
+const handleError = (
+  dispatch: (value: ObjectUploaderAction) => void,
+  fileName: string
+) => {
+  dispatch({
+    type: 'UPDATE_FILE',
+    data: {
+      fileName,
+      status: 'ERROR'
+    }
+  });
+};
