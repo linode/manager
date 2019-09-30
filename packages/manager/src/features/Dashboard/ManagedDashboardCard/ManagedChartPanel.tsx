@@ -1,10 +1,20 @@
+import * as classNames from 'classnames';
 import * as React from 'react';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import { compose } from 'recompose';
+import {
+  makeStyles,
+  Theme,
+  withTheme,
+  WithTheme
+} from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
+import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import LineGraph from 'src/components/LineGraph';
 import TabbedPanel from 'src/components/TabbedPanel';
 import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 import useTimezone from 'src/utilities/useTimezone';
+
+import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 
 // Temporary
 import { fakeData } from './fakeData';
@@ -17,12 +27,36 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   inner: {
     paddingTop: 0
+  },
+  graphControls: {
+    position: 'relative'
+  },
+  chartSelect: {
+    maxWidth: 150,
+    [theme.breakpoints.up('lg')]: {
+      position: 'absolute !important' as 'absolute',
+      right: 24,
+      top: 0,
+      zIndex: 2
+    },
+    [theme.breakpoints.down('md')]: {
+      marginLeft: theme.spacing(3),
+      marginBottom: theme.spacing(3)
+    }
+  },
+  chartSelectCompact: {
+    [theme.breakpoints.up('lg')]: {
+      right: 12,
+      top: -6
+    }
   }
 }));
 
 interface Props {
   data: any;
 }
+
+type CombinedProps = Props & WithTheme;
 
 const chartHeight = 300;
 
@@ -76,7 +110,7 @@ const tabs: Tab[] = [
   }
 ];
 
-export const ManagedChartPanel: React.FC<Props> = props => {
+export const ManagedChartPanel: React.FC<CombinedProps> = props => {
   const { data } = props;
   const classes = useStyles();
 
@@ -86,17 +120,53 @@ export const ManagedChartPanel: React.FC<Props> = props => {
 
   const initialTab = 0;
 
+  const rangeSelectOptions: Item[] = [
+    { value: 'Last 24 Hours', label: 'Last 24 Hours' },
+    { value: 'Last 30 Days', label: 'Last 30 Days' }
+  ];
+
+  const handleChartRangeChange = (e: Item<string>) => {
+    return e.value;
+  };
+
+  const spacingMode =
+    props.theme && props.theme.spacing(1) === COMPACT_SPACING_UNIT
+      ? 'compact'
+      : 'normal';
+
   return (
-    <TabbedPanel
-      rootClass={`${classes.root} tabbedPanel`}
-      innerClass={classes.inner}
-      error={undefined}
-      header={''}
-      copy={''}
-      tabs={tabs}
-      initTab={initialTab}
-    />
+    <React.Fragment>
+      <div className={classes.graphControls}>
+        <TabbedPanel
+          rootClass={`${classes.root} tabbedPanel`}
+          innerClass={classes.inner}
+          error={undefined}
+          header={''}
+          copy={''}
+          tabs={tabs}
+          initTab={initialTab}
+        />
+        {/* TODO this is placeholder for now */}
+        <Select
+          options={rangeSelectOptions}
+          defaultValue={rangeSelectOptions[0]}
+          onChange={handleChartRangeChange}
+          name="chartRange"
+          id="chartRange"
+          small
+          label="Select Time Range"
+          hideLabel
+          isClearable={false}
+          className={classNames({
+            [classes.chartSelect]: true,
+            [classes.chartSelectCompact]: spacingMode === 'compact'
+          })}
+        />
+      </div>
+    </React.Fragment>
   );
 };
 
-export default ManagedChartPanel;
+const enhanced = compose<CombinedProps, Props>(withTheme);
+
+export default enhanced(ManagedChartPanel);
