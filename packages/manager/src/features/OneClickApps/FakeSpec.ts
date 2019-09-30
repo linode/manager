@@ -129,12 +129,14 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Plesk',
-    description: `Plesk is a leading WordPress and website management platform and control panel. Plesk lets you build and manage multiple websites from a single dashboard to configure web services, email, and other applications. Plesk features hundreds of extensions, plus a complete WordPress toolkit, and can orchestrate deployments. Use the Plesk One-Click App to manage websites hosted on your Linode.`,
-    summary:
-      'A secure, scalable, and versatile website management platform.',
+    description: `Plesk is a leading WordPress and website management platform and control panel. 
+      Plesk lets you build and manage multiple websites from a single dashboard to configure web services, 
+      email, and other applications. Plesk features hundreds of extensions, plus a complete WordPress toolkit, 
+      and can orchestrate multi-server deployments. Use the Plesk One-Click App to manage websites hosted on your Linode.`,
+    summary: 'A secure, scalable, and versatile website management platform.',
     tips: [
       'Please allow the script around 15 minutes to finish.',
-      'After deployment, SSH into your Linode and run: <code> plesk login</code> to generate a login link.',
+      'After deployment, SSH into your Linode and run: <code> plesk login</code> to generate a login link.'
     ],
     href: 'https://www.plesk.com/',
     logo_url: 'assets/plesk_color.svg'
