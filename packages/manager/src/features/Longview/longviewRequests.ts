@@ -94,13 +94,6 @@ export const handleLongviewResponse = (
      * and what code/severity checking we should be doing
      * to make sure we only reject with errors.
      */
-    // const errors = [];
-    // let i = 0;
-    // for (i; i < notifications.length; i++) {
-    //   errors.push({
-    //     reason: notifications[i].TEXT
-    //   });
-    // }
     const errors = notifications.map((thisNotification: LongviewError) => ({
       reason: pathOr('Error accessing Longview API', ['TEXT'], thisNotification)
     }));
