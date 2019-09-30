@@ -14,12 +14,17 @@ const selectedBrowser = argv.browser
   : browserConf['chrome'];
 
 const specsToRun = () => {
+  if(argv.vscode) {
+    return [`./${argv.file}`];
+  }
+
   if (argv.file) {
     return [`./e2e/specs/${argv.file}`];
   }
 
   if (argv.spec) {
     return argv.spec.split(',');
+
   }
 
   if (argv.dir || argv.d) {
@@ -29,6 +34,7 @@ const specsToRun = () => {
   if (argv.smoke) {
     return ['./e2e/specs/**/smoke-*spec.js'];
   }
+
   return ['./e2e/specs/**/*.js'];
 };
 
@@ -76,6 +82,8 @@ const credStore = credStores[CRED_STORE_MODE];
 let creds = null;
 
 exports.config = {
+  debug: true,
+  execArgv: ['--inspect=127.0.0.1:5859'],
   // Selenium Host/Port
   hostname: process.env.DOCKER ? 'selenium' : 'localhost',
   port: 4444,
