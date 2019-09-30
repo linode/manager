@@ -13,8 +13,10 @@ import { APP_ROOT } from 'src/constants';
 
 import { oneClickApps } from './FakeSpec';
 import LinkSection from './LinkSection';
+import TipSection from './TipSection';
 
 import LibraryBook from 'src/assets/icons/guides.svg';
+import Info from 'src/assets/icons/info.svg';
 import Link from 'src/assets/icons/moreInfo.svg';
 
 type ClassNames =
@@ -114,11 +116,20 @@ export const AppDetailDrawer: React.FunctionComponent<
             icon={Link}
           />
         )}
-        <LinkSection
-          title="Guides"
-          links={app.related_guides || []}
-          icon={LibraryBook}
-        />
+        {app.related_guides && (
+          <LinkSection
+            title="Guides"
+            links={app.related_guides}
+            icon={LibraryBook}
+          />
+        )}
+        {app.tips && (
+          <TipSection
+          title="Tips"
+          tips={app.tips}
+          icon={Info}
+          />
+        )}
       </Grid>
     </Drawer>
   );
