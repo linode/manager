@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       content: '""',
       position: 'absolute',
       right: 0,
-      height: '70%',
+      height: '100%',
       width: 1,
       backgroundColor: theme.palette.divider,
       [theme.breakpoints.down('xs')]: {
@@ -45,10 +45,10 @@ const useStyles = makeStyles((theme: Theme) => ({
       }
     },
     [theme.breakpoints.up('sm')]: {
-      padding: `${theme.spacing(3)}px ${theme.spacing(1)}px !important`
+      margin: `${theme.spacing(3)}px ${theme.spacing(1)}px !important`
     },
     [theme.breakpoints.up('lg')]: {
-      padding: `${theme.spacing(6) + 2}px ${theme.spacing(1)}px !important`
+      margin: `${theme.spacing(6) + 2}px ${theme.spacing(1)}px !important`
     }
   },
   outerContainer: {
@@ -90,7 +90,6 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
       title="Managed Services"
       alignHeader="space-between"
       className={classes.root}
-      alignItems="center"
       headerAction={() => (
         <Link to="/managed" className={classes.detailsLink}>
           View Details
@@ -145,7 +144,7 @@ const LoadingErrorOrContent: React.FC<CombinedProps> = props => {
       container
       direction="row"
       justify="center"
-      alignItems="center"
+      alignItems="flex-start"
       className={classes.outerContainer}
     >
       <Grid

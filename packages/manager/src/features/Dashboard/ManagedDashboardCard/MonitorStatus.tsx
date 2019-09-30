@@ -46,6 +46,9 @@ export const useStyles = makeStyles((theme: Theme) => ({
     '&:last-of-type': {
       marginBottom: 0
     }
+  },
+  text: {
+    maxWidth: 250
   }
 }));
 
@@ -113,7 +116,7 @@ export const MonitorStatus: React.FC<CombinedProps> = props => {
           </Grid>
         )}
         <Grid item>
-          <Typography>
+          <Typography className={classes.text}>
             <Link to="/managed/monitors">
               View your list of service monitors
             </Link>

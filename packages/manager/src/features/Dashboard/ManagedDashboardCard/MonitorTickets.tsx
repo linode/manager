@@ -45,7 +45,7 @@ export const MonitorTickets: React.FC<Props> = props => {
         item
         className={hasIssues ? classes.sadTicket : classes.happyTicket}
       >
-        <TicketIcon width={50} height={50} />
+        <TicketIcon width={50} height={39} />
       </Grid>
       <Grid item>
         <Typography variant="h2">
