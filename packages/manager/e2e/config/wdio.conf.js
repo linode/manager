@@ -14,7 +14,7 @@ const selectedBrowser = argv.browser
   : browserConf['chrome'];
 
 const specsToRun = () => {
-  if(argv.vscode) {
+  if (argv.vscode) {
     return [`./${argv.file}`];
   }
 
@@ -24,7 +24,6 @@ const specsToRun = () => {
 
   if (argv.spec) {
     return argv.spec.split(',');
-
   }
 
   if (argv.dir || argv.d) {
@@ -82,8 +81,9 @@ const credStore = credStores[CRED_STORE_MODE];
 let creds = null;
 
 exports.config = {
-  debug: true,
-  execArgv: ['--inspect=127.0.0.1:5859'],
+  // TODO fix this for debugging with VSCode and not affecting Travis builds
+  // debug: true,
+  // execArgv: ['--inspect=127.0.0.1:5859'],
   // Selenium Host/Port
   hostname: process.env.DOCKER ? 'selenium' : 'localhost',
   port: 4444,
