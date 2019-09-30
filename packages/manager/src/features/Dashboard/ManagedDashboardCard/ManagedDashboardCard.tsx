@@ -33,17 +33,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   status: {
     position: 'relative',
-    '&:after': {
-      content: '""',
-      position: 'absolute',
-      right: 0,
-      height: '100%',
-      width: 1,
-      backgroundColor: theme.palette.divider,
-      [theme.breakpoints.down('xs')]: {
-        display: 'none'
-      }
-    },
     [theme.breakpoints.up('sm')]: {
       margin: `${theme.spacing(3)}px ${theme.spacing(1)}px !important`
     },

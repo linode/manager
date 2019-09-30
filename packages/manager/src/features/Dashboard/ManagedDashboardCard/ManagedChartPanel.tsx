@@ -29,7 +29,19 @@ const useStyles = makeStyles((theme: Theme) => ({
     paddingTop: 0
   },
   graphControls: {
-    position: 'relative'
+    position: 'relative',
+    '&:before': {
+      content: '""',
+      position: 'absolute',
+      left: 0,
+      top: 52,
+      height: 'calc(100% - 102px);',
+      width: 1,
+      backgroundColor: theme.palette.divider,
+      [theme.breakpoints.down('xs')]: {
+        display: 'none'
+      }
+    }
   },
   chartSelect: {
     maxWidth: 150,
