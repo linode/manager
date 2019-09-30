@@ -134,7 +134,8 @@ export const oneClickApps: OCA[] = [
       'A secure, scalable, and versatile website management platform.',
     tips: [
       'Please allow the script around 15 minutes to finish.',
-      'After deployment, SSH into your Linode and run: <code> plesk login</code> to generate a login link.',
+      "Once the script finishes, go to <i>https://[your-Linode's-IP-address]</i> in a browser, where you'll be prompted to log in.",
+      'Your credentials are <code>root</code> for the username and the <b>Root Password</b> you defined when you ran the Plesk One-Click App installer.'
     ],
     href: 'https://www.plesk.com/',
     logo_url: 'assets/plesk_color.svg'
