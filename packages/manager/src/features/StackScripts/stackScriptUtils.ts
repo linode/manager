@@ -19,64 +19,22 @@ export const emptyResult: Linode.ResourcePage<StackScript> = {
  * our filtering criteria don't automatically end up being
  * shown to the user before we've updated Cloud to support them.
  */
-export const baseApps = [
-  {
-    id: 401699,
-    label: 'Ark - Latest One-Click'
-  },
-  {
-    id: 401704,
-    label: 'TF2 - Latest One-Click'
-  },
-  {
-    id: 401705,
-    label: 'Terraria - Latest One-Click'
-  },
-  {
-    id: 401703,
-    label: 'Rust - Latest One-Click'
-  },
-  {
-    id: 401700,
-    label: 'CS:GO - Latest One-Click'
-  },
-  {
-    id: 401702,
-    label: 'MERN One-Click'
-  },
-  {
-    id: 401698,
-    label: 'Drupal - Latest One-Click'
-  },
-  {
-    id: 401707,
-    label: 'GitLab - Latest One-Click'
-  },
-  {
-    id: 401708,
-    label: 'WooCommerce - Latest One-Click'
-  },
-  {
-    id: 401706,
-    label: 'WireGuard - Latest One-Click'
-  },
-  {
-    id: 401709,
-    label: 'Minecraft - Latest One-Click'
-  },
-  {
-    id: 401701,
-    label: 'LAMP One-Click'
-  },
-  {
-    id: 401719,
-    label: 'OpenVPN - Latest One-Click'
-  },
-  {
-    id: 401697,
-    label: 'WordPress - Latest One-Click'
-  }
-];
+export const baseApps = {
+  '401699': 'Ark - Latest One-Click',
+  '401704': 'TF2 - Latest One-Click',
+  '401705': 'Terraria - Latest One-Click',
+  '401703': 'Rust - Latest One-Click',
+  '401700': 'CS:GO - Latest One-Click',
+  '401702': 'MERN One-Click',
+  '401698': 'Drupal - Latest One-Click',
+  '401707': 'GitLab - Latest One-Click',
+  '401708': 'WooCommerce - Latest One-Click',
+  '401706': 'WireGuard - Latest One-Click',
+  '401709': 'Minecraft - Latest One-Click',
+  '401701': 'LAMP One-Click',
+  '401719': 'OpenVPN - Latest One-Click',
+  '401697': 'WordPress - Latest One-Click'
+};
 
 const oneClickFilter = [
   {

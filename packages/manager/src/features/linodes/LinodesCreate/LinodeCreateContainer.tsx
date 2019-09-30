@@ -170,7 +170,7 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
     const params = getParamsFromUrl(this.props.location.search);
     // Allowed apps include the base set of original apps + anything LD tells us to show
     const newApps = this.props.flags.oneClickApps || [];
-    const allowedApps = [...baseApps, ...newApps].map(i => i.id);
+    const allowedApps = Object.keys({ ...baseApps, ...newApps });
     if (params && params !== {}) {
       this.setState({
         // This set is for creating from a Backup
@@ -191,7 +191,8 @@ class LinodeCreateContainer extends React.PureComponent<CombinedProps, State> {
       .then(response =>
         response.data.filter(script => {
           return (
-            !script.label.match(/helpers/i) && allowedApps.includes(script.id)
+            !script.label.match(/helpers/i) &&
+            allowedApps.includes(String(script.id))
           );
         })
       )
