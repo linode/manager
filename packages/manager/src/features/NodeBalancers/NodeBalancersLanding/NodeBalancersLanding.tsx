@@ -39,6 +39,7 @@ import {
   WithNodeBalancerActions
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
 import { nodeBalancersWithConfigs } from 'src/store/nodeBalancer/nodeBalancer.selectors';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import ListGroupedNodeBalancers from './ListGroupedNodeBalancers';
@@ -186,21 +187,15 @@ export class NodeBalancersLanding extends React.Component<
         });
       })
       .catch(err => {
-        const apiError = path<APIError[]>(['response', 'data', 'error'], err);
-
         return this.setState(
           {
             deleteConfirmDialog: {
               ...this.state.deleteConfirmDialog,
               submitting: false,
-              errors: apiError
-                ? apiError
-                : [
-                    {
-                      field: 'none',
-                      reason: 'Unable to complete your request at this time.'
-                    }
-                  ]
+              errors: getAPIErrorOrDefault(
+                err,
+                'There was an error deleting this NodeBalancer.'
+              )
             }
           },
           () => {
