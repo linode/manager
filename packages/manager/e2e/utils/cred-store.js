@@ -67,7 +67,7 @@ class CredStore {
        * looking to determine if we're on the oauth/auth page
        */
       try {
-        $('.oauthauthorize-page').waitForDisplayed(constants.wait.short);
+        $('.oauthauthorize-page').waitForDisplayed(1000);
         return true;
       } catch (err) {
         console.log('Not on the Oauth Page, continuing');

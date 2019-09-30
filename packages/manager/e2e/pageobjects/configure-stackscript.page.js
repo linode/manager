@@ -74,7 +74,7 @@ class ConfigureStackScript extends Page {
 
   cancel() {
     this.cancelButton.click();
-    this.dialogTitle.waitForText(constants.wait.normal);
+    browser.waitForText(`${this.dialogTitle.selector}`, constants.wait.normal);
     this.dialogContent.waitForText(constants.wait.normal);
     this.dialogConfirm.waitForDisplayed(constants.wait.normal);
     this.dialogCancel.waitForDisplayed(constants.wait.normal);

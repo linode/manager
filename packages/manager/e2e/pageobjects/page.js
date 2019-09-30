@@ -35,9 +35,6 @@ export default class Page {
   get toast() {
     return $('[data-qa-toast]');
   }
-  get toastMsg() {
-    return $('[data-qa-toast-message]');
-  }
   get userMenu() {
     return $('[data-qa-user-menu]');
   }
@@ -321,13 +318,18 @@ export default class Page {
   toastDisplays(expectedMessage, timeout = constants.wait.normal, wait = true) {
     this.toast.waitForDisplayed(timeout);
     let toastMessage;
+    console.log('toast message: ' + $(this.toast.selector).getText());
     if (wait) {
-      browser.waitUntil(() => {
-        toastMessage = $$(this.toast.selector).find(
-          toast => toast.getText() === expectedMessage
-        );
-        return toastMessage;
-      }, timeout);
+      browser.waitUntil(
+        () => {
+          toastMessage = $$(this.toast.selector).find(
+            toast => toast.getText() === expectedMessage
+          );
+          return toastMessage;
+        },
+        timeout,
+        `waited for toast text to equal: ${expectedMessage}`
+      );
       toastMessage.waitForDisplayed(timeout, true);
     } else {
       this.toast.waitForDisplayed(timeout, true);

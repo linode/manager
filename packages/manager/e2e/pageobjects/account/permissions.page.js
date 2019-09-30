@@ -98,7 +98,7 @@ class Permissions extends Page {
     return $(this.submitButton.selector);
   }
   get unrestrictedMsg() {
-    return $('[data-qa-unrestricted-msg');
+    return $('[data-qa-unrestricted-msg]');
   }
 
   baseElementsDisplay(restricted) {

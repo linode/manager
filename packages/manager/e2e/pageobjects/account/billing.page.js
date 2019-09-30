@@ -109,10 +109,13 @@ class Billing extends Page {
       )
       .not.toBe(null);
     this.currentAddress.waitForDisplayed(constants.wait.normal);
-    expect(this.currentAddress.getText());
-    withContext(
-      `"${this.currentAddress.selector}" selector ${assertLog.shouldNotBeNull}`
-    ).not.toBe(null);
+    expect(this.currentAddress.getText())
+      .withContext(
+        `"${this.currentAddress.selector}" selector ${
+          assertLog.shouldNotBeNull
+        }`
+      )
+      .not.toBe(null);
     this.currentEmail.waitForDisplayed(constants.wait.normal);
     expect(this.currentEmail.getText())
       .withContext(
@@ -134,10 +137,13 @@ class Billing extends Page {
       )
       .not.toBe(null);
     this.currentExpDate.waitForDisplayed(constants.wait.normal);
-    expect(this.currentExpDate.getText());
-    withContext(
-      `"${this.currentExpDate.selector}" selector ${assertLog.shouldNotBeNull}`
-    ).not.toBe(null);
+    expect(this.currentExpDate.getText())
+      .withContext(
+        `"${this.currentExpDate.selector}" selector ${
+          assertLog.shouldNotBeNull
+        }`
+      )
+      .not.toBe(null);
   }
 
   updateElemsDisplay() {
@@ -180,10 +186,11 @@ class Billing extends Page {
         `"${this.updateCity.selector}" selector ${assertLog.displayed}`
       )
       .toBe(true);
-    expect(this.updateStateProvince.isDisplayed());
-    withContext(
-      `"${this.updateStateProvince.selector}" selector ${assertLog.displayed}`
-    ).toBe(true);
+    expect(this.updateStateProvince.isDisplayed())
+      .withContext(
+        `"${this.updateStateProvince.selector}" selector ${assertLog.displayed}`
+      )
+      .toBe(true);
     expect(this.updatePostCode.isDisplayed())
       .withContext(
         `"${this.updatePostCode.selector}" selector ${assertLog.displayed}`
@@ -194,10 +201,11 @@ class Billing extends Page {
         `"${this.updateTaxId.selector}" selector ${assertLog.displayed}`
       )
       .toBe(true);
-    expect(this.updateButton.isDisplayed());
-    withContext(
-      `"${this.updateButton.selector}" selector ${assertLog.displayed}`
-    ).toBe(true);
+    expect(this.updateButton.isDisplayed())
+      .withContext(
+        `"${this.updateButton.selector}" selector ${assertLog.displayed}`
+      )
+      .toBe(true);
     expect(this.updateButton.getTagName())
       .withContext(
         `${assertLog.incorrectText} for "${this.resetButton.selector}" selector`
