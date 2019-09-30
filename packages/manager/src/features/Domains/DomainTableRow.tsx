@@ -1,3 +1,4 @@
+import { DomainStatus } from 'linode-js-sdk/lib/domains';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -43,7 +44,7 @@ const styles = (theme: Theme) =>
 interface Props {
   domain: string;
   id: number;
-  status: string;
+  status: DomainStatus;
   type: 'master' | 'slave';
   onRemove: (domain: string, domainId: number) => void;
   onClone: (domain: string, id: number) => void;
@@ -120,6 +121,9 @@ class DomainTableRow extends React.Component<CombinedProps> {
         <TableCell parentColumn="Type" data-qa-domain-type>
           {type}
         </TableCell>
+        <TableCell parentColumn="Status" data-qa-domain-status>
+          {humanizeDomainStatus(status)}
+        </TableCell>
         <TableCell>
           <ActionMenu
             domain={domain}
@@ -134,6 +138,21 @@ class DomainTableRow extends React.Component<CombinedProps> {
     );
   }
 }
+
+const humanizeDomainStatus = (status: DomainStatus) => {
+  switch (status) {
+    case 'active':
+      return 'Active';
+    case 'disabled':
+      return 'Disabled';
+    case 'edit_mode':
+      return 'Edit Mode';
+    case 'has_errors':
+      return 'Error';
+    default:
+      return 'Unknown';
+  }
+};
 
 const styled = withStyles(styles);
 

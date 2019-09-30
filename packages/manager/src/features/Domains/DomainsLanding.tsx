@@ -90,24 +90,15 @@ const styles = (theme: Theme) =>
   });
 
 interface State {
-  importDrawer: {
-    open: boolean;
-    submitting: boolean;
-    errors?: APIError[];
-    domain?: string;
-    remote_nameserver?: string;
-  };
-  createDrawer: {
-    open: boolean;
-    mode: 'clone' | 'create';
-    domain?: string;
-    id?: number;
-  };
-  removeDialog: {
-    open: boolean;
-    domain?: string;
-    domainId?: number;
-  };
+  importDrawerOpen: boolean;
+  importDrawerSubmitting: false;
+  importDrawerErrors?: APIError[];
+  remote_nameserver: string;
+  createDrawerOpen: boolean;
+  createDrawerMode: 'clone' | 'create';
+  selectedDomainLabel: string;
+  selectedDomainID?: number;
+  removeDialogOpen: boolean;
 }
 
 interface Props {
@@ -125,35 +116,28 @@ export type CombinedProps = DomainProps &
 
 export class DomainsLanding extends React.Component<CombinedProps, State> {
   state: State = {
-    importDrawer: {
-      open: false,
-      submitting: false
-    },
-    createDrawer: {
-      open: false,
-      mode: 'create'
-    },
-    removeDialog: {
-      open: false
-    }
+    importDrawerOpen: false,
+    importDrawerSubmitting: false,
+    remote_nameserver: '',
+    createDrawerMode: 'create',
+    createDrawerOpen: false,
+    removeDialogOpen: false,
+    selectedDomainLabel: ''
   };
 
   static docs: Linode.Doc[] = [Domains];
 
   cancelRequest: Function;
 
-  openImportZoneDrawer = () =>
-    this.setState({ importDrawer: { ...this.state.importDrawer, open: true } });
+  openImportZoneDrawer = () => this.setState({ importDrawerOpen: true });
 
   closeImportZoneDrawer = () =>
     this.setState({
-      importDrawer: {
-        open: false,
-        submitting: false,
-        remote_nameserver: undefined,
-        domain: undefined,
-        errors: undefined
-      }
+      importDrawerOpen: false,
+      importDrawerSubmitting: false,
+      remote_nameserver: '',
+      selectedDomainLabel: '',
+      importDrawerErrors: undefined
     });
 
   handleSuccess = (domain: Domain) => {
@@ -185,12 +169,10 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
   };
 
   removeDomain = () => {
-    const {
-      removeDialog: { domainId }
-    } = this.state;
+    const { selectedDomainID } = this.state;
     const { enqueueSnackbar, deleteDomain } = this.props;
-    if (domainId) {
-      deleteDomain({ domainId })
+    if (selectedDomainID) {
+      deleteDomain({ domainId: selectedDomainID })
         .then(() => {
           this.closeRemoveDialog();
         })
@@ -211,14 +193,15 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
 
   openRemoveDialog = (domain: string, domainId: number) => {
     this.setState({
-      removeDialog: { open: true, domain, domainId }
+      removeDialogOpen: true,
+      selectedDomainLabel: domain,
+      selectedDomainID: domainId
     });
   };
 
   closeRemoveDialog = () => {
-    const { removeDialog } = this.state;
     this.setState({
-      removeDialog: { ...removeDialog, open: false }
+      removeDialogOpen: false
     });
   };
 
@@ -383,13 +366,13 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
           }}
         </PreferenceToggle>
         <DomainZoneImportDrawer
-          open={this.state.importDrawer.open}
+          open={this.state.importDrawerOpen}
           onClose={this.closeImportZoneDrawer}
           onSuccess={this.handleSuccess}
         />
         <ConfirmationDialog
-          open={this.state.removeDialog.open}
-          title={`Remove ${this.state.removeDialog.domain}`}
+          open={this.state.removeDialogOpen}
+          title={`Remove ${this.state.selectedDomainLabel}`}
           onClose={this.closeRemoveDialog}
           actions={this.getActions}
         >
