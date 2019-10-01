@@ -30,7 +30,7 @@ type MapProps<ReduxStateProps, OwnProps> = (
 export type Props = DispatchProps & StateProps;
 
 const connected = <ReduxStateProps extends {}, OwnProps extends {}>(
-  mapAccountToProps?: MapProps<ReduxStateProps, OwnProps>
+  mapStateToProps?: MapProps<ReduxStateProps, OwnProps>
 ): InferableComponentEnhancerWithProps<any, any> =>
   connect<
     ReduxStateProps | StateProps,
@@ -40,8 +40,8 @@ const connected = <ReduxStateProps extends {}, OwnProps extends {}>(
   >(
     (state, ownProps) => {
       const { loading, error, entities } = state.__resources.linodes;
-      if (mapAccountToProps) {
-        return mapAccountToProps(
+      if (mapStateToProps) {
+        return mapStateToProps(
           ownProps,
           entities,
           loading,
