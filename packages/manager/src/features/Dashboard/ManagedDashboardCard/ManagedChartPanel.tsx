@@ -1,6 +1,7 @@
-import * as classNames from 'classnames';
+import { DataSeries, ManagedStatsData } from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 import { compose } from 'recompose';
+import CircleProgress from 'src/components/CircleProgress';
 import {
   makeStyles,
   Theme,
@@ -8,23 +9,15 @@ import {
   WithTheme
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import Select, { Item } from 'src/components/EnhancedSelect/Select';
+import ErrorState from 'src/components/ErrorState';
 import LineGraph from 'src/components/LineGraph';
 import TabbedPanel from 'src/components/TabbedPanel';
-import { Tab } from 'src/components/TabbedPanel/TabbedPanel';
 import useTimezone from 'src/utilities/useTimezone';
 
-import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
-
-// Temporary
-import { fakeData } from './fakeData';
-const _data: [number, number][] = fakeData.map(thisPoint => [
-  thisPoint.x,
-  thisPoint.y
-]);
-
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
+  root: {
+    marginTop: theme.spacing(3)
+  },
   inner: {
     paddingTop: 0
   },
@@ -61,124 +54,164 @@ const useStyles = makeStyles((theme: Theme) => ({
       right: 12,
       top: -6
     }
+  },
+  caption: {
+    position: 'absolute',
+    top: 65,
+    left: 30,
+    padding: theme.spacing()
   }
 }));
 
 interface Props {
-  data: any;
+  data: ManagedStatsData | null;
+  loading: boolean;
+  error?: string;
 }
 
 type CombinedProps = Props & WithTheme;
 
 const chartHeight = 300;
 
-// const statsFetchInterval = 30000;
+const formatData = (value: DataSeries[]): [number, number][] =>
+  value.map(thisPoint => [thisPoint.x, thisPoint.y]);
 
-const rangeSelection = '24';
-
-const tabs: Tab[] = [
-  {
-    render: () => {
-      const timezone = useTimezone();
-      return (
-        <>
-          <LineGraph
-            timezone={timezone}
-            chartHeight={chartHeight}
-            showToday={rangeSelection === '24'}
-            data={[
-              {
-                borderColor: 'rgba(54, 131, 220, 1)',
-                backgroundColor: 'rgba(54, 131, 220, .5)',
-                data: _data,
-                label: 'CPU %'
-              }
-            ]}
-          />
-        </>
-      );
-    },
-    title: 'CPU Usage'
-  },
-  {
-    render: () => {
-      return (
-        <>
-          <Typography>Empty transfer panel</Typography>
-        </>
-      );
-    },
-    title: 'Network Transfer'
-  },
-  {
-    render: () => {
-      return (
-        <>
-          <Typography>Empty I/O panel</Typography>
-        </>
-      );
-    },
-    title: 'Disk I/O'
+const createTabs = (
+  data: ManagedStatsData | null,
+  timezone: string,
+  classes: Record<string, string>
+) => {
+  const summaryCopy = (
+    <Typography variant="body1" className={classes.caption}>
+      This graph represents combined usage for all Linodes on this account.
+    </Typography>
+  );
+  if (!data) {
+    return [];
   }
-];
+  return [
+    {
+      render: () => {
+        return (
+          <div className={classes.root}>
+            {summaryCopy}
+            <LineGraph
+              timezone={timezone}
+              unit="%"
+              chartHeight={chartHeight}
+              showToday={true}
+              data={[
+                {
+                  borderColor: 'rgba(54, 131, 220, 1)',
+                  backgroundColor: 'rgba(54, 131, 220, .5)',
+                  data: formatData(data.cpu),
+                  label: 'CPU %'
+                }
+              ]}
+            />
+          </div>
+        );
+      },
+      title: 'CPU Usage'
+    },
+    {
+      render: () => {
+        return (
+          <div className={classes.root}>
+            {summaryCopy}
+            <LineGraph
+              timezone={timezone}
+              unit={'bps'}
+              chartHeight={chartHeight}
+              showToday={true}
+              data={[
+                {
+                  borderColor: 'rgba(54, 131, 220, 1)',
+                  backgroundColor: 'rgba(54, 131, 220, .5)',
+                  data: formatData(data.net_in),
+                  label: 'Network Traffic In'
+                },
+                {
+                  borderColor: 'rgba(1, 177, 89, 1)',
+                  backgroundColor: 'rgba(1, 177, 89, .5)',
+                  data: formatData(data.net_out),
+                  label: 'Network Traffic Out'
+                }
+              ]}
+            />
+          </div>
+        );
+      },
+      title: 'Network Transfer'
+    },
+    {
+      render: () => {
+        return (
+          <div className={classes.root}>
+            {summaryCopy}
+            <LineGraph
+              timezone={timezone}
+              chartHeight={chartHeight}
+              showToday={true}
+              unit={` op/s`}
+              data={[
+                {
+                  borderColor: 'rgba(54, 131, 220, 1)',
+                  backgroundColor: 'rgba(54, 131, 220, .5)',
+                  data: formatData(data.disk),
+                  label: 'Disk I/O'
+                }
+              ]}
+            />
+          </div>
+        );
+      },
+      title: 'Disk I/O'
+    }
+  ];
+};
 
 export const ManagedChartPanel: React.FC<CombinedProps> = props => {
-  const { data } = props;
+  const { data, error, loading } = props;
   const classes = useStyles();
+  const timezone = useTimezone();
+
+  if (error) {
+    return <ErrorState errorText={error} />;
+  }
+
+  if (loading) {
+    return <CircleProgress />;
+  }
 
   if (data === null) {
     return null;
   }
 
+  const tabs = createTabs(data, timezone, classes);
+
   const initialTab = 0;
-
-  const rangeSelectOptions: Item[] = [
-    { value: 'Last 24 Hours', label: 'Last 24 Hours' },
-    { value: 'Last 30 Days', label: 'Last 30 Days' }
-  ];
-
-  const handleChartRangeChange = (e: Item<string>) => {
-    return e.value;
-  };
-
-  const spacingMode =
-    props.theme && props.theme.spacing(1) === COMPACT_SPACING_UNIT
-      ? 'compact'
-      : 'normal';
 
   return (
     <React.Fragment>
       <div className={classes.graphControls}>
         <TabbedPanel
-          rootClass={`${classes.root} tabbedPanel`}
+          rootClass={`tabbedPanel`}
           innerClass={classes.inner}
-          error={undefined}
+          error={undefined} // Use custom error handling (above)
           header={''}
           copy={''}
           tabs={tabs}
           initTab={initialTab}
-        />
-        {/* TODO this is placeholder for now */}
-        <Select
-          options={rangeSelectOptions}
-          defaultValue={rangeSelectOptions[0]}
-          onChange={handleChartRangeChange}
-          name="chartRange"
-          id="chartRange"
-          small
-          label="Select Time Range"
-          hideLabel
-          isClearable={false}
-          className={classNames({
-            [classes.chartSelect]: true,
-            [classes.chartSelectCompact]: spacingMode === 'compact'
-          })}
         />
       </div>
     </React.Fragment>
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(withTheme);
+const enhanced = compose<CombinedProps, Props>(
+  withTheme,
+  React.memo
+);
 
 export default enhanced(ManagedChartPanel);

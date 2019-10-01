@@ -1,3 +1,4 @@
+import { getManagedStats, ManagedStatsData } from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -14,6 +15,7 @@ import withManaged, {
   DispatchProps,
   ManagedProps
 } from 'src/containers/managedServices.container';
+import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import DashboardCard from '../DashboardCard';
@@ -58,6 +60,16 @@ type CombinedProps = ManagedProps &
 
 export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+  const {
+    data,
+    loading,
+    lastUpdated,
+    error,
+    update
+  } = useAPIRequest<ManagedStatsData | null>(
+    () => getManagedStats().then(response => response.data),
+    null
+  );
 
   React.useEffect(() => {
     // Rely on Redux error handling.
@@ -67,12 +79,20 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
     const interval = setInterval(() => {
       props.requestManagedServices().catch(_ => null);
       props.requestManagedIssues().catch(_ => null);
+      update();
     }, 10000);
 
     return () => {
       clearInterval(interval);
     };
   }, []);
+
+  const statsError =
+    error && data === null
+      ? getAPIErrorOrDefault(error, 'Unable to load your usage statistics.')[0]
+          .reason
+      : undefined;
+  const statsLoading = loading && lastUpdated === 0;
 
   return (
     <DashboardCard
@@ -87,14 +107,26 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
       data-qa-dash-managed
     >
       <Paper className={classes.paper}>
-        <LoadingErrorOrContent {...props} />
+        <LoadingErrorOrContent
+          data={data}
+          statsError={statsError}
+          statsLoading={statsLoading}
+          {...props}
+        />
       </Paper>
     </DashboardCard>
   );
 };
 
-const LoadingErrorOrContent: React.FC<CombinedProps> = props => {
+interface ContentProps extends CombinedProps {
+  data: ManagedStatsData | null;
+  statsLoading: boolean;
+  statsError?: string;
+}
+
+const LoadingErrorOrContent: React.FC<ContentProps> = props => {
   const {
+    data,
     issues,
     managedError,
     managedLoading,
@@ -102,7 +134,9 @@ const LoadingErrorOrContent: React.FC<CombinedProps> = props => {
     managedLastUpdated,
     issuesLoading,
     issuesError,
-    issuesLastUpdated
+    issuesLastUpdated,
+    statsError,
+    statsLoading
   } = props;
   const classes = useStyles();
 
@@ -133,7 +167,7 @@ const LoadingErrorOrContent: React.FC<CombinedProps> = props => {
       container
       direction="row"
       justify="center"
-      alignItems="flex-start"
+      alignItems="center"
       className={classes.outerContainer}
     >
       <Grid
@@ -154,7 +188,11 @@ const LoadingErrorOrContent: React.FC<CombinedProps> = props => {
         </Grid>
       </Grid>
       <Grid item xs={12} sm={8}>
-        <ManagedChartPanel data={6} />
+        <ManagedChartPanel
+          data={data}
+          loading={statsLoading}
+          error={statsError}
+        />
       </Grid>
     </Grid>
   );
