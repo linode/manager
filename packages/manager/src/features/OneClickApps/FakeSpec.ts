@@ -34,6 +34,16 @@ export const oneClickApps: OCA[] = [
     href: 'https://survivetheark.com/'
   },
   {
+    name: 'cPanel',
+    description: `cPanel & WHM is a Linux-based web hosting control panel and platform that helps you create and manage websites, servers, databases, and more with a suite of hosting automation and optimization tools. The cPanel One-Click App streamlines publishing and managing a website with cPanel & WHM on a Linode instance.`,
+    summary: 'The leading hosting automation platform that has simplified site and server management for 20 years.',
+    tips: [
+      `Please note that it will take approximately 15 minutes for cPanel to boot after you launch.`
+    ],
+    href: 'https://www.cpanel.net/',
+    logo_url: 'assets/cpanel_color.svg'
+  },
+  {
     name: 'CS:GO',
     description: `In CS:GO there are two teams: Terrorists and Counter-Terrorists.
     The teams compete against each other to complete objectives or to eliminate the opposing team.
