@@ -2,9 +2,7 @@ import { Linode } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import withLinodes, {
-  Props as LinodeProps
-} from 'src/containers/withLinodes.container';
+import withLinodes from 'src/containers/withLinodes.container';
 
 interface Props {
   linodeId: number;
