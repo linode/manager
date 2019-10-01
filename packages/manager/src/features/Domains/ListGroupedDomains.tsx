@@ -15,6 +15,7 @@ import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import DomainTableRow from 'src/features/Domains/DomainTableRow';
 import { groupByTags, sortGroups } from 'src/utilities/groupByTags';
+import { Handlers } from './DomainActionMenu';
 import TableWrapper from './DomainsTableWrapper';
 
 const DEFAULT_PAGE_SIZE = 25;
@@ -62,14 +63,11 @@ const styles = (theme: Theme) =>
       }
     }
   });
-interface Props {
+interface Props extends Handlers {
   data: Domain[];
   orderBy: string;
   order: 'asc' | 'desc';
   handleOrderChange: (orderBy: string, order?: 'asc' | 'desc') => void;
-  onRemove: (domain: string, domainId: number) => void;
-  onClone: (domain: string, id: number) => void;
-  onEdit: (domain: string, id: number) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -133,6 +131,7 @@ const ListGroupedDomains: React.StatelessComponent<CombinedProps> = props => {
                           onRemove={onRemove}
                           type={domain.type}
                           status={domain.status}
+                          onDisableOrEnable={props.onDisableOrEnable}
                         />
                       ))}
                       {count > DEFAULT_PAGE_SIZE && (
