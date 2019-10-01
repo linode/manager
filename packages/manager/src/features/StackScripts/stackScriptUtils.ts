@@ -14,6 +14,28 @@ export const emptyResult: Linode.ResourcePage<StackScript> = {
   results: 0
 };
 
+/**
+ * We need a way to make sure that newly added SS that meet
+ * our filtering criteria don't automatically end up being
+ * shown to the user before we've updated Cloud to support them.
+ */
+export const baseApps = {
+  '401699': 'Ark - Latest One-Click',
+  '401704': 'TF2 - Latest One-Click',
+  '401705': 'Terraria - Latest One-Click',
+  '401703': 'Rust - Latest One-Click',
+  '401700': 'CS:GO - Latest One-Click',
+  '401702': 'MERN One-Click',
+  '401698': 'Drupal - Latest One-Click',
+  '401707': 'GitLab - Latest One-Click',
+  '401708': 'WooCommerce - Latest One-Click',
+  '401706': 'WireGuard - Latest One-Click',
+  '401709': 'Minecraft - Latest One-Click',
+  '401701': 'LAMP One-Click',
+  '401719': 'OpenVPN - Latest One-Click',
+  '401697': 'WordPress - Latest One-Click'
+};
+
 const oneClickFilter = [
   {
     '+and': [
