@@ -7,13 +7,13 @@ export interface Firewall {
   status: FirewallStatus;
   label: string;
   tags: string[];
-  rules: FirewallRule[];
+  rules: FirewallRules;
   created_dt: string;
   updated_dt: string;
   devices: FirewallDevices;
 }
 
-export interface FirewallRule {
+export interface FirewallRules {
   inbound?: FirewallRuleType[] | null;
   outbound?: FirewallRuleType[] | null;
 }
@@ -29,5 +29,5 @@ export interface FirewallRuleType {
 }
 
 export interface FirewallDevices {
-  linodes: number[];
+  linodes?: number[];
 }

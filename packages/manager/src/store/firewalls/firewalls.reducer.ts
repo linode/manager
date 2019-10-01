@@ -13,7 +13,7 @@ interface FirewallRuleWithSequence {
 }
 
 export interface FirewallWithSequence extends Omit<Firewall, 'rules'> {
-  rules: FirewallRuleWithSequence[];
+  rules: FirewallRuleWithSequence;
 }
 
 export type State = EntitiesAsObjectState<FirewallWithSequence>;
@@ -37,23 +37,25 @@ const reducer = reducerWithInitialState(defaultState)
     data: result.data.reduce((acc, eachFirewall) => {
       acc[eachFirewall.id] = {
         ...eachFirewall,
-        rules: eachFirewall.rules.map(eachRule => ({
+        rules: {
           /**
            * map over each inbound and outbound rule and add the original order to them.
            * This is important because the API's original ordering matters
            * and the order they are returned in is the order they are applied.
            */
-          inbound: (eachRule.inbound || []).map((eachInboundRule, index) => ({
-            ...eachInboundRule,
-            sequence: index + 1
-          })),
-          outbound: (eachRule.outbound || []).map(
+          inbound: (eachFirewall.rules.inbound || []).map(
+            (eachInboundRule, index) => ({
+              ...eachInboundRule,
+              sequence: index + 1
+            })
+          ),
+          outbound: (eachFirewall.rules.outbound || []).map(
             (eachOutboundRule, index) => ({
               ...eachOutboundRule,
               sequence: index + 1
             })
           )
-        }))
+        }
       };
       return acc;
     }, {}),

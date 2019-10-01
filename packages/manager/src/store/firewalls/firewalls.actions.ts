@@ -10,7 +10,7 @@ export const getFirewalls = actionCreator.async<
   {
     params?: any;
     filter?: any;
-  } | void,
+  },
   GetAllData<Firewall[]>,
   APIError[]
 >(`success`);
