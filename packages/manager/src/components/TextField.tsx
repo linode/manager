@@ -321,7 +321,10 @@ class LinodeTextField extends React.Component<CombinedProps> {
         </TextField>
         {tooltipText && <HelpIcon text={tooltipText} />}
         {errorText && (
-          <FormHelperText className={classes.errorText}>
+          <FormHelperText
+            className={classes.errorText}
+            data-qa-textfield-error-text
+          >
             {errorText}
           </FormHelperText>
         )}
