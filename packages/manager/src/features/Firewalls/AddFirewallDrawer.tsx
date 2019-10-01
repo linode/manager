@@ -75,6 +75,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
         onChange={() => null}
       />
       <Select
+        label="Linodes"
         isLoading={linodesLoading}
         value={
           /*
