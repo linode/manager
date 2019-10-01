@@ -1,4 +1,5 @@
 import { Linode } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { groupBy } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -15,7 +16,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 interface WithLinodesProps {
   linodesData: Linode[];
   linodesLoading: boolean;
-  linodesError?: Linode.ApiFieldError[];
+  linodesError?: APIError[];
 }
 
 type Override = keyof Linode | ((linode: Linode) => any);

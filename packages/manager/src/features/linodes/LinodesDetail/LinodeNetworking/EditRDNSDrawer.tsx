@@ -1,4 +1,5 @@
 import { updateIP } from 'linode-js-sdk/lib/networking';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -21,7 +22,7 @@ interface State {
   rdns?: string | null;
   address?: string;
   loading: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   delayText: string | null;
 }
 

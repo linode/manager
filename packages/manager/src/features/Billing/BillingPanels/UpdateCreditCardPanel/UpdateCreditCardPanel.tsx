@@ -1,4 +1,5 @@
-import { Account, saveCreditCard } from 'linode-js-sdk/lib/account'
+import { Account, saveCreditCard } from 'linode-js-sdk/lib/account';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { compose, range, take, takeLast } from 'ramda';
 import * as React from 'react';
 import NumberFormat from 'react-number-format';
@@ -64,7 +65,7 @@ const styles = (theme: Theme) =>
 
 interface AccountContextProps {
   accountLoading: boolean;
-  accountErrors: Linode.ApiFieldError[];
+  accountErrors: APIError[];
   expiry: string;
   last_four: string;
   updateAccount: (update: (a: Account) => Account) => void;
@@ -73,7 +74,7 @@ interface AccountContextProps {
 
 interface State {
   submitting: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   success?: boolean;
   card_number: string;
   expiry_month: number;

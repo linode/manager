@@ -1,4 +1,5 @@
 import { Disk } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -91,7 +92,7 @@ type Filesystem = 'raw' | 'swap' | 'ext3' | 'ext4' | 'initrd' | '_none_';
 interface ConfirmDeleteState {
   open: boolean;
   submitting: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   id?: number;
   label?: string;
 }
@@ -100,7 +101,7 @@ interface DrawerState {
   open: boolean;
   submitting: boolean;
   mode: 'create' | 'rename' | 'resize';
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   diskId?: number;
   maximumSize: number;
   fields: {

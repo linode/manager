@@ -2,6 +2,7 @@ import {
   ManagedLinodeSetting,
   updateLinodeSettings
 } from 'linode-js-sdk/lib/managed';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -20,7 +21,7 @@ export type CombinedProps = Props & WithSnackbarProps;
 export const SSHAccessActionMenu: React.FC<CombinedProps> = props => {
   const { linodeId, isEnabled, updateOne, openDrawer, enqueueSnackbar } = props;
 
-  const handleError = (message: string, error: Linode.ApiFieldError[]) => {
+  const handleError = (message: string, error: APIError[]) => {
     const errMessage = getAPIErrorOrDefault(error, message);
     enqueueSnackbar(errMessage[0].reason, { variant: 'error' });
   };

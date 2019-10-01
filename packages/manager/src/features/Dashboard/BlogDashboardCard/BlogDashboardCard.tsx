@@ -1,5 +1,6 @@
 import Axios from 'axios';
 import { decode } from 'he';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { compose, map, pathOr, take } from 'ramda';
 import * as React from 'react';
 import Paper from 'src/components/core/Paper';
@@ -43,7 +44,7 @@ export interface BlogItem {
 interface State {
   items: BlogItem[];
   loading: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
 }
 
 type CombinedProps = WithStyles<ClassNames>;

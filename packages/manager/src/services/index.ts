@@ -1,4 +1,5 @@
 import Axios, { AxiosError, AxiosPromise, AxiosResponse } from 'axios';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { compose, isEmpty, isNil, lensPath, not, omit, set, when } from 'ramda';
 import { ObjectSchema, ValidationError } from 'yup';
 
@@ -66,7 +67,7 @@ export const setData = <T>(
       set(
         L.validationErrors,
         convertYupToLinodeErrors(error)
-      ) as () => Linode.ApiFieldError[]
+      ) as () => APIError[]
     );
   }
 };
@@ -77,7 +78,7 @@ export const setData = <T>(
  */
 const convertYupToLinodeErrors = (
   validationError: ValidationError
-): Linode.ApiFieldError[] => {
+): APIError[] => {
   const { inner } = validationError;
 
   /** If aggregate errors */
@@ -95,7 +96,7 @@ const convertYupToLinodeErrors = (
 const mapYupToLinodeAPIError = ({
   message,
   path
-}: ValidationError): Linode.ApiFieldError => ({
+}: ValidationError): APIError => ({
   reason: message,
   ...(path && { field: path })
 });
@@ -112,7 +113,7 @@ export default <T>(...fns: Function[]): AxiosPromise<T> => {
   const config = reduceRequestConfig(...fns);
   if (config.validationErrors) {
     return Promise.reject(
-      config.validationErrors // All failed requests, client or server errors, should be Linode.ApiFieldError[]
+      config.validationErrors // All failed requests, client or server errors, should be APIError[]
     );
   }
 
@@ -200,9 +201,7 @@ const createError = (message: string, response: AxiosResponse) => {
  *
  * Helper method to easily generate APIFieldError[] for a number of fields and a general error.
  */
-export const mockAPIFieldErrors = (
-  fields: string[]
-): Linode.ApiFieldError[] => {
+export const mockAPIFieldErrors = (fields: string[]): APIError[] => {
   return fields.reduce(
     (result, field) => [...result, { field, reason: `${field} is incorrect.` }],
     [{ reason: 'A general error has occurred.' }]

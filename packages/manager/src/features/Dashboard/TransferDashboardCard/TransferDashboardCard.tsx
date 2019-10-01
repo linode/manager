@@ -1,4 +1,5 @@
 import { getNetworkUtilization } from 'linode-js-sdk/lib/account';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import BarPercent from 'src/components/BarPercent';
 import CircleProgress from 'src/components/CircleProgress';
@@ -58,7 +59,7 @@ const styles = (theme: Theme) =>
 
 interface State {
   loading: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   used?: number;
   quota?: number;
 }
@@ -145,7 +146,7 @@ class TransferDashboardCard extends React.Component<CombinedProps, State> {
     );
   }
 
-  renderErrorState = (e: Linode.ApiFieldError[]) => null;
+  renderErrorState = (e: APIError[]) => null;
 
   renderLoadingState = () => (
     <DashboardCard>

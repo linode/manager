@@ -2,6 +2,7 @@ import {
   getNodeBalancer,
   getNodeBalancerConfigs
 } from 'linode-js-sdk/lib/nodebalancers';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { any, last, pathOr } from 'ramda';
 import * as React from 'react';
@@ -67,7 +68,7 @@ type RouteProps = RouteComponentProps<{ nodeBalancerId?: string }>;
 
 interface State {
   nodeBalancer?: ExtendedNodeBalancer;
-  ApiError: Linode.ApiFieldError[] | undefined;
+  ApiError: APIError[] | undefined;
   labelInput?: string;
 }
 

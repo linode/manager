@@ -1,4 +1,5 @@
 import { LinodeType } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { compose, filter, map, pathOr } from 'ramda';
 import { connect } from 'react-redux';
 
@@ -9,7 +10,7 @@ import { ApplicationState } from 'src/store';
 export interface WithTypesProps {
   typesData?: ExtendedType[];
   typesLoading: boolean;
-  typesError?: Linode.ApiFieldError[];
+  typesError?: APIError[];
 }
 
 export default connect((state: ApplicationState, ownProps) => ({

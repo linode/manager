@@ -1,9 +1,10 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 
 export interface StateProps {
   clustersData: Linode.Cluster[];
-  clustersError?: Linode.ApiFieldError[];
+  clustersError?: APIError[];
   clustersLoading: boolean;
 }
 

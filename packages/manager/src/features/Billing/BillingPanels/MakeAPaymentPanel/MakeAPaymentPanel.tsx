@@ -25,7 +25,8 @@ import {
   executePaypalPayment,
   makePayment,
   stagePaypalPayment
-} from 'linode-js-sdk/lib/account'
+} from 'linode-js-sdk/lib/account';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import scriptLoader from 'react-async-script-loader';
@@ -106,7 +107,7 @@ interface State {
   type: 'CREDIT_CARD' | 'PAYPAL';
   isSubmittingCreditCardPayment: boolean;
   successMessage?: string;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   usd: string;
   cvv?: string;
   paymentID: string;
@@ -157,11 +158,11 @@ const paypalSrcQueryParams = `&disable-funding=card,credit&currency=USD&commit=f
 const paypalScriptSrc = () => {
   return isProduction
     ? `https://www.paypal.com/sdk/js?client-id=${
-    client.production
-    }${paypalSrcQueryParams}`
+        client.production
+      }${paypalSrcQueryParams}`
     : `https://www.paypal.com/sdk/js?client-id=${
-    client.sandbox
-    }${paypalSrcQueryParams}`;
+        client.sandbox
+      }${paypalSrcQueryParams}`;
 };
 
 const env = process.env.NODE_ENV === 'development' ? 'sandbox' : 'production';
@@ -331,7 +332,7 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
           paypalDialogOpen: false,
           successMessage: `Payment for $${
             this.state.usd
-            } successfully submitted`
+          } successfully submitted`
         });
       })
       .catch(errorResponse => {
@@ -578,10 +579,10 @@ class MakeAPaymentPanel extends React.Component<CombinedProps, State> {
             </div>
           </React.Fragment>
         ) : (
-            <Button buttonType="primary" onClick={this.openCreditCardDialog}>
-              Submit Payment
+          <Button buttonType="primary" onClick={this.openCreditCardDialog}>
+            Submit Payment
           </Button>
-          )}
+        )}
         <Button buttonType="cancel" onClick={this.resetForm}>
           Cancel
         </Button>

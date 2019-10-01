@@ -6,6 +6,7 @@ import {
   Invoice,
   InvoiceItem
 } from 'linode-js-sdk/lib/account';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
@@ -63,7 +64,7 @@ interface State {
   invoice?: Invoice;
   items?: InvoiceItem[];
   loading: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   pdfGenerationError?: any;
 }
 

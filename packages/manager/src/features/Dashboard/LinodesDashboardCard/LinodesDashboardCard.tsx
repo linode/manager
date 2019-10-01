@@ -1,5 +1,6 @@
 import { Entity, Event } from 'linode-js-sdk/lib/account';
 import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { compose, path, pathOr, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -124,7 +125,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
     return <TableRowLoading colSpan={3} />;
   };
 
-  renderErrors = (errors: Linode.ApiFieldError[]) => {
+  renderErrors = (errors: APIError[]) => {
     let errorText: string | JSX.Element = pathOr(
       'Unable to load Linodes.',
       [0, 'reason'],
@@ -201,7 +202,7 @@ interface WithUpdatingLinodesProps {
   linodes: LinodeWithMaintenance[];
   linodeCount: number;
   loading: boolean;
-  error?: Linode.ApiFieldError[];
+  error?: APIError[];
 }
 
 const withUpdatingLinodes = connect((state: ApplicationState, ownProps: {}) => {

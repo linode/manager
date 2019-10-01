@@ -5,6 +5,7 @@ import {
   Linode
 } from 'linode-js-sdk/lib/linodes';
 import { StackScript, UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -84,7 +85,7 @@ interface State {
   password: string;
   udfs?: any[];
   tags?: Tag[];
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   formIsSubmitting: boolean;
   appInstances?: StackScript[];
   appInstancesLoading: boolean;

@@ -1,3 +1,5 @@
+import { APIError } from 'linode-js-sdk/lib/types';
+
 /**
  * filter out all the API errors that aren't UDF errors from our error state.
  * To do this, we compare the keys from the error state to our "errorResources"
@@ -5,7 +7,7 @@
  */
 export const filterUDFErrors = (
   errorResources: Record<string, string>,
-  errors?: Linode.ApiFieldError[]
+  errors?: APIError[]
 ) => {
   if (typeof errorResources !== 'object') {
     throw Error('errorResources must be an object.');

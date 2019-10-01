@@ -1,4 +1,5 @@
 import { InvoiceItem } from 'linode-js-sdk/lib/account';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
@@ -15,7 +16,7 @@ import PaginationFooter from 'src/components/PaginationFooter';
 
 interface Props {
   loading: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   items?: InvoiceItem[];
 }
 
@@ -130,7 +131,7 @@ const RenderLoading: React.StatelessComponent<{}> = () => {
 };
 
 const RenderErrors: React.StatelessComponent<{
-  errors: Linode.ApiFieldError[];
+  errors: APIError[];
 }> = props => {
   return (
     <TableRowError colSpan={8} message="Unable to retrieve invoice items." />
@@ -143,7 +144,7 @@ const RenderEmpty: React.StatelessComponent<{}> = () => {
 
 const MaybeRenderContent: React.StatelessComponent<{
   loading: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   items?: any[];
 }> = props => {
   const { loading, errors, items } = props;

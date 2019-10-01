@@ -1,4 +1,5 @@
 import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import EnhancedSelect, { Item } from 'src/components/EnhancedSelect/Select';
@@ -10,7 +11,7 @@ import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 interface WithNodeBalancersProps {
   nodeBalancersData: NodeBalancer[];
   nodeBalancersLoading: boolean;
-  nodeBalancersError?: Linode.ApiFieldError[];
+  nodeBalancersError?: APIError[];
 }
 
 interface Props {

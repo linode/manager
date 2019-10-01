@@ -1,4 +1,5 @@
 import { Config } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -17,7 +18,7 @@ interface Props {
   isOpen: boolean;
   selectedConfigID?: number;
   loading: boolean;
-  error?: Linode.ApiFieldError[];
+  error?: APIError[];
 }
 
 type CombinedProps = Props;

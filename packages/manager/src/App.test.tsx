@@ -1,4 +1,5 @@
 import { shallow } from 'enzyme';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { Provider } from 'react-redux';
 import { StaticRouter } from 'react-router-dom';
@@ -53,7 +54,7 @@ it('renders without crashing.', () => {
   expect(component.find('App')).toHaveLength(1);
 });
 
-const errors: (Linode.ApiFieldError[] | Error)[] = [
+const errors: (APIError[] | Error)[] = [
   [
     {
       reason: 'invalid OAuTh token'

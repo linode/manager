@@ -105,7 +105,7 @@ export const handleError = (error: AxiosError) => {
     }
   ]);
 
-  // Downstream components should only have to handle ApiFieldErrors, not AxiosErrors.
+  // Downstream components should only have to handle APIError, not AxiosErrors.
   return Promise.reject(interceptedErrors);
 };
 

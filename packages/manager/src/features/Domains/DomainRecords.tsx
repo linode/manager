@@ -5,6 +5,7 @@ import {
   DomainType,
   RecordType
 } from 'linode-js-sdk/lib/domains';
+import { APIError } from 'linode-js-sdk/lib/types';
 import {
   compose,
   equals,
@@ -93,7 +94,7 @@ interface Props {
 interface ConfirmationState {
   open: boolean;
   submitting: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   recordId?: number;
 }
 

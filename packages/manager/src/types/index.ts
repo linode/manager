@@ -34,11 +34,6 @@ namespace Linode {
     hourly: number;
   }
 
-  export interface ApiFieldError {
-    field?: string;
-    reason: string;
-  }
-
   export interface PaginationOptions {
     page?: number;
     page_size?: number;

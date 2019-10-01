@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { take } from 'ramda';
 import * as React from 'react';
@@ -16,7 +17,7 @@ import VolumeDashboardRow from './VolumeDashboardRow';
 
 interface VolumeProps {
   volumesLoading: boolean;
-  volumesError?: Linode.ApiFieldError[];
+  volumesError?: APIError[];
   volumesData: Volume[];
 }
 
@@ -63,7 +64,7 @@ export const VolumesDashboardCard: React.FunctionComponent<
     return <TableRowLoading colSpan={3} />;
   };
 
-  const renderErrors = (errors: Linode.ApiFieldError[]) => (
+  const renderErrors = (errors: APIError[]) => (
     <TableRowError colSpan={3} message={`Unable to load Volumes.`} />
   );
 

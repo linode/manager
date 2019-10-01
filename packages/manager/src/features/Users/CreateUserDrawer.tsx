@@ -1,4 +1,5 @@
-import { createUser, User } from "linode-js-sdk/lib/account";
+import { createUser, User } from 'linode-js-sdk/lib/account';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -21,7 +22,7 @@ interface State {
   username: string;
   email: string;
   restricted: boolean;
-  errors: Linode.ApiFieldError[];
+  errors: APIError[];
   submitting: boolean;
 }
 

@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import {
   append,
   clone,
@@ -91,11 +92,11 @@ interface NodeBalancerFieldsState {
 interface State {
   submitting: boolean;
   nodeBalancerFields: NodeBalancerFieldsState;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   deleteConfigConfirmDialog: {
     open: boolean;
     submitting: boolean;
-    errors?: Linode.ApiFieldError[];
+    errors?: APIError[];
     idxToDelete?: number;
   };
 }
@@ -256,7 +257,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     this.setState((compose as any)(...setFns));
   };
 
-  setNodeErrors = (errors: Linode.ApiFieldError[]) => {
+  setNodeErrors = (errors: APIError[]) => {
     /* Map the objects with this shape
         {
           path: ['configs', 2, 'nodes', 0, 'errors'],
@@ -320,7 +321,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
       .catch(errorResponse => {
         const errors = getAPIErrorOrDefault(errorResponse);
         this.setNodeErrors(
-          errors.map((e: Linode.ApiFieldError) => ({
+          errors.map((e: APIError) => ({
             ...e,
             ...(e.field && { field: e.field.replace(/(\[|\]\.)/g, '_') })
           }))
@@ -370,7 +371,7 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     /* remove the errors related to that config */
     if (this.state.errors) {
       this.setState({
-        errors: this.state.errors!.filter((error: Linode.ApiFieldError) => {
+        errors: this.state.errors!.filter((error: APIError) => {
           const t = new RegExp(`configs_${idxToDelete}_`);
           return error.field && !t.test(error.field);
         })
@@ -729,7 +730,7 @@ export interface FieldAndPath {
   path: any[];
 }
 
-export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
+export const fieldErrorsToNodePathErrors = (errors: APIError[]) => {
   /**
    * Potentials;
    *  JOI error config_0_nodes_0_address
@@ -745,7 +746,7 @@ export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
         }
       }
   */
-  return errors.reduce((acc: any, error: Linode.ApiFieldError) => {
+  return errors.reduce((acc: any, error: APIError) => {
     const errorFields = pathOr('', ['field'], error).split('|');
     const pathErrors: FieldAndPath[] = errorFields.map((field: string) =>
       getPathAndFieldFromFieldString(field)
@@ -773,7 +774,7 @@ export const fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
 interface WithRegions {
   regionsData: ExtendedRegion[];
   regionsLoading: boolean;
-  regionsError: Linode.ApiFieldError[];
+  regionsError: APIError[];
 }
 
 interface StateProps {

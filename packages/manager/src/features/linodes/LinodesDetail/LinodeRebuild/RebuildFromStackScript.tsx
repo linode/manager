@@ -5,6 +5,7 @@ import {
   RebuildLinodeFromStackScriptSchema
 } from 'linode-js-sdk/lib/linodes';
 import { UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty } from 'ramda';
 import * as React from 'react';
@@ -126,9 +127,9 @@ export const RebuildFromStackScript: React.StatelessComponent<
   // In this component, most errors are handled by Formik. This is not
   // possible with UDFs, since they are dynamic. Their errors need to
   // be handled separately.
-  const [udfErrors, setUdfErrors] = React.useState<
-    Linode.ApiFieldError[] | undefined
-  >(undefined);
+  const [udfErrors, setUdfErrors] = React.useState<APIError[] | undefined>(
+    undefined
+  );
 
   const [isDialogOpen, setIsDialogOpen] = React.useState<boolean>(false);
 
@@ -162,8 +163,8 @@ export const RebuildFromStackScript: React.StatelessComponent<
         history.push(`/linodes/${linodeId}/summary`);
       })
       .catch(errorResponse => {
-        const APIError = getAPIErrorOrDefault(errorResponse);
-        setUdfErrors(getUDFErrors(APIError));
+        const APIErrors = getAPIErrorOrDefault(errorResponse);
+        setUdfErrors(getUDFErrors(APIErrors));
 
         const defaultMessage = `There was an issue rebuilding your Linode.`;
         const mapErrorToStatus = (generalError: string) =>
@@ -183,7 +184,7 @@ export const RebuildFromStackScript: React.StatelessComponent<
   // to be validated separately. This functions checks if we've got values
   // for all REQUIRED UDFs, and sets errors appropriately.
   const validateUdfs = () => {
-    const maybeErrors: Linode.ApiFieldError[] = [];
+    const maybeErrors: APIError[] = [];
 
     // Walk through the defined UDFs
     ss.user_defined_fields.forEach(eachUdf => {
@@ -384,7 +385,7 @@ export default enhanced(RebuildFromStackScript);
 // Helpers
 // =============================================================================
 
-const getUDFErrors = (errors: Linode.ApiFieldError[] | undefined) => {
+const getUDFErrors = (errors: APIError[] | undefined) => {
   const fixedErrorFields = ['stackscript_id', 'root_pass', 'image', 'none'];
 
   return errors

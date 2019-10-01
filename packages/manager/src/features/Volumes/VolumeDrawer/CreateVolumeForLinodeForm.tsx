@@ -2,6 +2,7 @@
  * @todo Display the volume configuration information on success.
  */
 import { Form, Formik } from 'formik';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { CreateVolumeSchema } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -219,7 +220,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
                 touched.tags
                   ? errors.tags
                     ? getErrorStringOrDefault(
-                        errors.tags as Linode.ApiFieldError[],
+                        errors.tags as APIError[],
                         'Unable to tag volume.'
                       )
                     : undefined

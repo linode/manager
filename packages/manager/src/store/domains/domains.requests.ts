@@ -5,6 +5,7 @@ import {
   Domain,
   updateDomain as _updateDomain
 } from 'linode-js-sdk/lib/domains';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { createRequestThunk } from '../store.helpers';
 import {
   createDomainActions,
@@ -17,19 +18,18 @@ import {
 export const createDomain = createRequestThunk<
   CreateDomainPayload,
   Domain,
-  Linode.ApiFieldError[]
+  APIError[]
 >(createDomainActions, payload => _createDomain(payload));
 
-export const deleteDomain = createRequestThunk<
-  DomainId,
-  {},
-  Linode.ApiFieldError[]
->(deleteDomainActions, ({ domainId }) => _deleteDomain(domainId));
+export const deleteDomain = createRequestThunk<DomainId, {}, APIError[]>(
+  deleteDomainActions,
+  ({ domainId }) => _deleteDomain(domainId)
+);
 
 export const updateDomain = createRequestThunk<
   UpdateDomainParams,
   Domain,
-  Linode.ApiFieldError[]
+  APIError[]
 >(updateDomainActions, ({ domainId, ...payload }) =>
   _updateDomain(domainId, payload)
 );

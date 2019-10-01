@@ -5,6 +5,7 @@ import {
   getDomains,
   UpdateDomainPayload
 } from 'linode-js-sdk/lib/domains';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { Dispatch } from 'redux';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
@@ -29,7 +30,7 @@ export const getDomainsSuccess = actionCreator<{
   results: number;
 }>('success');
 
-export const getDomainsFailure = actionCreator<Linode.ApiFieldError[]>('fail');
+export const getDomainsFailure = actionCreator<APIError[]>('fail');
 
 export const upsertDomain = actionCreator<Domain>('upsert');
 
@@ -38,17 +39,17 @@ export const deleteDomain = actionCreator<number>('delete');
 export const createDomainActions = actionCreator.async<
   CreateDomainPayload,
   Domain,
-  Linode.ApiFieldError[]
+  APIError[]
 >('create');
 export const updateDomainActions = actionCreator.async<
   UpdateDomainParams,
   Domain,
-  Linode.ApiFieldError[]
+  APIError[]
 >('update');
 export const deleteDomainActions = actionCreator.async<
   DomainId,
   {},
-  Linode.ApiFieldError[]
+  APIError[]
 >('delete');
 
 /**

@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -8,12 +9,12 @@ import { MapState } from 'src/store/types';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 interface OuterProps {
-  configsError?: Linode.ApiFieldError[];
-  typesError?: Linode.ApiFieldError[];
+  configsError?: APIError[];
+  typesError?: APIError[];
 }
 
 interface InnerProps {
-  error?: Linode.ApiFieldError[] | Error;
+  error?: APIError[] | Error;
 }
 
 const collectErrors: MapState<InnerProps, OuterProps> = (
@@ -55,13 +56,16 @@ export default compose(
   branch(
     ({ error }) => Boolean(error),
     /** error is not the only prop, but it's the only one we care about */
-    renderComponent((props: { error: Linode.ApiFieldError[] }) => {
+    renderComponent((props: { error: APIError[] }) => {
       let errorText: string | JSX.Element = getAPIErrorOrDefault(
         props.error,
         'There was an issue retrieving your Linode. Please try again later.'
       )[0].reason;
 
-      if (typeof errorText === 'string' && errorText.toLowerCase() === 'this linode has been suspended') {
+      if (
+        typeof errorText === 'string' &&
+        errorText.toLowerCase() === 'this linode has been suspended'
+      ) {
         errorText = (
           <React.Fragment>
             This Linode is suspended. Please{' '}
