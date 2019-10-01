@@ -19,11 +19,11 @@ type CombinedProps = Props & LinodeProps;
 const AddFirewallDrawer: React.FC<CombinedProps> = props => {
   const {
     getLinodes,
-    loading: linodesLoading,
-    error: linodesError,
-    results: linodesResults,
-    entities: linodesEntities,
-    lastUpdated: linodesLastUpdated,
+    linodesLoading,
+    linodesError,
+    linodesResults,
+    linodesData,
+    linodesLastUpdated,
     ...restOfDrawerProps
   } = props;
 
@@ -49,7 +49,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
      * otherwise use the values from the react-select input value
      */
     const payloadAsArrayOfLinodeIDs = userSelectedAllLinodes(selectedLinodes)
-      ? linodesEntities.map(eachLinode => eachLinode.id)
+      ? linodesData.map(eachLinode => eachLinode.id)
       : selectedLinodes.map(eachValue => eachValue.value);
 
     return payloadAsArrayOfLinodeIDs;
@@ -109,7 +109,7 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
                   value: 'ALL',
                   label: 'All Linodes'
                 },
-                ...linodesEntities.map(eachLinode => ({
+                ...linodesData.map(eachLinode => ({
                   value: eachLinode.id,
                   label: eachLinode.label
                 }))

@@ -16,9 +16,13 @@ interface DispatchProps {
 export type LinodeWithMaintenance = L;
 
 /* tslint:disable-next-line */
-export type StateProps = Omit<State, 'error'> & {
-  error?: APIError[];
-};
+export interface StateProps {
+  linodesError?: APIError[];
+  linodesLoading: State['loading'];
+  linodesData: State['entities'];
+  linodesLastUpdated: State['lastUpdated'];
+  linodesResults: State['results'];
+}
 
 type MapProps<ReduxStateProps, OwnProps> = (
   ownProps: OwnProps,
@@ -39,7 +43,13 @@ const connected = <ReduxStateProps extends {}, OwnProps extends {}>(
     ApplicationState
   >(
     (state, ownProps) => {
-      const { loading, error, entities } = state.__resources.linodes;
+      const {
+        loading,
+        error,
+        entities,
+        lastUpdated,
+        results
+      } = state.__resources.linodes;
       if (mapStateToProps) {
         return mapStateToProps(
           ownProps,
@@ -50,8 +60,11 @@ const connected = <ReduxStateProps extends {}, OwnProps extends {}>(
       }
 
       return {
-        ...state.__resources.linodes,
-        error: path(['read'], state.__resources.linodes.error)
+        linodesError: path(['read'], error),
+        linodesLoading: loading,
+        linodesData: entities,
+        linodesResults: results,
+        linodesLastUpdated: lastUpdated
       };
     },
     (dispatch: ThunkDispatch) => ({
