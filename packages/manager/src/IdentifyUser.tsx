@@ -47,9 +47,9 @@ export const IdentifyUser: React.FC<Props> = props => {
       client
         .identify({
           key: md5(String(userID)),
+          name: username,
           country,
           custom: {
-            username,
             taxID: _taxID
           }
         })
