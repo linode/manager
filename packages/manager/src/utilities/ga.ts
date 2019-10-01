@@ -296,3 +296,10 @@ export const sendOneClickNavigationEvent = (
     action: `From ${whichButton}`
   });
 };
+
+export const sendDomainStatusChangeEvent = (action: 'Enable' | 'Disable') => {
+  return sendEvent({
+    category: 'Domain Status Change',
+    action
+  });
+};

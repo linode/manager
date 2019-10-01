@@ -1,4 +1,5 @@
 import { cleanup } from '@testing-library/react';
+import { DomainStatus } from 'linode-js-sdk/lib/domains';
 import * as React from 'react';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { DomainActionMenu } from './DomainActionMenu';
@@ -14,6 +15,8 @@ const props = {
   type: 'master' as 'master' | 'slave',
   domain: '',
   id: 1234456,
+  onDisableOrEnable: jest.fn(),
+  status: 'active' as DomainStatus,
   ...reactRouterProps
 };
 
