@@ -73,24 +73,6 @@ export const BucketTable: React.StatelessComponent<CombinedProps> = props => {
                     Name
                   </TableSortCell>
                   <TableSortCell
-                    active={orderBy === 'objects'}
-                    label="objects"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    data-qa-objects
-                  >
-                    Objects
-                  </TableSortCell>
-                  <TableSortCell
-                    active={orderBy === 'size'}
-                    label="size"
-                    direction={order}
-                    handleClick={handleOrderChange}
-                    data-qa-size
-                  >
-                    Size
-                  </TableSortCell>
-                  <TableSortCell
                     active={orderBy === 'region'}
                     label="region"
                     direction={order}

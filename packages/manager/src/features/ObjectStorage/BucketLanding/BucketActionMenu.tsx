@@ -3,8 +3,6 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 export interface Props {
   onRemove: () => void;
-  bucketLabel: string;
-  cluster: string;
 }
 
 export const BucketActionMenu: React.StatelessComponent<Props> = props => {

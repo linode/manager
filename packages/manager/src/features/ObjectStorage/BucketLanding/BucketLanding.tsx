@@ -29,7 +29,6 @@ import bucketRequestsContainer, {
 import useOpenClose from 'src/hooks/useOpenClose';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import { sendDeleteBucketEvent } from 'src/utilities/ga';
-import { readableBytes } from 'src/utilities/unitConversions';
 import BucketTable from './BucketTable';
 
 type ClassNames = 'root' | 'confirmationCopy';
@@ -82,9 +81,7 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
     setIsLoading(true);
 
     const { cluster, label } = bucketToRemove;
-    // Passing in `force: 1` as a param to delete ALL items within
-    // the bucket before deleting the bucket itself.
-    deleteBucket({ cluster, label, params: { force: 1 } })
+    deleteBucket({ cluster, label })
       .then(() => {
         removeBucketConfirmationDialog.close();
         setIsLoading(false);
@@ -127,23 +124,9 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
 
   const deleteBucketConfirmationMessage = bucketToRemove ? (
     <React.Fragment>
-      {bucketToRemove.size > 0 ? (
-        <Typography>
-          This bucket contains{' '}
-          <strong>
-            {bucketToRemove.objects}{' '}
-            {bucketToRemove.objects === 1 ? 'object' : 'objects'}
-          </strong>{' '}
-          totalling{' '}
-          <strong>{readableBytes(bucketToRemove.size).formatted}</strong> that
-          will be deleted along with the bucket. Deleting a bucket is permanent
-          and can't be undone.
-        </Typography>
-      ) : (
-        <Typography>
-          Deleting a bucket is permanent and can't be undone.
-        </Typography>
-      )}
+      <Typography>
+        Deleting a bucket is permanent and can't be undone.
+      </Typography>
       <Typography className={classes.confirmationCopy}>
         To confirm deletion, type the name of the bucket ({bucketToRemove.label}
         ) in the field below:
