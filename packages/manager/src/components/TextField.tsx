@@ -255,7 +255,6 @@ class LinodeTextField extends React.Component<CombinedProps> {
            */
           label={''}
           helperText={''}
-          // label={!!this.props.required ? `${label} (required)` : label}
           fullWidth
           /*
             let us explicitly pass an empty string to the input
