@@ -1,5 +1,6 @@
 import { createImage, updateImage } from 'linode-js-sdk/lib/images';
 import { Disk, getLinodeDisks } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { compose, equals } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -60,7 +61,7 @@ export interface Props {
 interface State {
   disks: Disk[];
   notice?: string;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames> & RouteComponentProps<{}>;

@@ -1,4 +1,5 @@
 import { MonitorStatus } from 'linode-js-sdk/lib/managed';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -34,7 +35,7 @@ export class MonitorActionMenu extends React.Component<CombinedProps, {}> {
       status
     } = this.props;
 
-    const handleError = (message: string, error: Linode.ApiFieldError[]) => {
+    const handleError = (message: string, error: APIError[]) => {
       const errMessage = getAPIErrorOrDefault(error, message);
       enqueueSnackbar(errMessage[0].reason, { variant: 'error' });
     };

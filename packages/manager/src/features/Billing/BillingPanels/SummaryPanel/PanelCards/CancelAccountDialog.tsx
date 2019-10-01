@@ -1,4 +1,5 @@
-import { cancelAccount } from 'linode-js-sdk/lib/account'
+import { cancelAccount } from 'linode-js-sdk/lib/account';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -26,9 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const CancelAccountDialog: React.FC<CombinedProps> = props => {
   const [isCancelling, setCancelling] = React.useState<boolean>(false);
-  const [errors, setErrors] = React.useState<
-    Linode.ApiFieldError[] | undefined
-  >(undefined);
+  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [comments, setComments] = React.useState<string>('');
   const [inputtedUsername, setUsername] = React.useState<string>('');
   const [canSubmit, setCanSubmit] = React.useState<boolean>(false);
@@ -85,7 +84,7 @@ const CancelAccountDialog: React.FC<CombinedProps> = props => {
         /** shoot the user off to survey monkey to answer some questions */
         props.history.push(`/cancel?link=${response.survey_link}`);
       })
-      .catch((e: Linode.ApiFieldError[]) => {
+      .catch((e: APIError[]) => {
         setCancelling(false);
         setErrors(e);
       });

@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import {
   attachVolume as _attachVolume,
   cloneVolume as _cloneVolume,
@@ -37,7 +38,7 @@ export type CreateVolumeRequest = _VolumeRequestPayload;
 export const createVolume = createRequestThunk<
   CreateVolumeRequest,
   Volume,
-  Linode.ApiFieldError[]
+  APIError[]
 >(createVolumeActions, data => _createVolume(data));
 
 /*
@@ -46,7 +47,7 @@ export const createVolume = createRequestThunk<
 export const updateVolume = createRequestThunk<
   UpdateVolumeParams,
   Volume,
-  Linode.ApiFieldError[]
+  APIError[]
 >(updateVolumeActions, ({ volumeId, ...data }) =>
   _updateVolume(volumeId, data)
 );
@@ -54,11 +55,10 @@ export const updateVolume = createRequestThunk<
 /*
  * Delete Volume
  */
-export const deleteVolume = createRequestThunk<
-  VolumeId,
-  {},
-  Linode.ApiFieldError[]
->(deleteVolumeActions, ({ volumeId }) => _deleteVolume(volumeId));
+export const deleteVolume = createRequestThunk<VolumeId, {}, APIError[]>(
+  deleteVolumeActions,
+  ({ volumeId }) => _deleteVolume(volumeId)
+);
 
 /*
  * Attach Volume
@@ -66,7 +66,7 @@ export const deleteVolume = createRequestThunk<
 export const attachVolume = createRequestThunk<
   AttachVolumeParams,
   Volume,
-  Linode.ApiFieldError[]
+  APIError[]
 >(attachVolumeActions, ({ volumeId, ...data }) =>
   _attachVolume(volumeId, data)
 );
@@ -74,11 +74,10 @@ export const attachVolume = createRequestThunk<
 /*
  * Detach Volume
  */
-export const detachVolume = createRequestThunk<
-  VolumeId,
-  {},
-  Linode.ApiFieldError[]
->(detachVolumeActions, ({ volumeId }) => _detachVolume(volumeId));
+export const detachVolume = createRequestThunk<VolumeId, {}, APIError[]>(
+  detachVolumeActions,
+  ({ volumeId }) => _detachVolume(volumeId)
+);
 
 /*
  * Resize Volume
@@ -86,7 +85,7 @@ export const detachVolume = createRequestThunk<
 export const resizeVolume = createRequestThunk<
   ResizeVolumeParams,
   Volume,
-  Linode.ApiFieldError[]
+  APIError[]
 >(resizeVolumeActions, ({ volumeId, ...payload }) =>
   _resizeVolume(volumeId, payload)
 );
@@ -94,11 +93,10 @@ export const resizeVolume = createRequestThunk<
 /*
  * Get One Volume
  */
-export const getOneVolume = createRequestThunk<
-  VolumeId,
-  Volume,
-  Linode.ApiFieldError[]
->(getOneVolumeActions, ({ volumeId }) => _getVolume(volumeId));
+export const getOneVolume = createRequestThunk<VolumeId, Volume, APIError[]>(
+  getOneVolumeActions,
+  ({ volumeId }) => _getVolume(volumeId)
+);
 
 /*
  * Clone Volume
@@ -106,7 +104,7 @@ export const getOneVolume = createRequestThunk<
 export const cloneVolume = createRequestThunk<
   CloneVolumeParams,
   Volume,
-  Linode.ApiFieldError[]
+  APIError[]
 >(cloneVolumeActions, ({ volumeId, ...payload }) =>
   _cloneVolume(volumeId, payload)
 );

@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 
 export interface DialogState {
@@ -70,7 +71,7 @@ export const useDialog = <T>(
         handleSuccess();
         return response;
       })
-      .catch((e: Linode.ApiFieldError[]) => {
+      .catch((e: APIError[]) => {
         /**
          * This sets the error to whatever the API returns.
          * Consumers can use the exposed handleError method

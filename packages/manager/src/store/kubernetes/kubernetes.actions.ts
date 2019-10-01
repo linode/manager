@@ -1,4 +1,5 @@
 import { KubernetesCluster } from 'linode-js-sdk/lib/kubernetes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import actionCreatorFactory from 'typescript-fsa';
 
 import { EntityError } from 'src/store/types';
@@ -8,7 +9,7 @@ export const actionCreator = actionCreatorFactory(`@@manager/kubernetes`);
 export const requestClustersActions = actionCreator.async<
   void,
   KubernetesCluster[],
-  Linode.ApiFieldError[]
+  APIError[]
 >('request');
 
 export const addOrUpdateCluster = actionCreator<KubernetesCluster>(
@@ -27,12 +28,12 @@ export type UpdateClusterParams = ClusterID & Partial<KubernetesCluster>;
 export const updateClusterActions = actionCreator.async<
   UpdateClusterParams,
   KubernetesCluster,
-  Linode.ApiFieldError[]
+  APIError[]
 >(`update`);
 
 export type DeleteClusterParams = ClusterID;
 export const deleteClusterActions = actionCreator.async<
   DeleteClusterParams,
   {},
-  Linode.ApiFieldError[]
+  APIError[]
 >(`delete-cluster`);

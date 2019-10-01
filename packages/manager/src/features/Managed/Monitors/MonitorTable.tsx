@@ -4,6 +4,7 @@ import {
   ManagedServiceMonitor,
   ManagedServicePayload
 } from 'linode-js-sdk/lib/managed';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -54,7 +55,7 @@ interface Props {
   credentials: ManagedCredential[];
   groups: string[];
   loading: boolean;
-  error?: Linode.ApiFieldError[];
+  error?: APIError[];
 }
 
 export type Modes = 'create' | 'edit';
@@ -148,7 +149,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
       handleDrawerClose();
     };
 
-    const _error = (e: Linode.ApiFieldError[]) => {
+    const _error = (e: APIError[]) => {
       const defaultMessage = `Unable to ${
         drawerMode === 'create' ? 'create' : 'update'
       } this Monitor. Please try again later.`;

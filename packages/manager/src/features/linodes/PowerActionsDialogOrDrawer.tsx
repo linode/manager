@@ -4,6 +4,7 @@ import {
   linodeReboot,
   linodeShutdown
 } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -31,9 +32,7 @@ type CombinedProps = Props;
 
 const PowerActionsDialogOrDrawer: React.FC<CombinedProps> = props => {
   const [isTakingAction, setTakingAction] = React.useState<boolean>(false);
-  const [errors, setErrors] = React.useState<
-    Linode.ApiFieldError[] | undefined
-  >(undefined);
+  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [selectedConfigID, selectConfigID] = React.useState<number | undefined>(
     undefined
   );

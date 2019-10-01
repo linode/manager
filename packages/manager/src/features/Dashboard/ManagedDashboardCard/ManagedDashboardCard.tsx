@@ -1,4 +1,5 @@
 import { ManagedServiceMonitor } from 'linode-js-sdk/lib/managed';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -29,7 +30,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface StateProps {
   monitors: ManagedServiceMonitor[];
   loading: boolean;
-  error?: Linode.ApiFieldError[];
+  error?: APIError[];
   updated: number;
 }
 

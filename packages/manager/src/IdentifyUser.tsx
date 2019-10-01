@@ -1,10 +1,11 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as md5 from 'md5';
 import * as React from 'react';
 import { useLDClient } from 'src/containers/withFeatureFlagProvider.container';
 
 interface Props {
   accountCountry?: string;
-  accountError?: Linode.ApiFieldError[];
+  accountError?: APIError[];
   userID?: number;
   username?: string;
   taxID?: string;

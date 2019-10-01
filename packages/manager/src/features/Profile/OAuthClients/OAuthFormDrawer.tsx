@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -15,7 +16,7 @@ interface Props {
   label?: string;
   redirect_uri?: string;
   public: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   edit?: boolean;
   onClose: () => void;
   onSubmit: () => void;

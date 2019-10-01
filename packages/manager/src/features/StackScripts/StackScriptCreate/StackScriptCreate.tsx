@@ -1,5 +1,6 @@
 import { Image } from 'linode-js-sdk/lib/images';
 import { createStackScript, StackScript } from 'linode-js-sdk/lib/stackscripts';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -59,7 +60,7 @@ interface State {
   script: string;
   revisionNote: string;
   isSubmitting: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   dialogOpen: boolean;
 }
 
@@ -341,7 +342,7 @@ const styled = withStyles(styles);
 interface WithImagesProps {
   imagesData: Record<string, Image>;
   imagesLoading: boolean;
-  imagesError?: Linode.ApiFieldError[];
+  imagesError?: APIError[];
 }
 
 const enhanced = compose<CombinedProps, {}>(

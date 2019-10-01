@@ -1,8 +1,9 @@
-import { Notification } from 'linode-js-sdk/lib/account'
+import { Notification } from 'linode-js-sdk/lib/account';
+import { APIError } from 'linode-js-sdk/lib/types';
 
 export interface Action {
   type: string;
-  error?: Linode.ApiFieldError[];
+  error?: APIError[];
   data?: any;
 }
 
@@ -17,7 +18,7 @@ export const UPDATE = '@manager/notifications/UPDATE';
 // ACTION CREATORS
 export const startRequest: ActionCreator = () => ({ type: LOAD });
 
-export const handleError: ActionCreator = (error: Linode.ApiFieldError[]) => ({
+export const handleError: ActionCreator = (error: APIError[]) => ({
   type: ERROR,
   error
 });

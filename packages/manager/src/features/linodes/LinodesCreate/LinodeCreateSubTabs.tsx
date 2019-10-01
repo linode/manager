@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import { parse } from 'querystring';
 import * as React from 'react';
 import AppBar from 'src/components/core/AppBar';
@@ -45,7 +46,7 @@ export interface Tab {
 }
 
 interface Props {
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   history: any;
   reset: () => void;
   tabs: Tab[];

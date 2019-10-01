@@ -3,6 +3,7 @@ import {
   getLinodeConfigs,
   LinodeBackups
 } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { stringify } from 'qs';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -57,7 +58,7 @@ export type CombinedProps = Props &
 interface State {
   configs: Config[];
   hasMadeConfigsRequest: boolean;
-  configsError?: Linode.ApiFieldError[];
+  configsError?: APIError[];
 }
 
 export class LinodeActionMenu extends React.Component<CombinedProps, State> {

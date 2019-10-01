@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import {
   BucketRequestPayload,
   DeleteBucketRequestPayload
@@ -9,17 +10,17 @@ export const actionCreator = actionCreatorFactory('@@manager/buckets');
 export const createBucketActions = actionCreator.async<
   BucketRequestPayload,
   Linode.Bucket,
-  Linode.ApiFieldError[]
+  APIError[]
 >(`create`);
 
 export const getAllBucketsActions = actionCreator.async<
   void,
   Linode.Bucket[],
-  Linode.ApiFieldError[]
+  APIError[]
 >('get-all');
 
 export const deleteBucketActions = actionCreator.async<
   DeleteBucketRequestPayload,
   {},
-  Linode.ApiFieldError[]
+  APIError[]
 >('delete');

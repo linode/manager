@@ -7,6 +7,7 @@ import {
   updateGrants,
   updateUser
 } from 'linode-js-sdk/lib/account';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { compose, flatten, lensPath, omit, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -131,7 +132,7 @@ interface State {
   grants?: Grants;
   originalGrants?: Grants /* used to implement cancel functionality */;
   restricted?: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   success?: Success;
   /* null needs to be a string here because it's a Select value */
   setAllPerm: 'null' | 'read_only' | 'read_write';

@@ -12,6 +12,7 @@ import {
   takeSnapshot,
   Window
 } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as moment from 'moment-timezone';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path, pathOr, sortBy } from 'ramda';
@@ -153,12 +154,12 @@ interface State {
   backups: LinodeBackupsResponse;
   snapshotForm: {
     label: string;
-    errors?: Linode.ApiFieldError[];
+    errors?: APIError[];
   };
   settingsForm: {
     window: Window;
     day: Day;
-    errors?: Linode.ApiFieldError[];
+    errors?: APIError[];
   };
   restoreDrawer: {
     open: boolean;
@@ -310,11 +311,10 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         sendBackupsEnabledEvent('From Backups tab');
       })
       .catch(errorResponse => {
-        getAPIErrorOrDefault(errorResponse).forEach(
-          (err: Linode.ApiFieldError) =>
-            enqueueSnackbar(err.reason, {
-              variant: 'error'
-            })
+        getAPIErrorOrDefault(errorResponse).forEach((err: APIError) =>
+          enqueueSnackbar(err.reason, {
+            variant: 'error'
+          })
         );
         this.setState({ enabling: false });
       });
@@ -340,7 +340,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
           'There was an error disabling backups'
         )
           /**  @todo move this error to the actual modal */
-          .forEach((err: Linode.ApiFieldError) =>
+          .forEach((err: APIError) =>
             enqueueSnackbar(err.reason, {
               variant: 'error'
             })

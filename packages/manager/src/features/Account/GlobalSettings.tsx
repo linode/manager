@@ -1,5 +1,6 @@
 import { AccountSettings } from 'linode-js-sdk/lib/account';
 import { Linode } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
@@ -34,7 +35,7 @@ interface StateProps {
   backups_enabled: boolean;
   error?: Error;
   linodesWithoutBackups: Linode[];
-  updateError?: Linode.ApiFieldError[];
+  updateError?: APIError[];
   networkHelperEnabled: boolean;
   entitiesWithGroupsToImport: GroupedEntitiesForImport;
   isManaged: boolean;
@@ -71,7 +72,7 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
     return updateAccount({ network_helper: !networkHelperEnabled });
   };
 
-  displayError = (errors: Linode.ApiFieldError[] | undefined) => {
+  displayError = (errors: APIError[] | undefined) => {
     if (!errors) {
       return;
     }

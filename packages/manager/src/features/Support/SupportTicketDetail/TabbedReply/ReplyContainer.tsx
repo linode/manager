@@ -1,5 +1,6 @@
 import { SupportReply } from 'linode-js-sdk/lib/account';
 import { createReply, uploadAttachment } from 'linode-js-sdk/lib/support';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -73,9 +74,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 const ReplyContainer: React.FC<CombinedProps> = props => {
   const { classes, onSuccess, reloadAttachments, ...rest } = props;
 
-  const [errors, setErrors] = React.useState<
-    Linode.ApiFieldError[] | undefined
-  >(undefined);
+  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
   const [value, setValue] = React.useState<string>('');
   const [isSubmitting, setSubmitting] = React.useState<boolean>(false);
   const [files, setFiles] = React.useState<FileAttachment[]>([]);

@@ -1,4 +1,5 @@
 import { Profile } from 'linode-js-sdk/lib/profile';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { Reducer } from 'redux';
 import { isType } from 'typescript-fsa';
 import { EntityError, RequestableData } from '../types';
@@ -8,7 +9,7 @@ export type State = RequestableData<Profile, EntityError>;
 
 interface Action<T> {
   type: string;
-  error?: Linode.ApiFieldError[];
+  error?: APIError[];
   payload?: T;
 }
 

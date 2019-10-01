@@ -5,6 +5,7 @@ import {
 } from 'linode-js-sdk/lib/domains';
 import { Linode } from 'linode-js-sdk/lib/linodes';
 import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { Lens, lensPath, over, path, pathOr, set, view } from 'ramda';
 import * as React from 'react';
@@ -76,7 +77,7 @@ interface State {
   soaEmail: string;
   cloneName: string;
   tags: Tag[];
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   submitting: boolean;
   master_ips: string[];
   masterIPsCount: number;
@@ -612,7 +613,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               .then(() => {
                 return this.redirectToLandingOrDetail(type, domainData.id);
               })
-              .catch((e: Linode.ApiFieldError[]) => {
+              .catch((e: APIError[]) => {
                 reportException(
                   `Default DNS Records couldn't be created from Linode: ${
                     e[0].reason
@@ -641,7 +642,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               .then(() => {
                 return this.redirectToLandingOrDetail(type, domainData.id);
               })
-              .catch((e: Linode.ApiFieldError[]) => {
+              .catch((e: APIError[]) => {
                 reportException(
                   `Default DNS Records couldn't be created from NodeBalancer: ${
                     e[0].reason

@@ -1,4 +1,5 @@
 import { Image } from 'linode-js-sdk/lib/images';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -157,7 +158,7 @@ interface LinodeContextProps {
   linodeTags: string[];
   mostRecentBackup: string | null;
   linodeVolumes: Volume[];
-  linodeVolumesError?: Linode.ApiFieldError[];
+  linodeVolumesError?: APIError[];
   backupsEnabled: boolean;
   readOnly: boolean;
 }

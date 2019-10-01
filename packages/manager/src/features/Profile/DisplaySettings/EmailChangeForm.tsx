@@ -1,4 +1,5 @@
 import { Profile } from 'linode-js-sdk/lib/profile';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -33,11 +34,11 @@ interface Props {
   username: string;
   email: string;
   updateProfile: (v: Partial<Profile>) => Promise<Profile>;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
 }
 
 interface State {
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   success?: string;
   submitting: boolean;
   updatedEmail: string;

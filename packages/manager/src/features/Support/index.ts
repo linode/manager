@@ -1,3 +1,5 @@
+import { APIError } from 'linode-js-sdk/lib/types';
+
 export interface FileAttachment {
   name: string;
   file: File;
@@ -6,5 +8,5 @@ export interface FileAttachment {
   /* Used to ensure that the file doesn't get uploaded again */
   uploaded: boolean;
   /* Each file needs to keep track of its own errors because each request hits the same endpoint */
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
 }

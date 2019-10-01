@@ -1,5 +1,6 @@
 import { getLinodes } from 'linode-js-sdk/lib/linodes';
 import { assignAddresses } from 'linode-js-sdk/lib/networking';
+import { APIError } from 'linode-js-sdk/lib/types';
 import {
   both,
   compose,
@@ -105,7 +106,7 @@ interface State {
   successMessage?: string;
   ips: IPRowState;
   linodes: { id: number; label: string; ips: string[] }[];
-  error?: Linode.ApiFieldError[];
+  error?: APIError[];
 }
 
 type Mode = 'none' | 'swap' | 'move';

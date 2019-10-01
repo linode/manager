@@ -1,4 +1,5 @@
 import { deleteImage, Image } from 'linode-js-sdk/lib/images';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -415,7 +416,7 @@ class ImagesLanding extends React.Component<CombinedProps, State> {
     );
   }
 
-  renderError = (_: Linode.ApiFieldError[]) => {
+  renderError = (_: APIError[]) => {
     return (
       <React.Fragment>
         <DocumentTitleSegment segment="Images" />
@@ -478,7 +479,7 @@ const EmptyCopy = () => (
 interface WithPrivateImages {
   imagesData: Record<string, Image>;
   imagesLoading: boolean;
-  imagesError?: Linode.ApiFieldError[];
+  imagesError?: APIError[];
 }
 
 const withPrivateImages = connect(

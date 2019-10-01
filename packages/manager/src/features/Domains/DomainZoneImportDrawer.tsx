@@ -1,4 +1,5 @@
 import { Domain, importZone } from 'linode-js-sdk/lib/domains';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -16,7 +17,7 @@ interface Props {
 
 interface State {
   submitting: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   domain?: string;
   remote_nameserver?: string;
 }

@@ -7,6 +7,7 @@ import {
   updateCredential,
   updatePassword
 } from 'linode-js-sdk/lib/managed';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
@@ -44,7 +45,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  error?: Linode.ApiFieldError[];
+  error?: APIError[];
   credentials: ManagedCredential[];
   loading: boolean;
   update: () => void;
@@ -92,7 +93,7 @@ export const CredentialList: React.FC<CombinedProps> = props => {
   };
 
   const _handleError = (
-    e: Linode.ApiFieldError[],
+    e: APIError[],
     setSubmitting: any,
     setErrors: any,
     setStatus: any,

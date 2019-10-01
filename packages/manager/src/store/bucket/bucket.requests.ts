@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import {
   BucketRequestPayload,
   createBucket as _createBucket,
@@ -21,7 +22,7 @@ export type CreateBucketRequest = BucketRequestPayload;
 export const createBucket = createRequestThunk<
   CreateBucketRequest,
   Linode.Bucket,
-  Linode.ApiFieldError[]
+  APIError[]
 >(createBucketActions, data => _createBucket(data));
 
 /*
@@ -43,5 +44,5 @@ export type DeleteBucketRequest = DeleteBucketRequestPayload;
 export const deleteBucket = createRequestThunk<
   DeleteBucketRequestPayload,
   {},
-  Linode.ApiFieldError[]
+  APIError[]
 >(deleteBucketActions, data => _deleteBucket(data));

@@ -7,6 +7,7 @@ import {
   Linode,
   LinodeStatus
 } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { intersection, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -86,7 +87,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface WithLinodesProps {
   linodesData: Linode[];
   linodesLoading: boolean;
-  linodesError?: Linode.ApiFieldError[];
+  linodesError?: APIError[];
 }
 
 type CombinedProps = RouteComponentProps<{}> &
@@ -204,7 +205,7 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
     return dispatch({ type: 'setSubmitting', value });
   };
 
-  const setErrors = (errors?: Linode.ApiFieldError[]) => {
+  const setErrors = (errors?: APIError[]) => {
     return dispatch({ type: 'setErrors', errors });
   };
 

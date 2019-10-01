@@ -1,5 +1,6 @@
 import { Event } from 'linode-js-sdk/lib/account';
 import { Config, Linode } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
@@ -138,7 +139,7 @@ const styles = (theme: Theme) =>
 interface WithLinodesProps {
   linodesData: Linode[];
   linodesLoading: boolean;
-  linodesError?: Linode.ApiFieldError[];
+  linodesError?: APIError[];
 }
 export interface ExtendedVolume extends Volume {
   linodeLabel?: string;

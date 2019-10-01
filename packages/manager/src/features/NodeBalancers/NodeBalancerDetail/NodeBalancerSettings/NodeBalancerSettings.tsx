@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import { clamp, compose, defaultTo } from 'ramda';
 import * as React from 'react';
 import { compose as composeC } from 'recompose';
@@ -54,7 +55,7 @@ interface Props {
 
 interface State {
   isSubmitting: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   success?: string;
   fields: FieldsState;
 }

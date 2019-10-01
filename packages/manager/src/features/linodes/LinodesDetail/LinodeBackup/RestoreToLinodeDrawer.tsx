@@ -1,5 +1,6 @@
 import { getLinodes, restoreBackup } from 'linode-js-sdk/lib/linodes';
 import { Profile } from 'linode-js-sdk/lib/profile';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -32,7 +33,7 @@ interface State {
   linodes: string[][];
   overwrite: boolean;
   selectedLinode?: string;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
 }
 
 type CombinedProps = Props & {

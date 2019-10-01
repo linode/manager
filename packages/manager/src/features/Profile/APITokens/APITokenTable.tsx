@@ -7,6 +7,7 @@ import {
   Token,
   updatePersonalAccessToken
 } from 'linode-js-sdk/lib/profile';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as moment from 'moment';
 import { compose } from 'ramda';
 import * as React from 'react';
@@ -71,7 +72,7 @@ interface Props extends PaginationProps<Token> {
 interface FormState {
   mode: DrawerMode;
   open: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   id?: number;
   values: {
     scopes?: string;
@@ -84,7 +85,7 @@ interface DialogState {
   open: boolean;
   id?: number;
   label?: string;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   type: string;
 }
 

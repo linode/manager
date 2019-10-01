@@ -1,5 +1,6 @@
 import { Form, Formik } from 'formik';
 import { Region } from 'linode-js-sdk/lib/regions';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { CreateVolumeSchema } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -239,7 +240,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
                 touched.tags
                   ? errors.tags
                     ? getErrorStringOrDefault(
-                        errors.tags as Linode.ApiFieldError[],
+                        errors.tags as APIError[],
                         'Unable to tag Volume.'
                       )
                     : undefined

@@ -4,6 +4,7 @@
  * it from there and make the (thunk) request to get the latest/greatest information.
  */
 import { Disk, getLinodeKernels, Kernel } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -102,7 +103,7 @@ interface State {
     config: boolean;
   };
   kernels: Kernel[];
-  errors?: Error | Linode.ApiFieldError[];
+  errors?: Error | APIError[];
   fields: EditableFields;
 }
 
@@ -222,10 +223,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     );
   }
 
-  renderContent = (
-    errors: Error | Linode.ApiFieldError[] = [],
-    loading: boolean
-  ) => {
+  renderContent = (errors: Error | APIError[] = [], loading: boolean) => {
     if (errors instanceof Error) {
       return this.renderErrorState();
     }
@@ -243,7 +241,7 @@ class LinodeConfigDrawer extends React.Component<CombinedProps, State> {
     <ErrorState errorText="Unable to load configurations." />
   );
 
-  renderForm = (errors?: Linode.ApiFieldError[]) => {
+  renderForm = (errors?: APIError[]) => {
     const { onClose, maxMemory, classes, readOnly } = this.props;
 
     const {

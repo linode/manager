@@ -1,5 +1,6 @@
 import * as Bluebird from 'bluebird';
 import { enableBackups, Linode } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { isEmpty, pathOr } from 'ramda';
 import { Reducer } from 'redux';
 import { updateAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
@@ -22,7 +23,7 @@ export interface State {
   autoEnroll: boolean;
   autoEnrollError?: string;
   enrolling: boolean;
-  error?: Error | Linode.ApiFieldError[];
+  error?: Error | APIError[];
   data?: Linode[];
 }
 

@@ -1,12 +1,13 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 
 export const useErrors = (): [
-  Linode.ApiFieldError[],
-  React.Dispatch<React.SetStateAction<Linode.ApiFieldError[]>>,
+  APIError[],
+  React.Dispatch<React.SetStateAction<APIError[]>>,
   () => void
 ] => {
-  const [errors, setErrors] = React.useState<Linode.ApiFieldError[]>([]);
+  const [errors, setErrors] = React.useState<APIError[]>([]);
 
   // If there are errors, scroll them into view
   React.useEffect(() => {

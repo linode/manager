@@ -366,7 +366,7 @@ const MainContent: React.FC<CombinedProps> = props => {
 const getObjectStorageRoute = (
   accountLoading: boolean,
   accountCapabilities: AccountCapability[],
-  accountError?: Error | Linode.ApiFieldError[]
+  accountError?: Error | APIError[]
 ) => {
   let component;
 

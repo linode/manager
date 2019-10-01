@@ -4,6 +4,7 @@ import {
   Disk,
   getLinodeDisks
 } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
@@ -35,7 +36,7 @@ interface State {
   diskId?: number;
 
   success?: string;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
 }
 
 type CombinedProps = Props & ContextProps;
@@ -66,7 +67,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
       compose(
         set(lensPath(['submitting']), true),
         set(lensPath(['success']), undefined),
-        set(lensPath(['errors']), undefined) as () => Linode.ApiFieldError[]
+        set(lensPath(['errors']), undefined) as () => APIError[]
       )
     );
 
@@ -80,7 +81,7 @@ class LinodeSettingsPasswordPanel extends React.Component<
           )
         );
       })
-      .catch((errors: Linode.ApiFieldError[]) => {
+      .catch((errors: APIError[]) => {
         this.setState(
           compose(
             set(lensPath(['errors']), errors),

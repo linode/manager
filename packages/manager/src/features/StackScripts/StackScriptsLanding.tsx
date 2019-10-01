@@ -1,4 +1,5 @@
 import { Image } from 'linode-js-sdk/lib/images';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -101,7 +102,7 @@ const styled = withStyles(styles);
 interface WithImagesProps {
   imagesData: Record<string, Image>;
   imagesLoading: boolean;
-  imagesError?: Linode.ApiFieldError[];
+  imagesError?: APIError[];
 }
 
 export default compose<CombinedProps, {}>(

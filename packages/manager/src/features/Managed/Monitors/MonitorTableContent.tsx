@@ -1,4 +1,5 @@
 import { ManagedServiceMonitor } from 'linode-js-sdk/lib/managed';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 
 import TableRowEmpty from 'src/components/TableRowEmptyState';
@@ -15,7 +16,7 @@ interface Props {
   openDialog: (id: number, label: string) => void;
   openHistoryDrawer: (id: number, label: string) => void;
   openMonitorDrawer: (id: number, mode: string) => void;
-  error?: Linode.ApiFieldError[];
+  error?: APIError[];
 }
 
 export type CombinedProps = Props;

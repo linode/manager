@@ -5,6 +5,7 @@ import {
   StackScript,
   updateStackScript
 } from 'linode-js-sdk/lib/stackscripts';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -70,7 +71,7 @@ interface State {
   script: string;
   revisionNote: string;
   isSubmitting: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   dialogOpen: boolean;
 }
 
@@ -430,7 +431,7 @@ const reloaded = reloadableWithRouter<
 interface WithImagesProps {
   imagesData: Record<string, Image>;
   imagesLoading: boolean;
-  imagesError?: Linode.ApiFieldError[];
+  imagesError?: APIError[];
 }
 const enhanced = compose<CombinedProps, {}>(
   setDocs(StackScriptUpdate.docs),

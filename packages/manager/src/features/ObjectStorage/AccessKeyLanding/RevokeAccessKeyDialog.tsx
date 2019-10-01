@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -10,7 +11,7 @@ interface RevokeKeysDialogProps {
   isLoading: boolean;
   handleClose: () => void;
   handleSubmit: () => void;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
 }
 
 export const RevokeAccessKeyDialog: React.StatelessComponent<

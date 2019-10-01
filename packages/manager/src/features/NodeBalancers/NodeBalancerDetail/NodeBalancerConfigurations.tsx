@@ -9,6 +9,7 @@ import {
   NodeBalancerConfigNodeFields,
   updateNodeBalancerConfigNode
 } from 'linode-js-sdk/lib/nodebalancers';
+import { APIError } from 'linode-js-sdk/lib/types';
 import {
   append,
   clone,
@@ -98,7 +99,7 @@ interface PreloadedProps {
 
 interface State {
   configs: NodeBalancerConfigFieldsWithStatus[];
-  configErrors: Linode.ApiFieldError[][];
+  configErrors: APIError[][];
   configSubmitting: boolean[];
   panelMessages: string[];
   panelNodeMessages: string[];
@@ -110,7 +111,7 @@ interface State {
   deleteConfigConfirmDialog: {
     open: boolean;
     submitting: boolean;
-    errors?: Linode.ApiFieldError[];
+    errors?: APIError[];
     idxToDelete?: number;
     portToDelete?: number;
   };
@@ -210,7 +211,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
     this.setState((compose as any)(...setFns));
   };
 
-  fieldErrorsToNodePathErrors = (errors: Linode.ApiFieldError[]) => {
+  fieldErrorsToNodePathErrors = (errors: APIError[]) => {
     /* Return objects with this shape
         {
           path: [0, 'errors'],
@@ -220,37 +221,34 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
           }
         }
     */
-    const nodePathErrors = errors.reduce(
-      (acc: any, error: Linode.ApiFieldError) => {
-        /**
-         * Regex conditions are as follows:
-         *
-         * must match "nodes["
-         * must have a digit 0-9
-         * then have "]"
-         * must end with ".anywordhere"
-         */
-        const match = /^nodes\[(\d+)\].(\w+)$/.exec(error.field!);
-        if (match && match[1] && match[2]) {
-          return [
-            ...acc,
-            {
-              path: [+match[1], 'errors'],
-              error: {
-                field: match[2],
-                reason: error.reason
-              }
+    const nodePathErrors = errors.reduce((acc: any, error: APIError) => {
+      /**
+       * Regex conditions are as follows:
+       *
+       * must match "nodes["
+       * must have a digit 0-9
+       * then have "]"
+       * must end with ".anywordhere"
+       */
+      const match = /^nodes\[(\d+)\].(\w+)$/.exec(error.field!);
+      if (match && match[1] && match[2]) {
+        return [
+          ...acc,
+          {
+            path: [+match[1], 'errors'],
+            error: {
+              field: match[2],
+              reason: error.reason
             }
-          ];
-        }
-        return acc;
-      },
-      []
-    );
+          }
+        ];
+      }
+      return acc;
+    }, []);
     return nodePathErrors;
   };
 
-  setNodeErrors = (configIdx: number, error: Linode.ApiFieldError[]) => {
+  setNodeErrors = (configIdx: number, error: APIError[]) => {
     /* Map the objects with this shape
         {
           path: [0, 'errors'],
@@ -627,7 +625,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   updateNodeErrors = (
     configIdx: number,
     nodeIdx: number,
-    errors: Linode.ApiFieldError[]
+    errors: APIError[]
   ) => {
     this.setState(
       set(lensPath(['configs', configIdx, 'nodes', nodeIdx, 'errors']), errors),

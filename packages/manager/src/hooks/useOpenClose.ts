@@ -1,8 +1,9 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 
 interface OpenCloseState {
   open: boolean;
-  error?: Linode.ApiFieldError[];
+  error?: APIError[];
 }
 
 export interface OpenClose {

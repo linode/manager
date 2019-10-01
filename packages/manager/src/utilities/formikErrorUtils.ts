@@ -1,9 +1,10 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import { getAPIErrorOrDefault } from './errorUtils';
 import isNilOrEmpty from './isNilOrEmpty';
 
 export const handleFieldErrors = (
   callback: Function,
-  fieldErrors: Linode.ApiFieldError[] = []
+  fieldErrors: APIError[] = []
 ) => {
   const mappedFieldErrors = fieldErrors.reduce(
     (result, { field, reason }) =>
@@ -18,7 +19,7 @@ export const handleFieldErrors = (
 
 export const handleGeneralErrors = (
   callback: Function,
-  apiErrors: Linode.ApiFieldError[],
+  apiErrors: APIError[],
   defaultMessage: string = 'An error has occurred.'
 ) => {
   if (!apiErrors) {

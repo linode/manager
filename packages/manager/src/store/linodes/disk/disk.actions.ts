@@ -1,4 +1,5 @@
 import { LinodeDiskCreationData } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { actionCreatorFactory } from 'typescript-fsa';
 import { Entity } from './disk.types';
 
@@ -30,7 +31,7 @@ export type GetLinodeDisksRequest = (
 export const getLinodeDisksActions = actionCreator.async<
   GetLinodeDisksParams,
   Entity[],
-  Linode.ApiFieldError[]
+  APIError[]
 >(`get-page`);
 
 /** Get Linode Disks (all) */
@@ -45,7 +46,7 @@ export type GetAllLinodeDisksRequest = (
 export const getAllLinodeDisksActions = actionCreator.async<
   GetAllLinodeDisksParams,
   Entity[],
-  Linode.ApiFieldError[]
+  APIError[]
 >(`get-all`);
 
 /** Get Linode Disk */
@@ -60,7 +61,7 @@ export type GetLinodeDiskRequest = (
 export const getLinodeDiskActions = actionCreator.async<
   GetLinodeDiskParams,
   Entity,
-  Linode.ApiFieldError[]
+  APIError[]
 >(`get`);
 
 /** Create Linode Disk */
@@ -75,7 +76,7 @@ export type CreateLinodeDiskRequest = (
 export const createLinodeDiskActions = actionCreator.async<
   CreateLinodeDiskParams,
   Entity,
-  Linode.ApiFieldError[]
+  APIError[]
 >(`create`);
 
 /** Update Linode Disk */
@@ -91,7 +92,7 @@ export type UpdateLinodeDiskRequest = (
 export const updateLinodeDiskActions = actionCreator.async<
   UpdateLinodeDiskParams,
   Entity,
-  Linode.ApiFieldError[]
+  APIError[]
 >(`update`);
 
 /** Delete Linode Disk */
@@ -106,7 +107,7 @@ export type DeleteLinodeDiskRequest = (
 export const deleteLinodeDiskActions = actionCreator.async<
   DeleteLinodeDiskParams,
   {},
-  Linode.ApiFieldError[]
+  APIError[]
 >(`delete`);
 
 /** Resize Linode Disk */
@@ -121,5 +122,5 @@ export type ResizeLinodeDiskRequest = (
 export const resizeLinodeDiskActions = actionCreator.async<
   ResizeLinodeDiskParams,
   Entity,
-  Linode.ApiFieldError[]
+  APIError[]
 >(`resize`);

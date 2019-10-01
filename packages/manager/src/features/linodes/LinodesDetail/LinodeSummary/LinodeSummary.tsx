@@ -6,6 +6,7 @@ import {
   LinodeType,
   Stats
 } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import * as moment from 'moment';
 import { map, pathOr } from 'ramda';
@@ -149,7 +150,7 @@ interface LinodeContextProps {
   linodeId: number;
   linodeData: Linode;
   linodeVolumes: Volume[];
-  linodeVolumesError?: Linode.ApiFieldError[];
+  linodeVolumesError?: APIError[];
 }
 
 interface WithImagesProps {

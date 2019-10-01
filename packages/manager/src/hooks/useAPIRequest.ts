@@ -8,7 +8,7 @@ interface UseAPIRequest<T> {
   lastUpdated: number;
   update: () => void;
   transformData: (fn: (data: T) => void) => void;
-  error?: Linode.ApiFieldError[];
+  error?: APIError[];
 }
 
 // @todo: write a README for this hook.

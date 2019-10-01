@@ -6,6 +6,7 @@ import {
 import { Image } from 'linode-js-sdk/lib/images';
 import { Linode } from 'linode-js-sdk/lib/linodes';
 import { Region } from 'linode-js-sdk/lib/regions';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
@@ -313,20 +314,20 @@ interface StateProps {
   bucketsLoading: boolean;
   accountLoading: boolean;
   accountSettingsLoading: boolean;
-  accountSettingsError?: Linode.ApiFieldError[];
+  accountSettingsError?: APIError[];
   nodeBalancersLoading: boolean;
-  linodesError?: Linode.ApiFieldError[];
-  volumesError?: Linode.ApiFieldError[];
-  nodeBalancersError?: Linode.ApiFieldError[];
-  domainsError?: Linode.ApiFieldError[];
-  imagesError?: Linode.ApiFieldError[];
-  bucketsError?: Linode.ApiFieldError[];
-  profileError?: Linode.ApiFieldError[];
-  accountError?: Linode.ApiFieldError[];
-  settingsError?: Linode.ApiFieldError[];
-  notificationsError?: Linode.ApiFieldError[];
-  typesError?: Linode.ApiFieldError[];
-  regionsError?: Linode.ApiFieldError[];
+  linodesError?: APIError[];
+  volumesError?: APIError[];
+  nodeBalancersError?: APIError[];
+  domainsError?: APIError[];
+  imagesError?: APIError[];
+  bucketsError?: APIError[];
+  profileError?: APIError[];
+  accountError?: APIError[];
+  settingsError?: APIError[];
+  notificationsError?: APIError[];
+  typesError?: APIError[];
+  regionsError?: APIError[];
   appIsLoading: boolean;
 }
 
@@ -390,9 +391,7 @@ export default compose(
   withFeatureFlagProvider
 )(App);
 
-export const hasOauthError = (
-  ...args: (Error | Linode.ApiFieldError[] | undefined)[]
-) => {
+export const hasOauthError = (...args: (Error | APIError[] | undefined)[]) => {
   return args.some(eachError => {
     const cleanedError: string | JSX.Element = pathOr(
       '',

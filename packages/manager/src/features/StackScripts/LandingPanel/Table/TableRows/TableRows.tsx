@@ -1,5 +1,6 @@
 import { Grant } from 'linode-js-sdk/lib/account';
 import { StackScript } from 'linode-js-sdk/lib/stackscripts';
+import { APIError } from 'linode-js-sdk/lib/types';
 import {
   compose as ramdaCompose,
   isEmpty,
@@ -32,7 +33,7 @@ import LabelCell from '../LabelCell';
 interface StackScriptData {
   stackScripts?: StackScript[];
   loading: boolean;
-  error?: Linode.ApiFieldError[];
+  error?: APIError[];
 }
 
 interface Props {

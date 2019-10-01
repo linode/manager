@@ -6,6 +6,7 @@ import {
   updateDomainRecord,
   ZoneFile
 } from 'linode-js-sdk/lib/domains';
+import { APIError } from 'linode-js-sdk/lib/types';
 import {
   cond,
   defaultTo,
@@ -91,7 +92,7 @@ interface EditableDomainFields extends EditableSharedFields {
 
 interface State {
   submitting: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   fields: EditableRecordFields | EditableDomainFields;
 }
 

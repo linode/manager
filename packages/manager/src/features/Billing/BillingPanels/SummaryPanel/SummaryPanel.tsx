@@ -1,4 +1,5 @@
-import { Account } from 'linode-js-sdk/lib/account'
+import { Account } from 'linode-js-sdk/lib/account';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { path, pathOr } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
@@ -14,13 +15,13 @@ import BillingInfo from './PanelCards/BillingInformation';
 import ContactInfo from './PanelCards/ContactInformation';
 
 interface AccountContextProps {
-  accountError?: Linode.ApiFieldError[];
+  accountError?: APIError[];
   lastUpdated: number;
   account?: Account;
   accountLoading: boolean;
 }
 
-interface Props extends Pick<RouteComponentProps, 'history'> { }
+interface Props extends Pick<RouteComponentProps, 'history'> {}
 
 export type CombinedProps = AccountContextProps & Profile & Props;
 
@@ -87,7 +88,7 @@ export class SummaryPanel extends React.Component<CombinedProps, {}> {
 
 interface Profile {
   profileLoading: boolean;
-  profileError?: Linode.ApiFieldError[];
+  profileError?: APIError[];
   username?: string;
   isRestricted: boolean;
 }

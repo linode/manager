@@ -1,4 +1,5 @@
 import { Config } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as moment from 'moment-timezone';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { parse, stringify } from 'qs';
@@ -180,7 +181,10 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
         linodesRequestError
       );
 
-      if (typeof errorText === 'string' && errorText.toLowerCase() === 'this linode has been suspended') {
+      if (
+        typeof errorText === 'string' &&
+        errorText.toLowerCase() === 'this linode has been suspended'
+      ) {
         errorText = (
           <React.Fragment>
             One or more of your Linodes is suspended. Please{' '}
@@ -446,11 +450,11 @@ interface StateProps {
   managed: boolean;
   linodesCount: number;
   linodesData: LinodeWithMaintenance[];
-  linodesRequestError?: Linode.ApiFieldError[];
+  linodesRequestError?: APIError[];
   linodesRequestLoading: boolean;
   userTimezone: string;
   userTimezoneLoading: boolean;
-  userTimezoneError?: Linode.ApiFieldError[];
+  userTimezoneError?: APIError[];
   someLinodesHaveScheduledMaintenance: boolean;
 }
 
@@ -475,7 +479,7 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
     linodesRequestError: path(['error', 'read'], state.__resources.linodes),
     userTimezone: pathOr('', ['data', 'timezone'], state.__resources.profile),
     userTimezoneLoading: state.__resources.profile.loading,
-    userTimezoneError: path<Linode.ApiFieldError[]>(
+    userTimezoneError: path<APIError[]>(
       ['read'],
       state.__resources.profile.error
     )
@@ -504,7 +508,7 @@ const updateParams = <T extends any>(params: string, updater: (s: T) => T) => {
 
 interface WithImagesProps {
   imagesLoading: boolean;
-  imagesError?: Linode.ApiFieldError[];
+  imagesError?: APIError[];
 }
 
 export const enhanced = compose<CombinedProps, {}>(

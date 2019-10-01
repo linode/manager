@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as moment from 'moment';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -116,7 +117,7 @@ interface Props {
   label?: string;
   scopes?: string;
   expiry?: string;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   id?: number;
   open: boolean;
   mode: string;

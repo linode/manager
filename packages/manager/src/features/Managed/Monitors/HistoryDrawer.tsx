@@ -1,4 +1,5 @@
 import { ManagedIssue } from 'linode-js-sdk/lib/managed';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -11,7 +12,7 @@ import IssueCalendar from './IssueCalendar';
 
 interface Props {
   open: boolean;
-  error?: Linode.ApiFieldError[];
+  error?: APIError[];
   loading: boolean;
   monitorLabel: string;
   issues: ExtendedIssue[];
@@ -39,7 +40,7 @@ export const HistoryDrawer: React.FC<Props> = props => {
 const renderDrawerContent = (
   issues: ManagedIssue[],
   loading: boolean,
-  error?: Linode.ApiFieldError[]
+  error?: APIError[]
 ) => {
   if (loading) {
     return <CircleProgress />;

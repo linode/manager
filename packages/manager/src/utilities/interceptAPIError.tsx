@@ -19,7 +19,7 @@ export const interceptGPUErrors = (
    * pre-filled support ticket). Checking the text of the error
    * and the type string of the plan is the best we can do.
    *
-   * Passing JSX to an APIFieldError.reason doesn't seem to break anything,
+   * Passing JSX to an APIError.reason doesn't seem to break anything,
    * but if we do this anywhere else we'll have to update the typings.
    */
   return errors.map(thisError => {

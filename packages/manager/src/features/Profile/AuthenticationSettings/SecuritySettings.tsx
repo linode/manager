@@ -1,4 +1,5 @@
 import { Profile } from 'linode-js-sdk/lib/profile';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import FormControl from 'src/components/core/FormControl';
 import FormControlLabel from 'src/components/core/FormControlLabel';
@@ -32,7 +33,7 @@ const styles = (theme: Theme) =>
 interface Props {
   onSuccess: () => void;
   updateProfile: (v: Partial<Profile>) => Promise<Profile>;
-  updateProfileError?: Linode.ApiFieldError[];
+  updateProfileError?: APIError[];
   ipWhitelistingEnabled: boolean;
 }
 

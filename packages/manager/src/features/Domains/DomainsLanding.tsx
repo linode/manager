@@ -1,4 +1,5 @@
 import { Domain } from 'linode-js-sdk/lib/domains';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -92,7 +93,7 @@ interface State {
   importDrawer: {
     open: boolean;
     submitting: boolean;
-    errors?: Linode.ApiFieldError[];
+    errors?: APIError[];
     domain?: string;
     remote_nameserver?: string;
   };

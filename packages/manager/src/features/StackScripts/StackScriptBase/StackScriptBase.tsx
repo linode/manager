@@ -1,6 +1,7 @@
 import { Grant } from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
 import { StackScript } from 'linode-js-sdk/lib/stackscripts';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -59,8 +60,8 @@ export interface State {
   currentFilter: any; // @TODO type correctly
   currentSearchFilter: any;
   isSorting: boolean;
-  error?: Linode.ApiFieldError[];
-  fieldError: Linode.ApiFieldError | undefined;
+  error?: APIError[];
+  fieldError: APIError | undefined;
   isSearching: boolean;
   didSearch: boolean;
   successMessage: string;

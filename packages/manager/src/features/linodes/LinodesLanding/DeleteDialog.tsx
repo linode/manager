@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -18,9 +19,7 @@ type CombinedProps = Props;
 
 const DeleteLinodeDialog: React.FC<CombinedProps> = props => {
   const [isDeleting, setDeleting] = React.useState<boolean>(false);
-  const [errors, setErrors] = React.useState<
-    Linode.ApiFieldError[] | undefined
-  >(undefined);
+  const [errors, setErrors] = React.useState<APIError[] | undefined>(undefined);
 
   React.useEffect(() => {
     if (props.open) {

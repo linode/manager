@@ -39,6 +39,7 @@ import {
   WithNodeBalancerActions
 } from 'src/store/nodeBalancer/nodeBalancer.containers';
 import { nodeBalancersWithConfigs } from 'src/store/nodeBalancer/nodeBalancer.selectors';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import ListGroupedNodeBalancers from './ListGroupedNodeBalancers';
@@ -97,7 +98,7 @@ const styles = (theme: Theme) =>
 interface DeleteConfirmDialogState {
   open: boolean;
   submitting: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
 }
 
 interface State {
@@ -186,24 +187,15 @@ export class NodeBalancersLanding extends React.Component<
         });
       })
       .catch(err => {
-        const apiError = path<Linode.ApiFieldError[]>(
-          ['response', 'data', 'error'],
-          err
-        );
-
         return this.setState(
           {
             deleteConfirmDialog: {
               ...this.state.deleteConfirmDialog,
               submitting: false,
-              errors: apiError
-                ? apiError
-                : [
-                    {
-                      field: 'none',
-                      reason: 'Unable to complete your request at this time.'
-                    }
-                  ]
+              errors: getAPIErrorOrDefault(
+                err,
+                'There was an error deleting this NodeBalancer.'
+              )
             }
           },
           () => {
@@ -388,7 +380,7 @@ interface NodeBalancerWithConfigs extends NodeBalancer {
 interface WithNodeBalancers {
   nodeBalancersCount: number;
   nodeBalancersData: NodeBalancerWithConfigs[];
-  nodeBalancersError?: Linode.ApiFieldError[];
+  nodeBalancersError?: APIError[];
   nodeBalancersLoading: boolean;
 }
 

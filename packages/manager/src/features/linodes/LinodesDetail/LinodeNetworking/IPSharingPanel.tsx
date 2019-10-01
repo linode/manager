@@ -1,5 +1,6 @@
 import { getLinodes, Linode } from 'linode-js-sdk/lib/linodes';
 import { shareAddresses } from 'linode-js-sdk/lib/networking';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { clone, flatten, pathOr, uniq } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -92,7 +93,7 @@ interface State {
   loading: boolean;
   submitting: boolean;
   successMessage?: string;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;

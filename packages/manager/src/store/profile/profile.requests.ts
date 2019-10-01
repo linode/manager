@@ -4,6 +4,7 @@ import {
   Profile,
   updateProfile as _updateProfile
 } from 'linode-js-sdk/lib/profile';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import { Action } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
@@ -95,8 +96,8 @@ const handleUpdateSuccess = (
 
 const handleUpdateFailure = (
   payload: Partial<Profile>,
-  error: Linode.ApiFieldError[],
-  failed: ActionCreator<Failure<Partial<Profile>, Linode.ApiFieldError[]>>,
+  error: APIError[],
+  failed: ActionCreator<Failure<Partial<Profile>, APIError[]>>,
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => {
   dispatch(

@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import {
   AttachVolumePayload,
   CloneVolumePayload,
@@ -22,44 +23,44 @@ export const actionCreator = actionCreatorFactory('@@manager/volumes');
 export const createVolumeActions = actionCreator.async<
   VolumeRequestPayload,
   Volume,
-  Linode.ApiFieldError[]
+  APIError[]
 >(`create`);
 export const getOneVolumeActions = actionCreator.async<
   VolumeId,
   Volume,
-  Linode.ApiFieldError[]
+  APIError[]
 >(`get-one`);
 export const updateVolumeActions = actionCreator.async<
   UpdateVolumeParams,
   Volume,
-  Linode.ApiFieldError[]
+  APIError[]
 >(`update`);
 export const deleteVolumeActions = actionCreator.async<
   VolumeId,
   {},
-  Linode.ApiFieldError[]
+  APIError[]
 >(`delete`);
 
 export const attachVolumeActions = actionCreator.async<
   AttachVolumeParams,
   Volume,
-  Linode.ApiFieldError[]
+  APIError[]
 >(`attach`);
 export const detachVolumeActions = actionCreator.async<
   VolumeId,
   {},
-  Linode.ApiFieldError[]
+  APIError[]
 >(`detach`);
 
 export const cloneVolumeActions = actionCreator.async<
   CloneVolumeParams,
   Volume,
-  Linode.ApiFieldError[]
+  APIError[]
 >(`clone`);
 export const resizeVolumeActions = actionCreator.async<
   ResizeVolumeParams,
   Volume,
-  Linode.ApiFieldError[]
+  APIError[]
 >(`resize`);
 
 // We want to provide the option NOT to set { loading: true } when requesting all Volumes.
@@ -71,5 +72,5 @@ export interface GetAllVolumesOptions {
 export const getAllVolumesActions = actionCreator.async<
   GetAllVolumesOptions | void,
   Volume[],
-  Linode.ApiFieldError[]
+  APIError[]
 >('get-all');

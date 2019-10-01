@@ -1,4 +1,5 @@
 import { deleteContact, ManagedContact } from 'linode-js-sdk/lib/managed';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import AddNewLink from 'src/components/AddNewLink';
@@ -46,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   contacts: ManagedContact[];
   loading: boolean;
-  error?: Linode.ApiFieldError[];
+  error?: APIError[];
   lastUpdated: number;
   transformData: (fn: (contacts: ManagedContact[]) => void) => void;
   update: () => void;

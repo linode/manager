@@ -1,4 +1,5 @@
 import { NodeBalancerConfigNodeFields } from 'linode-js-sdk/lib/nodebalancers';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
@@ -115,7 +116,7 @@ const styled = withStyles(styles);
 
 interface Props {
   nodeBalancerRegion?: string;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   nodeMessage?: string;
   configIdx?: number;
 

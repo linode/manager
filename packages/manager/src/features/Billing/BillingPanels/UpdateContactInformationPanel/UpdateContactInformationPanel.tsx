@@ -1,5 +1,6 @@
 import countryData from 'country-region-data';
 import { Account } from 'linode-js-sdk/lib/account';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { defaultTo, lensPath, set } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -136,7 +137,7 @@ class UpdateContactInformationPanel extends React.Component<
 
   renderLoading = () => null;
 
-  renderErrors = (e: Linode.ApiFieldError[]) => null;
+  renderErrors = (e: APIError[]) => null;
 
   renderForm = (account: Account) => {
     const { classes, accountError } = this.props;

@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import { getClusters } from 'src/services/objectStorage/clusters';
 import { actionCreatorFactory } from 'typescript-fsa';
 import { ThunkActionCreator } from '../types';
@@ -7,7 +8,7 @@ const actionCreator = actionCreatorFactory(`@@manager/clusters`);
 export const clustersRequestActions = actionCreator.async<
   void,
   Linode.Cluster[],
-  Linode.ApiFieldError[]
+  APIError[]
 >(`request`);
 
 export const requestClusters: ThunkActionCreator<

@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import { lensPath, set } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -23,7 +24,7 @@ interface Props {
 
 interface State {
   open: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
 }
 
 type CombinedProps = Props &
@@ -47,7 +48,7 @@ class LinodeSettingsDeletePanel extends React.Component<CombinedProps, State> {
         resetEventsPolling();
         this.props.history.push('/linodes');
       })
-      .catch((error: Linode.ApiFieldError[]) => {
+      .catch((error: APIError[]) => {
         this.setState(set(lensPath(['errors']), error), () => {
           scrollErrorIntoView();
         });
