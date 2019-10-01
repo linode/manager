@@ -95,6 +95,23 @@ const LinodePubKey: React.FC<{}> = props => {
     getSSHPubKey,
     { ssh_key: '' }
   );
+  const [copied, setCopied] = React.useState<boolean>(false);
+  let timeout: NodeJS.Timeout;
+
+  React.useEffect(() => {
+    if (copied) {
+      timeout = setTimeout(() => {
+        setCopied(false);
+      }, 500);
+    }
+
+    return () => clearTimeout(timeout);
+  }, [copied]);
+
+  const handleCopy = () => {
+    setCopied(true);
+    copy(data.ssh_key);
+  };
 
   if (error) {
     const errorMessage = getErrorStringOrDefault(error);
@@ -146,9 +163,8 @@ const LinodePubKey: React.FC<{}> = props => {
             lg={2}
             className={classes.copyToClipboard}
           >
-            {/* @todo: Should we include an indication that the key was successfully copied? */}
-            <Button buttonType="secondary" onClick={() => copy(data.ssh_key)}>
-              Copy to clipboard
+            <Button buttonType="secondary" onClick={handleCopy}>
+              {!copied ? 'Copy to clipboard' : 'Copied!'}
             </Button>
           </Grid>
         </Grid>
