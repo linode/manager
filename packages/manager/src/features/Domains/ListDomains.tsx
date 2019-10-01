@@ -16,6 +16,7 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 import DomainTableRow from 'src/features/Domains/DomainTableRow';
+import { Handlers } from './DomainActionMenu';
 
 type ClassNames = 'root' | 'label';
 
@@ -27,14 +28,11 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface Props {
+interface Props extends Handlers {
   data: Domain[];
   orderBy: string;
   order: 'asc' | 'desc';
   handleOrderChange: (orderBy: string, order?: 'asc' | 'desc') => void;
-  onRemove: (domain: string, domainId: number) => void;
-  onClone: (domain: string, id: number) => void;
-  onEdit: (domain: string, id: number) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -75,6 +73,15 @@ const ListDomains: React.StatelessComponent<CombinedProps> = props => {
                   >
                     Type
                   </TableSortCell>
+                  <TableSortCell
+                    data-qa-domain-type-header={order}
+                    active={orderBy === 'status'}
+                    label="status"
+                    direction={order}
+                    handleClick={handleOrderChange}
+                  >
+                    Status
+                  </TableSortCell>
                   <TableCell />
                 </TableRow>
               </TableHead>
@@ -84,6 +91,7 @@ const ListDomains: React.StatelessComponent<CombinedProps> = props => {
                   onClone={props.onClone}
                   onEdit={props.onEdit}
                   onRemove={props.onRemove}
+                  onDisableOrEnable={props.onDisableOrEnable}
                 />
               </TableBody>
             </Table>
@@ -102,15 +110,12 @@ const ListDomains: React.StatelessComponent<CombinedProps> = props => {
   );
 };
 
-interface RenderDataProps {
+interface RenderDataProps extends Handlers {
   data: Domain[];
-  onRemove: (domain: string, domainId: number) => void;
-  onClone: (domain: string, id: number) => void;
-  onEdit: (domain: string, id: number) => void;
 }
 
 const RenderData: React.StatelessComponent<RenderDataProps> = props => {
-  const { data, onClone, onEdit, onRemove } = props;
+  const { data, onClone, onEdit, onRemove, onDisableOrEnable } = props;
 
   return (
     <>
@@ -124,6 +129,7 @@ const RenderData: React.StatelessComponent<RenderDataProps> = props => {
           onRemove={onRemove}
           type={domain.type}
           status={domain.status}
+          onDisableOrEnable={onDisableOrEnable}
         />
       ))}
     </>

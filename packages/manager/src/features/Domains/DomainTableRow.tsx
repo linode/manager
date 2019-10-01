@@ -1,3 +1,4 @@
+import { DomainStatus } from 'linode-js-sdk/lib/domains';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import {
@@ -11,7 +12,7 @@ import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
-import ActionMenu from './DomainActionMenu';
+import ActionMenu, { Handlers } from './DomainActionMenu';
 
 type ClassNames =
   | 'domain'
@@ -40,14 +41,11 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface Props {
+interface Props extends Handlers {
   domain: string;
   id: number;
-  status: string;
+  status: DomainStatus;
   type: 'master' | 'slave';
-  onRemove: (domain: string, domainId: number) => void;
-  onClone: (domain: string, id: number) => void;
-  onEdit: (domain: string, id: number) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -120,13 +118,18 @@ class DomainTableRow extends React.Component<CombinedProps> {
         <TableCell parentColumn="Type" data-qa-domain-type>
           {type}
         </TableCell>
+        <TableCell parentColumn="Status" data-qa-domain-status>
+          {humanizeDomainStatus(status)}
+        </TableCell>
         <TableCell>
           <ActionMenu
             domain={domain}
+            onDisableOrEnable={this.props.onDisableOrEnable}
             id={id}
             type={type}
             onRemove={onRemove}
             onClone={onClone}
+            status={status}
             onEdit={onEdit}
           />
         </TableCell>
@@ -134,6 +137,21 @@ class DomainTableRow extends React.Component<CombinedProps> {
     );
   }
 }
+
+const humanizeDomainStatus = (status: DomainStatus) => {
+  switch (status) {
+    case 'active':
+      return 'Active';
+    case 'disabled':
+      return 'Disabled';
+    case 'edit_mode':
+      return 'Edit Mode';
+    case 'has_errors':
+      return 'Error';
+    default:
+      return 'Unknown';
+  }
+};
 
 const styled = withStyles(styles);
 

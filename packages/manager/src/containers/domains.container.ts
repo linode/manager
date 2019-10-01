@@ -20,7 +20,7 @@ export interface StateProps {
 
 export interface DomainActionsProps {
   createDomain: (payload: CreateDomainPayload) => Promise<Domain>;
-  updateDomain: (params: UpdateDomainParams) => Promise<Domain>;
+  updateDomain: (params: UpdateDomainParams & DomainId) => Promise<Domain>;
   deleteDomain: (domainId: DomainId) => Promise<{}>;
 }
 
@@ -46,7 +46,8 @@ export default <InnerStateProps extends {}, TOuter extends {}>(
     (dispatch: ThunkDispatch) => ({
       createDomain: (payload: CreateDomainPayload) =>
         dispatch(createDomain(payload)),
-      updateDomain: (params: DomainId) => dispatch(updateDomain(params)),
+      updateDomain: (params: UpdateDomainParams & DomainId) =>
+        dispatch(updateDomain(params)),
       deleteDomain: (domainId: DomainId) => dispatch(deleteDomain(domainId))
     })
   );
