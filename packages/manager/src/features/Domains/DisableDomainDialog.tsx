@@ -6,6 +6,8 @@ import ActionPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Dialog from 'src/components/ConfirmationDialog';
 
+import { sendDomainStatusChangeEvent } from 'src/utilities/ga';
+
 interface Props {
   updateDomain: (
     payload: UpdateDomainPayload & { domainId: number }
@@ -47,6 +49,7 @@ const DisableDomainDialog: React.FC<CombinedProps> = props => {
       })
       .then(() => {
         setSubmitting(false);
+        sendDomainStatusChangeEvent('Disable');
         props.closeDialog();
       })
       .catch(e => {

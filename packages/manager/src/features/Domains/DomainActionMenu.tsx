@@ -2,6 +2,7 @@ import { DomainStatus } from 'linode-js-sdk/lib/domains';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
+import { sendDomainStatusChangeEvent } from 'src/utilities/ga';
 
 export interface Handlers {
   onRemove: (domain: string, id: number) => void;
@@ -82,13 +83,22 @@ export class DomainActionMenu extends React.Component<CombinedProps> {
         }
       },
       {
-        title: this.props.status === 'disabled' ? 'Enable' : 'Disable',
+        title: this.props.status === 'active' ? 'Disable' : 'Enable',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
+          const actionToTake =
+            this.props.status === 'active' ? 'disable' : 'enable';
           this.props.onDisableOrEnable(
-            this.props.status === 'disabled' ? 'enable' : 'disable',
+            actionToTake,
             this.props.domain,
             this.props.id
           );
+          if (actionToTake === 'enable') {
+            /**
+             * disabling opens a dialog modal, so don't send the event
+             * for when the user is disabling
+             */
+            sendDomainStatusChangeEvent('Enable');
+          }
           closeMenu();
           e.preventDefault();
         }
