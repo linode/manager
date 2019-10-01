@@ -4,6 +4,34 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.73.0] - 2019-10-01
+
+### Added:
+
+- One-Click App support for feature flags
+- cPanel to One-Click App Library
+- Plesk to One-Click App Library
+- Firewall Landing and Table
+
+
+### Changed:
+
+- Update manifest.json to allow for iOS and Android “pin-to-home-screen” functionality
+- Display country flag after Region has been selected
+- Improve links in Add New menu
+- Disallow duplicate bucket names
+- Allow deletion of disks on active Linodes
+- Sort support tickets by order created
+- Add AU tax ID to invoice generator
+- Move Managed activation flow to /account/settings
+- Add height to radio cell for resize table
+- Adjustments to chip label styles
+- Linode JS SDK Documentation usage guide with examples
+
+
+### Fixed:
+- Overflow-x in select drop downs on compact mode
+
 ## [v0.72.0] - 2019-09-23
 
 ### Added:
