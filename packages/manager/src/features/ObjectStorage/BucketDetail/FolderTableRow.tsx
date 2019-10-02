@@ -55,6 +55,8 @@ const FolderTableRow: React.FC<CombinedProps> = props => {
       </TableCell>
       <TableCell parentColumn="Size" />
       <TableCell parentColumn="Last Modified" />
+      {/* Empty TableCell for Action Menu (for ObjectTableRow).*/}
+      <TableCell />
     </TableRow>
   );
 };
