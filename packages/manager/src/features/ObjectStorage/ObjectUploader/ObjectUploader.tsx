@@ -108,11 +108,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('lg')]: {
       marginTop: theme.spacing(2)
     }
-  },
-  moreFilesText: {
-    marginTop: theme.spacing(0.5),
-    marginBottom: theme.spacing(1),
-    textAlign: 'center'
   }
 }));
 
@@ -125,15 +120,6 @@ interface Props {
 
 type CombinedProps = Props & WithSnackbarProps;
 
-interface FileUpload {
-  name: string;
-  sizeInBytes: number;
-  completedPercentage: number;
-  inProgress: boolean;
-  meta: File;
-  error?: string;
-}
-
 const ObjectUploader: React.FC<CombinedProps> = props => {
   const { clusterId, bucketName, update, prefix } = props;
 
@@ -144,13 +130,17 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
     defaultState
   );
 
+  // Keep track of the previous value of `allUploadsFinished` using refs.
   const previousCompletion = usePrevious(state.allUploadsFinished);
+
   React.useEffect(() => {
+    // Once a batch of uploads is complete, update the object list.
     if (previousCompletion === false && state.allUploadsFinished === true) {
       update();
     }
   }, [state.allUploadsFinished]);
 
+  // This function is fired when objects are dropped in the upload area.
   const onDrop = async (files: File[]) => {
     // Look at the files queued and in-progress, along with the new files,
     // to see if we'll go over the limit.
@@ -170,86 +160,6 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
     dispatch({ type: 'ENQUEUE', files });
   };
 
-  const queuedUploads = React.useMemo(() => {
-    return state.files.filter(upload => upload.status === 'QUEUED');
-  }, [state.numQueued]);
-
-  const nextBatch = React.useMemo(() => {
-    if (state.numQueued === 0) {
-      return [];
-    }
-
-    if (state.numInProgress < MAX_PARALLEL_UPLOADS) {
-      return queuedUploads.slice(0, MAX_PARALLEL_UPLOADS - state.numInProgress);
-    }
-    return [];
-  }, [state.numQueued, state.numInProgress, queuedUploads]);
-
-  React.useEffect(() => {
-    if (nextBatch.length === 0) {
-      return;
-    }
-
-    dispatch({
-      type: 'UPDATE_FILES',
-      filesToUpdate: nextBatch.map(fileUpload => fileUpload.file.name),
-      data: { status: 'IN_PROGRESS' }
-    });
-
-    const getURLAndUploadObject = (fileUpload: ExtendedFile) => {
-      const { file } = fileUpload;
-
-      // We want to upload the object to the current "folder", so we prepend the
-      // file name with the prefix.
-
-      // The `path` key on File is bleeding edge. It's not part of the
-      // official spec, but all new browser versions support it. Using the
-      // path, we can upload directories. Fallback on the name if the browser
-      // doesn't support it.
-      const path = (file as any).path || file.name;
-      const fullObjectName = prefix + path;
-
-      return getObjectURL(clusterId, bucketName, fullObjectName, 'PUT', {
-        content_type: file.type
-      })
-        .then(({ url }) => {
-          const onUploadProgress = onUploadProgressFactory(dispatch, file.name);
-          return uploadObject(url, file, onUploadProgress);
-        })
-        .then(() => {
-          dispatch({
-            type: 'UPDATE_FILES',
-            filesToUpdate: [file.name],
-            data: {
-              percentComplete: 100,
-              status: 'FINISHED'
-            }
-          });
-        })
-        .catch(err => {
-          handleError(dispatch, file.name);
-          return Promise.reject();
-        });
-    };
-
-    const requests = nextBatch.map(fileUpload => {
-      return getURLAndUploadObject(fileUpload);
-    });
-
-    Promise.all(requests)
-      .then(() => {
-        dispatch({ type: 'FINISH_BATCH' });
-      })
-      .catch(() => {
-        // @todo: better error handling.
-      });
-  }, [nextBatch]);
-
-  const { width } = useWindowDimensions();
-
-  // These max widths and breakpoints are based on trial-and-error.
-  const truncationMaxWidth = width < 1920 ? 20 : 30;
-
   // This function will be called when dropped files that are over the max size.
   const onDropRejected = (files: File[]) => {
     files.forEach(file => {
@@ -263,6 +173,50 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
       );
     });
   };
+
+  const queuedUploads = React.useMemo(() => {
+    return state.files.filter(upload => upload.status === 'QUEUED');
+  }, [state.numQueued]);
+
+  const nextBatch = React.useMemo(() => {
+    if (state.numQueued === 0 || state.numInProgress >= MAX_PARALLEL_UPLOADS) {
+      return [];
+    }
+
+    return queuedUploads.slice(0, MAX_PARALLEL_UPLOADS - state.numInProgress);
+  }, [state.numQueued, state.numInProgress, queuedUploads]);
+
+  // When `nextBatch` changes, upload the files.
+  React.useEffect(() => {
+    if (nextBatch.length === 0) {
+      return;
+    }
+
+    // Set status as "IN_PROGRESS" for each file.
+    dispatch({
+      type: 'UPDATE_FILES',
+      filesToUpdate: nextBatch.map(fileUpload => fileUpload.file.name),
+      data: { status: 'IN_PROGRESS' }
+    });
+
+    const promises = nextBatch.map(fileUpload =>
+      getURLAndUploadObject(fileUpload, dispatch, clusterId, bucketName, prefix)
+    );
+
+    Promise.all(promises)
+      .then(() => {
+        dispatch({ type: 'FINISH_BATCH' });
+      })
+      .catch(() => {
+        // Errors for individual files are handled in the mapped promises.
+        dispatch({ type: 'FINISH_BATCH' });
+      });
+  }, [nextBatch]);
+
+  const { width } = useWindowDimensions();
+
+  // These max widths and breakpoints are based on trial-and-error.
+  const truncationMaxWidth = width < 1920 ? 20 : 30;
 
   const {
     getInputProps,
@@ -311,11 +265,6 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
               />
             );
           })}
-          {state.files.length > MAX_NUM_UPLOADS && (
-            <Typography className={classes.moreFilesText}>
-              ... and {state.files.length - MAX_NUM_UPLOADS} more
-            </Typography>
-          )}
         </div>
 
         {state.files.length === 0 && (
@@ -355,15 +304,48 @@ const onUploadProgressFactory = (
   });
 };
 
-const handleError = (
-  dispatch: (value: ObjectUploaderAction) => void,
-  fileName: string
+const getURLAndUploadObject = (
+  fileUpload: ExtendedFile,
+  dispatch: React.Dispatch<ObjectUploaderAction>,
+  clusterId: string,
+  bucketName: string,
+  prefix: string
 ) => {
-  dispatch({
-    type: 'UPDATE_FILES',
-    filesToUpdate: [fileName],
-    data: {
-      status: 'ERROR'
-    }
-  });
+  const { file } = fileUpload;
+
+  // We want to upload the object to the current "folder", so we prepend the
+  // file name with the prefix. The `path` key on File is bleeding edge.
+  // It's not part of the official spec, but all new browser versions
+  // support it. Using the path, we can upload directories. Fallback on the
+  // name if the browser doesn't support it.
+  const path = (file as any).path || file.name;
+  const fullObjectName = prefix + path;
+
+  return getObjectURL(clusterId, bucketName, fullObjectName, 'PUT', {
+    content_type: file.type
+  })
+    .then(({ url }) => {
+      const onUploadProgress = onUploadProgressFactory(dispatch, file.name);
+      return uploadObject(url, file, onUploadProgress);
+    })
+    .then(() => {
+      dispatch({
+        type: 'UPDATE_FILES',
+        filesToUpdate: [file.name],
+        data: {
+          percentComplete: 100,
+          status: 'FINISHED'
+        }
+      });
+    })
+    .catch(err => {
+      dispatch({
+        type: 'UPDATE_FILES',
+        filesToUpdate: [file.name],
+        data: {
+          status: 'ERROR'
+        }
+      });
+      return Promise.reject();
+    });
 };
