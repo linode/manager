@@ -73,10 +73,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('xl')]: {
       paddingRight: theme.spacing(4),
       paddingLeft: theme.spacing(4)
+    },
+    '&:hover': {
+      WebkitLineClamp: 'unset'
     }
   },
   copyToClipboard: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
     display: 'flex',
     justifyContent: 'flex-start',
     [theme.breakpoints.up('sm')]: {
