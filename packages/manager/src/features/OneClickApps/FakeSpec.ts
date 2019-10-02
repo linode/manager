@@ -34,6 +34,18 @@ export const oneClickApps: OCA[] = [
     href: 'https://survivetheark.com/'
   },
   {
+    name: 'cPanel',
+    description: `cPanel & WHM is a Linux-based web hosting control panel and platform that helps you create and manage websites, servers, databases, and more with a suite of hosting automation and optimization tools. The cPanel One-Click App streamlines publishing and managing a website with cPanel & WHM on a Linode instance.`,
+    summary: 'The leading hosting automation platform that has simplified site and server management for 20 years.',
+    tips: [
+      `Please note that it will take approximately 15 minutes for cPanel to boot after you launch.`,
+      `Once the script finishes, go to <i>https://[your-Linode's-IP-address]:2087</i> in a browser, where you'll be prompted to log in.`,
+      `Your credentials are <code>root</code> for the username and the <strong>Root Password</strong> you defined when you ran the cPanel One-Click App installer.`
+    ],
+    href: 'https://www.cpanel.net/',
+    logo_url: 'assets/cpanel_color.svg'
+  },
+  {
     name: 'CS:GO',
     description: `In CS:GO there are two teams: Terrorists and Counter-Terrorists.
     The teams compete against each other to complete objectives or to eliminate the opposing team.
@@ -129,9 +141,9 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Plesk',
-    description: `Plesk is a leading WordPress and website management platform and control panel. 
-      Plesk lets you build and manage multiple websites from a single dashboard to configure web services, 
-      email, and other applications. Plesk features hundreds of extensions, plus a complete WordPress toolkit, 
+    description: `Plesk is a leading WordPress and website management platform and control panel.
+      Plesk lets you build and manage multiple websites from a single dashboard to configure web services,
+      email, and other applications. Plesk features hundreds of extensions, plus a complete WordPress toolkit,
       and can orchestrate multi-server deployments. Use the Plesk One-Click App to manage websites hosted on your Linode.`,
     summary: 'A secure, scalable, and versatile website management platform.',
     tips: [
