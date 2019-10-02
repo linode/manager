@@ -1,6 +1,6 @@
 import { DomainStatus } from 'linode-js-sdk/lib/domains';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 import { sendDomainStatusChangeEvent } from 'src/utilities/ga';
 
