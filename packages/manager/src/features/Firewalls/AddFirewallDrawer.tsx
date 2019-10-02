@@ -12,7 +12,9 @@ import withLinodes, {
 } from 'src/containers/withLinodes.container';
 
 /* tslint:disable-next-line */
-interface Props extends DrawerProps {}
+interface Props extends Omit<DrawerProps, 'onClose'> {
+  onClose: () => void;
+}
 
 type CombinedProps = Props & LinodeProps;
 
@@ -31,18 +33,6 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
     Item<number | string>[]
   >([]);
 
-  const inputRef = React.useCallback(
-    node => {
-      /**
-       * focus on first textfield when drawer is opened
-       */
-      if (node && node.focus && props.open === true) {
-        node.focus();
-      }
-    },
-    [props.open]
-  );
-
   const submitForm = () => {
     /**
      * if user selected _ALL_, create an array of Linode IDs for every Linode
@@ -55,13 +45,23 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
     return payloadAsArrayOfLinodeIDs;
   };
 
+  const handleCloseDrawer = () => {
+    handleSelectLinodes([]);
+    props.onClose();
+  };
+
+  const allLinodesAreSelected = userSelectedAllLinodes(selectedLinodes);
+
   return (
-    <Drawer {...restOfDrawerProps}>
+    <Drawer {...restOfDrawerProps} onClose={handleCloseDrawer}>
       <TextField
         aria-label="Name of your new firewall"
         label="Name"
         required
-        inputRef={inputRef}
+        // inputRef={inputRef}
+        inputProps={{
+          autoFocus: true
+        }}
       />
       <Select
         label="Rules"
@@ -77,12 +77,13 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
       <Select
         label="Linodes"
         isLoading={linodesLoading}
+        errorText={linodesError ? linodesError[0].reason : ''}
         value={
           /*
             if the user selected _ALL_, that's the only chip
             we want appearing in the actual text field.
            */
-          userSelectedAllLinodes(selectedLinodes)
+          allLinodesAreSelected
             ? [
                 {
                   value: 'ALL',
@@ -92,29 +93,11 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
             : selectedLinodes
         }
         isMulti
-        options={
-          /*
-            basically, don't show any dropdown options
-            if the user has selected _ALL_
-           */
-          userSelectedAllLinodes(selectedLinodes)
-            ? [
-                {
-                  value: 'ALL',
-                  label: 'All Linodes'
-                }
-              ]
-            : [
-                {
-                  value: 'ALL',
-                  label: 'All Linodes'
-                },
-                ...linodesData.map(eachLinode => ({
-                  value: eachLinode.id,
-                  label: eachLinode.label
-                }))
-              ]
-        }
+        options={generateOptions(
+          allLinodesAreSelected,
+          linodesData,
+          linodesError
+        )}
         onChange={(values: Item<number | string>[]) =>
           handleSelectLinodes(values)
         }
@@ -136,16 +119,41 @@ const AddFirewallDrawer: React.FC<CombinedProps> = props => {
         >
           Create
         </Button>
-        <Button
-          onClick={props.onClose as any}
-          buttonType="cancel"
-          data-qa-cancel
-        >
+        <Button onClick={handleCloseDrawer} buttonType="cancel" data-qa-cancel>
           Cancel
         </Button>
       </ActionsPanel>
     </Drawer>
   );
+};
+
+const generateOptions = (
+  allLinodesAreSelected: boolean,
+  linodesData: LinodeProps['linodesData'],
+  linodeError: LinodeProps['linodesError']
+): Item<any>[] => {
+  /** if there's an error, don't show any options */
+  if (linodeError) {
+    return [];
+  }
+
+  return allLinodesAreSelected
+    ? [
+        {
+          value: 'ALL',
+          label: 'All Linodes'
+        }
+      ]
+    : [
+        {
+          value: 'ALL',
+          label: 'All Linodes'
+        },
+        ...linodesData.map(eachLinode => ({
+          value: eachLinode.id,
+          label: eachLinode.label
+        }))
+      ];
 };
 
 const userSelectedAllLinodes = (values: Item<string | number>[]) =>

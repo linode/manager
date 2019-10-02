@@ -1,6 +1,5 @@
 import { Event } from 'linode-js-sdk/lib/account';
 import { Config, Linode } from 'linode-js-sdk/lib/linodes';
-import { APIError } from 'linode-js-sdk/lib/types';
 import { Volume } from 'linode-js-sdk/lib/volumes';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
@@ -34,7 +33,7 @@ import withVolumesRequests, {
   VolumesRequests
 } from 'src/containers/volumesRequests.container';
 import withLinodes, {
-  LinodeWithMaintenance
+  Props as WithLinodesProps
 } from 'src/containers/withLinodes.container';
 import { BlockStorage } from 'src/documentation';
 import { resetEventsPolling } from 'src/events';
@@ -137,12 +136,6 @@ const styles = (theme: Theme) =>
       minWidth: 250
     }
   });
-
-interface WithLinodesProps {
-  linodesData: LinodeWithMaintenance[];
-  linodesLoading: boolean;
-  linodesError?: APIError[];
-}
 
 export interface ExtendedVolume extends Volume {
   linodeLabel?: string;
@@ -697,11 +690,7 @@ export default compose<CombinedProps, Props>(
     ...ownProps,
     eventsData: eventsData.filter(filterVolumeEvents)
   })),
-  withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
-    ...ownProps,
-    linodesData,
-    linodesLoading
-  })),
+  withLinodes(),
   withVolumes(
     (ownProps: CombinedProps, volumesData, volumesLoading, volumesError) => {
       const mappedData = volumesData.items.map(id => volumesData.itemsById[id]);
