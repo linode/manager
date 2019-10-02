@@ -59,6 +59,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: '-webkit-box',
     WebkitLineClamp: 3,
     WebkitBoxOrient: 'vertical',
+    transition: 'all 1s ease-in',
     overflow: 'hidden',
     wordBreak: 'break-all',
     fontFamily: '"Ubuntu Mono", monospace, sans-serif',
@@ -75,6 +76,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingLeft: theme.spacing(4)
     },
     '&:hover': {
+      transition: 'all 1s ease-in',
       WebkitLineClamp: 'unset'
     }
   },
@@ -86,7 +88,8 @@ const useStyles = makeStyles((theme: Theme) => ({
       justifyContent: 'flex-end'
     },
     '& > button': {
-      minWidth: 190
+      minWidth: 190,
+      marginTop: theme.spacing(1)
     }
   }
 }));
