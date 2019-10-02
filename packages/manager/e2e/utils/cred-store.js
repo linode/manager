@@ -42,7 +42,6 @@ class CredStore {
     let browser = this.browser;
 
     browser.url(constants.routes.linodes);
-    console.log(`route to follow: ${constants.routes.linodes}`);
     try {
       console.log(`attempting to enter username`);
       $('#username').waitForDisplayed(constants.wait.long);

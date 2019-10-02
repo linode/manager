@@ -24,7 +24,7 @@
     "storybook": "lerna run storybook --stream --scope linode-manager",
     "storybook:e2e": "lerna run storybook:e2e --stream --scope linode-manager -- --color",
     "storybook:debug": "lerna run storybook:e2e --stream --scope linode-manager -- --color --debug",
-    "e2e:smoke": "lerna run e2e:smoke --stream --scope linode-manager",
+    "e2e:smoke": "lerna run e2e:smoke --stream --scope linode-manager -- --color",
     "e2e": "lerna run e2e --stream --scope linode-manager -- --color",
     "e2e:all": "lerna run e2e:all --stream --scope linode-manager -- --color",
     "e2e:modified": "lerna run e2e:modified --stream --scope linode-manager -- --color",
