@@ -10,20 +10,20 @@ import Typography from 'src/components/core/Typography';
 import { usePrevious } from 'src/hooks/usePrevious';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { getObjectURL } from 'src/services/objectStorage/objects';
+import { sendObjectsQueuedForUploadEvent } from 'src/utilities/ga';
 import { truncateMiddle } from 'src/utilities/truncate';
-import { throttle } from 'throttle-debounce';
+import { readableBytes } from 'src/utilities/unitConversions';
 import { uploadObject } from '../requests';
 import FileUpload from './FileUpload';
 import {
   curriedObjectUploaderReducer,
   defaultState,
   ExtendedFile,
+  MAX_FILE_SIZE_IN_BYTES,
+  MAX_NUM_UPLOADS,
+  MAX_PARALLEL_UPLOADS,
   ObjectUploaderAction
 } from './reducer';
-
-const MAX_NUM_UPLOADS = 250;
-const MAX_PARALLEL_UPLOADS = 6;
-const MAX_FILE_SIZE_IN_BYTES = 5 * 1024 * 1024 * 1024;
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
@@ -108,6 +108,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.down('lg')]: {
       marginTop: theme.spacing(2)
     }
+  },
+  moreFilesText: {
+    marginTop: theme.spacing(0.5),
+    marginBottom: theme.spacing(1),
+    textAlign: 'center'
   }
 }));
 
@@ -147,13 +152,20 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
   }, [state.allUploadsFinished]);
 
   const onDrop = async (files: File[]) => {
-    // @todo: GA event
-    if (state.numInProgress + files.length > MAX_NUM_UPLOADS) {
-      props.enqueueSnackbar('Upload up to 100 files at a time.', {
+    // Look at the files queued and in-progress, along with the new files,
+    // to see if we'll go over the limit.
+    if (
+      state.numInProgress + state.numQueued + files.length >
+      MAX_NUM_UPLOADS
+    ) {
+      props.enqueueSnackbar(`Upload up to ${MAX_NUM_UPLOADS} files at a time`, {
         variant: 'error'
       });
       return;
     }
+
+    // @analytics
+    sendObjectsQueuedForUploadEvent(files.length);
 
     dispatch({ type: 'ENQUEUE', files });
   };
@@ -178,7 +190,11 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
       return;
     }
 
-    dispatch({ type: 'SET_IN_PROGRESS', files: nextBatch });
+    dispatch({
+      type: 'UPDATE_FILES',
+      filesToUpdate: nextBatch.map(fileUpload => fileUpload.file.name),
+      data: { status: 'IN_PROGRESS' }
+    });
 
     const getURLAndUploadObject = (fileUpload: ExtendedFile) => {
       const { file } = fileUpload;
@@ -202,9 +218,9 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
         })
         .then(() => {
           dispatch({
-            type: 'UPDATE_FILE',
+            type: 'UPDATE_FILES',
+            filesToUpdate: [file.name],
             data: {
-              fileName: file.name,
               percentComplete: 100,
               status: 'FINISHED'
             }
@@ -234,10 +250,17 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
   // These max widths and breakpoints are based on trial-and-error.
   const truncationMaxWidth = width < 1920 ? 20 : 30;
 
+  // This function will be called when dropped files that are over the max size.
   const onDropRejected = (files: File[]) => {
-    // @todo: better error handling.
-    props.enqueueSnackbar('Max file size exceeded (5 GB).', {
-      variant: 'error'
+    files.forEach(file => {
+      props.enqueueSnackbar(
+        `Max file size (${
+          readableBytes(MAX_FILE_SIZE_IN_BYTES).formatted
+        }) exceeded for file: ${file.name}`,
+        {
+          variant: 'error'
+        }
+      );
     });
   };
 
@@ -272,7 +295,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
         <input {...getInputProps()} />
 
         <div className={classes.fileUploads}>
-          {state.files.map((upload, idx) => {
+          {state.files.slice(0, MAX_NUM_UPLOADS).map((upload, idx) => {
             return (
               <FileUpload
                 key={idx}
@@ -288,6 +311,11 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
               />
             );
           })}
+          {state.files.length > MAX_NUM_UPLOADS && (
+            <Typography className={classes.moreFilesText}>
+              ... and {state.files.length - MAX_NUM_UPLOADS} more
+            </Typography>
+          )}
         </div>
 
         {state.files.length === 0 && (
@@ -317,25 +345,24 @@ export default withSnackbar(ObjectUploader);
 const onUploadProgressFactory = (
   dispatch: (value: ObjectUploaderAction) => void,
   fileName: string
-) =>
-  throttle(300, (progressEvent: ProgressEvent) => {
-    dispatch({
-      type: 'UPDATE_FILE',
-      data: {
-        fileName,
-        percentComplete: (progressEvent.loaded / progressEvent.total) * 100
-      }
-    });
+) => (progressEvent: ProgressEvent) => {
+  dispatch({
+    type: 'UPDATE_FILES',
+    filesToUpdate: [fileName],
+    data: {
+      percentComplete: (progressEvent.loaded / progressEvent.total) * 100
+    }
   });
+};
 
 const handleError = (
   dispatch: (value: ObjectUploaderAction) => void,
   fileName: string
 ) => {
   dispatch({
-    type: 'UPDATE_FILE',
+    type: 'UPDATE_FILES',
+    filesToUpdate: [fileName],
     data: {
-      fileName,
       status: 'ERROR'
     }
   });
