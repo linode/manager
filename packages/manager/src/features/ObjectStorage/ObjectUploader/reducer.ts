@@ -4,10 +4,6 @@ export const MAX_NUM_UPLOADS = 100;
 export const MAX_PARALLEL_UPLOADS = 6;
 export const MAX_FILE_SIZE_IN_BYTES = 5 * 1024 * 1024 * 1024;
 
-/**
- * TYPES
- */
-
 type FileStatus = 'QUEUED' | 'IN_PROGRESS' | 'FINISHED' | 'CANCELLED' | 'ERROR';
 
 export interface ExtendedFile {

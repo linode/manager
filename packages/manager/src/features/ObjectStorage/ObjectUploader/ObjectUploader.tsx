@@ -174,17 +174,17 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
     });
   };
 
-  const queuedUploads = React.useMemo(() => {
-    return state.files.filter(upload => upload.status === 'QUEUED');
-  }, [state.numQueued]);
-
   const nextBatch = React.useMemo(() => {
     if (state.numQueued === 0 || state.numInProgress >= MAX_PARALLEL_UPLOADS) {
       return [];
     }
 
+    const queuedUploads = state.files.filter(
+      upload => upload.status === 'QUEUED'
+    );
+
     return queuedUploads.slice(0, MAX_PARALLEL_UPLOADS - state.numInProgress);
-  }, [state.numQueued, state.numInProgress, queuedUploads]);
+  }, [state.numQueued, state.numInProgress]);
 
   // When `nextBatch` changes, upload the files.
   React.useEffect(() => {
@@ -249,7 +249,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
         <input {...getInputProps()} />
 
         <div className={classes.fileUploads}>
-          {state.files.slice(0, MAX_NUM_UPLOADS).map((upload, idx) => {
+          {state.files.map((upload, idx) => {
             return (
               <FileUpload
                 key={idx}
