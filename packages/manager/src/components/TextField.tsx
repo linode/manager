@@ -239,9 +239,14 @@ class LinodeTextField extends React.Component<CombinedProps> {
           [classes.wrapper]: true
         })}
       >
-        <InputLabel>{maybeRequiredLabel || ''}</InputLabel>
+        <InputLabel data-qa-textfield-label>
+          {maybeRequiredLabel || ''}
+        </InputLabel>
         {helperText && helperTextPosition === 'top' && (
-          <FormHelperText className={classes.helperTextTop}>
+          <FormHelperText
+            data-qa-textfield-helper-text
+            className={classes.helperTextTop}
+          >
             {helperText}
           </FormHelperText>
         )}
@@ -330,7 +335,9 @@ class LinodeTextField extends React.Component<CombinedProps> {
         )}
         {helperText &&
           (helperTextPosition === 'bottom' || !helperTextPosition) && (
-            <FormHelperText>{helperText}</FormHelperText>
+            <FormHelperText data-qa-textfield-helper-text>
+              {helperText}
+            </FormHelperText>
           )}
       </div>
     );
