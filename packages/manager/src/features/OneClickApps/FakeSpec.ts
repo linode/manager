@@ -40,7 +40,7 @@ export const oneClickApps: OCA[] = [
     tips: [
       `Please note that it will take approximately 15 minutes for cPanel to boot after you launch.`,
       `Once the script finishes, go to <i>https://[your-Linode's-IP-address]:2087</i> in a browser, where you'll be prompted to log in.`,
-      `Your credentials are <code>root</code> for the username and the <b>Root Password</b> you defined when you ran the cPanel One-Click App installer.`
+      `Your credentials are <code>root</code> for the username and the <strong>Root Password</strong> you defined when you ran the cPanel One-Click App installer.`
     ],
     href: 'https://www.cpanel.net/',
     logo_url: 'assets/cpanel_color.svg'
