@@ -1,4 +1,5 @@
-import { ActivePromotion } from 'linode-js-sdk/lib/account'
+import { ActivePromotion } from 'linode-js-sdk/lib/account';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -20,7 +21,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface StateProps {
   accountLoading: boolean;
-  accountError?: Linode.ApiFieldError[];
+  accountError?: APIError[];
   accountUpdated: number;
   promotions: ActivePromotion[];
 }

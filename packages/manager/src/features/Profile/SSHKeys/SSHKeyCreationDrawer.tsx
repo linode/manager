@@ -1,4 +1,5 @@
 import { createSSHKey } from 'linode-js-sdk/lib/profile';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -16,7 +17,7 @@ interface Props {
 
 interface State {
   submitting: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   label: string;
   sshKey: string;
 }
@@ -106,7 +107,7 @@ export class SSHKeyCreationDrawer extends React.PureComponent<
   onSubmit = () => {
     const { label, sshKey } = this.state;
 
-    const errors: Linode.ApiFieldError[] = [];
+    const errors: APIError[] = [];
 
     if (label === '') {
       errors.push({ field: 'label', reason: 'Label cannot be blank.' });

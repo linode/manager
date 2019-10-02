@@ -1,6 +1,8 @@
+import { APIError } from 'linode-js-sdk/lib/types';
+
 export default (
   errorMap: { [index: string]: string },
-  arr: Linode.ApiFieldError[] = []
+  arr: APIError[] = []
 ) => (field: string): undefined | string => {
   let err;
 

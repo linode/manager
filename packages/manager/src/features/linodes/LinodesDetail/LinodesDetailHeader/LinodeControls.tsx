@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import { last } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -86,7 +87,7 @@ const LinodeControls: React.StatelessComponent<CombinedProps> = props => {
         resetEditableLabel();
       })
       .catch(err => {
-        const errors: Linode.ApiFieldError[] = getAPIErrorOrDefault(
+        const errors: APIError[] = getAPIErrorOrDefault(
           err,
           'An error occurred while updating label',
           'label'

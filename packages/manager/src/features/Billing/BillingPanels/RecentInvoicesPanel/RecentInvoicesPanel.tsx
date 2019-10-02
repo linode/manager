@@ -1,4 +1,5 @@
-import { Account, getInvoices, Invoice } from 'linode-js-sdk/lib/account'
+import { Account, getInvoices, Invoice } from 'linode-js-sdk/lib/account';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { compose, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -94,8 +95,8 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
         <RecentInvoiceRow key={index} invoice={eachInvoice} account={account} />
       ))
     ) : (
-        <TableRowEmptyState colSpan={4} />
-      );
+      <TableRowEmptyState colSpan={4} />
+    );
   };
 
   handleExpansion = (e: any, expanded: boolean) => {
@@ -109,7 +110,7 @@ class RecentInvoicesPanel extends React.Component<CombinedProps, State> {
 interface ReduxState {
   account?: Account;
   accountLoading: boolean;
-  accountError?: Linode.ApiFieldError[] | Error;
+  accountError?: APIError[] | Error;
 }
 
 interface StateProps extends ReduxState {

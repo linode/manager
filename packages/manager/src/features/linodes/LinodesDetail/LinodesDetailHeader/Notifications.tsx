@@ -1,5 +1,6 @@
 import { Notification } from 'linode-js-sdk/lib/account';
 import { LinodeStatus } from 'linode-js-sdk/lib/linodes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { path } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
@@ -89,7 +90,7 @@ interface ContextProps {
 
 interface ProfileProps {
   userTimezoneLoading: boolean;
-  userTimezoneError?: Linode.ApiFieldError[];
+  userTimezoneError?: APIError[];
   userTimezone?: string;
 }
 

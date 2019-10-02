@@ -2,6 +2,7 @@ import {
   KubeNodePoolResponse,
   PoolNodeRequest
 } from 'linode-js-sdk/lib/kubernetes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import actionCreatorFactory from 'typescript-fsa';
 
 import { EntityError } from 'src/store/types';
@@ -17,7 +18,7 @@ export const actionCreator = actionCreatorFactory(
 export const requestNodePoolsActions = actionCreator.async<
   void,
   ExtendedNodePool[],
-  Linode.ApiFieldError[]
+  APIError[]
 >('request');
 
 export const addOrUpdateNodePool = actionCreator<KubeNodePoolResponse>(
@@ -40,26 +41,26 @@ export type CreateNodePoolParams = ClusterID & PoolNodeRequest;
 export const createNodePoolActions = actionCreator.async<
   CreateNodePoolParams,
   ExtendedNodePool,
-  Linode.ApiFieldError[]
+  APIError[]
 >(`create-node-pool`);
 
 export type UpdateNodePoolParams = ClusterID & NodePoolID & PoolNodeRequest;
 export const updateNodePoolActions = actionCreator.async<
   UpdateNodePoolParams,
   ExtendedNodePool,
-  Linode.ApiFieldError[]
+  APIError[]
 >(`update-node-pool`);
 
 export type DeleteClusterParams = ClusterID;
 export const deleteClusterActions = actionCreator.async<
   DeleteClusterParams,
   {},
-  Linode.ApiFieldError[]
+  APIError[]
 >(`delete-cluster`);
 
 export type DeleteNodePoolParams = ClusterID & NodePoolID;
 export const deleteNodePoolActions = actionCreator.async<
   DeleteNodePoolParams,
   {},
-  Linode.ApiFieldError[]
+  APIError[]
 >(`delete-node-pool`);

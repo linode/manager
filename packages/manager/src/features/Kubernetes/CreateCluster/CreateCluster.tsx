@@ -4,6 +4,7 @@ import {
   KubernetesVersion,
   PoolNodeRequest
 } from 'linode-js-sdk/lib/kubernetes';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { pick, remove, update } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -66,7 +67,7 @@ interface State {
   label?: string;
   tags: Item<string>[];
   version?: Item<string>;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   submitting: boolean;
   versionOptions: Item<string>[];
 }

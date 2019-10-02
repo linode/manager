@@ -1,4 +1,5 @@
 import { ManagedLinodeSetting } from 'linode-js-sdk/lib/managed';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import TableRowEmpty from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
@@ -12,7 +13,7 @@ interface Props {
   lastUpdated: number;
   updateOne: (linodeSetting: ManagedLinodeSetting) => void;
   openDrawer: (linodeId: number) => void;
-  error?: Linode.ApiFieldError[];
+  error?: APIError[];
 }
 
 export type CombinedProps = Props;

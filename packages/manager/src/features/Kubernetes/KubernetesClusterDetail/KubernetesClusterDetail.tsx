@@ -1,4 +1,5 @@
 import * as Bluebird from 'bluebird';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { contains, equals, path, pathOr, remove, update } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps, withRouter } from 'react-router-dom';
@@ -115,8 +116,8 @@ const styles = (theme: Theme) =>
 interface KubernetesContainerProps {
   cluster: ExtendedCluster | null;
   clustersLoading: boolean;
-  clustersLoadError?: Linode.ApiFieldError[];
-  clusterDeleteError?: Linode.ApiFieldError[];
+  clustersLoadError?: APIError[];
+  clusterDeleteError?: APIError[];
   lastUpdated: number;
   nodePoolsLoading: boolean;
 }
@@ -156,9 +157,9 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   const [tags, updateTags] = React.useState<string[]>([]);
   /** Form submission */
   const [submitting, setSubmitting] = React.useState<boolean>(false);
-  const [generalError, setErrors] = React.useState<
-    Linode.ApiFieldError[] | undefined
-  >(undefined);
+  const [generalError, setErrors] = React.useState<APIError[] | undefined>(
+    undefined
+  );
   const [success, setSuccess] = React.useState<boolean>(false);
   /** Deletion confirmation modal */
   const [confirmationOpen, setConfirmation] = React.useState<boolean>(false);
@@ -219,10 +220,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
    * state for actions that succeeded (so that e.g. a pending pool that has been added no longer has the
    * "pending pool" styles).
    */
-  const handleError = (
-    pool: PoolNodeWithPrice,
-    error: Linode.ApiFieldError[]
-  ) => {
+  const handleError = (pool: PoolNodeWithPrice, error: APIError[]) => {
     const poolIdx = pools.findIndex(thisPool => thisPool.id === pool.id);
     updatePool(poolIdx, { ...pool, _error: error });
     return Promise.reject(error);

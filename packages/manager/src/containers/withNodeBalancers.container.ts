@@ -1,4 +1,5 @@
 import { NodeBalancer } from 'linode-js-sdk/lib/nodebalancers';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 
@@ -6,7 +7,7 @@ type MapProps<TOuter, TInner> = (
   ownProps: TOuter,
   nodeBalancers: NodeBalancer[],
   loading: boolean,
-  error?: Linode.ApiFieldError[]
+  error?: APIError[]
 ) => TInner;
 
 export default <TInner extends {}, TOuter extends {}>(

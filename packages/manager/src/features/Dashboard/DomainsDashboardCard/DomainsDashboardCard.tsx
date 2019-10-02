@@ -1,5 +1,6 @@
 import { Entity, Event } from 'linode-js-sdk/lib/account';
 import { Domain } from 'linode-js-sdk/lib/domains';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { compose, prop, sortBy, take } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -73,7 +74,7 @@ const styles = (theme: Theme) =>
 
 interface State {
   loading: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   data?: Domain[];
   results?: number;
 }
@@ -145,7 +146,7 @@ class DomainsDashboardCard extends React.Component<CombinedProps, State> {
     return <TableRowLoading colSpan={2} />;
   };
 
-  renderErrors = (errors: Linode.ApiFieldError[]) => (
+  renderErrors = (errors: APIError[]) => (
     <TableRowError colSpan={3} message={`Unable to load domains.`} />
   );
 
@@ -210,7 +211,7 @@ interface WithUpdatingDomainsProps {
   domains: Domain[];
   domainCount: number;
   loading: boolean;
-  error?: Linode.ApiFieldError[];
+  error?: APIError[];
 }
 
 const withUpdatingDomains = connect(

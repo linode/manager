@@ -2,6 +2,7 @@ import {
   NodeBalancerConfig,
   NodeBalancerConfigNode
 } from 'linode-js-sdk/lib/nodebalancers';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import List from 'src/components/core/List';
 import ListItem from 'src/components/core/ListItem';
@@ -9,7 +10,7 @@ import ListItemText from 'src/components/core/ListItemText';
 import Notice from 'src/components/Notice';
 
 interface ErrorResponse {
-  errors: Linode.ApiFieldError[];
+  errors: APIError[];
 }
 
 interface ConfigErrorResponse extends ErrorResponse {
@@ -53,7 +54,7 @@ const NodeBalancerCreationError: React.StatelessComponent<
 
 export default NodeBalancerCreationError;
 
-const maybeListReason = (errors?: Linode.ApiFieldError[]) => {
+const maybeListReason = (errors?: APIError[]) => {
   if (!errors || errors.length === 0) {
     return null;
   }

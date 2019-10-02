@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 
 import { getDisplayName } from 'src/utilities';
@@ -8,7 +9,7 @@ export interface Requestable<T> {
   request: (...args: any[]) => Promise<any>;
   update: (f: (t: T) => T) => void;
   data?: T;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
 }
 
 /* tslint:disable */

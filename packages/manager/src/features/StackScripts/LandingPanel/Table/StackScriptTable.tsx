@@ -1,4 +1,5 @@
 import { StackScript } from 'linode-js-sdk/lib/stackscripts';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 
 import TableBody from 'src/components/core/TableBody';
@@ -11,7 +12,7 @@ import StackScriptTableRows from './TableRows';
 interface Props {
   type: 'linode' | 'own' | 'community';
   count: number;
-  error?: Linode.ApiFieldError[];
+  error?: APIError[];
   loading: boolean;
   page: number;
   pageSize: number;

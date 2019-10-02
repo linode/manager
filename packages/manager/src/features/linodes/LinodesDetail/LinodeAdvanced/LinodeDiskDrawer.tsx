@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import { UserSSHKeyObject } from 'src/components/AccessPanel';
@@ -47,7 +48,7 @@ interface EditableFields {
 interface Props extends EditableFields {
   mode: 'create' | 'rename' | 'resize';
   open: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   maximumSize: number;
   submitting: boolean;
   onClose: () => void;

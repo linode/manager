@@ -18,7 +18,7 @@ import { reportException } from 'src/exceptionReporting';
  *
  * fetchData()
  *  .then()
- *  .catch((e: Linode.ApiFieldError[]) => getAPIErrorOrDefault(e, 'There was an error', 'label'))
+ *  .catch((e: APIError[]) => getAPIErrorOrDefault(e, 'There was an error', 'label'))
  *
  * @param { AxiosError } - Error response from some API request
  * @param { string } - Default error message on the "reason" key
@@ -30,10 +30,10 @@ import { reportException } from 'src/exceptionReporting';
  *
  */
 export const getAPIErrorOrDefault = (
-  errorResponse: Linode.ApiFieldError[],
+  errorResponse: APIError[],
   defaultError: string = DEFAULT_ERROR_MESSAGE,
   field?: string
-): Linode.ApiFieldError[] => {
+): APIError[] => {
   const _defaultError = field
     ? [{ reason: defaultError, field }]
     : [{ reason: defaultError }];
@@ -41,7 +41,7 @@ export const getAPIErrorOrDefault = (
   return isDefaultError(errorResponse) ? _defaultError : errorResponse;
 };
 
-const isDefaultError = (errorResponse: Linode.ApiFieldError[]) => {
+const isDefaultError = (errorResponse: APIError[]) => {
   return (
     errorResponse &&
     errorResponse.length === 1 &&
@@ -88,16 +88,16 @@ export const handleUnauthorizedErrors = (
    */
   return hasUnauthorizedError
     ? [
-      {
-        reason: unauthedMessage
-      },
-      ...filteredErrors
-    ]
+        {
+          reason: unauthedMessage
+        },
+        ...filteredErrors
+      ]
     : filteredErrors;
 };
 
 export const getErrorStringOrDefault = (
-  errors: Linode.ApiFieldError[] | string,
+  errors: APIError[] | string,
   defaultError: string = 'An unexpected error occurred.'
 ): string => {
   if (typeof errors === 'string') {
@@ -131,7 +131,7 @@ export const getErrorStringOrDefault = (
  */
 export const getErrorMap = (
   fields: string[] = [],
-  errors?: Linode.ApiFieldError[]
+  errors?: APIError[]
 ): Record<string, string | undefined> => {
   if (!errors) {
     return {};

@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -37,7 +38,7 @@ interface Props {
   maintenanceEnd?: string | null;
   userTimezone?: string;
   userTimezoneLoading: boolean;
-  userTimezoneError?: Linode.ApiFieldError[];
+  userTimezoneError?: APIError[];
   type?: 'migration' | 'reboot';
 }
 

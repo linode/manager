@@ -1,4 +1,5 @@
 import { GrantLevel } from 'linode-js-sdk/lib/account';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { lensPath, pathOr, set } from 'ramda';
 import * as React from 'react';
 import { compose as recompose } from 'recompose';
@@ -21,7 +22,7 @@ interface State {
   updatedValue: string;
   submitting: boolean;
   success?: string;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
 }
 
 type CombinedProps = ContextProps;

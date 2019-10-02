@@ -3,9 +3,13 @@ import { prop, sortBy } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import Waypoint from 'react-waypoint';
+import ActionsPanel from 'src/components/ActionsPanel';
 import Breadcrumb from 'src/components/Breadcrumb';
+import Button from 'src/components/Button';
+import ConfirmationDialog from 'src/components/ConfirmationDialog';
 import Box from 'src/components/core/Box';
 import Divider from 'src/components/core/Divider';
+import Grid from 'src/components/core/Grid';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -22,8 +26,12 @@ import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
 import { getObjectList } from 'src/services/objectStorage/buckets';
+import { getObjectURL } from 'src/services/objectStorage/objects';
 import { getQueryParam } from 'src/utilities/queryParams';
-import { ExtendedObject, extendObject } from '../utilities';
+import { truncateMiddle } from 'src/utilities/truncate';
+import ObjectUploader from '../ObjectUploader';
+import { deleteObject } from '../requests';
+import { displayName, ExtendedObject, extendObject } from '../utilities';
 import BucketBreadcrumb from './BucketBreadcrumb';
 import ObjectTableContent from './ObjectTableContent';
 
@@ -31,9 +39,12 @@ const page_size = 100;
 
 type ClassNames =
   | 'divider'
+  | 'tableContainer'
+  | 'uploaderContainer'
   | 'objectTable'
   | 'nameColumn'
   | 'sizeColumn'
+  | 'updatedColumn'
   | 'footer'
   | 'tryAgainText';
 
@@ -48,10 +59,13 @@ const styles = (theme: Theme) =>
       marginTop: theme.spacing(2)
     },
     nameColumn: {
-      width: '70%'
+      width: '60%'
     },
     sizeColumn: {
-      width: '15%'
+      width: '20%'
+    },
+    updatedColumn: {
+      width: '20%'
     },
     footer: {
       marginTop: theme.spacing(3),
@@ -62,6 +76,16 @@ const styles = (theme: Theme) =>
       color: theme.palette.primary.main,
       textDecoration: 'underline',
       cursor: 'pointer'
+    },
+    tableContainer: {
+      [theme.breakpoints.up('lg')]: {
+        order: 1
+      }
+    },
+    uploaderContainer: {
+      [theme.breakpoints.up('lg')]: {
+        order: 2
+      }
     }
   });
 
@@ -76,8 +100,12 @@ interface State {
   data: ExtendedObject[];
   loading: boolean;
   allObjectsFetched: boolean;
+  deleteObjectDialogOpen: boolean;
+  deleteObjectLoading: boolean;
+  deleteObjectError?: string;
   generalError?: APIError[];
   nextPageError?: APIError[];
+  objectToDelete?: string;
 }
 
 export class BucketDetail extends React.Component<CombinedProps, {}> {
@@ -85,6 +113,8 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
     data: [],
     loading: false,
     allObjectsFetched: false,
+    deleteObjectDialogOpen: false,
+    deleteObjectLoading: false,
     generalError: undefined,
     nextPageError: undefined
   };
@@ -142,7 +172,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
     }
   }
 
-  getNextPage() {
+  getNextPage = () => {
     const { data } = this.state;
     const tail = data[data.length - 1];
     if (!tail) {
@@ -191,6 +221,82 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
           nextPageError: err
         });
       });
+  };
+
+  handleClickDelete = (objectName: string) => {
+    this.setState({
+      objectToDelete: objectName,
+      deleteObjectError: undefined,
+      deleteObjectDialogOpen: true
+    });
+  };
+
+  deleteObject = async () => {
+    const { clusterId, bucketName } = this.props.match.params;
+    const { objectToDelete } = this.state;
+
+    if (!objectToDelete) {
+      return;
+    }
+
+    this.setState({ deleteObjectLoading: true, deleteObjectError: undefined });
+
+    try {
+      const { url } = await getObjectURL(
+        clusterId,
+        bucketName,
+        objectToDelete,
+        'DELETE'
+      );
+
+      await deleteObject(url);
+
+      this.setState({
+        deleteObjectLoading: false,
+        deleteObjectDialogOpen: false
+      });
+      this.removeOne(objectToDelete);
+    } catch (err) {
+      this.setState({
+        deleteObjectLoading: false,
+        // We are unlikely to get back a helpful error message, so we create a
+        // generic one here.
+        deleteObjectError: 'Unable to delete object.'
+      });
+    }
+  };
+
+  removeOne = (objectName: string) => {
+    const updatedData = [...this.state.data];
+    const idx = updatedData.findIndex(object => object.name === objectName);
+    if (idx > -1) {
+      updatedData.splice(idx, 1);
+      this.setState({
+        data: updatedData
+      });
+    }
+  };
+
+  closeDeleteObjectDialog = () => {
+    this.setState({
+      deleteObjectDialogOpen: false
+    });
+  };
+
+  updateInPlace() {
+    const { bucketName, clusterId } = this.props.match.params;
+    const prefix = getQueryParam(this.props.location.search, 'prefix');
+
+    // @todo: If there are exactly 100 objects already, what do we do? Set a marker?
+    getObjectList(clusterId, bucketName, { delimiter, prefix, page_size }).then(
+      response => {
+        // Replace the old data with the new data.
+        this.setState({
+          data: response.data.map(object => extendObject(object, prefix))
+        });
+      }
+    );
+    // @todo: Do we need to catch this?
   }
 
   render() {
@@ -200,10 +306,14 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
       loading,
       generalError,
       nextPageError,
-      allObjectsFetched
+      allObjectsFetched,
+      objectToDelete,
+      deleteObjectLoading,
+      deleteObjectError,
+      deleteObjectDialogOpen
     } = this.state;
 
-    const { bucketName } = this.props.match.params;
+    const { bucketName, clusterId } = this.props.match.params;
     const prefix = getQueryParam(this.props.location.search, 'prefix');
 
     const numOfDisplayedObjects = this.state.data.filter(
@@ -229,60 +339,112 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
           <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/" />
         </Box>
         <Divider className={classes.divider} />
+
         <BucketBreadcrumb
           prefix={prefix}
           history={this.props.history}
           bucketName={bucketName}
         />
-        <Paper className={classes.objectTable}>
-          <Table removeLabelonMobile aria-label="List of Bucket Objects">
-            <TableHead>
-              <TableRow>
-                <TableCell className={classes.nameColumn}>Object</TableCell>
-                <TableCell className={classes.sizeColumn}>Size</TableCell>
-                <TableCell>Last Modified</TableCell>
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              <ObjectTableContent
-                data={data}
-                loading={loading}
-                error={generalError}
-                prefix={prefix}
-              />
-            </TableBody>
-          </Table>
-          {/* We shouldn't allow infinite scrolling if we're still loading,
-          if we've gotten all objects in the bucket (or folder), or if there
-          are errors. */}
-          {!loading &&
-            !allObjectsFetched &&
-            !generalError &&
-            !nextPageError &&
-            data.length >= 100 && (
-              <Waypoint onEnter={() => this.getNextPage()}>
-                <div />
-              </Waypoint>
-            )}
-        </Paper>
-        {nextPageError && (
-          <Typography variant="subtitle2" className={classes.footer}>
-            The next objects in the list failed to load.{' '}
-            <span
-              className={classes.tryAgainText}
-              onClick={() => this.getNextPage()}
-            >
-              Click here to try again.
-            </span>
-          </Typography>
-        )}
+        <Grid container>
+          <Grid item xs={12} lg={4} className={classes.uploaderContainer}>
+            <ObjectUploader
+              clusterId={clusterId}
+              bucketName={bucketName}
+              prefix={prefix}
+              update={() => this.updateInPlace()}
+            />
+          </Grid>
+          <Grid item xs={12} lg={8} className={classes.tableContainer}>
+            <>
+              <Paper className={classes.objectTable}>
+                <Table removeLabelonMobile aria-label="List of Bucket Objects">
+                  <TableHead>
+                    <TableRow>
+                      <TableCell className={classes.nameColumn}>
+                        Object
+                      </TableCell>
+                      <TableCell className={classes.sizeColumn}>Size</TableCell>
+                      <TableCell>Last Modified</TableCell>
+                      {/* Empty TableCell for Action Menu */}
+                      <TableCell />
+                    </TableRow>
+                  </TableHead>
+                  <TableBody>
+                    <ObjectTableContent
+                      data={data}
+                      loading={loading}
+                      error={generalError}
+                      prefix={prefix}
+                      handleClickDelete={this.handleClickDelete}
+                    />
+                  </TableBody>
+                </Table>
+                {/* We shouldn't allow infinite scrolling if we're still loading,
+              if we've gotten all objects in the bucket (or folder), or if there
+              are errors. */}
+                {!loading &&
+                  !allObjectsFetched &&
+                  !generalError &&
+                  !nextPageError &&
+                  data.length >= 100 && (
+                    <Waypoint onEnter={this.getNextPage}>
+                      <div />
+                    </Waypoint>
+                  )}
+              </Paper>
+              {nextPageError && (
+                <Typography variant="subtitle2" className={classes.footer}>
+                  The next objects in the list failed to load.{' '}
+                  <span
+                    className={classes.tryAgainText}
+                    onClick={this.getNextPage}
+                  >
+                    Click here to try again.
+                  </span>
+                </Typography>
+              )}
 
-        {/* Only display this message if there were more than 100 objects. */}
-        {allObjectsFetched && numOfDisplayedObjects > 100 && (
-          <Typography variant="subtitle2" className={classes.footer}>
-            Showing all {numOfDisplayedObjects} items
-          </Typography>
-        )}
+              {/* Only display this message if there were more than 100 objects. */}
+              {allObjectsFetched && numOfDisplayedObjects > 100 && (
+                <Typography variant="subtitle2" className={classes.footer}>
+                  Showing all {numOfDisplayedObjects} items
+                </Typography>
+              )}
+              <ConfirmationDialog
+                open={deleteObjectDialogOpen}
+                onClose={this.closeDeleteObjectDialog}
+                title={
+                  objectToDelete
+                    ? `Delete  ${truncateMiddle(displayName(objectToDelete))}`
+                    : 'Delete object'
+                }
+                actions={() => (
+                  <ActionsPanel>
+                    <Button
+                      buttonType="cancel"
+                      onClick={this.closeDeleteObjectDialog}
+                      data-qa-cancel
+                    >
+                      Cancel
+                    </Button>
+                    <Button
+                      buttonType="secondary"
+                      destructive
+                      onClick={this.deleteObject}
+                      data-qa-submit-rebuild
+                      loading={deleteObjectLoading}
+                    >
+                      Delete
+                    </Button>
+                  </ActionsPanel>
+                )}
+                error={deleteObjectError}
+              >
+                Are you sure you want to delete this object?
+              </ConfirmationDialog>
+            </>
+          </Grid>
+        </Grid>
       </>
     );
   }

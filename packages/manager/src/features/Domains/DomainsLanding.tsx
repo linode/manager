@@ -1,4 +1,5 @@
 import { Domain } from 'linode-js-sdk/lib/domains';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { pathOr } from 'ramda';
 import * as React from 'react';
@@ -39,7 +40,9 @@ import {
   openForCreating,
   openForEditing
 } from 'src/store/domainDrawer';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
+import DisableDomainDialog from './DisableDomainDialog';
 import DomainZoneImportDrawer from './DomainZoneImportDrawer';
 
 import Notice from 'src/components/Notice';
@@ -89,24 +92,16 @@ const styles = (theme: Theme) =>
   });
 
 interface State {
-  importDrawer: {
-    open: boolean;
-    submitting: boolean;
-    errors?: Linode.ApiFieldError[];
-    domain?: string;
-    remote_nameserver?: string;
-  };
-  createDrawer: {
-    open: boolean;
-    mode: 'clone' | 'create';
-    domain?: string;
-    id?: number;
-  };
-  removeDialog: {
-    open: boolean;
-    domain?: string;
-    domainId?: number;
-  };
+  importDrawerOpen: boolean;
+  importDrawerSubmitting: false;
+  importDrawerErrors?: APIError[];
+  remote_nameserver: string;
+  createDrawerOpen: boolean;
+  createDrawerMode: 'clone' | 'create';
+  selectedDomainLabel: string;
+  selectedDomainID?: number;
+  removeDialogOpen: boolean;
+  disableDialogOpen: boolean;
 }
 
 interface Props {
@@ -124,35 +119,29 @@ export type CombinedProps = DomainProps &
 
 export class DomainsLanding extends React.Component<CombinedProps, State> {
   state: State = {
-    importDrawer: {
-      open: false,
-      submitting: false
-    },
-    createDrawer: {
-      open: false,
-      mode: 'create'
-    },
-    removeDialog: {
-      open: false
-    }
+    importDrawerOpen: false,
+    importDrawerSubmitting: false,
+    remote_nameserver: '',
+    createDrawerMode: 'create',
+    createDrawerOpen: false,
+    removeDialogOpen: false,
+    selectedDomainLabel: '',
+    disableDialogOpen: false
   };
 
   static docs: Linode.Doc[] = [Domains];
 
   cancelRequest: Function;
 
-  openImportZoneDrawer = () =>
-    this.setState({ importDrawer: { ...this.state.importDrawer, open: true } });
+  openImportZoneDrawer = () => this.setState({ importDrawerOpen: true });
 
   closeImportZoneDrawer = () =>
     this.setState({
-      importDrawer: {
-        open: false,
-        submitting: false,
-        remote_nameserver: undefined,
-        domain: undefined,
-        errors: undefined
-      }
+      importDrawerOpen: false,
+      importDrawerSubmitting: false,
+      remote_nameserver: '',
+      selectedDomainLabel: '',
+      importDrawerErrors: undefined
     });
 
   handleSuccess = (domain: Domain) => {
@@ -184,12 +173,10 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
   };
 
   removeDomain = () => {
-    const {
-      removeDialog: { domainId }
-    } = this.state;
+    const { selectedDomainID } = this.state;
     const { enqueueSnackbar, deleteDomain } = this.props;
-    if (domainId) {
-      deleteDomain({ domainId })
+    if (selectedDomainID) {
+      deleteDomain({ domainId: selectedDomainID })
         .then(() => {
           this.closeRemoveDialog();
         })
@@ -208,16 +195,48 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     }
   };
 
+  handleClickEnableOrDisableDomain = (
+    action: 'enable' | 'disable',
+    domain: string,
+    domainId: number
+  ) => {
+    if (action === 'enable') {
+      return this.props
+        .updateDomain({
+          domainId,
+          status: 'active'
+        })
+        .catch(e => {
+          return this.props.enqueueSnackbar(
+            getAPIErrorOrDefault(
+              e,
+              'There was an issue enabling your domain'
+            )[0].reason,
+            {
+              variant: 'error'
+            }
+          );
+        });
+    } else {
+      return this.setState({
+        disableDialogOpen: true,
+        selectedDomainID: domainId,
+        selectedDomainLabel: domain
+      });
+    }
+  };
+
   openRemoveDialog = (domain: string, domainId: number) => {
     this.setState({
-      removeDialog: { open: true, domain, domainId }
+      removeDialogOpen: true,
+      selectedDomainLabel: domain,
+      selectedDomainID: domainId
     });
   };
 
   closeRemoveDialog = () => {
-    const { removeDialog } = this.state;
     this.setState({
-      removeDialog: { ...removeDialog, open: false }
+      removeDialogOpen: false
     });
   };
 
@@ -366,7 +385,8 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                         data: orderedData,
                         onClone: this.props.openForCloning,
                         onEdit: this.props.openForEditing,
-                        onRemove: this.openRemoveDialog
+                        onRemove: this.openRemoveDialog,
+                        onDisableOrEnable: this.handleClickEnableOrDisableDomain
                       };
 
                       return domainsAreGrouped ? (
@@ -382,13 +402,20 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
           }}
         </PreferenceToggle>
         <DomainZoneImportDrawer
-          open={this.state.importDrawer.open}
+          open={this.state.importDrawerOpen}
           onClose={this.closeImportZoneDrawer}
           onSuccess={this.handleSuccess}
         />
+        <DisableDomainDialog
+          updateDomain={this.props.updateDomain}
+          selectedDomainID={this.state.selectedDomainID}
+          selectedDomainLabel={this.state.selectedDomainLabel}
+          closeDialog={() => this.setState({ disableDialogOpen: false })}
+          open={this.state.disableDialogOpen}
+        />
         <ConfirmationDialog
-          open={this.state.removeDialog.open}
-          title={`Remove ${this.state.removeDialog.domain}`}
+          open={this.state.removeDialogOpen}
+          title={`Remove ${this.state.selectedDomainLabel}`}
           onClose={this.closeRemoveDialog}
           actions={this.getActions}
         >

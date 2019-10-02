@@ -1,4 +1,5 @@
 import { confirmTwoFactor } from 'linode-js-sdk/lib/profile';
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import CircleProgress from 'src/components/CircleProgress';
 import Divider from 'src/components/core/Divider';
@@ -36,7 +37,7 @@ interface Props {
 }
 
 interface State {
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   submitting: boolean;
   token: string;
 }
@@ -96,7 +97,7 @@ export class EnableTwoFactorForm extends React.Component<CombinedProps, State> {
           'Could not confirm code.',
           'tfa_code'
         );
-        APIErrors = APIErrors.filter((err: Linode.ApiFieldError) => {
+        APIErrors = APIErrors.filter((err: APIError) => {
           // Filter potentially confusing API error
           return (
             err.reason !==

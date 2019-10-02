@@ -117,7 +117,7 @@ export const requestGenerator = <T>(...fns: Function[]): AxiosPromise<T> => {
   const config = reduceRequestConfig(...fns);
   if (config.validationErrors) {
     return Promise.reject(
-      config.validationErrors // All failed requests, client or server errors, should be Linode.ApiFieldError[]
+      config.validationErrors // All failed requests, client or server errors, should be APIError[]
     );
   }
 
@@ -203,7 +203,7 @@ const createError = (message: string, response: AxiosResponse) => {
 
 /**
  *
- * Helper method to easily generate APIFieldError[] for a number of fields and a general error.
+ * Helper method to easily generate APIError[] for a number of fields and a general error.
  */
 export const mockAPIFieldErrors = (fields: string[]): APIError[] => {
   return fields.reduce(

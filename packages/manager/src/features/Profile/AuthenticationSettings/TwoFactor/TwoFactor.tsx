@@ -1,5 +1,6 @@
 import SettingsBackupRestore from '@material-ui/icons/SettingsBackupRestore';
 import { getTFAToken, Profile } from 'linode-js-sdk/lib/profile';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { path } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -83,7 +84,7 @@ interface ConfirmDisable {
 
 interface State {
   disableDialog: ConfirmDisable;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   loading: boolean;
   secret: string;
   showQRCode: boolean;

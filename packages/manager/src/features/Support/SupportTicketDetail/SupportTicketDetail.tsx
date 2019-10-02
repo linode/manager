@@ -2,6 +2,7 @@ import * as Bluebird from 'bluebird';
 import * as classNames from 'classnames';
 import { SupportReply, SupportTicket } from 'linode-js-sdk/lib/account';
 import { getTicket, getTicketReplies } from 'linode-js-sdk/lib/support';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { compose, isEmpty, path, pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -114,7 +115,7 @@ export interface AttachmentError {
 
 interface State {
   loading: boolean;
-  errors?: Linode.ApiFieldError[];
+  errors?: APIError[];
   attachmentErrors: AttachmentError[];
   replies?: SupportReply[];
   ticket?: SupportTicket;

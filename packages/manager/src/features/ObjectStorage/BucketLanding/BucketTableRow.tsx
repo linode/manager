@@ -102,12 +102,7 @@ export const BucketTableRow: React.StatelessComponent<
         />
       </TableCell>
       <TableCell>
-        <BucketActionMenu
-          onRemove={onRemove}
-          bucketLabel={label}
-          cluster={cluster}
-          data-qa-action-menu
-        />
+        <BucketActionMenu onRemove={onRemove} data-qa-action-menu />
       </TableCell>
     </TableRow>
   );

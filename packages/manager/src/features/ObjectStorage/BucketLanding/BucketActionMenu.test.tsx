@@ -8,9 +8,7 @@ jest.mock('src/components/ActionMenu/ActionMenu');
 const mockOnRemove = jest.fn();
 
 const props = {
-  onRemove: mockOnRemove,
-  bucketLabel: 'my-test-bucket',
-  cluster: 'a-cluster'
+  onRemove: mockOnRemove
 };
 
 afterAll(cleanup);

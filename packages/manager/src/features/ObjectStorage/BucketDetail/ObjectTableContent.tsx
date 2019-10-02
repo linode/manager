@@ -14,10 +14,11 @@ interface Props {
   loading: boolean;
   error?: APIError[];
   prefix: string;
+  handleClickDelete: (objectName: string) => void;
 }
 
 const ObjectTableContent: React.FC<Props> = props => {
-  const { data, loading, error, prefix } = props;
+  const { data, loading, error, prefix, handleClickDelete } = props;
 
   const { width } = useWindowDimensions();
 
@@ -90,6 +91,7 @@ const ObjectTableContent: React.FC<Props> = props => {
              */
             objectSize={object.size || 0}
             objectLastModified={object.last_modified || ''}
+            handleClickDelete={() => handleClickDelete(object.name)}
           />
         );
       })}

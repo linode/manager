@@ -1,3 +1,4 @@
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -12,7 +13,7 @@ interface Props {
   secretID?: string;
   secret: string;
   label: string;
-  modalErrors?: Linode.ApiFieldError[];
+  modalErrors?: APIError[];
   secretModalOpen: boolean;
   deleteModalOpen: boolean;
   secretSuccessOpen: boolean;
