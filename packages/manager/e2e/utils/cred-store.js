@@ -47,7 +47,6 @@ class CredStore {
       console.log(`attempting to enter username`);
       $('#username').waitForDisplayed(constants.wait.long);
     } catch (err) {
-      //console.log(`page source`)
       console.log(browser.getPageSource());
     }
 
@@ -59,7 +58,7 @@ class CredStore {
 
     const loginButton = url.includes('dev')
       ? '.btn#submit'
-      : '[data-qa-sign-in] input';
+      : '[data-qa-sign-in] #submit';
 
     // Helper to check if on the Authorize 3rd Party App
     const isOauthAuthPage = () => {
