@@ -39,7 +39,7 @@ export const oneClickApps: OCA[] = [
     summary: 'The leading hosting automation platform that has simplified site and server management for 20 years.',
     tips: [
       `Please note that it will take approximately 15 minutes for cPanel to boot after you launch.`,
-      `Once the script finishes, go to <i>https://[your-Linode's-IP-address]:2087</i> in a browser, where you'll be prompted to log in.`,
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:2087</em> in a browser, where you'll be prompted to log in.`,
       `Your credentials are <code>root</code> for the username and the <strong>Root Password</strong> you defined when you ran the cPanel One-Click App installer.`
     ],
     href: 'https://www.cpanel.net/',
@@ -148,7 +148,7 @@ export const oneClickApps: OCA[] = [
     summary: 'A secure, scalable, and versatile website management platform.',
     tips: [
       `Please allow the script around 15 minutes to finish.`,
-      `Once the script finishes, go to <i>https://[your-Linode's-IP-address]</i> in a browser, where you'll be prompted to log in.`,
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]</em> in a browser, where you'll be prompted to log in.`,
       `Your credentials are <code>root</code> for the username and the <b>Root Password</b> you defined when you ran the Plesk One-Click App installer.`
     ],
     href: 'https://www.plesk.com/',
