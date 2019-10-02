@@ -45,8 +45,12 @@ class CredStore {
     try {
       console.log(`attempting to enter username`);
       $('#username').waitForDisplayed(constants.wait.long);
+      browser.saveScreenshot(
+        `./e2e/screenshots/screenshot${new Date().getTime()}.png`
+      );
     } catch (err) {
-      console.log(browser.getPageSource());
+      //console.log(browser.getPageSource());
+      console.log(`CURRENT URL: ${browser.getUrl()}`);
     }
 
     $('#password').waitForDisplayed(constants.wait.long);
