@@ -94,10 +94,8 @@ class CredStore {
     // If still on the login page, check for a form error
     if (csrfError) {
       // Attempt to Login after encountering the CSRF Error
-      // browser.trySetValue('#password', password);
-      // browser.trySetValue('#username', username);
-      browser.setNewValue('#password', password);
-      browser.setNewValue('#username', username);
+      browser.trySetValue('#password', password);
+      browser.trySetValue('#username', username);
       $(loginButton).click();
     }
 
