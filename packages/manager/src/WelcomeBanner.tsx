@@ -1,7 +1,7 @@
 import Close from '@material-ui/icons/Close';
 import { compose } from 'ramda';
 import * as React from 'react';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import Mobile from 'src/assets/icons/mobile.svg';
 import Resource from 'src/assets/icons/resource.svg';
 import Streamline from 'src/assets/icons/streamline.svg';

@@ -1,7 +1,7 @@
 import { Event } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 import { Link } from 'react-router-dom';
 import Button from 'src/components/Button';
 import MenuList from 'src/components/core/MenuList';
