@@ -2,16 +2,16 @@ import * as React from 'react';
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 export interface Props {
-  onRemove: () => void;
+  handleClickDelete: () => void;
 }
 
-export const BucketActionMenu: React.StatelessComponent<Props> = props => {
+export const ObjectActionMenu: React.FC<Props> = props => {
   const createActions = () => (closeMenu: Function): Action[] => {
     return [
       {
         title: 'Delete',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
-          props.onRemove();
+          props.handleClickDelete();
           closeMenu();
           e.preventDefault();
         }
@@ -22,4 +22,4 @@ export const BucketActionMenu: React.StatelessComponent<Props> = props => {
   return <ActionMenu createActions={createActions()} />;
 };
 
-export default BucketActionMenu;
+export default ObjectActionMenu;

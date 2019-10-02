@@ -54,9 +54,7 @@ export const extendObject = (
   // want the basename (the part after the last slash). If the object ends with
   // a slash (i.e. the object is a folder), get the basename, ignoring the
   // trailing slash.
-  const _displayName = object.name.endsWith('/')
-    ? basename(object.name.substr(0, object.name.length - 1))
-    : basename(object.name);
+  const _displayName = displayName(object.name);
 
   return {
     ...object,
@@ -81,4 +79,10 @@ export const prefixArrayToString = (prefixArray: string[], cutoff: number) => {
   const prefixSlice = prefixArray.slice(0, cutoff + 1).join('/');
   const prefixString = prefixSlice + '/';
   return prefixString;
+};
+
+export const displayName = (objectName: string) => {
+  return objectName.endsWith('/')
+    ? basename(objectName.substr(0, objectName.length - 1))
+    : basename(objectName);
 };

@@ -1,5 +1,6 @@
 import {
   basename,
+  displayName,
   extendObject,
   isFolder,
   prefixArrayToString
@@ -112,6 +113,17 @@ describe('Object Storage utilities', () => {
     it('behaves like the cutoff is the length of the prefix array if the given cutoff is greater', () => {
       const result = prefixArrayToString(['hello', 'world'], 8);
       expect(result).toBe('hello/world/');
+    });
+  });
+
+  describe('displayName', () => {
+    it('returns the basename', () => {
+      expect(displayName('hello.jpg')).toBe('hello.jpg');
+      expect(displayName('hello/world.jpg')).toBe('world.jpg');
+      expect(displayName('testing/hello/world.jpg')).toBe('world.jpg');
+    });
+    it('ignores trailing slashes', () => {
+      expect(displayName('hello/world.jpg')).toBe('world.jpg');
     });
   });
 });

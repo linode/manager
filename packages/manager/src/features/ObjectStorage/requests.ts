@@ -18,3 +18,11 @@ export const uploadObject = (
   };
   return axiosInstance.request(config);
 };
+
+export const deleteObject = (signedUrl: string) => {
+  const config: AxiosRequestConfig = {
+    url: signedUrl,
+    method: 'DELETE'
+  };
+  return axiosInstance.request(config);
+};
