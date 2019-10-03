@@ -76,6 +76,12 @@ export interface ObjectListParams {
   prefix?: string;
   page_size?: number;
 }
+
+export interface ObjectListResponse {
+  data: Linode.Object[];
+  next_marker: string | null;
+  is_truncated: boolean;
+}
 /**
  * Returns a list of Objects in a given Bucket.
  */
@@ -84,7 +90,7 @@ export const getObjectList = (
   bucketName: string,
   params?: ObjectListParams
 ) =>
-  Request<{ data: Linode.Object[] }>(
+  Request<ObjectListResponse>(
     setMethod('GET'),
     setParams(params),
     setURL(
