@@ -28,15 +28,17 @@ import bucketRequestsContainer, {
 } from 'src/containers/bucketRequests.container';
 import useOpenClose from 'src/hooks/useOpenClose';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
-import { sendDeleteBucketEvent } from 'src/utilities/ga';
+import {
+  sendDeleteBucketEvent,
+  sendDeleteBucketFailedEvent
+} from 'src/utilities/ga';
 import BucketTable from './BucketTable';
 
-type ClassNames = 'root' | 'confirmationCopy';
+type ClassNames = 'copy';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
-    confirmationCopy: {
+    copy: {
       marginTop: theme.spacing(1)
     }
   });
@@ -90,6 +92,9 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
         sendDeleteBucketEvent(cluster);
       })
       .catch(e => {
+        // @analytics
+        sendDeleteBucketFailedEvent(cluster);
+
         setIsLoading(false);
         const errorText = getErrorStringOrDefault(e, 'Error removing bucket.');
         setError(errorText);
@@ -127,7 +132,19 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
       <Typography>
         Deleting a bucket is permanent and can't be undone.
       </Typography>
-      <Typography className={classes.confirmationCopy}>
+      <Typography className={classes.copy}>
+        A bucket must be empty before deleting it. Please delete all objects, or
+        use{' '}
+        <a
+          href="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          another tool
+        </a>{' '}
+        to force deletion.
+      </Typography>
+      <Typography className={classes.copy}>
         To confirm deletion, type the name of the bucket ({bucketToRemove.label}
         ) in the field below:
       </Typography>
