@@ -50,6 +50,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   detailsLink: {
     fontSize: 16,
     fontWeight: 'bold'
+  },
+  monitorStatusOuter: {
+    marginBottom: theme.spacing(3) + 2
   }
 }));
 
@@ -180,7 +183,7 @@ const LoadingErrorOrContent: React.FC<ContentProps> = props => {
         sm={5}
         className={classes.status}
       >
-        <Grid item>
+        <Grid item className={classes.monitorStatusOuter}>
           <MonitorStatus monitors={monitors} />
         </Grid>
         <Grid item>

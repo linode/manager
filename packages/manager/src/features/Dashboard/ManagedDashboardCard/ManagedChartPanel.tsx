@@ -15,9 +15,7 @@ import TabbedPanel from 'src/components/TabbedPanel';
 import useTimezone from 'src/utilities/useTimezone';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {
-    marginTop: theme.spacing(3)
-  },
+  root: {},
   inner: {
     paddingTop: 0
   },
@@ -56,10 +54,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   caption: {
-    position: 'absolute',
-    top: 65,
-    left: 30,
-    padding: theme.spacing()
+    marginBottom: theme.spacing(3),
+    paddingLeft: theme.spacing()
   }
 }));
 
@@ -94,21 +90,23 @@ const createTabs = (
       render: () => {
         return (
           <div className={classes.root}>
-            {summaryCopy}
-            <LineGraph
-              timezone={timezone}
-              unit="%"
-              chartHeight={chartHeight}
-              showToday={true}
-              data={[
-                {
-                  borderColor: 'rgba(54, 131, 220, 1)',
-                  backgroundColor: 'rgba(54, 131, 220, .5)',
-                  data: formatData(data.cpu),
-                  label: 'CPU %'
-                }
-              ]}
-            />
+            <div>{summaryCopy}</div>
+            <div>
+              <LineGraph
+                timezone={timezone}
+                unit="%"
+                chartHeight={chartHeight}
+                showToday={true}
+                data={[
+                  {
+                    borderColor: 'rgba(54, 131, 220, 1)',
+                    backgroundColor: 'rgba(54, 131, 220, .5)',
+                    data: formatData(data.cpu),
+                    label: 'CPU %'
+                  }
+                ]}
+              />
+            </div>
           </div>
         );
       },
@@ -118,27 +116,29 @@ const createTabs = (
       render: () => {
         return (
           <div className={classes.root}>
-            {summaryCopy}
-            <LineGraph
-              timezone={timezone}
-              unit={'bps'}
-              chartHeight={chartHeight}
-              showToday={true}
-              data={[
-                {
-                  borderColor: 'rgba(54, 131, 220, 1)',
-                  backgroundColor: 'rgba(54, 131, 220, .5)',
-                  data: formatData(data.net_in),
-                  label: 'Network Traffic In'
-                },
-                {
-                  borderColor: 'rgba(1, 177, 89, 1)',
-                  backgroundColor: 'rgba(1, 177, 89, .5)',
-                  data: formatData(data.net_out),
-                  label: 'Network Traffic Out'
-                }
-              ]}
-            />
+            <div>{summaryCopy}</div>
+            <div>
+              <LineGraph
+                timezone={timezone}
+                unit={'bps'}
+                chartHeight={chartHeight}
+                showToday={true}
+                data={[
+                  {
+                    borderColor: 'rgba(54, 131, 220, 1)',
+                    backgroundColor: 'rgba(54, 131, 220, .5)',
+                    data: formatData(data.net_in),
+                    label: 'Network Traffic In'
+                  },
+                  {
+                    borderColor: 'rgba(1, 177, 89, 1)',
+                    backgroundColor: 'rgba(1, 177, 89, .5)',
+                    data: formatData(data.net_out),
+                    label: 'Network Traffic Out'
+                  }
+                ]}
+              />
+            </div>
           </div>
         );
       },
@@ -148,21 +148,23 @@ const createTabs = (
       render: () => {
         return (
           <div className={classes.root}>
-            {summaryCopy}
-            <LineGraph
-              timezone={timezone}
-              chartHeight={chartHeight}
-              showToday={true}
-              unit={` op/s`}
-              data={[
-                {
-                  borderColor: 'rgba(54, 131, 220, 1)',
-                  backgroundColor: 'rgba(54, 131, 220, .5)',
-                  data: formatData(data.disk),
-                  label: 'Disk I/O'
-                }
-              ]}
-            />
+            <div>{summaryCopy}</div>
+            <div>
+              <LineGraph
+                timezone={timezone}
+                chartHeight={chartHeight}
+                showToday={true}
+                unit={` op/s`}
+                data={[
+                  {
+                    borderColor: 'rgba(54, 131, 220, 1)',
+                    backgroundColor: 'rgba(54, 131, 220, .5)',
+                    data: formatData(data.disk),
+                    label: 'Disk I/O'
+                  }
+                ]}
+              />
+            </div>
           </div>
         );
       },
