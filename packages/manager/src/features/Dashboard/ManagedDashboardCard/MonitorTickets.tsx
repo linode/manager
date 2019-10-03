@@ -13,8 +13,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     padding: theme.spacing(),
     textAlign: 'center'
   },
+  openTicketButton: {
+    [theme.breakpoints.down('sm')]: {
+      paddingLeft: 12,
+      paddingRight: 12
+    }
+  },
   happyTicket: {
-    color: theme.color.blue
+    color: theme.color.grey1
   },
   sadTicket: {
     color: theme.color.red
@@ -43,7 +49,7 @@ export const MonitorTickets: React.FC<Props> = props => {
     >
       <Grid
         item
-        className={hasIssues ? classes.sadTicket : classes.happyTicket}
+        className={`${hasIssues ? classes.sadTicket : classes.happyTicket} py0`}
       >
         <TicketIcon width={50} height={39} />
       </Grid>
@@ -63,7 +69,11 @@ export const MonitorTickets: React.FC<Props> = props => {
             a full list of open tickets.
           </Typography>
         ) : (
-          <Button buttonType="primary" onClick={() => null}>
+          <Button
+            buttonType="primary"
+            onClick={() => null}
+            className={classes.openTicketButton}
+          >
             Open a ticket
           </Button>
         )}

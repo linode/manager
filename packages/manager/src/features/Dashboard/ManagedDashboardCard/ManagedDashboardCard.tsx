@@ -49,10 +49,15 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   detailsLink: {
     fontSize: 16,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
+    position: 'relative',
+    top: 6
   },
   monitorStatusOuter: {
-    marginBottom: theme.spacing(3) + 2
+    marginBottom: theme.spacing(1),
+    [theme.breakpoints.up('lg')]: {
+      marginBottom: theme.spacing(3) + 2
+    }
   }
 }));
 
@@ -102,6 +107,7 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
       title="Managed Services"
       alignHeader="space-between"
       className={classes.root}
+      noHeaderActionStyles
       headerAction={() => (
         <Link to="/managed" className={classes.detailsLink}>
           View Details

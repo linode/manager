@@ -19,10 +19,10 @@ import { COMPACT_SPACING_UNIT } from 'src/themeFactory';
 
 export const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: `0 ${theme.spacing(2)}px 0`,
+    padding: `0`,
     textAlign: 'center',
     [theme.breakpoints.down('md')]: {
-      padding: `${theme.spacing(2)}px ${theme.spacing(2)}px 0`
+      padding: `${theme.spacing(2)}px 0 0`
     }
   },
   icon: {

@@ -31,6 +31,7 @@ interface Props {
   alignHeader?: 'flex-start' | 'space-between';
   alignItems?: 'center' | 'flex-start';
   headerAction?: () => JSX.Element | JSX.Element[] | null;
+  noHeaderActionStyles?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -40,6 +41,7 @@ const DashboardCard: React.StatelessComponent<CombinedProps> = props => {
     alignHeader,
     title,
     headerAction,
+    noHeaderActionStyles,
     classes,
     className,
     alignItems
@@ -66,7 +68,12 @@ const DashboardCard: React.StatelessComponent<CombinedProps> = props => {
             )}
             {headerAction && (
               <Grid item className={'py0'}>
-                <Typography variant="body1" className={classes.headerAction}>
+                <Typography
+                  variant="body1"
+                  className={
+                    !noHeaderActionStyles ? classes.headerAction : undefined
+                  }
+                >
                   {headerAction()}
                 </Typography>
               </Grid>
