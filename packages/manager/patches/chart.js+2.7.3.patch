@@ -12,7 +12,7 @@ index 2496a48..b96ccf5 100644
  
  			for (i = 0, ilen = ticks.length; i < ilen; ++i) {
 -				labels.push(this.tickFormatFunction(moment(ticks[i].value), i, ticks));
-+				if (offset) {
++				if (offset === 0 || offset) {
 +					labels.push(this.tickFormatFunction(moment(moment(ticks[i].value).utc()).utcOffset(offset), i, ticks));
 +				} else {
 +					labels.push(this.tickFormatFunction(moment(ticks[i].value), i, ticks));
