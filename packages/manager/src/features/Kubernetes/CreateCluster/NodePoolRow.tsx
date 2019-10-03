@@ -12,7 +12,9 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { displayPrice } from 'src/components/DisplayPrice';
+import HelpIcon from 'src/components/HelpIcon';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+import SupportLink from 'src/components/SupportLink';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TextField from 'src/components/TextField';
@@ -103,6 +105,17 @@ export const getNodeStatus = (linodes: PoolNodeResponse[]) => {
   });
 };
 
+const tooltipText = (
+  <Typography>
+    Some of your nodes may not have been successfully created. Please open a
+    {` `}
+    <SupportLink
+      text="Support ticket."
+      title="Kubernetes Cluster nodes not created"
+    />
+  </Typography>
+);
+
 export const getStatusString = (
   count: number,
   linodes?: PoolNodeResponse[]
@@ -114,6 +127,24 @@ export const getStatusString = (
     return `${count} (0 up, ${count} down)`;
   }
   const status = getNodeStatus(linodes);
+
+  if (status.ready + status.not_ready !== count) {
+    // The API hasn't registered/created all of the nodes
+    return (
+      <>
+        <span>{`${count} (${status.ready} up, ${status.not_ready} down)`}</span>
+        <HelpIcon
+          text={tooltipText}
+          className={''}
+          tooltipPosition="right-start"
+          interactive
+          classes={''}
+        />
+      </>
+    );
+  }
+
+  // All systems normal.
   return `${count} (${status.ready} up, ${status.not_ready} down)`;
 };
 
