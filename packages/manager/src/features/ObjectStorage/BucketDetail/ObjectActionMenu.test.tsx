@@ -1,17 +1,19 @@
 import { cleanup, fireEvent, render } from '@testing-library/react';
 import * as React from 'react';
 import { wrapWithTheme } from 'src/utilities/testHelpers';
-import { ObjectActionMenu } from './ObjectActionMenu';
+import { ObjectActionMenu, Props } from './ObjectActionMenu';
 
 jest.mock('src/components/ActionMenu/ActionMenu');
 
-const mockOnRemove = jest.fn();
+const mockHandleClickDelete = jest.fn();
+const mockHandleClickDownload = jest.fn();
 
-const props = {
-  handleClickDelete: mockOnRemove
+const props: Props = {
+  handleClickDownload: mockHandleClickDownload,
+  handleClickDelete: mockHandleClickDelete
 };
 
-afterAll(cleanup);
+afterEach(cleanup);
 
 describe('ObjectActionMenu', () => {
   it('Includes a "Delete" option', () => {
@@ -27,6 +29,22 @@ describe('ObjectActionMenu', () => {
     );
 
     fireEvent.click(getAllByText('Delete')[0]);
-    expect(mockOnRemove).toHaveBeenCalled();
+    expect(mockHandleClickDelete).toHaveBeenCalled();
+  });
+
+  it('Includes a "Open" option', () => {
+    const { queryByText } = render(
+      wrapWithTheme(<ObjectActionMenu {...props} />)
+    );
+    expect(queryByText('Open')).toBeInTheDocument();
+  });
+
+  it('executes the onOpen function when the "Open" option is clicked', () => {
+    const { getAllByText } = render(
+      wrapWithTheme(<ObjectActionMenu {...props} />)
+    );
+
+    fireEvent.click(getAllByText('Open')[0]);
+    expect(mockHandleClickDownload).toHaveBeenCalled();
   });
 });
