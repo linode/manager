@@ -28,13 +28,24 @@ const styles = (theme: Theme) =>
 interface Props {
   title?: string;
   className?: string;
+  alignHeader?: 'flex-start' | 'space-between';
+  alignItems?: 'center' | 'flex-start';
   headerAction?: () => JSX.Element | JSX.Element[] | null;
+  noHeaderActionStyles?: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
 const DashboardCard: React.StatelessComponent<CombinedProps> = props => {
-  const { title, headerAction, classes, className } = props;
+  const {
+    alignHeader,
+    title,
+    headerAction,
+    noHeaderActionStyles,
+    classes,
+    className,
+    alignItems
+  } = props;
   return (
     <Grid
       container
@@ -45,7 +56,11 @@ const DashboardCard: React.StatelessComponent<CombinedProps> = props => {
     >
       {(title || headerAction) && (
         <Grid item xs={12}>
-          <Grid container alignItems="flex-start">
+          <Grid
+            container
+            alignItems={alignItems || 'flex-start'}
+            justify={alignHeader || 'space-between'}
+          >
             {title && (
               <Grid item className={'py0'}>
                 <Typography variant="h2">{title}</Typography>
@@ -53,7 +68,12 @@ const DashboardCard: React.StatelessComponent<CombinedProps> = props => {
             )}
             {headerAction && (
               <Grid item className={'py0'}>
-                <Typography variant="body1" className={classes.headerAction}>
+                <Typography
+                  variant="body1"
+                  className={
+                    !noHeaderActionStyles ? classes.headerAction : undefined
+                  }
+                >
                   {headerAction()}
                 </Typography>
               </Grid>

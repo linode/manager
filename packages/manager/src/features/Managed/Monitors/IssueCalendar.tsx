@@ -1,8 +1,7 @@
 import * as moment from 'moment';
 import * as React from 'react';
-
-import useTimezone from 'src/hooks/useTimezone';
 import { ExtendedIssue } from 'src/store/managed/issues.actions';
+import useTimezone from 'src/utilities/useTimezone';
 import IssueDay from './IssueDay';
 
 const TOTAL_DAYS = 10;

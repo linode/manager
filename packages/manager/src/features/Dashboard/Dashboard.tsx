@@ -107,6 +107,11 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
             Dashboard
           </Typography>
         </Grid>
+        {flags.managed && managed && (
+          <Grid item xs={12}>
+            <ManagedDashboardCard />
+          </Grid>
+        )}
         <Grid item xs={12} md={7}>
           {flags.promos && (
             <PromotionsBanner
@@ -115,7 +120,6 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
               )}
             />
           )}
-          {flags.managed && managed && <ManagedDashboardCard />}
           <LinodesDashboardCard />
           <VolumesDashboardCard />
           <NodeBalancersDashboardCard />
