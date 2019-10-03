@@ -149,7 +149,7 @@ export const createFooter = (doc: JSPDF, font: string) => {
 };
 
 const truncateLabel = (label: string) => {
-  return label.length > 15 ? `${label.substr(0, 15)}...` : label;
+  return label.length > 20 ? `${label.substr(0, 20)}...` : label;
 };
 
 const formatDescription = (desc?: string) => {
@@ -178,6 +178,7 @@ const formatDescription = (desc?: string) => {
 
   if (descChunks.length < 2) {
     /** in this case, it's probably a manual payment from admin */
+    // return desc;
     return truncateLabel(desc);
   }
 
