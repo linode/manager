@@ -1,9 +1,10 @@
 import { Linode } from 'linode-js-sdk/lib/linodes';
-import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Select, { Item } from 'src/components/EnhancedSelect/Select';
-import withLinodes from 'src/containers/withLinodes.container';
+import withLinodes, {
+  Props as LinodeProps
+} from 'src/containers/withLinodes.container';
 
 interface Props {
   linodeId: number;
@@ -13,10 +14,9 @@ interface Props {
   errorText?: string;
 }
 
-interface WithLinodesProps {
+interface WithLinodesProps
+  extends Pick<LinodeProps, 'linodesLoading' | 'linodesError'> {
   linode?: Linode;
-  linodesLoading: boolean;
-  linodesError?: APIError[];
 }
 
 type CombinedProps = Props & WithLinodesProps;
