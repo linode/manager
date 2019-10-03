@@ -190,25 +190,77 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
       data: { status: 'IN_PROGRESS' }
     });
 
-    const promises = nextBatch.map(fileUpload =>
-      getURLAndUploadObject(
-        fileUpload,
-        dispatch,
-        clusterId,
-        bucketName,
-        prefix
-      ).then(() => {
-        const path: string =
-          (fileUpload.file as any).path || fileUpload.file.name;
-        const fullObjectName = prefix + path;
+    const promises = nextBatch.map(fileUpload => {
+      const { file } = fileUpload;
+
+      // We want to upload the object to the current "folder", so we prepend the
+      // file name with the prefix. The `path` key on File is bleeding edge.
+      // It's not part of the official spec, but all new browser versions
+      // support it. Using the path, we can upload directories. Fallback on the
+      // name if the browser doesn't support it.
+      const path = (file as any).path || file.name;
+      const fullObjectName = prefix + path;
+
+      const updateTable = () => {
         const match = path.match(/\/(.+\/)/);
         if (match) {
           addOneFolder(match[1]);
         } else {
           addOneFile(fullObjectName, fileUpload.file.size);
         }
+      };
+
+      // If we've already gotten the URL (i.e. we've confirmed this file should
+      // be overwritten) we can go ahead and upload it.
+      if (fileUpload.url) {
+        return handleUpload(fileUpload, fileUpload.url, dispatch)
+          .then(() => updateTable())
+          .catch(_ => {
+            dispatch({
+              type: 'UPDATE_FILES',
+              filesToUpdate: [file.name],
+              data: {
+                status: 'ERROR'
+              }
+            });
+          });
+      }
+
+      // Otherwise, we need to make an API request to get the URL.
+      return getObjectURL(clusterId, bucketName, fullObjectName, 'PUT', {
+        content_type: file.type
       })
-    );
+        .then(({ url, exists }) => {
+          if (exists) {
+            dispatch({
+              type: 'NOTIFY_FILE_EXISTS',
+              fileName: fullObjectName,
+              url
+            });
+            return;
+          }
+          return handleUpload(fileUpload, url, dispatch)
+            .then(() => updateTable())
+            .catch(_ => {
+              dispatch({
+                type: 'UPDATE_FILES',
+                filesToUpdate: [file.name],
+                data: {
+                  status: 'ERROR'
+                }
+              });
+            });
+        })
+        .catch(_ => {
+          dispatch({
+            type: 'UPDATE_FILES',
+            filesToUpdate: [file.name],
+            data: {
+              status: 'ERROR'
+            }
+          });
+        });
+    });
 
     Promise.all(promises)
       // Errors for individual files are handled in the mapped promises.
@@ -252,6 +304,8 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
 
         <div className={classes.fileUploads}>
           {state.files.map((upload, idx) => {
+            const path = (upload.file as any).path || upload.file.name;
+            const fullObjectName = prefix + path;
             return (
               <FileUpload
                 key={idx}
@@ -259,8 +313,12 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
                   upload.file.name || '',
                   truncationMaxWidth
                 )}
+                fullObjectName={fullObjectName}
                 sizeInBytes={upload.file.size || 0}
                 percentCompleted={upload.percentComplete || 0}
+                overwriteNotice={upload.status === 'OVERWRITE_NOTICE'}
+                url={upload.url}
+                dispatch={dispatch}
                 error={
                   upload.status === 'ERROR' ? 'Error uploading object.' : ''
                 }
@@ -311,47 +369,22 @@ const onUploadProgressFactory = (
   });
 };
 
-const getURLAndUploadObject = (
+const handleUpload = (
   fileUpload: ExtendedFile,
-  dispatch: React.Dispatch<ObjectUploaderAction>,
-  clusterId: string,
-  bucketName: string,
-  prefix: string
+  url: string,
+  dispatch: React.Dispatch<ObjectUploaderAction>
 ) => {
   const { file } = fileUpload;
 
-  // We want to upload the object to the current "folder", so we prepend the
-  // file name with the prefix. The `path` key on File is bleeding edge.
-  // It's not part of the official spec, but all new browser versions
-  // support it. Using the path, we can upload directories. Fallback on the
-  // name if the browser doesn't support it.
-  const path = (file as any).path || file.name;
-  const fullObjectName = prefix + path;
-
-  return getObjectURL(clusterId, bucketName, fullObjectName, 'PUT', {
-    content_type: file.type
-  })
-    .then(({ url }) => {
-      const onUploadProgress = onUploadProgressFactory(dispatch, file.name);
-      return uploadObject(url, file, onUploadProgress);
-    })
-    .then(() => {
-      dispatch({
-        type: 'UPDATE_FILES',
-        filesToUpdate: [file.name],
-        data: {
-          percentComplete: 100,
-          status: 'FINISHED'
-        }
-      });
-    })
-    .catch(_ => {
-      dispatch({
-        type: 'UPDATE_FILES',
-        filesToUpdate: [file.name],
-        data: {
-          status: 'ERROR'
-        }
-      });
+  const onUploadProgress = onUploadProgressFactory(dispatch, file.name);
+  return uploadObject(url, file, onUploadProgress).then(() => {
+    dispatch({
+      type: 'UPDATE_FILES',
+      filesToUpdate: [file.name],
+      data: {
+        percentComplete: 100,
+        status: 'FINISHED'
+      }
     });
+  });
 };

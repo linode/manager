@@ -4,12 +4,19 @@ export const MAX_NUM_UPLOADS = 100;
 export const MAX_PARALLEL_UPLOADS = 25;
 export const MAX_FILE_SIZE_IN_BYTES = 5 * 1024 * 1024 * 1024;
 
-type FileStatus = 'QUEUED' | 'IN_PROGRESS' | 'FINISHED' | 'CANCELLED' | 'ERROR';
+type FileStatus =
+  | 'QUEUED'
+  | 'OVERWRITE_NOTICE'
+  | 'IN_PROGRESS'
+  | 'FINISHED'
+  | 'CANCELLED'
+  | 'ERROR';
 
 export interface ExtendedFile {
   status: FileStatus;
   percentComplete: number;
   file: File;
+  url?: string;
 }
 
 export interface ObjectUploaderState {
@@ -28,7 +35,10 @@ export type ObjectUploaderAction =
       type: 'UPDATE_FILES';
       filesToUpdate: string[];
       data: Partial<ExtendedFile>;
-    };
+    }
+  | { type: 'NOTIFY_FILE_EXISTS'; fileName: string; url: string }
+  | { type: 'CONFIRM_OVERWRITE'; fileName: string }
+  | { type: 'CANCEL_OVERWRITE'; fileName: string };
 
 const cloneLandingReducer = (
   draft: ObjectUploaderState,
@@ -96,6 +106,36 @@ const cloneLandingReducer = (
           }
         }
       });
+      break;
+
+    case 'NOTIFY_FILE_EXISTS':
+      let foundFile = draft.files.find(
+        fileUpload => fileUpload.file.name === action.fileName
+      );
+      if (foundFile) {
+        foundFile.status = 'OVERWRITE_NOTICE';
+        foundFile.url = action.url;
+      }
+      break;
+
+    case 'CONFIRM_OVERWRITE':
+      foundFile = draft.files.find(
+        fileUpload => fileUpload.file.name === action.fileName
+      );
+      if (foundFile) {
+        foundFile.status = 'QUEUED';
+      }
+      updateCount(draft);
+      break;
+
+    case 'CANCEL_OVERWRITE':
+      const idx = draft.files.findIndex(fileUpload => {
+        return fileUpload.file.name === action.fileName;
+      });
+      if (idx > -1) {
+        draft.files.splice(idx, 1);
+      }
+      updateCount(draft);
       break;
   }
 };
