@@ -203,4 +203,4 @@ export const ManagedChartPanel: React.FC<Props> = props => {
   );
 };
 
-export default ManagedChartPanel;
+export default React.memo(ManagedChartPanel);

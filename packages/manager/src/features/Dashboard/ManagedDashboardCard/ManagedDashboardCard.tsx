@@ -16,7 +16,6 @@ import withManaged, {
   ManagedProps
 } from 'src/containers/managedServices.container';
 import { useAPIRequest } from 'src/hooks/useAPIRequest';
-import useFlags from 'src/hooks/useFlags';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import DashboardCard from '../DashboardCard';
@@ -81,8 +80,6 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
     null
   );
 
-  const flags = useFlags();
-
   React.useEffect(() => {
     // Rely on Redux error handling.
     props.requestManagedServices().catch(_ => null);
@@ -105,10 +102,6 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
           .reason
       : undefined;
   const statsLoading = loading && lastUpdated === 0;
-
-  if (!flags.managed) {
-    return null;
-  }
 
   return (
     <DashboardCard
