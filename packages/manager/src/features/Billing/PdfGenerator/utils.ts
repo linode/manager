@@ -75,12 +75,16 @@ export const createInvoiceItemsTable = (doc: JSPDF, items: InvoiceItem[]) => {
         content: formatDescription(item.label)
       },
       {
-        styles: { fontSize: 8, cellWidth: 60, overflow: 'linebreak' },
-        content: item.from || ''
+        styles: { fontSize: 8, cellWidth: 50, overflow: 'linebreak' },
+        content: item.from
+          ? `${item.from.substr(0, 10)}\n${item.from.substr(10)}`
+          : ''
       },
       {
-        styles: { fontSize: 8, cellWidth: 60, overflow: 'linebreak' },
-        content: item.to || ''
+        styles: { fontSize: 8, cellWidth: 50, overflow: 'linebreak' },
+        content: item.to
+          ? `${item.to.substr(0, 10)}\n${item.to.substr(10)}`
+          : ''
       },
       {
         styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
