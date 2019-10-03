@@ -59,6 +59,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: '-webkit-box',
     WebkitLineClamp: 3,
     WebkitBoxOrient: 'vertical',
+    transition: 'all 1s ease-in',
     overflow: 'hidden',
     wordBreak: 'break-all',
     fontFamily: '"Ubuntu Mono", monospace, sans-serif',
@@ -73,17 +74,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     [theme.breakpoints.up('xl')]: {
       paddingRight: theme.spacing(4),
       paddingLeft: theme.spacing(4)
+    },
+    '&:hover': {
+      transition: 'all 1s ease-in',
+      WebkitLineClamp: 'unset'
     }
   },
   copyToClipboard: {
-    alignItems: 'center',
+    alignItems: 'flex-start',
     display: 'flex',
     justifyContent: 'flex-start',
     [theme.breakpoints.up('sm')]: {
       justifyContent: 'flex-end'
     },
     '& > button': {
-      minWidth: 190
+      minWidth: 190,
+      marginTop: theme.spacing(1)
     }
   }
 }));
