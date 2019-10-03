@@ -37,6 +37,7 @@
     "invariant": "^2.2.4",
     "js-cookie": "^2.2.0",
     "jspdf": "^1.5.3",
+    "jspdf-autotable": "^3.2.4",
     "launchdarkly-react-client-sdk": "^2.11.0",
     "linode-js-sdk": "^0.8.1-alpha.0",
     "logic-query-parser": "^0.0.5",
