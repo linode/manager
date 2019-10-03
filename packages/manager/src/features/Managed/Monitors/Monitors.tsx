@@ -24,7 +24,7 @@ export const Monitors: React.FC<CombinedProps> = props => {
   const {
     credentials,
     groups,
-    lastUpdated,
+    managedLastUpdated,
     loading,
     errorFromProps,
     managedError,
@@ -45,7 +45,7 @@ export const Monitors: React.FC<CombinedProps> = props => {
       monitors={monitors || []}
       credentials={credentials}
       groups={groups}
-      loading={loading || (managedLoading && lastUpdated === 0)}
+      loading={loading || (managedLoading && managedLastUpdated === 0)}
       error={managedError.read || errorFromProps}
       {...rest}
     />

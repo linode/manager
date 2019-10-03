@@ -21,7 +21,7 @@ export interface ManagedProps {
   monitors: ManagedServiceMonitor[];
   managedLoading: boolean;
   managedError: EntityError;
-  lastUpdated: number;
+  managedLastUpdated: number;
 }
 
 export interface DispatchProps {

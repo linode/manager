@@ -80,7 +80,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
     issues,
     issuesError,
     issuesLoading,
-    lastUpdated
+    issuesLastUpdated
   } = props;
 
   const {
@@ -294,7 +294,7 @@ export const MonitorTable: React.FC<CombinedProps> = props => {
         onClose={() => setHistoryDrawerOpen(false)}
         monitorLabel={editLabel}
         issues={issues.filter(thisIssue => thisIssue.services.includes(editID))}
-        loading={issuesLoading && lastUpdated === 0}
+        loading={issuesLoading && issuesLastUpdated === 0}
         error={issuesError.read}
       />
     </>

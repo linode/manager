@@ -10,7 +10,7 @@ export interface ManagedIssuesProps {
   issues: ManagedIssue[];
   issuesLoading: boolean;
   issuesError: EntityError;
-  lastUpdated: number;
+  issuesLastUpdated: number;
 }
 
 export interface DispatchProps {
@@ -27,7 +27,7 @@ export default <TInner extends {}, TOuter extends {}>(
   mapManagedIssuesToProps?: (
     ownProps: TOuter,
     issuesLoading: boolean,
-    lastUpdated: number,
+    issuesLastUpdated: number,
     issues: ManagedIssue[],
     issuesError?: EntityError
   ) => TInner
@@ -37,19 +37,19 @@ export default <TInner extends {}, TOuter extends {}>(
       const issues = state.__resources.managedIssues.entities;
       const issuesLoading = state.__resources.managedIssues.loading;
       const issuesError = state.__resources.managedIssues.error;
-      const lastUpdated = state.__resources.managedIssues.lastUpdated;
+      const issuesLastUpdated = state.__resources.managedIssues.lastUpdated;
 
       if (mapManagedIssuesToProps) {
         return mapManagedIssuesToProps(
           ownProps,
           issuesLoading,
-          lastUpdated,
+          issuesLastUpdated,
           issues,
           issuesError
         );
       }
 
-      return { ...ownProps, issuesLoading, lastUpdated, issues, issuesError };
+      return { issuesLoading, issuesLastUpdated, issues, issuesError };
     },
     mapDispatchToProps
   );

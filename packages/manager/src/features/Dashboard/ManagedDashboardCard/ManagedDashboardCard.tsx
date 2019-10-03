@@ -1,5 +1,4 @@
-import { ManagedServiceMonitor } from 'linode-js-sdk/lib/managed';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { getManagedStats, ManagedStatsData } from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -8,136 +7,210 @@ import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import ErrorState from 'src/components/ErrorState';
 import Grid from 'src/components/Grid';
-import ManagedContainer, {
-  DispatchProps
+import withManagedIssues, {
+  DispatchProps as IssueDispatch,
+  ManagedIssuesProps
+} from 'src/containers/managedIssues.container';
+import withManaged, {
+  DispatchProps,
+  ManagedProps
 } from 'src/containers/managedServices.container';
+import { useAPIRequest } from 'src/hooks/useAPIRequest';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import DashboardCard from '../DashboardCard';
-import Healthy from './Healthy';
-import Unhealthy from './Unhealthy';
+import ManagedChartPanel from './ManagedChartPanel';
+import MonitorStatus from './MonitorStatus';
+import MonitorTickets from './MonitorTickets';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    marginBottom: theme.spacing(3),
-    marginTop: '0 !important'
+    marginTop: '0 !important',
+    [theme.breakpoints.up('sm')]: {
+      marginBottom: theme.spacing(3)
+    }
   },
   paper: {
     marginTop: theme.spacing()
+  },
+  status: {
+    position: 'relative',
+    [theme.breakpoints.up('sm')]: {
+      margin: `${theme.spacing(3)}px ${theme.spacing(1)}px !important`
+    },
+    [theme.breakpoints.up('lg')]: {
+      margin: `${theme.spacing(6) + 2}px ${theme.spacing(1)}px !important`
+    }
+  },
+  outerContainer: {
+    [theme.breakpoints.up('sm')]: {
+      flexWrap: 'nowrap'
+    }
+  },
+  detailsLink: {
+    fontSize: 16,
+    fontWeight: 'bold',
+    position: 'relative',
+    top: 6,
+    paddingRight: theme.spacing() - 3
+  },
+  monitorStatusOuter: {
+    marginBottom: theme.spacing(1),
+    [theme.breakpoints.up('lg')]: {
+      marginBottom: theme.spacing(3) + 2
+    }
   }
 }));
 
-interface StateProps {
-  monitors: ManagedServiceMonitor[];
-  loading: boolean;
-  error?: APIError[];
-  updated: number;
-}
-
-type CombinedProps = StateProps & DispatchProps;
+type CombinedProps = ManagedProps &
+  DispatchProps &
+  ManagedIssuesProps &
+  IssueDispatch;
 
 export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const { error, loading, monitors, updated } = props;
+  const {
+    data,
+    loading,
+    lastUpdated,
+    error,
+    update
+  } = useAPIRequest<ManagedStatsData | null>(
+    () => getManagedStats().then(response => response.data),
+    null
+  );
 
   React.useEffect(() => {
     // Rely on Redux error handling.
     props.requestManagedServices().catch(_ => null);
+    props.requestManagedIssues().catch(_ => null);
 
-    const interval = setInterval(
-      () => props.requestManagedServices().catch(_ => null),
-      10000
-    );
+    const interval = setInterval(() => {
+      props.requestManagedServices().catch(_ => null);
+      props.requestManagedIssues().catch(_ => null);
+      update();
+    }, 10000);
 
     return () => {
       clearInterval(interval);
     };
   }, []);
 
-  if (!loading && !error && monitors.length === 0 && updated === 0) {
-    return null;
-  }
+  const statsError =
+    error && data === null
+      ? getAPIErrorOrDefault(error, 'Unable to load your usage statistics.')[0]
+          .reason
+      : undefined;
+  const statsLoading = loading && lastUpdated === 0;
 
   return (
     <DashboardCard
       title="Managed Services"
+      alignHeader="space-between"
       className={classes.root}
-      headerAction={() => <Link to="/managed">View All</Link>}
-      data-qa-dash-volume
+      noHeaderActionStyles
+      headerAction={() => (
+        <Link to="/managed" className={classes.detailsLink}>
+          View Details
+        </Link>
+      )}
+      data-qa-dash-managed
     >
       <Paper className={classes.paper}>
-        <Grid
-          container
-          direction="row"
-          wrap="nowrap"
-          justify="center"
-          alignItems="center"
-        >
-          <Content
-            error={error}
-            loading={loading}
-            monitors={monitors}
-            updated={updated}
-          />
-        </Grid>
+        <LoadingErrorOrContent
+          data={data}
+          statsError={statsError}
+          statsLoading={statsLoading}
+          {...props}
+        />
       </Paper>
     </DashboardCard>
   );
 };
 
-const Content: React.FC<StateProps> = props => {
-  const { error, loading, monitors, updated } = props;
+interface ContentProps extends CombinedProps {
+  data: ManagedStatsData | null;
+  statsLoading: boolean;
+  statsError?: string;
+}
+
+const LoadingErrorOrContent: React.FC<ContentProps> = props => {
+  const {
+    data,
+    issues,
+    managedError,
+    managedLoading,
+    monitors,
+    managedLastUpdated,
+    issuesLoading,
+    issuesError,
+    issuesLastUpdated,
+    statsError,
+    statsLoading
+  } = props;
+  const classes = useStyles();
+
   /**
    * Don't show error state if we've successfully retrieved
    * monitor data but then a subsequent poll fails
    */
-  if (error && updated === 0) {
+  if (
+    (managedError.read && managedLastUpdated === 0) ||
+    (issuesError.read && issuesLastUpdated === 0)
+  ) {
     const errorString = getAPIErrorOrDefault(
-      error,
+      managedError.read || issuesError.read || [],
       'Error loading your Managed service information.'
     )[0].reason;
     return <ErrorState errorText={errorString} compact />;
   }
 
-  if (loading && updated === 0) {
-    return <CircleProgress mini />;
+  if (
+    (managedLoading && managedLastUpdated === 0) ||
+    (issuesLoading && issuesLastUpdated === 0)
+  ) {
+    return <CircleProgress />;
   }
 
-  const failedMonitors = getFailedMonitors(monitors);
-  if (failedMonitors.length > 0) {
-    return <Unhealthy monitorsDown={failedMonitors.length} />;
-  }
-
-  return <Healthy />;
+  return (
+    <Grid
+      container
+      direction="row"
+      justify="center"
+      alignItems="center"
+      className={classes.outerContainer}
+    >
+      <Grid
+        container
+        item
+        direction="column"
+        justify="space-around"
+        alignItems="center"
+        xs={12}
+        sm={5}
+        className={classes.status}
+      >
+        <Grid item className={classes.monitorStatusOuter}>
+          <MonitorStatus monitors={monitors} />
+        </Grid>
+        <Grid item>
+          <MonitorTickets issues={issues} />
+        </Grid>
+      </Grid>
+      <Grid item xs={12} sm={8}>
+        <ManagedChartPanel
+          data={data}
+          loading={statsLoading}
+          error={statsError}
+        />
+      </Grid>
+    </Grid>
+  );
 };
 
-const withManaged = ManagedContainer(
-  (ownProps, managedLoading, lastUpdated, monitors, managedError) => ({
-    ...ownProps,
-    loading: managedLoading,
-    updated: lastUpdated,
-    monitors,
-    error: managedError!.read
-  })
+const enhanced = compose<CombinedProps, {}>(
+  withManaged(),
+  withManagedIssues()
 );
-
-const getFailedMonitors = (monitors: ManagedServiceMonitor[]) => {
-  /**
-   * This assumes that a status of "failed" is the only
-   * error state; but if all a user's monitors are pending
-   * or disabled, they'll all pass the test here and the
-   * user will get a message saying that all monitors are
-   * verified.
-   */
-  return monitors.reduce((accum, thisMonitor) => {
-    if (thisMonitor.status === 'problem') {
-      return [...accum, thisMonitor.id];
-    } else {
-      return accum;
-    }
-  }, []);
-};
-
-const enhanced = compose<CombinedProps, {}>(withManaged);
 
 export default enhanced(ManagedDashboardCard);

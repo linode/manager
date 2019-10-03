@@ -24,6 +24,7 @@ interface Props {
   suggestedMax?: number;
   data: DataSet[];
   timezone: string;
+  unit?: string; // Display unit on Y axis ticks
 }
 
 type CombinedProps = Props;
@@ -47,13 +48,7 @@ const chartOptions: any = {
         ticks: {
           beginAtZero: true,
           callback(value: number, index: number) {
-            if (value >= 1000000) {
-              return value / 1000000 + 'M';
-            }
-            if (value >= 1000) {
-              return value / 1000 + 'K';
-            }
-            return value;
+            return humanizeLargeData(value);
           }
         }
       }
@@ -100,8 +95,18 @@ const parseInTimeZone = curry((timezone: string, utcMoment: any) => {
   return moment(utcMoment).tz(timezone);
 });
 
+const humanizeLargeData = (value: number) => {
+  if (value >= 1000000) {
+    return value / 1000000 + 'M';
+  }
+  if (value >= 1000) {
+    return value / 1000 + 'K';
+  }
+  return value;
+};
+
 class LineGraph extends React.Component<CombinedProps, {}> {
-  getChartOptions = (suggestedMax?: number) => {
+  getChartOptions = (suggestedMax?: number, unit?: string) => {
     const finalChartOptions = clone(chartOptions);
     const { showToday, timezone } = this.props;
     const parser = parseInTimeZone(timezone || '');
@@ -124,6 +129,13 @@ class LineGraph extends React.Component<CombinedProps, {}> {
 
     if (suggestedMax) {
       finalChartOptions.scales.yAxes[0].ticks.suggestedMax = suggestedMax;
+    }
+
+    if (unit) {
+      finalChartOptions.scales.yAxes[0].ticks.callback = (
+        value: number,
+        index: number
+      ) => `${humanizeLargeData(value)}${unit}`;
     }
 
     return finalChartOptions;
@@ -150,11 +162,11 @@ class LineGraph extends React.Component<CombinedProps, {}> {
   };
 
   render() {
-    const { chartHeight, suggestedMax } = this.props;
+    const { chartHeight, unit, suggestedMax } = this.props;
     return (
       <Line
         height={chartHeight || 300}
-        options={this.getChartOptions(suggestedMax)}
+        options={this.getChartOptions(suggestedMax, unit)}
         data={{
           datasets: this.formatData()
         }}
