@@ -102,7 +102,7 @@ const LinodePubKey: React.FC<{}> = props => {
     if (copied) {
       timeout = setTimeout(() => {
         setCopied(false);
-      }, 500);
+      }, 1000);
     }
 
     return () => clearTimeout(timeout);
