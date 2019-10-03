@@ -32,19 +32,19 @@ describe('ObjectActionMenu', () => {
     expect(mockHandleClickDelete).toHaveBeenCalled();
   });
 
-  it('Includes a "Download" option', () => {
+  it('Includes a "Open" option', () => {
     const { queryByText } = render(
       wrapWithTheme(<ObjectActionMenu {...props} />)
     );
-    expect(queryByText('Download')).toBeInTheDocument();
+    expect(queryByText('Open')).toBeInTheDocument();
   });
 
-  it('executes the onDownload function when the "Download" option is clicked', () => {
+  it('executes the onOpen function when the "Open" option is clicked', () => {
     const { getAllByText } = render(
       wrapWithTheme(<ObjectActionMenu {...props} />)
     );
 
-    fireEvent.click(getAllByText('Download')[0]);
+    fireEvent.click(getAllByText('Open')[0]);
     expect(mockHandleClickDownload).toHaveBeenCalled();
   });
 });

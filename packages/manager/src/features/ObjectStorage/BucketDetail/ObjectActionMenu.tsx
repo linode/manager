@@ -10,9 +10,9 @@ export const ObjectActionMenu: React.FC<Props> = props => {
   const createActions = () => (closeMenu: Function): Action[] => {
     return [
       {
-        title: 'Download',
+        title: 'Open',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
-          const shouldOpenInNewTab = e.metaKey || e.ctrlKey;
+          const shouldOpenInNewTab = true;
           props.handleClickDownload(shouldOpenInNewTab);
           closeMenu();
           e.preventDefault();
