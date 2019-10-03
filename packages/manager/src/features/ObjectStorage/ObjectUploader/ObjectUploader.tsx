@@ -199,12 +199,15 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
       // support it. Using the path, we can upload directories. Fallback on the
       // name if the browser doesn't support it.
       const path = (file as any).path || file.name;
-      const fullObjectName = prefix + path;
+      const isFolder = path.startsWith('/');
+
+      // Folders start with '/', which we need to drop.
+      const fullObjectName = prefix + (isFolder ? path.substring(1) : path);
 
       const updateTable = () => {
         const match = path.match(/\/(.+\/)/);
         if (match) {
-          addOneFolder(match[1]);
+          addOneFolder(prefix + match[1]);
         } else {
           addOneFile(fullObjectName, fileUpload.file.size);
         }
@@ -234,7 +237,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
           if (exists) {
             dispatch({
               type: 'NOTIFY_FILE_EXISTS',
-              fileName: fullObjectName,
+              fileName: file.name,
               url
             });
             return;
@@ -305,15 +308,14 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
         <div className={classes.fileUploads}>
           {state.files.map((upload, idx) => {
             const path = (upload.file as any).path || upload.file.name;
-            const fullObjectName = prefix + path;
             return (
               <FileUpload
                 key={idx}
-                name={truncateMiddle(
+                displayName={truncateMiddle(
                   upload.file.name || '',
                   truncationMaxWidth
                 )}
-                fullObjectName={fullObjectName}
+                fileName={path}
                 sizeInBytes={upload.file.size || 0}
                 percentCompleted={upload.percentComplete || 0}
                 overwriteNotice={upload.status === 'OVERWRITE_NOTICE'}

@@ -91,7 +91,8 @@ const ObjectTableContent: React.FC<Props> = props => {
         return (
           <ObjectTableRow
             key={object.name}
-            objectName={truncateMiddle(object._displayName, maxNameWidth)}
+            displayName={truncateMiddle(object._displayName, maxNameWidth)}
+            fullName={object.name}
             /**
              * In reality, if there's no `size` or `last_modified`, we're
              * probably dealing with a folder and will have already returned

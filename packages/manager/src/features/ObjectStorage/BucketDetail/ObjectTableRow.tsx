@@ -25,7 +25,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  objectName: string;
+  displayName: string;
+  fullName: string;
   objectSize: number;
   objectLastModified: string;
   handleClickDownload: (newTab: boolean) => void;
@@ -35,7 +36,8 @@ interface Props {
 
 const ObjectTableRow: React.FC<Props> = props => {
   const {
-    objectName,
+    displayName,
+    fullName,
     objectSize,
     objectLastModified,
     handleClickDownload,
@@ -55,7 +57,7 @@ const ObjectTableRow: React.FC<Props> = props => {
           <Grid item>
             <Box display="flex" alignItems="center">
               <Typography>
-                <strong>{objectName}</strong>
+                <strong>{displayName}</strong>
               </Typography>
             </Box>
           </Grid>
@@ -71,7 +73,7 @@ const ObjectTableRow: React.FC<Props> = props => {
         <ObjectActionMenu
           handleClickDownload={handleClickDownload}
           handleClickDelete={handleClickDelete}
-          objectName={objectName}
+          objectName={fullName}
         />
       </TableCell>
     </TableRow>

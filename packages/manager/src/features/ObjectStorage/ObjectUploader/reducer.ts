@@ -119,9 +119,10 @@ const cloneLandingReducer = (
       break;
 
     case 'CONFIRM_OVERWRITE':
-      foundFile = draft.files.find(
-        fileUpload => fileUpload.file.name === action.fileName
-      );
+      foundFile = draft.files.find(fileUpload => {
+        const path = (fileUpload.file as any).path || fileUpload.file.name;
+        return path === action.fileName;
+      });
       if (foundFile) {
         foundFile.status = 'QUEUED';
       }
@@ -130,7 +131,8 @@ const cloneLandingReducer = (
 
     case 'CANCEL_OVERWRITE':
       const idx = draft.files.findIndex(fileUpload => {
-        return fileUpload.file.name === action.fileName;
+        const path = (fileUpload.file as any).path || fileUpload.file.name;
+        return path === action.fileName;
       });
       if (idx > -1) {
         draft.files.splice(idx, 1);

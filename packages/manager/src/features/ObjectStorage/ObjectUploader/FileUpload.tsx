@@ -10,6 +10,7 @@ import LinearProgress from 'src/components/core/LinearProgress';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Tooltip from 'src/components/core/Tooltip';
 import Typography from 'src/components/core/Typography';
+import { truncateMiddle } from 'src/utilities/truncate';
 import { readableBytes } from 'src/utilities/unitConversions';
 import { ObjectUploaderAction } from './reducer';
 
@@ -105,8 +106,8 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 interface Props {
-  name: string;
-  fullObjectName: string;
+  displayName: string;
+  fileName: string;
   sizeInBytes: number;
   percentCompleted: number;
   overwriteNotice: boolean;
@@ -121,17 +122,17 @@ const FileUpload: React.FC<Props> = props => {
   const confirmOverwrite = () =>
     props.dispatch({
       type: 'CONFIRM_OVERWRITE',
-      fileName: props.fullObjectName
+      fileName: props.fileName
     });
 
   const cancelOverwrite = () =>
     props.dispatch({
       type: 'CANCEL_OVERWRITE',
-      fileName: props.fullObjectName
+      fileName: props.fileName
     });
 
   return (
-    <div className={classes.root} key={props.name}>
+    <div className={classes.root} key={props.displayName}>
       <LinearProgress
         variant="determinate"
         value={props.percentCompleted}
@@ -162,7 +163,7 @@ const FileUpload: React.FC<Props> = props => {
           [classes.error]: props.error
         })}
       >
-        {props.name}
+        {props.displayName}
       </Typography>
 
       <Typography
@@ -206,7 +207,8 @@ const FileUpload: React.FC<Props> = props => {
       {props.overwriteNotice && (
         <div className={classes.overwriteNotice}>
           <Typography variant="body1">
-            {props.name} already exists. Are you sure you want to overwrite it?
+            {truncateMiddle(props.fileName)} already exists. Are you sure you
+            want to overwrite it?
           </Typography>
           <div className={classes.actions}>
             <Button
