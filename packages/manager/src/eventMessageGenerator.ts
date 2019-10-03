@@ -337,6 +337,10 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: e =>
       `A node on NodeBalancer ${e.entity!.label} has been created.`
   },
+  nodebalancer_node_delete: {
+    notification: e =>
+      `A node on NodeBalancer ${e.entity!.label} has been deleted.`
+  },
   nodebalancer_node_update: {
     notification: e =>
       `A node on NodeBalancer ${e.entity!.label} has been updated.`
