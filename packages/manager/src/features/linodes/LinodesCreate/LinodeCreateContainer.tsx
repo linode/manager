@@ -651,7 +651,6 @@ export default recompose<CombinedProps, {}>(
     imagesError
   })),
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
-    ...ownProps,
     linodesData,
     linodesLoading,
     linodesError
