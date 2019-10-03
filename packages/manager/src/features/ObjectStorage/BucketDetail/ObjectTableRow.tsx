@@ -12,7 +12,9 @@ import ObjectActionMenu from './ObjectActionMenu';
 
 const useStyles = makeStyles((theme: Theme) => ({
   manuallyCreated: {
-    backgroundColor: theme.bg.lightBlue
+    '&:before': {
+      backgroundColor: theme.palette.status.warningDark
+    }
   },
   folderNameWrapper: {
     display: 'flex',

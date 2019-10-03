@@ -48,6 +48,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: 'transparent',
     outline: 'none',
     height: '100%',
+    minHeight: 200,
     transition: theme.transitions.create(['border-color', 'background-color']),
     overflow: 'auto'
   },
@@ -56,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: '0 auto',
     [theme.breakpoints.up('lg')]: {
       marginTop: theme.spacing(4),
-      marginBottom: theme.spacing(10)
+      marginBottom: theme.spacing(2)
     }
   },
   active: {
@@ -89,7 +90,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       padding: theme.spacing(2)
     },
     [theme.breakpoints.up('lg')]: {
-      padding: theme.spacing(8)
+      padding: `${theme.spacing(4)}px ${theme.spacing(8)}px`
     }
   },
   fileUploads: {
