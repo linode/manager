@@ -83,6 +83,7 @@ const ObjectTableContent: React.FC<Props> = props => {
               key={object.name}
               folderName={object.name}
               displayName={truncateEnd(object._displayName, maxNameWidth)}
+              manuallyCreated={object._manuallyCreated}
             />
           );
         }
@@ -102,7 +103,8 @@ const ObjectTableContent: React.FC<Props> = props => {
             handleClickDownload={(newTab: boolean) =>
               handleDownload(object.name, newTab)
             }
-            handleClickDelete={() => handleClickDelete(object.name)}
+            manuallyCreated={object._manuallyCreated}
+            handleClickDelete={handleClickDelete}
           />
         );
       })}

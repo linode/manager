@@ -92,11 +92,4 @@ describe('reducer', () => {
     expect(newState.files[0].percentComplete).toBe(0);
     expect(newState.numInProgress).toBe(1);
   });
-
-  it('updates allUploads finished on batch finish', () => {
-    const newState = reducer(baseState, {
-      type: 'FINISH_BATCH'
-    });
-    expect(newState.allUploadsFinished).toBe(true);
-  });
 });

@@ -11,6 +11,9 @@ import TableRow from 'src/components/TableRow';
 // import { generateObjectUrl } from '../utilities';
 
 const useStyles = makeStyles((theme: Theme) => ({
+  manuallyCreated: {
+    backgroundColor: theme.bg.lightBlue
+  },
   folderNameWrapper: {
     display: 'flex',
     flexFlow: 'row nowrap',
@@ -24,10 +27,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   folderName: string;
   displayName: string;
+  manuallyCreated: boolean;
 }
 
 const FolderTableRow: React.FC<Props> = props => {
-  const { folderName, displayName } = props;
+  const { folderName, displayName, manuallyCreated } = props;
 
   const history = useHistory();
 
@@ -38,7 +42,11 @@ const FolderTableRow: React.FC<Props> = props => {
   };
 
   return (
-    <TableRow key={folderName} rowLink={handleClick}>
+    <TableRow
+      className={manuallyCreated ? classes.manuallyCreated : ''}
+      key={folderName}
+      rowLink={handleClick}
+    >
       <TableCell parentColumn="Object">
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item className={classes.iconWrapper}>

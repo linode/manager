@@ -28,8 +28,7 @@ export type ObjectUploaderAction =
       type: 'UPDATE_FILES';
       filesToUpdate: string[];
       data: Partial<ExtendedFile>;
-    }
-  | { type: 'FINISH_BATCH' };
+    };
 
 const cloneLandingReducer = (
   draft: ObjectUploaderState,
@@ -97,15 +96,7 @@ const cloneLandingReducer = (
           }
         }
       });
-
       break;
-
-    // Update the count. If there are no in-progress uploads, flag as finished.
-    case 'FINISH_BATCH':
-      updateCount(draft);
-      if (draft.numInProgress === 0) {
-        draft.allUploadsFinished = true;
-      }
   }
 };
 

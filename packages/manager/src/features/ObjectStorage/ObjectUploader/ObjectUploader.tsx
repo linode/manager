@@ -2,12 +2,12 @@ import * as classNames from 'classnames';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { useDropzone } from 'react-dropzone';
+import { compose } from 'recompose';
 import CloudUpload from 'src/assets/icons/cloudUpload.svg';
 import Button from 'src/components/Button';
 import Hidden from 'src/components/core/Hidden';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { usePrevious } from 'src/hooks/usePrevious';
 import { useWindowDimensions } from 'src/hooks/useWindowDimensions';
 import { getObjectURL } from 'src/services/objectStorage/objects';
 import { sendObjectsQueuedForUploadEvent } from 'src/utilities/ga';
@@ -114,14 +114,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   clusterId: string;
   bucketName: string;
-  update: () => void;
   prefix: string;
+  addOneFile: (fileName: string, sizeInBytes: number) => void;
+  addOneFolder: (folderName: string) => void;
 }
 
 type CombinedProps = Props & WithSnackbarProps;
 
 const ObjectUploader: React.FC<CombinedProps> = props => {
-  const { clusterId, bucketName, update, prefix } = props;
+  const { clusterId, bucketName, prefix, addOneFile, addOneFolder } = props;
 
   const classes = useStyles();
 
@@ -129,16 +130,6 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
     curriedObjectUploaderReducer,
     defaultState
   );
-
-  // Keep track of the previous value of `allUploadsFinished` using refs.
-  const previousCompletion = usePrevious(state.allUploadsFinished);
-
-  React.useEffect(() => {
-    // Once a batch of uploads is complete, update the object list.
-    if (previousCompletion === false && state.allUploadsFinished === true) {
-      update();
-    }
-  }, [state.allUploadsFinished]);
 
   // This function is fired when objects are dropped in the upload area.
   const onDrop = async (files: File[]) => {
@@ -200,17 +191,28 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
     });
 
     const promises = nextBatch.map(fileUpload =>
-      getURLAndUploadObject(fileUpload, dispatch, clusterId, bucketName, prefix)
+      getURLAndUploadObject(
+        fileUpload,
+        dispatch,
+        clusterId,
+        bucketName,
+        prefix
+      ).then(() => {
+        const path: string =
+          (fileUpload.file as any).path || fileUpload.file.name;
+        const fullObjectName = prefix + path;
+        const match = path.match(/\/(.+\/)/);
+        if (match) {
+          addOneFolder(match[1]);
+        } else {
+          addOneFile(fullObjectName, fileUpload.file.size);
+        }
+      })
     );
 
     Promise.all(promises)
-      .then(() => {
-        dispatch({ type: 'FINISH_BATCH' });
-      })
-      .catch(() => {
-        // Errors for individual files are handled in the mapped promises.
-        dispatch({ type: 'FINISH_BATCH' });
-      });
+      // Errors for individual files are handled in the mapped promises.
+      .catch(_ => null);
   }, [nextBatch]);
 
   const { width } = useWindowDimensions();
@@ -289,7 +291,12 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
   );
 };
 
-export default withSnackbar(ObjectUploader);
+const enhanced = compose<CombinedProps, Props>(
+  withSnackbar,
+  React.memo
+);
+
+export default enhanced(ObjectUploader);
 
 const onUploadProgressFactory = (
   dispatch: (value: ObjectUploaderAction) => void,

@@ -1,5 +1,6 @@
 import * as React from 'react';
 import Box from 'src/components/core/Box';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import EntityIcon from 'src/components/EntityIcon';
@@ -9,12 +10,27 @@ import TableRow from 'src/components/TableRow';
 import { readableBytes } from 'src/utilities/unitConversions';
 import ObjectActionMenu from './ObjectActionMenu';
 
+const useStyles = makeStyles((theme: Theme) => ({
+  manuallyCreated: {
+    backgroundColor: theme.bg.lightBlue
+  },
+  folderNameWrapper: {
+    display: 'flex',
+    flexFlow: 'row nowrap',
+    alignItems: 'center'
+  },
+  iconWrapper: {
+    margin: '2px 0'
+  }
+}));
+
 interface Props {
   objectName: string;
   objectSize: number;
   objectLastModified: string;
   handleClickDownload: (newTab: boolean) => void;
-  handleClickDelete: () => void;
+  handleClickDelete: (objectName: string) => void;
+  manuallyCreated: boolean;
 }
 
 const ObjectTableRow: React.FC<Props> = props => {
@@ -23,11 +39,14 @@ const ObjectTableRow: React.FC<Props> = props => {
     objectSize,
     objectLastModified,
     handleClickDownload,
-    handleClickDelete
+    handleClickDelete,
+    manuallyCreated
   } = props;
 
+  const classes = useStyles();
+
   return (
-    <TableRow>
+    <TableRow className={manuallyCreated ? classes.manuallyCreated : ''}>
       <TableCell parentColumn="Object">
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item className="py0">
@@ -52,6 +71,7 @@ const ObjectTableRow: React.FC<Props> = props => {
         <ObjectActionMenu
           handleClickDownload={handleClickDownload}
           handleClickDelete={handleClickDelete}
+          objectName={objectName}
         />
       </TableCell>
     </TableRow>
