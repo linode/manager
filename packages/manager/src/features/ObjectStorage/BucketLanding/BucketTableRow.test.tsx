@@ -13,12 +13,9 @@ describe('BucketTableRow', () => {
         bucketRow: ''
       }}
       label="test-bucket-001"
-      size={812412288}
       created="2019-02-24 18:46:15.516813"
-      objects={24}
       hostname="test-bucket-001.alpha.linodeobjects.com"
-      region="us-east"
-      cluster="a-cluster"
+      cluster="us-east"
       onRemove={mockOnRemove}
     />
   );
@@ -45,16 +42,7 @@ describe('BucketTableRow', () => {
     ).toBe('test-bucket-001.alpha.linodeobjects.com');
   });
 
-  it('should render the size in a human-readable manner', () => {
-    expect(
-      wrapper
-        .find('[data-qa-size]')
-        .childAt(0)
-        .text()
-    ).toBe('775 MB');
-  });
-
-  it('should render the region in a human-readable manner', () => {
+  it('should render the cluster/region in a human-readable manner', () => {
     expect(
       wrapper
         .find('[data-qa-region]')
@@ -69,36 +57,10 @@ describe('BucketTableRow', () => {
     );
   });
 
-  it('should render an Action Menu with label and cluster', () => {
+  it('should render an Action Menu', () => {
     const actionMenuProps = wrapper
       .find('[data-qa-action-menu]')
       .props() as ActionMenuProps;
     expect(actionMenuProps.onRemove).toBe(mockOnRemove);
-  });
-
-  it('should correctly pluralize the number of objects in the bucket', () => {
-    wrapper.setProps({ objects: 0 });
-    expect(
-      wrapper
-        .find('[data-qa-num-objects]')
-        .childAt(0)
-        .text()
-    ).toBe('0 objects');
-
-    wrapper.setProps({ objects: 1 });
-    expect(
-      wrapper
-        .find('[data-qa-num-objects]')
-        .childAt(0)
-        .text()
-    ).toBe('1 object');
-
-    wrapper.setProps({ objects: 24 });
-    expect(
-      wrapper
-        .find('[data-qa-num-objects]')
-        .childAt(0)
-        .text()
-    ).toBe('24 objects');
   });
 });

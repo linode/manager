@@ -12,7 +12,6 @@ import Grid from 'src/components/Grid';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import { formatRegion } from 'src/utilities/formatRegion';
-import { readableBytes } from 'src/utilities/unitConversions';
 import BucketActionMenu from './BucketActionMenu';
 
 type ClassNames = 'bucketNameWrapper' | 'bucketRow';
@@ -39,17 +38,7 @@ type CombinedProps = BucketTableRowProps & WithStyles<ClassNames>;
 export const BucketTableRow: React.StatelessComponent<
   CombinedProps
 > = props => {
-  const {
-    classes,
-    label,
-    region,
-    size,
-    objects,
-    cluster,
-    hostname,
-    created,
-    onRemove
-  } = props;
+  const { classes, label, cluster, hostname, created, onRemove } = props;
 
   return (
     <TableRow
@@ -75,23 +64,9 @@ export const BucketTableRow: React.StatelessComponent<
           </Grid>
         </Grid>
       </TableCell>
-      <TableCell parentColumn="Objects">
-        <Grid>
-          <Typography variant="body2" data-qa-num-objects>
-            {`${objects} ${objects === 1 ? 'object' : 'objects'}`}
-          </Typography>
-        </Grid>
-      </TableCell>
-      <TableCell parentColumn="Size">
-        <Grid>
-          <Typography variant="body1" data-qa-size>
-            {readableBytes(size).formatted}
-          </Typography>
-        </Grid>
-      </TableCell>
       <TableCell parentColumn="Region">
         <Typography variant="body2" data-qa-region>
-          {formatRegion(region)}
+          {formatRegion(cluster)}
         </Typography>
       </TableCell>
       <TableCell parentColumn="Created">
