@@ -1,13 +1,7 @@
 import { DataSeries, ManagedStatsData } from 'linode-js-sdk/lib/managed';
 import * as React from 'react';
-import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
-import {
-  makeStyles,
-  Theme,
-  withTheme,
-  WithTheme
-} from 'src/components/core/styles';
+import { makeStyles, Theme } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import ErrorState from 'src/components/ErrorState';
 import LineGraph from 'src/components/LineGraph';
@@ -64,8 +58,6 @@ interface Props {
   loading: boolean;
   error?: string;
 }
-
-type CombinedProps = Props & WithTheme;
 
 const chartHeight = 300;
 
@@ -173,7 +165,7 @@ const createTabs = (
   ];
 };
 
-export const ManagedChartPanel: React.FC<CombinedProps> = props => {
+export const ManagedChartPanel: React.FC<Props> = props => {
   const { data, error, loading } = props;
   const classes = useStyles();
   const timezone = useTimezone();
@@ -211,9 +203,4 @@ export const ManagedChartPanel: React.FC<CombinedProps> = props => {
   );
 };
 
-const enhanced = compose<CombinedProps, Props>(
-  withTheme,
-  React.memo
-);
-
-export default enhanced(ManagedChartPanel);
+export default ManagedChartPanel;
