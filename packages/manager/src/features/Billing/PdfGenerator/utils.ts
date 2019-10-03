@@ -7,8 +7,6 @@ import formatDate from 'src/utilities/formatDate';
  * Creates the table header and rows for a payment PDF
  */
 export const createPaymentsTable = (doc: JSPDF, payment: Payment) => {
-  doc.setFontSize(8);
-
   (doc as any).autoTable({
     startY: 150,
     styles: {
@@ -47,8 +45,6 @@ export const createPaymentsTotalsTable = (doc: JSPDF, payment: Payment) => {
  * Creates the table header and rows for an Invoice PDF
  */
 export const createInvoiceItemsTable = (doc: JSPDF, items: InvoiceItem[]) => {
-  doc.setFontSize(8);
-
   (doc as any).autoTable({
     startY: 150,
     styles: {
