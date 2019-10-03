@@ -105,6 +105,7 @@ interface State {
   data: ExtendedObject[];
   loading: boolean;
   allObjectsFetched: boolean;
+  nextMarker: string | null;
   deleteObjectDialogOpen: boolean;
   deleteObjectLoading: boolean;
   deleteObjectError?: string;
@@ -118,6 +119,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
     data: [],
     loading: false,
     allObjectsFetched: false,
+    nextMarker: null,
     deleteObjectDialogOpen: false,
     deleteObjectLoading: false,
     generalError: undefined,
@@ -129,7 +131,6 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
     const prefix = getQueryParam(this.props.location.search, 'prefix');
 
     this.setState({
-      allObjectsFetched: false,
       loading: true,
       generalError: undefined,
       nextPageError: undefined,
@@ -140,20 +141,19 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
       .then(response => {
         // If there are less results than the page size we requested, we know
         // we've reached the end of the bucket (or folder).
-        const allObjectsFetched =
-          response.data.length < page_size ? true : false;
+        const allObjectsFetched = !response.is_truncated;
 
         // @todo @tdt: Extract this data-manipulation logic out of this
         // component and test.
         const extendedData = response.data.map(object =>
           extendObject(object, prefix)
         );
-        const sortedData = sortBy(prop('name'))(extendedData);
 
         this.setState({
           loading: false,
-          data: sortedData,
-          allObjectsFetched
+          data: extendedData,
+          allObjectsFetched,
+          nextMarker: response.next_marker
         });
       })
       .catch(err => {
@@ -178,9 +178,11 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
   }
 
   getNextPage = () => {
-    const { data } = this.state;
-    const tail = data[data.length - 1];
-    if (!tail) {
+    const { nextMarker } = this.state;
+
+    // If we don't have a nextMarker, there isn't another page to get.
+    // This probably won't happen.
+    if (!nextMarker) {
       return;
     }
 
@@ -198,14 +200,11 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
       // `marker` is used for Object Storage pagination. It is the name of
       // the last file of the current set. Specifying a marker will get you
       // the next page of objects after the marker.
-      marker: tail.name,
+      marker: nextMarker,
       page_size
     })
       .then(response => {
-        // If there are less results than the page size we requested, we know
-        // we've reached the end of the bucket (or folder).
-        const allObjectsFetched =
-          response.data.length < page_size ? true : false;
+        const allObjectsFetched = !response.is_truncated;
 
         // @todo @tdt: Extract this data-manipulation logic out of this
         // component and test.
@@ -217,7 +216,8 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
         this.setState({
           loading: false,
           data: [...this.state.data, ...sortedData],
-          allObjectsFetched
+          allObjectsFetched,
+          nextMarker: response.next_marker
         });
       })
       .catch(err => {
@@ -411,8 +411,8 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
                   </TableBody>
                 </Table>
                 {/* We shouldn't allow infinite scrolling if we're still loading,
-              if we've gotten all objects in the bucket (or folder), or if there
-              are errors. */}
+                if we've gotten all objects in the bucket (or folder), or if there
+                are errors. */}
                 {!loading &&
                   !allObjectsFetched &&
                   !generalError &&
@@ -435,8 +435,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
                 </Typography>
               )}
 
-              {/* Only display this message if there were more than 100 objects. */}
-              {allObjectsFetched && numOfDisplayedObjects > 100 && (
+              {allObjectsFetched && numOfDisplayedObjects >= 100 && (
                 <Typography variant="subtitle2" className={classes.footer}>
                   Showing all {numOfDisplayedObjects} items
                 </Typography>
