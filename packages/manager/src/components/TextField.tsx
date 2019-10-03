@@ -14,18 +14,29 @@ import TextField, { TextFieldProps } from 'src/components/core/TextField';
 import HelpIcon from 'src/components/HelpIcon';
 import { convertToKebabCase } from 'src/utilities/convertToKebobCase';
 
+import FormHelperText from 'src/components/core/FormHelperText';
+import InputLabel from 'src/components/core/InputLabel';
+
 type ClassNames =
   | 'root'
   | 'helpWrapper'
   | 'helpWrapperTextField'
   | 'expand'
+  | 'errorText'
+  | 'helperTextTop'
   | 'small'
   | 'selectSmall'
+  | 'wrapper'
   | 'tiny';
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
+    wrapper: {
+      marginTop: theme.spacing(2)
+    },
+    root: {
+      marginTop: 0
+    },
     helpWrapper: {
       display: 'flex',
       alignItems: 'flex-end'
@@ -59,6 +70,13 @@ const styles = (theme: Theme) =>
     },
     tiny: {
       width: '3.6em'
+    },
+    errorText: {
+      color: theme.color.red
+    },
+    helperTextTop: {
+      marginBottom: theme.spacing(),
+      marginTop: theme.spacing(2)
     }
   });
 
@@ -66,6 +84,7 @@ interface BaseProps {
   errorText?: string;
   errorGroup?: string;
   affirmative?: Boolean;
+  helperTextPosition?: 'top' | 'bottom';
   tooltipText?: string;
   className?: any;
   expand?: boolean;
@@ -188,11 +207,14 @@ class LinodeTextField extends React.Component<CombinedProps> {
       small,
       tiny,
       inputProps,
+      helperText,
+      helperTextPosition,
       InputProps,
       InputLabelProps,
       SelectProps,
       value,
       dataAttrs,
+      error,
       label,
       ...textFieldProps
     } = this.props;
@@ -200,24 +222,44 @@ class LinodeTextField extends React.Component<CombinedProps> {
     let errorScrollClassName = '';
 
     if (errorText) {
-      textFieldProps.error = true;
-      textFieldProps.helperText = errorText;
       errorScrollClassName = errorGroup
         ? `error-for-scroll-${errorGroup}`
         : `error-for-scroll`;
     }
 
+    const maybeRequiredLabel = !!this.props.required
+      ? `${label} (required)`
+      : label;
+
     return (
       <div
         className={classNames({
           [classes.helpWrapper]: Boolean(tooltipText),
-          [errorScrollClassName]: !!errorText
+          [errorScrollClassName]: !!errorText,
+          [classes.wrapper]: true
         })}
       >
+        <InputLabel data-qa-textfield-label>
+          {maybeRequiredLabel || ''}
+        </InputLabel>
+        {helperText && helperTextPosition === 'top' && (
+          <FormHelperText
+            data-qa-textfield-helper-text
+            className={classes.helperTextTop}
+          >
+            {helperText}
+          </FormHelperText>
+        )}
         <TextField
           {...textFieldProps}
           {...dataAttrs}
-          label={!!this.props.required ? `${label} (required)` : label}
+          error={!!error || !!errorText}
+          /**
+           * set _helperText_ and _label_ to no value because we want to
+           * have the ability to put the helper text under the label at the top
+           */
+          label={''}
+          helperText={''}
           fullWidth
           /*
             let us explicitly pass an empty string to the input
@@ -269,7 +311,8 @@ class LinodeTextField extends React.Component<CombinedProps> {
           className={classNames(
             {
               [classes.helpWrapperTextField]: Boolean(tooltipText),
-              [classes.small]: small
+              [classes.small]: small,
+              [classes.root]: true
             },
             className
           )}
@@ -282,6 +325,20 @@ class LinodeTextField extends React.Component<CombinedProps> {
           {this.props.children}
         </TextField>
         {tooltipText && <HelpIcon text={tooltipText} />}
+        {errorText && (
+          <FormHelperText
+            className={classes.errorText}
+            data-qa-textfield-error-text
+          >
+            {errorText}
+          </FormHelperText>
+        )}
+        {helperText &&
+          (helperTextPosition === 'bottom' || !helperTextPosition) && (
+            <FormHelperText data-qa-textfield-helper-text>
+              {helperText}
+            </FormHelperText>
+          )}
       </div>
     );
   }

@@ -125,6 +125,11 @@ class Example extends React.Component<{}, State> {
       <React.Fragment>
         <Select
           label="Basic Select"
+          textFieldProps={{
+            dataAttrs: {
+              'data-qa-basic-select': true
+            }
+          }}
           value={valueSingle}
           placeholder="Choose one fruit"
           onChange={this.handleChangeSingle}

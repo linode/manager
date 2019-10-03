@@ -38,6 +38,7 @@ import { requestNotifications } from 'src/store/notification/notification.reques
 import { requestProfile } from 'src/store/profile/profile.requests';
 import { requestRegions } from 'src/store/regions/regions.actions';
 import { getAllVolumes } from 'src/store/volume/volume.requests';
+import { GetAllData } from 'src/utilities/getAll';
 
 type CombinedProps = DispatchProps & StateProps & WithNodeBalancerActions;
 
@@ -142,7 +143,7 @@ interface DispatchProps {
   requestAccount: () => Promise<Account>;
   requestDomains: () => Promise<Domain[]>;
   requestImages: () => Promise<Image[]>;
-  requestLinodes: () => Promise<Linode[]>;
+  requestLinodes: () => Promise<GetAllData<Linode[]>>;
   requestNotifications: () => Promise<Notification[]>;
   requestSettings: () => Promise<AccountSettings>;
   requestTypes: () => Promise<LinodeType[]>;
@@ -160,7 +161,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   requestAccount: () => dispatch(requestAccount()),
   requestDomains: () => dispatch(requestDomains()),
   requestImages: () => dispatch(requestImages()),
-  requestLinodes: () => dispatch(requestLinodes()),
+  requestLinodes: () => dispatch(requestLinodes({})),
   requestNotifications: () => dispatch(requestNotifications()),
   requestSettings: () => dispatch(requestAccountSettings()),
   requestTypes: () => dispatch(requestTypes()),

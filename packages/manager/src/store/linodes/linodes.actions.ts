@@ -1,6 +1,7 @@
 import { Notification } from 'linode-js-sdk/lib/account';
 import { CreateLinodeRequest, Linode } from 'linode-js-sdk/lib/linodes';
 import { APIError } from 'linode-js-sdk/lib/types';
+import { GetAllData } from 'src/utilities/getAll';
 import actionCreatorFactory from 'typescript-fsa';
 
 export const actionCreator = actionCreatorFactory(`@@manager/linodes`);
@@ -33,8 +34,11 @@ export type GetLinodeRequest = (params: LinodeID) => GetLinodeResponse;
 export type GetLinodeResponse = Promise<Linode>;
 
 export const getLinodesActions = actionCreator.async<
-  void,
-  Linode[],
+  {
+    params?: any;
+    filter?: any;
+  },
+  GetAllData<Linode[]>,
   APIError[]
 >('get-all');
 

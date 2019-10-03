@@ -11,7 +11,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import Grid from 'src/components/Grid';
 
-interface Props extends DrawerProps {
+export interface Props extends DrawerProps {
   title: string;
   wide?: boolean;
 }

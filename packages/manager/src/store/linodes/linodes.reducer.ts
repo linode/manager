@@ -53,8 +53,8 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
     } = action;
     return {
       ...state,
-      entities: result,
-      results: result.map(getId),
+      entities: result.data,
+      results: result.data.map(getId),
       lastUpdated: Date.now(),
       loading: false
     };

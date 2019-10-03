@@ -9,7 +9,6 @@ import {
   updateLinode as _updateLinode
 } from 'linode-js-sdk/lib/linodes';
 import requestMostRecentBackupForLinode from 'src/features/linodes/LinodesLanding/requestMostRecentBackupForLinode';
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
@@ -46,31 +45,23 @@ export const rebootLinode = createRequestThunk(
   ({ linodeId, configId }) => _rebootLinode(linodeId, configId)
 );
 
-export const requestLinodes: ThunkActionCreator<
-  Promise<Linode[]>
-> = () => dispatch => {
-  dispatch(getLinodesActions.started);
+const getAllLinodes = (payload: { params?: any; filter?: any }) =>
+  getAll<Linode>((passedParams, passedFilter) =>
+    getLinodes(passedParams, passedFilter)
+  )(payload.params, payload.filter);
 
-  return getAll<Linode>(getLinodes)()
-    .then(getBackupsForLinodes)
-    .then(result => {
-      dispatch(getLinodesActions.done({ result }));
-      return result;
-    })
-    .catch(err => {
-      dispatch(
-        getLinodesActions.failed({
-          error: getAPIErrorOrDefault(
-            err,
-            'There was an error retrieving your Linodes. Please try again later.'
-          )
-        })
-      );
-      return err;
-    });
-};
+export const requestLinodes = createRequestThunk(
+  getLinodesActions,
+  ({ params, filter }) =>
+    getAllLinodes({ params, filter }).then(({ data, results }) =>
+      getBackupsForLinodes(data).then(linodesWithBackups => ({
+        data: linodesWithBackups,
+        results
+      }))
+    )
+);
 
-const getBackupsForLinodes = ({ data }: { data: Linode[] }) =>
+const getBackupsForLinodes = (data: Linode[]) =>
   Bluebird.map(data, requestMostRecentBackupForLinode);
 
 type RequestLinodeForStoreThunk = ThunkActionCreator<void, number>;
