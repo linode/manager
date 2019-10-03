@@ -432,12 +432,10 @@ class ConfigureLinode extends Page {
 
     if (linodeLabel) {
       linodes = sourceSection[0]
-        .$$('[data-qa-selection-card]')
-        .filter(
-          l => l.$('[data-qa-select-card-heading]').getText() === linodeLabel
-        );
+        .$$('[data-qa-plan-row]')
+        .filter(l => l.$('[data-qa-plan-name]').getText() === linodeLabel);
       sourceLinode = linodes[0];
-      sourceLabel = sourceLinode.$('[data-qa-select-card-heading]').getText();
+      sourceLabel = sourceLinode.$('[data-qa-plan-name]').getText();
 
       sourceLinode.click();
     }
@@ -451,13 +449,11 @@ class ConfigureLinode extends Page {
           'Select Target Linode'
       );
       const linodes = targetSection[0]
-        .$$('[data-qa-selection-card]')
-        .filter(
-          l => l.$('[data-qa-select-card-heading]').getText() === linodeLabel
-        );
+        .$$('[data-qa-plan-row]')
+        .filter(l => l.$('[data-qa-plan-name]').getText() === linodeLabel);
       linodes[0].click();
     } else {
-      const cloneToNewCard = $('[data-qa-select-card-heading="New Linode"]');
+      const cloneToNewCard = $('[data-qa-plan-name="New Linode"]');
       cloneToNewCard.click();
       $('[data-qa-tp="Region"]').waitForDisplayed();
       $('[data-qa-tp="Linode Plan"]').waitForDisplayed();
@@ -471,8 +467,8 @@ class ConfigureLinode extends Page {
     $(sourceSelector).click();
     browser.waitUntil(
       function() {
-        return browser
-          .getAttribute(sourceSelector, 'aria-selected')
+        return $(sourceSelector)
+          .getAttribute('aria-selected')
           .includes('true');
       },
       constants.wait.normal,

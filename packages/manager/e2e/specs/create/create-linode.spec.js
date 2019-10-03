@@ -19,14 +19,14 @@ describe('Create - Menu Suite', () => {
     );
   });
 
-  xit('TODO - should display create volume in header and link to create volume page', () => {
+  it('should display create volume in header and link to create volume page', () => {
     Create.menuButton.click();
     expect(Create.volumeMenuItem.isDisplayed()).toBe(true);
 
     Create.volume();
   });
 
-  xit('TODO - should display create nodebalancer in header and link to create nodebalancer page', () => {
+  it('should display create nodebalancer in header and link to create nodebalancer page', () => {
     Create.menuButton.click();
     expect(Create.nodeBalancerMenuItem.isDisplayed()).toBe(true);
 
