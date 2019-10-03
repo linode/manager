@@ -199,8 +199,6 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
       page_size
     })
       .then(response => {
-        // If there are less results than the page size we requested, we know
-        // we've reached the end of the bucket (or folder).
         const allObjectsFetched = !response.is_truncated;
 
         // @todo @tdt: Extract this data-manipulation logic out of this
