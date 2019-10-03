@@ -1,8 +1,10 @@
 import { APIError } from 'linode-js-sdk/lib/types';
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { prop, sortBy } from 'ramda';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import Waypoint from 'react-waypoint';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
@@ -27,6 +29,7 @@ import TableRow from 'src/components/TableRow';
 import { OBJECT_STORAGE_DELIMITER as delimiter } from 'src/constants';
 import { getObjectList } from 'src/services/objectStorage/buckets';
 import { getObjectURL } from 'src/services/objectStorage/objects';
+import { sendDownloadObjectEvent } from 'src/utilities/ga';
 import { getQueryParam } from 'src/utilities/queryParams';
 import { truncateMiddle } from 'src/utilities/truncate';
 import ObjectUploader from '../ObjectUploader';
@@ -94,7 +97,9 @@ interface MatchProps {
   bucketName: string;
 }
 
-type CombinedProps = RouteComponentProps<MatchProps> & WithStyles<ClassNames>;
+type CombinedProps = RouteComponentProps<MatchProps> &
+  WithStyles<ClassNames> &
+  WithSnackbarProps;
 
 interface State {
   data: ExtendedObject[];
@@ -221,6 +226,31 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
           nextPageError: err
         });
       });
+  };
+
+  handleDownload = async (objectName: string, newTab = false) => {
+    const { clusterId, bucketName } = this.props.match.params;
+
+    try {
+      const { url } = await getObjectURL(
+        clusterId,
+        bucketName,
+        objectName,
+        'GET'
+      );
+
+      sendDownloadObjectEvent();
+
+      if (newTab) {
+        window.open(url, '_blank', 'noopener');
+      } else {
+        window.location.assign(url);
+      }
+    } catch (err) {
+      this.props.enqueueSnackbar('Error downloading Object', {
+        variant: 'error'
+      });
+    }
   };
 
   handleClickDelete = (objectName: string) => {
@@ -375,6 +405,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
                       loading={loading}
                       error={generalError}
                       prefix={prefix}
+                      handleDownload={this.handleDownload}
                       handleClickDelete={this.handleClickDelete}
                     />
                   </TableBody>
@@ -452,4 +483,9 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
 
 const styled = withStyles(styles);
 
-export default styled(BucketDetail);
+const enhanced = compose<CombinedProps, {}>(
+  styled,
+  withSnackbar
+);
+
+export default enhanced(BucketDetail);

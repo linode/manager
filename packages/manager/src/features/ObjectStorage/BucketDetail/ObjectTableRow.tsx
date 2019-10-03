@@ -13,6 +13,7 @@ interface Props {
   objectName: string;
   objectSize: number;
   objectLastModified: string;
+  handleClickDownload: (newTab: boolean) => void;
   handleClickDelete: () => void;
 }
 
@@ -21,6 +22,7 @@ const ObjectTableRow: React.FC<Props> = props => {
     objectName,
     objectSize,
     objectLastModified,
+    handleClickDownload,
     handleClickDelete
   } = props;
 
@@ -47,7 +49,10 @@ const ObjectTableRow: React.FC<Props> = props => {
         <DateTimeDisplay value={objectLastModified} humanizeCutoff="never" />
       </TableCell>
       <TableCell>
-        <ObjectActionMenu handleClickDelete={handleClickDelete} />
+        <ObjectActionMenu
+          handleClickDownload={handleClickDownload}
+          handleClickDelete={handleClickDelete}
+        />
       </TableCell>
     </TableRow>
   );
