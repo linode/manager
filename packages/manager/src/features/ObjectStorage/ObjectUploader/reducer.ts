@@ -148,9 +148,3 @@ const updateCount = (draft: ObjectUploaderState) => {
   draft.numCancelled = numCancelled;
   draft.numErrors = numErrors;
 };
-
-export const extendFile = (file: File): ExtendedFile => ({
-  status: 'QUEUED',
-  percentComplete: 0,
-  file
-});

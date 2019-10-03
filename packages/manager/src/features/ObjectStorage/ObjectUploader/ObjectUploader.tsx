@@ -338,7 +338,7 @@ const getURLAndUploadObject = (
         }
       });
     })
-    .catch(err => {
+    .catch(_ => {
       dispatch({
         type: 'UPDATE_FILES',
         filesToUpdate: [file.name],
@@ -346,6 +346,5 @@ const getURLAndUploadObject = (
           status: 'ERROR'
         }
       });
-      return Promise.reject();
     });
 };
