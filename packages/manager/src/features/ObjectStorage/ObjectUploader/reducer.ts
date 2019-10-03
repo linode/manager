@@ -37,8 +37,9 @@ export type ObjectUploaderAction =
       data: Partial<ExtendedFile>;
     }
   | { type: 'NOTIFY_FILE_EXISTS'; fileName: string; url: string }
-  | { type: 'CONFIRM_OVERWRITE'; fileName: string }
-  | { type: 'CANCEL_OVERWRITE'; fileName: string };
+  | { type: 'CANCEL_OVERWRITE'; fileName: string }
+  | { type: 'TRY_AGAIN'; fileName: string }
+  | { type: 'RESUME_UPLOAD'; fileName: string };
 
 const cloneLandingReducer = (
   draft: ObjectUploaderState,
@@ -118,7 +119,7 @@ const cloneLandingReducer = (
       }
       break;
 
-    case 'CONFIRM_OVERWRITE':
+    case 'RESUME_UPLOAD':
       foundFile = draft.files.find(fileUpload => {
         const path = (fileUpload.file as any).path || fileUpload.file.name;
         return path === action.fileName;

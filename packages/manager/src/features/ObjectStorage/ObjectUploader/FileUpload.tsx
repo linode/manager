@@ -102,6 +102,9 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginLeft: theme.spacing(1.25),
       marginRight: theme.spacing(1.25)
     }
+  },
+  errorState: {
+    cursor: 'pointer'
   }
 }));
 
@@ -119,9 +122,9 @@ interface Props {
 const FileUpload: React.FC<Props> = props => {
   const classes = useStyles();
 
-  const confirmOverwrite = () =>
+  const resumeUpload = () =>
     props.dispatch({
-      type: 'CONFIRM_OVERWRITE',
+      type: 'RESUME_UPLOAD',
       fileName: props.fileName
     });
 
@@ -131,8 +134,21 @@ const FileUpload: React.FC<Props> = props => {
       fileName: props.fileName
     });
 
-  return (
-    <div className={classes.root} key={props.displayName}>
+  const handleClickRow = () => {
+    if (props.error) {
+      resumeUpload();
+    }
+  };
+
+  const Content = (
+    <div
+      className={classNames({
+        [classes.root]: true,
+        [classes.errorState]: props.error
+      })}
+      key={props.displayName}
+      onClick={handleClickRow}
+    >
       <LinearProgress
         variant="determinate"
         value={props.percentCompleted}
@@ -184,17 +200,15 @@ const FileUpload: React.FC<Props> = props => {
         />
       ) : props.error || props.overwriteNotice ? (
         <>
-          <Tooltip title={props.error} placement="left-start">
-            <span className={classes.tooltip}>
-              <CautionIcon
-                width={22}
-                height={22}
-                className={classNames({
-                  [classes.error]: props.error
-                })}
-              />
-            </span>
-          </Tooltip>
+          <span className={classes.tooltip}>
+            <CautionIcon
+              width={22}
+              height={22}
+              className={classNames({
+                [classes.error]: props.error
+              })}
+            />
+          </span>
         </>
       ) : (
         <UploadPending
@@ -218,17 +232,23 @@ const FileUpload: React.FC<Props> = props => {
             >
               Cancel
             </Button>
-            <Button
-              buttonType="primary"
-              superCompact
-              onClick={confirmOverwrite}
-            >
+            <Button buttonType="primary" superCompact onClick={resumeUpload}>
               Overwrite
             </Button>
           </div>
         </div>
       )}
     </div>
+  );
+
+  const TooltipTitle = <div>Error uploading object. Click to retry.</div>;
+
+  return props.error ? (
+    <Tooltip title={TooltipTitle} placement="bottom">
+      {Content}
+    </Tooltip>
+  ) : (
+    Content
   );
 };
 export default React.memo(FileUpload);
