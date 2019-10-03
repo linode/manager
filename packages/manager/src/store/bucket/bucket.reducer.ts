@@ -81,8 +81,9 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       ...state,
       data: state.data.filter(
         bucket =>
-          // Buckets don't have IDs, so we look at the region and label to remove the deleted bucket from state
-          bucket.label !== params.label && bucket.region !== params.cluster
+          // Buckets don't have IDs, so we look at the cluster and label to
+          // remove the deleted bucket from state
+          !(bucket.label === params.label && bucket.cluster === params.cluster)
       )
     };
   }

@@ -11,7 +11,7 @@ describe('ObjectStorageLanding', () => {
       bucketsLoading={false}
       openBucketDrawer={jest.fn()}
       closeBucketDrawer={jest.fn()}
-      classes={{ root: '', confirmationCopy: '' }}
+      classes={{ copy: '' }}
       deleteBucket={jest.fn()}
     />
   );

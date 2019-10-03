@@ -221,6 +221,14 @@ export const sendDeleteBucketEvent = (eventLabel: string) => {
   });
 };
 
+export const sendDeleteBucketFailedEvent = (eventLabel: string) => {
+  sendEvent({
+    category: 'Object Storage',
+    action: 'Delete Bucket Failed',
+    label: eventLabel
+  });
+};
+
 // AccessKeyLanding.tsx
 export const sendCreateAccessKeyEvent = () => {
   sendEvent({

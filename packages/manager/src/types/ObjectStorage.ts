@@ -8,10 +8,7 @@ namespace Linode {
 
   export interface Bucket {
     label: string;
-    objects: number;
     created: string;
-    size: number;
-    region: string;
     cluster: string;
     hostname: string;
   }

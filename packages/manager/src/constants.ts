@@ -87,6 +87,8 @@ export const ZONES: Record<string, ZoneName> = {
 };
 
 export const dcDisplayNames = {
+  // us-east-1 is for backwards-compatibility
+  'us-east-1': 'Newark, NJ',
   'us-east-1a': 'Newark, NJ',
   'us-south-1a': 'Dallas, TX',
   'us-west-1a': 'Fremont, CA',
