@@ -10,7 +10,8 @@ const mockHandleClickDownload = jest.fn();
 
 const props: Props = {
   handleClickDownload: mockHandleClickDownload,
-  handleClickDelete: mockHandleClickDelete
+  handleClickDelete: mockHandleClickDelete,
+  objectName: 'my-object'
 };
 
 afterEach(cleanup);

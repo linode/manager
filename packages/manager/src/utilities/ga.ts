@@ -318,3 +318,11 @@ export const sendDownloadObjectEvent = () => {
     action: 'Download Object'
   });
 };
+
+export const sendObjectsQueuedForUploadEvent = (numObjects: number) => {
+  sendEvent({
+    category: 'Object Storage',
+    action: 'Objects queued for upload',
+    label: `${numObjects} objects`
+  });
+};

@@ -41,11 +41,13 @@ export interface ExtendedObject extends Linode.Object {
   _isFolder: boolean;
   _displayName: string;
   _shouldDisplayObject: boolean;
+  _manuallyCreated: boolean;
 }
 
 export const extendObject = (
   object: Linode.Object,
-  prefix: string
+  prefix: string,
+  manuallyCreated = false
 ): ExtendedObject => {
   const _isFolder = isFolder(object);
 
@@ -63,7 +65,8 @@ export const extendObject = (
     // If we're in a folder called "my-folder", we don't want to show the object
     // called "my-folder/". We can look at the prefix to make this decision,
     // since it will also be "my-folder/".
-    _shouldDisplayObject: object.name !== prefix
+    _shouldDisplayObject: object.name !== prefix,
+    _manuallyCreated: manuallyCreated
   };
 };
 
