@@ -38,7 +38,8 @@ import ListGroupedDomains from 'src/features/Domains/ListGroupedDomains';
 import {
   openForCloning,
   openForCreating,
-  openForEditing
+  openForEditing,
+  Origin as DomainDrawerOrigin
 } from 'src/store/domainDrawer';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
@@ -260,7 +261,11 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     }
 
     if (!domainsData || domainsData.length === 0) {
-      return <RenderEmpty onClick={this.props.openForCreating} />;
+      return (
+        <RenderEmpty
+          onClick={this.props.openForCreating('Created from Domain Landing')}
+        />
+      );
     }
 
     /**
@@ -339,7 +344,9 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                       </Grid>
                       <Grid item className="pt0">
                         <AddNewLink
-                          onClick={this.props.openForCreating}
+                          onClick={this.props.openForCreating(
+                            'Created from Domain Landing'
+                          )}
                           label="Add a Domain"
                         />
                       </Grid>
@@ -494,7 +501,7 @@ const styled = withStyles(styles);
 interface DispatchProps {
   openForCloning: (domain: string, id: number) => void;
   openForEditing: (domain: string, id: number) => void;
-  openForCreating: () => void;
+  openForCreating: (origin: DomainDrawerOrigin) => void;
 }
 
 interface StateProps {
