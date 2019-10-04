@@ -124,28 +124,30 @@ export const getStatusString = (
     return '';
   }
   if (!linodes || linodes.length === 0) {
-    return `${count} (0 up, ${count} down)`;
+    return <Typography>{`${count} (0 up, ${count} down)`}</Typography>;
   }
   const status = getNodeStatus(linodes);
 
   if (status.ready + status.not_ready !== count) {
     // The API hasn't registered/created all of the nodes
     return (
-      <>
+      <Typography style={{ display: 'flex', alignItems: 'center' }}>
         <span>{`${count} (${status.ready} up, ${status.not_ready} down)`}</span>
         <HelpIcon
           text={tooltipText}
-          className={''}
           tooltipPosition="right-start"
           interactive
-          classes={''}
         />
-      </>
+      </Typography>
     );
   }
 
   // All systems normal.
-  return `${count} (${status.ready} up, ${status.not_ready} down)`;
+  return (
+    <Typography>{`${count} (${status.ready} up, ${
+      status.not_ready
+    } down)`}</Typography>
+  );
 };
 
 export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
@@ -204,7 +206,7 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
             }
           />
         ) : (
-          <Typography>{getStatusString(pool.count, pool.linodes)}</Typography>
+          getStatusString(pool.count, pool.linodes)
         )}
       </TableCell>
       <TableCell parentColumn="Pricing" className={classes.priceTableCell}>
