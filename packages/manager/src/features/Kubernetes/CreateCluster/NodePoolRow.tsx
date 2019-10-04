@@ -37,7 +37,6 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
     link: {
       color: `${theme.palette.primary.main} !important` as any
     },
@@ -75,7 +74,8 @@ const styles = (theme: Theme) =>
       width: '20%'
     },
     regularCell: {
-      width: '25%'
+      width: '25%',
+      height: 70
     }
   });
 
