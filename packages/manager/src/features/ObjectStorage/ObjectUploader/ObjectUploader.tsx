@@ -179,15 +179,16 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
 
   // This function will be called when dropped files that are over the max size.
   const onDropRejected = (files: File[]) => {
-    files.forEach(file => {
-      props.enqueueSnackbar(
-        `Max file size (${
-          readableBytes(MAX_FILE_SIZE_IN_BYTES).formatted
-        }) exceeded for file: ${file.name}`,
-        {
-          variant: 'error'
-        }
-      );
+    let errorMessage = `Max file size (${
+      readableBytes(MAX_FILE_SIZE_IN_BYTES).formatted
+    }) exceeded`;
+
+    if (files.length > 1) {
+      errorMessage += ' for some files';
+    }
+
+    props.enqueueSnackbar(errorMessage, {
+      variant: 'error'
     });
   };
 
