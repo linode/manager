@@ -307,27 +307,60 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
     }
   };
 
+  addOneFile = (objectName: string, sizeInBytes: number) => {
+    const object: Linode.Object = {
+      name: objectName,
+      etag: '',
+      owner: '',
+      last_modified: new Date().toISOString(),
+      size: sizeInBytes
+    };
+
+    const prefix = getQueryParam(this.props.location.search, 'prefix');
+
+    const extendedObject = extendObject(object, prefix, true);
+
+    const updatedFiles = [...this.state.data];
+
+    // If the file already exists in `data` (i.e. if the file is being
+    // overwritten), move it from its current location to the front.
+    const idx = updatedFiles.findIndex(file => file.name === objectName);
+    if (idx > -1) {
+      updatedFiles.splice(idx, 1);
+      updatedFiles.unshift(extendedObject);
+      this.setState({ data: updatedFiles });
+    } else {
+      this.setState({
+        data: [extendedObject, ...this.state.data]
+      });
+    }
+  };
+
+  addOneFolder = (objectName: string) => {
+    const folder: Linode.Object = {
+      name: objectName,
+      etag: null,
+      owner: null,
+      last_modified: null,
+      size: null
+    };
+
+    const prefix = getQueryParam(this.props.location.search, 'prefix');
+
+    const extendedFolder = extendObject(folder, prefix, true);
+
+    const idx = this.state.data.findIndex(object => object.name === objectName);
+    // If the folder isn't already in `data`, add it to the front.
+    if (idx === -1) {
+      this.setState({ data: [extendedFolder, ...this.state.data] });
+    }
+  };
+
   closeDeleteObjectDialog = () => {
     this.setState({
       deleteObjectDialogOpen: false
     });
   };
-
-  updateInPlace() {
-    const { bucketName, clusterId } = this.props.match.params;
-    const prefix = getQueryParam(this.props.location.search, 'prefix');
-
-    // @todo: If there are exactly 100 objects already, what do we do? Set a marker?
-    getObjectList(clusterId, bucketName, { delimiter, prefix, page_size }).then(
-      response => {
-        // Replace the old data with the new data.
-        this.setState({
-          data: response.data.map(object => extendObject(object, prefix))
-        });
-      }
-    );
-    // @todo: Do we need to catch this?
-  }
 
   render() {
     const { classes } = this.props;
@@ -354,7 +387,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
       <>
         <Box display="flex" flexDirection="row" justifyContent="space-between">
           <Breadcrumb
-            // The actual pathname doesn't match what we want in the Breadcrumb,
+            // The actual pathname doesn't match what we want` in the Breadcrumb,
             // so we create a custom one.
             pathname={`/object-storage/${bucketName}`}
             crumbOverrides={[
@@ -381,13 +414,18 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
               clusterId={clusterId}
               bucketName={bucketName}
               prefix={prefix}
-              update={() => this.updateInPlace()}
+              addOneFile={this.addOneFile}
+              addOneFolder={this.addOneFolder}
             />
           </Grid>
           <Grid item xs={12} lg={8} className={classes.tableContainer}>
             <>
               <Paper className={classes.objectTable}>
-                <Table removeLabelonMobile aria-label="List of Bucket Objects">
+                <Table
+                  removeLabelonMobile
+                  aria-label="List of Bucket Objects"
+                  isResponsive={false}
+                >
                   <TableHead>
                     <TableRow>
                       <TableCell className={classes.nameColumn}>
@@ -405,7 +443,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
                       loading={loading}
                       error={generalError}
                       prefix={prefix}
-                      handleDownload={this.handleDownload}
+                      handleClickDownload={this.handleDownload}
                       handleClickDelete={this.handleClickDelete}
                     />
                   </TableBody>
