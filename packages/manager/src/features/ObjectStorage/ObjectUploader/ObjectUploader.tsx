@@ -158,7 +158,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
   );
 
   // This function is fired when objects are dropped in the upload area.
-  const onDrop = async (files: File[]) => {
+  const onDrop = (files: File[]) => {
     // Look at the files queued and in-progress, along with the new files,
     // to see if we'll go over the limit.
     if (
@@ -174,7 +174,10 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
     // @analytics
     sendObjectsQueuedForUploadEvent(files.length);
 
-    dispatch({ type: 'ENQUEUE', files });
+    // We bind each file to the prefix at the time of onDrop. The prefix could
+    // change later, if the user navigates to a different folder before the
+    // upload is complete.
+    dispatch({ type: 'ENQUEUE', files, prefix });
   };
 
   // This function will be called when dropped files that are over the max size.
@@ -228,7 +231,12 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
       // We want to upload the object to the current "folder" the user is
       // viewing, so we prepend the file name with the prefix. If the object
       // being uploaded is itself in a folder, we drop the leading slash.
-      const fullObjectName = prefix + (isInFolder ? path.substring(1) : path);
+      //
+      // We need to use the prefix on each object (bound at onDrop) because the
+      // prefix from the parent might have changed if the user has navigated to
+      // a different folder.
+      const fullObjectName =
+        fileUpload.prefix + (isInFolder ? path.substring(1) : path);
 
       const onUploadProgress = onUploadProgressFactory(dispatch, path);
 
@@ -239,7 +247,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
           const pathAsArray = path.split('/');
           if (pathAsArray.length <= 3) {
             const folderName = pathAsArray[1] || '';
-            addOneFolder(prefix + folderName + '/');
+            addOneFolder(fileUpload.prefix + folderName + '/');
           }
         } else {
           addOneFile(fullObjectName, file.size);

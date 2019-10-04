@@ -13,7 +13,7 @@ import TableRow from 'src/components/TableRow';
 const useStyles = makeStyles((theme: Theme) => ({
   manuallyCreated: {
     '&:before': {
-      backgroundColor: theme.palette.status.warningDark
+      backgroundColor: theme.bg.lightBlue
     }
   },
   folderNameWrapper: {

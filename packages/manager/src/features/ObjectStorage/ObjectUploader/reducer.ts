@@ -16,6 +16,7 @@ export interface ExtendedFile {
   status: FileStatus;
   percentComplete: number;
   file: File;
+  prefix: string;
   url?: string;
 }
 
@@ -29,7 +30,7 @@ export interface ObjectUploaderState {
 }
 
 export type ObjectUploaderAction =
-  | { type: 'ENQUEUE'; files: File[] }
+  | { type: 'ENQUEUE'; files: File[]; prefix: string }
   | {
       type: 'UPDATE_FILES';
       filesToUpdate: string[];
@@ -70,7 +71,8 @@ const cloneLandingReducer = (
             draft.files.unshift({
               status: 'QUEUED',
               percentComplete: 0,
-              file
+              file,
+              prefix: action.prefix
             });
           }
         }
@@ -79,7 +81,8 @@ const cloneLandingReducer = (
       const extendedFiles: ExtendedFile[] = newFiles.map(file => ({
         status: 'QUEUED',
         percentComplete: 0,
-        file
+        file,
+        prefix: action.prefix
       }));
 
       draft.files = [...extendedFiles, ...draft.files];
