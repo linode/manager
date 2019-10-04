@@ -138,7 +138,7 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
       {
         title: 'Domain',
         onClick: e => {
-          this.props.openDomainDrawerForCreating();
+          this.props.openDomainDrawerForCreating('Created from Add New Menu');
           this.handleClose();
           e.preventDefault();
         },

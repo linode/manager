@@ -39,6 +39,7 @@ import {
   CLONING,
   CREATING,
   EDITING,
+  Origin as DomainDrawerOrigin,
   resetDrawer
 } from 'src/store/domainDrawer';
 import {
@@ -53,6 +54,7 @@ import { reportException } from 'src/exceptionReporting';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import NodeBalancerSelect from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import { sendCreateDomainEvent } from 'src/utilities/ga';
 
 import { isValidSOAEmail } from './domainUtils';
 
@@ -781,8 +783,10 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
   };
 
   submit = () => {
+    const { origin } = this.props;
     if (this.props.mode === CREATING) {
       this.create();
+      sendCreateDomainEvent(origin);
     } else if (this.props.mode === CLONING) {
       this.clone();
     } else if (this.props.mode === EDITING) {
@@ -846,6 +850,7 @@ interface StateProps {
   domainProps?: Domain;
   id?: number;
   disabled: boolean;
+  origin: DomainDrawerOrigin;
 }
 
 const mapStateToProps = (state: ApplicationState) => {
@@ -861,7 +866,8 @@ const mapStateToProps = (state: ApplicationState) => {
     domainProps,
     id,
     // disabled if the profile is restricted and doesn't have add_domains grant
-    disabled: isRestrictedUser(state) && !hasGrant(state, 'add_domains')
+    disabled: isRestrictedUser(state) && !hasGrant(state, 'add_domains'),
+    origin: state.domainDrawer.origin
   };
 };
 

@@ -40,8 +40,14 @@ interface Reset extends Action {
 
 type ActionCreator = (...args: any[]) => Action;
 
+export type Origin =
+  | 'Created from Add New Menu'
+  | 'Created from Domain Landing';
+
 // ACTION CREATORS
-export const openForCreating: ActionCreator = (): Creating => ({
+export const openForCreating: ActionCreator = (
+  origin: undefined
+): Creating => ({
   type: CREATING
 });
 export const openForEditing: ActionCreator = (
