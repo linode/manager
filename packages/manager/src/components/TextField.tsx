@@ -37,10 +37,7 @@ const styles = (theme: Theme) =>
     root: {
       marginTop: 0
     },
-    helpWrapper: {
-      display: 'flex',
-      alignItems: 'flex-end'
-    },
+    helpWrapper: {},
     helpWrapperTextField: {
       width: 415,
       [theme.breakpoints.down('xs')]: {
