@@ -1,11 +1,12 @@
-import { Linode } from 'linode-js-sdk/lib/linodes';
+import { ExtendedLinode, Linode } from 'linode-js-sdk/lib/linodes';
 
 export const linode1: Linode = {
   specs: {
     transfer: 1000,
     memory: 1024,
     vcpus: 1,
-    disk: 20480
+    disk: 20480,
+    gpus: 0,
   },
   updated: '2017-12-11T16:35:31',
   ipv4: ['97.107.143.78', '98.107.143.78', '99.107.143.78'],
@@ -31,7 +32,6 @@ export const linode1: Linode = {
     },
     enabled: true
   },
-  mostRecentBackup: null,
   status: 'running',
   ipv6: '2600:3c03::f03c:91ff:fe0a:109a/64',
   watchdog_enabled: false,
@@ -43,7 +43,8 @@ export const linode2: Linode = {
     transfer: 2000,
     memory: 2048,
     vcpus: 1,
-    disk: 30720
+    disk: 30720,
+    gpus: 0,
   },
   updated: '2018-02-22T16:11:07',
   ipv4: ['97.107.143.49'],
@@ -69,7 +70,6 @@ export const linode2: Linode = {
     },
     enabled: true
   },
-  mostRecentBackup: null,
   status: 'running',
   ipv6: '2600:3c03::f03c:91ff:fe0a:0d7a/64',
   watchdog_enabled: false,
@@ -81,7 +81,8 @@ export const linode3: Linode = {
     transfer: 2000,
     memory: 2048,
     vcpus: 1,
-    disk: 30720
+    disk: 30720,
+    gpus: 0,
   },
   updated: '2018-02-22T16:11:07',
   ipv4: ['97.107.143.49'],
@@ -107,7 +108,6 @@ export const linode3: Linode = {
     },
     enabled: false
   },
-  mostRecentBackup: null,
   status: 'running',
   ipv6: '2600:3c03::f03c:91ff:fe0a:0d7a/64',
   watchdog_enabled: false,
@@ -119,7 +119,8 @@ export const linode4: Linode = {
     transfer: 2000,
     memory: 2048,
     vcpus: 1,
-    disk: 30720
+    disk: 30720,
+    gpus: 0,
   },
   updated: '2018-02-22T16:11:07',
   ipv4: ['97.107.143.49'],
@@ -145,7 +146,6 @@ export const linode4: Linode = {
     },
     enabled: false
   },
-  mostRecentBackup: null,
   status: 'running',
   ipv6: '2600:3c03::f03c:91ff:fe0a:0d7a/64',
   watchdog_enabled: false,
@@ -153,3 +153,14 @@ export const linode4: Linode = {
 };
 
 export const linodes = [linode1, linode2, linode3];
+
+export const extendedLinodes: ExtendedLinode[] = [{
+  ...linode1,
+  mostRecentBackup: null
+}, {
+  ...linode2,
+  mostRecentBackup: null,
+}, {
+  ...linode3,
+  mostRecentBackup: null 
+}]

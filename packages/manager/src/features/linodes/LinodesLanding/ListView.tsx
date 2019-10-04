@@ -5,10 +5,10 @@ import { PaginationProps } from 'src/components/Paginate';
 import LinodeRow from './LinodeRow/LinodeRow';
 
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
+import { LinodeWithMaintenanceAndMostRecentBackup } from 'src/store/linodes/types';
 
 interface Props {
-  data: LinodeWithMaintenance[];
+  data: LinodeWithMaintenanceAndMostRecentBackup[];
   images: Image[];
   showHead?: boolean;
   openDeleteDialog: (linodeID: number, linodeLabel: string) => void;
@@ -34,7 +34,7 @@ export const ListView: React.StatelessComponent<CombinedProps> = props => {
           maintenanceStartTime={
             linode.maintenance ? linode.maintenance.when : ''
           }
-          ipv6={linode.ipv6}
+          ipv6={linode.ipv6 || ''}
           label={linode.label}
           region={linode.region}
           status={linode.status}
