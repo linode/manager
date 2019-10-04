@@ -10,8 +10,7 @@ describe('reducer', () => {
     numInProgress: 0,
     numFinished: 0,
     numCancelled: 0,
-    numErrors: 0,
-    allUploadsFinished: false
+    numErrors: 0
   };
 
   const file1: File = {

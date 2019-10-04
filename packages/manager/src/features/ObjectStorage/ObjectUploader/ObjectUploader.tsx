@@ -18,11 +18,11 @@ import FileUpload from './FileUpload';
 import {
   curriedObjectUploaderReducer,
   defaultState,
-  ExtendedFile,
   MAX_FILE_SIZE_IN_BYTES,
   MAX_NUM_UPLOADS,
   MAX_PARALLEL_UPLOADS,
-  ObjectUploaderAction
+  ObjectUploaderAction,
+  pathOrFileName
 } from './reducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -187,94 +187,94 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
     // Set status as "IN_PROGRESS" for each file.
     dispatch({
       type: 'UPDATE_FILES',
-      filesToUpdate: nextBatch.map(fileUpload => fileUpload.file.name),
+      filesToUpdate: nextBatch.map(fileUpload =>
+        pathOrFileName(fileUpload.file)
+      ),
       data: { status: 'IN_PROGRESS' }
     });
 
-    const promises = nextBatch.map(fileUpload => {
+    nextBatch.forEach(fileUpload => {
       const { file } = fileUpload;
 
-      // We want to upload the object to the current "folder", so we prepend the
-      // file name with the prefix. The `path` key on File is bleeding edge.
-      // It's not part of the official spec, but all new browser versions
-      // support it. Using the path, we can upload directories. Fallback on the
-      // name if the browser doesn't support it.
-      const path = (file as any).path || file.name;
-      const isFolder = path.startsWith('/');
+      const path = pathOrFileName(fileUpload.file);
+      const isInFolder = path.startsWith('/');
 
-      // Folders start with '/', which we need to drop.
-      const fullObjectName = prefix + (isFolder ? path.substring(1) : path);
+      // We want to upload the object to the current "folder" the user is
+      // viewing, so we prepend the file name with the prefix. If the object
+      // being uploaded is itself in a folder, we drop the leading slash.
+      const fullObjectName = prefix + (isInFolder ? path.substring(1) : path);
 
-      const updateTable = () => {
-        const match = path.match(/\/(.+\/)/);
-        if (match) {
-          addOneFolder(prefix + match[1]);
+      const onUploadProgress = onUploadProgressFactory(dispatch, path);
+
+      const handleSuccess = () => {
+        if (isInFolder) {
+          // Determine if the path is a nested folder (2+ levels deep). If so,
+          // add a folder to the object table.
+          const pathAsArray = path.split('/');
+          if (pathAsArray.length <= 3) {
+            const folderName = pathAsArray[1] || '';
+            addOneFolder(prefix + folderName + '/');
+          }
         } else {
-          addOneFile(fullObjectName, fileUpload.file.size);
+          addOneFile(fullObjectName, file.size);
         }
+
+        dispatch({
+          type: 'UPDATE_FILES',
+          filesToUpdate: [path],
+          data: {
+            percentComplete: 100,
+            status: 'FINISHED'
+          }
+        });
+      };
+
+      const handleError = () => {
+        dispatch({
+          type: 'UPDATE_FILES',
+          filesToUpdate: [path],
+          data: {
+            status: 'ERROR'
+          }
+        });
       };
 
       // If we've already gotten the URL (i.e. we've confirmed this file should
       // be overwritten) we can go ahead and upload it.
       if (fileUpload.url) {
-        return handleUpload(fileUpload, fileUpload.url, dispatch)
-          .then(() => updateTable())
-          .catch(_ => {
-            dispatch({
-              type: 'UPDATE_FILES',
-              filesToUpdate: [file.name],
-              data: {
-                status: 'ERROR'
-              }
-            });
-          });
-      }
-
-      // Otherwise, we need to make an API request to get the URL.
-      return getObjectURL(clusterId, bucketName, fullObjectName, 'PUT', {
-        content_type: file.type
-      })
-        .then(({ url, exists }) => {
-          if (exists) {
-            dispatch({
-              type: 'NOTIFY_FILE_EXISTS',
-              fileName: file.name,
-              url
-            });
-            return;
-          }
-          return handleUpload(fileUpload, url, dispatch)
-            .then(() => updateTable())
-            .catch(_ => {
-              dispatch({
-                type: 'UPDATE_FILES',
-                filesToUpdate: [file.name],
-                data: {
-                  status: 'ERROR'
-                }
-              });
-            });
+        uploadObject(fileUpload.url, file, onUploadProgress)
+          .then(_ => handleSuccess())
+          .catch(_ => handleError());
+      } else {
+        // Otherwise, we need to make an API request to get the URL.
+        getObjectURL(clusterId, bucketName, fullObjectName, 'PUT', {
+          content_type: file.type
         })
-        .catch(_ => {
-          dispatch({
-            type: 'UPDATE_FILES',
-            filesToUpdate: [file.name],
-            data: {
-              status: 'ERROR'
+          .then(({ url, exists }) => {
+            if (exists) {
+              dispatch({
+                type: 'NOTIFY_FILE_EXISTS',
+                fileName: path,
+                url
+              });
+              return;
             }
-          });
-        });
-    });
 
-    Promise.all(promises)
-      // Errors for individual files are handled in the mapped promises.
-      .catch(_ => null);
+            return uploadObject(url, file, onUploadProgress)
+              .then(_ => handleSuccess())
+              .catch(_ => handleError());
+          })
+          .catch(_ => handleError());
+      }
+    });
   }, [nextBatch]);
 
   const { width } = useWindowDimensions();
 
   // These max widths and breakpoints are based on trial-and-error.
   const truncationMaxWidth = width < 1920 ? 20 : 30;
+
+  console.log(state.files);
 
   const {
     getInputProps,
@@ -369,25 +369,5 @@ const onUploadProgressFactory = (
     data: {
       percentComplete: (progressEvent.loaded / progressEvent.total) * 100
     }
-  });
-};
-
-const handleUpload = (
-  fileUpload: ExtendedFile,
-  url: string,
-  dispatch: React.Dispatch<ObjectUploaderAction>
-) => {
-  const { file } = fileUpload;
-
-  const onUploadProgress = onUploadProgressFactory(dispatch, file.name);
-  return uploadObject(url, file, onUploadProgress).then(() => {
-    dispatch({
-      type: 'UPDATE_FILES',
-      filesToUpdate: [file.name],
-      data: {
-        percentComplete: 100,
-        status: 'FINISHED'
-      }
-    });
   });
 };

@@ -14,7 +14,7 @@ interface Props {
   loading: boolean;
   error?: APIError[];
   prefix: string;
-  handleDownload: (objectName: string, newTab: boolean) => void;
+  handleClickDownload: (objectName: string, newTab: boolean) => void;
   handleClickDelete: (objectName: string) => void;
 }
 
@@ -24,7 +24,7 @@ const ObjectTableContent: React.FC<Props> = props => {
     loading,
     error,
     prefix,
-    handleDownload,
+    handleClickDownload,
     handleClickDelete
   } = props;
 
@@ -101,10 +101,8 @@ const ObjectTableContent: React.FC<Props> = props => {
              */
             objectSize={object.size || 0}
             objectLastModified={object.last_modified || ''}
-            handleClickDownload={(newTab: boolean) =>
-              handleDownload(object.name, newTab)
-            }
             manuallyCreated={object._manuallyCreated}
+            handleClickDownload={handleClickDownload}
             handleClickDelete={handleClickDelete}
           />
         );

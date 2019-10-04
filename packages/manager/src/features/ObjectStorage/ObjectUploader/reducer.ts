@@ -26,7 +26,6 @@ export interface ObjectUploaderState {
   numFinished: number;
   numCancelled: number;
   numErrors: number;
-  allUploadsFinished: boolean;
 }
 
 export type ObjectUploaderAction =
@@ -38,7 +37,6 @@ export type ObjectUploaderAction =
     }
   | { type: 'NOTIFY_FILE_EXISTS'; fileName: string; url: string }
   | { type: 'CANCEL_OVERWRITE'; fileName: string }
-  | { type: 'TRY_AGAIN'; fileName: string }
   | { type: 'RESUME_UPLOAD'; fileName: string };
 
 const cloneLandingReducer = (
@@ -51,9 +49,9 @@ const cloneLandingReducer = (
       const newFiles: File[] = [];
       action.files.forEach(file => {
         // See if we're already tracking the file.
-        const foundFileIdx = draft.files.findIndex(
-          upload => upload.file.name === file.name
-        );
+        const foundFileIdx = draft.files.findIndex(fileUpload => {
+          return pathOrFileName(fileUpload.file) === pathOrFileName(file);
+        });
 
         // If we aren't already tracking it, add it to the list of new files.
         if (foundFileIdx === -1) {
@@ -86,15 +84,14 @@ const cloneLandingReducer = (
 
       draft.files = [...extendedFiles, ...draft.files];
       updateCount(draft);
-      draft.allUploadsFinished = false;
       break;
 
     // Update files given a list of filenames and attributes to update.
     case 'UPDATE_FILES':
       action.filesToUpdate.forEach(filename => {
-        const existingFile = draft.files.find(
-          prevUpload => prevUpload.file.name === filename
-        );
+        const existingFile = draft.files.find(fileUpload => {
+          return pathOrFileName(fileUpload.file) === filename;
+        });
 
         if (existingFile) {
           Object.keys(action.data).forEach(key => {
@@ -111,19 +108,19 @@ const cloneLandingReducer = (
 
     case 'NOTIFY_FILE_EXISTS':
       let foundFile = draft.files.find(
-        fileUpload => fileUpload.file.name === action.fileName
+        fileUpload => pathOrFileName(fileUpload.file) === action.fileName
       );
       if (foundFile) {
         foundFile.status = 'OVERWRITE_NOTICE';
         foundFile.url = action.url;
       }
+      updateCount(draft);
       break;
 
     case 'RESUME_UPLOAD':
-      foundFile = draft.files.find(fileUpload => {
-        const path = (fileUpload.file as any).path || fileUpload.file.name;
-        return path === action.fileName;
-      });
+      foundFile = draft.files.find(
+        fileUpload => pathOrFileName(fileUpload.file) === action.fileName
+      );
       if (foundFile) {
         foundFile.status = 'QUEUED';
       }
@@ -131,10 +128,9 @@ const cloneLandingReducer = (
       break;
 
     case 'CANCEL_OVERWRITE':
-      const idx = draft.files.findIndex(fileUpload => {
-        const path = (fileUpload.file as any).path || fileUpload.file.name;
-        return path === action.fileName;
-      });
+      const idx = draft.files.findIndex(
+        fileUpload => pathOrFileName(fileUpload.file) === action.fileName
+      );
       if (idx > -1) {
         draft.files.splice(idx, 1);
       }
@@ -151,8 +147,7 @@ export const defaultState: ObjectUploaderState = {
   numInProgress: 0,
   numFinished: 0,
   numCancelled: 0,
-  numErrors: 0,
-  allUploadsFinished: false
+  numErrors: 0
 };
 
 const updateCount = (draft: ObjectUploaderState) => {
@@ -182,3 +177,10 @@ const updateCount = (draft: ObjectUploaderState) => {
   draft.numCancelled = numCancelled;
   draft.numErrors = numErrors;
 };
+
+// The `path` key on File is bleeding edge.
+// It's not part of the official spec, but all new browser versions
+// support it. Using the path, we can upload directories. Fallback on the
+// name if the browser doesn't support it.
+export const pathOrFileName = (file: File): string =>
+  (file as any).path || file.name;

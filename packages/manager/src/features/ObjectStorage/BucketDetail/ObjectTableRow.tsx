@@ -31,7 +31,7 @@ interface Props {
   fullName: string;
   objectSize: number;
   objectLastModified: string;
-  handleClickDownload: (newTab: boolean) => void;
+  handleClickDownload: (objectName: string, newTab: boolean) => void;
   handleClickDelete: (objectName: string) => void;
   manuallyCreated: boolean;
 }

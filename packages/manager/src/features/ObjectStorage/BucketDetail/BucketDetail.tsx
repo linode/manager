@@ -439,7 +439,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
                       loading={loading}
                       error={generalError}
                       prefix={prefix}
-                      handleDownload={this.handleDownload}
+                      handleClickDownload={this.handleDownload}
                       handleClickDelete={this.handleClickDelete}
                     />
                   </TableBody>

@@ -3,7 +3,7 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
 export interface Props {
   objectName: string;
-  handleClickDownload: (newTab: boolean) => void;
+  handleClickDownload: (objectName: string, newTab: boolean) => void;
   handleClickDelete: (objectName: string) => void;
 }
 
@@ -14,7 +14,7 @@ export const ObjectActionMenu: React.FC<Props> = props => {
         title: 'Open',
         onClick: (e: React.MouseEvent<HTMLElement>) => {
           const shouldOpenInNewTab = true;
-          props.handleClickDownload(shouldOpenInNewTab);
+          props.handleClickDownload(props.objectName, shouldOpenInNewTab);
           closeMenu();
           e.preventDefault();
         }
