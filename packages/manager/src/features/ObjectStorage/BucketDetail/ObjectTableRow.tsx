@@ -13,7 +13,7 @@ import ObjectActionMenu from './ObjectActionMenu';
 const useStyles = makeStyles((theme: Theme) => ({
   manuallyCreated: {
     '&:before': {
-      backgroundColor: theme.palette.status.warningDark
+      backgroundColor: theme.bg.lightBlue
     }
   },
   folderNameWrapper: {
@@ -23,6 +23,11 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   iconWrapper: {
     margin: '2px 0'
+  },
+  manuallyCreatedIcon: {
+    '& g': {
+      fill: theme.bg.lightBlue
+    }
   }
 }));
 
@@ -51,10 +56,14 @@ const ObjectTableRow: React.FC<Props> = props => {
 
   return (
     <TableRow className={manuallyCreated ? classes.manuallyCreated : ''}>
-      <TableCell parentColumn="Object">
+      <TableCell>
         <Grid container wrap="nowrap" alignItems="center">
           <Grid item className="py0">
-            <EntityIcon variant="object" size={20} />
+            <EntityIcon
+              variant="object"
+              size={20}
+              className={manuallyCreated ? classes.manuallyCreatedIcon : ''}
+            />
           </Grid>
           <Grid item>
             <Box display="flex" alignItems="center">
@@ -65,10 +74,8 @@ const ObjectTableRow: React.FC<Props> = props => {
           </Grid>
         </Grid>
       </TableCell>
-      <TableCell parentColumn="Size" noWrap>
-        {readableBytes(objectSize).formatted}
-      </TableCell>
-      <TableCell parentColumn="Last Modified" noWrap>
+      <TableCell noWrap>{readableBytes(objectSize).formatted}</TableCell>
+      <TableCell noWrap>
         <DateTimeDisplay value={objectLastModified} humanizeCutoff="never" />
       </TableCell>
       <TableCell>

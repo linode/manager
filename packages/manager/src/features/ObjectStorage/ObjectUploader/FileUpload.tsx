@@ -16,17 +16,20 @@ import { ObjectUploaderAction } from './reducer';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    display: 'flex',
-    flexShrink: 0,
-    alignItems: 'center',
     position: 'relative',
-    height: theme.spacing(5.25),
     marginTop: theme.spacing(0.5),
-    marginBottom: theme.spacing(0.5)
+    marginBottom: theme.spacing(0.5),
+    '&:last-child ': {
+      '&$overwriteNotice': {
+        borderBottom: 0,
+        paddingBottom: theme.spacing(1)
+      }
+    }
   },
   progressBar: {
     height: theme.spacing(5.25),
     position: 'absolute',
+    zIndex: 1,
     width: '100%',
     backgroundColor: theme.bg.main,
     borderRadius: 4
@@ -34,24 +37,34 @@ const useStyles = makeStyles((theme: Theme) => ({
   barColorPrimary: {
     backgroundColor: theme.bg.lightBlue
   },
-  fileName: {
-    position: 'absolute',
-    left: 28 + theme.spacing(2)
+  container: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    position: 'relative',
+    zIndex: 2,
+    padding: theme.spacing(1)
   },
+  leftWrapper: {
+    display: 'flex',
+    alignItems: 'center',
+    marginRight: theme.spacing(1)
+  },
+  rightWrapper: {
+    display: 'flex',
+    alignItems: 'center'
+  },
+  fileName: {},
   fileSize: {
-    position: 'absolute',
-    right: 28 + theme.spacing(2)
+    marginRight: theme.spacing(1)
   },
   iconLeft: {
-    position: 'absolute',
-    left: theme.spacing(1),
+    marginRight: theme.spacing(1),
     '& g': {
       stroke: theme.color.offBlack
     }
   },
   iconRight: {
-    position: 'absolute',
-    right: theme.spacing(1),
     '& g': {
       stroke: theme.color.offBlack
     }
@@ -60,7 +73,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     animation: '$rotate 2s linear infinite'
   },
   errorText: {
-    position: 'absolute',
     textDecoration: 'underline',
     cursor: 'pointer',
     right: theme.spacing(1),
@@ -74,11 +86,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       transform: 'rotate(0deg)'
     }
   },
-  tooltip: {
-    position: 'absolute',
-    right: theme.spacing(1),
-    top: theme.spacing(1.25)
-  },
+  tooltip: {},
   error: {
     color: theme.color.red,
     '& g': {
@@ -86,12 +94,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   overwriteNotice: {
-    position: 'absolute',
-    bottom: theme.spacing(-13),
+    position: 'relative',
+    zIndex: 10,
     padding: theme.spacing(1),
+    paddingBottom: theme.spacing(2),
     display: 'flex',
     flexDirection: 'column',
-    alignContent: 'center'
+    alignContent: 'center',
+    borderBottom: `1px solid ${theme.color.grey2}`
   },
   actions: {
     marginTop: theme.spacing(2),
@@ -158,78 +168,81 @@ const FileUpload: React.FC<Props> = props => {
         }}
         className={classes.progressBar}
       />
-
-      {props.error || props.overwriteNotice ? (
-        <UploadCaution
-          width={28}
-          height={28}
-          className={classNames({
-            [classes.iconLeft]: true,
-            [classes.error]: props.error
-          })}
-        />
-      ) : (
-        <FileUploadIcon width={28} height={28} className={classes.iconLeft} />
-      )}
-
-      <Typography
-        variant="body1"
-        className={classNames({
-          [classes.fileName]: true,
-          [classes.error]: props.error
-        })}
-      >
-        {props.displayName}
-      </Typography>
-
-      <Typography
-        variant="body1"
-        className={classNames({
-          [classes.fileSize]: true,
-          [classes.error]: props.error
-        })}
-      >
-        {readableBytes(props.sizeInBytes).formatted}
-      </Typography>
-
-      {props.percentCompleted === 100 ? (
-        <FileUploadComplete
-          width={22}
-          height={22}
-          className={classes.iconRight}
-        />
-      ) : props.error || props.overwriteNotice ? (
-        <>
-          <span className={classes.tooltip}>
-            <CautionIcon
-              width={22}
-              height={22}
+      <div className={classes.container}>
+        <div className={classes.leftWrapper}>
+          {props.error || props.overwriteNotice ? (
+            <UploadCaution
+              width={28}
+              height={28}
               className={classNames({
+                [classes.iconLeft]: true,
                 [classes.error]: props.error
               })}
             />
-          </span>
-        </>
-      ) : (
-        <UploadPending
-          width={22}
-          height={22}
-          className={`${classes.iconRight} ${classes.rotate}`}
-        />
-      )}
+          ) : (
+            <FileUploadIcon
+              width={28}
+              height={28}
+              className={classes.iconLeft}
+            />
+          )}
+
+          <Typography
+            variant="body1"
+            className={classNames({
+              [classes.fileName]: true,
+              [classes.error]: props.error
+            })}
+          >
+            {props.displayName}
+          </Typography>
+        </div>
+        <div className={classes.rightWrapper}>
+          <Typography
+            variant="body1"
+            className={classNames({
+              [classes.fileSize]: true,
+              [classes.error]: props.error
+            })}
+          >
+            {readableBytes(props.sizeInBytes).formatted}
+          </Typography>
+          {props.percentCompleted === 100 ? (
+            <FileUploadComplete
+              width={22}
+              height={22}
+              className={classes.iconRight}
+            />
+          ) : props.error || props.overwriteNotice ? (
+            <>
+              <span className={classes.tooltip}>
+                <CautionIcon
+                  width={22}
+                  height={22}
+                  className={classNames({
+                    [classes.error]: props.error
+                  })}
+                />
+              </span>
+            </>
+          ) : (
+            <UploadPending
+              width={22}
+              height={22}
+              className={`${classes.iconRight} ${classes.rotate}`}
+            />
+          )}
+        </div>
+      </div>
 
       {props.overwriteNotice && (
         <div className={classes.overwriteNotice}>
           <Typography variant="body1">
-            {truncateMiddle(props.fileName)} already exists. Are you sure you
-            want to overwrite it?
+            <b>{truncateMiddle(props.fileName)}</b> already exists. Are you sure
+            you want to overwrite it?
           </Typography>
           <div className={classes.actions}>
-            <Button
-              buttonType="secondary"
-              superCompact
-              onClick={cancelOverwrite}
-            >
+            <Button buttonType="cancel" superCompact onClick={cancelOverwrite}>
               Cancel
             </Button>
             <Button buttonType="primary" superCompact onClick={resumeUpload}>

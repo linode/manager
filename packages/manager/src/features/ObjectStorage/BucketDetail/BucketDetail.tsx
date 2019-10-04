@@ -421,7 +421,11 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
           <Grid item xs={12} lg={8} className={classes.tableContainer}>
             <>
               <Paper className={classes.objectTable}>
-                <Table removeLabelonMobile aria-label="List of Bucket Objects">
+                <Table
+                  removeLabelonMobile
+                  aria-label="List of Bucket Objects"
+                  isResponsive={false}
+                >
                   <TableHead>
                     <TableRow>
                       <TableCell className={classes.nameColumn}>

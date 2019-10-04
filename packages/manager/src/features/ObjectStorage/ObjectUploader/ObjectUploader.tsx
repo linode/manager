@@ -34,6 +34,16 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginLeft: theme.spacing(4)
     }
   },
+  rootActive: {
+    [theme.breakpoints.down('md')]: {
+      paddingBottom: 60,
+      position: 'relative'
+    },
+    [theme.breakpoints.up('lg')]: {
+      minHeight: 200,
+      height: `calc(100vh - (220px + ${theme.spacing(20)}px))`
+    }
+  },
   dropzone: {
     display: 'flex',
     flexDirection: 'row',
@@ -91,6 +101,21 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
     [theme.breakpoints.up('lg')]: {
       padding: `${theme.spacing(4)}px ${theme.spacing(8)}px`
+    }
+  },
+  UploadZoneActiveButton: {
+    position: 'absolute',
+    zIndex: 10,
+    backgroundColor: theme.palette.divider,
+    bottom: -70,
+    left: theme.spacing(2),
+    width: `calc(100% - ${theme.spacing(4)}px)`,
+    padding: 0,
+    '& $uploadButton': {
+      marginTop: 0
+    },
+    [theme.breakpoints.down('md')]: {
+      bottom: 0
     }
   },
   fileUploads: {
@@ -274,8 +299,6 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
   // These max widths and breakpoints are based on trial-and-error.
   const truncationMaxWidth = width < 1920 ? 20 : 30;
 
-  console.log(state.files);
-
   const {
     getInputProps,
     getRootProps,
@@ -301,8 +324,15 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
     [isDragActive, isDragAccept, isDragReject]
   );
 
+  const UploadZoneActive = state.files.length !== 0;
+
   return (
-    <div className={classes.root}>
+    <div
+      className={classNames({
+        [classes.root]: true,
+        [classes.rootActive]: UploadZoneActive
+      })}
+    >
       <div {...getRootProps({ className: `${classes.dropzone} ${className}` })}>
         <input {...getInputProps()} />
 
@@ -330,23 +360,32 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
           })}
         </div>
 
-        {state.files.length === 0 && (
-          <div className={classes.dropzoneContent}>
+        <div
+          className={classNames({
+            [classes.dropzoneContent]: true,
+            [classes.UploadZoneActiveButton]: UploadZoneActive
+          })}
+        >
+          {!UploadZoneActive && (
             <Hidden xsDown>
               <CloudUpload />
             </Hidden>
+          )}
+          {!UploadZoneActive && (
             <Typography variant="subtitle2" className={classes.copy}>
               You can browse your device to upload files or drop them here.
             </Typography>
-            <Button
-              buttonType="primary"
-              onClick={open}
-              className={classes.uploadButton}
-            >
-              Browse Files
-            </Button>
-          </div>
-        )}
+          )}
+          <Button
+            buttonType="primary"
+            onClick={open}
+            className={classNames({
+              [classes.uploadButton]: true
+            })}
+          >
+            Browse Files
+          </Button>
+        </div>
       </div>
     </div>
   );
