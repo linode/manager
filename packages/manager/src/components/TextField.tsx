@@ -235,13 +235,14 @@ class LinodeTextField extends React.Component<CombinedProps> {
       <div
         className={classNames({
           [classes.helpWrapper]: Boolean(tooltipText),
-          [errorScrollClassName]: !!errorText,
-          [classes.wrapper]: true
+          [errorScrollClassName]: !!errorText
         })}
       >
-        <InputLabel data-qa-textfield-label>
-          {maybeRequiredLabel || ''}
-        </InputLabel>
+        {maybeRequiredLabel && (
+          <InputLabel data-qa-textfield-label className={classes.wrapper}>
+            {maybeRequiredLabel || ''}
+          </InputLabel>
+        )}
         {helperText && helperTextPosition === 'top' && (
           <FormHelperText
             data-qa-textfield-helper-text
