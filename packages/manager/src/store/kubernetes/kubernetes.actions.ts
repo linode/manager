@@ -37,3 +37,9 @@ export const deleteClusterActions = actionCreator.async<
   {},
   APIError[]
 >(`delete-cluster`);
+
+export const requestClusterActions = actionCreator.async<
+  ClusterID,
+  KubernetesCluster,
+  APIError[]
+>('request-cluster');
