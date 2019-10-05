@@ -2,6 +2,9 @@ import {
   basename,
   displayName,
   extendObject,
+  firstSubfolder,
+  getElementToAddToTable,
+  isFile,
   isFolder,
   prefixArrayToString
 } from './utilities';
@@ -124,6 +127,71 @@ describe('Object Storage utilities', () => {
     });
     it('ignores trailing slashes', () => {
       expect(displayName('hello/world.jpg')).toBe('world.jpg');
+    });
+  });
+
+  describe('getElementToAddToTable', () => {
+    it('should return files', () => {
+      expect(getElementToAddToTable('', 'file.txt')).toEqual({
+        type: 'FILE',
+        name: 'file.txt'
+      });
+      expect(getElementToAddToTable('hello/', 'hello/file.txt')).toEqual({
+        type: 'FILE',
+        name: 'file.txt'
+      });
+      expect(
+        getElementToAddToTable('hello/world/', 'hello/world/file.txt')
+      ).toEqual({
+        type: 'FILE',
+        name: 'file.txt'
+      });
+    });
+
+    it('should return folders', () => {
+      expect(getElementToAddToTable('', 'hello/file.txt')).toEqual({
+        type: 'FOLDER',
+        name: 'hello'
+      });
+      expect(getElementToAddToTable('hello/', 'hello/world/file.txt')).toEqual({
+        type: 'FOLDER',
+        name: 'world'
+      });
+      expect(
+        getElementToAddToTable('hello/world/', 'hello/world/path/file.txt')
+      ).toEqual({
+        type: 'FOLDER',
+        name: 'path'
+      });
+    });
+
+    it('returns null if the prefix does not match', () => {
+      expect(getElementToAddToTable('another/path', 'hello/file.txt')).toBe(
+        null
+      );
+      expect(getElementToAddToTable('some/', 'hello/file.txt')).toBe(null);
+      expect(
+        getElementToAddToTable('some/another/path', 'another/path/file.txt')
+      ).toBe(null);
+    });
+  });
+
+  describe('isFile', () => {
+    it('should return true for folders', () => {
+      expect(isFile('file.txt')).toBe(true);
+      expect(isFile('file')).toBe(true);
+      expect(isFile('file')).toBe(true);
+      expect(isFile('folder/file')).toBe(false);
+      expect(isFile('folder/file.txt')).toBe(false);
+      expect(isFile('folder/path/file.txt')).toBe(false);
+    });
+  });
+
+  describe('firstSubfolder', () => {
+    it('should return the first subfolder in a given path', () => {
+      expect(firstSubfolder('path/file1')).toBe('path');
+      expect(firstSubfolder('path1/path2/file.txt')).toBe('path1');
+      expect(firstSubfolder('file1')).toBe('file1');
     });
   });
 });

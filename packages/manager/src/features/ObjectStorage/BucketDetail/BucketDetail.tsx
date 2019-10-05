@@ -34,7 +34,12 @@ import { getQueryParam } from 'src/utilities/queryParams';
 import { truncateMiddle } from 'src/utilities/truncate';
 import ObjectUploader from '../ObjectUploader';
 import { deleteObject } from '../requests';
-import { displayName, ExtendedObject, extendObject } from '../utilities';
+import {
+  displayName,
+  ExtendedObject,
+  extendObject,
+  getElementToAddToTable
+} from '../utilities';
 import BucketBreadcrumb from './BucketBreadcrumb';
 import ObjectTableContent from './ObjectTableContent';
 
@@ -308,15 +313,15 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
   };
 
   addOneFile = (objectName: string, sizeInBytes: number) => {
+    const prefix = getQueryParam(this.props.location.search, 'prefix');
+
     const object: Linode.Object = {
-      name: objectName,
+      name: prefix + objectName,
       etag: '',
       owner: '',
       last_modified: new Date().toISOString(),
       size: sizeInBytes
     };
-
-    const prefix = getQueryParam(this.props.location.search, 'prefix');
 
     const extendedObject = extendObject(object, prefix, true);
 
@@ -324,7 +329,9 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
 
     // If the file already exists in `data` (i.e. if the file is being
     // overwritten), move it from its current location to the front.
-    const idx = updatedFiles.findIndex(file => file.name === objectName);
+    const idx = updatedFiles.findIndex(
+      file => file.name === prefix + objectName
+    );
     if (idx > -1) {
       updatedFiles.splice(idx, 1);
       updatedFiles.unshift(extendedObject);
@@ -337,19 +344,21 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
   };
 
   addOneFolder = (objectName: string) => {
+    const prefix = getQueryParam(this.props.location.search, 'prefix');
+
     const folder: Linode.Object = {
-      name: objectName,
+      name: prefix + objectName + '/',
       etag: null,
       owner: null,
       last_modified: null,
       size: null
     };
 
-    const prefix = getQueryParam(this.props.location.search, 'prefix');
-
     const extendedFolder = extendObject(folder, prefix, true);
 
-    const idx = this.state.data.findIndex(object => object.name === objectName);
+    const idx = this.state.data.findIndex(
+      object => object.name === prefix + objectName + '/'
+    );
     // If the folder isn't already in `data`, add it to the front.
     if (idx === -1) {
       this.setState({ data: [extendedFolder, ...this.state.data] });
@@ -360,6 +369,18 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
     this.setState({
       deleteObjectDialogOpen: false
     });
+  };
+
+  maybeAddObjectToTable = (path: string, sizeInBytes: number) => {
+    const prefix = getQueryParam(this.props.location.search, 'prefix');
+    const action = getElementToAddToTable(prefix, path);
+    if (action) {
+      if (action.type === 'FILE') {
+        this.addOneFile(action.name, sizeInBytes);
+      } else {
+        this.addOneFolder(action.name);
+      }
+    }
   };
 
   render() {
@@ -414,8 +435,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
               clusterId={clusterId}
               bucketName={bucketName}
               prefix={prefix}
-              addOneFile={this.addOneFile}
-              addOneFolder={this.addOneFolder}
+              maybeAddObjectToTable={this.maybeAddObjectToTable}
             />
           </Grid>
           <Grid item xs={12} lg={8} className={classes.tableContainer}>

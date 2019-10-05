@@ -141,14 +141,13 @@ interface Props {
   clusterId: string;
   bucketName: string;
   prefix: string;
-  addOneFile: (fileName: string, sizeInBytes: number) => void;
-  addOneFolder: (folderName: string) => void;
+  maybeAddObjectToTable: (path: string, sizeInBytes: number) => void;
 }
 
 type CombinedProps = Props & WithSnackbarProps;
 
 const ObjectUploader: React.FC<CombinedProps> = props => {
-  const { clusterId, bucketName, prefix, addOneFile, addOneFolder } = props;
+  const { clusterId, bucketName, prefix } = props;
 
   const classes = useStyles();
 
@@ -241,17 +240,7 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
       const onUploadProgress = onUploadProgressFactory(dispatch, path);
 
       const handleSuccess = () => {
-        if (isInFolder) {
-          // Determine if the path is a nested folder (2+ levels deep). If so,
-          // add a folder to the object table.
-          const pathAsArray = path.split('/');
-          if (pathAsArray.length <= 3) {
-            const folderName = pathAsArray[1] || '';
-            addOneFolder(fileUpload.prefix + folderName + '/');
-          }
-        } else {
-          addOneFile(fullObjectName, file.size);
-        }
+        props.maybeAddObjectToTable(fullObjectName, file.size);
 
         dispatch({
           type: 'UPDATE_FILES',

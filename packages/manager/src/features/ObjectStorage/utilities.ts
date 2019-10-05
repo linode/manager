@@ -89,3 +89,25 @@ export const displayName = (objectName: string) => {
     ? basename(objectName.substr(0, objectName.length - 1))
     : basename(objectName);
 };
+
+export const getElementToAddToTable = (
+  currentPrefix: string,
+  objectName: string
+) => {
+  if (objectName.startsWith(currentPrefix) || currentPrefix === '') {
+    // If the prefix matches the beginning of the objectName, we "subtract" it
+    // from the objectName, and make decisions based on that.
+    const delta = objectName.slice(currentPrefix.length);
+
+    if (isFile(delta)) {
+      return { type: 'FILE', name: delta };
+    } else {
+      return { type: 'FOLDER', name: firstSubfolder(delta) };
+    }
+  }
+  return null;
+};
+
+export const isFile = (path: string) => path.split('/').length < 2;
+
+export const firstSubfolder = (path: string) => path.split('/')[0];
