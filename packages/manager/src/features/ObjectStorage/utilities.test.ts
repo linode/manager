@@ -3,10 +3,10 @@ import {
   displayName,
   extendObject,
   firstSubfolder,
-  getElementToAddToTable,
   isFile,
   isFolder,
-  prefixArrayToString
+  prefixArrayToString,
+  tableUpdateAction
 } from './utilities';
 
 const folder: Linode.Object = {
@@ -132,33 +132,33 @@ describe('Object Storage utilities', () => {
 
   describe('getElementToAddToTable', () => {
     it('should return files', () => {
-      expect(getElementToAddToTable('', 'file.txt')).toEqual({
+      expect(tableUpdateAction('', 'file.txt')).toEqual({
         type: 'FILE',
         name: 'file.txt'
       });
-      expect(getElementToAddToTable('hello/', 'hello/file.txt')).toEqual({
+      expect(tableUpdateAction('hello/', 'hello/file.txt')).toEqual({
         type: 'FILE',
         name: 'file.txt'
       });
-      expect(
-        getElementToAddToTable('hello/world/', 'hello/world/file.txt')
-      ).toEqual({
-        type: 'FILE',
-        name: 'file.txt'
-      });
+      expect(tableUpdateAction('hello/world/', 'hello/world/file.txt')).toEqual(
+        {
+          type: 'FILE',
+          name: 'file.txt'
+        }
+      );
     });
 
     it('should return folders', () => {
-      expect(getElementToAddToTable('', 'hello/file.txt')).toEqual({
+      expect(tableUpdateAction('', 'hello/file.txt')).toEqual({
         type: 'FOLDER',
         name: 'hello'
       });
-      expect(getElementToAddToTable('hello/', 'hello/world/file.txt')).toEqual({
+      expect(tableUpdateAction('hello/', 'hello/world/file.txt')).toEqual({
         type: 'FOLDER',
         name: 'world'
       });
       expect(
-        getElementToAddToTable('hello/world/', 'hello/world/path/file.txt')
+        tableUpdateAction('hello/world/', 'hello/world/path/file.txt')
       ).toEqual({
         type: 'FOLDER',
         name: 'path'
@@ -166,18 +166,16 @@ describe('Object Storage utilities', () => {
     });
 
     it('returns null if the prefix does not match', () => {
-      expect(getElementToAddToTable('another/path', 'hello/file.txt')).toBe(
-        null
-      );
-      expect(getElementToAddToTable('some/', 'hello/file.txt')).toBe(null);
+      expect(tableUpdateAction('another/path', 'hello/file.txt')).toBe(null);
+      expect(tableUpdateAction('some/', 'hello/file.txt')).toBe(null);
       expect(
-        getElementToAddToTable('some/another/path', 'another/path/file.txt')
+        tableUpdateAction('some/another/path', 'another/path/file.txt')
       ).toBe(null);
     });
   });
 
   describe('isFile', () => {
-    it('should return true for folders', () => {
+    it('should return true for files and false for folders', () => {
       expect(isFile('file.txt')).toBe(true);
       expect(isFile('file')).toBe(true);
       expect(isFile('file')).toBe(true);

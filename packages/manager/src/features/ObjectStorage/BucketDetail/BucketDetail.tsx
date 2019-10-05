@@ -38,7 +38,7 @@ import {
   displayName,
   ExtendedObject,
   extendObject,
-  getElementToAddToTable
+  tableUpdateAction
 } from '../utilities';
 import BucketBreadcrumb from './BucketBreadcrumb';
 import ObjectTableContent from './ObjectTableContent';
@@ -312,6 +312,18 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
     }
   };
 
+  maybeAddObjectToTable = (path: string, sizeInBytes: number) => {
+    const prefix = getQueryParam(this.props.location.search, 'prefix');
+    const action = tableUpdateAction(prefix, path);
+    if (action) {
+      if (action.type === 'FILE') {
+        this.addOneFile(action.name, sizeInBytes);
+      } else {
+        this.addOneFolder(action.name);
+      }
+    }
+  };
+
   addOneFile = (objectName: string, sizeInBytes: number) => {
     const prefix = getQueryParam(this.props.location.search, 'prefix');
 
@@ -369,18 +381,6 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
     this.setState({
       deleteObjectDialogOpen: false
     });
-  };
-
-  maybeAddObjectToTable = (path: string, sizeInBytes: number) => {
-    const prefix = getQueryParam(this.props.location.search, 'prefix');
-    const action = getElementToAddToTable(prefix, path);
-    if (action) {
-      if (action.type === 'FILE') {
-        this.addOneFile(action.name, sizeInBytes);
-      } else {
-        this.addOneFolder(action.name);
-      }
-    }
   };
 
   render() {

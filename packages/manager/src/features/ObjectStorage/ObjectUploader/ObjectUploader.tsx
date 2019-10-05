@@ -240,6 +240,9 @@ const ObjectUploader: React.FC<CombinedProps> = props => {
       const onUploadProgress = onUploadProgressFactory(dispatch, path);
 
       const handleSuccess = () => {
+        // We may want to add the object to the table, depending on the prefix
+        // the user is currently viewing. Do this in the parent, which has the
+        // current prefix in scope.
         props.maybeAddObjectToTable(fullObjectName, file.size);
 
         dispatch({
