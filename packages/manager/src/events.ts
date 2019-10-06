@@ -11,9 +11,10 @@
  * access Redux and control the start of the event loop.
  */
 import { Event } from 'linode-js-sdk/lib/account';
+import { pathOr } from 'ramda';
 import { Subject } from 'rxjs/Subject';
 import { DISABLE_EVENT_THROTTLE, INTERVAL } from 'src/constants';
-import store from 'src/store';
+import store, { ApplicationState } from 'src/store';
 import {
   setPollingInterval,
   setRequestDeadline
@@ -48,10 +49,14 @@ export const requestEvents = () => {
 export const startEventsInterval = () =>
   setInterval(
     () => {
-      const state = store.getState();
+      const state: ApplicationState = pathOr({}, [], store.getState());
       const now = Date.now();
-      const pollIteration = state.events.pollingInterval || 1;
-      const eventRequestDeadline = state.events.requestDeadline;
+      const pollIteration = pathOr(1, ['events', 'pollingInterval'], state);
+      const eventRequestDeadline = pathOr(
+        0,
+        ['events', 'requestDeadline'],
+        state
+      );
       if (now > eventRequestDeadline) {
         /**
          * If we're waiting on a request, set reset the pollIteration and return to prevent
@@ -76,7 +81,7 @@ export const startEventsInterval = () =>
           store.dispatch(setRequestDeadline(now + timeout));
           /* Update the iteration to a maximum of 16. */
           const newIteration = Math.min(pollIteration * 2, 16);
-          if (newIteration < 16) {
+          if (pollIteration < 16) {
             store.dispatch(setPollingInterval(newIteration));
           }
         }
