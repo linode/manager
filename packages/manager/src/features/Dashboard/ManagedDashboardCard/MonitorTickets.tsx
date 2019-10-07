@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 
 import TicketIcon from 'src/assets/icons/ticket.svg';
 import Button from 'src/components/Button';
@@ -34,6 +34,7 @@ interface Props {
 export const MonitorTickets: React.FC<Props> = props => {
   const { issues } = props;
   const classes = useStyles();
+  const history = useHistory();
 
   const openIssues = issues.filter(thisIssue => !thisIssue.dateClosed);
 
@@ -71,7 +72,15 @@ export const MonitorTickets: React.FC<Props> = props => {
         ) : (
           <Button
             buttonType="primary"
-            onClick={() => null}
+            onClick={() =>
+              history.push({
+                pathname: '/support/tickets',
+                state: {
+                  open: true,
+                  title: 'Managed monitor issue'
+                }
+              })
+            }
             className={classes.openTicketButton}
           >
             Open a ticket

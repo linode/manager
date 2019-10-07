@@ -105,7 +105,7 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
 
   return (
     <DashboardCard
-      title="Managed Services"
+      title="Linode Managed"
       alignHeader="space-between"
       className={classes.root}
       noHeaderActionStyles
