@@ -27,10 +27,6 @@ interface Props {
   error?: string;
   onClose: () => void;
   onSnapshot: () => void;
-  // onDelete: () => void;
-  // volumeLabel: string;
-  // linodeLabel: string;
-  // poweredOff: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;

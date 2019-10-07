@@ -387,7 +387,11 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
             )
           },
           destructiveDialog: {
-            ...this.state.destructiveDialog
+            ...this.state.destructiveDialog,
+            error: getAPIErrorOrDefault(
+              errorResponse,
+              'There was an error taking a snapshot'
+            )[0].reason
           }
         });
       });
