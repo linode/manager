@@ -57,7 +57,11 @@ const styles = (theme: Theme) =>
       paddingRight: '4px !important'
     },
     description: {
-      paddingTop: theme.spacing(1) / 2
+      paddingTop: theme.spacing(1) / 2,
+      [theme.breakpoints.down('sm')]: {
+        // Firefox only
+        overflowWrap: 'anywhere'
+      }
     },
     labelCol: {
       width: '70%'
