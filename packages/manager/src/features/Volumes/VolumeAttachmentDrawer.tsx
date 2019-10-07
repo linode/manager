@@ -268,7 +268,6 @@ const connected = connect(mapStateToProps);
 const enhanced = compose<CombinedProps, Props>(
   withVolumesRequests,
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
-    ...ownProps,
     linodesError
   })),
   connected
