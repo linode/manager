@@ -72,6 +72,8 @@ import LinodePermissionsError from '../LinodePermissionsError';
 import BackupTableRow from './BackupTableRow';
 import RestoreToLinodeDrawer from './RestoreToLinodeDrawer';
 
+import DestructiveSnapshotDialog from './DestructiveSnapshotDialog';
+
 type ClassNames =
   | 'paper'
   | 'title'
@@ -166,6 +168,11 @@ interface State {
     backupCreated: string;
     backupID?: number;
   };
+  destructiveDialog: {
+    open: boolean;
+    mode: 'snapshot';
+    error?: string;
+  };
   cancelBackupsAlertOpen: boolean;
   enabling: boolean;
 }
@@ -215,6 +222,10 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     restoreDrawer: {
       open: false,
       backupCreated: ''
+    },
+    destructiveDialog: {
+      open: false,
+      mode: 'snapshot'
     },
     cancelBackupsAlertOpen: false,
     enabling: false
@@ -360,7 +371,10 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         enqueueSnackbar('A snapshot is being taken', {
           variant: 'info'
         });
-        this.setState({ snapshotForm: { label: '', errors: undefined } });
+        this.closeDestructiveDialog();
+        this.setState({
+          snapshotForm: { label: '', errors: undefined }
+        });
         resetEventsPolling();
       })
       .catch(errorResponse => {
@@ -371,9 +385,21 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
               errorResponse,
               'There was an error taking a snapshot'
             )
+          },
+          destructiveDialog: {
+            ...this.state.destructiveDialog
           }
         });
       });
+  };
+
+  closeDestructiveDialog = () => {
+    this.setState({
+      destructiveDialog: {
+        ...this.state.destructiveDialog,
+        open: false
+      }
+    });
   };
 
   saveSettings = () => {
@@ -445,6 +471,16 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
 
   handleSnapshotNameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     this.setState({ snapshotForm: { label: e.target.value } });
+  };
+
+  handleSnapshotDialogDisplay = () => {
+    this.setState({
+      destructiveDialog: {
+        open: true,
+        mode: 'snapshot',
+        error: undefined
+      }
+    });
   };
 
   handleCloseBackupsAlert = () => {
@@ -604,7 +640,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
               <div>
                 <Button
                   buttonType="primary"
-                  onClick={this.takeSnapshot}
+                  onClick={this.handleSnapshotDialogDisplay}
                   data-qa-snapshot-button
                   disabled={linodeInTransition || disabled}
                 >
@@ -614,6 +650,13 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
             </Tooltip>
           </FormControl>
         </Paper>
+        <DestructiveSnapshotDialog
+          open={this.state.destructiveDialog.open}
+          error={this.state.destructiveDialog.error}
+          mode={this.state.destructiveDialog.mode}
+          onClose={this.closeDestructiveDialog}
+          onSnapshot={this.takeSnapshot}
+        />
       </React.Fragment>
     );
   };
