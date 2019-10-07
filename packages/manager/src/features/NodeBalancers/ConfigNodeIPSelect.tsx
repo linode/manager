@@ -2,9 +2,25 @@ import { Linode } from 'linode-js-sdk/lib/linodes';
 import * as React from 'react';
 import { compose } from 'recompose';
 
+import {
+  createStyles,
+  Theme,
+  withStyles,
+  WithStyles
+} from 'src/components/core/styles';
+
 import { Props as TextFieldProps } from 'src/components/TextField';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import { privateIPRegex } from 'src/utilities/ipUtils';
+
+type ClassNames = 'labelOuter';
+
+const styles = (theme: Theme) =>
+  createStyles({
+    labelOuter: {
+      display: 'block'
+    }
+  });
 
 interface Props {
   selectedRegion?: string;
@@ -16,12 +32,13 @@ interface Props {
   textfieldProps: TextFieldProps;
 }
 
-type CombinedProps = Props;
+type CombinedProps = WithStyles<ClassNames> & Props;
 
 const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
   const [selectedLinode, setSelectedLinode] = React.useState<number | null>(
     null
   );
+  const { classes } = props;
 
   const handleChange = (linode: Linode) => {
     setSelectedLinode(linode.id);
@@ -77,7 +94,7 @@ const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
             <strong>
               {linode.ipv4.find(eachIP => eachIP.match(privateIPRegex))}
             </strong>
-            <div style={{ display: 'block' }}>{` ${linode.label}`}</div>
+            <div className={classes.labelOuter}>{` ${linode.label}`}</div>
           </div>
         );
       }}
@@ -96,4 +113,9 @@ const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(ConfigNodeIPSelect);
+const styled = withStyles(styles);
+
+export default compose<CombinedProps, Props>(
+  React.memo,
+  styled
+)(ConfigNodeIPSelect);
