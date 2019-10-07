@@ -9,7 +9,9 @@ import TabbedPanel from 'src/components/TabbedPanel';
 import useTimezone from 'src/utilities/useTimezone';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
+  root: {
+    position: 'relative'
+  },
   inner: {
     paddingTop: 0
   },
@@ -27,6 +29,13 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'none'
       }
     }
+  },
+  leftLegend: {
+    position: 'absolute',
+    left: 0,
+    bottom: 6,
+    color: '#777',
+    fontSize: 14
   },
   chartSelect: {
     maxWidth: 150,
@@ -89,6 +98,7 @@ const createTabs = (
         return (
           <div className={classes.root}>
             <div>{summaryCopy}</div>
+            <div className={classes.leftLegend}>%</div>
             <div>
               <LineGraph
                 timezone={timezone}
@@ -115,6 +125,7 @@ const createTabs = (
         return (
           <div className={classes.root}>
             <div>{summaryCopy}</div>
+            <div className={classes.leftLegend}>bps</div>
             <div>
               <LineGraph
                 timezone={timezone}
@@ -147,6 +158,7 @@ const createTabs = (
         return (
           <div className={classes.root}>
             <div>{summaryCopy}</div>
+            <div className={classes.leftLegend}>op/s</div>
             <div>
               <LineGraph
                 timezone={timezone}
