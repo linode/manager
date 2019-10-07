@@ -50,6 +50,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   caption: {
     marginBottom: theme.spacing(3),
     paddingLeft: theme.spacing()
+  },
+  unitLegend: {
+    color: '#777',
+    fontSize: 14,
+    paddingLeft: theme.spacing(1),
+    paddingTop: theme.spacing(1)
   }
 }));
 
@@ -86,7 +92,6 @@ const createTabs = (
             <div>
               <LineGraph
                 timezone={timezone}
-                unit="%"
                 chartHeight={chartHeight}
                 showToday={true}
                 data={[
@@ -99,6 +104,7 @@ const createTabs = (
                 ]}
               />
             </div>
+            <div className={classes.unitLegend}>usage percentage</div>
           </div>
         );
       },
@@ -112,7 +118,6 @@ const createTabs = (
             <div>
               <LineGraph
                 timezone={timezone}
-                unit={'bps'}
                 chartHeight={chartHeight}
                 showToday={true}
                 data={[
@@ -131,6 +136,7 @@ const createTabs = (
                 ]}
               />
             </div>
+            <div className={classes.unitLegend}>bits/sec</div>
           </div>
         );
       },
@@ -146,17 +152,17 @@ const createTabs = (
                 timezone={timezone}
                 chartHeight={chartHeight}
                 showToday={true}
-                unit={` op/s`}
                 data={[
                   {
-                    borderColor: 'rgba(54, 131, 220, 1)',
-                    backgroundColor: 'rgba(54, 131, 220, .5)',
+                    borderColor: 'rgba(255, 209, 0, 1)',
+                    backgroundColor: 'rgba(255, 209, 0, .5)',
                     data: formatData(data.disk),
                     label: 'Disk I/O'
                   }
                 ]}
               />
             </div>
+            <div className={classes.unitLegend}>operations/sec</div>
           </div>
         );
       },

@@ -30,7 +30,7 @@ import {
 
 type ClassNames =
   | 'chart'
-  | 'leftLegend'
+  | 'unitLegend'
   | 'bottomLegend'
   | 'graphControls'
   | 'blue'
@@ -62,13 +62,11 @@ const styles = (theme: Theme) =>
       width: '100%',
       padding: theme.spacing(4)
     },
-    leftLegend: {
-      position: 'absolute',
-      left: -8,
-      bottom: 36,
-      transform: 'rotate(-90deg)',
+    unitLegend: {
       color: '#777',
-      fontSize: 14
+      fontSize: 14,
+      paddingLeft: theme.spacing(1),
+      paddingTop: theme.spacing(1)
     },
     bottomLegend: {
       margin: `${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(
@@ -247,12 +245,6 @@ class TablesPanel extends React.Component<CombinedProps, State> {
         </Typography>
         <React.Fragment>
           <div className={classes.chart}>
-            <div
-              className={classes.leftLegend}
-              style={{ left: -34, bottom: 60 }}
-            >
-              connections/sec
-            </div>
             <LineGraph
               timezone={timezone}
               showToday={true}
@@ -266,6 +258,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
               ]}
             />
           </div>
+          <div className={classes.unitLegend}>connections/sec</div>
           <div className={classes.bottomLegend}>
             <Grid container>
               <Grid item xs={12}>
@@ -309,7 +302,6 @@ class TablesPanel extends React.Component<CombinedProps, State> {
         </Typography>
         <React.Fragment>
           <div className={classes.chart}>
-            <div className={classes.leftLegend}>bits/sec</div>
             <LineGraph
               timezone={timezone}
               showToday={true}
@@ -329,6 +321,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
               ]}
             />
           </div>
+          <div className={classes.unitLegend}>bits/sec</div>
           <div className={classes.bottomLegend}>
             <MetricsDisplay
               rows={[
