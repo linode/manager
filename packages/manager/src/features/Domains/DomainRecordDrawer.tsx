@@ -32,7 +32,6 @@ import {
   DomainActionsProps,
   withDomainActions
 } from 'src/store/domains/domains.container';
-import defaultNumeric from 'src/utilities/defaultNumeric';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -198,10 +197,6 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
   );
 
   NumberField = ({ label, field }: NumberFieldProps) => {
-    const defaultValue: number = DomainRecordDrawer.defaultFieldsState(
-      this.props
-    )[field];
-
     return (
       <TextField
         label={label}
@@ -210,9 +205,9 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
           DomainRecordDrawer.errorFields,
           this.state.errors
         )(field)}
-        value={defaultTo(defaultValue, this.state.fields[field])}
+        value={this.state.fields[field]}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          this.updateField(field)(defaultNumeric(defaultValue, e.target.value))
+          this.updateField(field)(+e.target.value)
         }
         data-qa-target={label}
       />
