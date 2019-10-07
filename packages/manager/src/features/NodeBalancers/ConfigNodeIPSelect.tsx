@@ -73,12 +73,12 @@ const ConfigNodeIPSelect: React.FC<CombinedProps> = props => {
       }}
       labelOverride={linode => {
         return (
-          <span>
+          <div>
             <strong>
               {linode.ipv4.find(eachIP => eachIP.match(privateIPRegex))}
             </strong>
-            {` ${linode.label}`}
-          </span>
+            <div style={{ display: 'block' }}>{` ${linode.label}`}</div>
+          </div>
         );
       }}
       filterCondition={linode => {
