@@ -19,6 +19,7 @@ import InputLabel from 'src/components/core/InputLabel';
 
 type ClassNames =
   | 'root'
+  | 'helpWrapperContainer'
   | 'helpWrapper'
   | 'helpWrapperTextField'
   | 'expand'
@@ -37,7 +38,15 @@ const styles = (theme: Theme) =>
     root: {
       marginTop: 0
     },
-    helpWrapper: {},
+    helpWrapperContainer: {
+      display: 'flex',
+      width: '100%'
+    },
+    helpWrapper: {
+      display: 'flex',
+      alignItems: 'flex-end',
+      flexWrap: 'wrap'
+    },
     helpWrapperTextField: {
       width: 415,
       [theme.breakpoints.down('xs')]: {
@@ -248,89 +257,95 @@ class LinodeTextField extends React.Component<CombinedProps> {
             {helperText}
           </FormHelperText>
         )}
-        <TextField
-          {...textFieldProps}
-          {...dataAttrs}
-          error={!!error || !!errorText}
-          /**
-           * set _helperText_ and _label_ to no value because we want to
-           * have the ability to put the helper text under the label at the top
-           */
-          label={''}
-          helperText={''}
-          fullWidth
-          /*
+        <div
+          className={classNames({
+            [classes.helpWrapperContainer]: Boolean(tooltipText)
+          })}
+        >
+          <TextField
+            {...textFieldProps}
+            {...dataAttrs}
+            error={!!error || !!errorText}
+            /**
+             * set _helperText_ and _label_ to no value because we want to
+             * have the ability to put the helper text under the label at the top
+             */
+            label={''}
+            helperText={''}
+            fullWidth
+            /*
             let us explicitly pass an empty string to the input
 
             see UserDefinedFieldsPanel.tsx for a verbose explanation why.
           */
-          value={value}
-          onChange={this.handleChange}
-          InputLabelProps={{
-            ...InputLabelProps,
-            required: false,
-            shrink: true
-          }}
-          inputProps={{
-            'data-testid': 'textfield-input',
-            ...inputProps
-          }}
-          InputProps={{
-            disableUnderline: true,
-            className: classNames(
-              'input',
+            value={value}
+            onChange={this.handleChange}
+            InputLabelProps={{
+              ...InputLabelProps,
+              required: false,
+              shrink: true
+            }}
+            inputProps={{
+              'data-testid': 'textfield-input',
+              ...inputProps
+            }}
+            InputProps={{
+              disableUnderline: true,
+              className: classNames(
+                'input',
+                {
+                  [classes.expand]: expand,
+                  [classes.small]: small,
+                  [classes.tiny]: tiny,
+                  affirmative: !!affirmative
+                },
+                className
+              ),
+              ...InputProps
+            }}
+            SelectProps={{
+              disableUnderline: true,
+              IconComponent: KeyboardArrowDown,
+              MenuProps: {
+                getContentAnchorEl: undefined,
+                anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
+                transformOrigin: { vertical: 'top', horizontal: 'left' },
+                MenuListProps: { className: 'selectMenuList' },
+                PaperProps: { className: 'selectMenuDropdown' }
+              },
+              inputProps: {
+                className: classNames({
+                  [classes.selectSmall]: small
+                })
+              },
+              ...SelectProps
+            }}
+            className={classNames(
               {
-                [classes.expand]: expand,
+                [classes.helpWrapperTextField]: Boolean(tooltipText),
                 [classes.small]: small,
-                [classes.tiny]: tiny,
-                affirmative: !!affirmative
+                [classes.root]: true
               },
               className
-            ),
-            ...InputProps
-          }}
-          SelectProps={{
-            disableUnderline: true,
-            IconComponent: KeyboardArrowDown,
-            MenuProps: {
-              getContentAnchorEl: undefined,
-              anchorOrigin: { vertical: 'bottom', horizontal: 'left' },
-              transformOrigin: { vertical: 'top', horizontal: 'left' },
-              MenuListProps: { className: 'selectMenuList' },
-              PaperProps: { className: 'selectMenuDropdown' }
-            },
-            inputProps: {
-              className: classNames({
-                [classes.selectSmall]: small
-              })
-            },
-            ...SelectProps
-          }}
-          className={classNames(
-            {
-              [classes.helpWrapperTextField]: Boolean(tooltipText),
-              [classes.small]: small,
-              [classes.root]: true
-            },
-            className
-          )}
-          id={
-            this.props.label
-              ? convertToKebabCase(`${this.props.label}`)
-              : undefined
-          }
-        >
-          {this.props.children}
-        </TextField>
-        {tooltipText && <HelpIcon text={tooltipText} />}
-        {errorText && (
-          <FormHelperText
-            className={classes.errorText}
-            data-qa-textfield-error-text
+            )}
+            id={
+              this.props.label
+                ? convertToKebabCase(`${this.props.label}`)
+                : undefined
+            }
           >
-            {errorText}
-          </FormHelperText>
-        )}
+            {this.props.children}
+          </TextField>
+          {tooltipText && <HelpIcon text={tooltipText} />}
+          {errorText && (
+            <FormHelperText
+              className={classes.errorText}
+              data-qa-textfield-error-text
+            >
+              {errorText}
+            </FormHelperText>
+          )}
+        </div>
         {helperText &&
           (helperTextPosition === 'bottom' || !helperTextPosition) && (
             <FormHelperText data-qa-textfield-helper-text>
