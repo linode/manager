@@ -89,3 +89,30 @@ export const displayName = (objectName: string) => {
     ? basename(objectName.substr(0, objectName.length - 1))
     : basename(objectName);
 };
+
+// Given a prefix and an object name, determine table update action to take once
+// the upload is successful.
+export const tableUpdateAction = (
+  currentPrefix: string,
+  objectName: string
+): null | { type: 'FILE' | 'FOLDER'; name: string } => {
+  if (objectName.startsWith(currentPrefix) || currentPrefix === '') {
+    // If the prefix matches the beginning of the objectName, we "subtract" it
+    // from the objectName, and make decisions based on that.
+
+    // Example: if the current prefix is 'my-folder/' and the objectName is
+    // 'my-folder/my-file.txt', we just need to look at 'my-file.txt'.
+    const delta = objectName.slice(currentPrefix.length);
+
+    if (isFile(delta)) {
+      return { type: 'FILE', name: delta };
+    } else {
+      return { type: 'FOLDER', name: firstSubfolder(delta) };
+    }
+  }
+  return null;
+};
+
+export const isFile = (path: string) => path.split('/').length < 2;
+
+export const firstSubfolder = (path: string) => path.split('/')[0];
