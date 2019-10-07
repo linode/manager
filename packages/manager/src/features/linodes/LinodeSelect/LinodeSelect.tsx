@@ -119,7 +119,6 @@ const LinodeSelect: React.StatelessComponent<CombinedProps> = props => {
 export default compose<CombinedProps, Props & RenderGuardProps>(
   RenderGuard,
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
-    ...ownProps,
     linodesData,
     linodesLoading,
     linodesError

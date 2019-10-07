@@ -9,7 +9,7 @@ export const firewall: Firewall = {
   updated_dt: '2019-09-11T19:44:38.526Z',
   tags: [],
   devices: {
-    linodes: []
+    linodes: [16621754, 15922741]
   },
   rules: {
     inbound: [
@@ -39,7 +39,7 @@ export const firewall2: Firewall = {
   updated_dt: '2019-12-11T19:44:38.526Z',
   tags: [],
   devices: {
-    linodes: [123]
+    linodes: [15922741]
   },
   rules: {
     inbound: [],
@@ -59,43 +59,28 @@ export const firewall2: Firewall = {
 const firewallWithSequence: FirewallWithSequence = {
   ...firewall,
   rules: {
-    inbound: [
-      {
-        protocol: 'ALL',
-        sequence: 1,
-        start_port: 443
-      }
-    ],
-    outbound: [
-      {
-        protocol: 'UDP',
-        sequence: 1,
-        start_port: 22,
-        addresses: {
-          ipv4: ['12.12.12.12'],
-          ipv6: ['192.168.12.12']
-        }
-      }
-    ]
+    inbound: (firewall.rules.inbound || []).map((eachRule, index) => ({
+      ...eachRule,
+      sequence: index + 1
+    })),
+    outbound: (firewall.rules.outbound || []).map((eachRule, index) => ({
+      ...eachRule,
+      sequence: index + 1
+    }))
   }
 };
 
 const firewallWithSequence2: FirewallWithSequence = {
   ...firewall2,
   rules: {
-    inbound: [],
-    outbound: [
-      {
-        protocol: 'ALL',
-        sequence: 1,
-        start_port: 443
-      },
-      {
-        protocol: 'ALL',
-        sequence: 2,
-        start_port: 80
-      }
-    ]
+    inbound: (firewall2.rules.inbound || []).map((eachRule, index) => ({
+      ...eachRule,
+      sequence: index + 1
+    })),
+    outbound: (firewall2.rules.outbound || []).map((eachRule, index) => ({
+      ...eachRule,
+      sequence: index + 1
+    }))
   }
 };
 

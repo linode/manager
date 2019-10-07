@@ -10,7 +10,9 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 import ExternalLink from 'src/components/ExternalLink';
 import Grid from 'src/components/Grid';
 import SupportLink from 'src/components/SupportLink';
-import withLinodes from 'src/containers/withLinodes.container';
+import withLinodes, {
+  DispatchProps
+} from 'src/containers/withLinodes.container';
 import useFlags from 'src/hooks/useFlags';
 import { pluralize } from 'src/utilities/pluralize';
 
@@ -24,7 +26,7 @@ interface StateProps {
   linodeCount: number;
 }
 
-type CombinedProps = Props & StateProps;
+type CombinedProps = Props & StateProps & DispatchProps;
 
 interface ContentProps {
   isManaged: boolean;
@@ -143,6 +145,8 @@ export const EnableManaged: React.FC<CombinedProps> = props => {
   );
 };
 
-export default withLinodes((ownProps, entities, loading, error) => ({
-  linodeCount: entities.length
-}))(EnableManaged);
+export default withLinodes<StateProps, Props>(
+  (ownProps, entities, loading, error) => ({
+    linodeCount: entities.length
+  })
+)(EnableManaged);
