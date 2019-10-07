@@ -9,7 +9,9 @@ import TabbedPanel from 'src/components/TabbedPanel';
 import useTimezone from 'src/utilities/useTimezone';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
+  root: {
+    position: 'relative'
+  },
   inner: {
     paddingTop: 0
   },
@@ -27,6 +29,13 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'none'
       }
     }
+  },
+  leftLegend: {
+    position: 'absolute',
+    left: 0,
+    bottom: 6,
+    color: '#777',
+    fontSize: 14
   },
   chartSelect: {
     maxWidth: 150,
@@ -83,10 +92,10 @@ const createTabs = (
         return (
           <div className={classes.root}>
             <div>{summaryCopy}</div>
+            <div className={classes.leftLegend}>%</div>
             <div>
               <LineGraph
                 timezone={timezone}
-                unit="%"
                 chartHeight={chartHeight}
                 showToday={true}
                 data={[
@@ -109,10 +118,10 @@ const createTabs = (
         return (
           <div className={classes.root}>
             <div>{summaryCopy}</div>
+            <div className={classes.leftLegend}>bps</div>
             <div>
               <LineGraph
                 timezone={timezone}
-                unit={'bps'}
                 chartHeight={chartHeight}
                 showToday={true}
                 data={[
@@ -141,16 +150,16 @@ const createTabs = (
         return (
           <div className={classes.root}>
             <div>{summaryCopy}</div>
+            <div className={classes.leftLegend}>op/s</div>
             <div>
               <LineGraph
                 timezone={timezone}
                 chartHeight={chartHeight}
                 showToday={true}
-                unit={` op/s`}
                 data={[
                   {
-                    borderColor: 'rgba(54, 131, 220, 1)',
-                    backgroundColor: 'rgba(54, 131, 220, .5)',
+                    borderColor: 'rgba(255, 209, 0, 1)',
+                    backgroundColor: 'rgba(255, 209, 0, .5)',
                     data: formatData(data.disk),
                     label: 'Disk I/O'
                   }
