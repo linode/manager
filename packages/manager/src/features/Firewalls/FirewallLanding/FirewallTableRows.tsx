@@ -62,7 +62,7 @@ const FirewallTableRows: React.FC<CombinedProps> = props => {
       {firewalls.map(eachFirewall => {
         const count = getCountOfRules(eachFirewall);
         return (
-          <TableRow key={eachFirewall.id}>
+          <TableRow key={`firewall-row-${eachFirewall.id}`}>
             <TableCell>{eachFirewall.label}</TableCell>
             <TableCell>{eachFirewall.status}</TableCell>
             <TableCell>{getRuleString(count)}</TableCell>
