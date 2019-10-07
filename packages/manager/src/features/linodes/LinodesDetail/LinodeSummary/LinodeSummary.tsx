@@ -241,7 +241,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           ? `${testYear}-0${testMonth}-01`
           : `${testYear}-${testMonth}-01`;
     } while (moment(formattedTestDate).diff(creationFirstOfMonth) >= 0);
-    (this.rangeSelectOptions as Linode.TodoAny) = options.map(option => {
+    this.rangeSelectOptions = options.map(option => {
       return { label: option[1], value: option[0] };
     });
   }
