@@ -6,6 +6,7 @@ import {
   StackScript,
   UserDefinedField
 } from 'linode-js-sdk/lib/stackscripts';
+import { ResourcePage } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
@@ -104,7 +105,7 @@ interface Props extends RenderGuardProps {
     params?: any,
     filter?: any,
     stackScriptGrants?: Grant[]
-  ) => Promise<Linode.ResourcePage<any>>;
+  ) => Promise<ResourcePage<any>>;
   category: string;
   header: string;
 }

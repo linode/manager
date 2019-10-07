@@ -1,4 +1,5 @@
 import { Event, getEvents } from 'linode-js-sdk/lib/account';
+import { ResourcePage } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
 import { compose as rCompose, concat, uniq } from 'ramda';
 import * as React from 'react';
@@ -211,7 +212,7 @@ export const EventsLanding: React.StatelessComponent<CombinedProps> = props => {
       });
   };
 
-  const handleEventsRequestSuccess = (response: Linode.ResourcePage<Event>) => {
+  const handleEventsRequestSuccess = (response: ResourcePage<Event>) => {
     setCurrentPage(currentPage + 1);
     setLoadMoreEvents(true);
     /** append our events to component state */

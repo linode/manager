@@ -5,7 +5,7 @@ import {
   createSupportTicket,
   uploadAttachment
 } from 'linode-js-sdk/lib/support';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError, ResourcePage } from 'linode-js-sdk/lib/types';
 import { getVolumes } from 'linode-js-sdk/lib/volumes';
 import { compose, lensPath, set } from 'ramda';
 import * as React from 'react';
@@ -182,7 +182,7 @@ export class SupportTicketDrawer extends React.Component<CombinedProps, State> {
     }
   }
 
-  handleThen = (response: Linode.ResourcePage<any>) => {
+  handleThen = (response: ResourcePage<any>) => {
     const type = this.state.ticket.entity_type;
     const entityItems = response.data.map(entity => {
       return type === 'domain_id'

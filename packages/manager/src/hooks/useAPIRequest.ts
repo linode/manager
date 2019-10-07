@@ -37,7 +37,7 @@ interface UseAPIRequest<T> {
  * Get Linodes:
  *
  * We'd like to resolve `response.data` from the request, so we can deal with Linode[]
- * instead of Linode.ResourcePage<Linode>.
+ * instead of ResourcePage<Linode>.
  *
  * ```typescript
  * const { data, loading, lastUpdated, error } = useAPIData<Linode[]>(

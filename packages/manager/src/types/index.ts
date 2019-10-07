@@ -7,35 +7,3 @@ declare module '*.svg';
 declare module '*.png';
 
 declare module 'react-csv';
-
-namespace Linode {
-  export type TodoAny = any;
-
-  export type NullableString = string | null;
-
-  export type Hypervisor = 'kvm' | 'zen';
-
-  export interface ResourcePage<T> {
-    data: T[];
-    page: number;
-    pages: number;
-    results: number;
-  }
-
-  export interface LinodeSpecs {
-    disk: number;
-    memory: number;
-    vcpus: number;
-    transfer: number;
-  }
-
-  export interface PriceObject {
-    monthly: number;
-    hourly: number;
-  }
-
-  export interface PaginationOptions {
-    page?: number;
-    page_size?: number;
-  }
-}

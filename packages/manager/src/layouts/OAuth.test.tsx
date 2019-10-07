@@ -4,9 +4,7 @@ import { parseQueryParams } from 'src/utilities/queryParams';
 describe('layouts/OAuth', () => {
   describe('parseQueryParams', () => {
     it('parses query params of the expected format', () => {
-      const res = parseQueryParams(
-        'entity=key&color=bronze&weight=20%20grams'
-      ) as Linode.TodoAny;
+      const res = parseQueryParams('entity=key&color=bronze&weight=20%20grams');
       expect(res.entity).toBe('key');
       expect(res.color).toBe('bronze');
       expect(res.weight).toBe('20 grams');
@@ -21,8 +19,8 @@ describe('layouts/OAuth', () => {
       const res = parseQueryParams(
         'access_token=123456&return=https://localhost:3000/oauth/callback?returnTo=/asdf'
       );
-      expect((res as Linode.TodoAny).access_token).toBe('123456');
-      expect((res as Linode.TodoAny).return).toBe(
+      expect(res.access_token).toBe('123456');
+      expect(res.return).toBe(
         'https://localhost:3000/oauth/callback?returnTo=/asdf'
       );
     });
