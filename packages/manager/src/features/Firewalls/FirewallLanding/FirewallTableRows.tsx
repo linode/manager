@@ -15,7 +15,7 @@ import withLinodes, {
   Props as LinodeProps
 } from 'src/containers/withLinodes.container';
 import { FirewallWithSequence } from 'src/store/firewalls/firewalls.reducer';
-import ActionMenu from './FirewallActionMenu';
+import ActionMenu, { ActionHandlers } from './FirewallActionMenu';
 
 // const useStyles = makeStyles((theme: Theme) => ({
 //   root: {}
@@ -25,7 +25,7 @@ interface Props extends Omit<FireProps, 'data' | 'results' | 'getFirewalls'> {
   data: FirewallWithSequence[];
 }
 
-type CombinedProps = Props & LinodeProps;
+type CombinedProps = Props & LinodeProps & ActionHandlers;
 
 const FirewallTableRows: React.FC<CombinedProps> = props => {
   // const classes = useStyles();
@@ -35,7 +35,8 @@ const FirewallTableRows: React.FC<CombinedProps> = props => {
     loading: firewallsLoading,
     error: firewallsError,
     lastUpdated: firewallsLastUpdated,
-    listOfIDsInOriginalOrder: firewallsKeys
+    listOfIDsInOriginalOrder: firewallsKeys,
+    ...actionMenuHandlers
   } = props;
 
   if (firewallsLoading && firewallsLastUpdated === 0) {
@@ -79,10 +80,7 @@ const FirewallTableRows: React.FC<CombinedProps> = props => {
                 firewallID={eachFirewall.id}
                 firewallLabel={eachFirewall.label}
                 firewallStatus={eachFirewall.status}
-                triggerDeleteFirewall={() => null}
-                triggerDisableFirewall={() => null}
-                triggerEditFirewall={() => null}
-                triggerEnableFirewall={() => null}
+                {...actionMenuHandlers}
               />
             </TableCell>
           </TableRow>
@@ -155,7 +153,7 @@ const getLinodesCellString = (
     .join(', ');
 };
 
-export default compose<CombinedProps, Props>(
+export default compose<CombinedProps, Props & ActionHandlers>(
   withLinodes(),
   React.memo
 )(FirewallTableRows);

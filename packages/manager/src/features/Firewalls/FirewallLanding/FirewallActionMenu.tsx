@@ -3,14 +3,17 @@ import * as React from 'react';
 
 import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 
-interface Props {
-  firewallID: number;
-  firewallLabel: string;
-  firewallStatus: FirewallStatus;
+export interface ActionHandlers {
   triggerEnableFirewall: (firewallID: number, firewallLabel: string) => void;
   triggerDisableFirewall: (firewallID: number, firewallLabel: string) => void;
   triggerEditFirewall: (firewallID: number, firewallLabel: string) => void;
   triggerDeleteFirewall: (firewallID: number, firewallLabel: string) => void;
+}
+
+interface Props extends ActionHandlers {
+  firewallID: number;
+  firewallLabel: string;
+  firewallStatus: FirewallStatus;
 }
 
 type CombinedProps = Props;
