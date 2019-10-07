@@ -4,6 +4,29 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+ ## [v0.74.0] - 2019-10-07
+
+### Breaking:
+- Remove ability to delete buckets that contain objects
+
+### Added:
+
+- File Uploads for Object Storage
+- Ability to delete Objects
+- Managed Dashboard widget
+- Ability to Edit Domain Status
+
+### Changed:
+
+- Expand Linode public SSH Key on hover
+- Add copy indicator to Linode public SSH Key button
+
+### Fixed:
+
+- Issue with chart tooltips not showing correct time
+- Cell height for Kubernetes Clusters while in edit mode
+- Link to status.linode.com for all maintenance notifications
+
 ## [v0.73.0] - 2019-10-01
 
 ### Added:
