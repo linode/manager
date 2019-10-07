@@ -8,9 +8,6 @@ export const firewall: Firewall = {
   created_dt: '2019-09-11T19:44:38.526Z',
   updated_dt: '2019-09-11T19:44:38.526Z',
   tags: [],
-  devices: {
-    linodes: [16621754, 15922741]
-  },
   rules: {
     inbound: [
       {
@@ -38,9 +35,6 @@ export const firewall2: Firewall = {
   created_dt: '2019-12-11T19:44:38.526Z',
   updated_dt: '2019-12-11T19:44:38.526Z',
   tags: [],
-  devices: {
-    linodes: [15922741]
-  },
   rules: {
     inbound: [],
     outbound: [
