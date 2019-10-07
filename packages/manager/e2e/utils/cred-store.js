@@ -59,7 +59,7 @@ class CredStore {
 
     const loginButton = url.includes('dev')
       ? '.btn#submit'
-      : '[data-qa-sign-in] input';
+      : '[data-qa-sign-in] #submit';
 
     // Helper to check if on the Authorize 3rd Party App
     const isOauthAuthPage = () => {
@@ -95,10 +95,8 @@ class CredStore {
     // If still on the login page, check for a form error
     if (csrfError) {
       // Attempt to Login after encountering the CSRF Error
-      // browser.trySetValue('#password', password);
-      // browser.trySetValue('#username', username);
-      browser.setNewValue('#password', password);
-      browser.setNewValue('#username', username);
+      browser.trySetValue('#username', username);
+      browser.trySetValue('#password', password);
       $(loginButton).click();
     }
 
