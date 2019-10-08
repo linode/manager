@@ -186,13 +186,13 @@ class Select extends React.PureComponent<CombinedProps, {}> {
           errorText,
           errorGroup,
           disabled,
+          noMarginTop,
           InputLabelProps: {
             shrink: true
           },
           className: classNames({
             [classes.medium]: medium,
             [classes.small]: small,
-            [classes.noMarginTop]: noMarginTop,
             [classes.inline]: inline,
             [classes.hideLabel]: hideLabel
           })
