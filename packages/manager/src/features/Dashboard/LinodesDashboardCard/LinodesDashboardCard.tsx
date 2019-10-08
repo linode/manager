@@ -168,7 +168,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
             region={linode.region}
             status={linode.status}
             tags={linode.tags}
-            mostRecentBackup={linode.mostRecentBackup}
+            mostRecentBackup={linode.mostRecentBackup || null}
             disk={linode.specs.disk}
             vcpus={linode.specs.vcpus}
             memory={linode.specs.memory}
@@ -198,7 +198,9 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
   typesData: state.__resources.types.entities
 }));
 
-type ExtendedLinode = { recentEvent: Event } & LinodeWithMaintenanceAndMostRecentBackup;
+type ExtendedLinode = {
+  recentEvent: Event;
+} & LinodeWithMaintenanceAndMostRecentBackup;
 
 interface WithUpdatingLinodesProps {
   linodes: ExtendedLinode[];

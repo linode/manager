@@ -1,4 +1,5 @@
-import { ExtendedLinode, Linode } from 'linode-js-sdk/lib/linodes';
+import { Linode } from 'linode-js-sdk/lib/linodes';
+import { LinodeWithMaintenanceAndMostRecentBackup } from 'src/store/linodes/types';
 
 export const linode1: Linode = {
   specs: {
@@ -6,7 +7,7 @@ export const linode1: Linode = {
     memory: 1024,
     vcpus: 1,
     disk: 20480,
-    gpus: 0,
+    gpus: 0
   },
   updated: '2017-12-11T16:35:31',
   ipv4: ['97.107.143.78', '98.107.143.78', '99.107.143.78'],
@@ -44,7 +45,7 @@ export const linode2: Linode = {
     memory: 2048,
     vcpus: 1,
     disk: 30720,
-    gpus: 0,
+    gpus: 0
   },
   updated: '2018-02-22T16:11:07',
   ipv4: ['97.107.143.49'],
@@ -82,7 +83,7 @@ export const linode3: Linode = {
     memory: 2048,
     vcpus: 1,
     disk: 30720,
-    gpus: 0,
+    gpus: 0
   },
   updated: '2018-02-22T16:11:07',
   ipv4: ['97.107.143.49'],
@@ -120,7 +121,7 @@ export const linode4: Linode = {
     memory: 2048,
     vcpus: 1,
     disk: 30720,
-    gpus: 0,
+    gpus: 0
   },
   updated: '2018-02-22T16:11:07',
   ipv4: ['97.107.143.49'],
@@ -154,13 +155,17 @@ export const linode4: Linode = {
 
 export const linodes = [linode1, linode2, linode3];
 
-export const extendedLinodes: ExtendedLinode[] = [{
-  ...linode1,
-  mostRecentBackup: null
-}, {
-  ...linode2,
-  mostRecentBackup: null,
-}, {
-  ...linode3,
-  mostRecentBackup: null 
-}]
+export const extendedLinodes: LinodeWithMaintenanceAndMostRecentBackup[] = [
+  {
+    ...linode1,
+    mostRecentBackup: null
+  },
+  {
+    ...linode2,
+    mostRecentBackup: null
+  },
+  {
+    ...linode3,
+    mostRecentBackup: null
+  }
+];

@@ -39,7 +39,7 @@ export const ListView: React.StatelessComponent<CombinedProps> = props => {
           region={linode.region}
           status={linode.status}
           tags={linode.tags}
-          mostRecentBackup={linode.mostRecentBackup}
+          mostRecentBackup={linode.mostRecentBackup || null}
           disk={linode.specs.disk}
           vcpus={linode.specs.vcpus}
           memory={linode.specs.memory}
