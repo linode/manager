@@ -95,9 +95,9 @@ class UntrustButton extends React.PureComponent<ButtonProps, {}> {
   };
   render() {
     return (
-      <a href="javascript:void(0)" onClick={this.handleDelete} title="Untrust">
+      <button type="button" onClick={this.handleDelete} name="Untrust">
         Untrust
-      </a>
+      </button>
     );
   }
 }
