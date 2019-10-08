@@ -32,7 +32,6 @@ import {
   DomainActionsProps,
   withDomainActions
 } from 'src/store/domains/domains.container';
-import defaultNumeric from 'src/utilities/defaultNumeric';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
@@ -102,6 +101,8 @@ type CombinedProps = Props & DomainActionsProps;
 interface _TextFieldProps {
   label: string;
   field: keyof EditableRecordFields | keyof EditableDomainFields;
+  min?: number;
+  max?: number;
 }
 
 interface NumberFieldProps extends _TextFieldProps {
@@ -197,11 +198,7 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
     />
   );
 
-  NumberField = ({ label, field }: NumberFieldProps) => {
-    const defaultValue: number = DomainRecordDrawer.defaultFieldsState(
-      this.props
-    )[field];
-
+  NumberField = ({ label, field, ...rest }: NumberFieldProps) => {
     return (
       <TextField
         label={label}
@@ -210,11 +207,12 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
           DomainRecordDrawer.errorFields,
           this.state.errors
         )(field)}
-        value={defaultTo(defaultValue, this.state.fields[field])}
+        value={this.state.fields[field]}
         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-          this.updateField(field)(defaultNumeric(defaultValue, e.target.value))
+          this.updateField(field)(+e.target.value)
         }
         data-qa-target={label}
+        {...rest}
       />
     );
   };
@@ -229,8 +227,8 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
 
   ServiceField = () => <this.TextField field="service" label="Service" />;
 
-  PriorityField = ({ label }: { label: string }) => (
-    <this.NumberField field="priority" label={label} />
+  PriorityField = (props: { label: string; min: number; max: number }) => (
+    <this.NumberField field="priority" {...props} />
   );
 
   PortField = () => <this.NumberField field="port" label="Port" />;
@@ -652,7 +650,9 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       fields: [
         (idx: number) => <this.TargetField label="Mail Server" key={idx} />,
         ,
-        (idx: number) => <this.PriorityField label="Preference" key={idx} />,
+        (idx: number) => (
+          <this.PriorityField min={0} max={255} label="Preference" key={idx} />
+        ),
         (idx: number) => <this.TTLField key={idx} />,
         (idx: number) => <this.NameField label="Subdomain" key={idx} />
       ]
@@ -676,7 +676,9 @@ class DomainRecordDrawer extends React.Component<CombinedProps, State> {
       fields: [
         (idx: number) => <this.ServiceField key={idx} />,
         (idx: number) => <this.ProtocolField key={idx} />,
-        (idx: number) => <this.PriorityField label="Priority" key={idx} />,
+        (idx: number) => (
+          <this.PriorityField min={0} max={255} label="Priority" key={idx} />
+        ),
         (idx: number) => <this.WeightField key={idx} />,
         (idx: number) => <this.PortField key={idx} />,
         (idx: number) => <this.TargetField label="Target" key={idx} />,
