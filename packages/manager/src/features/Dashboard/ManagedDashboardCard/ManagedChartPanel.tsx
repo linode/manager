@@ -67,12 +67,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   caption: {
     marginBottom: theme.spacing(3),
     paddingLeft: theme.spacing()
-  },
-  unitLegend: {
-    color: '#777',
-    fontSize: 14,
-    paddingLeft: theme.spacing(1),
-    paddingTop: theme.spacing(1)
   }
 }));
 
@@ -122,7 +116,6 @@ const createTabs = (
                 ]}
               />
             </div>
-            <div className={classes.unitLegend}>usage percentage</div>
           </div>
         );
       },
@@ -155,7 +148,6 @@ const createTabs = (
                 ]}
               />
             </div>
-            <div className={classes.unitLegend}>bits/sec</div>
           </div>
         );
       },
@@ -182,7 +174,6 @@ const createTabs = (
                 ]}
               />
             </div>
-            <div className={classes.unitLegend}>operations/sec</div>
           </div>
         );
       },
