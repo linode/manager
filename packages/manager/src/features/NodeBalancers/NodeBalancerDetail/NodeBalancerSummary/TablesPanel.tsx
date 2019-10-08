@@ -30,6 +30,7 @@ import {
 
 type ClassNames =
   | 'chart'
+  | 'cxnChart'
   | 'leftLegend'
   | 'bottomLegend'
   | 'graphControls'
@@ -60,13 +61,15 @@ const styles = (theme: Theme) =>
     chart: {
       position: 'relative',
       width: '100%',
-      padding: theme.spacing(4)
+      paddingLeft: 32
+    },
+    cxnChart: {
+      paddingLeft: 48
     },
     leftLegend: {
       position: 'absolute',
-      left: -8,
-      bottom: 36,
-      transform: 'rotate(-90deg)',
+      left: 0,
+      bottom: 23,
       color: '#777',
       fontSize: 14
     },
@@ -246,13 +249,8 @@ class TablesPanel extends React.Component<CombinedProps, State> {
           Connections (5 min avg.)
         </Typography>
         <React.Fragment>
-          <div className={classes.chart}>
-            <div
-              className={classes.leftLegend}
-              style={{ left: -34, bottom: 60 }}
-            >
-              connections/sec
-            </div>
+          <div className={`${classes.chart} ${classes.cxnChart}`}>
+            <div className={classes.leftLegend}>CXN/sec</div>
             <LineGraph
               timezone={timezone}
               showToday={true}
