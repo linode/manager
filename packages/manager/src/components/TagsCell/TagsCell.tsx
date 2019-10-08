@@ -53,9 +53,13 @@ const LinodeRowTagCell: React.StatelessComponent<CombinedProps> = props => {
           interactive={true}
         >
           <div className={classes.wrapper} data-qa-total-tags>
-            <a href="javascript:;" className={classes.tagLink}>
+            <button
+              name={`${tags.length}`}
+              type="button"
+              className={classes.tagLink}
+            >
               {tags.length}
-            </a>
+            </button>
           </div>
         </Tooltip>
       ) : (

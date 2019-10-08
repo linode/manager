@@ -40,6 +40,8 @@ const styles = (theme: Theme) =>
       padding: 4,
       transition: theme.transitions.create(['background-color']),
       borderRadius: 4,
+      border: 'none',
+      cursor: 'pointer',
       color: theme.color.grey1,
       '& svg': {
         transition: theme.transitions.create(['color']),
@@ -95,11 +97,11 @@ class CopyTooltip extends React.Component<CombinedProps, State> {
     const { copied } = this.state;
 
     return (
-      <a
+      <button
         aria-label={text}
-        title={text}
+        name={text}
+        type="button"
         onClick={this.clickIcon}
-        href="javascript:void(0)"
         className={classNames(className, {
           [classes.root]: true,
           [classes.standAlone]: standAlone
@@ -111,7 +113,7 @@ class CopyTooltip extends React.Component<CombinedProps, State> {
           </span>
         )}
         <FileCopy />
-      </a>
+      </button>
     );
   }
 }
