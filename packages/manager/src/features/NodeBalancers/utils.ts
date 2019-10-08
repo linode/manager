@@ -30,9 +30,12 @@ export type CreateNodeWithStatus = CreateNode & {
   port?: number;
 };
 
-export type CreateConfig = WithModifyStatusAndErrors<
-  CreateNodeBalancerConfigPayload<CreateNodeWithStatus>
->;
+interface AlteredCreateConfig extends Omit<CreateNodeBalancerConfigPayload, 'nodes'> {
+  nodes: CreateNodeWithStatus[];
+}
+
+export type CreateConfig = WithModifyStatusAndErrors<AlteredCreateConfig>;
+
 export type RequestedConfig<
   T = WithModifyStatusAndErrors<NodeBalancerConfigNode>
 > = WithModifyStatusAndErrors<NodeBalancerConfig & { nodes: T[] }>;

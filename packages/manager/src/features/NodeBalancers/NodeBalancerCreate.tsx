@@ -298,19 +298,16 @@ class NodeBalancerCreate extends React.Component<CombinedProps, State> {
     } = this.props;
     const { nodeBalancerFields } = this.state;
 
-    /* transform node data for the requests */
-    const nodeBalancerRequestData = clone(nodeBalancerFields);
-    nodeBalancerRequestData.configs = transformConfigsForRequest(
-      nodeBalancerRequestData.configs
-    );
-
     /* Clear node errors */
     this.clearNodeErrors();
 
     /* Clear config errors */
     this.setState({ submitting: true, errors: undefined });
 
-    createNodeBalancer(nodeBalancerRequestData)
+    createNodeBalancer({
+      ...nodeBalancerFields,
+      configs: transformConfigsForRequest(nodeBalancerFields.configs)
+    })
       .then(nodeBalancer => {
         this.props.history.push(`/nodebalancers/${nodeBalancer.id}/summary`);
         // GA Event

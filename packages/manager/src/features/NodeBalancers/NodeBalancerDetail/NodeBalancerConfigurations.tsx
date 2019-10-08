@@ -1,6 +1,7 @@
 import * as Promise from 'bluebird';
 import {
   createNodeBalancerConfigNode,
+  CreateNodeBalancerConfigPayload,
   deleteNodeBalancerConfigNode,
   getNodeBalancerConfigNodes,
   getNodeBalancerConfigs,
@@ -50,7 +51,6 @@ import NodeBalancerConfigPanel from '../NodeBalancerConfigPanel';
 import { lensFrom } from '../NodeBalancerCreate';
 import {
   clampNumericString,
-  CreateConfig,
   createNewNodeBalancerConfig,
   createNewNodeBalancerConfigNode,
   CreateNodeWithStatus,
@@ -286,7 +286,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   saveConfigUpdatePath = (
     idx: number,
     config: RequestedConfig,
-    configPayload: CreateConfig
+    configPayload: CreateNodeBalancerConfigPayload
   ) => {
     /* Update a config and its nodes simultaneously */
     const {
@@ -403,7 +403,7 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
   saveConfigNewPath = (
     idx: number,
     config: RequestedConfig,
-    configPayload: CreateConfig
+    configPayload: CreateNodeBalancerConfigPayload
   ) => {
     /*
      * Create a config and then its nodes.
