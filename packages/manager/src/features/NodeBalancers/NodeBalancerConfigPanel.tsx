@@ -1,4 +1,3 @@
-import { NodeBalancerConfigNodeFields } from 'linode-js-sdk/lib/nodebalancers';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
@@ -26,6 +25,8 @@ import Toggle from 'src/components/Toggle';
 import getAPIErrorFor from 'src/utilities/getAPIErrorFor';
 
 import SelectIP from './ConfigNodeIPSelect';
+
+import { CreateNodeWithStatus } from './utils';
 
 type ClassNames =
   | 'divider'
@@ -169,7 +170,7 @@ interface Props {
   privateKey: string;
   onPrivateKeyChange: (v: string) => void;
 
-  nodes: NodeBalancerConfigNodeFields[];
+  nodes: CreateNodeWithStatus[];
   disabled?: boolean;
   addNode: (nodeIdx?: number) => void;
   removeNode: (nodeIdx: number) => void;
@@ -1004,7 +1005,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                 <TextField
                                   type="number"
                                   label="Port"
-                                  value={node.port}
+                                  value={node.port || ''}
                                   inputProps={{ 'data-node-idx': idx }}
                                   onChange={this.onNodePortChange}
                                   errorText={nodesHasErrorFor('port')}

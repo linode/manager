@@ -6,11 +6,10 @@ import {
   UpdateNodeBalancerConfigSchema
 } from './nodebalancers.schema';
 import {
-  CreateNodeBalancerConfig,
+  CreateNodeBalancerConfigPayload,
   NodeBalancerConfig,
   UpdateNodeBalancerConfig
 } from './types';
-import { combineConfigNodeAddressAndPort } from './utils';
 
 /**
  * getNodeBalancerConfigs
@@ -51,16 +50,12 @@ export const getNodeBalancerConfig = (
  */
 export const createNodeBalancerConfig = (
   nodeBalancerId: number,
-  data: CreateNodeBalancerConfig
+  data: CreateNodeBalancerConfigPayload
 ) =>
   Request<NodeBalancerConfig>(
     setMethod('POST'),
     setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs`),
-    setData(
-      data,
-      createNodeBalancerConfigSchema,
-      combineConfigNodeAddressAndPort
-    )
+    setData(data, createNodeBalancerConfigSchema)
   ).then(response => response.data);
 
 /**

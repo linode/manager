@@ -12,6 +12,9 @@ export const nodeBalancerConfigNodeSchema = object({
     .max(32, 'Label should be between 3 and 32 characters.')
     .required('Label is required.'),
 
+  /**
+   * @todo fix this to allow for :port!
+   */
   address: string()
     .matches(
       /^192\.168\.\d{1,3}\.\d{1,3}$/,

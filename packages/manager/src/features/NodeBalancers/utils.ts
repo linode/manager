@@ -1,17 +1,19 @@
 import {
-  NodeBalancerConfigFields,
-  NodeBalancerConfigNode,
-  NodeBalancerConfigNode2,
-  NodeBalancerConfigNodeFields
+  ConfigNodeStatus,
+  CreateNodeBalancerConfigNodePayload,
+  CreateNodeBalancerConfigPayload,
+  NodeBalancerConfig,
+  NodeBalancerConfigNode
 } from 'linode-js-sdk/lib/nodebalancers';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { clamp, compose, filter, isNil, toString } from 'ramda';
 
 import defaultNumeric from 'src/utilities/defaultNumeric';
 
-export interface NodeBalancerConfigFieldsWithStatus
-  extends NodeBalancerConfigFields {
-  modifyStatus?: 'new';
-}
+export type WithModifyStatusAndErrors<T> = T & {
+  modifyStatus?: string;
+  errors?: APIError[];
+};
 
 export const clampNumericString = (low: number, hi: number) =>
   compose(
@@ -20,10 +22,24 @@ export const clampNumericString = (low: number, hi: number) =>
     (value: number) => defaultNumeric(0, value)
   ) as (value: any) => string;
 
-export const createNewNodeBalancerConfigNode = (): NodeBalancerConfigNodeFields => ({
+export type CreateNode = WithModifyStatusAndErrors<
+  CreateNodeBalancerConfigNodePayload
+>;
+export type CreateNodeWithStatus = CreateNode & {
+  status?: ConfigNodeStatus;
+  port?: number;
+};
+
+export type CreateConfig = WithModifyStatusAndErrors<
+  CreateNodeBalancerConfigPayload<CreateNodeWithStatus>
+>;
+export type RequestedConfig<
+  T = WithModifyStatusAndErrors<NodeBalancerConfigNode>
+> = WithModifyStatusAndErrors<NodeBalancerConfig & { nodes: T[] }>;
+
+export const createNewNodeBalancerConfigNode = (): CreateNode => ({
   label: '',
   address: '',
-  port: 80,
   weight: 100,
   mode: 'accept',
   modifyStatus: 'new'
@@ -31,61 +47,31 @@ export const createNewNodeBalancerConfigNode = (): NodeBalancerConfigNodeFields 
 
 export const createNewNodeBalancerConfig = (
   withDefaultPort?: boolean
-): NodeBalancerConfigFieldsWithStatus => ({
+): CreateConfig => ({
   algorithm: 'roundrobin',
   check_attempts: 2,
-  check_body: undefined,
+  check_body: '',
   check_interval: 5,
   check_passive: true,
-  check_path: undefined,
+  check_path: '',
   check_timeout: 3,
   check: 'none',
-  cipher_suite: undefined,
-  port: withDefaultPort ? 80 : undefined,
+  cipher_suite: 'recommended',
+  port: withDefaultPort ? 80 : 80,
   protocol: 'http',
-  ssl_cert: undefined,
-  ssl_key: undefined,
+  ssl_cert: '',
+  ssl_key: '',
   stickiness: 'table',
   nodes: [createNewNodeBalancerConfigNode()],
   modifyStatus: 'new'
 });
 
-export const nodeForRequest = (node: NodeBalancerConfigNodeFields) => ({
-  label: node.label,
-  address: node.address,
-  port: node.port,
-  weight: +node.weight!,
-  /* Force Node creation and updates to set mode to 'accept' */
-  mode: node.mode
-});
-
-export const formatAddress = (node: NodeBalancerConfigNode2) => ({
-  ...node,
-  address: `${node.address}:${node.port}`
-});
-
-export const parseAddress = (node: NodeBalancerConfigNode) => {
-  const match = /^(192\.168\.\d{1,3}\.\d{1,3}):(\d{1,5})$/.exec(node.address);
-  if (match) {
-    return {
-      ...node,
-      address: match![1],
-      port: match![2]
-    };
-  }
-  return node;
-};
-
-export const parseAddresses = (nodes: NodeBalancerConfigNode[]) => {
-  return nodes.map(parseAddress);
-};
-
 /* Transform an array of configs into valid request data.
    Does not modify in-place, returns a deep clone of the configs */
 export const transformConfigsForRequest = (
-  configs: NodeBalancerConfigFields[]
-): NodeBalancerConfigFields[] => {
-  return configs.map((config: NodeBalancerConfigFields) => {
+  configs: CreateConfig[]
+): CreateNodeBalancerConfigPayload[] => {
+  return configs.map(config => {
     return filter(
       /* remove the (key: value) pairs that we set to undefined */
       el => el !== undefined,
@@ -126,23 +112,16 @@ export const transformConfigsForRequest = (
           config.ssl_key === '<REDACTED>'
             ? undefined
             : config.ssl_key || undefined,
-        nodes: config.nodes.map(nodeForRequest),
+        nodes: (config.nodes || []).map(eachNode => ({
+          ...eachNode,
+          address: `${eachNode.address}:${eachNode.port}`
+        })),
         id: undefined,
         nodebalancer_id: undefined,
         nodes_status: undefined,
         ssl_fingerprint: undefined,
         ssl_commonname: undefined
       }
-    ) as any;
-  }) as NodeBalancerConfigFields[];
-};
-
-/* Transform the Node fields in an array of Nodes into valid request data
-   Does not modify in-place, returns a deep clone of the Nodes */
-export const transformConfigNodesForRequest = (
-  nodes: NodeBalancerConfigNode[]
-): NodeBalancerConfigNodeFields[] => {
-  return nodes.map((node: NodeBalancerConfigNodeFields) =>
-    nodeForRequest(node)
-  );
+    );
+  });
 };

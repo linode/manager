@@ -16,7 +16,6 @@ import {
   NodeBalancer,
   NodeBalancerStats
 } from './types';
-import { combineNodeBalancerConfigNodeAddressAndPort } from './utils';
 
 /**
  * getNodeBalancers
@@ -72,11 +71,7 @@ export const createNodeBalancer = (data: CreateNodeBalancerPayload) =>
   Request<NodeBalancer>(
     setMethod('POST'),
     setURL(`${API_ROOT}/nodebalancers`),
-    setData(
-      data,
-      NodeBalancerSchema,
-      combineNodeBalancerConfigNodeAddressAndPort
-    )
+    setData(data, NodeBalancerSchema)
   ).then(response => response.data);
 
 /**
