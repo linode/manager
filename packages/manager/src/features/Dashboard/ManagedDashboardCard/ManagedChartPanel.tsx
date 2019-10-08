@@ -10,7 +10,15 @@ import useTimezone from 'src/utilities/useTimezone';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    position: 'relative'
+    position: 'relative',
+    '& canvas': {
+      paddingLeft: 16
+    }
+  },
+  ioChart: {
+    '& canvas': {
+      paddingLeft: 30
+    }
   },
   inner: {
     paddingTop: 0
@@ -33,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   leftLegend: {
     position: 'absolute',
     left: 0,
-    bottom: 6,
+    bottom: 23,
     color: '#777',
     fontSize: 14
   },
@@ -156,7 +164,7 @@ const createTabs = (
     {
       render: () => {
         return (
-          <div className={classes.root}>
+          <div className={`${classes.root} ${classes.ioChart}`}>
             <div>{summaryCopy}</div>
             <div className={classes.leftLegend}>op/s</div>
             <div>
