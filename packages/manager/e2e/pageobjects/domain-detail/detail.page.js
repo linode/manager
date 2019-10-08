@@ -215,9 +215,18 @@ class DomainDetail extends Page {
 
   addMxRecord(mailServer, preference, subdomain) {
     this.mxRecordDrawerDisplays();
-    this.inputElementByLabel('Mail Server').setValue(mailServer);
-    this.inputElementByLabel('Preference').setValue(preference);
-    this.inputElementByLabel('Subdomain').setValue(subdomain);
+    browser.trySetValue(
+      this.inputElementByLabel('Mail Server').selector,
+      mailServer
+    );
+    browser.numberEntry(
+      this.inputElementByLabel('Preference').selector,
+      preference
+    );
+    browser.trySetValue(
+      this.inputElementByLabel('Subdomain').selector,
+      subdomain
+    );
     const ttl = this.selectDropdownOption('TTL');
     this.saveRecord();
     return ttl;
@@ -225,8 +234,14 @@ class DomainDetail extends Page {
 
   addNsRecord(nameServer, subdomain) {
     this.nsRecordDrawerDisplays();
-    this.inputElementByLabel('Name Server').setValue(nameServer);
-    this.inputElementByLabel('Subdomain').setValue(subdomain);
+    browser.trySetValue(
+      this.inputElementByLabel('Name Server').selector,
+      nameServer
+    );
+    browser.trySetValue(
+      this.inputElementByLabel('Subdomain').selector,
+      subdomain
+    );
     const ttl = this.selectDropdownOption('TTL');
     this.saveRecord();
     return ttl;
@@ -234,8 +249,14 @@ class DomainDetail extends Page {
 
   addAaaaRecord(hostName, ipAddress) {
     this.aaaaRecordDrawerDisplays();
-    this.inputElementByLabel('Hostname').setValue(hostName);
-    this.inputElementByLabel('IP Address').setValue(ipAddress);
+    browser.trySetValue(
+      this.inputElementByLabel('Hostname').selector,
+      hostName
+    );
+    browser.trySetValue(
+      this.inputElementByLabel('IP Address').selector,
+      ipAddress
+    );
     const ttl = this.selectDropdownOption('TTL');
     this.saveRecord();
     return ttl;
@@ -243,8 +264,11 @@ class DomainDetail extends Page {
 
   addCnameRecord(hostName, aliasTo) {
     this.cNameRecordDrawerDisplays();
-    this.inputElementByLabel('Hostname').setValue(hostName);
-    this.inputElementByLabel('Alias to').setValue(aliasTo);
+    browser.trySetValue(
+      this.inputElementByLabel('Hostname').selector,
+      hostName
+    );
+    browser.trySetValue(this.inputElementByLabel('Alias to').selector, aliasTo);
     const ttl = this.selectDropdownOption('TTL');
     this.saveRecord();
     return ttl;
@@ -252,8 +276,11 @@ class DomainDetail extends Page {
 
   addTxtRecord(hostName, value) {
     this.txtRecordDrawerDisplays();
-    this.inputElementByLabel('Hostname').setValue(hostName);
-    this.inputElementByLabel('Value').setValue(value);
+    browser.trySetValue(
+      this.inputElementByLabel('Hostname').selector,
+      hostName
+    );
+    browser.trySetValue(this.inputElementByLabel('Value').selector, value);
     const ttl = this.selectDropdownOption('TTL');
     this.saveRecord();
     return ttl;
@@ -261,12 +288,15 @@ class DomainDetail extends Page {
 
   addSrvRecord(service, protocol, priority, weight, port, target) {
     this.srvRecordDrawerDisplays();
-    this.inputElementByLabel('Service').setValue(service);
+    browser.trySetValue(this.inputElementByLabel('Service').selector, service);
     this.selectDropdownOption('Protocol', protocol);
-    this.inputElementByLabel('Priority').setValue(priority);
-    this.inputElementByLabel('Weight').setValue(weight);
-    this.inputElementByLabel('Port').setValue(port);
-    this.inputElementByLabel('Target').setValue(target);
+    browser.numberEntry(
+      this.inputElementByLabel('Priority').selector,
+      priority
+    );
+    browser.trySetValue(this.inputElementByLabel('Weight').selector, weight);
+    browser.trySetValue(this.inputElementByLabel('Port').selector, port);
+    browser.trySetValue(this.inputElementByLabel('Target').selector, target);
     const ttl = this.selectDropdownOption('TTL');
     this.saveRecord();
     return ttl;
@@ -274,8 +304,8 @@ class DomainDetail extends Page {
 
   addCaaRecord(name, tag, value) {
     this.caaRecordDrawerDisplays();
-    this.inputElementByLabel('Name').setValue(name);
-    this.inputElementByLabel('Value').setValue(value);
+    browser.trySetValue(this.inputElementByLabel('Name').selector, name);
+    browser.trySetValue(this.inputElementByLabel('Value').selector, value);
     this.selectDropdownOption('caa tag', tag);
     const ttl = this.selectDropdownOption('TTL');
     this.saveRecord();
@@ -304,6 +334,14 @@ class DomainDetail extends Page {
       constants.wait.normal,
       true
     );
+  }
+
+  selectDomain(domainName) {
+    console.log(`selecting domain: ${domainName}`);
+    $(`[data-qa-domain-cell="${domainName}"]`).waitForDisplayed(
+      constants.wait.normal
+    );
+    $(`[data-qa-domain-cell="${domainName}"]`).click();
   }
 }
 
