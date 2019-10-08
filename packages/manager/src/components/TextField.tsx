@@ -26,6 +26,7 @@ type ClassNames =
   | 'errorText'
   | 'helperTextTop'
   | 'small'
+  | 'noTransform'
   | 'selectSmall'
   | 'wrapper'
   | 'tiny';
@@ -34,6 +35,9 @@ const styles = (theme: Theme) =>
   createStyles({
     wrapper: {
       marginTop: theme.spacing(2)
+    },
+    noTransform: {
+      transform: 'none'
     },
     root: {
       marginTop: 0
@@ -83,6 +87,9 @@ const styles = (theme: Theme) =>
     helperTextTop: {
       marginBottom: theme.spacing(),
       marginTop: theme.spacing(2)
+    },
+    noMarginTop: {
+      marginTop: 0
     }
   });
 
@@ -104,6 +111,7 @@ interface BaseProps {
   min?: number;
   max?: number;
   dataAttrs?: Record<string, any>;
+  noMarginTop?: boolean;
 }
 
 export type Props = BaseProps & TextFieldProps;
@@ -221,6 +229,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
       value,
       dataAttrs,
       error,
+      noMarginTop,
       label,
       ...textFieldProps
     } = this.props;
@@ -245,7 +254,13 @@ class LinodeTextField extends React.Component<CombinedProps> {
         })}
       >
         {maybeRequiredLabel && (
-          <InputLabel data-qa-textfield-label className={classes.wrapper}>
+          <InputLabel
+            data-qa-textfield-label
+            className={classNames({
+              [classes.wrapper]: noMarginTop ? false : true,
+              [classes.noTransform]: true
+            })}
+          >
             {maybeRequiredLabel || ''}
           </InputLabel>
         )}
