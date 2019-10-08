@@ -1,6 +1,6 @@
 import KeyboardArrowDown from '@material-ui/icons/KeyboardArrowDown';
 import KeyboardArrowUp from '@material-ui/icons/KeyboardArrowUp';
-import { AccountCapability } from 'linode-js-sdk/lib/account';
+import { Account } from 'linode-js-sdk/lib/account';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, Dispatch } from 'react-redux';
@@ -237,7 +237,7 @@ interface DispatchProps {
 }
 
 interface StateProps {
-  accountCapabilities: AccountCapability[];
+  accountCapabilities: Account['capabilities'][];
 }
 
 const mapStateToProps: MapState<StateProps, CombinedProps> = (

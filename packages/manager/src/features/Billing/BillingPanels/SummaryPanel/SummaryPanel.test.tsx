@@ -32,10 +32,8 @@ describe('SummaryPanel', () => {
       balance: 0,
       balance_uninvoiced: 0,
       active_since: '2018-05-17T18:22:50',
-      active_promotions: activePromotions
-      // [BETA]
-      // @todo: Uncomment this when it becomes generally available
-      // capabilities: ['Linodes', 'NodeBalancers', 'Block Storage']
+      active_promotions: activePromotions,
+      capabilities: ['Linodes', 'NodeBalancers', 'Block Storage']
     }
   };
 

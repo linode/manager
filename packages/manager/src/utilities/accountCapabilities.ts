@@ -1,4 +1,4 @@
-import { AccountCapability } from 'linode-js-sdk/lib/account'
+import { Account } from 'linode-js-sdk/lib/account'
 
 import { curry } from 'ramda';
 
@@ -25,20 +25,20 @@ import {
 
 const isFeatureEnabled = curry(
   (
-    featureName: AccountCapability,
+    featureName: Account['capabilities'],
     environmentVar: boolean,
-    capabilities: AccountCapability[]
+    capabilities: Account['capabilities'][]
   ) => {
     return environmentVar || capabilities.indexOf(featureName) > -1;
   }
 );
 
 export const isObjectStorageEnabled = isFeatureEnabled(
-  'Object Storage',
+  ['Object Storage'],
   isObjectStorageEnabledForEnvironment
 );
 
 export const isKubernetesEnabled = isFeatureEnabled(
-  'Kubernetes',
+  ['Kubernetes'],
   isKubernetesEnabledForEnvironment
 );

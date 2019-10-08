@@ -1,5 +1,5 @@
 import * as classnames from 'classnames';
-import { AccountCapability } from 'linode-js-sdk/lib/account';
+import { Account } from 'linode-js-sdk/lib/account';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
@@ -106,7 +106,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 interface Props {
   accountLoading: boolean;
   accountError?: APIError[];
-  accountCapabilities: AccountCapability[];
+  accountCapabilities: Account['capabilities'][];
   location: RouteComponentProps['location'];
   history: RouteComponentProps['history'];
   appIsLoading: boolean;
@@ -365,7 +365,7 @@ const MainContent: React.FC<CombinedProps> = props => {
 // whether or not the feature is enabled for this account.
 const getObjectStorageRoute = (
   accountLoading: boolean,
-  accountCapabilities: AccountCapability[],
+  accountCapabilities: Account['capabilities'][],
   accountError?: Error | APIError[]
 ) => {
   let component;

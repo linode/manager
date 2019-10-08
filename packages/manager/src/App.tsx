@@ -1,6 +1,5 @@
 import {
   Account,
-  AccountCapability,
   Notification
 } from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
@@ -307,7 +306,7 @@ interface StateProps {
   username: string;
   documentation: Linode.Doc[];
   isLoggedInAsCustomer: boolean;
-  accountCapabilities: AccountCapability[];
+  accountCapabilities: Account['capabilities'][];
   linodesLoading: boolean;
   volumesLoading: boolean;
   domainsLoading: boolean;

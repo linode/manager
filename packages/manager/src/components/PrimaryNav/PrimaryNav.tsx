@@ -1,6 +1,6 @@
 import Settings from '@material-ui/icons/Settings';
 import * as classNames from 'classnames';
-import { AccountCapability } from 'linode-js-sdk/lib/account';
+import { Account } from 'linode-js-sdk/lib/account';
 import { Profile } from 'linode-js-sdk/lib/profile';
 import { clone, pathOr } from 'ramda';
 import * as React from 'react';
@@ -606,7 +606,7 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
 interface StateProps {
   hasAccountAccess: boolean;
   // isLongviewEnabled: boolean;
-  accountCapabilities: AccountCapability[];
+  accountCapabilities: Account['capabilities'][];
   accountLastUpdated: number;
   isManagedAccount: boolean;
 }

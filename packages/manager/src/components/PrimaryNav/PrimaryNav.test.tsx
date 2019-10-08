@@ -182,12 +182,12 @@ describe('PrimaryNav', () => {
           ldClient={ldClient}
           toggleTheme={jest.fn()}
           hasAccountAccess={false}
-          accountCapabilities={[
+          accountCapabilities={[[
             'Linodes',
             'NodeBalancers',
             'Block Storage',
             'Object Storage'
-          ]}
+          ]]}
           accountLastUpdated={0}
           isManagedAccount={true}
           {...reactRouterProps}
