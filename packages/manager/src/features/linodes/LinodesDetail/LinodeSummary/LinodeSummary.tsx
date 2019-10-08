@@ -57,6 +57,7 @@ type ClassNames =
   | 'sidebar'
   | 'headerWrapper'
   | 'chart'
+  | 'ioChart'
   | 'chartSelect'
   | 'leftLegend'
   | 'bottomLegend'
@@ -86,13 +87,15 @@ const styles = (theme: Theme) =>
     },
     chart: {
       position: 'relative',
-      paddingLeft: theme.spacing(4)
+      paddingLeft: 32
+    },
+    ioChart: {
+      paddingLeft: 54
     },
     leftLegend: {
       position: 'absolute',
-      left: -8,
-      bottom: 48,
-      transform: 'rotate(-90deg)',
+      left: 0,
+      bottom: 23,
       color: '#777',
       fontSize: 14
     },
@@ -623,10 +626,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <div className={classes.chart}>
-          <div className={classes.leftLegend} style={{ left: -24 }}>
-            blocks/sec
-          </div>
+        <div className={`${classes.chart} ${classes.ioChart}`}>
+          <div className={classes.leftLegend}>blocks/sec</div>
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
