@@ -1,11 +1,11 @@
 import { extendedClusters } from 'src/__data__/kubernetes';
 
 import {
-  // addOrUpdateCluster,
   deleteClusterActions,
-  // requestClusterActions,
-  requestClustersActions
+  requestClusterActions,
+  requestClustersActions,
   // updateClusterActions,
+  upsertCluster
 } from './kubernetes.actions';
 import reducer, { defaultState } from './kubernetes.reducer';
 
@@ -77,6 +77,64 @@ describe('Kubernetes clusters reducer', () => {
         })
       );
       expect(newState.error!.delete).toEqual(mockError);
+    });
+  });
+
+  describe('Upsert action', () => {
+    it('should add a cluster to a list where it is not already present', () => {
+      const withEntities = addEntities();
+      const newCluster = { ...extendedClusters[0], id: 9999 };
+      const newState = reducer(withEntities, upsertCluster(newCluster));
+      expect(newState.results).toHaveLength(extendedClusters.length + 1);
+      expect(newState.entities).toContain(newCluster);
+    });
+
+    it('should update an existing cluster', () => {
+      const withEntities = addEntities();
+      expect(withEntities.results.length).toEqual(extendedClusters.length);
+      const updatedCluster = {
+        ...extendedClusters[1],
+        label: 'updated-cluster-label'
+      };
+      const newState = reducer(withEntities, upsertCluster(updatedCluster));
+      // Length should be unchanged
+      expect(newState.results.length).toEqual(extendedClusters.length);
+      expect(newState.entities).toContain(updatedCluster);
+    });
+  });
+
+  describe('Requesting a cluster by ID', () => {
+    it('should set loading state and clear error on action start', () => {
+      const newState = reducer(
+        { ...defaultState, error: { read: mockError } },
+        requestClusterActions.started({ clusterID: 123 })
+      );
+      expect(newState.loading).toBe(true);
+      expect(newState.error!.read).toBeUndefined();
+    });
+
+    it('should handle a successful request', () => {
+      const newState = reducer(
+        defaultState,
+        requestClusterActions.done({
+          params: { clusterID: 123 },
+          result: extendedClusters[0]
+        })
+      );
+      expect(newState.loading).toBe(false);
+      expect(newState.entities).toEqual([extendedClusters[0]]);
+    });
+
+    it('should handle a failed request', () => {
+      const newState = reducer(
+        defaultState,
+        requestClusterActions.failed({
+          params: { clusterID: 123 },
+          error: mockError
+        })
+      );
+      expect(newState.loading).toBe(false);
+      expect(newState.error!.read).toEqual(mockError);
     });
   });
 });

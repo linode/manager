@@ -12,10 +12,6 @@ export const requestClustersActions = actionCreator.async<
   APIError[]
 >('request');
 
-export const addOrUpdateCluster = actionCreator<KubernetesCluster>(
-  'add_or_update'
-);
-
 export const upsertCluster = actionCreator<KubernetesCluster>(`upsert`);
 
 export const setErrors = actionCreator<EntityError>('set-errors');
