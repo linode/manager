@@ -61,10 +61,10 @@ const styles = (theme: Theme) =>
     chart: {
       position: 'relative',
       width: '100%',
-      paddingLeft: 32
+      paddingLeft: 24
     },
     cxnChart: {
-      paddingLeft: 48
+      paddingLeft: 40
     },
     leftLegend: {
       position: 'absolute',
@@ -250,7 +250,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
         </Typography>
         <React.Fragment>
           <div className={`${classes.chart} ${classes.cxnChart}`}>
-            <div className={classes.leftLegend}>CXN/sec</div>
+            <div className={classes.leftLegend}>CXN/s</div>
             <LineGraph
               timezone={timezone}
               showToday={true}
@@ -307,7 +307,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
         </Typography>
         <React.Fragment>
           <div className={classes.chart}>
-            <div className={classes.leftLegend}>bits/sec</div>
+            <div className={classes.leftLegend}>bits/s</div>
             <LineGraph
               timezone={timezone}
               showToday={true}

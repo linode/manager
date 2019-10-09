@@ -87,7 +87,7 @@ const styles = (theme: Theme) =>
     },
     chart: {
       position: 'relative',
-      paddingLeft: 32
+      paddingLeft: 24
     },
     ioChart: {
       paddingLeft: 54
@@ -425,7 +425,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div className={classes.chart}>
-          <div className={classes.leftLegend}>bits/sec</div>
+          <div className={classes.leftLegend}>bits/s</div>
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
@@ -533,7 +533,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div className={classes.chart}>
-          <div className={classes.leftLegend}>bits/sec</div>
+          <div className={classes.leftLegend}>bits/s</div>
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
@@ -627,7 +627,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div className={`${classes.chart} ${classes.ioChart}`}>
-          <div className={classes.leftLegend}>blocks/sec</div>
+          <div className={classes.leftLegend}>blocks/s</div>
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
