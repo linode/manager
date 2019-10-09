@@ -78,7 +78,7 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
         <Breadcrumb pathname={props.location.pathname} labelTitle="Firewalls" />
         <DocumentationButton href={'https://google.com'} />
       </Box>
-      <Divider className={classes.line} />
+      <Divider className={classes.line} type="landingHeader" />
       <Grid
         container
         justify="flex-end"
