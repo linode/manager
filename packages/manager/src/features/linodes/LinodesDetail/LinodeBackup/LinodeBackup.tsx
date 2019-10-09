@@ -168,11 +168,9 @@ interface State {
     backupCreated: string;
     backupID?: number;
   };
-  destructiveDialog: {
-    open: boolean;
-    mode: 'snapshot';
-    error?: string;
-  };
+  dialogOpen: boolean;
+  dialogError?: string;
+  dialogLoading: boolean;
   cancelBackupsAlertOpen: boolean;
   enabling: boolean;
 }
@@ -223,10 +221,9 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
       open: false,
       backupCreated: ''
     },
-    destructiveDialog: {
-      open: false,
-      mode: 'snapshot'
-    },
+    dialogOpen: false,
+    dialogError: undefined,
+    dialogLoading: false,
     cancelBackupsAlertOpen: false,
     enabling: false
   };
@@ -386,23 +383,21 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
               'There was an error taking a snapshot'
             )
           },
-          destructiveDialog: {
-            ...this.state.destructiveDialog,
-            error: getAPIErrorOrDefault(
-              errorResponse,
-              'There was an error taking a snapshot'
-            )[0].reason
-          }
+          dialogOpen: this.state.dialogOpen,
+          dialogError: getAPIErrorOrDefault(
+            errorResponse,
+            'There was an error taking a snapshot'
+          )[0].reason,
+          dialogLoading: this.state.dialogLoading
         });
       });
   };
 
   closeDestructiveDialog = () => {
     this.setState({
-      destructiveDialog: {
-        ...this.state.destructiveDialog,
-        open: false
-      }
+      dialogOpen: false,
+      dialogError: undefined,
+      dialogLoading: false
     });
   };
 
@@ -479,11 +474,9 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
 
   handleSnapshotDialogDisplay = () => {
     this.setState({
-      destructiveDialog: {
-        open: true,
-        mode: 'snapshot',
-        error: undefined
-      }
+      dialogOpen: true,
+      dialogError: undefined,
+      dialogLoading: false
     });
   };
 
@@ -655,9 +648,9 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
           </FormControl>
         </Paper>
         <DestructiveSnapshotDialog
-          open={this.state.destructiveDialog.open}
-          error={this.state.destructiveDialog.error}
-          mode={this.state.destructiveDialog.mode}
+          open={this.state.dialogOpen}
+          error={this.state.dialogError}
+          loading={this.state.dialogLoading}
           onClose={this.closeDestructiveDialog}
           onSnapshot={this.takeSnapshot}
         />
