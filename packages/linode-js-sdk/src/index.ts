@@ -26,4 +26,6 @@ export * from './stackscripts';
 
 export * from './regions';
 
+export * from './longview';
+
 export { baseRequest } from './request';
