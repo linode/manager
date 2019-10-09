@@ -170,7 +170,7 @@ interface State {
   };
   dialogOpen: boolean;
   dialogError?: string;
-  dialogLoading: boolean;
+  loading: boolean;
   cancelBackupsAlertOpen: boolean;
   enabling: boolean;
 }
@@ -223,7 +223,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     },
     dialogOpen: false,
     dialogError: undefined,
-    dialogLoading: false,
+    loading: false,
     cancelBackupsAlertOpen: false,
     enabling: false
   };
@@ -387,8 +387,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
           dialogError: getAPIErrorOrDefault(
             errorResponse,
             'There was an error taking a snapshot'
-          )[0].reason,
-          dialogLoading: this.state.dialogLoading
+          )[0].reason
         });
       });
   };
@@ -396,8 +395,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   closeDestructiveDialog = () => {
     this.setState({
       dialogOpen: false,
-      dialogError: undefined,
-      dialogLoading: false
+      dialogError: undefined
     });
   };
 
@@ -475,8 +473,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   handleSnapshotDialogDisplay = () => {
     this.setState({
       dialogOpen: true,
-      dialogError: undefined,
-      dialogLoading: false
+      dialogError: undefined
     });
   };
 
@@ -650,7 +647,6 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         <DestructiveSnapshotDialog
           open={this.state.dialogOpen}
           error={this.state.dialogError}
-          loading={this.state.dialogLoading}
           onClose={this.closeDestructiveDialog}
           onSnapshot={this.takeSnapshot}
         />

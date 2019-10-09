@@ -22,7 +22,6 @@ const styles = (theme: Theme) =>
 
 interface Props {
   open: boolean;
-  loading: boolean;
   error?: string;
   onClose: () => void;
   onSnapshot: () => void;
@@ -30,7 +29,7 @@ interface Props {
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
-class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
+class DestructiveSnapshotDialog extends React.PureComponent<CombinedProps, {}> {
   renderActions = () => {
     return (
       <ActionsPanel style={{ padding: 0 }}>
@@ -69,4 +68,4 @@ class DestructiveVolumeDialog extends React.PureComponent<CombinedProps, {}> {
   }
 }
 
-export default withStyles(styles)(DestructiveVolumeDialog);
+export default withStyles(styles)(DestructiveSnapshotDialog);
