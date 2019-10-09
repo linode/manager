@@ -942,26 +942,27 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                   disabled={disabled}
                                 />
                               </Grid>
-
-                              <Grid item xs={6} sm={4} lg={2}>
-                                <Typography
-                                  variant="h3"
-                                  data-qa-active-checks-header
-                                  className={classes.statusHeader}
-                                >
-                                  Status
-                                  <div>
-                                    <Chip
-                                      className={`
+                              {node.status && (
+                                <Grid item xs={6} sm={4} lg={2}>
+                                  <Typography
+                                    variant="h3"
+                                    data-qa-active-checks-header
+                                    className={classes.statusHeader}
+                                  >
+                                    Status
+                                    <div>
+                                      <Chip
+                                        className={`
                                           ${classes.statusChip}
                                           ${classes[`chip-${node.status}`]}
                                         `}
-                                      label={node.status}
-                                      component="div"
-                                    />
-                                  </div>
-                                </Typography>
-                              </Grid>
+                                        label={node.status}
+                                        component="div"
+                                      />
+                                    </div>
+                                  </Typography>
+                                </Grid>
+                              )}
                             </Grid>
                           </Grid>
                           <Grid item xs={12}>
