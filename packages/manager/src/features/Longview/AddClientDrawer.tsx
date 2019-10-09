@@ -23,12 +23,13 @@ const AddClientDrawer: React.FC<CombinedProps> = props => {
   const [isSubmitting, toggleSubmitting] = React.useState<boolean>(false);
   const [error, setError] = React.useState<APIError[] | undefined>(undefined);
 
+  const { createClient, onClose, ...rest } = props;
+
   const submitForm = () => {
     toggleSubmitting(true);
     setError(undefined);
 
-    props
-      .createClient(label.trim())
+    createClient(label.trim())
       .then(response => {
         toggleSubmitting(false);
         props.onClose();
@@ -48,13 +49,13 @@ const AddClientDrawer: React.FC<CombinedProps> = props => {
   }, [props.open]);
 
   const handleCloseDrawer = () => {
-    props.onClose();
+    onClose();
   };
 
   const errorMap = getErrorMap(['label'], error);
 
   return (
-    <Drawer {...props} onClose={handleCloseDrawer}>
+    <Drawer {...rest} onClose={handleCloseDrawer}>
       {errorMap.none && <Notice error text={errorMap.none} />}
       <TextField
         errorText={errorMap.label}
