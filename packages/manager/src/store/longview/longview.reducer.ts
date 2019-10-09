@@ -1,7 +1,7 @@
 import { LongviewClient } from 'linode-js-sdk/lib/longview';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { EntitiesAsObjectState } from '../types';
-import { getLongviewClients } from './longview.actions';
+import { createLongviewClient, getLongviewClients } from './longview.actions';
 
 export type State = EntitiesAsObjectState<LongviewClient>;
 
@@ -15,6 +15,7 @@ export const defaultState: State = {
 };
 
 const reducer = reducerWithInitialState(defaultState)
+  /** START GET ACTIONS */
   .case(getLongviewClients.started, state => ({
     ...state,
     loading: true,
@@ -46,6 +47,38 @@ const reducer = reducerWithInitialState(defaultState)
     },
     loading: false
   }))
+  /** START CREATE ACTIONS */
+  .case(createLongviewClient.started, state => ({
+    ...state,
+    error: {
+      ...state.error,
+      create: undefined
+    }
+  }))
+  .caseWithAction(
+    createLongviewClient.done,
+    (state, { payload: { result } }) => ({
+      ...state,
+      data: {
+        ...state.data,
+        [result.id]: result
+      },
+      results: state.results + 1,
+      listOfIDsInOriginalOrder: [...state.listOfIDsInOriginalOrder, result.id],
+      lastUpdated: Date.now()
+    })
+  )
+  .caseWithAction(
+    createLongviewClient.failed,
+    (state, { payload: { error } }) => ({
+      ...state,
+      error: {
+        ...state.error,
+        create: error
+      }
+    })
+  )
+
   .default(state => state);
 
 export default reducer;

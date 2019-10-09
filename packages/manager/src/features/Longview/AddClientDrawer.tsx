@@ -1,4 +1,4 @@
-import { createLongviewClient } from 'linode-js-sdk/lib/longview';
+import { LongviewClient } from 'linode-js-sdk/lib/longview';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 
@@ -13,6 +13,7 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 /* tslint:disable-next-line */
 interface Props extends Omit<DrawerProps, 'onClose'> {
   onClose: () => void;
+  createClient: (label: string) => Promise<LongviewClient>;
 }
 
 type CombinedProps = Props;
@@ -26,9 +27,11 @@ const AddClientDrawer: React.FC<CombinedProps> = props => {
     toggleSubmitting(true);
     setError(undefined);
 
-    createLongviewClient(label.trim())
+    props
+      .createClient(label.trim())
       .then(response => {
         toggleSubmitting(false);
+        props.onClose();
       })
       .catch((e: APIError[]) => {
         setError(e);

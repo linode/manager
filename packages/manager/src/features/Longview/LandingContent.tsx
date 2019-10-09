@@ -40,7 +40,8 @@ const LongviewContent: React.FC<CombinedProps> = props => {
     longviewClientsError,
     longviewClientsLastUpdated,
     longviewClientsLoading,
-    longviewClientsResults
+    longviewClientsResults,
+    createLongviewClient
   } = props;
 
   return (
@@ -80,6 +81,7 @@ const LongviewContent: React.FC<CombinedProps> = props => {
         title="Add Longview Client"
         onClose={() => toggleAddDrawer(false)}
         open={addDrawerOpen}
+        createClient={createLongviewClient}
       />
     </React.Fragment>
   );
