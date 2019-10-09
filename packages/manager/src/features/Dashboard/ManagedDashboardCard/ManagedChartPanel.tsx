@@ -9,7 +9,22 @@ import TabbedPanel from 'src/components/TabbedPanel';
 import useTimezone from 'src/utilities/useTimezone';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
+  root: {
+    position: 'relative',
+    '& canvas': {
+      paddingLeft: 16
+    }
+  },
+  ioChart: {
+    '& canvas': {
+      paddingLeft: 30
+    }
+  },
+  networkChart: {
+    '& canvas': {
+      paddingLeft: 24
+    }
+  },
   inner: {
     paddingTop: 0
   },
@@ -27,6 +42,13 @@ const useStyles = makeStyles((theme: Theme) => ({
         display: 'none'
       }
     }
+  },
+  leftLegend: {
+    position: 'absolute',
+    left: 0,
+    bottom: 23,
+    color: '#777',
+    fontSize: 14
   },
   chartSelect: {
     maxWidth: 150,
@@ -50,12 +72,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   caption: {
     marginBottom: theme.spacing(3),
     paddingLeft: theme.spacing()
-  },
-  unitLegend: {
-    color: '#777',
-    fontSize: 14,
-    paddingLeft: theme.spacing(1),
-    paddingTop: theme.spacing(1)
   }
 }));
 
@@ -89,6 +105,7 @@ const createTabs = (
         return (
           <div className={classes.root}>
             <div>{summaryCopy}</div>
+            <div className={classes.leftLegend}>%</div>
             <div>
               <LineGraph
                 timezone={timezone}
@@ -104,7 +121,6 @@ const createTabs = (
                 ]}
               />
             </div>
-            <div className={classes.unitLegend}>usage percentage</div>
           </div>
         );
       },
@@ -113,8 +129,9 @@ const createTabs = (
     {
       render: () => {
         return (
-          <div className={classes.root}>
+          <div className={`${classes.root} ${classes.networkChart}`}>
             <div>{summaryCopy}</div>
+            <div className={classes.leftLegend}>bits/s</div>
             <div>
               <LineGraph
                 timezone={timezone}
@@ -136,7 +153,6 @@ const createTabs = (
                 ]}
               />
             </div>
-            <div className={classes.unitLegend}>bits/sec</div>
           </div>
         );
       },
@@ -145,8 +161,9 @@ const createTabs = (
     {
       render: () => {
         return (
-          <div className={classes.root}>
+          <div className={`${classes.root} ${classes.ioChart}`}>
             <div>{summaryCopy}</div>
+            <div className={classes.leftLegend}>op/s</div>
             <div>
               <LineGraph
                 timezone={timezone}
@@ -162,7 +179,6 @@ const createTabs = (
                 ]}
               />
             </div>
-            <div className={classes.unitLegend}>operations/sec</div>
           </div>
         );
       },

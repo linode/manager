@@ -30,7 +30,8 @@ import {
 
 type ClassNames =
   | 'chart'
-  | 'unitLegend'
+  | 'cxnChart'
+  | 'leftLegend'
   | 'bottomLegend'
   | 'graphControls'
   | 'blue'
@@ -60,13 +61,17 @@ const styles = (theme: Theme) =>
     chart: {
       position: 'relative',
       width: '100%',
-      padding: theme.spacing(4)
+      paddingLeft: 24
     },
-    unitLegend: {
+    cxnChart: {
+      paddingLeft: 40
+    },
+    leftLegend: {
+      position: 'absolute',
+      left: 0,
+      bottom: 23,
       color: '#777',
-      fontSize: 14,
-      paddingLeft: theme.spacing(1),
-      paddingTop: theme.spacing(1)
+      fontSize: 14
     },
     bottomLegend: {
       margin: `${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(
@@ -244,7 +249,8 @@ class TablesPanel extends React.Component<CombinedProps, State> {
           Connections (5 min avg.)
         </Typography>
         <React.Fragment>
-          <div className={classes.chart}>
+          <div className={`${classes.chart} ${classes.cxnChart}`}>
+            <div className={classes.leftLegend}>CXN/s</div>
             <LineGraph
               timezone={timezone}
               showToday={true}
@@ -258,7 +264,6 @@ class TablesPanel extends React.Component<CombinedProps, State> {
               ]}
             />
           </div>
-          <div className={classes.unitLegend}>connections/sec</div>
           <div className={classes.bottomLegend}>
             <Grid container>
               <Grid item xs={12}>
@@ -302,6 +307,7 @@ class TablesPanel extends React.Component<CombinedProps, State> {
         </Typography>
         <React.Fragment>
           <div className={classes.chart}>
+            <div className={classes.leftLegend}>bits/s</div>
             <LineGraph
               timezone={timezone}
               showToday={true}
@@ -321,7 +327,6 @@ class TablesPanel extends React.Component<CombinedProps, State> {
               ]}
             />
           </div>
-          <div className={classes.unitLegend}>bits/sec</div>
           <div className={classes.bottomLegend}>
             <MetricsDisplay
               rows={[
