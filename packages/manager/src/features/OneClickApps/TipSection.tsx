@@ -67,13 +67,10 @@ export const TipSection: React.FunctionComponent<CombinedProps> = props => {
       <Grid container item className={classes.tip}>
         {tips.map((tip, idx) => (
           <Grid item key={`${title}-tip-item-${idx}`}>
-            <Typography className={classes.title}>
-              <div
-                  dangerouslySetInnerHTML={{
-                    __html: sanitizeHTML(tip)
-                  }}
-              />
-            </Typography>
+            <Typography
+            className={classes.title}
+            dangerouslySetInnerHTML={{ __html: sanitizeHTML(tip) }}
+            />
           </Grid>
         ))}
       </Grid>

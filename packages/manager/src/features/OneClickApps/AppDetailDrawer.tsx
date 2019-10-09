@@ -105,9 +105,11 @@ export const AppDetailDrawer: React.FunctionComponent<
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant="body1" className={classes.description}>
-            {app.description}
-          </Typography>
+          <Typography
+          variant="body1"
+          className={classes.description}
+          dangerouslySetInnerHTML={{ __html: app.description }}
+          />
         </Grid>
         {app.href && (
           <LinkSection
