@@ -72,7 +72,7 @@ const primaryColors = {
   dark: '#2466b3',
   text: '#606469',
   headline: '#32363c',
-  divider: '#f4f4f4',
+  divider: '#c5c6c8',
   offBlack: '#444',
   white: '#fff'
 };
