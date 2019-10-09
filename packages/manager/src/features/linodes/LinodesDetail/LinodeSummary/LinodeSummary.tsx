@@ -57,8 +57,9 @@ type ClassNames =
   | 'sidebar'
   | 'headerWrapper'
   | 'chart'
+  | 'ioChart'
   | 'chartSelect'
-  | 'unitLegend'
+  | 'leftLegend'
   | 'bottomLegend'
   | 'graphTitle'
   | 'graphSelectTitle'
@@ -86,13 +87,17 @@ const styles = (theme: Theme) =>
     },
     chart: {
       position: 'relative',
-      paddingLeft: theme.spacing(1)
+      paddingLeft: 24
     },
-    unitLegend: {
+    ioChart: {
+      paddingLeft: 54
+    },
+    leftLegend: {
+      position: 'absolute',
+      left: 0,
+      bottom: 23,
       color: '#777',
-      fontSize: 14,
-      paddingLeft: theme.spacing(1),
-      paddingTop: theme.spacing(1)
+      fontSize: 14
     },
     bottomLegend: {
       margin: `${theme.spacing(2)}px ${theme.spacing(1)}px ${theme.spacing(
@@ -343,6 +348,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div className={classes.chart}>
+          <div className={classes.leftLegend}>CPU %</div>
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
@@ -357,7 +363,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             ]}
           />
         </div>
-        <div className={classes.unitLegend}>CPU %</div>
         <div className={classes.bottomLegend}>
           <Grid container>
             <Grid item xs={12}>
@@ -420,6 +425,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div className={classes.chart}>
+          <div className={classes.leftLegend}>bits/s</div>
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
@@ -452,7 +458,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             ]}
           />
         </div>
-        <div className={classes.unitLegend}>bits/sec</div>
         <div className={classes.bottomLegend}>
           <Grid container>
             <Grid item xs={12}>
@@ -528,6 +533,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div className={classes.chart}>
+          <div className={classes.leftLegend}>bits/s</div>
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
@@ -560,7 +566,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             ]}
           />
         </div>
-        <div className={classes.unitLegend}>bits/sec</div>
         <div className={classes.bottomLegend}>
           <Grid container>
             <Grid item xs={12}>
@@ -621,7 +626,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <div className={classes.chart}>
+        <div className={`${classes.chart} ${classes.ioChart}`}>
+          <div className={classes.leftLegend}>blocks/s</div>
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
@@ -642,7 +648,6 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
             ]}
           />
         </div>
-        <div className={classes.unitLegend}>blocks/sec</div>
         <div className={classes.bottomLegend}>
           <Grid container>
             <Grid item xs={12}>
