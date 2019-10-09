@@ -56,6 +56,10 @@ const styles = (theme: Theme) =>
       },
       [theme.breakpoints.down('xs')]: {
         marginTop: 0
+      },
+      '& .remove': {
+        margin: 0,
+        padding: theme.spacing(2.5)
       }
     },
     suggestionsParent: {
@@ -97,7 +101,8 @@ const styles = (theme: Theme) =>
     },
     statusHeader: {
       fontSize: '.9rem',
-      color: theme.color.label
+      color: theme.color.label,
+      marginTop: theme.spacing(2) - 4
     },
     statusChip: {
       marginTop: theme.spacing(1),
@@ -108,7 +113,7 @@ const styles = (theme: Theme) =>
       }
     },
     passiveChecks: {
-      marginTop: theme.spacing(1)
+      marginTop: theme.spacing(2.5)
     }
   });
 
@@ -937,27 +942,26 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                   disabled={disabled}
                                 />
                               </Grid>
-                              {node.status && (
-                                <Grid item xs={6} sm={4} lg={2}>
-                                  <Typography
-                                    variant="h3"
-                                    data-qa-active-checks-header
-                                    className={classes.statusHeader}
-                                  >
-                                    Status
-                                    <div>
-                                      <Chip
-                                        className={`
+
+                              <Grid item xs={6} sm={4} lg={2}>
+                                <Typography
+                                  variant="h3"
+                                  data-qa-active-checks-header
+                                  className={classes.statusHeader}
+                                >
+                                  Status
+                                  <div>
+                                    <Chip
+                                      className={`
                                           ${classes.statusChip}
                                           ${classes[`chip-${node.status}`]}
                                         `}
-                                        label={node.status}
-                                        component="div"
-                                      />
-                                    </div>
-                                  </Typography>
-                                </Grid>
-                              )}
+                                      label={node.status}
+                                      component="div"
+                                    />
+                                  </div>
+                                </Typography>
+                              </Grid>
                             </Grid>
                           </Grid>
                           <Grid item xs={12}>
