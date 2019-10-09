@@ -20,6 +20,11 @@ const useStyles = makeStyles((theme: Theme) => ({
       paddingLeft: 30
     }
   },
+  networkChart: {
+    '& canvas': {
+      paddingLeft: 24
+    }
+  },
   inner: {
     paddingTop: 0
   },
@@ -124,9 +129,9 @@ const createTabs = (
     {
       render: () => {
         return (
-          <div className={classes.root}>
+          <div className={`${classes.root} ${classes.networkChart}`}>
             <div>{summaryCopy}</div>
-            <div className={classes.leftLegend}>bps</div>
+            <div className={classes.leftLegend}>bits/s</div>
             <div>
               <LineGraph
                 timezone={timezone}
