@@ -26,6 +26,14 @@ const useStyles = makeStyles((theme: Theme) => ({
       [theme.breakpoints.down('xs')]: {
         display: 'none'
       }
+    },
+    /**
+     * hacky solution to solve for a bug where
+     * the canvas element under the chart kept ending up with a 0px height
+     * so that it was not appearing
+     */
+    '& canvas': {
+      height: `300px !important`
     }
   },
   chartSelect: {
