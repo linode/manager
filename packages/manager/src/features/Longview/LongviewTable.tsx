@@ -14,7 +14,7 @@ import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
 import TableSortCell from 'src/components/TableSortCell';
 
-// import { ActionHandlers } from './FirewallActionMenu';
+import { ActionHandlers } from './LongviewActionMenu';
 import LongviewRows from './LongviewTableRows';
 
 // const useStyles = makeStyles((theme: Theme) => ({
@@ -23,7 +23,7 @@ import LongviewRows from './LongviewTableRows';
 
 type LongviewProps = Omit<LVProps, 'getLongviewClients'>;
 
-type CombinedProps = LongviewProps;
+type CombinedProps = LongviewProps & ActionHandlers;
 
 const LongviewTable: React.FC<CombinedProps> = props => {
   // const classes = useStyles();
@@ -100,4 +100,6 @@ const LongviewTable: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, LongviewProps>(React.memo)(LongviewTable);
+export default compose<CombinedProps, LongviewProps & ActionHandlers>(
+  React.memo
+)(LongviewTable);

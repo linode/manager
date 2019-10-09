@@ -73,6 +73,8 @@ const LongviewContent: React.FC<CombinedProps> = props => {
         longviewClientsLastUpdated={longviewClientsLastUpdated}
         longviewClientsLoading={longviewClientsLoading}
         longviewClientsResults={longviewClientsResults}
+        triggerDeleteLongviewClient={() => null}
+        triggerEditLongviewClient={() => null}
       />
       <AddClientDrawer
         title="Add Longview Client"
