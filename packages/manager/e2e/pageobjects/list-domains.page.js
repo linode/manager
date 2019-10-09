@@ -43,8 +43,14 @@ class ListDomains extends Page {
   get type() {
     return $('[data-qa-domain-type]');
   }
+  get soaMailLabel() {
+    return $('[data-qa-textfield-label="SOA Email Address"]');
+  }
   get createSoaEmail() {
     return $('[data-qa-soa-email]');
+  }
+  get domainNameLabel() {
+    return $('[data-qa-textfield-label="Domain"]');
   }
   get createDomainName() {
     return $('[data-qa-domain-name]');
@@ -155,15 +161,19 @@ class ListDomains extends Page {
         `"${this.createSoaEmail.selector}" selector ${assertLog.displayed}`
       )
       .toBe(true);
-    expect(this.createSoaEmail.$('label').getText())
+    expect(this.soaMailLabel.getText())
       .withContext(
         `${assertLog.incorrectText} for "${
-          this.createSoaEmail.selector
+          this.soaMailLabel.selector
         }" selector`
       )
       .toBe('SOA Email Address');
-    expect(this.createDomainName.$('label').getText())
-      .withContext(``)
+    expect(this.domainNameLabel.getText())
+      .withContext(
+        `${assertLog.incorrectText} for "${
+          this.domainNameLabel.selector
+        }" selector`
+      )
       .toBe('Domain');
     expect(this.createDomainName.isDisplayed())
       .withContext(
