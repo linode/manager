@@ -23,7 +23,7 @@ import LongviewRows from './LongviewTableRows';
 
 type LongviewProps = Omit<
   LVProps,
-  'getLongviewClients' | 'createLongviewClient'
+  'getLongviewClients' | 'createLongviewClient' | 'deleteLongviewClient'
 >;
 
 type CombinedProps = LongviewProps & ActionHandlers;
