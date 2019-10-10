@@ -15,6 +15,7 @@ import withLongviewClients, {
 } from 'src/containers/longview.container';
 
 import AddClientDrawer from './AddClientDrawer';
+import DeleteDialog from './LongviewDeleteDialog';
 import LongviewTable from './LongviewTable';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -30,10 +31,21 @@ const LongviewContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const [addDrawerOpen, toggleAddDrawer] = React.useState<boolean>(false);
+  const [deleteDialogOpen, toggleDeleteDialog] = React.useState<boolean>(false);
+  const [selectedClientID, setClientID] = React.useState<number | undefined>(
+    undefined
+  );
+  const [selectedClientLabel, setClientLabel] = React.useState<string>('');
 
   React.useEffect(() => {
     props.getLongviewClients();
   }, []);
+
+  const openDeleteDialog = (id: number, label: string) => {
+    toggleDeleteDialog(true);
+    setClientID(id);
+    setClientLabel(label);
+  };
 
   const {
     longviewClientsData,
@@ -41,7 +53,8 @@ const LongviewContent: React.FC<CombinedProps> = props => {
     longviewClientsLastUpdated,
     longviewClientsLoading,
     longviewClientsResults,
-    createLongviewClient
+    createLongviewClient,
+    deleteLongviewClient
   } = props;
 
   return (
@@ -74,7 +87,7 @@ const LongviewContent: React.FC<CombinedProps> = props => {
         longviewClientsLastUpdated={longviewClientsLastUpdated}
         longviewClientsLoading={longviewClientsLoading}
         longviewClientsResults={longviewClientsResults}
-        triggerDeleteLongviewClient={() => null}
+        triggerDeleteLongviewClient={openDeleteDialog}
         triggerEditLongviewClient={() => null}
       />
       <AddClientDrawer
@@ -82,6 +95,13 @@ const LongviewContent: React.FC<CombinedProps> = props => {
         onClose={() => toggleAddDrawer(false)}
         open={addDrawerOpen}
         createClient={createLongviewClient}
+      />
+      <DeleteDialog
+        selectedLongviewClientID={selectedClientID}
+        selectedLongviewClientLabel={selectedClientLabel}
+        deleteClient={deleteLongviewClient}
+        open={deleteDialogOpen}
+        closeDialog={() => toggleDeleteDialog(false)}
       />
     </React.Fragment>
   );

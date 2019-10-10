@@ -53,31 +53,38 @@ const AddClientDrawer: React.FC<CombinedProps> = props => {
   return (
     <Drawer {...rest} onClose={onClose}>
       {errorMap.none && <Notice error text={errorMap.none} />}
-      <TextField
-        errorText={errorMap.label}
-        aria-label="Name of our new Longview client"
-        label="Label"
-        placeholder="ex: my-longview-client"
-        required
-        onChange={({ target: { value } }) => setLabel(value)}
-        inputProps={{
-          autoFocus: true
-        }}
-      />
+      <form onSubmit={submitForm}>
+        <TextField
+          errorText={errorMap.label}
+          aria-label="Name of our new Longview client"
+          label="Label"
+          placeholder="ex: my-longview-client"
+          required
+          onChange={({ target: { value } }) => setLabel(value)}
+          inputProps={{
+            autoFocus: true
+          }}
+        />
 
-      <ActionsPanel>
-        <Button
-          buttonType="primary"
-          onClick={submitForm}
-          data-qa-submit
-          loading={isSubmitting}
-        >
-          Create
-        </Button>
-        <Button onClick={onClose} buttonType="cancel" data-qa-cancel>
-          Cancel
-        </Button>
-      </ActionsPanel>
+        <ActionsPanel>
+          <Button
+            buttonType="primary"
+            onClick={submitForm}
+            data-qa-submit
+            type="submit"
+            loading={isSubmitting}
+          >
+            Create
+          </Button>
+          <Button
+            onClick={onClose}
+            buttonType="cancel"
+            data-qa-cancel
+          >
+            Cancel
+          </Button>
+        </ActionsPanel>
+      </form>
     </Drawer>
   );
 };
