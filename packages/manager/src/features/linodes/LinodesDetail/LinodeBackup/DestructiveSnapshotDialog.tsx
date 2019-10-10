@@ -23,6 +23,7 @@ const styles = (theme: Theme) =>
 interface Props {
   open: boolean;
   error?: string;
+  loading: boolean;
   onClose: () => void;
   onSnapshot: () => void;
 }
@@ -41,6 +42,7 @@ class DestructiveSnapshotDialog extends React.PureComponent<CombinedProps, {}> {
           destructive
           onClick={this.props.onSnapshot}
           data-qa-confirm
+          loading={this.props.loading}
         >
           {'Take Snapshot'}
         </Button>

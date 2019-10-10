@@ -363,6 +363,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
   takeSnapshot = () => {
     const { linodeID, enqueueSnackbar } = this.props;
     const { snapshotForm } = this.state;
+    this.setState({ loading: true });
     takeSnapshot(linodeID, snapshotForm.label)
       .then(() => {
         enqueueSnackbar('A snapshot is being taken', {
@@ -370,7 +371,8 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
         });
         this.closeDestructiveDialog();
         this.setState({
-          snapshotForm: { label: '', errors: undefined }
+          snapshotForm: { label: '', errors: undefined },
+          loading: false
         });
         resetEventsPolling();
       })
@@ -384,6 +386,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
             )
           },
           dialogOpen: this.state.dialogOpen,
+          loading: false,
           dialogError: getAPIErrorOrDefault(
             errorResponse,
             'There was an error taking a snapshot'
@@ -649,6 +652,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
           error={this.state.dialogError}
           onClose={this.closeDestructiveDialog}
           onSnapshot={this.takeSnapshot}
+          loading={this.state.loading}
         />
       </React.Fragment>
     );
