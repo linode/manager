@@ -49,8 +49,8 @@ const UpdateClientDrawer: React.FC<CombinedProps> = props => {
         toggleSubmitting(false);
         onClose();
       })
-      .catch((e: APIError[]) => {
-        setError(e);
+      .catch((err: APIError[]) => {
+        setError(err);
         toggleSubmitting(false);
       });
   };

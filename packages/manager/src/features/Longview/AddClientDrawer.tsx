@@ -34,8 +34,8 @@ const AddClientDrawer: React.FC<CombinedProps> = props => {
         toggleSubmitting(false);
         props.onClose();
       })
-      .catch((e: APIError[]) => {
-        setError(e);
+      .catch((err: APIError[]) => {
+        setError(err);
         toggleSubmitting(false);
       });
   };
