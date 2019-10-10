@@ -6,6 +6,7 @@ export interface OCA {
   logo_url: string;
   summary: string;
   tips?: string[];
+  related_info?: Doc[];
 }
 
 export interface Doc {
@@ -30,8 +31,13 @@ export const oneClickApps: OCA[] = [
           'https://linode.com/docs/platform/one-click/deploying-ark-survival-evolved-with-one-click-apps/'
       }
     ],
-    logo_url: 'assets/ark_color.svg',
-    href: 'https://survivetheark.com/'
+    related_info: [
+      {
+        title: 'https://survivetheark.com/',
+        href: 'https://survivetheark.com/',
+      }
+    ],
+    logo_url: 'assets/ark_color.svg'
   },
   {
     name: 'cPanel',
@@ -42,7 +48,12 @@ export const oneClickApps: OCA[] = [
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:2087</em> in a browser, where you'll be prompted to log in.`,
       `Your credentials are <code>root</code> for the username and the <strong>Root Password</strong> you defined when you ran the cPanel One-Click App installer.`
     ],
-    href: 'https://www.cpanel.net/',
+    related_info: [
+      {
+        title: 'https://www.cpanel.net/',
+        href: 'https://www.cpanel.net/',
+      }
+    ],
     logo_url: 'assets/cpanel_color.svg'
   },
   {
@@ -59,8 +70,13 @@ export const oneClickApps: OCA[] = [
           'https://linode.com/docs/platform/one-click/deploying-cs-go-with-one-click-apps/'
       }
     ],
-    logo_url: 'assets/csgo_color.svg',
-    href: 'https://blog.counter-strike.net/index.php/about/'
+    related_info: [
+      {
+        title: 'https://blog.counter-strike.net/index.php/about/',
+        href: 'https://blog.counter-strike.net/index.php/about/',
+      }
+    ],
+    logo_url: 'assets/csgo_color.svg'
   },
   {
     name: 'GitLab',
@@ -90,7 +106,12 @@ export const oneClickApps: OCA[] = [
         href: 'https://linode.com/docs/quick-answers/linux/how-to-use-git/'
       }
     ],
-    href: 'https://about.gitlab.com',
+    related_info: [
+      {
+        title: 'https://about.gitlab.com/',
+        href: 'https://about.gitlab.com/',
+      }
+    ],
     logo_url: 'assets/gitlab_color.svg'
   },
   {
@@ -115,7 +136,12 @@ export const oneClickApps: OCA[] = [
           'https://linode.com/docs/websites/cms/update-and-secure-drupal-8-on-ubuntu/'
       }
     ],
-    href: 'https://www.drupal.org/',
+    related_info: [
+      {
+        title: 'https://www.drupal.org/',
+        href: 'https://www.drupal.org/',
+      }
+    ],
     logo_url: 'assets/drupal_color.svg'
   },
   {
@@ -141,18 +167,24 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Plesk',
-    description: `Plesk is a leading WordPress and website management platform and control panel.
-      Plesk lets you build and manage multiple websites from a single dashboard to configure web services,
-      email, and other applications. Plesk features hundreds of extensions, plus a complete WordPress toolkit,
-      and can orchestrate multi-server deployments. Use the Plesk One-Click App to manage websites hosted on your Linode.`,
-    summary: 'A secure, scalable, and versatile website management platform.',
+    description: `Plesk is a leading WordPress and website management platform and control panel. Plesk lets you build and manage multiple websites from a single dashboard to configure web services, email, and other applications. Plesk features hundreds of extensions, plus a complete WordPress toolkit. Use the Plesk One-Click App to manage websites hosted on your Linode.`,
+    summary: 'A secure, scalable, and versatile website and WordPress management platform.',
     tips: [
       `Please allow the script around 15 minutes to finish.`,
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]</em> in a browser, where you'll be prompted to log in.`,
       `Your credentials are <code>root</code> for the username and the <b>Root Password</b> you defined when you ran the Plesk One-Click App installer.`
     ],
-    href: 'https://www.plesk.com/',
-    logo_url: 'assets/plesk_color.svg'
+    related_info: [
+      {
+        title: 'https://www.plesk.com/',
+        href: 'https://www.plesk.com/',
+      },
+      {
+        title: 'Plesk %off License exclusively with Linode',
+        href: 'https://www.plesk.com/',
+      }
+    ],
+    logo_url: 'assets/plesk_color.svg',
   },
   {
     name: 'Rust',
@@ -170,8 +202,13 @@ export const oneClickApps: OCA[] = [
           'https://linode.com/docs/platform/one-click/deploying-rust-with-one-click-apps/'
       }
     ],
-    logo_url: 'assets/rust_color.svg',
-    href: 'https://rust.facepunch.com/'
+    related_info: [
+      {
+        title: 'https://rust.facepunch.com/',
+        href: 'https://rust.facepunch.com/',
+      }
+    ],
+    logo_url: 'assets/rust_color.svg'
   },
   {
     name: 'Terraria',
@@ -189,8 +226,13 @@ export const oneClickApps: OCA[] = [
           'https://linode.com/docs/platform/one-click/deploying-terraria-with-one-click-apps/'
       }
     ],
-    logo_url: 'assets/terraria_color.svg',
-    href: 'https://terraria.org/'
+    related_info: [
+      {
+        title: 'https://terraria.org/',
+        href: 'https://terraria.org/',
+      }
+    ],
+    logo_url: 'assets/terraria_color.svg'
   },
   {
     name: 'TF2',
@@ -210,8 +252,13 @@ export const oneClickApps: OCA[] = [
           'https://linode.com/docs/platform/one-click/deploying-team-fortress-2-with-one-click-apps/'
       }
     ],
-    logo_url: 'assets/teamfortress_color.svg',
-    href: 'http://www.teamfortress.com/'
+    related_info: [
+      {
+        title: 'http://www.teamfortress.com/',
+        href: 'http://www.teamfortress.com/',
+      }
+    ],
+    logo_url: 'assets/teamfortress_color.svg'
   },
   {
     name: 'WooCommerce',
@@ -227,7 +274,12 @@ export const oneClickApps: OCA[] = [
           'https://linode.com/docs/platform/one-click/one-click-woocommerce/'
       }
     ],
-    href: 'https://woocommerce.com/features/',
+    related_info: [
+      {
+        title: 'https://woocommerce.com/features/',
+        href: 'https://woocommerce.com/features/',
+      }
+    ],
     logo_url: 'assets/woocommerce_color.svg'
   },
   {
@@ -302,7 +354,12 @@ export const oneClickApps: OCA[] = [
           'https://linode.com/docs/platform/one-click/deploying-minecraft-with-one-click-apps/'
       }
     ],
-    href: 'https://www.minecraft.net/',
+    related_info: [
+      {
+        title: 'https://www.minecraft.net/',
+        href: 'https://www.minecraft.net/',
+      }
+    ],
     logo_url: 'assets/minecraft_color.svg'
   },
   {
@@ -322,7 +379,12 @@ export const oneClickApps: OCA[] = [
           'https://linode.com/docs/platform/one-click/deploy-wireguard-with-one-click-apps/'
       }
     ],
-    href: 'https://www.wireguard.com/',
+    related_info: [
+      {
+        title: 'https://www.wireguard.com/',
+        href: 'https://www.wireguard.com/',
+      }
+    ],
     logo_url: 'assets/wireguard_color.svg'
   },
   {
@@ -340,7 +402,12 @@ export const oneClickApps: OCA[] = [
           'https://linode.com/docs/platform/one-click/one-click-woocommerce/'
       }
     ],
-    href: 'https://woocommerce.com/features/',
+    related_info: [
+      {
+        title: 'https://woocommerce.com/features/',
+        href: 'https://woocommerce.com/features/',
+      }
+    ],
     logo_url: 'assets/woocommerce_color.svg'
   },
   {
@@ -368,7 +435,12 @@ export const oneClickApps: OCA[] = [
           'https://linode.com/docs/websites/cms/turbocharge-wordpress-search-with-solr/'
       }
     ],
-    href: 'https://wordpress.org',
+    related_info: [
+      {
+        title: 'https://wordpress.org/',
+        href: 'https://wordpress.org/',
+      }
+    ],
     logo_url: 'assets/wordpress_color.svg'
   }
 ];
