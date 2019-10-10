@@ -205,7 +205,10 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
               ) : (
                 <>
                   <div className={classes.cardMaintenance}>
-                    <Typography>Status: Maintenance Scheduled</Typography>
+                    <Typography>
+                      <strong>Maintenance Scheduled</strong> {dateTime[0]} at{' '}
+                      {dateTime[1]}
+                    </Typography>
                     <HelpIcon
                       text={<MaintenanceText />}
                       className={classes.statusHelpIcon}
@@ -304,8 +307,7 @@ export const RenderTitle: React.StatelessComponent<{
     linodeId,
     mutationAvailable,
     linodeNotifications,
-    recentEvent,
-    maintenance
+    recentEvent
   } = props;
 
   return (
@@ -314,7 +316,7 @@ export const RenderTitle: React.StatelessComponent<{
         <Grid item className={`${classes.StatusIndicatorWrapper} ${'py0'}`}>
           <EntityIcon
             variant="linode"
-            status={!maintenance ? linodeStatus : 'maintenance'}
+            status={linodeStatus}
             loading={
               recentEvent && linodeInTransition(linodeStatus, recentEvent)
             }
