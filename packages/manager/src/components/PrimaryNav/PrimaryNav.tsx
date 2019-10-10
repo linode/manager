@@ -443,7 +443,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
         <Link
           role="menuitem"
           to={primaryLink.href}
-          href="javascript:void(0)"
           onClick={(e: React.ChangeEvent<any>) => {
             this.props.closeMenu();
             if (primaryLink.onClick) {
@@ -532,7 +531,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
               <Link
                 role="menuitem"
                 to="/profile/display"
-                href="javascript:void(0)"
                 onClick={this.props.closeMenu}
                 data-qa-nav-item="/profile/display"
                 className={classNames({
@@ -553,7 +551,6 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
               <Link
                 role="menuitem"
                 to="/logout"
-                href="javascript:void(0)"
                 onClick={this.props.closeMenu}
                 data-qa-nav-item="/logout"
                 className={classNames({
