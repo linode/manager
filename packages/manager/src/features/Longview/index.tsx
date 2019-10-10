@@ -5,8 +5,8 @@ import {
   Switch,
   withRouter
 } from 'react-router-dom';
-
 import DefaultLoader from 'src/components/DefaultLoader';
+import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 
 const LongviewLanding = DefaultLoader({
   loader: () => import('./LongviewLanding')
@@ -21,9 +21,12 @@ class Longview extends React.Component<Props> {
     } = this.props;
 
     return (
-      <Switch>
-        <Route component={LongviewLanding} path={path} exact />
-      </Switch>
+      <React.Fragment>
+        <DocumentTitleSegment segment="Longview" />
+        <Switch>
+          <Route component={LongviewLanding} path={path} exact />
+        </Switch>
+      </React.Fragment>
     );
   }
 }

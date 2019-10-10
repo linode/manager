@@ -255,7 +255,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
       >
         {maybeRequiredLabel && (
           <InputLabel
-            data-qa-textfield-label
+            data-qa-textfield-label={label}
             className={classNames({
               [classes.wrapper]: noMarginTop ? false : true,
               [classes.noTransform]: true

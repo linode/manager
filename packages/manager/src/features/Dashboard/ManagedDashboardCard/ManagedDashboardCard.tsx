@@ -118,10 +118,10 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
     >
       <Paper className={classes.paper}>
         <LoadingErrorOrContent
+          {...props}
           data={data}
           statsError={statsError}
           statsLoading={statsLoading}
-          {...props}
         />
       </Paper>
     </DashboardCard>

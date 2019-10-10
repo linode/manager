@@ -19,7 +19,7 @@ import FirewallTable from './FirewallTable';
 
 const useStyles = makeStyles((theme: Theme) => ({
   line: {
-    marginTop: theme.spacing(3),
+    marginTop: theme.spacing(10),
     marginBottom: theme.spacing(3)
   }
 }));
@@ -78,7 +78,7 @@ const FirewallLanding: React.FC<CombinedProps> = props => {
         <Breadcrumb pathname={props.location.pathname} labelTitle="Firewalls" />
         <DocumentationButton href={'https://google.com'} />
       </Box>
-      <Divider className={classes.line} />
+      <Divider className={classes.line} type="landingHeader" />
       <Grid
         container
         justify="flex-end"

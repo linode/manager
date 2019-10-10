@@ -31,7 +31,7 @@ const SelectPlaceholder: React.StatelessComponent<CombinedProps> = props => {
     <Typography
       className={props.classes.root}
       {...props.innerProps}
-      data-qa-enhanced-select
+      data-qa-select-placeholder
       data-qa-multi-select={
         props.isMulti ? props.selectProps.placeholder : false
       }
