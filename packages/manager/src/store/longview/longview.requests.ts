@@ -2,14 +2,16 @@ import {
   createLongviewClient as _create,
   deleteLongviewClient as _delete,
   getLongviewClients,
-  LongviewClient
+  LongviewClient,
+  updateLongviewClient as update
 } from 'linode-js-sdk/lib/longview';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import {
   createLongviewClient as _createLongviewClientActions,
   deleteLongviewClient as _deleteLongviewClientActions,
-  getLongviewClients as _getLongviewClientsActions
+  getLongviewClients as _getLongviewClientsActions,
+  updateLongviewClient as _updateLongviewClientActions
 } from './longview.actions';
 
 const _getAllLongviewClients = (payload: { params?: any; filter?: any }) =>
@@ -30,4 +32,9 @@ export const createLongviewClient = createRequestThunk(
 export const deleteLongviewClient = createRequestThunk(
   _deleteLongviewClientActions,
   ({ id }) => _delete(id)
+);
+
+export const updateLongviewClient = createRequestThunk(
+  _updateLongviewClientActions,
+  ({ id, label }) => update(id, label)
 );

@@ -31,7 +31,7 @@ const LongviewActionMenu: React.FC<CombinedProps> = props => {
   const createActions = () => {
     return (closeMenu: Function): Action[] => [
       {
-        title: 'Edit',
+        title: 'Rename',
         onClick: () => {
           closeMenu();
           triggerEditLongviewClient(longviewClientID, longviewClientLabel);
