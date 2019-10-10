@@ -1,6 +1,6 @@
 {
   "name": "linode-js-sdk",
-  "version": "0.8.0-alpha.0",
+  "version": "0.8.1-alpha.0",
   "homepage": "https://github.com/linode/manager/tree/develop/packages/linode-js-sdk",
   "bugs": {
     "url": "https://github.com/linode/manager/issues",
