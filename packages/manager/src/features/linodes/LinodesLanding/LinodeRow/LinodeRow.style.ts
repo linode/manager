@@ -70,21 +70,21 @@ const styles = (theme: Theme) =>
     },
     statusCell: {
       width: '14%',
+      textTransform: 'capitalize',
       [theme.breakpoints.down('sm')]: {
         width: '100%'
       }
     },
     statusCellMaintenance: {
-      [theme.breakpoints.up('lg')]: {
-        width: '20%'
-      },
       '& .data': {
         display: 'flex',
+        width: 250,
         alignItems: 'center',
         lineHeight: 1.2,
         marginRight: -12,
-        [theme.breakpoints.up('lg')]: {
-          minWidth: 200
+        [theme.breakpoints.up('md')]: {
+          width: 125,
+          marginRight: 0
         }
       },
       '& button': {
