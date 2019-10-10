@@ -488,7 +488,6 @@ const enhanced = compose<CombinedProps, {}>(
   connected,
   linodeContext,
   withLinodes((ownProps, linodesData, linodesLoading, linodesError) => ({
-    ...ownProps,
     linodesData,
     linodesLoading,
     linodesError

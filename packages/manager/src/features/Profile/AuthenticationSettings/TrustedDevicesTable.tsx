@@ -1,6 +1,7 @@
 import { TrustedDevice } from 'linode-js-sdk/lib/profile';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
+import Button from 'src/components/core/Button';
 import DateTimeDisplay from 'src/components/DateTimeDisplay';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
@@ -95,9 +96,9 @@ class UntrustButton extends React.PureComponent<ButtonProps, {}> {
   };
   render() {
     return (
-      <a href="javascript:void(0)" onClick={this.handleDelete} title="Untrust">
+      <Button color="primary" onClick={this.handleDelete} name="Untrust">
         Untrust
-      </a>
+      </Button>
     );
   }
 }

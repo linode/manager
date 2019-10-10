@@ -9,7 +9,7 @@ import { State } from 'src/store/linodes/linodes.reducer';
 import { ThunkDispatch } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
 
-interface DispatchProps {
+export interface DispatchProps {
   getLinodes: (params: any, filters: any) => Promise<GetAllData<Linode[]>>;
 }
 
@@ -33,11 +33,24 @@ type MapProps<ReduxStateProps, OwnProps> = (
 
 export type Props = DispatchProps & StateProps;
 
-const connected = <ReduxStateProps extends {}, OwnProps extends {}>(
-  mapStateToProps?: MapProps<ReduxStateProps, OwnProps>
-): InferableComponentEnhancerWithProps<any, any> =>
+interface Connected {
+  <ReduxStateProps, OwnProps>(
+    mapStateToProps: MapProps<ReduxStateProps, OwnProps>
+  ): InferableComponentEnhancerWithProps<
+    ReduxStateProps & Partial<StateProps> & DispatchProps & OwnProps,
+    OwnProps
+  >;
+  <ReduxStateProps, OwnProps>(): InferableComponentEnhancerWithProps<
+    ReduxStateProps & DispatchProps & OwnProps,
+    OwnProps
+  >;
+}
+
+const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
+  mapStateToProps?: MapProps<ReduxState, OwnProps>
+) =>
   connect<
-    ReduxStateProps | StateProps,
+    (ReduxState & Partial<StateProps>) | StateProps,
     DispatchProps,
     OwnProps,
     ApplicationState

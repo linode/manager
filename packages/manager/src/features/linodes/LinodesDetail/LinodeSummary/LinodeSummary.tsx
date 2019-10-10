@@ -57,6 +57,7 @@ type ClassNames =
   | 'sidebar'
   | 'headerWrapper'
   | 'chart'
+  | 'ioChart'
   | 'chartSelect'
   | 'leftLegend'
   | 'bottomLegend'
@@ -86,13 +87,15 @@ const styles = (theme: Theme) =>
     },
     chart: {
       position: 'relative',
-      paddingLeft: theme.spacing(4)
+      paddingLeft: 24
+    },
+    ioChart: {
+      paddingLeft: 54
     },
     leftLegend: {
       position: 'absolute',
-      left: -8,
-      bottom: 48,
-      transform: 'rotate(-90deg)',
+      left: 0,
+      bottom: 23,
       color: '#777',
       fontSize: 14
     },
@@ -241,7 +244,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
           ? `${testYear}-0${testMonth}-01`
           : `${testYear}-${testMonth}-01`;
     } while (moment(formattedTestDate).diff(creationFirstOfMonth) >= 0);
-    (this.rangeSelectOptions as Linode.TodoAny) = options.map(option => {
+    this.rangeSelectOptions = options.map(option => {
       return { label: option[1], value: option[0] };
     });
   }
@@ -422,7 +425,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div className={classes.chart}>
-          <div className={classes.leftLegend}>bits/sec</div>
+          <div className={classes.leftLegend}>bits/s</div>
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
@@ -530,7 +533,7 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
     return (
       <React.Fragment>
         <div className={classes.chart}>
-          <div className={classes.leftLegend}>bits/sec</div>
+          <div className={classes.leftLegend}>bits/s</div>
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}
@@ -623,10 +626,8 @@ export class LinodeSummary extends React.Component<CombinedProps, State> {
 
     return (
       <React.Fragment>
-        <div className={classes.chart}>
-          <div className={classes.leftLegend} style={{ left: -24 }}>
-            blocks/sec
-          </div>
+        <div className={`${classes.chart} ${classes.ioChart}`}>
+          <div className={classes.leftLegend}>blocks/s</div>
           <LineGraph
             timezone={timezone}
             chartHeight={chartHeight}

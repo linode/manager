@@ -9,7 +9,7 @@ import {
   NodeBalancerConfigNodeFields,
   updateNodeBalancerConfigNode
 } from 'linode-js-sdk/lib/nodebalancers';
-import { APIError } from 'linode-js-sdk/lib/types';
+import { APIError, ResourcePage } from 'linode-js-sdk/lib/types';
 import {
   append,
   clone,
@@ -93,7 +93,7 @@ type RouteProps = RouteComponentProps<MatchProps>;
 
 interface PreloadedProps {
   configs: PromiseLoaderResponse<
-    Linode.ResourcePage<NodeBalancerConfigFieldsWithStatus>
+    ResourcePage<NodeBalancerConfigFieldsWithStatus>
   >;
 }
 

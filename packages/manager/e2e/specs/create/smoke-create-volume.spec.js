@@ -110,14 +110,14 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
 
   it('should display form error on create without a label', () => {
     VolumeDetail.createVolume(testVolume, 'header');
-    expect(VolumeDetail.label.$('p').isDisplayed()).toBe(true);
+    expect($('[data-qa-textfield-error-text="true"]').isDisplayed()).toBe(true);
     VolumeDetail.closeVolumeDrawer();
   });
 
   it('should display a error notice on create without region', () => {
     testVolume['label'] = `ASD${new Date().getTime()}`;
     VolumeDetail.createVolume(testVolume, 'header');
-    expect($('#select-a-region-helper-text').isDisplayed())
+    expect($('[data-qa-textfield-error-text="true"]').isDisplayed())
       .withContext(`region error ${assertLog.displayed}`)
       .toBe(true);
     VolumeDetail.closeVolumeDrawer();
@@ -131,7 +131,7 @@ describe('Create, Edit, Resize, Attach, Detach, Clone, Delete - Volume Suite', (
     VolumeDetail.waitForNotice('Volume scheduled for creation.');
     VolumeDetail.toastDisplays(
       'Volume successfully created.',
-      constants.wait.minute * 2
+      constants.wait.minute
     );
   });
 

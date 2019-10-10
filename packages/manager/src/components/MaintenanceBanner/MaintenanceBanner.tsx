@@ -103,7 +103,7 @@ const MaintenanceBanner: React.FC<CombinedProps> = props => {
         <a
           target="_blank"
           rel="noopener noreferrer"
-          href="https://status.linode.com/incidents/d04kfh52spfn"
+          href="https://status.linode.com"
         >
           {' '}
           the Linode status page{' '}

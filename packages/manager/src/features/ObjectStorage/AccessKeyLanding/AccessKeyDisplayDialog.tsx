@@ -55,8 +55,9 @@ export const AccessKeyDisplayDialog: React.StatelessComponent<
       className={classes.confirmationDialog}
     >
       <Typography variant="body1" className={classes.helperText}>
-        Your Access Keys have been created. Store these credentials. They won't
-        be shown again.
+        Your keys have been generated. For security purposes, we can only
+        display your Secret Key once, after which it can’t be recovered.{' '}
+        <strong>Be sure to keep it in a safe place</strong>
       </Typography>
 
       <Typography>

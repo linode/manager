@@ -5,7 +5,7 @@ const recordBaseSchema = object().shape({
   target: string(),
   priority: number()
     .min(0, 'Priority must be between 0 and 255.')
-    .max(255, 'Priority must be between 1 and 255.'),
+    .max(255, 'Priority must be between 0 and 255.'),
   weight: number(),
   port: number(),
   service: string().nullable(true),

@@ -120,11 +120,10 @@ export const BackupsDashboardCard: React.StatelessComponent<
       )}
       {/* Only show this section if the user has Linodes without backups */}
       {Boolean(linodesWithoutBackups) && (
-        <a
+        <div
           onClick={openBackupDrawer}
           data-qa-backup-existing
           className={classes.ctaLink}
-          href="javascript:;"
         >
           <Paper
             className={classNames({
@@ -143,7 +142,7 @@ export const BackupsDashboardCard: React.StatelessComponent<
                 without backups. Enable backups to protect your data.`}
             </Typography>
           </Paper>
-        </a>
+        </div>
       )}
     </DashboardCard>
   );

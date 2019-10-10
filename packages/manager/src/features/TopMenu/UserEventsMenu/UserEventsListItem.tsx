@@ -125,7 +125,6 @@ class UserEventsListItem extends React.Component<CombinedProps> {
         {onClick ? (
           <Link
             to={linkPath ? linkPath : '/'}
-            href="javascript:void(0)"
             onClick={onClick}
             className={classes.linkItem}
           >

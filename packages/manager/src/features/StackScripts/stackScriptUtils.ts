@@ -4,10 +4,11 @@ import {
   getStackScripts,
   StackScript
 } from 'linode-js-sdk/lib/stackscripts';
+import { ResourcePage } from 'linode-js-sdk/lib/types';
 
 export type StackScriptCategory = 'account' | 'community';
 
-export const emptyResult: Linode.ResourcePage<StackScript> = {
+export const emptyResult: ResourcePage<StackScript> = {
   data: [],
   page: 1,
   pages: 1,

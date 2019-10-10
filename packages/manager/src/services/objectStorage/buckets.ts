@@ -1,3 +1,4 @@
+import { ResourcePage } from 'linode-js-sdk/lib/types';
 import { BETA_API_ROOT } from 'src/constants';
 import Request, {
   setData,
@@ -8,7 +9,7 @@ import Request, {
 } from '../index';
 import { CreateBucketSchema } from './buckets.schema';
 
-type Page<T> = Linode.ResourcePage<T>;
+type Page<T> = ResourcePage<T>;
 
 export interface BucketRequestPayload {
   label: string;

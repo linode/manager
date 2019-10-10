@@ -118,7 +118,6 @@ export class UserEventsMenu extends React.Component<CombinedProps, State> {
                 <Link
                   role="menuitem"
                   to={'/events'}
-                  href="javascript:void(0)"
                   onClick={(e: any) => {
                     e.preventDefault();
                     push('/events');

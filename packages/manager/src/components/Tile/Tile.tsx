@@ -1,6 +1,7 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
 import { Link } from 'react-router-dom';
+import Button from 'src/components/core/Button';
 import {
   createStyles,
   Theme,
@@ -11,7 +12,13 @@ import Typography from 'src/components/core/Typography';
 import ExternalLink from 'src/components/ExternalLink';
 import Notice from 'src/components/Notice';
 
-type ClassNames = 'root' | 'card' | 'clickableTile' | 'icon' | 'tileTitle';
+type ClassNames =
+  | 'root'
+  | 'card'
+  | 'clickableTile'
+  | 'icon'
+  | 'tileTitle'
+  | 'buttonTitle';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -33,6 +40,7 @@ const styles = (theme: Theme) =>
     clickableTile: {
       position: 'relative',
       transition: 'border-color 225ms ease-in-out',
+      cursor: 'pointer',
       '&:hover': {
         '& $icon': {
           ...theme.animateCircleIcon
@@ -40,6 +48,10 @@ const styles = (theme: Theme) =>
         '& svg': {
           fill: theme.palette.primary.main,
           transition: 'fill .2s ease-in-out .2s'
+        },
+        '& $buttonTitle': {
+          color: theme.color.black,
+          textDecoration: 'underline'
         }
       },
       '& .tile-link::after': {
@@ -74,6 +86,16 @@ const styles = (theme: Theme) =>
         height: 70,
         fill: theme.bg.offWhiteDT
       }
+    },
+    buttonTitle: {
+      padding: 0,
+      fontSize: '1.2rem',
+      cursor: 'pointer',
+      color: theme.color.black,
+      '&:hover': {
+        color: theme.color.black,
+        textDecoration: 'underline'
+      }
     }
   });
 
@@ -92,13 +114,18 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class Tile extends React.Component<CombinedProps> {
   renderLink = () => {
-    const { link, title } = this.props;
+    const { link, title, classes } = this.props;
 
     if (typeof link === 'function') {
       return (
-        <a href="javascript:;" onClick={link} className="black tile-link">
+        <Button
+          onClick={link}
+          className={classNames({
+            [classes.buttonTitle]: true
+          })}
+        >
           {title}
-        </a>
+        </Button>
       );
     } else if (
       link &&
@@ -139,6 +166,7 @@ class Tile extends React.Component<CombinedProps> {
           className
         )}
         data-qa-tile={title}
+        onClick={typeof link === 'function' ? link : undefined}
       >
         {icon && (
           <span className={classes.icon} data-qa-tile-icon>

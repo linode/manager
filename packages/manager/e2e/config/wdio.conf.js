@@ -15,7 +15,7 @@ const selectedBrowser = argv.browser
 
 const specsToRun = () => {
   if (argv.vscode) {
-    return [`./${argv.file}`];
+    return [`${argv.file}`];
   }
 
   if (argv.file) {
