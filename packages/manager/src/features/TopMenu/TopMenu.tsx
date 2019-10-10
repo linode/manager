@@ -35,7 +35,7 @@ const styles = (theme: Theme) =>
     toolbar: {
       minHeight: theme.spacing(4) + 32,
       padding: `${theme.spacing(1)}px 0`,
-      [theme.breakpoints.up('md')]: {
+      [theme.breakpoints.up('lg')]: {
         minHeight: theme.spacing(5) + 40,
         paddingLeft: theme.spacing(3),
         paddingRight: theme.spacing(3)
@@ -49,7 +49,7 @@ const styles = (theme: Theme) =>
         width: 32,
         height: 32
       },
-      [theme.breakpoints.up('md')]: {
+      [theme.breakpoints.up('lg')]: {
         display: 'none'
       }
     }
