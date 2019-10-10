@@ -5,10 +5,10 @@ import Page from './page';
 
 class SearchBar extends Page {
   get searchElem() {
-    return $('#search-bar');
+    return $('[data-qa-select-placeholder]');
   }
   get searchInput() {
-    return $('#search-bar input');
+    return $('#search-bar');
   }
   get searchIcon() {
     return $('[data-qa-search-icon]');
@@ -47,7 +47,6 @@ class SearchBar extends Page {
 
   assertSuggestions() {
     $('[data-qa-suggestion]').waitForDisplayed(constants.wait.normal);
-
     // Assert suggestions display icons, titles, descriptions
     this.suggestions.forEach(el => {
       const iconVisible = el.$('svg').isDisplayed();
