@@ -35,7 +35,7 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'cPanel',
-    description: `cPanel & WHM is a Linux-based web hosting control panel and platform that helps you create and manage websites, servers, databases, and more with a suite of hosting automation and optimization tools. The cPanel One-Click App streamlines publishing and managing a website with cPanel & WHM on a Linode instance.`,
+    description: `The cPanel &amp; WHM&reg; One-Click App streamlines publishing and managing a website on your Linode. cPanel 	&amp; WHM is a Linux&reg; based web hosting control panel and platform that helps you create and manage websites, servers, databases and more with a suite of hosting automation and optimization tools.`,
     summary: 'The leading hosting automation platform that has simplified site and server management for 20 years.',
     tips: [
       `Please note that it will take approximately 15 minutes for cPanel to boot after you launch.`,

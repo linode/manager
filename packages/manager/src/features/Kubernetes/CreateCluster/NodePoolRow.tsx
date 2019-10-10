@@ -12,7 +12,9 @@ import {
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
 import { displayPrice } from 'src/components/DisplayPrice';
+import HelpIcon from 'src/components/HelpIcon';
 import renderGuard, { RenderGuardProps } from 'src/components/RenderGuard';
+import SupportLink from 'src/components/SupportLink';
 import TableCell from 'src/components/TableCell';
 import TableRow from 'src/components/TableRow';
 import TextField from 'src/components/TextField';
@@ -103,6 +105,17 @@ export const getNodeStatus = (linodes: PoolNodeResponse[]) => {
   });
 };
 
+const tooltipText = (
+  <Typography>
+    Some of your nodes may not have been successfully created. Please open a
+    {` `}
+    <SupportLink
+      text="Support ticket."
+      title="Kubernetes Cluster nodes not created"
+    />
+  </Typography>
+);
+
 export const getStatusString = (
   count: number,
   linodes?: PoolNodeResponse[]
@@ -111,10 +124,30 @@ export const getStatusString = (
     return '';
   }
   if (!linodes || linodes.length === 0) {
-    return `${count} (0 up, ${count} down)`;
+    return <Typography>{`${count} (0 up, ${count} down)`}</Typography>;
   }
   const status = getNodeStatus(linodes);
-  return `${count} (${status.ready} up, ${status.not_ready} down)`;
+
+  if (status.ready + status.not_ready !== count) {
+    // The API hasn't registered/created all of the nodes
+    return (
+      <Typography style={{ display: 'flex', alignItems: 'center' }}>
+        <span>{`${count} (${status.ready} up, ${status.not_ready} down)`}</span>
+        <HelpIcon
+          text={tooltipText}
+          tooltipPosition="right-start"
+          interactive
+        />
+      </Typography>
+    );
+  }
+
+  // All systems normal.
+  return (
+    <Typography>{`${count} (${status.ready} up, ${
+      status.not_ready
+    } down)`}</Typography>
+  );
 };
 
 export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
@@ -173,7 +206,7 @@ export const NodePoolRow: React.FunctionComponent<CombinedProps> = props => {
             }
           />
         ) : (
-          <Typography>{getStatusString(pool.count, pool.linodes)}</Typography>
+          getStatusString(pool.count, pool.linodes)
         )}
       </TableCell>
       <TableCell parentColumn="Pricing" className={classes.priceTableCell}>

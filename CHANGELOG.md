@@ -4,6 +4,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.74.1] - 2019-10-08
+
+### Changed:
+- Managed Dashboard chart colors to match corresponding charts from the Linode Detail screen
+
+### Fixed:
+- Issue with TextField components missing labels
+- Issue with Managed Dashboard "Open a Ticket" button not functioning
+
  ## [v0.74.0] - 2019-10-07
 
 ### Breaking:
