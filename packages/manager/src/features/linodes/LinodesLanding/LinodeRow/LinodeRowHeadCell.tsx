@@ -128,8 +128,7 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
     recentEvent,
     displayType,
     imagesData,
-    width,
-    maintenance
+    width
   } = props;
 
   const description = getLinodeDescription(
@@ -149,7 +148,7 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
         <Grid item className="py0">
           <EntityIcon
             variant="linode"
-            status={!maintenance ? status : 'maintenance'}
+            status={status}
             loading={linodeInTransition(status, recentEvent)}
             marginTop={1}
           />

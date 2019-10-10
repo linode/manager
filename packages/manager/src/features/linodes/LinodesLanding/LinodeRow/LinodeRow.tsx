@@ -86,13 +86,12 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
   } = props;
 
   const loading = linodeInTransition(status, recentEvent);
+  const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(' ');
 
   const MaintenanceText = () => {
-    const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(' ');
     return (
       <>
-        Maintenance for this Linode is scheduled to begin {dateTime[0]} at{' '}
-        {dateTime[1]}. Please consult your{' '}
+        Please consult your{' '}
         <Link to="/support/tickets?type=open">support tickets</Link> for
         details.
       </>
@@ -157,11 +156,18 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
             )
           ) : (
             <>
-              Maintenance Scheduled
+              <div>
+                <div>
+                  <strong>Maintenance scheduled</strong>
+                </div>
+                <div>
+                  {dateTime[0]} at {dateTime[1]}
+                </div>
+              </div>
               <HelpIcon
                 text={<MaintenanceText />}
                 className={classes.statusHelpIcon}
-                tooltipPosition="right-start"
+                tooltipPosition="top"
                 interactive
               />
             </>
