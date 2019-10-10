@@ -422,7 +422,7 @@ class UpdateContactInformationPanel extends React.Component<
                 dataAttrs={{
                   'data-qa-contact-province': true
                 }}
-                value={fields.state}
+                value={fields.state || ''}
               />
             </Grid>
             <Grid item xs={12} sm={5}>

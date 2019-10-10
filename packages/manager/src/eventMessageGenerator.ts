@@ -138,7 +138,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     scheduled: e => `Linode ${e.entity!.label} is scheduled to boot.`,
     started: e => `Linode ${e.entity!.label} is booting.`,
     failed: e => `Linode ${e.entity!.label} could not be booted.`,
-    finished: e => `Linode ${e.entity!.label} has booted.`
+    finished: e => `Linode ${e.entity!.label} has been booted.`
   },
   lassie_reboot: {
     scheduled: e =>
@@ -240,13 +240,13 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for a reboot.`,
     started: e => `Linode ${e.entity!.label} is rebooting.`,
     failed: e => `Linode ${e.entity!.label} could not be rebooted.`,
-    finished: e => `Linode ${e.entity!.label} was rebooted.`
+    finished: e => `Linode ${e.entity!.label} has been rebooted.`
   },
   linode_rebuild: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for rebuild.`,
     started: e => `Linode ${e.entity!.label} is being rebuilt.`,
     failed: e => `Linode ${e.entity!.label} could not be rebuilt.`,
-    finished: e => `Linode ${e.entity!.label} was rebuilt.`
+    finished: e => `Linode ${e.entity!.label} has been rebuilt.`
   },
   // This event type isn't currently being displayed, but I added a message here just in case.
   linode_resize_create: {

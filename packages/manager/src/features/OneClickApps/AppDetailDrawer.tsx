@@ -10,6 +10,7 @@ import {
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import { APP_ROOT } from 'src/constants';
+import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
 import { oneClickApps } from './FakeSpec';
 import LinkSection from './LinkSection';
@@ -105,9 +106,11 @@ export const AppDetailDrawer: React.FunctionComponent<
           </Typography>
         </Grid>
         <Grid item>
-          <Typography variant="body1" className={classes.description}>
-            {app.description}
-          </Typography>
+          <Typography
+          variant="body1"
+          className={classes.description}
+          dangerouslySetInnerHTML={{ __html: sanitizeHTML(app.description) }}
+          />
         </Grid>
         {app.href && (
           <LinkSection

@@ -257,9 +257,6 @@ export const styles = (theme: Theme) =>
       minHeight: 35,
       minWidth: 'auto'
     },
-    noMarginTop: {
-      marginTop: 0
-    },
     inline: {
       display: 'inline-flex',
       flexDirection: 'row',

@@ -14,7 +14,7 @@ interface Props {
   loading: boolean;
   error?: APIError[];
   prefix: string;
-  handleDownload: (objectName: string, newTab: boolean) => void;
+  handleClickDownload: (objectName: string, newTab: boolean) => void;
   handleClickDelete: (objectName: string) => void;
 }
 
@@ -24,7 +24,7 @@ const ObjectTableContent: React.FC<Props> = props => {
     loading,
     error,
     prefix,
-    handleDownload,
+    handleClickDownload,
     handleClickDelete
   } = props;
 
@@ -83,6 +83,7 @@ const ObjectTableContent: React.FC<Props> = props => {
               key={object.name}
               folderName={object.name}
               displayName={truncateEnd(object._displayName, maxNameWidth)}
+              manuallyCreated={object._manuallyCreated}
             />
           );
         }
@@ -90,7 +91,8 @@ const ObjectTableContent: React.FC<Props> = props => {
         return (
           <ObjectTableRow
             key={object.name}
-            objectName={truncateMiddle(object._displayName, maxNameWidth)}
+            displayName={truncateMiddle(object._displayName, maxNameWidth)}
+            fullName={object.name}
             /**
              * In reality, if there's no `size` or `last_modified`, we're
              * probably dealing with a folder and will have already returned
@@ -99,10 +101,9 @@ const ObjectTableContent: React.FC<Props> = props => {
              */
             objectSize={object.size || 0}
             objectLastModified={object.last_modified || ''}
-            handleClickDownload={(newTab: boolean) =>
-              handleDownload(object.name, newTab)
-            }
-            handleClickDelete={() => handleClickDelete(object.name)}
+            manuallyCreated={object._manuallyCreated}
+            handleClickDownload={handleClickDownload}
+            handleClickDelete={handleClickDelete}
           />
         );
       })}

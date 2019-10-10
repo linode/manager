@@ -3,9 +3,7 @@ const { navigateToStory } = require('../../../e2e/utils/storybook');
 
 describe('Icon Text Link Suite', () => {
   const component = 'IconTextLink';
-  const childStories = [
-    'Interactive',
-  ]
+  const childStories = ['Interactive'];
   const iconTextLinkTitle = '[data-qa-icon-text-link="Link title"]';
 
   beforeAll(() => {
@@ -16,17 +14,26 @@ describe('Icon Text Link Suite', () => {
     $(iconTextLinkTitle).waitForDisplayed();
 
     const iconTextLinks = $$(iconTextLinkTitle);
-    iconTextLinks.forEach(e => expect(e.isDisplayed())
-      .withContext(`Icon titles should be displayed`).toBe(true));
+    iconTextLinks.forEach(e =>
+      expect(e.isDisplayed())
+        .withContext(`Icon titles should be displayed`)
+        .toBe(true)
+    );
   });
 
   it('should display IconTextLink with link text', () => {
     const iconTextLinks = $$(iconTextLinkTitle);
 
-    iconTextLinks.forEach(e => expect(e.getTagName())
-      .withContext(`Incorrect tag name`).toBe('button'));
-    iconTextLinks.forEach(e => expect(e.getText())
-      .withContext(`should be any text`).toMatch(/([A-Z])/ig));
+    iconTextLinks.forEach(e =>
+      expect(e.getTagName())
+        .withContext(`Incorrect tag name`)
+        .toBe('button')
+    );
+    iconTextLinks.forEach(e =>
+      expect(e.getText())
+        .withContext(`should be any text`)
+        .toMatch(/([A-Z])/gi)
+    );
   });
 
   it('should contain an svg icon', () => {
@@ -52,7 +59,9 @@ describe('Icon Text Link Suite', () => {
     let alertDisplays = true;
     browser.dismissAlert();
     try {
-      console.log(`expecting to get a an error for dismissed alert`)
+      console.log(
+        `****** EXPECTING TO GET AN ERROR FOR DISMISSED ALERT *******`
+      );
       browser.getAlertText();
     } catch (err) {
       alertDisplays = false;
@@ -66,7 +75,9 @@ describe('Icon Text Link Suite', () => {
     $(iconTextLinkTitle).waitForDisplayed();
 
     const iconTextLinks = $$(iconTextLinkTitle);
-    const disabledLinks = iconTextLinks.map(e => e.getAttribute('class').includes('disabled'));
+    const disabledLinks = iconTextLinks.map(e =>
+      e.getAttribute('class').includes('disabled')
+    );
 
     expect(disabledLinks)
       .withContext(`Links should be disabled`)

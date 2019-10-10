@@ -2,10 +2,8 @@ const { constants } = require('../../constants');
 
 import ConfigureStackScripts from '../../pageobjects/configure-stackscript.page';
 import ConfigureLinode from '../../pageobjects/configure-linode';
-import {
-  timestamp,
-  apiDeleteAllLinodes,
-} from '../../utils/common';
+import { timestamp, apiDeleteAllLinodes } from '../../utils/common';
+import { assertLog } from '../../utils/assertionLog';
 
 describe('Create Linode - Create from StackScript Suite', () => {
   beforeAll(() => {
@@ -36,7 +34,9 @@ describe('Create Linode - Create from StackScript Suite', () => {
   it('should search for a community stackscript', () => {
     const docker = 'docker-ubuntu';
     ConfigureLinode.stackScriptSearch.setValue(docker);
-    browser.waitForVisible('[data-qa-table-row="docker-ubuntu"]', constants.wait.normal);
+    $('[data-qa-table-row="docker-ubuntu"]').waitForDisplayed(
+      constants.wait.normal
+    );
   });
 
   it('should select a stackscript if its table row is clicked', () => {
@@ -51,40 +51,36 @@ describe('Create Linode - Create from StackScript Suite', () => {
     expect(checkedRows.length).toEqual(1);
   });
 
-  it('should display an error when creating without selecting a region', () => {
+  it('should display errors when creating without a region or plan', () => {
     const regionErr = 'Region is required.';
-
-    ConfigureLinode.deploy.click();
-    ConfigureLinode.waitForNotice(regionErr, constants.wait.normal);
-  });
-
-  it('should display an error when creating without selecting a plan', () => {
     const planError = 'Plan is required.';
 
-    ConfigureLinode.regions[0].click();
     ConfigureLinode.deploy.click();
     ConfigureLinode.waitForNotice(planError, constants.wait.normal);
+    expect(
+      $('[data-qa-textfield-error-text]').isDisplayed(constants.wait.normal)
+    )
+      .withContext(`[data-qa-textfield-error-text] ${assertLog.displayed}`)
+      .toBe(true);
+    expect($('[data-qa-textfield-error-text]').getText())
+      .withContext(`Should display ${regionErr}`)
+      .toBe(regionErr);
   });
 
   it('should create from stackscript', () => {
+    browser.enhancedSelect('#select-a-region', 'Newark, NJ');
     ConfigureLinode.plans[0].click();
-
-    const imageName = ConfigureLinode.images[0]
-      .$('[data-qa-select-card-subheading]')
-      .getText();
-
     ConfigureLinode.randomPassword();
 
     const linodeLabel = `${timestamp()}`;
-    ConfigureLinode.label.setValue(linodeLabel);
-
+    browser.trySetValue(ConfigureLinode.label.selector, linodeLabel);
     ConfigureLinode.deploy.click();
 
     /**
      * at this point, we've been redirected to the Linodes detail page
      * and we should see the editable text on the screen
      */
-    $('[data-qa-editable-text]').waitForVisible(constants.wait.minute);
+    $('[data-qa-editable-text]').waitForDisplayed(constants.wait.minute);
     expect($('[data-qa-editable-text]').getText()).toBe(linodeLabel);
   });
 });

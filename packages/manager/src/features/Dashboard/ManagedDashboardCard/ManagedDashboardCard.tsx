@@ -105,7 +105,7 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
 
   return (
     <DashboardCard
-      title="Managed Services"
+      title="Linode Managed"
       alignHeader="space-between"
       className={classes.root}
       noHeaderActionStyles
@@ -118,10 +118,10 @@ export const ManagedDashboardCard: React.FC<CombinedProps> = props => {
     >
       <Paper className={classes.paper}>
         <LoadingErrorOrContent
+          {...props}
           data={data}
           statsError={statsError}
           statsLoading={statsLoading}
-          {...props}
         />
       </Paper>
     </DashboardCard>

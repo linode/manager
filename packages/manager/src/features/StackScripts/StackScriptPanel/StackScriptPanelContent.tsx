@@ -4,6 +4,7 @@ import {
   StackScript,
   updateStackScript
 } from 'linode-js-sdk/lib/stackscripts';
+import { ResourcePage } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 import StackScriptBase, {
@@ -39,7 +40,7 @@ interface Props {
     username: string,
     params?: any,
     filter?: any
-  ) => Promise<Linode.ResourcePage<StackScript>>;
+  ) => Promise<ResourcePage<StackScript>>;
   category: string;
 }
 

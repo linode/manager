@@ -1,6 +1,7 @@
 import { Grant } from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
 import { StackScript, UserDefinedField } from 'linode-js-sdk/lib/stackscripts';
+import { ResourcePage } from 'linode-js-sdk/lib/types';
 import { assocPath, pathOr } from 'ramda';
 import * as React from 'react';
 import { Sticky, StickyProps } from 'react-sticky';
@@ -70,7 +71,7 @@ interface Props {
     params?: any,
     filter?: any,
     stackScriptGrants?: Grant[]
-  ) => Promise<Linode.ResourcePage<StackScript>>;
+  ) => Promise<ResourcePage<StackScript>>;
   header: string;
   category: 'community' | 'account';
 }
