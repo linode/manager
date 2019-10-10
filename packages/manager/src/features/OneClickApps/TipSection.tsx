@@ -8,7 +8,7 @@ import {
   WithStyles
 } from 'src/components/core/styles';
 import Typography from 'src/components/core/Typography';
-import { sanitizeHTML } from 'src/utilities/sanitize-html'
+import { sanitizeHTML } from 'src/utilities/sanitize-html';
 
 
 type ClassNames = 'root' | 'icon' | 'tip' | 'title';
