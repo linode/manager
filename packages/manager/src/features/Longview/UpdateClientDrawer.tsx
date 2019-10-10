@@ -12,27 +12,42 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 
 interface Props extends Omit<DrawerProps, 'onClose'> {
   onClose: () => void;
-  createClient: (label: string) => Promise<LongviewClient>;
+  updateClient: (id: number, label: string) => Promise<LongviewClient>;
+  selectedID?: number;
+  selectedLabel: string;
 }
 
 type CombinedProps = Props;
 
-const AddClientDrawer: React.FC<CombinedProps> = props => {
-  const [label, setLabel] = React.useState<string>('');
+const UpdateClientDrawer: React.FC<CombinedProps> = props => {
+  const { updateClient, onClose, selectedID, selectedLabel, ...rest } = props;
+
+  const [label, setLabel] = React.useState<string>(selectedLabel);
   const [isSubmitting, toggleSubmitting] = React.useState<boolean>(false);
   const [error, setError] = React.useState<APIError[] | undefined>(undefined);
-
-  const { createClient, onClose, ...rest } = props;
 
   const submitForm = (e: React.ChangeEvent<any>) => {
     e.preventDefault();
     toggleSubmitting(true);
     setError(undefined);
 
-    createClient(label.trim())
-      .then(response => {
+    if (!selectedID) {
+      return setError([
+        {
+          reason: 'Your label could not be updated. Please try again.'
+        }
+      ]);
+    }
+
+    /** just close the drawer if no edits have been made */
+    if (label === selectedLabel) {
+      return onClose();
+    }
+
+    updateClient(selectedID, label)
+      .then(() => {
         toggleSubmitting(false);
-        props.onClose();
+        onClose();
       })
       .catch((e: APIError[]) => {
         setError(e);
@@ -41,17 +56,21 @@ const AddClientDrawer: React.FC<CombinedProps> = props => {
   };
 
   React.useEffect(() => {
-    if (props.open) {
+    if (open) {
       setError(undefined);
       toggleSubmitting(false);
-      setLabel('');
+      setLabel(selectedLabel);
     }
   }, [props.open]);
+
+  const handleCloseDrawer = () => {
+    onClose();
+  };
 
   const errorMap = getErrorMap(['label'], error);
 
   return (
-    <Drawer {...rest} onClose={onClose}>
+    <Drawer {...rest} onClose={handleCloseDrawer}>
       {errorMap.none && <Notice error text={errorMap.none} />}
       <form onSubmit={submitForm}>
         <TextField
@@ -59,6 +78,7 @@ const AddClientDrawer: React.FC<CombinedProps> = props => {
           aria-label="Name of our new Longview client"
           label="Label"
           placeholder="ex: my-longview-client"
+          value={label}
           required
           onChange={({ target: { value } }) => setLabel(value)}
           inputProps={{
@@ -74,10 +94,10 @@ const AddClientDrawer: React.FC<CombinedProps> = props => {
             type="submit"
             loading={isSubmitting}
           >
-            Create
+            Update
           </Button>
           <Button
-            onClick={onClose}
+            onClick={handleCloseDrawer}
             buttonType="cancel"
             data-qa-cancel
           >
@@ -89,4 +109,4 @@ const AddClientDrawer: React.FC<CombinedProps> = props => {
   );
 };
 
-export default React.memo(AddClientDrawer);
+export default React.memo(UpdateClientDrawer);

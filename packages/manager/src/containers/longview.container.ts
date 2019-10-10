@@ -5,7 +5,8 @@ import { State } from 'src/store/longview/longview.reducer';
 import {
   createLongviewClient as create,
   deleteLongviewClient as _delete,
-  getAllLongviewClients
+  getAllLongviewClients,
+  updateLongviewClient as update
 } from 'src/store/longview/longview.requests';
 import { ThunkDispatch } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
@@ -17,6 +18,7 @@ export interface DispatchProps {
   ) => Promise<GetAllData<LongviewClient[]>>;
   createLongviewClient: (label: string) => Promise<LongviewClient>;
   deleteLongviewClient: (id: number) => Promise<{}>;
+  updateLongviewClient: (id: number, label: string) => Promise<LongviewClient>;
 }
 
 /* tslint:disable-next-line */
@@ -87,7 +89,8 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
       getLongviewClients: (params, filter) =>
         dispatch(getAllLongviewClients({ params, filter })),
       createLongviewClient: label => dispatch(create({ label })),
-      deleteLongviewClient: id => dispatch(_delete({ id }))
+      deleteLongviewClient: id => dispatch(_delete({ id })),
+      updateLongviewClient: (id, label) => dispatch(update({ id, label }))
     })
   );
 
