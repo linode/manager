@@ -282,20 +282,15 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   linode_config_delete: {
     notification: e => `A config has been deleted on Linode ${e.entity!.label}.`
   },
-  // longviewclient_create: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
-  // longviewclient_delete: {
-  //   scheduled: e => ``,
-  //   started: e => ``,
-  //   failed: e => ``,
-  //   finished: e => ``,
-  //   notification: e => ``,
-  // },
+  longviewclient_create: {
+    notification: e => `Longview Client ${e.entity!.label} has been created.`
+  },
+  longviewclient_delete: {
+    notification: e => `Longview Client ${e.entity!.label} has been deleted.`
+  },
+  longviewclient_update: {
+    notification: e => `Longview Client ${e.entity!.label} has been updated.`
+  },
   // managed_disabled: {
   //   scheduled: e => ``,
   //   started: e => ``,
