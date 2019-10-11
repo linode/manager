@@ -178,10 +178,6 @@ export const oneClickApps: OCA[] = [
       {
         title: 'https://www.plesk.com/',
         href: 'https://www.plesk.com/',
-      },
-      {
-        title: 'Plesk %off License exclusively with Linode',
-        href: 'https://www.plesk.com/',
       }
     ],
     logo_url: 'assets/plesk_color.svg',
