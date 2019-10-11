@@ -30,6 +30,8 @@ export const ALGOLIA_SEARCH_KEY =
 export const LAUNCH_DARKLY_API_KEY =
   process.env.REACT_APP_LAUNCH_DARKLY_ID || '';
 
+export const LONGVIEW_ROOT = 'https://longview.linode.com/fetch';
+
 /** optional variables */
 export const SENTRY_URL = process.env.REACT_APP_SENTRY_URL;
 export const LOGIN_SESSION_LIFETIME_MS = 45 * 60 * 1000;
