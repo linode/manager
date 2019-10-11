@@ -58,12 +58,21 @@ const reducer: Reducer<State> = (state = defaultState, action) => {
       draft.results = entities.map(cluster => cluster.id);
     }
 
+    if (isType(action, updateClusterActions.started)) {
+      draft.error!.update = undefined;
+    }
+
     if (isType(action, updateClusterActions.done)) {
       const { result } = action.payload;
       const update = updateOrAdd(result, state.entities);
 
       draft.entities = update;
       draft.results = update.map(cluster => cluster.id);
+    }
+
+    if (isType(action, updateClusterActions.failed)) {
+      const { error } = action.payload;
+      draft.error!.update = error;
     }
 
     if (isType(action, setErrors)) {
