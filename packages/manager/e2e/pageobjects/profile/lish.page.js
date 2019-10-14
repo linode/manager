@@ -1,4 +1,5 @@
 const { constants } = require('../../constants');
+const { assertLog } = require('../../utils/assertionLog');
 
 import Page from '../page';
 
@@ -60,21 +61,21 @@ export class Lish extends Page {
   }
 
   allowKeyAuthOnly(publicKey, statusMsg) {
-    this.authModeSelect.$('input').setValue('\uE015');
+    browser.trySetValue(`${this.authModeSelect.selector} input`, '\uE015');
     this.keysOnlyOption.waitForDisplayed(constants.wait.normal);
     this.keysOnlyOption.click();
     this.keysOnlyOption.waitForExist(constants.wait.normal, true);
-    this.sshKey.setValue(publicKey);
+    browser.trySetValue(this.sshKey.selector, publicKey);
     this.saveButton.click();
     this.waitForNotice(statusMsg, constants.wait.normal);
   }
 
   allowPassAndKey(publicKey, statusMsg) {
-    this.authModeSelect.$('input').setValue('\uE015');
+    browser.trySetValue(`${this.authModeSelect.selector} input`, '\uE015');
     this.passwordKeysOption.waitForDisplayed(constants.wait.normal);
     this.passwordKeysOption.click();
     this.passwordKeysOption.waitForExist(constants.wait.normal, true);
-    this.sshKey.setValue(publicKey);
+    browser.trySetValue(this.sshKey.selector, publicKey);
     this.saveButton.click();
     this.waitForNotice(statusMsg, constants.wait.normal);
   }
