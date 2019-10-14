@@ -10,7 +10,7 @@ import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 
 import { Props as LVProps } from 'src/containers/longview.container';
-// import ActionMenu, { ActionHandlers } from './FirewallActionMenu';
+import ActionMenu, { ActionHandlers } from './LongviewActionMenu';
 
 // const useStyles = makeStyles((theme: Theme) => ({
 //   root: {}
@@ -21,7 +21,7 @@ interface Props
   longviewClientsData: LongviewClient[];
 }
 
-type CombinedProps = Props;
+type CombinedProps = Props & ActionHandlers;
 
 const LongviewTableRows: React.FC<CombinedProps> = props => {
   // const classes = useStyles();
@@ -31,8 +31,8 @@ const LongviewTableRows: React.FC<CombinedProps> = props => {
     longviewClientsResults,
     longviewClientsLoading,
     longviewClientsLastUpdated,
-    longviewClientsError
-    // ...actionMenuHandlers
+    longviewClientsError,
+    ...actionMenuHandlers
   } = props;
 
   if (longviewClientsLoading && longviewClientsLastUpdated === 0) {
@@ -67,12 +67,11 @@ const LongviewTableRows: React.FC<CombinedProps> = props => {
           <TableRow key={`longview-row-${eachClient.id}`}>
             <TableCell>{eachClient.label}</TableCell>
             <TableCell>
-              {/* <ActionMenu
-                firewallID={eachFirewall.id}
-                firewallLabel={eachFirewall.label}
-                firewallStatus={eachFirewall.status}
+              <ActionMenu
+                longviewClientID={eachClient.id}
+                longviewClientLabel={eachClient.label}
                 {...actionMenuHandlers}
-              /> */}
+              />
             </TableCell>
           </TableRow>
         );
@@ -81,4 +80,6 @@ const LongviewTableRows: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(LongviewTableRows);
+export default compose<CombinedProps, Props & ActionHandlers>(React.memo)(
+  LongviewTableRows
+);
