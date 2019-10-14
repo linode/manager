@@ -1,5 +1,4 @@
 import { LongviewClient } from 'linode-js-sdk/lib/longview';
-import { APIError } from 'linode-js-sdk/lib/types';
 import { connect, InferableComponentEnhancerWithProps } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { State } from 'src/store/longview/longview.reducer';
@@ -16,7 +15,7 @@ export interface DispatchProps {
 
 /* tslint:disable-next-line */
 export interface StateProps {
-  longviewClientsError?: APIError[];
+  longviewClientsError: State['error'];
   longviewClientsLoading: State['loading'];
   longviewClientsData: State['data'];
   longviewClientsLastUpdated: State['lastUpdated'];
@@ -63,7 +62,7 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
       if (mapStateToProps) {
         return mapStateToProps(ownProps, {
           longviewClientsData: data,
-          longviewClientsError: error.read,
+          longviewClientsError: error,
           longviewClientsLastUpdated: lastUpdated,
           longviewClientsLoading: loading,
           longviewClientsResults: results
@@ -71,7 +70,7 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
       }
 
       return {
-        longviewClientsError: error.read,
+        longviewClientsError: error,
         longviewClientsLoading: loading,
         longviewClientsData: data,
         longviewClientsResults: results,
