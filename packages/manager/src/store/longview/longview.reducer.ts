@@ -17,7 +17,11 @@ export const defaultState: State = {
 const reducer = reducerWithInitialState(defaultState)
   .case(getLongviewClients.started, state => ({
     ...state,
-    loading: true
+    loading: true,
+    error: {
+      ...state.error,
+      read: undefined
+    }
   }))
   .caseWithAction(
     getLongviewClients.done,
