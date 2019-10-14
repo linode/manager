@@ -2,6 +2,14 @@ import Axios, { AxiosResponse } from 'axios';
 import { curry, pathOr } from 'ramda';
 import { LONGVIEW_ROOT } from 'src/constants';
 
+import {
+  LongviewCPU,
+  LongviewDisk,
+  LongviewLoad,
+  LongviewMemory,
+  LongviewNetwork
+} from './request.types';
+
 /**
  * A successful LV request results in a response like this:
  *
@@ -52,10 +60,16 @@ export type LongviewAction =
   | 'getValues'
   | 'lastUpdated';
 
+type AllData = LongviewCPU &
+  LongviewDisk &
+  LongviewLoad &
+  LongviewMemory &
+  LongviewNetwork;
+
 export interface LongviewResponse {
   VERSION: number;
   ACTION: LongviewAction;
-  DATA: any;
+  DATA: Partial<AllData>;
   NOTIFICATIONS: LongviewError[];
 }
 
@@ -109,7 +123,7 @@ export const handleLongviewResponse = (
     }));
     return Promise.reject(errors);
   } else {
-    return Promise.resolve(response.data[0].DATA);
+    return Promise.resolve(response.data.DATA);
   }
 };
 
