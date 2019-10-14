@@ -211,9 +211,7 @@ export class TokenCreateDrawer extends Page {
     const elem = row.$(permission.selector);
     elem.click();
     expect(elem.getAttribute('data-qa-radio'))
-      .withContext(
-        `${assertLog.incorrectAttr} "${this.elem.selector}" selector`
-      )
+      .withContext(`${assertLog.incorrectAttr} "${this.elem}" selector`)
       .toBe('true');
   }
 }
@@ -311,7 +309,7 @@ export class Profile extends Page {
         `"${this.profileTab.selector}" selector ${assertLog.incorrectAttr} `
       )
       .toBe('true');
-    browser.waitForDisplayed('[data-qa-oauth-label]', constants.wait.normal);
+    $('[data-qa-oauth-label]').waitForDisplayed(constants.wait.normal);
     expect(this.oauthLabel.isDisplayed())
       .withContext(
         `"${this.oauthLabel.selector}" selector ${assertLog.displayed}`
@@ -346,7 +344,7 @@ export class Profile extends Page {
       this.tokenCreate.waitForDisplayed(constants.wait.normal);
       this.tokenCreate.click();
     }
-    $('[data-qa-drawer-title]').waitForText(constants.wait.normal);
+    browser.waitForText('[data-qa-drawer-title]');
     $('[data-qa-add-label]').waitForDisplayed(constants.wait.normal);
   }
 
