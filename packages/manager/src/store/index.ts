@@ -52,7 +52,7 @@ import firewalls, {
 import globalErrors, {
   defaultState as defaultGlobalErrorState,
   State as GlobalErrorState
-} from 'src/store/globalErrors'
+} from 'src/store/globalErrors';
 import images, {
   defaultState as defaultImagesState,
   State as ImagesState
@@ -86,6 +86,10 @@ import types, {
   defaultState as defaultTypesState,
   State as TypesState
 } from 'src/store/linodeType/linodeType.reducer';
+import longview, {
+  defaultState as defaultLongviewState,
+  State as LongviewState
+} from 'src/store/longview/longview.reducer';
 import managedIssues, {
   defaultState as defaultManagedIssuesState,
   State as ManagedIssuesState
@@ -213,7 +217,8 @@ export interface ApplicationState {
   preferences: PreferencesState;
   initialLoad: InitialLoadState;
   firewalls: FirewallState;
-  globalErrors: GlobalErrorState
+  globalErrors: GlobalErrorState;
+  longviewClients: LongviewState;
 }
 
 const defaultState: ApplicationState = {
@@ -231,7 +236,8 @@ const defaultState: ApplicationState = {
   preferences: preferencesState,
   initialLoad: initialLoadState,
   firewalls: defaultFirewallState,
-  globalErrors: defaultGlobalErrorState
+  globalErrors: defaultGlobalErrorState,
+  longviewClients: defaultLongviewState
 };
 
 /**
@@ -275,7 +281,8 @@ const reducers = combineReducers<ApplicationState>({
   preferences,
   initialLoad,
   firewalls,
-  globalErrors
+  globalErrors,
+  longviewClients: longview
 });
 
 const enhancers = compose(

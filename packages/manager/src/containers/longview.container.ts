@@ -1,34 +1,31 @@
-import { Linode } from 'linode-js-sdk/lib/linodes';
+import { LongviewClient } from 'linode-js-sdk/lib/longview';
 import { APIError } from 'linode-js-sdk/lib/types';
-import { path } from 'ramda';
 import { connect, InferableComponentEnhancerWithProps } from 'react-redux';
 import { ApplicationState } from 'src/store';
-import { requestLinodes } from 'src/store/linodes/linode.requests';
-import { LinodeWithMaintenance as L } from 'src/store/linodes/linodes.helpers';
-import { State } from 'src/store/linodes/linodes.reducer';
+import { State } from 'src/store/longview/longview.reducer';
+import { getAllLongviewClients } from 'src/store/longview/longview.requests';
 import { ThunkDispatch } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
 
 export interface DispatchProps {
-  getLinodes: (params?: any, filters?: any) => Promise<GetAllData<Linode[]>>;
+  getLongviewClients: (
+    params?: any,
+    filters?: any
+  ) => Promise<GetAllData<LongviewClient[]>>;
 }
-
-export type LinodeWithMaintenance = L;
 
 /* tslint:disable-next-line */
 export interface StateProps {
-  linodesError?: APIError[];
-  linodesLoading: State['loading'];
-  linodesData: State['entities'];
-  linodesLastUpdated: State['lastUpdated'];
-  linodesResults: State['results'];
+  longviewClientsError?: APIError[];
+  longviewClientsLoading: State['loading'];
+  longviewClientsData: State['data'];
+  longviewClientsLastUpdated: State['lastUpdated'];
+  longviewClientsResults: State['results'];
 }
 
 type MapProps<ReduxStateProps, OwnProps> = (
   ownProps: OwnProps,
-  linodes: Linode[],
-  loading: boolean,
-  error?: APIError[]
+  data: StateProps
 ) => ReduxStateProps & Partial<StateProps>;
 
 export type Props = DispatchProps & StateProps;
@@ -59,30 +56,31 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
       const {
         loading,
         error,
-        entities,
+        data,
         lastUpdated,
         results
-      } = state.__resources.linodes;
+      } = state.longviewClients;
       if (mapStateToProps) {
-        return mapStateToProps(
-          ownProps,
-          entities,
-          loading,
-          path(['read'], error)
-        );
+        return mapStateToProps(ownProps, {
+          longviewClientsData: data,
+          longviewClientsError: error.read,
+          longviewClientsLastUpdated: lastUpdated,
+          longviewClientsLoading: loading,
+          longviewClientsResults: results
+        });
       }
 
       return {
-        linodesError: path(['read'], error),
-        linodesLoading: loading,
-        linodesData: entities,
-        linodesResults: results,
-        linodesLastUpdated: lastUpdated
+        longviewClientsError: error.read,
+        longviewClientsLoading: loading,
+        longviewClientsData: data,
+        longviewClientsResults: results,
+        longviewClientsLastUpdated: lastUpdated
       };
     },
     (dispatch: ThunkDispatch) => ({
-      getLinodes: (params, filter) =>
-        dispatch(requestLinodes({ params, filter }))
+      getLongviewClients: (params, filter) =>
+        dispatch(getAllLongviewClients({ params, filter }))
     })
   );
 
