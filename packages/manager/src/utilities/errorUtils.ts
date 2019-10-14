@@ -133,9 +133,9 @@ export const getErrorStringOrDefault = (
 export const getErrorMap = <T extends string = string>(
   fields: T[] = [],
   errors?: APIError[]
-): Record<T | 'none', string | undefined> => {
+): Partial<Record<T | 'none', string | undefined>> => {
   if (!errors) {
-    return {} as Record<any, any>;
+    return {} as Partial<Record<any, any>>;
   }
   return errors.reduce(
     (accum, thisError) => {

@@ -37,7 +37,7 @@ const AddClientDrawer: React.FC<CombinedProps> = props => {
   };
 
   React.useEffect(() => {
-    if (open) {
+    if (props.open) {
       setError(undefined);
       toggleSubmitting(false);
       setLabel('');
