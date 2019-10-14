@@ -17,7 +17,10 @@ import ActionMenu, { ActionHandlers } from './LongviewActionMenu';
 // }))
 
 interface Props
-  extends Omit<LVProps, 'longviewClientsData' | 'getLongviewClients'> {
+  extends Omit<
+    LVProps,
+    'longviewClientsData' | 'getLongviewClients' | 'createLongviewClient'
+  > {
   longviewClientsData: LongviewClient[];
 }
 

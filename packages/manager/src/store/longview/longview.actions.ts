@@ -14,3 +14,11 @@ export const getLongviewClients = actionCreator.async<
   GetAllData<LongviewClient[]>,
   APIError[]
 >(`get`);
+
+export const createLongviewClient = actionCreator.async<
+  {
+    label: string;
+  },
+  LongviewClient,
+  APIError[]
+>(`create`);

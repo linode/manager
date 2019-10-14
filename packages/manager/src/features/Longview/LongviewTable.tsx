@@ -21,7 +21,10 @@ import LongviewRows from './LongviewTableRows';
 //   root: {}
 // }))
 
-type LongviewProps = Omit<LVProps, 'getLongviewClients'>;
+type LongviewProps = Omit<
+  LVProps,
+  'getLongviewClients' | 'createLongviewClient'
+>;
 
 type CombinedProps = LongviewProps & ActionHandlers;
 

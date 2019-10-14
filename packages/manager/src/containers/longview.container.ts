@@ -2,7 +2,10 @@ import { LongviewClient } from 'linode-js-sdk/lib/longview';
 import { connect, InferableComponentEnhancerWithProps } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { State } from 'src/store/longview/longview.reducer';
-import { getAllLongviewClients } from 'src/store/longview/longview.requests';
+import {
+  createLongviewClient as create,
+  getAllLongviewClients
+} from 'src/store/longview/longview.requests';
 import { ThunkDispatch } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
 
@@ -11,6 +14,7 @@ export interface DispatchProps {
     params?: any,
     filters?: any
   ) => Promise<GetAllData<LongviewClient[]>>;
+  createLongviewClient: (label: string) => Promise<LongviewClient>;
 }
 
 /* tslint:disable-next-line */
@@ -79,7 +83,8 @@ const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
     },
     (dispatch: ThunkDispatch) => ({
       getLongviewClients: (params, filter) =>
-        dispatch(getAllLongviewClients({ params, filter }))
+        dispatch(getAllLongviewClients({ params, filter })),
+      createLongviewClient: label => dispatch(create({ label }))
     })
   );
 
