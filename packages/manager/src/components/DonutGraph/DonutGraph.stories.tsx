@@ -32,12 +32,14 @@ const Example: React.FC<{}> = props => {
         filledInNumber={100}
         maxNumber={200}
         subTitle={`This is subtext`}
+        filledInColor="green"
       />
       <Donut
         filledInNumber={30}
         maxNumber={100}
         innerText="25% Used"
         subTitle="Hello world"
+        filledInColor="purple"
       />
       <Donut
         height={200}
