@@ -107,7 +107,7 @@ export const baseRequest = Axios.create({
 });
 
 export const handleLongviewResponse = (
-  response: AxiosResponse<LongviewResponse>
+  response: AxiosResponse<[LongviewResponse]>
 ) => {
   const notifications = response.data[0].NOTIFICATIONS;
   if (notifications.length > 0) {
@@ -123,7 +123,7 @@ export const handleLongviewResponse = (
     }));
     return Promise.reject(errors);
   } else {
-    return Promise.resolve(response.data.DATA);
+    return Promise.resolve(response.data[0].DATA);
   }
 };
 
