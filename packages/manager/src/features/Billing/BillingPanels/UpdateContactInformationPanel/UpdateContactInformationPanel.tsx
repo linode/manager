@@ -330,7 +330,7 @@ class UpdateContactInformationPanel extends React.Component<
           updateFor={[
             account.address_2,
             fields.address_2,
-            errorMap.address2,
+            errorMap.address_2,
             classes
           ]}
         >

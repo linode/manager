@@ -129,16 +129,17 @@ export const getErrorStringOrDefault = (
  * @param fields optional list of fields to include in the response object
  * @param errors an API error response
  */
-export const getErrorMap = (
-  fields: string[] = [],
+// type = GetReturnType<E, Record<T | 'none', (string | undefined)>>
+export const getErrorMap = <T extends string = string>(
+  fields: T[] = [],
   errors?: APIError[]
-): Record<string, string | undefined> => {
+): Partial<Record<T | 'none', string | undefined>> => {
   if (!errors) {
-    return {};
+    return {} as Partial<Record<any, any>>;
   }
   return errors.reduce(
     (accum, thisError) => {
-      if (thisError.field && fields.includes(thisError.field)) {
+      if (thisError.field && fields.includes(thisError.field as T)) {
         return {
           ...accum,
           [thisError.field]: thisError.reason
@@ -151,5 +152,5 @@ export const getErrorMap = (
       }
     },
     { none: undefined }
-  );
+  ) as Record<T | 'none', string | undefined>;
 };

@@ -10,6 +10,8 @@ import Divider from 'src/components/core/Divider';
 import DocumentationButton from 'src/components/DocumentationButton';
 import Grid from 'src/components/Grid';
 
+import AddClientDrawer from './AddClientDrawer';
+
 const useStyles = makeStyles((theme: Theme) => ({
   line: {
     marginTop: theme.spacing(10),
@@ -21,6 +23,8 @@ type CombinedProps = RouteComponentProps;
 
 const LongviewContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
+
+  const [addDrawerOpen, toggleAddDrawer] = React.useState<boolean>(false);
 
   return (
     <React.Fragment>
@@ -38,11 +42,19 @@ const LongviewContent: React.FC<CombinedProps> = props => {
         <Grid item>
           <Grid container alignItems="flex-end">
             <Grid item className="pt0">
-              <AddNewLink onClick={() => null} label="Add a Client" />
+              <AddNewLink
+                onClick={() => toggleAddDrawer(true)}
+                label="Add a Client"
+              />
             </Grid>
           </Grid>
         </Grid>
       </Grid>
+      <AddClientDrawer
+        title="Add Longview Client"
+        onClose={() => toggleAddDrawer(false)}
+        open={addDrawerOpen}
+      />
     </React.Fragment>
   );
 };
