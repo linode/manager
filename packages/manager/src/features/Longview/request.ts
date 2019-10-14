@@ -69,11 +69,21 @@ export interface LongviewError {
  * Scaffolding; expand as we gather requirements.
  */
 
-export type LongviewFieldName = 'cpu' | 'uptime';
+export type LongviewFieldName =
+  | 'cpu'
+  | 'uptime'
+  | 'memory'
+  | 'load'
+  | 'network'
+  | 'disk';
 
 export const fieldNames: Record<LongviewFieldName, string> = {
   cpu: 'CPU.*',
-  uptime: 'Uptime'
+  uptime: 'Uptime',
+  memory: 'Memory.*',
+  load: 'Load.*',
+  network: 'Network.*',
+  disk: 'Disk.*'
 };
 
 export const baseRequest = Axios.create({
