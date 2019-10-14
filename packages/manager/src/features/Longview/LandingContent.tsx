@@ -10,6 +10,10 @@ import Divider from 'src/components/core/Divider';
 import DocumentationButton from 'src/components/DocumentationButton';
 import Grid from 'src/components/Grid';
 
+import withLongviewClients, {
+  Props as LongviewProps
+} from 'src/containers/longview.container';
+
 import AddClientDrawer from './AddClientDrawer';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -19,12 +23,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type CombinedProps = RouteComponentProps;
+type CombinedProps = RouteComponentProps & LongviewProps;
 
 const LongviewContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const [addDrawerOpen, toggleAddDrawer] = React.useState<boolean>(false);
+
+  React.useEffect(() => {
+    props.getLongviewClients();
+  }, []);
 
   return (
     <React.Fragment>
@@ -59,6 +67,7 @@ const LongviewContent: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, RouteComponentProps>(React.memo)(
-  LongviewContent
-);
+export default compose<CombinedProps, RouteComponentProps>(
+  React.memo,
+  withLongviewClients()
+)(LongviewContent);
