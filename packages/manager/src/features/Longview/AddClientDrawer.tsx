@@ -48,14 +48,10 @@ const AddClientDrawer: React.FC<CombinedProps> = props => {
     }
   }, [props.open]);
 
-  const handleCloseDrawer = () => {
-    onClose();
-  };
-
   const errorMap = getErrorMap(['label'], error);
 
   return (
-    <Drawer {...rest} onClose={handleCloseDrawer}>
+    <Drawer {...rest} onClose={onClose}>
       {errorMap.none && <Notice error text={errorMap.none} />}
       <TextField
         errorText={errorMap.label}
@@ -78,7 +74,7 @@ const AddClientDrawer: React.FC<CombinedProps> = props => {
         >
           Create
         </Button>
-        <Button onClick={handleCloseDrawer} buttonType="cancel" data-qa-cancel>
+        <Button onClick={onClose} buttonType="cancel" data-qa-cancel>
           Cancel
         </Button>
       </ActionsPanel>
