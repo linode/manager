@@ -52,8 +52,8 @@ interface Props {
 type CombinedProps = Props & WithTheme;
 
 const DonutGraph: React.FC<CombinedProps> = props => {
-  const width = props.width || 30;
-  const height = props.height || 30;
+  const width = props.width || 300;
+  const height = props.height || 300;
   const classes = useStyles({
     width,
     height,
