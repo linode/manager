@@ -72,11 +72,11 @@ const DonutGraph: React.FC<CombinedProps> = props => {
           data={{
             datasets: [
               {
+                borderWidth: 0,
                 hoverBackgroundColor: [
                   props.filledInColor || props.theme.color.blue,
                   props.nonFilledInColor || props.theme.color.grey2
                 ],
-                hoverBorderWidth: [0, 0],
                 /** so basically, index 0 is the filled in, index 1 is the full graph percentage */
                 data: [
                   props.filledInNumber,
