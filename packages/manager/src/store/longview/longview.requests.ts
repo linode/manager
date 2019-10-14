@@ -1,7 +1,14 @@
-import { getLongviewClients, LongviewClient } from 'linode-js-sdk/lib/longview';
+import {
+  createLongviewClient as _create,
+  getLongviewClients,
+  LongviewClient
+} from 'linode-js-sdk/lib/longview';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
-import { getLongviewClients as _getLongviewClientsActions } from './longview.actions';
+import {
+  createLongviewClient as _createLongviewClientActions,
+  getLongviewClients as _getLongviewClientsActions
+} from './longview.actions';
 
 const _getAllLongviewClients = (payload: { params?: any; filter?: any }) =>
   getAll<LongviewClient>((passedParams, passedFilter) =>
@@ -11,4 +18,9 @@ const _getAllLongviewClients = (payload: { params?: any; filter?: any }) =>
 export const getAllLongviewClients = createRequestThunk(
   _getLongviewClientsActions,
   _getAllLongviewClients
+);
+
+export const createLongviewClient = createRequestThunk(
+  _createLongviewClientActions,
+  ({ label }) => _create(label)
 );

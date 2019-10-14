@@ -1,4 +1,4 @@
-import { createLongviewClient } from 'linode-js-sdk/lib/longview';
+import { LongviewClient } from 'linode-js-sdk/lib/longview';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 
@@ -13,6 +13,7 @@ import { getErrorMap } from 'src/utilities/errorUtils';
 /* tslint:disable-next-line */
 interface Props extends Omit<DrawerProps, 'onClose'> {
   onClose: () => void;
+  createClient: (label: string) => Promise<LongviewClient>;
 }
 
 type CombinedProps = Props;
@@ -22,13 +23,16 @@ const AddClientDrawer: React.FC<CombinedProps> = props => {
   const [isSubmitting, toggleSubmitting] = React.useState<boolean>(false);
   const [error, setError] = React.useState<APIError[] | undefined>(undefined);
 
+  const { createClient, onClose, ...rest } = props;
+
   const submitForm = () => {
     toggleSubmitting(true);
     setError(undefined);
 
-    createLongviewClient(label.trim())
+    createClient(label.trim())
       .then(response => {
         toggleSubmitting(false);
+        props.onClose();
       })
       .catch((e: APIError[]) => {
         setError(e);
@@ -44,14 +48,10 @@ const AddClientDrawer: React.FC<CombinedProps> = props => {
     }
   }, [props.open]);
 
-  const handleCloseDrawer = () => {
-    props.onClose();
-  };
-
   const errorMap = getErrorMap(['label'], error);
 
   return (
-    <Drawer {...props} onClose={handleCloseDrawer}>
+    <Drawer {...rest} onClose={onClose}>
       {errorMap.none && <Notice error text={errorMap.none} />}
       <TextField
         errorText={errorMap.label}
@@ -74,7 +74,7 @@ const AddClientDrawer: React.FC<CombinedProps> = props => {
         >
           Create
         </Button>
-        <Button onClick={handleCloseDrawer} buttonType="cancel" data-qa-cancel>
+        <Button onClick={onClose} buttonType="cancel" data-qa-cancel>
           Cancel
         </Button>
       </ActionsPanel>
