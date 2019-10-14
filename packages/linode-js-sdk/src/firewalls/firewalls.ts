@@ -7,7 +7,7 @@
 //   setXFilter
 // } from '../request';
 import { ResourcePage as Page } from '../types';
-import { Firewall } from './types';
+import { Firewall, FirewallDevice } from './types';
 
 /**
  * mocked GET firewalls
@@ -29,4 +29,20 @@ export const getFirewalls = (
   }).then((data: any) => {
     return data;
   });
+};
+
+export const getFirewallDevices = (
+  id: number,
+  mockData: FirewallDevice[]
+): Promise<Page<FirewallDevice>> => {
+  return new Promise(resolve => {
+    setTimeout(() => {
+      resolve({
+        data: mockData,
+        page: 1,
+        pages: 1,
+        results: mockData.length
+      });
+    });
+  }).then((data: any) => data);
 };
