@@ -15,6 +15,7 @@ import withLongviewClients, {
 } from 'src/containers/longview.container';
 
 import AddClientDrawer from './AddClientDrawer';
+import LongviewTable from './LongviewTable';
 
 const useStyles = makeStyles((theme: Theme) => ({
   line: {
@@ -33,6 +34,14 @@ const LongviewContent: React.FC<CombinedProps> = props => {
   React.useEffect(() => {
     props.getLongviewClients();
   }, []);
+
+  const {
+    longviewClientsData,
+    longviewClientsError,
+    longviewClientsLastUpdated,
+    longviewClientsLoading,
+    longviewClientsResults
+  } = props;
 
   return (
     <React.Fragment>
@@ -58,6 +67,13 @@ const LongviewContent: React.FC<CombinedProps> = props => {
           </Grid>
         </Grid>
       </Grid>
+      <LongviewTable
+        longviewClientsData={longviewClientsData}
+        longviewClientsError={longviewClientsError}
+        longviewClientsLastUpdated={longviewClientsLastUpdated}
+        longviewClientsLoading={longviewClientsLoading}
+        longviewClientsResults={longviewClientsResults}
+      />
       <AddClientDrawer
         title="Add Longview Client"
         onClose={() => toggleAddDrawer(false)}
