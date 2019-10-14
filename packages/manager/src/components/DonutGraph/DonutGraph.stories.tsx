@@ -2,6 +2,19 @@ import { storiesOf } from '@storybook/react';
 import * as React from 'react';
 import Donut from './DonutGraph';
 
+import Typography from 'src/components/core/Typography';
+
+const SubText = () => {
+  return (
+    <React.Fragment>
+      <Typography>
+        <strong>CPU</strong>
+      </Typography>
+      <Typography>4 Cores</Typography>
+    </React.Fragment>
+  );
+};
+
 const Example: React.FC<{}> = props => {
   return (
     <React.Fragment>
@@ -11,6 +24,7 @@ const Example: React.FC<{}> = props => {
         filledInNumber={50}
         maxNumber={200}
         innerText="25% Used"
+        subTitle="Hello world"
       />
       <Donut
         height={300}
@@ -26,11 +40,10 @@ const Example: React.FC<{}> = props => {
         maxNumber={200}
         innerText="25% Used"
         innerTextFontSize={12}
+        subTitle={SubText()}
       />
     </React.Fragment>
-  )
-}
+  );
+};
 
-
-storiesOf('Donut Graph', module)
-  .add('Example', () => <Example />)
+storiesOf('Donut Graph', module).add('Example', () => <Example />);
