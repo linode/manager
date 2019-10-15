@@ -56,7 +56,7 @@ const UpdateClientDrawer: React.FC<CombinedProps> = props => {
   };
 
   React.useEffect(() => {
-    if (open) {
+    if (props.open) {
       setError(undefined);
       toggleSubmitting(false);
       setLabel(selectedLabel);
@@ -75,7 +75,7 @@ const UpdateClientDrawer: React.FC<CombinedProps> = props => {
       <form onSubmit={submitForm}>
         <TextField
           errorText={errorMap.label}
-          aria-label="Name of our new Longview client"
+          aria-label="Updated name of this Longview Client"
           label="Label"
           placeholder="ex: my-longview-client"
           value={label}
