@@ -4,7 +4,7 @@ import { pathOr } from 'ramda';
 import formatDate from 'src/utilities/formatDate';
 
 const formatDateForTable = (date: string): [string, string] => {
-  /** gives us a datetime seperated by a space. e.g. 2019-09-30 08:25:00 */
+  /** gives us a datetime separated by a space. e.g. 2019-09-30 08:25:00 */
   const res = formatDate(date);
 
   /** basically, if we have an invalid date, return empty strings */
