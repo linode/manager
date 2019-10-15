@@ -1,4 +1,4 @@
-import { Notification } from 'linode-js-sdk/lib/account'
+import { Notification } from 'linode-js-sdk/lib/account';
 import { linode1 } from 'src/__data__/linodes';
 import { addNotificationsToLinodes } from './linodes.helpers';
 
@@ -42,7 +42,8 @@ describe('Linode Redux Helpers', () => {
     addNotificationsToLinodes(maintenanceNotification(4325345345), [linode1])
   ).toEqual([
     {
-      ...linode1
+      ...linode1,
+      maintenance: null
     }
   ]);
 });
