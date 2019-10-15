@@ -104,7 +104,7 @@ const reducer = reducerWithInitialState(defaultState)
         results: state.results - 1,
         lastUpdated: Date.now(),
         listOfIDsInOriginalOrder: state.listOfIDsInOriginalOrder.filter(
-          e => e === params.id
+          e => e !== params.id
         )
       };
     }
