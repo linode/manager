@@ -5,7 +5,8 @@ import { EntitiesAsObjectState } from '../types';
 import {
   createLongviewClient,
   deleteLongviewClient,
-  getLongviewClients
+  getLongviewClients,
+  updateLongviewClient
 } from './longview.actions';
 
 export type State = EntitiesAsObjectState<LongviewClient>;
@@ -119,7 +120,38 @@ const reducer = reducerWithInitialState(defaultState)
       }
     })
   )
+  /** START UPDATE ACTIONS */
+  .case(updateLongviewClient.started, state => ({
+    ...state,
+    error: {
+      ...state.error,
+      update: undefined
+    }
+  }))
+  .caseWithAction(
+    updateLongviewClient.done,
+    (state, { payload: { params, result } }) => {
+      /** update in place */
+      const dataCopy = clone(state.data);
+      dataCopy[params.id] = result;
 
+      return {
+        ...state,
+        data: dataCopy,
+        lastUpdated: Date.now()
+      };
+    }
+  )
+  .caseWithAction(
+    updateLongviewClient.failed,
+    (state, { payload: { error } }) => ({
+      ...state,
+      error: {
+        ...state.error,
+        update: error
+      }
+    })
+  )
   .default(state => state);
 
 export default reducer;
