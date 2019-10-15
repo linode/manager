@@ -52,6 +52,7 @@ describe('Header - Search Suite', () => {
   it('should not display suggestions when no matching results found', () => {
     SearchBar.executeSearch('blahlblahblah');
     $('[data-qa-suggestion]').waitForDisplayed(constants.wait.short, true);
+    $('body').click();
   });
 
   it('should display search suggestions on a legitimate search', () => {
