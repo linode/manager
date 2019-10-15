@@ -1,4 +1,3 @@
-import { Event } from '../account/types';
 import { IPAddress, IPRange } from '../networking/types';
 import { SSHKey } from '../profile/types';
 
@@ -43,11 +42,6 @@ export interface LinodeAlerts {
 export interface LinodeBackups {
   enabled: boolean;
   schedule: LinodeBackupSchedule;
-}
-
-export interface BackupWithSnapAndLast extends LinodeBackups {
-  last_backup: LinodeBackup;
-  snapshot: LinodeBackup;
 }
 
 export type Window =
