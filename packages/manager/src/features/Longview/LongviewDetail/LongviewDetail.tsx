@@ -9,6 +9,7 @@ import withLongviewClients, {
 
 interface Props {
   clients: LVProps['longviewClientsData'];
+  longviewClientsLastUpdated: number;
 }
 
 type CombinedProps = RouteComponentProps<{ id: string }> &
@@ -20,12 +21,13 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
     match: {
       params: { id }
     },
-    clients
+    clients,
+    longviewClientsLastUpdated
   } = props;
 
   React.useEffect(() => {
     /** request clients if they haven't already been requested */
-    if (!Object.keys(clients).length) {
+    if (longviewClientsLastUpdated === 0) {
       props.getLongviewClients();
     }
   }, []);
@@ -37,7 +39,10 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
 
 export default compose<CombinedProps, {}>(
   React.memo,
-  withLongviewClients<Props, {}>((own, { longviewClientsData }) => ({
-    clients: longviewClientsData
-  }))
+  withLongviewClients<Props, {}>(
+    (own, { longviewClientsData, longviewClientsLastUpdated }) => ({
+      clients: longviewClientsData,
+      longviewClientsLastUpdated
+    })
+  )
 )(LongviewDetail);
