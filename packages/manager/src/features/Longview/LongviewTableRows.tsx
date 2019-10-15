@@ -23,6 +23,7 @@ interface Props
     | 'getLongviewClients'
     | 'createLongviewClient'
     | 'deleteLongviewClient'
+    | 'updateLongviewClient'
   > {
   longviewClientsData: LongviewClient[];
 }
