@@ -368,6 +368,9 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                                     data={linodesData.map(e => {
                                       return {
                                         ...e,
+                                        maintenance: e.maintenance || {
+                                          when: null
+                                        },
                                         linodeDescription: getLinodeDescription(
                                           e.label,
                                           e.specs.memory,

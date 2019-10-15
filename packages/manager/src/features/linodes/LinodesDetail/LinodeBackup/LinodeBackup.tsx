@@ -413,6 +413,7 @@ class _LinodeBackup extends React.Component<CombinedProps, State> {
     updateLinode({
       linodeId: linodeID,
       backups: {
+        enabled: true,
         schedule: {
           day: settingsForm.day,
           window: settingsForm.window

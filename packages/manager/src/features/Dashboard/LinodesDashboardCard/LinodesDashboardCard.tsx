@@ -29,7 +29,7 @@ import {
   isEntityEvent,
   isInProgressEvent
 } from 'src/store/events/event.helpers';
-import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
+import { LinodeWithMaintenanceAndMostRecentBackup } from 'src/store/linodes/types';
 import DashboardCard from '../DashboardCard';
 
 interface EntityEvent extends Omit<Event, 'entitiy'> {
@@ -150,7 +150,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
 
   renderEmpty = () => <TableRowEmptyState colSpan={3} />;
 
-  renderData = (data: LinodeWithMaintenance[]) => {
+  renderData = (data: ExtendedLinode[]) => {
     const { classes } = this.props;
 
     return data.map(linode => {
@@ -163,12 +163,12 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
             backups={linode.backups}
             id={linode.id}
             ipv4={linode.ipv4}
-            ipv6={linode.ipv6}
+            ipv6={linode.ipv6 || ''}
             label={linode.label}
             region={linode.region}
             status={linode.status}
             tags={linode.tags}
-            mostRecentBackup={linode.mostRecentBackup}
+            mostRecentBackup={linode.mostRecentBackup || null}
             disk={linode.specs.disk}
             vcpus={linode.specs.vcpus}
             memory={linode.specs.memory}
@@ -198,8 +198,12 @@ const withTypes = connect((state: ApplicationState, ownProps) => ({
   typesData: state.__resources.types.entities
 }));
 
+type ExtendedLinode = {
+  recentEvent: Event;
+} & LinodeWithMaintenanceAndMostRecentBackup;
+
 interface WithUpdatingLinodesProps {
-  linodes: LinodeWithMaintenance[];
+  linodes: ExtendedLinode[];
   linodeCount: number;
   loading: boolean;
   error?: APIError[];
