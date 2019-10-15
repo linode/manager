@@ -49,6 +49,17 @@ curl --request POST \
   --form 'api_requestArray=[{ "api_action": "getLatestValue", "keys": [ "Disk.*" ]  }]'
 ```
 
+You can also batch datasets with comma-seperated keys like so:
+
+```
+curl --request POST \
+  --url https://longview.linode.com/fetch \
+  --header 'content-type: multipart/form-data; boundary=---011000010111000001101001' \
+  --form api_key=1234 \
+  --form api_action=batch \
+  --form 'api_requestArray=[{ "api_action": "getLatestValue", "keys": [ "Disk.*", "Memory.*" ]  }]'
+```
+
 We recommend to keep `--form api_action=batch \` untouched and instead make changes to the `api_requestArray` field to filter down the data. There are a couple configurable fields here that you can change in the `apiRequestArray`:
 
 #### `api_action`
@@ -61,7 +72,7 @@ We recommend to keep `--form api_action=batch \` untouched and instead make chan
 
 #### `keys`
 
-| key       | returned unit  | description                                                                                                                                      |
+| key       | Returned Unit  | Description                                                                                                                                      |
 |-----------|----------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
 | *         |                | Returns everything. This is _extremely_ slow, so run at your own risk.                                                                           |
 | Disk.*    | Bytes          | Returns all storage information for each disk. Run `df -h` on the server to compare data.                                                        |
