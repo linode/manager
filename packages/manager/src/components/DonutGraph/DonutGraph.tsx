@@ -26,14 +26,16 @@ const useStyles = (options: Options) =>
       top: `calc((${options.height}px / 2))`,
       width: options.width,
       textAlign: 'center',
-      fontSize: options.fontSize || `${theme.spacing(2.5)}px `
+      fontSize: options.fontSize || `${theme.spacing(2.5)}px `,
+      color: theme.palette.text.primary
     },
     subTitle: {
       position: 'absolute',
       width: options.width,
       textAlign: 'center',
       top: `calc(${options.height}px - 10%)`,
-      fontSize: options.fontSize || `${theme.spacing(2.5)}px `
+      fontSize: options.fontSize || `${theme.spacing(2.5)}px `,
+      color: theme.color.headline
     }
   }));
 
@@ -98,6 +100,7 @@ const DonutGraph: React.FC<CombinedProps> = props => {
             maintainAspectRatio: false,
             rotation: -1.25 * Math.PI,
             circumference: 1.5 * Math.PI,
+            cutoutPercentage: 70,
             responsive: true,
             /** get rid of all hover events with events: [] */
             events: [],

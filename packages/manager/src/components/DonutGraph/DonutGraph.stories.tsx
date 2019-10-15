@@ -42,11 +42,11 @@ const Example: React.FC<{}> = props => {
         filledInColor="purple"
       />
       <Donut
-        height={200}
-        width={200}
+        height={150}
+        width={150}
         filledInNumber={50}
         maxNumber={200}
-        innerText="25% Used"
+        innerText="25%"
         innerTextFontSize={12}
         subTitle={SubText()}
       />
