@@ -73,7 +73,7 @@ We recommend to keep `--form api_action=batch \` untouched and instead make chan
 
 ## FAQ
 
-1. I have 2 CPUs and `Load.*` is telling me I have a combined Load of `2.5`. What does that mean?
+### I have 2 CPUs and `Load.*` is telling me I have a combined Load of `2.5`. What does that mean?
 
 If you have 2 CPUs, a Load of 2 means that both CPUs are 100% utilizied. Anything past that, that means there are scheduled processes that will begin when the Load clears up.
 
@@ -85,12 +85,12 @@ As per @abemassry:
 
 See [this blog post](http://www.brendangregg.com/blog/2017-08-08/linux-load-averages.html) for a more detailed explanation.
 
-2. How do I calculate my actual used memory on my ext disk?
+### How do I calculate my actual used memory on my ext disk?
 
 Actual used memory is `used - (buffers + cache)` which are all returned from the Longview API.
 
 Please note, however, that full memory on the system is `used + free`
 
-3. How do I determine the maximum amount of network traffic I can have?
+### How do I determine the maximum amount of network traffic I can have?
 
 Idk. Still have to figure this out.
