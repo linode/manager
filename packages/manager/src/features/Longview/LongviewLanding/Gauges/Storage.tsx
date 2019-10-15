@@ -10,7 +10,7 @@ const StorageGauge: React.FC = () => {
       {...baseGaugeProps}
       max={100}
       value={80}
-      filledInColor="#D38ADB"
+      filledInColor="#F4AC3D"
       innerText="36.41 GB"
       subTitle={
         <>
