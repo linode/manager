@@ -22,3 +22,11 @@ export const createLongviewClient = actionCreator.async<
   LongviewClient,
   APIError[]
 >(`create`);
+
+export const deleteLongviewClient = actionCreator.async<
+  {
+    id: number;
+  },
+  {},
+  APIError[]
+>(`delete`);
