@@ -10,7 +10,6 @@ export interface Firewall {
   rules: FirewallRules;
   created_dt: string;
   updated_dt: string;
-  devices: FirewallDevices;
 }
 
 export interface FirewallRules {
@@ -28,6 +27,14 @@ export interface FirewallRuleType {
   };
 }
 
-export interface FirewallDevices {
-  linodes?: number[];
+export interface FirewallDeviceEntity {
+  id: number;
+  type: 'linode' | 'nodebalancer';
+  label: string;
+  url: string;
+}
+
+export interface FirewallDevice {
+  id: number;
+  entity: FirewallDeviceEntity;
 }

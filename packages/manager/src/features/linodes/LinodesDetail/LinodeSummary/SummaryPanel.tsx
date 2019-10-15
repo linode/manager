@@ -117,7 +117,7 @@ class SummaryPanel extends React.Component<CombinedProps> {
           <BackupStatus
             linodeId={linodeId}
             backupsEnabled={backupsEnabled}
-            mostRecentBackup={mostRecentBackup}
+            mostRecentBackup={mostRecentBackup || null}
           />
         </Paper>
         <Paper className={classes.summarySection}>
@@ -156,7 +156,7 @@ interface LinodeContextProps {
   linodeIpv6: any;
   linodeRegion: string;
   linodeTags: string[];
-  mostRecentBackup: string | null;
+  mostRecentBackup?: string | null;
   linodeVolumes: Volume[];
   linodeVolumesError?: APIError[];
   backupsEnabled: boolean;

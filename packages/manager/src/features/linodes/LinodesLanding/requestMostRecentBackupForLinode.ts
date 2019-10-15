@@ -1,9 +1,10 @@
 import { getLinodeBackups, Linode } from 'linode-js-sdk/lib/linodes';
+import { LinodeWithMaintenanceAndMostRecentBackup } from 'src/store/linodes/types';
 import { mostRecentFromResponse } from 'src/utilities/backups';
 
-const requestMostRecentBackupForLinode: (linode: Linode) => Promise<Linode> = (
+const requestMostRecentBackupForLinode: (
   linode: Linode
-) =>
+) => Promise<LinodeWithMaintenanceAndMostRecentBackup> = (linode: Linode) =>
   linode.backups.enabled === false
     ? Promise.resolve({
         ...linode,

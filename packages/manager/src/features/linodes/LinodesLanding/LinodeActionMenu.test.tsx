@@ -17,6 +17,7 @@ const props: CombinedProps = {
   regionsLoading: false,
   openPowerActionDialog: jest.fn(),
   linodeBackups: {
+    enabled: false,
     schedule: {
       window: null,
       day: null

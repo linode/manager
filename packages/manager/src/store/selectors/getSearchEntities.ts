@@ -13,7 +13,7 @@ type State = ApplicationState['__resources'];
 
 export const getLinodeIps = (linode: Linode): string[] => {
   const { ipv4, ipv6 } = linode;
-  return ipv4.concat([ipv6]);
+  return ipv4.concat([ipv6 || '']);
 };
 
 export const getDomainIps = (domain: Domain): string[] => {

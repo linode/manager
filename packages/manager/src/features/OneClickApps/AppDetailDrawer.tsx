@@ -112,10 +112,10 @@ export const AppDetailDrawer: React.FunctionComponent<
           dangerouslySetInnerHTML={{ __html: sanitizeHTML(app.description) }}
           />
         </Grid>
-        {app.href && (
+        {app.related_info && (
           <LinkSection
             title="More info"
-            links={[{ title: app.href, href: app.href }]}
+            links={app.related_info}
             icon={Link}
           />
         )}

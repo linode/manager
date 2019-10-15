@@ -1,4 +1,3 @@
-import { Event } from '../account/types';
 import { IPAddress, IPRange } from '../networking/types';
 import { SSHKey } from '../profile/types';
 
@@ -9,6 +8,7 @@ export interface LinodeSpecs {
   memory: number;
   vcpus: number;
   transfer: number;
+  gpus: number;
 }
 
 export interface Linode {
@@ -20,7 +20,7 @@ export interface Linode {
   image: string | null;
   group: string;
   ipv4: string[];
-  ipv6: string;
+  ipv6: string | null;
   label: string;
   type: null | string;
   status: LinodeStatus;
@@ -29,11 +29,6 @@ export interface Linode {
   specs: LinodeSpecs;
   watchdog_enabled: boolean;
   tags: string[];
-  /** Added by UI */
-  recentEvent?: Event;
-  notifications?: Notification[];
-  notification?: string;
-  mostRecentBackup: string | null;
 }
 
 export interface LinodeAlerts {
@@ -45,10 +40,8 @@ export interface LinodeAlerts {
 }
 
 export interface LinodeBackups {
-  enabled?: boolean;
+  enabled: boolean;
   schedule: LinodeBackupSchedule;
-  last_backup?: LinodeBackup;
-  snapshot?: LinodeBackup;
 }
 
 export type Window =
@@ -149,6 +142,7 @@ export type LinodeStatus =
   | 'running'
   | 'shutting_down'
   | 'rebooting'
+  | 'rebuilding'
   | 'provisioning'
   | 'deleting'
   | 'migrating'
