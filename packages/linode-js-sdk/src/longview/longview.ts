@@ -36,3 +36,16 @@ export const deleteLongviewClient = (id: number) =>
     setURL(`${API_ROOT}/longview/clients/${id}`),
     setMethod('DELETE')
   ).then(response => response.data);
+
+export const updateLongviewClient = (id: number, label: string) => {
+  return Request<LongviewClient>(
+    setURL(`${API_ROOT}/longview/clients/${id}`),
+    setData(
+      {
+        label
+      },
+      longviewClientCreate
+    ),
+    setMethod('PUT')
+  ).then(response => response.data);
+};

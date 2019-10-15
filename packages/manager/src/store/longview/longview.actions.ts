@@ -30,3 +30,12 @@ export const deleteLongviewClient = actionCreator.async<
   {},
   APIError[]
 >(`delete`);
+
+export const updateLongviewClient = actionCreator.async<
+  {
+    id: number;
+    label: string;
+  },
+  LongviewClient,
+  APIError[]
+>(`update`);
