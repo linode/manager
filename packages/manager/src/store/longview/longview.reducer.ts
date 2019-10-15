@@ -1,7 +1,12 @@
 import { LongviewClient } from 'linode-js-sdk/lib/longview';
+import { clone } from 'ramda';
 import { reducerWithInitialState } from 'typescript-fsa-reducers';
 import { EntitiesAsObjectState } from '../types';
-import { createLongviewClient, getLongviewClients } from './longview.actions';
+import {
+  createLongviewClient,
+  deleteLongviewClient,
+  getLongviewClients
+} from './longview.actions';
 
 export type State = EntitiesAsObjectState<LongviewClient>;
 
@@ -75,6 +80,42 @@ const reducer = reducerWithInitialState(defaultState)
       error: {
         ...state.error,
         create: error
+      }
+    })
+  )
+  /** START DELETE ACTIONS */
+  .case(deleteLongviewClient.started, state => ({
+    ...state,
+    error: {
+      ...state.error,
+      delete: undefined
+    }
+  }))
+  .caseWithAction(
+    deleteLongviewClient.done,
+    (state, { payload: { params } }) => {
+      const dataCopy = clone(state.data);
+
+      delete dataCopy[params.id];
+
+      return {
+        ...state,
+        data: dataCopy,
+        results: state.results - 1,
+        lastUpdated: Date.now(),
+        listOfIDsInOriginalOrder: state.listOfIDsInOriginalOrder.filter(
+          e => e !== params.id
+        )
+      };
+    }
+  )
+  .caseWithAction(
+    deleteLongviewClient.failed,
+    (state, { payload: { error } }) => ({
+      ...state,
+      error: {
+        ...state.error,
+        delete: error
       }
     })
   )

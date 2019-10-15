@@ -30,3 +30,9 @@ export const getLongviewClients = (params?: any, filter?: any) =>
     setXFilter(filter),
     setMethod('GET')
   ).then(response => response.data);
+
+export const deleteLongviewClient = (id: number) =>
+  Request<{}>(
+    setURL(`${API_ROOT}/longview/clients/${id}`),
+    setMethod('DELETE')
+  ).then(response => response.data);
