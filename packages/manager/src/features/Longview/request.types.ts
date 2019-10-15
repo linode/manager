@@ -93,3 +93,7 @@ export interface LongviewNetwork {
     };
   };
 }
+
+export interface LastUpdated {
+  updated: number;
+}

@@ -1,20 +1,14 @@
 import { LongviewClient } from 'linode-js-sdk/lib/longview';
 import * as React from 'react';
 import { compose } from 'recompose';
-// import { makeStyles, Theme } from 'src/components/core/styles'
 
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
 import TableRowEmpty from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
 
 import { Props as LVProps } from 'src/containers/longview.container';
-import ActionMenu, { ActionHandlers } from './LongviewActionMenu';
-
-// const useStyles = makeStyles((theme: Theme) => ({
-//   root: {}
-// }))
+import { ActionHandlers } from './LongviewActionMenu';
+import ClientRow from './LongviewClientRow';
 
 interface Props
   extends Omit<
@@ -31,8 +25,6 @@ interface Props
 type CombinedProps = Props & ActionHandlers;
 
 const LongviewTableRows: React.FC<CombinedProps> = props => {
-  // const classes = useStyles();
-
   const {
     longviewClientsData,
     longviewClientsResults,
@@ -71,19 +63,13 @@ const LongviewTableRows: React.FC<CombinedProps> = props => {
     <React.Fragment>
       {longviewClientsData.map(eachClient => {
         return (
-          <TableRow
-            rowLink={`longview/clients/${eachClient.id}`}
-            key={`longview-row-${eachClient.id}`}
-          >
-            <TableCell>{eachClient.label}</TableCell>
-            <TableCell>
-              <ActionMenu
-                longviewClientID={eachClient.id}
-                longviewClientLabel={eachClient.label}
-                {...actionMenuHandlers}
-              />
-            </TableCell>
-          </TableRow>
+          <ClientRow
+            key={`longview-client-${eachClient.label}`}
+            clientID={eachClient.id}
+            clientLabel={eachClient.label}
+            clientAPIKey={eachClient.api_key}
+            {...actionMenuHandlers}
+          />
         );
       })}
     </React.Fragment>
