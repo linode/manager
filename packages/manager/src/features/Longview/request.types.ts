@@ -3,6 +3,14 @@ interface Stat {
   y: number;
 }
 
+interface FS {
+  itotal: Stat[];
+  ifree: Stat[];
+  total: Stat[];
+  free: Stat[];
+  path: string;
+}
+
 interface Disk {
   dm: number;
   children: number;
@@ -13,6 +21,7 @@ interface Disk {
   writes?: Stat[];
   reads?: Stat[];
   read_bytes?: Stat[];
+  fs: FS;
 }
 /*
   each key will be the name of the disk
