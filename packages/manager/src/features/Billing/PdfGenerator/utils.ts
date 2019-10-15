@@ -23,7 +23,7 @@ export const createPaymentsTable = (doc: JSPDF, payment: Payment) => {
       lineWidth: 1
     },
     headStyles: {
-      fillColor: '#3683dc'
+      fillColor: '#444444'
     },
     head: [['Description', 'Date', 'Amount']],
     body: [
@@ -45,7 +45,7 @@ export const createPaymentsTotalsTable = (doc: JSPDF, payment: Payment) => {
       halign: 'right'
     },
     headStyles: {
-      fillColor: '#3683dc'
+      fillColor: '#444444'
     },
     body: [['Payment Total (USD)        ', `$${payment.usd.toFixed(2)}`]]
   });
@@ -61,7 +61,7 @@ export const createInvoiceItemsTable = (doc: JSPDF, items: InvoiceItem[]) => {
       lineWidth: 1
     },
     headStyles: {
-      fillColor: '#3683dc'
+      fillColor: '#444444'
     },
     head: [
       [
@@ -125,7 +125,7 @@ export const createInvoiceTotalsTable = (doc: JSPDF, invoice: Invoice) => {
       halign: 'right'
     },
     headStyles: {
-      fillColor: '#3683dc'
+      fillColor: '#444444'
     },
     body: [
       ['Subtotal (USD)', `$${invoice.subtotal.toFixed(2)}`],
