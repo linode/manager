@@ -3,8 +3,8 @@ import * as React from 'react';
 import { compose } from 'recompose';
 // import { makeStyles, Theme } from 'src/components/core/styles'
 
-import TableRow from 'src/components/core/TableRow';
 import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import TableRowEmpty from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
@@ -71,7 +71,10 @@ const LongviewTableRows: React.FC<CombinedProps> = props => {
     <React.Fragment>
       {longviewClientsData.map(eachClient => {
         return (
-          <TableRow key={`longview-row-${eachClient.id}`}>
+          <TableRow
+            rowLink={`longview/clients/${eachClient.id}`}
+            key={`longview-row-${eachClient.id}`}
+          >
             <TableCell>{eachClient.label}</TableCell>
             <TableCell>
               <ActionMenu
