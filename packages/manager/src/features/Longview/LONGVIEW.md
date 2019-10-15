@@ -59,7 +59,7 @@ We recommend to keep `--form api_action=batch \` untouched and instead make chan
 | getTopProcesses | Gets all the top processes running on the server             |
 | lastUpdated     | Returns a datetime when the Longview stats were last updated |
 
-#### keys
+#### `keys`
 
 | key       | returned unit  | description                                                                                                                                      |
 |-----------|----------------|--------------------------------------------------------------------------------------------------------------------------------------------------|
