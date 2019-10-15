@@ -3,6 +3,16 @@ import { Invoice, InvoiceItem, Payment } from 'linode-js-sdk/lib/account';
 import { pathOr } from 'ramda';
 import formatDate from 'src/utilities/formatDate';
 
+const formatDateForTable = (date: string): [string, string] => {
+  /** gives us a datetime seperated by a space. e.g. 2019-09-30 08:25:00 */
+  const res = formatDate(date);
+
+  /** basically, if we have an invalid date, return empty strings */
+  return !!res.match(/invalid/gim)
+    ? ['', '']
+    : (res.split(' ') as [string, string]);
+};
+
 /**
  * Creates the table header and rows for a payment PDF
  */
@@ -65,44 +75,44 @@ export const createInvoiceItemsTable = (doc: JSPDF, items: InvoiceItem[]) => {
         'Total'
       ]
     ],
-    body: items.map(item => [
-      {
-        styles: { fontSize: 8, cellWidth: 75, overflow: 'linebreak' },
-        content: formatDescription(item.label)
-      },
-      {
-        styles: { fontSize: 8, cellWidth: 50, overflow: 'linebreak' },
-        content: item.from
-          ? `${item.from.substr(0, 10)}\n${item.from.substr(10)}`
-          : ''
-      },
-      {
-        styles: { fontSize: 8, cellWidth: 50, overflow: 'linebreak' },
-        content: item.to
-          ? `${item.to.substr(0, 10)}\n${item.to.substr(10)}`
-          : ''
-      },
-      {
-        styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
-        content: item.quantity || ''
-      },
-      {
-        styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
-        content: item.unit_price || ''
-      },
-      {
-        styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
-        content: `$${item.amount}`
-      },
-      {
-        styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
-        content: `$${item.tax}`
-      },
-      {
-        styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
-        content: `$${item.total}`
-      }
-    ])
+    body: items.map(item => {
+      const [toDate, toTime] = formatDateForTable(item.to || '');
+      const [fromDate, fromTime] = formatDateForTable(item.from || '');
+      return [
+        {
+          styles: { fontSize: 8, cellWidth: 75, overflow: 'linebreak' },
+          content: formatDescription(item.label)
+        },
+        {
+          styles: { fontSize: 8, cellWidth: 50, overflow: 'linebreak' },
+          content: item.from ? `${fromDate}\n${fromTime}` : ''
+        },
+        {
+          styles: { fontSize: 8, cellWidth: 50, overflow: 'linebreak' },
+          content: item.to ? `${toDate}\n${toTime}` : ''
+        },
+        {
+          styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
+          content: item.quantity || ''
+        },
+        {
+          styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
+          content: item.unit_price || ''
+        },
+        {
+          styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
+          content: `$${item.amount}`
+        },
+        {
+          styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
+          content: `$${item.tax}`
+        },
+        {
+          styles: { halign: 'center', fontSize: 8, overflow: 'linebreak' },
+          content: `$${item.total}`
+        }
+      ];
+    })
   });
 };
 
