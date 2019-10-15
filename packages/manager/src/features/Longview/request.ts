@@ -2,6 +2,14 @@ import Axios, { AxiosResponse } from 'axios';
 import { curry, pathOr } from 'ramda';
 import { LONGVIEW_ROOT } from 'src/constants';
 
+import {
+  LongviewCPU,
+  LongviewDisk,
+  LongviewLoad,
+  LongviewMemory,
+  LongviewNetwork
+} from './request.types';
+
 /**
  * A successful LV request results in a response like this:
  *
@@ -52,10 +60,16 @@ export type LongviewAction =
   | 'getValues'
   | 'lastUpdated';
 
+type AllData = LongviewCPU &
+  LongviewDisk &
+  LongviewLoad &
+  LongviewMemory &
+  LongviewNetwork;
+
 export interface LongviewResponse {
   VERSION: number;
   ACTION: LongviewAction;
-  DATA: any;
+  DATA: Partial<AllData>;
   NOTIFICATIONS: LongviewError[];
 }
 
@@ -69,11 +83,21 @@ export interface LongviewError {
  * Scaffolding; expand as we gather requirements.
  */
 
-export type LongviewFieldName = 'cpu' | 'uptime';
+export type LongviewFieldName =
+  | 'cpu'
+  | 'uptime'
+  | 'memory'
+  | 'load'
+  | 'network'
+  | 'disk';
 
 export const fieldNames: Record<LongviewFieldName, string> = {
   cpu: 'CPU.*',
-  uptime: 'Uptime'
+  uptime: 'Uptime',
+  memory: 'Memory.*',
+  load: 'Load.*',
+  network: 'Network.*',
+  disk: 'Disk.*'
 };
 
 export const baseRequest = Axios.create({
@@ -83,7 +107,7 @@ export const baseRequest = Axios.create({
 });
 
 export const handleLongviewResponse = (
-  response: AxiosResponse<LongviewResponse>
+  response: AxiosResponse<[LongviewResponse]>
 ) => {
   const notifications = response.data[0].NOTIFICATIONS;
   if (notifications.length > 0) {
