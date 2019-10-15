@@ -85,12 +85,18 @@ As per @abemassry:
 
 See [this blog post](http://www.brendangregg.com/blog/2017-08-08/linux-load-averages.html) for a more detailed explanation.
 
+---
+
 ### How do I calculate my actual used memory on my ext disk?
 
 Actual used memory is `used - (buffers + cache)` which are all returned from the Longview API.
 
 Please note, however, that full memory on the system is `used + free`
 
+---
+
 ### How do I determine the maximum amount of network traffic I can have?
 
 Idk. Still have to figure this out.
+
+---
