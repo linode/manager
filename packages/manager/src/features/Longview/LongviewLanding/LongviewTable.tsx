@@ -6,12 +6,12 @@ import { Props as LVProps } from 'src/containers/longview.container';
 import Paper from 'src/components/core/Paper';
 import TableBody from 'src/components/core/TableBody';
 import TableHead from 'src/components/core/TableHead';
-import TableRow from 'src/components/core/TableRow';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
 import Table from 'src/components/Table';
 import TableCell from 'src/components/TableCell';
+import TableRow from 'src/components/TableRow';
 import TableSortCell from 'src/components/TableSortCell';
 
 import { ActionHandlers } from './LongviewActionMenu';
