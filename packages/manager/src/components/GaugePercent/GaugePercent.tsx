@@ -17,7 +17,7 @@ interface Options {
 
 const useStyles = (options: Options) =>
   makeStyles((theme: Theme) => ({
-    donutWrapper: {
+    gaugeWrapper: {
       position: 'relative',
       width: `50%`
     },
@@ -44,8 +44,8 @@ interface Props {
   height?: number;
   filledInColor?: string;
   nonFilledInColor?: string;
-  filledInNumber: number;
-  maxNumber: number;
+  value: number;
+  max: number;
   innerText?: string;
   innerTextFontSize?: number;
   subTitle?: string | JSX.Element;
@@ -53,7 +53,7 @@ interface Props {
 
 type CombinedProps = Props & WithTheme;
 
-const DonutGraph: React.FC<CombinedProps> = props => {
+const GaugePercent: React.FC<CombinedProps> = props => {
   const width = props.width || 300;
   const height = props.height || 300;
   const classes = useStyles({
@@ -65,7 +65,7 @@ const DonutGraph: React.FC<CombinedProps> = props => {
   return (
     <React.Fragment>
       <div
-        className={classes.donutWrapper}
+        className={classes.gaugeWrapper}
         style={{
           width
         }}
@@ -80,10 +80,7 @@ const DonutGraph: React.FC<CombinedProps> = props => {
                   props.nonFilledInColor || props.theme.color.grey2
                 ],
                 /** so basically, index 0 is the filled in, index 1 is the full graph percentage */
-                data: [
-                  props.filledInNumber,
-                  props.maxNumber - props.filledInNumber
-                ],
+                data: [props.value, props.max - props.value],
                 backgroundColor: [
                   props.filledInColor || props.theme.color.blue,
                   props.nonFilledInColor || props.theme.color.grey2
@@ -123,4 +120,4 @@ const DonutGraph: React.FC<CombinedProps> = props => {
 export default compose<CombinedProps, Props>(
   React.memo,
   withTheme
-)(DonutGraph);
+)(GaugePercent);

@@ -1,6 +1,6 @@
 import { storiesOf } from '@storybook/react';
 import * as React from 'react';
-import Donut from './DonutGraph';
+import Gauge from './GaugePercent';
 
 import Typography from 'src/components/core/Typography';
 
@@ -18,34 +18,34 @@ const SubText = () => {
 const Example: React.FC<{}> = props => {
   return (
     <React.Fragment>
-      <Donut
+      <Gauge
         height={500}
         width={500}
-        filledInNumber={50}
-        maxNumber={200}
+        value={50}
+        max={200}
         innerText="25% Used"
         subTitle="Hello world"
       />
-      <Donut
+      <Gauge
         height={300}
         width={300}
-        filledInNumber={100}
-        maxNumber={200}
+        value={100}
+        max={200}
         subTitle={`This is subtext`}
         filledInColor="green"
       />
-      <Donut
-        filledInNumber={30}
-        maxNumber={100}
+      <Gauge
+        value={30}
+        max={100}
         innerText="25% Used"
         subTitle="Hello world"
         filledInColor="purple"
       />
-      <Donut
+      <Gauge
         height={150}
         width={150}
-        filledInNumber={50}
-        maxNumber={200}
+        value={50}
+        max={200}
         innerText="25%"
         innerTextFontSize={12}
         subTitle={SubText()}
@@ -54,4 +54,4 @@ const Example: React.FC<{}> = props => {
   );
 };
 
-storiesOf('Donut Graph', module).add('Example', () => <Example />);
+storiesOf('Gauge Percent', module).add('Example', () => <Example />);
