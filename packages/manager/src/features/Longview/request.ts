@@ -3,6 +3,7 @@ import { curry, pathOr } from 'ramda';
 import { LONGVIEW_ROOT } from 'src/constants';
 
 import {
+  LastUpdated,
   LongviewCPU,
   LongviewDisk,
   LongviewLoad,
@@ -52,6 +53,29 @@ import {
  * So the errors will be available at response.data[0].NOTIFICATIONS.
  */
 
+type AllData = LongviewCPU &
+  LongviewDisk &
+  LongviewLoad &
+  LongviewMemory &
+  LongviewNetwork &
+  LastUpdated;
+
+/**
+ * overload for the actual request
+ *
+ * this will need to be updated to account for different types of actions
+ * and field names.
+ *
+ * For example if the action is getLatestValue and the field is ['CPU.*'],
+ * the return type will be Promise<LongviewCPU>
+ */
+interface Get {
+  (token: string, action: 'lastUpdated'): Promise<LastUpdated>;
+  (token: string, action: LongviewAction, field?: LongviewFieldName[]): Promise<
+    Partial<AllData>
+  >;
+}
+
 export type LongviewAction =
   | 'batch'
   | 'getTopProcesses'
@@ -60,16 +84,10 @@ export type LongviewAction =
   | 'getValues'
   | 'lastUpdated';
 
-type AllData = LongviewCPU &
-  LongviewDisk &
-  LongviewLoad &
-  LongviewMemory &
-  LongviewNetwork;
-
 export interface LongviewResponse {
   VERSION: number;
   ACTION: LongviewAction;
-  DATA: Partial<AllData>;
+  DATA: any;
   NOTIFICATIONS: LongviewError[];
 }
 
@@ -127,7 +145,7 @@ export const handleLongviewResponse = (
   }
 };
 
-export const get = (
+export const get: Get = (
   token: string,
   action: LongviewAction,
   fields?: LongviewFieldName[]
@@ -147,9 +165,9 @@ export const get = (
   }).then(handleLongviewResponse);
 };
 
-export const getLastUpdated = curry((token: string) => {
-  return get(token, 'getLatestValue');
-});
+export const getLastUpdated = (token: string) => {
+  return get(token, 'lastUpdated');
+};
 
 export const getValues = curry((token: string, fields: LongviewFieldName[]) => {
   return get(token, 'getValues', fields);

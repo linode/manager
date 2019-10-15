@@ -1,6 +1,5 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-// import { makeStyles, Theme } from 'src/components/core/styles'
 import { Props as LVProps } from 'src/containers/longview.container';
 
 import Paper from 'src/components/core/Paper';
@@ -17,10 +16,6 @@ import TableSortCell from 'src/components/TableSortCell';
 import { ActionHandlers } from './LongviewActionMenu';
 import LongviewRows from './LongviewTableRows';
 
-// const useStyles = makeStyles((theme: Theme) => ({
-//   root: {}
-// }))
-
 type LongviewProps = Omit<
   LVProps,
   | 'getLongviewClients'
@@ -32,8 +27,6 @@ type LongviewProps = Omit<
 type CombinedProps = LongviewProps & ActionHandlers;
 
 const LongviewTable: React.FC<CombinedProps> = props => {
-  // const classes = useStyles();
-
   const {
     longviewClientsData,
     longviewClientsError,
