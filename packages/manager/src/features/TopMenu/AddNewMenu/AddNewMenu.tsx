@@ -83,6 +83,7 @@ const styles = (theme: Theme) =>
 
 interface Props {
   openVolumeDrawerForCreating: typeof openVolumeDrawerForCreating;
+  openDomainDrawerForCreating: typeof openDomainDrawerForCreating;
 }
 
 interface State {

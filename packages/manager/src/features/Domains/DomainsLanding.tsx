@@ -241,6 +241,12 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     });
   };
 
+  openCreateDomainDrawer = (e: any) => {
+    this.props.openForCreating('Created from Domain Landing');
+
+    e.preventDefault();
+  };
+
   render() {
     const { classes } = this.props;
     const {
@@ -261,11 +267,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     }
 
     if (!domainsData || domainsData.length === 0) {
-      return (
-        <RenderEmpty
-          onClick={this.props.openForCreating('Created from Domain Landing')}
-        />
-      );
+      return <RenderEmpty onClick={this.openCreateDomainDrawer} />;
     }
 
     /**
@@ -344,9 +346,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
                       </Grid>
                       <Grid item className="pt0">
                         <AddNewLink
-                          onClick={this.props.openForCreating(
-                            'Created from Domain Landing'
-                          )}
+                          onClick={this.openCreateDomainDrawer}
                           label="Add a Domain"
                         />
                       </Grid>
@@ -471,7 +471,7 @@ const EmptyCopy = () => (
 );
 
 const RenderEmpty: React.StatelessComponent<{
-  onClick: () => void;
+  onClick: (e: any) => void;
 }> = props => {
   return (
     <React.Fragment>
