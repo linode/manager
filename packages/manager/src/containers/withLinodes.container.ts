@@ -10,7 +10,7 @@ import { ThunkDispatch } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
 
 export interface DispatchProps {
-  getLinodes: (params: any, filters: any) => Promise<GetAllData<Linode[]>>;
+  getLinodes: (params?: any, filters?: any) => Promise<GetAllData<Linode[]>>;
 }
 
 export type LinodeWithMaintenance = L;

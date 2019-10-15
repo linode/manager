@@ -296,7 +296,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                 <Route path="/nodebalancers" component={NodeBalancers} />
                 <Route path="/domains" component={Domains} />
                 <Route path="/managed" component={Managed} />
-                <Route exact path="/longview" component={Longview} />
+                <Route path="/longview" component={Longview} />
                 <Route exact strict path="/images" component={Images} />
                 <Redirect path="/images*" to="/images" />
                 <Route path="/stackscripts" component={StackScripts} />

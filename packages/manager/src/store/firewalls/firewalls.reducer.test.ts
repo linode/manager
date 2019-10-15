@@ -24,8 +24,7 @@ const baseFirewall: Firewall[] = [
     label: 'zzz',
     created_dt: '2019-12-11T19:44:38.526Z',
     updated_dt: '2019-12-11T19:44:38.526Z',
-    tags: [],
-    devices: {}
+    tags: []
   }
 ];
 
@@ -76,8 +75,7 @@ describe('Cloud Firewalls Reducer', () => {
         label: 'zzz',
         created_dt: '2019-12-11T19:44:38.526Z',
         updated_dt: '2019-12-11T19:44:38.526Z',
-        tags: [],
-        devices: {}
+        tags: []
       }
     });
     expect(newState).toHaveProperty('loading', false);

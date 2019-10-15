@@ -5,7 +5,7 @@ export default <TInner extends {}, TOuter extends {}>(
   propsSelector: (ownProps: TOuter) => number,
   mapBackupToProps: (
     ownProps: TOuter,
-    mostRecentBackup: string | null
+    mostRecentBackup?: string | null
   ) => TInner
 ) =>
   connect((state: ApplicationState, ownProps: TOuter) => {
