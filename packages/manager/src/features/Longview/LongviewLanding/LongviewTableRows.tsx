@@ -35,7 +35,7 @@ const LongviewTableRows: React.FC<CombinedProps> = props => {
   } = props;
 
   if (longviewClientsLoading && longviewClientsLastUpdated === 0) {
-    return <TableRowLoading colSpan={3} />;
+    return <TableRowLoading colSpan={9} />;
   }
 
   /**
@@ -44,7 +44,7 @@ const LongviewTableRows: React.FC<CombinedProps> = props => {
   if (longviewClientsError.read && longviewClientsLastUpdated === 0) {
     return (
       <TableRowError
-        colSpan={3}
+        colSpan={9}
         message={longviewClientsError.read[0].reason}
       />
     );
@@ -53,7 +53,7 @@ const LongviewTableRows: React.FC<CombinedProps> = props => {
   if (longviewClientsLastUpdated !== 0 && longviewClientsResults === 0) {
     return (
       <TableRowEmpty
-        colSpan={3}
+        colSpan={9}
         message="You do not have any Longview Clients"
       />
     );
