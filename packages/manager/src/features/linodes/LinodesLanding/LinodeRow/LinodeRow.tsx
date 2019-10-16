@@ -24,6 +24,7 @@ import LinodeRowHeadCell from './LinodeRowHeadCell';
 import LinodeRowLoading from './LinodeRowLoading';
 
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import { capitalize } from 'src/utilities/capitalize';
 import { parseMaintenanceStartTime } from '../utils';
 
 interface Props {
@@ -152,13 +153,13 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
             loading ? (
               'Busy'
             ) : (
-              status
+              capitalize(status)
             )
           ) : (
             <>
               <div>
                 <div>
-                  <strong>Maintenance scheduled</strong>
+                  <strong>Maintenance Scheduled</strong>
                 </div>
                 <div>
                   {dateTime[0]} at {dateTime[1]}
