@@ -705,6 +705,7 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
       },
       MuiFormHelperText: {
         root: {
+          maxWidth: 415,
           fontSize: '0.875rem',
           '&$error': {
             color: '#ca0813'
