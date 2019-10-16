@@ -13,6 +13,7 @@ export interface State {
   mode: string;
   id?: number;
   domain?: string;
+  origin?: Origin;
 }
 
 interface Creating extends Action {
@@ -45,9 +46,7 @@ export type Origin =
   | 'Created from Domain Landing';
 
 // ACTION CREATORS
-export const openForCreating: ActionCreator = (
-  origin: undefined
-): Creating => ({
+export const openForCreating: ActionCreator = (): Creating => ({
   type: CREATING
 });
 export const openForEditing: ActionCreator = (
