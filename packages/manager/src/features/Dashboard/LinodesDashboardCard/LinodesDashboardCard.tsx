@@ -84,6 +84,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
         title="Linodes"
         headerAction={this.renderAction}
         className={classes.root}
+        alignHeader="flex-start"
       >
         <Paper>
           <Table>

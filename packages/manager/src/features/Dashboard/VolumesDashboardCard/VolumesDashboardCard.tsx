@@ -74,6 +74,7 @@ export const VolumesDashboardCard: React.FunctionComponent<
     <DashboardCard
       title="Volumes"
       headerAction={renderAction}
+      alignHeader="flex-start"
       data-qa-dash-volume
     >
       <Paper>

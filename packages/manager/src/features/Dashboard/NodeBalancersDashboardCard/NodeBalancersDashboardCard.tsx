@@ -162,7 +162,11 @@ const NodeBalancersDashboardCard: React.FunctionComponent<
   };
 
   return (
-    <DashboardCard title="NodeBalancers" headerAction={renderAction}>
+    <DashboardCard
+      title="NodeBalancers"
+      headerAction={renderAction}
+      alignHeader="flex-start"
+    >
       <Paper>
         <Table>
           <TableBody>{renderContent()}</TableBody>

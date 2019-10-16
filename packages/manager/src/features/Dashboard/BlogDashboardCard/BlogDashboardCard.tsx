@@ -93,7 +93,11 @@ export class BlogDashboardCard extends React.Component<CombinedProps, State> {
     }
 
     return (
-      <DashboardCard title="Blog" headerAction={this.renderAction}>
+      <DashboardCard
+        title="Blog"
+        headerAction={this.renderAction}
+        alignHeader="flex-start"
+      >
         {items.map(this.renderItem)}
       </DashboardCard>
     );
