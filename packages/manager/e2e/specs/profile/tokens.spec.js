@@ -165,23 +165,15 @@ describe('View - Personal Access Tokens', () => {
 
     describe('Revoke Personal Access Tokens', () => {
       const revokeMenu = '[data-qa-action-menu-item="Revoke"]';
-
-      it('should display revoke action menu item', () => {
+      it('should revoke token on remove', () => {
         $(`${updatedSelector} [data-qa-action-menu]`).waitForDisplayed(
           constants.wait.normal
         );
         browser.jsClick(`${updatedSelector} [data-qa-action-menu]`);
-        expect($(revokeMenu).isDisplayed()).toBe(true);
-      });
-
-      it('should display revoke dialog', () => {
         browser.jsClick(revokeMenu);
         $(dialogTitle).waitForDisplayed(constants.wait.normal);
 
         expect($(dialogTitle).getText()).toBe(`Revoking ${updatedMsg}`);
-      });
-
-      it('should revoke on remove', () => {
         browser.jsClick(dialogConfirm);
         profile.tokenBaseElems();
         /** we've revoked the token and it should not be visible */
