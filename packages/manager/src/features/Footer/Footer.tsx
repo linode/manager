@@ -29,7 +29,7 @@ const styles = (theme: Theme) =>
         flexDirection: 'column',
         alignItems: 'flex-start'
       },
-      [theme.breakpoints.up('md')]: {
+      [theme.breakpoints.up('lg')]: {
         paddingLeft: theme.spacing(17) + 79 // 215
       },
       [theme.breakpoints.up('xl')]: {
