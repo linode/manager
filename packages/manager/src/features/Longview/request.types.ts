@@ -97,3 +97,21 @@ export interface LongviewNetwork {
 export interface LastUpdated {
   updated: number;
 }
+
+export interface LongviewSystemInfo {
+  SysInfo: {
+    arch: string;
+    client: string;
+    type: string;
+    os: {
+      distversion: string;
+      dist: string;
+    };
+    cpu: {
+      cores: number;
+      type: string;
+    };
+    hostname: string;
+    kernel: string;
+  };
+}
