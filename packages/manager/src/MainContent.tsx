@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   content: {
     flex: 1,
-    [theme.breakpoints.up('md')]: {
+    [theme.breakpoints.up('lg')]: {
       marginLeft: theme.spacing(14) + 103 // 215
     },
     [theme.breakpoints.up('xl')]: {
