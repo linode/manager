@@ -17,6 +17,7 @@ import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import LinearProgress from 'src/components/LinearProgress';
+import Notice from 'src/components/Notice';
 import Tags from 'src/components/Tags';
 import {
   linodeInTransition,
@@ -205,15 +206,19 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
               ) : (
                 <>
                   <div className={classes.cardMaintenance}>
-                    <Typography>
-                      <strong>Maintenance Scheduled</strong> {dateTime[0]} at{' '}
-                      {dateTime[1]}
-                    </Typography>
-                    <HelpIcon
-                      text={<MaintenanceText />}
-                      className={classes.statusHelpIcon}
-                      tooltipPosition="right-start"
-                    />
+                    <Notice
+                      warning
+                      spacingBottom={0}
+                      className={classes.maintenanceNotice}
+                    >
+                      Maintenance Scheduled <br />
+                      {dateTime[0]} at {dateTime[1]}
+                      <HelpIcon
+                        text={<MaintenanceText />}
+                        className={classes.statusHelpIcon}
+                        tooltipPosition="right-start"
+                      />
+                    </Notice>
                   </div>
                 </>
               )}

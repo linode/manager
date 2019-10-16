@@ -83,7 +83,7 @@ const styles = (theme: Theme) =>
         alignItems: 'center',
         lineHeight: 1.2,
         marginRight: -12,
-        [theme.breakpoints.down('md')]: {
+        [theme.breakpoints.down('sm')]: {
           minWidth: 200,
           justifyContent: 'flex-end'
         },
