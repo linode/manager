@@ -67,6 +67,13 @@ const LongviewTable: React.FC<CombinedProps> = props => {
                         >
                           Client
                         </TableSortCell>
+                        {/* @todo: Make these sortable (by what, though?) */}
+                        <TableCell>CPU</TableCell>
+                        <TableCell>RAM</TableCell>
+                        <TableCell>Swap</TableCell>
+                        <TableCell>Load</TableCell>
+                        <TableCell>Network</TableCell>
+                        <TableCell>Storage</TableCell>
                         <TableCell />
                       </TableRow>
                     </TableHead>

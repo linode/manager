@@ -26,7 +26,7 @@ const useStyles = (options: Options) =>
       top: `calc((${options.height}px / 2))`,
       width: options.width,
       textAlign: 'center',
-      fontSize: options.fontSize || `${theme.spacing(2.5)}px `,
+      fontSize: options.fontSize || `${theme.spacing(2)}px `,
       color: theme.palette.text.primary
     },
     subTitle: {
