@@ -375,7 +375,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     });
 
     return (
-      <Grid item xs={12} md={4}>
+      <Grid item xs={12} md={6}>
         <Grid container>
           <Grid
             updateFor={[classes]} // never update after initial render
