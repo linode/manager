@@ -30,6 +30,7 @@ type ClassNames =
   | 'link'
   | 'statusProgress'
   | 'cardMaintenance'
+  | 'maintenanceNotice'
   | 'wrapHeader';
 
 export type StyleProps = WithStyles<ClassNames> & WithTheme;
@@ -187,6 +188,13 @@ const styles = (theme: Theme) =>
     cardMaintenance: {
       display: 'flex',
       alignItems: 'center'
+    },
+    maintenanceNotice: {
+      '& .noticeText': {
+        display: 'flex',
+        alignItems: 'center',
+        fontSize: '.9rem'
+      }
     }
   });
 
