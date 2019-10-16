@@ -19,7 +19,6 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       '& p': {
-        marginBottom: theme.spacing(1),
         lineHeight: `20px`
       },
       '& p:last-child': {
