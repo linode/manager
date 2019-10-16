@@ -222,7 +222,7 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
                 {dateTime[0]} at {dateTime[1]}
                 <HelpIcon
                   text={<MaintenanceText />}
-                  tooltipPosition="right-start"
+                  tooltipPosition="top"
                   className={classes.helpIcon}
                 />
               </Notice>
