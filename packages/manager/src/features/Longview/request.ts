@@ -8,7 +8,8 @@ import {
   LongviewDisk,
   LongviewLoad,
   LongviewMemory,
-  LongviewNetwork
+  LongviewNetwork,
+  LongviewSystemInfo
 } from './request.types';
 
 /**
@@ -58,6 +59,7 @@ type AllData = LongviewCPU &
   LongviewLoad &
   LongviewMemory &
   LongviewNetwork &
+  LongviewSystemInfo &
   LastUpdated;
 
 /**
@@ -71,6 +73,11 @@ type AllData = LongviewCPU &
  */
 interface Get {
   (token: string, action: 'lastUpdated'): Promise<LastUpdated>;
+  (
+    token: string,
+    action: 'getLatestValue',
+    field: ('load' | 'sysinfo')[]
+  ): Promise<LongviewLoad & LongviewSystemInfo>;
   (token: string, action: LongviewAction, field?: LongviewFieldName[]): Promise<
     Partial<AllData>
   >;
@@ -106,6 +113,7 @@ export type LongviewFieldName =
   | 'uptime'
   | 'memory'
   | 'load'
+  | 'sysinfo'
   | 'network'
   | 'disk';
 
@@ -115,7 +123,8 @@ export const fieldNames: Record<LongviewFieldName, string> = {
   memory: 'Memory.*',
   load: 'Load.*',
   network: 'Network.*',
-  disk: 'Disk.*'
+  disk: 'Disk.*',
+  sysinfo: 'SysInfo.*'
 };
 
 export const baseRequest = Axios.create({
@@ -178,6 +187,8 @@ export const getLatestValue = curry(
     return get(token, 'getLatestValue', fields);
   }
 );
+
+export default get;
 
 /*
  * getTopProcesses
