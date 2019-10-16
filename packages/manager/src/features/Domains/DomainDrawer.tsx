@@ -529,7 +529,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
       selectedDefaultLinode,
       selectedDefaultNodeBalancer
     } = this.state;
-    const { domainActions } = this.props;
+    const { domainActions, origin } = this.props;
 
     const tags = this.state.tags.map(tag => tag.value);
 
@@ -613,6 +613,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               path(['ipv6'], selectedDefaultLinode)
             )
               .then(() => {
+                sendCreateDomainEvent(origin);
                 return this.redirectToLandingOrDetail(type, domainData.id);
               })
               .catch((e: APIError[]) => {
@@ -642,6 +643,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               path(['ipv6'], selectedDefaultNodeBalancer)
             )
               .then(() => {
+                sendCreateDomainEvent(origin);
                 return this.redirectToLandingOrDetail(type, domainData.id);
               })
               .catch((e: APIError[]) => {
@@ -665,6 +667,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
           }
         }
 
+        sendCreateDomainEvent(origin);
         return this.redirectToLandingOrDetail(type, domainData.id);
       })
       .catch(err => {
@@ -783,10 +786,8 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
   };
 
   submit = () => {
-    const { origin } = this.props;
     if (this.props.mode === CREATING) {
       this.create();
-      sendCreateDomainEvent(origin);
     } else if (this.props.mode === CLONING) {
       this.clone();
     } else if (this.props.mode === EDITING) {
