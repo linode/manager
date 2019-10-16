@@ -56,6 +56,10 @@ const styles = (theme: Theme) =>
       },
       [theme.breakpoints.down('xs')]: {
         marginTop: 0
+      },
+      '& .remove': {
+        margin: 0,
+        padding: theme.spacing(2.5)
       }
     },
     suggestionsParent: {
@@ -97,7 +101,8 @@ const styles = (theme: Theme) =>
     },
     statusHeader: {
       fontSize: '.9rem',
-      color: theme.color.label
+      color: theme.color.label,
+      marginTop: theme.spacing(2) - 4
     },
     statusChip: {
       marginTop: theme.spacing(1),
@@ -108,7 +113,7 @@ const styles = (theme: Theme) =>
       }
     },
     passiveChecks: {
-      marginTop: theme.spacing(1)
+      marginTop: theme.spacing(2.5)
     }
   });
 
@@ -370,7 +375,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
     });
 
     return (
-      <Grid item xs={12} md={4}>
+      <Grid item xs={12} md={6}>
         <Grid container>
           <Grid
             updateFor={[classes]} // never update after initial render
