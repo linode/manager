@@ -193,26 +193,29 @@ exports.browserCommands = () => {
       console.log(
         `clearing out ${fieldLength} characters for "${selector}" selector`
       );
+      $(selector).click();
+
       for (i = 0; i < fieldLength; i++) {
         $(selector).setValue('\uE003');
       }
     }
-    /* This is for handling the odd cases of numeric multi select inputs
-     * that will not cooperate with wdio e.g. MX preference
-     * @param { String } selector to target
-     * @param { String } value to enter/change
-     */
-    browser.addCommand('numberEntry', function(selector, valueToChange) {
-      $(selector).click();
-      //This is using the shift key and 2 arrow left actions (cmd + a) will not work on
-      //non Mac systems, this will work for all systems
-      browser.keys(['\uE008', '\uE012', '\uE012', '\uE012']);
-      $(selector).addValue(valueToChange);
-    });
 
     $(selector).setValue(value);
     const newValue = $(selector).getValue();
     console.log(`new set value: ${newValue}, has been entered`);
+  });
+
+  /* This is for handling the odd cases of numeric multi select inputs
+   * that will not cooperate with wdio e.g. MX preference
+   * @param { String } selector to target
+   * @param { String } value to enter/change
+   */
+  browser.addCommand('numberEntry', function(selector, valueToChange) {
+    $(selector).click();
+    //This is using the shift key and arrow up actions (cmd + a) will not work on
+    //non Mac systems, this will work for all systems for single line input
+    browser.keys(['\uE008', '\uE013']);
+    $(selector).addValue(valueToChange);
   });
 
   //This has been added as there are react issues with the element.setValue and element.clearValue

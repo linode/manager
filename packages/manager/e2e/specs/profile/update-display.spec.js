@@ -18,7 +18,8 @@ describe('Profile - Update Display Settings', () => {
     updateProfile(resetProfileBody);
   });
 
-  it('Should display the update display settings view', () => {
+  //TODO redo this suite or keep in Jest
+  xit('Should display the update display settings view', () => {
     Display.baseElementsDisplay();
   });
 
@@ -30,10 +31,10 @@ describe('Profile - Update Display Settings', () => {
     expect(Display.userEmail.getAttribute('disabled')).toBe(null);
   });
 
-  it('Invalid emails can not be saved', () => {
-    Display.userEmail.setValue('fakeemail');
+  xit('Invalid emails can not be saved', () => {
+    browser.trySetValue(Display.userEmail.selector, 'fakeemail');
     Display.submitButton.click();
-    Display.invalidEmailWarning.waitForVisible(constants.wait.normal);
+    Display.invalidEmailWarning.waitForDisplayed(constants.wait.normal);
     expect(Display.invalidEmailWarning.getText()).toEqual(
       'email must be a valid email'
     );
@@ -42,21 +43,21 @@ describe('Profile - Update Display Settings', () => {
 
   it('Valid email can be saved', () => {
     const validEmail = 'test@gmail.com';
-    Display.userEmail.setValue(validEmail);
+    browser.trySetValue(Display.userEmail.selector, validEmail);
     Display.submitButton.click();
     Display.waitForNotice('Email address updated.');
     expect(getProfile().email).toBe(validEmail);
   });
 
-  it('Change user timezone', () => {
+  xit('Change user timezone', () => {
     const gmtOffset = '(GMT -5:00) Eastern Time - New York';
     const timeZoneResponse = 'America/New_York';
-    expect(Display.timeZoneSelect.isVisible()).toBe(true);
+    expect(Display.timeZoneSelect.isDisplayed()).toBe(true);
     Display.timeZoneSelect
       .$('..')
       .$('input')
       .setValue(gmtOffset);
-    Display.selectOptions[0].waitForVisible(constants.wait.normal);
+    Display.selectOptions[0].waitForDisplayed(constants.wait.normal);
     Display.selectOptions[0].click(0);
     Display.saveTimeZone.click();
     Display.waitForNotice('Account timezone updated.');
