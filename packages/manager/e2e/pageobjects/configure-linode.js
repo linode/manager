@@ -384,9 +384,7 @@ class ConfigureLinode extends Page {
   }
 
   selectImage(imageName) {
-    this.generic();
-    this.imageDistro().setValue(imageName);
-    browser.enhancedSelect(this.imageDistro.selector, distro);
+    browser.enhancedSelect(this.imageDistro.selector, imageName);
   }
 
   selectPlanTab(planType) {
