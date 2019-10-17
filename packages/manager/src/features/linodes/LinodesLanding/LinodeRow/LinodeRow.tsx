@@ -40,6 +40,7 @@ interface Props {
   memory: number;
   vcpus: number;
   status: LinodeStatus;
+  displayStatus: string;
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;
@@ -69,6 +70,7 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
     label,
     region,
     status,
+    displayStatus,
     tags,
     mostRecentBackup,
     disk,
@@ -111,6 +113,7 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
       label={label}
       region={region}
       status={status}
+      displayStatus={displayStatus}
       tags={tags}
       mostRecentBackup={mostRecentBackup}
       disk={disk}
@@ -153,7 +156,7 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
             loading ? (
               'Busy'
             ) : (
-              capitalize(status)
+              capitalize(displayStatus)
             )
           ) : (
             <>
