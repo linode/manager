@@ -7,10 +7,10 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import ExpansionPanel from 'src/components/ExpansionPanel';
 import withAccount from 'src/containers/account.container';
 import useFlags from 'src/hooks/useFlags';
-import { pluralize } from 'src/utilities/pluralize';
-import { expiresInDays } from 'src/utilities/promoUtils';
 
 import PanelContent from './PanelContent';
+
+import formatDate from 'src/utilities/formatDate';
 
 const useStyles = makeStyles((theme: Theme) => ({
   promoNotice: {
@@ -37,13 +37,13 @@ export const PromotionsPanel: React.FC<StateProps> = props => {
     return null;
   }
 
-  const days = expiresInDays(pathOr(null, [0, 'expire_dt'], promotions));
-  const header = days ? (
+  const expireDate = pathOr(null, [0, 'expire_dt'], promotions);
+  const formattedDated = formatDate(expireDate, { format: 'D-MMM-YYYY' });
+  const header = expireDate ? (
     <span>
       {'Promotions & Credits '}{' '}
       <em className={classes.promoNotice}>
-        &#8212; You have promotional credits expiring in{' '}
-        {pluralize('day', 'days', days)}.
+        &#8212; You have promotional credits expiring the {formattedDated}
       </em>
     </span>
   ) : (
