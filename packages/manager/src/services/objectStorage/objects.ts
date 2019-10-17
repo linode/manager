@@ -7,6 +7,7 @@ interface ObjectURLOptions {
   // of a request to /object-url, to inform the API which kind of file it is
   // we're trying to upload.
   content_type?: string;
+  content_disposition?: string;
 }
 
 /**
