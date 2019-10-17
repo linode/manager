@@ -42,10 +42,12 @@ const LongviewGauge: React.FC<Props> = props => {
         setUsedCPU(normalizedUsed);
       })
       .catch(_ => {
-        setError({
-          reason: 'Error' // @todo: Error message?
-        });
-        setLoading(false);
+        if (!usedCPU) {
+          setError({
+            reason: 'Error' // @todo: Error message?
+          });
+          setLoading(false);
+        }
       });
   }, [lastUpdated]);
 
@@ -55,7 +57,7 @@ const LongviewGauge: React.FC<Props> = props => {
       // The MAX depends on the number of CPU cores. Default to 1 if cores
       // doesn't exist or is 0.
       max={100 * numCores || 1}
-      value={usedCPU}
+      value={usedCPU || 100}
       innerText={innerText(usedCPU, loading, error)}
       subTitle={
         <>
