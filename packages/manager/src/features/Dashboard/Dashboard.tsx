@@ -17,9 +17,12 @@ import {
 import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
+import MaintenanceBanner from 'src/components/MaintenanceBanner';
+import TaxBanner from 'src/components/TaxBanner';
 import TagImportDrawer from 'src/features/TagImport';
 import useFlags from 'src/hooks/useFlags';
 import { handleOpen } from 'src/store/backupDrawer';
+import { addNotificationsToLinodes } from 'src/store/linodes/linodes.helpers';
 import getEntitiesWithGroupsToImport, {
   emptyGroupedEntities,
   GroupedEntitiesForImport
@@ -38,9 +41,6 @@ import NodeBalancersDashboardCard from './NodeBalancersDashboardCard';
 import PromotionsBanner from './PromotionsBanner';
 import TransferDashboardCard from './TransferDashboardCard';
 import VolumesDashboardCard from './VolumesDashboardCard';
-
-import MaintenanceBanner from 'src/components/MaintenanceBanner';
-import TaxBanner from 'src/components/TaxBanner';
 
 type ClassNames = 'root';
 
@@ -151,7 +151,13 @@ export const Dashboard: React.StatelessComponent<CombinedProps> = props => {
 };
 
 const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
-  const linodesData = state.__resources.linodes.entities;
+  const linodes = state.__resources.linodes.entities;
+  const notifications = state.__resources.notifications.data || [];
+
+  const linodesWithMaintenance = addNotificationsToLinodes(
+    notifications,
+    linodes
+  );
 
   return {
     accountBackups: pathOr(
@@ -163,10 +169,12 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
     userTimezone: pathOr('', ['data', 'timezone'], state.__resources.profile),
     userTimezoneLoading: state.__resources.profile.loading,
     userTimezoneError: path(['read'], state.__resources.profile.error),
-    someLinodesHaveScheduledMaintenance: linodesData
-      ? linodesData.some(eachLinode => !!eachLinode.maintenance)
+    someLinodesHaveScheduledMaintenance: linodesWithMaintenance
+      ? linodesWithMaintenance.some(eachLinode => !!eachLinode.maintenance)
       : false,
-    linodesWithoutBackups: linodesData.filter(l => !l.backups.enabled),
+    linodesWithoutBackups: linodesWithMaintenance.filter(
+      l => !l.backups.enabled
+    ),
     managed: pathOr(
       false,
       ['__resources', 'accountSettings', 'data', 'managed'],

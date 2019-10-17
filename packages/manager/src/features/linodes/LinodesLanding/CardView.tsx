@@ -8,7 +8,7 @@ import { safeGetImageLabel } from 'src/utilities/safeGetImageLabel';
 import LinodeCard from './LinodeCard';
 
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
-import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
+import { LinodeWithMaintenance } from 'src/store/linodes/types';
 
 interface Props {
   data: LinodeWithMaintenance[];

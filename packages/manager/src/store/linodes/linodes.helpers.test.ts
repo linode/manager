@@ -16,8 +16,8 @@ const maintenanceNotification: (
       type: 'linode',
       url: 'https://hello.world'
     },
-    when: 'rightnow',
-    until: 'later',
+    when: '2019-10-17 21:52:28',
+    until: '2019-10-17 21:52:28',
     body: null
   }
 ];
@@ -30,20 +30,29 @@ describe('Linode Redux Helpers', () => {
       {
         ...linode1,
         maintenance: {
-          when: 'rightnow',
-          until: 'later',
+          when: '2019-10-17 21:52:28',
+          until: '2019-10-17 21:52:28',
           type: 'reboot'
         }
       }
     ]);
   });
 
-  expect(
-    addNotificationsToLinodes(maintenanceNotification(4325345345), [linode1])
-  ).toEqual([
-    {
-      ...linode1,
-      maintenance: null
-    }
-  ]);
+  it('returns Linode with `maintenance: null` if there are no notifications', () => {
+    expect(
+      addNotificationsToLinodes(maintenanceNotification(4325345345), [linode1])
+    ).toEqual([
+      {
+        ...linode1,
+        maintenance: null
+      }
+    ]);
+
+    expect(addNotificationsToLinodes([], [linode1])).toEqual([
+      {
+        ...linode1,
+        maintenance: null
+      }
+    ]);
+  });
 });

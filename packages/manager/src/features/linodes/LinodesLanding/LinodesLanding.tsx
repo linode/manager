@@ -47,7 +47,8 @@ import ToggleBox from './ToggleBox';
 
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
-import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
+import { addNotificationsToLinodes } from 'src/store/linodes/linodes.helpers';
+import { LinodeWithMaintenance } from 'src/store/linodes/types';
 
 import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
 import DeleteDialog from './DeleteDialog';
@@ -257,7 +258,7 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                       toggleCallbackFnDebounced={this.changeViewDelayed}
                       toggleCallbackFn={this.changeViewInstant}
                       /**
-                       * we want the URL query param to take priorty here, but if it's
+                       * we want the URL query param to take priority here, but if it's
                        * undefined, just use the user preference
                        */
                       value={
@@ -469,7 +470,13 @@ interface StateProps {
 }
 
 const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
-  const linodesData = state.__resources.linodes.entities;
+  const linodes = state.__resources.linodes.entities;
+  const notifications = state.__resources.notifications.data || [];
+
+  const linodesWithMaintenance = addNotificationsToLinodes(
+    notifications,
+    linodes
+  );
 
   return {
     managed: pathOr(
@@ -478,9 +485,9 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
       state
     ),
     linodesCount: state.__resources.linodes.results.length,
-    linodesData,
-    someLinodesHaveScheduledMaintenance: linodesData
-      ? linodesData.some(
+    linodesData: linodesWithMaintenance,
+    someLinodesHaveScheduledMaintenance: linodesWithMaintenance
+      ? linodesWithMaintenance.some(
           eachLinode =>
             !!eachLinode.maintenance && !!eachLinode.maintenance.when
         )

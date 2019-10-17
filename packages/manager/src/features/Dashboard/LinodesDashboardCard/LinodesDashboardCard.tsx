@@ -29,10 +29,11 @@ import {
   isEntityEvent,
   isInProgressEvent
 } from 'src/store/events/event.helpers';
+import { addNotificationsToLinodes } from 'src/store/linodes/linodes.helpers';
 import { LinodeWithMaintenanceAndMostRecentBackup } from 'src/store/linodes/types';
 import DashboardCard from '../DashboardCard';
 
-interface EntityEvent extends Omit<Event, 'entitiy'> {
+interface EntityEvent extends Omit<Event, 'entity'> {
   entity: Entity;
 }
 
@@ -213,12 +214,20 @@ interface WithUpdatingLinodesProps {
 }
 
 const withUpdatingLinodes = connect((state: ApplicationState, ownProps: {}) => {
+  const linodes = state.__resources.linodes.entities;
+  const notifications = state.__resources.notifications.data || [];
+
+  const linodesWithMaintenance = addNotificationsToLinodes(
+    notifications,
+    linodes
+  );
+
   return {
     linodes: compose(
       mergeEvents(state.events.events),
       take(5),
       sortBy(prop('label'))
-    )(state.__resources.linodes.entities),
+    )(linodesWithMaintenance),
     linodeCount: state.__resources.linodes.entities.length,
     loading: state.__resources.linodes.loading,
     error: path(['read'], state.__resources.linodes.error)
