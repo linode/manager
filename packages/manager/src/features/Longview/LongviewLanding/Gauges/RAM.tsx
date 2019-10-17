@@ -42,7 +42,7 @@ const RAMGauge: React.FC<Props> = props => {
           /**
            * All units come back in KB. We will do our converting in the render methods
            */
-          setMemory(generateUsedMemory(used, buffers, cache, free));
+          setMemory(generateUsedMemory(used, buffers, cache));
           setTotalMemory(generateTotalMemory(used, free));
           if (!!loading) {
             setLoading(false);
@@ -138,18 +138,18 @@ const RAMGauge: React.FC<Props> = props => {
   );
 };
 
-const generateUsedMemory = (
+export const generateUsedMemory = (
   used: number,
   buffers: number,
-  cache: number,
-  free: number
+  cache: number
 ) => {
   /**
    * calculation comes from original implementation of Longview.JS
    */
-  return used - (buffers + cache);
+  const result = used - (buffers + cache);
+  return result < 0 ? 0 : result;
 };
 
-const generateTotalMemory = (used: number, free: number) => used + free;
+export const generateTotalMemory = (used: number, free: number) => used + free;
 
 export default RAMGauge;
