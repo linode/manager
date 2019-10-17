@@ -17,7 +17,8 @@ import SwapGauge from './Gauges/Swap';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
     '& td': {
-      height: 192
+      height: 192,
+      paddingBottom: theme.spacing(4)
     }
   }
 }));
@@ -65,7 +66,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
 
   return (
     <TableRow className={classes.root} rowLink={`longview/clients/${clientID}`}>
-      <TableCell>{`${clientLabel} - ${lastUpdated}`}</TableCell>
+      <TableCell>{`${clientLabel}`}</TableCell>
       <TableCell>
         <CPUGauge clientAPIKey={clientAPIKey} lastUpdated={lastUpdated} />
       </TableCell>
@@ -76,7 +77,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         <SwapGauge />
       </TableCell>
       <TableCell>
-        <LoadGauge />
+        <LoadGauge lastUpdated={lastUpdated} token={clientAPIKey} />
       </TableCell>
       <TableCell>
         <NetworkGauge />
