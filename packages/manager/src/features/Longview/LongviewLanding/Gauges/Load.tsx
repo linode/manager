@@ -24,17 +24,21 @@ const LoadGauge: React.FC<Props> = props => {
     requestStats(props.token, 'getLatestValue', ['sysinfo', 'load'])
       .then(response => {
         setLoad(response.Load[0].y);
-        setCores(pathOr(1, ['cpu', 'cores'], response.SysInfo));
+        setCores(pathOr(0, ['cpu', 'cores'], response.SysInfo));
 
         if (!!loading) {
           setLoading(false);
         }
       })
-      .catch(e => {
+      .catch(() => {
         if (!load) {
           setError({
             reason: 'Error'
           });
+        }
+
+        if (!!loading) {
+          setLoading(false);
         }
       });
   }, [props.lastUpdated]);
@@ -46,14 +50,22 @@ const LoadGauge: React.FC<Props> = props => {
     if (error) {
       return {
         innerText: error.reason,
-        subTitle: null
+        subTitle: (
+          <Typography>
+            <strong>Load</strong>
+          </Typography>
+        )
       };
     }
 
     if (loading) {
       return {
         innerText: 'Loading...',
-        subTitle: null
+        subTitle: (
+          <Typography>
+            <strong>Load</strong>
+          </Typography>
+        )
       };
     }
 
