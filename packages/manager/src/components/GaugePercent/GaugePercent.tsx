@@ -48,7 +48,7 @@ interface Props {
   max: number;
   innerText?: string;
   innerTextFontSize?: number;
-  subTitle?: string | JSX.Element;
+  subTitle?: string | JSX.Element | null;
 }
 
 type CombinedProps = Props & WithTheme;
@@ -61,6 +61,12 @@ const GaugePercent: React.FC<CombinedProps> = props => {
     height,
     fontSize: props.innerTextFontSize
   })();
+
+  /**
+   * if the value exceeds the maximum (e.g Longview Load), just make the max 0
+   * so the value takes up 100% of the gauge
+   */
+  const finalMax = props.max - props.value < 0 ? 0 : props.max - props.value;
 
   return (
     <React.Fragment>
@@ -80,7 +86,7 @@ const GaugePercent: React.FC<CombinedProps> = props => {
                   props.nonFilledInColor || props.theme.color.grey2
                 ],
                 /** so basically, index 0 is the filled in, index 1 is the full graph percentage */
-                data: [props.value, props.max - props.value],
+                data: [props.value, finalMax],
                 backgroundColor: [
                   props.filledInColor || props.theme.color.blue,
                   props.nonFilledInColor || props.theme.color.grey2

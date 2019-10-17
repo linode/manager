@@ -11,3 +11,5 @@ export const usePrevious = <T>(value: T) => {
   });
   return ref.current;
 };
+
+export default usePrevious;
