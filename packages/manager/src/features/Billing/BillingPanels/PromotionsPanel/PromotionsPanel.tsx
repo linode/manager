@@ -43,7 +43,7 @@ export const PromotionsPanel: React.FC<StateProps> = props => {
     <span>
       {'Promotions & Credits '}{' '}
       <em className={classes.promoNotice}>
-        &#8212; You have promotional credits expiring the {formattedDated}
+        &#8212; You have promotional credits expiring {formattedDated}
       </em>
     </span>
   ) : (
