@@ -212,9 +212,7 @@ exports.browserCommands = () => {
    */
   browser.addCommand('numberEntry', function(selector, valueToChange) {
     $(selector).click();
-    //This is using the shift key and arrow up actions (cmd + a) will not work on
-    //non Mac systems, this will work for all systems for single line input
-    browser.keys(['\uE008', '\uE013']);
+    browser.keys(['Shift', 'Home']);
     $(selector).addValue(valueToChange);
   });
 

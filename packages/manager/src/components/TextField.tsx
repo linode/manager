@@ -355,7 +355,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
           {errorText && (
             <FormHelperText
               className={classes.errorText}
-              data-qa-textfield-error-text
+              data-qa-textfield-error-text={this.props.label}
             >
               {errorText}
             </FormHelperText>
