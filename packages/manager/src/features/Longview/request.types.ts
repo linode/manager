@@ -25,7 +25,7 @@ interface Disk {
 }
 /*
   each key will be the name of the disk
-  
+
   So if I have 1 ext disk and 1 swap, the keys might be:
 
   {
@@ -57,15 +57,15 @@ export interface LongviewMemory {
   };
 }
 
-interface CPU {
+export interface CPU {
   user: Stat[];
   wait: Stat[];
   system: Stat[];
 }
 
 /*
-  each key will be cpu${number} 
-  
+  each key will be cpu${number}
+
   So if I have 2 CPUs, the keys will be:
 
   {
