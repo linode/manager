@@ -25,6 +25,7 @@ const LoadGauge: React.FC<Props> = props => {
       .then(response => {
         setLoad(response.Load[0].y);
         setCores(pathOr(0, ['cpu', 'cores'], response.SysInfo));
+        setError(undefined);
 
         if (!!loading) {
           setLoading(false);
