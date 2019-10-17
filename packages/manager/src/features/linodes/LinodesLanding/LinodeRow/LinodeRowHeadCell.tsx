@@ -116,6 +116,7 @@ interface Props {
   memory: number;
   vcpus: number;
   status: LinodeStatus;
+  displayStatus: string | null;
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;

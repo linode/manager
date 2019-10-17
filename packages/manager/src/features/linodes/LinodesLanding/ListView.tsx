@@ -38,6 +38,7 @@ export const ListView: React.StatelessComponent<CombinedProps> = props => {
           label={linode.label}
           region={linode.region}
           status={linode.status}
+          displayStatus={linode.displayStatus || ''}
           tags={linode.tags}
           mostRecentBackup={linode.mostRecentBackup || null}
           disk={linode.specs.disk}

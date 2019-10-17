@@ -33,6 +33,7 @@ describe('LinodeRow', () => {
     type: 'whatever',
     tags: [],
     status: 'running',
+    displayStatus: 'running',
     region: 'us-east',
     label: 'my-linode',
     ipv6: 'some.long.ipv6.address',
