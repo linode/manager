@@ -51,5 +51,13 @@ afterAll(() => {
 });
 
 jest.mock('react-chartjs-2', () => ({
-  Doughnut: () => null
+  Doughnut: () => null,
+  Line: () => null,
+  defaults: {
+    global: {
+      defaultFontFamily: '',
+      defaultFontStyle: '',
+      defaultFontSize: ''
+    }
+  }
 }));
