@@ -18,6 +18,7 @@ export interface State {
 
 interface Creating extends Action {
   type: typeof CREATING;
+  origin: Origin;
 }
 interface Cloning extends Action {
   type: typeof CLONING;
@@ -46,8 +47,9 @@ export type Origin =
   | 'Created from Domain Landing';
 
 // ACTION CREATORS
-export const openForCreating: ActionCreator = (): Creating => ({
-  type: CREATING
+export const openForCreating: ActionCreator = (origin: Origin): Creating => ({
+  type: CREATING,
+  origin
 });
 export const openForEditing: ActionCreator = (
   domain: string,
@@ -79,7 +81,7 @@ type ActionTypes = Creating | Editing | Cloning | Close | Reset;
 export default (state: State = defaultState, action: ActionTypes) => {
   switch (action.type) {
     case CREATING:
-      return { mode: CREATING, open: true };
+      return { mode: CREATING, open: true, origin: action.origin };
 
     case EDITING:
       return {
