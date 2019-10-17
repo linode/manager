@@ -34,10 +34,10 @@ class NodeBalancers extends Page {
     return $('[data-qa-tp="Region"]');
   }
   get regionSelect() {
-    return $('[data-qa-enhanced-select="Regions"] input');
+    return $('[data-qa-enhanced-select="Regions"] #select-a-region');
   }
   get regionError() {
-    return $('#select-a-region-helper-text');
+    return $('[data-qa-textfield-error-text]');
   }
 
   get connectionThrottleSection() {
