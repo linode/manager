@@ -217,6 +217,7 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
                         text={<MaintenanceText />}
                         className={classes.statusHelpIcon}
                         tooltipPosition="top"
+                        interactive
                       />
                     </Notice>
                   </div>
