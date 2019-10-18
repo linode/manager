@@ -1,4 +1,3 @@
-import { Notification } from 'linode-js-sdk/lib/account';
 import { CreateLinodeRequest, Linode } from 'linode-js-sdk/lib/linodes';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { GetAllData } from 'src/utilities/getAll';
@@ -7,14 +6,11 @@ import actionCreatorFactory from 'typescript-fsa';
 export const actionCreator = actionCreatorFactory(`@@manager/linodes`);
 
 /*
-non-async actions for the purposes of updating the UI based on an event 
+non-async actions for the purposes of updating the UI based on an event
 that comes down the stream
 */
 
 export const updateMultipleLinodes = actionCreator<Linode[]>('update_multiple');
-export const addNotificationsToLinodes = actionCreator<Notification[]>(
-  'add_notifications_to_all_linodes'
-);
 export const upsertLinode = actionCreator<Linode>(`upsert`);
 export const deleteLinode = actionCreator<number>('delete');
 export const updateLinode = actionCreator<{
