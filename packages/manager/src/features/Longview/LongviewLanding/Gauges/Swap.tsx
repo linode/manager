@@ -98,7 +98,6 @@ const SwapGauge: React.FC<Props> = props => {
 
     /** first convert memory from KB to bytes */
     const usedMemoryToBytes = memory * 1024;
-    // const howManyBytesInGB = 1073741824;
 
     const convertedUsedMemory = readableBytes(
       /** convert KB to bytes */
