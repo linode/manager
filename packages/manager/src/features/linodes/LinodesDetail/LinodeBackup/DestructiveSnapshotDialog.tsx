@@ -63,7 +63,7 @@ class DestructiveSnapshotDialog extends React.PureComponent<CombinedProps, {}> {
       >
         <Typography>
           Taking a snapshot will back up your Linode in its current state,
-          over-writing your previous snapshot. Are you sure?
+          overriding your previous snapshot. Are you sure?
         </Typography>
       </ConfirmationDialog>
     );

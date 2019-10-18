@@ -87,7 +87,7 @@ const styles = (theme: Theme) =>
     },
     chart: {
       position: 'relative',
-      paddingLeft: 24
+      paddingLeft: 32
     },
     ioChart: {
       paddingLeft: 54
