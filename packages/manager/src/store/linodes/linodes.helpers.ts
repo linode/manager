@@ -1,10 +1,29 @@
 import { Notification } from 'linode-js-sdk/lib/account';
 import { Linode } from 'linode-js-sdk/lib/linodes';
-import formatDate from 'src/utilities/formatDate';
-import { LinodeWithMaintenance, Type } from './types';
+
+/**
+ * _when_ is not guaranteed to exist if this is a maintenance notification
+ *
+ * _when_ could be in the past
+ *
+ * In the case of maintenance, _until_ is always going to be _null_,
+ * so we cannot tell the user when their maintenance window will end. :(
+ */
+
+type Type = 'reboot-scheduled' | 'migration-pending';
+
+export interface Maintenance {
+  type: Type;
+  when: string | null;
+  until: string | null;
+}
+
+export interface LinodeWithMaintenance extends Linode {
+  maintenance?: Maintenance | null;
+}
 
 export const addNotificationsToLinodes = (
-  notifications: Notification[] = [],
+  notifications: Notification[],
   linodes: Linode[]
 ): LinodeWithMaintenance[] => {
   const maintenanceNotifications = notifications.filter(eachNotification => {
@@ -27,14 +46,8 @@ export const addNotificationsToLinodes = (
              * "when" and "until" are not guaranteed to exist
              * if we have a maintenance notification
              */
-            when:
-              typeof foundNotification.when === 'string'
-                ? formatDate(foundNotification.when)
-                : foundNotification.when,
-            until:
-              typeof foundNotification.until === 'string'
-                ? formatDate(foundNotification.until)
-                : foundNotification.until,
+            when: foundNotification.when,
+            until: foundNotification.until,
             type: foundNotification.label as Type
           }
         }

@@ -2,7 +2,7 @@ import { Event, GrantLevel } from 'linode-js-sdk/lib/account';
 import { Config, Disk, LinodeType } from 'linode-js-sdk/lib/linodes';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { Volume } from 'linode-js-sdk/lib/volumes';
-import { LinodeWithMaintenance } from 'src/store/linodes/types';
+import { LinodeWithMaintenance } from 'src/store/linodes/linodes.helpers';
 
 export interface ExtendedLinode extends LinodeWithMaintenance {
   _configs: Config[];

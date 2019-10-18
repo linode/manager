@@ -10,7 +10,7 @@ import { withLinodeDetailContext } from '../linodeDetailContext';
 
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import withProfile from 'src/containers/profile.container';
-import { Maintenance } from 'src/store/linodes/types';
+import { Maintenance } from 'src/store/linodes/linodes.helpers';
 import MigrationNotification from './MigrationNotification';
 
 type CombinedProps = ProfileProps &

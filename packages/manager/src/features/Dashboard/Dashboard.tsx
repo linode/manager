@@ -29,6 +29,7 @@ import getEntitiesWithGroupsToImport, {
 } from 'src/store/selectors/getEntitiesWithGroupsToImport';
 import { openDrawer as openGroupDrawer } from 'src/store/tagImportDrawer';
 import { MapState } from 'src/store/types';
+import { formatNotifications } from 'src/utilities/formatNotifications';
 import shouldDisplayGroupImport from 'src/utilities/shouldDisplayGroupImportCTA';
 import { storage } from 'src/utilities/storage';
 import BackupsDashboardCard from './BackupsDashboardCard';
@@ -155,7 +156,7 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
   const notifications = state.__resources.notifications.data || [];
 
   const linodesWithMaintenance = addNotificationsToLinodes(
-    notifications,
+    formatNotifications(notifications),
     linodes
   );
 

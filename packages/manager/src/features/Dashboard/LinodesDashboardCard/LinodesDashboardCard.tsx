@@ -31,6 +31,7 @@ import {
 } from 'src/store/events/event.helpers';
 import { addNotificationsToLinodes } from 'src/store/linodes/linodes.helpers';
 import { LinodeWithMaintenanceAndMostRecentBackup } from 'src/store/linodes/types';
+import { formatNotifications } from 'src/utilities/formatNotifications';
 import DashboardCard from '../DashboardCard';
 
 interface EntityEvent extends Omit<Event, 'entity'> {
@@ -218,7 +219,7 @@ const withUpdatingLinodes = connect((state: ApplicationState, ownProps: {}) => {
   const notifications = state.__resources.notifications.data || [];
 
   const linodesWithMaintenance = addNotificationsToLinodes(
-    notifications,
+    formatNotifications(notifications),
     linodes
   );
 

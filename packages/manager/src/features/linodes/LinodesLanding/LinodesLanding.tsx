@@ -31,6 +31,7 @@ import { ApplicationState } from 'src/store';
 import { deleteLinode } from 'src/store/linodes/linode.requests';
 import { MapState } from 'src/store/types';
 import formatDate from 'src/utilities/formatDate';
+import { formatNotifications } from 'src/utilities/formatNotifications';
 import {
   sendGroupByTagEnabledEvent,
   sendLinodesViewEvent
@@ -474,7 +475,7 @@ const mapStateToProps: MapState<StateProps, {}> = (state, ownProps) => {
   const notifications = state.__resources.notifications.data || [];
 
   const linodesWithMaintenance = addNotificationsToLinodes(
-    notifications,
+    formatNotifications(notifications),
     linodes
   );
 
