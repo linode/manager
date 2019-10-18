@@ -24,7 +24,7 @@ body.searchOverlay #main-content {
 
 @media screen and (min-width: 960px) {
   body {
-    /* fix for scrollbar compoensation */
+    /* fix for scrollbar compensation */
     width: 100vw;
     overflow-x: hidden;
   }
@@ -173,8 +173,8 @@ a.h-u:hover {
 }
 
 strong,
-bold {
-  font-family: 'LatoWebBold';
+b {
+  font-family: 'LatoWebBold', sans-serif;
 }
 
 .visually-hidden {
