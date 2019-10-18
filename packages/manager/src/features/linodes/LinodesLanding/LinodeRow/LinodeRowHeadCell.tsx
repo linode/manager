@@ -224,6 +224,7 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
                 <HelpIcon
                   text={<MaintenanceText />}
                   tooltipPosition="top"
+                  interactive
                   className={classes.helpIcon}
                 />
               </Notice>
