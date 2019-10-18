@@ -34,7 +34,8 @@ describe('LinodeRow', () => {
     cardMaintenance: '',
     wrapHeader: '',
     status: '',
-    statusHelpIcon: ''
+    statusHelpIcon: '',
+    maintenanceNotice: ''
   };
 
   const mockProps: CombinedProps = {

@@ -24,6 +24,7 @@ import LinodeRowHeadCell from './LinodeRowHeadCell';
 import LinodeRowLoading from './LinodeRowLoading';
 
 import { Action } from 'src/features/linodes/PowerActionsDialogOrDrawer';
+import { capitalize } from 'src/utilities/capitalize';
 import { parseMaintenanceStartTime } from '../utils';
 
 interface Props {
@@ -39,6 +40,7 @@ interface Props {
   memory: number;
   vcpus: number;
   status: LinodeStatus;
+  displayStatus: string;
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;
@@ -68,6 +70,7 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
     label,
     region,
     status,
+    displayStatus,
     tags,
     mostRecentBackup,
     disk,
@@ -86,13 +89,12 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
   } = props;
 
   const loading = linodeInTransition(status, recentEvent);
+  const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(' ');
 
   const MaintenanceText = () => {
-    const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(' ');
     return (
       <>
-        Maintenance for this Linode is scheduled to begin {dateTime[0]} at{' '}
-        {dateTime[1]}. Please consult your{' '}
+        Please consult your{' '}
         <Link to="/support/tickets?type=open">support tickets</Link> for
         details.
       </>
@@ -111,6 +113,7 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
       label={label}
       region={region}
       status={status}
+      displayStatus={displayStatus}
       tags={tags}
       mostRecentBackup={mostRecentBackup}
       disk={disk}
@@ -153,15 +156,22 @@ export const LinodeRow: React.StatelessComponent<CombinedProps> = props => {
             loading ? (
               'Busy'
             ) : (
-              status
+              capitalize(displayStatus)
             )
           ) : (
             <>
-              Maintenance Scheduled
+              <div>
+                <div>
+                  <strong>Maintenance Scheduled</strong>
+                </div>
+                <div>
+                  {dateTime[0]} at {dateTime[1]}
+                </div>
+              </div>
               <HelpIcon
                 text={<MaintenanceText />}
                 className={classes.statusHelpIcon}
-                tooltipPosition="right-start"
+                tooltipPosition="top"
                 interactive
               />
             </>

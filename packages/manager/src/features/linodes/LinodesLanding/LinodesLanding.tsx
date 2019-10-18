@@ -321,7 +321,14 @@ export class ListLinodes extends React.Component<CombinedProps, State> {
                             </Grid>
                             <Grid item xs={12}>
                               <OrderBy
-                                data={linodesData}
+                                data={linodesData.map(linode => {
+                                  return {
+                                    ...linode,
+                                    displayStatus: linode.maintenance
+                                      ? 'maintenance'
+                                      : linode.status
+                                  };
+                                })}
                                 order={'asc'}
                                 orderBy={'label'}
                               >

@@ -6,4 +6,5 @@ export interface LinodeWithMaintenance extends L {}
 export interface LinodeWithMaintenanceAndMostRecentBackup
   extends LinodeWithMaintenance {
   mostRecentBackup?: string | null;
+  displayStatus?: string;
 }

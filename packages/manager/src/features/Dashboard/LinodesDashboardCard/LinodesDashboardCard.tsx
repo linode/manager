@@ -84,6 +84,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
         title="Linodes"
         headerAction={this.renderAction}
         className={classes.root}
+        alignHeader="flex-start"
       >
         <Paper>
           <Table>
@@ -167,6 +168,7 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
             label={linode.label}
             region={linode.region}
             status={linode.status}
+            displayStatus={linode.displayStatus || ''}
             tags={linode.tags}
             mostRecentBackup={linode.mostRecentBackup || null}
             disk={linode.specs.disk}
@@ -174,8 +176,9 @@ class LinodesDashboardCard extends React.Component<CombinedProps> {
             memory={linode.specs.memory}
             type={linode.type}
             image={linode.image}
-            width={70}
+            width={75}
             maintenance={linode.maintenance ? linode.maintenance.when : ''}
+            isDashboard
           />
           <Hidden xsDown>
             <TableCell className={classes.moreCol} data-qa-linode-region>

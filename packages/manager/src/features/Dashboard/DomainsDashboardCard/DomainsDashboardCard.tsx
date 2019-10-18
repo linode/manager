@@ -94,7 +94,11 @@ type CombinedProps = Props &
 class DomainsDashboardCard extends React.Component<CombinedProps, State> {
   render() {
     return (
-      <DashboardCard title="Domains" headerAction={this.renderAction}>
+      <DashboardCard
+        title="Domains"
+        headerAction={this.renderAction}
+        alignHeader="flex-start"
+      >
         <Paper>
           <Table>
             <TableBody>{this.renderContent()}</TableBody>
