@@ -57,7 +57,7 @@ const LongviewGauge: React.FC<Props> = props => {
       // The MAX depends on the number of CPU cores. Default to 1 if cores
       // doesn't exist or is 0.
       max={typeof numCores === 'undefined' ? 1 : 100 * numCores}
-      value={typeof usedCPU === 'undefined' ? 1 : usedCPU}
+      value={typeof usedCPU === 'undefined' ? 0 : usedCPU}
       innerText={innerText(usedCPU || 0, loading, error)}
       subTitle={
         <>

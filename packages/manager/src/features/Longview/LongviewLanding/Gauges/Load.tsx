@@ -96,7 +96,7 @@ const LoadGauge: React.FC<Props> = props => {
     <GaugePercent
       {...baseGaugeProps}
       max={typeof amountOfCores === 'undefined' ? 1 : amountOfCores}
-      value={typeof load === 'undefined' ? 1 : load}
+      value={typeof load === 'undefined' ? 0 : load}
       filledInColor="#FADB50"
       {...generateCopy()}
     />

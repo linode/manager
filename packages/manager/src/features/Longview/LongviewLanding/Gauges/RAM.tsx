@@ -1,5 +1,5 @@
 import { APIError } from 'linode-js-sdk/lib/types';
-import { pathOr } from 'ramda';
+import { path } from 'ramda';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
@@ -28,22 +28,34 @@ const RAMGauge: React.FC<Props> = props => {
          * The likelihood of any of these paths being undefined is a big
          * unknown, so we learn towards safety.
          */
-        const free = pathOr(0, ['Memory', 'real', 'free', 0, 'y'], response);
-        const used = pathOr(0, ['Memory', 'real', 'used', 0, 'y'], response);
-        const buffers = pathOr(
-          0,
+        const free = path<number | undefined>(
+          ['Memory', 'real', 'free', 0, 'y'],
+          response
+        );
+        const used = path<number | undefined>(
+          ['Memory', 'real', 'used', 0, 'y'],
+          response
+        );
+        const buffers = path<number | undefined>(
           ['Memory', 'real', 'buffers', 0, 'y'],
           response
         );
-        const cache = pathOr(0, ['Memory', 'real', 'cache', 0, 'y'], response);
+        const cache = path<number | undefined>(
+          ['Memory', 'real', 'cache', 0, 'y'],
+          response
+        );
 
         if (mounted) {
           setError(undefined);
           /**
            * All units come back in KB. We will do our converting in the render methods
+           * Only set state if these values are not undefined because the render method
+           * has custom handling for if the values are undefined.
            */
-          setMemory(generateUsedMemory(used, buffers, cache));
-          setTotalMemory(generateTotalMemory(used, free));
+          if (!!free && !!used && !!cache && !!buffers) {
+            setMemory(generateUsedMemory(used, buffers, cache));
+            setTotalMemory(generateTotalMemory(used, free));
+          }
           if (!!loading) {
             setLoading(false);
           }
@@ -130,8 +142,8 @@ const RAMGauge: React.FC<Props> = props => {
   return (
     <GaugePercent
       {...baseGaugeProps}
-      max={totalMemory || 1}
-      value={memory || 1}
+      max={typeof totalMemory === 'undefined' ? 1 : totalMemory}
+      value={typeof memory === 'undefined' ? 0 : memory}
       filledInColor="#D38ADB"
       {...generateText()}
     />
