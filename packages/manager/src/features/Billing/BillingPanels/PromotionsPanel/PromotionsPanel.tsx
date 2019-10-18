@@ -38,7 +38,9 @@ export const PromotionsPanel: React.FC<StateProps> = props => {
   }
 
   const expireDate = pathOr(null, [0, 'expire_dt'], promotions);
-  const formattedDated = formatDate(expireDate, { format: 'D-MMM-YYYY' });
+  const formattedDated = expireDate
+    ? formatDate(expireDate, { format: 'D-MMM-YYYY' })
+    : null;
   const header = expireDate ? (
     <span>
       {'Promotions & Credits '}{' '}
