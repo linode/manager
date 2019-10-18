@@ -24,7 +24,6 @@ import Select, { Item } from 'src/components/EnhancedSelect/Select';
 import ErrorState from 'src/components/ErrorState';
 import Notice from 'src/components/Notice';
 import SelectRegionPanel from 'src/components/SelectRegionPanel';
-import TagsInput from 'src/components/TagsInput';
 import TextField from 'src/components/TextField';
 import { dcDisplayNames } from 'src/constants';
 import regionsContainer from 'src/containers/regions.container';
@@ -33,7 +32,6 @@ import { WithRegionsProps } from 'src/features/linodes/LinodesCreate/types';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import { getAll } from 'src/utilities/getAll';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
-import { getTagsAsStrings } from 'src/utilities/tagUtils';
 
 import KubeCheckoutBar from '.././KubeCheckoutBar';
 import { getMonthlyPrice } from '.././kubeUtils';
@@ -65,7 +63,6 @@ interface State {
   numberOfLinodes: number;
   nodePools: PoolNodeWithPrice[];
   label?: string;
-  tags: Item<string>[];
   version?: Item<string>;
   errors?: APIError[];
   submitting: boolean;
@@ -92,7 +89,6 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     numberOfLinodes: 1,
     nodePools: [],
     label: undefined,
-    tags: [],
     version: undefined,
     errors: undefined,
     submitting: false,
@@ -121,7 +117,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
   }
 
   createCluster = () => {
-    const { selectedRegion, nodePools, label, tags, version } = this.state;
+    const { selectedRegion, nodePools, label, version } = this.state;
     const {
       history: { push }
     } = this.props;
@@ -144,8 +140,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       region: selectedRegion,
       node_pools,
       label,
-      version: _version,
-      tags: getTagsAsStrings(tags)
+      version: _version
     };
 
     createKubernetesCluster(payload)
@@ -199,10 +194,6 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
     this.setState({ label: newLabel ? newLabel : undefined });
   };
 
-  updateTags = (newTags: Item<string>[]) => {
-    this.setState({ tags: newTags });
-  };
-
   render() {
     const {
       classes,
@@ -220,14 +211,13 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       selectedType,
       numberOfLinodes,
       nodePools,
-      tags,
       submitting,
       version,
       versionOptions
     } = this.state;
 
     const errorMap = getErrorMap(
-      ['region', 'node_pools', 'label', 'tags', 'version', 'versionLoad'],
+      ['region', 'node_pools', 'label', 'version', 'versionLoad'],
       errors
     );
 
@@ -327,11 +317,6 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
                     this.setState({ version: selected })
                   }
                   isClearable={false}
-                />
-                <TagsInput
-                  value={tags}
-                  onChange={this.updateTags}
-                  tagError={errorMap.tags}
                 />
               </div>
             </Paper>

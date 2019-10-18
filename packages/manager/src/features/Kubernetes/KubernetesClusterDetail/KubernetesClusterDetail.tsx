@@ -9,17 +9,14 @@ import Breadcrumb from 'src/components/Breadcrumb';
 import Button from 'src/components/Button';
 import CircleProgress from 'src/components/CircleProgress';
 import Grid from 'src/components/core/Grid';
-import Paper from 'src/components/core/Paper';
 import {
   createStyles,
   Theme,
   WithStyles,
   withStyles
 } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import ErrorState from 'src/components/ErrorState';
-import TagsPanel from 'src/components/TagsPanel';
 import KubeContainer, {
   DispatchProps
 } from 'src/containers/kubernetes.container';
@@ -43,13 +40,11 @@ type ClassNames =
   | 'section'
   | 'panelItem'
   | 'button'
-  | 'tagSectionInner'
   | 'deleteSection'
   | 'titleGridWrapper'
   | 'tagHeading'
   | 'sectionMain'
-  | 'sectionSideBar'
-  | 'tagSection';
+  | 'sectionSideBar';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -80,11 +75,6 @@ const styles = (theme: Theme) =>
         }
       }
     },
-    tagSectionInner: {
-      padding: `${theme.spacing(2) + 3}px ${theme.spacing(3)}px ${theme.spacing(
-        1
-      ) - 1}px`
-    },
     deleteSection: {
       [theme.breakpoints.up('md')]: {
         marginLeft: theme.spacing(3)
@@ -105,11 +95,6 @@ const styles = (theme: Theme) =>
       [theme.breakpoints.up('md')]: {
         order: 2,
         display: 'inline-block'
-      }
-    },
-    tagSection: {
-      [theme.breakpoints.down('sm')]: {
-        order: 3
       }
     }
   });
@@ -153,8 +138,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     undefined
   );
   const [count, setCount] = React.useState<number>(1);
-  /** For adding tags */
-  const [tags, updateTags] = React.useState<string[]>([]);
   /** Form submission */
   const [submitting, setSubmitting] = React.useState<boolean>(false);
   const [generalError, setErrors] = React.useState<APIError[] | undefined>(
@@ -405,15 +388,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<
     setConfirmation(true);
   };
 
-  const handleUpdateTags = (newTags: string[]) => {
-    return props
-      .updateCluster({ clusterID: cluster.id, tags: newTags })
-      .then(response => {
-        updateTags(newTags);
-        return response;
-      });
-  };
-
   const handleLabelChange = async (newLabel: string) => {
     props.updateCluster({ clusterID: cluster.id, label: newLabel });
     return cluster.label;
@@ -464,20 +438,6 @@ export const KubernetesClusterDetail: React.FunctionComponent<
           </Grid>
           <Grid item xs={12} className={classes.section}>
             <KubeSummaryPanel cluster={cluster} />
-          </Grid>
-          <Grid item xs={12} className={classes.tagSection}>
-            <Paper className={classes.tagSectionInner}>
-              <Typography
-                variant="h2"
-                className={classes.tagHeading}
-                data-qa-title
-              >
-                Cluster Tags
-              </Typography>
-              <div>
-                <TagsPanel tags={tags} updateTags={handleUpdateTags} />
-              </div>
-            </Paper>
           </Grid>
         </Grid>
         <Grid
