@@ -4,8 +4,8 @@ import { path } from 'ramda';
 import { connect, InferableComponentEnhancerWithProps } from 'react-redux';
 import { ApplicationState } from 'src/store';
 import { requestLinodes } from 'src/store/linodes/linode.requests';
+import { LinodeWithMaintenance as L } from 'src/store/linodes/linodes.helpers';
 import { State } from 'src/store/linodes/linodes.reducer';
-import { LinodeWithMaintenance as L } from 'src/store/linodes/types';
 import { ThunkDispatch } from 'src/store/types';
 import { GetAllData } from 'src/utilities/getAll';
 

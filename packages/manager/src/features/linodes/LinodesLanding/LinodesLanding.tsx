@@ -48,8 +48,10 @@ import ToggleBox from './ToggleBox';
 
 import MaintenanceBanner from 'src/components/MaintenanceBanner';
 import PreferenceToggle, { ToggleProps } from 'src/components/PreferenceToggle';
-import { addNotificationsToLinodes } from 'src/store/linodes/linodes.helpers';
-import { LinodeWithMaintenance } from 'src/store/linodes/types';
+import {
+  addNotificationsToLinodes,
+  LinodeWithMaintenance
+} from 'src/store/linodes/linodes.helpers';
 
 import PowerDialogOrDrawer, { Action } from '../PowerActionsDialogOrDrawer';
 import DeleteDialog from './DeleteDialog';
