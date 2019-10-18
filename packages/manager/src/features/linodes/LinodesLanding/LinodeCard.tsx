@@ -17,6 +17,7 @@ import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
 import HelpIcon from 'src/components/HelpIcon';
 import LinearProgress from 'src/components/LinearProgress';
+import Notice from 'src/components/Notice';
 import Tags from 'src/components/Tags';
 import {
   linodeInTransition,
@@ -112,15 +113,12 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
     } = this.props;
 
     const loading = linodeInTransition(status, recentEvent);
+    const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(' ');
 
     const MaintenanceText = () => {
-      const dateTime = parseMaintenanceStartTime(maintenanceStartTime).split(
-        ' '
-      );
       return (
         <>
-          Maintenance for this Linode is scheduled to begin {dateTime[0]} at{' '}
-          {dateTime[1]}. Please consult your{' '}
+          Please consult your{' '}
           <Link to="/support/tickets?type=open">support tickets</Link> for
           details.
         </>
@@ -208,12 +206,19 @@ export class LinodeCard extends React.PureComponent<CombinedProps> {
               ) : (
                 <>
                   <div className={classes.cardMaintenance}>
-                    <Typography>Status: Maintenance Scheduled</Typography>
-                    <HelpIcon
-                      text={<MaintenanceText />}
-                      className={classes.statusHelpIcon}
-                      tooltipPosition="right-start"
-                    />
+                    <Notice
+                      warning
+                      spacingBottom={0}
+                      className={classes.maintenanceNotice}
+                    >
+                      Maintenance Scheduled <br />
+                      {dateTime[0]} at {dateTime[1]}
+                      <HelpIcon
+                        text={<MaintenanceText />}
+                        className={classes.statusHelpIcon}
+                        tooltipPosition="top"
+                      />
+                    </Notice>
                   </div>
                 </>
               )}
@@ -307,8 +312,7 @@ export const RenderTitle: React.StatelessComponent<{
     linodeId,
     mutationAvailable,
     linodeNotifications,
-    recentEvent,
-    maintenance
+    recentEvent
   } = props;
 
   return (
@@ -317,7 +321,7 @@ export const RenderTitle: React.StatelessComponent<{
         <Grid item className={`${classes.StatusIndicatorWrapper} ${'py0'}`}>
           <EntityIcon
             variant="linode"
-            status={!maintenance ? linodeStatus : 'maintenance'}
+            status={linodeStatus}
             loading={
               recentEvent && linodeInTransition(linodeStatus, recentEvent)
             }

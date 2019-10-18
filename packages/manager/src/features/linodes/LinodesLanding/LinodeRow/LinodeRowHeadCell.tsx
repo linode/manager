@@ -13,6 +13,8 @@ import {
 import Typography from 'src/components/core/Typography';
 import EntityIcon from 'src/components/EntityIcon';
 import Grid from 'src/components/Grid';
+import HelpIcon from 'src/components/HelpIcon';
+import Notice from 'src/components/Notice';
 import TableCell from 'src/components/TableCell';
 import withImages from 'src/containers/withImages.container';
 import {
@@ -33,7 +35,10 @@ type ClassNames =
   | 'labelRow'
   | 'labelStatusWrapper'
   | 'dashboard'
-  | 'wrapHeader';
+  | 'wrapHeader'
+  | 'maintenanceContainer'
+  | 'maintenanceNotice'
+  | 'helpIcon';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -79,6 +84,23 @@ const styles = (theme: Theme) =>
     },
     wrapHeader: {
       wordBreak: 'break-all'
+    },
+    maintenanceContainer: {},
+    maintenanceNotice: {
+      paddingTop: 0,
+      paddingBottom: 0,
+      '& .noticeText': {
+        display: 'flex',
+        alignItems: 'center',
+        fontSize: '.9rem',
+        '& br': {
+          display: 'none'
+        }
+      }
+    },
+    helpIcon: {
+      paddingTop: 0,
+      paddingBottom: 0
     }
   });
 
@@ -94,6 +116,7 @@ interface Props {
   memory: number;
   vcpus: number;
   status: LinodeStatus;
+  displayStatus: string | null;
   type: null | string;
   tags: string[];
   mostRecentBackup: string | null;
@@ -101,6 +124,7 @@ interface Props {
   loading: boolean;
   recentEvent?: Event;
   maintenance?: string | null;
+  isDashboard?: boolean;
 }
 
 interface WithImagesProps {
@@ -129,7 +153,8 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
     displayType,
     imagesData,
     width,
-    maintenance
+    maintenance,
+    isDashboard
   } = props;
 
   const description = getLinodeDescription(
@@ -142,6 +167,16 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
   );
 
   const style = width ? { width: `${width}%` } : {};
+  const dateTime = maintenance && maintenance.split(' ');
+  const MaintenanceText = () => {
+    return (
+      <>
+        Please consult your{' '}
+        <Link to="/support/tickets?type=open">support tickets</Link> for
+        details.
+      </>
+    );
+  };
 
   return (
     <TableCell className={classes.root} style={style} rowSpan={loading ? 2 : 1}>
@@ -149,7 +184,7 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
         <Grid item className="py0">
           <EntityIcon
             variant="linode"
-            status={!maintenance ? status : 'maintenance'}
+            status={status}
             loading={linodeInTransition(status, recentEvent)}
             marginTop={1}
           />
@@ -176,6 +211,24 @@ const LinodeRowHeadCell: React.StatelessComponent<CombinedProps> = props => {
             </div>
             <Typography>{description}</Typography>
           </div>
+          {maintenance && dateTime && isDashboard && (
+            <div className={classes.maintenanceContainer}>
+              <Notice
+                warning
+                spacingTop={8}
+                spacingBottom={0}
+                className={classes.maintenanceNotice}
+              >
+                Maintenance: <br />
+                {dateTime[0]} at {dateTime[1]}
+                <HelpIcon
+                  text={<MaintenanceText />}
+                  tooltipPosition="top"
+                  className={classes.helpIcon}
+                />
+              </Notice>
+            </div>
+          )}
         </Grid>
       </Grid>
     </TableCell>

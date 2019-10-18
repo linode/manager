@@ -58,9 +58,7 @@ const styles = (theme: Theme) =>
     offline: {
       color: theme.color.red
     },
-    maintenance: {
-      color: theme.color.yellow
-    },
+    maintenance: {},
     loading: {
       position: 'absolute',
       top: 0,
