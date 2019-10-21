@@ -39,6 +39,7 @@ import {
   CLONING,
   CREATING,
   EDITING,
+  Origin as DomainDrawerOrigin,
   resetDrawer
 } from 'src/store/domainDrawer';
 import {
@@ -53,6 +54,7 @@ import { reportException } from 'src/exceptionReporting';
 import LinodeSelect from 'src/features/linodes/LinodeSelect';
 import NodeBalancerSelect from 'src/features/NodeBalancers/NodeBalancerSelect';
 import { getErrorMap } from 'src/utilities/errorUtils';
+import { sendCreateDomainEvent } from 'src/utilities/ga';
 
 import { isValidSOAEmail } from './domainUtils';
 
@@ -527,7 +529,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
       selectedDefaultLinode,
       selectedDefaultNodeBalancer
     } = this.state;
-    const { domainActions } = this.props;
+    const { domainActions, origin } = this.props;
 
     const tags = this.state.tags.map(tag => tag.value);
 
@@ -593,7 +595,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         if (!this.mounted) {
           return;
         }
-
+        sendCreateDomainEvent(origin);
         /**
          * now we check to see if the user wanted us to automatically create
          * domain records for them. If so, create some A/AAAA and MX records
@@ -662,7 +664,6 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               });
           }
         }
-
         return this.redirectToLandingOrDetail(type, domainData.id);
       })
       .catch(err => {
@@ -846,6 +847,7 @@ interface StateProps {
   domainProps?: Domain;
   id?: number;
   disabled: boolean;
+  origin: DomainDrawerOrigin;
 }
 
 const mapStateToProps = (state: ApplicationState) => {
@@ -861,7 +863,8 @@ const mapStateToProps = (state: ApplicationState) => {
     domainProps,
     id,
     // disabled if the profile is restricted and doesn't have add_domains grant
-    disabled: isRestrictedUser(state) && !hasGrant(state, 'add_domains')
+    disabled: isRestrictedUser(state) && !hasGrant(state, 'add_domains'),
+    origin: state.domainDrawer.origin
   };
 };
 
