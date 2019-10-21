@@ -595,7 +595,7 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
         if (!this.mounted) {
           return;
         }
-
+        sendCreateDomainEvent(origin);
         /**
          * now we check to see if the user wanted us to automatically create
          * domain records for them. If so, create some A/AAAA and MX records
@@ -613,7 +613,6 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               path(['ipv6'], selectedDefaultLinode)
             )
               .then(() => {
-                sendCreateDomainEvent(origin);
                 return this.redirectToLandingOrDetail(type, domainData.id);
               })
               .catch((e: APIError[]) => {
@@ -643,7 +642,6 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               path(['ipv6'], selectedDefaultNodeBalancer)
             )
               .then(() => {
-                sendCreateDomainEvent(origin);
                 return this.redirectToLandingOrDetail(type, domainData.id);
               })
               .catch((e: APIError[]) => {
@@ -666,8 +664,6 @@ class DomainDrawer extends React.Component<CombinedProps, State> {
               });
           }
         }
-
-        sendCreateDomainEvent(origin);
         return this.redirectToLandingOrDetail(type, domainData.id);
       })
       .catch(err => {

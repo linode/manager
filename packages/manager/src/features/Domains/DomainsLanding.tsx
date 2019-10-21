@@ -241,7 +241,7 @@ export class DomainsLanding extends React.Component<CombinedProps, State> {
     });
   };
 
-  openCreateDomainDrawer = (e: any) => {
+  openCreateDomainDrawer = (e: React.MouseEvent<HTMLElement>) => {
     this.props.openForCreating('Created from Domain Landing');
 
     e.preventDefault();
@@ -471,7 +471,7 @@ const EmptyCopy = () => (
 );
 
 const RenderEmpty: React.StatelessComponent<{
-  onClick: (e: any) => void;
+  onClick: (e: React.MouseEvent<HTMLElement>) => void;
 }> = props => {
   return (
     <React.Fragment>
