@@ -19,7 +19,6 @@ it('renders without crashing.', () => {
           <App
             {...reactRouterProps}
             linodes={[]}
-            notifications={[]}
             profileError={undefined}
             username=""
             isLoggedInAsCustomer={false}
@@ -32,7 +31,6 @@ it('renders without crashing.', () => {
               state: {}
             }}
             userId={123456}
-            addNotificationsToLinodes={jest.fn()}
             documentation={[]}
             markAppAsDoneLoading={jest.fn()}
             appIsLoading={false}
