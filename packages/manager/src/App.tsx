@@ -1,8 +1,4 @@
-import {
-  Account,
-  AccountCapability,
-  Notification
-} from 'linode-js-sdk/lib/account';
+import { Account, AccountCapability } from 'linode-js-sdk/lib/account';
 import { Image } from 'linode-js-sdk/lib/images';
 import { Linode } from 'linode-js-sdk/lib/linodes';
 import { Region } from 'linode-js-sdk/lib/regions';
@@ -31,8 +27,6 @@ import { isKubernetesEnabled as _isKubernetesEnabled } from './utilities/account
 
 import DataLoadedListener from 'src/components/DataLoadedListener';
 import { handleLoadingDone } from 'src/store/initialLoad/initialLoad.actions';
-import { addNotificationsToLinodes } from 'src/store/linodes/linodes.actions';
-import { formatDate } from 'src/utilities/formatDate';
 
 import IdentifyUser from './IdentifyUser';
 
@@ -74,40 +68,6 @@ export class App extends React.Component<CombinedProps, State> {
     this.setState({ flagsLoaded: true });
   };
 
-  maybeAddNotificationsToLinodes = (additionalCondition: boolean = true) => {
-    if (
-      !!additionalCondition &&
-      this.props.linodes.length &&
-      this.props.notifications
-    ) {
-      this.props.addNotificationsToLinodes(
-        this.props.notifications.map(eachNotification => ({
-          ...eachNotification,
-          /** alter when and until to respect the user's timezone */
-          when:
-            typeof eachNotification.when === 'string'
-              ? formatDate(eachNotification.when)
-              : eachNotification.when,
-          until:
-            typeof eachNotification.until === 'string'
-              ? formatDate(eachNotification.until)
-              : eachNotification.until
-        })),
-        this.props.linodes
-      );
-    }
-  };
-
-  componentDidUpdate(prevProps: CombinedProps) {
-    /**
-     * run once when both notifications and linodes are loaded in Redux state
-     * for the first time
-     */
-    this.maybeAddNotificationsToLinodes(
-      !prevProps.notifications || !prevProps.linodes.length
-    );
-  }
-
   componentDidCatch() {
     this.setState({ hasError: true });
   }
@@ -122,9 +82,6 @@ export class App extends React.Component<CombinedProps, State> {
         (window as any).ga(`linodecom.send`, 'pageview', pathname);
       }
     });
-
-    /** try and add notifications to the Linodes object if that data exists */
-    this.maybeAddNotificationsToLinodes();
 
     /*
      * We want to listen for migration events side-wide
@@ -276,10 +233,6 @@ export class App extends React.Component<CombinedProps, State> {
 }
 
 interface DispatchProps {
-  addNotificationsToLinodes: (
-    notifications: Notification[],
-    linodes: Linode[]
-  ) => void;
   markAppAsDoneLoading: () => void;
 }
 
@@ -287,10 +240,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, Props> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, Action<any>>
 ) => {
   return {
-    addNotificationsToLinodes: (
-      _notifications: Notification[],
-      linodes: Linode[]
-    ) => dispatch(addNotificationsToLinodes(_notifications, linodes)),
     markAppAsDoneLoading: () => dispatch(handleLoadingDone())
   };
 };
@@ -299,7 +248,6 @@ interface StateProps {
   /** Profile */
   linodes: Linode[];
   images?: Image[];
-  notifications?: Notification[];
   types?: string[];
   regions?: Region[];
   userId?: number;
@@ -338,7 +286,6 @@ const mapStateToProps: MapState<StateProps, Props> = state => ({
   linodesError: path(['read'], state.__resources.linodes.error),
   domainsError: state.__resources.domains.error.read,
   imagesError: path(['read'], state.__resources.images.error),
-  notifications: state.__resources.notifications.data,
   notificationsError: state.__resources.notifications.error,
   settingsError: state.__resources.accountSettings.error.read,
   typesError: state.__resources.types.error,
