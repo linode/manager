@@ -85,6 +85,18 @@ export const sendCreateVolumeEvent = (
   });
 };
 
+// For DOMAINS
+export const sendCreateDomainEvent = (
+  eventLabel: string,
+  eventAction?: string
+) => {
+  sendEvent({
+    category: 'Create Domain',
+    action: eventAction || 'Create Domain',
+    label: eventLabel
+  });
+};
+
 // PanelContent.tsx
 // StackScriptBase.tsx
 export const sendStackscriptsSearchEvent = (eventLabel: string) => {
