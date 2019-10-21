@@ -104,6 +104,48 @@ class VncDisplay extends React.PureComponent<Props> {
 
     this.rfb = new RFB(options);
     this.rfb.connect(this.props.url);
+    if (this.rfb) {
+      document.addEventListener('paste', e => {
+        if (!this.rfb) {
+          return;
+        }
+        if (e.clipboardData === null) {
+          return;
+        }
+        const paste = e.clipboardData.getData('text');
+        const f = (t: string[]) => {
+          const character = t.shift();
+          if (typeof character === 'undefined') {
+            return;
+          }
+          const code = character.charCodeAt(0);
+          const needs_shift = character.match(/[A-Z!@#$%^&*()_+{}:\"<>?~|]/);
+
+          if (character.match(/\n/)) {
+            this.rfb.sendKey(0xff0d, 1);
+            this.rfb.sendKey(0xff0d, 0);
+          } else {
+            if (needs_shift) {
+              this.rfb.sendKey(0xffe1, 1);
+            }
+            this.rfb.sendKey(code, 1);
+            this.rfb.sendKey(code, 0);
+            if (needs_shift) {
+              this.rfb.sendKey(0xffe1, 0);
+            }
+          }
+
+          if (t.length > 0) {
+            setTimeout(() => {
+              f(t);
+            }, 10);
+          }
+        };
+        f(paste.split(''));
+      });
+    } else {
+      return;
+    }
   };
 
   handleMouseEnter = () => {
