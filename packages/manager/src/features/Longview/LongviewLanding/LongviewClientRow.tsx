@@ -92,7 +92,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         <NetworkGauge />
       </TableCell>
       <TableCell>
-        <StorageGauge />
+        <StorageGauge clientAPIKey={clientAPIKey} lastUpdated={lastUpdated} />
       </TableCell>
       <TableCell>
         <ActionMenu

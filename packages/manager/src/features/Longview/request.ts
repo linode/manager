@@ -83,6 +83,9 @@ interface Get {
     action: 'getLatestValue',
     field: ('cpu' | 'sysinfo')[]
   ): Promise<Partial<LongviewCPU & LongviewSystemInfo>>;
+  (token: string, action: 'getLatestValue', field: ('disk')[]): Promise<
+    Partial<LongviewDisk>
+  >;
   (token: string, action: LongviewAction, field?: LongviewFieldName[]): Promise<
     Partial<AllData>
   >;
@@ -123,7 +126,9 @@ export type LongviewFieldName =
   | 'load'
   | 'sysinfo'
   | 'network'
-  | 'disk';
+  | 'disk'
+  | 'diskFsFree'
+  | 'diskFsTotal';
 
 export const fieldNames: Record<LongviewFieldName, string> = {
   cpu: 'CPU.*',
@@ -132,6 +137,8 @@ export const fieldNames: Record<LongviewFieldName, string> = {
   load: 'Load.*',
   network: 'Network.*',
   disk: 'Disk.*',
+  diskFsFree: 'Disk.*.fs.free',
+  diskFsTotal: 'Disk.*.fs.total',
   sysinfo: 'SysInfo.*'
 };
 
