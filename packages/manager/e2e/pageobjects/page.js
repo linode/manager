@@ -449,12 +449,14 @@ export default class Page {
   addTagToTagPanel(tagName) {
     const expectedCount = this.tags.length + 1;
     this.addTag.click();
-    const createTagSelect = $$('[data-qa-enhanced-select]')[1]
-      .$('..')
-      .$('input');
-    createTagSelect.waitForDisplayed(constants.wait.normal);
-    createTagSelect.setValue(tagName);
-    createTagSelect.addValue(this.enterKey);
+    const createTagSelect = $(
+      '[data-qa-enhanced-select="Create or Select a Tag"]'
+    );
+    $('[data-qa-enhanced-select="Create or Select a Tag"]').waitForDisplayed(
+      constants.wait.normal
+    );
+    createTagSelect.$('input').setValue(tagName);
+    browser.keys('Enter');
     browser.waitUntil(() => {
       return this.tags.length === expectedCount;
     }, constants.wait.normal);
