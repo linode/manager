@@ -1,12 +1,5 @@
 import { Action } from 'redux';
-
-// ACTIONS
-export const OPEN = '@manager/domains/OPEN';
-export const CLOSE = '@manager/domains/CLOSE';
-export const CREATING = '@manager/domains/CREATING';
-export const EDITING = '@manager/domains/EDITING';
-export const CLONING = '@manager/domains/CLONING';
-export const RESET = '@manager/domains/RESET';
+import actionCreatorFactory from 'typescript-fsa';
 
 export interface State {
   open: boolean;
@@ -15,6 +8,16 @@ export interface State {
   domain?: string;
   origin?: Origin;
 }
+
+const actionCreator = actionCreatorFactory(`@@manager/domains`);
+
+// ACTIONS
+export const OPEN = '@manager/domains/OPEN';
+export const CLOSE = '@manager/domains/CLOSE';
+export const CREATING = '@manager/domains/CREATING';
+export const EDITING = '@manager/domains/EDITING';
+export const CLONING = '@manager/domains/CLONING';
+export const RESET = '@manager/domains/RESET';
 
 interface Creating extends Action {
   type: typeof CREATING;
@@ -36,39 +39,43 @@ interface Close extends Action {
   type: typeof CLOSE;
 }
 
+export const closeDrawer = (): Close => ({
+  type: CLOSE
+});
+
 interface Reset extends Action {
   type: typeof RESET;
 }
 
-type ActionCreator = (...args: any[]) => Action;
+export const resetDrawer = (): Reset => ({
+  type: RESET
+});
 
 export type Origin =
   | 'Created from Add New Menu'
   | 'Created from Domain Landing';
 
-// ACTION CREATORS
-export const openForCreating: ActionCreator = (origin: Origin): Creating => ({
-  type: CREATING,
-  origin
+export const openForCreating = (origin: Origin) => createDomain({ origin });
+
+interface CreateDomainPayload {
+  origin: Origin;
+}
+
+const createDomain = actionCreator<CreateDomainPayload>(`CREAT_DOMAIN`, {
+  type: CREATING
 });
-export const openForEditing: ActionCreator = (
-  domain: string,
-  id: number
-): Editing => ({
+
+export const openForEditing = (domain: string, id: number): Editing => ({
   type: EDITING,
   domain,
   id
 });
-export const openForCloning: ActionCreator = (
-  domain: string,
-  id: number
-): Cloning => ({
+
+export const openForCloning = (domain: string, id: number): Cloning => ({
   type: CLONING,
   domain,
   id
 });
-export const closeDrawer: ActionCreator = (): Close => ({ type: CLOSE });
-export const resetDrawer: ActionCreator = (): Reset => ({ type: RESET });
 
 // DEFAULT STATE
 export const defaultState: State = {

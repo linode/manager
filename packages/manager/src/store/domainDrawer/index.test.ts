@@ -15,7 +15,7 @@ describe('domainDrawer reducer', () => {
   });
 
   it('should be OPEN when opening for cloning', () => {
-    const newState = reducer(defaultState, openForCloning());
+    const newState = reducer(defaultState, openForCloning('my-domain', 1234));
     expect(newState).toHaveProperty('open', true);
     expect(newState.mode).toBe(CLONING);
   });
