@@ -40,11 +40,11 @@ const _Skeleton: React.FC<combinedProps> = props => {
     const ifColumns = columns !== undefined ? columns : 1;
     const calcColumns = () => {
       if (colCount === 0) {
-        return firstColWidth ? firstColWidth : ifColumns;
+        return firstColWidth ? firstColWidth : 100 / ifColumns;
       } else {
         return firstColWidth
           ? (100 - firstColWidth) / (ifColumns - 1)
-          : ifColumns;
+          : 100 / ifColumns;
       }
     };
     for (
