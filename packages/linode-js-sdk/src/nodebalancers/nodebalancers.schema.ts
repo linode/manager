@@ -23,18 +23,6 @@ export const nodeBalancerConfigNodeSchema = object({
     )
     .required('IP address is required.'),
 
-  // /**
-  //  * Even though API expects the address in the _port:address_ format
-  //  * the app still considers port it's own text field. Because of this, we still need
-  //  * client side validation. This is mostly harmless as the API doesn't do anything
-  //  * with the _port_ value
-  //  */
-  // port: number()
-  //   .typeError('Port must be a number.')
-  //   .required('Port is required.')
-  //   .min(1, 'Port must be between 1 and 65535.')
-  //   .max(65535, 'Port must be between 1 and 65535.'),
-
   weight: number()
     .typeError('Weight must be a number.')
     .min(1, `Weight must be between 1 and 255.`)
