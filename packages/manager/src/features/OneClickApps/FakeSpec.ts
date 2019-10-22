@@ -207,6 +207,18 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/rust_color.svg'
   },
   {
+    name: 'Shadowsocks',
+    description: 'Shadowsocks is a free and open-source encrypted proxy project, widely used in mainland China to circumvent Internet censorship. It was created in 2012 by a Chinese programmer named "clowwindy", and multiple implementations of the protocol have been made available since.',
+    summary: 'A secure socks5 proxy, designed to protect your Internet traffic.',
+    related_info: [
+      {
+        title: 'https://shadowsocks.org/',
+        href: 'https://shadowsocks.org/',
+      }
+    ],
+    logo_url: 'assets/shadowsocks_color.png',
+  },
+  {
     name: 'Terraria',
     description: `Terraria generates unique environments where a player begins by digging
       for ore, and the further they dig the more adventure they find. Multiplayer
