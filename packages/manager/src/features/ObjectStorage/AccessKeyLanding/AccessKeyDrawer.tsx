@@ -3,7 +3,7 @@ import { AccountSettings } from 'linode-js-sdk/lib/account';
 import {
   createObjectStorageKeysSchema,
   ObjectStorageKeyRequest
-} from 'linode-js-sdk/lib/profile';
+} from 'linode-js-sdk/lib/object-storage';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';

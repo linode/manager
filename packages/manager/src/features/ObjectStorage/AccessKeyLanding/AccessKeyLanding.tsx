@@ -6,7 +6,7 @@ import {
   ObjectStorageKeyRequest,
   revokeObjectStorageKey,
   updateObjectStorageKey
-} from 'linode-js-sdk/lib/profile';
+} from 'linode-js-sdk/lib/object-storage';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
