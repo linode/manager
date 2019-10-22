@@ -1,6 +1,6 @@
 {
   "name": "linode-js-sdk",
-  "version": "0.8.1-alpha.0",
+  "version": "0.9.0-alpha.0",
   "homepage": "https://github.com/linode/manager/tree/develop/packages/linode-js-sdk",
   "bugs": {
     "url": "https://github.com/linode/manager/issues",
@@ -68,7 +68,7 @@
     "webpack-cli": "^3.3.6",
     "webpack-dev-server": "^3.8.0"
   },
-  "resolutions":{
-    "handlebars":"^4.4.3"
+  "resolutions": {
+    "handlebars": "^4.4.3"
   }
 }
