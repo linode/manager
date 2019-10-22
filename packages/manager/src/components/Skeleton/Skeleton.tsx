@@ -6,46 +6,91 @@ import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
-  column: {}
+  columnTitle: {
+    marginBottom: theme.spacing(1)
+  },
+  columnText: {
+    marginTop: theme.spacing(1)
+  }
 }));
 
 interface Props {
-  columns?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8;
+  table?: boolean;
+  columns?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+  firstColWidth?: number;
+  textHeight?: number;
+  subtextHeight?: number;
 }
 
 type combinedProps = SkeletonProps & Props;
 
 const _Skeleton: React.FC<combinedProps> = props => {
   const classes = useStyles();
-  const { columns } = props;
+  const {
+    table,
+    columns,
+    firstColWidth,
+    variant,
+    textHeight,
+    subtextHeight
+  } = props;
 
   const cols: any = [];
-  const renderCols = (colCount: any) => {
+  const renderTableSkeleton = (colCount: number) => {
+    const ifColumns = columns !== undefined ? columns : 1;
+    const calcColumns = () => {
+      if (colCount === 0) {
+        return firstColWidth ? firstColWidth : ifColumns;
+      } else {
+        return firstColWidth
+          ? (100 - firstColWidth) / (ifColumns - 1)
+          : ifColumns;
+      }
+    };
     for (
       colCount = 0;
       colCount <= (columns !== undefined ? columns - 1 : 1);
       colCount++
     ) {
       cols.push(
-        <Grid
-          item
-          style={{ width: `${100 / (columns !== undefined ? columns : 1)}%` }}
-        >
-          <Skeleton {...props} className={classes.column} />
+        <Grid item style={{ width: `${calcColumns()}%` }}>
+          <Skeleton
+            {...props}
+            className={classes.columnTitle}
+            height={textHeight && variant === 'text' ? textHeight : 24}
+          />
+          <Grid container>
+            <Grid item xs={9} className="py0">
+              <Skeleton
+                {...props}
+                className={classes.columnText}
+                height={subtextHeight ? subtextHeight : 16}
+              />
+            </Grid>
+            <Grid item xs={6} className="py0">
+              <Skeleton
+                {...props}
+                className={classes.columnText}
+                height={subtextHeight ? subtextHeight : 16}
+              />
+            </Grid>
+          </Grid>
         </Grid>
       );
     }
     return;
   };
 
-  renderCols(columns);
+  table && columns !== undefined
+    ? renderTableSkeleton(columns)
+    : renderTableSkeleton(1);
 
   return (
     <>
-      {!columns ? (
-        <Skeleton {...props} className={classes.root} />
-      ) : (
+      {table ? (
         <Grid container>{cols}</Grid>
+      ) : (
+        <Skeleton {...props} className={classes.root} />
       )}
     </>
   );
