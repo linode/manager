@@ -126,9 +126,7 @@ export type LongviewFieldName =
   | 'load'
   | 'sysinfo'
   | 'network'
-  | 'disk'
-  | 'diskFsFree'
-  | 'diskFsTotal';
+  | 'disk';
 
 export const fieldNames: Record<LongviewFieldName, string> = {
   cpu: 'CPU.*',
@@ -137,8 +135,6 @@ export const fieldNames: Record<LongviewFieldName, string> = {
   load: 'Load.*',
   network: 'Network.*',
   disk: 'Disk.*',
-  diskFsFree: 'Disk.*.fs.free',
-  diskFsTotal: 'Disk.*.fs.total',
   sysinfo: 'SysInfo.*'
 };
 
