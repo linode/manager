@@ -4,6 +4,30 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [v0.75.0] - 2019-10-22
+
+### Added:
+- Ability to view, add, edit, and delete Longview Clients
+- Interactive flag for Linode card
+- Maintenance status schedule date always visible on table row
+- Maintenance status to Linodes Dashboard Card
+- Confirmation modal when creating new backup snapshot
+
+### Changed:
+- Add helper text to Kubernetes Node Pool rows if not all Nodes are accounted for
+- Adjust display of expiring credit in expandable panel header
+- Collapse primary nav at wider breakpoint
+- Copy changes for Plesk and cPanel One-Click Apps
+- Update Managed dashboard graphs
+- Update Access Key creation message (Object Storage)
+
+### Fixed:
+- Sort by status (Linodes)
+- Consistency with display of charts legend units
+- NodeBalancers configuration layout
+- Maintenance status not be displayed after updated a Linode
+
+
 ## [v0.74.1] - 2019-10-08
 
 ### Changed:
