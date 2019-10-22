@@ -214,7 +214,7 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
 
     return (
       <Table
-        aria-label="Personnal Acccess Token Permissions"
+        aria-label="Personal Access Token Permissions"
         className={classes.permsTable}
         spacingTop={24}
       >
