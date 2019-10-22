@@ -899,6 +899,21 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                         node.errors
                       );
 
+                      /**
+                       * for all NodeBalancer Config Node API actions, API
+                       * treats port and address as one. So for example, _node.address_
+                       * ends up looking like 192.168.12.12:80
+                       *
+                       * The tricky thing here is that once the user starts typing in the
+                       * node port field, we want that user input to override whatever came
+                       * back from the API. This is why there's a conditional for the
+                       * _value_ prop on the node port text field
+                       *
+                       */
+                      const [nodeAddress, initialNodePort] = node.address.split(
+                        ':'
+                      );
+
                       return (
                         <React.Fragment key={`nb-node-${idx}`}>
                           <Grid
@@ -997,7 +1012,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                   selectedRegion={this.props.nodeBalancerRegion}
                                   nodeIndex={idx}
                                   errorText={nodesHasErrorFor('address')}
-                                  nodeAddress={node.address}
+                                  nodeAddress={nodeAddress || ''}
                                   workflow={forEdit ? 'edit' : 'create'}
                                 />
                               </Grid>
@@ -1005,7 +1020,11 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                 <TextField
                                   type="number"
                                   label="Port"
-                                  value={node.port || ''}
+                                  value={
+                                    typeof node.port === 'string'
+                                      ? node.port
+                                      : initialNodePort || ''
+                                  }
                                   inputProps={{ 'data-node-idx': idx }}
                                   onChange={this.onNodePortChange}
                                   errorText={nodesHasErrorFor('port')}

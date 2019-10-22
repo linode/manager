@@ -30,7 +30,8 @@ export type CreateNodeWithStatus = CreateNode & {
   port?: number;
 };
 
-interface AlteredCreateConfig extends Omit<CreateNodeBalancerConfigPayload, 'nodes'> {
+interface AlteredCreateConfig
+  extends Omit<CreateNodeBalancerConfigPayload, 'nodes'> {
   nodes: CreateNodeWithStatus[];
 }
 
@@ -117,7 +118,8 @@ export const transformConfigsForRequest = (
             : config.ssl_key || undefined,
         nodes: (config.nodes || []).map(eachNode => ({
           ...eachNode,
-          address: `${eachNode.address}:${eachNode.port}`
+          /** the API wants the address in a ADDRESS:PORT format */
+          address: `${eachNode.address}:${eachNode.port || ''}`
         })),
         id: undefined,
         nodebalancer_id: undefined,

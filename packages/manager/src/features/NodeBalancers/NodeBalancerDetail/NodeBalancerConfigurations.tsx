@@ -729,7 +729,17 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       return;
     }
 
-    return createNodeBalancerConfigNode(Number(nodeBalancerId), config.id, node)
+    /** Need to post to API in _address:port_ format */
+    const cleanedNode = {
+      ...node,
+      address: `${node.address}:${node.port}`
+    };
+
+    return createNodeBalancerConfigNode(
+      Number(nodeBalancerId),
+      config.id,
+      cleanedNode
+    )
       .then(responseNode => {
         /* Set the new Node data including the ID
            This also clears the errors and modify status. */
@@ -794,11 +804,23 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
       return;
     }
 
+    /**
+     * We need to PUT to the API with _address:port_ format here,
+     * so we need to get the user-inputted address and concat that with that
+     * user-inputted port
+     */
+    const [pureAddress] = node.address.split(':');
+
+    const cleanedNode = {
+      ...node,
+      address: `${pureAddress}:${node.port}`
+    };
+
     return updateNodeBalancerConfigNode(
       Number(nodeBalancerId),
       config.id,
       node.id,
-      node
+      cleanedNode
     )
       .then(responseNode => {
         /* Set the new Node data including the ID

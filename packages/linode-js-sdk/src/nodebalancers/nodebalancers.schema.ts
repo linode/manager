@@ -12,21 +12,28 @@ export const nodeBalancerConfigNodeSchema = object({
     .max(32, 'Label should be between 3 and 32 characters.')
     .required('Label is required.'),
 
-  /**
-   * @todo fix this to allow for :port!
-   */
   address: string()
     .matches(
-      /^192\.168\.\d{1,3}\.\d{1,3}$/,
-      'Must be a valid private IPv4 address.'
+      /**
+       * The API wants the port and address as a combined value here
+       * e.g 192.168.12.12:80
+       */
+      /^192\.168\.\d{1,3}\.\d{1,3}\:\d{1,5}$/,
+      'Must be a valid private IPv4 address with a specified port.'
     )
     .required('IP address is required.'),
 
-  port: number()
-    .typeError('Port must be a number.')
-    .required('Port is required.')
-    .min(1, 'Port must be between 1 and 65535.')
-    .max(65535, 'Port must be between 1 and 65535.'),
+  // /**
+  //  * Even though API expects the address in the _port:address_ format
+  //  * the app still considers port it's own text field. Because of this, we still need
+  //  * client side validation. This is mostly harmless as the API doesn't do anything
+  //  * with the _port_ value
+  //  */
+  // port: number()
+  //   .typeError('Port must be a number.')
+  //   .required('Port is required.')
+  //   .min(1, 'Port must be between 1 and 65535.')
+  //   .max(65535, 'Port must be between 1 and 65535.'),
 
   weight: number()
     .typeError('Weight must be a number.')
