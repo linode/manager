@@ -49,3 +49,15 @@ beforeAll(() => {
 afterAll(() => {
   console.error = originalError;
 });
+
+jest.mock('react-chartjs-2', () => ({
+  Doughnut: () => null,
+  Line: () => null,
+  defaults: {
+    global: {
+      defaultFontFamily: '',
+      defaultFontStyle: '',
+      defaultFontSize: ''
+    }
+  }
+}));

@@ -113,10 +113,14 @@ const GaugePercent: React.FC<CombinedProps> = props => {
           }}
         />
         {props.innerText && (
-          <div className={classes.innerText}>{props.innerText}</div>
+          <div data-testid="gauge-innertext" className={classes.innerText}>
+            {props.innerText}
+          </div>
         )}
         {props.subTitle && (
-          <div className={classes.subTitle}>{props.subTitle}</div>
+          <div data-testid="gauge-subtext" className={classes.subTitle}>
+            {props.subTitle}
+          </div>
         )}
       </div>
     </React.Fragment>

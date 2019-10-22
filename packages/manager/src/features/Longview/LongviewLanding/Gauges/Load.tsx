@@ -1,6 +1,6 @@
 import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
-import React from 'react';
+import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
 import { baseGaugeProps } from './common';
@@ -21,27 +21,33 @@ const LoadGauge: React.FC<Props> = props => {
   const [error, setError] = React.useState<APIError | undefined>(undefined);
 
   React.useEffect(() => {
+    let mounted = true;
     requestStats(props.token, 'getLatestValue', ['sysinfo', 'load'])
       .then(response => {
-        setLoad(response.Load[0].y);
-        setCores(pathOr(0, ['cpu', 'cores'], response.SysInfo));
-        setError(undefined);
+        if (mounted) {
+          setLoad(response.Load[0].y);
+          setCores(pathOr(0, ['cpu', 'cores'], response.SysInfo));
+          setError(undefined);
 
-        if (!!loading) {
-          setLoading(false);
+          if (!!loading) {
+            setLoading(false);
+          }
         }
       })
       .catch(() => {
-        if (!load) {
+        if (!load && mounted) {
           setError({
             reason: 'Error'
           });
-        }
-
-        if (!!loading) {
-          setLoading(false);
+          if (!!loading) {
+            setLoading(false);
+          }
         }
       });
+
+    return () => {
+      mounted = false;
+    };
   }, [props.lastUpdated]);
 
   const generateCopy = (): {
@@ -99,7 +105,10 @@ const LoadGauge: React.FC<Props> = props => {
   );
 };
 
-const getOverallocationPercent = (amountOfCores: number, load: number) => {
+export const getOverallocationPercent = (
+  amountOfCores: number,
+  load: number
+) => {
   /** we have a negative number meaning we're overallocated */
   const allocation = amountOfCores - load;
   if (allocation < 0) {
