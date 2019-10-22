@@ -1,9 +1,10 @@
+import { Bucket } from 'linode-js-sdk/lib/object-storage';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { connect, MapStateToProps } from 'react-redux';
 import { ApplicationState } from 'src/store';
 
 export interface StateProps {
-  bucketsData: Linode.Bucket[];
+  bucketsData: Bucket[];
   bucketsLoading: boolean;
   bucketsError?: Error | APIError[];
 }

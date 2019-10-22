@@ -1,3 +1,4 @@
+import { Bucket } from 'linode-js-sdk/lib/object-storage';
 import * as React from 'react';
 import { compose } from 'recompose';
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
@@ -65,13 +66,13 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
 
   const removeBucketConfirmationDialog = useOpenClose();
   const [bucketToRemove, setBucketToRemove] = React.useState<
-    Linode.Bucket | undefined
+    Bucket | undefined
   >(undefined);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>('');
   const [confirmBucketName, setConfirmBucketName] = React.useState<string>('');
 
-  const handleClickRemove = (bucket: Linode.Bucket) => {
+  const handleClickRemove = (bucket: Bucket) => {
     setBucketToRemove(bucket);
     setError('');
     removeBucketConfirmationDialog.open();

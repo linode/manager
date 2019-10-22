@@ -1,5 +1,6 @@
 import { Form, Formik } from 'formik';
 import { AccountSettings } from 'linode-js-sdk/lib/account';
+import { Bucket, CreateBucketSchema } from 'linode-js-sdk/lib/object-storage';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -23,7 +24,6 @@ import bucketRequestsContainer, {
 // @todo: Extract ActionPanel out of Volumes
 import BucketsActionPanel from 'src/features/Volumes/VolumeDrawer/VolumesActionsPanel';
 import useFlags from 'src/hooks/useFlags';
-import { CreateBucketSchema } from 'src/services/objectStorage/buckets.schema';
 import { ApplicationState } from 'src/store';
 import { updateSettingsInStore } from 'src/store/accountSettings/accountSettings.actions';
 import {
@@ -266,7 +266,7 @@ export default enhanced(CreateBucketForm);
 // Returns `true` if a bucket with the same label and clusterId already exist
 // in the given bucket data.
 export const isDuplicateBucket = (
-  bucketsData: Linode.Bucket[],
+  bucketsData: Bucket[],
   label: string,
   cluster: string
 ) => {

@@ -1,21 +1,22 @@
-import { APIError } from 'linode-js-sdk/lib/types';
 import {
+  Bucket,
   BucketRequestPayload,
   DeleteBucketRequestPayload
-} from 'src/services/objectStorage/buckets';
+} from 'linode-js-sdk/lib/object-storage';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { actionCreatorFactory } from 'typescript-fsa';
 
 export const actionCreator = actionCreatorFactory('@@manager/buckets');
 
 export const createBucketActions = actionCreator.async<
   BucketRequestPayload,
-  Linode.Bucket,
+  Bucket,
   APIError[]
 >(`create`);
 
 export const getAllBucketsActions = actionCreator.async<
   void,
-  Linode.Bucket[],
+  Bucket[],
   APIError[]
 >('get-all');
 

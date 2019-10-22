@@ -18,6 +18,9 @@ describe('BucketTableRow', () => {
       hostname="test-bucket-001.alpha.linodeobjects.com"
       cluster="us-east"
       onRemove={mockOnRemove}
+      objects={1}
+      size={1}
+      region=""
     />
   );
 

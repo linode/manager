@@ -22,7 +22,7 @@ import { requestNodePoolsForCluster } from './nodePools.requests';
 const getAllClusters = getAll<KubernetesCluster>(getKubernetesClusters);
 
 export const requestKubernetesClusters: ThunkActionCreator<
-  Promise<Linode.Cluster[]>
+  Promise<KubernetesCluster[]>
 > = () => dispatch => {
   dispatch(requestClustersActions.started());
 

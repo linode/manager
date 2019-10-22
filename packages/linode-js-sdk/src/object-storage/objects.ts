@@ -1,14 +1,6 @@
 import { BETA_API_ROOT } from 'src/constants';
-import Request, { setData, setMethod, setURL } from '../index';
-
-interface ObjectURLOptions {
-  expires_in?: number;
-  // "Content-Type" is normally an HTTP header, but here it is used in the body
-  // of a request to /object-url, to inform the API which kind of file it is
-  // we're trying to upload.
-  content_type?: string;
-  content_disposition?: 'attachment';
-}
+import Request, { setData, setMethod, setURL } from '../request';
+import { ObjectURL, ObjectURLOptions } from './types';
 
 /**
  * Gets a URL to upload/download/delete objects from a bucket.
@@ -20,7 +12,7 @@ export const getObjectURL = (
   method: 'GET' | 'PUT' | 'POST' | 'DELETE',
   options?: ObjectURLOptions
 ) =>
-  Request<Linode.ObjectURL>(
+  Request<ObjectURL>(
     setMethod('POST'),
     setURL(
       `${BETA_API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/object-url`

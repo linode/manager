@@ -3,6 +3,7 @@ import { AccountSettings } from 'linode-js-sdk/lib/account';
 import {
   createObjectStorageKeys,
   getObjectStorageKeys,
+  ObjectStorageKey,
   ObjectStorageKeyRequest,
   revokeObjectStorageKey,
   updateObjectStorageKey
@@ -65,7 +66,7 @@ interface DispatchProps {
 }
 
 type CombinedProps = Props &
-  PaginationProps<Linode.ObjectStorageKey> &
+  PaginationProps<ObjectStorageKey> &
   WithStyles<ClassNames> &
   ReduxStateProps &
   DispatchProps;
@@ -88,19 +89,17 @@ export const AccessKeyLanding: React.StatelessComponent<
   const [
     keyToDisplay,
     setKeyToDisplay
-  ] = React.useState<Linode.ObjectStorageKey | null>(null);
+  ] = React.useState<ObjectStorageKey | null>(null);
 
   // Key to rename (by clicking on a key's kebab menu )
-  const [
-    keyToEdit,
-    setKeyToEdit
-  ] = React.useState<Linode.ObjectStorageKey | null>(null);
+  const [keyToEdit, setKeyToEdit] = React.useState<ObjectStorageKey | null>(
+    null
+  );
 
   // Key to revoke (by clicking on a key's kebab menu )
-  const [
-    keyToRevoke,
-    setKeyToRevoke
-  ] = React.useState<Linode.ObjectStorageKey | null>(null);
+  const [keyToRevoke, setKeyToRevoke] = React.useState<ObjectStorageKey | null>(
+    null
+  );
   const [isRevoking, setIsRevoking] = React.useState<boolean>(false);
   const [revokeErrors, setRevokeErrors] = useErrors();
 
@@ -250,13 +249,13 @@ export const AccessKeyLanding: React.StatelessComponent<
     createOrEditDrawer.open();
   };
 
-  const openDrawerForEditing = (objectStorageKey: Linode.ObjectStorageKey) => {
+  const openDrawerForEditing = (objectStorageKey: ObjectStorageKey) => {
     setMode('editing');
     setKeyToEdit(objectStorageKey);
     createOrEditDrawer.open();
   };
 
-  const openRevokeDialog = (objectStorageKey: Linode.ObjectStorageKey) => {
+  const openRevokeDialog = (objectStorageKey: ObjectStorageKey) => {
     setKeyToRevoke(objectStorageKey);
     revokeKeysDialog.open();
   };

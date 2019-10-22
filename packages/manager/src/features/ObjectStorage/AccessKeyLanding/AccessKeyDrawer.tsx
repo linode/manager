@@ -2,6 +2,7 @@ import { Formik } from 'formik';
 import { AccountSettings } from 'linode-js-sdk/lib/account';
 import {
   createObjectStorageKeysSchema,
+  ObjectStorageKey,
   ObjectStorageKeyRequest
 } from 'linode-js-sdk/lib/object-storage';
 import { pathOr } from 'ramda';
@@ -25,7 +26,7 @@ export interface Props {
   onSubmit: (values: ObjectStorageKeyRequest, formikProps: any) => void;
   mode: MODES;
   // If the mode is 'editing', we should have an ObjectStorageKey to edit
-  objectStorageKey?: Linode.ObjectStorageKey;
+  objectStorageKey?: ObjectStorageKey;
   isRestrictedUser: boolean;
 }
 

@@ -1,3 +1,4 @@
+import { Bucket } from 'linode-js-sdk/lib/object-storage';
 import * as React from 'react';
 import { compose } from 'recompose';
 import Paper from 'src/components/core/Paper';
@@ -28,11 +29,11 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  data: Linode.Bucket[];
+  data: Bucket[];
   orderBy: string;
   order: 'asc' | 'desc';
   handleOrderChange: (orderBy: string, order?: 'asc' | 'desc') => void;
-  handleClickRemove: (bucket: Linode.Bucket) => void;
+  handleClickRemove: (bucket: Bucket) => void;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
@@ -114,8 +115,8 @@ export const BucketTable: React.StatelessComponent<CombinedProps> = props => {
 };
 
 interface RenderDataProps {
-  data: Linode.Bucket[];
-  onRemove: (bucket: Linode.Bucket) => void;
+  data: Bucket[];
+  onRemove: (bucket: Bucket) => void;
 }
 
 const RenderData: React.StatelessComponent<RenderDataProps> = props => {

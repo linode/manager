@@ -1,5 +1,5 @@
+import { Cluster, getClusters } from 'linode-js-sdk/lib/object-storage';
 import { APIError } from 'linode-js-sdk/lib/types';
-import { getClusters } from 'src/services/objectStorage/clusters';
 import { actionCreatorFactory } from 'typescript-fsa';
 import { ThunkActionCreator } from '../types';
 
@@ -7,12 +7,12 @@ const actionCreator = actionCreatorFactory(`@@manager/clusters`);
 
 export const clustersRequestActions = actionCreator.async<
   void,
-  Linode.Cluster[],
+  Cluster[],
   APIError[]
 >(`request`);
 
 export const requestClusters: ThunkActionCreator<
-  Promise<Linode.Cluster[]>
+  Promise<Cluster[]>
 > = () => dispatch => {
   dispatch(clustersRequestActions.started());
 

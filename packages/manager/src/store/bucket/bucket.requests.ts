@@ -1,11 +1,12 @@
-import { APIError } from 'linode-js-sdk/lib/types';
 import {
+  Bucket,
   BucketRequestPayload,
   createBucket as _createBucket,
   deleteBucket as _deleteBucket,
   DeleteBucketRequestPayload,
   getBuckets as _getBuckets
-} from 'src/services/objectStorage/buckets';
+} from 'linode-js-sdk/lib/object-storage';
+import { APIError } from 'linode-js-sdk/lib/types';
 import { getAll } from 'src/utilities/getAll';
 import { createRequestThunk } from '../store.helpers';
 import {
@@ -21,14 +22,14 @@ import {
 export type CreateBucketRequest = BucketRequestPayload;
 export const createBucket = createRequestThunk<
   CreateBucketRequest,
-  Linode.Bucket,
+  Bucket,
   APIError[]
 >(createBucketActions, data => _createBucket(data));
 
 /*
  * Get All Buckets
  */
-const _getAll = getAll<Linode.Bucket>(_getBuckets);
+const _getAll = getAll<Bucket>(_getBuckets);
 
 const getAllBucketsRequest = () => _getAll().then(({ data }) => data);
 

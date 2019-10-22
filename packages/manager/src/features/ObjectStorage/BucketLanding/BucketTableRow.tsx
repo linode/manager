@@ -1,3 +1,4 @@
+import { Bucket } from 'linode-js-sdk/lib/object-storage';
 import * as React from 'react';
 import {
   createStyles,
@@ -34,7 +35,7 @@ const styles = (theme: Theme) =>
     }
   });
 
-interface BucketTableRowProps extends Linode.Bucket {
+interface BucketTableRowProps extends Bucket {
   onRemove: () => void;
 }
 

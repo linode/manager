@@ -1,3 +1,4 @@
+import { Bucket } from 'linode-js-sdk/lib/object-storage';
 import { Reducer } from 'redux';
 import { RequestableRequiredData } from 'src/store/types';
 import { isType } from 'typescript-fsa';
@@ -14,7 +15,7 @@ import {
 
 // We are unable to use the "EntityState" pattern we've adopted, since IDs
 // do not exist on buckets.
-export type State = RequestableRequiredData<Linode.Bucket[]>;
+export type State = RequestableRequiredData<Bucket[]>;
 
 export const defaultState: State = {
   data: [],

@@ -1,3 +1,4 @@
+import { Object } from 'linode-js-sdk/lib/object-storage';
 import {
   basename,
   confirmObjectStorage,
@@ -10,28 +11,28 @@ import {
   tableUpdateAction
 } from './utilities';
 
-const folder: Linode.Object = {
+const folder: Object = {
   name: 'my-folder',
   etag: null,
   last_modified: null,
   owner: null,
   size: null
 };
-const object1: Linode.Object = {
+const object1: Object = {
   name: 'file1.txt',
   etag: '4agr3fbzvf4haf86bGFdac325c6bfga27',
   last_modified: '2019-09-05T12:00:00.000Z',
   owner: '912b4786-d307-11e9-bb65-2a2ae2dbcce4',
   size: 0
 };
-const object2: Linode.Object = {
+const object2: Object = {
   name: 'my-folder/file2.txt',
   etag: '4agr3fbzvf4haf86bGFdac325c6bfga27',
   last_modified: '2019-09-05T12:00:00.000Z',
   owner: '912b4786-d307-11e9-bb65-2a2ae2dbcce4',
   size: 0
 };
-const object3: Linode.Object = {
+const object3: Object = {
   name: 'my-folder/',
   etag: '4agr3fbzvf4haf86bGFdac325c6bfga27',
   last_modified: '2019-09-05T12:00:00.000Z',

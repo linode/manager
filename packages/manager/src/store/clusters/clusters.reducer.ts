@@ -1,3 +1,4 @@
+import { Cluster } from 'linode-js-sdk/lib/object-storage';
 import { Reducer } from 'redux';
 import { EntityState } from 'src/store/types';
 import { isType } from 'typescript-fsa';
@@ -6,7 +7,7 @@ import { clustersRequestActions } from './clusters.actions';
 /**
  * State
  */
-export type State = EntityState<Linode.Cluster>;
+export type State = EntityState<Cluster>;
 
 export const defaultState: State = {
   results: [],
