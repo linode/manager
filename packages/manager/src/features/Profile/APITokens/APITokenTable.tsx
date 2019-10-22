@@ -495,7 +495,8 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
     const { form, dialog } = this.state;
 
     // If Object Storage is enabled, add it to the list of perms.
-    // @todo: Once Object Storage is safely in GA, remove this logic.
+    // @todo: Once Object Storage is safely in GA, remove this logic and add
+    // it to the hard-coded list of scopes.
     const perms = flags.objectStorage
       ? //  Scopes are returned from the API sorted alphabetically. Since we're
         // manually inserting a scope here, I chose to sort the entire list
