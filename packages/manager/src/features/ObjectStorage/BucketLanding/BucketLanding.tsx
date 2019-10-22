@@ -133,8 +133,15 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
         Deleting a bucket is permanent and can't be undone.
       </Typography>
       <Typography className={classes.copy}>
-        A bucket must be empty before deleting it. Please delete all objects, or
-        use{' '}
+        A bucket must be empty before deleting it. Please{' '}
+        <a
+          href="https://www.linode.com/docs/platform/object-storage/lifecycle-policies/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          delete all objects
+        </a>
+        , or use{' '}
         <a
           href="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools"
           target="_blank"
@@ -244,7 +251,7 @@ const EmptyCopy = () => (
     <Typography variant="subtitle1">Need help getting started?</Typography>
     <Typography variant="subtitle1">
       <a
-        href="https://linode.com/docs/platform/object-storage/how-to-use-object-storage/"
+        href="https://linode.com/docs/platform/object-storage"
         target="_blank"
         rel="noopener noreferrer"
         className="h-u"
