@@ -125,7 +125,7 @@ class IPSharingPanel extends React.Component<CombinedProps, State> {
             })
             .map((linode: Linode) => {
               // side-effect of this mapping is saving the labels
-              linode.ipv4.map((ip: string) => {
+              linode.ipv4.forEach((ip: string) => {
                 choiceLabels[ip] = linode.label;
               });
               return linode.ipv4;

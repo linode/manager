@@ -215,7 +215,7 @@ class LinodeConfigs extends React.Component<CombinedProps, State> {
           errorResponse,
           `Error booting ${label}`
         );
-        errors.map((error: APIError) => {
+        errors.forEach((error: APIError) => {
           this.props.enqueueSnackbar(error.reason, {
             variant: 'error'
           });

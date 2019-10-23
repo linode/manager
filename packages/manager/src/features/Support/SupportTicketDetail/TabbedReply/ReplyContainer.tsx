@@ -98,7 +98,7 @@ const ReplyContainer: React.FC<CombinedProps> = props => {
       .then(() => {
         /* Make sure the reply will go through before attaching files */
         /* Send each file */
-        files.map((file, idx) => {
+        files.forEach((file, idx) => {
           if (file.uploaded) {
             return;
           }
