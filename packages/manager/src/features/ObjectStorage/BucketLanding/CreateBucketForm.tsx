@@ -158,6 +158,7 @@ export const CreateBucketForm: React.StatelessComponent<
                 resetForm();
                 onClose();
               }}
+              disabled={props.isRestrictedUser}
             />
           </Form>
         );
