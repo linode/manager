@@ -1,8 +1,8 @@
 import Axios from 'axios';
-import { decode } from 'he';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { compose, map, pathOr, take } from 'ramda';
 import * as React from 'react';
+import * as sanitize from 'sanitize-html';
 import Paper from 'src/components/core/Paper';
 import {
   createStyles,
@@ -106,8 +106,13 @@ export class BlogDashboardCard extends React.Component<CombinedProps, State> {
   renderItem = (item: BlogItem, idx: number) => {
     const { classes } = this.props;
 
-    const cleanedDescription = decode(item.description);
-    const cleanedTitle = decode(item.title);
+    /** remove all HTML tags from the title and description */
+    const cleanedDescription = sanitize(item.description, {
+      allowedTags: []
+    });
+    const cleanedTitle = sanitize(item.title, {
+      allowedTags: []
+    });
 
     return (
       <Paper key={idx} className={classes.root}>
