@@ -32,11 +32,11 @@ export const MonitorTableContent: React.FC<CombinedProps> = props => {
     openMonitorDrawer
   } = props;
   if (loading) {
-    return <TableRowLoading colSpan={12} />;
+    return <TableRowLoading colSpan={3} />;
   }
 
   if (error) {
-    return <TableRowError colSpan={12} message={error[0].reason} />;
+    return <TableRowError colSpan={3} message={error[0].reason} />;
   }
 
   if (monitors.length === 0) {
