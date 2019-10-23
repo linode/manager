@@ -104,48 +104,7 @@ class VncDisplay extends React.PureComponent<Props> {
 
     this.rfb = new RFB(options);
     this.rfb.connect(this.props.url);
-    if (this.rfb) {
-      document.addEventListener('paste', e => {
-        if (!this.rfb) {
-          return;
-        }
-        if (e.clipboardData === null) {
-          return;
-        }
-        const paste = e.clipboardData.getData('text');
-        const f = (t: string[]) => {
-          const character = t.shift();
-          if (typeof character === 'undefined') {
-            return;
-          }
-          const code = character.charCodeAt(0);
-          const needs_shift = character.match(/[A-Z!@#$%^&*()_+{}:\"<>?~|]/);
-
-          if (character.match(/\n/)) {
-            this.rfb.sendKey(0xff0d, 1);
-            this.rfb.sendKey(0xff0d, 0);
-          } else {
-            if (needs_shift) {
-              this.rfb.sendKey(0xffe1, 1);
-            }
-            this.rfb.sendKey(code, 1);
-            this.rfb.sendKey(code, 0);
-            if (needs_shift) {
-              this.rfb.sendKey(0xffe1, 0);
-            }
-          }
-
-          if (t.length > 0) {
-            setTimeout(() => {
-              f(t);
-            }, 10);
-          }
-        };
-        f(paste.split(''));
-      });
-    } else {
-      return;
-    }
+    document.addEventListener('paste', this.handlePaste);
   };
 
   handleMouseEnter = () => {
@@ -165,6 +124,52 @@ class VncDisplay extends React.PureComponent<Props> {
 
     this.rfb.get_keyboard().ungrab();
     this.rfb.get_mouse().ungrab();
+  };
+
+  handlePaste = (event: ClipboardEvent) => {
+    event.preventDefault();
+    if (!this.rfb) {
+      return;
+    }
+    if (event.clipboardData === null) {
+      return;
+    }
+    if (event.clipboardData.getData('text') === null) {
+      return;
+    }
+    this.rfb.get_keyboard().ungrab();
+    this.rfb.get_mouse().ungrab();
+    this.rfb.get_keyboard().ungrab();
+    const text = event.clipboardData.getData('text');
+    const pasteNextCharacter = (contentArray: string[]) => {
+      const character = contentArray.shift();
+      if (typeof character === 'undefined') {
+        return;
+      }
+      const code = character.charCodeAt(0);
+      const needs_shift = character.match(/[A-Z!@#$%^&*()_+{}:\"<>?~|]/);
+
+      if (character.match(/\n/)) {
+        this.rfb.sendKey(0xff0d, 1);
+        this.rfb.sendKey(0xff0d, 0);
+      } else {
+        if (needs_shift) {
+          this.rfb.sendKey(0xffe1, 1);
+        }
+        this.rfb.sendKey(code, 1);
+        this.rfb.sendKey(code, 0);
+        if (needs_shift) {
+          this.rfb.sendKey(0xffe1, 0);
+        }
+      }
+
+      if (contentArray.length > 0) {
+        setTimeout(() => {
+          pasteNextCharacter(contentArray);
+        }, 10);
+      }
+    };
+    pasteNextCharacter(text.split(''));
   };
 
   getCanvas = (el: HTMLCanvasElement) => {
