@@ -13,17 +13,11 @@ export interface Domain {
   axfr_ips: string[];
   group: string;
   type: DomainType;
-  zonefile: ZoneFile;
 }
 
 export type DomainStatus = 'active' | 'disabled' | 'edit_mode' | 'has_errors';
 
 export type DomainType = 'master' | 'slave';
-
-export interface ZoneFile {
-  rendered: string;
-  status: 'current' | 'setting_up' | 'updating';
-}
 
 export type RecordType =
   | 'A'
