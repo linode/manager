@@ -85,12 +85,7 @@ export interface LongviewLoad {
 export interface LongviewNetwork {
   Network: {
     mac_addr: string;
-    Interface: {
-      eth0: {
-        rx_bytes: Stat[];
-        tx_bytes: Stat[];
-      };
-    };
+    Interface: Record<string, any>;
   };
 }
 
