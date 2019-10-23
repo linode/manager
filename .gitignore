@@ -108,3 +108,4 @@ localStorage.json
 
 # Vim users
 *.swp
+.scannerwork/
