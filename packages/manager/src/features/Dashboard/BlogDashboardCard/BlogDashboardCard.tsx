@@ -65,7 +65,7 @@ export class BlogDashboardCard extends React.Component<CombinedProps, State> {
     this.mounted = true;
 
     req
-      .get(`https://linode.com/blog/feed/`, { responseType: 'text' })
+      .get(`https://www.linode.com/blog/feed/`, { responseType: 'text' })
       .then(({ data }) => parseXMLStringPromise(data))
       .then(processXMLData)
       .then(
@@ -132,7 +132,7 @@ export class BlogDashboardCard extends React.Component<CombinedProps, State> {
   renderAction = () => (
     <ViewAllLink
       text="Read More"
-      link={'https://linode.com/blog/'}
+      link={'https://www.linode.com/blog/'}
       data-qa-read-more
       external
     />
