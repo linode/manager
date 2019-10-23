@@ -9,7 +9,10 @@ import reducer, {
 
 describe('domainDrawer reducer', () => {
   it('should be OPEN when opening for creating', () => {
-    const newState = reducer(defaultState, openForCreating());
+    const newState = reducer(
+      defaultState,
+      openForCreating('Created from Add New Menu')
+    );
     expect(newState).toHaveProperty('open', true);
     expect(newState.mode).toBe(CREATING);
   });

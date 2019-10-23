@@ -1,5 +1,5 @@
-import { Action } from 'redux';
-import actionCreatorFactory from 'typescript-fsa';
+import { Action, Reducer } from 'redux';
+import actionCreatorFactory, { isType } from 'typescript-fsa';
 
 export interface State {
   open: boolean;
@@ -21,7 +21,6 @@ export const RESET = '@manager/domains/RESET';
 
 interface Creating extends Action {
   type: typeof CREATING;
-  origin: Origin;
 }
 interface Cloning extends Action {
   type: typeof CLONING;
@@ -62,7 +61,7 @@ interface CreateDomainPayload {
 }
 
 const createDomain = actionCreator<CreateDomainPayload>(`CREAT_DOMAIN`, {
-  type: CREATING
+  mode: CREATING
 });
 
 export const openForEditing = (domain: string, id: number): Editing => ({
@@ -85,11 +84,19 @@ export const defaultState: State = {
 
 type ActionTypes = Creating | Editing | Cloning | Close | Reset;
 
-export default (state: State = defaultState, action: ActionTypes) => {
-  switch (action.type) {
-    case CREATING:
-      return { mode: CREATING, open: true, origin: action.origin };
+export const domainDrawer: Reducer<State> = (
+  state = defaultState,
+  action: ActionTypes
+) => {
+  if (isType(action, createDomain)) {
+    return {
+      ...state,
+      open: true,
+      origin: action.payload.origin
+    };
+  }
 
+  switch (action.type) {
     case EDITING:
       return {
         open: true,
@@ -116,3 +123,5 @@ export default (state: State = defaultState, action: ActionTypes) => {
       return state;
   }
 };
+
+export default domainDrawer;
