@@ -16,7 +16,8 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {},
     tableCell: {
-      padding: 0,
+      paddingTop: 0,
+      paddingBottom: 0,
       textAlign: 'center'
     },
     transparent: {

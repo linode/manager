@@ -6,7 +6,7 @@ import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: '0 10px 10px'
+    marginBottom: 10
   },
   columnTitle: {
     marginBottom: theme.spacing(1)
