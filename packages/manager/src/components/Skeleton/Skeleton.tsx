@@ -6,13 +6,14 @@ import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: ' 0 10px 10px'
+    padding: '0 10px 10px'
   },
   columnTitle: {
     marginBottom: theme.spacing(1)
   },
   columnText: {
-    marginTop: theme.spacing(1)
+    marginTop: theme.spacing(1),
+    marginBottom: 0
   }
 }));
 
@@ -61,21 +62,18 @@ const _Skeleton: React.FC<combinedProps> = props => {
           key={`ske-${colCount}`}
         >
           <Skeleton
-            {...props}
             className={classes.columnTitle}
             height={textHeight && variant === 'text' ? textHeight : 24}
           />
           <Grid container>
             <Grid item xs={9} className="py0">
               <Skeleton
-                {...props}
                 className={classes.columnText}
                 height={subtextHeight ? subtextHeight : 16}
               />
             </Grid>
             <Grid item xs={6} className="py0">
               <Skeleton
-                {...props}
                 className={classes.columnText}
                 height={subtextHeight ? subtextHeight : 16}
               />
