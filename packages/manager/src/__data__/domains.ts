@@ -14,8 +14,7 @@ export const domain1: Domain = {
   retry_sec: 0,
   soa_email: 'user@host.com',
   status: 'active',
-  ttl_sec: 0,
-  zonefile: { rendered: '', status: 'current' }
+  ttl_sec: 0
 };
 
 export const domain2: Domain = {
@@ -32,8 +31,7 @@ export const domain2: Domain = {
   retry_sec: 0,
   soa_email: 'user@host.com',
   status: 'active',
-  ttl_sec: 0,
-  zonefile: { rendered: '', status: 'current' }
+  ttl_sec: 0
 };
 
 export const domain3: Domain = {
@@ -50,8 +48,7 @@ export const domain3: Domain = {
   retry_sec: 0,
   soa_email: 'user@host.com',
   status: 'active',
-  ttl_sec: 0,
-  zonefile: { rendered: '', status: 'current' }
+  ttl_sec: 0
 };
 
 export const domains = [domain1, domain2, domain3];
