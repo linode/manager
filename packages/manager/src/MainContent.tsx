@@ -4,7 +4,6 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { Redirect, Route, RouteComponentProps, Switch } from 'react-router-dom';
 import { compose } from 'recompose';
-import Logo from 'src/assets/logo/logo-text.svg';
 import Box from 'src/components/core/Box';
 import {
   makeStyles,
@@ -12,26 +11,32 @@ import {
   withTheme,
   WithTheme
 } from 'src/components/core/styles';
-import DefaultLoader from 'src/components/DefaultLoader';
-import ErrorState from 'src/components/ErrorState';
-import Grid from 'src/components/Grid';
-import LandingLoading from 'src/components/LandingLoading';
-import NotFound from 'src/components/NotFound';
-import SideMenu from 'src/components/SideMenu';
-import withGlobalErrors, {
-  Props as GlobalErrorProps
-} from 'src/containers/globalErrors.container';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
+
 import BackupDrawer from 'src/features/Backups';
 import DomainDrawer from 'src/features/Domains/DomainDrawer';
 import Footer from 'src/features/Footer';
 import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
-import { notifications } from 'src/utilities/storage';
 import WelcomeBanner from 'src/WelcomeBanner';
+
+import DefaultLoader from 'src/components/DefaultLoader';
+import ErrorState from 'src/components/ErrorState';
+import Grid from 'src/components/Grid';
+import LandingLoading from 'src/components/LandingLoading';
+import NotFound from 'src/components/NotFound';
+import SideMenu from 'src/components/SideMenu';
+
+import withGlobalErrors, {
+  Props as GlobalErrorProps
+} from 'src/containers/globalErrors.container';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container.ts';
+
+import Logo from 'src/assets/logo/logo-text.svg';
+
+import { notifications } from 'src/utilities/storage';
 import {
   isKubernetesEnabled as _isKubernetesEnabled,
   isObjectStorageEnabled
