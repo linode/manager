@@ -5,7 +5,9 @@ import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
 
 const useStyles = makeStyles((theme: Theme) => ({
-  root: {},
+  root: {
+    padding: ' 0 10px 10px'
+  },
   columnTitle: {
     marginBottom: theme.spacing(1)
   },
@@ -16,7 +18,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   table?: boolean;
-  columns?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+  columns?: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10 | 11 | 12;
   firstColWidth?: number;
   textHeight?: number;
   subtextHeight?: number;
@@ -53,7 +55,11 @@ const _Skeleton: React.FC<combinedProps> = props => {
       colCount++
     ) {
       cols.push(
-        <Grid item style={{ width: `${calcColumns()}%` }}>
+        <Grid
+          item
+          style={{ width: `${calcColumns()}%` }}
+          key={`ske-${colCount}`}
+        >
           <Skeleton
             {...props}
             className={classes.columnTitle}
@@ -88,7 +94,9 @@ const _Skeleton: React.FC<combinedProps> = props => {
   return (
     <>
       {table && columns !== undefined ? (
-        <Grid container>{cols}</Grid>
+        <Grid container className={classes.root}>
+          {cols}
+        </Grid>
       ) : (
         <Skeleton {...props} className={classes.root} />
       )}

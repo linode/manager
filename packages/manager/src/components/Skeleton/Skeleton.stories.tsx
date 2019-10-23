@@ -8,7 +8,7 @@ storiesOf('Skeleton', module).add('Table', () => (
     width="100%"
     height="30px"
     table
-    columns={6}
-    firstColWidth={40}
+    columns={5}
+    firstColWidth={30}
   />
 ));
