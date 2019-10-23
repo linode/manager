@@ -1,6 +1,5 @@
 import * as classNames from 'classnames';
 import * as React from 'react';
-import CircleProgress from 'src/components/CircleProgress';
 import {
   createStyles,
   Theme,
@@ -9,6 +8,7 @@ import {
 } from 'src/components/core/styles';
 import TableCell from 'src/components/core/TableCell';
 import TableRow from 'src/components/core/TableRow';
+import Skeleton from 'src/components/Skeleton';
 
 type ClassNames = 'root' | 'tableCell' | 'transparent';
 
@@ -46,7 +46,7 @@ const tableRowLoading: React.StatelessComponent<CombinedProps> = props => {
           [classes.transparent]: transparent
         })}
       >
-        <CircleProgress mini />
+        <Skeleton table columns={7} />
       </TableCell>
     </TableRow>
   );

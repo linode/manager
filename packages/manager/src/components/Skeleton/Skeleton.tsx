@@ -87,7 +87,7 @@ const _Skeleton: React.FC<combinedProps> = props => {
 
   return (
     <>
-      {table ? (
+      {table && columns !== undefined ? (
         <Grid container>{cols}</Grid>
       ) : (
         <Skeleton {...props} className={classes.root} />
