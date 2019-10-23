@@ -3,7 +3,7 @@
     "tslint:recommended",
     "tslint-react",
     "tslint-config-prettier",
-    "react-a11y",
+    "tslint-react-a11y",
     "tslint-react-hooks"
   ],
   "rules": {
