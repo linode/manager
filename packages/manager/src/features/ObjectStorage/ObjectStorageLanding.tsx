@@ -92,13 +92,7 @@ export const ObjectStorageLanding: React.FunctionComponent<
           labelTitle="Object Storage"
           removeCrumbX={1}
         />
-        <DocumentationButton
-          href={
-            props.location.pathname.match(/access/i)
-              ? 'https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-key-pair'
-              : 'https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/'
-          }
-        />
+        <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
       </Box>
       <AppBar position="static" color="default">
         <Tabs

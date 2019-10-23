@@ -419,8 +419,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
             ]}
             labelOptions={{ noCap: true }}
           />
-          {/* @todo: What should this link be? */}
-          <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/" />
+          <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
         </Box>
         <Divider className={classes.divider} />
 
