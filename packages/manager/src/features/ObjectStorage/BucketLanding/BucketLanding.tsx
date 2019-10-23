@@ -43,7 +43,12 @@ const styles = (theme: Theme) =>
     }
   });
 
-type CombinedProps = StateProps &
+interface Props {
+  isRestrictedUser: boolean;
+}
+
+type CombinedProps = Props &
+  StateProps &
   DispatchProps &
   WithStyles<ClassNames> &
   BucketsRequests;
@@ -54,6 +59,7 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
     bucketsData,
     bucketsLoading,
     bucketsError,
+    isRestrictedUser,
     openBucketDrawer
   } = props;
 
@@ -150,6 +156,10 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
       </Typography>
     </React.Fragment>
   ) : null;
+
+  if (isRestrictedUser) {
+    return <RenderEmpty onClick={openBucketDrawer} data-qa-empty-state />;
+  }
 
   if (bucketsLoading) {
     return <RenderLoading data-qa-loading-state />;
@@ -258,7 +268,7 @@ const EmptyCopy = () => (
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, Props>(
   styled,
   bucketContainer,
   bucketRequestsContainer,

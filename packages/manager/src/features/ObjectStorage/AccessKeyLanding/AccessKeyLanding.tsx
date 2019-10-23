@@ -42,13 +42,21 @@ const styles = (theme: Theme) =>
     }
   });
 
-type Props = PaginationProps<Linode.ObjectStorageKey> & WithStyles<ClassNames>;
+interface Props {
+  isRestrictedUser: boolean;
+}
 
-export type FormikProps = FormikBag<Props, ObjectStorageKeyRequest>;
+type CombinedProps = Props &
+  PaginationProps<Linode.ObjectStorageKey> &
+  WithStyles<ClassNames>;
+
+export type FormikProps = FormikBag<CombinedProps, ObjectStorageKeyRequest>;
 
 export type MODES = 'creating' | 'editing';
 
-export const AccessKeyLanding: React.StatelessComponent<Props> = props => {
+export const AccessKeyLanding: React.StatelessComponent<
+  CombinedProps
+> = props => {
   const { classes, ...paginationProps } = props;
 
   const [mode, setMode] = React.useState<MODES>('creating');
@@ -259,6 +267,7 @@ export const AccessKeyLanding: React.StatelessComponent<Props> = props => {
         onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
         mode={mode}
         objectStorageKey={keyToEdit ? keyToEdit : undefined}
+        isRestrictedUser={props.isRestrictedUser}
       />
 
       <AccessKeyDisplayDialog
@@ -280,12 +289,12 @@ export const AccessKeyLanding: React.StatelessComponent<Props> = props => {
 
 const styled = withStyles(styles);
 
-const updatedRequest = (_: Props, params: any, filters: any) =>
+const updatedRequest = (_: CombinedProps, params: any, filters: any) =>
   getObjectStorageKeys(params, filters);
 
 const paginated = Pagey(updatedRequest);
 
-const enhanced = compose<Props, {}>(
+const enhanced = compose<CombinedProps, Props>(
   styled,
   paginated
 );
