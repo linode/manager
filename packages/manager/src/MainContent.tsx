@@ -291,7 +291,7 @@ const MainContent: React.FC<CombinedProps> = props => {
             <Grid item className={classes.switchWrapper}>
               <Switch>
                 <Route path="/linodes" component={LinodesRoutes} />
-                <Route path="/volumes" component={Volumes} exact strict />
+                <Route path="/volumes" component={Volumes} />
                 <Redirect path="/volumes*" to="/volumes" />
                 <Route path="/nodebalancers" component={NodeBalancers} />
                 <Route path="/domains" component={Domains} />

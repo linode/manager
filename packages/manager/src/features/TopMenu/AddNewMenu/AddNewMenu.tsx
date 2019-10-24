@@ -119,10 +119,11 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
       {
         title: 'Volume',
         onClick: e => {
-          this.props.openVolumeDrawerForCreating('Created from Add New Menu');
+          // this.props.openVolumeDrawerForCreating('Created from Add New Menu');
           this.handleClose();
           e.preventDefault();
         },
+        linkTo: '/volumes/create',
         body: `Block Storage service allows you to attach additional storage to your Linode`,
         ItemIcon: VolumeIcon
       },
