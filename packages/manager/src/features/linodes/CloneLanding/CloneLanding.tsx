@@ -336,7 +336,8 @@ export const CloneLanding: React.FC<CombinedProps> = props => {
         <Grid item xs={12} md={8} lg={9}>
           <Paper className={classes.paper}>
             <Typography
-              role="header"
+              role="heading"
+              aria-level={2}
               variant="h2"
               className={classes.title}
               data-qa-title
