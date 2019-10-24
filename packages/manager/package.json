@@ -80,6 +80,8 @@
     "showdown": "^1.9.0",
     "showdown-highlightjs-extension": "^0.1.2",
     "throttle-debounce": "^2.0.0",
+    "tslint-react-a11y": "^1.1.0",
+    "tslint-react-hooks": "^2.2.1",
     "typeface-lato": "^0.0.54",
     "typeface-ubuntu-mono": "^0.0.72",
     "typescript-fsa": "^3.0.0-beta-2",
