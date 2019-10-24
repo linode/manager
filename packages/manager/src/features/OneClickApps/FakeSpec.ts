@@ -234,7 +234,7 @@ export const oneClickApps: OCA[] = [
       `- set <b>Encryption</b> to <em>aes-256-cfb</em>`,
       `- set <b>Password</b> that was specified on configuration`,
     ],
-    logo_url: 'assets/shadowsocks_color.png',
+    logo_url: 'assets/shadowsocks_color.svg',
   },
   {
     name: 'Terraria',
