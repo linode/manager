@@ -208,13 +208,31 @@ export const oneClickApps: OCA[] = [
   },
   {
     name: 'Shadowsocks',
-    description: 'Shadowsocks is a free and open-source encrypted proxy project, widely used in mainland China to circumvent Internet censorship. It was created in 2012 by a Chinese programmer named "clowwindy", and multiple implementations of the protocol have been made available since.',
+    description: 'Shadowsocks is a lightweight SOCKS5 web proxy tool primarily utilized to bypass network censorship and blocking on certain websites and web protocols. A full setup requires a Linode server to host the Shadowsocks daemon, and a client installed on PC, Mac, Linux, or a mobile device. Unlike other proxy software, Shadowsocks traffic is designed to be both indiscernible from other traffic to third-party monitoring tools, and also able to disguise itself as a normal direct connection. Data passing through Shadowsocks is encrypted for additional security and privacy.',
     summary: 'A secure socks5 proxy, designed to protect your Internet traffic.',
     related_info: [
       {
         title: 'https://shadowsocks.org/',
         href: 'https://shadowsocks.org/',
-      }
+      },
+      {
+        title: 'ShadowsocksX-NG - macOS Client',
+        href: 'https://github.com/shadowsocks/ShadowsocksX-NG',
+      },
+      {
+        title: 'shadowsocks-windows - Windows Client',
+        href: 'https://github.com/shadowsocks/shadowsocks-windows',
+      },
+      {
+        title: 'shadowsocks-android - Android Client',
+        href: 'https://github.com/shadowsocks/shadowsocks-android',
+      },
+    ],
+    tips: [
+      `<b>Server Preferences</b> on your Shadowsocks Client:`,
+      `- set <b>Address</b> to <em>[your-linodes-IP]:8000</em>`,
+      `- set <b>Encryption</b> to <em>aes-256-cfb</em>`,
+      `- set <b>Password</b> that was specified on configuration`,
     ],
     logo_url: 'assets/shadowsocks_color.png',
   },
