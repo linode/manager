@@ -331,6 +331,7 @@
     "set-value": "^3.0.1",
     "handlebars": "^4.4.3",
     "js-yaml": "^3.13.1",
-    "braces": "^3.0.2"
+    "braces": "^3.0.2",
+    "axe-core":"^3.4.0"
   }
 }
