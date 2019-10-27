@@ -19,7 +19,7 @@
     "@material-ui/core": "^4.4.2",
     "@material-ui/icons": "^4.4.1",
     "@material-ui/styles": "^4.4.1",
-    "@sentry/browser": "^5.4.3",
+    "@sentry/browser": "^5.7.1",
     "@types/sanitize-html": "^1.18.3",
     "algoliasearch": "^3.30.0",
     "axios": "^0.18.1",
@@ -85,7 +85,7 @@
     "typescript-fsa": "^3.0.0-beta-2",
     "typescript-fsa-reducers": "^1.2.0",
     "xml2js": "^0.4.19",
-    "xterm": "^3.3.0",
+    "xterm": "^4.2.0",
     "yup": "^0.26.3",
     "zxcvbn": "^4.4.2"
   },
