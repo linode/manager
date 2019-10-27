@@ -166,6 +166,19 @@ export const oneClickApps: OCA[] = [
     // href: 'https://www.ibm.com/cloud/learn/lamp-stack-explained' Not sure this is kosher.
   },
   {
+    name: 'LEMP',
+    description: ` LEMP provides a platform for applications that is compatible with the LAMP stack for nearly all applications; however, because nginx is able to serve more pages at once with a more predictable memory usage profile, it may be more suited to high demand situations.`,
+    summary: `The LEMP stack replaces the Apache web server component with NGINX, providing the E in the acronym: Linux, NGINX, MySQL/MariaDB, PHP.`,
+    related_guides: [
+      {
+        title: 'LEMP Guides',
+        href:
+          'https://www.linode.com/docs/web-servers/lemp/'
+      }
+    ],
+    logo_url: 'assets/lemp_color.png'
+  },
+  {
     name: 'Plesk',
     description: `Plesk is a leading WordPress and website management platform and control panel. Plesk lets you build and manage multiple websites from a single dashboard to configure web services, email, and other applications. Plesk features hundreds of extensions, plus a complete WordPress toolkit. Use the Plesk One-Click App to manage websites hosted on your Linode.`,
     summary: 'A secure, scalable, and versatile website and WordPress management platform.',

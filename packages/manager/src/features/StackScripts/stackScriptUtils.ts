@@ -34,7 +34,8 @@ export const baseApps = {
   '401709': 'Minecraft - Latest One-Click',
   '401701': 'LAMP One-Click',
   '401719': 'OpenVPN - Latest One-Click',
-  '401697': 'WordPress - Latest One-Click'
+  '401697': 'WordPress - Latest One-Click',
+  '606691': 'LEMP One-Click'
 };
 
 const oneClickFilter = [
