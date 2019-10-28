@@ -24,7 +24,7 @@ import {
   isRestrictedUser
 } from 'src/features/Profile/permissionsHelpers';
 import { MapState } from 'src/store/types';
-import { Origin as VolumeDrawerOrigin } from 'src/store/volumeDrawer';
+import { Origin as VolumeDrawerOrigin } from 'src/store/volumeForm';
 import { getErrorStringOrDefault } from 'src/utilities/errorUtils';
 import {
   handleFieldErrors,
@@ -33,13 +33,13 @@ import {
 import { sendCreateVolumeEvent } from 'src/utilities/ga';
 import isNilOrEmpty from 'src/utilities/isNilOrEmpty';
 import maybeCastToNumber from 'src/utilities/maybeCastToNumber';
-import ConfigSelect from './ConfigSelect';
-import LabelField from './LabelField';
-import LinodeSelect from './LinodeSelect';
-import NoticePanel from './NoticePanel';
-import PricePanel from './PricePanel';
-import SizeField from './SizeField';
-import VolumesActionsPanel from './VolumesActionsPanel';
+import ConfigSelect from '../VolumeDrawer/ConfigSelect';
+import LabelField from '../VolumeDrawer/LabelField';
+import LinodeSelect from '../VolumeDrawer/LinodeSelect';
+import NoticePanel from '../VolumeDrawer/NoticePanel';
+import PricePanel from '../VolumeDrawer/PricePanel';
+import SizeField from '../VolumeDrawer/SizeField';
+import VolumesActionsPanel from '../VolumeDrawer/VolumesActionsPanel';
 
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import { dcDisplayNames } from 'src/constants';
@@ -49,12 +49,13 @@ type ClassNames = 'copy';
 const styles = (theme: Theme) =>
   createStyles({
     copy: {
-      marginTop: theme.spacing(1)
+      marginTop: theme.spacing(1),
+      marginBottom: theme.spacing(2)
     }
   });
 
 interface Props {
-  onClose: () => void;
+  // onClose: () => void;
   regions: Region[];
   onSuccess: (
     volumeLabel: string,
@@ -69,7 +70,7 @@ type CombinedProps = Props &
   StateProps;
 
 const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
-  const { onClose, onSuccess, classes, createVolume, disabled, origin } = props;
+  const { onSuccess, classes, createVolume, disabled, origin } = props;
   return (
     <Formik
       initialValues={initialValues}
@@ -271,7 +272,6 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               onSubmit={handleSubmit}
               onCancel={() => {
                 resetForm();
-                onClose();
               }}
             />
           </Form>

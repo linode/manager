@@ -10,7 +10,7 @@ import withVolumesRequests, {
 } from 'src/containers/volumesRequests.container';
 import { resetEventsPolling } from 'src/events';
 import { MapState } from 'src/store/types';
-import { openForCreating } from 'src/store/volumeDrawer';
+import { openForCreating } from 'src/store/volumeForm';
 import {
   handleFieldErrors,
   handleGeneralErrors

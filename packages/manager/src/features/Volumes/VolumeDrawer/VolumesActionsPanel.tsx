@@ -32,7 +32,7 @@ const VolumesActionsPanel: React.StatelessComponent<CombinedProps> = ({
       )}
       {onCancel && (
         <Button onClick={onCancel} buttonType="cancel" data-qa-cancel>
-          Cancel
+          Reset Form
         </Button>
       )}
     </ActionsPanel>
