@@ -111,6 +111,9 @@ export const CreateBucketForm: React.StatelessComponent<
             resetForm(initialValues);
             setSubmitting(false);
             onSuccess(bucketLabel);
+
+            // If our Redux Store says that the user doesn't have OBJ enabled,
+            // it problably means they have
             if (props.object_storage === 'disabled') {
               props.updateAccountSettingsInStore({ object_storage: 'active' });
             }

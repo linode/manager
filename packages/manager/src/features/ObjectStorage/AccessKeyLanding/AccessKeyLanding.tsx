@@ -133,6 +133,11 @@ export const AccessKeyLanding: React.StatelessComponent<
         createOrEditDrawer.close();
         displayKeysDialog.open();
 
+        // If our Redux Store says that the user doesn't have OBJ enabled,
+        // it probably means they have just enabled it with the creation
+        // of this key. In that case, update the Redux Store so that
+        // subsequently created keys don't need to go through the
+        // confirmation flow.
         if (object_storage === 'disabled') {
           updateAccountSettingsInStore({ object_storage: 'active' });
         }
