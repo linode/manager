@@ -1,5 +1,9 @@
 import { KubernetesCluster } from 'linode-js-sdk/lib/kubernetes';
-import { connect, MapDispatchToProps } from 'react-redux';
+import {
+  connect,
+  InferableComponentEnhancerWithProps,
+  MapDispatchToProps
+} from 'react-redux';
 import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 
@@ -71,18 +75,35 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
     dispatch(_requestNodePools({ clusterID }))
 });
 
-export default <TInner extends {}, TOuter extends {}>(
-  mapKubernetesToProps: (
-    ownProps: TOuter,
-    clustersLoading: boolean,
-    lastUpdated: number,
-    clustersError: EntityError,
-    clusters: KubernetesCluster[],
-    nodePoolsLoading: boolean
-  ) => TInner
+type MapProps<ReduxStateProps, OwnProps> = (
+  ownProps: OwnProps,
+  clustersLoading: boolean,
+  lastUpdated: number,
+  clustersError: EntityError,
+  clusters: KubernetesCluster[],
+  nodePoolsLoading: boolean
+) => ReduxStateProps & Partial<KubernetesProps>;
+
+export type Props = DispatchProps & KubernetesProps;
+
+interface Connected {
+  <ReduxStateProps, OwnProps>(
+    mapStateToProps: MapProps<ReduxStateProps, OwnProps>
+  ): InferableComponentEnhancerWithProps<
+    ReduxStateProps & Partial<KubernetesProps> & DispatchProps & OwnProps,
+    OwnProps
+  >;
+  <ReduxStateProps, OwnProps>(): InferableComponentEnhancerWithProps<
+    ReduxStateProps & DispatchProps & OwnProps,
+    OwnProps
+  >;
+}
+
+const connected: Connected = <ReduxState extends {}, OwnProps extends {}>(
+  mapKubernetesToProps?: MapProps<ReduxState, OwnProps>
 ) =>
   connect(
-    (state: ApplicationState, ownProps: TOuter) => {
+    (state: ApplicationState, ownProps: OwnProps) => {
       const _clusters = state.__resources.kubernetes.entities;
       // Add node pool and pricing data to clusters
       const nodePools = state.__resources.nodePools.entities;
@@ -98,14 +119,26 @@ export default <TInner extends {}, TOuter extends {}>(
         state.__resources.nodePools.loading &&
         state.__resources.nodePools.entities.length === 0;
 
-      return mapKubernetesToProps(
-        ownProps,
+      if (mapKubernetesToProps) {
+        return mapKubernetesToProps(
+          ownProps,
+          clustersLoading,
+          lastUpdated,
+          clustersError,
+          clusters,
+          nodePoolsLoading
+        );
+      }
+
+      return {
         clustersLoading,
         lastUpdated,
         clustersError,
         clusters,
         nodePoolsLoading
-      );
+      };
     },
     mapDispatchToProps
   );
+
+export default connected;
