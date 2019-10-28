@@ -3,7 +3,6 @@ import { pool1 } from 'src/__data__/nodePools';
 
 export const clusters: KubernetesCluster[] = [
   {
-    tags: ['spam', 'eggs'],
     region: 'us-central',
     label: 'cluster-1',
     created: '2019-04-29 18:02:17',
@@ -12,7 +11,6 @@ export const clusters: KubernetesCluster[] = [
     version: '1.13.5'
   },
   {
-    tags: ['spam', 'eggs'],
     region: 'us-central',
     label: 'cluster-2',
     created: '2019-04-29 18:02:17',
