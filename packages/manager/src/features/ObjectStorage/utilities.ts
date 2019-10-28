@@ -122,12 +122,12 @@ export const firstSubfolder = (path: string) => path.split('/')[0];
 export const confirmObjectStorage = <T extends {}>(
   object_storage: AccountSettings['object_storage'],
   formikProps: FormikProps<T>,
-  openConfirmationDialog: () => void
+  openConfirmationDialog: () => void,
+  featureFlag = false
 ) => {
-  // @todo: feature flag?
   // If the user doesn't already have Object Storage enabled, we show
   // a confirmation modal before letting them create their first bucket.
-  if (object_storage !== 'active') {
+  if (featureFlag && object_storage !== 'active') {
     // But first, manually validate the form.
     formikProps.validateForm().then(validationErrors => {
       if (Object.keys(validationErrors).length > 0) {
