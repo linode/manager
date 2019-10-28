@@ -46,6 +46,7 @@ const styles = (theme: Theme) => {
     },
     root: {
       marginBottom: theme.spacing(2),
+      position: 'relative',
       padding: '4px 16px',
       maxWidth: '100%',
       display: 'flex',
@@ -64,7 +65,7 @@ const styles = (theme: Theme) => {
     icon: {
       color: 'white',
       position: 'absolute',
-      left: theme.spacing(1) + 7
+      left: -25 // This value must be static regardless of theme selection
     },
     closeIcon: {
       paddingLeft: theme.spacing(1)
