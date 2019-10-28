@@ -210,7 +210,8 @@ export class LinodeRescue extends React.Component<CombinedProps, State> {
         <Paper className={classes.root}>
           {disabled && <LinodePermissionsError />}
           <Typography
-            role="header"
+            role="heading"
+            aria-level={2}
             variant="h2"
             className={classes.title}
             data-qa-title

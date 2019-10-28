@@ -486,6 +486,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
                   <span
                     className={classes.tryAgainText}
                     onClick={this.getNextPage}
+                    role="button"
                   >
                     Click here to try again.
                   </span>

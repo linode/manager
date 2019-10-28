@@ -191,6 +191,7 @@ export const Configs: React.FC<Props> = props => {
                   onClick={() => handleToggleConfig(eachConfig.id)}
                   className={classes.closeIcon}
                   data-qa-inline-delete
+                  role="button"
                 >
                   <Close />
                 </a>

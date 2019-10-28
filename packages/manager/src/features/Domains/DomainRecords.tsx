@@ -673,6 +673,8 @@ class DomainRecords extends React.Component<CombinedProps, State> {
                 <Grid item>
                   <a ref={ref} />
                   <Typography
+                    role="heading"
+                    aria-level={2}
                     variant="h2"
                     className={classes.titles}
                     data-qa-domain-record={type.title}
