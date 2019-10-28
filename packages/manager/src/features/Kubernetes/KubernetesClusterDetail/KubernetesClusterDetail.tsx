@@ -196,7 +196,11 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   }, []);
 
   if (clustersLoadError) {
-    return <ErrorState errorText="Unable to load cluster data." />;
+    const error = getAPIErrorOrDefault(
+      clustersLoadError,
+      'Unable to load cluster data.'
+    )[0].reason;
+    return <ErrorState errorText={error} />;
   }
 
   if (
@@ -206,6 +210,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   ) {
     return <CircleProgress />;
   }
+
   if (cluster === null) {
     return null;
   }

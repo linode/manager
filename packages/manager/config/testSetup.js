@@ -28,6 +28,8 @@ const localStorageMock = (function() {
 
 Object.defineProperty(window, 'localStorage', { value: localStorageMock });
 
+Object.defineProperty(window, 'URL', { value: { createObjectURL: jest.fn() } });
+
 HTMLCanvasElement.prototype.getContext = () => {
   return 0;
 };
