@@ -2,8 +2,10 @@ import { Form, Formik } from 'formik';
 import { AccountSettings } from 'linode-js-sdk/lib/account';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 import {
   createStyles,
   Theme,
@@ -23,6 +25,7 @@ import BucketsActionPanel from 'src/features/Volumes/VolumeDrawer/VolumesActions
 import useFlags from 'src/hooks/useFlags';
 import { CreateBucketSchema } from 'src/services/objectStorage/buckets.schema';
 import { ApplicationState } from 'src/store';
+import { updateSettingsInStore } from 'src/store/accountSettings/accountSettings.actions';
 import {
   handleFieldErrors,
   handleGeneralErrors
@@ -51,11 +54,16 @@ interface ReduxStateProps {
   object_storage: AccountSettings['object_storage'];
 }
 
+interface DispatchProps {
+  updateAccountSettingsInStore: (data: Partial<AccountSettings>) => void;
+}
+
 type CombinedProps = Props &
   BucketContainerProps &
   BucketsRequests &
   WithStyles<ClassNames> &
-  ReduxStateProps;
+  ReduxStateProps &
+  DispatchProps;
 
 export const CreateBucketForm: React.StatelessComponent<
   CombinedProps
@@ -103,6 +111,9 @@ export const CreateBucketForm: React.StatelessComponent<
             resetForm(initialValues);
             setSubmitting(false);
             onSuccess(bucketLabel);
+            if (props.object_storage === 'disabled') {
+              props.updateAccountSettingsInStore({ object_storage: 'active' });
+            }
 
             // @analytics
             sendCreateBucketEvent(cluster);
@@ -221,7 +232,19 @@ const mapStateToProps = (state: ApplicationState) => {
   };
 };
 
-const connected = connect(mapStateToProps);
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
+) => {
+  return {
+    updateAccountSettingsInStore: (data: Partial<AccountSettings>) =>
+      dispatch(updateSettingsInStore(data))
+  };
+};
+
+const connected = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
 
 const styled = withStyles(styles);
 

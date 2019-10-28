@@ -1,4 +1,5 @@
 import { shallow } from 'enzyme';
+import { AccountSettings } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import { pageyProps } from 'src/__data__/pageyProps';
 import { AccessKeyLanding } from './AccessKeyLanding';
@@ -14,6 +15,8 @@ describe('AccessKeyLanding', () => {
       confirmationDialog: ''
     },
     isRestrictedUser: false,
+    object_storage: 'active' as AccountSettings['object_storage'],
+    updateAccountSettingsInStore: jest.fn(),
     ...pageyProps
   };
   const wrapper = shallow(<AccessKeyLanding {...props} />);
