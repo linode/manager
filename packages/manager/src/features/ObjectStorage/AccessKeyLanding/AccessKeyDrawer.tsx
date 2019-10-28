@@ -7,16 +7,13 @@ import {
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
 import Drawer from 'src/components/Drawer';
 import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
+import useFlags from 'src/hooks/useFlags';
 import { ApplicationState } from 'src/store';
 import EnableObjectStorageModal from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
@@ -36,7 +33,7 @@ interface ReduxStateProps {
   object_storage: AccountSettings['object_storage'];
 }
 
-type CombinedProps = Props & ReduxStateProps & FeatureFlagConsumerProps;
+type CombinedProps = Props & ReduxStateProps;
 
 interface FormState {
   label: string;
@@ -47,13 +44,14 @@ export const AccessKeyDrawer: React.StatelessComponent<
 > = props => {
   const {
     isRestrictedUser,
-    flags,
     open,
     onClose,
     onSubmit,
     mode,
     objectStorageKey
   } = props;
+
+  const flags = useFlags();
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
 
@@ -182,9 +180,4 @@ const mapStateToProps = (state: ApplicationState) => {
 
 const connected = connect(mapStateToProps);
 
-const enhanced = compose<CombinedProps, Props>(
-  connected,
-  withFeatureFlags
-);
-
-export default enhanced(AccessKeyDrawer);
+export default connected(AccessKeyDrawer);

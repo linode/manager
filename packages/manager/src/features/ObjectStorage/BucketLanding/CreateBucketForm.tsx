@@ -18,11 +18,9 @@ import bucketContainer, {
 import bucketRequestsContainer, {
   BucketsRequests
 } from 'src/containers/bucketRequests.container';
-import withFeatureFlags, {
-  FeatureFlagConsumerProps
-} from 'src/containers/withFeatureFlagConsumer.container.ts';
 // @todo: Extract ActionPanel out of Volumes
 import BucketsActionPanel from 'src/features/Volumes/VolumeDrawer/VolumesActionsPanel';
+import useFlags from 'src/hooks/useFlags';
 import { CreateBucketSchema } from 'src/services/objectStorage/buckets.schema';
 import { ApplicationState } from 'src/store';
 import {
@@ -57,20 +55,20 @@ type CombinedProps = Props &
   BucketContainerProps &
   BucketsRequests &
   WithStyles<ClassNames> &
-  ReduxStateProps &
-  FeatureFlagConsumerProps;
+  ReduxStateProps;
 
 export const CreateBucketForm: React.StatelessComponent<
   CombinedProps
 > = props => {
   const {
     isRestrictedUser,
-    flags,
     onClose,
     onSuccess,
     createBucket,
     bucketsData
   } = props;
+
+  const flags = useFlags();
 
   const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
 
@@ -231,8 +229,7 @@ const enhanced = compose<CombinedProps, Props>(
   styled,
   bucketRequestsContainer,
   bucketContainer,
-  connected,
-  withFeatureFlags
+  connected
 );
 
 export default enhanced(CreateBucketForm);

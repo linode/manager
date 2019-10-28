@@ -1,7 +1,6 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
 import { buckets } from 'src/__data__/buckets';
-import ldClient from 'src/__data__/ldClient';
 import { CreateBucketForm, isDuplicateBucket } from './CreateBucketForm';
 
 describe('CreateBucketForm', () => {
@@ -16,8 +15,6 @@ describe('CreateBucketForm', () => {
       classes={{ root: '', textWrapper: '' }}
       isRestrictedUser={false}
       object_storage="active"
-      ldClient={ldClient}
-      flags={{}}
     />
   );
 
