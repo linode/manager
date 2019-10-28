@@ -49,7 +49,6 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
-import { isProduction } from 'src/constants';
 import AccountContainer, {
   DispatchProps as AccountDispatchProps
 } from 'src/containers/account.container';
@@ -154,18 +153,13 @@ const client = {
 };
 
 const paypalSrcQueryParams = `&disable-funding=card,credit&currency=USD&commit=false&intent=capture`;
+const env = process.env.REACT_APP_PAYPAL_ID ? 'sandbox' : 'production';
 
 const paypalScriptSrc = () => {
-  return isProduction
-    ? `https://www.paypal.com/sdk/js?client-id=${
-        client.production
-      }${paypalSrcQueryParams}`
-    : `https://www.paypal.com/sdk/js?client-id=${
-        client.sandbox
-      }${paypalSrcQueryParams}`;
+  return `https://www.paypal.com/sdk/js?client-id=${
+    client[env]
+  }${paypalSrcQueryParams}`;
 };
-
-const env = process.env.NODE_ENV === 'development' ? 'sandbox' : 'production';
 
 export const getDefaultPayment = (balance: number | false): string => {
   if (!balance) {
