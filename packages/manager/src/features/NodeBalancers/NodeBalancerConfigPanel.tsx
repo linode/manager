@@ -1045,6 +1045,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                     errorText={nodesHasErrorFor('mode')}
                                     data-qa-backend-ip-mode
                                     small
+                                    noMarginTop
                                     disabled={disabled}
                                   >
                                     <MenuItem
