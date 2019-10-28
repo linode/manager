@@ -1,5 +1,8 @@
 import { Form, Formik } from 'formik';
+import { AccountSettings } from 'linode-js-sdk/lib/account';
+import { pathOr } from 'ramda';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import {
   createStyles,
@@ -18,11 +21,14 @@ import bucketRequestsContainer, {
 // @todo: Extract ActionPanel out of Volumes
 import BucketsActionPanel from 'src/features/Volumes/VolumeDrawer/VolumesActionsPanel';
 import { CreateBucketSchema } from 'src/services/objectStorage/buckets.schema';
+import { ApplicationState } from 'src/store';
 import {
   handleFieldErrors,
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
 import { sendCreateBucketEvent } from 'src/utilities/ga';
+import EnableObjectStorageModal from '../EnableObjectStorageModal';
+import { confirmObjectStorage } from '../utilities';
 import ClusterSelect from './ClusterSelect';
 
 type ClassNames = 'root' | 'textWrapper';
@@ -40,10 +46,15 @@ interface Props {
   onSuccess: (bucketLabel: string) => void;
 }
 
+interface ReduxStateProps {
+  object_storage: AccountSettings['object_storage'];
+}
+
 type CombinedProps = Props &
   BucketContainerProps &
   BucketsRequests &
-  WithStyles<ClassNames>;
+  WithStyles<ClassNames> &
+  ReduxStateProps;
 
 export const CreateBucketForm: React.StatelessComponent<
   CombinedProps
@@ -55,6 +66,8 @@ export const CreateBucketForm: React.StatelessComponent<
     createBucket,
     bucketsData
   } = props;
+
+  const [dialogOpen, setDialogOpen] = React.useState<boolean>(false);
 
   return (
     <Formik
@@ -119,48 +132,66 @@ export const CreateBucketForm: React.StatelessComponent<
           values
         } = formikProps;
 
-        return (
-          <Form>
-            {/* `status` holds generalError messages */}
-            {status && <Notice error>{status.generalError}</Notice>}
-            {props.isRestrictedUser && (
-              <Notice
-                error
-                important
-                text="You don't have permissions to create a Bucket. Please contact an account administrator for details."
-                data-qa-permissions-notice
-              />
-            )}
-            <TextField
-              data-qa-cluster-label
-              label="Label"
-              name="label"
-              errorText={touched.label ? errors.label : undefined}
-              onBlur={handleBlur}
-              onChange={handleChange}
-              value={values.label}
-              disabled={props.isRestrictedUser}
-            />
+        const beforeSubmit = () => {
+          confirmObjectStorage<FormState>(
+            props.object_storage,
+            formikProps,
+            () => setDialogOpen(true)
+          );
+        };
 
-            <ClusterSelect
-              data-qa-cluster-select
-              error={touched.cluster ? errors.cluster : undefined}
-              onBlur={handleBlur}
-              onChange={value => setFieldValue('cluster', value)}
-              selectedCluster={values.cluster}
-              disabled={isRestrictedUser}
+        return (
+          <>
+            <Form>
+              {/* `status` holds generalError messages */}
+              {status && <Notice error>{status.generalError}</Notice>}
+
+              {isRestrictedUser && (
+                <Notice
+                  error
+                  important
+                  text="You don't have permissions to create a Bucket. Please contact an account administrator for details."
+                  data-qa-permissions-notice
+                />
+              )}
+
+              <TextField
+                data-qa-cluster-label
+                label="Label"
+                name="label"
+                errorText={touched.label ? errors.label : undefined}
+                onBlur={handleBlur}
+                onChange={handleChange}
+                value={values.label}
+                disabled={isRestrictedUser}
+              />
+
+              <ClusterSelect
+                data-qa-cluster-select
+                error={touched.cluster ? errors.cluster : undefined}
+                onBlur={handleBlur}
+                onChange={value => setFieldValue('cluster', value)}
+                selectedCluster={values.cluster}
+                disabled={isRestrictedUser}
+              />
+
+              <BucketsActionPanel
+                data-qa-bucket-actions-panel
+                isSubmitting={isSubmitting}
+                onSubmit={beforeSubmit}
+                onCancel={() => {
+                  resetForm();
+                  onClose();
+                }}
+                disabled={isRestrictedUser}
+              />
+            </Form>
+            <EnableObjectStorageModal
+              open={dialogOpen}
+              onClose={() => setDialogOpen(false)}
+              handleSubmit={handleSubmit}
             />
-            <BucketsActionPanel
-              data-qa-bucket-actions-panel
-              isSubmitting={isSubmitting}
-              onSubmit={handleSubmit}
-              onCancel={() => {
-                resetForm();
-                onClose();
-              }}
-              disabled={props.isRestrictedUser}
-            />
-          </Form>
+          </>
         );
       }}
     />
@@ -176,12 +207,25 @@ const initialValues: FormState = {
   cluster: ''
 };
 
+const mapStateToProps = (state: ApplicationState) => {
+  return {
+    object_storage: pathOr(
+      false,
+      ['data', 'object_storage'],
+      state.__resources.accountSettings
+    )
+  };
+};
+
+const connected = connect(mapStateToProps);
+
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
   styled,
   bucketRequestsContainer,
-  bucketContainer
+  bucketContainer,
+  connected
 );
 
 export default enhanced(CreateBucketForm);

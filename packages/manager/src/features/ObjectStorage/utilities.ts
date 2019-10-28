@@ -1,3 +1,5 @@
+import { FormikProps } from 'formik';
+import { AccountSettings } from 'linode-js-sdk/lib/account';
 import { OBJECT_STORAGE_DELIMITER, OBJECT_STORAGE_ROOT } from 'src/constants';
 
 export const generateObjectUrl = (
@@ -116,3 +118,32 @@ export const tableUpdateAction = (
 export const isFile = (path: string) => path.split('/').length < 2;
 
 export const firstSubfolder = (path: string) => path.split('/')[0];
+
+export const confirmObjectStorage = <T extends {}>(
+  object_storage: AccountSettings['object_storage'],
+  formikProps: FormikProps<T>,
+  openConfirmationDialog: () => void
+) => {
+  // @todo: feature flag?
+  // If the user doesn't already have Object Storage enabled, we show
+  // a confirmation modal before letting them create their first bucket.
+  if (object_storage !== 'active') {
+    // But first, manually validate the form.
+    formikProps.validateForm().then(validationErrors => {
+      if (Object.keys(validationErrors).length > 0) {
+        // Set `touched` and `error` for each field with an error.
+        // Setting `touched` is necessary because we only display errors
+        // on fields that have been touched (handleSubmit() does this
+        // implicitly).
+        Object.keys(validationErrors).forEach(key => {
+          formikProps.setFieldTouched(key, validationErrors[key]);
+          formikProps.setFieldError(key, validationErrors[key]);
+        });
+      } else {
+        openConfirmationDialog();
+      }
+    });
+  } else {
+    formikProps.handleSubmit();
+  }
+};
