@@ -85,7 +85,7 @@ export const ObjectStorageLanding: React.FunctionComponent<
         /** We choose to do nothing, relying on the Redux error state. */
       });
     }
-  }, []);
+  }, [props.isRestrictedUser]);
 
   const url = props.match.url;
   const matches = (p: string) => {
