@@ -9,15 +9,15 @@ export interface State {
   origin?: Origin;
 }
 
-const actionCreator = actionCreatorFactory(`@@manager/domains`);
+const actionCreator = actionCreatorFactory(`@@manager/domainDrawer`);
 
 // ACTIONS
-export const OPEN = '@manager/domains/OPEN';
-export const CLOSE = '@manager/domains/CLOSE';
-export const CREATING = '@manager/domains/CREATING';
-export const EDITING = '@manager/domains/EDITING';
-export const CLONING = '@manager/domains/CLONING';
-export const RESET = '@manager/domains/RESET';
+export const OPEN = '@manager/domainDrawer/OPEN';
+export const CLOSE = '@manager/domainDrawer/CLOSE';
+export const CREATING = '@manager/domainDrawer/CREATING';
+export const EDITING = '@manager/domainDrawer/EDITING';
+export const CLONING = '@manager/domainDrawer/CLONING';
+export const RESET = '@manager/domainDrawer/RESET';
 
 interface Creating extends Action {
   type: typeof CREATING;
