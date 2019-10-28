@@ -60,7 +60,7 @@ interface CreateDomainPayload {
   origin: Origin;
 }
 
-const createDomain = actionCreator<CreateDomainPayload>(`CREAT_DOMAIN`, {
+const createDomain = actionCreator<CreateDomainPayload>(`CREATE_DOMAIN`, {
   mode: CREATING
 });
 
