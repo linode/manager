@@ -130,7 +130,7 @@ import volumes, {
 import volumeDrawer, {
   defaultState as volumeDrawerDefaultState,
   State as VolumeDrawerState
-} from 'src/store/volumeDrawer';
+} from 'src/store/volumeForm';
 import initialLoad, {
   defaultState as initialLoadState,
   State as InitialLoadState

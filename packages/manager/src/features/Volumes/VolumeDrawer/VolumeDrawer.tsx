@@ -11,11 +11,10 @@ import {
   close,
   openForConfig,
   viewResizeInstructions
-} from 'src/store/volumeDrawer';
+} from 'src/store/volumeForm';
 import AttachVolumeToLinodeForm from './AttachVolumeToLinodeForm';
 import CloneVolumeForm from './CloneVolumeForm';
 import CreateVolumeForLinodeForm from './CreateVolumeForLinodeForm';
-import CreateVolumeForm from './CreateVolumeForm';
 import EditVolumeForm from './EditVolumeForm';
 import { modes } from './modes';
 import ResizeVolumeForm from './ResizeVolumeForm';
@@ -46,13 +45,6 @@ class VolumeDrawer extends React.PureComponent<CombinedProps> {
 
     return (
       <Drawer open={isOpen} title={drawerTitle} onClose={actions.closeDrawer}>
-        {mode === modes.CREATING && (
-          <CreateVolumeForm
-            onClose={actions.closeDrawer}
-            onSuccess={actions.openForConfig}
-            regions={this.props.regions}
-          />
-        )}
         {mode === modes.EDITING &&
           volumeId !== undefined &&
           volumeLabel !== undefined &&

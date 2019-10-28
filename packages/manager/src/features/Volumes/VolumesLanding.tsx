@@ -46,7 +46,7 @@ import {
   openForEdit,
   openForResize,
   Origin as VolumeDrawerOrigin
-} from 'src/store/volumeDrawer';
+} from 'src/store/volumeForm';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import { sendGroupByTagEnabledEvent } from 'src/utilities/ga';
 import DestructiveVolumeDialog from './DestructiveVolumeDialog';

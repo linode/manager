@@ -204,7 +204,7 @@ type ActionTypes =
 
 const getMode = (action: AnyAction) => action.meta && action.meta.mode;
 
-export const volumeDrawer: Reducer<State> = (
+export const volumeForm: Reducer<State> = (
   state = defaultState,
   action: ActionTypes
 ) => {
@@ -311,4 +311,4 @@ export const volumeDrawer: Reducer<State> = (
   }
 };
 
-export default volumeDrawer;
+export default volumeForm;
