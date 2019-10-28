@@ -1,6 +1,7 @@
 import { AccountSettings } from 'linode-js-sdk/lib/account';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
+import { Link } from 'react-router-dom';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import ConfirmationDialog from 'src/components/ConfirmationDialog';
@@ -59,8 +60,8 @@ export const ObjectStorageContent: React.FC<ContentProps> = props => {
       Content storage and delivery for unstructured data. Great for multimedia,
       static sites, software delivery, archives, and data backups. To get
       started with Object Storage, create a{' '}
-      <a href="/object-storage/buckets">Bucket</a> or an{' '}
-      <a href="/object-storage/access-keys">Access Key.</a>{' '}
+      <Link to="/object-storage/buckets">Bucket</Link> or an{' '}
+      <Link to="/object-storage/access-keys">Access Key.</Link>{' '}
       <ExternalLink
         fixedIcon
         text="Learn more."
