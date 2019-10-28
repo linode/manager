@@ -6,7 +6,7 @@ import ActionMenu, { Action } from 'src/components/ActionMenu/ActionMenu';
 interface Props {
   token: Token;
   type: string;
-  isAppTokenMenu: boolean;
+  isThirdPartyAccessToken: boolean;
   openViewDrawer: (token: Token) => void;
   openEditDrawer: (token: Token) => void;
   openRevokeDialog: (token: Token, type: string) => void;
@@ -17,7 +17,7 @@ type CombinedProps = Props;
 class APITokenMenu extends React.Component<CombinedProps> {
   createActions = () => {
     const {
-      isAppTokenMenu,
+      isThirdPartyAccessToken,
       openViewDrawer,
       openEditDrawer,
       openRevokeDialog,
@@ -26,7 +26,7 @@ class APITokenMenu extends React.Component<CombinedProps> {
     } = this.props;
 
     return (closeMenu: Function): Action[] => {
-      const actions = !isAppTokenMenu
+      const actions = !isThirdPartyAccessToken
         ? [
             {
               title: 'View Token Scopes',
