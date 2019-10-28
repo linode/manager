@@ -1,4 +1,4 @@
-import { Event } from 'linode-js-sdk/lib/account'
+import { Event } from 'linode-js-sdk/lib/account';
 import { ExtendedEvent } from 'src/store/events/event.helpers';
 
 export const events: Event[] = [
@@ -439,7 +439,7 @@ export const events: Event[] = [
     time_remaining: 0,
     seen: true,
     created: '2018-12-02T20:21:11',
-    action: 'linode_shutdown',
+    action: 'lassie_reboot',
     read: false,
     percent_complete: 100,
     username: 'test',
