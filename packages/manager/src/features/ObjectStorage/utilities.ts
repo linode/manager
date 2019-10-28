@@ -127,7 +127,7 @@ export const confirmObjectStorage = <T extends {}>(
 ) => {
   // If the user doesn't already have Object Storage enabled, we show
   // a confirmation modal before letting them create their first bucket.
-  if (featureFlag && object_storage !== 'active') {
+  if (featureFlag && object_storage === 'disabled') {
     // But first, manually validate the form.
     formikProps.validateForm().then(validationErrors => {
       if (Object.keys(validationErrors).length > 0) {

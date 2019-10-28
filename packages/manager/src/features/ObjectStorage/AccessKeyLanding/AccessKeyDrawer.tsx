@@ -170,8 +170,8 @@ export const AccessKeyDrawer: React.StatelessComponent<
 
 const mapStateToProps = (state: ApplicationState) => {
   return {
-    object_storage: pathOr(
-      false,
+    object_storage: pathOr<AccountSettings['object_storage']>(
+      'disabled',
       ['data', 'object_storage'],
       state.__resources.accountSettings
     )
