@@ -11,10 +11,16 @@ import { AnyAction } from 'redux';
 import { ThunkDispatch } from 'redux-thunk';
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
+import withFeatureFlags, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
 import TagImportDrawer from 'src/features/TagImport';
 import { ApplicationState } from 'src/store';
 import { updateSettingsInStore } from 'src/store/accountSettings/accountSettings.actions';
-import { updateAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
+import {
+  requestAccountSettings,
+  updateAccountSettings
+} from 'src/store/accountSettings/accountSettings.requests';
 import { handleOpen } from 'src/store/backupDrawer';
 import getEntitiesWithGroupsToImport, {
   emptyGroupedEntities,
@@ -27,6 +33,7 @@ import shouldDisplayGroupImport from 'src/utilities/shouldDisplayGroupImportCTA'
 import { storage } from 'src/utilities/storage';
 import AutoBackups from './AutoBackups';
 import EnableManaged from './EnableManaged';
+import EnableObjectStorage from './EnableObjectStorage';
 import ImportGroupsAsTags from './ImportGroupsAsTags';
 import NetworkHelper from './NetworkHelper';
 
@@ -39,6 +46,7 @@ interface StateProps {
   networkHelperEnabled: boolean;
   entitiesWithGroupsToImport: GroupedEntitiesForImport;
   isManaged: boolean;
+  object_storage: AccountSettings['object_storage'];
 }
 
 interface DispatchProps {
@@ -47,13 +55,15 @@ interface DispatchProps {
     updateAccountSettingsInStore: (data: Partial<AccountSettings>) => void;
     openImportDrawer: () => void;
     openBackupsDrawer: () => void;
+    requestSettings: () => void;
   };
 }
 
 type CombinedProps = StateProps &
   DispatchProps &
   WithSnackbarProps &
-  RouteComponentProps<{}>;
+  RouteComponentProps<{}> &
+  FeatureFlagConsumerProps;
 
 class GlobalSettings extends React.Component<CombinedProps, {}> {
   toggleAutomaticBackups = () => {
@@ -86,17 +96,24 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
     });
   };
 
+  // Make sure account settings are fresh on mount.
+  componentDidMount = () => {
+    this.props.actions.requestSettings();
+  };
+
   render() {
     const {
       actions: { openBackupsDrawer, openImportDrawer },
       backups_enabled,
       networkHelperEnabled,
       error,
+      flags,
       loading,
       linodesWithoutBackups,
       updateError,
       entitiesWithGroupsToImport,
-      isManaged
+      isManaged,
+      object_storage
     } = this.props;
 
     if (loading) {
@@ -125,6 +142,12 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
           onChange={this.toggleNetworkHelper}
           networkHelperEnabled={networkHelperEnabled}
         />
+        {flags.objectStorage && (
+          <EnableObjectStorage
+            object_storage={object_storage}
+            update={this.props.actions.updateAccountSettingsInStore}
+          />
+        )}
         <EnableManaged
           isManaged={isManaged}
           update={this.props.actions.updateAccountSettingsInStore}
@@ -140,6 +163,7 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
 }
 const mapStateToProps: MapState<StateProps, {}> = state => ({
   loading: pathOr(false, ['__resources', 'accountSettings', 'loading'], state),
+
   backups_enabled: pathOr(
     false,
     ['__resources', 'accountSettings', 'data', 'backups_enabled'],
@@ -165,6 +189,11 @@ const mapStateToProps: MapState<StateProps, {}> = state => ({
     false,
     ['__resources', 'accountSettings', 'data', 'managed'],
     state
+  ),
+  object_storage: pathOr(
+    'disabled',
+    ['__resources', 'accountSettings', 'data', 'object_storage'],
+    state
   )
 });
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
@@ -177,7 +206,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
       openBackupsDrawer: () => dispatch(handleOpen()),
       openImportDrawer: () => dispatch(openGroupDrawer()),
       updateAccountSettingsInStore: (data: Partial<AccountSettings>) =>
-        dispatch(updateSettingsInStore(data))
+        dispatch(updateSettingsInStore(data)),
+      requestSettings: () => dispatch(requestAccountSettings())
     }
   };
 };
@@ -189,7 +219,8 @@ const connected = connect(
 
 const enhanced = compose<CombinedProps, {}>(
   connected,
-  withSnackbar
+  withSnackbar,
+  withFeatureFlags
 )(GlobalSettings);
 
 export default enhanced;
