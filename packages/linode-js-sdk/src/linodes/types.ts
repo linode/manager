@@ -81,14 +81,12 @@ export interface LinodeBackupsResponse {
   };
 }
 
-export interface LinodeWithBackups extends Linode {
-  currentBackups: LinodeBackupsResponse;
-}
+export type Filesystem = 'raw' | 'swap' | 'ext4' | 'ext3' | 'initrd';
 
 export interface LinodeBackupDisk {
   size: number;
   label: string;
-  filesystem: string;
+  filesystem: Filesystem;
 }
 
 export interface LinodeBackup {
@@ -102,10 +100,6 @@ export interface LinodeBackup {
   finished: string;
   configs: string[];
   disks: LinodeBackupDisk[];
-  /**
-   * @todo Waiting on API to clarify as this is documented as an ENUM.
-   */
-  availability?: string;
 }
 
 export type LinodeBackupType = 'auto' | 'snapshot';
@@ -113,6 +107,7 @@ export type LinodeBackupType = 'auto' | 'snapshot';
 export type LinodeBackupStatus =
   | 'pending'
   | 'running'
+  | 'paused'
   | 'needsPostProcessing'
   | 'successful'
   | 'failed'
@@ -172,8 +167,6 @@ export interface VolumeDevice {
   volume_id: null | number;
 }
 
-export type Filesystem = 'raw' | 'swap' | 'ext3' | 'ext4' | 'initrd';
-
 export interface Devices {
   sda: null | DiskDevice | VolumeDevice;
   sdb: null | DiskDevice | VolumeDevice;
@@ -194,10 +187,6 @@ export interface Kernel {
   architecture: string;
   pvops: boolean;
 }
-
-export type BootAction = 'reboot' | 'power_down' | null;
-
-export type KebabAction = BootAction | 'delete';
 
 interface NetStats {
   in: [number, number][];
@@ -226,7 +215,7 @@ export interface Disk {
   label: string;
   status: DiskStatus;
   size: number;
-  filesystem: DiskFilesystem;
+  filesystem: Filesystem;
   created: string;
   updated: string;
 }
@@ -241,8 +230,6 @@ export type DiskStatus =
   | 'deleting'
   | 'migrating'
   | 'ready';
-
-export type DiskFilesystem = 'raw' | 'swap' | 'ext3' | 'ext4' | 'initrd';
 
 export interface LinodeConfigCreationData {
   label: string;
