@@ -2,7 +2,7 @@ import * as Promise from 'bluebird';
 import {
   getLinodeBackups,
   Linode,
-  LinodeWithBackups
+  LinodeBackupsResponse
 } from 'linode-js-sdk/lib/linodes';
 import { compose as ramdaCompose, pathOr } from 'ramda';
 import * as React from 'react';
@@ -37,6 +37,10 @@ import { extendLinodes, getRegionIDFromLinodeID } from '../utilities';
 import { renderBackupsDisplaySection } from './utils';
 
 import { reportException } from 'src/exceptionReporting';
+
+export interface LinodeWithBackups extends Linode {
+  currentBackups: LinodeBackupsResponse;
+}
 
 type ClassNames = 'root' | 'main' | 'sidebar';
 
