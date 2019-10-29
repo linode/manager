@@ -13,19 +13,17 @@ interface Props {
 }
 
 const LoadGauge: React.FC<Props> = props => {
-  const [load, setLoad] = React.useState<number | undefined>(undefined);
-  const [amountOfCores, setCores] = React.useState<number | undefined>(
-    undefined
-  );
+  const [load, setLoad] = React.useState<number | undefined>();
+  const [amountOfCores, setCores] = React.useState<number | undefined>();
   const [loading, setLoading] = React.useState<boolean>(true);
-  const [error, setError] = React.useState<APIError | undefined>(undefined);
+  const [error, setError] = React.useState<APIError | undefined>();
 
   React.useEffect(() => {
     let mounted = true;
     requestStats(props.token, 'getLatestValue', ['sysinfo', 'load'])
       .then(response => {
         if (mounted) {
-          setLoad(response.Load[0].y);
+          setLoad(pathOr(0, ['Load', 0, 'y'], response));
           setCores(pathOr(0, ['cpu', 'cores'], response.SysInfo));
           setError(undefined);
 
@@ -97,8 +95,8 @@ const LoadGauge: React.FC<Props> = props => {
   return (
     <GaugePercent
       {...baseGaugeProps}
-      max={amountOfCores || 1}
-      value={load || 1}
+      max={typeof amountOfCores === 'undefined' ? 1 : amountOfCores}
+      value={typeof load === 'undefined' ? 0 : load}
       filledInColor="#FADB50"
       {...generateCopy()}
     />

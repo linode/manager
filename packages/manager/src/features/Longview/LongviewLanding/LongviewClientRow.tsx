@@ -80,13 +80,13 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         <CPUGauge clientAPIKey={clientAPIKey} lastUpdated={lastUpdated} />
       </TableCell>
       <TableCell>
-        <RAMGauge />
+        <RAMGauge token={clientAPIKey} lastUpdated={lastUpdated} />
       </TableCell>
       <TableCell>
         <SwapGauge />
       </TableCell>
       <TableCell>
-        <LoadGauge lastUpdated={lastUpdated} token={clientAPIKey} />
+        <LoadGauge token={clientAPIKey} lastUpdated={lastUpdated} />
       </TableCell>
       <TableCell>
         <NetworkGauge />

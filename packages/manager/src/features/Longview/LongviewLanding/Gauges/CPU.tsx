@@ -19,8 +19,8 @@ const LongviewGauge: React.FC<Props> = props => {
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<APIError | undefined>();
 
-  const [usedCPU, setUsedCPU] = React.useState<number>(0);
-  const [numCores, setNumCores] = React.useState<number>(1);
+  const [usedCPU, setUsedCPU] = React.useState<number | undefined>();
+  const [numCores, setNumCores] = React.useState<number | undefined>();
 
   React.useEffect(() => {
     requestStats(clientAPIKey, 'getLatestValue', ['cpu', 'sysinfo'])
@@ -56,16 +56,16 @@ const LongviewGauge: React.FC<Props> = props => {
       {...baseGaugeProps}
       // The MAX depends on the number of CPU cores. Default to 1 if cores
       // doesn't exist or is 0.
-      max={100 * numCores || 1}
-      value={usedCPU || 100}
-      innerText={innerText(usedCPU, loading, error)}
+      max={typeof numCores === 'undefined' ? 1 : 100 * numCores}
+      value={typeof usedCPU === 'undefined' ? 0 : usedCPU}
+      innerText={innerText(usedCPU || 0, loading, error)}
       subTitle={
         <>
           <Typography>
             <strong>CPU</strong>
           </Typography>
           {!error && !loading && (
-            <Typography>{pluralize('Core', 'Cores', numCores)}</Typography>
+            <Typography>{pluralize('Core', 'Cores', numCores || 0)}</Typography>
           )}
         </>
       }
