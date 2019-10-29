@@ -140,7 +140,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
         e.secondary_entity!.label
       } is scheduled to boot.`,
     started: e =>
-      `Linode ${e.entity!.label}: ${e.secondary_entity!.label} is booting.`,
+      `Linode ${e.entity!.label}: ${
+        e.secondary_entity!.label
+      } is being booted.`,
     failed: e =>
       `Linode ${e.entity!.label}: ${
         e.secondary_entity!.label
@@ -172,7 +174,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
         e.entity!.label
       } is scheduled to reboot (Host initiated restart).`,
     started: e =>
-      `Linode ${e.entity!.label} is booting (Host initiated restart).`,
+      `Linode ${e.entity!.label} is being booted (Host initiated restart).`,
     failed: e =>
       `Linode ${e.entity!.label} could not be booted (Host initiated restart).`,
     finished: e =>
@@ -184,7 +186,8 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   lish_boot: {
     scheduled: e =>
       `Linode ${e.entity!.label} is scheduled to boot (Lish initiated boot).`,
-    started: e => `Linode ${e.entity!.label} is booting (Lish initiated boot).`,
+    started: e =>
+      `Linode ${e.entity!.label} is being booted (Lish initiated boot).`,
     failed: e =>
       `Linode ${e.entity!.label} could not be booted (Lish initiated boot).`,
     finished: e => `Linode ${e.entity!.label} has booted (Lish initiated boot).`
@@ -250,7 +253,9 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
         e.secondary_entity!.label
       } is scheduled for a reboot.`,
     started: e =>
-      `Linode ${e.entity!.label}: ${e.secondary_entity!.label} is rebooting.`,
+      `Linode ${e.entity!.label}: ${
+        e.secondary_entity!.label
+      } is being rebooted.`,
     failed: e =>
       `Linode ${e.entity!.label}: ${
         e.secondary_entity!.label
