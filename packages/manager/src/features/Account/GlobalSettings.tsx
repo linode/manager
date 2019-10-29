@@ -55,7 +55,7 @@ interface DispatchProps {
     updateAccountSettingsInStore: (data: Partial<AccountSettings>) => void;
     openImportDrawer: () => void;
     openBackupsDrawer: () => void;
-    requestSettings: () => void;
+    requestSettings: () => Promise<AccountSettings>;
   };
 }
 
