@@ -1,3 +1,5 @@
+export * from './account';
+
 export * from './buckets';
 
 export * from './buckets.schema';

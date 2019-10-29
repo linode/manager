@@ -1,5 +1,5 @@
 import { BETA_API_ROOT } from 'src/constants';
-import Request, { setMethod, setURL } from '../index';
+import Request, { setMethod, setURL } from '../request';
 
 /**
  * cancelObjectStorage
