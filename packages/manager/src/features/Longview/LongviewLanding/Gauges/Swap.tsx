@@ -9,7 +9,7 @@ import { baseGaugeProps } from './common';
 import { readableBytes } from 'src/utilities/unitConversions';
 
 interface Props {
-  lastUpdated: number;
+  lastUpdated?: number;
   token: string;
 }
 
