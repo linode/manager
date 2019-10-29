@@ -1,4 +1,5 @@
 import { FormikBag } from 'formik';
+import { AccountSettings } from 'linode-js-sdk/lib/account';
 import {
   createObjectStorageKeys,
   getObjectStorageKeys,
@@ -6,8 +7,12 @@ import {
   revokeObjectStorageKey,
   updateObjectStorageKey
 } from 'linode-js-sdk/lib/profile';
+import { pathOr } from 'ramda';
 import * as React from 'react';
+import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 import AddNewLink from 'src/components/AddNewLink';
 import {
   createStyles,
@@ -21,6 +26,8 @@ import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { useErrors } from 'src/hooks/useErrors';
 import { useOpenClose } from 'src/hooks/useOpenClose';
+import { ApplicationState } from 'src/store';
+import { updateSettingsInStore } from 'src/store/accountSettings/accountSettings.actions';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import {
   sendCreateAccessKeyEvent,
@@ -29,6 +36,7 @@ import {
 } from 'src/utilities/ga';
 import AccessKeyDisplayDialog from './AccessKeyDisplayDialog';
 import AccessKeyDrawer from './AccessKeyDrawer';
+import { MODES } from './AccessKeyLanding';
 import AccessKeyTable from './AccessKeyTable';
 import RevokeAccessKeyDialog from './RevokeAccessKeyDialog';
 
@@ -46,18 +54,33 @@ interface Props {
   isRestrictedUser: boolean;
 }
 
+export type FormikProps = FormikBag<CombinedProps, ObjectStorageKeyRequest>;
+
+interface ReduxStateProps {
+  object_storage: AccountSettings['object_storage'];
+}
+
+interface DispatchProps {
+  updateAccountSettingsInStore: (data: Partial<AccountSettings>) => void;
+}
+
 type CombinedProps = Props &
   PaginationProps<Linode.ObjectStorageKey> &
-  WithStyles<ClassNames>;
-
-export type FormikProps = FormikBag<CombinedProps, ObjectStorageKeyRequest>;
+  WithStyles<ClassNames> &
+  ReduxStateProps &
+  DispatchProps;
 
 export type MODES = 'creating' | 'editing';
 
 export const AccessKeyLanding: React.StatelessComponent<
   CombinedProps
 > = props => {
-  const { classes, ...paginationProps } = props;
+  const {
+    classes,
+    object_storage,
+    updateAccountSettingsInStore,
+    ...paginationProps
+  } = props;
 
   const [mode, setMode] = React.useState<MODES>('creating');
 
@@ -109,6 +132,15 @@ export const AccessKeyLanding: React.StatelessComponent<
 
         createOrEditDrawer.close();
         displayKeysDialog.open();
+
+        // If our Redux Store says that the user doesn't have OBJ enabled,
+        // it probably means they have just enabled it with the creation
+        // of this key. In that case, update the Redux Store so that
+        // subsequently created keys don't need to go through the
+        // confirmation flow.
+        if (object_storage === 'disabled') {
+          updateAccountSettingsInStore({ object_storage: 'active' });
+        }
 
         // @analytics
         sendCreateAccessKeyEvent();
@@ -294,9 +326,34 @@ const updatedRequest = (_: CombinedProps, params: any, filters: any) =>
 
 const paginated = Pagey(updatedRequest);
 
+const mapStateToProps = (state: ApplicationState) => {
+  return {
+    object_storage: pathOr<AccountSettings['object_storage']>(
+      'disabled',
+      ['data', 'object_storage'],
+      state.__resources.accountSettings
+    )
+  };
+};
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
+) => {
+  return {
+    updateAccountSettingsInStore: (data: Partial<AccountSettings>) =>
+      dispatch(updateSettingsInStore(data))
+  };
+};
+
+const connected = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
+
 const enhanced = compose<CombinedProps, Props>(
   styled,
-  paginated
+  paginated,
+  connected
 );
 
 export default enhanced(AccessKeyLanding);
