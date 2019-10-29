@@ -1,3 +1,4 @@
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -38,12 +39,20 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
 
   const { clientID, clientLabel, clientAPIKey, ...actionHandlers } = props;
 
-  const [lastUpdated, setLastUpdated] = React.useState<number>(0);
+  /* 
+   lastUpdated _might_ come back from the endpoint as 0, so it's important
+   that we differentiate between _0_ and _undefined_
+   */
+  const [lastUpdated, setLastUpdated] = React.useState<number | undefined>();
 
   const requestAndSetLastUpdated = () => {
     return getLastUpdated(clientAPIKey)
       .then(response => {
-        if (response.updated > lastUpdated) {
+        /* 
+          only update _lastUpdated_ state if it hasn't already been set
+          or the API response is in a time past what's already been set.
+        */
+        if (!lastUpdated || pathOr(0, ['updated'], response) > lastUpdated) {
           setLastUpdated(response.updated);
         }
       })
