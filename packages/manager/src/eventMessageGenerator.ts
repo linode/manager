@@ -135,10 +135,18 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: e => `An IP has been added to ${e.entity!.label}.`
   },
   linode_boot: {
-    scheduled: e => `Linode ${e.entity!.label} is scheduled to boot.`,
-    started: e => `Linode ${e.entity!.label} is booting.`,
-    failed: e => `Linode ${e.entity!.label} could not be booted.`,
-    finished: e => `Linode ${e.entity!.label} has been booted.`
+    scheduled: e =>
+      `Linode ${e.entity!.label}: ${
+        e.secondary_entity!.label
+      } is scheduled to boot.`,
+    started: e =>
+      `Linode ${e.entity!.label}: ${e.secondary_entity!.label} is booting.`,
+    failed: e =>
+      `Linode ${e.entity!.label}: ${
+        e.secondary_entity!.label
+      } could not be booted.`,
+    finished: e =>
+      `Linode ${e.entity!.label}: ${e.secondary_entity!.label} has been booted.`
   },
   lassie_reboot: {
     scheduled: e =>
@@ -237,10 +245,20 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
     notification: e => `Linode ${e.entity!.label} is being upgraded.`
   },
   linode_reboot: {
-    scheduled: e => `Linode ${e.entity!.label} is scheduled for a reboot.`,
-    started: e => `Linode ${e.entity!.label} is rebooting.`,
-    failed: e => `Linode ${e.entity!.label} could not be rebooted.`,
-    finished: e => `Linode ${e.entity!.label} has been rebooted.`
+    scheduled: e =>
+      `Linode ${e.entity!.label}: ${
+        e.secondary_entity!.label
+      } is scheduled for a reboot.`,
+    started: e =>
+      `Linode ${e.entity!.label}: ${e.secondary_entity!.label} is rebooting.`,
+    failed: e =>
+      `Linode ${e.entity!.label}: ${
+        e.secondary_entity!.label
+      } could not be rebooted.`,
+    finished: e =>
+      `Linode ${e.entity!.label}: ${
+        e.secondary_entity!.label
+      } has been rebooted.`
   },
   linode_rebuild: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for rebuild.`,
