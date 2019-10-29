@@ -19,6 +19,7 @@ export interface Props {
   mode: MODES;
   // If the mode is 'editing', we should have an ObjectStorageKey to edit
   objectStorageKey?: Linode.ObjectStorageKey;
+  isRestrictedUser: boolean;
 }
 
 type CombinedProps = Props;
@@ -26,7 +27,14 @@ type CombinedProps = Props;
 export const AccessKeyDrawer: React.StatelessComponent<
   CombinedProps
 > = props => {
-  const { open, onClose, onSubmit, mode, objectStorageKey } = props;
+  const {
+    isRestrictedUser,
+    open,
+    onClose,
+    onSubmit,
+    mode,
+    objectStorageKey
+  } = props;
 
   const title =
     mode === 'creating' ? 'Create an Access Key' : 'Edit Access Key';
@@ -57,6 +65,14 @@ export const AccessKeyDrawer: React.StatelessComponent<
               <Notice key={status} text={status} error data-qa-error />
             )}
 
+            {props.isRestrictedUser && (
+              <Notice
+                error
+                important
+                text="You don't have permissions to create an Access Key. Please contact an account administrator for details."
+              />
+            )}
+
             {/* Explainer copy if we're in 'creating' mode */}
             {mode === 'creating' && (
               <Typography>
@@ -83,12 +99,14 @@ export const AccessKeyDrawer: React.StatelessComponent<
                 errorText={errors.label}
                 onChange={handleChange}
                 onBlur={handleBlur}
+                disabled={isRestrictedUser}
               />
               <ActionsPanel>
                 <Button
                   buttonType="primary"
                   onClick={() => handleSubmit()}
                   loading={isSubmitting}
+                  disabled={isRestrictedUser}
                   data-qa-submit
                 >
                   Submit

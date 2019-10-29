@@ -12,7 +12,8 @@ describe('AccessKeyDrawer', () => {
     label: 'test-label',
     updateLabel: jest.fn(),
     isLoading: false,
-    mode: 'creating' as MODES
+    mode: 'creating' as MODES,
+    isRestrictedUser: false
   };
   const wrapper = shallow<Props>(<AccessKeyDrawer {...props} />);
   it('renders without crashing', () => {

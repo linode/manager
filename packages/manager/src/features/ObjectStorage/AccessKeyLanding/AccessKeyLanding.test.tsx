@@ -13,6 +13,7 @@ describe('AccessKeyLanding', () => {
       createdCell: '',
       confirmationDialog: ''
     },
+    isRestrictedUser: false,
     ...pageyProps
   };
   const wrapper = shallow(<AccessKeyLanding {...props} />);

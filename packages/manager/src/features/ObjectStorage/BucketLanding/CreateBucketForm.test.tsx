@@ -13,6 +13,7 @@ describe('CreateBucketForm', () => {
       bucketsData={[]}
       bucketsLoading={false}
       classes={{ root: '', textWrapper: '' }}
+      isRestrictedUser={false}
     />
   );
 
