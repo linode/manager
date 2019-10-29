@@ -78,10 +78,13 @@ type ClassNames =
 
 const styles = (theme: Theme) =>
   createStyles({
-    root: {},
+    root: {
+      paddingBottom: 0
+    },
     tagGroup: {
       flexDirection: 'row-reverse',
-      marginBottom: theme.spacing(1)
+      position: 'relative',
+      top: -(theme.spacing(1) + 1)
     },
     titleWrapper: {
       flex: 1
@@ -343,7 +346,7 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                   container
                   justify="space-between"
                   alignItems={removeBreadCrumb ? 'center' : 'flex-end'}
-                  style={{ paddingBottom: 0 }}
+                  className={classes.root}
                 >
                   <Grid item className={classes.titleWrapper}>
                     {removeBreadCrumb ? (
@@ -375,8 +378,10 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                     <Grid container alignItems="flex-end">
                       <Grid item className="pt0">
                         <AddNewLink
-                          onClick={this.openCreateVolumeDrawer}
-                          label="Add a Volume"
+                          onClick={e => {
+                            this.props.history.push('/volumes/create');
+                          }}
+                          label="Create a Volume"
                         />
                       </Grid>
                     </Grid>
@@ -684,7 +689,6 @@ const filterVolumeEvents = (event: Event): boolean => {
 export default compose<CombinedProps, Props>(
   connected,
   documented,
-  styled,
   withVolumesRequests,
   _withEvents((ownProps: CombinedProps, eventsData) => ({
     ...ownProps,
@@ -714,7 +718,8 @@ export default compose<CombinedProps, Props>(
     }
   ),
   withRegions(),
-  withSnackbar
+  withSnackbar,
+  styled
 )(VolumesLanding);
 
 const RenderError = () => {

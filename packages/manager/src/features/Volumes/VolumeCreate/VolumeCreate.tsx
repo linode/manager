@@ -4,8 +4,8 @@ import { pathOr } from 'ramda';
 import React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
 import { RouteComponentProps } from 'react-router-dom';
+import BreadCrumb from 'src/components/Breadcrumb';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import Typography from 'src/components/core/Typography';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import Grid from 'src/components/Grid';
 import { isRestrictedUser } from 'src/features/Profile/permissionsHelpers';
@@ -16,7 +16,11 @@ import CreateVolumeForm from './CreateVolumeForm';
 const useStyles = makeStyles((theme: Theme) => ({
   root: {},
   main: {
-    marginTop: theme.spacing(2)
+    marginTop: theme.spacing(1)
+  },
+  title: {
+    marginTop: 3,
+    marginBottom: theme.spacing(1)
   }
 }));
 
@@ -68,10 +72,12 @@ const VolumeCreate: React.FC<CombinedProps> = props => {
   return (
     <>
       <DocumentTitleSegment segment="Create a Volume" />
-      <Grid item className="mlMain">
-        <Typography variant="h1" data-qa-create-nodebalancer-header>
-          Create a Volume
-        </Typography>
+      <Grid item>
+        <BreadCrumb
+          pathname={props.location.pathname}
+          labelTitle="Create"
+          className={classes.title}
+        />
         <div className={classes.main}>
           <CreateVolumeForm
             onSuccess={actions.openForConfig}
