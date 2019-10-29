@@ -39,7 +39,8 @@ export const ObjectStorageContent: React.FC<ContentProps> = props => {
               fixedIcon
               text="lifecycle policies."
               link="https://www.linode.com/docs/platform/object-storage/lifecycle-policies/"
-            />
+            />{' '}
+            Upon cancellation, all Object Storage Access Keys will be revoked.
           </Typography>
         </Grid>
         <Grid item>

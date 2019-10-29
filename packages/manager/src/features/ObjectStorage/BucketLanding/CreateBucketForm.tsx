@@ -156,7 +156,10 @@ export const CreateBucketForm: React.StatelessComponent<
           confirmObjectStorage<FormState>(
             props.object_storage,
             formikProps,
-            () => setDialogOpen(true),
+            () => {
+              updateSettingsInStore({ object_storage: 'active' });
+              setDialogOpen(true);
+            },
             flags.objectStorage
           );
         };
