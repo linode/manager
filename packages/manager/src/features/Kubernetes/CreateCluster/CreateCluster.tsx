@@ -221,8 +221,15 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       errors
     );
 
-    const _region = regionsData
-      ? regionsData.find(thisRegion => thisRegion.id === selectedRegion)
+    // Only displaying regions that have LKE capability
+    const filteredRegions = regionsData
+      ? regionsData.filter(thisRegion =>
+          thisRegion.capabilities.includes('Kubernetes')
+        )
+      : undefined;
+
+    const _region = filteredRegions
+      ? filteredRegions.find(thisRegion => thisRegion.id === selectedRegion)
       : undefined;
 
     const regionDisplay = _region ? _region.display : undefined;
@@ -248,14 +255,14 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
             <SelectRegionPanel
               error={errorMap.region}
               copy={'Determine the best location for your cluster.'}
-              regions={regionsData || []}
+              regions={filteredRegions || []}
               selectedID={selectedRegion}
               handleSelection={(regionID: string) =>
                 this.setState({ selectedRegion: regionID })
               }
               updateFor={[
                 errorMap.region,
-                regionsData,
+                filteredRegions,
                 selectedRegion,
                 classes
               ]}
