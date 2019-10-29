@@ -27,7 +27,6 @@ import PaginationFooter from 'src/components/PaginationFooter';
 import { useErrors } from 'src/hooks/useErrors';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import { ApplicationState } from 'src/store';
-import { updateSettingsInStore } from 'src/store/accountSettings/accountSettings.actions';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import {
@@ -62,8 +61,7 @@ interface ReduxStateProps {
 }
 
 interface DispatchProps {
-  updateAccountSettingsInStore: (data: Partial<AccountSettings>) => void;
-  requestSettings: () => void;
+  requestSettings: () => Promise<AccountSettings>;
 }
 
 type CombinedProps = Props &
@@ -80,7 +78,6 @@ export const AccessKeyLanding: React.StatelessComponent<
   const {
     classes,
     object_storage,
-    updateAccountSettingsInStore,
     requestSettings,
     ...paginationProps
   } = props;
@@ -349,8 +346,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => {
   return {
-    updateAccountSettingsInStore: (data: Partial<AccountSettings>) =>
-      dispatch(updateSettingsInStore(data)),
     requestSettings: () => dispatch(requestAccountSettings())
   };
 };

@@ -25,7 +25,6 @@ import BucketsActionPanel from 'src/features/Volumes/VolumeDrawer/VolumesActions
 import useFlags from 'src/hooks/useFlags';
 import { CreateBucketSchema } from 'src/services/objectStorage/buckets.schema';
 import { ApplicationState } from 'src/store';
-import { updateSettingsInStore } from 'src/store/accountSettings/accountSettings.actions';
 import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import {
   handleFieldErrors,
@@ -56,8 +55,7 @@ interface ReduxStateProps {
 }
 
 interface DispatchProps {
-  updateAccountSettingsInStore: (data: Partial<AccountSettings>) => void;
-  requestSettings: () => void;
+  requestSettings: () => Promise<AccountSettings>;
 }
 
 type CombinedProps = Props &
@@ -250,8 +248,6 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => {
   return {
-    updateAccountSettingsInStore: (data: Partial<AccountSettings>) =>
-      dispatch(updateSettingsInStore(data)),
     requestSettings: () => dispatch(requestAccountSettings())
   };
 };
