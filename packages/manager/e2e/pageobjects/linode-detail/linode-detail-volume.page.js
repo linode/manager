@@ -152,7 +152,8 @@ export class VolumeDetail extends Page {
 
   closeVolumeDrawer() {
     this.drawerClose.click();
-    this.drawerTitle.waitForDisplayed(constants.wait.short, true);
+    this.drawerTitle.waitForDisplayed(constants.wait.normal, true);
+    expect(this.drawerTitle.isDisplayed()).toBe(false);
     browser.pause(500);
   }
 
