@@ -166,6 +166,35 @@ export const oneClickApps: OCA[] = [
     // href: 'https://www.ibm.com/cloud/learn/lamp-stack-explained' Not sure this is kosher.
   },
   {
+    name: 'MySQL',
+    description: ``,
+    summary: `MySQL is a popular database management system used for web and server applications.`,
+    related_info: [
+      {
+        title: 'https://www.mysql.com/',
+        href: 'https://www.mysql.com/'
+      },
+      {
+        title: 'https://dev.mysql.com/downloads/workbench/',
+        href: 'https://dev.mysql.com/downloads/workbench/'
+      },
+      {
+        title: 'macOS database management client',
+        href: 'https://www.sequelpro.com/'
+      }
+    ],
+    related_guides: [
+      {
+        title: 'MySQL Guides',
+        href: 'https://www.linode.com/docs/databases/mysql/'
+      },
+    ],
+    tips: [
+      `Enables UFW firewall to allow access to, SSH <em>port 22</em>, HTTP <em>port 80</em>, HTTPS <em>port 443</em>, MySQL <em>port 3306</em>.`
+    ],
+    logo_url: 'assets/mysql.svg'
+  },
+  {
     name: 'Plesk',
     description: `Plesk is a leading WordPress and website management platform and control panel. Plesk lets you build and manage multiple websites from a single dashboard to configure web services, email, and other applications. Plesk features hundreds of extensions, plus a complete WordPress toolkit. Use the Plesk One-Click App to manage websites hosted on your Linode.`,
     summary: 'A secure, scalable, and versatile website and WordPress management platform.',
