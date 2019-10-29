@@ -90,6 +90,7 @@ export const Hively: React.FC<Props> = props => {
             src={
               'https://secure.teamhively.com/system/smileys/icons/000/000/541/px_25/icon_positive.png'
             }
+            alt="Green face with a happy expression."
           />
         </a>
         <a
@@ -103,6 +104,7 @@ export const Hively: React.FC<Props> = props => {
             src={
               'https://secure.teamhively.com/system/smileys/icons/000/000/542/px_25/icon_indifferent.png'
             }
+            alt="Yellow face with an indifferent expression."
           />
         </a>
         <a
@@ -116,6 +118,7 @@ export const Hively: React.FC<Props> = props => {
             src={
               'https://secure.teamhively.com/system/smileys/icons/000/000/543/px_25/icon_negative.png'
             }
+            alt="Red face with an unhappy expression."
           />
         </a>
       </span>
