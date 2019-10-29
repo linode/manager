@@ -3,8 +3,7 @@ import {
   DomainRecord,
   DomainType,
   RecordType,
-  updateDomainRecord,
-  ZoneFile
+  updateDomainRecord
 } from 'linode-js-sdk/lib/domains';
 import { APIError } from 'linode-js-sdk/lib/types';
 import {
@@ -86,7 +85,6 @@ interface EditableDomainFields extends EditableSharedFields {
   retry_sec?: number;
   soa_email?: string;
   ttl_sec?: number;
-  zonefile?: ZoneFile;
 }
 
 interface State {

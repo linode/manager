@@ -1,7 +1,7 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-
 import { APITokenDrawer } from './APITokenDrawer';
+import { basePermNameMap, basePerms } from './utils';
 
 describe('API Token Drawer', () => {
   const component = shallow<APITokenDrawer>(
@@ -20,6 +20,8 @@ describe('API Token Drawer', () => {
       onChange={jest.fn()}
       onCreate={jest.fn()}
       onEdit={jest.fn()}
+      perms={basePerms}
+      permNameMap={basePermNameMap}
     />
   );
 

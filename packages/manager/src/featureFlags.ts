@@ -17,6 +17,8 @@ interface Flags {
   firewalls: boolean;
   oneClickApps: OneClickApp;
   longview: boolean;
+  objectStorageBilling: boolean;
+  objectStorageCancel: boolean;
 }
 
 /**
