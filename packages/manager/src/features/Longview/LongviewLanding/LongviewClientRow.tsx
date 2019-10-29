@@ -77,7 +77,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
     <TableRow className={classes.root} rowLink={`longview/clients/${clientID}`}>
       <TableCell>{`${clientLabel}`}</TableCell>
       <TableCell>
-        <CPUGauge clientAPIKey={clientAPIKey} lastUpdated={lastUpdated || 0} />
+        <CPUGauge clientAPIKey={clientAPIKey} lastUpdated={lastUpdated} />
       </TableCell>
       <TableCell>
         <RAMGauge />
@@ -86,7 +86,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         <SwapGauge />
       </TableCell>
       <TableCell>
-        <LoadGauge lastUpdated={lastUpdated || 0} token={clientAPIKey} />
+        <LoadGauge lastUpdated={lastUpdated} token={clientAPIKey} />
       </TableCell>
       <TableCell>
         <NetworkGauge />

@@ -8,7 +8,7 @@ import { baseGaugeProps } from './common';
 import requestStats from '../../request';
 
 interface Props {
-  lastUpdated: number;
+  lastUpdated?: number;
   token: string;
 }
 

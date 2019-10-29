@@ -10,7 +10,7 @@ import { baseGaugeProps } from './common';
 
 interface Props {
   clientAPIKey: string;
-  lastUpdated: number;
+  lastUpdated?: number;
 }
 
 const LongviewGauge: React.FC<Props> = props => {
