@@ -55,7 +55,7 @@ interface DispatchProps {
     updateAccountSettingsInStore: (data: Partial<AccountSettings>) => void;
     openImportDrawer: () => void;
     openBackupsDrawer: () => void;
-    requestSettings: () => void;
+    requestSettings: () => Promise<AccountSettings>;
   };
 }
 
@@ -142,7 +142,7 @@ class GlobalSettings extends React.Component<CombinedProps, {}> {
           onChange={this.toggleNetworkHelper}
           networkHelperEnabled={networkHelperEnabled}
         />
-        {flags.objectStorage && (
+        {flags.objectStorageCancel && (
           <EnableObjectStorage
             object_storage={object_storage}
             update={this.props.actions.updateAccountSettingsInStore}
