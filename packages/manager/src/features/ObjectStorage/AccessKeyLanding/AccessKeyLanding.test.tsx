@@ -17,6 +17,7 @@ describe('AccessKeyLanding', () => {
     isRestrictedUser: false,
     object_storage: 'active' as AccountSettings['object_storage'],
     updateAccountSettingsInStore: jest.fn(),
+    requestSettings: jest.fn(),
     ...pageyProps
   };
   const wrapper = shallow(<AccessKeyLanding {...props} />);

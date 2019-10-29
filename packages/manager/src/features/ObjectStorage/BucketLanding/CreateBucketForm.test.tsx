@@ -16,6 +16,7 @@ describe('CreateBucketForm', () => {
       isRestrictedUser={false}
       object_storage="active"
       updateAccountSettingsInStore={jest.fn()}
+      requestSettings={jest.fn()}
     />
   );
 

@@ -28,6 +28,7 @@ import { useErrors } from 'src/hooks/useErrors';
 import { useOpenClose } from 'src/hooks/useOpenClose';
 import { ApplicationState } from 'src/store';
 import { updateSettingsInStore } from 'src/store/accountSettings/accountSettings.actions';
+import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import {
   sendCreateAccessKeyEvent,
@@ -62,6 +63,7 @@ interface ReduxStateProps {
 
 interface DispatchProps {
   updateAccountSettingsInStore: (data: Partial<AccountSettings>) => void;
+  requestSettings: () => void;
 }
 
 type CombinedProps = Props &
@@ -79,6 +81,7 @@ export const AccessKeyLanding: React.StatelessComponent<
     classes,
     object_storage,
     updateAccountSettingsInStore,
+    requestSettings,
     ...paginationProps
   } = props;
 
@@ -139,13 +142,19 @@ export const AccessKeyLanding: React.StatelessComponent<
         // subsequently created keys don't need to go through the
         // confirmation flow.
         if (object_storage === 'disabled') {
-          updateAccountSettingsInStore({ object_storage: 'active' });
+          requestSettings();
         }
 
         // @analytics
         sendCreateAccessKeyEvent();
       })
       .catch(errorResponse => {
+        // We also need to refresh account settings on failure, since, depending
+        // on the error, Object Storage service might have actually been enabled.
+        if (object_storage === 'disabled') {
+          requestSettings();
+        }
+
         setSubmitting(false);
 
         const errors = getAPIErrorOrDefault(
@@ -341,7 +350,8 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
 ) => {
   return {
     updateAccountSettingsInStore: (data: Partial<AccountSettings>) =>
-      dispatch(updateSettingsInStore(data))
+      dispatch(updateSettingsInStore(data)),
+    requestSettings: () => dispatch(requestAccountSettings())
   };
 };
 
