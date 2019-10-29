@@ -157,7 +157,7 @@ export const CreateBucketForm: React.StatelessComponent<
             props.object_storage,
             formikProps,
             () => {
-              updateSettingsInStore({ object_storage: 'active' });
+              props.updateAccountSettingsInStore({ object_storage: 'active' });
               setDialogOpen(true);
             },
             flags.objectStorage

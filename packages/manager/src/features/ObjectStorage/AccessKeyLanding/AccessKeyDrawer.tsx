@@ -6,7 +6,9 @@ import {
 } from 'linode-js-sdk/lib/profile';
 import { pathOr } from 'ramda';
 import * as React from 'react';
-import { connect } from 'react-redux';
+import { connect, MapDispatchToProps } from 'react-redux';
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
 import Typography from 'src/components/core/Typography';
@@ -15,6 +17,7 @@ import Notice from 'src/components/Notice';
 import TextField from 'src/components/TextField';
 import useFlags from 'src/hooks/useFlags';
 import { ApplicationState } from 'src/store';
+import { updateSettingsInStore } from 'src/store/accountSettings/accountSettings.actions';
 import EnableObjectStorageModal from '../EnableObjectStorageModal';
 import { confirmObjectStorage } from '../utilities';
 import { MODES } from './AccessKeyLanding';
@@ -33,7 +36,11 @@ interface ReduxStateProps {
   object_storage: AccountSettings['object_storage'];
 }
 
-type CombinedProps = Props & ReduxStateProps;
+interface DispatchProps {
+  updateAccountSettingsInStore: (data: Partial<AccountSettings>) => void;
+}
+
+type CombinedProps = Props & ReduxStateProps & DispatchProps;
 
 interface FormState {
   label: string;
@@ -88,7 +95,12 @@ export const AccessKeyDrawer: React.StatelessComponent<
             confirmObjectStorage<FormState>(
               props.object_storage,
               formikProps,
-              () => setDialogOpen(true),
+              () => {
+                setDialogOpen(true);
+                props.updateAccountSettingsInStore({
+                  object_storage: 'active'
+                });
+              },
               flags.objectStorage
             );
           };
@@ -178,6 +190,18 @@ const mapStateToProps = (state: ApplicationState) => {
   };
 };
 
-const connected = connect(mapStateToProps);
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
+) => {
+  return {
+    updateAccountSettingsInStore: (data: Partial<AccountSettings>) =>
+      dispatch(updateSettingsInStore(data))
+  };
+};
+
+const connected = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
 
 export default connected(AccessKeyDrawer);
