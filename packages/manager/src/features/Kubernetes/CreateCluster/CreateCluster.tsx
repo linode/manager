@@ -255,7 +255,7 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
             <SelectRegionPanel
               error={errorMap.region}
               copy={'Determine the best location for your cluster.'}
-              regions={filteredRegions || []}
+              regions={filteredRegions}
               selectedID={selectedRegion}
               handleSelection={(regionID: string) =>
                 this.setState({ selectedRegion: regionID })
