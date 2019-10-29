@@ -1,5 +1,6 @@
 import {
   LongviewLoad,
+  LongviewMemory,
   LongviewSystemInfo
 } from 'src/features/Longview/request.types';
 
@@ -27,5 +28,50 @@ export const systemInfo: LongviewSystemInfo = {
       type: 'Intel(R) Xeon(R) CPU E5-2680 v3 @ 2.50GHz'
     },
     hostname: 'localhost'
+  }
+};
+
+export const memory: LongviewMemory = {
+  Memory: {
+    real: {
+      used: [
+        {
+          y: 5000,
+          x: 500
+        }
+      ],
+      cache: [
+        {
+          y: 100,
+          x: 100
+        }
+      ],
+      buffers: [
+        {
+          y: 100,
+          x: 100
+        }
+      ],
+      free: [
+        {
+          y: 2000000,
+          x: 200
+        }
+      ]
+    },
+    swap: {
+      free: [
+        {
+          y: 100,
+          x: 100
+        }
+      ],
+      used: [
+        {
+          y: 2000000,
+          x: 100
+        }
+      ]
+    }
   }
 };
