@@ -113,7 +113,7 @@ const styles = (theme: Theme) =>
       }
     },
     passiveChecks: {
-      marginTop: theme.spacing(2.5)
+      marginTop: 4
     }
   });
 
@@ -726,6 +726,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                   data-qa-port
                   small
                   disabled={disabled}
+                  noMarginTop
                 />
                 <FormHelperText>Listen on this port</FormHelperText>
               </Grid>
@@ -1012,6 +1013,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                   }
                                   data-qa-backend-ip-port
                                   small
+                                  noMarginTop
                                   disabled={disabled}
                                 />
                               </Grid>
@@ -1028,6 +1030,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                   }
                                   data-qa-backend-ip-weight
                                   small
+                                  noMarginTop
                                   disabled={disabled}
                                 />
                               </Grid>
@@ -1042,6 +1045,7 @@ class NodeBalancerConfigPanel extends React.Component<CombinedProps> {
                                     errorText={nodesHasErrorFor('mode')}
                                     data-qa-backend-ip-mode
                                     small
+                                    noMarginTop
                                     disabled={disabled}
                                   >
                                     <MenuItem
