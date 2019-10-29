@@ -35,5 +35,8 @@
   },
   "resolutions":{
     "handlebars":"^4.4.3"
-  }
+  },
+  "workspaces":[
+    "packages/*"
+  ]
 }
