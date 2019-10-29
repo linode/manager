@@ -226,11 +226,11 @@ export class CreateCluster extends React.Component<CombinedProps, State> {
       ? regionsData.filter(thisRegion =>
           thisRegion.capabilities.includes('Kubernetes')
         )
-      : undefined;
+      : [];
 
-    const _region = filteredRegions
-      ? filteredRegions.find(thisRegion => thisRegion.id === selectedRegion)
-      : undefined;
+    const _region = filteredRegions.find(
+      thisRegion => thisRegion.id === selectedRegion
+    );
 
     const regionDisplay = _region ? _region.display : undefined;
 
