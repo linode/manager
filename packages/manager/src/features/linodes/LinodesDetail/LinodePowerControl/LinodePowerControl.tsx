@@ -202,7 +202,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
           aria-owns={anchorEl ? 'power' : undefined}
           aria-haspopup="true"
           className={`${classes.button} ${anchorEl ? 'active' : ''}`}
-          data-qa-power-control={status}
+          data-qa-power-control={buttonText()}
         >
           <div className={classes.buttonInner}>
             <EntityIcon
