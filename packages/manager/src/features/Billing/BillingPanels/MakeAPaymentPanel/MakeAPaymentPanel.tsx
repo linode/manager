@@ -49,6 +49,7 @@ import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
 import Radio from 'src/components/Radio';
 import TextField from 'src/components/TextField';
+import { paypalClientEnv } from 'src/constants';
 import AccountContainer, {
   DispatchProps as AccountDispatchProps
 } from 'src/containers/account.container';
@@ -153,7 +154,6 @@ const client = {
 };
 
 const paypalSrcQueryParams = `&disable-funding=card,credit&currency=USD&commit=false&intent=capture`;
-const env = process.env.REACT_APP_PAYPAL_ID ? 'sandbox' : 'production';
 
 const paypalScriptSrc = () => {
   return `https://www.paypal.com/sdk/js?client-id=${
