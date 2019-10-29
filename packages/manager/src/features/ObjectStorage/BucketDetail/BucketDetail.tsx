@@ -233,7 +233,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
       });
   };
 
-  handleDownload = async (objectName: string, newTab = false) => {
+  handleDownload = async (objectName: string) => {
     const { clusterId, bucketName } = this.props.match.params;
 
     try {
@@ -241,16 +241,14 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
         clusterId,
         bucketName,
         objectName,
-        'GET'
+        'GET',
+        // Force download with content_disposition: attachment
+        { content_disposition: 'attachment' }
       );
 
       sendDownloadObjectEvent();
 
-      if (newTab) {
-        window.open(url, '_blank', 'noopener');
-      } else {
-        window.location.assign(url);
-      }
+      window.location.assign(url);
     } catch (err) {
       this.props.enqueueSnackbar('Error downloading Object', {
         variant: 'error'
@@ -419,8 +417,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
             ]}
             labelOptions={{ noCap: true }}
           />
-          {/* @todo: What should this link be? */}
-          <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/" />
+          <DocumentationButton href="https://www.linode.com/docs/platform/object-storage/" />
         </Box>
         <Divider className={classes.divider} />
 

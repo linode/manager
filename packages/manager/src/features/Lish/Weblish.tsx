@@ -84,7 +84,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
      */
     if (this.props.token !== prevProps.token) {
       this.socket.close();
-      this.terminal.destroy();
+      this.terminal.dispose();
     }
 
     /*
@@ -133,7 +133,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
       fontFamily: '"Ubuntu Mono", monospace, sans-serif'
     });
 
-    this.terminal.on('data', (data: string) => this.socket.send(data));
+    this.terminal.onData((data: string) => this.socket.send(data));
     const terminalDiv = document.getElementById('terminal');
     this.terminal.open(terminalDiv as HTMLElement);
 
@@ -184,7 +184,7 @@ export class Weblish extends React.Component<CombinedProps, State> {
     });
 
     this.socket.addEventListener('close', () => {
-      this.terminal.destroy();
+      this.terminal.dispose();
       if (!this.mounted) {
         return;
       }

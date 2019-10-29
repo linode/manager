@@ -46,6 +46,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
+  isRestrictedUser: boolean;
   openRevokeDialog: (objectStorageKey: Linode.ObjectStorageKey) => void;
   openDrawerForEditing: (objectStorageKey: Linode.ObjectStorageKey) => void;
 }
@@ -62,11 +63,16 @@ export const AccessKeyTable: React.StatelessComponent<
     data,
     loading,
     error,
+    isRestrictedUser,
     openRevokeDialog,
     openDrawerForEditing
   } = props;
 
   const renderContent = () => {
+    if (isRestrictedUser) {
+      return <TableRowEmptyState colSpan={6} />;
+    }
+
     if (loading) {
       return <TableRowLoading colSpan={6} />;
     }

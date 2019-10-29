@@ -2,7 +2,7 @@ import * as React from 'react';
 import { compose } from 'recompose';
 import CircleProgress from 'src/components/CircleProgress';
 import ErrorState from 'src/components/ErrorState';
-import KubernetesContainer, {
+import withKubernetes, {
   DispatchProps,
   KubernetesProps
 } from 'src/containers/kubernetes.container';
@@ -65,24 +65,6 @@ export const KubernetesLanding: React.FunctionComponent<
   );
 };
 
-const withKubernetes = KubernetesContainer(
-  (
-    ownProps,
-    clustersLoading,
-    lastUpdated,
-    clustersError,
-    clusters,
-    nodePoolsLoading
-  ) => ({
-    ...ownProps,
-    clusters,
-    clustersError,
-    clustersLoading,
-    lastUpdated,
-    nodePoolsLoading
-  })
-);
-
-const enhanced = compose<CombinedProps, {}>(withKubernetes);
+const enhanced = compose<CombinedProps, {}>(withKubernetes());
 
 export default enhanced(KubernetesLanding);
