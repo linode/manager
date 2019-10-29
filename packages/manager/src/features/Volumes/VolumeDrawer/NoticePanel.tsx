@@ -17,13 +17,18 @@ const NoticePanel: React.StatelessComponent<CombinedProps> = ({
   return (
     <>
       {success && (
-        <Notice success important={important}>
+        <Notice
+          success
+          important={important}
+          spacingBottom={24}
+          spacingTop={16}
+        >
           {success}
         </Notice>
       )}
 
       {error && (
-        <Notice error important={important}>
+        <Notice error important={important} spacingBottom={24} spacingTop={16}>
           {error}
         </Notice>
       )}

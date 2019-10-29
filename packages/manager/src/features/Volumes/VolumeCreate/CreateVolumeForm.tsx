@@ -56,8 +56,13 @@ const styles = (theme: Theme) =>
       padding: theme.spacing(3)
     },
     sidebar: {
+      [theme.breakpoints.down('sm')]: {
+        marginTop: `0 !important`
+      },
       '& > div': {
-        padding: `${theme.spacing(1)}px 0`
+        [theme.breakpoints.up('md')]: {
+          padding: `${theme.spacing(1)}px 0`
+        }
       }
     },
     copy: {
@@ -141,7 +146,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
           handleBlur,
           handleChange,
           handleSubmit,
-          // isSubmitting,
+          isSubmitting,
           setFieldValue,
           status,
           values,
@@ -286,6 +291,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
                   onDeploy={handleSubmit}
                   calculatedPrice={values.size / 10}
                   disabled={values.configId === -9999 || disabled}
+                  isMakingRequest={isSubmitting}
                 />
               </Grid>
             </Grid>
