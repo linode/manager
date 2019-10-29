@@ -8,6 +8,7 @@ describe('BucketDrawer', () => {
       isOpen={true}
       openBucketDrawer={jest.fn()}
       closeBucketDrawer={jest.fn()}
+      isRestrictedUser={false}
     />
   );
 

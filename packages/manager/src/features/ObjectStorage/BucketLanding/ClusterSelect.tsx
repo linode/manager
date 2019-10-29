@@ -11,6 +11,7 @@ interface Props {
   onChange: (value: string) => void;
   onBlur: (e: any) => void;
   error?: string;
+  disabled?: boolean;
 }
 
 type CombinedProps = Props & StateProps;
@@ -21,7 +22,8 @@ export const ClusterSelect: React.StatelessComponent<CombinedProps> = props => {
     onChange,
     onBlur,
     clustersData,
-    clustersError
+    clustersError,
+    disabled
   } = props;
 
   const options: Item<string>[] = clustersData.map(eachCluster => ({
@@ -57,6 +59,7 @@ export const ClusterSelect: React.StatelessComponent<CombinedProps> = props => {
       isClearable={false}
       errorText={errorText}
       defaultValue={options.length === 1 && options[0]}
+      disabled={disabled}
     />
   );
 };

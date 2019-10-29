@@ -35,6 +35,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
+  isRestrictedUser: boolean;
   onClose: () => void;
   onSuccess: (bucketLabel: string) => void;
 }
@@ -47,7 +48,13 @@ type CombinedProps = Props &
 export const CreateBucketForm: React.StatelessComponent<
   CombinedProps
 > = props => {
-  const { onClose, onSuccess, createBucket, bucketsData } = props;
+  const {
+    isRestrictedUser,
+    onClose,
+    onSuccess,
+    createBucket,
+    bucketsData
+  } = props;
 
   return (
     <Formik
@@ -116,7 +123,14 @@ export const CreateBucketForm: React.StatelessComponent<
           <Form>
             {/* `status` holds generalError messages */}
             {status && <Notice error>{status.generalError}</Notice>}
-
+            {props.isRestrictedUser && (
+              <Notice
+                error
+                important
+                text="You don't have permissions to create a Bucket. Please contact an account administrator for details."
+                data-qa-permissions-notice
+              />
+            )}
             <TextField
               data-qa-cluster-label
               label="Label"
@@ -125,6 +139,7 @@ export const CreateBucketForm: React.StatelessComponent<
               onBlur={handleBlur}
               onChange={handleChange}
               value={values.label}
+              disabled={props.isRestrictedUser}
             />
 
             <ClusterSelect
@@ -133,8 +148,8 @@ export const CreateBucketForm: React.StatelessComponent<
               onBlur={handleBlur}
               onChange={value => setFieldValue('cluster', value)}
               selectedCluster={values.cluster}
+              disabled={isRestrictedUser}
             />
-
             <BucketsActionPanel
               data-qa-bucket-actions-panel
               isSubmitting={isSubmitting}
@@ -143,6 +158,7 @@ export const CreateBucketForm: React.StatelessComponent<
                 resetForm();
                 onClose();
               }}
+              disabled={props.isRestrictedUser}
             />
           </Form>
         );
