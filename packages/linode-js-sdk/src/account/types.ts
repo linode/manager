@@ -257,7 +257,7 @@ export interface Event {
   status: EventStatus;
   time_remaining: null | number;
   username: string;
-  secondary_entity?: Entity;
+  secondary_entity: Entity | null;
   _initial?: boolean;
 }
 /**
