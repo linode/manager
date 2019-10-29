@@ -183,6 +183,18 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/plesk_color.svg',
   },
   {
+    name: 'Prometheus',
+    description: `Prometheus is a an open-source monitoring system with a dimensional data model, flexible query language, efficient time series database and modern alerting approach.`,
+    summary: 'Power your metrics and alerting with a leading open-source monitoring solution.',
+    related_info: [
+      {
+        title: 'https://prometheus.io/',
+        href: 'https://prometheus.io/',
+      }
+    ],
+    logo_url: 'assets/prometheus_color.png',
+  },
+  {
     name: 'Rust',
     description: `In Rust, you must work with or against other players
       to ensure your own survival. Players are able to steal, lie, cheat, or
