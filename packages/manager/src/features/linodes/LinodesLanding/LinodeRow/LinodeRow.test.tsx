@@ -70,8 +70,8 @@ describe('LinodeRow', () => {
           classes={{ flag: '' }}
         />
       );
-
-      const Tooltip = wrapper.find('WithStyles(Tooltip)');
+      // console.log(wrapper.debug({ ignoreProps: true }));
+      const Tooltip = wrapper.find('WithStyles(ForwardRef(Tooltip))');
 
       expect(Tooltip).toHaveLength(1);
       expect(Tooltip.props()).toHaveProperty('title', mockNotification.message);
