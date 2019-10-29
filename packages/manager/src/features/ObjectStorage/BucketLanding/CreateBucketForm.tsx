@@ -25,7 +25,7 @@ import BucketsActionPanel from 'src/features/Volumes/VolumeDrawer/VolumesActions
 import useFlags from 'src/hooks/useFlags';
 import { CreateBucketSchema } from 'src/services/objectStorage/buckets.schema';
 import { ApplicationState } from 'src/store';
-import { updateSettingsInStore } from 'src/store/accountSettings/accountSettings.actions';
+import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import {
   handleFieldErrors,
   handleGeneralErrors
@@ -55,7 +55,7 @@ interface ReduxStateProps {
 }
 
 interface DispatchProps {
-  updateAccountSettingsInStore: (data: Partial<AccountSettings>) => void;
+  requestSettings: () => Promise<AccountSettings>;
 }
 
 type CombinedProps = Props &
@@ -118,13 +118,19 @@ export const CreateBucketForm: React.StatelessComponent<
             // subsequently created buckets don't need to go through the
             // confirmation flow.
             if (props.object_storage === 'disabled') {
-              props.updateAccountSettingsInStore({ object_storage: 'active' });
+              props.requestSettings();
             }
 
             // @analytics
             sendCreateBucketEvent(cluster);
           })
           .catch(errorResponse => {
+            // We also need to refresh account settings on failure, since, depending
+            // on the error, Object Storage service might have actually been enabled.
+            if (props.object_storage === 'disabled') {
+              props.requestSettings();
+            }
+
             const defaultMessage = `Unable to create a Bucket. Please try again later.`;
             const mapErrorToStatus = (generalError: string) =>
               setStatus({ generalError });
@@ -242,8 +248,7 @@ const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
   dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
 ) => {
   return {
-    updateAccountSettingsInStore: (data: Partial<AccountSettings>) =>
-      dispatch(updateSettingsInStore(data))
+    requestSettings: () => dispatch(requestAccountSettings())
   };
 };
 
