@@ -14,6 +14,9 @@ interface Props {
 }
 
 const RAMGauge: React.FC<Props> = props => {
+  const [dataHasResolvedAtLeastOnce, setDataResolved] = React.useState<boolean>(
+    false
+  );
   const [memory, setMemory] = React.useState<number | undefined>();
   const [totalMemory, setTotalMemory] = React.useState<number | undefined>();
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -59,11 +62,14 @@ const RAMGauge: React.FC<Props> = props => {
           if (!!loading) {
             setLoading(false);
           }
+          if (!dataHasResolvedAtLeastOnce) {
+            setDataResolved(true);
+          }
         }
       })
       .catch(() => {
         if (mounted) {
-          if (!memory) {
+          if (!dataHasResolvedAtLeastOnce) {
             setError({
               reason: 'Error'
             });
