@@ -89,7 +89,7 @@ export const AccessKeyDrawer: React.StatelessComponent<
               props.object_storage,
               formikProps,
               () => setDialogOpen(true),
-              flags.objectStorage
+              flags.objectStorageBilling
             );
           };
 
