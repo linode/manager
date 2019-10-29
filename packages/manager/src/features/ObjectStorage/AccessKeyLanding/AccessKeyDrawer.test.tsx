@@ -15,8 +15,7 @@ describe('AccessKeyDrawer', () => {
     isLoading: false,
     mode: 'creating' as MODES,
     isRestrictedUser: false,
-    object_storage: 'active' as AccountSettings['object_storage'],
-    requestSettings: jest.fn()
+    object_storage: 'active' as AccountSettings['object_storage']
   };
   const wrapper = shallow<Props>(<AccessKeyDrawer {...props} />);
   it('renders without crashing', () => {
