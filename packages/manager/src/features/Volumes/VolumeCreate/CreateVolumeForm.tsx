@@ -19,7 +19,8 @@ import Typography from 'src/components/core/Typography';
 import RegionSelect from 'src/components/EnhancedSelect/variants/RegionSelect';
 import Grid from 'src/components/Grid';
 import Notice from 'src/components/Notice';
-import TagsInput, { Tag } from 'src/components/TagsInput';
+import Tag from 'src/components/Tag';
+import TagsInput, { Tag as _Tag } from 'src/components/TagsInput';
 import { dcDisplayNames, MAX_VOLUME_SIZE } from 'src/constants';
 import withVolumesRequests, {
   VolumesRequests
@@ -36,6 +37,7 @@ import {
   handleGeneralErrors
 } from 'src/utilities/formikErrorUtils';
 import { sendCreateVolumeEvent } from 'src/utilities/ga';
+import { getEntityByIDFromStore } from 'src/utilities/getEntityByIDFromStore';
 import isNilOrEmpty from 'src/utilities/isNilOrEmpty';
 import maybeCastToNumber from 'src/utilities/maybeCastToNumber';
 import ConfigSelect from '../VolumeDrawer/ConfigSelect';
@@ -53,7 +55,8 @@ const styles = (theme: Theme) =>
       flexWrap: 'wrap'
     },
     container: {
-      padding: theme.spacing(3)
+      padding: theme.spacing(3),
+      paddingBottom: theme.spacing(4)
     },
     sidebar: {
       [theme.breakpoints.down('sm')]: {
@@ -72,7 +75,6 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  // onClose: () => void;
   regions: Region[];
   onSuccess: (
     volumeLabel: string,
@@ -159,6 +161,40 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
             : touched.linodeId
             ? errors.linodeId
             : undefined;
+
+        const { region, linodeId, tags, configId } = values;
+        const displaySections = [];
+        if (region) {
+          displaySections.push({
+            title: props.regions
+              .filter(c => c.id === region)
+              .map(eachRegion => eachRegion.country.toUpperCase())
+              .join(),
+            details: props.regions
+              .filter(c => c.id === region)
+              .map(eachRegion => dcDisplayNames[eachRegion.id])
+              .join()
+          });
+        }
+        if (linodeId !== -1) {
+          const linodeObject: any = getEntityByIDFromStore('linode', linodeId);
+          displaySections.push({
+            title: 'Attach To',
+            details: linodeObject ? linodeObject.label : null
+          });
+        }
+        if (tags.length !== 0) {
+          displaySections.push({
+            title: 'Tags',
+            details: tags.map((tag, i) => <Tag key={i} label={tag.label} />)
+          });
+        }
+        if (linodeId !== -1 && configId !== -1) {
+          displaySections.push({
+            title: 'Config',
+            details: 'how do i grab this??'
+          });
+        }
 
         return (
           <Form className={classes.form}>
@@ -287,11 +323,12 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
               </Grid>
               <Grid item className={`${classes.sidebar} mlSidebar`}>
                 <CheckoutBar
-                  heading={values.label || 'Volume Name'}
+                  heading={`${values.label || 'Volume'} Summary`}
                   onDeploy={handleSubmit}
                   calculatedPrice={values.size / 10}
                   disabled={values.configId === -9999 || disabled}
                   isMakingRequest={isSubmitting}
+                  displaySections={displaySections && displaySections}
                 />
               </Grid>
             </Grid>
@@ -307,7 +344,7 @@ interface FormState {
   region: string;
   linodeId: number;
   configId: number;
-  tags: Tag[];
+  tags: _Tag[];
 }
 
 const initialValues: FormState = {
