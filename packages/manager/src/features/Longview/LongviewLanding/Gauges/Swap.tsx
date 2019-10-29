@@ -14,6 +14,9 @@ interface Props {
 }
 
 const SwapGauge: React.FC<Props> = props => {
+  const [dataHasResolvedAtLeastOnce, setDataResolved] = React.useState<boolean>(
+    false
+  );
   const [memory, setMemory] = React.useState<number>(0);
   const [totalMemory, setTotalMemory] = React.useState<number>(0);
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -49,11 +52,15 @@ const SwapGauge: React.FC<Props> = props => {
           if (!!loading) {
             setLoading(false);
           }
+
+          if (!dataHasResolvedAtLeastOnce) {
+            setDataResolved(true);
+          }
         }
       })
       .catch(() => {
         if (mounted) {
-          if (!memory) {
+          if (!dataHasResolvedAtLeastOnce) {
             setError({
               reason: 'Error'
             });
