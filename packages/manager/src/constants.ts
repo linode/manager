@@ -31,7 +31,7 @@ export const LAUNCH_DARKLY_API_KEY =
   process.env.REACT_APP_LAUNCH_DARKLY_ID || '';
 
 // Sets Paypal Environment, valid values: 'sandbox|production'
-const paypalClientEnv = process.env.REACT_APP_PAYPAL_ENV || 'production';
+export const paypalClientEnv = process.env.REACT_APP_PAYPAL_ENV || 'production';
 
 export const LONGVIEW_ROOT = 'https://longview.linode.com/fetch';
 

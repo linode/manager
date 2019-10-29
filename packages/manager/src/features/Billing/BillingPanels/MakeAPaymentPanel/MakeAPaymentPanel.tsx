@@ -157,7 +157,7 @@ const paypalSrcQueryParams = `&disable-funding=card,credit&currency=USD&commit=f
 
 const paypalScriptSrc = () => {
   return `https://www.paypal.com/sdk/js?client-id=${
-    client[env]
+    client[paypalClientEnv]
   }${paypalSrcQueryParams}`;
 };
 
