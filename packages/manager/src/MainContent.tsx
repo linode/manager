@@ -319,6 +319,7 @@ const MainContent: React.FC<CombinedProps> = props => {
                   path="/support/tickets/:ticketId"
                   component={SupportTicketDetail}
                   exact
+                  strict
                 />
                 <Route path="/profile" component={Profile} />
                 <Route exact path="/support" component={Help} />
