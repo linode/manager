@@ -12,7 +12,7 @@ before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev 
   build-essential g++ google-chrome-stable curl
 install:
 - yarn global add lerna
-- lerna bootstrap && lerna run build --stream --scope linode-js-sdk
+- yarn && lerna bootstrap && lerna run build --stream --scope linode-js-sdk
 #before_script:
 #- lerna run --stream --scope linode-manager storybook &
 script:
