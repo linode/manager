@@ -162,7 +162,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
             ? errors.linodeId
             : undefined;
 
-        const { region, linodeId, tags, configId } = values;
+        const { region, linodeId, tags } = values;
         const displaySections = [];
         if (region) {
           displaySections.push({
@@ -189,12 +189,12 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
             details: tags.map((tag, i) => <Tag key={i} label={tag.label} />)
           });
         }
-        if (linodeId !== -1 && configId !== -1) {
-          displaySections.push({
-            title: 'Config',
-            details: 'how do i grab this??'
-          });
-        }
+        // if (linodeId !== -1 && configId !== -1) {
+        //   displaySections.push({
+        //     title: 'Config',
+        //     details: 'how do i grab this??'
+        //   });
+        // }
 
         return (
           <Form className={classes.form}>
