@@ -25,7 +25,7 @@ interface Props {
   subtextHeight?: number;
 }
 
-type combinedProps = SkeletonProps & Props;
+export type combinedProps = SkeletonProps & Props;
 
 const _Skeleton: React.FC<combinedProps> = props => {
   const classes = useStyles();
@@ -60,6 +60,7 @@ const _Skeleton: React.FC<combinedProps> = props => {
           item
           style={{ width: `${calcColumns()}%` }}
           key={`ske-${colCount}`}
+          data-testid={'skeletonCol'}
         >
           <Skeleton
             className={classes.columnTitle}
@@ -92,11 +93,15 @@ const _Skeleton: React.FC<combinedProps> = props => {
   return (
     <>
       {table && columns !== undefined ? (
-        <Grid container className={classes.root}>
+        <Grid container className={classes.root} data-testid={'tableSkeleton'}>
           {cols}
         </Grid>
       ) : (
-        <Skeleton {...props} className={classes.root} />
+        <Skeleton
+          {...props}
+          className={classes.root}
+          data-testid={'basicSkeleton'}
+        />
       )}
     </>
   );
