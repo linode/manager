@@ -63,19 +63,19 @@ const _Skeleton: React.FC<combinedProps> = props => {
         >
           <Skeleton
             className={classes.columnTitle}
-            height={textHeight && variant === 'text' ? textHeight : 24}
+            height={textHeight && variant === 'text' ? textHeight : 16}
           />
           <Grid container>
             <Grid item xs={9} className="py0">
               <Skeleton
                 className={classes.columnText}
-                height={subtextHeight ? subtextHeight : 16}
+                height={subtextHeight ? subtextHeight : 8}
               />
             </Grid>
             <Grid item xs={6} className="py0">
               <Skeleton
                 className={classes.columnText}
-                height={subtextHeight ? subtextHeight : 16}
+                height={subtextHeight ? subtextHeight : 8}
               />
             </Grid>
           </Grid>
