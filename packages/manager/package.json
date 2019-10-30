@@ -98,7 +98,7 @@
     "start": "node scripts/start.js",
     "lint": "tslint 'src/**/*.ts' 'src/**/*.tsx'",
     "build": "node scripts/build.js",
-    "precommit": "lint-staged",
+    "precommit": "lint-staged && tsc --noEmit",
     "prepush": "./scripts/pre-push.sh && yarn test --passWithNoTests --bail",
     "mock": "./scripts/mb.js",
     "test": "node scripts/test.js",
@@ -121,9 +121,9 @@
   },
   "lint-staged": {
     "*.{ts,tsx,js}": [
+      "tslint",
       "prettier --write",
       "git add",
-      "yarn tsc --noEmit",
       "npx madge --circular --extensions ts"
     ]
   },

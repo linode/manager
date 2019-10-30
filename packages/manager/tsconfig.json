@@ -25,6 +25,8 @@
     }
   },
   "exclude": [
+    // "**/*.test.{ts,tsx,js}",
+    // "**/*.spec.{ts,tsx,js}",
     "node_modules",
     "build",
     "e2e",

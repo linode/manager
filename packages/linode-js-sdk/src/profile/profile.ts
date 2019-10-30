@@ -11,6 +11,8 @@ import { ResourcePage } from '../types';
 import { updateProfileSchema } from './profile.schema';
 import { Profile, TrustedDevice } from './types';
 
+const thing = 'fdf';
+
 /**
  * getProfile
  *
