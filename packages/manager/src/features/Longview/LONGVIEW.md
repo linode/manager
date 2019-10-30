@@ -93,7 +93,9 @@ While developing with Longview, you may find it useful to populate yo
 ### Swap
 
 1. SSH into your Linode.
+
 2. `$ touch filename.c`
+
 3. Open `filename.c` with the editor of your choice, and paste the following:
 
 ```
@@ -117,11 +119,13 @@ int main(int argc, char** argv) {
 return 0;
 }
 ```
-
 4. `$ dd if=/dev/urandom of=/dev/sdb bs=1M count=256`
+
 5. `$ gcc filename.c -o memeater`
+
 6. `$ ./memeater`
-7. In a separate terminal, SSH into your Linode and run `$ free -h` to see your usage increase (this may take a few minutes).
+
+7. In a separate terminal, SSH into your Linode and run `$ free h` to see your usage increase (this may take a few minutes).
 
 ### Load
 
