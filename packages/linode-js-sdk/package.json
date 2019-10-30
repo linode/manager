@@ -17,8 +17,8 @@
   "author": "Linode",
   "license": "MIT",
   "private": false,
-  "main": "./dist/index.js",
-  "types": "./dist/index.d.ts",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
   "unpkg": "./index.js",
   "dependencies": {
     "axios": "^0.19.0",
