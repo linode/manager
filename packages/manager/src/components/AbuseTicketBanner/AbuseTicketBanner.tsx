@@ -8,11 +8,11 @@ import Notice from 'src/components/Notice';
 import getAbuseTicket from 'src/store/selectors/getAbuseTicket';
 import { MapState } from 'src/store/types';
 
-interface Props {
+interface ReduxStateProps {
   abuseTickets: Notification[];
 }
 
-export class AbuseTicketBanner extends React.Component<Props> {
+export class AbuseTicketBanner extends React.Component<ReduxStateProps> {
   render() {
     const { abuseTickets } = this.props;
 
@@ -47,13 +47,13 @@ export class AbuseTicketBanner extends React.Component<Props> {
   }
 }
 
-const mapStateToProps: MapState<Props, {}> = (state, ownProps) => ({
+const mapStateToProps: MapState<ReduxStateProps, {}> = (state, ownProps) => ({
   abuseTickets: getAbuseTicket(state.__resources)
 });
 
-const connected = connect(
+const connected = connect<ReduxStateProps, any, {}>(
   mapStateToProps,
   undefined
 );
 
-export default connected(AbuseTicketBanner);
+export default connected(AbuseTicketBanner) as React.ComponentType<{}>;
