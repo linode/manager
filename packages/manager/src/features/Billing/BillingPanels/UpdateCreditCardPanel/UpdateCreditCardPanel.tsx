@@ -69,7 +69,7 @@ interface AccountContextProps {
   expiry: string;
   last_four: string;
   updateAccount: (update: (a: Account) => Account) => void;
-  cvv?: string;
+  cvv: string;
 }
 
 interface State {
@@ -186,7 +186,8 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
       {
         card_number: 'card number',
         expiry_month: 'expiration month',
-        expiry_year: 'expiration year'
+        expiry_year: 'expiration year',
+        cvv: 'cvv code'
       },
       errors
     );
@@ -283,6 +284,7 @@ class UpdateCreditCardPanel extends React.Component<CombinedProps, State> {
 
                 <Grid item className={classes.fullWidthMobile}>
                   <TextField
+                    required
                     label="CVV"
                     value={this.state.cvv}
                     onChange={this.handleCVVChange}
