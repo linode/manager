@@ -55,7 +55,7 @@ export const EditableTableRowLabel: React.FC<Props> = props => {
   };
 
   return (
-    <TableCell  style={{ width: width || '30%', padding: '12px'}}>
+    <TableCell className={classes.root} style={{ width: width || '30%' }}>
       <Grid
         container
         direction="row"
@@ -74,7 +74,6 @@ export const EditableTableRowLabel: React.FC<Props> = props => {
           direction="column"
           alignItems="flex-start"
           justify="center"
-          spacing={0}
         >
           <Grid item className="py0 px0">
             <EditableInput

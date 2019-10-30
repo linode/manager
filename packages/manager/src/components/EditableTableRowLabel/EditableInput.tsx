@@ -8,7 +8,7 @@ import ClickAwayListener from 'src/components/core/ClickAwayListener';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import { TextFieldProps } from 'src/components/core/TextField';
 import Typography from 'src/components/core/Typography';
-import TextField from '../TextField';
+import TextField from 'src/components/TextField';
 
 const useStyles = makeStyles((theme: Theme) => ({
   '@keyframes fadeIn': {
@@ -106,11 +106,6 @@ const useStyles = makeStyles((theme: Theme) => ({
         opacity: 1
       }
     }
-  },
-  underlineOnHover: {
-    '&:hover, &:focus': {
-      textDecoration: 'underline !important'
-    }
   }
 }));
 
@@ -123,7 +118,6 @@ interface Props {
   onInputChange: (text: string) => void;
   text: string;
   errorText?: string;
-  labelLink?: string;
   typeVariant: EditableTextVariant;
   className?: string;
   inputText: string;
@@ -136,7 +130,6 @@ type FinalProps = PassThroughProps;
 
 export const EditableInput: React.FC<FinalProps> = props => {
   const {
-    labelLink,
     errorText,
     onEdit,
     openForEdit,
