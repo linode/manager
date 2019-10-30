@@ -81,15 +81,16 @@ We recommend to keep `--form api_action=batch \` untouched and instead make chan
 | Load.*    | Literal number | Returns the literal number for how much Load is on the system. 1 load === 100% of CPU utilized                                                   |
 | Network.* | Bytes          | Returns interfaces for inbound and outbound network traffic on the server. Run `apt install -y netload && netload` on the server to compare data |
 
-## Populating your Linode with Data
+
+## Populating your Linode with Data
 
 While developing with Longview, you may find it useful to populate your Linode with data for the Longview Client to record. Here are some tricks to up the usage of each reporting area:
 
-### CPU
+### CPU
 
-### RAM
+### RAM
 
-### Swap
+### Swap
 
 1. SSH into your Linode.
 2. `$ touch filename.c`
@@ -122,9 +123,9 @@ return 0;
 6. `$ ./memeater`
 7. In a separate terminal, SSH into your Linode and run `$ free -h` to see your usage increase (this may take a few minutes).
 
-### Load
+### Load
 
-### Networking
+### Networking
 
 
 ## FAQ
