@@ -26,14 +26,7 @@ import getAPIErrorsFor from 'src/utilities/getAPIErrorFor';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import UserDeleteConfirmationDialog from './UserDeleteConfirmationDialog';
 
-type ClassNames =
-  | 'root'
-  | 'inner'
-  | 'field'
-  | 'deleteRoot'
-  | 'topMargin'
-  | 'emailField'
-  | 'emailAddress';
+type ClassNames = 'root' | 'inner' | 'deleteRoot' | 'topMargin';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -53,18 +46,8 @@ const styles = (theme: Theme) =>
     inner: {
       padding: theme.spacing(3)
     },
-    field: {
-      marginTop: theme.spacing(3)
-    },
     topMargin: {
       marginTop: theme.spacing(2)
-    },
-    emailField: {
-      marginTop: theme.spacing(3),
-      marginBottom: theme.spacing(2)
-    },
-    emailAddress: {
-      marginTop: theme.spacing(1)
     }
   });
 
@@ -160,7 +143,6 @@ class UserProfile extends React.Component<CombinedProps> {
               <Notice error text={generalAccountError} spacingBottom={0} />
             )}
             <TextField
-              className={classes.field}
               label="Username"
               value={username}
               onChange={changeUsername}
@@ -192,7 +174,6 @@ class UserProfile extends React.Component<CombinedProps> {
             <TextField
               // This should be disabled if this is NOT the current user.
               disabled={profileUsername !== originalUsername}
-              className={classes.field}
               label="Email"
               value={email}
               onChange={changeEmail}
