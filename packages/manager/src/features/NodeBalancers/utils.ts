@@ -116,11 +116,19 @@ export const transformConfigsForRequest = (
           config.ssl_key === '<REDACTED>'
             ? undefined
             : config.ssl_key || undefined,
-        nodes: (config.nodes || []).map(eachNode => ({
-          ...eachNode,
-          /** the API wants the address in a ADDRESS:PORT format */
-          address: `${eachNode.address}:${eachNode.port || ''}`
-        })),
+        nodes: (config.nodes || []).map(eachNode => {
+          const [
+            alreadyExistingAddress,
+            alreadyExistingPort
+          ] = eachNode.address.split(':');
+          return {
+            ...eachNode,
+            /** the API wants the address in a ADDRESS:PORT format */
+            address: `${alreadyExistingAddress}:${alreadyExistingPort ||
+              eachNode.port ||
+              ''}`
+          };
+        }),
         id: undefined,
         nodebalancer_id: undefined,
         nodes_status: undefined,
