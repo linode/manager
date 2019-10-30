@@ -20,7 +20,11 @@ storiesOf('EditableTableRowLabel', module).add('default', () => (
     </TableHead>
     <TableBody>
       <TableRow>
-        <EditableTableRowLabel text="sample text" />
+        <EditableTableRowLabel
+          text="sample text"
+          iconVariant="linode"
+          subText="Waiting for data..."
+        />
         <TableCell>Table Value</TableCell>
         <TableCell>2 days ago</TableCell>
       </TableRow>
