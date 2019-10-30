@@ -19,7 +19,6 @@ import ToastNotifications from 'src/features/ToastNotifications';
 import TopMenu from 'src/features/TopMenu';
 import VolumeDrawer from 'src/features/Volumes/VolumeDrawer';
 import WelcomeBanner from 'src/WelcomeBanner';
-import BucketDrawer from './features/ObjectStorage/BucketLanding/BucketDrawer';
 
 import DefaultLoader from 'src/components/DefaultLoader';
 import ErrorState from 'src/components/ErrorState';
@@ -303,7 +302,8 @@ const MainContent: React.FC<CombinedProps> = props => {
                 {getObjectStorageRoute(
                   props.accountLoading,
                   props.accountCapabilities,
-                  props.accountError
+                  props.accountError,
+                  Boolean(props.flags.objectStorage)
                 )}
                 {isKubernetesEnabled && (
                   <Route path="/kubernetes" component={Kubernetes} />
@@ -355,7 +355,6 @@ const MainContent: React.FC<CombinedProps> = props => {
       <DomainDrawer />
       <VolumeDrawer />
       <BackupDrawer />
-      {isObjectStorageEnabled(props.accountCapabilities) && <BucketDrawer />}
     </div>
   );
 };
@@ -366,11 +365,15 @@ const MainContent: React.FC<CombinedProps> = props => {
 const getObjectStorageRoute = (
   accountLoading: boolean,
   accountCapabilities: AccountCapability[],
-  accountError?: Error | APIError[]
+  accountError?: Error | APIError[],
+  featureFlag?: boolean
 ) => {
   let component;
-
-  if (accountLoading) {
+  // If the feature flag is on, we want to see Object Storage regardless of
+  // the state of account.
+  if (featureFlag) {
+    component = ObjectStorage;
+  } else if (accountLoading) {
     component = () => <LandingLoading delayInMS={1000} />;
   } else if (accountError) {
     component = () => (

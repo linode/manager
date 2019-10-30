@@ -1,7 +1,6 @@
 export interface KubernetesCluster {
   created: string;
   region: string;
-  tags: string[];
   status: string; // @todo enum this
   label: string;
   version: string;
@@ -38,5 +37,4 @@ export interface CreateKubeClusterPayload {
   region?: string; // Will be caught by Yup if undefined
   node_pools: PoolNodeRequest[];
   version?: string; // Will be caught by Yup if undefined
-  tags: string[];
 }

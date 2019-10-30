@@ -10,7 +10,8 @@ describe('BucketTableRow', () => {
     <BucketTableRow
       classes={{
         bucketNameWrapper: '',
-        bucketRow: ''
+        bucketRow: '',
+        link: ''
       }}
       label="test-bucket-001"
       created="2019-02-24 18:46:15.516813"

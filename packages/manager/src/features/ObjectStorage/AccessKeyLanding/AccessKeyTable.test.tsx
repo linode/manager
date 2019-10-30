@@ -19,6 +19,7 @@ describe('ObjectStorageKeyTable', () => {
         }}
         openDrawerForEditing={jest.fn()}
         openRevokeDialog={jest.fn()}
+        isRestrictedUser={false}
         {...pageyProps}
       />
     );

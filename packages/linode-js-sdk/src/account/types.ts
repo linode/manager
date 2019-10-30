@@ -42,6 +42,7 @@ export interface AccountSettings {
   longview_subscription: string | null;
   network_helper: boolean;
   backups_enabled: boolean;
+  object_storage: 'active' | 'disabled' | 'suspended';
 }
 
 export interface ActivePromotion {

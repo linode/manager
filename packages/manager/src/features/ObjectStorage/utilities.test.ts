@@ -1,5 +1,6 @@
 import {
   basename,
+  confirmObjectStorage,
   displayName,
   extendObject,
   firstSubfolder,
@@ -190,6 +191,55 @@ describe('Object Storage utilities', () => {
       expect(firstSubfolder('path/file1')).toBe('path');
       expect(firstSubfolder('path1/path2/file.txt')).toBe('path1');
       expect(firstSubfolder('file1')).toBe('file1');
+    });
+  });
+
+  describe('confirmObjectStorage', () => {
+    afterEach(() => {
+      jest.clearAllMocks();
+    });
+    const validateForm = jest.fn(() => Promise.resolve({}));
+    const setFieldTouched = jest.fn();
+    const setFieldError = jest.fn();
+    const handleSubmit = jest.fn();
+    const openConfirmationDialog = jest.fn();
+    const mockFormikProps = {
+      validateForm,
+      setFieldTouched,
+      setFieldError,
+      handleSubmit
+    } as any;
+
+    it("doesn't call the confirmation handler if the feature flag is off", async () => {
+      await confirmObjectStorage(
+        'disabled',
+        mockFormikProps,
+        openConfirmationDialog,
+        false
+      );
+      expect(openConfirmationDialog).toHaveBeenCalledTimes(0);
+      expect(handleSubmit).toHaveBeenCalledTimes(1);
+    });
+
+    it("doesn't call the confirmation handler if OBJ is active", async () => {
+      await confirmObjectStorage(
+        'active',
+        mockFormikProps,
+        openConfirmationDialog,
+        true
+      );
+      expect(openConfirmationDialog).toHaveBeenCalledTimes(0);
+      expect(handleSubmit).toHaveBeenCalledTimes(1);
+    });
+    it('calls call the confirmation handler if OBJ is disabled', async () => {
+      await confirmObjectStorage(
+        'disabled',
+        mockFormikProps,
+        openConfirmationDialog,
+        true
+      );
+      expect(openConfirmationDialog).toHaveBeenCalledTimes(1);
+      expect(handleSubmit).toHaveBeenCalledTimes(0);
     });
   });
 });

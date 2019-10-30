@@ -66,7 +66,12 @@ const GaugePercent: React.FC<CombinedProps> = props => {
    * if the value exceeds the maximum (e.g Longview Load), just make the max 0
    * so the value takes up 100% of the gauge
    */
-  const finalMax = props.max - props.value < 0 ? 0 : props.max - props.value;
+  const finalMax =
+    props.max === 0 && props.value === 0
+      ? 1 // if they're both actually 0, make sure we have a full grey gauge
+      : props.max - props.value < 0
+      ? 0
+      : props.max - props.value;
 
   return (
     <React.Fragment>
