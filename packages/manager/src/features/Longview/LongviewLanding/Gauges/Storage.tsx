@@ -10,7 +10,7 @@ import { baseGaugeProps } from './common';
 
 interface Props {
   clientAPIKey: string;
-  lastUpdated: number;
+  lastUpdated?: number;
 }
 
 const StorageGauge: React.FC<Props> = props => {
@@ -19,17 +19,20 @@ const StorageGauge: React.FC<Props> = props => {
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<APIError | undefined>();
 
-  const [storage, setStorage] = React.useState<Storage | undefined>();
+  // The Longview API returns disk usage data in bytes.
+  const [storageInBytes, setStorageInBytes] = React.useState<
+    Storage | undefined
+  >();
 
   React.useEffect(() => {
     requestStats(clientAPIKey, 'getLatestValue', ['disk'])
       .then(data => {
         setLoading(false);
         setError(undefined);
-        setStorage(sumStorage(data.Disk));
+        setStorageInBytes(sumStorage(data.Disk));
       })
       .catch(_ => {
-        if (!storage) {
+        if (!storageInBytes) {
           setError({
             reason: 'Error' // @todo: Error message?
           });
@@ -38,12 +41,14 @@ const StorageGauge: React.FC<Props> = props => {
       });
   }, [lastUpdated]);
 
-  const usedStorage = storage ? storage.total - storage.free : 100;
+  const usedStorage = storageInBytes
+    ? storageInBytes.total - storageInBytes.free
+    : 0;
 
   return (
     <GaugePercent
       {...baseGaugeProps}
-      max={storage ? storage.total : 100}
+      max={storageInBytes ? storageInBytes.total : 0}
       value={usedStorage}
       innerText={innerText(
         readableBytes(usedStorage).formatted,
@@ -56,8 +61,10 @@ const StorageGauge: React.FC<Props> = props => {
           <Typography>
             <strong>Storage</strong>
           </Typography>
-          {!error && !loading && storage && (
-            <Typography>{readableBytes(storage.total).formatted}</Typography>
+          {!error && !loading && storageInBytes && (
+            <Typography>
+              {readableBytes(storageInBytes.total).formatted}
+            </Typography>
           )}
         </>
       }
