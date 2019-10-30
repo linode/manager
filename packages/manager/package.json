@@ -94,6 +94,7 @@
     "postinstall": "patch-package",
     "axe": "npx wdio ./e2e/config/wdio.axe.conf.js",
     "format": "prettier 'src/**/*.{ts,tsx,js}' 'e2e/**/*.{ts,jsx,js}' --write",
+    "clean": "rm -rf ./node_modules/",
     "compare": "./scripts/jira-changelog.sh",
     "start": "node scripts/start.js",
     "lint": "tslint 'src/**/*.ts' 'src/**/*.tsx'",
@@ -331,5 +332,15 @@
     "js-yaml": "^3.13.1",
     "braces": "^3.0.2",
     "https-proxy-agent": "^3.0.1"
+  },
+  "workspaces": {
+    "nohoist": [
+      "@types/sanitize-html",
+      "sanitize-html",
+      "chart*",
+      "perfume*",
+      "wdio-jasmine-framework*",
+      "launchdarkly*"
+    ]
   }
 }
