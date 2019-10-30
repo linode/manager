@@ -98,8 +98,8 @@
     "start": "node scripts/start.js",
     "lint": "tslint 'src/**/*.ts' 'src/**/*.tsx'",
     "build": "node scripts/build.js",
-    "precommit": "lint-staged && npx madge --circular --extensions ts src/ && ./scripts/pre-commit.sh",
-    "prepush": "./scripts/pre-push.sh",
+    "precommit": "lint-staged",
+    "prepush": "./scripts/pre-push.sh && yarn test --passWithNoTests --bail",
     "mock": "./scripts/mb.js",
     "test": "node scripts/test.js",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
@@ -122,7 +122,9 @@
   "lint-staged": {
     "*.{ts,tsx,js}": [
       "prettier --write",
-      "git add"
+      "git add",
+      "yarn tsc --noEmit",
+      "npx madge --circular --extensions ts"
     ]
   },
   "devDependencies": {

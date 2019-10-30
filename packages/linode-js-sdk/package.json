@@ -34,7 +34,7 @@
     "lint": "tslint -p tsconfig.json",
     "typecheck": "tsc --noEmit true --emitDeclarationOnly false",
     "prepublishOnly": "yarn lint && yarn typecheck && yarn format && yarn build",
-    "precommit": "yarn lint && yarn typecheck && yarn format"
+    "precommit": "lint-staged"
   },
   "files": [
     "index.js",
@@ -58,6 +58,7 @@
     "babel-plugin-module-resolver": "^3.2.0",
     "concurrently": "^4.1.1",
     "jest": "^24.8.0",
+    "lint-staged": "^9.4.2",
     "npm-dts-webpack-plugin": "^1.1.10",
     "prettier": "^1.18.2",
     "ts-jest": "^24.0.2",
@@ -70,5 +71,13 @@
   },
   "resolutions": {
     "handlebars": "^4.4.3"
+  },
+  "lint-staged": {
+    "*.{ts,tsx,js}": [
+      "yarn lint",
+      "yarn typecheck",
+      "yarn format",
+      "git add"
+    ]
   }
 }
