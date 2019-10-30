@@ -145,6 +145,21 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/drupal_color.svg'
   },
   {
+    name: 'Grafana',
+    description: `Grafana allows you to query, visualize, alert on and understand your metrics no matter where they are stored. Create, explore, and share dashboards with your team and foster a data driven culture.`,
+    summary: `Grafana is the open source analytics & monitoring solution for every database.`,
+    related_info: [
+      {
+        title: 'https://grafana.com/',
+        href:'https://grafana.com/'
+      }
+    ],
+    tips: [
+      `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:3000</em> in a browser.`
+    ],
+    logo_url: 'assets/grafana_color.png'
+  },
+  {
     name: 'LAMP',
     description: `The LAMP stack consists of the Linux operating system,
       the Apache HTTP Server, the MySQL relational database management system,
