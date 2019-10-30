@@ -116,7 +116,7 @@ const styles = (theme: Theme) =>
     },
     input: {
       padding: '5px 8px',
-      ...theme.typography.body1
+      ...theme.typography.h1
     },
     headline: {
       ...theme.typography.h1
@@ -139,15 +139,13 @@ const styles = (theme: Theme) =>
     }
   });
 
-export type EditableTextVariant = 'h1' | 'h2' | 'table-cell';
-
 interface Props {
   onEdit: (text: string) => Promise<any>;
   onCancel: () => void;
   text: string;
   errorText?: string;
   labelLink?: string;
-  typeVariant: EditableTextVariant;
+  typeVariant: string;
   className?: string;
 }
 
@@ -238,11 +236,7 @@ export class EditableText extends React.Component<FinalProps, State> {
     const { isEditing, text } = this.state;
 
     const labelText = (
-      <Typography
-        className={classes.root}
-        variant={typeVariant === 'table-cell' ? 'body1' : 'h1'}
-        data-qa-editable-text
-      >
+      <Typography className={classes.root} variant="h1" data-qa-editable-text>
         {this.state.text}
       </Typography>
     );
