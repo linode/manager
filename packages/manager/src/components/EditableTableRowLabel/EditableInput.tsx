@@ -118,7 +118,6 @@ export type EditableTextVariant = 'h1' | 'h2' | 'table-cell';
 
 interface Props {
   onEdit: () => void;
-  onCancel: () => void;
   openForEdit: () => void;
   cancelEdit: () => void;
   onInputChange: (text: string) => void;
@@ -136,68 +135,10 @@ type PassThroughProps = Props & TextFieldProps;
 type FinalProps = PassThroughProps;
 
 export const EditableInput: React.FC<FinalProps> = props => {
-  // componentDidUpdate(prevProps: FinalProps, prevState: State) {
-  //   const { text } = this.props;
-  //   const { text: prevText } = prevProps;
-  //   if (text !== prevText) {
-  //     this.setState({
-  //       isEditing: false,
-  //       text
-  //     });
-  //   }
-  // // }
-
-  // const onChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   this.setState({ text: e.target.value });
-  // };
-
-  // const openEdit = () => {
-  //   this.setState({ isEditing: true });
-  // };
-
-  // const finishEditing = () => {
-  //   const { text } = this.state;
-  //   /**
-  //    * if the entered text is different from the original text
-  //    * provided, run the update callback
-  //    *
-  //    * only exit editing mode if promise resolved
-  //    */
-  //   if (text !== this.props.text) {
-  //     this.props
-  //       .onEdit(text)
-  //       .then(() => {
-  //         this.setState({ isEditing: false });
-  //       })
-  //       .catch(e => e);
-  //   } else {
-  //     /** otherwise, we've just submitted the form with no value change */
-  //     this.setState({ isEditing: false });
-  //   }
-  // };
-
-  // cancelEditing = () => {
-  //   /** cancel editing and invoke callback function and revert text to original */
-  //   this.setState({ isEditing: false, text: this.props.text }, () => {
-  //     this.props.onCancel();
-  //   });
-  // };
-
-  // /** confirm or cancel edits if the enter or escape keys are pressed, respectively */
-  // handleKeyPress = (e: React.KeyboardEvent) => {
-  //   if (e.key === 'Enter') {
-  //     this.finishEditing();
-  //   }
-  //   if (e.key === 'Escape' || e.key === 'Esc') {
-  //     this.cancelEditing();
-  //   }
-  // };
-
   const {
     labelLink,
     errorText,
     onEdit,
-    onCancel,
     openForEdit,
     cancelEdit,
     onInputChange,
@@ -208,6 +149,16 @@ export const EditableInput: React.FC<FinalProps> = props => {
     inputText,
     ...rest
   } = props;
+
+  /** confirm or cancel edits if the enter or escape keys are pressed, respectively */
+  const handleKeyPress = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') {
+      onEdit();
+    }
+    if (e.key === 'Escape' || e.key === 'Esc') {
+      cancelEdit();
+    }
+  };
 
   const classes = useStyles();
 
@@ -250,7 +201,7 @@ export const EditableInput: React.FC<FinalProps> = props => {
           className={classes.textField}
           type="text"
           onChange={(e: any) => onInputChange(e.target.value)}
-          onKeyDown={() => null}
+          onKeyDown={handleKeyPress}
           value={inputText}
           errorText={errorText}
           InputProps={{ className: classes.inputRoot }}

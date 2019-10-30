@@ -30,9 +30,13 @@ export const EditableTableRowLabel: React.FC<Props> = props => {
   const classes = useStyles();
 
   const onSubmit = () => {
-    onEdit(inputText)
-      .then(() => toggleEditing(false))
-  }
+    if (inputText !== text) {
+      onEdit(inputText).then(() => toggleEditing(false));
+    } else {
+      toggleEditing(false);
+    }
+  };
+
   return (
     <TableCell style={{ width: width || '30%' }}>
       <Grid
@@ -58,7 +62,6 @@ export const EditableTableRowLabel: React.FC<Props> = props => {
           <Grid item className="py0 px0">
             <EditableInput
               onEdit={onSubmit}
-              onCancel={() => toggleEditing(false)}
               openForEdit={() => toggleEditing(true)}
               cancelEdit={() => toggleEditing(false)}
               onInputChange={(t: string) => setInputText(t)}
