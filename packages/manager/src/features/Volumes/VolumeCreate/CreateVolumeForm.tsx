@@ -189,12 +189,6 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
             details: tags.map((tag, i) => <Tag key={i} label={tag.label} />)
           });
         }
-        // if (linodeId !== -1 && configId !== -1) {
-        //   displaySections.push({
-        //     title: 'Config',
-        //     details: 'how do i grab this??'
-        //   });
-        // }
 
         return (
           <Form className={classes.form}>
