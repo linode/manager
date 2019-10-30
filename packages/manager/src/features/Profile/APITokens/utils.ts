@@ -1,6 +1,6 @@
 export type Permission = [string, number];
 
-export const perms = [
+export const basePerms = [
   'account',
   'domains',
   'events',
@@ -9,9 +9,26 @@ export const perms = [
   'linodes',
   'longview',
   'nodebalancers',
+  // @todo: Once Object Storage is safely in GA, uncomment:
+  // 'object_storage'
   'stackscripts',
   'volumes'
 ];
+
+export const basePermNameMap: Record<string, string> = {
+  account: 'Account',
+  domains: 'Domains',
+  events: 'Events',
+  images: 'Images',
+  ips: 'IPs',
+  linodes: 'Linodes',
+  longview: 'Longview',
+  nodebalancers: 'NodeBalancers',
+  // @todo: Once Object Storage is safely in GA, uncomment:
+  // object_storage: 'Object Storage'
+  stackscripts: 'StackScripts',
+  volumes: 'Volumes'
+};
 
 export const inverseLevelMap = ['none', 'read_only', 'read_write'];
 
@@ -25,10 +42,8 @@ export const levelMap = {
   delete: 2
 };
 
-const defaultScopeMap: Record<string, 0> = perms.reduce(
-  (obj, key) => ({ ...obj, [key]: 0 }),
-  {}
-);
+const defaultScopeMap = (perms: string[]): Record<string, 0> =>
+  perms.reduce((obj, key) => ({ ...obj, [key]: 0 }), {});
 
 /**
  * This function accepts scopes strings as given by the API, which have the following format:
@@ -53,7 +68,10 @@ const defaultScopeMap: Record<string, 0> = perms.reduce(
  * Each permission level gives a user access to all lower permission levels.
  */
 
-export const scopeStringToPermTuples = (scopes: string): Permission[] => {
+export const scopeStringToPermTuples = (
+  scopes: string,
+  perms: string[]
+): Permission[] => {
   if (scopes === '*') {
     return perms.map(perm => [perm, 2] as Permission);
   }
@@ -64,7 +82,7 @@ export const scopeStringToPermTuples = (scopes: string): Permission[] => {
       ...map,
       [perm]: levelMap[level]
     };
-  }, defaultScopeMap);
+  }, defaultScopeMap(perms));
 
   /**
    * So there are deprecated permission types that have been folded into a parent permission. So
@@ -113,7 +131,10 @@ export const scopeStringToPermTuples = (scopes: string): Permission[] => {
   return permTuples;
 };
 
-export const allMaxPerm = (scopeTups: Permission[]): boolean => {
+export const allMaxPerm = (
+  scopeTups: Permission[],
+  perms: string[]
+): boolean => {
   if (scopeTups.length !== perms.length) {
     return false;
   }
@@ -125,8 +146,11 @@ export const allMaxPerm = (scopeTups: Permission[]): boolean => {
   );
 };
 
-export const permTuplesToScopeString = (scopeTups: Permission[]): string => {
-  if (allMaxPerm(scopeTups)) {
+export const permTuplesToScopeString = (
+  scopeTups: Permission[],
+  perms: string[]
+): string => {
+  if (allMaxPerm(scopeTups, perms)) {
     return '*';
   }
   const joinedTups = scopeTups.reduce((acc, [key, value]) => {

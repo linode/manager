@@ -72,19 +72,25 @@ type AllData = LongviewCPU &
  * the return type will be Promise<LongviewCPU>
  */
 interface Get {
-  (token: string, action: 'lastUpdated'): Promise<LastUpdated>;
+  (token: string, action: 'lastUpdated'): Promise<Partial<LastUpdated>>;
   (
     token: string,
     action: 'getLatestValue',
     field: ('load' | 'sysinfo')[]
-  ): Promise<LongviewLoad & LongviewSystemInfo>;
+  ): Promise<Partial<LongviewLoad & LongviewSystemInfo>>;
   (
     token: string,
     action: 'getLatestValue',
     field: ('cpu' | 'sysinfo')[]
-  ): Promise<LongviewCPU & LongviewSystemInfo>;
+  ): Promise<Partial<LongviewCPU & LongviewSystemInfo>>;
+  (token: string, action: 'getLatestValue', field: ('disk')[]): Promise<
+    Partial<LongviewDisk>
+  >;
   (token: string, action: LongviewAction, field?: LongviewFieldName[]): Promise<
     Partial<AllData>
+  >;
+  (token: string, action: 'getLatestValue', field: 'memory'[]): Promise<
+    Partial<LongviewMemory>
   >;
 }
 

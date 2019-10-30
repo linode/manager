@@ -1,5 +1,6 @@
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as moment from 'moment';
+import { equals } from 'ramda';
 import * as React from 'react';
 import ActionsPanel from 'src/components/ActionsPanel';
 import Button from 'src/components/Button';
@@ -117,6 +118,8 @@ interface Props {
   label?: string;
   scopes?: string;
   expiry?: string;
+  perms: string[];
+  permNameMap: Record<string, string>;
   errors?: APIError[];
   id?: number;
   open: boolean;
@@ -139,7 +142,7 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 export class APITokenDrawer extends React.Component<CombinedProps, State> {
   state = {
-    scopes: scopeStringToPermTuples(this.props.scopes || ''),
+    scopes: scopeStringToPermTuples(this.props.scopes || '', this.props.perms),
     expiryTups: genExpiryTups(),
     selectAllSelectedScope: null
   };
@@ -148,11 +151,13 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
   componentWillReceiveProps(nextProps: CombinedProps) {
     if (
       /* If we are about to display a new token */
-      this.props.id !== nextProps.id
+      this.props.id !== nextProps.id ||
+      /* If we have updated perms (via feature flag) */
+      !equals(this.props.perms, nextProps.perms)
     ) {
       /* Then update our current scopes state */
       this.setState({
-        scopes: scopeStringToPermTuples(nextProps.scopes || '')
+        scopes: scopeStringToPermTuples(nextProps.scopes || '', nextProps.perms)
       });
     }
   }
@@ -195,26 +200,13 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
     return allScopesIdentical;
   };
 
-  permNameMap = {
-    account: 'Account',
-    domains: 'Domains',
-    events: 'Events',
-    images: 'Images',
-    ips: 'IPs',
-    linodes: 'Linodes',
-    longview: 'Longview',
-    nodebalancers: 'NodeBalancers',
-    stackscripts: 'StackScripts',
-    volumes: 'Volumes'
-  };
-
   renderPermsTable() {
-    const { classes, mode } = this.props;
+    const { classes, mode, permNameMap } = this.props;
     const { scopes, selectAllSelectedScope } = this.state;
 
     return (
       <Table
-        aria-label="Personnal Acccess Token Permissions"
+        aria-label="Personal Access Token Permissions"
         className={classes.permsTable}
         spacingTop={24}
       >
@@ -293,17 +285,20 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
             </TableRow>
           )}
           {scopes.map(scopeTup => {
+            if (!permNameMap[scopeTup[0]]) {
+              return null;
+            }
             return (
               <TableRow
                 key={scopeTup[0]}
-                data-qa-row={this.permNameMap[scopeTup[0]]}
+                data-qa-row={permNameMap[scopeTup[0]]}
               >
                 <TableCell
                   parentColumn="Access"
                   padding="checkbox"
                   className={classes.accessCell}
                 >
-                  {this.permNameMap[scopeTup[0]]}
+                  {permNameMap[scopeTup[0]]}
                 </TableCell>
                 <TableCell
                   parentColumn="None"
@@ -450,7 +445,13 @@ export class APITokenDrawer extends React.Component<CombinedProps, State> {
               buttonType="primary"
               onClick={
                 (mode as string) === 'create'
-                  ? () => onCreate(permTuplesToScopeString(this.state.scopes))
+                  ? () =>
+                      onCreate(
+                        permTuplesToScopeString(
+                          this.state.scopes,
+                          this.props.perms
+                        )
+                      )
                   : () => onEdit()
               }
               data-qa-submit
