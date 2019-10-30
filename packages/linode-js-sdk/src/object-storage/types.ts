@@ -5,16 +5,6 @@ export interface ObjectStorageKey {
   secret_key: string;
 }
 
-export interface Bucket {
-  label: string;
-  objects: number;
-  created: string;
-  size: number;
-  region: string;
-  cluster: string;
-  hostname: string;
-}
-
 export interface ObjectStorageKeyRequest {
   label: string;
 }
@@ -27,13 +17,6 @@ export interface BucketRequestPayload {
 export interface DeleteBucketRequestPayload {
   cluster: string;
   label: string;
-}
-
-export interface ObjectStorageKey {
-  access_key: string;
-  id: number;
-  label: string;
-  secret_key: string;
 }
 
 export interface Bucket {
