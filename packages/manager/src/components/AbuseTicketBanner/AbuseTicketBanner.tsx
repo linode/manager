@@ -9,7 +9,7 @@ import getAbuseTicket from 'src/store/selectors/getAbuseTicket';
 import { MapState } from 'src/store/types';
 
 interface Props {
-  abuseTickets: Notification[];
+  abuseTickets?: Notification[];
 }
 
 export class AbuseTicketBanner extends React.Component<Props> {
