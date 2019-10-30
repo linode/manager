@@ -11,7 +11,7 @@ interface FS {
   path: string;
 }
 
-interface Disk {
+export interface Disk {
   dm: number;
   children: number;
   mounted: number;
