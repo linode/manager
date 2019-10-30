@@ -44,6 +44,7 @@ const styles = (theme: Theme) =>
     button: {
       padding: theme.spacing(1),
       borderRadius: 30,
+      order: 4,
       '&:hover, &.active': {
         '& $username': {
           color: theme.palette.primary.main

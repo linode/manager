@@ -21,6 +21,7 @@ type ClassNames =
 const styles = (theme: Theme) =>
   createStyles({
     root: {
+      order: 5,
       marginRight: -theme.spacing(1),
       position: 'relative',
       [theme.breakpoints.up('lg')]: {

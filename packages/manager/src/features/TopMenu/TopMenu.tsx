@@ -46,6 +46,7 @@ const styles = (theme: Theme) =>
       }
     },
     navIconHide: {
+      order: 1,
       '& > span': {
         justifyContent: 'flex-start'
       },
@@ -54,7 +55,7 @@ const styles = (theme: Theme) =>
         height: 32
       },
       [theme.breakpoints.up('lg')]: {
-        display: 'none'
+        marginLeft: -theme.spacing(2)
       }
     }
   });
@@ -97,8 +98,8 @@ class TopMenu extends React.Component<PropsWithStyles> {
             >
               <MenuIcon />
             </IconButton>
-            <AddNewMenu />
             <SearchBar />
+            <AddNewMenu />
             <UserMenu />
             <UserNotificationsMenu />
             <UserEventsMenu />
