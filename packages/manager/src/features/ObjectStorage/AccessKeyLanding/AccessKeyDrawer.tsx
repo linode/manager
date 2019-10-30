@@ -123,38 +123,36 @@ export const AccessKeyDrawer: React.StatelessComponent<
                 </Typography>
               )}
 
-              <form onSubmit={beforeSubmit}>
-                <TextField
-                  name="label"
-                  label="Label"
-                  data-qa-add-label
-                  value={values.label}
-                  error={!!errors.label}
-                  errorText={errors.label}
-                  onChange={handleChange}
-                  onBlur={handleBlur}
+              <TextField
+                name="label"
+                label="Label"
+                data-qa-add-label
+                value={values.label}
+                error={!!errors.label}
+                errorText={errors.label}
+                onChange={handleChange}
+                onBlur={handleBlur}
+                disabled={isRestrictedUser}
+              />
+              <ActionsPanel>
+                <Button
+                  buttonType="primary"
+                  onClick={beforeSubmit}
+                  loading={isSubmitting}
                   disabled={isRestrictedUser}
-                />
-                <ActionsPanel>
-                  <Button
-                    buttonType="primary"
-                    onClick={beforeSubmit}
-                    loading={isSubmitting}
-                    disabled={isRestrictedUser}
-                    data-qa-submit
-                  >
-                    Submit
-                  </Button>
-                  <Button
-                    onClick={onClose}
-                    data-qa-cancel
-                    buttonType="secondary"
-                    className="cancel"
-                  >
-                    Cancel
-                  </Button>
-                </ActionsPanel>
-              </form>
+                  data-qa-submit
+                >
+                  Submit
+                </Button>
+                <Button
+                  onClick={onClose}
+                  data-qa-cancel
+                  buttonType="secondary"
+                  className="cancel"
+                >
+                  Cancel
+                </Button>
+              </ActionsPanel>
               <EnableObjectStorageModal
                 open={dialogOpen}
                 onClose={() => setDialogOpen(false)}
