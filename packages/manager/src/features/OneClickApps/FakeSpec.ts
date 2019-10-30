@@ -176,7 +176,7 @@ export const oneClickApps: OCA[] = [
           'https://www.linode.com/docs/web-servers/lemp/'
       }
     ],
-    logo_url: 'assets/lemp_color.png'
+    logo_url: 'assets/lemp_color.svg'
   },
   {
     name: 'Plesk',
