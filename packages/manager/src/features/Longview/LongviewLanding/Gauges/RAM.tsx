@@ -1,5 +1,5 @@
 import { APIError } from 'linode-js-sdk/lib/types';
-import { path } from 'ramda';
+import { pathOr } from 'ramda';
 import * as React from 'react';
 import Typography from 'src/components/core/Typography';
 import GaugePercent from 'src/components/GaugePercent';
@@ -17,8 +17,8 @@ const RAMGauge: React.FC<Props> = props => {
   const [dataHasResolvedAtLeastOnce, setDataResolved] = React.useState<boolean>(
     false
   );
-  const [memory, setMemory] = React.useState<number | undefined>();
-  const [totalMemory, setTotalMemory] = React.useState<number | undefined>();
+  const [memory, setMemory] = React.useState<number>(0);
+  const [totalMemory, setTotalMemory] = React.useState<number>(0);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<APIError | undefined>();
 
@@ -31,19 +31,23 @@ const RAMGauge: React.FC<Props> = props => {
          * The likelihood of any of these paths being undefined is a big
          * unknown, so we learn towards safety.
          */
-        const free = path<number | undefined>(
+        const free = pathOr<number>(
+          0,
           ['Memory', 'real', 'free', 0, 'y'],
           response
         );
-        const used = path<number | undefined>(
+        const used = pathOr<number>(
+          0,
           ['Memory', 'real', 'used', 0, 'y'],
           response
         );
-        const buffers = path<number | undefined>(
+        const buffers = pathOr<number>(
+          0,
           ['Memory', 'real', 'buffers', 0, 'y'],
           response
         );
-        const cache = path<number | undefined>(
+        const cache = pathOr<number>(
+          0,
           ['Memory', 'real', 'cache', 0, 'y'],
           response
         );
@@ -52,13 +56,9 @@ const RAMGauge: React.FC<Props> = props => {
           setError(undefined);
           /**
            * All units come back in KB. We will do our converting in the render methods
-           * Only set state if these values are not undefined because the render method
-           * has custom handling for if the values are undefined.
            */
-          if (!!free && !!used && !!cache && !!buffers) {
-            setMemory(generateUsedMemory(used, buffers, cache));
-            setTotalMemory(generateTotalMemory(used, free));
-          }
+          setMemory(generateUsedMemory(used, buffers, cache));
+          setTotalMemory(generateTotalMemory(used, free));
           if (!!loading) {
             setLoading(false);
           }
@@ -113,7 +113,7 @@ const RAMGauge: React.FC<Props> = props => {
     }
 
     /** first convert memory from KB to bytes */
-    const usedMemoryToBytes = (memory || 0) * 1024;
+    const usedMemoryToBytes = memory * 1024;
     const howManyBytesInGB = 1073741824;
 
     const convertedUsedMemory = readableBytes(
@@ -126,7 +126,7 @@ const RAMGauge: React.FC<Props> = props => {
 
     const convertedTotalMemory = readableBytes(
       /** convert KB to bytes */
-      (totalMemory || 0) * 1024,
+      totalMemory * 1024,
       {
         unit: 'GB'
       }
@@ -148,8 +148,8 @@ const RAMGauge: React.FC<Props> = props => {
   return (
     <GaugePercent
       {...baseGaugeProps}
-      max={typeof totalMemory === 'undefined' ? 1 : totalMemory}
-      value={typeof memory === 'undefined' ? 0 : memory}
+      max={totalMemory}
+      value={memory}
       filledInColor="#D38ADB"
       {...generateText()}
     />

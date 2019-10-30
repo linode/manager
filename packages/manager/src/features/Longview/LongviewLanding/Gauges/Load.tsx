@@ -13,8 +13,8 @@ interface Props {
 }
 
 const LoadGauge: React.FC<Props> = props => {
-  const [load, setLoad] = React.useState<number | undefined>();
-  const [amountOfCores, setCores] = React.useState<number | undefined>();
+  const [load, setLoad] = React.useState<number>(0);
+  const [amountOfCores, setCores] = React.useState<number>(0);
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<APIError | undefined>();
 
@@ -95,8 +95,8 @@ const LoadGauge: React.FC<Props> = props => {
   return (
     <GaugePercent
       {...baseGaugeProps}
-      max={typeof amountOfCores === 'undefined' ? 1 : amountOfCores}
-      value={typeof load === 'undefined' ? 0 : load}
+      max={amountOfCores}
+      value={load}
       filledInColor="#FADB50"
       {...generateCopy()}
     />
