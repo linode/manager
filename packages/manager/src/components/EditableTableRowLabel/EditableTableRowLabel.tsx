@@ -17,16 +17,22 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 interface Props {
   text: string;
+  onEdit: (s: string) => Promise<any>;
   width?: string;
   iconVariant: Variant;
   subText?: string;
 }
 
 export const EditableTableRowLabel: React.FC<Props> = props => {
-  const { iconVariant, subText, text, width } = props;
+  const { iconVariant, subText, text, width, onEdit } = props;
   const [isEditing, toggleEditing] = React.useState<boolean>(false);
-  const [inputText, setInputText] = React.useState<string>('');
+  const [inputText, setInputText] = React.useState<string>(text);
   const classes = useStyles();
+
+  const onSubmit = () => {
+    onEdit(inputText)
+      .then(() => toggleEditing(false))
+  }
   return (
     <TableCell style={{ width: width || '30%' }}>
       <Grid
@@ -51,8 +57,8 @@ export const EditableTableRowLabel: React.FC<Props> = props => {
         >
           <Grid item className="py0 px0">
             <EditableInput
-              onEdit={() => Promise.resolve()}
-              onCancel={() => Promise.resolve()}
+              onEdit={onSubmit}
+              onCancel={() => toggleEditing(false)}
               openForEdit={() => toggleEditing(true)}
               cancelEdit={() => toggleEditing(false)}
               onInputChange={(t: string) => setInputText(t)}

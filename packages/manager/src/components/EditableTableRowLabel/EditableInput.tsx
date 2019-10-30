@@ -117,7 +117,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 export type EditableTextVariant = 'h1' | 'h2' | 'table-cell';
 
 interface Props {
-  onEdit: () => Promise<any>;
+  onEdit: () => void;
   onCancel: () => void;
   openForEdit: () => void;
   cancelEdit: () => void;
@@ -251,7 +251,7 @@ export const EditableInput: React.FC<FinalProps> = props => {
           type="text"
           onChange={(e: any) => onInputChange(e.target.value)}
           onKeyDown={() => null}
-          value={text}
+          value={inputText}
           errorText={errorText}
           InputProps={{ className: classes.inputRoot }}
           inputProps={{
