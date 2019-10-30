@@ -9,6 +9,7 @@
     "moduleResolution": "node",
     "strict": true,
     "baseUrl": ".",
+    "noUnusedLocals": true
   },
   "include": [
     "src"

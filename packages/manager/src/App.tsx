@@ -338,6 +338,7 @@ export default compose(
   withFeatureFlagProvider
 )(App);
 
+/** test comment */
 export const hasOauthError = (...args: (Error | APIError[] | undefined)[]) => {
   return args.some(eachError => {
     const cleanedError: string | JSX.Element = pathOr(
