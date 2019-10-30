@@ -51,7 +51,9 @@ const styles = (theme: Theme) =>
     },
     userNameSlash: {
       color: theme.palette.text.primary,
-      fontFamily: theme.font.normal
+      fontFamily: theme.font.normal,
+      marginLeft: theme.spacing(1),
+      marginRight: theme.spacing(1)
     }
   });
 
@@ -121,7 +123,7 @@ export class StackScriptsDetail extends React.Component<CombinedProps, {}> {
           <Grid item>
             <Breadcrumb
               pathname={this.props.location.pathname}
-              labelOptions={{ prefixComponent: userNameSlash }}
+              labelOptions={{ prefixComponent: userNameSlash, noCap: true }}
               labelTitle={stackScript.label}
             />
           </Grid>
