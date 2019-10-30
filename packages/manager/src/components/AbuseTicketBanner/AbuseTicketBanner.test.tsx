@@ -13,7 +13,15 @@ import filterAbuseTickets from 'src/store/selectors/getAbuseTicket';
 afterEach(cleanup);
 
 describe('Abuse ticket banner', () => {
+  it('should render a banner for no tickets', () => {
+    render(
+      wrapWithTheme(
+        <AbuseTicketBanner  />
+      )
+    );
+  });
   it('should render a banner for an abuse ticket', () => {
+    
     const { queryAllByText } = render(
       wrapWithTheme(
         <AbuseTicketBanner abuseTickets={[abuseTicketNotification]} />
