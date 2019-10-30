@@ -16,7 +16,7 @@ afterAll(async done => {
 
 describe('Utility Functions', () => {
   it('should return overallocation correctly', () => {
-    expect(getOverallocationPercent(4, 5)).toBe(110);
+    expect(getOverallocationPercent(4, 5)).toBe(100);
     expect(getOverallocationPercent(3, 2)).toBe(0);
     expect(getOverallocationPercent(10, 5)).toBe(0);
     expect(getOverallocationPercent(1, 3)).toBe(200);
