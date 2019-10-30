@@ -45,6 +45,9 @@ e.g `Bearer 1232313` or `Admin 1231423`
 
 `REACT_APP_LOG_PERFORMANCE_METRICS`: Set to `'true'` to log performance metrics to the console. Only works in development mode (i.e. while running `yarn start`).
 
+`REACT_APP_PAYPAL_ENV`: Set to `production` or `sandbox` to alter which Paypal environment is used
+for making payments. Defaults to `production`.
+
 ### Testing Variables
 
 These are environment variables that can be used for automated testing processes
