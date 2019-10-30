@@ -99,7 +99,7 @@
     "lint": "tslint 'src/**/*.ts' 'src/**/*.tsx'",
     "build": "node scripts/build.js",
     "precommit": "lint-staged && tsc --noEmit",
-    "prepush": "./scripts/pre-push.sh && yarn test --bail --color",
+    "prepush": "./scripts/pre-push.sh && yarn test --color",
     "mock": "./scripts/mb.js",
     "test": "node scripts/test.js",
     "test:debug": "node --inspect-brk scripts/test.js --runInBand",
