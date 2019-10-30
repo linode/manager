@@ -26,13 +26,14 @@ const styles = (theme: Theme) =>
       alignItems: 'center',
       backgroundColor: theme.bg.main,
       padding: theme.spacing(1),
-      marginLeft: theme.spacing(2),
+      marginLeft: theme.spacing(1),
       marginRight: theme.spacing(2),
       transition: theme.transitions.create(['opacity']),
+      order: 2,
       [theme.breakpoints.down('sm')]: {
         backgroundColor: theme.bg.white,
         position: 'absolute',
-        width: 'calc(100% - 118px)',
+        width: 'calc(100% - 100px)',
         zIndex: -1,
         left: 0,
         visibility: 'hidden',
@@ -74,6 +75,9 @@ const styles = (theme: Theme) =>
       }
     },
     navIconHide: {
+      order: 5,
+      position: 'relative',
+      top: 1,
       '& > span': {
         justifyContent: 'flex-end'
       },

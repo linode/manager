@@ -44,7 +44,7 @@ class SideMenu extends React.Component<CombinedProps> {
 
     return (
       <React.Fragment>
-        <Hidden lgUp>
+        <Hidden mdUp>
           <Drawer
             variant="temporary"
             open={open}
@@ -61,7 +61,7 @@ class SideMenu extends React.Component<CombinedProps> {
             />
           </Drawer>
         </Hidden>
-        <Hidden mdDown implementation="css">
+        <Hidden smDown implementation="css">
           <Drawer
             variant="permanent"
             open
