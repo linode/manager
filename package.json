@@ -3,7 +3,9 @@
   "private": true,
   "devDependencies": {
     "husky": "^3.0.1",
-    "lerna": "^3.16.4"
+    "lerna": "^3.16.4",
+    "postinstall": "^0.6.0",
+    "typescript": "3.5.3"
   },
   "husky": {
     "hooks": {
@@ -14,6 +16,7 @@
   "scripts": {
     "install:all": "yarn && lerna bootstrap",
     "up": "yarn && lerna bootstrap && lerna run start --parallel -- --color",
+    "postinstall" : "yarn workspaces run postinstall",
     "up:manager": "yarn install:all && yarn start:manager",
     "start:manager": "lerna run build --stream --scope linode-js-sdk && lerna run start --stream --scope linode-manager -- --color",
     "start:docker": "lerna run build --stream --scope linode-js-sdk && yarn start:all",
@@ -33,8 +36,8 @@
     "docker:storybook": "docker build -f Dockerfile . -t 'storybook' && docker run -it --rm -p 6006:6006 -v $(pwd)/packages/manager/src:/home/node/app/packages/manager/src -v $(pwd)/packages/linode-js-sdk/src:/home/node/app/packages/linode-js-sdk/src storybook storybook",
     "docker:storybook:test": "docker-compose -f packages/manager/storybook-test.yml up --build --exit-code-from storybook-test"
   },
-  "resolutions":{
-    "handlebars":"^4.4.3"
+  "resolutions": {
+    "handlebars": "^4.4.3"
   },
   "workspaces": {
     "packages": [
