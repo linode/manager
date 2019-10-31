@@ -2,7 +2,7 @@ import {
   createNodeBalancerConfigNode as _createNode,
   deleteNodeBalancerConfigNode as _deleteNode,
   getNodeBalancerConfigNodes as _getConfigNodes,
-  NodeBalancerConfig,
+  NodeBalancerConfigNode,
   updateNodeBalancerConfigNode as _updateNode
 } from 'linode-js-sdk/lib/nodebalancers';
 import { getAll } from 'src/utilities/getAll';
@@ -15,9 +15,11 @@ import {
 } from './configNode.actions';
 
 const getNodeBalancerConfigNodes = (nodeBalancerId: number, configId: number) =>
-  getAll<NodeBalancerConfig>(() => _getConfigNodes(nodeBalancerId, configId));
+  getAll<NodeBalancerConfigNode>(() =>
+    _getConfigNodes(nodeBalancerId, configId)
+  );
 
-export const getAllNodeBalancerConfigs = createRequestThunk(
+export const getAllNodeBalancerConfigNodes = createRequestThunk(
   requestNodeBalancerConfigNodesActions,
   ({ nodeBalancerId, configId }) =>
     getNodeBalancerConfigNodes(nodeBalancerId, configId)().then(
@@ -25,13 +27,13 @@ export const getAllNodeBalancerConfigs = createRequestThunk(
     )
 );
 
-export const createNodeBalancerConfig = createRequestThunk(
+export const createNodeBalancerConfigNode = createRequestThunk(
   createNodeBalancerConfigNodeActions,
   ({ nodeBalancerId, configId, ...data }) =>
     _createNode(nodeBalancerId, configId, data)
 );
 
-export const updateNodeBalancerConfig = createRequestThunk(
+export const updateNodeBalancerConfigNode = createRequestThunk(
   updateNodeBalancerConfigNodeActions,
   ({ nodeBalancerId, configId, nodeId, ...data }) =>
     _updateNode(nodeBalancerId, configId, nodeId, data)

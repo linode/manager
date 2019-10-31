@@ -102,6 +102,10 @@ import nodeBalancers, {
   defaultState as defaultNodeBalancerState,
   State as NodeBalancersState
 } from 'src/store/nodeBalancer/nodeBalancer.reducer';
+import nodeBalancerConfigNodes, {
+  defaultState as defaultNodeBalancerConfigNodeState,
+  State as NodeBalancerConfigNodesState
+} from 'src/store/nodeBalancerConfig/configNode.reducer';
 import nodeBalancerConfigs, {
   defaultState as defaultNodeBalancerConfigState,
   State as NodeBalancerConfigsState
@@ -169,6 +173,7 @@ const __resourcesDefaultState = {
   linodeConfigs: defaultLinodeConfigsState,
   linodeDisks: defaultLinodeDisksState,
   nodeBalancerConfigs: defaultNodeBalancerConfigState,
+  nodeBalancerConfigNodes: defaultNodeBalancerConfigNodeState,
   nodeBalancers: defaultNodeBalancerState,
   notifications: notificationsDefaultState,
   profile: defaultProfileState,
@@ -192,6 +197,7 @@ export interface ResourcesState {
   linodeConfigs: LinodeConfigsState;
   linodeDisks: LinodeDisksState;
   nodeBalancerConfigs: NodeBalancerConfigsState;
+  nodeBalancerConfigNodes: NodeBalancerConfigNodesState;
   nodeBalancers: NodeBalancersState;
   notifications: NotificationsState;
   profile: ProfileState;
@@ -257,6 +263,7 @@ const __resources = combineReducers({
   managedIssues,
   nodeBalancers,
   nodeBalancerConfigs,
+  nodeBalancerConfigNodes,
   notifications,
   profile,
   regions,
