@@ -1,7 +1,8 @@
 import { render } from '@testing-library/react';
-import { ResourcePage } from 'linode-js-sdk/lib/types'
+import { ResourcePage } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { Provider } from 'react-redux';
+import { MemoryRouterProps } from 'react-router';
 import { MemoryRouter } from 'react-router-dom';
 import { PromiseLoaderResponse } from 'src/components/PromiseLoader';
 import LinodeThemeWrapper from 'src/LinodeThemeWrapper';
@@ -19,11 +20,15 @@ createResourcePage = data => ({
   results: 0
 });
 
-export const wrapWithTheme = (ui: any) => {
+interface Options {
+  MemoryRouter?: MemoryRouterProps;
+}
+
+export const wrapWithTheme = (ui: any, options: Options = {}) => {
   return (
     <Provider store={store}>
       <LinodeThemeWrapper theme="dark" spacing="normal">
-        <MemoryRouter>{ui}</MemoryRouter>
+        <MemoryRouter {...options.MemoryRouter}>{ui}</MemoryRouter>
       </LinodeThemeWrapper>
     </Provider>
   );
