@@ -140,7 +140,7 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
         e.secondary_entity!.label
       }.`,
     started: e =>
-      `Linode ${e.entity!.label} is being booted with config${
+      `Linode ${e.entity!.label} is being booted with config ${
         e.secondary_entity!.label
       }.`,
     failed: e =>
