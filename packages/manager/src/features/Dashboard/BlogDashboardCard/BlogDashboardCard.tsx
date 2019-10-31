@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import he from 'he';
+import * as he from 'he';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { compose, map, pathOr, take } from 'ramda';
 import * as React from 'react';
