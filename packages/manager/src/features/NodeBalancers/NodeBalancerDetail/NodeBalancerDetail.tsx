@@ -50,6 +50,8 @@ import NodeBalancerSummary from './NodeBalancerSummary';
 
 import { ExtendedNodeBalancer } from 'src/services/nodebalancers';
 
+import EditNodeBalancerConfigLanding from './__new__/EditNodeBalancerConfigsLanding';
+
 type ClassNames = 'root' | 'backButton';
 
 const styles = (theme: Theme) =>
@@ -379,7 +381,12 @@ class NodeBalancerDetail extends React.Component<CombinedProps, State> {
               exact
               path={`${path}/configurations`}
               render={() => (
-                <NodeBalancerConfigurations
+                // <NodeBalancerConfigurations
+                //   nodeBalancerLabel={nodeBalancer.label}
+                //   nodeBalancerRegion={nodeBalancer.region}
+                // />
+                <EditNodeBalancerConfigLanding
+                  nodeBalancerID={nodeBalancer.id}
                   nodeBalancerLabel={nodeBalancer.label}
                   nodeBalancerRegion={nodeBalancer.region}
                 />
