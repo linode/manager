@@ -192,7 +192,7 @@ export const oneClickApps: OCA[] = [
           'https://linode.com/docs/platform/one-click/deploy-lamp-stack-with-one-click-apps/'
       }
     ],
-    logo_url: 'assets/docker_color.svg'
+    logo_url: 'assets/lamp_flame_color.svg'
     // href: 'https://www.ibm.com/cloud/learn/lamp-stack-explained' Not sure this is kosher.
   },
   {
