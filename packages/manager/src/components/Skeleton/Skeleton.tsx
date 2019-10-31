@@ -38,9 +38,9 @@ const _Skeleton: React.FC<combinedProps> = props => {
     subtextHeight
   } = props;
 
-  const cols: any = [];
+  const cols: JSX.Element[] = [];
+  const ifColumns = columns !== undefined ? columns : 1;
   const renderTableSkeleton = (colCount: number) => {
-    const ifColumns = columns !== undefined ? columns : 1;
     const calcColumns = () => {
       if (colCount === 0) {
         return firstColWidth ? firstColWidth : 100 / ifColumns;
@@ -50,11 +50,7 @@ const _Skeleton: React.FC<combinedProps> = props => {
           : 100 / ifColumns;
       }
     };
-    for (
-      colCount = 0;
-      colCount <= (columns !== undefined ? columns - 1 : 1);
-      colCount++
-    ) {
+    for (colCount = 0; colCount <= ifColumns - 1; colCount++) {
       cols.push(
         <Grid
           item
@@ -86,16 +82,19 @@ const _Skeleton: React.FC<combinedProps> = props => {
     return;
   };
 
-  table && columns !== undefined
-    ? renderTableSkeleton(columns)
-    : renderTableSkeleton(1);
-
   return (
     <>
-      {table && columns !== undefined ? (
-        <Grid container className={classes.root} data-testid={'tableSkeleton'}>
-          {cols}
-        </Grid>
+      {table ? (
+        <>
+          {renderTableSkeleton(ifColumns)}
+          <Grid
+            container
+            className={classes.root}
+            data-testid={'tableSkeleton'}
+          >
+            {cols}
+          </Grid>
+        </>
       ) : (
         <Skeleton
           {...props}
