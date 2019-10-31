@@ -24,6 +24,7 @@ Here are a list of all the required and optional environment variables the Manag
 
 `REACT_APP_CLIENT_ID`: The Client ID you created above in the first step
 
+`REACT_APP_LAUNCH_DARKLY_ID`: The Client ID that matches up with the Launch Darkly Service. Contact a team member for this.
 
 ### Optional Variables
 

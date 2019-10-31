@@ -19,7 +19,7 @@
     "start:docker": "lerna run build --stream --scope linode-js-sdk && yarn start:all",
     "start:all": "lerna run start --parallel -- --color",
     "clean": "rm -rf node_modules && lerna clean --yes",
-    "test": "lerna run test --stream --scope linode-manager -- --color",
+    "test": "lerna run test --stream --scope linode-manager -- --color --detectOpenHandles",
     "selenium": "lerna run selenium --stream --scope linode-manager -- --color",
     "storybook": "lerna run storybook --stream --scope linode-manager",
     "storybook:e2e": "lerna run storybook:e2e --stream --scope linode-manager -- --color",

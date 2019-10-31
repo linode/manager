@@ -9,8 +9,8 @@ import {
 } from 'linode-js-sdk/lib/profile';
 import { APIError } from 'linode-js-sdk/lib/types';
 import * as moment from 'moment';
-import { compose } from 'ramda';
 import * as React from 'react';
+import { compose } from 'recompose';
 import ActionsPanel from 'src/components/ActionsPanel';
 import AddNewLink from 'src/components/AddNewLink';
 import Button from 'src/components/Button';
@@ -36,11 +36,15 @@ import TableRow from 'src/components/TableRow';
 import TableRowEmptyState from 'src/components/TableRowEmptyState';
 import TableRowError from 'src/components/TableRowError';
 import TableRowLoading from 'src/components/TableRowLoading';
+import withFeatureFlagConsumer, {
+  FeatureFlagConsumerProps
+} from 'src/containers/withFeatureFlagConsumer.container';
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 import isPast from 'src/utilities/isPast';
 import scrollErrorIntoView from 'src/utilities/scrollErrorIntoView';
 import APITokenDrawer, { DrawerMode, genExpiryTups } from './APITokenDrawer';
 import APITokenMenu from './APITokenMenu';
+import { basePermNameMap, basePerms } from './utils';
 
 type ClassNames = 'headline' | 'paper' | 'labelCell' | 'createdCell';
 
@@ -62,9 +66,11 @@ const styles = (theme: Theme) =>
   });
 
 export type APITokenType = 'OAuth Client Token' | 'Personal Access Token';
-export type APITokenTitle = 'Apps' | 'Personal Access Tokens';
+export type APITokenTitle =
+  | 'Third Party Access Tokens'
+  | 'Personal Access Tokens';
 
-interface Props extends PaginationProps<Token> {
+interface Props {
   type: APITokenType;
   title: APITokenTitle;
 }
@@ -100,7 +106,10 @@ interface State {
   token?: TokenState;
 }
 
-type CombinedProps = Props & WithStyles<ClassNames>;
+type CombinedProps = Props &
+  PaginationProps<Token> &
+  WithStyles<ClassNames> &
+  FeatureFlagConsumerProps;
 
 export const filterOutLinodeApps = (token: Token) =>
   !token.website || !/.linode.com$/.test(token.website);
@@ -471,7 +480,7 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           <APITokenMenu
             token={token}
             type={type}
-            isAppTokenMenu={title === 'Apps'}
+            isThirdPartyAccessToken={title === 'Third Party Access Tokens'}
             openViewDrawer={this.openViewDrawer}
             openEditDrawer={this.openEditDrawer}
             openRevokeDialog={this.openRevokeDialog}
@@ -482,8 +491,23 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
   }
 
   render() {
-    const { classes, type, title } = this.props;
+    const { classes, flags, type, title } = this.props;
     const { form, dialog } = this.state;
+
+    // If Object Storage is enabled, add it to the list of perms.
+    // @todo: Once Object Storage is safely in GA, remove this logic and add
+    // it to the hard-coded list of scopes.
+    const perms = flags.objectStorage
+      ? //  Scopes are returned from the API sorted alphabetically. Since we're
+        // manually inserting a scope here, I chose to sort the entire list
+        // instead of inserting 'object_storage' in the correct place according
+        // to the hard-coded basePerms array (that seemed brittle).
+        [...basePerms, 'object_storage'].sort()
+      : basePerms;
+
+    const permNameMap = flags.objectStorage
+      ? { ...basePermNameMap, object_storage: 'Object Storage' }
+      : basePermNameMap;
 
     return (
       <React.Fragment>
@@ -536,6 +560,8 @@ export class APITokenTable extends React.Component<CombinedProps, State> {
           label={form.values.label}
           scopes={form.values.scopes}
           expiry={form.values.expiry}
+          perms={perms}
+          permNameMap={permNameMap}
           closeDrawer={this.closeDrawer}
           onChange={this.handleDrawerChange}
           onCreate={this.createToken}
@@ -645,9 +671,10 @@ const updatedRequest = (ownProps: Props, params: any, filters: any) => {
 
 const paginated = Pagey(updatedRequest);
 
-const enhanced = compose<any, any, any>(
+const enhanced = compose<CombinedProps, Props>(
   paginated,
-  styled
+  styled,
+  withFeatureFlagConsumer
 );
 
 export default enhanced(APITokenTable);
