@@ -3,11 +3,15 @@
   "private": true,
   "devDependencies": {
     "husky": "^3.0.1",
-    "lerna": "^3.16.4"
+    "lerna": "^3.16.4",
+    "tslint": "^5.20.0",
+    "tslint-config-prettier": "^1.18.0",
+    "tslint-react": "^4.1.0",
+    "typescript": "^3.6.4"
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lerna run precommit --stream && git add .",
+      "pre-commit": "lerna run precommit --stream",
       "pre-push": "lerna run prepush --stream --scope linode-manager"
     }
   },
@@ -33,7 +37,7 @@
     "docker:storybook": "docker build -f Dockerfile . -t 'storybook' && docker run -it --rm -p 6006:6006 -v $(pwd)/packages/manager/src:/home/node/app/packages/manager/src -v $(pwd)/packages/linode-js-sdk/src:/home/node/app/packages/linode-js-sdk/src storybook storybook",
     "docker:storybook:test": "docker-compose -f packages/manager/storybook-test.yml up --build --exit-code-from storybook-test"
   },
-  "resolutions":{
-    "handlebars":"^4.4.3"
+  "resolutions": {
+    "handlebars": "^4.4.3"
   }
 }
