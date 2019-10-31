@@ -94,6 +94,19 @@ const handleLinodeRebuild = (
       // Get the new disks and update the store.
       dispatch(getAllLinodeDisks({ linodeId: id }));
       dispatch(getAllLinodeConfigs({ linodeId: id }));
+      /**
+       * After resizing, a Linode is booted (if it was booted before);
+       * however, no boot event is sent. Additionally, the 'finished'
+       * resize event is sent before this is complete. As a result,
+       * the requestLinodeForStore below will often return a
+       * status of 'offline', which will then not be updated.
+       *
+       * The best thing to do here would be to have the API send a boot
+       * event, or in the new events system push an update whenever a Linode's
+       * status changes. In the meantime, we can get around this by sending a follow-on
+       * request.
+       */
+      setTimeout(() => dispatch(requestLinodeForStore(id)), 10000);
       return dispatch(requestLinodeForStore(id));
     default:
       return;
