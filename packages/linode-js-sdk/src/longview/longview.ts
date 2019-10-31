@@ -10,7 +10,7 @@ import { ResourcePage } from '../types';
 import { longviewClientCreate } from './longview.schema';
 import { LongviewClient } from './types';
 
-export const createLongviewClient = (label: string) => {
+export const createLongviewClient = (label?: string) => {
   return Request<LongviewClient>(
     setURL(`${API_ROOT}/longview/clients`),
     setData(
