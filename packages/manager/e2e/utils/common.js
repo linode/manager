@@ -89,6 +89,7 @@ export const apiCreateLinode = (
   console.log(`linode: "${linode.label}" created`);
   return linode;
 };
+
 export const apiCreateMultipleLinodes = arrayOfLinodeCreateObj => {
   let linodes = [];
   const token = readToken(browser.options.testUser);
