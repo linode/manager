@@ -9,11 +9,11 @@ import Request, {
 import { ResourcePage as Page } from '../types';
 import { CreateBucketSchema } from './buckets.schema';
 import {
-  Bucket,
-  BucketRequestPayload,
-  DeleteBucketRequestPayload,
-  ObjectListParams,
-  ObjectListResponse
+  ObjectStorageBucket,
+  ObjectStorageBucketRequestPayload,
+  ObjectStorageDeleteBucketRequestPayload,
+  ObjectStorageObjectListParams,
+  ObjectStorageObjectListResponse
 } from './types';
 
 /**
@@ -22,7 +22,7 @@ import {
  * Gets a list of a user's Object Storage Buckets
  */
 export const getBuckets = (params?: any, filters?: any) =>
-  Request<Page<Bucket>>(
+  Request<Page<ObjectStorageBucket>>(
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
@@ -37,8 +37,8 @@ export const getBuckets = (params?: any, filters?: any) =>
  * @param data { object } The label and clusterId of the new Bucket.
  *
  */
-export const createBucket = (data: BucketRequestPayload) =>
-  Request<Bucket>(
+export const createBucket = (data: ObjectStorageBucketRequestPayload) =>
+  Request<ObjectStorageBucket>(
     setURL(`${BETA_API_ROOT}/object-storage/buckets`),
     setMethod('POST'),
     setData(data, CreateBucketSchema)
@@ -51,8 +51,11 @@ export const createBucket = (data: BucketRequestPayload) =>
  *
  * NOTE: Attempting to delete a non-empty bucket will result in an error.
  */
-export const deleteBucket = ({ cluster, label }: DeleteBucketRequestPayload) =>
-  Request<Bucket>(
+export const deleteBucket = ({
+  cluster,
+  label
+}: ObjectStorageDeleteBucketRequestPayload) =>
+  Request<ObjectStorageBucket>(
     setURL(`${BETA_API_ROOT}/object-storage/buckets/${cluster}/${label}`),
     setMethod('DELETE')
   );
@@ -63,9 +66,9 @@ export const deleteBucket = ({ cluster, label }: DeleteBucketRequestPayload) =>
 export const getObjectList = (
   clusterId: string,
   bucketName: string,
-  params?: ObjectListParams
+  params?: ObjectStorageObjectListParams
 ) =>
-  Request<ObjectListResponse>(
+  Request<ObjectStorageObjectListResponse>(
     setMethod('GET'),
     setParams(params),
     setURL(

@@ -1,6 +1,6 @@
-import { Bucket } from 'linode-js-sdk/lib/object-storage';
+import { ObjectStorageBucket } from 'linode-js-sdk/lib/object-storage';
 
-export const buckets: Bucket[] = [
+export const buckets: ObjectStorageBucket[] = [
   {
     label: 'test-bucket-001',
     created: '2019-02-20 18:46:15.516813',

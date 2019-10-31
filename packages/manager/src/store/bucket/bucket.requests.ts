@@ -1,10 +1,10 @@
 import {
-  Bucket,
-  BucketRequestPayload,
   createBucket as _createBucket,
   deleteBucket as _deleteBucket,
-  DeleteBucketRequestPayload,
-  getBuckets as _getBuckets
+  getBuckets as _getBuckets,
+  ObjectStorageBucket,
+  ObjectStorageBucketRequestPayload,
+  ObjectStorageDeleteBucketRequestPayload
 } from 'linode-js-sdk/lib/object-storage';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { getAll } from 'src/utilities/getAll';
@@ -19,17 +19,17 @@ import {
  * Create Bucket
  */
 
-export type CreateBucketRequest = BucketRequestPayload;
+export type CreateBucketRequest = ObjectStorageBucketRequestPayload;
 export const createBucket = createRequestThunk<
   CreateBucketRequest,
-  Bucket,
+  ObjectStorageBucket,
   APIError[]
 >(createBucketActions, data => _createBucket(data));
 
 /*
  * Get All Buckets
  */
-const _getAll = getAll<Bucket>(_getBuckets);
+const _getAll = getAll<ObjectStorageBucket>(_getBuckets);
 
 const getAllBucketsRequest = () => _getAll().then(({ data }) => data);
 
@@ -41,9 +41,9 @@ export const getAllBuckets = createRequestThunk(
 /*
  * Delete Bucket
  */
-export type DeleteBucketRequest = DeleteBucketRequestPayload;
+export type DeleteBucketRequest = ObjectStorageDeleteBucketRequestPayload;
 export const deleteBucket = createRequestThunk<
-  DeleteBucketRequestPayload,
+  ObjectStorageDeleteBucketRequestPayload,
   {},
   APIError[]
 >(deleteBucketActions, data => _deleteBucket(data));

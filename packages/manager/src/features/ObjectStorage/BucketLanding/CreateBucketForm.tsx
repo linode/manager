@@ -1,6 +1,9 @@
 import { Form, Formik } from 'formik';
 import { AccountSettings } from 'linode-js-sdk/lib/account';
-import { Bucket, CreateBucketSchema } from 'linode-js-sdk/lib/object-storage';
+import {
+  CreateBucketSchema,
+  ObjectStorageBucket
+} from 'linode-js-sdk/lib/object-storage';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { connect, MapDispatchToProps } from 'react-redux';
@@ -266,7 +269,7 @@ export default enhanced(CreateBucketForm);
 // Returns `true` if a bucket with the same label and clusterId already exist
 // in the given bucket data.
 export const isDuplicateBucket = (
-  bucketsData: Bucket[],
+  bucketsData: ObjectStorageBucket[],
   label: string,
   cluster: string
 ) => {

@@ -1,10 +1,10 @@
-import { Cluster } from 'linode-js-sdk/lib/object-storage';
+import { ObjectStorageCluster } from 'linode-js-sdk/lib/object-storage';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { connect } from 'react-redux';
 import { ApplicationState } from 'src/store';
 
 export interface StateProps {
-  clustersData: Cluster[];
+  clustersData: ObjectStorageCluster[];
   clustersError?: APIError[];
   clustersLoading: boolean;
 }

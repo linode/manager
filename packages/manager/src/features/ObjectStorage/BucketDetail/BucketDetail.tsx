@@ -1,8 +1,8 @@
 import {
-  ClusterID,
   getObjectList,
   getObjectURL,
-  Object
+  ObjectStorageClusterID,
+  ObjectStorageObject
 } from 'linode-js-sdk/lib/object-storage';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { withSnackbar, WithSnackbarProps } from 'notistack';
@@ -102,7 +102,7 @@ const styles = (theme: Theme) =>
   });
 
 interface MatchProps {
-  clusterId: ClusterID;
+  clusterId: ObjectStorageClusterID;
   bucketName: string;
 }
 
@@ -329,7 +329,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
   addOneFile = (objectName: string, sizeInBytes: number) => {
     const prefix = getQueryParam(this.props.location.search, 'prefix');
 
-    const object: Object = {
+    const object: ObjectStorageObject = {
       name: prefix + objectName,
       etag: '',
       owner: '',
@@ -360,7 +360,7 @@ export class BucketDetail extends React.Component<CombinedProps, {}> {
   addOneFolder = (objectName: string) => {
     const prefix = getQueryParam(this.props.location.search, 'prefix');
 
-    const folder: Object = {
+    const folder: ObjectStorageObject = {
       name: prefix + objectName + '/',
       etag: null,
       owner: null,

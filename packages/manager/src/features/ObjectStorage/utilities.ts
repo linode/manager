@@ -1,11 +1,13 @@
 import { FormikProps } from 'formik';
 import { AccountSettings } from 'linode-js-sdk/lib/account';
-import { ClusterID } from 'linode-js-sdk/lib/object-storage';
-import { Object } from 'linode-js-sdk/lib/object-storage';
+import {
+  ObjectStorageClusterID,
+  ObjectStorageObject
+} from 'linode-js-sdk/lib/object-storage';
 import { OBJECT_STORAGE_DELIMITER, OBJECT_STORAGE_ROOT } from 'src/constants';
 
 export const generateObjectUrl = (
-  clusterId: ClusterID,
+  clusterId: ObjectStorageClusterID,
   bucketName: string,
   objectName: string
 ) => {
@@ -18,7 +20,7 @@ export const generateObjectUrl = (
 
 // If an Object does not have an etag, last_modified, owner, or size, it can
 // be considered a "folder".
-export const isFolder = (object: Object) =>
+export const isFolder = (object: ObjectStorageObject) =>
   !object.etag && !object.last_modified && !object.owner && !object.size;
 
 /**
@@ -41,7 +43,7 @@ export const basename = (
   return path.substr(idx + 1);
 };
 
-export interface ExtendedObject extends Object {
+export interface ExtendedObject extends ObjectStorageObject {
   _isFolder: boolean;
   _displayName: string;
   _shouldDisplayObject: boolean;
@@ -49,7 +51,7 @@ export interface ExtendedObject extends Object {
 }
 
 export const extendObject = (
-  object: Object,
+  object: ObjectStorageObject,
   prefix: string,
   manuallyCreated = false
 ): ExtendedObject => {

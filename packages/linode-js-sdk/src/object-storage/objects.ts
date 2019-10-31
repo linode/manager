@@ -1,6 +1,6 @@
 import { BETA_API_ROOT } from 'src/constants';
 import Request, { setData, setMethod, setURL } from '../request';
-import { ObjectURL, ObjectURLOptions } from './types';
+import { ObjectStorageObjectURL, ObjectStorageObjectURLOptions } from './types';
 
 /**
  * Gets a URL to upload/download/delete objects from a bucket.
@@ -10,9 +10,9 @@ export const getObjectURL = (
   bucketName: string,
   name: string,
   method: 'GET' | 'PUT' | 'POST' | 'DELETE',
-  options?: ObjectURLOptions
+  options?: ObjectStorageObjectURLOptions
 ) =>
-  Request<ObjectURL>(
+  Request<ObjectStorageObjectURL>(
     setMethod('POST'),
     setURL(
       `${BETA_API_ROOT}/object-storage/buckets/${clusterId}/${bucketName}/object-url`

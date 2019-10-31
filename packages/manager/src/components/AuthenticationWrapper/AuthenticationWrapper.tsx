@@ -6,7 +6,10 @@ import {
 import { Domain } from 'linode-js-sdk/lib/domains';
 import { Image } from 'linode-js-sdk/lib/images';
 import { Linode, LinodeType } from 'linode-js-sdk/lib/linodes';
-import { Bucket, Cluster } from 'linode-js-sdk/lib/object-storage';
+import {
+  ObjectStorageBucket,
+  ObjectStorageCluster
+} from 'linode-js-sdk/lib/object-storage';
 import { Profile } from 'linode-js-sdk/lib/profile';
 import { Region } from 'linode-js-sdk/lib/regions';
 import { Volume } from 'linode-js-sdk/lib/volumes';
@@ -151,8 +154,8 @@ interface DispatchProps {
   requestRegions: () => Promise<Region[]>;
   requestVolumes: () => Promise<Volume[]>;
   requestProfile: () => Promise<Profile>;
-  requestBuckets: () => Promise<Bucket[]>;
-  requestClusters: () => Promise<Cluster[]>;
+  requestBuckets: () => Promise<ObjectStorageBucket[]>;
+  requestClusters: () => Promise<ObjectStorageCluster[]>;
 }
 
 const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (

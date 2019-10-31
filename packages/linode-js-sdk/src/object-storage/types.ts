@@ -9,24 +9,24 @@ export interface ObjectStorageKeyRequest {
   label: string;
 }
 
-export interface BucketRequestPayload {
+export interface ObjectStorageBucketRequestPayload {
   label: string;
   cluster: string;
 }
 
-export interface DeleteBucketRequestPayload {
+export interface ObjectStorageDeleteBucketRequestPayload {
   cluster: string;
   label: string;
 }
 
-export interface Bucket {
+export interface ObjectStorageBucket {
   label: string;
   created: string;
   cluster: string;
   hostname: string;
 }
 
-export interface Object {
+export interface ObjectStorageObject {
   size: number | null; // Size of object in bytes
   owner: string | null;
   etag: string | null;
@@ -34,12 +34,12 @@ export interface Object {
   name: string;
 }
 
-export interface ObjectURL {
+export interface ObjectStorageObjectURL {
   exists: boolean;
   url: string;
 }
 
-export interface ObjectURLOptions {
+export interface ObjectStorageObjectURLOptions {
   expires_in?: number;
   // "Content-Type" is normally an HTTP header, but here it is used in the body
   // of a request to /object-url, to inform the API which kind of file it is
@@ -49,25 +49,25 @@ export interface ObjectURLOptions {
 }
 
 // Enum containing IDs for each Cluster
-export type ClusterID = 'us-east-1' | 'us-east';
+export type ObjectStorageClusterID = 'us-east-1' | 'us-east';
 
-export interface Cluster {
+export interface ObjectStorageCluster {
   region: string;
   status: string; // @todo: should be enum
-  id: ClusterID;
+  id: ObjectStorageClusterID;
   domain: string;
   static_site_domain: string;
 }
 
-export interface ObjectListParams {
+export interface ObjectStorageObjectListParams {
   delimiter?: string;
   marker?: string;
   prefix?: string;
   page_size?: number;
 }
 
-export interface ObjectListResponse {
-  data: Object[];
+export interface ObjectStorageObjectListResponse {
+  data: ObjectStorageObject[];
   next_marker: string | null;
   is_truncated: boolean;
 }
