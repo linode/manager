@@ -1,4 +1,5 @@
 import * as Bluebird from 'bluebird';
+import { getKubernetesClusterEndpoint } from 'linode-js-sdk/lib/kubernetes';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { contains, equals, path, pathOr, remove, update } from 'ramda';
 import * as React from 'react';
@@ -147,11 +148,28 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   /** Deletion confirmation modal */
   const [confirmationOpen, setConfirmation] = React.useState<boolean>(false);
   const [deleting, setDeleting] = React.useState<boolean>(false);
+  const [endpoint, setEndpoint] = React.useState<string | null>(null);
+  const [endpointError, setEndpointError] = React.useState<string | undefined>(
+    undefined
+  );
 
   React.useEffect(() => {
     const clusterID = +props.match.params.clusterID;
     if (clusterID) {
       props.requestClusterForStore(clusterID);
+      // The cluster endpoint has its own API...uh, endpoint, so we need
+      // to request it separately.
+      getKubernetesClusterEndpoint(clusterID)
+        .then(response => {
+          setEndpointError(undefined);
+          setEndpoint(response.endpoint);
+        })
+        .catch(error => {
+          setEndpointError(
+            getAPIErrorOrDefault(error, 'Cluster endpoint not available.')[0]
+              .reason
+          );
+        });
     }
 
     /**
@@ -442,7 +460,11 @@ export const KubernetesClusterDetail: React.FunctionComponent<
             />
           </Grid>
           <Grid item xs={12} className={classes.section}>
-            <KubeSummaryPanel cluster={cluster} />
+            <KubeSummaryPanel
+              cluster={cluster}
+              endpoint={endpoint}
+              endpointError={endpointError}
+            />
           </Grid>
         </Grid>
         <Grid

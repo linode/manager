@@ -32,6 +32,10 @@ export interface KubernetesVersion {
   id: string;
 }
 
+export interface KubernetesEndpointResponse {
+  endpoint: string;
+}
+
 export interface CreateKubeClusterPayload {
   label?: string; // Label will be assigned by the API if not provided
   region?: string; // Will be caught by Yup if undefined
