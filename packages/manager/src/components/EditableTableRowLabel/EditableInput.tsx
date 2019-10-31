@@ -22,7 +22,6 @@ const useStyles = makeStyles((theme: Theme) => ({
   root: {
     padding: '5px 8px',
     display: 'inline-block',
-    border: '1px solid transparent',
     transition: theme.transitions.create(['opacity']),
     wordBreak: 'break-all',
     textDecoration: 'inherit',
@@ -32,11 +31,9 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: 'flex',
     justifyContent: 'flex-start',
     alignItems: 'center',
-    maxHeight: 48,
     position: 'relative'
   },
   initial: {
-    border: '1px solid transparent',
     '&:hover, &:focus': {
       '& $editIcon': {
         opacity: 1
@@ -70,9 +67,11 @@ const useStyles = makeStyles((theme: Theme) => ({
     }
   },
   button: {
-    minWidth: 'auto',
-    minHeight: 48,
     padding: 0,
+    height: 24,
+    width: 24,
+    minWidth: 'auto',
+    minHeight: 'auto',
     marginTop: 0,
     background: 'transparent !important'
   },
@@ -82,6 +81,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     '&:hover, &:focus': {
       color: theme.palette.primary.light
     }
+  },
+  saveButton: {
+    marginLeft: 8,
+    marginRight: 8
   },
   save: {
     fontSize: 26
@@ -100,6 +103,8 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...theme.typography.h1
   },
   editIcon: {
+    position: 'absolute',
+    right: 0,
     [theme.breakpoints.up('sm')]: {
       opacity: 0,
       '&:focus': {
@@ -208,7 +213,7 @@ export const EditableInput: React.FC<FinalProps> = props => {
           autoFocus={true}
         />
         <Button
-          className={classes.button}
+          className={`${classes.button} ${classes.saveButton}`}
           onClick={() => onEdit()}
           data-qa-save-edit
         >

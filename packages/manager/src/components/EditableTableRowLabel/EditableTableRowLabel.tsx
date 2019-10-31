@@ -8,10 +8,11 @@ import EditableInput from './EditableInput';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    padding: theme.spacing(2)
+    minHeight: 40
   },
   smallInput: {
-    height: '1em'
+    position: 'relative',
+    paddingRight: 20
   },
   subText: {
     fontSize: '0.8em'
@@ -55,16 +56,17 @@ export const EditableTableRowLabel: React.FC<Props> = props => {
   };
 
   return (
-    <TableCell className={classes.root} style={{ width: width || '30%' }}>
+    <TableCell style={{ width: width || '30%' }}>
       <Grid
         container
         direction="row"
         wrap="nowrap"
         alignItems="center"
         justify="flex-start"
+        className={`${classes.root} m0`}
       >
         {!isEditing && (
-          <Grid item xs={1}>
+          <Grid item xs={1} className="py0">
             <EntityIcon variant={iconVariant} />
           </Grid>
         )}
@@ -74,6 +76,7 @@ export const EditableTableRowLabel: React.FC<Props> = props => {
           direction="column"
           alignItems="flex-start"
           justify="center"
+          className="py0"
         >
           <Grid item className="py0 px0">
             <EditableInput
