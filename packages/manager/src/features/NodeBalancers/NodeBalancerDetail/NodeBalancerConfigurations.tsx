@@ -809,11 +809,12 @@ class NodeBalancerConfigurations extends React.Component<CombinedProps, State> {
      * so we need to get the user-inputted address and concat that with that
      * user-inputted port
      */
-    const [pureAddress] = node.address.split(':');
+    const [pureAddress, existingPort] = node.address.split(':');
 
     const cleanedNode = {
       ...node,
-      address: `${pureAddress}:${node.port}`
+      address: `${pureAddress}:${node.port || existingPort}`,
+      weight: +node.weight
     };
 
     return updateNodeBalancerConfigNode(

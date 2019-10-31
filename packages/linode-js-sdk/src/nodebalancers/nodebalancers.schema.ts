@@ -24,7 +24,8 @@ export const nodeBalancerConfigNodeSchema = object({
     .required('IP address is required.'),
 
   weight: number()
-    .typeError('Weight must be a number.')
+    .typeError('Weight is required.')
+    .required('Weight is required.')
     .min(1, `Weight must be between 1 and 255.`)
     .max(255, `Weight must be between 1 and 255.`),
 
