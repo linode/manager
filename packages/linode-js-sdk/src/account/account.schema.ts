@@ -61,7 +61,11 @@ export const CreditCardSchema = object({
   expiry_month: number()
     .required('Expiration month is required.')
     .min(1, 'Expiration month must be a number from 1 to 12.')
-    .max(12, 'Expiration month must be a number from 1 to 12.')
+    .max(12, 'Expiration month must be a number from 1 to 12.'),
+  cvv: string()
+    .required('CVV code is required.')
+    .min(3, 'CVV code must be between 3 and 4 characters.')
+    .max(4, 'CVV code must be between 3 and 4 characters.')
 });
 
 export const CreateUserSchema = object({
