@@ -32,17 +32,17 @@ export const MonitorTableContent: React.FC<CombinedProps> = props => {
     openMonitorDrawer
   } = props;
   if (loading) {
-    return <TableRowLoading colSpan={12} />;
+    return <TableRowLoading colSpan={4} />;
   }
 
   if (error) {
-    return <TableRowError colSpan={12} message={error[0].reason} />;
+    return <TableRowError colSpan={4} message={error[0].reason} />;
   }
 
   if (monitors.length === 0) {
     return (
       <TableRowEmpty
-        colSpan={12}
+        colSpan={4}
         message={"You don't have any Monitors on your account."}
       />
     );

@@ -31,7 +31,7 @@ const ObjectTableContent: React.FC<Props> = props => {
   const { width } = useWindowDimensions();
 
   if (loading && data.length === 0) {
-    return <TableRowLoading colSpan={6} />;
+    return <TableRowLoading colSpan={4} firstColWidth={20} />;
   }
 
   if (error) {

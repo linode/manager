@@ -993,6 +993,11 @@ const themeDefaults: ThemeDefaults = ({ spacingOverride: spacingUnit }) => {
         },
         disabled: {}
       },
+      MuiSkeleton: {
+        text: {
+          borderRadius: 0
+        }
+      },
       MuiSnackbar: {
         root: {}
       },
