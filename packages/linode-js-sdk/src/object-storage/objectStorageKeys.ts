@@ -8,11 +8,8 @@ import Request, {
 } from '../request';
 import { ResourcePage as Page } from '../types';
 import { createObjectStorageKeysSchema } from './objectStorageKeys.schema';
-import { ObjectStorageKey } from './types';
+import { ObjectStorageKey, ObjectStorageKeyRequest } from './types';
 
-export interface ObjectStorageKeyRequest {
-  label: string;
-}
 /**
  * getObjectStorageKeys
  *

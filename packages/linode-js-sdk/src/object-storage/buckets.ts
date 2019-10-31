@@ -1,4 +1,3 @@
-import { ResourcePage } from 'linode-js-sdk/lib/types';
 import { BETA_API_ROOT } from 'src/constants';
 import Request, {
   setData,
@@ -6,20 +5,16 @@ import Request, {
   setParams,
   setURL,
   setXFilter
-} from '../index';
+} from '../request';
+import { ResourcePage as Page } from '../types';
 import { CreateBucketSchema } from './buckets.schema';
-
-type Page<T> = ResourcePage<T>;
-
-export interface BucketRequestPayload {
-  label: string;
-  cluster: string;
-}
-
-export interface DeleteBucketRequestPayload {
-  cluster: string;
-  label: string;
-}
+import {
+  ObjectStorageBucket,
+  ObjectStorageBucketRequestPayload,
+  ObjectStorageDeleteBucketRequestPayload,
+  ObjectStorageObjectListParams,
+  ObjectStorageObjectListResponse
+} from './types';
 
 /**
  * getBuckets
@@ -27,7 +22,7 @@ export interface DeleteBucketRequestPayload {
  * Gets a list of a user's Object Storage Buckets
  */
 export const getBuckets = (params?: any, filters?: any) =>
-  Request<Page<Linode.Bucket>>(
+  Request<Page<ObjectStorageBucket>>(
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),
@@ -42,8 +37,8 @@ export const getBuckets = (params?: any, filters?: any) =>
  * @param data { object } The label and clusterId of the new Bucket.
  *
  */
-export const createBucket = (data: BucketRequestPayload) =>
-  Request<Linode.Bucket>(
+export const createBucket = (data: ObjectStorageBucketRequestPayload) =>
+  Request<ObjectStorageBucket>(
     setURL(`${BETA_API_ROOT}/object-storage/buckets`),
     setMethod('POST'),
     setData(data, CreateBucketSchema)
@@ -56,33 +51,24 @@ export const createBucket = (data: BucketRequestPayload) =>
  *
  * NOTE: Attempting to delete a non-empty bucket will result in an error.
  */
-export const deleteBucket = ({ cluster, label }: DeleteBucketRequestPayload) =>
-  Request<Linode.Bucket>(
+export const deleteBucket = ({
+  cluster,
+  label
+}: ObjectStorageDeleteBucketRequestPayload) =>
+  Request<ObjectStorageBucket>(
     setURL(`${BETA_API_ROOT}/object-storage/buckets/${cluster}/${label}`),
     setMethod('DELETE')
   );
 
-export interface ObjectListParams {
-  delimiter?: string;
-  marker?: string;
-  prefix?: string;
-  page_size?: number;
-}
-
-export interface ObjectListResponse {
-  data: Linode.Object[];
-  next_marker: string | null;
-  is_truncated: boolean;
-}
 /**
  * Returns a list of Objects in a given Bucket.
  */
 export const getObjectList = (
   clusterId: string,
   bucketName: string,
-  params?: ObjectListParams
+  params?: ObjectStorageObjectListParams
 ) =>
-  Request<ObjectListResponse>(
+  Request<ObjectStorageObjectListResponse>(
     setMethod('GET'),
     setParams(params),
     setURL(

@@ -1,4 +1,5 @@
 import { ZoneName } from 'linode-js-sdk/lib/networking';
+import { ObjectStorageClusterID } from 'linode-js-sdk/lib/object-storage';
 
 const PRODUCTION = 'production';
 
@@ -161,7 +162,10 @@ export const dcDisplayCountry = {
   'ap-west': 'IN'
 };
 
-export const objectStorageClusterDisplay: Record<Linode.ClusterID, string> = {
+export const objectStorageClusterDisplay: Record<
+  ObjectStorageClusterID,
+  string
+> = {
   'us-east-1': 'Newark, NJ',
   'us-east': 'Newark, NJ'
 };
