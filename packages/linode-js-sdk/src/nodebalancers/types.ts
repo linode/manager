@@ -115,3 +115,24 @@ export interface NodeBalancerConfig {
   ssl_fingerprint: string;
   cipher_suite: 'recommended' | 'legacy';
 }
+
+/**
+ * NEW
+ */
+
+export interface NEWCreateNodeBalancerConfigPayload {
+  port: number;
+  protocol: 'http' | 'https' | 'tcp';
+  algorithm: 'roundrobin' | 'leastconn' | 'source';
+  stickiness?: 'none' | 'table' | 'http_cookie';
+  check: 'none' | 'connection' | 'http' | 'http_body';
+  check_interval: number;
+  check_timeout: number;
+  check_attempts: number;
+  check_path: string;
+  check_body: string;
+  check_passive: boolean;
+  cipher_suite: 'recommended' | 'legacy';
+  ssl_cert?: string;
+  ssl_key?: string;
+}
