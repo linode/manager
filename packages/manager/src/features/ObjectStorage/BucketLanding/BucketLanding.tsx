@@ -43,7 +43,12 @@ const styles = (theme: Theme) =>
     }
   });
 
-type CombinedProps = StateProps &
+interface Props {
+  isRestrictedUser: boolean;
+}
+
+type CombinedProps = Props &
+  StateProps &
   DispatchProps &
   WithStyles<ClassNames> &
   BucketsRequests;
@@ -54,6 +59,7 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
     bucketsData,
     bucketsLoading,
     bucketsError,
+    isRestrictedUser,
     openBucketDrawer
   } = props;
 
@@ -133,8 +139,15 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
         Deleting a bucket is permanent and can't be undone.
       </Typography>
       <Typography className={classes.copy}>
-        A bucket must be empty before deleting it. Please delete all objects, or
-        use{' '}
+        A bucket must be empty before deleting it. Please{' '}
+        <a
+          href="https://www.linode.com/docs/platform/object-storage/lifecycle-policies/"
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          delete all objects
+        </a>
+        , or use{' '}
         <a
           href="https://www.linode.com/docs/platform/object-storage/how-to-use-object-storage/#object-storage-tools"
           target="_blank"
@@ -150,6 +163,10 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
       </Typography>
     </React.Fragment>
   ) : null;
+
+  if (isRestrictedUser) {
+    return <RenderEmpty onClick={openBucketDrawer} data-qa-empty-state />;
+  }
 
   if (bucketsLoading) {
     return <RenderLoading data-qa-loading-state />;
@@ -244,7 +261,7 @@ const EmptyCopy = () => (
     <Typography variant="subtitle1">Need help getting started?</Typography>
     <Typography variant="subtitle1">
       <a
-        href="https://linode.com/docs/platform/object-storage/how-to-use-object-storage/"
+        href="https://linode.com/docs/platform/object-storage"
         target="_blank"
         rel="noopener noreferrer"
         className="h-u"
@@ -258,7 +275,7 @@ const EmptyCopy = () => (
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, Props>(
   styled,
   bucketContainer,
   bucketRequestsContainer,

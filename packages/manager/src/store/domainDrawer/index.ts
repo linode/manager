@@ -1,12 +1,5 @@
-import { Action } from 'redux';
-
-// ACTIONS
-export const OPEN = '@manager/domains/OPEN';
-export const CLOSE = '@manager/domains/CLOSE';
-export const CREATING = '@manager/domains/CREATING';
-export const EDITING = '@manager/domains/EDITING';
-export const CLONING = '@manager/domains/CLONING';
-export const RESET = '@manager/domains/RESET';
+import { Action, Reducer } from 'redux';
+import actionCreatorFactory, { isType } from 'typescript-fsa';
 
 export interface State {
   open: boolean;
@@ -16,9 +9,18 @@ export interface State {
   origin?: Origin;
 }
 
+const actionCreator = actionCreatorFactory(`@@manager/domainDrawer`);
+
+// ACTIONS
+export const OPEN = '@manager/domainDrawer/OPEN';
+export const CLOSE = '@manager/domainDrawer/CLOSE';
+export const CREATING = '@manager/domainDrawer/CREATING';
+export const EDITING = '@manager/domainDrawer/EDITING';
+export const CLONING = '@manager/domainDrawer/CLONING';
+export const RESET = '@manager/domainDrawer/RESET';
+
 interface Creating extends Action {
   type: typeof CREATING;
-  origin: Origin;
 }
 interface Cloning extends Action {
   type: typeof CLONING;
@@ -36,39 +38,43 @@ interface Close extends Action {
   type: typeof CLOSE;
 }
 
+export const closeDrawer = (): Close => ({
+  type: CLOSE
+});
+
 interface Reset extends Action {
   type: typeof RESET;
 }
 
-type ActionCreator = (...args: any[]) => Action;
+export const resetDrawer = (): Reset => ({
+  type: RESET
+});
 
 export type Origin =
   | 'Created from Add New Menu'
   | 'Created from Domain Landing';
 
-// ACTION CREATORS
-export const openForCreating: ActionCreator = (origin: Origin): Creating => ({
-  type: CREATING,
-  origin
+export const openForCreating = (origin: Origin) => createDomain({ origin });
+
+interface CreateDomainPayload {
+  origin: Origin;
+}
+
+const createDomain = actionCreator<CreateDomainPayload>(`CREATE_DOMAIN`, {
+  mode: CREATING
 });
-export const openForEditing: ActionCreator = (
-  domain: string,
-  id: number
-): Editing => ({
+
+export const openForEditing = (domain: string, id: number): Editing => ({
   type: EDITING,
   domain,
   id
 });
-export const openForCloning: ActionCreator = (
-  domain: string,
-  id: number
-): Cloning => ({
+
+export const openForCloning = (domain: string, id: number): Cloning => ({
   type: CLONING,
   domain,
   id
 });
-export const closeDrawer: ActionCreator = (): Close => ({ type: CLOSE });
-export const resetDrawer: ActionCreator = (): Reset => ({ type: RESET });
 
 // DEFAULT STATE
 export const defaultState: State = {
@@ -78,11 +84,19 @@ export const defaultState: State = {
 
 type ActionTypes = Creating | Editing | Cloning | Close | Reset;
 
-export default (state: State = defaultState, action: ActionTypes) => {
-  switch (action.type) {
-    case CREATING:
-      return { mode: CREATING, open: true, origin: action.origin };
+export const domainDrawer: Reducer<State> = (
+  state = defaultState,
+  action: ActionTypes
+) => {
+  if (isType(action, createDomain)) {
+    return {
+      ...state,
+      open: true,
+      origin: action.payload.origin
+    };
+  }
 
+  switch (action.type) {
     case EDITING:
       return {
         open: true,
@@ -109,3 +123,5 @@ export default (state: State = defaultState, action: ActionTypes) => {
       return state;
   }
 };
+
+export default domainDrawer;

@@ -68,8 +68,7 @@ describe('Entities that have groups to import', () => {
         retry_sec: 0,
         soa_email: '',
         status: 'active',
-        ttl_sec: 0,
-        zonefile: { rendered: '', status: 'current' }
+        ttl_sec: 0
       };
 
       const newState = {
