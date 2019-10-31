@@ -153,6 +153,7 @@ interface Props {
   recentEvent?: Event;
   readOnly?: boolean;
   removeBreadCrumb?: boolean;
+  fromLinodes?: boolean;
 }
 
 //
@@ -303,7 +304,8 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
       volumesLoading,
       mappedVolumesDataWithLinodes,
       readOnly,
-      removeBreadCrumb
+      removeBreadCrumb,
+      fromLinodes
     } = this.props;
 
     if (volumesLoading) {
@@ -378,9 +380,13 @@ class VolumesLanding extends React.Component<CombinedProps, State> {
                     <Grid container alignItems="flex-end">
                       <Grid item className="pt0">
                         <AddNewLink
-                          onClick={e => {
-                            this.props.history.push('/volumes/create');
-                          }}
+                          onClick={
+                            fromLinodes
+                              ? this.openCreateVolumeDrawer
+                              : () => {
+                                  this.props.history.push('/volumes/create');
+                                }
+                          }
                           label="Create a Volume"
                         />
                       </Grid>
