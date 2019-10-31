@@ -13,7 +13,7 @@ interface Props {
   lastUpdated?: number;
 }
 
-const LongviewGauge: React.FC<Props> = props => {
+const CPUGauge: React.FC<Props> = props => {
   const { clientAPIKey, lastUpdated } = props;
 
   const [dataHasResolvedAtLeastOnce, setDataResolved] = React.useState<boolean>(
@@ -80,7 +80,7 @@ const LongviewGauge: React.FC<Props> = props => {
   );
 };
 
-export default LongviewGauge;
+export default CPUGauge;
 
 // UTILITIES
 export const sumCPUUsage = (CPUData: Record<string, CPU> = {}) => {

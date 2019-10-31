@@ -36,6 +36,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   let requestInterval: NodeJS.Timeout;
+  let mounted = true;
 
   const { clientID, clientLabel, clientAPIKey, ...actionHandlers } = props;
 
@@ -53,7 +54,10 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
           only update _lastUpdated_ state if it hasn't already been set
           or the API response is in a time past what's already been set.
         */
-        if (!lastUpdated || pathOr(0, ['updated'], response) > lastUpdated) {
+        if (
+          mounted &&
+          (!lastUpdated || pathOr(0, ['updated'], response) > lastUpdated)
+        ) {
           setLastUpdated(response.updated);
         }
       })
@@ -71,16 +75,27 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
 
   /** request on first mount */
   React.useEffect(() => {
-    requestAndSetLastUpdated();
+    if (mounted) {
+      requestAndSetLastUpdated();
+    }
+
+    return () => {
+      mounted = false;
+    };
   }, []);
 
   /** then request on an interval of 10 seconds */
   React.useEffect(() => {
-    requestInterval = setInterval(() => {
-      requestAndSetLastUpdated();
-    }, 10000);
+    if (mounted) {
+      requestInterval = setInterval(() => {
+        requestAndSetLastUpdated();
+      }, 10000);
+    }
 
-    return () => clearInterval(requestInterval);
+    return () => {
+      mounted = false;
+      clearInterval(requestInterval);
+    };
   });
 
   /**
