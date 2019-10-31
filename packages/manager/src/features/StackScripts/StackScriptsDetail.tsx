@@ -50,7 +50,7 @@ const styles = (theme: Theme) =>
       ...theme.typography.h1
     },
     userNameSlash: {
-      color: theme.palette.text.primary,
+      color: theme.color.grey1,
       fontFamily: theme.font.normal,
       marginLeft: theme.spacing(1),
       marginRight: theme.spacing(1)
