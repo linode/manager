@@ -1,17 +1,18 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import { makeStyles, Theme } from 'src/components/core/styles';
+// import { makeStyles, Theme } from 'src/components/core/styles';
 
-const useStyles = makeStyles((theme: Theme) => ({
-  root: {}
-}));
+// const useStyles = makeStyles((theme: Theme) => ({
+//   root: {}
+// }));
 
+/* tslint:disable-next-line */
 interface Props {}
 
 type CombinedProps = Props;
 
 const EditNodeBalancerConfigs: React.FC<CombinedProps> = props => {
-  const classes = useStyles();
+  // const classes = useStyles();
 
   return <div>hello world</div>;
 };
