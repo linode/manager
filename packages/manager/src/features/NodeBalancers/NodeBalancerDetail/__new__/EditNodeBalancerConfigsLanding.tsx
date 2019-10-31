@@ -10,7 +10,7 @@ import ExpansionPanel from 'src/components/ExpansionPanel';
 
 import withNodeBalancerConfigs, {
   Props as ConfigProps,
-  StateProps
+  StateProps as ConfigStateProps
 } from 'src/containers/__new__/nodeBalancerConfigs.container';
 
 const useStyles = makeStyles((theme: Theme) => ({
@@ -49,13 +49,13 @@ const EditNodeBalancerConfigs: React.FC<CombinedProps> = props => {
       <Typography variant="h1" data-qa-title className={classes.title}>
         NodeBalancer Configurations
       </Typography>
-      {/** map over existing configs */
+      {/** create an expansion panel for each existing config */
       Object.keys(nodeBalancerConfigsData).map(eachKey => {
         return (
           <ExpansionPanel key={`config-${eachKey}`} heading="hello world" />
         );
       })}
-      {/** map over new configs */
+      {/** create an expansion panel for each new config */
       newConfigs.map((eachConfig, idx) => {
         return <ExpansionPanel key={`config-${idx}`} heading="hello world" />;
       })}
@@ -74,7 +74,7 @@ const EditNodeBalancerConfigs: React.FC<CombinedProps> = props => {
 
 export default compose<CombinedProps, Props>(
   React.memo,
-  withNodeBalancerConfigs<StateProps, Props>(
+  withNodeBalancerConfigs<ConfigStateProps, Props>(
     (ownProps, { nodeBalancerConfigsData, ...rest }) => ({
       nodeBalancerConfigsData: Object.keys(nodeBalancerConfigsData).reduce(
         (acc, eachKey) => {
