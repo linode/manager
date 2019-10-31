@@ -16,6 +16,9 @@ interface Props {
 const LongviewGauge: React.FC<Props> = props => {
   const { clientAPIKey, lastUpdated } = props;
 
+  const [dataHasResolvedAtLeastOnce, setDataResolved] = React.useState<boolean>(
+    false
+  );
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<APIError | undefined>();
 
@@ -35,6 +38,10 @@ const LongviewGauge: React.FC<Props> = props => {
           return;
         }
 
+        if (!dataHasResolvedAtLeastOnce) {
+          setDataResolved(true);
+        }
+
         setNumCores(cores);
 
         const used = sumCPUUsage(data.CPU);
@@ -42,7 +49,7 @@ const LongviewGauge: React.FC<Props> = props => {
         setUsedCPU(normalizedUsed);
       })
       .catch(_ => {
-        if (!usedCPU) {
+        if (!dataHasResolvedAtLeastOnce) {
           setError({
             reason: 'Error' // @todo: Error message?
           });
