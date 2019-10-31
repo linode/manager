@@ -22,7 +22,7 @@
     "member-access": false,
     "member-ordering": false,
     "no-angle-bracket-type-assertion": { "severity": "warning" },
-    "no-console": { "severity": "warning" },
+    "no-console": true,
     "no-empty-interface": { "severity": "warning" },
     "no-empty": { "severity": "warning" },
     "no-namespace": false,
