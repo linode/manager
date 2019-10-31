@@ -138,6 +138,7 @@ const LinodesDetailNavigation: React.StatelessComponent<
               linodeRegion={linodeRegion}
               linodeConfigs={linodeConfigs}
               readOnly={readOnly}
+              fromLinodes
               removeBreadCrumb
               {...routeProps}
             />
