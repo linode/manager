@@ -1,5 +1,5 @@
 import Axios from 'axios';
-import * as he from 'he';
+import { decode } from 'he';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { compose, map, pathOr, take } from 'ramda';
 import * as React from 'react';
@@ -108,12 +108,12 @@ export class BlogDashboardCard extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
 
     /** remove all HTML tags from the title and description */
-    const cleanedDescription = he.decode(
+    const cleanedDescription = decode(
       sanitize(item.description, {
         allowedTags: []
       })
     );
-    const cleanedTitle = he.decode(
+    const cleanedTitle = decode(
       sanitize(item.title, {
         allowedTags: []
       })
