@@ -72,7 +72,7 @@ type CombinedProps = WithStyles<ClassNames> &
   SortableVolumesTableHeaderProps &
   Omit<OrderByProps, 'data'>;
 
-const SortableTableHeader: React.StatelessComponent<CombinedProps> = props => {
+const SortableTableHeader: React.FC<CombinedProps> = props => {
   const {
     classes,
     order,

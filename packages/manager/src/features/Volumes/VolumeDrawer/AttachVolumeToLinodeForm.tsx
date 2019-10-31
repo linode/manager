@@ -44,9 +44,7 @@ const validationScheme = object({
 
 const initialValues = { volume_id: -1, config_id: -1 };
 
-const AttachVolumeToLinodeForm: React.StatelessComponent<
-  CombinedProps
-> = props => {
+const AttachVolumeToLinodeForm: React.FC<CombinedProps> = props => {
   const {
     actions,
     onClose,

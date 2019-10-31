@@ -222,9 +222,6 @@ const titleFromState = (state: ApplicationState['volumeDrawer']) => {
   const { mode, volumeLabel, linodeLabel } = state;
 
   switch (mode) {
-    case modes.CREATING:
-      return `Create a Volume`;
-
     case modes.CREATING_FOR_LINODE:
       return `Create a volume for ${linodeLabel}`;
 
