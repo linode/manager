@@ -15,7 +15,6 @@ import {
 import EntityIcon from 'src/components/EntityIcon';
 import MenuItem from 'src/components/MenuItem';
 import { linodeInTransition } from 'src/features/linodes/transitions';
-
 import PowerDialogOrDrawer, { Action } from '../../PowerActionsDialogOrDrawer';
 
 type ClassNames =
@@ -194,6 +193,9 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
         return 'Offline';
       }
     };
+
+    const text = buttonText();
+
     return (
       <React.Fragment>
         <Button
@@ -202,7 +204,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
           aria-owns={anchorEl ? 'power' : undefined}
           aria-haspopup="true"
           className={`${classes.button} ${anchorEl ? 'active' : ''}`}
-          data-qa-power-control={buttonText()}
+          data-qa-power-control={text}
         >
           <div className={classes.buttonInner}>
             <EntityIcon
@@ -212,7 +214,7 @@ export class LinodePowerButton extends React.Component<CombinedProps, State> {
               size={34}
               marginTop={1}
             />
-            <span className={classes.buttonText}>{buttonText()}</span>
+            <span className={classes.buttonText}>{text}</span>
           </div>
           {anchorEl ? (
             <KeyboardArrowUp
