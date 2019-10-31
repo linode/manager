@@ -1,7 +1,7 @@
 import { AxiosError } from 'axios';
 import { handleStartSession } from 'src/store/authentication/authentication.actions';
-import store from '../store';
 import { handleError } from './request';
+import store from './store';
 
 const baseError = {
   config: {

@@ -1,7 +1,8 @@
 import { AxiosError, AxiosResponse } from 'axios';
+import { baseRequest } from 'linode-js-sdk/lib/request';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { pathOr } from 'ramda';
-import React from 'react';
+import * as React from 'react';
 
 import { ACCESS_TOKEN, DEFAULT_ERROR_MESSAGE } from 'src/constants';
 import { interceptErrors } from 'src/utilities/interceptAPIError';
@@ -9,8 +10,6 @@ import { interceptErrors } from 'src/utilities/interceptAPIError';
 import { AccountActivationError } from 'src/components/AccountActivation';
 import { GPUError } from 'src/components/GPUError';
 import { MigrateError } from 'src/components/MigrateError';
-
-import { baseRequest } from 'linode-js-sdk/lib/request';
 
 import store from 'src/store';
 import { handleLogout } from 'src/store/authentication/authentication.actions';
