@@ -9,7 +9,7 @@ interface Props {
 
 type CombinedProps = Props;
 
-const NoticePanel: React.StatelessComponent<CombinedProps> = ({
+const NoticePanel: React.FC<CombinedProps> = ({
   success,
   error,
   important

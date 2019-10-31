@@ -67,7 +67,7 @@ type CombinedProps = StateProps & RouteComponentProps<{}> & DispatchProps;
 
 const VolumeCreate: React.FC<CombinedProps> = props => {
   const classes = useStyles();
-  const { actions, regions } = props;
+  const { actions, regions, history } = props;
 
   return (
     <>
@@ -82,6 +82,7 @@ const VolumeCreate: React.FC<CombinedProps> = props => {
           <CreateVolumeForm
             onSuccess={actions.openForConfig}
             regions={regions}
+            history={history}
           />
         </div>
       </Grid>

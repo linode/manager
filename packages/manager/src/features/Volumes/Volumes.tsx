@@ -1,5 +1,6 @@
 import * as React from 'react';
 import {
+  Redirect,
   Route,
   RouteComponentProps,
   Switch,
@@ -26,8 +27,9 @@ class Volumes extends React.Component<Props> {
 
     return (
       <Switch>
-        <Route component={VolumesLanding} path={path} exact />
-        <Route component={VolumeCreate} path={`${path}/create`} exact />
+        <Route component={VolumesLanding} path={path} exact strict />
+        <Route component={VolumeCreate} path={`${path}/create`} exact strict />
+        <Redirect to={path} />
       </Switch>
     );
   }

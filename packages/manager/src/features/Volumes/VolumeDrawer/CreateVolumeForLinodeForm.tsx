@@ -72,7 +72,7 @@ type CombinedProps = Props &
   DispatchProps &
   WithStyles<ClassNames>;
 
-const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
+const CreateVolumeForm: React.FC<CombinedProps> = props => {
   const {
     onClose,
     onSuccess,

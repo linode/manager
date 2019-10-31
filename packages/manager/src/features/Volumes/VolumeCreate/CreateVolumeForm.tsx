@@ -4,7 +4,7 @@ import { APIError } from 'linode-js-sdk/lib/types';
 import { CreateVolumeSchema } from 'linode-js-sdk/lib/volumes';
 import * as React from 'react';
 import { connect } from 'react-redux';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
 import CheckoutBar from 'src/components/CheckoutBar';
 import FormHelperText from 'src/components/core/FormHelperText';
@@ -76,6 +76,7 @@ const styles = (theme: Theme) =>
 
 interface Props {
   regions: Region[];
+  history: RouteComponentProps['history'];
   onSuccess: (
     volumeLabel: string,
     volumePath: string,
@@ -84,12 +85,11 @@ interface Props {
 }
 
 type CombinedProps = Props &
-  RouteComponentProps &
   VolumesRequests &
   WithStyles<ClassNames> &
   StateProps;
 
-const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
+const CreateVolumeForm: React.FC<CombinedProps> = props => {
   const { onSuccess, classes, createVolume, disabled, origin, history } = props;
   return (
     <Formik
@@ -332,6 +332,7 @@ const CreateVolumeForm: React.StatelessComponent<CombinedProps> = props => {
     />
   );
 };
+
 interface FormState {
   label: string;
   size: number;
@@ -365,7 +366,6 @@ const connected = connect(mapStateToProps);
 const styled = withStyles(styles);
 
 const enhanced = compose<CombinedProps, Props>(
-  withRouter,
   withVolumesRequests,
   connected,
   styled
