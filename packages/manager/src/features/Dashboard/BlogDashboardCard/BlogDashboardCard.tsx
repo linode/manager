@@ -1,4 +1,5 @@
 import Axios from 'axios';
+import he from 'he';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { compose, map, pathOr, take } from 'ramda';
 import * as React from 'react';
@@ -107,12 +108,24 @@ export class BlogDashboardCard extends React.Component<CombinedProps, State> {
     const { classes } = this.props;
 
     /** remove all HTML tags from the title and description */
-    const cleanedDescription = sanitize(item.description, {
-      allowedTags: []
-    });
-    const cleanedTitle = sanitize(item.title, {
-      allowedTags: []
-    });
+    const cleanedDescription = he.decode(
+      sanitize(item.description, {
+        allowedTags: []
+      })
+    );
+    const cleanedTitle = he.decode(
+      sanitize(item.title, {
+        allowedTags: []
+      })
+    );
+
+    /** string that starts with "the post" and ends with anything */
+    const appearedFirstOnLinode = /^the post.*$/gim;
+    const finalDesc = cleanedDescription.replace(appearedFirstOnLinode, '');
+
+    if (!cleanedTitle) {
+      return null;
+    }
 
     return (
       <Paper key={idx} className={classes.root}>
@@ -128,7 +141,7 @@ export class BlogDashboardCard extends React.Component<CombinedProps, State> {
           </a>
         </Typography>
         <Typography variant="body1" data-qa-post-desc>
-          {cleanedDescription}
+          {finalDesc}
         </Typography>
       </Paper>
     );
