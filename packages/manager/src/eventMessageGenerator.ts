@@ -136,19 +136,21 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   linode_boot: {
     scheduled: e =>
-      `Linode ${e.entity!.label}: ${
+      `Linode ${e.entity!.label} is scheduled to boot with config ${
         e.secondary_entity!.label
-      } is scheduled to boot.`,
+      }.`,
     started: e =>
-      `Linode ${e.entity!.label}: ${
+      `Linode ${e.entity!.label} is being booted with config${
         e.secondary_entity!.label
-      } is being booted.`,
+      }.`,
     failed: e =>
-      `Linode ${e.entity!.label}: ${
+      `Linode ${e.entity!.label} could not be booted with config ${
         e.secondary_entity!.label
-      } could not be booted.`,
+      }.`,
     finished: e =>
-      `Linode ${e.entity!.label}: ${e.secondary_entity!.label} has been booted.`
+      `Linode ${e.entity!.label} has been booted with config ${
+        e.secondary_entity!.label
+      }.`
   },
   lassie_reboot: {
     scheduled: e =>
@@ -249,21 +251,21 @@ export const eventMessageCreators: { [index: string]: CreatorsForStatus } = {
   },
   linode_reboot: {
     scheduled: e =>
-      `Linode ${e.entity!.label}: ${
+      `Linode ${e.entity!.label} is scheduled for a reboot with config ${
         e.secondary_entity!.label
-      } is scheduled for a reboot.`,
+      }.`,
     started: e =>
-      `Linode ${e.entity!.label}: ${
+      `Linode ${e.entity!.label} is being rebooted with config ${
         e.secondary_entity!.label
-      } is being rebooted.`,
+      }.`,
     failed: e =>
-      `Linode ${e.entity!.label}: ${
+      `Linode ${e.entity!.label} could not be rebooted with config ${
         e.secondary_entity!.label
-      } could not be rebooted.`,
+      }.`,
     finished: e =>
-      `Linode ${e.entity!.label}: ${
+      `Linode ${e.entity!.label} has been rebooted with config ${
         e.secondary_entity!.label
-      } has been rebooted.`
+      }.`
   },
   linode_rebuild: {
     scheduled: e => `Linode ${e.entity!.label} is scheduled for rebuild.`,
