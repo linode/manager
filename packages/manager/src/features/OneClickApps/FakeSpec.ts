@@ -79,6 +79,36 @@ export const oneClickApps: OCA[] = [
     logo_url: 'assets/csgo_color.svg'
   },
   {
+    name: 'Docker',
+    description: `Docker is a tool that enables you to create, deploy, and manage lightweight, stand-alone packages that contain everything needed to run an application (code, libraries, runtime, system settings, and dependencies). These packages are called containers.`,
+    summary: `Securely build, share and run modern applications anywhere.`,
+    related_guides: [
+      {
+        title: 'An Introduction to Docker',
+        href: 'https://www.linode.com/docs/applications/containers/introduction-to-docker/'
+      },
+      {
+        title: 'Docker Commands Quick Reference Cheat Sheet',
+        href: 'https://www.linode.com/docs/applications/containers/docker-commands-quick-reference-cheat-sheet/'
+      },
+      {
+        title: 'How to Use Docker Compose',
+        href: 'https://www.linode.com/docs/applications/containers/how-to-use-docker-compose/'
+      },
+    ],
+    related_info: [
+      {
+        title: 'https://www.docker.com/',
+        href: 'https://www.docker.com/',
+      },
+      {
+        title: 'https://docs.docker.com/compose/',
+        href: 'https://docs.docker.com/compose/',
+      }
+    ],
+    logo_url: 'assets/docker.png'
+  },
+  {
     name: 'GitLab',
     description: `GitLab is a complete solution for all aspects of your software development.
       At its core, GitLab serves as your centralized Git repository. GitLab also
@@ -162,7 +192,7 @@ export const oneClickApps: OCA[] = [
           'https://linode.com/docs/platform/one-click/deploy-lamp-stack-with-one-click-apps/'
       }
     ],
-    logo_url: 'assets/lamp_flame_color.svg'
+    logo_url: 'assets/docker_color.svg'
     // href: 'https://www.ibm.com/cloud/learn/lamp-stack-explained' Not sure this is kosher.
   },
   {
