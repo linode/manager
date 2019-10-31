@@ -13,6 +13,9 @@ interface Props {
 }
 
 const LoadGauge: React.FC<Props> = props => {
+  const [dataHasResolvedAtLeastOnce, setDataResolved] = React.useState<boolean>(
+    false
+  );
   const [load, setLoad] = React.useState<number>(0);
   const [amountOfCores, setCores] = React.useState<number>(0);
   const [loading, setLoading] = React.useState<boolean>(true);
@@ -30,10 +33,13 @@ const LoadGauge: React.FC<Props> = props => {
           if (!!loading) {
             setLoading(false);
           }
+          if (!dataHasResolvedAtLeastOnce) {
+            setDataResolved(true);
+          }
         }
       })
       .catch(() => {
-        if (!load && mounted) {
+        if (!dataHasResolvedAtLeastOnce && mounted) {
           setError({
             reason: 'Error'
           });
