@@ -191,6 +191,7 @@ export type EventAction =
   | 'domain_record_delete'
   | 'image_update'
   | 'image_delete'
+  | 'lassie_reboot'
   | 'linode_addip'
   | 'linode_boot'
   | 'linode_clone'
@@ -257,6 +258,7 @@ export interface Event {
   status: EventStatus;
   time_remaining: null | number;
   username: string;
+  secondary_entity: Entity | null;
   _initial?: boolean;
 }
 /**

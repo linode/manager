@@ -1,9 +1,10 @@
 import { shallow } from 'enzyme';
 import * as React from 'react';
-import { maybeRemoveTrailingPeriod, Row, RowProps } from './EventRow';
+import { Row, RowProps } from './EventRow';
 
 const message = 'this is a message.';
 const props: RowProps = {
+  action: 'linode_boot',
   message,
   type: 'linode',
   created: '2018-01-01',
@@ -55,14 +56,5 @@ describe('EventRow component', () => {
     expect(row.find(`[data-qa-event-message]`).text()).toBe(
       'this is a message by marty.'
     );
-  });
-});
-
-describe('utilities', () => {
-  it('should remove trailing periods', () => {
-    expect(maybeRemoveTrailingPeriod('hello world.')).toBe('hello world');
-    expect(maybeRemoveTrailingPeriod('hello wor..ld')).toBe('hello wor..ld');
-    expect(maybeRemoveTrailingPeriod('hello world')).toBe('hello world');
-    expect(maybeRemoveTrailingPeriod('hello. world')).toBe('hello. world');
   });
 });
