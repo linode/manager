@@ -96,7 +96,6 @@ interface DeviceMap {
   sde?: string;
   sdf?: string;
   sdg?: string;
-  sdh?: string;
 }
 
 export const getDefaultDeviceMapAndCounter = (
@@ -124,8 +123,7 @@ export const getDefaultDeviceMapAndCounter = (
     sdd: defaultDisks[3],
     sde: defaultDisks[4],
     sdf: defaultDisks[5],
-    sdg: defaultDisks[6],
-    sdh: defaultDisks[7]
+    sdg: defaultDisks[6]
   };
   return [deviceMap, counter];
 };
