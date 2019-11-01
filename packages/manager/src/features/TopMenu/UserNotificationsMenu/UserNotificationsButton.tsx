@@ -24,9 +24,6 @@ const styles = (theme: Theme) =>
       order: 5,
       marginRight: -theme.spacing(1),
       position: 'relative',
-      [theme.breakpoints.up('lg')]: {
-        marginLeft: theme.spacing(1)
-      },
       '&.active $icon': {
         backgroundColor: theme.palette.text.primary
       }
