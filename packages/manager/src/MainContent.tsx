@@ -62,12 +62,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   content: {
     flex: 1,
+    transition: theme.transitions.create('margin-left'),
     [theme.breakpoints.up('md')]: {
       marginLeft: theme.spacing(14) + 103 // 215
     },
     [theme.breakpoints.up('xl')]: {
       marginLeft: theme.spacing(22) + 99 // 275
     }
+  },
+  fullWidthContent: {
+    marginLeft: 0
   },
   hidden: {
     display: 'none',
@@ -209,6 +213,9 @@ const MainContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
   const [menuIsOpen, toggleMenu] = React.useState<boolean>(false);
+  const [desktopMenuIsOpen, desktopOpenSideMenu] = React.useState<boolean>(
+    true
+  );
   const [welcomeModalIsOpen, toggleWelcomeModal] = React.useState<boolean>(
     notifications.welcome.get() === 'open'
   );
@@ -275,13 +282,22 @@ const MainContent: React.FC<CombinedProps> = props => {
     >
       <SideMenu
         open={menuIsOpen}
+        desktopOpen={desktopMenuIsOpen}
         closeMenu={() => toggleMenu(false)}
         toggleTheme={props.toggleTheme}
         toggleSpacing={props.toggleSpacing}
       />
-      <main className={classes.content}>
+      <main
+        className={`
+        ${classes.content}
+        ${!desktopMenuIsOpen ? classes.fullWidthContent : ''}
+      `}
+      >
         <TopMenu
           openSideMenu={() => toggleMenu(true)}
+          desktopMenuIsOpen={desktopMenuIsOpen}
+          desktopOpenSideMenu={() => desktopOpenSideMenu(true)}
+          desktopCloseSideMenu={() => desktopOpenSideMenu(false)}
           isLoggedInAsCustomer={props.isLoggedInAsCustomer}
           username={props.username}
         />
