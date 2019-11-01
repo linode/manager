@@ -63,9 +63,7 @@ const styles = (theme: Theme) =>
 
 interface Props {
   openSideMenu: () => void;
-  desktopMenuIsOpen: boolean;
-  desktopOpenSideMenu: () => void;
-  desktopCloseSideMenu: () => void;
+  desktopMenuToggle: () => void;
   isLoggedInAsCustomer: boolean;
   username: string;
 }
@@ -74,13 +72,7 @@ type PropsWithStyles = Props & WithStyles<ClassNames>;
 
 class TopMenu extends React.Component<PropsWithStyles> {
   render() {
-    const {
-      classes,
-      desktopMenuIsOpen,
-      openSideMenu,
-      desktopCloseSideMenu,
-      desktopOpenSideMenu
-    } = this.props;
+    const { classes, openSideMenu, desktopMenuToggle } = this.props;
 
     return (
       <React.Fragment>
@@ -104,9 +96,7 @@ class TopMenu extends React.Component<PropsWithStyles> {
               <IconButton
                 color="inherit"
                 aria-label="open menu"
-                onClick={
-                  desktopMenuIsOpen ? desktopCloseSideMenu : desktopOpenSideMenu
-                }
+                onClick={desktopMenuToggle}
                 className={classes.navIconHide}
               >
                 <MenuIcon />
