@@ -43,7 +43,8 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
    lastUpdated _might_ come back from the endpoint as 0, so it's important
    that we differentiate between _0_ and _undefined_
    */
-  const [lastUpdated, setLastUpdated] = React.useState<number | undefined>();
+  const [lastUpdated, setLastUpdated] = React.useState<number | undefined>(0);
+  const [authed, setAuthed] = React.useState<boolean>(true);
 
   const requestAndSetLastUpdated = () => {
     return getLastUpdated(clientAPIKey)
@@ -56,7 +57,12 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
           setLastUpdated(response.updated);
         }
       })
-      .catch(e => e);
+      .catch(e => {
+        const reason = pathOr('', [0, 'reason'], e);
+        if (reason === 'Authentication failed.') {
+          setAuthed(false);
+        }
+      });
   };
 
   /** request on first mount */
@@ -72,6 +78,16 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
 
     return () => clearInterval(requestInterval);
   });
+
+  if (!authed || lastUpdated === 0) {
+    return (
+      <TableRow>
+        <TableCell colSpan={9}>
+          Waiting for data...(installation instructions go here)
+        </TableCell>
+      </TableRow>
+    );
+  }
 
   return (
     <TableRow className={classes.root} rowLink={`longview/clients/${clientID}`}>
