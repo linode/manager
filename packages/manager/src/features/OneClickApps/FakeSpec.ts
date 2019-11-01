@@ -106,7 +106,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://docs.docker.com/compose/',
       }
     ],
-    logo_url: 'assets/docker.png'
+    logo_url: 'assets/docker_color.svg'
   },
   {
     name: 'GitLab',
