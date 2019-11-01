@@ -157,7 +157,7 @@ export const oneClickApps: OCA[] = [
     tips: [
       `Once the script finishes, go to <em>https://[your-Linode's-IP-address]:3000</em> in a browser.`
     ],
-    logo_url: 'assets/grafana_color.png'
+    logo_url: 'assets/grafana_color.svg'
   },
   {
     name: 'LAMP',
@@ -195,7 +195,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://www.plesk.com/',
       }
     ],
-    logo_url: 'assets/plesk_color.svg',
+    logo_url: 'assets/plesk_color.svgg',
   },
   {
     name: 'Rust',
