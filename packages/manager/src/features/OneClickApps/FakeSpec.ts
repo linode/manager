@@ -192,7 +192,7 @@ export const oneClickApps: OCA[] = [
         href: 'https://prometheus.io/',
       }
     ],
-    logo_url: 'assets/prometheus_color.png',
+    logo_url: 'assets/prometheus_color.svg',
   },
   {
     name: 'Rust',
