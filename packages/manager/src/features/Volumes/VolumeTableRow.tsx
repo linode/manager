@@ -125,9 +125,7 @@ const progressFromEvent = (e?: Event) => {
   return undefined;
 };
 
-export const VolumeTableRow: React.StatelessComponent<
-  CombinedProps
-> = props => {
+export const VolumeTableRow: React.FC<CombinedProps> = props => {
   const {
     classes,
     isUpdating,

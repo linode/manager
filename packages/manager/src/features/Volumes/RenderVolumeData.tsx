@@ -32,7 +32,7 @@ export interface RenderVolumeDataProps {
   handleDelete: (volumeId: number, volumeLabel: string) => void;
 }
 
-const RenderData: React.StatelessComponent<
+const RenderData: React.FC<
   { data: Volume[] } & RenderVolumeDataProps
 > = props => {
   const {
