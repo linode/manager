@@ -1,94 +1,69 @@
 import Search from '@material-ui/icons/Search';
-import * as ClassNames from 'classnames';
 import * as React from 'react';
-import CircleProgress from 'src/components/CircleProgress';
-import InputAdornment from 'src/components/core/InputAdornment';
-import {
-  createStyles,
-  Theme,
-  withStyles,
-  WithStyles
-} from 'src/components/core/styles';
-import TextField from 'src/components/TextField';
+import { compose } from 'recompose';
 import { debounce } from 'throttle-debounce';
 
-type ClassNames = 'root' | 'searchIcon';
+import CircleProgress from 'src/components/CircleProgress';
+import InputAdornment from 'src/components/core/InputAdornment';
+import { makeStyles, Theme } from 'src/components/core/styles';
+import TextField, { Props as TextFieldProps } from 'src/components/TextField';
 
-const styles = (theme: Theme) =>
-  createStyles({
-    root: {},
-    searchIcon: {
-      color: `${theme.color.grey1} !important`
-    }
-  });
-
-interface Props {
-  placeholderText: string;
-  onSearch: (value: string) => void;
-  className?: string;
-  isSearching?: boolean;
-  toolTipText?: string;
-}
-
-interface State {
-  query: string;
-  debouncedSearch: Function;
-}
-
-type CombinedProps = Props & WithStyles<ClassNames>;
-
-class DebouncedSearchTextField extends React.Component<CombinedProps, State> {
-  public state: State = {
-    query: '',
-    debouncedSearch: debounce(400, false, this.props.onSearch)
-  };
-
-  handleChangeQuery = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const { debouncedSearch } = this.state;
-    this.setState({ query: e.target.value });
-    debouncedSearch(e.target.value);
-  };
-
-  render() {
-    const { query } = this.state;
-    const {
-      classes,
-      className,
-      placeholderText,
-      isSearching,
-      toolTipText
-    } = this.props;
-
-    return (
-      <React.Fragment>
-        <TextField
-          tooltipText={toolTipText}
-          fullWidth
-          InputProps={{
-            placeholder: placeholderText,
-            value: query,
-            onChange: this.handleChangeQuery,
-            startAdornment: (
-              <InputAdornment position="end">
-                <Search className={classes.searchIcon} />
-              </InputAdornment>
-            ),
-            endAdornment: isSearching ? (
-              <InputAdornment position="end">
-                <CircleProgress mini={true} />
-              </InputAdornment>
-            ) : (
-              <React.Fragment />
-            )
-          }}
-          className={ClassNames(className)}
-          data-qa-debounced-search
-        />
-      </React.Fragment>
-    );
+const useStyles = makeStyles((theme: Theme) => ({
+  searchIcon: {
+    color: `${theme.color.grey1} !important`
   }
+}));
+
+interface Props<T extends any = any> extends TextFieldProps {
+  // updateList: (list: T | undefined) => void;
+  originalList: T;
+  onSearch: (query: string, originalList: T) => void;
+  debounceTime?: number;
+  isSearching?: boolean;
+  className?: string;
 }
 
-const styled = withStyles(styles);
+type CombinedProps = Props;
 
-export default styled(DebouncedSearchTextField);
+const ClientSearch: React.FC<CombinedProps> = props => {
+  const { className, isSearching, InputProps, debounceTime, originalList, onSearch, ...restOfTextFieldProps } = props;
+  const [query, setQuery] = React.useState<string>('');
+
+  const classes = useStyles();
+
+  React.useEffect(() => {
+    if (debounceTime) {
+      debounce(debounceTime, false, () => {
+        onSearch(query, originalList);
+      })()
+    } else {
+      onSearch(query, originalList);
+    }
+  }, [query]);
+
+  return (
+    <TextField
+      className={className}
+      placeholder="Filter by query"
+      onChange={e => setQuery(e.target.value)}
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="end">
+            <Search className={classes.searchIcon} />
+          </InputAdornment>
+        ),
+        endAdornment: isSearching ? (
+          <InputAdornment position="end">
+            <CircleProgress mini={true} />
+          </InputAdornment>
+        ) : (
+            <React.Fragment />
+          ),
+        ...InputProps
+      }}
+      {...restOfTextFieldProps}
+    />
+  );
+};
+
+export default compose<CombinedProps, Props>(React.memo)(ClientSearch) as unknown as <T>(props: Props<T>) => React.ReactElement;

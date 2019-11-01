@@ -24,9 +24,9 @@ const LoadGauge: React.FC<Props> = props => {
   React.useEffect(() => {
     let mounted = true;
 
-    if (mounted) {
-      requestStats(props.token, 'getLatestValue', ['sysinfo', 'load'])
-        .then(response => {
+    requestStats(props.token, 'getLatestValue', ['sysinfo', 'load'])
+      .then(response => {
+        if (mounted) {
           setLoad(pathOr(0, ['Load', 0, 'y'], response));
           setCores(pathOr(0, ['cpu', 'cores'], response.SysInfo));
           setError(undefined);
@@ -37,18 +37,18 @@ const LoadGauge: React.FC<Props> = props => {
           if (!dataHasResolvedAtLeastOnce) {
             setDataResolved(true);
           }
-        })
-        .catch(() => {
-          if (mounted && !dataHasResolvedAtLeastOnce) {
-            setError({
-              reason: 'Error'
-            });
-            if (!!loading) {
-              setLoading(false);
-            }
+        }
+      })
+      .catch(() => {
+        if (mounted && !dataHasResolvedAtLeastOnce) {
+          setError({
+            reason: 'Error'
+          });
+          if (!!loading) {
+            setLoading(false);
           }
-        });
-    }
+        }
+      });
 
     return () => {
       mounted = false;

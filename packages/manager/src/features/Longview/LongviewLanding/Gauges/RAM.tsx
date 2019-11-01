@@ -25,63 +25,61 @@ const RAMGauge: React.FC<Props> = props => {
   React.useEffect(() => {
     let mounted = true;
 
-    if (mounted) {
-      requestStats(props.token, 'getLatestValue', ['memory'])
-        .then(response => {
+    requestStats(props.token, 'getLatestValue', ['memory'])
+      .then(response => {
+        /**
+         * The likelihood of any of these paths being undefined is a big
+         * unknown, so we learn towards safety.
+         */
+        const free = pathOr<number>(
+          0,
+          ['Memory', 'real', 'free', 0, 'y'],
+          response
+        );
+        const used = pathOr<number>(
+          0,
+          ['Memory', 'real', 'used', 0, 'y'],
+          response
+        );
+        const buffers = pathOr<number>(
+          0,
+          ['Memory', 'real', 'buffers', 0, 'y'],
+          response
+        );
+        const cache = pathOr<number>(
+          0,
+          ['Memory', 'real', 'cache', 0, 'y'],
+          response
+        );
+
+        if (mounted) {
+          setError(undefined);
           /**
-           * The likelihood of any of these paths being undefined is a big
-           * unknown, so we learn towards safety.
+           * All units come back in KB. We will do our converting in the render methods
            */
-          const free = pathOr<number>(
-            0,
-            ['Memory', 'real', 'free', 0, 'y'],
-            response
-          );
-          const used = pathOr<number>(
-            0,
-            ['Memory', 'real', 'used', 0, 'y'],
-            response
-          );
-          const buffers = pathOr<number>(
-            0,
-            ['Memory', 'real', 'buffers', 0, 'y'],
-            response
-          );
-          const cache = pathOr<number>(
-            0,
-            ['Memory', 'real', 'cache', 0, 'y'],
-            response
-          );
-
-          if (mounted) {
-            setError(undefined);
-            /**
-             * All units come back in KB. We will do our converting in the render methods
-             */
-            setMemory(generateUsedMemory(used, buffers, cache));
-            setTotalMemory(generateTotalMemory(used, free));
-            if (!!loading) {
-              setLoading(false);
-            }
-            if (!dataHasResolvedAtLeastOnce) {
-              setDataResolved(true);
-            }
+          setMemory(generateUsedMemory(used, buffers, cache));
+          setTotalMemory(generateTotalMemory(used, free));
+          if (!!loading) {
+            setLoading(false);
           }
-        })
-        .catch(() => {
-          if (mounted) {
-            if (!dataHasResolvedAtLeastOnce) {
-              setError({
-                reason: 'Error'
-              });
-            }
-
-            if (!!loading) {
-              setLoading(false);
-            }
+          if (!dataHasResolvedAtLeastOnce) {
+            setDataResolved(true);
           }
-        });
-    }
+        }
+      })
+      .catch(() => {
+        if (mounted) {
+          if (!dataHasResolvedAtLeastOnce) {
+            setError({
+              reason: 'Error'
+            });
+          }
+
+          if (!!loading) {
+            setLoading(false);
+          }
+        }
+      });
 
     return () => {
       mounted = false;

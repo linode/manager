@@ -19,26 +19,32 @@ class Example extends React.Component<Props, State> {
     isSearching: false
   };
 
-  handleSearch = (value: string) => {
+  handleSearch = (value: string, list: string[]) => {
     this.setState({ isSearching: true });
     action('searching')(value);
-    setTimeout(() => {
-      const filteredList = this.props.list.filter(eachVal =>
-        eachVal.includes(value.toLowerCase())
-      );
-      action('result')(filteredList);
-      this.setState({
-        list: filteredList,
-        isSearching: false
-      });
-    }, 800);
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        const filteredList = list.filter(eachVal =>
+          eachVal.includes(value.toLowerCase())
+        );
+        return resolve(filteredList)
+      }, 800)
+    })
+      .then((res: string[]) => {
+        action('result')(res);
+        this.setState({
+          list: res,
+          isSearching: false
+        });
+      })
   };
 
   render() {
     return (
       <React.Fragment>
-        <DebouncedSearchTextField
-          placeholderText="Search for something"
+        <DebouncedSearchTextField<string[]>
+          placeholder="Search for something"
+          originalList={this.state.list}
           onSearch={this.handleSearch}
           isSearching={this.state.isSearching}
         />

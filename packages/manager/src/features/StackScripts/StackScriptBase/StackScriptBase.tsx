@@ -274,10 +274,10 @@ const withStackScriptBase = (isSelecting: boolean) => (
        */
       const filterWithSearch = !!Object.keys(currentSearchFilter).length
         ? {
-            ['+order_by']: filterInfo.apiFilter,
-            ['+order']: sortOrder,
-            ...currentSearchFilter
-          }
+          ['+order_by']: filterInfo.apiFilter,
+          ['+order']: sortOrder,
+          ...currentSearchFilter
+        }
         : { ['+order_by']: filterInfo.apiFilter, ['+order']: sortOrder };
 
       this.getDataAtPage(1, filterWithSearch, true);
@@ -447,80 +447,82 @@ const withStackScriptBase = (isSelecting: boolean) => (
            * an empty table, rather than showing a message indicating no StackScripts exist
            */}
           {!didSearch &&
-          listOfStackScripts &&
-          listOfStackScripts.length === 0 ? (
-            <div className={classes.emptyState} data-qa-stackscript-empty-msg>
-              {userCannotCreateStackScripts ? (
-                <Placeholder
-                  icon={StackScriptsIcon}
-                  title="StackScripts"
-                  copy="You don't have any StackScripts to select from."
-                  className={classes.stackscriptPlaceholder}
-                />
-              ) : (
-                <Placeholder
-                  icon={StackScriptsIcon}
-                  title="StackScripts"
-                  copy={<EmptyCopy />}
-                  buttonProps={[
-                    {
-                      children: 'Create New StackScript',
-                      onClick: () => this.goToCreateStackScript()
-                    }
-                  ]}
-                  className={classes.stackscriptPlaceholder}
-                />
-              )}
-            </div>
-          ) : (
-            <React.Fragment>
-              <div className={classes.searchWrapper}>
-                <DebouncedSearch
-                  placeholderText="Search by Label, Username, or Description"
-                  onSearch={this.handleSearch}
-                  className={classes.searchBar}
-                  isSearching={isSearching}
-                  toolTipText={
-                    this.props.category === 'community'
-                      ? `Hint: try searching for a specific item by prepending your
-                  search term with "username:", "label:", or "description:"`
-                      : ''
-                  }
-                />
+            listOfStackScripts &&
+            listOfStackScripts.length === 0 ? (
+              <div className={classes.emptyState} data-qa-stackscript-empty-msg>
+                {userCannotCreateStackScripts ? (
+                  <Placeholder
+                    icon={StackScriptsIcon}
+                    title="StackScripts"
+                    copy="You don't have any StackScripts to select from."
+                    className={classes.stackscriptPlaceholder}
+                  />
+                ) : (
+                    <Placeholder
+                      icon={StackScriptsIcon}
+                      title="StackScripts"
+                      copy={<EmptyCopy />}
+                      buttonProps={[
+                        {
+                          children: 'Create New StackScript',
+                          onClick: () => this.goToCreateStackScript()
+                        }
+                      ]}
+                      className={classes.stackscriptPlaceholder}
+                    />
+                  )}
               </div>
-              <Table
-                isResponsive={!isSelecting}
-                aria-label="List of StackScripts"
-                noOverflow={true}
-                tableClass={classes.table}
-                removeLabelonMobile={!isSelecting}
-                border
-                stickyHeader
-              >
-                <StackScriptTableHead
-                  handleClickTableHeader={this.handleClickTableHeader}
-                  sortOrder={sortOrder}
-                  currentFilterType={currentFilterType}
-                  isSelecting={isSelecting}
-                />
-                <Component
-                  {...this.props}
-                  {...this.state}
-                  getDataAtPage={this.getDataAtPage}
-                  getNext={this.getNext}
-                />
-              </Table>
-              {/*
+            ) : (
+              <React.Fragment>
+                <div className={classes.searchWrapper}>
+                  <DebouncedSearch<StackScript[]>
+                    placeholder="Search by Label, Username, or Description"
+                    onSearch={this.handleSearch}
+                    debounceTime={2000}
+                    originalList={this.state.listOfStackScripts}
+                    className={classes.searchBar}
+                    isSearching={isSearching}
+                    tooltipText={
+                      this.props.category === 'community'
+                        ? `Hint: try searching for a specific item by prepending your
+                  search term with "username:", "label:", or "description:"`
+                        : ''
+                    }
+                  />
+                </div>
+                <Table
+                  isResponsive={!isSelecting}
+                  aria-label="List of StackScripts"
+                  noOverflow={true}
+                  tableClass={classes.table}
+                  removeLabelonMobile={!isSelecting}
+                  border
+                  stickyHeader
+                >
+                  <StackScriptTableHead
+                    handleClickTableHeader={this.handleClickTableHeader}
+                    sortOrder={sortOrder}
+                    currentFilterType={currentFilterType}
+                    isSelecting={isSelecting}
+                  />
+                  <Component
+                    {...this.props}
+                    {...this.state}
+                    getDataAtPage={this.getDataAtPage}
+                    getNext={this.getNext}
+                  />
+                </Table>
+                {/*
                * show loading indicator if we're getting more stackscripts
                * and if we're not showing the "get more stackscripts" button
                */}
-              {gettingMoreStackScripts && !isSorting && (
-                <div style={{ margin: '32px 0 32px 0', textAlign: 'center' }}>
-                  <CircleProgress mini />
-                </div>
-              )}
-            </React.Fragment>
-          )}
+                {gettingMoreStackScripts && !isSorting && (
+                  <div style={{ margin: '32px 0 32px 0', textAlign: 'center' }}>
+                    <CircleProgress mini />
+                  </div>
+                )}
+              </React.Fragment>
+            )}
           {/*
            * if we're sorting, or if we already loaded all results
            * or if we're in the middle of getting more results, don't render
@@ -544,17 +546,17 @@ const withStackScriptBase = (isSelecting: boolean) => (
                   <div style={{ minHeight: '150px' }} />
                 </Waypoint>
               ) : (
-                <Button
-                  title="Show More StackScripts"
-                  onClick={this.getNext}
-                  value="Show More"
-                  buttonType="secondary"
-                  disabled={this.state.gettingMoreStackScripts}
-                  style={{ margin: '32px 0 32px 0' }}
-                >
-                  Show More StackScripts
+                  <Button
+                    title="Show More StackScripts"
+                    onClick={this.getNext}
+                    value="Show More"
+                    buttonType="secondary"
+                    disabled={this.state.gettingMoreStackScripts}
+                    style={{ margin: '32px 0 32px 0' }}
+                  >
+                    Show More StackScripts
                 </Button>
-              )}
+                )}
             </div>
           )}
         </React.Fragment>
@@ -565,10 +567,10 @@ const withStackScriptBase = (isSelecting: boolean) => (
   const mapStateToProps: MapState<StoreProps, CombinedProps> = state => ({
     stackScriptGrants: isRestrictedUser(state)
       ? pathOr(
-          undefined,
-          ['__resources', 'profile', 'data', 'grants', 'stackscript'],
-          state
-        )
+        undefined,
+        ['__resources', 'profile', 'data', 'grants', 'stackscript'],
+        state
+      )
       : undefined,
     userCannotCreateStackScripts:
       isRestrictedUser(state) && !hasGrant(state, 'add_stackscripts')
