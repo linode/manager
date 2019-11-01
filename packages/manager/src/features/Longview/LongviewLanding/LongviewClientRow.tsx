@@ -82,8 +82,15 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
   if (!authed || lastUpdated === 0) {
     return (
       <TableRow>
-        <TableCell colSpan={9}>
+        <TableCell colSpan={7}>
           Waiting for data...(installation instructions go here)
+        </TableCell>
+        <TableCell>
+          <ActionMenu
+            longviewClientID={clientID}
+            longviewClientLabel={clientLabel}
+            {...actionHandlers}
+          />
         </TableCell>
       </TableRow>
     );
