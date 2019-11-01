@@ -23,7 +23,6 @@ import {
 } from 'src/components/core/styles';
 import { openForCreating as openDomainDrawerForCreating } from 'src/store/domainDrawer';
 import { MapState } from 'src/store/types';
-import { openForCreating as openVolumeDrawerForCreating } from 'src/store/volumeDrawer';
 import { isKubernetesEnabled } from 'src/utilities/accountCapabilities';
 import AddNewMenuItem, { MenuItems } from './AddNewMenuItem';
 
@@ -82,7 +81,7 @@ const styles = (theme: Theme) =>
   });
 
 interface Props {
-  openVolumeDrawerForCreating: typeof openVolumeDrawerForCreating;
+  // openVolumeDrawerForCreating: typeof openVolumeDrawerForCreating;
   openDomainDrawerForCreating: typeof openDomainDrawerForCreating;
 }
 
@@ -119,10 +118,11 @@ class AddNewMenu extends React.Component<CombinedProps, State> {
       {
         title: 'Volume',
         onClick: e => {
-          this.props.openVolumeDrawerForCreating('Created from Add New Menu');
+          // this.props.openVolumeDrawerForCreating('Created from Add New Menu');
           this.handleClose();
           e.preventDefault();
         },
+        linkTo: '/volumes/create',
         body: `Block Storage service allows you to attach additional storage to your Linode`,
         ItemIcon: VolumeIcon
       },
@@ -255,10 +255,7 @@ const mapStateToProps: MapState<StateProps, CombinedProps> = (
 };
 
 const mapDispatchToProps = (dispatch: Dispatch<any>) =>
-  bindActionCreators(
-    { openDomainDrawerForCreating, openVolumeDrawerForCreating },
-    dispatch
-  );
+  bindActionCreators({ openDomainDrawerForCreating }, dispatch);
 
 const connected = connect(
   mapStateToProps,

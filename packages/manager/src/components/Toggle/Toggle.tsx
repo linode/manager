@@ -1,4 +1,3 @@
-import * as classNames from 'classnames';
 import * as React from 'react';
 import ToggleOff from 'src/assets/icons/toggleOff.svg';
 import ToggleOn from 'src/assets/icons/toggleOn.svg';
@@ -32,16 +31,9 @@ type CombinedProps = Props & SwitchProps & WithStyles<CSSClasses>;
 const LinodeSwitchControl: React.StatelessComponent<CombinedProps> = props => {
   const { classes, tooltipText, ...rest } = props;
 
-  const classnames = classNames({
-    [classes.root]: true,
-    [classes.checked]: Boolean(props.checked),
-    [classes.disabled]: props.disabled === true
-  });
-
   return (
     <React.Fragment>
       <Switch
-        className={classnames}
         icon={<ToggleOff />}
         checkedIcon={<ToggleOn />}
         data-qa-toggle={props.checked}

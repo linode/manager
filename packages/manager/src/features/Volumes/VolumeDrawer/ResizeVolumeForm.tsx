@@ -27,7 +27,7 @@ interface Props {
 
 type CombinedProps = Props & VolumesRequests;
 
-const ResizeVolumeForm: React.StatelessComponent<CombinedProps> = props => {
+const ResizeVolumeForm: React.FC<CombinedProps> = props => {
   const {
     volumeId,
     volumeSize,
