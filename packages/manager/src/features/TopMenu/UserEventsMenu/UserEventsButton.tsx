@@ -22,13 +22,12 @@ const styles = (theme: Theme) =>
     },
     root: {
       order: 6,
-      marginRight: 6,
       marginLeft: theme.spacing(1) / 2,
       position: 'relative',
       opacity: 1,
       transition: theme.transitions.create(['opacity']),
       [theme.breakpoints.up('lg')]: {
-        marginLeft: theme.spacing(2)
+        marginLeft: theme.spacing(1)
       },
       '&:hover': {
         '& $icon': {
