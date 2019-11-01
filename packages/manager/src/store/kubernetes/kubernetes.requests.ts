@@ -13,16 +13,16 @@ import { createRequestThunk } from '../store.helpers';
 import { ThunkActionCreator } from '../types';
 import {
   deleteClusterActions,
+  requestClusterActions,
   requestClustersActions,
-  updateClusterActions,
-  upsertCluster
+  updateClusterActions
 } from './kubernetes.actions';
 import { requestNodePoolsForCluster } from './nodePools.requests';
 
 const getAllClusters = getAll<KubernetesCluster>(getKubernetesClusters);
 
 export const requestKubernetesClusters: ThunkActionCreator<
-  Promise<Linode.Cluster[]>
+  Promise<KubernetesCluster[]>
 > = () => dispatch => {
   dispatch(requestClustersActions.started());
 
@@ -46,10 +46,19 @@ export const requestKubernetesClusters: ThunkActionCreator<
 
 type RequestClusterForStoreThunk = ThunkActionCreator<void, number>;
 export const requestClusterForStore: RequestClusterForStoreThunk = clusterID => dispatch => {
-  getKubernetesCluster(clusterID).then(cluster => {
-    dispatch(requestNodePoolsForCluster({ clusterID }));
-    return dispatch(upsertCluster(cluster));
-  });
+  dispatch(requestClusterActions.started({ clusterID }));
+  getKubernetesCluster(clusterID)
+    .then(cluster => {
+      dispatch(requestNodePoolsForCluster({ clusterID }));
+      return dispatch(
+        requestClusterActions.done({ result: cluster, params: { clusterID } })
+      );
+    })
+    .catch(err => {
+      dispatch(
+        requestClusterActions.failed({ error: err, params: { clusterID } })
+      );
+    });
 };
 
 export const updateCluster = createRequestThunk(

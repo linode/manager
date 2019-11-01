@@ -1,13 +1,19 @@
 import { FormikBag } from 'formik';
+import { AccountSettings } from 'linode-js-sdk/lib/account';
 import {
   createObjectStorageKeys,
   getObjectStorageKeys,
+  ObjectStorageKey,
   ObjectStorageKeyRequest,
   revokeObjectStorageKey,
   updateObjectStorageKey
-} from 'linode-js-sdk/lib/profile';
+} from 'linode-js-sdk/lib/object-storage';
+import { pathOr } from 'ramda';
 import * as React from 'react';
+import { connect, MapDispatchToProps } from 'react-redux';
 import { compose } from 'recompose';
+import { AnyAction } from 'redux';
+import { ThunkDispatch } from 'redux-thunk';
 import AddNewLink from 'src/components/AddNewLink';
 import {
   createStyles,
@@ -21,6 +27,8 @@ import Pagey, { PaginationProps } from 'src/components/Pagey';
 import PaginationFooter from 'src/components/PaginationFooter';
 import { useErrors } from 'src/hooks/useErrors';
 import { useOpenClose } from 'src/hooks/useOpenClose';
+import { ApplicationState } from 'src/store';
+import { requestAccountSettings } from 'src/store/accountSettings/accountSettings.requests';
 import { getAPIErrorOrDefault, getErrorMap } from 'src/utilities/errorUtils';
 import {
   sendCreateAccessKeyEvent,
@@ -29,6 +37,7 @@ import {
 } from 'src/utilities/ga';
 import AccessKeyDisplayDialog from './AccessKeyDisplayDialog';
 import AccessKeyDrawer from './AccessKeyDrawer';
+import { MODES } from './AccessKeyLanding';
 import AccessKeyTable from './AccessKeyTable';
 import RevokeAccessKeyDialog from './RevokeAccessKeyDialog';
 
@@ -42,14 +51,37 @@ const styles = (theme: Theme) =>
     }
   });
 
-type Props = PaginationProps<Linode.ObjectStorageKey> & WithStyles<ClassNames>;
+interface Props {
+  isRestrictedUser: boolean;
+}
 
-export type FormikProps = FormikBag<Props, ObjectStorageKeyRequest>;
+export type FormikProps = FormikBag<CombinedProps, ObjectStorageKeyRequest>;
+
+interface ReduxStateProps {
+  object_storage: AccountSettings['object_storage'];
+}
+
+interface DispatchProps {
+  requestSettings: () => Promise<AccountSettings>;
+}
+
+type CombinedProps = Props &
+  PaginationProps<ObjectStorageKey> &
+  WithStyles<ClassNames> &
+  ReduxStateProps &
+  DispatchProps;
 
 export type MODES = 'creating' | 'editing';
 
-export const AccessKeyLanding: React.StatelessComponent<Props> = props => {
-  const { classes, ...paginationProps } = props;
+export const AccessKeyLanding: React.StatelessComponent<
+  CombinedProps
+> = props => {
+  const {
+    classes,
+    object_storage,
+    requestSettings,
+    ...paginationProps
+  } = props;
 
   const [mode, setMode] = React.useState<MODES>('creating');
 
@@ -57,19 +89,17 @@ export const AccessKeyLanding: React.StatelessComponent<Props> = props => {
   const [
     keyToDisplay,
     setKeyToDisplay
-  ] = React.useState<Linode.ObjectStorageKey | null>(null);
+  ] = React.useState<ObjectStorageKey | null>(null);
 
   // Key to rename (by clicking on a key's kebab menu )
-  const [
-    keyToEdit,
-    setKeyToEdit
-  ] = React.useState<Linode.ObjectStorageKey | null>(null);
+  const [keyToEdit, setKeyToEdit] = React.useState<ObjectStorageKey | null>(
+    null
+  );
 
   // Key to revoke (by clicking on a key's kebab menu )
-  const [
-    keyToRevoke,
-    setKeyToRevoke
-  ] = React.useState<Linode.ObjectStorageKey | null>(null);
+  const [keyToRevoke, setKeyToRevoke] = React.useState<ObjectStorageKey | null>(
+    null
+  );
   const [isRevoking, setIsRevoking] = React.useState<boolean>(false);
   const [revokeErrors, setRevokeErrors] = useErrors();
 
@@ -102,10 +132,25 @@ export const AccessKeyLanding: React.StatelessComponent<Props> = props => {
         createOrEditDrawer.close();
         displayKeysDialog.open();
 
+        // If our Redux Store says that the user doesn't have OBJ enabled,
+        // it probably means they have just enabled it with the creation
+        // of this key. In that case, update the Redux Store so that
+        // subsequently created keys don't need to go through the
+        // confirmation flow.
+        if (object_storage === 'disabled') {
+          requestSettings();
+        }
+
         // @analytics
         sendCreateAccessKeyEvent();
       })
       .catch(errorResponse => {
+        // We also need to refresh account settings on failure, since, depending
+        // on the error, Object Storage service might have actually been enabled.
+        if (object_storage === 'disabled') {
+          requestSettings();
+        }
+
         setSubmitting(false);
 
         const errors = getAPIErrorOrDefault(
@@ -210,13 +255,13 @@ export const AccessKeyLanding: React.StatelessComponent<Props> = props => {
     createOrEditDrawer.open();
   };
 
-  const openDrawerForEditing = (objectStorageKey: Linode.ObjectStorageKey) => {
+  const openDrawerForEditing = (objectStorageKey: ObjectStorageKey) => {
     setMode('editing');
     setKeyToEdit(objectStorageKey);
     createOrEditDrawer.open();
   };
 
-  const openRevokeDialog = (objectStorageKey: Linode.ObjectStorageKey) => {
+  const openRevokeDialog = (objectStorageKey: ObjectStorageKey) => {
     setKeyToRevoke(objectStorageKey);
     revokeKeysDialog.open();
   };
@@ -259,6 +304,7 @@ export const AccessKeyLanding: React.StatelessComponent<Props> = props => {
         onSubmit={mode === 'creating' ? handleCreateKey : handleEditKey}
         mode={mode}
         objectStorageKey={keyToEdit ? keyToEdit : undefined}
+        isRestrictedUser={props.isRestrictedUser}
       />
 
       <AccessKeyDisplayDialog
@@ -280,14 +326,38 @@ export const AccessKeyLanding: React.StatelessComponent<Props> = props => {
 
 const styled = withStyles(styles);
 
-const updatedRequest = (_: Props, params: any, filters: any) =>
+const updatedRequest = (_: CombinedProps, params: any, filters: any) =>
   getObjectStorageKeys(params, filters);
 
 const paginated = Pagey(updatedRequest);
 
-const enhanced = compose<Props, {}>(
+const mapStateToProps = (state: ApplicationState) => {
+  return {
+    object_storage: pathOr<AccountSettings['object_storage']>(
+      'disabled',
+      ['data', 'object_storage'],
+      state.__resources.accountSettings
+    )
+  };
+};
+
+const mapDispatchToProps: MapDispatchToProps<DispatchProps, {}> = (
+  dispatch: ThunkDispatch<ApplicationState, undefined, AnyAction>
+) => {
+  return {
+    requestSettings: () => dispatch(requestAccountSettings())
+  };
+};
+
+const connected = connect(
+  mapStateToProps,
+  mapDispatchToProps
+);
+
+const enhanced = compose<CombinedProps, Props>(
   styled,
-  paginated
+  paginated,
+  connected
 );
 
 export default enhanced(AccessKeyLanding);

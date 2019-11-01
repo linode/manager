@@ -1,7 +1,13 @@
+import { FormikProps } from 'formik';
+import { AccountSettings } from 'linode-js-sdk/lib/account';
+import {
+  ObjectStorageClusterID,
+  ObjectStorageObject
+} from 'linode-js-sdk/lib/object-storage';
 import { OBJECT_STORAGE_DELIMITER, OBJECT_STORAGE_ROOT } from 'src/constants';
 
 export const generateObjectUrl = (
-  clusterId: Linode.ClusterID,
+  clusterId: ObjectStorageClusterID,
   bucketName: string,
   objectName: string
 ) => {
@@ -14,7 +20,7 @@ export const generateObjectUrl = (
 
 // If an Object does not have an etag, last_modified, owner, or size, it can
 // be considered a "folder".
-export const isFolder = (object: Linode.Object) =>
+export const isFolder = (object: ObjectStorageObject) =>
   !object.etag && !object.last_modified && !object.owner && !object.size;
 
 /**
@@ -37,7 +43,7 @@ export const basename = (
   return path.substr(idx + 1);
 };
 
-export interface ExtendedObject extends Linode.Object {
+export interface ExtendedObject extends ObjectStorageObject {
   _isFolder: boolean;
   _displayName: string;
   _shouldDisplayObject: boolean;
@@ -45,7 +51,7 @@ export interface ExtendedObject extends Linode.Object {
 }
 
 export const extendObject = (
-  object: Linode.Object,
+  object: ObjectStorageObject,
   prefix: string,
   manuallyCreated = false
 ): ExtendedObject => {
@@ -116,3 +122,32 @@ export const tableUpdateAction = (
 export const isFile = (path: string) => path.split('/').length < 2;
 
 export const firstSubfolder = (path: string) => path.split('/')[0];
+
+export const confirmObjectStorage = <T extends {}>(
+  object_storage: AccountSettings['object_storage'],
+  formikProps: FormikProps<T>,
+  openConfirmationDialog: () => void,
+  featureFlag = false
+) => {
+  // If the user doesn't already have Object Storage enabled, we show
+  // a confirmation modal before letting them create their first bucket.
+  if (featureFlag && object_storage === 'disabled') {
+    // But first, manually validate the form.
+    formikProps.validateForm().then(validationErrors => {
+      if (Object.keys(validationErrors).length > 0) {
+        // Set `touched` and `error` for each field with an error.
+        // Setting `touched` is necessary because we only display errors
+        // on fields that have been touched (handleSubmit() does this
+        // implicitly).
+        Object.keys(validationErrors).forEach(key => {
+          formikProps.setFieldTouched(key, validationErrors[key]);
+          formikProps.setFieldError(key, validationErrors[key]);
+        });
+      } else {
+        openConfirmationDialog();
+      }
+    });
+  } else {
+    formikProps.handleSubmit();
+  }
+};

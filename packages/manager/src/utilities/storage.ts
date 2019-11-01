@@ -41,7 +41,6 @@ export const setStorage = (key: string, value: string) => {
 
 const PAGE_SIZE = 'PAGE_SIZE';
 const BETA_NOTIFICATION = 'BetaNotification';
-const VAT_NOTIFICATION = 'vatNotification';
 const HIDE_DISPLAY_GROUPS_CTA = 'importDisplayGroupsCTA';
 const HAS_IMPORTED_GROUPS = 'hasImportedGroups';
 const BACKUPSCTA_DISMISSED = 'BackupsCtaDismissed';
@@ -52,7 +51,6 @@ const EXPIRE = 'authentication/expire';
 
 export type PageSize = number;
 type Beta = 'open' | 'closed';
-type Notification = 'show' | 'hide';
 
 interface AuthGetAndSet {
   get: () => any;
@@ -74,10 +72,6 @@ export interface Storage {
     welcome: {
       get: () => Beta;
       set: (open: Beta) => void;
-    };
-    VAT: {
-      get: () => Notification;
-      set: (show: Notification) => void;
     };
   };
   loginCloudManager: {
@@ -128,10 +122,6 @@ export const storage: Storage = {
       /** Leaving the LS key alone so it's not popping for those who've dismissed it. */
       get: () => getStorage(BETA_NOTIFICATION, 'open'),
       set: open => setStorage(BETA_NOTIFICATION, open)
-    },
-    VAT: {
-      get: () => getStorage(VAT_NOTIFICATION, 'show'),
-      set: show => setStorage(VAT_NOTIFICATION, show)
     }
   },
   loginCloudManager: {

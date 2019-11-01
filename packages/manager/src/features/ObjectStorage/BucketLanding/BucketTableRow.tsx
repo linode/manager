@@ -1,3 +1,4 @@
+import { ObjectStorageBucket } from 'linode-js-sdk/lib/object-storage';
 import * as React from 'react';
 import {
   createStyles,
@@ -14,7 +15,7 @@ import TableRow from 'src/components/TableRow';
 import { formatRegion } from 'src/utilities/formatRegion';
 import BucketActionMenu from './BucketActionMenu';
 
-type ClassNames = 'bucketNameWrapper' | 'bucketRow';
+type ClassNames = 'bucketNameWrapper' | 'bucketRow' | 'link';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -26,10 +27,15 @@ const styles = (theme: Theme) =>
       flexFlow: 'row nowrap',
       alignItems: 'center',
       wordBreak: 'break-all'
+    },
+    link: {
+      '&:hover': {
+        textDecoration: 'underline'
+      }
     }
   });
 
-interface BucketTableRowProps extends Linode.Bucket {
+interface BucketTableRowProps extends ObjectStorageBucket {
   onRemove: () => void;
 }
 
@@ -58,9 +64,15 @@ export const BucketTableRow: React.StatelessComponent<
                 {label}
               </Typography>
             </div>
-            <Typography variant="body2" data-qa-hostname>
+            <a
+              className={classes.link}
+              href={`https://${hostname}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              data-qa-hostname
+            >
               {hostname}
-            </Typography>
+            </a>
           </Grid>
         </Grid>
       </TableCell>

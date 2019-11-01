@@ -1,8 +1,7 @@
-import { ResourcePage } from 'linode-js-sdk/lib/types';
 import { BETA_API_ROOT } from 'src/constants';
-import Request, { setMethod, setParams, setURL, setXFilter } from '../index';
-
-type Page<T> = ResourcePage<T>;
+import Request, { setMethod, setParams, setURL, setXFilter } from '../request';
+import { ResourcePage as Page } from '../types';
+import { ObjectStorageCluster } from './types';
 
 /**
  * getClusters
@@ -10,7 +9,7 @@ type Page<T> = ResourcePage<T>;
  * Gets a list of available clusters
  */
 export const getClusters = (params?: any, filters?: any) =>
-  Request<Page<Linode.Cluster>>(
+  Request<Page<ObjectStorageCluster>>(
     setMethod('GET'),
     setParams(params),
     setXFilter(filters),

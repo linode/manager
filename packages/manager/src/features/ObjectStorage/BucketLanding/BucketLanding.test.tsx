@@ -13,6 +13,7 @@ describe('ObjectStorageLanding', () => {
       closeBucketDrawer={jest.fn()}
       classes={{ copy: '' }}
       deleteBucket={jest.fn()}
+      isRestrictedUser={false}
     />
   );
 

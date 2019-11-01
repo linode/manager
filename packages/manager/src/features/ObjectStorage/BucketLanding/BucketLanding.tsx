@@ -1,3 +1,4 @@
+import { ObjectStorageBucket } from 'linode-js-sdk/lib/object-storage';
 import * as React from 'react';
 import { compose } from 'recompose';
 import BucketIcon from 'src/assets/icons/entityIcons/bucket.svg';
@@ -43,7 +44,12 @@ const styles = (theme: Theme) =>
     }
   });
 
-type CombinedProps = StateProps &
+interface Props {
+  isRestrictedUser: boolean;
+}
+
+type CombinedProps = Props &
+  StateProps &
   DispatchProps &
   WithStyles<ClassNames> &
   BucketsRequests;
@@ -54,18 +60,19 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
     bucketsData,
     bucketsLoading,
     bucketsError,
+    isRestrictedUser,
     openBucketDrawer
   } = props;
 
   const removeBucketConfirmationDialog = useOpenClose();
   const [bucketToRemove, setBucketToRemove] = React.useState<
-    Linode.Bucket | undefined
+    ObjectStorageBucket | undefined
   >(undefined);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [error, setError] = React.useState<string>('');
   const [confirmBucketName, setConfirmBucketName] = React.useState<string>('');
 
-  const handleClickRemove = (bucket: Linode.Bucket) => {
+  const handleClickRemove = (bucket: ObjectStorageBucket) => {
     setBucketToRemove(bucket);
     setError('');
     removeBucketConfirmationDialog.open();
@@ -157,6 +164,10 @@ export const BucketLanding: React.StatelessComponent<CombinedProps> = props => {
       </Typography>
     </React.Fragment>
   ) : null;
+
+  if (isRestrictedUser) {
+    return <RenderEmpty onClick={openBucketDrawer} data-qa-empty-state />;
+  }
 
   if (bucketsLoading) {
     return <RenderLoading data-qa-loading-state />;
@@ -265,7 +276,7 @@ const EmptyCopy = () => (
 
 const styled = withStyles(styles);
 
-const enhanced = compose<CombinedProps, {}>(
+const enhanced = compose<CombinedProps, Props>(
   styled,
   bucketContainer,
   bucketRequestsContainer,

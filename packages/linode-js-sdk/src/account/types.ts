@@ -42,6 +42,7 @@ export interface AccountSettings {
   longview_subscription: string | null;
   network_helper: boolean;
   backups_enabled: boolean;
+  object_storage: 'active' | 'disabled' | 'suspended';
 }
 
 export interface ActivePromotion {
@@ -57,7 +58,7 @@ export interface ActivePromotion {
 interface CreditCard {
   expiry: string;
   last_four: string;
-  cvv?: string;
+  cvv: string;
 }
 
 export interface Invoice {
@@ -190,6 +191,7 @@ export type EventAction =
   | 'domain_record_delete'
   | 'image_update'
   | 'image_delete'
+  | 'lassie_reboot'
   | 'linode_addip'
   | 'linode_boot'
   | 'linode_clone'
@@ -256,6 +258,7 @@ export interface Event {
   status: EventStatus;
   time_remaining: null | number;
   username: string;
+  secondary_entity: Entity | null;
   _initial?: boolean;
 }
 /**

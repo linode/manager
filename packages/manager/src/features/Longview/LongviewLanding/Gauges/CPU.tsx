@@ -10,17 +10,20 @@ import { baseGaugeProps } from './common';
 
 interface Props {
   clientAPIKey: string;
-  lastUpdated: number;
+  lastUpdated?: number;
 }
 
 const LongviewGauge: React.FC<Props> = props => {
   const { clientAPIKey, lastUpdated } = props;
 
+  const [dataHasResolvedAtLeastOnce, setDataResolved] = React.useState<boolean>(
+    false
+  );
   const [loading, setLoading] = React.useState<boolean>(true);
   const [error, setError] = React.useState<APIError | undefined>();
 
   const [usedCPU, setUsedCPU] = React.useState<number>(0);
-  const [numCores, setNumCores] = React.useState<number>(1);
+  const [numCores, setNumCores] = React.useState<number>(0);
 
   React.useEffect(() => {
     requestStats(clientAPIKey, 'getLatestValue', ['cpu', 'sysinfo'])
@@ -35,6 +38,10 @@ const LongviewGauge: React.FC<Props> = props => {
           return;
         }
 
+        if (!dataHasResolvedAtLeastOnce) {
+          setDataResolved(true);
+        }
+
         setNumCores(cores);
 
         const used = sumCPUUsage(data.CPU);
@@ -42,7 +49,7 @@ const LongviewGauge: React.FC<Props> = props => {
         setUsedCPU(normalizedUsed);
       })
       .catch(_ => {
-        if (!usedCPU) {
+        if (!dataHasResolvedAtLeastOnce) {
           setError({
             reason: 'Error' // @todo: Error message?
           });
@@ -56,16 +63,16 @@ const LongviewGauge: React.FC<Props> = props => {
       {...baseGaugeProps}
       // The MAX depends on the number of CPU cores. Default to 1 if cores
       // doesn't exist or is 0.
-      max={100 * numCores || 1}
-      value={usedCPU || 100}
-      innerText={innerText(usedCPU, loading, error)}
+      max={100 * numCores}
+      value={usedCPU}
+      innerText={innerText(usedCPU || 0, loading, error)}
       subTitle={
         <>
           <Typography>
             <strong>CPU</strong>
           </Typography>
           {!error && !loading && (
-            <Typography>{pluralize('Core', 'Cores', numCores)}</Typography>
+            <Typography>{pluralize('Core', 'Cores', numCores || 0)}</Typography>
           )}
         </>
       }

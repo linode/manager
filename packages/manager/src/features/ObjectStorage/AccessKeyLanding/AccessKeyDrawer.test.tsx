@@ -1,4 +1,5 @@
 import { shallow } from 'enzyme';
+import { AccountSettings } from 'linode-js-sdk/lib/account';
 import * as React from 'react';
 import { AccessKeyDrawer, Props } from './AccessKeyDrawer';
 import { MODES } from './AccessKeyLanding';
@@ -12,7 +13,9 @@ describe('AccessKeyDrawer', () => {
     label: 'test-label',
     updateLabel: jest.fn(),
     isLoading: false,
-    mode: 'creating' as MODES
+    mode: 'creating' as MODES,
+    isRestrictedUser: false,
+    object_storage: 'active' as AccountSettings['object_storage']
   };
   const wrapper = shallow<Props>(<AccessKeyDrawer {...props} />);
   it('renders without crashing', () => {
