@@ -22,7 +22,7 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       order: 5,
-      marginRight: -theme.spacing(1),
+      marginRight: -theme.spacing(2),
       position: 'relative',
       '&.active $icon': {
         backgroundColor: theme.palette.text.primary
