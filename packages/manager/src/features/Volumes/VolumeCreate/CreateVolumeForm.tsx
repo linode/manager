@@ -302,6 +302,7 @@ const CreateVolumeForm: React.FC<CombinedProps> = props => {
                     disabled={disabled}
                     onChange={selected => setFieldValue('tags', selected)}
                     value={values.tags}
+                    menuPlacement="top"
                   />
 
                   <ConfigSelect
