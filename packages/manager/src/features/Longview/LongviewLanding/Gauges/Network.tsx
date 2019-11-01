@@ -99,16 +99,26 @@ const NetworkGauge: React.FC<Props> = props => {
           <Typography>
             <strong>Network</strong>
           </Typography>
-          <Typography>{``}</Typography>
         </React.Fragment>
       )
     };
   };
 
+  /** Thanks to http://www.matisse.net/bitcalc/ */
+  const howManyBytesInAGigabit = 134217728;
+
   return (
     <GaugePercent
       {...baseGaugeProps}
-      max={generateMaxNetworkAsBytes()}
+      /* 
+        the max here is not meant to act as an actual max 
+        but instead just a logical high value.
+
+        This max comes from the product review on Nov 1st, 2019
+        where @caker said to make the max network for the gauge
+        1 gigabit.
+      */
+      max={howManyBytesInAGigabit}
       value={networkUsed}
       filledInColor="#4FAD62"
       {...generateCopy()}
@@ -117,29 +127,6 @@ const NetworkGauge: React.FC<Props> = props => {
 };
 
 export default React.memo(NetworkGauge);
-
-/**
- * The short explanation behind this function is that we'll never really
- * know how much the actual max is.
- *
- * Check out this blog post:
- *
- * https://www.linode.com/2014/04/17/linode-cloud-ssds-double-ram-much-more/
- *
- * So basically, a Linode has capabilities of 40Gbps inbound bandwidth,
- * but the outbound is dependant on the Linode's plan. And since we can't
- * properly match up a Longivew Client with a Linode, it's basically impossible
- * to get the full inbound + outbound max bandwidth.
- *
- * So for the time being, lets just say the max is 40Gbps
- *
- * @param networkUsed how much inbound and outbound network is being used
- */
-export const generateMaxNetworkAsBytes = () => {
-  /** Thanks to http://www.matisse.net/bitcalc/ */
-  const howManyBytesInAGigabit = 134217728;
-  return howManyBytesInAGigabit * 40;
-};
 
 interface Units {
   value: number;
