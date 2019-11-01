@@ -165,7 +165,7 @@ export const oneClickApps: OCA[] = [
       `You will need to SSH into your Linode to retrieve the Jenkins one time password:`,
       `<code>sudo cat /var/lib/jenkins/secrets/initialAdminPassword</code>`
     ],
-    logo_url: 'assets/jenkins_color.png'
+    logo_url: 'assets/jenkins_color.svg'
   },
   {
     name: 'LAMP',
