@@ -36,14 +36,28 @@ interface Props {
   cluster: ExtendedCluster;
   endpoint: string | null;
   endpointError?: string;
+  endpointLoading: boolean;
 }
 
 type CombinedProps = Props & WithStyles<ClassNames>;
 
+const renderEndpoint = (
+  endpoint: string | null,
+  endpointLoading: boolean,
+  endpointError?: string
+) => {
+  if (endpointLoading) {
+    return 'Loading...';
+  } else if (endpointError) {
+    return endpointError;
+  }
+  return endpoint || ''; // Just leave it blank if endpoint === null (which should never happen)
+};
+
 export const KubeSummaryPanel: React.FunctionComponent<
   CombinedProps
 > = props => {
-  const { classes, cluster, endpoint, endpointError } = props;
+  const { classes, cluster, endpoint, endpointError, endpointLoading } = props;
   const region = dcDisplayNames[cluster.region] || 'Unknown region';
   return (
     <Paper className={classes.root}>
@@ -66,9 +80,9 @@ export const KubeSummaryPanel: React.FunctionComponent<
         <Typography className={classes.label}>
           Kubernetes API Endpoint
         </Typography>
-        {/** If one of these is defined, the other one should not be. */}
-        {endpoint && <Typography>{endpoint}</Typography>}
-        {endpointError && <Typography>{endpointError}</Typography>}
+        <Typography>
+          {renderEndpoint(endpoint, endpointLoading, endpointError)}
+        </Typography>
       </Paper>
       <Paper className={classes.item}>
         <Typography className={classes.label}>Region</Typography>

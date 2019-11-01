@@ -152,6 +152,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
   const [endpointError, setEndpointError] = React.useState<string | undefined>(
     undefined
   );
+  const [endpointLoading, setEndpointLoading] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     const clusterID = +props.match.params.clusterID;
@@ -159,12 +160,15 @@ export const KubernetesClusterDetail: React.FunctionComponent<
       props.requestClusterForStore(clusterID);
       // The cluster endpoint has its own API...uh, endpoint, so we need
       // to request it separately.
+      setEndpointLoading(true);
       getKubernetesClusterEndpoint(clusterID)
         .then(response => {
           setEndpointError(undefined);
           setEndpoint(response.endpoint);
+          setEndpointLoading(false);
         })
         .catch(error => {
+          setEndpointLoading(false);
           setEndpointError(
             getAPIErrorOrDefault(error, 'Cluster endpoint not available.')[0]
               .reason
@@ -464,6 +468,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
               cluster={cluster}
               endpoint={endpoint}
               endpointError={endpointError}
+              endpointLoading={endpointLoading}
             />
           </Grid>
         </Grid>
