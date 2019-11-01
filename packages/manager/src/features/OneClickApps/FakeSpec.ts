@@ -192,7 +192,7 @@ export const oneClickApps: OCA[] = [
     tips: [
       `Enables UFW firewall to allow access to, SSH <em>port 22</em>, HTTP <em>port 80</em>, HTTPS <em>port 443</em>, MySQL <em>port 3306</em>.`
     ],
-    logo_url: 'assets/mysql.svg'
+    logo_url: 'assets/mysql_color.svg'
   },
   {
     name: 'Plesk',
