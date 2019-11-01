@@ -1,6 +1,7 @@
 import MenuIcon from '@material-ui/icons/Menu';
 import * as React from 'react';
 import AppBar from 'src/components/core/AppBar';
+import Hidden from 'src/components/core/Hidden';
 import IconButton from 'src/components/core/IconButton';
 import {
   createStyles,
@@ -62,6 +63,9 @@ const styles = (theme: Theme) =>
 
 interface Props {
   openSideMenu: () => void;
+  desktopMenuIsOpen: boolean;
+  desktopOpenSideMenu: () => void;
+  desktopCloseSideMenu: () => void;
   isLoggedInAsCustomer: boolean;
   username: string;
 }
@@ -70,7 +74,13 @@ type PropsWithStyles = Props & WithStyles<ClassNames>;
 
 class TopMenu extends React.Component<PropsWithStyles> {
   render() {
-    const { classes, openSideMenu } = this.props;
+    const {
+      classes,
+      desktopMenuIsOpen,
+      openSideMenu,
+      desktopCloseSideMenu,
+      desktopOpenSideMenu
+    } = this.props;
 
     return (
       <React.Fragment>
@@ -90,14 +100,28 @@ class TopMenu extends React.Component<PropsWithStyles> {
         )}
         <AppBar className={classes.appBar}>
           <Toolbar className={classes.toolbar}>
-            <IconButton
-              color="inherit"
-              aria-label="open menu"
-              onClick={openSideMenu}
-              className={classes.navIconHide}
-            >
-              <MenuIcon />
-            </IconButton>
+            <Hidden mdDown>
+              <IconButton
+                color="inherit"
+                aria-label="open menu"
+                onClick={
+                  desktopMenuIsOpen ? desktopCloseSideMenu : desktopOpenSideMenu
+                }
+                className={classes.navIconHide}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Hidden>
+            <Hidden lgUp>
+              <IconButton
+                color="inherit"
+                aria-label="open menu"
+                onClick={openSideMenu}
+                className={classes.navIconHide}
+              >
+                <MenuIcon />
+              </IconButton>
+            </Hidden>
             <SearchBar />
             <AddNewMenu />
             <UserMenu />

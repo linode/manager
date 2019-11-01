@@ -9,7 +9,11 @@ import {
 } from 'src/components/core/styles';
 import PrimaryNav from 'src/components/PrimaryNav';
 
-type ClassNames = 'menuPaper' | 'menuDocked';
+type ClassNames =
+  | 'menuPaper'
+  | 'menuDocked'
+  | 'desktopMenu'
+  | 'collapsedDesktopMenu';
 
 const styles = (theme: Theme) =>
   createStyles({
@@ -26,11 +30,22 @@ const styles = (theme: Theme) =>
     },
     menuDocked: {
       height: '100%'
+    },
+    desktopMenu: {
+      transform: 'none',
+      transition: theme.transitions.create('margin-left')
+    },
+    collapsedDesktopMenu: {
+      marginLeft: -(theme.spacing(14) + 103),
+      [theme.breakpoints.up('xl')]: {
+        marginLeft: -(theme.spacing(22) + 99)
+      }
     }
   });
 
 interface Props {
   open: boolean;
+  desktopOpen: boolean;
   closeMenu: () => void;
   toggleTheme: () => void;
   toggleSpacing: () => void;
@@ -40,7 +55,14 @@ type CombinedProps = Props & WithStyles<ClassNames>;
 
 class SideMenu extends React.Component<CombinedProps> {
   render() {
-    const { classes, open, closeMenu, toggleSpacing, toggleTheme } = this.props;
+    const {
+      classes,
+      open,
+      desktopOpen,
+      closeMenu,
+      toggleSpacing,
+      toggleTheme
+    } = this.props;
 
     return (
       <React.Fragment>
@@ -69,6 +91,10 @@ class SideMenu extends React.Component<CombinedProps> {
               paper: classes.menuPaper,
               docked: classes.menuDocked
             }}
+            className={`
+              ${classes.desktopMenu}
+              ${!desktopOpen ? classes.collapsedDesktopMenu : ''}
+            `}
           >
             <PrimaryNav
               closeMenu={closeMenu}
