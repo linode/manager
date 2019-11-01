@@ -82,10 +82,15 @@ export interface LongviewLoad {
   Load: Stat[];
 }
 
+export interface InboundOutboundNetwork {
+  rx_bytes: Stat[];
+  tx_bytes: Stat[];
+}
+
 export interface LongviewNetwork {
   Network: {
     mac_addr: string;
-    Interface: Record<string, any>;
+    Interface: Record<string, InboundOutboundNetwork>;
   };
 }
 
