@@ -45,6 +45,7 @@ const styles = (theme: Theme) =>
       padding: theme.spacing(1),
       borderRadius: 30,
       order: 4,
+      marginRight: -theme.spacing(1),
       '&:hover, &.active': {
         '& $username': {
           color: theme.palette.primary.main
@@ -62,13 +63,13 @@ const styles = (theme: Theme) =>
     userWrapper: {
       marginRight: theme.spacing(1),
       borderRadius: '50%',
-      width: '42px',
-      height: '42px',
+      width: '40px',
+      height: '40px',
       transition: theme.transitions.create(['box-shadow']),
       [theme.breakpoints.down('md')]: {
         margin: 0,
-        width: '30px',
-        height: '30px'
+        width: '28px',
+        height: '28px'
       }
     },
     leftIcon: {

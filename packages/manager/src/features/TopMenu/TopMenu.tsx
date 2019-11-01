@@ -92,7 +92,7 @@ class TopMenu extends React.Component<PropsWithStyles> {
         )}
         <AppBar className={classes.appBar}>
           <Toolbar className={classes.toolbar}>
-            <Hidden mdDown>
+            <Hidden smDown>
               <IconButton
                 color="inherit"
                 aria-label="open menu"
@@ -102,7 +102,7 @@ class TopMenu extends React.Component<PropsWithStyles> {
                 <MenuIcon />
               </IconButton>
             </Hidden>
-            <Hidden lgUp>
+            <Hidden mdUp>
               <IconButton
                 color="inherit"
                 aria-label="open menu"
