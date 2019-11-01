@@ -33,7 +33,7 @@ export interface KubernetesVersion {
 }
 
 export interface KubernetesEndpointResponse {
-  endpoint: string;
+  endpoints: string[];
 }
 
 export interface CreateKubeClusterPayload {

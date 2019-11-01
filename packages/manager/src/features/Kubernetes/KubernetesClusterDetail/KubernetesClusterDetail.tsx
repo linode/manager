@@ -164,7 +164,7 @@ export const KubernetesClusterDetail: React.FunctionComponent<
       getKubernetesClusterEndpoint(clusterID)
         .then(response => {
           setEndpointError(undefined);
-          setEndpoint(response.endpoint);
+          setEndpoint(response.endpoints[0]); // @todo will there ever be multiple values here?
           setEndpointLoading(false);
         })
         .catch(error => {
