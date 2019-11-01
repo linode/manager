@@ -57,9 +57,7 @@ describe('Longview Load Gauge UI', () => {
     const innerText = await waitForElement(() =>
       getByTestId('gauge-innertext')
     );
-    const subtext = await waitForElement(() => getByTestId('gauge-subtext'));
 
     expect(innerText).toHaveTextContent('2');
-    expect(subtext).toHaveTextContent('100% Overallocated');
   });
 });
