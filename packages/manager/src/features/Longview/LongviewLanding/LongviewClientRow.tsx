@@ -58,8 +58,12 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
         }
       })
       .catch(e => {
+        /**
+         * The first request we make after creating a new client will almost always
+         * return an authentication failed error.
+         */
         const reason = pathOr('', [0, 'reason'], e);
-        if (reason === 'Authentication failed.') {
+        if (reason.match(/authentication/i)) {
           setAuthed(false);
         }
       });
@@ -79,6 +83,10 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
     return () => clearInterval(requestInterval);
   });
 
+  /**
+   * We want to show a "waiting for data" state
+   * until data has been returned.
+   */
   if (!authed || lastUpdated === 0) {
     return (
       <TableRow>
