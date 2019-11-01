@@ -22,21 +22,23 @@ class Example extends React.Component<Props, State> {
   handleSearch = (value: string, list: string[]) => {
     this.setState({ isSearching: true });
     action('searching')(value);
-    return new Promise((resolve) => {
+    return new Promise(resolve => {
       setTimeout(() => {
+        if (!value.trim()) {
+          return resolve(this.props.list);
+        }
         const filteredList = list.filter(eachVal =>
           eachVal.includes(value.toLowerCase())
         );
-        return resolve(filteredList)
-      }, 800)
-    })
-      .then((res: string[]) => {
-        action('result')(res);
-        this.setState({
-          list: res,
-          isSearching: false
-        });
-      })
+        return resolve(filteredList);
+      }, 800);
+    }).then((res: string[]) => {
+      action('result')(res);
+      this.setState({
+        list: res,
+        isSearching: false
+      });
+    });
   };
 
   render() {
@@ -45,6 +47,7 @@ class Example extends React.Component<Props, State> {
         <DebouncedSearchTextField<string[]>
           placeholder="Search for something"
           originalList={this.state.list}
+          debounceTime={400}
           onSearch={this.handleSearch}
           isSearching={this.state.isSearching}
         />

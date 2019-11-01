@@ -1,7 +1,6 @@
 import Search from '@material-ui/icons/Search';
 import * as React from 'react';
 import { compose } from 'recompose';
-import { debounce } from 'throttle-debounce';
 
 import CircleProgress from 'src/components/CircleProgress';
 import InputAdornment from 'src/components/core/InputAdornment';
@@ -26,19 +25,37 @@ interface Props<T extends any = any> extends TextFieldProps {
 type CombinedProps = Props;
 
 const ClientSearch: React.FC<CombinedProps> = props => {
-  const { className, isSearching, InputProps, debounceTime, originalList, onSearch, ...restOfTextFieldProps } = props;
+  const {
+    className,
+    isSearching,
+    InputProps,
+    debounceTime,
+    originalList,
+    onSearch,
+    ...restOfTextFieldProps
+  } = props;
   const [query, setQuery] = React.useState<string>('');
 
   const classes = useStyles();
 
   React.useEffect(() => {
+    /* This `didCancel` business is to prevent a warning from React.
+     * See: https://github.com/facebook/react/issues/14369#issuecomment-468267798
+     */
+    let didCancel = false;
+
     if (debounceTime) {
-      debounce(debounceTime, false, () => {
-        onSearch(query, originalList);
-      })()
+      setTimeout(() => {
+        if (!didCancel) {
+          onSearch(query, originalList);
+        }
+      }, debounceTime);
     } else {
       onSearch(query, originalList);
     }
+    return () => {
+      didCancel = true;
+    };
   }, [query]);
 
   return (
@@ -57,8 +74,8 @@ const ClientSearch: React.FC<CombinedProps> = props => {
             <CircleProgress mini={true} />
           </InputAdornment>
         ) : (
-            <React.Fragment />
-          ),
+          <React.Fragment />
+        ),
         ...InputProps
       }}
       {...restOfTextFieldProps}
@@ -66,4 +83,6 @@ const ClientSearch: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, Props>(React.memo)(ClientSearch) as unknown as <T>(props: Props<T>) => React.ReactElement;
+export default (compose<CombinedProps, Props>(React.memo)(
+  ClientSearch
+) as unknown) as <T>(props: Props<T>) => React.ReactElement;
