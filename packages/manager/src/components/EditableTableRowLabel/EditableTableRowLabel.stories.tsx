@@ -57,11 +57,10 @@ storiesOf('EditableTableRowLabel', module)
         setLoading(true);
         setTimeout(() => {
           setLoading(false);
-          reject();
+          reject('An error occurred!');
         }, 3000);
       });
     };
-
 
     return (
       <Table>
@@ -75,7 +74,7 @@ storiesOf('EditableTableRowLabel', module)
         <TableBody>
           <TableRow>
             <EditableTableRowLabel
-              text={"demo text"}
+              text={'demo text'}
               iconVariant="linode"
               subText="Waiting for data..."
               onEdit={onEdit}
