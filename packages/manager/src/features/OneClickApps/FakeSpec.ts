@@ -152,6 +152,10 @@ export const oneClickApps: OCA[] = [
       {
         title: 'Using LISH to SSH into your Linode',
         href: 'https://www.linode.com/docs/platform/manager/using-the-linode-shell-lish/#use-a-web-browser'
+      },
+      {
+        title: 'Scripted vs. Declarative Pipeline Syntax',
+        href: 'https://www.linode.com/docs/development/ci/automate-builds-with-jenkins-on-ubuntu/#scripted-vs-declarative-pipeline-syntax'
       }
     ],
     related_info: [
