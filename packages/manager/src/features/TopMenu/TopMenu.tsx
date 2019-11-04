@@ -34,14 +34,12 @@ const styles = (theme: Theme) =>
       paddingRight: '0 !important'
     },
     toolbar: {
-      minHeight: theme.spacing(4) + 32,
       padding: `${theme.spacing(1)}px 0`,
       [theme.breakpoints.up('md')]: {
         paddingLeft: theme.spacing(1),
         paddingRight: theme.spacing(1)
       },
       [theme.breakpoints.up('lg')]: {
-        minHeight: theme.spacing(5) + 40,
         paddingLeft: theme.spacing(3),
         paddingRight: theme.spacing(3)
       }
