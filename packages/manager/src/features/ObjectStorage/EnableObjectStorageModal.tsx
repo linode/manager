@@ -39,10 +39,9 @@ const EnableObjectStorageModal: React.FC<Props> = ({
       )}
     >
       <Typography variant="subtitle1">
-        Linode Object Storage has a prorated minimum monthly cost of{' '}
-        <strong>$5</strong>, which provides <strong>250 GB</strong> of storage.
-        Object Storage adds <strong>1 TB</strong> of outbound data transfer to
-        your data transfer pool.{' '}
+        Linode Object Storage costs a flat rate of <strong>$5/month</strong>,
+        and includes 250 GB of storage and 1 TB of outbound data transfer.
+        Beyond that, it's <strong>$0.02 per GB per month.</strong>{' '}
         <ExternalLink
           fixedIcon
           text="Learn more."
