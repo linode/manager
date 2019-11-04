@@ -1,150 +1,105 @@
-import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
-import { RouteComponentProps } from 'react-router-dom';
-import { compose } from 'recompose';
-import { makeStyles, Theme } from 'src/components/core/styles';
+import {
+  matchPath,
+  Redirect,
+  Route,
+  RouteComponentProps,
+  Switch
+} from 'react-router-dom';
 
-import AddNewLink from 'src/components/AddNewLink';
 import Breadcrumb from 'src/components/Breadcrumb';
+import AppBar from 'src/components/core/AppBar';
 import Box from 'src/components/core/Box';
-import Divider from 'src/components/core/Divider';
+import Tab from 'src/components/core/Tab';
+import Tabs from 'src/components/core/Tabs';
+import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
-import Grid from 'src/components/Grid';
+import TabLink from 'src/components/TabLink';
 
-import withLongviewClients, {
-  Props as LongviewProps
-} from 'src/containers/longview.container';
+const LongviewClients = DefaultLoader({
+  loader: () => import('./LongviewClients')
+});
 
-import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+const LongviewPlans = DefaultLoader({
+  loader: () => import('./LongviewPlans')
+});
 
-import DeleteDialog from './LongviewDeleteDialog';
-import LongviewTable from './LongviewTable';
-import UpdateDrawer from './UpdateClientDrawer';
+type CombinedProps = RouteComponentProps<{}>;
 
-const useStyles = makeStyles((theme: Theme) => ({
-  line: {
-    marginTop: theme.spacing(10),
-    marginBottom: theme.spacing(3)
-  }
-}));
+export const LongviewLanding: React.FunctionComponent<
+  CombinedProps
+> = props => {
+  const tabs = [
+    /* NB: These must correspond to the routes inside the Switch */
+    { title: 'Clients', routeName: `${props.match.url}/clients` },
+    { title: 'Plan Details', routeName: `${props.match.url}/plan-details` }
+  ];
 
-type CombinedProps = RouteComponentProps & LongviewProps & WithSnackbarProps;
-
-const LongviewContent: React.FC<CombinedProps> = props => {
-  const classes = useStyles();
-
-  const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
-    false
-  );
-  const [editDrawerOpen, toggleEditDrawer] = React.useState<boolean>(false);
-  const [deleteDialogOpen, toggleDeleteDialog] = React.useState<boolean>(false);
-  const [selectedClientID, setClientID] = React.useState<number | undefined>(
-    undefined
-  );
-  const [selectedClientLabel, setClientLabel] = React.useState<string>('');
-
-  React.useEffect(() => {
-    props.getLongviewClients();
-  }, []);
-
-  const openDeleteDialog = (id: number, label: string) => {
-    toggleDeleteDialog(true);
-    setClientID(id);
-    setClientLabel(label);
+  const handleTabChange = (
+    _: React.ChangeEvent<HTMLDivElement>,
+    value: number
+  ) => {
+    const routeName = tabs[value].routeName;
+    props.history.push(`${routeName}`);
   };
 
-  const openEditDrawer = (id: number, label: string) => {
-    toggleEditDrawer(true);
-    setClientID(id);
-    setClientLabel(label);
+  const url = props.match.url;
+  const matches = (p: string) => {
+    return Boolean(matchPath(p, { path: props.location.pathname }));
   };
-
-  const handleAddClient = () => {
-    setNewClientLoading(true);
-    createLongviewClient()
-      .then(_ => {
-        setNewClientLoading(false);
-      })
-      .catch(errorResponse => {
-        props.enqueueSnackbar(
-          getAPIErrorOrDefault(
-            errorResponse,
-            'Error creating Longview client.'
-          )[0].reason,
-          { variant: 'error' }
-        ),
-          setNewClientLoading(false);
-      });
-  };
-
-  const {
-    longviewClientsData,
-    longviewClientsError,
-    longviewClientsLastUpdated,
-    longviewClientsLoading,
-    longviewClientsResults,
-    createLongviewClient,
-    deleteLongviewClient,
-    updateLongviewClient
-  } = props;
 
   return (
     <React.Fragment>
       <Box display="flex" flexDirection="row" justifyContent="space-between">
-        <Breadcrumb pathname={props.location.pathname} labelTitle="Longview" />
+        <Breadcrumb
+          pathname={props.location.pathname}
+          labelTitle="Longview"
+          removeCrumbX={1}
+        />
         <DocumentationButton href={'https://google.com'} />
       </Box>
-      <Divider className={classes.line} type="landingHeader" />
-      <Grid
-        container
-        justify="flex-end"
-        alignItems="flex-end"
-        style={{ paddingBottom: 0 }}
-      >
-        <Grid item>
-          <Grid container alignItems="flex-end">
-            <Grid item className="pt0">
-              {/** @todo replace with actual loading state when design is ready */}
-              <AddNewLink
-                onClick={handleAddClient}
-                label={newClientLoading ? 'Loading...' : 'Add a Client'}
-              />
-            </Grid>
-          </Grid>
-        </Grid>
-      </Grid>
-      <LongviewTable
-        longviewClientsData={longviewClientsData}
-        longviewClientsError={longviewClientsError}
-        longviewClientsLastUpdated={longviewClientsLastUpdated}
-        longviewClientsLoading={longviewClientsLoading}
-        longviewClientsResults={longviewClientsResults}
-        triggerDeleteLongviewClient={openDeleteDialog}
-        triggerEditLongviewClient={openEditDrawer}
-      />
-      <UpdateDrawer
-        title={`Rename Longview Client${
-          selectedClientLabel ? `: ${selectedClientLabel}` : ''
-        }`}
-        selectedID={selectedClientID}
-        selectedLabel={selectedClientLabel}
-        updateClient={updateLongviewClient}
-        open={editDrawerOpen}
-        onClose={() => toggleEditDrawer(false)}
-      />
-      <DeleteDialog
-        selectedLongviewClientID={selectedClientID}
-        selectedLongviewClientLabel={selectedClientLabel}
-        deleteClient={deleteLongviewClient}
-        open={deleteDialogOpen}
-        closeDialog={() => toggleDeleteDialog(false)}
-      />
+      <AppBar position="static" color="default">
+        <Tabs
+          value={tabs.findIndex(tab => matches(tab.routeName))}
+          onChange={handleTabChange}
+          indicatorColor="primary"
+          textColor="primary"
+          variant="scrollable"
+          scrollButtons="on"
+        >
+          {tabs.map(tab => (
+            <Tab
+              key={tab.title}
+              data-qa-tab={tab.title}
+              component={React.forwardRef((forwardedProps, ref) => (
+                <TabLink
+                  to={tab.routeName}
+                  title={tab.title}
+                  {...forwardedProps}
+                  ref={ref}
+                />
+              ))}
+            />
+          ))}
+        </Tabs>
+      </AppBar>
+      <Switch>
+        <Route
+          exact
+          strict
+          path={`${url}/clients`}
+          render={() => <LongviewClients {...props} />}
+        />
+        <Route
+          exact
+          strict
+          path={`${url}/plan-details`}
+          render={() => <LongviewPlans />}
+        />
+        <Redirect to={`${url}/clients`} />
+      </Switch>
     </React.Fragment>
   );
 };
 
-export default compose<CombinedProps, RouteComponentProps>(
-  React.memo,
-  withLongviewClients(),
-  withSnackbar
-)(LongviewContent);
+export default LongviewLanding;
