@@ -1,4 +1,5 @@
 import { APIError } from 'linode-js-sdk/lib/types';
+import { reportException } from 'src/exceptionReporting';
 
 export const handleUnauthorizedErrors = (
   e: APIError[],
