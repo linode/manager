@@ -18,7 +18,7 @@ import UpdateDrawer from './UpdateClientDrawer';
 
 type CombinedProps = RouteComponentProps & LongviewProps & WithSnackbarProps;
 
-const LongviewContent: React.FC<CombinedProps> = props => {
+export const LongviewClients: React.FC<CombinedProps> = props => {
   const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
     false
   );
@@ -128,4 +128,4 @@ export default compose<CombinedProps, RouteComponentProps>(
   React.memo,
   withLongviewClients(),
   withSnackbar
-)(LongviewContent);
+)(LongviewClients);
