@@ -123,6 +123,7 @@ interface Props {
   onInputChange: (text: string) => void;
   text: string;
   errorText?: string;
+  editable?: boolean;
   typeVariant: EditableTextVariant;
   className?: string;
   inputText: string;
@@ -137,6 +138,7 @@ type FinalProps = PassThroughProps;
 export const EditableInput: React.FC<FinalProps> = props => {
   const {
     errorText,
+    editable,
     onEdit,
     openForEdit,
     cancelEdit,
@@ -214,24 +216,25 @@ export const EditableInput: React.FC<FinalProps> = props => {
             })
           }}
           autoFocus={true}
+          editable
         />
         {!loading && (
           <>
-          <Button
-            className={`${classes.button} ${classes.saveButton}`}
-            onClick={() => onEdit()}
-            data-qa-save-edit
-          >
-            <Check className={`${classes.icon} ${classes.save}`} />
-          </Button>
-          <Button
-            className={classes.button}
-            onClick={cancelEdit}
-            data-qa-cancel-edit
-          >
-            <Close className={`${classes.icon} ${classes.close}`} />
-          </Button>
-        </>
+            <Button
+              className={`${classes.button} ${classes.saveButton}`}
+              onClick={() => onEdit()}
+              data-qa-save-edit
+            >
+              <Check className={`${classes.icon} ${classes.save}`} />
+            </Button>
+            <Button
+              className={classes.button}
+              onClick={cancelEdit}
+              data-qa-cancel-edit
+            >
+              <Close className={`${classes.icon} ${classes.close}`} />
+            </Button>
+          </>
         )}
       </div>
     </ClickAwayListener>

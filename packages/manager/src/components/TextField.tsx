@@ -26,6 +26,7 @@ type ClassNames =
   | 'helpWrapperTextField'
   | 'expand'
   | 'errorText'
+  | 'editable'
   | 'helperTextTop'
   | 'small'
   | 'noTransform'
@@ -86,6 +87,16 @@ const styles = (theme: Theme) =>
     errorText: {
       color: theme.color.red
     },
+    editable: {
+      fontSize: '.75rem',
+      marginTop: theme.spacing(1) / 2,
+      position: 'absolute',
+      bottom: -5,
+      left: 6,
+      backgroundColor: theme.bg.white,
+      paddingLeft: 4,
+      paddingRight: 4
+    },
     helperTextTop: {
       marginBottom: theme.spacing(),
       marginTop: theme.spacing(2)
@@ -104,6 +115,7 @@ interface BaseProps {
   className?: any;
   expand?: boolean;
   small?: boolean;
+  editable?: boolean;
   // Currently only used for LKE node pool inputs
   tiny?: boolean;
   /**
@@ -211,6 +223,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
   render() {
     const {
       errorText,
+      editable,
       errorGroup,
       affirmative,
       classes,
@@ -363,7 +376,9 @@ class LinodeTextField extends React.Component<CombinedProps> {
           {tooltipText && <HelpIcon text={tooltipText} />}
           {errorText && (
             <FormHelperText
-              className={classes.errorText}
+              className={`${classes.errorText} ${
+                editable ? classes.editable : ''
+              }`}
               data-qa-textfield-error-text={this.props.label}
             >
               {errorText}
