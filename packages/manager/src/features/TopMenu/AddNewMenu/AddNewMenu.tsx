@@ -61,11 +61,8 @@ const styles = (theme: Theme) =>
     },
     button: {
       position: 'relative',
-      minHeight: 40,
+      minHeight: `${theme.spacing(2) + 34}px`,
       paddingRight: `calc(${theme.spacing(3)}px + 24px)`,
-      [theme.breakpoints.up('md')]: {
-        minHeight: 50
-      },
       [theme.breakpoints.down('sm')]: {
         padding: '6px 34px 7px 11px'
       }

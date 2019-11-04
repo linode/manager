@@ -20,6 +20,7 @@ const styles = (theme: Theme) =>
   createStyles({
     root: {
       position: 'relative' /* for search results */,
+      minHeight: `${theme.spacing(2) + 34}px`,
       maxHeight: 50,
       flex: 1,
       display: 'flex',

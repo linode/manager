@@ -99,7 +99,6 @@ const styles = (theme: Theme) =>
         minHeight: 80
       }
     },
-
     fadeContainer: {
       width: '100%',
       height: 'calc(100% - 90px)',
@@ -107,12 +106,19 @@ const styles = (theme: Theme) =>
       flexDirection: 'column'
     },
     logoItem: {
-      padding: `${theme.spacing(1) + 2}px 0 ${theme.spacing(
-        1
-      )}px ${theme.spacing(1) + theme.spacing(1) / 2}px`
+      padding: `
+        ${theme.spacing(2) - 2}px
+        0
+        ${theme.spacing(1) + theme.spacing(1) / 2}px
+        ${theme.spacing(1) + theme.spacing(1) / 2}px
+      `
     },
     logoItemCompact: {
-      padding: `${theme.spacing(1) + 2}px 0 ${theme.spacing(1)}px`
+      padding: `
+        ${theme.spacing(1) + 2}px
+        0
+        ${theme.spacing(1)}px
+        `
     },
     listItem: {
       position: 'relative',
