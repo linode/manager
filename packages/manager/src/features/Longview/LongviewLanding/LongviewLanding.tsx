@@ -53,7 +53,11 @@ export const LongviewLanding: React.FunctionComponent<
     <React.Fragment>
       <DocumentTitleSegment segment="Longview" />
       <Box display="flex" flexDirection="row" justifyContent="space-between">
-        <Breadcrumb pathname={props.location.pathname} labelTitle="Longview" />
+        <Breadcrumb
+          pathname={props.location.pathname}
+          labelTitle="Longview"
+          removeCrumbX={1}
+        />
         <DocumentationButton href={'https://google.com'} />
       </Box>
       <AppBar position="static" color="default">
