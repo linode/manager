@@ -1,12 +1,13 @@
+import Close from '@material-ui/icons/Close';
 import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 
+import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
-import TableCell from 'src/components/TableCell';
-import TableRow from 'src/components/TableRow';
+import Grid from 'src/components/Grid';
 import CPUGauge from './Gauges/CPU';
-import ActionMenu, { ActionHandlers } from './LongviewActionMenu';
+import { ActionHandlers } from './LongviewActionMenu';
 
 import { getLastUpdated } from '../request';
 import LoadGauge from './Gauges/Load';
@@ -17,10 +18,13 @@ import SwapGauge from './Gauges/Swap';
 
 const useStyles = makeStyles((theme: Theme) => ({
   root: {
-    '& td': {
-      height: 192,
-      paddingBottom: theme.spacing(4)
-    }
+    marginBottom: theme.spacing(4),
+    padding: `0px ${theme.spacing()}px ${theme.spacing(2)}px ${theme.spacing(
+      2
+    )}px`
+  },
+  container: {
+    height: 176
   }
 }));
 
@@ -37,7 +41,12 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
 
   let requestInterval: NodeJS.Timeout;
 
-  const { clientID, clientLabel, clientAPIKey, ...actionHandlers } = props;
+  const {
+    clientID,
+    clientLabel,
+    clientAPIKey,
+    triggerDeleteLongviewClient
+  } = props;
 
   /* 
    lastUpdated _might_ come back from the endpoint as 0, so it's important
@@ -89,50 +98,58 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
    */
   if (!authed || lastUpdated === 0) {
     return (
-      <TableRow>
-        <TableCell colSpan={7}>
-          Waiting for data...(installation instructions go here)
-        </TableCell>
-        <TableCell>
-          <ActionMenu
-            longviewClientID={clientID}
-            longviewClientLabel={clientLabel}
-            {...actionHandlers}
-          />
-        </TableCell>
-      </TableRow>
+      <Paper className={classes.root}>
+        <Grid container direction="row" key={clientID}>
+          <Grid item>
+            Waiting for data...(installation instructions go here)
+          </Grid>
+          <Grid item>
+            <Close
+              width={25}
+              height={25}
+              onClick={() => triggerDeleteLongviewClient(clientID, clientLabel)}
+            />
+          </Grid>
+        </Grid>
+      </Paper>
     );
   }
 
   return (
-    <TableRow className={classes.root} rowLink={`longview/clients/${clientID}`}>
-      <TableCell>{`${clientLabel}`}</TableCell>
-      <TableCell>
+    <Paper className={classes.root}>
+      <Grid
+        container
+        direction="row"
+        justify="space-between"
+        alignItems="center"
+        className={classes.container}
+      >
+        <Grid item xs={2}>{`${clientLabel}`}</Grid>
         <CPUGauge clientAPIKey={clientAPIKey} lastUpdated={lastUpdated} />
-      </TableCell>
-      <TableCell>
-        <RAMGauge token={clientAPIKey} lastUpdated={lastUpdated} />
-      </TableCell>
-      <TableCell>
-        <SwapGauge token={clientAPIKey} lastUpdated={lastUpdated} />
-      </TableCell>
-      <TableCell>
-        <LoadGauge token={clientAPIKey} lastUpdated={lastUpdated} />
-      </TableCell>
-      <TableCell>
-        <NetworkGauge />
-      </TableCell>
-      <TableCell>
-        <StorageGauge clientAPIKey={clientAPIKey} lastUpdated={lastUpdated} />
-      </TableCell>
-      <TableCell>
-        <ActionMenu
-          longviewClientID={clientID}
-          longviewClientLabel={clientLabel}
-          {...actionHandlers}
-        />
-      </TableCell>
-    </TableRow>
+        <Grid item>
+          <RAMGauge token={clientAPIKey} lastUpdated={lastUpdated} />
+        </Grid>
+        <Grid item>
+          <SwapGauge token={clientAPIKey} lastUpdated={lastUpdated} />
+        </Grid>
+        <Grid item>
+          <LoadGauge token={clientAPIKey} lastUpdated={lastUpdated} />
+        </Grid>
+        <Grid item>
+          <NetworkGauge />
+        </Grid>
+        <Grid item>
+          <StorageGauge clientAPIKey={clientAPIKey} lastUpdated={lastUpdated} />
+        </Grid>
+        <Grid item style={{ alignSelf: 'flex-start' }}>
+          <Close
+            width={25}
+            height={25}
+            onClick={() => triggerDeleteLongviewClient(clientID, clientLabel)}
+          />
+        </Grid>
+      </Grid>
+    </Paper>
   );
 };
 

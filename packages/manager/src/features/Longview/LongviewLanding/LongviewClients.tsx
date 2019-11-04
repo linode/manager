@@ -13,7 +13,7 @@ import withLongviewClients, {
 import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
 
 import DeleteDialog from './LongviewDeleteDialog';
-import LongviewTable from './LongviewTable';
+import LongviewList from './LongviewList';
 import UpdateDrawer from './UpdateClientDrawer';
 
 type CombinedProps = RouteComponentProps & LongviewProps & WithSnackbarProps;
@@ -94,7 +94,7 @@ export const LongviewClients: React.FC<CombinedProps> = props => {
           </Grid>
         </Grid>
       </Grid>
-      <LongviewTable
+      <LongviewList
         longviewClientsData={longviewClientsData}
         longviewClientsError={longviewClientsError}
         longviewClientsLastUpdated={longviewClientsLastUpdated}

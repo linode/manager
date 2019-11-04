@@ -2,10 +2,7 @@ import { LongviewClient } from 'linode-js-sdk/lib/longview';
 import * as React from 'react';
 import { compose } from 'recompose';
 
-import TableRowEmpty from 'src/components/TableRowEmptyState';
-import TableRowError from 'src/components/TableRowError';
-import TableRowLoading from 'src/components/TableRowLoading';
-
+import Grid from 'src/components/core/Grid';
 import { Props as LVProps } from 'src/containers/longview.container';
 import { ActionHandlers } from './LongviewActionMenu';
 import ClientRow from './LongviewClientRow';
@@ -24,7 +21,7 @@ interface Props
 
 type CombinedProps = Props & ActionHandlers;
 
-const LongviewTableRows: React.FC<CombinedProps> = props => {
+const LongviewListRows: React.FC<CombinedProps> = props => {
   const {
     longviewClientsData,
     longviewClientsResults,
@@ -35,28 +32,18 @@ const LongviewTableRows: React.FC<CombinedProps> = props => {
   } = props;
 
   if (longviewClientsLoading && longviewClientsLastUpdated === 0) {
-    return <TableRowLoading colSpan={9} />;
+    return <Grid>Loading...</Grid>;
   }
 
   /**
    * only display error if we don't already have data
    */
   if (longviewClientsError.read && longviewClientsLastUpdated === 0) {
-    return (
-      <TableRowError
-        colSpan={9}
-        message={longviewClientsError.read[0].reason}
-      />
-    );
+    return <Grid>Error!</Grid>;
   }
 
   if (longviewClientsLastUpdated !== 0 && longviewClientsResults === 0) {
-    return (
-      <TableRowEmpty
-        colSpan={9}
-        message="You do not have any Longview Clients"
-      />
-    );
+    return <Grid>Empty</Grid>;
   }
 
   return (
@@ -77,5 +64,5 @@ const LongviewTableRows: React.FC<CombinedProps> = props => {
 };
 
 export default compose<CombinedProps, Props & ActionHandlers>(React.memo)(
-  LongviewTableRows
+  LongviewListRows
 );
