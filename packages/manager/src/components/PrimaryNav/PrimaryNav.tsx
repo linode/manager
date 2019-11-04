@@ -7,7 +7,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
-import Logo from 'src/assets/logo/logo-text.svg';
+import Logo from 'src/assets/logo/new-logo.svg';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
 import Hidden from 'src/components/core/Hidden';
@@ -106,19 +106,18 @@ const styles = (theme: Theme) =>
       flexDirection: 'column'
     },
     logoItem: {
+      minHeight: 64,
+      display: 'flex',
+      alignItems: 'center',
       padding: `
         ${theme.spacing(2) - 2}px
         0
         ${theme.spacing(1) + theme.spacing(1) / 2}px
-        ${theme.spacing(1) + theme.spacing(1) / 2}px
-      `
-    },
-    logoItemCompact: {
-      padding: `
-        ${theme.spacing(1) + 2}px
-        0
-        ${theme.spacing(1)}px
-        `
+        ${theme.spacing(3) + theme.spacing(1) / 2}px
+      `,
+      '& svg': {
+        maxWidth: theme.spacing(3) + 91
+      }
     },
     listItem: {
       position: 'relative',
