@@ -1,12 +1,13 @@
 import * as React from 'react';
 import { compose } from 'recompose';
-import { Props as LVProps } from 'src/containers/longview.container';
-
+import CircleProgress from 'src/components/CircleProgress';
 import Box from 'src/components/core/Box';
+import Paper from 'src/components/core/Paper';
+import ErrorState from 'src/components/ErrorState';
 import OrderBy from 'src/components/OrderBy';
 import Paginate from 'src/components/Paginate';
 import PaginationFooter from 'src/components/PaginationFooter';
-
+import { Props as LVProps } from 'src/containers/longview.container';
 import { ActionHandlers } from './LongviewActionMenu';
 import LongviewRows from './LongviewListRows';
 
@@ -30,6 +31,29 @@ const LongviewList: React.FC<CombinedProps> = props => {
     ...actionMenuHandlers
   } = props;
 
+  if (longviewClientsLoading && longviewClientsLastUpdated === 0) {
+    return (
+      <Paper>
+        <CircleProgress />
+      </Paper>
+    );
+  }
+
+  /**
+   * only display error if we don't already have data
+   */
+  if (longviewClientsError.read && longviewClientsLastUpdated === 0) {
+    return (
+      <Paper>
+        <ErrorState errorText={longviewClientsError.read[0].reason} />
+      </Paper>
+    );
+  }
+
+  if (longviewClientsLastUpdated !== 0 && longviewClientsResults === 0) {
+    return <div>Empty</div>;
+  }
+
   return (
     <React.Fragment>
       <OrderBy
@@ -51,9 +75,6 @@ const LongviewList: React.FC<CombinedProps> = props => {
                 <Box flexDirection="column">
                   <LongviewRows
                     longviewClientsData={paginatedAndOrderedData}
-                    longviewClientsError={longviewClientsError}
-                    longviewClientsLastUpdated={longviewClientsLastUpdated}
-                    longviewClientsLoading={longviewClientsLoading}
                     longviewClientsResults={longviewClientsResults}
                     {...actionMenuHandlers}
                   />
