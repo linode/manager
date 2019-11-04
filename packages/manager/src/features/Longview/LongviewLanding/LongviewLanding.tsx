@@ -17,8 +17,6 @@ import DocumentationButton from 'src/components/DocumentationButton';
 import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import TabLink from 'src/components/TabLink';
 
-import { requestClusters as _requestClusters } from 'src/store/clusters/clusters.actions';
-
 const LongviewClients = DefaultLoader({
   loader: () => import('./LongviewClients')
 });
