@@ -3,6 +3,7 @@ import { pathOr } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
 
+import Button from 'src/components/Button';
 import Paper from 'src/components/core/Paper';
 import { makeStyles, Theme } from 'src/components/core/styles';
 import Grid from 'src/components/Grid';
@@ -104,11 +105,11 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
             Waiting for data...(installation instructions go here)
           </Grid>
           <Grid item>
-            <Close
-              width={25}
-              height={25}
+            <Button
               onClick={() => triggerDeleteLongviewClient(clientID, clientLabel)}
-            />
+            >
+              <Close width={25} height={25} />
+            </Button>
           </Grid>
         </Grid>
       </Paper>
@@ -142,11 +143,11 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
           <StorageGauge clientAPIKey={clientAPIKey} lastUpdated={lastUpdated} />
         </Grid>
         <Grid item style={{ alignSelf: 'flex-start' }}>
-          <Close
-            width={25}
-            height={25}
+          <Button
             onClick={() => triggerDeleteLongviewClient(clientID, clientLabel)}
-          />
+          >
+            <Close width={25} height={25} />
+          </Button>
         </Grid>
       </Grid>
     </Paper>
