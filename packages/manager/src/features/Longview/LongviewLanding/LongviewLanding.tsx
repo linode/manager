@@ -1,3 +1,4 @@
+import { withSnackbar, WithSnackbarProps } from 'notistack';
 import * as React from 'react';
 import { RouteComponentProps } from 'react-router-dom';
 import { compose } from 'recompose';
@@ -14,7 +15,8 @@ import withLongviewClients, {
   Props as LongviewProps
 } from 'src/containers/longview.container';
 
-import AddClientDrawer from './AddClientDrawer';
+import { getAPIErrorOrDefault } from 'src/utilities/errorUtils';
+
 import DeleteDialog from './LongviewDeleteDialog';
 import LongviewTable from './LongviewTable';
 import UpdateDrawer from './UpdateClientDrawer';
@@ -26,12 +28,14 @@ const useStyles = makeStyles((theme: Theme) => ({
   }
 }));
 
-type CombinedProps = RouteComponentProps & LongviewProps;
+type CombinedProps = RouteComponentProps & LongviewProps & WithSnackbarProps;
 
 const LongviewContent: React.FC<CombinedProps> = props => {
   const classes = useStyles();
 
-  const [addDrawerOpen, toggleAddDrawer] = React.useState<boolean>(false);
+  const [newClientLoading, setNewClientLoading] = React.useState<boolean>(
+    false
+  );
   const [editDrawerOpen, toggleEditDrawer] = React.useState<boolean>(false);
   const [deleteDialogOpen, toggleDeleteDialog] = React.useState<boolean>(false);
   const [selectedClientID, setClientID] = React.useState<number | undefined>(
@@ -53,6 +57,24 @@ const LongviewContent: React.FC<CombinedProps> = props => {
     toggleEditDrawer(true);
     setClientID(id);
     setClientLabel(label);
+  };
+
+  const handleAddClient = () => {
+    setNewClientLoading(true);
+    createLongviewClient()
+      .then(_ => {
+        setNewClientLoading(false);
+      })
+      .catch(errorResponse => {
+        props.enqueueSnackbar(
+          getAPIErrorOrDefault(
+            errorResponse,
+            'Error creating Longview client.'
+          )[0].reason,
+          { variant: 'error' }
+        ),
+          setNewClientLoading(false);
+      });
   };
 
   const {
@@ -82,9 +104,10 @@ const LongviewContent: React.FC<CombinedProps> = props => {
         <Grid item>
           <Grid container alignItems="flex-end">
             <Grid item className="pt0">
+              {/** @todo replace with actual loading state when design is ready */}
               <AddNewLink
-                onClick={() => toggleAddDrawer(true)}
-                label="Add a Client"
+                onClick={handleAddClient}
+                label={newClientLoading ? 'Loading...' : 'Add a Client'}
               />
             </Grid>
           </Grid>
@@ -98,12 +121,6 @@ const LongviewContent: React.FC<CombinedProps> = props => {
         longviewClientsResults={longviewClientsResults}
         triggerDeleteLongviewClient={openDeleteDialog}
         triggerEditLongviewClient={openEditDrawer}
-      />
-      <AddClientDrawer
-        title="Add Longview Client"
-        onClose={() => toggleAddDrawer(false)}
-        open={addDrawerOpen}
-        createClient={createLongviewClient}
       />
       <UpdateDrawer
         title={`Rename Longview Client${
@@ -128,5 +145,6 @@ const LongviewContent: React.FC<CombinedProps> = props => {
 
 export default compose<CombinedProps, RouteComponentProps>(
   React.memo,
-  withLongviewClients()
+  withLongviewClients(),
+  withSnackbar
 )(LongviewContent);
