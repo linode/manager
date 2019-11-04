@@ -14,7 +14,6 @@ import Tab from 'src/components/core/Tab';
 import Tabs from 'src/components/core/Tabs';
 import DefaultLoader from 'src/components/DefaultLoader';
 import DocumentationButton from 'src/components/DocumentationButton';
-import { DocumentTitleSegment } from 'src/components/DocumentTitle';
 import TabLink from 'src/components/TabLink';
 
 const LongviewClients = DefaultLoader({
@@ -51,7 +50,6 @@ export const LongviewLanding: React.FunctionComponent<
 
   return (
     <React.Fragment>
-      <DocumentTitleSegment segment="Longview" />
       <Box display="flex" flexDirection="row" justifyContent="space-between">
         <Breadcrumb
           pathname={props.location.pathname}
