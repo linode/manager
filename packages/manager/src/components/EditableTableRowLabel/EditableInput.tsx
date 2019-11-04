@@ -127,6 +127,7 @@ interface Props {
   className?: string;
   inputText: string;
   isEditing: boolean;
+  loading: boolean;
 }
 
 type PassThroughProps = Props & TextFieldProps;
@@ -145,6 +146,7 @@ export const EditableInput: React.FC<FinalProps> = props => {
     className,
     isEditing,
     inputText,
+    loading,
     ...rest
   } = props;
 
@@ -196,6 +198,7 @@ export const EditableInput: React.FC<FinalProps> = props => {
       >
         <TextField
           {...rest}
+          loading={loading}
           className={classes.textField}
           type="text"
           onChange={(e: any) => onInputChange(e.target.value)}
@@ -212,20 +215,24 @@ export const EditableInput: React.FC<FinalProps> = props => {
           }}
           autoFocus={true}
         />
-        <Button
-          className={`${classes.button} ${classes.saveButton}`}
-          onClick={() => onEdit()}
-          data-qa-save-edit
-        >
-          <Check className={`${classes.icon} ${classes.save}`} />
-        </Button>
-        <Button
-          className={classes.button}
-          onClick={cancelEdit}
-          data-qa-cancel-edit
-        >
-          <Close className={`${classes.icon} ${classes.close}`} />
-        </Button>
+        {!loading && (
+          <>
+          <Button
+            className={`${classes.button} ${classes.saveButton}`}
+            onClick={() => onEdit()}
+            data-qa-save-edit
+          >
+            <Check className={`${classes.icon} ${classes.save}`} />
+          </Button>
+          <Button
+            className={classes.button}
+            onClick={cancelEdit}
+            data-qa-cancel-edit
+          >
+            <Close className={`${classes.icon} ${classes.close}`} />
+          </Button>
+        </>
+        )}
       </div>
     </ClickAwayListener>
   );

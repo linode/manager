@@ -24,11 +24,12 @@ interface Props {
   onEdit: (s: string) => Promise<any>;
   width?: string;
   iconVariant: Variant;
+  loading: boolean;
   subText?: string;
 }
 
 export const EditableTableRowLabel: React.FC<Props> = props => {
-  const { iconVariant, subText, text, width, onEdit } = props;
+  const { iconVariant, loading, subText, text, width, onEdit } = props;
   const [isEditing, toggleEditing] = React.useState<boolean>(false);
   const [inputText, setInputText] = React.useState<string>(text);
   const [error, setError] = React.useState<string | undefined>();
@@ -81,6 +82,7 @@ export const EditableTableRowLabel: React.FC<Props> = props => {
           <Grid item className="py0 px0">
             <EditableInput
               errorText={error}
+              loading={loading}
               onEdit={onSubmit}
               openForEdit={handleOpen}
               cancelEdit={handleClose}

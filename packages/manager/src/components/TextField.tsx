@@ -3,6 +3,8 @@ import * as classNames from 'classnames';
 import { clamp, equals } from 'ramda';
 import * as React from 'react';
 import { compose } from 'recompose';
+import CircleProgress from 'src/components/CircleProgress';
+import InputAdornment from 'src/components/core/InputAdornment';
 import {
   createStyles,
   Theme,
@@ -112,6 +114,7 @@ interface BaseProps {
   max?: number;
   dataAttrs?: Record<string, any>;
   noMarginTop?: boolean;
+  loading?: boolean;
 }
 
 export type Props = BaseProps & TextFieldProps;
@@ -231,6 +234,7 @@ class LinodeTextField extends React.Component<CombinedProps> {
       error,
       noMarginTop,
       label,
+      loading,
       ...textFieldProps
     } = this.props;
 
@@ -306,6 +310,11 @@ class LinodeTextField extends React.Component<CombinedProps> {
             }}
             InputProps={{
               disableUnderline: true,
+              endAdornment: loading && (
+                <InputAdornment position="end">
+                  <CircleProgress mini />
+                </InputAdornment>
+              ),
               className: classNames(
                 'input',
                 {

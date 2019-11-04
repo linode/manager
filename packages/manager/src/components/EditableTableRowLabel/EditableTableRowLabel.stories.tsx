@@ -12,9 +12,16 @@ import EditableTableRowLabel from './EditableTableRowLabel';
 storiesOf('EditableTableRowLabel', module)
   .add('default', () => {
     const [text, setText] = React.useState<string>('sample text');
+    const [loading, setLoading] = React.useState<boolean>(false);
 
     const onEdit = (s: string) => {
-      return Promise.resolve(s).then(response => setText(response));
+      return new Promise((resolve, reject) => {
+        setLoading(true);
+        setTimeout(() => {
+          setLoading(false);
+          resolve(setText(s));
+        }, 3000);
+      });
     };
 
     return (
@@ -33,6 +40,7 @@ storiesOf('EditableTableRowLabel', module)
               iconVariant="linode"
               subText="Waiting for data..."
               onEdit={onEdit}
+              loading={loading}
             />
             <TableCell>Table Value</TableCell>
             <TableCell>2 days ago</TableCell>
@@ -42,11 +50,18 @@ storiesOf('EditableTableRowLabel', module)
     );
   })
   .add('with error', () => {
-    const [text, setText] = React.useState<string>('sample text');
+    const [loading, setLoading] = React.useState<boolean>(false);
 
     const onEdit = (s: string) => {
-      return Promise.reject('an error').then(response => setText(response));
+      return new Promise((resolve, reject) => {
+        setLoading(true);
+        setTimeout(() => {
+          setLoading(false);
+          reject();
+        }, 3000);
+      });
     };
+
 
     return (
       <Table>
@@ -60,10 +75,11 @@ storiesOf('EditableTableRowLabel', module)
         <TableBody>
           <TableRow>
             <EditableTableRowLabel
-              text={text}
+              text={"demo text"}
               iconVariant="linode"
               subText="Waiting for data..."
               onEdit={onEdit}
+              loading={loading}
             />
             <TableCell>Table Value</TableCell>
             <TableCell>2 days ago</TableCell>
