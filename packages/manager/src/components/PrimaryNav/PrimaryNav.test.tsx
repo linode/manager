@@ -3,7 +3,8 @@ import * as React from 'react';
 import ldClient from 'src/__data__/ldClient';
 import { reactRouterProps } from 'src/__data__/reactRouterProps';
 import { light } from 'src/themes';
-import { ClassNames, PrimaryNav } from './PrimaryNav';
+import { PrimaryNav } from './PrimaryNav';
+import { ClassNames } from './PrimaryNav.styles';
 
 const findLinkIn = (w: ShallowWrapper) => (s: string) => {
   return w.find(`[data-qa-nav-item="${s}"]`);
