@@ -165,9 +165,7 @@ export default class Page {
     return $('[data-qa-cancel-edit]');
   }
   get groupByTagsToggle() {
-    return $$('span')
-      .find(it => it.getText().includes('Group by Tag'))
-      .$('..');
+    return $('[data-qa-toggle]');
   }
   get tagHeaderSelector() {
     return 'data-qa-tag-header';
