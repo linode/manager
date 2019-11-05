@@ -138,7 +138,6 @@ xdescribe('StackScript - detail page and drawer suite', () => {
         stackConfig.label,
         browser.options.testUser,
         '0',
-        stackConfig.images,
         stackConfig.description,
         stackConfig.script
       );
@@ -183,7 +182,6 @@ xdescribe('StackScript - detail page and drawer suite', () => {
         stackConfig.label,
         browser.options.testUser,
         '0',
-        stackConfig.images,
         stackConfig.description,
         stackConfig.script
       );
