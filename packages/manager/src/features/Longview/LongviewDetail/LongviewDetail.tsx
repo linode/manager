@@ -9,6 +9,7 @@ import {
 import { compose } from 'recompose';
 
 import Breadcrumb from 'src/components/Breadcrumb';
+import CircleProgress from 'src/components/CircleProgress';
 import AppBar from 'src/components/core/AppBar';
 import Box from 'src/components/core/Box';
 import Tab from 'src/components/core/Tab';
@@ -111,6 +112,10 @@ const LongviewDetail: React.FC<CombinedProps> = props => {
   const matches = (p: string) => {
     return Boolean(matchPath(p, { path: props.location.pathname }));
   };
+
+  if (!client) {
+    return <CircleProgress />;
+  }
 
   return (
     <React.Fragment>
