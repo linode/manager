@@ -54,13 +54,14 @@ const styles = (theme: Theme) =>
     },
     logoItem: {
       minHeight: 64,
+      position: 'relative',
       display: 'flex',
       alignItems: 'center',
       padding: `
         ${theme.spacing(2) - 2}px
         0
         ${theme.spacing(1) + theme.spacing(1) / 2}px
-        ${theme.spacing(3) + theme.spacing(1) / 2}px
+        ${theme.spacing(4)}px
       `,
       '& svg': {
         maxWidth: theme.spacing(3) + 91
@@ -83,16 +84,22 @@ const styles = (theme: Theme) =>
         backgroundColor: theme.bg.primaryNavActiveBG,
         '& $linkItem': {
           color: 'white'
+        },
+        '& svg': {
+          fill: theme.color.white,
+          '& *': {
+            stroke: theme.color.white
+          }
         }
       },
       '& .icon': {
         marginRight: theme.spacing(2),
-        color: theme.color.primaryNavText,
         '& svg': {
           width: 26,
           height: 26,
           transform: 'scale(1.75)',
           fill: theme.color.primaryNavText,
+          transition: theme.transitions.create(['fill']),
           '&.small': {
             transform: 'scale(1)'
           },
@@ -100,6 +107,7 @@ const styles = (theme: Theme) =>
             display: 'none'
           },
           '& *': {
+            transition: theme.transitions.create(['stroke']),
             stroke: theme.color.primaryNavText
           }
         }
@@ -109,9 +117,10 @@ const styles = (theme: Theme) =>
       fontSize: '0.9rem'
     },
     linkItem: {
-      transition: theme.transitions.create(['color', 'opacity']),
+      transition: theme.transitions.create(['color']),
       color: theme.color.primaryNavText,
       opacity: 1,
+      whiteSpace: 'nowrap',
       fontFamily: 'LatoWebBold', // we keep this bold at all times
       '&.hiddenWhenCollapsed': {
         opacity: 0
@@ -122,29 +131,25 @@ const styles = (theme: Theme) =>
       '&:before': {
         content: "''",
         borderStyle: 'solid',
-        borderWidth: `${theme.spacing(2) + 5}px ${theme.spacing(
-          2
-        )}px ${theme.spacing(2) + 5}px 0`,
+        borderWidth: `
+          ${theme.spacing(2) + 3}px
+          ${theme.spacing(2) - 2}px 
+          ${theme.spacing(2) + 3}px 
+          0
+        `,
         borderColor: `transparent ${
           theme.bg.primaryNavActive
         } transparent transparent`,
         position: 'absolute',
         right: 0,
-        top: '8%'
+        top: 'calc(8% - 1px)'
       },
       '&:hover': {
         '&:before': {
           content: "''",
-          borderStyle: 'solid',
-          borderWidth: `${theme.spacing(2) + 5}px ${theme.spacing(
-            2
-          )}px ${theme.spacing(2) + 5}px 0`,
           borderColor: `transparent ${
             theme.bg.primaryNavActive
-          } transparent transparent`,
-          position: 'absolute',
-          right: 0,
-          top: '8%'
+          } transparent transparent`
         }
       },
       [theme.breakpoints.down('sm')]: {

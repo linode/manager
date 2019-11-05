@@ -7,6 +7,7 @@ import * as React from 'react';
 import { connect } from 'react-redux';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { compose } from 'recompose';
+import LogoM from 'src/assets/logo/new-logo-m.svg';
 import Logo from 'src/assets/logo/new-logo.svg';
 import Divider from 'src/components/core/Divider';
 import Grid from 'src/components/core/Grid';
@@ -365,7 +366,11 @@ export class PrimaryNav extends React.Component<CombinedProps, State> {
             {NORMAL_SPACING_UNIT ? (
               <div className={classes.logoItem}>
                 <Link to={`/dashboard`}>
-                  <Logo width={115} height={43} />
+                  {isCollapsed ? (
+                    <LogoM width={115} height={43} />
+                  ) : (
+                    <Logo width={115} height={43} />
+                  )}
                 </Link>
               </div>
             ) : (

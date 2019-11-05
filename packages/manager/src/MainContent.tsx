@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
   content: {
     flex: 1,
-    transition: theme.transitions.create('margin-left'),
+    transition: 'margin-left .1s linear',
     [theme.breakpoints.up('md')]: {
       marginLeft: theme.spacing(14) + 103 // 215
     },
@@ -74,7 +74,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   fullWidthContent: {
     marginLeft: 0,
     [theme.breakpoints.up('md')]: {
-      marginLeft: 90
+      marginLeft: 92
     }
   },
   hidden: {
