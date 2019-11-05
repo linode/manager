@@ -21,26 +21,26 @@ const getNodeBalancerConfigNodes = (nodeBalancerId: number, configId: number) =>
 
 export const getAllNodeBalancerConfigNodes = createRequestThunk(
   requestNodeBalancerConfigNodesActions,
-  ({ nodeBalancerId, configId }) =>
-    getNodeBalancerConfigNodes(nodeBalancerId, configId)().then(
+  ({ nodeBalancerID, configID }) =>
+    getNodeBalancerConfigNodes(nodeBalancerID, configID)().then(
       ({ data }) => data
     )
 );
 
 export const createNodeBalancerConfigNode = createRequestThunk(
   createNodeBalancerConfigNodeActions,
-  ({ nodeBalancerId, configId, ...data }) =>
-    _createNode(nodeBalancerId, configId, data)
+  ({ nodeBalancerID, configID, ...data }) =>
+    _createNode(nodeBalancerID, configID, data)
 );
 
 export const updateNodeBalancerConfigNode = createRequestThunk(
   updateNodeBalancerConfigNodeActions,
-  ({ nodeBalancerId, configId, nodeId, ...data }) =>
-    _updateNode(nodeBalancerId, configId, nodeId, data)
+  ({ nodeBalancerID, configID, nodeID, ...data }) =>
+    _updateNode(nodeBalancerID, configID, nodeID, data)
 );
 
 export const deleteNodeBalancerConfigNode = createRequestThunk(
   deleteNodeBalancerConfigNodeActions,
-  ({ nodeBalancerId, configId, nodeId }) =>
-    _deleteNode(nodeBalancerId, configId, nodeId)
+  ({ nodeBalancerID, configID, nodeID }) =>
+    _deleteNode(nodeBalancerID, configID, nodeID)
 );

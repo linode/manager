@@ -1,5 +1,6 @@
 import { NEWCreateNodeBalancerConfigPayload } from 'linode-js-sdk/lib/nodebalancers';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
@@ -12,6 +13,8 @@ import withNodeBalancerConfigs, {
   Props as ConfigProps,
   StateProps as ConfigStateProps
 } from 'src/containers/__new__/nodeBalancerConfigs.container';
+
+import { getAllNodeBalancerConfigNodes } from 'src/store/nodeBalancerConfigNodes/configNode.requests';
 
 const useStyles = makeStyles((theme: Theme) => ({
   title: {
@@ -26,7 +29,10 @@ interface Props {
   nodeBalancerLabel: string;
 }
 
-type CombinedProps = Props & ConfigProps;
+type CombinedProps = Props &
+  ConfigProps & {
+    getAllNodeBalancerConfigNodes: (configID: number) => Promise<any>;
+  };
 
 const EditNodeBalancerConfigs: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -34,6 +40,18 @@ const EditNodeBalancerConfigs: React.FC<CombinedProps> = props => {
   const [newConfigs, setNewConfigs] = React.useState<
     NEWCreateNodeBalancerConfigPayload[]
   >([]);
+
+  React.useEffect(() => {
+    /**
+     * iterate over all this NodeBalancer's Configs and request
+     * all the nodes for each Config.
+     *
+     * Do it on every mount
+     */
+    Object.keys(nodeBalancerConfigsData).forEach(eachKey => {
+      props.getAllNodeBalancerConfigNodes(+eachKey);
+    });
+  }, []);
 
   const {
     nodeBalancerLabel,
@@ -76,14 +94,11 @@ export default compose<CombinedProps, Props>(
   React.memo,
   withNodeBalancerConfigs<ConfigStateProps, Props>(
     (ownProps, { nodeBalancerConfigsData, ...rest }) => ({
-      nodeBalancerConfigsData: Object.keys(nodeBalancerConfigsData).reduce(
-        (acc, eachKey) => {
+      nodeBalancerConfigsData: Object.values(nodeBalancerConfigsData).reduce(
+        (acc, eachConfig) => {
           /** return us just the configs that are attached to this nodebalancer */
-          if (
-            nodeBalancerConfigsData[eachKey].nodebalancer_id ===
-            ownProps.nodeBalancerID
-          ) {
-            acc[eachKey] = nodeBalancerConfigsData[eachKey];
+          if (eachConfig.nodebalancer_id === ownProps.nodeBalancerID) {
+            acc[eachConfig.id] = nodeBalancerConfigsData[eachConfig.id];
           }
 
           return acc;
@@ -91,6 +106,18 @@ export default compose<CombinedProps, Props>(
         {}
       ),
       ...rest
+    })
+  ),
+  connect(
+    undefined,
+    (dispatch: any, ownProps: Props) => ({
+      getAllNodeBalancerConfigNodes: (configID: number) =>
+        dispatch(
+          getAllNodeBalancerConfigNodes({
+            configID,
+            nodeBalancerID: ownProps.nodeBalancerID
+          })
+        )
     })
   )
 )(EditNodeBalancerConfigs);

@@ -90,16 +90,28 @@ export type EventHandler = (
   getState: () => ApplicationState
 ) => void;
 
+export type CRUDError = Partial<{
+  read: APIError[];
+  create: APIError[];
+  delete: APIError[];
+  update: APIError[];
+}>;
+
 export interface EntitiesAsObjectState<T> {
-  error: Partial<{
-    read: APIError[];
-    create: APIError[];
-    delete: APIError[];
-    update: APIError[];
-  }>;
+  error: CRUDError;
   data: Record<string, T>;
   results: number;
   lastUpdated: number;
   loading: boolean;
   listOfIDsInOriginalOrder: (string | number)[];
 }
+
+export type RelationalDataSet<T extends {}> = Record<
+  string,
+  {
+    data: T;
+    loading: boolean;
+    error: CRUDError;
+    lastUpdated: number;
+  }
+>;

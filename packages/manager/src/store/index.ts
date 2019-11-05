@@ -102,14 +102,14 @@ import nodeBalancers, {
   defaultState as defaultNodeBalancerState,
   State as NodeBalancersState
 } from 'src/store/nodeBalancer/nodeBalancer.reducer';
-import nodeBalancerConfigNodes, {
-  defaultState as defaultNodeBalancerConfigNodeState,
-  State as NodeBalancerConfigNodesState
-} from 'src/store/nodeBalancerConfig/configNode.reducer';
 import nodeBalancerConfigs, {
   defaultState as defaultNodeBalancerConfigState,
   State as NodeBalancerConfigsState
 } from 'src/store/nodeBalancerConfig/nodeBalancerConfig.reducer';
+import nodeBalancerConfigNodes, {
+  defaultState as defaultNodeBalancerConfigNodeState,
+  State as NodeBalancerConfigNodesState
+} from 'src/store/nodeBalancerConfigNodes/configNode.reducer';
 import profile, {
   defaultState as defaultProfileState,
   State as ProfileState

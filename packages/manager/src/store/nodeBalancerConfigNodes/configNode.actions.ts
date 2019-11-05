@@ -5,27 +5,27 @@ import {
 } from 'linode-js-sdk/lib/nodebalancers';
 import { APIError } from 'linode-js-sdk/lib/types';
 import { actionCreatorFactory } from 'typescript-fsa';
-import { BalancerParams } from '../nodeBalancer/nodeBalancer.actions';
 
-export interface ConfigParams extends BalancerParams {
-  configId: number;
+export interface NodeParams {
+  nodeBalancerID: number;
+  configID: number;
 }
 
-export interface NodeParams extends ConfigParams {
-  nodeId: number;
+export interface WithNodeID {
+  nodeID: number;
 }
 
 const actionCreator = actionCreatorFactory(`@@manager/nodeBalancerConfigNode`);
 
-export type GetAllConfigNodesParams = ConfigParams;
 export const requestNodeBalancerConfigNodesActions = actionCreator.async<
-  GetAllConfigNodesParams,
+  NodeParams,
   NodeBalancerConfigNode[],
   APIError[]
 >(`get-all`);
 
-export type CreateNodeBalancerConfigNodeParams = ConfigParams &
+export type CreateNodeBalancerConfigNodeParams = NodeParams &
   CreateNodeBalancerConfigNode;
+
 export const createNodeBalancerConfigNodeActions = actionCreator.async<
   CreateNodeBalancerConfigNodeParams,
   NodeBalancerConfigNode,
@@ -33,24 +33,19 @@ export const createNodeBalancerConfigNodeActions = actionCreator.async<
 >(`create`);
 
 export type UpdateNodeBalancerConfigNodeParams = NodeParams &
+  WithNodeID &
   UpdateNodeBalancerConfigNode;
+
 export const updateNodeBalancerConfigNodeActions = actionCreator.async<
   UpdateNodeBalancerConfigNodeParams,
   NodeBalancerConfigNode,
   APIError[]
 >(`update`);
 
-export type DeleteNodeBalancerConfigNodeParams = NodeParams;
+export type DeleteNodeBalancerConfigNodeParams = NodeParams & WithNodeID;
+
 export const deleteNodeBalancerConfigNodeActions = actionCreator.async<
   DeleteNodeBalancerConfigNodeParams,
   {},
   APIError[]
 >(`delete`);
-
-export const removeNodeBalancerConfigNodes = actionCreator<number[]>(
-  `remove-many`
-);
-
-export const addNodeBalancerConfigNodes = actionCreator<
-  NodeBalancerConfigNode[]
->(`add-many`);
