@@ -54,6 +54,7 @@ describe('PrimaryNav', () => {
           accountCapabilities={[]}
           accountLastUpdated={0}
           isManagedAccount={true}
+          isCollapsed={false}
           {...reactRouterProps}
         />
       );
@@ -122,6 +123,7 @@ describe('PrimaryNav', () => {
           accountCapabilities={[]}
           accountLastUpdated={0}
           isManagedAccount={true}
+          isCollapsed={false}
           {...reactRouterProps}
         />
       );
@@ -154,6 +156,7 @@ describe('PrimaryNav', () => {
           accountCapabilities={[]}
           accountLastUpdated={0}
           isManagedAccount={true}
+          isCollapsed={false}
           {...reactRouterProps}
         />
       );
@@ -191,6 +194,7 @@ describe('PrimaryNav', () => {
           ]}
           accountLastUpdated={0}
           isManagedAccount={true}
+          isCollapsed={false}
           {...reactRouterProps}
         />
       );

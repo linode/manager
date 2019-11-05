@@ -71,6 +71,7 @@ const styles = (theme: Theme) =>
       alignItems: 'center',
       position: 'relative',
       cursor: 'pointer',
+      maxHeight: 42,
       transition: theme.transitions.create(['background-color']),
       padding: `
         ${theme.spacing(1.5)}px
@@ -108,9 +109,13 @@ const styles = (theme: Theme) =>
       fontSize: '0.9rem'
     },
     linkItem: {
-      transition: theme.transitions.create(['color']),
+      transition: theme.transitions.create(['color', 'opacity']),
       color: theme.color.primaryNavText,
-      fontFamily: 'LatoWebBold' // we keep this bold at all times
+      opacity: 1,
+      fontFamily: 'LatoWebBold', // we keep this bold at all times
+      '&.hiddenWhenCollapsed': {
+        opacity: 0
+      }
     },
     active: {
       backgroundColor: theme.bg.primaryNavActiveBG,
