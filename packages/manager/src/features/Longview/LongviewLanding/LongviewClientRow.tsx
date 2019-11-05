@@ -111,7 +111,7 @@ const LongviewClientRow: React.FC<CombinedProps> = props => {
   if (!authed || lastUpdated === 0) {
     return (
       <Paper className={classes.root}>
-        <Grid container direction="row">
+        <Grid container direction="row" justify="space-between">
           <Grid item>
             Waiting for data...(installation instructions go here)
           </Grid>

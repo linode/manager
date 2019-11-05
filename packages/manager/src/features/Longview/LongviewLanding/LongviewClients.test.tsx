@@ -6,9 +6,9 @@ import { longviewClientFactory } from 'src/factories/longviewClient';
 import { renderWithTheme } from 'src/utilities/testHelpers';
 import { LongviewClients } from './LongviewClients';
 
-jest.genMockFromModule('../request');
-
 afterEach(cleanup);
+
+jest.mock('../request');
 
 const clients = longviewClientFactory.buildList(5);
 
