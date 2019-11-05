@@ -29,7 +29,6 @@ export interface DispatchProps {
   ) => Promise<NodeBalancerConfig>;
 }
 
-/* tslint:disable-next-line */
 export interface StateProps {
   nodeBalancerConfigsError: State['error'];
   nodeBalancerConfigsLoading: State['loading'];
