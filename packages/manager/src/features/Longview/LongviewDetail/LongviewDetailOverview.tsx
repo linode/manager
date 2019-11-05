@@ -72,7 +72,7 @@ const LongviewDetailOverview: React.FC<CombinedProps> = props => {
   );
 };
 
-export default compose<CombinedProps, {}>(
+export default compose<CombinedProps, Props>(
   React.memo,
   withLongviewClients<Props, {}>(
     (own, { longviewClientsData, longviewClientsLastUpdated }) => ({
