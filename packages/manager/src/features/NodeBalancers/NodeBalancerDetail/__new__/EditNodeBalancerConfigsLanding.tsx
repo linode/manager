@@ -3,6 +3,7 @@ import {
   NodeBalancerConfig
 } from 'linode-js-sdk/lib/nodebalancers';
 import * as React from 'react';
+import { connect } from 'react-redux';
 import { compose } from 'recompose';
 import { makeStyles, Theme } from 'src/components/core/styles';
 
@@ -15,6 +16,8 @@ import withNodeBalancerConfigs, {
   DispatchProps,
   StateProps as ConfigStateProps
 } from 'src/containers/__new__/nodeBalancerConfigs.container';
+
+import { getAllNodeBalancerConfigNodes as _getAllNodes } from 'src/store/nodeBalancerConfigNodes/configNode.requests';
 
 const useStyles = makeStyles((theme: Theme) => ({
   title: {
@@ -29,7 +32,9 @@ interface Props {
   nodeBalancerLabel: string;
 }
 
-type CombinedProps = Props & DispatchProps & ReduxStateProps;
+type CombinedProps = Props & DispatchProps & ReduxStateProps & {
+  getAllNodeBalancerConfigNodes: (configID: number) => Promise<any>;
+};
 
 const EditNodeBalancerConfigs: React.FC<CombinedProps> = props => {
   const classes = useStyles();
@@ -41,8 +46,21 @@ const EditNodeBalancerConfigs: React.FC<CombinedProps> = props => {
   const {
     nodeBalancerLabel,
     // nodeBalancerRegion,
+    getAllNodeBalancerConfigNodes,
     configs
   } = props;
+
+  React.useEffect(() => {
+    /**
+     * iterate over all this NodeBalancer's Configs and request
+     * all the nodes for each Config.
+     *
+     * Do it on every mount
+     */
+    configs.forEach(eachKey => {
+      getAllNodeBalancerConfigNodes(+eachKey);
+    });
+  }, []);
 
   const hasNoConfigs = !Object.keys(configs).length;
 
@@ -91,6 +109,18 @@ export default compose<CombinedProps, Props>(
         config => config.nodebalancer_id === ownProps.nodeBalancerID
       ),
       ...rest
+    })
+  ),
+  connect(
+    undefined,
+    (dispatch: any, ownProps: Props) => ({
+      getAllNodeBalancerConfigNodes: (configID: number) =>
+        dispatch(
+          _getAllNodes({
+            configID,
+            nodeBalancerID: ownProps.nodeBalancerID
+          })
+        )
     })
   )
 )(EditNodeBalancerConfigs);

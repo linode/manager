@@ -1,90 +1,87 @@
 import { NodeBalancerConfigNode } from 'linode-js-sdk/lib/nodebalancers';
 import { connect, InferableComponentEnhancerWithProps } from 'react-redux';
 import { ApplicationState } from 'src/store';
-import { State } from 'src/store/nodeBalancerConfig/configNode.reducer';
+import { State } from 'src/store/nodeBalancerConfigNodes/configNode.reducer';
 import {
   createNodeBalancerConfigNode as _create,
   deleteNodeBalancerConfigNode as _delete,
   getAllNodeBalancerConfigNodes as _getAll,
   updateNodeBalancerConfigNode as _update
-} from 'src/store/nodeBalancerConfig/configNode.requests';
+} from 'src/store/nodeBalancerConfigNodes/configNode.requests';
 import { ThunkDispatch } from 'src/store/types';
 
 import {
   CreateNodeBalancerConfigNodeParams,
-  GetAllConfigNodesParams,
+  DeleteNodeBalancerConfigNodeParams,
   NodeParams,
   UpdateNodeBalancerConfigNodeParams
-} from 'src/store/nodeBalancerConfig/configNode.actions';
+} from 'src/store/nodeBalancerConfigNodes/configNode.actions';
 
 export interface DispatchProps {
   getAllNodeBalancerConfigNodes: (
-    payload: GetAllConfigNodesParams
+    payload: NodeParams
   ) => Promise<NodeBalancerConfigNode[]>;
   createNodeBalancerConfigNode: (
     payload: CreateNodeBalancerConfigNodeParams
   ) => Promise<NodeBalancerConfigNode>;
-  deleteNodeBalancerConfigNode: (payload: NodeParams) => Promise<{}>;
+  deleteNodeBalancerConfigNode: (
+    payload: DeleteNodeBalancerConfigNodeParams
+  ) => Promise<{}>;
   updateNodeBalancerConfigNode: (
     params: UpdateNodeBalancerConfigNodeParams
   ) => Promise<NodeBalancerConfigNode>;
 }
 
-export interface StateProps {
-  nodeBalancerConfigNodesError: State['error'];
-  nodeBalancerConfigNodesLoading: State['loading'];
-  nodeBalancerConfigNodesData: State['entities'];
-  nodeBalancerConfigNodesLastUpdated: State['lastUpdated'];
-  nodeBalancerConfigNodesResults: number;
-}
-
 type MapProps<ReduxStateProps, OwnProps> = (
   ownProps: OwnProps,
-  data: StateProps
-) => ReduxStateProps & Partial<StateProps>;
+  data: State
+) => ReduxStateProps & Partial<State>;
 
-export type Props = DispatchProps & StateProps;
+export type Props = DispatchProps & State;
 
 interface Connected {
   <ReduxStateProps, OwnProps>(
+    configID: number,
     mapStateToProps: MapProps<ReduxStateProps, OwnProps>
   ): InferableComponentEnhancerWithProps<
-    ReduxStateProps & Partial<StateProps> & DispatchProps & OwnProps,
+    ReduxStateProps & Partial<State> & DispatchProps & OwnProps,
     OwnProps
   >;
-  <ReduxStateProps, OwnProps>(): InferableComponentEnhancerWithProps<
+  <ReduxStateProps, OwnProps>(
+    configID: number
+  ): InferableComponentEnhancerWithProps<
     ReduxStateProps & DispatchProps & OwnProps,
     OwnProps
   >;
 }
 
 const connected: Connected = <ReduxStateProps extends {}, OwnProps extends {}>(
+  configID: number,
   mapStateToProps?: MapProps<ReduxStateProps, OwnProps>
 ) =>
   connect<
-    (ReduxStateProps & Partial<StateProps>) | StateProps,
+    (ReduxStateProps & Partial<State>) | State,
     DispatchProps,
     OwnProps,
     ApplicationState
   >(
     (state, ownProps) => {
-      const {
-        loading,
-        error,
-        entities,
-        results,
-        lastUpdated
-      } = state.__resources.nodeBalancerConfigNodes;
+      const { nodeBalancerConfigNodes } = state.__resources;
+      const configNodesForAConfig = Object.keys(nodeBalancerConfigNodes).reduce(
+        (acc, eachKey) => {
+          if (+eachKey === configID) {
+            acc[eachKey] = nodeBalancerConfigNodes[eachKey];
+          }
+          return acc;
+        },
+        {}
+      );
 
-      const result = {
-        nodeBalancerConfigNodesData: entities,
-        nodeBalancerConfigNodesError: error,
-        nodeBalancerConfigNodesLastUpdated: lastUpdated,
-        nodeBalancerConfigNodesLoading: loading,
-        nodeBalancerConfigNodesResults: results.length
-      };
+      if (mapStateToProps) {
+        return mapStateToProps(ownProps, configNodesForAConfig);
+      }
 
-      return mapStateToProps ? mapStateToProps(ownProps, result) : result;
+      return configNodesForAConfig;
     },
     (dispatch: ThunkDispatch) => ({
       getAllNodeBalancerConfigNodes: params => dispatch(_getAll(params)),
