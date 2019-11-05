@@ -181,3 +181,51 @@ export const UpdateNodeBalancerSchema = object({
 
   region: string()
 });
+
+/**
+ *
+ *
+ * NEW
+ *
+ */
+
+export const NEW_createNodeBalancerConfigSchema = object({
+  algorithm: mixed().oneOf(['roundrobin', 'leastconn', 'source']),
+  check_attempts: number(),
+  check_body: string().when('check', {
+    is: check => check === 'http_body',
+    then: string().required()
+  }),
+  check_interval: number().typeError('Check interval must be a number.'),
+  check_passive: boolean(),
+  check_path: string()
+    .matches(/\/.*/)
+    .when('check', {
+      is: check => check === 'http',
+      then: string().required()
+    })
+    .when('check', {
+      is: check => check === 'http_body',
+      then: string().required()
+    }),
+  check_timeout: number()
+    .typeError('Timeout must be a number.')
+    .integer(),
+  check: mixed().oneOf(['none', 'connection', 'http', 'http_body']),
+  cipher_suite: mixed().oneOf(['recommended', 'legacy']),
+  port: number()
+    .integer()
+    .required('Port is required')
+    .min(1, 'Port must be between 1 and 65534.')
+    .max(65534, 'Port must be between 1 and 65534.'),
+  protocol: mixed().oneOf(['http', 'https', 'tcp']),
+  ssl_key: string().when('protocol', {
+    is: protocol => protocol === 'https',
+    then: string().required('SSL key is required when using HTTPS.')
+  }),
+  ssl_cert: string().when('protocol', {
+    is: protocol => protocol === 'https',
+    then: string().required('SSL certificate is required when using HTTPS.')
+  }),
+  stickiness: mixed().oneOf(['none', 'table', 'http_cookie'])
+});

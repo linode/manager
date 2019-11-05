@@ -1,10 +1,11 @@
 import {
   Algorithm,
   Check,
+  NodeBalancerConfig,
   Protocol,
   Stickiness
 } from 'linode-js-sdk/lib/nodebalancers';
-// import { APIError } from 'linode-js-sdk/lib/types'
+import { APIError } from 'linode-js-sdk/lib/types';
 import * as React from 'react';
 import { compose } from 'recompose';
 
@@ -32,11 +33,19 @@ import StickinessField from './Fields/Stickiness';
 
 import { getErrorMap } from 'src/utilities/errorUtils';
 
+import ActionsPanel from './ActionsPanel';
 import useFormStyles from './form.styles';
+
+import { CreateNodeBalancerConfigParams } from 'src/store/nodeBalancerConfig/nodeBalancerConfig.actions';
 
 interface Props {
   userCannotCreateNodeBalancerConfig: boolean;
-  onSuccessfulConfigCreation: () => void;
+  createConfig: (
+    payload: CreateNodeBalancerConfigParams
+  ) => Promise<NodeBalancerConfig>;
+  deleteConfig: () => void;
+  onSuccessfulCreate: () => void;
+  nodeBalancerID: number;
 }
 
 type CombinedProps = Props;
@@ -60,10 +69,63 @@ const CreateConfigForm: React.FC<CombinedProps> = props => {
   const [checkBody, setCheckBody] = React.useState<string>('');
   const [checkPath, setCheckPath] = React.useState<string>('');
 
-  /** @todo we don't let the user edit this - find out why and document */
+  /** @todo we don't let the user edit this - find out why and document here */
   // const [cipherSuite, setCipherSuite] = React.useState<CipherSuite>('recommended');
 
-  // const [errors, setErrors] = React.useState<APIError[] | undefined>();
+  const [isCreatingConfig, setCreatingConfig] = React.useState<boolean>(false);
+  const [errors, setErrors] = React.useState<APIError[] | undefined>();
+
+  const _createConfig = () => {
+    setCreatingConfig(true);
+
+    const basePayload: CreateNodeBalancerConfigParams = {
+      port,
+      nodeBalancerId: props.nodeBalancerID,
+      stickiness,
+      protocol,
+      algorithm,
+      ssl_cert: sslCert,
+      ssl_key: sslKey,
+      check,
+      check_attempts: checkAttempts,
+      check_body: checkBody,
+      check_passive: checkPassive,
+      check_path: checkPath,
+      check_interval: checkInterval,
+      check_timeout: checkTimeout
+    };
+
+    /**
+     * optional pieces that can be deleted from the payload if empty
+     */
+    if (!checkPassive) {
+      delete basePayload.check_passive;
+    }
+
+    if (!checkPath) {
+      delete basePayload.check_path;
+    }
+
+    if (!checkInterval) {
+      delete basePayload.check_interval;
+    }
+
+    if (!checkTimeout) {
+      delete basePayload.check_timeout;
+    }
+
+    return props
+      .createConfig(basePayload)
+      .then(config => {
+        setCreatingConfig(false);
+        props.onSuccessfulCreate();
+        return config;
+      })
+      .catch(e => {
+        setErrors(e);
+        setCreatingConfig(false);
+      });
+  };
 
   const errorMap = getErrorMap(
     [
@@ -82,7 +144,7 @@ const CreateConfigForm: React.FC<CombinedProps> = props => {
       'check_path',
       'cipher_suite'
     ],
-    []
+    errors
   );
 
   return (
@@ -239,6 +301,19 @@ const CreateConfigForm: React.FC<CombinedProps> = props => {
               onChange={() => setCheckPassive(!checkPassive)}
               data-qa-passive-checks-toggle={checkPassive}
               disabled={userCannotCreateNodeBalancerConfig}
+            />
+          </Grid>
+
+          <Grid item xs={12}>
+            <Divider type="landingHeader" className={classes.divider} />
+          </Grid>
+
+          <Grid item xs={12}>
+            <ActionsPanel
+              userCannotCreateConfig={userCannotCreateNodeBalancerConfig}
+              onSubmit={_createConfig}
+              onDelete={props.deleteConfig}
+              isSubmitting={isCreatingConfig}
             />
           </Grid>
         </Grid>

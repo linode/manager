@@ -12,9 +12,8 @@ const PortField: React.FC<CombinedProps> = props => {
       required
       data-qa-port
       small
-      /** https://www.google.com/search?q=how+many+ports+are+there+computer&oq=how+many+ports+are+there+computer&aqs=chrome..69i57j0l5.4099j0j7&sourceid=chrome&ie=UTF-8 */
       min={0}
-      max={70000}
+      max={65534}
       noMarginTop
       helperText="Listen on this port"
     />

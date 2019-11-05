@@ -21,6 +21,9 @@ const useStyles = makeStyles((theme: Theme) => ({
   title: {
     marginTop: theme.spacing(),
     marginBottom: theme.spacing(2)
+  },
+  button: {
+    marginTop: theme.spacing(2)
   }
 }));
 
@@ -45,7 +48,7 @@ const EditNodeBalancerConfigs: React.FC<CombinedProps> = props => {
    * So once they hit the "create new config" button, we'll add a blank form
    * but not allow them to keep adding more blank forms.
    */
-  const [newConfigQueued, setNewConfigQueued] = React.useState<boolean>(true);
+  const [newConfigQueued, setNewConfigQueued] = React.useState<boolean>(false);
 
   React.useEffect(() => {
     /**
@@ -58,13 +61,6 @@ const EditNodeBalancerConfigs: React.FC<CombinedProps> = props => {
       props.getAllNodeBalancerConfigNodes(+eachKey);
     });
   }, []);
-
-  const onConfigCreate = () => {
-    props
-      .getAllNodeBalancerConfigs(props.nodeBalancerID)
-      .catch(e => e /** do nothing */);
-    setNewConfigQueued(false);
-  };
 
   const {
     nodeBalancerLabel,
@@ -90,7 +86,10 @@ const EditNodeBalancerConfigs: React.FC<CombinedProps> = props => {
       newConfigQueued && (
         <CreateNewConfigForm
           userCannotCreateNodeBalancerConfig={false}
-          onSuccessfulConfigCreation={onConfigCreate}
+          createConfig={props.createNodeBalancerConfig}
+          deleteConfig={() => setNewConfigQueued(false)}
+          nodeBalancerID={props.nodeBalancerID}
+          onSuccessfulCreate={() => setNewConfigQueued(false)}
         />
       )}
       {/** only allow us to create one new config at a time */
@@ -99,6 +98,7 @@ const EditNodeBalancerConfigs: React.FC<CombinedProps> = props => {
           buttonType="secondary"
           onClick={() => setNewConfigQueued(true)}
           data-qa-add-config
+          className={classes.button}
         >
           {hasNoConfigs ? 'Add a Configuration' : 'Add another Configuration'}
         </Button>

@@ -2,7 +2,7 @@ import { API_ROOT } from '../constants';
 import Request, { setData, setMethod, setURL } from '../request';
 import { ResourcePage as Page } from '../types';
 import {
-  createNodeBalancerConfigSchema,
+  NEW_createNodeBalancerConfigSchema,
   UpdateNodeBalancerConfigSchema
 } from './nodebalancers.schema';
 import {
@@ -55,7 +55,7 @@ export const createNodeBalancerConfig = (
   Request<NodeBalancerConfig>(
     setMethod('POST'),
     setURL(`${API_ROOT}/nodebalancers/${nodeBalancerId}/configs`),
-    setData(data, createNodeBalancerConfigSchema)
+    setData(data, NEW_createNodeBalancerConfigSchema)
   ).then(response => response.data);
 
 /**
