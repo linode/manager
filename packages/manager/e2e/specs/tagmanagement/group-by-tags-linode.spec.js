@@ -2,7 +2,7 @@ const { constants } = require('../../constants');
 import {
   timestamp,
   apiCreateMultipleLinodes,
-  apiDeleteAllLinodes,
+  apiDeleteAllLinodes
 } from '../../utils/common';
 import ListLinodes from '../../pageobjects/list-linodes';
 // TODO refactor these tests. User settings are being stored on some values that cause tests to fail
@@ -69,7 +69,7 @@ xdescribe('Group Linodes by Tags - Suite', () => {
   });
 
   describe('Grouped Linodes - List View', () => {
-    it('Linodes are groupped by tags', () => {
+    it('Linodes are grouped by tags', () => {
       checkGroupedByTags();
     });
 
@@ -95,7 +95,7 @@ xdescribe('Group Linodes by Tags - Suite', () => {
       });
     });
 
-    it('Linodes are groupped by tags', () => {
+    it('Linodes are grouped by tags', () => {
       checkGroupedByTags();
     });
 
