@@ -76,7 +76,7 @@ interface Params {
 
 type RouteProps = RouteComponentProps<Params>;
 
-type CombinedProps = Omit<WithImages, 'imagesData'> &
+type CombinedProps = WithImages &
   StateProps &
   DispatchProps &
   RouteProps &

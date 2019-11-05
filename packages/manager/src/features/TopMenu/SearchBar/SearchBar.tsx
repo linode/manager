@@ -26,7 +26,7 @@ interface State {
 }
 
 type CombinedProps = WithTypesProps &
-  Pick<WithImages, 'imagesData' | 'imagesLoading'> &
+  WithImages &
   SearchProps &
   StyleProps &
   RouteComponentProps<{}>;

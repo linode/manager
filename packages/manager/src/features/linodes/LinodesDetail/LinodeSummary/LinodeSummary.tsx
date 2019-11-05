@@ -166,7 +166,7 @@ interface State {
 
 type CombinedProps = LinodeContextProps &
   WithTypesProps &
-  Pick<WithImages, 'imagesData'> &
+  WithImages &
   WithStyles<ClassNames>;
 
 const chartHeight = 300;

@@ -25,7 +25,7 @@ interface Props {
   sshError?: string;
 }
 
-type CombinedProps = Props & ContextProps & Omit<WithImages, 'imagesLoading'>;
+type CombinedProps = Props & ContextProps & WithImages;
 
 export const ImageAndPassword: React.StatelessComponent<
   CombinedProps
