@@ -20,6 +20,7 @@ const mockClasses: Record<ClassNames, string> = {
   listItem: '',
   listItemAccount: '',
   logoItem: '',
+  logoCollapsed: '',
   logoItemCompact: '',
   menuGrid: '',
   spacer: '',

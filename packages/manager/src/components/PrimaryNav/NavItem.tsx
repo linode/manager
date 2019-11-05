@@ -65,6 +65,7 @@ const NavItem: React.SFC<CombinedProps> = props => {
             disableTypography={true}
             className={classNames({
               [listItemClasses]: true,
+              primaryNavLink: true,
               hiddenWhenCollapsed: isCollapsed
             })}
           />

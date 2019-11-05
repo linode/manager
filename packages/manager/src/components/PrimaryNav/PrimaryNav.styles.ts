@@ -10,6 +10,7 @@ export type ClassNames =
   | 'menuGrid'
   | 'fadeContainer'
   | 'logoItem'
+  | 'logoCollapsed'
   | 'logoItemCompact'
   | 'listItem'
   | 'collapsible'
@@ -65,6 +66,11 @@ const styles = (theme: Theme) =>
       `,
       '& svg': {
         maxWidth: theme.spacing(3) + 91
+      }
+    },
+    logoCollapsed: {
+      '& .logoLetters': {
+        opacity: 0
       }
     },
     listItem: {
